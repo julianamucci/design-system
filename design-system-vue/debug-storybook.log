@@ -1,0 +1,24 @@
+[15:29:17.035] [INFO] storybook v10.3.5
+[15:29:17.574] [DEBUG] Getting package.json info for C:/Users/julia/Documents/design-system/design-system-vue/package.json...
+[15:29:19.052] [WARN] 🚨 Unable to index ./src/components/ui/button/Button.mdx,./src/components/ui/button/Button.stories.ts:
+  Error: You created a component docs page for 'UI/Button', but also tagged the CSF file with 'autodocs'. This is probably a mistake.
+    at _StoryIndexGenerator.chooseDuplicate (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:6248:15)
+    at file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:6287:52
+    at Array.forEach (<anonymous>)
+    at _StoryIndexGenerator.getIndexAndStats (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:6284:23)
+    at async _StoryIndexGenerator.getIndex (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:6271:13)
+    at async Object.experimental_serverChannel (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/@storybook/addon-vitest/dist/preset.js:464:14)
+    at async buildDevStandalone (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:8027:32)
+    at async withTelemetry (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-FIR43JGQ.js:225:12)
+    at async dev (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/bin/core.js:2736:3)
+    at async _Command.<anonymous> (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/bin/core.js:2806:92)
+[15:29:19.060] [ERROR] Error: Unable to index ./src/components/ui/button/Button.mdx,./src/components/ui/button/Button.stories.ts
+    at _StoryIndexGenerator.getIndexAndStats (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:6292:15)
+    at async _StoryIndexGenerator.getIndex (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:6271:13)
+    at async Object.experimental_serverChannel (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/@storybook/addon-vitest/dist/preset.js:464:14)
+    at async buildDevStandalone (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:8027:32)
+    at async withTelemetry (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-FIR43JGQ.js:225:12)
+    at async dev (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/bin/core.js:2736:3)
+    at async _Command.<anonymous> (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/bin/core.js:2806:92)
+[15:29:19.063] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.

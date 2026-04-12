@@ -1,0 +1,392 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+
+  /* Typography font sizes */
+  --text-h1: 48px;
+  --text-h2: 30px;
+  --text-h3: 20px;
+  --text-h4: 16px;
+  --text-p: 14px;
+  --text-label: 12px;
+
+  /* Typography font family */
+  --font-family: 'Inter', sans-serif;
+
+  /* Typography font weights */
+  --font-weight-extra-bold: 800;
+  --font-weight-semi-bold: 600;
+  --font-weight-medium: 500;
+  --font-weight-regular: 400;
+
+  /* Typography line heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+
+  /* Typography letter spacing */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.02em;
+
+  /* The default background color for the application. */
+  --background: 0 0% 100%;
+  /* The default color for elements or text that appears on top of the background. */
+  --foreground: 0 0% 4%;
+  /* The background color for cards, modals, and other containers. */
+  --card: 0 0% 100%;
+  /* The default color for text or elements that appear on top of cards, modals and other background containers. */
+  --card-foreground: 0 0% 4%;
+  /* The background color for dropdowns and tooltips. */
+  --popover: 0 0% 100%;
+  /* The default color for text or elements that appear on top of dropdowns and tooltips. */
+  --popover-foreground: 0 0% 4%;
+  /* The primary color used for buttons, links, and other interactive elements. */
+  --primary: 0 0% 9%;
+  /* The default color for text or elements that appear on top of primary colored elements. */
+  --primary-foreground: 0 0% 98%;
+  /* The secondary color used for secondary(but NOT-DESTRUCTIVE) buttons and interactive elements. */
+  --secondary: 0 0% 96%;
+  /* The default color for text or elements that appear on top of secondary colored elements. */
+  --secondary-foreground: 0 0% 4%;
+  /* The muted color used for less prominent elements, such as disabled buttons or disabled text. */
+  --muted: 0 0% 96%;
+  /* The default color for text or elements that appear on top of muted colored elements. */
+  --muted-foreground: 0 0% 45%;
+  /* The accent color used for highlights, links, and other interactive elements. */
+  --accent: 0 0% 96%;
+  /* The default color for text or elements that appear on top of accent colored elements. */
+  --accent-foreground: 0 0% 9%;
+  /* The color used for background in destructive actions, such as delete buttons or error messages. */
+  --destructive: 0 84% 60%;
+  /* The default color for text or elements that appear on top of destructive colored elements. */
+  --destructive-foreground: 0 0% 98%;
+  /* The color used for success messages and confirmations. */
+  --success: 142 71% 45%;
+  /* The default color for text or elements that appear on top of success colored elements. */
+  --success-foreground: 0 0% 100%;
+  /* The color used for warning messages and alerts. */
+  --warning: 48 96% 53%;
+  /* The default color for text or elements that appear on top of warning colored elements. */
+  --warning-foreground: 0 0% 4%;
+  /* The color used for informational messages. */
+  --info: 221 83% 53%;
+  /* The default color for text or elements that appear on top of info colored elements. */
+  --info-foreground: 0 0% 100%;
+  /* The default border color for elements such as inputs, buttons, and other containers. */
+  --border: 0 0% 90%;
+  /* The default background color for input fields once the text has been filled. Should be either transparent or match the input-background. */
+  --input: 0 0% 90%;
+  /* The default background color for input fields, text areas, and other input elements. */
+  --input-background: 0 0% 100%;
+  /* The color for focus rings, outlines, and other focus indicators. */
+  --ring: 0 0% 45%;
+  /* Ring offset width for focus indicators. */
+  --ring-offset-width: 2px;
+  /* Ring offset color for focus indicators. */
+  --ring-offset-color: 0 0% 100%;
+
+  /* Shadow for small elevations, such as cards or modals. */
+  --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
+  /* Shadow for medium elevations, such as dropdowns. */
+  --elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+  /* Shadow for large elevations, such as modals. */
+  --elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+  /* Shadow for extra large elevations. */
+  --elevation-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* The color for chart elements, such as a bar or line in a chart. */
+  --chart-1: 199 89% 65%;
+  /* The color for another chart element, such as a bar or line in a chart. */
+  --chart-2: 200 100% 50%;
+  /* The color for another chart element, such as a bar or line in a chart. */
+  --chart-3: 201 98% 48%;
+  /* The color for another chart element, such as a bar or line in a chart. */
+  --chart-4: 201 88% 43%;
+  /* The color for another chart element, such as a bar or line in a chart. */
+  --chart-5: 210 71% 23%;
+
+  /* The default border radius for elements such as buttons, cards, and other containers. */
+  --radius: 8px;
+  /* The border radius for buttons. */
+  --radius-button: 8px;
+  /* The border radius for cards. */
+  --radius-card: 8px;
+
+  /* Transition duration for fast animations. */
+  --transition-fast: 150ms;
+  /* Transition duration for normal animations. */
+  --transition-normal: 300ms;
+  /* Transition duration for slow animations. */
+  --transition-slow: 500ms;
+  /* Transition timing function for ease. */
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+
+  /* Z-index for dropdown menus */
+  --z-dropdown: 1000;
+  /* Z-index for sticky elements */
+  --z-sticky: 1020;
+  /* Z-index for fixed elements */
+  --z-fixed: 1030;
+  /* Z-index for modal backdrops */
+  --z-modal-backdrop: 1040;
+  /* Z-index for modals */
+  --z-modal: 1050;
+  /* Z-index for popovers */
+  --z-popover: 1060;
+  /* Z-index for tooltips */
+  --z-tooltip: 1070;
+
+  /* The background color for sidebars, navigation menus, and other persistent elements. */
+  --sidebar: 0 0% 98%;
+  /* The default color for text or elements that appear on top of sidebars, navigation menus, and other persistent elements. */
+  --sidebar-foreground: 0 0% 4%;
+  /* The primary color used for buttons, links, and other interactive elements in sidebars and navigation menus. */
+  --sidebar-primary: 0 0% 9%;
+  /* The default color for text or elements that appear on top of primary colored elements in sidebars and navigation menus. */
+  --sidebar-primary-foreground: 0 0% 98%;
+  /* The accent color used for highlights, links, and other interactive elements in sidebars and navigation menus. */
+  --sidebar-accent: 0 0% 96%;
+  /* The default color for text or elements that appear on top of accent colored elements in sidebars and navigation menus. */
+  --sidebar-accent-foreground: 0 0% 9%;
+  /* The default border color for elements in sidebars and navigation menus. */
+  --sidebar-border: 0 0% 83%;
+  /* The default color for focus rings, outlines, and other focus indicators in sidebars and navigation menus. */
+  --sidebar-ring: 0 0% 45%;
+}
+
+html.dark {
+  --background: 0 0% 9%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 15%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --success: 142 71% 45%;
+  --success-foreground: 0 0% 100%;
+  --warning: 48 96% 53%;
+  --warning-foreground: 0 0% 4%;
+  --info: 221 83% 53%;
+  --info-foreground: 0 0% 100%;
+  --border: 0 0% 15%;
+  --input: 0 0% 15%;
+  --input-background: 0 0% 9%;
+  --ring: 0 0% 45%;
+  --ring-offset-color: 0 0% 9%;
+  --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.3), 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.3), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --elevation-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.3), 0px 10px 10px -5px rgba(0, 0, 0, 0.1);
+  --sidebar: 0 0% 9%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-primary: 0 0% 98%;
+  --sidebar-primary-foreground: 0 0% 9%;
+  --sidebar-accent: 0 0% 15%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 0 0% 15%;
+  --sidebar-ring: 0 0% 63.9%;
+}
+
+@theme inline {
+  /* Color Mappings */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-info: hsl(var(--info));
+  --color-info-foreground: hsl(var(--info-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-input-background: hsl(var(--input-background));
+  --color-ring: hsl(var(--ring));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+  --color-sidebar: hsl(var(--sidebar-background, var(--sidebar)));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  /* Typography Mappings */
+  --font-sans: var(--font-family);
+  --font-base-size: var(--font-size);
+  --text-h1: var(--text-h1);
+  --text-h2: var(--text-h2);
+  --text-h3: var(--text-h3);
+  --text-h4: var(--text-h4);
+  --text-p: var(--text-p);
+  --text-label: var(--text-label);
+  --font-weight-extrabold: var(--font-weight-extra-bold);
+  --font-weight-semibold: var(--font-weight-semi-bold);
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-normal: var(--font-weight-regular);
+  --leading-tight: var(--line-height-tight);
+  --leading-normal: var(--line-height-normal);
+  --leading-relaxed: var(--line-height-relaxed);
+  --leading-loose: var(--line-height-loose);
+  --tracking-tight: var(--letter-spacing-tight);
+  --tracking-normal: var(--letter-spacing-normal);
+  --tracking-wide: var(--letter-spacing-wide);
+
+  /* Radius Mappings */
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius-button);
+  --radius-xl: var(--radius-card);
+
+  /* Shadow Mappings */
+  --shadow-sm: var(--elevation-sm);
+  --shadow-md: var(--elevation-md);
+  --shadow-lg: var(--elevation-lg);
+  --shadow-xl: var(--elevation-xl);
+
+  /* Transition Mappings */
+  --duration-fast: var(--transition-fast);
+  --duration-normal: var(--transition-normal);
+  --duration-slow: var(--transition-slow);
+  --ease-default: var(--transition-timing);
+
+  /* Z-Index Mappings */
+  --z-dropdown: var(--z-dropdown);
+  --z-sticky: var(--z-sticky);
+  --z-fixed: var(--z-fixed);
+  --z-modal-backdrop: var(--z-modal-backdrop);
+  --z-modal: var(--z-modal);
+  --z-popover: var(--z-popover);
+  --z-tooltip: var(--z-tooltip);
+
+  /* Ring & Focus Mappings */
+  --ring-offset: var(--ring-offset-width);
+  --ring-offset-color: hsl(var(--ring-offset-color));
+
+  /* Animations for shadcn */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-family);
+  }
+}
+
+/*
+ * ─── .ds-docs: componente de documentação do design system ───────────────────
+ *
+ * CSS unlayered (fora de qualquer @layer) com especificidade (0,2,N).
+ * O Storybook injeta via CSS-in-JS (unlayered) com especificidade (0,1,0):
+ *   .css-hash :where(p)   { margin: 16px 0 }
+ *   .css-hash :where(div) { margin: 0 }
+ *
+ * Nossa especificidade (0,2,N) > (0,1,0) → ganhamos na cascade sem !important.
+ * Aplicado apenas dentro de .ds-docs para não vazar para o restante da aplicação.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+
+.ds-docs {
+  font-family: var(--font-family) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Zera a margem injetada pelo Storybook nos elementos p */
+.ds-docs p {
+  margin: 0;
+}
+
+/* Restaura space-y-* para divs (Storybook reseta margin de todas as divs) */
+.ds-docs .space-y-0\.5 > * + *  { margin-top: 0.125rem; }
+.ds-docs .space-y-1    > * + *  { margin-top: 0.25rem;  }
+.ds-docs .space-y-1\.5 > * + *  { margin-top: 0.375rem; }
+.ds-docs .space-y-2    > * + *  { margin-top: 0.5rem;   }
+.ds-docs .space-y-3    > * + *  { margin-top: 0.75rem;  }
+.ds-docs .space-y-4    > * + *  { margin-top: 1rem;     }
+.ds-docs .space-y-5    > * + *  { margin-top: 1.25rem;  }
+.ds-docs .space-y-6    > * + *  { margin-top: 1.5rem;   }
+.ds-docs .space-y-8    > * + *  { margin-top: 2rem;     }
+.ds-docs .space-y-10   > * + *  { margin-top: 2.5rem;   }
+.ds-docs .space-y-12   > * + *  { margin-top: 3rem;     }
+
+/* Restaura utilitários de margem individuais (Storybook reseta div margin) */
+.ds-docs .mb-4  { margin-bottom: 1rem !important; }
+.ds-docs .mb-6  { margin-bottom: 1.5rem !important; }
+.ds-docs .mb-8  { margin-bottom: 2rem !important; }
+.ds-docs .mb-10 { margin-bottom: 2.5rem !important; }
+.ds-docs .mb-12 { margin-bottom: 3rem !important; }
+.ds-docs .mt-6  { margin-top: 1.5rem !important; }
+
+/* Restaura gaps de grid (Storybook às vezes interfere com layouts de grid) */
+.ds-docs .gap-4 { gap: 1rem !important; }
+.ds-docs .gap-16 { gap: 4rem !important; }
+
+/* Restaura list-style-* (Storybook injeta list-style: disc em ul por padrão) */
+.ds-docs ul.list-none  { list-style: none; padding-left: 0; }
+.ds-docs ul.list-disc  { list-style: disc; padding-left: 1.25rem; }
+
+/* 
+ * Reset de tipografia e bordas do Storybook 
+ * Neutraliza o border-bottom em h2 e força fontes do projeto 
+ */
+.ds-docs h1, .ds-docs h2, .ds-docs h3, .ds-docs h4 {
+  font-family: inherit !important;
+  border-bottom: none !important;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.ds-docs h1 { font-size: 1.875rem; line-height: 2.25rem; font-weight: 700; letter-spacing: -0.025em; }
+.ds-docs h2 { font-size: 1.25rem; line-height: 1.75rem; font-weight: 600; }
+.ds-docs h3 { font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
+.ds-docs h4 { font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; }
+
+
