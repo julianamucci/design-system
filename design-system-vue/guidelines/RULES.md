@@ -26,7 +26,7 @@ Tokens de superfície:
 Tokens de cor de estado aplicados via `class` — nunca via prop inexistente:
 - Warning/Success em Alert e Badge: `class="bg-warning/10 text-warning border-warning/30"`
 
-Referência completa: `03-sistema-design.md` e `16-padroes-design-sistema.md`.
+Referência completa: `03-sistema-design.md` e `../../docs/shared/guidelines/04-padroes-design-sistema.md`.
 
 ---
 
@@ -48,7 +48,7 @@ Regras permanentes:
 - `TableCaption` obrigatório em toda Table (pode ser `sr-only`)
 - `scope="col"` em todo cabeçalho de coluna de tabela
 
-Referência completa: `11-acessibilidade.md`.
+Referência completa: `../../docs/shared/guidelines/01-acessibilidade.md`.
 
 ---
 
@@ -80,7 +80,7 @@ Ao editar qualquer seção de um arquivo existente:
 - Preservar exports, interfaces e props intactos
 - Não modificar código fora do escopo solicitado
 
-Referência: `14-edicoes-parciais.md`.
+Referência: `../../docs/shared/guidelines/03-edicoes-parciais.md`.
 
 ---
 
@@ -115,19 +115,17 @@ Payload base obrigatório: `{ component, variant?, location, label? }`
 
 Não rastrear `value` de campos sensíveis (senha, CPF, cartão).
 
-Referência completa: `21-analytics.md`.
+Referência completa: `../../docs/shared/guidelines/07-analytics.md`.
 
 ---
 
-## 9. Roteamento SPA
+## 9. Navegação — Storybook como interface principal
 
-O projeto usa roteamento baseado em estado via `currentPage` (ref no App.vue) — **sem Vue Router, sem URLs reais**.
+A interface principal de documentação é o **Storybook** (`npm run storybook`, porta 6006). Novos componentes são adicionados criando stories — não registrando no `App.vue`.
 
-Para navegar, emitir o evento `navigate` com o path ou chamar a função `navigateTo(path)` no App.vue.
+O `App.vue` é um **sandbox de desenvolvimento** e rota `?view=admin`. Não usar para fins de navegação de documentação.
 
-Não usar `<a href>` para navegação interna — usar `<button>` com `@click`.
-
-Referência: `15-arquitetura-projeto.md` e `17-system-design.md`.
+Referência: `12-arquitetura-projeto.md`.
 
 ---
 
@@ -137,26 +135,19 @@ Tratamento: **"você"** — nunca "tu", "o usuário", "deve-se".
 
 Nível: semi-formal. Nem burocrático, nem coloquial.
 
-Referência completa: `19-tom-de-voz.md`.
+Referência completa: `../../docs/shared/guidelines/05-tom-de-voz.md`.
 
 ---
 
-## 11. SEO e GEO (SPA)
+## 11. SEO e GEO (Storybook iframe)
 
-Cada página do projeto atualiza dinamicamente via `onMounted`:
+Todo ComponentDocs usa o composable `useSeoEffect` de `@/lib/use-seo.ts`. Ele detecta o iframe do Storybook e escreve no documento pai automaticamente.
 
 ```ts
-onMounted(() => {
-  document.title = 'Button — Design System'
-  const meta = document.querySelector('meta[name="description"]')
-  if (meta) meta.setAttribute('content', 'Documentação do componente Button...')
-})
-onUnmounted(() => {
-  document.title = 'Design System — Nortear (Vue)'
-})
+useSeoEffect({ title: 'Button — Formulários · DS', description: '...', locale: 'pt-BR', componentSlug: 'button' })
 ```
 
-Referência completa: `20-seo-geo.md`.
+Referência completa: `../../docs/shared/guidelines/06-seo-geo.md`.
 
 ---
 
@@ -168,4 +159,4 @@ Referência completa: `20-seo-geo.md`.
 - Composables em `/src/composables/` — prefixo `use`
 - Tipos TypeScript em `/src/types/` quando compartilhados
 
-Referência: `15-arquitetura-projeto.md` e `17-system-design.md`.
+Referência: `12-arquitetura-projeto.md` e `13-system-design.md`.

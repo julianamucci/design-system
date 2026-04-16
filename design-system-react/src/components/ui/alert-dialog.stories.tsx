@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn, userEvent, within, expect } from "@storybook/test";
+import { fn, userEvent, within, expect } from "storybook/test";
 import { Button } from "./button";
 import {
   AlertDialog,
@@ -13,6 +13,7 @@ import {
   AlertDialogCancel,
 } from "./alert-dialog";
 import { AlertDialogDocs } from "@/components/docs/AlertDialogDocs";
+import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 // ─── Meta compartilhado ──────────────────────────────────────────────────────
 
@@ -21,7 +22,7 @@ const meta = {
   component: AlertDialog,
   tags: ["autodocs"],
   parameters: {
-    docs: { page: AlertDialogDocs },
+    docs: { page: withAutoDocsTab(AlertDialogDocs) },
   },
   argTypes: {
     open: {

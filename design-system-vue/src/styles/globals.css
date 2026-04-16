@@ -1,130 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 @import "tailwindcss";
-
 @import "tw-animate-css";
 
+/* ── Tokens e temas compartilhados entre todos os stacks ─────────────────── */
+@import "@shared/tokens/tokens.css";
+@import "@shared/themes/index.css";
+
 @custom-variant dark (&:is(.dark *));
-
-:root {
-  --font-size: 16px;
-
-  /* Typography font sizes */
-  --text-h1: 48px;
-  --text-h2: 30px;
-  --text-h3: 20px;
-  --text-h4: 16px;
-  --text-p: 14px;
-  --text-label: 12px;
-
-  /* Typography font family */
-  --font-family: 'Inter', sans-serif;
-
-  /* Typography font weights */
-  --font-weight-extra-bold: 800;
-  --font-weight-semi-bold: 600;
-  --font-weight-medium: 500;
-  --font-weight-regular: 400;
-
-  /* Typography line heights */
-  --line-height-tight: 1.2;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
-  --line-height-loose: 2;
-
-  /* Typography letter spacing */
-  --letter-spacing-tight: -0.02em;
-  --letter-spacing-normal: 0em;
-  --letter-spacing-wide: 0.02em;
-
-  /* Surfaces */
-  --background: 0 0% 100%;
-  --foreground: 0 0% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 3.9%;
-
-  /* Brand / Interactive */
-  --primary: 0 0% 9%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 0 0% 96.1%;
-  --secondary-foreground: 0 0% 9%;
-  --muted: 0 0% 96.1%;
-  --muted-foreground: 0 0% 45.1%;
-  --accent: 0 0% 96.1%;
-  --accent-foreground: 0 0% 9%;
-
-  /* Semantic */
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --success: 142 71% 45%;
-  --success-foreground: 0 0% 100%;
-  --warning: 48 96% 53%;
-  --warning-foreground: 0 0% 4%;
-  --info: 221 83% 53%;
-  --info-foreground: 0 0% 100%;
-
-  /* Borders & Inputs */
-  --border: 0 0% 89.8%;
-  --input: 0 0% 89.8%;
-  --input-background: 0 0% 100%;
-  --ring: 0 0% 3.9%;
-  --ring-offset-width: 2px;
-  --ring-offset-color: 0 0% 100%;
-
-  /* Charts */
-  --chart-1: 12 76% 61%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 37% 24%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
-
-  /* Radius */
-  --radius: 0.5rem;
-  --radius-button: 8px;
-  --radius-card: 8px;
-
-  /* Sidebar */
-  --sidebar: 0 0% 98%;
-  --sidebar-foreground: 0 0% 3.9%;
-  --sidebar-primary: 0 0% 9%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 0 0% 96.1%;
-  --sidebar-accent-foreground: 0 0% 9%;
-  --sidebar-border: 0 0% 91%;
-  --sidebar-ring: 0 0% 3.9%;
-}
-
-html.dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
-  --sidebar: 222.2 84% 4.9%;
-  --sidebar-foreground: 210 40% 98%;
-  --sidebar-primary: 210 40% 98%;
-  --sidebar-primary-foreground: 222.2 47.4% 11.2%;
-  --sidebar-accent: 217.2 32.6% 17.5%;
-  --sidebar-accent-foreground: 210 40% 98%;
-  --sidebar-border: 217.2 32.6% 17.5%;
-  --sidebar-ring: 212.7 26.8% 83.9%;
-}
 
 @theme inline {
   /* Color Mappings */
@@ -220,7 +101,7 @@ html.dark {
   --ring-offset: var(--ring-offset-width);
   --ring-offset-color: hsl(var(--ring-offset-color));
 
-  /* Animations for shadcn */
+  /* Animations for shadcn-vue */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -234,13 +115,12 @@ html.dark {
   }
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-family);
   }
 }
-

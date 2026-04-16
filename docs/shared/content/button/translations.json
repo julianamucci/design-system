@@ -1,0 +1,692 @@
+{
+  "pt-BR": {
+    "title": "Button",
+    "category": "Form",
+    "type": "Componente",
+    "description": "Elemento interativo fundamental para disparar ações do usuário. Suporta múltiplas variantes, estados de carregamento e integração nativa com o ecossistema Shadcn/UI.",
+    "installation": "Instalação",
+    "demonstration": {
+      "title": "Demonstração Padrão",
+      "labels": {
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "delete": "Excluir conta",
+        "loading": "Aguarde..."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Container</strong> — elemento <code><button></code> nativo, ou <code>Slot</code> do Radix quando <code>asChild</code> é verdadeiro. Recebe todos os atributos HTML do botão.",
+      "item2": "<strong>Label</strong> — conteúdo filho (<code>children</code>). Pode ser texto, ícone ou a combinação de ambos.",
+      "item3": "<strong>Ícone (opcional)</strong> — renderizado automaticamente via <code>[&_svg]:size-4</code>. Gap entre ícone e texto gerenciado por <code>gap-2</code>."
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "📋 Guidelines Obrigatórias",
+        "item1": "Use no máximo <strong>um botão primário</strong> (variant default) por área de ação.",
+        "item2": "Botões destrutivos (variant destructive) exigem confirmação — envolva-os em um <code>AlertDialog</code>.",
+        "item3": "Ordene os botões: primário à direita, secundário à esquerda (padrão ocidental).",
+        "item4": "Para botões em linha de texto, prefira <code>variant=\"link\"</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Ação principal (Login, Salvar)",
+          "u": "Sim, variant default",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Navegação entre páginas",
+          "u": "Sim, com asChild",
+          "a": "Link (Router)"
+        },
+        "item3": {
+          "s": "Seleção binária (Sim/Não)",
+          "u": "Não",
+          "a": "Toggle / Radio"
+        }
+      },
+      "do": {
+        "title": "✅ Use quando",
+        "item1": "A ação principal da página precisa de destaque",
+        "item2": "O usuário precisa submeter um formulário",
+        "item3": "Uma ação imediata será executada ao clique",
+        "item4": "A navegação exige estado ou parâmetros (ex: abrir modal)"
+      },
+      "dont": {
+        "title": "❌ Não use quando",
+        "item1": "A ação é navegação simples — use <code><a></code> com <code>asChild</code>",
+        "item2": "O estado precisa ser alternado — use <code>Toggle</code>",
+        "item3": "Há mais de 3 ações agrupadas — use <code>DropdownMenu</code>"
+      }
+    },
+    "uxWriting": {
+      "title": "✍️ UX Writing",
+      "table": {
+        "element": "Elemento",
+        "rules": "Regras de formato",
+        "correct": "✅ Correto",
+        "avoid": "❌ Evitar",
+        "label": {
+          "name": "Label",
+          "format": "Verbo no infinitivo · máx. 3 palavras · sem pontuação final",
+          "good": "\"Salvar\", \"Enviar pedido\"",
+          "bad": "\"Clique aqui\", \"OK\", \"Salvar!\""
+        },
+        "destructive": {
+          "name": "Botão destrutivo",
+          "format": "Nomeia a ação · deixa claro o que será destruído",
+          "good": "\"Excluir conta\", \"Remover item\"",
+          "bad": "\"Sim\", \"Confirmar\", \"Deletar\""
+        },
+        "cancel": {
+          "name": "Botão cancelar",
+          "format": "Neutro · sem drama · sem \"não\"",
+          "good": "\"Cancelar\", \"Voltar\"",
+          "bad": "\"Não\", \"Fechar\", \"Desistir\""
+        }
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Verbo no infinitivo, ação clara. Primário à direita, secundário à esquerda.",
+        "dont": "Labels vagos não comunicam a ação. O usuário não sabe o que vai acontecer."
+      },
+      "pair2": {
+        "do": "Botão icon-only com <code>aria-label</code> descritivo.",
+        "dont": "Ícone sem <code>aria-label</code> é invisível para leitores de tela."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "variants": "Com variantes (para compor classes fora do componente):"
+    },
+    "examples": {
+      "title": "Exemplos de Código",
+      "basic": "Uso Básico",
+      "withIcon": "Com Ícone",
+      "asChild": "AsChild — como link de navegação",
+      "disabled": "Desabilitado",
+      "variantsRef": "buttonVariants — para elementos não-button"
+    },
+    "variants": {
+      "title": "Variantes e Tamanhos",
+      "visualTitle": "Variantes Disponíveis",
+      "sizeTitle": "Escala de Tamanhos",
+      "items": {
+        "default": "Ação primária de destaque na interface.",
+        "secondary": "Ações de suporte ou caminhos alternativos.",
+        "outline": "Botão secundário com borda, menos ênfase.",
+        "ghost": "Ações sutis, ideal para toolbars e menus.",
+        "link": "Navegação em linha como se fosse um link.",
+        "destructive": "Ações críticas que não podem ser desfeitas."
+      },
+      "sizes": {
+        "sm": "32px · Compacto",
+        "default": "36px · Padrão",
+        "lg": "40px · Destaque",
+        "icon": "Ajuste quadrado"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "table": {
+        "state": "Estado",
+        "visual": "Visual",
+        "trigger": "Como ativar",
+        "initial": "Estado inicial sem props adicionais",
+        "hover": "Passar o cursor sobre o botão",
+        "focus": "Tab — <code>focus-visible:ring-1</code>",
+        "disabled": "Prop: <code>disabled</code> — opacidade 50%"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "variant": "Estilo visual do botão",
+        "size": "Tamanho e padding interno",
+        "asChild": "Substitui o elemento raiz pelo filho via Radix Slot",
+        "disabled": "Desabilita interação e aplica opacidade 50%",
+        "className": "Classes Tailwind adicionais",
+        "children": "Conteúdo do botão (texto, ícone ou combinação)",
+        "onClick": "Callback ao clicar"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "light": "Light (HSL)",
+        "dark": "Dark (HSL)",
+        "primary": "Cor de fundo primária",
+        "radius": "Arredondamento das bordas"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "featuresTitle": "♿ Recursos de Acessibilidade",
+      "keyboardTitle": "⌨️ Navegação por Teclado",
+      "item1": "<strong>Elemento nativo</strong> — usa <code><button></code> para garantir suporte a leitores de tela e estados de formulário.",
+      "item2": "<strong>Aria-label</strong> — quando o botão contém apenas um ícone, deve-se fornecer um <code>aria-label</code> descritivo.",
+      "item3": "<strong>Contraste</strong> — as variantes cumprem os requisitos de contraste mínimo da WCAG (4.5:1).",
+      "keyboard": {
+        "tab": "Move o foco para o botão.",
+        "enter": "Ativa o botão.",
+        "space": "Ativa o botão."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "toggle": "Para estados de alternância binária (On/Off).",
+      "dropdown": "Para agrupar múltiplas ações secundárias.",
+      "alert": "Para confirmações críticas de botões destrutivos."
+    },
+    "notes": {
+      "title": "Notas e Dicas",
+      "tip1": "Evite usar botões Ghost em áreas com muitos elementos visuais para garantir que a ação seja percebida.",
+      "tip2": "Ao usar o botão como link (asChild), certifique-se de que o filho seja um único elemento semanticamente correto."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "O componente Button deve ser instrumentado seguindo a Guideline 21 para rastrear a intenção do usuário.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "click": "button_click",
+        "clickTrigger": "Ao clicar no botão",
+        "clickPayload": "{ label: string }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": "Comportamento Funcional",
+      "accessibility": "Acessibilidade Verificável",
+      "action": "Clicar no botão habilitado",
+      "result": "Callback onClick é disparado exatamente uma vez",
+      "priority": "Alta",
+      "a11yItem1": "Botão é focável via Tab",
+      "a11yItem2": "Enter e Space ativam o botão",
+      "a11yItem3": "Role 'button' é anunciada por leitores de tela",
+      "a11yItem4": "Estado disabled impede interação e é anunciado"
+    }
+  },
+  "en": {
+    "title": "Button",
+    "category": "Form",
+    "type": "Component",
+    "description": "Fundamental interactive element to trigger user actions. Supports multiple variants, loading states, and native integration with the Shadcn/UI ecosystem.",
+    "installation": "Installation",
+    "demonstration": {
+      "title": "Default Demonstration",
+      "labels": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete account",
+        "loading": "Please wait..."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Container</strong> — native <code><button></code> element, or Radix <code>Slot</code> when <code>asChild</code> is true. Receives all HTML button attributes.",
+      "item2": "<strong>Label</strong> — child content (<code>children</code>). Can be text, icon, or a combination of both.",
+      "item3": "<strong>Icon (optional)</strong> — automatically rendered via <code>[&_svg]:size-4</code>. Gap between icon and text managed by <code>gap-2</code>."
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "📋 Mandatory Guidelines",
+        "item1": "Use at most <strong>one primary button</strong> (default variant) per action area.",
+        "item2": "Destructive buttons (destructive variant) require confirmation — wrap them in an <code>AlertDialog</code>.",
+        "item3": "Order buttons: primary on the right, secondary on the left (Western standard).",
+        "item4": "For buttons in a line of text, prefer <code>variant=\"link\"</code>."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Main action (Login, Save)",
+          "u": "Yes, default variant",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Navigation between pages",
+          "u": "Yes, with asChild",
+          "a": "Link (Router)"
+        },
+        "item3": {
+          "s": "Binary selection (Yes/No)",
+          "u": "No",
+          "a": "Toggle / Radio"
+        }
+      },
+      "do": {
+        "title": "✅ Use when",
+        "item1": "The main action of the page needs highlighting",
+        "item2": "The user needs to submit a form",
+        "item3": "An immediate action will be executed on click",
+        "item4": "Navigation requires state or parameters (e.g., open modal)"
+      },
+      "dont": {
+        "title": "❌ Don't use when",
+        "item1": "The action is simple navigation — use <code><a></code> with <code>asChild</code>",
+        "item2": "State needs to be toggled — use <code>Toggle</code>",
+        "item3": "There are more than 3 grouped actions — use <code>DropdownMenu</code>"
+      }
+    },
+    "uxWriting": {
+      "title": "✍️ UX Writing",
+      "table": {
+        "element": "Element",
+        "rules": "Format rules",
+        "correct": "✅ Correct",
+        "avoid": "❌ Avoid",
+        "label": {
+          "name": "Label",
+          "format": "Infinitive verb · max 3 words · no final punctuation",
+          "good": "\"Save\", \"Send order\"",
+          "bad": "\"Click here\", \"OK\", \"Save!\""
+        },
+        "destructive": {
+          "name": "Destructive button",
+          "format": "Names the action · makes clear what will be destroyed",
+          "good": "\"Delete account\", \"Remove item\"",
+          "bad": "\"Yes\", \"Confirm\", \"Delete\""
+        },
+        "cancel": {
+          "name": "Cancel button",
+          "format": "Neutral · no drama · no \"no\"",
+          "good": "\"Cancel\", \"Back\"",
+          "bad": "\"No\", \"Close\", \"Give up\""
+        }
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Infinitive verb, clear action. Primary on the right, secondary on the left.",
+        "dont": "Vague labels don't communicate action. The user doesn't know what will happen."
+      },
+      "pair2": {
+        "do": "Icon-only button with descriptive <code>aria-label</code>.",
+        "dont": "Icon without <code>aria-label</code> is invisible to screen readers."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "variants": "With variants (to compose classes outside the component):"
+    },
+    "examples": {
+      "title": "Code Examples",
+      "basic": "Basic Usage",
+      "withIcon": "With Icon",
+      "asChild": "AsChild — as navigation link",
+      "disabled": "Disabled",
+      "variantsRef": "buttonVariants — for non-button elements"
+    },
+    "variants": {
+      "title": "Variants and Sizes",
+      "visualTitle": "Available Variants",
+      "sizeTitle": "Size Scale",
+      "items": {
+        "default": "Primary highlight action in the interface.",
+        "secondary": "Support actions or alternative paths.",
+        "outline": "Secondary button with border, less emphasis.",
+        "ghost": "Subtle actions, ideal for toolbars and menus.",
+        "link": "Inline navigation as if it were a link.",
+        "destructive": "Critical actions that cannot be undone."
+      },
+      "sizes": {
+        "sm": "32px · Compact",
+        "default": "36px · Standard",
+        "lg": "40px · Highlight",
+        "icon": "Square adjustment"
+      }
+    },
+    "states": {
+      "title": "States",
+      "table": {
+        "state": "State",
+        "visual": "Visual",
+        "trigger": "How to activate",
+        "initial": "Initial state without additional props",
+        "hover": "Hover cursor over the button",
+        "focus": "Tab — <code>focus-visible:ring-1</code>",
+        "disabled": "Prop: <code>disabled</code> — 50% opacity"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "variant": "Visual style of the button",
+        "size": "Size and internal padding",
+        "asChild": "Replaces the root element with the child via Radix Slot",
+        "disabled": "Disables interaction and applies 50% opacity",
+        "className": "Additional Tailwind classes",
+        "children": "Button content (text, icon, or combination)",
+        "onClick": "Click callback"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component part",
+        "light": "Light (HSL)",
+        "dark": "Dark (HSL)",
+        "primary": "Primary background color",
+        "radius": "Border radius"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "featuresTitle": "♿ Accessibility Features",
+      "keyboardTitle": "⌨️ Keyboard Navigation",
+      "item1": "<strong>Native element</strong> — uses <code><button></code> to ensure support for screen readers and form states.",
+      "item2": "<strong>Aria-label</strong> — when the button contains only an icon, a descriptive <code>aria-label</code> must be provided.",
+      "item3": "<strong>Contrast</strong> — variants meet WCAG minimum contrast requirements (4.5:1).",
+      "keyboard": {
+        "tab": "Moves focus to the button.",
+        "enter": "Activates the button.",
+        "space": "Activates the button."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Usually used with",
+      "toggle": "For binary toggle states (On/Off).",
+      "dropdown": "To group multiple secondary actions.",
+      "alert": "For critical confirmations of destructive buttons."
+    },
+    "notes": {
+      "title": "Notes and Tips",
+      "tip1": "Avoid using Ghost buttons in areas with many visual elements to ensure the action is noticed.",
+      "tip2": "When using the button as a link (asChild), make sure the child is a single semantically correct element."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The Button component should be instrumented following Guideline 21 to track user intent.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "click": "button_click",
+        "clickTrigger": "When clicking the button",
+        "clickPayload": "{ label: string }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": "Functional Behavior",
+      "accessibility": "Verifiable Accessibility",
+      "action": "Click enabled button",
+      "result": "onClick callback is fired exactly once",
+      "priority": "High",
+      "a11yItem1": "Button is focusable via Tab",
+      "a11yItem2": "Enter and Space activate the button",
+      "a11yItem3": "Role 'button' is announced by screen readers",
+      "a11yItem4": "Disabled state prevents interaction and is announced"
+    }
+  },
+  "es": {
+    "title": "Button",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Elemento interactivo fundamental para disparar acciones del usuario. Soporta múltiples variantes, estados de carga e integración nativa con el ecosistema Shadcn/UI.",
+    "installation": "Instalación",
+    "demonstration": {
+      "title": "Demostración Estándar",
+      "labels": {
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "delete": "Eliminar cuenta",
+        "loading": "Espere..."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Contenedor</strong> — elemento <code><button></code> nativo, o <code>Slot</code> de Radix cuando <code>asChild</code> es verdadero. Recibe todos los atributos HTML del botón.",
+      "item2": "<strong>Etiqueta (Label)</strong> — contenido hijo (<code>children</code>). Puede ser texto, icono o una combinación de ambos.",
+      "item3": "<strong>Icono (opcional)</strong> — renderizado automáticamente vía <code>[&_svg]:size-4</code>. Espaciado entre icono y texto gestionado por <code>gap-2</code>."
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "📋 Directrizes Obligatorias",
+        "item1": "Use como máximo <strong>un botón primario</strong> (variante default) por área de acción.",
+        "item2": "Los botones destructivos (variante destructive) requieren confirmación — envuélvalos en un <code>AlertDialog</code>.",
+        "item3": "Ordene los botones: primario a la derecha, secundario a la izquierda (estándar occidental).",
+        "item4": "Para botones en línea de texto, prefiera <code>variant=\"link\"</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Acción principal (Login, Guardar)",
+          "u": "Sí, variante default",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Navegación entre páginas",
+          "u": "Sí, con asChild",
+          "a": "Enlace (Router)"
+        },
+        "item3": {
+          "s": "Selección binaria (Sí/No)",
+          "u": "No",
+          "a": "Toggle / Radio"
+        }
+      },
+      "do": {
+        "title": "✅ Úselo cuando",
+        "item1": "La acción principal de la página necesita destacar",
+        "item2": "El usuario necesita enviar un formulario",
+        "item3": "Se ejecutará una acción inmediata al hacer clic",
+        "item4": "La navegación requiere estado o parámetros (ej: abrir modal)"
+      },
+      "dont": {
+        "title": "❌ No lo use cuando",
+        "item1": "La acción es una navegación simple — use <code><a></code> con <code>asChild</code>",
+        "item2": "El estado debe ser alternado — use <code>Toggle</code>",
+        "item3": "Hay más de 3 acciones agrupadas — use <code>DropdownMenu</code>"
+      }
+    },
+    "uxWriting": {
+      "title": "✍️ UX Writing",
+      "table": {
+        "element": "Elemento",
+        "rules": "Reglas de formato",
+        "correct": "✅ Correcto",
+        "avoid": "❌ Evitar",
+        "label": {
+          "name": "Etiqueta",
+          "format": "Verbo en infinitivo · máx. 3 palabras · sin puntuación final",
+          "good": "\"Guardar\", \"Enviar pedido\"",
+          "bad": "\"Haga clic aquí\", \"OK\", \"¡Guardar!\""
+        },
+        "destructive": {
+          "name": "Botón destructivo",
+          "format": "Nombra la acción · deja claro qué será destruido",
+          "good": "\"Eliminar cuenta\", \"Remover ítem\"",
+          "bad": "\"Sí\", \"Confirmar\", \"Borrar\""
+        },
+        "cancel": {
+          "name": "Botón cancelar",
+          "format": "Neutro · sin drama · sin \"no\"",
+          "good": "\"Cancelar\", \"Volver\"",
+          "bad": "\"No\", \"Cerrar\", \"Desistir\""
+        }
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Verbo en infinitivo, acción clara. Primario a la derecha, secundario a la izquierda.",
+        "dont": "Etiquetas vagas no comunican la acción. El usuario no sabe qué pasará."
+      },
+      "pair2": {
+        "do": "Botón de solo icono con <code>aria-label</code> descriptivo.",
+        "dont": "Icono sin <code>aria-label</code> es invisible para lectores de pantalla."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Importación básica:",
+      "variants": "Con variantes (para componer clases fuera do componente):"
+    },
+    "examples": {
+      "title": "Ejemplos de Código",
+      "basic": "Uso Básico",
+      "withIcon": "Con Icono",
+      "asChild": "AsChild — como enlace de navegación",
+      "disabled": "Deshabilitado",
+      "variantsRef": "buttonVariants — para elementos que no son botones"
+    },
+    "variants": {
+      "title": "Variantes y Tamaños",
+      "visualTitle": "Variantes Disponíveis",
+      "sizeTitle": "Escala de Tamaños",
+      "items": {
+        "default": "Acción primaria destacada en la interfaz.",
+        "secondary": "Acciones de apoyo o caminos alternativos.",
+        "outline": "Botón secundario con borde, menos énfasis.",
+        "ghost": "Acciones sutiles, ideal para barras de herramientas y menús.",
+        "link": "Navegación en línea como si fuera un enlace.",
+        "destructive": "Acciones críticas que no se pueden deshacer."
+      },
+      "sizes": {
+        "sm": "32px · Compacto",
+        "default": "36px · Estándar",
+        "lg": "40px · Destacado",
+        "icon": "Ajuste cuadrado"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "table": {
+        "state": "Estado",
+        "visual": "Visual",
+        "trigger": "Cómo activar",
+        "initial": "Estado inicial sin props adicionales",
+        "hover": "Pasar el cursor sobre el botón",
+        "focus": "Tab — <code>focus-visible:ring-1</code>",
+        "disabled": "Prop: <code>disabled</code> — opacidad 50%"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interface TypeScript",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "variant": "Estilo visual del botón",
+        "size": "Tamaño y padding interno",
+        "asChild": "Reemplaza el elemento raíz por el hijo vía Radix Slot",
+        "disabled": "Desactiva la interacción y aplica opacidad 50%",
+        "className": "Clases de Tailwind adicionales",
+        "children": "Contenido del botón (texto, icono o combinación)",
+        "onClick": "Callback al hacer clic"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "light": "Light (HSL)",
+        "dark": "Dark (HSL)",
+        "primary": "Color de fondo primario",
+        "radius": "Radio de borde"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "featuresTitle": "♿ Recursos de Accesibilidad",
+      "keyboardTitle": "⌨️ Navegación por Teclado",
+      "item1": "<strong>Elemento nativo</strong> — usa <code><button></code> para garantizar soporte a lectores de pantalla y estados de formulario.",
+      "item2": "<strong>Aria-label</strong> — cuando el botón contiene solo un icono, se debe proporcionar un <code>aria-label</code> descriptivo.",
+      "item3": "<strong>Contraste</strong> — las variantes cumplen los requisitos de contraste mínimo de WCAG (4.5:1).",
+      "keyboard": {
+        "tab": "Mueve el foco al botón.",
+        "enter": "Activa el botón.",
+        "space": "Activa el botón."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Suele usarse con",
+      "toggle": "Para estados de alternancia binaria (On/Off).",
+      "dropdown": "Para agrupar múltiples acciones secundarias.",
+      "alert": "Para confirmaciones críticas de botones destructivos."
+    },
+    "notes": {
+      "title": "Notas y Consejos",
+      "tip1": "Evite usar botones Ghost en áreas con muitos elementos visuales para asegurar que la acción sea percibida.",
+      "tip2": "Al usar el botón como enlace (asChild), asegúrese de que el hijo sea un único elemento semánticamente correcto."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "El componente Button debe instrumentarse siguiendo la Directriz 21 para rastrear la intención del usuario.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "click": "button_click",
+        "clickTrigger": "Al hacer clic en el botón",
+        "clickPayload": "{ label: string }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": "Comportamiento Funcional",
+      "accessibility": "Accesibilidad Verificable",
+      "action": "Hacer clic en el botón habilitado",
+      "result": "Callback onClick se dispara exactamente una vez",
+      "priority": "Alta",
+      "a11yItem1": "El botón es enfocable vía Tab",
+      "a11yItem2": "Enter y Space activan el botón",
+      "a11yItem3": "El rol 'button' es anunciado por lectores de pantalla",
+      "a11yItem4": "El estado disabled impide la interacción y es anunciado"
+    }
+  }
+}

@@ -26,7 +26,7 @@ Tokens de superfície:
 Tokens de cor de estado aplicados via `className` — nunca via prop inexistente:
 - Warning/Success em Alert e Badge: `className="bg-warning/10 text-warning border-warning/30"`
 
-Referência completa: `03-sistema-design.md` e `16-padroes-design-sistema.md`.
+Referência completa: `03-sistema-design.md` e `../../docs/shared/guidelines/04-padroes-design-sistema.md`.
 
 ---
 
@@ -50,7 +50,7 @@ Regras permanentes:
 - `TooltipProvider` no root da aplicação (App.tsx) — sem ele tooltips não aparecem
 - `aria-invalid` dentro de `FormField`: automático via `FormControl` — não adicionar manualmente. Fora de `FormField`: adicionar manualmente com `aria-errormessage`
 
-Referência completa: `11-acessibilidade.md`.
+Referência completa: `../../docs/shared/guidelines/01-acessibilidade.md`.
 
 ---
 
@@ -69,6 +69,8 @@ Referência: `02-jsx-caracteres-especiais.md`.
 
 ---
 
+---
+
 ## 5. Alinhamento de botões
 
 - Primário sempre à **direita** — usar `justify-end` ou `ml-auto`
@@ -84,7 +86,7 @@ Ao editar qualquer seção de um arquivo existente:
 - Preservar exports, interfaces e props intactos
 - Não modificar código fora do escopo solicitado
 
-Referência: `14-edicoes-parciais.md`.
+Referência: `../../docs/shared/guidelines/03-edicoes-parciais.md`.
 
 ---
 
@@ -108,6 +110,8 @@ Referência por categoria: `04-layout-components.md` a `10-overlay-components.md
 
 ---
 
+---
+
 ## 8. Analytics
 
 Tracking na **camada de produto** — nunca dentro de `/components/ui/`.
@@ -120,22 +124,17 @@ Payload base obrigatório: `{ component, variant?, location, label? }`
 
 Não rastrear `value` de campos sensíveis (senha, CPF, cartão).
 
-Referência completa: `21-analytics.md`.
+Referência completa: `../../docs/shared/guidelines/07-analytics.md`.
 
 ---
 
-## 9. Roteamento SPA
+## 9. Navegação — Storybook como interface principal
 
-O projeto usa roteamento baseado em estado via `currentPage` — **sem React Router, sem URLs reais**.
+A interface principal de documentação é o **Storybook** (`npm run storybook`, porta 6006). Novos componentes são adicionados criando stories — não registrando no `App.tsx`.
 
-A função `navigateTo(path, name)` é obrigatória para toda navegação e deve:
-1. Anunciar a mudança via `aria-live`
-2. Mover foco para `#main-content`
-3. Disparar `page_view` analytics
+O `App.tsx` é um **sandbox de desenvolvimento** e rota `?view=admin`. Não usar para fins de navegação de documentação.
 
-Não usar `<a href>` para navegação interna — usar `<button>` com `onClick={() => navigateTo(...)}`.
-
-Referência: `15-arquitetura-projeto.md` e `17-system-design.md`.
+Para adicionar um componente: criar `*Docs.tsx` + `translations.json` + `*.stories.tsx` (5 arquivos). Ver `12-arquitetura-projeto.md`.
 
 ---
 
@@ -153,31 +152,29 @@ Regras rápidas:
 - Tooltip: complementa o label visível, não repete
 - Dialog destrutivo: título = ação, descrição = consequência, botão primário = repete o verbo
 
-Referência completa: `19-tom-de-voz.md`.
+Referência completa: `../../docs/shared/guidelines/05-tom-de-voz.md`.
 
 ---
 
-## 11. SEO e GEO (SPA)
+## 11. SEO e GEO (Storybook iframe)
 
-Cada página do projeto atualiza dinamicamente via `useEffect`:
-- `document.title` — formato: `"[Componente] — Design System"`
-- `meta[name="description"]` — máximo 155 caracteres
-- Schema.org JSON-LD via `<script type="application/ld+json">`
+Todo ComponentDocs usa o hook `useSeoEffect` de `@/lib/use-seo.ts`. Ele detecta o iframe do Storybook e escreve no documento pai automaticamente.
 
-Breadcrumb: único componente com impacto direto em rich snippets — implementar `BreadcrumbList` Schema.org em todas as páginas com hierarquia.
+```tsx
+useSeoEffect({ title: "Button — Formulários · DS", description: "...", locale: "pt-BR", componentSlug: "button" });
+```
 
-Referência completa: `20-seo-geo.md`.
+Referência completa: `../../docs/shared/guidelines/06-seo-geo.md`.
 
 ---
 
 ## 12. Arquitetura — restrições
 
 - Máximo de componentes por arquivo: manter pequeno e extrair helpers para arquivos separados
-- `SidebarProvider` envolve o layout raiz no `App.tsx`
 - `Toaster` (Sonner) no root — `position="bottom-right" richColors`
 - `TooltipProvider` no root
 - Espaçamento: múltiplos de 8px
 - Calendar: `locale={ptBR}` de `react-day-picker/locale` sempre obrigatório
 - Carousel auto-play: plugin `embla-carousel-autoplay` — não é nativo
 
-Referência: `15-arquitetura-projeto.md` e `17-system-design.md`.
+Referência: `12-arquitetura-projeto.md` e `13-system-design.md`.

@@ -1,0 +1,122 @@
+{
+  "pt-BR": {
+    "title": "Icons",
+    "category": "Foundations",
+    "type": "Biblioteca",
+    "description": "Todos os ícones do Design System são fornecidos pela biblioteca Lucide — open-source, consistentes e acessíveis. Clique em qualquer ícone para copiar o statement de importação.",
+    "iconsAvailable": "{count} ícones disponíveis",
+    "search": {
+      "placeholder": "Buscar ícone por nome… ex: arrow, user, settings",
+      "results": "{count} resultado{plural} para “{query}”",
+      "count": "{count} ícones",
+      "noResults": "Nenhum ícone encontrado",
+      "noResultsSub": "Tente um termo diferente"
+    },
+    "copy": {
+      "tooltip": "Clique para copiar",
+      "copied": "Copiado!"
+    },
+    "howToUse": {
+      "title": "Como usar",
+      "individual": {
+        "title": "Importação individual (recomendada)"
+      },
+      "sizes": {
+        "title": "Tamanhos padrão do projeto"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "decorative": {
+        "title": "Ícone decorativo — com texto adjacente"
+      },
+      "functional": {
+        "title": "Ícone funcional — sem texto adjacente"
+      },
+      "rule1": "Sempre <code>aria-hidden=\"true\"</code> em ícones decorativos — o texto adjacente já descreve a ação",
+      "rule2": "<code>aria-label</code> no elemento pai quando o ícone é a única comunicação visual",
+      "rule3": "Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto",
+      "rule4": "Tamanho mínimo recomendado: <code>h-4 w-4</code> (16px) para legibilidade"
+    }
+  },
+  "en": {
+    "title": "Icons",
+    "category": "Foundations",
+    "type": "Library",
+    "description": "All Design System icons are provided by the Lucide library — open-source, consistent and accessible. Click any icon to copy its import statement.",
+    "iconsAvailable": "{count} icons available",
+    "search": {
+      "placeholder": "Search icon by name… e.g. arrow, user, settings",
+      "results": "{count} result{plural} for “{query}”",
+      "count": "{count} icons",
+      "noResults": "No icons found",
+      "noResultsSub": "Try a different term"
+    },
+    "copy": {
+      "tooltip": "Click to copy",
+      "copied": "Copied!"
+    },
+    "howToUse": {
+      "title": "How to use",
+      "individual": {
+        "title": "Individual import (recommended)"
+      },
+      "sizes": {
+        "title": "Project standard sizes"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "decorative": {
+        "title": "Decorative icon — with adjacent text"
+      },
+      "functional": {
+        "title": "Functional icon — without adjacent text"
+      },
+      "rule1": "Always <code>aria-hidden=\"true\"</code> on decorative icons — adjacent text already describes the action",
+      "rule2": "<code>aria-label</code> on the parent element when the icon is the only visual communication",
+      "rule3": "Color is never the sole state indicator — always pair with icon + text",
+      "rule4": "Minimum recommended size: <code>h-4 w-4</code> (16px) for readability"
+    }
+  },
+  "es": {
+    "title": "Icons",
+    "category": "Foundations",
+    "type": "Biblioteca",
+    "description": "Todos los íconos del Design System son proporcionados por la biblioteca Lucide — open-source, consistentes y accesibles. Haz clic en cualquier ícono para copiar su import.",
+    "iconsAvailable": "{count} íconos disponibles",
+    "search": {
+      "placeholder": "Buscar ícono por nombre… ej: arrow, user, settings",
+      "results": "{count} resultado{plural} para “{query}”",
+      "count": "{count} íconos",
+      "noResults": "Ningún ícono encontrado",
+      "noResultsSub": "Prueba un término diferente"
+    },
+    "copy": {
+      "tooltip": "Clic para copiar",
+      "copied": "¡Copiado!"
+    },
+    "howToUse": {
+      "title": "Cómo usar",
+      "individual": {
+        "title": "Importación individual (recomendada)"
+      },
+      "sizes": {
+        "title": "Tamaños estándar del proyecto"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "decorative": {
+        "title": "Ícono decorativo — con texto adyacente"
+      },
+      "functional": {
+        "title": "Ícono funcional — sin texto adyacente"
+      },
+      "rule1": "Siempre <code>aria-hidden=\"true\"</code> en íconos decorativos — el texto adyacente ya describe la acción",
+      "rule2": "<code>aria-label</code> en el elemento padre cuando el ícono es la única comunicación visual",
+      "rule3": "El color nunca es el único indicador de estado — siempre acompañar con ícono + texto",
+      "rule4": "Tamaño mínimo recomendado: <code>h-4 w-4</code> (16px) para legibilidad"
+    }
+  }
+}

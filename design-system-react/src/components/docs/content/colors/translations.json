@@ -1,0 +1,77 @@
+{
+  "pt-BR": {
+    "title": "Sistema de Cores",
+    "category": "Foundations",
+    "description": "Nossa paleta de cores é estruturada para garantir acessibilidade e flexibilidade visual entre os diferentes temas de marca.",
+    "nortear": {
+      "title": "Tema Nortear (Padrão)",
+      "subtitle": "Identidade corporativa neutra e moderna."
+    },
+    "crystal": {
+      "title": "Tema Crystal",
+      "subtitle": "Foco em tons energéticos de Indigo e Violeta."
+    },
+    "industrial": {
+      "title": "Tema Industrial",
+      "subtitle": "Visual técnico com alto contraste e tons terrosos."
+    },
+    "usage": {
+      "title": "Diretrizes de Uso",
+      "content": "Sempre prefira utilizar os tokens semânticos (ex: <code>bg-primary</code>) em vez de valores HEX fixos.",
+      "do": "Usar tokens semânticos",
+      "dont": "Evitar HEX fixo no código"
+    },
+    "copy": "Copiado!",
+    "onPage": "Nesta Página"
+  },
+  "en": {
+    "title": "Color System",
+    "category": "Foundations",
+    "description": "Our color palette is structured to ensure accessibility and visual flexibility across different brand themes.",
+    "nortear": {
+      "title": "Nortear Theme (Default)",
+      "subtitle": "Neutral and modern corporate identity."
+    },
+    "crystal": {
+      "title": "Crystal Theme",
+      "subtitle": "Focus on energetic Indigo and Violet tones."
+    },
+    "industrial": {
+      "title": "Industrial Theme",
+      "subtitle": "Technical look with high contrast and earthy tones."
+    },
+    "usage": {
+      "title": "Usage Guidelines",
+      "content": "Always prefer using semantic tokens (e.g., <code>bg-primary</code>) instead of fixed HEX values.",
+      "do": "Use semantic tokens",
+      "dont": "Avoid fixed HEX in code"
+    },
+    "copy": "Copied!",
+    "onPage": "On this Page"
+  },
+  "es": {
+    "title": "Sistema de Colores",
+    "category": "Foundations",
+    "description": "Nuestra paleta de colores está estructurada para garantizar la accesibilidad y la flexibilidad visual entre los diferentes temas de marca.",
+    "nortear": {
+      "title": "Tema Nortear (Predeterminado)",
+      "subtitle": "Identidad corporativa neutra y moderna."
+    },
+    "crystal": {
+      "title": "Tema Crystal",
+      "subtitle": "Enfoque en tonos energéticos de Indigo y Violeta."
+    },
+    "industrial": {
+      "title": "Tema Industrial",
+      "subtitle": "Visual técnico con alto contraste y tonos terrosos."
+    },
+    "usage": {
+      "title": "Directrices de Uso",
+      "content": "Siempre prefiera utilizar los tokens semánticos (ej: <code>bg-primary</code>) en lugar de valores HEX fijos.",
+      "do": "Usar tokens semánticos",
+      "dont": "Evitar HEX fijo en el código"
+    },
+    "copy": "¡Copiado!",
+    "onPage": "En esta página"
+  }
+}

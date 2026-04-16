@@ -1,0 +1,150 @@
+apiVersion: backstage.io/v1beta2
+kind: Template
+metadata:
+  name: design-system-scaffold
+  title: Design System — Multi-Stack
+  description: >
+    Template para criar um novo design system com documentação centralizada.
+    Escolha entre React (shadcn/ui), Vue (shadcn-vue), Svelte (shadcn-svelte)
+    ou Vanilla JS (Basecoat UI). A documentação é sempre a mesma — apenas os
+    exemplos de código variam por stack.
+  tags:
+    - design-system
+    - frontend
+    - component-library
+    - react
+    - vue
+    - svelte
+    - vanilla
+
+spec:
+  owner: design-team
+  type: library
+
+  parameters:
+    - title: Informações do Projeto
+      required:
+        - projectName
+        - description
+        - owner
+      properties:
+        projectName:
+          type: string
+          title: Nome do Projeto
+          description: Identificador único (ex. "minha-empresa-ds")
+          pattern: '^[a-z0-9-]+$'
+          ui:autofocus: true
+
+        description:
+          type: string
+          title: Descrição
+          description: Breve descrição do design system
+
+        owner:
+          type: string
+          title: Time responsável
+          description: Squad ou time que mantém o projeto (ex. "squad-plataforma")
+
+    - title: Stack e Repositório
+      required:
+        - stackChoice
+        - repoUrl
+      properties:
+        stackChoice:
+          type: string
+          title: Framework
+          description: >
+            Escolha o framework. A documentação textual é idêntica em todos;
+            apenas os exemplos de código são adaptados ao framework escolhido.
+          enum:
+            - react
+            - vue
+            - svelte
+            - vanilla
+          enumNames:
+            - "React (shadcn/ui + Radix)"
+            - "Vue 3 (shadcn-vue + Reka UI)"
+            - "Svelte 5 (shadcn-svelte + Bits UI)"
+            - "Vanilla JS (Basecoat UI + Tailwind)"
+          default: react
+
+        includeStorybook:
+          type: boolean
+          title: Incluir Storybook
+          default: true
+
+        includeBackstageIntegration:
+          type: boolean
+          title: Registrar no catálogo Backstage
+          description: Cria catalog-info.yaml para aparecer no portal
+          default: true
+
+        repoUrl:
+          title: Repositório
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  steps:
+    - id: fetch-template
+      name: Buscar Template
+      action: fetch:template
+      input:
+        url: ./
+        values:
+          projectName: ${{ parameters.projectName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          stackChoice: ${{ parameters.stackChoice }}
+          includeStorybook: ${{ parameters.includeStorybook }}
+
+    - id: copy-shared-docs
+      name: Copiar Documentação Compartilhada
+      action: fetch:plain
+      input:
+        url: ./docs/shared
+        targetPath: docs/shared
+
+    - id: copy-stack
+      name: Copiar Stack Selecionada
+      action: fetch:plain
+      input:
+        url: ./stacks/${{ parameters.stackChoice }}
+        targetPath: ./
+
+    - id: remove-unused-stacks
+      name: Remover Stacks Não Utilizadas
+      action: fs:delete
+      input:
+        files:
+          - stacks/
+
+    - id: publish
+      name: Publicar Repositório
+      action: publish:github
+      input:
+        allowedHosts:
+          - github.com
+        description: ${{ parameters.description }}
+        repoUrl: ${{ parameters.repoUrl }}
+        defaultBranch: main
+        repoVisibility: private
+
+    - id: register
+      name: Registrar no Catálogo
+      if: ${{ parameters.includeBackstageIntegration }}
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: Repositório no GitHub
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Ver no Catálogo Backstage
+        if: ${{ parameters.includeBackstageIntegration }}
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

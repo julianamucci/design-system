@@ -7,14 +7,23 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
+import { docsApiPlugin } from '../scripts/vite-plugin-docs-api.ts';
+
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
+  plugins: [
+    vue(),
+    tailwindcss(),
+    docsApiPlugin({
+      sharedContentPath: path.resolve(dirname, '../docs/shared/content'),
+    }),
+  ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src')
+      '@': resolve(__dirname, './src'),
+      '@shared': path.resolve(dirname, '../docs/shared'),
     }
   },
   test: {

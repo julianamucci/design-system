@@ -1,154 +1,98 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { fn, userEvent, within, expect } from 'storybook/test';
 import { Button } from './index';
+import ButtonDocs from '@/components/docs/ButtonDocs.vue';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-/**
- * Botão principal do design system, utilizado para ações do usuário.
- * Construído sobre o Primitive da Reka UI para máxima acessibilidade.
- */
-const meta: Meta<typeof Button> = {
+// ─── Meta ─────────────────────────────────────────────────────────────────────
+
+const meta = {
   title: 'UI/Button',
   component: Button,
   tags: ['autodocs'],
   parameters: {
-    docs: {
-      description: {
-        component: `
-Botão principal do design system, utilizado para disparar ações do usuário e navegação.
-
-**Categoria**: Interaction  
-**Complexidade**: Simples
-
----
-
-## 1. Visão Geral
-
-### 1.1 Anatomia
-1. **Label**: Texto claro que indica a ação.
-2. **Ícone (Opcional)**: Auxilia na identificação visual rápida.
-
-### 1.2 Quando e Como Usar
-- **Use quando**: A ação principal da página precisa de destaque (default), em formulários, ou para disparar modais.
-- **Não use quando**: A ação for puramente navegacional (use Link) ou houver muitas ações primárias concorrendo na mesma tela.
-
-### 1.3 UX Writing
-- **Label**: Use verbo no infinitivo com no máximo 3 palavras (ex: *Salvar Alterações*).
-- **Evitar**: Palavras genéricas como *Clique aqui*, *Ok* ou *Sim*.
-
-## 2. Do & Don't
-- ✅ **Faça:** Diferencie claramente a ação principal das secundárias usando variantes.
-- ❌ **Não faça:** Evite colocar vários botões primários lado a lado.
-
-## 3. Qualidade & Testes
-
-### 3.1 Acessibilidade
-- Navegação completa via \`Tab\` garantida.
-- Foco visível (\`focus-visible\`) com alto contraste integrado ao Tailwind.
-- Suporte a \`aria-label\` (obrigatório para botões apenas com ícone).
-
-### 3.2 Critérios de Teste
-- O evento \`@click\` **não** pode ser emitido se o botão possuir a prop \`disabled\`.
-- O visual do componente não deve quebrar ao alternar para o *Dark Mode*.
-        `
-      }
-    }
+    docs: { page: withAutoDocsTab(ButtonDocs) },
   },
   argTypes: {
     variant: {
       control: 'select',
+      description: 'Define o estilo visual do botão',
       options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
-      description: 'Define o estilo visual do botão, alterando cores e bordas.',
     },
     size: {
       control: 'select',
+      description: 'Define o tamanho e o preenchimento',
       options: ['default', 'sm', 'lg', 'icon', 'icon-sm', 'icon-lg'],
-      description: 'Define as dimensões espaciais e o preenchimento do botão.',
     },
-    as: {
-      control: 'text',
-      description: 'Determina qual tag HTML ou componente será renderizado como raiz.',
-    },
-    asChild: {
+    disabled: {
       control: 'boolean',
-      description: 'Se verdadeiro, o botão delegará a renderização ao seu único filho direto (Radix Slot).',
+      description: 'Desabilita o botão — remove interatividade e aplica opacidade 50%',
     },
-    default: {
-      control: 'text',
-      description: 'Conteúdo principal do botão (texto ou outros componentes).',
-    },
+    onClick: { action: 'clicked' },
   },
   args: {
     variant: 'default',
     size: 'default',
-    default: 'Button',
-    asChild: false,
+    disabled: false,
+    onClick: fn(),
   },
-};
+} satisfies Meta<typeof Button>;
 
 export default meta;
-type Story = StoryObj<typeof Button>;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+// ─── Playground ───────────────────────────────────────────────────────────────
+
+/**
+ * O Playground é a story principal onde todas as propriedades podem ser testadas interativamente.
+ *
+ * @summary Demonstração interativa do componente Button.
+ */
+export const Playground: Story = {
   render: (args) => ({
     components: { Button },
-    setup() {
-      return { args };
-    },
-    template: '<Button v-bind="args">{{ args.default }}</Button>',
+    setup() { return { args }; },
+    template: `<Button v-bind="args" @click="args.onClick">Button</Button>`,
   }),
-};
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button');
 
-export const Destructive: Story = {
-  args: {
-    variant: 'destructive',
-    default: 'Destructive Action',
+    await step('Clica no botão habilitado', async () => {
+      await userEvent.click(button);
+      await expect(args.onClick).toHaveBeenCalledTimes(1);
+    });
+
+    await step('Botão permanece habilitado após interação', async () => {
+      await expect(button).toBeEnabled();
+      await expect(button).not.toHaveAttribute('disabled');
+    });
+
+    await step('Botão recebe foco → focus-visible disponível', async () => {
+      button.focus();
+      await expect(button).toHaveFocus();
+    });
+
+    await step('Pressiona Enter com foco → onClick dispara', async () => {
+      button.focus();
+      const countBefore = (args.onClick as ReturnType<typeof fn>).mock.calls.length;
+      await userEvent.keyboard('{Enter}');
+      await expect(args.onClick).toHaveBeenCalledTimes(countBefore + 1);
+    });
+
+    await step('Pressiona Space com foco → onClick dispara', async () => {
+      button.focus();
+      const countBefore = (args.onClick as ReturnType<typeof fn>).mock.calls.length;
+      await userEvent.keyboard(' ');
+      await expect(args.onClick).toHaveBeenCalledTimes(countBefore + 1);
+    });
   },
-};
-
-export const Outline: Story = {
-  args: {
-    variant: 'outline',
-    default: 'Outline Button',
-  },
-};
-
-export const Secondary: Story = {
-  args: {
-    variant: 'secondary',
-    default: 'Secondary Action',
-  },
-};
-
-export const Ghost: Story = {
-  args: {
-    variant: 'ghost',
-    default: 'Ghost Button',
-  },
-};
-
-export const Link: Story = {
-  args: {
-    variant: 'link',
-    default: 'Link Style',
-  },
-};
-
-export const Small: Story = {
-  args: {
-    size: 'sm',
-    default: 'Small',
-  },
-};
-
-export const Large: Story = {
-  args: {
-    size: 'lg',
-    default: 'Large',
-  },
-};
-
-export const Icon: Story = {
-  args: {
-    size: 'icon',
-    default: '🔥',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Cobre os 5 critérios de teste: clique, estado habilitado, foco, Enter e Space. Veja a aba **Interactions**.',
+      },
+    },
   },
 };

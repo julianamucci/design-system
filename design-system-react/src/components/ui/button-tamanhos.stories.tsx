@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { within, expect } from "@storybook/test";
+import { within, expect } from "storybook/test";
 import { Mail, X } from "lucide-react";
 import { Button } from "./button";
 

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" fill="none" aria-label="Success illustration">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="80" fill="currentColor" opacity="0.06"/>
+  <!-- Outer ring -->
+  <circle cx="100" cy="100" r="52" stroke="currentColor" stroke-width="3" opacity="0.2"/>
+  <!-- Inner filled circle -->
+  <circle cx="100" cy="100" r="40" fill="currentColor" opacity="0.12"/>
+  <!-- Checkmark -->
+  <path d="M80 100 L94 114 L122 86" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+  <!-- Sparkles -->
+  <path d="M148 60 L150 54 L152 60 L158 62 L152 64 L150 70 L148 64 L142 62 Z" fill="currentColor" opacity="0.3"/>
+  <path d="M56 138 L57.5 134 L59 138 L63 139.5 L59 141 L57.5 145 L56 141 L52 139.5 Z" fill="currentColor" opacity="0.2"/>
+</svg>

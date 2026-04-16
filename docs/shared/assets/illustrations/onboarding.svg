@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" fill="none" aria-label="Onboarding illustration">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="80" fill="currentColor" opacity="0.05"/>
+  <!-- Person silhouette -->
+  <circle cx="100" cy="72" r="20" fill="currentColor" opacity="0.2"/>
+  <path d="M66 140c0-18.8 15.2-34 34-34s34 15.2 34 34" fill="currentColor" opacity="0.15"/>
+  <!-- Wave / greeting -->
+  <path d="M128 68c4-6 10-8 14-4s2 12-2 16l-10 10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
+  <!-- Stars -->
+  <path d="M44 64 L46 58 L48 64 L54 66 L48 68 L46 74 L44 68 L38 66 Z" fill="currentColor" opacity="0.25"/>
+  <path d="M154 120 L155.5 115 L157 120 L162 121.5 L157 123 L155.5 128 L154 123 L149 121.5 Z" fill="currentColor" opacity="0.2"/>
+</svg>

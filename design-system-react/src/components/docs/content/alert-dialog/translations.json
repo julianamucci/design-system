@@ -1,0 +1,350 @@
+{
+  "pt-BR": {
+    "title": "Alert Dialog",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Diálogo modal de confirmação que interrompe o fluxo do usuário para exigir uma decisão explícita antes de executar ações destrutivas ou irreversíveis.",
+    "demonstration": {
+      "title": "Demonstração Padrão",
+      "trigger": "Excluir conta",
+      "confirmTitle": "Tem certeza absoluta?",
+      "confirmDesc": "Esta ação não pode ser desfeita. Isso excluirá permanentemente sua conta e removerá todos os seus dados de nossos servidores.",
+      "cancel": "Cancelar",
+      "action": "Sim, excluir conta"
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "table": {
+        "part": "Parte",
+        "component": "Componente",
+        "function": "Função",
+        "root": "Container de estado",
+        "trigger": "Elemento que abre o diálogo",
+        "content": "Painel modal centralizado",
+        "header": "Container de título e descrição",
+        "title": "Título acessível (h2)",
+        "desc": "Informação detalhada do alerta",
+        "footer": "Alinhamento das ações (direita)",
+        "cancel": "Ação neutra (fecha)",
+        "action": "Ação principal (executa)"
+      }
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "📋 Diretrizes de Uso",
+        "item1": "Use apenas para ações <strong>destrutivas</strong> ou com impacto significativo.",
+        "item2": "Sempre ofereça uma opção clara de <strong>cancelamento</strong>.",
+        "item3": "O foco deve ser bloqueado dentro do modal (focus trap).",
+        "item4": "O modal deve ser fechado ao clicar no backdrop ou pressionar Esc."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar Alert Dialog?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Excluir um registro permanentemente",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Informar sucesso em uma operação",
+          "u": "Não",
+          "a": "Sonner / Toast"
+        },
+        "item3": {
+          "s": "Formulário complexo de edição",
+          "u": "Não",
+          "a": "Dialog / Sheet"
+        }
+      }
+    },
+    "uxWriting": {
+      "title": "✍️ UX Writing",
+      "table": {
+        "title": {
+          "name": "Título",
+          "format": "Pergunta clara ou afirmação direta",
+          "good": "\"Excluir projeto?\"",
+          "bad": "\"Tem certeza?\""
+        },
+        "description": {
+          "name": "Descrição",
+          "format": "Explica a consequência e se é reversível",
+          "good": "\"Esta ação não pode ser desfeita.\"",
+          "bad": "\"Clique em OK para continuar.\""
+        }
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "open": "Controla se o diálogo está visível",
+        "onOpenChange": "Callback disparado ao abrir ou fechar",
+        "asChild": "Permite usar um elemento customizado no Trigger/Action"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "item1": "Foco automático no elemento de ação menos destrutivo ao abrir.",
+      "item2": "Retorno de foco ao trigger após o fechamento.",
+      "item3": "Aria-labelledby e aria-describedby vinculados automaticamente.",
+      "keyboard": {
+        "esc": "Fecha o diálogo sem executar a ação.",
+        "tab": "Navega ciclicamente entre os botões do footer."
+      }
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastreie o ciclo de vida da decisão do usuário conforme Guideline 21.",
+      "table": {
+        "open": "dialog_open",
+        "confirm": "dialog_confirm",
+        "cancel": "dialog_close"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": "Comportamento Funcional",
+      "accessibility": "Acessibilidade Verificável",
+      "action": "Clicar em Cancelar",
+      "result": "O diálogo fecha e o foco retorna ao trigger",
+      "priority": "Crítica"
+    }
+  },
+  "en": {
+    "title": "Alert Dialog",
+    "category": "Overlay",
+    "type": "Component",
+    "description": "A modal confirmation dialog that interrupts the user flow to require an explicit decision before performing destructive or irreversible actions.",
+    "demonstration": {
+      "title": "Default Demonstration",
+      "trigger": "Delete account",
+      "confirmTitle": "Are you absolutely sure?",
+      "confirmDesc": "This action cannot be undone. This will permanently delete your account and remove all your data from our servers.",
+      "cancel": "Cancel",
+      "action": "Yes, delete account"
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "table": {
+        "part": "Part",
+        "component": "Component",
+        "function": "Function",
+        "root": "State container",
+        "trigger": "Element that opens the dialog",
+        "content": "Centered modal panel",
+        "header": "Title and description container",
+        "title": "Accessible title (h2)",
+        "desc": "Detailed alert information",
+        "footer": "Action alignment (right)",
+        "cancel": "Neutral action (closes)",
+        "action": "Main action (executes)"
+      }
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "📋 Usage Guidelines",
+        "item1": "Use only for <strong>destructive</strong> actions or significant impact.",
+        "item2": "Always offer a clear <strong>cancel</strong> option.",
+        "item3": "Focus must be locked inside the modal (focus trap).",
+        "item4": "The modal should be closed when clicking the backdrop or pressing Esc."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use Alert Dialog?",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Deleting a record permanently",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Informing success in an operation",
+          "u": "No",
+          "a": "Sonner / Toast"
+        },
+        "item3": {
+          "s": "Complex editing form",
+          "u": "No",
+          "a": "Dialog / Sheet"
+        }
+      }
+    },
+    "uxWriting": {
+      "title": "✍️ UX Writing",
+      "table": {
+        "title": {
+          "name": "Title",
+          "format": "Clear question or direct statement",
+          "good": "\"Delete project?\"",
+          "bad": "\"Are you sure?\""
+        },
+        "description": {
+          "name": "Description",
+          "format": "Explains the consequence and if it's reversible",
+          "good": "\"This action cannot be undone.\"",
+          "bad": "\"Click OK to continue.\""
+        }
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "open": "Controls if the dialog is visible",
+        "onOpenChange": "Callback fired when opening or closing",
+        "asChild": "Allows using a custom element on the Trigger/Action"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "item1": "Automatic focus on the least destructive action element when opening.",
+      "item2": "Focus return to the trigger after closing.",
+      "item3": "Aria-labelledby and aria-describedby automatically linked.",
+      "keyboard": {
+        "esc": "Closes the dialog without executing the action.",
+        "tab": "Cyclically navigates between the footer buttons."
+      }
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Track the user's decision lifecycle according to Guideline 21.",
+      "table": {
+        "open": "dialog_open",
+        "confirm": "dialog_confirm",
+        "cancel": "dialog_close"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": "Functional Behavior",
+      "accessibility": "Verifiable Accessibility",
+      "action": "Clicking Cancel",
+      "result": "The dialog closes and focus returns to the trigger",
+      "priority": "Critical"
+    }
+  },
+  "es": {
+    "title": "Alert Dialog",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Un diálogo modal de confirmación que interrumpe el flujo del usuario para requerir una decisión explícita antes de realizar acciones destructivas o irreversibles.",
+    "demonstration": {
+      "title": "Demostración Estándar",
+      "trigger": "Eliminar cuenta",
+      "confirmTitle": "¿Está totalmente seguro?",
+      "confirmDesc": "Esta acción no se puede deshacer. Esto eliminará permanentemente su cuenta y removerá todos sus datos de nuestros servidores.",
+      "cancel": "Cancelar",
+      "action": "Sí, eliminar cuenta"
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "table": {
+        "part": "Parte",
+        "component": "Componente",
+        "function": "Função",
+        "root": "Contenedor de estado",
+        "trigger": "Elemento que abre el diálogo",
+        "content": "Panel modal centrado",
+        "header": "Contenedor de título y descripción",
+        "title": "Título accesible (h2)",
+        "desc": "Información detallada de la alerta",
+        "footer": "Alineación de acciones (derecha)",
+        "cancel": "Acción neutra (cierra)",
+        "action": "Acción principal (ejecuta)"
+      }
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "📋 Directrizes de Uso",
+        "item1": "Use solo para acciones <strong>destructivas</strong> o con impacto significativo.",
+        "item2": "Ofrezca siempre una opción clara de <strong>cancelación</strong>.",
+        "item3": "El foco debe estar bloqueado dentro del modal (focus trap).",
+        "item4": "El modal debe cerrarse al hacer clic en el fondo o presionar Esc."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar Alert Dialog?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Eliminar un registro permanentemente",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Informar éxito en una operación",
+          "u": "No",
+          "a": "Sonner / Toast"
+        },
+        "item3": {
+          "s": "Formulario complejo de edición",
+          "u": "No",
+          "a": "Dialog / Sheet"
+        }
+      }
+    },
+    "uxWriting": {
+      "title": "✍️ UX Writing",
+      "table": {
+        "title": {
+          "name": "Título",
+          "format": "Pregunta clara o afirmación directa",
+          "good": "\"¿Eliminar proyecto?\"",
+          "bad": "\"¿Está seguro?\""
+        },
+        "description": {
+          "name": "Descripción",
+          "format": "Explica la consecuencia y se es reversible",
+          "good": "\"Esta acción no se puede deshacer.\"",
+          "bad": "\"Haga clic en OK para continuar.\""
+        }
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "open": "Controla si el diálogo es visible",
+        "onOpenChange": "Callback disparado al abrir o cerrar",
+        "asChild": "Permite usar um elemento personalizado en el Trigger/Action"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "item1": "Foco automático en el elemento de acción menos destructivo al abrir.",
+      "item2": "Retorno de foco al trigger después del cierre.",
+      "item3": "Aria-labelledby y aria-describedby vinculados automáticamente.",
+      "keyboard": {
+        "esc": "Cierra el diálogo sin ejecutar la acción.",
+        "tab": "Navega cíclicamente entre los botones del footer."
+      }
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastree el ciclo de vida de la decisión del usuario según la Directriz 21.",
+      "table": {
+        "open": "dialog_open",
+        "confirm": "dialog_confirm",
+        "cancel": "dialog_close"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": "Comportamiento Funcional",
+      "accessibility": "Accesibilidad Verificable",
+      "action": "Hacer clic en Cancelar",
+      "result": "El diálogo se cierra y el foco vuelve al disparador",
+      "priority": "Crítica"
+    }
+  }
+}

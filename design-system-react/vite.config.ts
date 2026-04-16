@@ -6,14 +6,23 @@ import path from 'path';
 import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
+import { docsApiPlugin } from '../scripts/vite-plugin-docs-api.ts';
+
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    docsApiPlugin({
+      sharedContentPath: path.resolve(dirname, '../docs/shared/content'),
+    }),
+  ],
   resolve: {
     alias: {
-      "@": path.resolve(dirname, "./src")
+      "@": path.resolve(dirname, "./src"),
+      "@shared": path.resolve(dirname, "../docs/shared"),
     }
   },
   test: {

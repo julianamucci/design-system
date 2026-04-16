@@ -1,0 +1,21 @@
+{
+  "name": "design-system-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "validate:docs": "npx tsx scripts/validate-docs-consistency.ts",
+    "dev:react":    "npm run dev --prefix design-system-react",
+    "dev:vue":      "npm run dev --prefix design-system-vue",
+    "dev:svelte":   "npm run dev --prefix design-system-svelte",
+    "dev:vanilla":  "npm run dev --prefix design-system-basecoat",
+    "storybook:react":   "npm run storybook --prefix design-system-react",
+    "storybook:vue":     "npm run storybook --prefix design-system-vue",
+    "storybook:svelte":  "npm run storybook --prefix design-system-svelte",
+    "storybook:vanilla": "npm run storybook --prefix design-system-basecoat"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  }
+}
