@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 export interface DocSection {
   id: string;
@@ -21,17 +21,19 @@ function useActiveSection(ids: string[]) {
   const [activeId, setActiveId] = useState<string>(ids[0]);
 
   useEffect(() => {
-    const observers = ids.map((id) => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) { setActiveId(entry.target.id); break; }
+        }
+      },
+      { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
+    );
+    ids.forEach((id) => {
       const el = document.getElementById(id);
-      if (!el) return null;
-      const observer = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveId(id); },
-        { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
-      );
-      observer.observe(el);
-      return observer;
+      if (el) observer.observe(el);
     });
-    return () => observers.forEach((obs) => obs?.disconnect());
+    return () => observer.disconnect();
   }, [ids]);
 
   return activeId;
@@ -42,21 +44,16 @@ export function DocsNav({ sections }: DocsNavProps) {
   const activeId = useActiveSection(ids);
   const blocks = Array.from(new Set(sections.map(s => s.block))).sort((a, b) => a - b);
 
-  const scrollTo = (id: string) => {
+  const scrollTo = useCallback((id: string) => {
     const el = document.getElementById(id);
     if (el) {
-      const offset = 80; // Account for the sticky header
+      const offset = 80;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = el.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
+      const offsetPosition = elementRect - bodyRect - offset;
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
-  };
+  }, []);
 
   return (
     <nav

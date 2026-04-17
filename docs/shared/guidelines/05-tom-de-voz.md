@@ -285,6 +285,47 @@ Antes de considerar o texto de um componente finalizado:
 - [ ] Pontuação: ponto final só em frases completas
 - [ ] Limite de caracteres respeitado para o tipo de elemento
 
+**Ícones e emojis nas translations:**
+- [ ] Nenhum emoji (✅, ❌, 🎉...) ou símbolo de ícone (✓, ✗) foi inserido dentro de chaves de `translations.json`
+- [ ] Ícones e símbolos são sempre renderizados por JSX — nunca embutidos no texto das translations
+- [ ] Razão: emojis no texto + ícone JSX = duplicação visual; emojis em translations = inconsistência quando o JSX de outra seção usa símbolos
+
+**Padrão obrigatório para ícones ✓/✗ (certo/errado):**
+
+Use sempre os pill classes abaixo — garantem tamanho, cor, background e espaçamento consistentes:
+
+```tsx
+{/* ✓ certo / do — green pill */}
+<span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
+
+{/* ✗ errado / don't — red pill */}
+<span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
+```
+
+Regras de espaçamento:
+- Em containers `flex` com `gap-*` (ex: `<h4 className="flex items-center gap-2">`): **não adicione `mr-*`** — o gap já controla o espaço
+- Em `<th>` / `<td>` ou qualquer contexto não-flex: envolva ícone + texto em um `<span className="flex items-center gap-1.5">` — **nunca use `mr-*` em elemento inline**, o comportamento de margem em contexto não-flex é inconsistente entre browsers
+
+```tsx
+{/* ✅ Correto — wrapper flex dentro do th */}
+<th className="p-3 font-semibold text-green-700 dark:text-green-400">
+  <span className="flex items-center gap-1.5">
+    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
+    Correto
+  </span>
+</th>
+
+{/* ❌ Errado — mr-* em inline-flex dentro de contexto não-flex */}
+<th><span className="inline-flex ... mr-1.5">✓</span>Correto</th>
+```
+
+Para outros indicadores de estado (ex: "feature presente" na seção de acessibilidade), use a mesma estrutura mas com a cor semântica do contexto:
+
+```tsx
+{/* ✓ feature presente — primary pill */}
+<span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold flex-shrink-0">✓</span>
+```
+
 **Terminologia:**
 - [ ] Termos de ação seguem a tabela de termos aprovados (Salvar, Adicionar, Excluir...)
 - [ ] Nenhuma palavra da lista de termos a evitar foi usada

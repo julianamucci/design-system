@@ -1,6 +1,7 @@
 <script lang="ts">
   import Button from './Button.svelte';
   import type { ButtonVariants } from './Button.svelte';
+  import { sanitizeHtml } from '@/lib/sanitize-html';
 
   let {
     label = 'Botão',
@@ -12,5 +13,5 @@
 </script>
 
 <Button {variant} {size} {disabled} {...rest}>
-  {@html label}
+  {@html sanitizeHtml(label)}
 </Button>

@@ -109,12 +109,18 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-onboarding',
     '@storybook/addon-themes',
+    '@storybook/addon-mcp',
   ],
   framework: '@storybook/react-vite',
+  features: {
+    componentsManifest: true,
+  },
 };
 ```
 
 **Important:** The stories glob picks up both `.mdx` and `.stories.tsx` files anywhere under `src/`. This means every `.mdx` file placed under `src/` automatically becomes a Storybook page.
+
+**MCP Integration:** The `@storybook/addon-mcp` addon exposes component documentation via MCP (Model Context Protocol). The `componentsManifest: true` feature generates `/manifests/components.json` at build time, which the MCP server uses to provide component props, stories, and code snippets to AI agents. Without this feature, the MCP tools return errors when trying to read component documentation.
 
 ### 3.2 `preview.ts`
 

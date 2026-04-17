@@ -397,6 +397,17 @@ Mudanças de estado que devem ser anunciadas por leitores de tela:
 | `aria-busy="true"` | Conteúdo sendo carregado | Skeleton, botão de submit durante loading |
 | `aria-disabled="true"` | Elemento desabilitado sem remoção do DOM | Botões disabled que mantêm foco para explicação |
 
+### Toast / Notificações (Sonner)
+
+Toasts são notificações não-bloqueantes que aparecem temporariamente. Regras de acessibilidade específicas:
+
+- Container do toaster: `role="region"` + `aria-label="Notifications"`
+- Cada toast individual: `role="status"` + `aria-live="polite"` (default/success/info/warning) ou `aria-live="assertive"` (erros críticos)
+- **Auto-dismiss timing (WCAG 2.2.1):** duration mínimo de 4000ms para mensagens curtas; erros devem usar 8000ms+ ou `closeButton` habilitado para permitir dismiss manual
+- Botão de fechar: `aria-label="Close"` ou equivalente contextual (ex: "Fechar notificação de erro")
+- Toast com ação (ex: "Desfazer"): o botão de ação deve ser focável via Tab; toast não deve desaparecer enquanto o botão tiver foco
+- Múltiplos toasts empilhados são anunciados sequencialmente pelo leitor de tela — evitar disparar mais de 3 simultaneamente
+
 ---
 
 ## Idioma do documento

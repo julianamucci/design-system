@@ -194,6 +194,76 @@ export const Default: Story = {
 
 ---
 
+### Componentes Provider + API imperativa (Sonner)
+
+Componentes como Sonner expõem duas superfícies: um **provider** (`<Toaster />`) e uma **função imperativa** (`toast()`). As docs pages seguem o mesmo template de 14 seções mas com adaptações:
+
+1. **"Variantes" → "Tipos de Toast"** — `variants.items` lista tipos de API (`default`, `success`, `error`, `warning`, `info`, `loading`) em vez de variantes `cva()`.
+2. **Subseção "Posições"** — `variants.positions` com 6 opções de posicionamento.
+3. **"Propriedades"** — duas tabelas: props do `<Toaster />` provider + opções do `toast()`.
+4. **"Importação"** — duas seções: import do provider + import da função `toast`.
+5. **"Demonstração"** — botões interativos que disparam toasts. Evento `toast_demo_triggered`.
+6. **"Anatomia"** — 7 items (provider, container, ícone, título, descrição, botão de ação, botão de fechar).
+
+**Estrutura de stories** (usa `SonnerStory.svelte` como wrapper):
+
+```
+src/components/ui/
+  ├── Sonner.svelte                             (componente wrapper)
+  ├── SonnerStory.svelte                        (wrapper para stories)
+  ├── sonner.stories.ts                         (meta + Playground)
+  ├── sonner-tipos.stories.ts                   (6 tipos)
+  ├── sonner-posicoes.stories.ts                (6 posições)
+  ├── sonner-composicoes.stories.ts             (com ação, descrição, promise, rich colors)
+  └── sonner-estados.stories.ts                 (expandido, dismiss, close button, duração)
+```
+
+---
+
+### Componentes Presentacionais Compostos (padrão Table)
+
+Componentes como **Table** expõem múltiplos sub-componentes independentes (8 no Svelte: `Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`), instalados via `npx shadcn-svelte@latest add table`. Cada sub-componente envolve um elemento HTML semântico via `<script lang="ts">` + `$props()` com classes estáticas (sem `cva()`). Seguem o mesmo template de 15 seções, com as seguintes adaptações:
+
+1. **Anatomia** — uma entrada por sub-componente (`anatomy.item1` a `anatomy.item8`). `structureCode` mostra a árvore aninhada com `&lt;Table&gt;` na raiz usando sintaxe Svelte (`{#each}`, `{@html}` quando aplicável via `sanitizeHtml`).
+
+2. **Variantes → Composições** — sem `cva()`. `variants.items` lista composições recorrentes (`basic`, `withCaption`, `withFooter`, `empty`). Título da seção: `"Composições e Tamanhos"` (`variants.title`). Cards seguem §11.1 do guideline 08, mas a área de preview renderiza a composição montada (`<Table.Root><Table.Header>…<Table.Body>…` ou usando imports diretos) em vez de passar uma prop `variant`.
+
+3. **Tamanhos → Padrões de Densidade** — `variants.sizes` descreve convenções de altura aplicadas via `class` no `TableHead`/`TableCell` (`h-8` compact, `h-10` default, `h-12` comfortable) — **não** são props do componente. Cards seguem o mesmo layout de 3 linhas de §11.2 do guideline 08.
+
+4. **Estados** — apenas estados estruturais: `hover` (automático via `hover:bg-muted/50`), `selected` (via `data-state="selected"`), `empty` (renderização condicional com `colspan`), `scroll` (automático via `overflow-x-auto`). **Omitir** `disabled`/`loading` — tabelas não são interativas.
+
+5. **Propriedades** — cada sub-componente aceita atributos HTML nativos via `$props()` spread `{...restProps}`. Documentar chaves `props.table.*`: `class`, `children` (snippet), `colspan`, `rowspan`, `scope` (em `TableHead`), `data-state` (em `TableRow`). Interface TypeScript exibe `HTMLAttributes<HTMLTableElement>` (e variantes para section/row/cell/caption). **Sem** props customizadas (`variant`, `size`).
+
+6. **Analytics** — componente estrutural; dispara apenas eventos da docs page (`docs_page_view`, `docs_section_viewed`, `language_switched`). Eventos de domínio (`table_sorted`, `row_selected`) pertencem a wrappers (ex: futuro `DataTable`), não à Table pura. A chave `analytics.description` deve explicitar: "Table é estrutural — não dispara eventos próprios".
+
+7. **Estrutura de stories**:
+   ```
+   src/components/ui/table/
+     ├── index.ts                                  (barrel export)
+     ├── table.svelte                              (wrapper div + <table>)
+     ├── table-header.svelte, table-body.svelte, table-footer.svelte
+     ├── table-row.svelte, table-head.svelte, table-cell.svelte
+     └── table-caption.svelte
+
+   src/components/ui/
+     ├── TableStory.svelte                         (wrapper para stories — monta composição)
+     ├── table.stories.ts                          (meta + Playground com invoice demo)
+     ├── table-composicoes.stories.ts              (basic, withCaption, withFooter, withSelection)
+     ├── table-estados.stories.ts                  (hover, selected, empty, scroll)
+     └── table-densidades.stories.ts               (compact, default, comfortable via class)
+   ```
+   **Omitir** `table-variantes` e `table-tamanhos` — não existem props `variant`/`size`. Stories passam um prop `composition: 'basic' | 'withCaption' | ...` ao `TableStory.svelte`, que renderiza a árvore correspondente.
+
+8. **Play functions** — focam em estrutura semântica (não em interações):
+   - `<caption>` presente e visível (caption-bottom)
+   - Headers usam `<th>` com atributo `scope`
+   - `data-state="selected"` aplica `bg-muted` persistente
+   - `colspan` em footer cobre colunas corretas
+   - Overflow horizontal aparece em viewport estreito
+   - Estado vazio renderiza linha única com colspan total
+
+---
+
 ## Checklist de implementação
 
 - [ ] `translations.json` criado em `src/components/docs/content/{slug}/`

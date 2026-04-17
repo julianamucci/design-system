@@ -191,6 +191,7 @@ Estes eventos rastreiam comportamento do usuário nas páginas de documentação
 | `docs_page_view` | No mount de qualquer `*Docs.tsx` | `{ component, locale }` |
 | `docs_section_viewed` | Quando uma seção fica visível (IntersectionObserver) | `{ component, section, locale }` |
 | `language_switched` | No `LanguageSwitcher` ao trocar idioma | `{ previous_language, new_language }` |
+| `{slug}_demo_triggered` | Em docs pages com demonstrações interativas (ex: Sonner) | `{ component, demo_type }` |
 
 ```typescript
 // docs_page_view — no topo do ComponentDocs, junto com useSeoEffect

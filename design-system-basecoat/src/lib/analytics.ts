@@ -28,6 +28,10 @@ interface AnalyticsEvents {
     locale: Locale;
     page_title: string;
   };
+  toast_demo_triggered: {
+    toast_type: string;
+    locale: Locale;
+  };
 }
 
 export function track<T extends keyof AnalyticsEvents>(

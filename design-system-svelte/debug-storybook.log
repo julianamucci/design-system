@@ -1,0 +1,22 @@
+[22:24:26.818] [INFO] storybook v10.3.5
+[22:37:02.194] [PROMPT] Port 6006 is not available. 
+Would you like to run Storybook on port 6007 instead? {"choice":true}
+[22:37:02.772] [DEBUG] Getting package.json info for C:/Users/julia/Documents/design-system/design-system-svelte/package.json...
+[22:37:04.846] [DEBUG] Serving static files from [36mdesign-system-svelte/node_modules/@chromatic-com/storybook/assets[39m at [36m/addon-visual-tests-assets[39m
+[22:37:04.846] [INFO] Starting...
+[22:37:05.686] [DEBUG] Starting preview..
+[22:37:06.275] [INFO] [43mVite[49m Re-optimizing dependencies because lockfile has changed
+[22:37:06.387] [ERROR] [38;2;241;97;97mError: listen EADDRINUSE: address already in use :::6007[39m
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at _Polka.listen (file:///C:/Users/julia/Documents/design-system/design-system-svelte/node_modules/storybook/dist/core-server/index.js:7175:110)
+    at file:///C:/Users/julia/Documents/design-system/design-system-svelte/node_modules/storybook/dist/core-server/index.js:7513:39
+    at new Promise (<anonymous>)
+    at storybookDevServer (file:///C:/Users/julia/Documents/design-system/design-system-svelte/node_modules/storybook/dist/core-server/index.js:7512:19)
+    at async buildOrThrow (file:///C:/Users/julia/Documents/design-system/design-system-svelte/node_modules/storybook/dist/core-server/index.js:4508:12)
+    at async buildDevStandalone (file:///C:/Users/julia/Documents/design-system/design-system-svelte/node_modules/storybook/dist/core-server/index.js:8033:41)
+    at async withTelemetry (file:///C:/Users/julia/Documents/design-system/design-system-svelte/node_modules/storybook/dist/_node-chunks/chunk-FIR43JGQ.js:225:12)
+[22:37:06.391] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.
+[22:37:11.565] [PROMPT] Would you like to send anonymous crash reports to improve Storybook and fix bugs faster? {"choice":true}

@@ -16,166 +16,69 @@ As seções foram organizadas em quatro blocos com propósitos e públicos disti
 
 ---
 
-## Navegação do ComponentDocs (Obrigatória)
+## Navegação Lateral do ComponentDocs (Obrigatória)
 
-A navegação deve ser o **primeiro elemento após o header** em toda página de documentação de componente. Ela permite ao usuário saltar diretamente para a seção de interesse sem rolar a página inteira, é **sticky** ao rolar, indica a **seção ativa** via IntersectionObserver e é **acessível** com `<nav>` semântico e foco visível.
+A navegação lateral (`DocsNav`) é uma **sidebar sticky** posicionada à esquerda do conteúdo principal. Ela permite ao usuário saltar diretamente para qualquer seção, permanece **visível durante todo o scroll**, indica a **seção ativa** via IntersectionObserver e é **acessível** com `<nav>` semântico.
 
-```tsx
-import { useEffect, useState } from "react";
+### Layout obrigatório — duas colunas
 
-// Definição das seções — remover as que não se aplicam ao componente
-const sections = [
-  // Bloco 1 — Visão Geral
-  { id: "demonstracao",   label: "Demonstração",  block: 1 },
-  { id: "anatomia",       label: "Anatomia",       block: 1 },
-  { id: "quando-usar",    label: "Quando Usar",    block: 1 },
-  { id: "do-dont",        label: "Do & Don't",     block: 1 },
-  // Bloco 2 — Referência Técnica
-  { id: "importacao",     label: "Importação",     block: 2 },
-  { id: "exemplos",       label: "Exemplos",       block: 2 },
-  { id: "variantes",      label: "Variantes",      block: 2 },
-  { id: "estados",        label: "Estados",        block: 2 },
-  { id: "propriedades",   label: "Propriedades",   block: 2 },
-  { id: "tokens",         label: "Tokens",         block: 2 },
-  // Bloco 3 — Contexto
-  { id: "acessibilidade", label: "Acessibilidade", block: 3 },
-  { id: "relacionados",   label: "Relacionados",   block: 3 },
-  { id: "notas",          label: "Notas",          block: 3 },
-  // Bloco 4 — Qualidade
-  { id: "testes",         label: "Testes",         block: 4 },
-] as const;
+```vue
+<template>
+  <div class="ds-docs p-8 max-w-5xl mx-auto">
 
-const blockLabels: Record<number, string> = {
-  1: "Visão Geral",
-  2: "Referência Técnica",
-  3: "Contexto",
-  4: "Qualidade",
-};
+    <!-- Header (sem id — é o topo da página) -->
+    <header class="mb-12 border-b pb-8 border-border/50">
+      <!-- badges, LanguageSwitcher, h1, description -->
+    </header>
 
-function useActiveSection(ids: string[]) {
-  const [activeId, setActiveId] = useState<string>(ids[0]);
+    <!-- Layout de duas colunas: nav lateral + conteúdo -->
+    <div class="flex gap-16 items-start">
 
-  useEffect(() => {
-    const observers = ids.map((id) => {
-      const el = document.getElementById(id);
-      if (!el) return null;
-      const observer = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveId(id); },
-        { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
-      );
-      observer.observe(el);
-      return observer;
-    });
-    return () => observers.forEach((obs) => obs?.disconnect());
-  }, [ids]);
+      <!-- OBRIGATÓRIO: wrapper <nav> com sticky -->
+      <nav
+        aria-label="Navegação das seções do componente"
+        class="sticky top-8 w-52 shrink-0 self-start space-y-5"
+      >
+        <DocsNav :groups="navGroups" :active-section="activeSection" />
+      </nav>
 
-  return activeId;
-}
-
-export function ComponentDocsNav() {
-  const ids = sections.map((s) => s.id);
-  const activeId = useActiveSection(ids);
-  const blocks = [1, 2, 3, 4] as const;
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  return (
-    <nav
-      aria-label="Navegação das seções do componente"
-      className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border -mx-8 px-8 py-3 mb-8"
-    >
-      <div className="flex flex-wrap gap-x-6 gap-y-2">
-        {blocks.map((block) => (
-          <div key={block} className="flex items-center gap-1">
-
-            {/* Label do bloco — visível apenas em telas largas */}
-            <span className="hidden lg:inline text-xs text-muted-foreground mr-1 font-medium">
-              {blockLabels[block]}:
-            </span>
-
-            {sections
-              .filter((s) => s.block === block)
-              .map((section, index, arr) => (
-                <span key={section.id} className="flex items-center gap-1">
-                  <button
-                    onClick={() => scrollTo(section.id)}
-                    aria-current={activeId === section.id ? "location" : undefined}
-                    className={[
-                      "text-xs px-2 py-1 rounded-md transition-colors",
-                      "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-                      activeId === section.id
-                        ? "bg-primary text-primary-foreground font-medium"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted",
-                    ].join(" ")}
-                  >
-                    {section.label}
-                  </button>
-                  {index < arr.length - 1 && (
-                    <span className="text-border text-xs" aria-hidden="true">·</span>
-                  )}
-                </span>
-              ))}
-
-            {block < 4 && (
-              <span className="text-muted-foreground/40 ml-2 text-sm" aria-hidden="true">|</span>
-            )}
-          </div>
-        ))}
+      <!-- Conteúdo principal -->
+      <div class="ds-docs flex-1 min-w-0 space-y-12">
+        <section id="demonstracao">...</section>
+        <section id="anatomia">...</section>
+        <section id="quando-usar">...</section>
+        <!-- demais seções -->
       </div>
-    </nav>
-  );
-}
+
+    </div>
+  </div>
+</template>
 ```
 
-**Regras da navegação:**
-- Posicionada imediatamente após o `<header>`, antes da seção 2 (Demonstração)
-- `sticky top-0 z-10` — permanece visível durante todo o scroll da página
-- `-mx-8 px-8` — sangra até as margens do `max-w-4xl` criando barra de largura total
-- Seção ativa: `bg-primary text-primary-foreground font-medium` — estado distinguível por cor e peso tipográfico (não apenas cor)
-- `aria-current="location"` na seção ativa — anuncia o estado ao leitor de tela
-- `aria-label` no `<nav>` — diferencia esta navegação do `<nav>` da sidebar
+**Regras da navegação lateral:**
+- **`<nav>` wrapper obrigatório** com `sticky top-8` — sem ele, o `DocsNav` rola junto com o conteúdo e perde a função de navegação persistente
+- `w-52 shrink-0 self-start` — largura fixa de 13rem, não encolhe, alinha ao topo do flex container
+- `space-y-5` — espaçamento entre grupos de seções
+- `aria-label` no `<nav>` — diferencia esta navegação de outras `<nav>` na página
+- `flex-1 min-w-0` no conteúdo — ocupa o espaço restante, `min-w-0` previne overflow de tabelas/código
+- `flex gap-16 items-start` no container — gap de 4rem entre sidebar e conteúdo, alinhamento ao topo
 
-**IDs obrigatórios nas seções:** cada `<section>` deve ter o `id` correspondente ao array:
+**⚠️ Erro comum:** usar `<DocsNav>` diretamente sem o wrapper `<nav>` sticky. Isso faz a navegação rolar junto com a página, perdendo a referência visual.
 
-```tsx
+**IDs obrigatórios nas seções:** cada `<section>` deve ter o `id` correspondente ao array de `navGroups`:
+
+```vue
 <section id="demonstracao">
-  <h2 className="mb-4">Demonstração Padrão</h2>
+  <h2 class="text-xl font-semibold mb-4">{{ tContent('demonstration.title') }}</h2>
   ...
 </section>
 
 <section id="anatomia">
-  <h2 className="mb-4">Anatomia</h2>
+  <h2 class="text-xl font-semibold mb-4">{{ tContent('anatomy.title') }}</h2>
   ...
 </section>
 
-{/* Continuar para todas as seções presentes */}
-```
-
-**Seções opcionais:** remover do array `sections` qualquer seção omitida no componente (ex: "Estados" para componentes estáticos, "Testes" para Badge). A navegação se adapta automaticamente ao que está no array.
-
-**Posição no ComponentDocs:**
-
-```tsx
-export function NomeComponenteDocs() {
-  return (
-    <div className="flex-1 h-full overflow-auto">
-      <div className="p-8 space-y-12 max-w-4xl mx-auto">
-
-        {/* Seção 1 — Header (sem id — é o topo da página) */}
-        <header className="space-y-4">
-          ...
-        </header>
-
-        {/* Navegação sticky — imediatamente após o header */}
-        <ComponentDocsNav />
-
-        {/* Seções 2–15 com ids correspondentes */}
-        <section id="demonstracao">...</section>
-        <section id="anatomia">...</section>
-        <section id="quando-usar">...</section>
-        {/* ... */}
+<!-- Continuar para todas as seções presentes -->
 
       </div>
     </div>
@@ -1302,13 +1205,31 @@ Define os comportamentos que qualquer forma de verificação deve confirmar — 
 
 ### Importações Obrigatórias
 
-```tsx
-import React, { useState } from 'react';
-import { ComponentDemo } from '../ComponentDemo';
-import { NomeComponente } from '../ui/nome-componente';
-// Subcomponentes conforme necessário
-import { CheckCircle2, XCircle } from 'lucide-react';
+```vue
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useTranslation } from '@/lib/i18n'
+import { useSeoEffect } from '@/lib/use-seo'
+import { track } from '@/lib/analytics'
+import { sanitizeHtml } from '@/lib/sanitize-html'
+import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue'
+import DocsNav from '@/components/docs/shared/DocsNav.vue'
+import uiTranslations from '@/i18n/ui.json'
+import componentTranslations from '@shared/content/{slug}/translations.json'
+
+// ⚠️ OBRIGATÓRIO: locale vem de useTranslation, NÃO de store/pinia
+const { t: tContent, locale } = useTranslation({ ...uiTranslations, ...componentTranslations })
+
+useSeoEffect(computed(() => ({
+  title: `${tContent('title')} — ${tContent('category')}`,
+  description: tContent('seo.description'),
+  locale: locale.value as 'pt-BR' | 'en' | 'es',
+  componentSlug: '{slug}',
+})))
+</script>
 ```
+
+**Regra crítica:** o `locale` reativo deve vir do retorno de `useTranslation()`, **nunca** de `useLocaleStore()` ou Pinia direto. O `useTranslation` já encapsula o estado de locale e garante reatividade correta com `useSeoEffect`.
 
 ### Padrões de Nomenclatura
 
@@ -1362,7 +1283,7 @@ Estrutura obrigatória para todas as tabelas:
 ## Problemas Comuns a Evitar
 
 1. **❌ Seções fora de ordem** — sempre seguir a sequência de 1–15
-2. **❌ `ComponentDocsNav` ausente ou fora de posição** — deve ser o primeiro elemento após o `<header>`, antes da seção 2
+2. **❌ `DocsNav` sem wrapper `<nav>` sticky** — deve estar envolvido por `<nav class="sticky top-8 w-52 shrink-0 self-start space-y-5">` dentro do layout `flex gap-16 items-start`
 3. **❌ Seção sem `id` correspondente** — cada `<section>` precisa do `id` que aparece no array `sections` da navegação
 2. **❌ Tabelas sem coluna "Obrigatório"** — adicionar em todas as tabelas de propriedades
 3. **❌ Callbacks sem assinatura TypeScript** — sempre exibir `(value: string) => void`, nunca apenas `function`
@@ -1389,7 +1310,7 @@ Antes de considerar uma página de documentação completa, verificar:
 **Estrutura:**
 - [ ] 15 seções na ordem correta (ou seções omitidas com justificativa)
 - [ ] Container usa `flex-1 h-full overflow-auto` + `p-8 max-w-4xl mx-auto space-y-12`
-- [ ] `ComponentDocsNav` presente imediatamente após o `<header>`
+- [ ] `DocsNav` envolvido por `<nav>` com `sticky top-8 w-52 shrink-0 self-start` no layout flex de duas colunas
 - [ ] Todas as `<section>` têm `id` correspondente ao array `sections` da navegação
 - [ ] Seções omitidas removidas também do array `sections`
 
@@ -1436,3 +1357,48 @@ Antes de considerar uma página de documentação completa, verificar:
 - [ ] Todas as tabelas têm `overflow-x-auto`, zebrado e bordas verticais
 - [ ] Nenhum valor hardcoded de cor (usar tokens CSS)
 - [ ] Exemplos de código são autocontidos e renderizáveis
+
+---
+
+## Componentes Presentacionais Compostos (padrão Table)
+
+Componentes como **Table** expõem múltiplos sub-componentes independentes (9 no Vue: `Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`, `TableEmpty`), cada um envolvendo um elemento HTML semântico via `<script setup>` com classes estáticas (sem `cva()`). Seguem o mesmo template de 15 seções, com as seguintes adaptações:
+
+1. **Anatomia** — uma entrada por sub-componente (`anatomy.item1` a `anatomy.item8`). `structureCode` mostra a árvore aninhada com `&lt;Table&gt;` na raiz usando sintaxe Vue (`v-for`, `:key`).
+
+2. **Variantes → Composições** — sem `cva()`. `variants.items` lista composições recorrentes (`basic`, `withCaption`, `withFooter`, `empty`). Título da seção: `"Composições e Tamanhos"` (`variants.title`). Cards seguem §11.1 do guideline 08, mas a área de preview renderiza a composição montada (`<Table><TableHeader>…<TableBody>…`) em vez de passar uma prop `variant`.
+
+3. **Tamanhos → Padrões de Densidade** — `variants.sizes` descreve convenções de altura aplicadas via `class` no `TableHead`/`TableCell` (`h-8` compact, `h-10` default, `h-12` comfortable) — **não** são props do componente. Cards seguem o mesmo layout de 3 linhas de §11.2 do guideline 08.
+
+4. **Estados** — apenas estados estruturais: `hover` (automático via `hover:bg-muted/50`), `selected` (via `data-state="selected"`), `empty` (renderização condicional com `colspan`), `scroll` (automático via `overflow-x-auto`). **Omitir** `disabled`/`loading` — tabelas não são interativas.
+
+5. **Propriedades** — cada sub-componente aceita atributos HTML nativos via `defineProps` com `HTMLAttributes`. Documentar chaves `props.table.*`: `class`, slot default (`children` em React), `colspan`, `rowspan`, `scope` (em `TableHead`), `data-state` (em `TableRow`). Interface TypeScript exibe `HTMLAttributes<HTMLTableElement>` (e variantes para section/row/cell/caption). **Sem** props customizadas (`variant`, `size`).
+
+6. **Analytics** — componente estrutural; dispara apenas eventos da docs page (`docs_page_view`, `docs_section_viewed`, `language_switched`). Eventos de domínio (`table_sorted`, `row_selected`) pertencem a wrappers (ex: futuro `DataTable`), não à Table pura. A chave `analytics.description` deve explicitar: "Table é estrutural — não dispara eventos próprios".
+
+7. **Estrutura de stories**:
+   ```
+   src/components/ui/table/
+     ├── Table.vue                                 (wrapper div + <table>)
+     ├── TableHeader.vue, TableBody.vue, TableFooter.vue
+     ├── TableRow.vue, TableHead.vue, TableCell.vue
+     ├── TableCaption.vue, TableEmpty.vue
+     └── index.ts                                  (barrel export)
+
+   src/components/ui/
+     ├── table.stories.ts                          (meta + Playground com invoice demo)
+     ├── table-composicoes.stories.ts              (basic, withCaption, withFooter, withSelection)
+     ├── table-estados.stories.ts                  (hover, selected, empty, scroll)
+     └── table-densidades.stories.ts               (compact, default, comfortable via class)
+   ```
+   **Omitir** `table-variantes` e `table-tamanhos` — não existem props `variant`/`size`.
+
+8. **Play functions** — focam em estrutura semântica (não em interações):
+   - `<caption>` presente e visível (caption-bottom)
+   - Headers usam `<th>` com atributo `scope`
+   - `data-state="selected"` aplica `bg-muted` persistente
+   - `colspan` em footer cobre colunas corretas
+   - Overflow horizontal aparece em viewport estreito
+   - Estado vazio renderiza linha única com colspan total
+
+9. **Render functions das stories** — `render: (args) => ({ components: { Table, TableHeader, ... }, setup() { return { args }; }, template: '...' })`. Registrar TODOS os sub-componentes usados no template. Para demos com dados, declarar arrays no `setup()` e iterar com `v-for`.

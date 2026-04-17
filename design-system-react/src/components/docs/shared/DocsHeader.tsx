@@ -1,6 +1,15 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 
+function isSafeUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return ['https:', 'http:'].includes(parsed.protocol);
+  } catch {
+    return false;
+  }
+}
+
 interface DocsHeaderProps {
   category: 'Layout' | 'Navigation' | 'Form' | 'Feedback' | 'Display' | 'Overlay' | 'Interaction';
   complexity: 'Simples' | 'Composto' | 'Complexo';
@@ -38,7 +47,7 @@ export function DocsHeader({
         {shadcnCommand && (
           <span>Shadcn/UI: <code className="bg-muted px-1.5 py-0.5 rounded text-foreground">{shadcnCommand}</code></span>
         )}
-        {figmaLink && (
+        {figmaLink && isSafeUrl(figmaLink) && (
           <span>Figma: <a href={figmaLink} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">Ver no Figma</a></span>
         )}
         {updatedAt && (

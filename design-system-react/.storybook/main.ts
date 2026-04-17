@@ -11,8 +11,12 @@ const config: StorybookConfig = {
     "@storybook/addon-a11y",
     "@storybook/addon-docs",
     "@storybook/addon-onboarding",
-    "@storybook/addon-themes"
+    "@storybook/addon-themes",
+    "@storybook/addon-mcp"
   ],
-  "framework": "@storybook/react-vite"
+  "framework": "@storybook/react-vite",
+  features: {
+    componentsManifest: true,
+  },
 };
 export default config;

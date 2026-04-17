@@ -14,7 +14,7 @@ Este documento descreve a arquitetura técnica, estrutura de pastas e padrões o
 ├── components/
 │   ├── HomePage.vue                 # Página inicial
 │   ├── ComponentDemo.vue            # Wrapper para demos de componentes
-│   ├── ComponentDocsNav.vue         # Navegação sticky de seções
+│   ├── docs/shared/DocsNav.vue      # Navegação lateral sticky de seções
 │   ├── ThemeSelector.vue            # Seletor de temas
 │   ├── ui/                          # Componentes Shadcn Vue base
 │   └── docs/                        # Páginas de documentação (.vue)
@@ -89,11 +89,12 @@ Este documento descreve a arquitetura técnica, estrutura de pastas e padrões o
 
 ---
 
-### 4. ComponentDocsNav.vue — Navegação de Seções
+### 4. DocsNav.vue — Navegação Lateral de Seções
 
-**Props**: `sections: Array<{ id, label, block }>`
+**Localização**: `src/components/docs/shared/DocsNav.vue`
+**Props**: `groups: Array<{ label, sections: Array<{ id, label }> }>`, `activeSection: string`
 
-Sticky à direita do conteúdo, usa `IntersectionObserver` via `onMounted/onUnmounted` para detectar seção ativa. `aria-current="location"` no item ativo.
+Navegação lateral (sidebar) que deve ser envolvida por um wrapper `<nav>` com `sticky top-8 w-52 shrink-0 self-start` no layout de duas colunas (`flex gap-16 items-start`). Usa `IntersectionObserver` via `onMounted/onUnmounted` para detectar seção ativa.
 
 ---
 

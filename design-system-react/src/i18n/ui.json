@@ -31,7 +31,10 @@
       "priority": "Prioridade",
       "high": "Alta",
       "medium": "Média",
-      "low": "Baixa"
+      "low": "Baixa",
+      "storyState": "Story / Estado",
+      "themeLight": "Tema light",
+      "themeDark": "Tema dark"
     }
   },
   "en": {
@@ -66,7 +69,10 @@
       "priority": "Priority",
       "high": "High",
       "medium": "Medium",
-      "low": "Low"
+      "low": "Low",
+      "storyState": "Story / State",
+      "themeLight": "Light theme",
+      "themeDark": "Dark theme"
     }
   },
   "es": {
@@ -101,7 +107,10 @@
       "priority": "Prioridad",
       "high": "Alta",
       "medium": "Media",
-      "low": "Baja"
+      "low": "Baja",
+      "storyState": "Story / Estado",
+      "themeLight": "Tema light",
+      "themeDark": "Tema dark"
     }
   }
 }

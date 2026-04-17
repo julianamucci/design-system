@@ -1,27 +1,20 @@
-[18:42:28.241] [INFO] storybook v10.3.5
-[18:42:29.829] [PROMPT] Port 6006 is not available. 
+[10:45:36.465] [INFO] storybook v10.3.5
+[10:46:31.614] [PROMPT] Port 6006 is not available. 
 Would you like to run Storybook on port 6009 instead? {"choice":true}
-[18:42:30.293] [DEBUG] Getting package.json info for C:/Users/julia/Documents/design-system/design-system-basecoat/package.json...
-[18:42:31.262] [WARN] 🚨 Unable to index ./src/components/docs/IconsDocs.mdx:
-  Error: Unexpected `ExpressionStatement` in code: only import/exports are supported
-    at file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:6033:24
-    at async Promise.all (index 0)
-    at async Promise.all (index 0)
-    at async _StoryIndexGenerator.updateExtracted (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:6016:5)
-    at async _StoryIndexGenerator.ensureExtracted (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:6053:8)
-    at async _StoryIndexGenerator.initialize (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:6012:5)
-    at async file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/presets/common-preset.js:1855:10
-    at async Object.experimental_serverChannel (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/@storybook/addon-vitest/dist/preset.js:450:29)
-    at async buildDevStandalone (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:8027:32)
+[10:46:38.129] [DEBUG] Getting package.json info for C:/Users/julia/Documents/design-system/design-system-basecoat/package.json...
+[10:46:51.429] [DEBUG] Serving static files from [36mdesign-system-basecoat/node_modules/@chromatic-com/storybook/assets[39m at [36m/addon-visual-tests-assets[39m
+[10:46:51.430] [INFO] Starting...
+[10:46:55.946] [DEBUG] Starting preview..
+[10:46:58.521] [ERROR] [38;2;241;97;97mError: listen EADDRINUSE: address already in use :::6009[39m
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at _Polka.listen (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:7175:110)
+    at file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:7513:39
+    at new Promise (<anonymous>)
+    at storybookDevServer (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:7512:19)
+    at async buildOrThrow (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:4508:12)
+    at async buildDevStandalone (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:8033:41)
     at async withTelemetry (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/_node-chunks/chunk-FIR43JGQ.js:225:12)
-[18:42:31.269] [ERROR] Error: Unable to index ./src/components/docs/IconsDocs.mdx
-    at _StoryIndexGenerator.getIndexAndStats (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:6282:15)
-    at async _StoryIndexGenerator.getIndex (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:6271:13)
-    at async Object.experimental_serverChannel (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/@storybook/addon-vitest/dist/preset.js:464:14)
-    at async buildDevStandalone (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:8027:32)
-    at async withTelemetry (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/_node-chunks/chunk-FIR43JGQ.js:225:12)
-    at async dev (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/bin/core.js:2736:3)
-    at async _Command.<anonymous> (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/bin/core.js:2806:92)
-[18:42:31.272] [WARN] Broken build, fix the error above.
+[10:46:58.537] [WARN] Broken build, fix the error above.
 You may need to refresh the browser.
-[18:42:36.185] [PROMPT] Would you like to send anonymous crash reports to improve Storybook and fix bugs faster? {"choice":true}

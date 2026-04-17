@@ -12,8 +12,12 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-onboarding',
     '@storybook/addon-themes',
+    '@storybook/addon-mcp',
   ],
   framework: '@storybook/vue3-vite',
+  features: {
+    componentsManifest: true,
+  },
 };
 
 export default config;

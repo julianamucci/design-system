@@ -50,7 +50,7 @@ export function createButtonDocs(): HTMLElement {
     const locale = getLocale();
     const cleanup = applySeo({
       title: `${t('title')} — ${t('category')}`,
-      description: t('description'),
+      description: t('seo.description'),
       locale,
       componentSlug: 'button',
     });
@@ -240,7 +240,7 @@ export function createButtonDocs(): HTMLElement {
   const h2When = document.createElement('h2');
   h2When.className = 'text-xl font-semibold mb-4';
   const whenContent = document.createElement('div');
-  whenContent.className = 'space-y-8';
+  whenContent.className = 'border rounded-xl p-6 shadow-sm space-y-6';
   secWhen.append(h2When, whenContent);
 
   // --- Do/Don't ---
@@ -285,7 +285,7 @@ export function createButtonDocs(): HTMLElement {
   const h2States = document.createElement('h2');
   h2States.className = 'text-xl font-semibold mb-4';
   const statesContent = document.createElement('div');
-  statesContent.className = 'rounded-lg border border-border p-6 bg-card/30 overflow-x-auto';
+  statesContent.className = 'border rounded-xl overflow-x-auto p-4 shadow-sm';
   secStates.append(h2States, statesContent);
 
   // --- Propriedades ---
@@ -303,7 +303,7 @@ export function createButtonDocs(): HTMLElement {
   const h2Tokens = document.createElement('h2');
   h2Tokens.className = 'text-xl font-semibold mb-4';
   const tokensContent = document.createElement('div');
-  tokensContent.className = 'border rounded-lg overflow-hidden shadow-sm';
+  tokensContent.className = 'border rounded-xl overflow-x-auto p-4 shadow-sm';
   secTokens.append(h2Tokens, tokensContent);
 
   // --- Acessibilidade ---
@@ -386,31 +386,77 @@ export function createButtonDocs(): HTMLElement {
 
     // Anatomia
     h2Anatomia.textContent = t('anatomy.title');
-    anatomiaContent.innerHTML = `<ol class="space-y-3 text-sm list-none p-0 m-0">
-      ${[1, 2, 3].map(i => `<li class="flex gap-3 list-none">
-        <span class="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">${i}</span>
-        <span>${sanitizeHtml(t(`anatomy.item${i}`))}</span>
-      </li>`).join('')}
-    </ol>`;
+    anatomiaContent.innerHTML = `
+      <ol class="space-y-3 text-sm list-none p-0 m-0">
+        ${[1, 2, 3].map(i => `<li class="flex gap-3 list-none">
+          <span class="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">${i}</span>
+          <span>${sanitizeHtml(t(`anatomy.item${i}`))}</span>
+        </li>`).join('')}
+      </ol>
+      <div class="rounded-lg bg-muted/50 border border-border/40 px-4 pt-3 pb-4 mt-4">
+        <p class="text-xs text-muted-foreground mb-2">${sanitizeHtml(t('anatomy.structureLabel'))}</p>
+        <pre class="text-xs font-mono leading-relaxed">${sanitizeHtml(t('anatomy.structureCode'))}</pre>
+      </div>`;
 
     // Quando usar
     h2When.textContent = t('usage.title');
     whenContent.innerHTML = `
-      <div class="bg-muted/30 border p-4 rounded-lg space-y-3">
-        <h4 class="font-medium text-sm">${t('usage.guidelines.title')}</h4>
+      <div class="bg-muted/30 rounded-lg p-4 space-y-3">
+        <h3 class="font-medium text-sm">${sanitizeHtml(t('usage.guidelines.title'))}</h3>
         <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
           ${[1, 2, 3, 4].map(i => `<li>${sanitizeHtml(t(`usage.guidelines.item${i}`))}</li>`).join('')}
         </ul>
       </div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-border text-left bg-muted/50 font-medium">
+              <th class="p-3 border-r border-border">${sanitizeHtml(t('usage.scenarios.cols.scenario'))}</th>
+              <th class="p-3 border-r border-border">${sanitizeHtml(t('usage.scenarios.cols.use'))}</th>
+              <th class="p-3">${sanitizeHtml(t('usage.scenarios.cols.alternative'))}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${[1, 2, 3].map(i => `<tr class="border-b border-border hover:bg-muted/5">
+              <td class="p-3 border-r border-border">${sanitizeHtml(t(`usage.scenarios.item${i}.s`))}</td>
+              <td class="p-3 border-r border-border font-medium text-primary">${sanitizeHtml(t(`usage.scenarios.item${i}.u`))}</td>
+              <td class="p-3 text-muted-foreground">${sanitizeHtml(t(`usage.scenarios.item${i}.a`))}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="space-y-3">
+        <h3 class="font-medium text-sm">${sanitizeHtml(t('uxWriting.title'))}</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-border bg-muted/70 text-left">
+                <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('uxWriting.table.element'))}</th>
+                <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('uxWriting.table.rules'))}</th>
+                <th class="p-3 border-r border-border font-semibold text-green-700 dark:text-green-400"><span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>${sanitizeHtml(t('uxWriting.table.correct'))}</span></th>
+                <th class="p-3 font-semibold text-red-700 dark:text-red-400"><span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>${sanitizeHtml(t('uxWriting.table.avoid'))}</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${['label', 'destructive', 'cancel'].map(key => `<tr class="border-b border-border last:border-0 hover:bg-muted/5">
+                <td class="p-3 border-r border-border font-medium">${sanitizeHtml(t(`uxWriting.table.${key}.name`))}</td>
+                <td class="p-3 border-r border-border">${sanitizeHtml(t(`uxWriting.table.${key}.format`))}</td>
+                <td class="p-3 border-r border-border font-medium text-green-600 dark:text-green-500">${sanitizeHtml(t(`uxWriting.table.${key}.good`))}</td>
+                <td class="p-3 font-medium text-red-600 dark:text-red-500">${sanitizeHtml(t(`uxWriting.table.${key}.bad`))}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-card border rounded-xl p-4 shadow-sm">
-          <h4 class="mb-3 text-sm font-semibold text-green-600">✓ ${t('usage.do.title')}</h4>
+          <h3 class="mb-3 text-sm font-semibold text-green-600 flex items-center gap-2"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>${sanitizeHtml(t('usage.do.title'))}</h3>
           <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
-            ${[1, 2, 3, 4].map(i => `<li>${t(`usage.do.item${i}`)}</li>`).join('')}
+            ${[1, 2, 3, 4].map(i => `<li>${sanitizeHtml(t(`usage.do.item${i}`))}</li>`).join('')}
           </ul>
         </div>
         <div class="bg-card border rounded-xl p-4 shadow-sm">
-          <h4 class="mb-3 text-sm font-semibold text-red-600">✗ ${t('usage.dont.title')}</h4>
+          <h3 class="mb-3 text-sm font-semibold text-red-600 flex items-center gap-2"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>${sanitizeHtml(t('usage.dont.title'))}</h3>
           <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
             ${[1, 2, 3].map(i => `<li>${sanitizeHtml(t(`usage.dont.item${i}`))}</li>`).join('')}
           </ul>
@@ -422,20 +468,40 @@ export function createButtonDocs(): HTMLElement {
     doDontContent.innerHTML = `
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-3">
-          <div class="flex items-center gap-2 text-green-600"><span class="font-bold text-lg">✓</span><span class="text-sm font-semibold uppercase">${tNav('common.do')}</span></div>
+          <div class="flex items-center gap-2 text-green-600"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span><span class="text-sm font-semibold uppercase">${sanitizeHtml(tNav('common.do'))}</span></div>
           <div class="border border-green-200 dark:border-green-900/50 rounded-xl p-6 bg-green-50/50 dark:bg-green-950/10 flex gap-2">
-            <button class="${BTN_VARIANTS.default}">${t('demonstration.labels.save')}</button>
-            <button class="${BTN_VARIANTS.outline}">${t('demonstration.labels.cancel')}</button>
+            <button class="${BTN_VARIANTS.outline}">${sanitizeHtml(t('demonstration.labels.cancel'))}</button>
+            <button class="${BTN_VARIANTS.default}">${sanitizeHtml(t('demonstration.labels.save'))}</button>
           </div>
-          <p class="text-sm text-muted-foreground italic px-1">${t('doDont.pair1.do')}</p>
+          <p class="text-sm text-muted-foreground italic px-1">${sanitizeHtml(t('doDont.pair1.do'))}</p>
         </div>
         <div class="space-y-3">
-          <div class="flex items-center gap-2 text-red-600"><span class="font-bold text-lg">✗</span><span class="text-sm font-semibold uppercase">${tNav('common.dont')}</span></div>
+          <div class="flex items-center gap-2 text-red-600"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span><span class="text-sm font-semibold uppercase">${sanitizeHtml(tNav('common.dont'))}</span></div>
           <div class="border border-red-200 dark:border-red-900/50 rounded-xl p-6 bg-red-50/50 dark:bg-red-950/10 flex gap-2">
             <button class="${BTN_VARIANTS.default}">OK</button>
             <button class="${BTN_VARIANTS.default}">Click here</button>
           </div>
-          <p class="text-sm text-muted-foreground italic px-1">${t('doDont.pair1.dont')}</p>
+          <p class="text-sm text-muted-foreground italic px-1">${sanitizeHtml(t('doDont.pair1.dont'))}</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 text-green-600"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span><span class="text-sm font-semibold uppercase">${sanitizeHtml(tNav('common.do'))}</span></div>
+          <div class="border border-green-200 dark:border-green-900/50 rounded-xl p-6 bg-green-50/50 dark:bg-green-950/10">
+            <button class="${BTN_VARIANTS.icon}" aria-label="Close dialog">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+            </button>
+          </div>
+          <p class="text-sm text-muted-foreground italic px-1">${sanitizeHtml(t('doDont.pair2.do'))}</p>
+        </div>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 text-red-600"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span><span class="text-sm font-semibold uppercase">${sanitizeHtml(tNav('common.dont'))}</span></div>
+          <div class="border border-red-200 dark:border-red-900/50 rounded-xl p-6 bg-red-50/50 dark:bg-red-950/10">
+            <button class="${BTN_VARIANTS.icon}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+            </button>
+          </div>
+          <p class="text-sm text-muted-foreground italic px-1">${sanitizeHtml(t('doDont.pair2.dont'))}</p>
         </div>
       </div>`;
 
@@ -443,24 +509,35 @@ export function createButtonDocs(): HTMLElement {
     h2Import.textContent = t('import.title');
     importContent.innerHTML = `
       <div>
-        <p class="text-sm text-muted-foreground mb-3">${t('import.basic')}</p>
-        <pre class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code>import { createButton } from '@/components/ui/button';</code></pre>
+        <p class="text-sm text-muted-foreground mb-3">${sanitizeHtml(t('import.basic'))}</p>
+        <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code class="whitespace-pre">import { createButton } from '@/components/ui/button';</code></div>
       </div>`;
 
     // Exemplos
     h2Examples.textContent = t('examples.title');
     examplesContent.innerHTML = `
       <div class="space-y-3">
-        <h3 class="text-sm font-medium">${t('examples.basic')}</h3>
+        <h3 class="text-sm font-medium">${sanitizeHtml(t('examples.basic'))}</h3>
         <div class="rounded-lg border border-border p-6 bg-card/30">
-          <button class="${BTN_VARIANTS.default}">${t('demonstration.labels.save')}</button>
+          <button class="${BTN_VARIANTS.default}">${sanitizeHtml(t('demonstration.labels.save'))}</button>
         </div>
+        <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code class="whitespace-pre">&lt;button class="..."&gt;Salvar&lt;/button&gt;</code></div>
       </div>
       <div class="space-y-3">
-        <h3 class="text-sm font-medium">${t('examples.disabled')}</h3>
-        <div class="rounded-lg border border-border p-6 bg-card/30">
-          <button disabled class="${BTN_VARIANTS.default} opacity-50 cursor-not-allowed pointer-events-none">${t('examples.disabled')}</button>
+        <h3 class="text-sm font-medium">${sanitizeHtml(t('examples.withIcon'))}</h3>
+        <div class="rounded-lg border border-border p-6 bg-card/30 flex gap-4">
+          <button class="${BTN_VARIANTS.outline}">${sanitizeHtml(t('demonstration.labels.cancel'))} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:4px" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></button>
+          <button class="${BTN_VARIANTS.default}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>${sanitizeHtml(t('demonstration.labels.save'))}</button>
         </div>
+        <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code class="whitespace-pre">&lt;button class="... outline"&gt;Cancelar &lt;XCircleIcon /&gt;&lt;/button&gt;
+&lt;button class="..."&gt;&lt;MailIcon /&gt; Salvar&lt;/button&gt;</code></div>
+      </div>
+      <div class="space-y-3">
+        <h3 class="text-sm font-medium">${sanitizeHtml(t('examples.disabled'))}</h3>
+        <div class="rounded-lg border border-border p-6 bg-card/30">
+          <button disabled class="${BTN_VARIANTS.default} opacity-50 cursor-not-allowed pointer-events-none">${sanitizeHtml(t('examples.disabled'))}</button>
+        </div>
+        <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code class="whitespace-pre">&lt;button disabled class="..."&gt;Desabilitado&lt;/button&gt;</code></div>
       </div>`;
 
     // Variantes
@@ -472,31 +549,32 @@ export function createButtonDocs(): HTMLElement {
     ] as const;
     variantsContent.innerHTML = `
       <div>
-        <h3 class="text-sm font-semibold text-muted-foreground mb-6 px-1 border-l-2 border-primary/20 pl-3">${t('variants.visualTitle')}</h3>
+        <h3 class="text-sm font-semibold text-muted-foreground mb-6 px-1">${sanitizeHtml(t('variants.visualTitle'))}</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           ${VARIANT_LIST.map(v => `
             <div class="border border-border/60 rounded-xl overflow-hidden bg-card/50 flex flex-col hover:border-primary/30 hover:shadow-sm transition-all">
               <div class="flex-1 flex items-center justify-center p-8 bg-muted/5 min-h-[140px]">
-                <button class="${BTN_VARIANTS[v]}">${t('title')}</button>
+                <button class="${BTN_VARIANTS[v]}">${sanitizeHtml(t('title'))}</button>
               </div>
               <div class="p-4 border-t border-border/40 bg-muted/10 space-y-1">
-                <p class="text-[10px] uppercase font-mono text-primary font-bold tracking-wider px-1.5 py-0.5 bg-primary/5 rounded-sm inline-block mb-1">${v}</p>
-                <p class="text-xs text-muted-foreground leading-relaxed">${t(`variants.items.${v}`)}</p>
+                <p class="text-[11px] uppercase font-mono text-primary font-bold tracking-wider px-1.5 py-0.5 bg-primary/5 rounded-sm inline-block mb-1">${v}</p>
+                <p class="text-xs text-muted-foreground leading-relaxed">${sanitizeHtml(t(`variants.items.${v}`))}</p>
               </div>
             </div>`).join('')}
         </div>
       </div>
       <div>
-        <h3 class="text-sm font-semibold text-muted-foreground mb-6 px-1 border-l-2 border-primary/20 pl-3">${t('variants.sizeTitle')}</h3>
+        <h3 class="text-sm font-semibold text-muted-foreground mb-6 px-1">${sanitizeHtml(t('variants.sizeTitle'))}</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           ${SIZE_LIST.map(({ key, cls }) => `
             <div class="border border-border/60 rounded-xl overflow-hidden bg-card/50 flex flex-col hover:border-primary/30 hover:shadow-sm transition-all">
               <div class="flex-1 flex items-center justify-center p-6 bg-muted/5 min-h-[100px]">
                 <button class="${BTN_VARIANTS[cls]}">${key === 'icon' ? '✉' : t('title')}</button>
               </div>
-              <div class="p-3 border-t border-border/40 bg-muted/10">
-                <p class="text-[10px] uppercase font-mono text-primary font-bold block mb-1">${key}</p>
-                <p class="text-[11px] text-muted-foreground">${t(`variants.sizes.${key}`)}</p>
+              <div class="p-3 border-t border-border/40 bg-muted/10 space-y-1">
+                <p class="text-[11px] uppercase font-mono text-primary font-bold block">${key}</p>
+                <p class="text-xs text-muted-foreground">${sanitizeHtml(t(`variants.sizes.${key}`))}</p>
+                <p class="text-xs text-muted-foreground/70 italic">${sanitizeHtml(t(`variants.sizes.${key}Use`))}</p>
               </div>
             </div>`).join('')}
         </div>
@@ -504,129 +582,204 @@ export function createButtonDocs(): HTMLElement {
 
     // Estados
     h2States.textContent = t('states.title');
-    statesContent.innerHTML = `<table class="w-full border-collapse text-sm">
+    statesContent.innerHTML = `<table class="w-full border-collapse text-sm" style="margin:0">
       <thead><tr class="border-b border-border text-left bg-muted/50">
-        <th class="p-3 border-r border-border font-medium">${t('states.table.state')}</th>
-        <th class="p-3 border-r border-border font-medium">${t('states.table.visual')}</th>
-        <th class="p-3 font-medium">${t('states.table.trigger')}</th>
+        <th class="p-3 border-r border-border font-medium">${sanitizeHtml(t('states.table.state'))}</th>
+        <th class="p-3 border-r border-border font-medium">${sanitizeHtml(t('states.table.visual'))}</th>
+        <th class="p-3 font-medium">${sanitizeHtml(t('states.table.trigger'))}</th>
       </tr></thead>
       <tbody>
-        <tr class="border-b border-border hover:bg-muted/5"><td class="p-3 border-r border-border font-medium">Default</td><td class="p-3 border-r border-border"><button class="${BTN_VARIANTS.sm}">${t('demonstration.labels.save')}</button></td><td class="p-3 text-muted-foreground">${t('states.table.initial')}</td></tr>
-        <tr class="hover:bg-muted/5"><td class="p-3 border-r border-border font-medium">Disabled</td><td class="p-3 border-r border-border"><button disabled class="${BTN_VARIANTS.sm} opacity-50 cursor-not-allowed">${t('demonstration.labels.save')}</button></td><td class="p-3 text-muted-foreground">${t('states.table.disabled')}</td></tr>
+        <tr class="border-b border-border hover:bg-muted/5"><td class="p-3 border-r border-border font-medium">Default</td><td class="p-3 border-r border-border"><button class="${BTN_VARIANTS.sm}">${sanitizeHtml(t('demonstration.labels.save'))}</button></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('states.table.initial'))}</td></tr>
+        <tr class="border-b border-border hover:bg-muted/5"><td class="p-3 border-r border-border font-medium">Hover</td><td class="p-3 border-r border-border text-muted-foreground italic">${sanitizeHtml(t('states.table.hover'))}</td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('states.table.hoverTrigger'))}</td></tr>
+        <tr class="border-b border-border hover:bg-muted/5"><td class="p-3 border-r border-border font-medium">Focus</td><td class="p-3 border-r border-border"><button class="${BTN_VARIANTS.sm} ring-[3px] ring-offset-0 outline-none" style="box-shadow:0 0 0 3px var(--ring,hsl(var(--primary)/0.5))">${sanitizeHtml(t('demonstration.labels.save'))}</button></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('states.table.focusTrigger'))}</td></tr>
+        <tr class="border-b border-border hover:bg-muted/5"><td class="p-3 border-r border-border font-medium">Disabled</td><td class="p-3 border-r border-border"><button disabled class="${BTN_VARIANTS.sm} opacity-50 cursor-not-allowed pointer-events-none">${sanitizeHtml(t('demonstration.labels.save'))}</button></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('states.table.disabledTrigger'))}</td></tr>
+        <tr class="border-b border-border hover:bg-muted/5"><td class="p-3 border-r border-border font-medium">Loading</td><td class="p-3 border-r border-border"><button disabled class="${BTN_VARIANTS.sm} opacity-50 cursor-not-allowed pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Aguarde…</button></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('states.table.loadingTrigger'))}</td></tr>
+        <tr class="hover:bg-muted/5"><td class="p-3 border-r border-border font-medium">aria-invalid</td><td class="p-3 border-r border-border"><button aria-invalid="true" class="${BTN_VARIANTS.sm} ring-[3px] ring-destructive/20 border-destructive">${sanitizeHtml(t('demonstration.labels.save'))}</button></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('states.table.invalidTrigger'))}</td></tr>
       </tbody></table>`;
 
     // Propriedades
     h2Props.textContent = t('props.title');
     propsContent.innerHTML = `
       <div>
-        <h3 class="font-medium text-sm mb-3">${t('props.interface')}</h3>
-        <pre class="bg-muted p-4 rounded-lg font-mono text-xs border overflow-x-auto whitespace-pre leading-relaxed"><code>interface ButtonOptions {
-  variant?: 'default'|'destructive'|'outline'|'secondary'|'ghost'|'link';
-  size?: 'default'|'sm'|'lg'|'icon';
-  disabled?: boolean;
-  class?: string;
-}</code></pre>
+        <h3 class="font-medium text-sm mb-3">${sanitizeHtml(t('props.interface'))}</h3>
+        <div class="bg-muted p-4 rounded-lg font-mono text-xs border overflow-x-auto whitespace-pre leading-relaxed"><code>interface ButtonOptions {
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+  size?: "default" | "sm" | "lg" | "icon"
+  disabled?: boolean
+  class?: string
+}</code></div>
       </div>
-      <div class="border rounded-lg overflow-hidden shadow-sm">
-        <table class="w-full border-collapse text-sm">
+      <div class="border rounded-xl overflow-x-auto p-4 shadow-sm">
+        <table class="w-full border-collapse text-sm" style="margin:0">
           <thead class="bg-muted/50 border-b text-left"><tr>
-            <th class="p-3 border-r border-border font-semibold">${t('props.table.prop')}</th>
-            <th class="p-3 border-r border-border font-semibold">${t('props.table.type')}</th>
-            <th class="p-3 border-r border-border font-semibold">${t('props.table.default')}</th>
-            <th class="p-3 font-semibold">${t('props.table.description')}</th>
+            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('props.table.prop'))}</th>
+            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('props.table.type'))}</th>
+            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('props.table.default'))}</th>
+            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('props.table.required'))}</th>
+            <th class="p-3 font-semibold">${sanitizeHtml(t('props.table.description'))}</th>
           </tr></thead>
           <tbody>
-            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-xs font-bold text-primary">variant</td><td class="p-3 border-r border-border font-mono text-[10px] text-muted-foreground">"default"|"destructive"|…</td><td class="p-3 border-r border-border font-mono text-[10px]">"default"</td><td class="p-3 text-xs text-muted-foreground">${t('props.table.variant')}</td></tr>
-            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-xs font-bold text-primary">size</td><td class="p-3 border-r border-border font-mono text-[10px] text-muted-foreground">"default"|"sm"|"lg"|"icon"</td><td class="p-3 border-r border-border font-mono text-[10px]">"default"</td><td class="p-3 text-xs text-muted-foreground">${t('props.table.size')}</td></tr>
-            <tr class="hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-xs font-bold text-primary">disabled</td><td class="p-3 border-r border-border font-mono text-[10px] text-muted-foreground">boolean</td><td class="p-3 border-r border-border font-mono text-[10px]">false</td><td class="p-3 text-xs text-muted-foreground">${t('props.table.disabled')}</td></tr>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono font-bold text-primary">variant</td><td class="p-3 border-r border-border font-mono text-muted-foreground">"default"|"destructive"|"outline"|"secondary"|"ghost"|"link"</td><td class="p-3 border-r border-border font-mono">"default"</td><td class="p-3 border-r border-border text-muted-foreground">Não</td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('props.table.variant'))}</td></tr>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono font-bold text-primary">size</td><td class="p-3 border-r border-border font-mono text-muted-foreground">"default"|"sm"|"lg"|"icon"</td><td class="p-3 border-r border-border font-mono">"default"</td><td class="p-3 border-r border-border text-muted-foreground">Não</td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('props.table.size'))}</td></tr>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono font-bold text-primary">disabled</td><td class="p-3 border-r border-border font-mono text-muted-foreground">boolean</td><td class="p-3 border-r border-border font-mono">false</td><td class="p-3 border-r border-border text-muted-foreground">Não</td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('props.table.disabled'))}</td></tr>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono font-bold text-primary">onclick</td><td class="p-3 border-r border-border font-mono text-muted-foreground">(event: MouseEvent) =&gt; void</td><td class="p-3 border-r border-border font-mono">—</td><td class="p-3 border-r border-border text-muted-foreground">Não</td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('props.table.onClick'))}</td></tr>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono font-bold text-primary">type</td><td class="p-3 border-r border-border font-mono text-muted-foreground">"button"|"submit"|"reset"</td><td class="p-3 border-r border-border font-mono">"button"</td><td class="p-3 border-r border-border text-muted-foreground">Não</td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('props.table.type'))}</td></tr>
+            <tr class="hover:bg-muted/5"><td class="p-3 border-r border-border font-mono font-bold text-primary">class</td><td class="p-3 border-r border-border font-mono text-muted-foreground">string</td><td class="p-3 border-r border-border font-mono">—</td><td class="p-3 border-r border-border text-muted-foreground">Não</td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('props.table.className'))}</td></tr>
           </tbody>
         </table>
+      </div>
+      <div class="space-y-3">
+        <h3 class="font-medium text-sm">${sanitizeHtml(t('props.extensibilityTitle'))}</h3>
+        <div class="space-y-3">
+          <p class="text-sm text-muted-foreground bg-muted/30 rounded-lg p-4 border">${sanitizeHtml(t('props.extensibility.classNameNote'))}</p>
+          <p class="text-sm text-muted-foreground bg-muted/30 rounded-lg p-4 border">${sanitizeHtml(t('props.extensibility.asChildNote'))}</p>
+        </div>
       </div>`;
 
     // Tokens
     h2Tokens.textContent = t('tokens.title');
-    tokensContent.innerHTML = `<table class="w-full border-collapse text-sm">
-      <thead><tr class="border-b border-border bg-muted/50 text-left">
-        <th class="p-3 border-r border-border font-medium">${t('tokens.table.token')}</th>
-        <th class="p-3 border-r border-border font-medium">${t('tokens.table.class')}</th>
-        <th class="p-3 font-medium">${t('tokens.table.part')}</th>
-      </tr></thead>
-      <tbody>
-        <tr class="border-b border-border hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-xs text-primary font-medium"><code>--primary</code></td><td class="p-3 border-r border-border font-mono text-xs text-primary"><code>bg-primary</code></td><td class="p-3 text-xs text-muted-foreground">${t('tokens.table.primary')}</td></tr>
-        <tr class="hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-xs text-primary font-medium"><code>--radius</code></td><td class="p-3 border-r border-border font-mono text-xs text-primary"><code>rounded-md</code></td><td class="p-3 text-xs text-muted-foreground">${t('tokens.table.radius')}</td></tr>
-      </tbody></table>`;
+    tokensContent.className = 'space-y-6';
+    tokensContent.innerHTML = `
+      <div class="border rounded-xl overflow-x-auto p-4 shadow-sm">
+        <table class="w-full border-collapse text-sm" style="margin:0">
+          <thead><tr class="border-b border-border bg-muted/50 text-left">
+            <th class="p-3 border-r border-border font-medium">${sanitizeHtml(t('tokens.table.token'))}</th>
+            <th class="p-3 border-r border-border font-medium">${sanitizeHtml(t('tokens.table.class'))}</th>
+            <th class="p-3 font-medium">${sanitizeHtml(t('tokens.table.part'))}</th>
+          </tr></thead>
+          <tbody>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-primary font-medium"><code>--primary</code></td><td class="p-3 border-r border-border font-mono text-primary"><code>bg-primary</code></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('tokens.table.primary'))}</td></tr>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-primary font-medium"><code>--primary-foreground</code></td><td class="p-3 border-r border-border font-mono text-primary"><code>text-primary-foreground</code></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('tokens.table.primaryForeground'))}</td></tr>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-primary font-medium"><code>--secondary</code></td><td class="p-3 border-r border-border font-mono text-primary"><code>bg-secondary</code></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('tokens.table.secondary'))}</td></tr>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-primary font-medium"><code>--destructive</code></td><td class="p-3 border-r border-border font-mono text-primary"><code>bg-destructive</code></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('tokens.table.destructive'))}</td></tr>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-primary font-medium"><code>--border</code></td><td class="p-3 border-r border-border font-mono text-primary"><code>border-border</code></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('tokens.table.border'))}</td></tr>
+            <tr class="border-b hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-primary font-medium"><code>--ring</code></td><td class="p-3 border-r border-border font-mono text-primary"><code>ring-ring</code></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('tokens.table.ring'))}</td></tr>
+            <tr class="hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-primary font-medium"><code>--radius</code></td><td class="p-3 border-r border-border font-mono text-primary"><code>rounded-md</code></td><td class="p-3 text-muted-foreground">${sanitizeHtml(t('tokens.table.radius'))}</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="space-y-2">
+        <h3 class="font-medium text-sm">${sanitizeHtml(t('tokens.customizationTitle'))}</h3>
+        <div class="bg-muted p-4 rounded-lg font-mono text-xs border overflow-x-auto whitespace-pre leading-relaxed"><code>/* Em globals.css ou theme-custom.css */
+html.meu-tema {
+  --primary: 262 80% 58%; /* Roxo — light mode */
+  --primary-foreground: 0 0% 100%;
+}
+html.meu-tema.dark {
+  --primary: 262 60% 75%; /* Roxo — dark mode */
+  --primary-foreground: 0 0% 100%;
+}</code></div>
+      </div>`;
 
     // Acessibilidade
-    h2A11y.innerHTML = `<span class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-lg">♿</span>${t('accessibility.title')}`;
+    h2A11y.className = 'text-xl font-semibold mb-4';
+    h2A11y.textContent = t('accessibility.title');
+    a11yContent.className = 'border rounded-xl p-6 shadow-sm space-y-6';
     a11yContent.innerHTML = `
-      <div class="bg-muted/30 border p-6 rounded-xl space-y-4">
-        <h4 class="font-semibold text-sm">${t('accessibility.featuresTitle')}</h4>
-        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 list-none p-0 m-0">
-          ${[1, 2, 3].map(i => `<li class="flex gap-3 text-sm text-muted-foreground bg-card p-3 rounded-lg border border-border/40 list-none"><span class="text-primary font-bold">✓</span><span>${sanitizeHtml(t(`accessibility.item${i}`))}</span></li>`).join('')}
-        </ul>
-      </div>
+      <ul class="space-y-3 text-sm text-muted-foreground list-disc pl-5">
+        ${[1, 2, 3, 4, 5].map(i => `<li>${sanitizeHtml(t(`accessibility.item${i}`))}</li>`).join('')}
+      </ul>
       <div class="space-y-4">
-        <h4 class="font-semibold text-sm">⌨️ ${t('accessibility.keyboardTitle')}</h4>
+        <h3 class="font-medium text-sm">${sanitizeHtml(t('accessibility.keyboardTitle'))}</h3>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          ${['tab', 'enter', 'space'].map(k => `<div class="bg-card border rounded-xl p-4 shadow-sm"><code class="text-[10px] bg-muted px-2 py-0.5 rounded-md uppercase font-bold text-primary border border-border/60 block mb-2">${k}</code><p class="text-xs text-muted-foreground italic">${t(`accessibility.keyboard.${k}`)}</p></div>`).join('')}
+          ${['tab', 'enter', 'space'].map(k => `<div class="bg-muted/30 border rounded-xl p-4"><code class="text-[10px] bg-muted px-2 py-0.5 rounded-md uppercase font-bold text-primary border border-border/60 block mb-2">${k}</code><p class="text-xs text-muted-foreground leading-relaxed">${sanitizeHtml(t(`accessibility.keyboard.${k}`))}</p></div>`).join('')}
         </div>
       </div>`;
 
     // Relacionados
     h2Related.textContent = t('related.title');
-    relatedContent.innerHTML = `
-      <div class="border rounded-xl p-4 bg-muted/20 hover:bg-muted/30 transition-colors cursor-pointer"><h4 class="text-sm font-semibold mb-1">Toggle</h4><p class="text-xs text-muted-foreground">${t('related.toggle')}</p></div>
-      <div class="border rounded-xl p-4 bg-muted/20 hover:bg-muted/30 transition-colors cursor-pointer"><h4 class="text-sm font-semibold mb-1">Dropdown Menu</h4><p class="text-xs text-muted-foreground">${t('related.dropdown')}</p></div>`;
+    const relatedData = [
+      { name: 'Toggle',        desc: t('related.toggle'),   path: '?path=/docs/ui-toggle--docs' },
+      { name: 'Dropdown Menu', desc: t('related.dropdown'), path: '?path=/docs/ui-dropdownmenu--docs' },
+    ];
+    relatedContent.innerHTML = relatedData.map(item => `<div role="link" tabindex="0" data-path="${item.path}" class="border rounded-xl p-4 bg-muted/20 hover:bg-muted/30 transition-colors cursor-pointer group"><h4 class="text-sm font-semibold mb-1 group-hover:text-primary transition-colors">${sanitizeHtml(item.name)}</h4><p class="text-xs text-muted-foreground">${sanitizeHtml(item.desc)}</p></div>`).join('');
+    relatedContent.querySelectorAll<HTMLElement>('[data-path]').forEach(el => {
+      const path = el.dataset.path!;
+      const navigate = () => { (window.top ?? window).location.href = path; };
+      el.addEventListener('click', navigate);
+      el.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigate(); });
+    });
 
     // Notas
     h2Notes.textContent = t('notes.title');
     notesContent.innerHTML = `
-      <div class="p-4 bg-primary/5 border-l-4 border-primary rounded-r-lg"><p class="text-sm text-muted-foreground">${t('notes.tip1')}</p></div>
-      <div class="p-4 bg-orange-500/5 border-l-4 border-orange-500 rounded-r-lg"><p class="text-sm text-muted-foreground">${t('notes.tip2')}</p></div>`;
+      <div class="p-4 bg-primary/5 border-l-4 border-primary rounded-r-lg"><p class="text-sm text-muted-foreground">${sanitizeHtml(t('notes.tip1'))}</p></div>
+      <div class="p-4 bg-orange-500/5 border-l-4 border-orange-500 rounded-r-lg"><p class="text-sm text-muted-foreground">${sanitizeHtml(t('notes.tip2'))}</p></div>`;
 
     // Analytics
-    h2Analytics.innerHTML = `<span class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-lg">📊</span>${t('analytics.title')}`;
+    h2Analytics.className = 'text-xl font-semibold mb-4';
+    h2Analytics.textContent = t('analytics.title');
     analyticsContent.innerHTML = `
-      <p class="text-sm text-muted-foreground">${t('analytics.description')}</p>
-      <div class="border rounded-xl overflow-hidden shadow-sm">
-        <table class="w-full border-collapse text-sm">
+      <p class="text-sm text-muted-foreground">${sanitizeHtml(t('analytics.description'))}</p>
+      <div class="border rounded-xl overflow-x-auto p-4 shadow-sm">
+        <table class="w-full border-collapse text-sm" style="margin:0">
           <thead><tr class="bg-muted/50 border-b text-left">
-            <th class="p-4 border-r border-border font-semibold w-1/4">${t('analytics.table.event')}</th>
-            <th class="p-4 border-r border-border font-semibold w-1/4">${t('analytics.table.trigger')}</th>
-            <th class="p-4 font-semibold">${t('analytics.table.payload')}</th>
+            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('analytics.table.event'))}</th>
+            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('analytics.table.trigger'))}</th>
+            <th class="p-3 font-semibold">${sanitizeHtml(t('analytics.table.payload'))}</th>
           </tr></thead>
-          <tbody><tr class="hover:bg-muted/5">
-            <td class="p-4 border-r border-border font-mono text-xs text-primary font-bold">${t('analytics.table.click')}</td>
-            <td class="p-4 border-r border-border text-xs">${t('analytics.table.clickTrigger')}</td>
-            <td class="p-4 font-mono text-[11px] text-muted-foreground bg-muted/10">${t('analytics.table.clickPayload')}</td>
-          </tr></tbody>
+          <tbody>
+            ${['pageView', 'sectionViewed', 'langSwitch', 'click'].map(key => `<tr class="border-b last:border-0 hover:bg-muted/5"><td class="p-3 border-r border-border font-mono text-primary font-bold">${sanitizeHtml(t(`analytics.table.${key}`))}</td><td class="p-3 border-r border-border">${sanitizeHtml(t(`analytics.table.${key}Trigger`))}</td><td class="p-3 font-mono text-muted-foreground">${sanitizeHtml(t(`analytics.table.${key}Payload`))}</td></tr>`).join('')}
+          </tbody>
         </table>
       </div>`;
 
     // Testes
-    h2Tests.innerHTML = `<span class="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center text-lg">🧪</span>${t('testes.title')}`;
+    h2Tests.className = 'text-xl font-semibold mb-6';
+    h2Tests.textContent = t('testes.title');
+
+    const priorityBadge = (p: string) => p === 'high'
+      ? `<span class="inline-flex items-center rounded-md border border-orange-500/20 bg-orange-500/10 px-2 py-0.5 text-[11px] font-medium text-orange-600 h-5">${sanitizeHtml(tNav('common.high'))}</span>`
+      : `<span class="inline-flex items-center rounded-md border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[11px] font-medium text-blue-600 h-5">${sanitizeHtml(tNav('common.medium'))}</span>`;
+
     testsContent.innerHTML = `
       <div>
-        <h3 class="font-semibold text-sm mb-4 text-muted-foreground">${t('testes.functional')}</h3>
-        <div class="border rounded-xl overflow-hidden shadow-sm">
+        <h3 class="font-semibold text-sm mb-1">${sanitizeHtml(t('testes.functional.title'))}</h3>
+        <p class="text-xs text-muted-foreground mb-4">${sanitizeHtml(t('testes.functional.description'))}</p>
+        <div class="border rounded-xl overflow-x-auto p-4 shadow-sm">
           <table class="w-full border-collapse text-sm">
             <thead class="bg-muted/50 border-b text-left"><tr>
-              <th class="p-4 border-r border-border font-semibold">${tNav('common.userAction')}</th>
-              <th class="p-4 border-r border-border font-semibold">${tNav('common.expectedResult')}</th>
-              <th class="p-4 font-semibold w-24">${tNav('common.priority')}</th>
+              <th class="p-4 border-r border-border font-semibold">${sanitizeHtml(tNav('common.userAction'))}</th>
+              <th class="p-4 border-r border-border font-semibold">${sanitizeHtml(tNav('common.expectedResult'))}</th>
+              <th class="p-4 font-semibold w-24">${sanitizeHtml(tNav('common.priority'))}</th>
             </tr></thead>
-            <tbody><tr class="hover:bg-muted/5">
-              <td class="p-4 border-r border-border text-xs font-medium">${t('testes.action')}</td>
-              <td class="p-4 border-r border-border text-xs text-muted-foreground">${t('testes.result')}</td>
-              <td class="p-4"><span class="inline-flex items-center rounded-md border border-orange-500/20 bg-orange-500/10 px-2 py-0.5 text-[9px] uppercase tracking-wider font-bold text-orange-600">${t('testes.priority')}</span></td>
-            </tr></tbody>
+            <tbody>
+              ${[1, 2, 3, 4, 5, 6].map(i => `<tr class="border-b last:border-0 hover:bg-muted/5">
+                <td class="p-4 border-r border-border font-medium">${sanitizeHtml(t(`testes.functional.item${i}.action`))}</td>
+                <td class="p-4 border-r border-border text-muted-foreground">${sanitizeHtml(t(`testes.functional.item${i}.result`))}</td>
+                <td class="p-4">${priorityBadge(t(`testes.functional.item${i}.priority`))}</td>
+              </tr>`).join('')}
+            </tbody>
           </table>
         </div>
       </div>
       <div>
-        <h3 class="font-semibold text-sm mb-4 text-muted-foreground">${t('testes.accessibility')}</h3>
+        <h3 class="font-semibold text-sm mb-1">${sanitizeHtml(t('testes.accessibility.title'))}</h3>
+        <p class="text-xs text-muted-foreground mb-4">${sanitizeHtml(t('testes.accessibility.description'))}</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          ${[1, 2, 3, 4].map(i => `<div class="flex gap-3 items-start p-3 bg-muted/10 rounded-lg border border-border/40"><div class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-[10px] text-primary font-bold italic">axe</span></div><span class="text-xs text-muted-foreground">${t(`testes.a11yItem${i}`)}</span></div>`).join('')}
+          ${[1, 2, 3, 4, 5, 6].map(i => `<div class="flex gap-3 items-start p-3 bg-muted/10 rounded-lg border border-border/40"><div class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-[10px] text-primary font-bold italic">axe</span></div><span class="text-xs text-muted-foreground leading-relaxed">${sanitizeHtml(t(`testes.accessibility.item${i}`))}</span></div>`).join('')}
+        </div>
+      </div>
+      <div>
+        <h3 class="font-semibold text-sm mb-1">${sanitizeHtml(t('testes.visual.title'))}</h3>
+        <p class="text-xs text-muted-foreground mb-4">${sanitizeHtml(t('testes.visual.description'))}</p>
+        <div class="border rounded-xl overflow-x-auto p-4 shadow-sm">
+          <table class="w-full border-collapse text-sm">
+            <thead class="bg-muted/50 border-b text-left"><tr>
+              <th class="p-4 border-r border-border font-semibold">${sanitizeHtml(tNav('common.storyState'))}</th>
+              <th class="p-4 border-r border-border font-semibold text-center w-32">${sanitizeHtml(tNav('common.themeLight'))}</th>
+              <th class="p-4 border-r border-border font-semibold text-center w-32">${sanitizeHtml(tNav('common.themeDark'))}</th>
+              <th class="p-4 font-semibold w-24">${sanitizeHtml(tNav('common.priority'))}</th>
+            </tr></thead>
+            <tbody>
+              ${[1, 2, 3, 4, 5, 6, 7].map(i => `<tr class="border-b last:border-0 hover:bg-muted/5">
+                <td class="p-4 border-r border-border font-medium">${sanitizeHtml(t(`testes.visual.item${i}.story`))}</td>
+                <td class="p-4 border-r border-border text-center text-emerald-600 font-medium">${sanitizeHtml(t('testes.visual.required'))}</td>
+                <td class="p-4 border-r border-border text-center text-emerald-600 font-medium">${sanitizeHtml(t('testes.visual.required'))}</td>
+                <td class="p-4">${priorityBadge(t(`testes.visual.item${i}.priority`))}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
         </div>
       </div>`;
   }
@@ -642,22 +795,22 @@ export function createButtonDocs(): HTMLElement {
     'relacionados', 'notas', 'analytics', 'testes',
   ];
 
-  let observers: IntersectionObserver[] = [];
+  let sectionObserver: IntersectionObserver | null = null;
 
   function setupObservers() {
-    observers.forEach(o => o.disconnect());
-    observers = [];
+    sectionObserver?.disconnect();
+    sectionObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          updateActiveNav(entry.target.id);
+          track('docs_section_viewed', { section_id: entry.target.id, component_name: 'button', locale: getLocale() });
+          break;
+        }
+      }
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
     ALL_SECTION_IDS.forEach(id => {
       const el = root.querySelector<HTMLElement>(`#${id}`);
-      if (!el) return;
-      const obs = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) {
-          updateActiveNav(id);
-          track('docs_section_viewed', { section_id: id, component_name: 'button', locale: getLocale() });
-        }
-      }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
-      obs.observe(el);
-      observers.push(obs);
+      if (el) sectionObserver!.observe(el);
     });
   }
 
@@ -674,7 +827,7 @@ export function createButtonDocs(): HTMLElement {
   const detachObserver = new MutationObserver(() => {
     if (!root.isConnected) {
       cleanups.forEach(fn => fn());
-      observers.forEach(o => o.disconnect());
+      sectionObserver?.disconnect();
       detachObserver.disconnect();
     }
   });

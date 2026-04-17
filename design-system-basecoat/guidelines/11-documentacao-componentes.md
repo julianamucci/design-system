@@ -211,6 +211,84 @@ export const Default: Story = {
 
 ---
 
+### Componentes Provider + API imperativa (Sonner)
+
+Componentes como Sonner expõem duas superfícies: um **provider** e uma **função imperativa** (`toast()`). No Basecoat, como o pacote `sonner` não existe para vanilla TS, a stack usa uma **implementação própria** em `toast-utils.ts`.
+
+**Diferenças da implementação vanilla:**
+
+1. `toast-utils.ts` — utilitário DOM puro que replica a API do Sonner: `toast()`, `toast.success()`, `toast.error()`, `toast.promise()`, `toast.dismiss()`.
+2. Toasts são criados via `document.createElement` com classes Tailwind equivalentes às do Sonner original.
+3. Container usa `role="region"` + `aria-label="Notifications"`. Cada toast usa `role="status"` + `aria-live="polite"`.
+4. `injectToastStyles()` adiciona a animação CSS do spinner de loading.
+
+**Adaptações nas docs pages e stories** (mesmas que React):
+
+1. **"Variantes" → "Tipos de Toast"** — 6 tipos via API, não via `cva()`.
+2. **"Propriedades"** — duas tabelas: Toaster provider + toast() options.
+3. **"Importação"** — duas seções (provider + função).
+4. **"Demonstração"** — botões interativos. Evento `toast_demo_triggered`.
+5. **"Anatomia"** — 7 items.
+
+**Estrutura de stories:**
+
+```
+src/components/ui/
+  ├── toast-utils.ts                            (implementação vanilla)
+  ├── sonner.stories.ts                         (meta + Playground)
+  ├── sonner-tipos.stories.ts                   (6 tipos)
+  ├── sonner-posicoes.stories.ts                (6 posições)
+  ├── sonner-composicoes.stories.ts             (com ação, descrição, promise, rich colors)
+  └── sonner-estados.stories.ts                 (expandido, dismiss, close button, duração)
+```
+
+---
+
+### Componentes Presentacionais Compostos (padrão Table)
+
+Componentes como **Table** expõem múltiplas **fábricas vanilla** que constroem elementos DOM semânticos com as mesmas classes Tailwind das demais stacks. O arquivo `src/components/ui/table.ts` exporta 8 fábricas: `createTable` (retorna `{ wrapper, table }`), `createTableHeader`, `createTableBody`, `createTableFooter`, `createTableRow`, `createTableHead`, `createTableCell`, `createTableCaption` — mais a constante `TABLE_TOKENS` com as classes para uso externo. **Sem** `cva()` — apenas `mergeClass(base, extra?)`. Seguem o mesmo template de 15 seções, com as seguintes adaptações:
+
+1. **Anatomia** — uma entrada por fábrica (`anatomy.item1` a `anatomy.item8`). `structureCode` mostra a estrutura HTML resultante (`<div><table><thead>…`) — não código TS da fábrica.
+
+2. **Variantes → Composições** — sem `cva()`. `variants.items` lista composições recorrentes (`basic`, `withCaption`, `withFooter`, `empty`). Título da seção: `"Composições e Tamanhos"` (`variants.title`). Cards seguem §11.1 do guideline 08. A área de preview monta a composição chamando as fábricas (`const { wrapper, table } = createTable(); const thead = createTableHeader(); …`) e faz `.appendChild` na ordem correta.
+
+3. **Tamanhos → Padrões de Densidade** — `variants.sizes` descreve convenções de altura aplicadas via parâmetro `extraClass` de `createTableHead`/`createTableCell` (`h-8` compact, `h-10` default, `h-12` comfortable) — **não** são argumentos dedicados. Cards seguem o mesmo layout de 3 linhas de §11.2 do guideline 08.
+
+4. **Estados** — apenas estados estruturais: `hover` (automático via `hover:bg-muted/50`), `selected` (atribuído via `tr.setAttribute('data-state', 'selected')`), `empty` (renderização condicional com `colspan`), `scroll` (automático via `overflow-x-auto` no wrapper). **Omitir** `disabled`/`loading` — tabelas não são interativas.
+
+5. **Propriedades → Argumentos de fábrica** — cada fábrica aceita apenas `extraClass?: string` (append às classes base). Para atributos HTML, manipular o elemento retornado (`th.setAttribute('scope', 'col')`, `td.colSpan = 2`, `tr.dataset.state = 'selected'`). Documentar chaves `props.table.*`: `extraClass`, `colspan`, `rowspan`, `scope`, `dataState`. **Não** há interface TypeScript de props — exibir assinatura da função: `createTable(extraClass?: string): { wrapper, table }`.
+
+6. **Analytics** — componente estrutural; dispara apenas eventos da docs page (`docs_page_view`, `docs_section_viewed`, `language_switched`). Eventos de domínio (`table_sorted`, `row_selected`) pertencem a wrappers (ex: futuro `createDataTable`), não às fábricas puras. A chave `analytics.description` deve explicitar: "Table é estrutural — não dispara eventos próprios".
+
+7. **Estrutura de stories**:
+   ```
+   src/components/ui/
+     ├── table.ts                                  (8 fábricas + TABLE_TOKENS)
+     ├── table.stories.ts                          (meta + Playground com invoice demo)
+     ├── table-composicoes.stories.ts              (basic, withCaption, withFooter, withSelection)
+     ├── table-estados.stories.ts                  (hover, selected, empty, scroll)
+     └── table-densidades.stories.ts               (compact, default, comfortable via extraClass)
+   ```
+   **Omitir** `table-variantes` e `table-tamanhos` — não existem argumentos `variant`/`size`. O `render` de cada story retorna o `wrapper` de `createTable()` após montar a composição:
+   ```ts
+   render: (args) => {
+     const { wrapper, table } = createTable();
+     const thead = createTableHeader();
+     // ... monta a árvore e appendChild
+     return wrapper;
+   }
+   ```
+
+8. **Play functions** — focam em estrutura semântica (não em interações):
+   - `<caption>` presente e visível (caption-bottom)
+   - Headers usam `<th>` com atributo `scope`
+   - `data-state="selected"` aplica `bg-muted` persistente
+   - `colspan` em footer cobre colunas corretas
+   - Overflow horizontal aparece em viewport estreito
+   - Estado vazio renderiza linha única com colspan total
+
+---
+
 ## Checklist de implementação
 
 - [ ] `translations.json` criado em `src/components/docs/content/{slug}/`

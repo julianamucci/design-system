@@ -24,7 +24,7 @@ const meta = {
     size: {
       control: "select",
       description: "Define o tamanho e o preenchimento",
-      options: ["default", "sm", "lg", "icon"],
+      options: ["default", "sm", "lg", "icon", "icon-sm", "icon-lg"],
     },
     disabled: {
       control: "boolean",

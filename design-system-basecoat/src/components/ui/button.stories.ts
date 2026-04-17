@@ -6,22 +6,24 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Variantes e tamanhos ─────────────────────────────────────────────────────
 
 const BTN_BASE =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer';
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]';
 
 const VARIANT_CLASSES: Record<string, string> = {
   default:     `${BTN_BASE} bg-primary text-primary-foreground hover:bg-primary/90`,
-  destructive: `${BTN_BASE} bg-destructive text-white hover:bg-destructive/90`,
-  outline:     `${BTN_BASE} border bg-background hover:bg-accent hover:text-accent-foreground`,
+  destructive: `${BTN_BASE} bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20`,
+  outline:     `${BTN_BASE} border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground`,
   secondary:   `${BTN_BASE} bg-secondary text-secondary-foreground hover:bg-secondary/80`,
   ghost:       `${BTN_BASE} hover:bg-accent hover:text-accent-foreground`,
   link:        `${BTN_BASE} text-primary underline-offset-4 hover:underline`,
 };
 
 const SIZE_CLASSES: Record<string, string> = {
-  default: 'h-9 px-4 py-2',
-  sm:      'h-8 px-3 rounded-md',
-  lg:      'h-10 px-6 rounded-md',
-  icon:    'size-9',
+  'default':  'h-9 px-4 py-2',
+  'sm':       'h-8 px-3 rounded-md',
+  'lg':       'h-10 px-6 rounded-md',
+  'icon':     'size-9',
+  'icon-sm':  'size-8',
+  'icon-lg':  'size-10',
 };
 
 function buildButton(args: {

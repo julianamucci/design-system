@@ -340,7 +340,7 @@ Layout de **grid de cards** — cada card mostra o componente centralizado + met
             </div>
             {/* Área de metadados */}
             <div className="p-4 border-t border-border/40 bg-muted/10 space-y-1">
-              <p className="text-[11px] font-mono text-primary font-bold tracking-tight px-1.5 py-0.5 bg-primary/5 rounded-sm inline-block mb-1">
+              <p className="text-[11px] uppercase font-mono text-primary font-bold tracking-wider px-1.5 py-0.5 bg-primary/5 rounded-sm inline-block mb-1">
                 {label}
               </p>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -661,3 +661,76 @@ Para componentes estáticos (Badge, Separator, Avatar):
 - Omitir play function do Playground
 - Remover seções da sidebar que foram omitidas
 - Manter no mínimo: Header + Demonstração + Variantes + Propriedades + Acessibilidade
+
+### Componentes Provider + API imperativa (Sonner)
+
+Componentes como Sonner expõem duas superfícies: um **provider** (`<Toaster />`) e uma **função imperativa** (`toast()`). As docs pages desses componentes seguem o mesmo template de 14 seções mas com adaptações:
+
+**Diferenças na estrutura de conteúdo** (`translations.json`):
+
+1. **Seção "Variantes"** → "Tipos de Toast" — `variants.items` lista tipos de API (`default`, `success`, `error`, `warning`, `info`, `loading`) em vez de variantes `cva()`. Os cards de preview chamam a API programaticamente (ex: `toast.success('Mensagem')`) em vez de renderizar com prop `variant`.
+
+2. **Subseção "Posições"** — `variants.positions` com 6 opções de posicionamento. Cada posição tem par `{key}` (descrição) + `{key}Use` (contexto de uso), no mesmo padrão dos size cards.
+
+3. **Seção "Propriedades"** — duas tabelas separadas:
+   - `props.toasterTitle` + `props.table.*` — props do `<Toaster />` provider
+   - `props.toastTitle` + `props.toastTable.*` — opções do `toast()` por notificação
+
+4. **Seção "Importação"** — duas seções:
+   - `import.basic` — import do provider (`Toaster`)
+   - `import.usage` — import da função `toast` (de `sonner`)
+
+5. **Seção "Demonstração"** — botões interativos que disparam toasts. Evento `toast_demo_triggered` emitido ao clicar.
+
+6. **Seção "Anatomia"** — 7 items (provider, container, ícone de tipo, título, descrição, botão de ação, botão de fechar). A `structureCode` mostra chamadas de API em vez de JSX aninhado.
+
+**Estrutura de stories**:
+
+```
+src/components/ui/
+  ├── sonner.tsx                              (componente wrapper)
+  ├── sonner.stories.tsx                      (meta + Playground)
+  ├── sonner-tipos.stories.tsx                (default, success, error, warning, info, loading)
+  ├── sonner-posicoes.stories.tsx             (6 posições)
+  ├── sonner-composicoes.stories.tsx          (com ação, com descrição, promise, rich colors)
+  └── sonner-estados.stories.tsx              (expandido, dismiss, múltiplos empilhados)
+```
+
+**Playground play function**: deve cobrir os 8 critérios funcionais da seção de testes — disparar toast, aguardar timeout, clicar ação, fechar, promise resolve/reject, múltiplos, hover expand.
+
+---
+
+### Componentes Presentacionais Compostos (padrão Table)
+
+Componentes como **Table** expõem múltiplos sub-componentes independentes (8 para Table: `Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`), cada um envolvendo um elemento HTML semântico via `React.forwardRef` com classes estáticas (sem `cva()`). Seguem o mesmo template de 15 seções, com as seguintes adaptações:
+
+1. **Anatomia** — uma entrada por sub-componente (`anatomy.item1` a `anatomy.item8` para Table). `structureCode` mostra a árvore JSX aninhada com `&lt;Table&gt;` na raiz.
+
+2. **Variantes → Composições** — sem `cva()`. `variants.items` lista composições recorrentes (`basic`, `withCaption`, `withFooter`, `empty`). Título da seção: `"Composições e Tamanhos"` (`variants.title`). Cards seguem §11.1 do guideline 08, mas a área de preview renderiza a composição montada (ex: `<Table><TableHeader>…<TableBody>…`) em vez de passar uma prop `variant`.
+
+3. **Tamanhos → Padrões de Densidade** — `variants.sizes` descreve convenções de altura aplicadas via `className` no `TableHead`/`TableCell` (`h-8` compact, `h-10` default, `h-12` comfortable) — **não** são props do componente. Cards seguem o mesmo layout de 3 linhas de §11.2 do guideline 08.
+
+4. **Estados** — apenas estados estruturais: `hover` (automático via `hover:bg-muted/50`), `selected` (via `data-state="selected"`), `empty` (renderização condicional com `colSpan`), `scroll` (automático via `overflow-x-auto`). **Omitir** `disabled`/`loading` — tabelas não são interativas.
+
+5. **Propriedades** — cada sub-componente aceita atributos HTML nativos. Documentar chaves `props.table.*`: `className`, `children`, `colSpan`, `rowSpan`, `scope` (em `TableHead`), `dataState` (em `TableRow`). Interface TypeScript exibe `React.HTMLAttributes<HTMLTableElement>` (e variantes `HTMLTableSectionElement`, `HTMLTableRowElement`, `HTMLTableCellElement`, `HTMLTableCaptionElement`). **Sem** props customizadas (`variant`, `size`).
+
+6. **Analytics** — componente estrutural; dispara apenas eventos da docs page (`docs_page_view`, `docs_section_viewed`, `language_switched`). Eventos de domínio (`table_sorted`, `row_selected`) pertencem a wrappers (ex: futuro `DataTable`), não à Table pura. A chave `analytics.description` deve explicitar: "Table é estrutural — não dispara eventos próprios".
+
+7. **Estrutura de stories**:
+   ```
+   src/components/ui/
+     ├── table.tsx                                 (8 forwardRef sub-componentes)
+     ├── table.stories.tsx                         (meta + Playground com invoice demo)
+     ├── table-composicoes.stories.tsx             (basic, withCaption, withFooter, withSelection)
+     ├── table-estados.stories.tsx                 (hover, selected, empty, scroll)
+     └── table-densidades.stories.tsx              (compact, default, comfortable via className)
+   ```
+   **Omitir** `table-variantes` e `table-tamanhos` — não existem props `variant`/`size`.
+
+8. **Play functions** — focam em estrutura semântica (não em interações):
+   - `<caption>` presente e visível (caption-bottom)
+   - Headers usam `<th>` com atributo `scope`
+   - `data-state="selected"` aplica `bg-muted` persistente
+   - `colSpan` em footer cobre colunas corretas
+   - Overflow horizontal aparece em viewport estreito
+   - Estado vazio renderiza linha única com colSpan total
