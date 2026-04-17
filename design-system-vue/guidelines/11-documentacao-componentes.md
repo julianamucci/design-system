@@ -1402,3 +1402,30 @@ Componentes como **Table** expõem múltiplos sub-componentes independentes (9 n
    - Estado vazio renderiza linha única com colspan total
 
 9. **Render functions das stories** — `render: (args) => ({ components: { Table, TableHeader, ... }, setup() { return { args }; }, template: '...' })`. Registrar TODOS os sub-componentes usados no template. Para demos com dados, declarar arrays no `setup()` e iterar com `v-for`.
+
+---
+
+### Componentes Compostos Interativos com Disclosure (padrão Accordion)
+
+Componentes como **Accordion** expõem múltiplos sub-componentes (`Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`) que implementam o padrão ARIA Disclosure. Não possuem variantes visuais via `cva()` — diferem por modo de operação (`type="single"` | `type="multiple"`). Seguem o template de 15 seções com as seguintes adaptações:
+
+1. **Seção "Variantes" → "Modos de Operação"** — `variants.items` lista modos operacionais (`single`, `multiple`, `controlled`), não variantes visuais. **Omitir** seção "Tamanhos" — accordion não tem prop `size`.
+
+2. **Estados** — apenas `closed`, `open`, `focus`, `disabled`. **Omitir** `loading`. Verificar `data-state="open"` | `"closed"` no trigger e no painel.
+
+3. **Propriedades** — documentadas em 4 blocos: `props.rootTitle` (Root), `props.itemTitle` (Item), `props.triggerTitle` (Trigger), `props.contentTitle` (Content).
+
+4. **Estrutura de stories**:
+   ```
+   src/components/ui/accordion/
+     ├── Accordion.vue + AccordionItem.vue + AccordionTrigger.vue + AccordionContent.vue + index.ts
+     ├── accordion.stories.ts               (meta + Playground — type single, collapsible)
+     ├── accordion-modos.stories.ts         (single, multiple, controlled)
+     ├── accordion-estados.stories.ts       (disabled item, focus via keyboard)
+     └── accordion-composicoes.stories.ts   (dentro de card, FAQ)
+   ```
+   **Omitir** `accordion-variantes` e `accordion-tamanhos`.
+
+5. **Render functions** — registrar TODOS os 4 sub-componentes: `{ components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent } }`. Template com `:default-value` (kebab-case) e `@update:model-value` (ou `v-model:modelValue`).
+
+6. **Play functions** — verificar `aria-expanded="true"` após abrir, `aria-expanded="false"` após fechar. Disabled: `userEvent.click({ pointerEventsCheck: 0 })` confirma que estado não muda.

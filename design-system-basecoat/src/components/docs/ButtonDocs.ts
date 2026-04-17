@@ -212,7 +212,7 @@ export function createButtonDocs(): HTMLElement {
 
   // Main content
   const main = document.createElement('div');
-  main.className = 'flex-1 space-y-12';
+  main.className = 'flex-1 min-w-0 space-y-12';
   layout.append(sidebar, main);
 
   // ── Sections ──────────────────────────────────────────────────────────────

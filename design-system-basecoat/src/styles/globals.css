@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "basecoat-css";
 
 /* ── Tokens e temas compartilhados entre todos os stacks ─────────────────── */
 @import "@shared/tokens/tokens.css";

@@ -17,6 +17,8 @@ interface UseDocsReturn {
   locale: Locale;
   setLocale: (l: Locale) => void;
   updateField: (key: string, value: string) => void;
+  removeField: (key: string) => void;
+  setLocaleData: (locale: Locale, localeData: Record<string, unknown>) => void;
   save: () => Promise<void>;
 }
 
@@ -52,6 +54,26 @@ export function useDocs(componentName: string): UseDocsReturn {
     });
   }, [locale]);
 
+  // ── Remove um campo (dot notation) ────────────────────────────────────────
+  const removeField = useCallback((key: string) => {
+    setData((prev) => {
+      if (!prev) return prev;
+      const localeData = deepClone(prev[locale] ?? {}) as Record<string, unknown>;
+      deleteNestedValue(localeData, key.split('.'));
+      setDirty(true);
+      return { ...prev, [locale]: localeData };
+    });
+  }, [locale]);
+
+  // ── Substitui todos os campos de um locale (ex: resultado de tradução) ─────
+  const setLocaleData = useCallback((targetLocale: Locale, localeData: Record<string, unknown>) => {
+    setData((prev) => {
+      if (!prev) return prev;
+      setDirty(true);
+      return { ...prev, [targetLocale]: localeData };
+    });
+  }, []);
+
   // ── Salva o JSON via PUT ───────────────────────────────────────────────────
   const save = useCallback(async () => {
     if (!data) return;
@@ -75,7 +97,7 @@ export function useDocs(componentName: string): UseDocsReturn {
     }
   }, [data, componentName]);
 
-  return { data, loading, saving, dirty, error, locale, setLocale, updateField, save };
+  return { data, loading, saving, dirty, error, locale, setLocale, updateField, removeField, setLocaleData, save };
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -92,4 +114,14 @@ function setNestedValue(obj: Record<string, unknown>, keys: string[], value: unk
     cur = cur[k] as Record<string, unknown>;
   }
   cur[last] = value;
+}
+
+function deleteNestedValue(obj: Record<string, unknown>, keys: string[]): void {
+  const last = keys.at(-1)!;
+  let cur = obj;
+  for (const k of keys.slice(0, -1)) {
+    if (typeof cur[k] !== 'object' || cur[k] === null) return;
+    cur = cur[k] as Record<string, unknown>;
+  }
+  delete cur[last];
 }

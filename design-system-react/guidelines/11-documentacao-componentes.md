@@ -734,3 +734,52 @@ Componentes como **Table** expõem múltiplos sub-componentes independentes (8 p
    - `colSpan` em footer cobre colunas corretas
    - Overflow horizontal aparece em viewport estreito
    - Estado vazio renderiza linha única com colSpan total
+
+---
+
+### Componentes Compostos Interativos com Disclosure (padrão Accordion)
+
+Componentes como **Accordion** expõem múltiplos sub-componentes (`Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`) que implementam o padrão ARIA Disclosure. Não possuem variantes visuais via `cva()` — diferem por modo de operação (`type="single"` | `type="multiple"`). Seguem o template de 15 seções com as seguintes adaptações:
+
+1. **Seção "Variantes" → "Modos de Operação"** — `variants.items` lista modos operacionais em vez de variantes visuais: `single`, `multiple`, `controlled`. Título da seção no JSON: `"Modos de Operação"` (`variants.title`). Cards de preview mostram o accordion funcionando em cada modo (não mudam cor ou estilo). **Omitir** seção "Tamanhos" — accordion não tem prop `size`.
+
+2. **Anatomia** — 4 items (Root, Item, Trigger, Content). `structureCode` mostra a árvore JSX aninhada completa.
+
+3. **Estados** — apenas estados de disclosure: `closed`, `open`, `focus`, `disabled`. **Omitir** `loading` — não aplicável. Cada estado documenta o atributo `data-state` correspondente (`open` | `closed`).
+
+4. **Propriedades** — props por sub-componente, documentadas em 4 blocos separados:
+   - `props.rootTitle` — `Accordion` (Root): `type`, `collapsible`, `value`, `defaultValue`, `onValueChange`
+   - `props.itemTitle` — `AccordionItem`: `value` (obrigatório), `disabled`, `className`
+   - `props.triggerTitle` — `AccordionTrigger`: `className`, `children`
+   - `props.contentTitle` — `AccordionContent`: `className`, `children`
+
+5. **Tokens CSS** — sem tokens de cor específicos (herda `border`, `foreground`, `muted-foreground`). Tokens de animação (`--animate-accordion-up`, `--animate-accordion-down`) configurados no `globals.css` via `@keyframes`. Documentar no `tokens.table`.
+
+6. **Estrutura de stories**:
+   ```
+   src/components/ui/
+     ├── accordion.tsx                          (4 sub-componentes forwardRef)
+     ├── accordion.stories.tsx                  (meta + Playground — type single, collapsible)
+     ├── accordion-modos.stories.tsx            (single, multiple, controlled)
+     ├── accordion-estados.stories.tsx          (disabled item, focus via keyboard)
+     └── accordion-composicoes.stories.tsx      (dentro de card, conteúdo rico, FAQ)
+   ```
+   **Omitir** `accordion-variantes` e `accordion-tamanhos` — não existem props `variant`/`size`.
+
+7. **Playground play function** — deve cobrir os 6 critérios da seção de testes:
+   - Clicar trigger fechado → item abre (`data-state="open"`)
+   - Clicar trigger aberto (collapsible) → item fecha
+   - No modo single, abrir segundo item → primeiro fecha
+   - Trigger disabled → nenhuma mudança de estado
+   - Enter no trigger focado → item expande
+   - Space no trigger focado → item expande
+
+8. **Analytics** — accordion é interativo; além dos eventos de docs page (`docs_page_view`, `docs_section_viewed`), documenta evento de produto: `accordion_toggle` com payload `{ item_value, state: 'open' | 'closed' }`.
+
+9. **`aria-expanded`** — verificar via `expect(trigger).toHaveAttribute('aria-expanded', 'true')` após abrir e `'false'` após fechar. Essencial para conformidade WCAG 2.1 AA (critério 4.1.2).
+
+10. **Chaves de tradução — conflito de caminho** — `props.table` usa chaves para cabeçalhos de coluna (`type` = "Tipo") E chaves para descrições de props. Para evitar conflito com prop de mesmo nome, usar sufixo `_prop`: `props.table.type_prop` = "Modo de operação do accordion". Padrão: cabeçalhos de coluna usam o nome canônico; descrições de prop com nome igual a coluna usam `{prop}_prop`.
+
+11. **`doDont.pair${n}.dontExample`** — texto de exemplo visual na caixa "don't" (aparece antes da caption). Adicionar ao `translations.json` junto com `do`/`dont`.
+
+12. **`notes.tip${i}Title`** — título flat separado de `notes.tip${i}` (descrição). Não usar `notes.tip${i}.title` — `flattenDict` não indexa objetos intermediários, então o caminho `notes.tip1` precisa ser uma string leaf.

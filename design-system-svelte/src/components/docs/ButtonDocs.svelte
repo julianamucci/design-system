@@ -1,5 +1,6 @@
 <script lang="ts">
-  import Button from '@/components/ui/Button.svelte';
+  import { Button } from '@/components/ui/button';
+  import { Badge } from '@/components/ui/badge';
   import LanguageSwitcher from '@/components/product/LanguageSwitcher.svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -92,12 +93,12 @@
   <header class="mb-12 border-b pb-8 border-border/50">
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-2">
-        <span class="inline-flex items-center rounded-md border border-primary/10 bg-primary/5 px-2 py-0 text-xs font-medium text-primary">
+        <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
           {$tStore('category')}
-        </span>
-        <span class="inline-flex items-center rounded-md border border-border px-2 py-0 text-xs font-normal text-muted-foreground">
+        </Badge>
+        <Badge variant="outline" class="rounded-md text-muted-foreground font-normal px-2 py-0">
           {$tStore('type')}
-        </span>
+        </Badge>
       </div>
       <LanguageSwitcher />
     </div>
@@ -146,7 +147,7 @@
     </nav>
 
     <!-- ── Conteúdo principal ────────────────────────────────────────────────── -->
-    <div class="flex-1 space-y-12">
+    <div class="flex-1 min-w-0 space-y-12">
 
       <section id="demonstracao">
         <h2 class="text-xl font-semibold mb-4">{$tStore('demonstration.title')}</h2>
@@ -333,11 +334,11 @@
         <div class="rounded-lg border border-border p-6 bg-card/30 space-y-4">
           <div>
             <p class="text-sm text-muted-foreground mb-3">{$tStore('import.basic')}</p>
-            <pre class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code>{"import Button from '@/components/ui/Button.svelte';"}</code></pre>
+            <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code class="whitespace-pre">{"import { Button } from '@/components/ui/button';"}</code></div>
           </div>
           <div>
             <p class="text-sm text-muted-foreground mb-3">{$tStore('import.variants')}</p>
-            <pre class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code>{"import { buttonVariants } from '@/components/ui/Button.svelte';"}</code></pre>
+            <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code class="whitespace-pre">{"import { buttonVariants } from '@/components/ui/button';"}</code></div>
           </div>
         </div>
       </section>
@@ -703,11 +704,11 @@ html.meu-tema.dark {
                       <td class="p-4 border-r border-border font-medium">{$tStore(`testes.functional.item${i}.action`)}</td>
                       <td class="p-4 border-r border-border text-muted-foreground">{$tStore(`testes.functional.item${i}.result`)}</td>
                       <td class="p-4">
-                        <span class={isHigh
-                          ? 'inline-flex items-center rounded-md border border-orange-500/20 bg-orange-500/10 px-2 py-0.5 text-[11px] font-medium text-orange-600 h-5'
-                          : 'inline-flex items-center rounded-md border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[11px] font-medium text-blue-600 h-5'}>
+                        <Badge class={isHigh
+                          ? "rounded-md bg-orange-500/10 text-orange-600 border-orange-500/20 hover:bg-orange-500/10 font-medium text-[11px]"
+                          : "rounded-md bg-blue-500/10 text-blue-600 border-blue-500/20 hover:bg-blue-500/10 font-medium text-[11px]"}>
                           {isHigh ? $tNavStore('common.high') : $tNavStore('common.medium')}
-                        </span>
+                        </Badge>
                       </td>
                     </tr>
                   {/each}
@@ -758,11 +759,11 @@ html.meu-tema.dark {
                       <td class="p-4 border-r border-border text-center text-emerald-600 font-medium">{$tStore('testes.visual.required')}</td>
                       <td class="p-4 border-r border-border text-center text-emerald-600 font-medium">{$tStore('testes.visual.required')}</td>
                       <td class="p-4">
-                        <span class={isHigh
-                          ? 'inline-flex items-center rounded-md border border-orange-500/20 bg-orange-500/10 px-2 py-0.5 text-[11px] font-medium text-orange-600 h-5'
-                          : 'inline-flex items-center rounded-md border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[11px] font-medium text-blue-600 h-5'}>
+                        <Badge class={isHigh
+                          ? "rounded-md bg-orange-500/10 text-orange-600 border-orange-500/20 hover:bg-orange-500/10 font-medium text-[11px]"
+                          : "rounded-md bg-blue-500/10 text-blue-600 border-blue-500/20 hover:bg-blue-500/10 font-medium text-[11px]"}>
                           {isHigh ? $tNavStore('common.high') : $tNavStore('common.medium')}
-                        </span>
+                        </Badge>
                       </td>
                     </tr>
                   {/each}

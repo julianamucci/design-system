@@ -17,6 +17,7 @@ Antes de considerar uma docs page completa, os seguintes itens **devem** estar p
 | Analytics `docs_page_view` | `useEffect(() => track(...), [locale])` | `track(...)` on mount | `$effect(() => track(...))` | `subscribe(() => track(...))` |
 | Nav lateral sticky (`<nav class="sticky top-8 w-52 shrink-0 self-start">`) | `<nav>` wrapper | `<nav>` wrapper | `<nav>` inline | `sidebar.className = 'sticky top-8...'` |
 | Layout duas colunas (`flex gap-16 items-start`) | obrigatório | obrigatório | obrigatório | obrigatório |
+| **`min-w-0` no conteúdo principal** (`flex-1 min-w-0 space-y-12`) | obrigatório | obrigatório | obrigatório | obrigatório |
 | Dark mode via Tailwind `dark:` | sim | sim | sim | sim |
 | Componentes da própria biblioteca | `Badge`, `Input`, etc. | idem | badges inline (sem componentes Svelte externos no bridge) | DOM manual com classes Tailwind |
 | `list-none p-0 m-0` em `<ul>` + `list-none` em `<li>` | obrigatório | obrigatório | obrigatório | obrigatório |

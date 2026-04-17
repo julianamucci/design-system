@@ -11,6 +11,9 @@
  *   GET  /api/docs/:component          → retorna o JSON completo
  *   PUT  /api/docs/:component          → sobrescreve o JSON e dispara HMR reload
  *   GET  /api/docs/__components        → lista os componentes disponíveis
+ *   POST /api/translate                → traduz um objeto JSON via Claude API
+ *                                        Body: { data, fromLocale, toLocales[] }
+ *                                        Requer: ANTHROPIC_API_KEY no environment
  */
 
 import type { Plugin } from 'vite';
@@ -33,7 +36,7 @@ export function docsApiPlugin(options: DocsApiOptions): Plugin {
       server.middlewares.use(async (req, res, next) => {
         const url = new URL(req.url ?? '/', 'http://localhost');
 
-        if (!url.pathname.startsWith('/api/docs')) return next();
+        if (!url.pathname.startsWith('/api/docs') && url.pathname !== '/api/translate') return next();
 
         // ── CORS para uso no Storybook ─────────────────────────────────────
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -51,6 +54,81 @@ export function docsApiPlugin(options: DocsApiOptions): Plugin {
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify(data, null, 2));
         };
+
+        // ── POST /api/translate ────────────────────────────────────────────
+        if (url.pathname === '/api/translate' && req.method === 'POST') {
+          let body = '';
+          req.on('data', (chunk: Buffer) => { body += chunk.toString(); });
+          req.on('end', async () => {
+            try {
+              const { data, fromLocale, toLocales } = JSON.parse(body) as {
+                data: Record<string, unknown>;
+                fromLocale: string;
+                toLocales: string[];
+              };
+
+              const apiKey = process.env.ANTHROPIC_API_KEY;
+              if (!apiKey) {
+                return json({ error: 'ANTHROPIC_API_KEY não configurada no environment' }, 500);
+              }
+
+              const LOCALE_NAMES: Record<string, string> = {
+                'pt-BR': 'Brazilian Portuguese',
+                'en': 'English',
+                'es': 'Spanish',
+              };
+
+              const results: Record<string, unknown> = {};
+
+              for (const toLang of toLocales) {
+                const prompt = `You are a translation assistant for a design system documentation.
+Translate the JSON below from ${LOCALE_NAMES[fromLocale] ?? fromLocale} to ${LOCALE_NAMES[toLang] ?? toLang}.
+
+Rules:
+- Keep ALL JSON keys exactly as they are (never translate keys)
+- Preserve HTML tags (<strong>, <em>, <code>, <br>, etc.) and their attributes
+- Do NOT translate content inside <code> tags or backtick strings
+- Do NOT translate proper nouns: component names (Button, Table, Input...), CSS class names (text-sm, bg-muted...), JavaScript identifiers, brand names
+- DO translate all natural language descriptions, labels, and user-facing text
+- Preserve the exact JSON structure (nesting, arrays, all fields)
+- Return ONLY valid JSON, no markdown fences, no explanation
+
+JSON:
+${JSON.stringify(data, null, 2)}`;
+
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
+                    'anthropic-version': '2023-06-01',
+                  },
+                  body: JSON.stringify({
+                    model: 'claude-haiku-4-5-20251001',
+                    max_tokens: 8192,
+                    messages: [{ role: 'user', content: prompt }],
+                  }),
+                });
+
+                if (!response.ok) {
+                  const err = await response.text();
+                  return json({ error: `Anthropic API error: ${err}` }, 502);
+                }
+
+                const result = await response.json() as {
+                  content: { type: string; text: string }[];
+                };
+                const text = result.content.find((b) => b.type === 'text')?.text ?? '{}';
+                results[toLang] = JSON.parse(text);
+              }
+
+              return json(results);
+            } catch (err) {
+              return json({ error: String(err) }, 500);
+            }
+          });
+          return;
+        }
 
         // ── GET /api/docs/__components  (lista todos) ──────────────────────
         if (url.pathname === '/api/docs/__components') {

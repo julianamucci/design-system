@@ -15,7 +15,6 @@ import { getThemeInfo, themeDisplayNames } from '@shared/themes/theme-config';
 // Lazy-loaded documentation pages — only loaded when the user navigates to them
 const lazyDocs: Record<string, React.LazyExoticComponent<React.ComponentType>> = {
   'accordion': lazy(() => import('./components/docs/AccordionDocs').then(m => ({ default: m.AccordionDocs }))),
-  'alert-dialog': lazy(() => import('./components/docs/AlertDialogDocs').then(m => ({ default: m.AlertDialogDocs }))),
   'alert': lazy(() => import('./components/docs/AlertDocs').then(m => ({ default: m.AlertDocs }))),
   'aspect-ratio': lazy(() => import('./components/docs/AspectRatioDocs').then(m => ({ default: m.AspectRatioDocs }))),
   'avatar': lazy(() => import('./components/docs/AvatarDocs').then(m => ({ default: m.AvatarDocs }))),

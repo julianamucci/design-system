@@ -1,7 +1,7 @@
 # Regras Gerais Obrigatórias (Svelte)
 
 * **SEU PAPEL**: Manter a consistência do projeto seguindo ESTRITAMENTE o que está definido nas guidelines. NUNCA invente seções, estruturas ou padrões que não estejam documentados. SEMPRE consulte as guidelines antes de criar ou modificar qualquer componente.
-* **É OBRIGATÓRIO usar os componentes da pasta `$lib/components/ui`**
+* **É OBRIGATÓRIO usar os componentes da pasta `@/components/ui`** — import de pasta com export nomeado: `import { Button } from '@/components/ui/button'`
 * **É OBRIGATÓRIO usar os estilos do arquivo `./styles/globals.css`**
 * **É OBRIGATÓRIO usar APENAS ícones da biblioteca `lucide-svelte` para TODOS os ícones do projeto**
 * **É OBRIGATÓRIO que todos os dialogs/modais usem as variáveis `--card` para background e `--card-foreground` para foreground**
@@ -12,7 +12,6 @@
 * Sistema de espaçamento baseado em múltiplos de 8px
 * Use diretrizes WCAG 2.2 AA para acessibilidade
 * **TIPOGRAFIA**: Use APENAS a fonte sistema definida no CSS para todos os textos
-* **NÃO use classes de tamanho de fonte ou altura de linha do Tailwind** (ex: text-2xl, leading-none) — a tipografia está definida no CSS base
 * Prefira refatoração contínua para manter o código limpo
 * Mantenha arquivos pequenos e coloque funções auxiliares em arquivos separados
 
@@ -30,14 +29,13 @@
 * Eventos: sintaxe Svelte 5 — `onclick={handler}` (não `on:click`)
 * `{#each items as item (item.id)}` — sempre incluir key para listas
 * `{#if}`, `{#await}` para renderização condicional e assíncrona
-* Lazy loading: `{#await import('./Component.svelte') then { default: Comp }}` ou `svelte:component`
 
 ## Estrutura de arquivo `.svelte`
 
 ```svelte
 <script lang="ts">
   import { algumIcone } from 'lucide-svelte';
-  import { Component } from '$lib/components/ui/component';
+  import { Component } from '@/components/ui/component';
 
   interface Props {
     titulo: string;
@@ -65,26 +63,11 @@
 // Ícones
 import { AlertCircle, Check, X } from 'lucide-svelte';
 
-// Componentes UI
-import { Button } from '$lib/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
+// Componentes UI — sempre import de pasta
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 // Tipos
 import type { ComponentProps } from 'svelte';
-```
-
-## Lazy loading de docs pages
-
-```svelte
-<script lang="ts">
-  import { defineAsyncComponent } from 'svelte'; // não existe — usar dynamic import
-  let ComponenteDocs: any = $state(null);
-  $effect(() => {
-    import('./docs/ComponenteDocs.svelte').then(m => { ComponenteDocs = m.default; });
-  });
-</script>
-
-{#if ComponenteDocs}
-  <svelte:component this={ComponenteDocs} />
-{/if}
 ```

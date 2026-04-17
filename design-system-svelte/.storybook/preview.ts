@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/svelte-vite';
 import { withThemeByClassName } from '@storybook/addon-themes';
+import { setMode } from 'mode-watcher';
 import '../src/styles/globals.css';
 import '../src/styles/storybook-docs.css';
 
@@ -48,12 +49,13 @@ const preview: Preview = {
       parentSelector: 'html',
     }),
 
-    // Decorator 2: manages brand class on <html>
+    // Decorator 2: manages brand class on <html> + syncs mode-watcher with Storybook theme
     (Story, context) => {
       const brand = context.globals.brand || 'default';
       const html = document.documentElement;
       html.classList.remove('tema-um', 'tema-dois');
       if (brand !== 'default') html.classList.add(brand);
+      setMode(html.classList.contains('dark') ? 'dark' : 'light');
       return Story();
     },
   ],

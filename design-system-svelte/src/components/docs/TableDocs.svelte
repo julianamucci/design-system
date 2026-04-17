@@ -9,6 +9,7 @@
     TableHeader,
     TableRow,
   } from '@/components/ui/table/index.js';
+  import { Badge } from '@/components/ui/badge';
   import LanguageSwitcher from '@/components/product/LanguageSwitcher.svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -232,12 +233,12 @@ html.meu-tema.dark {
   <header class="mb-12 border-b pb-8 border-border/50">
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-2">
-        <span class="inline-flex items-center rounded-md border border-primary/10 bg-primary/5 px-2 py-0 text-xs font-medium text-primary">
+        <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
           {$tStore('category')}
-        </span>
-        <span class="inline-flex items-center rounded-md border border-border px-2 py-0 text-xs font-normal text-muted-foreground">
+        </Badge>
+        <Badge variant="outline" class="rounded-md text-muted-foreground font-normal px-2 py-0">
           {$tStore('type')}
-        </span>
+        </Badge>
       </div>
       <LanguageSwitcher />
     </div>

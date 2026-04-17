@@ -287,6 +287,35 @@ Componentes como **Table** expõem múltiplas **fábricas vanilla** que constroe
    - Overflow horizontal aparece em viewport estreito
    - Estado vazio renderiza linha única com colspan total
 
+### Componentes Compostos Interativos com Disclosure (padrão Accordion)
+
+Componentes como **Accordion** são implementados em Vanilla TS como funções que constroem elementos DOM. Não possuem variantes visuais — diferem por modo de operação. Seguem o template de 15 seções com as seguintes adaptações:
+
+1. **Seção "Variantes" → "Modos de Operação"** — `variants.items` lista modos (`single`, `multiple`, `controlled`). **Omitir** seção "Tamanhos".
+
+2. **Implementação Vanilla** — criar `createAccordion(options)` e `createAccordionItem(options)` que retornam `HTMLElement`. Gerenciar estado `open`/`closed` via dataset (`el.dataset.state`). Emit events via `CustomEvent` para `onValueChange`.
+
+3. **ARIA obrigatório** — setar manualmente: `button.setAttribute('aria-expanded', 'false')`, `button.setAttribute('aria-controls', contentId)`, `content.setAttribute('id', contentId)`, `content.setAttribute('role', 'region')`.
+
+4. **Estrutura de stories**:
+   ```
+   src/components/ui/
+     ├── accordion.ts
+     ├── accordion.stories.ts
+     ├── accordion-modos.stories.ts
+     ├── accordion-estados.stories.ts
+     └── accordion-composicoes.stories.ts
+   ```
+   **Omitir** `accordion-variantes` e `accordion-tamanhos`.
+
+5. **Props table** — em Basecoat, **não** usar chaves aninhadas como `props.table.type.name` (conflita com a chave de cabeçalho `props.table.type = "Tipo"`). Hardcode `name`, `type` e `default` no array de dados; buscar apenas a **descrição** via chave flat: `t('props.table.{propDescKey}')`. Para props com nome igual a coluna (ex: `type`), usar sufixo `_prop` no JSON: `props.table.type_prop`.
+
+6. **`doDont.pair${n}.dontExample`** — texto de exemplo visual na caixa "don't". Adicionar ao `translations.json` junto com `do`/`dont`.
+
+7. **`notes.tip${i}Title`** — título flat separado de `notes.tip${i}` (descrição). Não usar `notes.tip${i}.title` — cria conflito de caminho com a string de descrição.
+
+8. **Play functions** — verificar `getAttribute('aria-expanded')` após interação. Animar via `dataset.state` + CSS transitions em vez de animações JS.
+
 ---
 
 ## Checklist de implementação

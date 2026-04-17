@@ -55,8 +55,14 @@
   color: inherit !important;
 }
 
-/* Zera a margem injetada pelo Storybook nos elementos p */
+/* Zera a margem injetada pelo Storybook nos elementos p e table */
 .ds-docs p {
+  margin: 0;
+}
+
+/* Remove margin-block que o Storybook injeta em <table>.
+ * Sem isso, tabelas dentro de cards ficam com gap entre a borda e a tabela. */
+.ds-docs table {
   margin: 0;
 }
 

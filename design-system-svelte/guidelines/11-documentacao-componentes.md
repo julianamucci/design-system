@@ -264,6 +264,36 @@ Componentes como **Table** expõem múltiplos sub-componentes independentes (8 n
 
 ---
 
+### Componentes Compostos Interativos com Disclosure (padrão Accordion)
+
+Componentes como **Accordion** expõem múltiplos sub-componentes (via Bits UI) que implementam o padrão ARIA Disclosure. Não possuem variantes visuais via `cva()` — diferem por modo de operação. Seguem o template de 15 seções com as seguintes adaptações:
+
+1. **Seção "Variantes" → "Modos de Operação"** — `variants.items` lista modos (`single`, `multiple`, `controlled`). **Omitir** seção "Tamanhos".
+
+2. **Bits UI** — usar `Accordion.Root`, `Accordion.Item`, `Accordion.Header`, `Accordion.Trigger`, `Accordion.Content` de `bits-ui`. Props kebab-case no template Svelte: `type`, `value`, `onValueChange`, `disabled`.
+
+3. **Estrutura de stories**:
+   ```
+   src/components/ui/
+     ├── accordion/
+     │   ├── accordion.svelte + accordion-item.svelte + ...
+     ├── accordion.stories.ts
+     ├── accordion-modos.stories.ts
+     ├── accordion-estados.stories.ts
+     └── accordion-composicoes.stories.ts
+   ```
+   **Omitir** `accordion-variantes` e `accordion-tamanhos`.
+
+4. **Props table** — em Svelte, **não** usar chaves aninhadas como `props.table.type.name` (conflita com a chave de cabeçalho `props.table.type = "Tipo"`). Hardcode `name`, `type` e `default` no array de dados do script; buscar apenas a **descrição** via chave flat: `$tStore('props.table.{propDescKey}')`. Para props com nome igual a coluna (ex: `type`), usar sufixo `_prop` no JSON: `props.table.type_prop`.
+
+5. **`doDont.pair${n}.dontExample`** — texto de exemplo visual na caixa "don't". Adicionar ao `translations.json` junto com `do`/`dont`.
+
+6. **`notes.tip${i}Title`** — título flat separado de `notes.tip${i}` (descrição). Não usar `notes.tip${i}.title` — cria conflito de caminho com a string de descrição.
+
+7. **Play functions** — verificar `aria-expanded` no trigger após interação. `{@html sanitizeHtml(...)}` no conteúdo de items com HTML.
+
+---
+
 ## Checklist de implementação
 
 - [ ] `translations.json` criado em `src/components/docs/content/{slug}/`
