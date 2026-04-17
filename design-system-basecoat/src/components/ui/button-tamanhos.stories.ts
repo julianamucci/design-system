@@ -3,13 +3,10 @@ import { within, expect } from 'storybook/test';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const BTN_BASE =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90';
-
-function btn(label: string, sizeClass: string, extraAttrs: Record<string, string> = {}): HTMLButtonElement {
+function btn(label: string, cls: string, extraAttrs: Record<string, string> = {}): HTMLButtonElement {
   const el = document.createElement('button');
   el.type = 'button';
-  el.className = `${BTN_BASE} ${sizeClass}`;
+  el.className = cls;
   el.textContent = label;
   Object.entries(extraAttrs).forEach(([k, v]) => el.setAttribute(k, v));
   return el;
@@ -31,7 +28,7 @@ type Story = StoryObj;
 // ─── Small ────────────────────────────────────────────────────────────────────
 
 export const Small: Story = {
-  render: () => btn('Botão', 'h-8 px-3 rounded-md'),
+  render: () => btn('Botão', 'btn-sm'),
   parameters: {
     docs: {
       description: {
@@ -44,7 +41,7 @@ export const Small: Story = {
 // ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: () => btn('Botão', 'h-9 px-4 py-2'),
+  render: () => btn('Botão', 'btn'),
   parameters: {
     docs: {
       description: {
@@ -57,7 +54,7 @@ export const Default: Story = {
 // ─── Large ────────────────────────────────────────────────────────────────────
 
 export const Large: Story = {
-  render: () => btn('Botão', 'h-10 px-6 rounded-md'),
+  render: () => btn('Botão', 'btn-lg'),
   parameters: {
     docs: {
       description: {
@@ -73,7 +70,7 @@ export const IconOnly: Story = {
   render: () => {
     const el = document.createElement('button');
     el.type = 'button';
-    el.className = `${BTN_BASE} size-9`;
+    el.className = 'btn-icon';
     el.setAttribute('aria-label', 'Fechar');
     el.innerHTML = svgIcon();
     return el;

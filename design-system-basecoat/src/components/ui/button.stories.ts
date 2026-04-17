@@ -3,28 +3,12 @@ import { fn, userEvent, within, expect } from 'storybook/test';
 import { createButtonDocs } from '@/components/docs/ButtonDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-// ─── Variantes e tamanhos ─────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
-const BTN_BASE =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]';
-
-const VARIANT_CLASSES: Record<string, string> = {
-  default:     `${BTN_BASE} bg-primary text-primary-foreground hover:bg-primary/90`,
-  destructive: `${BTN_BASE} bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20`,
-  outline:     `${BTN_BASE} border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground`,
-  secondary:   `${BTN_BASE} bg-secondary text-secondary-foreground hover:bg-secondary/80`,
-  ghost:       `${BTN_BASE} hover:bg-accent hover:text-accent-foreground`,
-  link:        `${BTN_BASE} text-primary underline-offset-4 hover:underline`,
-};
-
-const SIZE_CLASSES: Record<string, string> = {
-  'default':  'h-9 px-4 py-2',
-  'sm':       'h-8 px-3 rounded-md',
-  'lg':       'h-10 px-6 rounded-md',
-  'icon':     'size-9',
-  'icon-sm':  'size-8',
-  'icon-lg':  'size-10',
-};
+function btnClass(variant = 'default', size = 'default'): string {
+  const prefix = size === 'icon' ? 'btn-icon' : size === 'sm' ? 'btn-sm' : size === 'lg' ? 'btn-lg' : 'btn';
+  return variant === 'default' ? prefix : `${prefix}-${variant}`;
+}
 
 function buildButton(args: {
   variant?: string;
@@ -34,12 +18,9 @@ function buildButton(args: {
   ariaLabel?: string;
   onClick?: (e: MouseEvent) => void;
 }): HTMLButtonElement {
-  const variant = args.variant ?? 'default';
-  const size = args.size ?? 'default';
-
   const el = document.createElement('button');
   el.type = 'button';
-  el.className = [VARIANT_CLASSES[variant] ?? VARIANT_CLASSES.default, SIZE_CLASSES[size] ?? SIZE_CLASSES.default].join(' ');
+  el.className = btnClass(args.variant, args.size);
   if (args.label) el.textContent = args.label;
   if (args.ariaLabel) el.setAttribute('aria-label', args.ariaLabel);
   if (args.disabled) el.disabled = true;
