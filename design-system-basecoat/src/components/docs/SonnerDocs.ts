@@ -2,6 +2,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import sonnerTranslations from '@shared/content/sonner/translations.json';
 import { toast, injectToastStyles } from '@/components/ui/toast-utils';
@@ -343,18 +344,11 @@ export function createSonnerDocs(): HTMLElement {
     const demoInner = document.createElement('div');
     demoInner.className = 'flex flex-wrap gap-3';
 
-    const BTN = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2';
-    const BTN_DEFAULT = `${BTN} bg-primary text-primary-foreground hover:bg-primary/90`;
-    const BTN_OUTLINE = `${BTN} border bg-background hover:bg-accent hover:text-accent-foreground`;
-    const BTN_DESTRUCTIVE = `${BTN} bg-destructive text-white hover:bg-destructive/90`;
-
     const demoOpts = { richColors: true, closeButton: true, position: 'top-right' as const };
 
     TOAST_TYPES.forEach(type => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = type === 'error' ? BTN_DESTRUCTIVE : type === 'default' ? BTN_OUTLINE : BTN_DEFAULT;
-      b.textContent = t(`demonstration.labels.${type}`);
+      const variant = type === 'error' ? 'destructive' : type === 'default' ? 'outline' : 'default';
+      const b = createButton({ variant, label: t(`demonstration.labels.${type}`) });
       b.addEventListener('click', () => {
         track('toast_demo_triggered', { toast_type: type, locale: getLocale() });
         if (type === 'default') toast(t('demonstration.labels.default'), demoOpts);
@@ -363,10 +357,7 @@ export function createSonnerDocs(): HTMLElement {
       demoInner.appendChild(b);
     });
 
-    const dismissBtn = document.createElement('button');
-    dismissBtn.type = 'button';
-    dismissBtn.className = BTN_OUTLINE;
-    dismissBtn.textContent = t('demonstration.labels.dismiss');
+    const dismissBtn = createButton({ variant: 'outline', label: t('demonstration.labels.dismiss') });
     dismissBtn.addEventListener('click', () => toast.dismiss());
     demoInner.appendChild(dismissBtn);
 

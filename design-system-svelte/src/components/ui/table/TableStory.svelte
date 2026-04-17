@@ -1,5 +1,5 @@
 <script lang="ts">
-  import * as Table from './table/index.js';
+  import * as Table from './index.js';
 
   type Scenario =
     | 'playground'

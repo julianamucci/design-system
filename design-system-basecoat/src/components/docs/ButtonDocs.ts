@@ -2,6 +2,8 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createButton, btnClass } from '@/components/ui/button';
+import type { ButtonVariant } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import buttonTranslations from '@shared/content/button/translations.json';
 
@@ -10,30 +12,22 @@ import buttonTranslations from '@shared/content/button/translations.json';
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
 const { t, subscribe } = createTranslation(buttonTranslations as Record<string, unknown>);
 
-// ─── Button helper ────────────────────────────────────────────────────────────
+// Lookup table of CSS class strings built from the btnClass() helper
+const BTN_VARIANTS = {
+  default:     btnClass('default'),
+  secondary:   btnClass('secondary'),
+  outline:     btnClass('outline'),
+  ghost:       btnClass('ghost'),
+  link:        btnClass('link'),
+  destructive: btnClass('destructive'),
+  sm:          btnClass('default', 'sm'),
+  lg:          btnClass('default', 'lg'),
+  icon:        btnClass('default', 'icon'),
+} as const;
 
-const BTN_BASE =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
-
-const BTN_VARIANTS: Record<string, string> = {
-  default:     `${BTN_BASE} bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2`,
-  outline:     `${BTN_BASE} border bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2`,
-  secondary:   `${BTN_BASE} bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-4 py-2`,
-  ghost:       `${BTN_BASE} hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2`,
-  link:        `${BTN_BASE} text-primary underline-offset-4 hover:underline h-9 px-4 py-2`,
-  destructive: `${BTN_BASE} bg-destructive text-white hover:bg-destructive/90 h-9 px-4 py-2`,
-  sm:          `${BTN_BASE} bg-primary text-primary-foreground hover:bg-primary/90 h-8 rounded-md px-3`,
-  lg:          `${BTN_BASE} bg-primary text-primary-foreground hover:bg-primary/90 h-10 rounded-md px-6`,
-  icon:        `${BTN_BASE} bg-primary text-primary-foreground hover:bg-primary/90 size-9`,
-};
-
-function btn(label: string, variant: keyof typeof BTN_VARIANTS = 'default', disabled = false): HTMLButtonElement {
-  const el = document.createElement('button');
-  el.type = 'button';
-  el.className = BTN_VARIANTS[variant];
-  el.textContent = label;
-  if (disabled) el.disabled = true;
-  return el;
+// btn() — wrapper local para criar botões de demo com a factory do componente
+function btn(label: string, variant: ButtonVariant = 'default', disabled = false): HTMLButtonElement {
+  return createButton({ label, variant, disabled });
 }
 
 // ─── createButtonDocs ─────────────────────────────────────────────────────────
@@ -838,4 +832,10 @@ html.meu-tema.dark {
   }, 0);
 
   return root;
+}
+
+export function render(container: HTMLElement): () => void {
+  const el = createButtonDocs();
+  container.appendChild(el);
+  return () => el.remove();
 }
