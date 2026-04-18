@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 interface DocsExampleItem {
@@ -27,10 +27,8 @@ function toggleCode(i: number) {
       <div v-for="(item, i) in items" :key="i" class="space-y-3">
         <h3 class="text-base font-semibold">{{ item.title }}</h3>
         <p v-if="item.description" class="text-sm text-muted-foreground">{{ item.description }}</p>
-        <Card>
-          <CardContent class="p-10 flex items-center justify-center">
+        <Card class="p-10 flex items-center justify-center">
             <slot :name="`preview-${i}`" />
-          </CardContent>
         </Card>
         <div>
           <Button variant="link" size="sm" @click="toggleCode(i)">

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { Card, CardContent } from '@/components/ui/card';
+  import { Card } from '@/components/ui/card';
   import { Button } from '@/components/ui/button';
 
   interface DocsExampleItem {
@@ -27,10 +27,8 @@
         {#if item.description}
           <p class="text-sm text-muted-foreground">{item.description}</p>
         {/if}
-        <Card>
-          <CardContent class="p-10 flex items-center justify-center">
+        <Card class="p-10 flex items-center justify-center">
             {@render item.preview()}
-          </CardContent>
         </Card>
         <div>
           <Button

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import {
   Table,
   TableHeader,
@@ -47,19 +47,16 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
   return (
     <section id="quando-usar">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <Card>
-        <CardContent className="p-6 space-y-6">
+      <Card className="p-6 space-y-6">
 
           {/* Guidelines */}
-          <Card className="bg-muted/30 border-0 shadow-none">
-            <CardContent className="p-4">
+          <Card className="bg-muted/30 border-0 shadow-none p-4">
               <h3 className="font-medium text-sm mb-3">{guidelines.title}</h3>
               <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
                 {guidelines.items.map((item, i) => (
                   <li key={i} dangerouslySetInnerHTML={{ __html: sanitizeHtml(item) }} />
                 ))}
               </ul>
-            </CardContent>
           </Card>
 
           {/* Cenários */}
@@ -127,8 +124,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
 
           {/* Do / Don't cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="bg-card">
-              <CardContent className="p-4">
+            <Card className="bg-card p-4">
                 <h3 className="mb-3 text-sm font-semibold text-green-600 flex items-center gap-2">
                   <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
                   {doBlock.title}
@@ -138,10 +134,8 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
                     <li key={i} dangerouslySetInnerHTML={{ __html: sanitizeHtml(item) }} />
                   ))}
                 </ul>
-              </CardContent>
             </Card>
-            <Card className="bg-card">
-              <CardContent className="p-4">
+            <Card className="bg-card p-4">
                 <h3 className="mb-3 text-sm font-semibold text-red-600 flex items-center gap-2">
                   <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
                   {dontBlock.title}
@@ -151,11 +145,9 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
                     <li key={i} dangerouslySetInnerHTML={{ __html: sanitizeHtml(item) }} />
                   ))}
                 </ul>
-              </CardContent>
             </Card>
           </div>
 
-        </CardContent>
       </Card>
     </section>
   );

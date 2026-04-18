@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { Card, CardContent } from '@/components/ui/card';
+  import { Card } from '@/components/ui/card';
 
   interface DocsDoDontPair {
     doLabel: string;
@@ -16,8 +16,7 @@
 
 <section id="do-dont">
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
-  <Card>
-    <CardContent class="p-10 mt-6">
+  <Card class="p-10 mt-6">
       <div class="space-y-8 w-full">
         {#each pairs as pair}
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -46,6 +45,5 @@
           </div>
         {/each}
       </div>
-    </CardContent>
   </Card>
 </section>

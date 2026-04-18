@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -80,8 +80,7 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
         {/* Functional */}
         <div className="space-y-3">
           <h3 className="text-base font-semibold">{functional.title}</h3>
-          <Card className="shadow-sm overflow-x-auto">
-            <CardContent className="p-4">
+          <Card className="shadow-sm overflow-x-auto p-4">
               <Table className="w-full text-sm">
                 <TableHeader>
                   <TableRow className="border-b border-border bg-muted/50 text-left">
@@ -100,7 +99,6 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
           </Card>
         </div>
 
@@ -109,8 +107,7 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
           <h3 className="text-base font-semibold">{accessibility.title}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {accessibility.items.map((item, i) => (
-              <Card key={i} className="bg-muted/30 border-0 shadow-none">
-                <CardContent className="p-4">
+              <Card key={i} className="bg-muted/30 border-0 shadow-none p-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-mono font-bold text-primary border border-primary/20 rounded px-1.5 py-0.5 bg-primary/5">
@@ -120,7 +117,6 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
                     </div>
                     <p className="text-xs text-muted-foreground pl-0.5">{item.how}</p>
                   </div>
-                </CardContent>
               </Card>
             ))}
           </div>
@@ -129,8 +125,7 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
         {/* Visual */}
         <div className="space-y-3">
           <h3 className="text-base font-semibold">{visual.title}</h3>
-          <Card className="shadow-sm overflow-x-auto">
-            <CardContent className="p-4">
+          <Card className="shadow-sm overflow-x-auto p-4">
               <Table className="w-full text-sm">
                 <TableHeader>
                   <TableRow className="border-b border-border bg-muted/50 text-left">
@@ -147,7 +142,6 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
           </Card>
         </div>
 

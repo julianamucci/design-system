@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import {
   Table,
   TableHeader,
@@ -25,8 +25,7 @@ export function DocsStates({ title, cols, items }: DocsStatesProps) {
   return (
     <section id="estados">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <Card className="shadow-sm overflow-x-auto">
-        <CardContent className="p-4">
+      <Card className="shadow-sm overflow-x-auto p-4">
           <Table className="w-full text-sm">
             <TableHeader>
               <TableRow className="border-b border-border bg-muted/50 text-left">
@@ -45,7 +44,6 @@ export function DocsStates({ title, cols, items }: DocsStatesProps) {
               ))}
             </TableBody>
           </Table>
-        </CardContent>
       </Card>
     </section>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import {
   Table,
   TableHeader,
@@ -36,8 +36,7 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
   return (
     <div className="space-y-3">
       {def.title && <h3 className="text-base font-semibold">{def.title}</h3>}
-      <Card className="shadow-sm overflow-x-auto">
-        <CardContent className="p-4">
+      <Card className="shadow-sm overflow-x-auto p-4">
           <Table className="w-full text-sm">
             <TableHeader>
               <TableRow className="border-b border-border bg-muted/50 text-left">
@@ -60,7 +59,6 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
               ))}
             </TableBody>
           </Table>
-        </CardContent>
       </Card>
     </div>
   );

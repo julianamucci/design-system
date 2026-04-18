@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
 interface DocsStateItem { label: string; trigger: string; behavior: string }
@@ -14,8 +14,7 @@ defineProps<{
 <template>
   <section id="estados">
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
-    <Card>
-      <CardContent class="p-4 overflow-x-auto">
+    <Card class="p-4 overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow class="border-b border-border bg-muted/50 text-left">
@@ -32,7 +31,6 @@ defineProps<{
             </TableRow>
           </TableBody>
         </Table>
-      </CardContent>
     </Card>
   </section>
 </template>

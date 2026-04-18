@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { sanitizeHtml } from '@/lib/sanitize-html';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
 defineProps<{
   title: string;
@@ -13,8 +13,7 @@ defineProps<{
 <template>
   <section id="anatomia">
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
-    <Card>
-      <CardContent class="p-10 mt-6 flex items-center justify-center">
+    <Card class="p-10 mt-6 flex items-center justify-center">
         <div class="space-y-4 w-full">
           <ol class="space-y-3 text-sm list-none p-0 m-0">
             <li v-for="(item, i) in items" :key="i" class="flex gap-3 list-none">
@@ -29,7 +28,6 @@ defineProps<{
             <pre class="font-mono text-sm whitespace-pre">{{ structureCode }}</pre>
           </div>
         </div>
-      </CardContent>
     </Card>
   </section>
 </template>

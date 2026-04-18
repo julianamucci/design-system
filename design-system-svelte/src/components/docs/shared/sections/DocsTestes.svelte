@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Card, CardContent } from '@/components/ui/card';
+  import { Card } from '@/components/ui/card';
   import { Badge } from '@/components/ui/badge';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
@@ -25,8 +25,7 @@
     <!-- Functional -->
     <div class="space-y-3">
       <h3 class="text-base font-semibold">{functional.title}</h3>
-      <Card class="overflow-x-auto">
-        <CardContent class="p-4">
+      <Card class="overflow-x-auto p-4">
           <Table class="w-full text-sm">
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/50 text-left">
@@ -47,7 +46,6 @@
               {/each}
             </TableBody>
           </Table>
-        </CardContent>
       </Card>
     </div>
 
@@ -56,14 +54,12 @@
       <h3 class="text-base font-semibold">{accessibility.title}</h3>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {#each accessibility.items as item}
-          <Card class="bg-muted/30 border-0 shadow-none">
-            <CardContent class="p-3 space-y-1">
+          <Card class="bg-muted/30 border-0 shadow-none p-3 space-y-1">
               <div class="flex items-center gap-2">
                 <span class="text-xs font-mono font-bold text-primary border border-primary/20 rounded px-1.5 py-0.5 bg-primary/5">{item.level}</span>
                 <span class="text-sm font-medium">{item.criterion}</span>
               </div>
               <p class="text-xs text-muted-foreground pl-0.5">{item.how}</p>
-            </CardContent>
           </Card>
         {/each}
       </div>
@@ -72,8 +68,7 @@
     <!-- Visual -->
     <div class="space-y-3">
       <h3 class="text-base font-semibold">{visual.title}</h3>
-      <Card class="overflow-x-auto">
-        <CardContent class="p-4">
+      <Card class="overflow-x-auto p-4">
           <Table class="w-full text-sm">
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/50 text-left">
@@ -92,7 +87,6 @@
               {/each}
             </TableBody>
           </Table>
-        </CardContent>
       </Card>
     </div>
 

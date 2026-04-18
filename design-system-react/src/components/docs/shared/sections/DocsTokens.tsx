@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import {
   Table,
   TableHeader,
@@ -28,8 +28,7 @@ export function DocsTokens({ title, cols, items, customizationTitle, customizati
     <section id="tokens">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
       <div className="space-y-6">
-        <Card className="shadow-sm overflow-x-auto">
-          <CardContent className="p-4">
+        <Card className="shadow-sm overflow-x-auto p-4">
             <Table className="w-full text-sm">
               <TableHeader>
                 <TableRow className="border-b border-border bg-muted/50 text-left">
@@ -48,7 +47,6 @@ export function DocsTokens({ title, cols, items, customizationTitle, customizati
                 ))}
               </TableBody>
             </Table>
-          </CardContent>
         </Card>
         {customizationTitle && (
           <div className="space-y-3">

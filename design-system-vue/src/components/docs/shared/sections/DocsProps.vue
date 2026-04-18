@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { sanitizeHtml } from '@/lib/sanitize-html';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
 interface DocsPropItem {
@@ -32,8 +32,7 @@ defineProps<{
     <div class="space-y-8">
       <div v-for="(def, ti) in tables" :key="ti" class="space-y-3">
         <h3 v-if="def.title" class="text-base font-semibold">{{ def.title }}</h3>
-        <Card>
-          <CardContent class="p-4 overflow-x-auto">
+        <Card class="p-4 overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow class="border-b border-border bg-muted/50 text-left">
@@ -54,7 +53,6 @@ defineProps<{
                 </TableRow>
               </TableBody>
             </Table>
-          </CardContent>
         </Card>
       </div>
       <div v-if="interfaceCode" class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
 export interface DocsDoDontPair {
   doLabel: string;
@@ -19,8 +19,7 @@ export function DocsDoDont({ title, pairs }: DocsDoDontProps) {
   return (
     <section id="do-dont">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <Card className="mt-6">
-        <CardContent className="p-10">
+      <Card className="mt-6 p-10">
           <div className="space-y-8 w-full">
             {pairs.map((pair, index) => (
               <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -49,7 +48,6 @@ export function DocsDoDont({ title, pairs }: DocsDoDontProps) {
               </div>
             ))}
           </div>
-        </CardContent>
       </Card>
     </section>
   );

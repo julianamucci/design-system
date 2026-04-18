@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Card, CardContent } from '@/components/ui/card';
+  import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
   interface DocsTokenItem { token: string; value: string; description: string }
@@ -16,8 +16,7 @@
 <section id="tokens">
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
   <div class="space-y-6">
-    <Card class="overflow-x-auto">
-      <CardContent class="p-4">
+    <Card class="overflow-x-auto p-4">
         <Table class="w-full text-sm">
           <TableHeader>
             <TableRow class="border-b border-border bg-muted/50 text-left">
@@ -36,7 +35,6 @@
             {/each}
           </TableBody>
         </Table>
-      </CardContent>
     </Card>
     {#if customizationTitle}
       <div class="space-y-3">

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { sanitizeHtml } from '@/lib/sanitize-html';
-  import { Card, CardContent } from '@/components/ui/card';
+  import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
   interface Scenario { s: string; u: string; a: string }
@@ -18,19 +18,16 @@
 
 <section id="quando-usar">
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
-  <Card>
-    <CardContent class="p-6 space-y-6">
+  <Card class="p-6 space-y-6">
 
       <!-- Guidelines -->
-      <Card class="bg-muted/30 border-0 shadow-none">
-        <CardContent class="p-4 space-y-3">
+      <Card class="bg-muted/30 border-0 shadow-none p-4 space-y-3">
           <h3 class="font-medium text-sm">{guidelines.title}</h3>
           <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
             {#each guidelines.items as item}
               <li>{@html sanitizeHtml(item)}</li>
             {/each}
           </ul>
-        </CardContent>
       </Card>
 
       <!-- Cenários -->
@@ -98,8 +95,7 @@
 
       <!-- Do / Don't cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card class="bg-card">
-          <CardContent class="p-4">
+        <Card class="bg-card p-4">
             <h3 class="mb-3 text-sm font-semibold text-green-600 flex items-center gap-2">
               <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
               {doBlock.title}
@@ -109,10 +105,8 @@
                 <li>{@html sanitizeHtml(item)}</li>
               {/each}
             </ul>
-          </CardContent>
         </Card>
-        <Card class="bg-card">
-          <CardContent class="p-4">
+        <Card class="bg-card p-4">
             <h3 class="mb-3 text-sm font-semibold text-red-600 flex items-center gap-2">
               <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
               {dontBlock.title}
@@ -122,10 +116,8 @@
                 <li>{@html sanitizeHtml(item)}</li>
               {/each}
             </ul>
-          </CardContent>
         </Card>
       </div>
 
-    </CardContent>
   </Card>
 </section>

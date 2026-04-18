@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
 interface DocsTokenItem { token: string; value: string; description: string }
@@ -17,8 +17,7 @@ defineProps<{
   <section id="tokens">
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
     <div class="space-y-6">
-      <Card>
-        <CardContent class="p-4 overflow-x-auto">
+      <Card class="p-4 overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/50 text-left">
@@ -35,7 +34,6 @@ defineProps<{
               </TableRow>
             </TableBody>
           </Table>
-        </CardContent>
       </Card>
       <div v-if="customizationTitle" class="space-y-3">
         <h3 class="text-base font-semibold">{{ customizationTitle }}</h3>

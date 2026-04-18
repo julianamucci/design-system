@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
 interface DocsDoDontPair {
   doLabel: string;
@@ -17,8 +17,7 @@ defineProps<{
 <template>
   <section id="do-dont">
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
-    <Card>
-      <CardContent class="p-10 mt-6 flex items-center justify-center">
+    <Card class="p-10 mt-6 flex items-center justify-center">
         <div class="space-y-8 w-full">
           <div v-for="(pair, index) in pairs" :key="index" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- DO -->
@@ -45,7 +44,6 @@ defineProps<{
             </div>
           </div>
         </div>
-      </CardContent>
     </Card>
   </section>
 </template>

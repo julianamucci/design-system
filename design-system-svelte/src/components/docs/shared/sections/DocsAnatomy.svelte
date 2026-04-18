@@ -1,6 +1,6 @@
 <script lang="ts">
   import { sanitizeHtml } from '@/lib/sanitize-html';
-  import { Card, CardContent } from '@/components/ui/card';
+  import { Card } from '@/components/ui/card';
 
   const { title, items, structureCode, structureLabel }: {
     title: string;
@@ -12,8 +12,7 @@
 
 <section id="anatomia">
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
-  <Card>
-    <CardContent class="p-10 mt-6">
+  <Card class="p-10 mt-6">
       <div class="space-y-4 w-full">
         <ol class="space-y-3 text-sm list-none p-0 m-0">
           {#each items as item, i}
@@ -32,6 +31,5 @@
           <pre class="font-mono text-sm whitespace-pre">{structureCode}</pre>
         </div>
       </div>
-    </CardContent>
   </Card>
 </section>
