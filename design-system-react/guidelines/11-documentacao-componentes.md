@@ -824,15 +824,15 @@ Componentes como **Accordion** (`Accordion`, `AccordionItem`, `AccordionTrigger`
 Componentes como **Alert** (`Alert` + `AlertTitle` + `AlertDescription`) são banners de status. Não recebem foco, não têm `disabled`/`loading`.
 
 1. **`DocsAnatomy`** — 4 items: `Alert` (`div[role=alert]`), `AlertTitle` (`h5`), `AlertDescription` (`div`), ícone SVG opcional (filho direto do `Alert`).
-2. **`DocsVariants`** — 2 entradas (`default`, `destructive`). Cada `preview` mostra o alerta completo (ícone + `AlertTitle` + `AlertDescription`), não isolado. Omitir seção de tamanhos.
-3. **`DocsStates`** — `default`, `destructive`, `withIcon`, `withoutTitle`. Omitir `loading`/`disabled`.
+2. **`DocsVariants`** — 4 entradas (`default`, `destructive` como props; `success` e `warning` via `className`). Cada `preview` mostra o alerta completo (ícone + `AlertTitle` + `AlertDescription`), não isolado. Omitir seção de tamanhos.
+3. **`DocsStates`** — `complete`, `withoutTitle`, `withoutIcon`, `dynamicInsert`. Omitir `loading`/`disabled`.
 4. **`DocsProps`** — 3 entradas em `tables`: `Alert` (variant, className, children), `AlertTitle` (className, children), `AlertDescription` (className, children). Todos aceitam atributos HTML nativos via `forwardRef`.
 5. **Play function** — estrutura e a11y, não interação:
    - `role="alert"` no elemento raiz (`getByRole('alert')`)
    - Variante `destructive` aplica a classe correta
    - Ícone SVG filho direto recebe posicionamento absoluto via seletor CSS
    - `AlertTitle` renderiza como `h5`
-6. **`DocsAnalytics`** — Alert é estrutural: listar apenas `docs_page_view`, `docs_section_viewed`, `language_switched`. Não documentar `alert_shown` ou `alert_dismissed`.
+6. **`DocsAnalytics`** — Alert é estrutural: listar apenas `docs_page_view`, `docs_section_viewed`, `language_switched`. Incluir `alert_dismiss` (payload: `{ label: string }`) apenas se o alerta tiver ação de dismissal.
 7. **Stories** — omitir `alert-tamanhos`. Arquivos: `.stories.tsx`, `-variantes`, `-composicoes`, `-estados`.
 8. **`role="alert"` + WCAG 4.1.3** — inserção dinâmica no DOM é anunciada por leitores de tela (ARIA Live Region implícita). Cobrir na seção de Acessibilidade e verificar com `getByRole('alert')`.
 9. **Ícone via CSS absoluto** — `[&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4` no `alertVariants` posiciona qualquer SVG filho direto. Texto recuado via `[&>svg~*]:pl-7`. Documentar em `notes.note2` e na Anatomia.

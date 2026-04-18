@@ -506,7 +506,7 @@ Componentes Radix/Reka com children internos **não** aceitam `dangerouslySetInn
 
 - Stories sem `argTypes.onClick`
 - Play functions testam estrutura: `getByRole('alert')`, `toBeVisible()`, classes CSS de variante
-- Seção `DocsStates` descreve estados visuais (default, destructive) — não estados funcionais (disabled, loading)
+- Seção `DocsStates` descreve configurações visuais (`complete`, `withoutTitle`, `withoutIcon`, `dynamicInsert`) — não estados funcionais (disabled, loading)
 
 ### AlertDialog e overlays
 

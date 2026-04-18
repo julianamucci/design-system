@@ -464,7 +464,7 @@ Containers já fazem isso para os props de texto que aceitam HTML. No consumidor
 
 - Stories sem handlers de clique
 - Play functions testam `getByRole('alert')`, classes CSS
-- `DocsStates` cobre default/destructive (visuais), não loading/disabled
+- `DocsStates` cobre configurações visuais (`complete`, `withoutTitle`, `withoutIcon`, `dynamicInsert`) — não loading/disabled
 
 ### AlertDialog e overlays
 
