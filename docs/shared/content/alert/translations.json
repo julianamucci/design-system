@@ -1,0 +1,944 @@
+{
+  "pt-BR": {
+    "title": "Alert",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Mensagem estática e persistente para comunicar erros, avisos, sucesso ou informações importantes no fluxo da página.",
+    "seo": {
+      "title": "Alert — Feedback · Design System",
+      "description": "Documentação do Alert: 2 variantes nativas, success e warning via className, acessibilidade WCAG com role=\"alert\" automático.",
+      "aiSummary": "Componente Alert com 2 variantes nativas (default, destructive), variantes success e warning via className, role=\"alert\" automático e suporte a ícone, título e descrição.",
+      "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role alert, aria-live",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "infoTitle": "Atenção",
+        "infoDesc": "Suas alterações serão aplicadas na próxima sessão.",
+        "errorTitle": "Erro ao salvar",
+        "errorDesc": "Não foi possível salvar. Verifique sua conexão e tente novamente.",
+        "successTitle": "Perfil atualizado",
+        "successDesc": "Suas informações foram salvas com sucesso.",
+        "warningTitle": "Assinatura expirando",
+        "warningDesc": "Sua assinatura expira em 3 dias. Renove para evitar interrupções."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Alert</strong> — container <code>&lt;div role=\"alert\"&gt;</code>. Recebe todos os atributos HTML do elemento.",
+      "item2": "<strong>Ícone (opcional)</strong> — filho direto do Alert, sem wrapper. Deve ter <code>aria-hidden=\"true\"</code>.",
+      "item3": "<strong>AlertTitle (opcional)</strong> — elemento <code>&lt;h5&gt;</code>. Omitir quando a descrição já é autoexplicativa.",
+      "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;div&gt;</code> para o texto principal da mensagem.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Alert>                  {/* Container role=\"alert\" */}\n  <Icon />             {/* Ícone (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descrição */}\n</Alert>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "📋 Guidelines Obrigatórias",
+        "item1": "Use apenas para mensagens que precisam permanecer visíveis enquanto o usuário lê ou age.",
+        "item2": "Escolha a variante correta para a severidade: <code>destructive</code> para erros, <code>default</code> para informativo.",
+        "item3": "Inclua sempre ícone + texto — nunca dependa de cor como único indicador de estado.",
+        "item4": "<code>AlertTitle</code> é opcional — omita quando a <code>AlertDescription</code> já é autoexplicativa."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Erro que bloqueia o fluxo", "u": "Sim, variant destructive", "a": "-" },
+        "item2": { "s": "Confirmação temporária", "u": "Não", "a": "Sonner" },
+        "item3": { "s": "Aviso de prazo ou expiração", "u": "Sim, variant warning", "a": "AlertDialog se exige ação" },
+        "item4": { "s": "Info contextual persistente", "u": "Sim, variant default", "a": "Tooltip se for inline" }
+      },
+      "uxWriting": {
+        "title": "✍️ UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "AlertTitle",
+            "format": "Frase nominal · sem ponto final · máx. 5 palavras",
+            "good": "\"Erro ao salvar\", \"Perfil atualizado\"",
+            "bad": "\"Ocorreu um erro!\", \"Seu perfil foi atualizado com sucesso!\""
+          },
+          "description": {
+            "name": "AlertDescription",
+            "format": "Frase completa · ponto final · máx. 2 linhas",
+            "good": "\"Não foi possível salvar. Verifique sua conexão.\"",
+            "bad": "Texto com 4+ linhas que exige rolagem"
+          },
+          "error": {
+            "name": "Variante destructive",
+            "format": "Causa + orientação · sem culpar o usuário",
+            "good": "\"Não foi possível salvar. Tente novamente.\"",
+            "bad": "\"Você cometeu um erro ao preencher.\""
+          },
+          "warning": {
+            "name": "Variante warning",
+            "format": "Consequência + ação disponível",
+            "good": "\"Assinatura expira em 3 dias. Renove agora.\"",
+            "bad": "\"Atenção!!!\", \"Cuidado.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Uma mensagem precisa ficar visível enquanto o usuário age",
+        "item2": "Um erro bloqueia a conclusão de um formulário ou fluxo",
+        "item3": "Um aviso importante requer atenção contínua na página",
+        "item4": "Uma confirmação de estado (sucesso) deve permanecer visível"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A mensagem é temporária e dispensável — use <code>Sonner</code>",
+        "item2": "A ação é destrutiva e precisa de confirmação — use <code>AlertDialog</code>",
+        "item3": "A informação é contextual e inline — use <code>Tooltip</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Ícone + título + descrição. Informação completa, sem ambiguidade.",
+        "dont": "Alert para notificação temporária de ação (ex: 'Salvo!'). Use Sonner."
+      },
+      "pair2": {
+        "do": "Variante destructive para erros que bloqueiam o fluxo.",
+        "dont": "Cor sem ícone como único indicador de severidade."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withIcon": "Com ícone Lucide:"
+    },
+    "examples": {
+      "title": "Exemplos de Código",
+      "default": "Informativo (default)",
+      "destructive": "Erro (destructive)",
+      "success": "Sucesso (via className)",
+      "warning": "Aviso (via className)",
+      "withoutTitle": "Sem título"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Variantes Disponíveis",
+      "note": "O Alert tem 2 variantes nativas (<code>default</code> e <code>destructive</code>). As variantes <code>success</code> e <code>warning</code> são implementadas via <code>className</code> com tokens semânticos do projeto.",
+      "items": {
+        "default": "Mensagens informativas e neutras. Fundo e borda do tema padrão.",
+        "destructive": "Erros críticos ou ações irreversíveis. Texto e borda vermelhos.",
+        "success": "Confirmações de ações bem-sucedidas. Via <code>className=\"bg-success/10 text-success border-success/30\"</code>.",
+        "warning": "Avisos que requerem atenção, mas não bloqueiam. Via <code>className=\"bg-warning/10 text-warning border-warning/30\"</code>."
+      }
+    },
+    "states": {
+      "title": "Configurações",
+      "cols": {
+        "state": "Configuração",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "complete": {
+        "label": "Completo",
+        "trigger": "Ícone + <code>AlertTitle</code> + <code>AlertDescription</code>",
+        "behavior": "Exibição padrão com hierarquia visual: ícone à esquerda, título em negrito, descrição abaixo"
+      },
+      "withoutTitle": {
+        "label": "Sem título",
+        "trigger": "Omitir <code>AlertTitle</code>",
+        "behavior": "Apenas ícone e descrição. Use quando a mensagem é curta e autoexplicativa"
+      },
+      "withoutIcon": {
+        "label": "Sem ícone",
+        "trigger": "Não incluir filho ícone",
+        "behavior": "Texto alinhado à esquerda sem padding extra. Não recomendado — inclua sempre ícone"
+      },
+      "dynamicInsert": {
+        "label": "Inserção dinâmica",
+        "trigger": "Renderizar após montagem via estado",
+        "behavior": "Adicionar <code>aria-live=\"polite\"</code> no container pai para anunciar via leitor de tela"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "alertTitle": "Alert",
+      "alertTitleTitle": "AlertTitle",
+      "alertDescTitle": "AlertDescription",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "variant": "Variante visual: <code>\"default\"</code> para informativo, <code>\"destructive\"</code> para erro.",
+        "className": "Classes Tailwind adicionais — use para variantes success/warning com tokens do projeto.",
+        "children": "Conteúdo do Alert: ícone, AlertTitle e AlertDescription."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Use tokens semânticos (<code>bg-success/10</code>, <code>text-warning</code>) para variantes não nativas — nunca cores hardcoded."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "background": "Fundo (variante default)",
+        "foreground": "Texto (variante default)",
+        "border": "Borda padrão",
+        "destructiveBorder": "Borda (variante destructive)",
+        "destructiveText": "Texto e ícone (variante destructive)",
+        "success": "Fundo + texto + borda (success via className)",
+        "warning": "Fundo + texto + borda (warning via className)",
+        "radius": "Border radius do container"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "O Alert usa <code>role=\"alert\"</code> que anuncia o conteúdo automaticamente ao leitor de tela quando inserido no DOM. Cumpre WCAG 2.1 AA: 1.4.1 (cor não é o único indicador), 4.1.3 (mensagens de status).",
+      "item1": "<strong>role=\"alert\" automático</strong> — o Shadcn aplica <code>role=\"alert\"</code> no container, fazendo leitores de tela anunciarem o conteúdo imediatamente ao ser inserido.",
+      "item2": "<strong>Inserção dinâmica</strong> — para alerts inseridos após a montagem, adicione <code>aria-live=\"polite\"</code> no container pai. Use <code>aria-live=\"assertive\"</code> apenas para erros críticos que bloqueiam o fluxo.",
+      "item3": "<strong>Ícones decorativos</strong> — sempre <code>aria-hidden=\"true\"</code>. O texto da <code>AlertDescription</code> já descreve o estado.",
+      "item4": "<strong>Cor + ícone + texto</strong> — nunca use cor como único indicador (WCAG 1.4.1). Cada variante deve ter ícone e texto correspondentes.",
+      "item5": "<strong>Contraste</strong> — variante default: 4.5:1 (texto sobre fundo). Variante destructive: cumpre 4.5:1 com <code>text-destructive</code>.",
+      "keyboard": {
+        "tab": "Navega para links ou botões dentro do Alert, se houver.",
+        "enter": "Ativa links ou botões internos ao Alert.",
+        "noKeyboard": "O Alert em si não é interativo — apenas o conteúdo filho pode receber foco."
+      },
+      "aria": {
+        "role": "<code>role=\"alert\"</code> — aplicado automaticamente no container. Anuncia o conteúdo ao leitor de tela.",
+        "ariaLive": "<code>aria-live=\"polite\"</code> — no container pai para alerts inseridos dinamicamente.",
+        "ariaLiveAssertive": "<code>aria-live=\"assertive\"</code> — apenas para erros críticos urgentes.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — em todos os ícones decorativos."
+      },
+      "screenReader": {
+        "onInsert": "Ao inserir o Alert no DOM: leitor anuncia o conteúdo completo (título + descrição).",
+        "onUpdate": "Ao atualizar o conteúdo: o leitor anuncia as mudanças se <code>aria-live</code> estiver presente.",
+        "icons": "Ícones ignorados pelo leitor — o texto descreve o estado completamente."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "sonner": "Para confirmações temporárias que o usuário pode dispensar (toasts).",
+      "alertDialog": "Para ações críticas que exigem confirmação explícita do usuário.",
+      "badge": "Para indicadores de status compactos e inline em listas ou tabelas.",
+      "progress": "Para comunicar progresso de operações assíncronas em andamento."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "Para variantes success e warning, use tokens semânticos do projeto (<code>bg-success/10</code>, <code>text-warning</code>) — nunca cores hardcoded. Isso garante consistência no dark mode.",
+      "tip2": "O ícone deve ser filho direto do Alert — não envolva em <code>&lt;div&gt;</code>. O CSS do Shadcn usa <code>[&gt;svg]</code> para posicionamento automático.",
+      "tip3": "Em formulários, prefira inserir o Alert acima dos campos com erro, não dentro deles — o <code>role=\"alert\"</code> anuncia imediatamente ao foco mudar para a região."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "O Alert raramente emite eventos por si. Rastreie apenas quando o alerta tem ação relevante para o produto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "dismiss": "alert_dismiss",
+        "dismissTrigger": "Usuário descarta um alerta importante (botão de fechar)",
+        "dismissPayload": "{ label: string }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada configuração do Alert.",
+        "item1": { "action": "Renderizar variante default", "result": "Container com bg-background, borda padrão, texto foreground", "priority": "high" },
+        "item2": { "action": "Renderizar variante destructive", "result": "Texto e borda com cor destructive; ícone com text-destructive", "priority": "high" },
+        "item3": { "action": "Renderizar com ícone filho direto", "result": "Ícone posicionado à esquerda via CSS [&>svg]:absolute [&>svg]:left-4", "priority": "high" },
+        "item4": { "action": "Renderizar sem AlertTitle", "result": "AlertDescription ocupa o espaço completo; sem quebra de layout", "priority": "medium" },
+        "item5": { "action": "Renderizar com className de success", "result": "bg-success/10, text-success, border-success/30 aplicados corretamente", "priority": "medium" },
+        "item6": { "action": "Inserir Alert dinamicamente no DOM", "result": "Leitor de tela anuncia o conteúdo (role=\"alert\" ativo)", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "role=\"alert\" presente no container", "level": "AA", "how": "getByRole('alert') no testing-library" },
+        "item2": { "criterion": "Ícones com aria-hidden=\"true\"", "level": "AA", "how": "Inspecionar atributos do SVG no DOM" },
+        "item3": { "criterion": "Contraste mínimo 4.5:1 em todas as variantes", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Playground — variante default", "priority": "high" },
+        "item2": { "story": "Variantes — default, destructive, success, warning", "priority": "high" },
+        "item3": { "story": "Configurações — com e sem AlertTitle", "priority": "medium" },
+        "item4": { "story": "Configurações — com e sem ícone", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "examples": "Exemplos",
+      "variants": "Variantes",
+      "states": "Configurações",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Alert",
+    "category": "Feedback",
+    "type": "Component",
+    "description": "Static, persistent message for communicating errors, warnings, success, or important information within the page flow.",
+    "seo": {
+      "title": "Alert — Feedback · Design System",
+      "description": "Documentation for Alert: 2 native variants, success and warning via className, WCAG accessibility with automatic role=\"alert\".",
+      "aiSummary": "Alert component with 2 native variants (default, destructive), success and warning via className, automatic role=\"alert\", and support for icon, title, and description.",
+      "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role alert, aria-live",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "infoTitle": "Notice",
+        "infoDesc": "Your changes will be applied in the next session.",
+        "errorTitle": "Save failed",
+        "errorDesc": "Unable to save. Check your connection and try again.",
+        "successTitle": "Profile updated",
+        "successDesc": "Your information has been saved successfully.",
+        "warningTitle": "Subscription expiring",
+        "warningDesc": "Your subscription expires in 3 days. Renew to avoid interruptions."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Alert</strong> — <code>&lt;div role=\"alert\"&gt;</code> container. Accepts all HTML div attributes.",
+      "item2": "<strong>Icon (optional)</strong> — direct child of Alert, no wrapper needed. Must have <code>aria-hidden=\"true\"</code>.",
+      "item3": "<strong>AlertTitle (optional)</strong> — <code>&lt;h5&gt;</code> element. Omit when the description is self-explanatory.",
+      "item4": "<strong>AlertDescription</strong> — <code>&lt;div&gt;</code> element for the primary message text.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Alert>                  {/* Container role=\"alert\" */}\n  <Icon />             {/* Icon (optional, aria-hidden) */}\n  <AlertTitle />       {/* Title (optional) */}\n  <AlertDescription /> {/* Description */}\n</Alert>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "📋 Required Guidelines",
+        "item1": "Use only for messages that need to remain visible while the user reads or acts.",
+        "item2": "Choose the variant that matches the severity: <code>destructive</code> for errors, <code>default</code> for informational.",
+        "item3": "Always include icon + text — never rely on color as the only state indicator.",
+        "item4": "<code>AlertTitle</code> is optional — omit when <code>AlertDescription</code> is already self-explanatory."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Error blocking the flow", "u": "Yes, destructive variant", "a": "-" },
+        "item2": { "s": "Temporary confirmation", "u": "No", "a": "Sonner" },
+        "item3": { "s": "Deadline or expiry warning", "u": "Yes, warning variant", "a": "AlertDialog if action required" },
+        "item4": { "s": "Persistent contextual info", "u": "Yes, default variant", "a": "Tooltip if inline" }
+      },
+      "uxWriting": {
+        "title": "✍️ UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "title": {
+            "name": "AlertTitle",
+            "format": "Noun phrase · no period · max. 5 words",
+            "good": "\"Save failed\", \"Profile updated\"",
+            "bad": "\"An error has occurred!\", \"Your profile was updated successfully!\""
+          },
+          "description": {
+            "name": "AlertDescription",
+            "format": "Complete sentence · period · max. 2 lines",
+            "good": "\"Unable to save. Check your connection.\"",
+            "bad": "Text with 4+ lines requiring scroll"
+          },
+          "error": {
+            "name": "Destructive variant",
+            "format": "Cause + guidance · don't blame the user",
+            "good": "\"Unable to save. Please try again.\"",
+            "bad": "\"You made an error while filling the form.\""
+          },
+          "warning": {
+            "name": "Warning variant",
+            "format": "Consequence + available action",
+            "good": "\"Subscription expires in 3 days. Renew now.\"",
+            "bad": "\"Attention!!!\", \"Caution.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "A message needs to stay visible while the user acts",
+        "item2": "An error blocks the completion of a form or flow",
+        "item3": "An important warning requires ongoing attention on the page",
+        "item4": "A status confirmation (success) must remain visible"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The message is temporary and dismissable — use <code>Sonner</code>",
+        "item2": "The action is destructive and needs confirmation — use <code>AlertDialog</code>",
+        "item3": "The information is contextual and inline — use <code>Tooltip</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Icon + title + description. Complete information, no ambiguity.",
+        "dont": "Alert for temporary action feedback (e.g., 'Saved!'). Use Sonner instead."
+      },
+      "pair2": {
+        "do": "Destructive variant for errors that block the flow.",
+        "dont": "Color as the only severity indicator without icon or text."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withIcon": "With Lucide icon:"
+    },
+    "examples": {
+      "title": "Code Examples",
+      "default": "Informational (default)",
+      "destructive": "Error (destructive)",
+      "success": "Success (via className)",
+      "warning": "Warning (via className)",
+      "withoutTitle": "Without title"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Available Variants",
+      "note": "Alert has 2 native variants (<code>default</code> and <code>destructive</code>). The <code>success</code> and <code>warning</code> variants are implemented via <code>className</code> using the project's semantic tokens.",
+      "items": {
+        "default": "Informational and neutral messages. Default theme background and border.",
+        "destructive": "Critical errors or irreversible actions. Red text and border.",
+        "success": "Successful action confirmations. Via <code>className=\"bg-success/10 text-success border-success/30\"</code>.",
+        "warning": "Warnings requiring attention but not blocking. Via <code>className=\"bg-warning/10 text-warning border-warning/30\"</code>."
+      }
+    },
+    "states": {
+      "title": "Configurations",
+      "cols": {
+        "state": "Configuration",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "complete": {
+        "label": "Complete",
+        "trigger": "Icon + <code>AlertTitle</code> + <code>AlertDescription</code>",
+        "behavior": "Standard display with visual hierarchy: icon on left, bold title, description below"
+      },
+      "withoutTitle": {
+        "label": "Without title",
+        "trigger": "Omit <code>AlertTitle</code>",
+        "behavior": "Only icon and description. Use for short, self-explanatory messages"
+      },
+      "withoutIcon": {
+        "label": "Without icon",
+        "trigger": "Don't include icon child",
+        "behavior": "Text left-aligned without extra padding. Not recommended — always include an icon"
+      },
+      "dynamicInsert": {
+        "label": "Dynamic insertion",
+        "trigger": "Render after mount via state",
+        "behavior": "Add <code>aria-live=\"polite\"</code> to the parent container to announce via screen reader"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "alertTitle": "Alert",
+      "alertTitleTitle": "AlertTitle",
+      "alertDescTitle": "AlertDescription",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "variant": "Visual variant: <code>\"default\"</code> for informational, <code>\"destructive\"</code> for error.",
+        "className": "Additional Tailwind classes — use for success/warning variants with project tokens.",
+        "children": "Alert content: icon, AlertTitle, and AlertDescription."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. Use semantic tokens (<code>bg-success/10</code>, <code>text-warning</code>) for non-native variants — never hardcoded colors."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "background": "Background (default variant)",
+        "foreground": "Text (default variant)",
+        "border": "Default border",
+        "destructiveBorder": "Border (destructive variant)",
+        "destructiveText": "Text and icon (destructive variant)",
+        "success": "Background + text + border (success via className)",
+        "warning": "Background + text + border (warning via className)",
+        "radius": "Container border radius"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "Alert uses <code>role=\"alert\"</code> which announces content automatically to screen readers when inserted in the DOM. Meets WCAG 2.1 AA: 1.4.1 (color not the only indicator), 4.1.3 (status messages).",
+      "item1": "<strong>Automatic role=\"alert\"</strong> — Shadcn applies <code>role=\"alert\"</code> to the container, causing screen readers to announce the content immediately when inserted.",
+      "item2": "<strong>Dynamic insertion</strong> — for alerts inserted after mount, add <code>aria-live=\"polite\"</code> to the parent container. Use <code>aria-live=\"assertive\"</code> only for critical errors that block the flow.",
+      "item3": "<strong>Decorative icons</strong> — always <code>aria-hidden=\"true\"</code>. The <code>AlertDescription</code> text already describes the state.",
+      "item4": "<strong>Color + icon + text</strong> — never use color as the only indicator (WCAG 1.4.1). Each variant must have a matching icon and text.",
+      "item5": "<strong>Contrast</strong> — default variant: 4.5:1 (text over background). Destructive variant: meets 4.5:1 with <code>text-destructive</code>.",
+      "keyboard": {
+        "tab": "Navigates to links or buttons inside the Alert, if any.",
+        "enter": "Activates links or buttons inside the Alert.",
+        "noKeyboard": "The Alert itself is not interactive — only child content can receive focus."
+      },
+      "aria": {
+        "role": "<code>role=\"alert\"</code> — automatically applied to the container. Announces content to screen readers.",
+        "ariaLive": "<code>aria-live=\"polite\"</code> — on the parent container for dynamically inserted alerts.",
+        "ariaLiveAssertive": "<code>aria-live=\"assertive\"</code> — only for critical urgent errors.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — on all decorative icons."
+      },
+      "screenReader": {
+        "onInsert": "When Alert is inserted in the DOM: reader announces the full content (title + description).",
+        "onUpdate": "When content updates: reader announces changes if <code>aria-live</code> is present.",
+        "icons": "Icons are ignored by the reader — the text fully describes the state."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "sonner": "For temporary confirmations the user can dismiss (toasts).",
+      "alertDialog": "For critical actions requiring explicit user confirmation.",
+      "badge": "For compact inline status indicators in lists or tables.",
+      "progress": "For communicating progress of ongoing async operations."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "For success and warning variants, use project semantic tokens (<code>bg-success/10</code>, <code>text-warning</code>) — never hardcoded colors. This ensures dark mode consistency.",
+      "tip2": "The icon must be a direct child of Alert — don't wrap in a <code>&lt;div&gt;</code>. Shadcn CSS uses <code>[&gt;svg]</code> selectors for automatic positioning.",
+      "tip3": "In forms, prefer inserting the Alert above the error fields, not inside them — the <code>role=\"alert\"</code> announces immediately when focus moves to the region."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Alert rarely emits events on its own. Track only when the alert has product-relevant actions.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "dismiss": "alert_dismiss",
+        "dismissTrigger": "User dismisses an important alert (close button)",
+        "dismissPayload": "{ label: string }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Alert configuration.",
+        "item1": { "action": "Render default variant", "result": "Container with bg-background, default border, foreground text", "priority": "high" },
+        "item2": { "action": "Render destructive variant", "result": "Text and border with destructive color; icon with text-destructive", "priority": "high" },
+        "item3": { "action": "Render with direct icon child", "result": "Icon positioned left via CSS [&>svg]:absolute [&>svg]:left-4", "priority": "high" },
+        "item4": { "action": "Render without AlertTitle", "result": "AlertDescription fills available space; no layout break", "priority": "medium" },
+        "item5": { "action": "Render with success className", "result": "bg-success/10, text-success, border-success/30 applied correctly", "priority": "medium" },
+        "item6": { "action": "Insert Alert dynamically in DOM", "result": "Screen reader announces content (active role=\"alert\")", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "role=\"alert\" present on container", "level": "AA", "how": "getByRole('alert') in testing-library" },
+        "item2": { "criterion": "Icons with aria-hidden=\"true\"", "level": "AA", "how": "Inspect SVG attributes in DOM" },
+        "item3": { "criterion": "Minimum contrast 4.5:1 across all variants", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Playground — default variant", "priority": "high" },
+        "item2": { "story": "Variants — default, destructive, success, warning", "priority": "high" },
+        "item3": { "story": "Configurations — with and without AlertTitle", "priority": "medium" },
+        "item4": { "story": "Configurations — with and without icon", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "examples": "Examples",
+      "variants": "Variants",
+      "states": "Configurations",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Alert",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Mensaje estático y persistente para comunicar errores, advertencias, éxito o información importante en el flujo de la página.",
+    "seo": {
+      "title": "Alert — Feedback · Design System",
+      "description": "Documentación del Alert: 2 variantes nativas, success y warning vía className, accesibilidad WCAG con role=\"alert\" automático.",
+      "aiSummary": "Componente Alert con 2 variantes nativas (default, destructive), success y warning vía className, role=\"alert\" automático y soporte para ícono, título y descripción.",
+      "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role alert, aria-live",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "infoTitle": "Atención",
+        "infoDesc": "Tus cambios se aplicarán en la próxima sesión.",
+        "errorTitle": "Error al guardar",
+        "errorDesc": "No fue posible guardar. Verifica tu conexión e intenta de nuevo.",
+        "successTitle": "Perfil actualizado",
+        "successDesc": "Tu información se guardó correctamente.",
+        "warningTitle": "Suscripción por vencer",
+        "warningDesc": "Tu suscripción vence en 3 días. Renueva para evitar interrupciones."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Alert</strong> — contenedor <code>&lt;div role=\"alert\"&gt;</code>. Acepta todos los atributos HTML del elemento.",
+      "item2": "<strong>Ícono (opcional)</strong> — hijo directo del Alert, sin wrapper. Debe tener <code>aria-hidden=\"true\"</code>.",
+      "item3": "<strong>AlertTitle (opcional)</strong> — elemento <code>&lt;h5&gt;</code>. Omitir cuando la descripción es autoexplicativa.",
+      "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;div&gt;</code> para el texto principal del mensaje.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Alert>                  {/* Contenedor role=\"alert\" */}\n  <Icon />             {/* Ícono (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descripción */}\n</Alert>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "📋 Guías Obligatorias",
+        "item1": "Úsalo solo para mensajes que necesiten permanecer visibles mientras el usuario lee o actúa.",
+        "item2": "Elige la variante según la severidad: <code>destructive</code> para errores, <code>default</code> para informativo.",
+        "item3": "Incluye siempre ícono + texto — nunca dependas del color como único indicador de estado.",
+        "item4": "<code>AlertTitle</code> es opcional — omítelo cuando <code>AlertDescription</code> ya es autoexplicativa."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Error que bloquea el flujo", "u": "Sí, variante destructive", "a": "-" },
+        "item2": { "s": "Confirmación temporal", "u": "No", "a": "Sonner" },
+        "item3": { "s": "Advertencia de plazo o vencimiento", "u": "Sí, variante warning", "a": "AlertDialog si requiere acción" },
+        "item4": { "s": "Info contextual persistente", "u": "Sí, variante default", "a": "Tooltip si es inline" }
+      },
+      "uxWriting": {
+        "title": "✍️ UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "AlertTitle",
+            "format": "Frase nominal · sin punto final · máx. 5 palabras",
+            "good": "\"Error al guardar\", \"Perfil actualizado\"",
+            "bad": "\"¡Ocurrió un error!\", \"¡Tu perfil fue actualizado con éxito!\""
+          },
+          "description": {
+            "name": "AlertDescription",
+            "format": "Frase completa · punto final · máx. 2 líneas",
+            "good": "\"No fue posible guardar. Verifica tu conexión.\"",
+            "bad": "Texto con 4+ líneas que requiere scroll"
+          },
+          "error": {
+            "name": "Variante destructive",
+            "format": "Causa + orientación · sin culpar al usuario",
+            "good": "\"No fue posible guardar. Intenta de nuevo.\"",
+            "bad": "\"Cometiste un error al completar el formulario.\""
+          },
+          "warning": {
+            "name": "Variante warning",
+            "format": "Consecuencia + acción disponible",
+            "good": "\"La suscripción vence en 3 días. Renueva ahora.\"",
+            "bad": "\"¡Atención!!!\", \"Cuidado.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "Un mensaje necesita permanecer visible mientras el usuario actúa",
+        "item2": "Un error bloquea la finalización de un formulario o flujo",
+        "item3": "Una advertencia importante requiere atención continua en la página",
+        "item4": "Una confirmación de estado (éxito) debe permanecer visible"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El mensaje es temporal y descartable — usa <code>Sonner</code>",
+        "item2": "La acción es destructiva y requiere confirmación — usa <code>AlertDialog</code>",
+        "item3": "La información es contextual e inline — usa <code>Tooltip</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Ícono + título + descripción. Información completa, sin ambigüedad.",
+        "dont": "Alert para notificación temporal de acción (ej: '¡Guardado!'). Usa Sonner."
+      },
+      "pair2": {
+        "do": "Variante destructive para errores que bloquean el flujo.",
+        "dont": "Color como único indicador de severidad sin ícono ni texto."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withIcon": "Con ícono Lucide:"
+    },
+    "examples": {
+      "title": "Ejemplos de Código",
+      "default": "Informativo (default)",
+      "destructive": "Error (destructive)",
+      "success": "Éxito (vía className)",
+      "warning": "Advertencia (vía className)",
+      "withoutTitle": "Sin título"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Variantes Disponibles",
+      "note": "Alert tiene 2 variantes nativas (<code>default</code> y <code>destructive</code>). Las variantes <code>success</code> y <code>warning</code> se implementan vía <code>className</code> con tokens semánticos del proyecto.",
+      "items": {
+        "default": "Mensajes informativos y neutros. Fondo y borde del tema predeterminado.",
+        "destructive": "Errores críticos o acciones irreversibles. Texto y borde en rojo.",
+        "success": "Confirmaciones de acciones exitosas. Vía <code>className=\"bg-success/10 text-success border-success/30\"</code>.",
+        "warning": "Advertencias que requieren atención pero no bloquean. Vía <code>className=\"bg-warning/10 text-warning border-warning/30\"</code>."
+      }
+    },
+    "states": {
+      "title": "Configuraciones",
+      "cols": {
+        "state": "Configuración",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "complete": {
+        "label": "Completo",
+        "trigger": "Ícono + <code>AlertTitle</code> + <code>AlertDescription</code>",
+        "behavior": "Visualización estándar con jerarquía visual: ícono a la izquierda, título en negrita, descripción abajo"
+      },
+      "withoutTitle": {
+        "label": "Sin título",
+        "trigger": "Omitir <code>AlertTitle</code>",
+        "behavior": "Solo ícono y descripción. Usar para mensajes cortos y autoexplicativos"
+      },
+      "withoutIcon": {
+        "label": "Sin ícono",
+        "trigger": "No incluir hijo ícono",
+        "behavior": "Texto alineado a la izquierda sin padding extra. No recomendado — incluye siempre un ícono"
+      },
+      "dynamicInsert": {
+        "label": "Inserción dinámica",
+        "trigger": "Renderizar después del montaje vía estado",
+        "behavior": "Agregar <code>aria-live=\"polite\"</code> al contenedor padre para anunciar vía lector de pantalla"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "alertTitle": "Alert",
+      "alertTitleTitle": "AlertTitle",
+      "alertDescTitle": "AlertDescription",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "variant": "Variante visual: <code>\"default\"</code> para informativo, <code>\"destructive\"</code> para error.",
+        "className": "Clases Tailwind adicionales — usar para variantes success/warning con tokens del proyecto.",
+        "children": "Contenido del Alert: ícono, AlertTitle y AlertDescription."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Usa tokens semánticos (<code>bg-success/10</code>, <code>text-warning</code>) para variantes no nativas — nunca colores hardcoded."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "background": "Fondo (variante default)",
+        "foreground": "Texto (variante default)",
+        "border": "Borde predeterminado",
+        "destructiveBorder": "Borde (variante destructive)",
+        "destructiveText": "Texto e ícono (variante destructive)",
+        "success": "Fondo + texto + borde (success vía className)",
+        "warning": "Fondo + texto + borde (warning vía className)",
+        "radius": "Border radius del contenedor"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "Alert usa <code>role=\"alert\"</code> que anuncia el contenido automáticamente al lector de pantalla cuando se inserta en el DOM. Cumple WCAG 2.1 AA: 1.4.1 (color no es el único indicador), 4.1.3 (mensajes de estado).",
+      "item1": "<strong>role=\"alert\" automático</strong> — Shadcn aplica <code>role=\"alert\"</code> en el contenedor, haciendo que los lectores de pantalla anuncien el contenido inmediatamente al insertarse.",
+      "item2": "<strong>Inserción dinámica</strong> — para alerts insertados después del montaje, agrega <code>aria-live=\"polite\"</code> al contenedor padre. Usa <code>aria-live=\"assertive\"</code> solo para errores críticos que bloquean el flujo.",
+      "item3": "<strong>Íconos decorativos</strong> — siempre <code>aria-hidden=\"true\"</code>. El texto de <code>AlertDescription</code> ya describe el estado.",
+      "item4": "<strong>Color + ícono + texto</strong> — nunca uses el color como único indicador (WCAG 1.4.1). Cada variante debe tener ícono y texto correspondientes.",
+      "item5": "<strong>Contraste</strong> — variante default: 4.5:1 (texto sobre fondo). Variante destructive: cumple 4.5:1 con <code>text-destructive</code>.",
+      "keyboard": {
+        "tab": "Navega a links o botones dentro del Alert, si los hay.",
+        "enter": "Activa links o botones internos al Alert.",
+        "noKeyboard": "El Alert en sí no es interactivo — solo el contenido hijo puede recibir foco."
+      },
+      "aria": {
+        "role": "<code>role=\"alert\"</code> — aplicado automáticamente en el contenedor. Anuncia el contenido al lector de pantalla.",
+        "ariaLive": "<code>aria-live=\"polite\"</code> — en el contenedor padre para alerts insertados dinámicamente.",
+        "ariaLiveAssertive": "<code>aria-live=\"assertive\"</code> — solo para errores críticos urgentes.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — en todos los íconos decorativos."
+      },
+      "screenReader": {
+        "onInsert": "Al insertar el Alert en el DOM: el lector anuncia el contenido completo (título + descripción).",
+        "onUpdate": "Al actualizar el contenido: el lector anuncia los cambios si <code>aria-live</code> está presente.",
+        "icons": "Los íconos son ignorados por el lector — el texto describe completamente el estado."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "sonner": "Para confirmaciones temporales que el usuario puede descartar (toasts).",
+      "alertDialog": "Para acciones críticas que requieren confirmación explícita del usuario.",
+      "badge": "Para indicadores de estado compactos e inline en listas o tablas.",
+      "progress": "Para comunicar el progreso de operaciones asíncronas en curso."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "Para las variantes success y warning, usa tokens semánticos del proyecto (<code>bg-success/10</code>, <code>text-warning</code>) — nunca colores hardcoded. Esto garantiza consistencia en dark mode.",
+      "tip2": "El ícono debe ser hijo directo del Alert — no lo envuelvas en un <code>&lt;div&gt;</code>. El CSS de Shadcn usa selectores <code>[&gt;svg]</code> para posicionamiento automático.",
+      "tip3": "En formularios, prefiere insertar el Alert sobre los campos con error, no dentro de ellos — el <code>role=\"alert\"</code> anuncia inmediatamente cuando el foco se mueve a la región."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Alert raramente emite eventos por sí solo. Rastrea solo cuando el alerta tiene acciones relevantes para el producto.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "dismiss": "alert_dismiss",
+        "dismissTrigger": "Usuario descarta un alerta importante (botón de cerrar)",
+        "dismissPayload": "{ label: string }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada configuración del Alert.",
+        "item1": { "action": "Renderizar variante default", "result": "Contenedor con bg-background, borde predeterminado, texto foreground", "priority": "high" },
+        "item2": { "action": "Renderizar variante destructive", "result": "Texto y borde con color destructive; ícono con text-destructive", "priority": "high" },
+        "item3": { "action": "Renderizar con ícono hijo directo", "result": "Ícono posicionado a la izquierda vía CSS [&>svg]:absolute [&>svg]:left-4", "priority": "high" },
+        "item4": { "action": "Renderizar sin AlertTitle", "result": "AlertDescription ocupa el espacio completo; sin ruptura de layout", "priority": "medium" },
+        "item5": { "action": "Renderizar con className de success", "result": "bg-success/10, text-success, border-success/30 aplicados correctamente", "priority": "medium" },
+        "item6": { "action": "Insertar Alert dinámicamente en el DOM", "result": "Lector de pantalla anuncia el contenido (role=\"alert\" activo)", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "role=\"alert\" presente en el contenedor", "level": "AA", "how": "getByRole('alert') en testing-library" },
+        "item2": { "criterion": "Íconos con aria-hidden=\"true\"", "level": "AA", "how": "Inspeccionar atributos del SVG en el DOM" },
+        "item3": { "criterion": "Contraste mínimo 4.5:1 en todas las variantes", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Playground — variante default", "priority": "high" },
+        "item2": { "story": "Variantes — default, destructive, success, warning", "priority": "high" },
+        "item3": { "story": "Configuraciones — con y sin AlertTitle", "priority": "medium" },
+        "item4": { "story": "Configuraciones — con y sin ícono", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "examples": "Ejemplos",
+      "variants": "Variantes",
+      "states": "Configuraciones",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
