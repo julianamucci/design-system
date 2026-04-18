@@ -18,8 +18,8 @@ function stripHtml(s: string): string {
 }
 
 function priorityLabel(raw: string): string {
-  const map: Record<string, string> = { high: 'Alta', medium: 'Média', low: 'Baixa' };
-  return map[raw] ?? raw;
+  const keyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
+  return tNav(keyMap[raw] ?? 'common.high');
 }
 
 function priorityColor(raw: string): string {
@@ -635,9 +635,9 @@ export function createAlertDocs(): HTMLElement {
       <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto mb-6">
         <table class="w-full text-sm">
           <thead><tr class="border-b border-border">
-            <th class="text-left p-3 text-muted-foreground font-medium">Ação</th>
-            <th class="text-left p-3 text-muted-foreground font-medium">Resultado esperado</th>
-            <th class="text-left p-3 text-muted-foreground font-medium">Prioridade</th>
+            <th class="text-left p-3 text-muted-foreground font-medium">${sanitizeHtml(tNav('common.userAction'))}</th>
+            <th class="text-left p-3 text-muted-foreground font-medium">${sanitizeHtml(tNav('common.expectedResult'))}</th>
+            <th class="text-left p-3 text-muted-foreground font-medium">${sanitizeHtml(tNav('common.priority'))}</th>
           </tr></thead>
           <tbody>${[1,2,3,4,5,6].map(i => `<tr class="border-b border-border/50 last:border-0">
             <td class="p-3 text-xs">${sanitizeHtml(t(`testes.functional.item${i}.action`))}</td>
@@ -650,9 +650,9 @@ export function createAlertDocs(): HTMLElement {
       <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto mb-6">
         <table class="w-full text-sm">
           <thead><tr class="border-b border-border">
-            <th class="text-left p-3 text-muted-foreground font-medium">Critério</th>
-            <th class="text-left p-3 text-muted-foreground font-medium">Nível</th>
-            <th class="text-left p-3 text-muted-foreground font-medium">Como testar</th>
+            <th class="text-left p-3 text-muted-foreground font-medium">${getLocale() === 'en' ? 'Criterion' : getLocale() === 'es' ? 'Criterio' : 'Critério'}</th>
+            <th class="text-left p-3 text-muted-foreground font-medium">WCAG</th>
+            <th class="text-left p-3 text-muted-foreground font-medium">${getLocale() === 'en' ? 'How to verify' : getLocale() === 'es' ? 'Cómo verificar' : 'Como verificar'}</th>
           </tr></thead>
           <tbody>${[1,2,3,4].map(i => `<tr class="border-b border-border/50 last:border-0">
             <td class="p-3 text-xs">${sanitizeHtml(t(`testes.accessibility.item${i}.criterion`))}</td>
@@ -667,8 +667,8 @@ export function createAlertDocs(): HTMLElement {
       <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto">
         <table class="w-full text-sm">
           <thead><tr class="border-b border-border">
-            <th class="text-left p-3 text-muted-foreground font-medium">Story</th>
-            <th class="text-left p-3 text-muted-foreground font-medium">Prioridade</th>
+            <th class="text-left p-3 text-muted-foreground font-medium">${sanitizeHtml(tNav('common.storyState'))}</th>
+            <th class="text-left p-3 text-muted-foreground font-medium">${sanitizeHtml(tNav('common.priority'))}</th>
           </tr></thead>
           <tbody>${[1,2,3,4].map(i => `<tr class="border-b border-border/50 last:border-0">
             <td class="p-3 text-xs">${sanitizeHtml(t(`testes.visual.item${i}.story`))}</td>

@@ -92,14 +92,11 @@
     return s.replace(/<[^>]*>/g, '');
   }
 
-  function priorityLabel(raw: string): string {
-    const map: Record<string, string> = { high: 'Alta', medium: 'Média', low: 'Baixa', High: 'High', Medium: 'Medium', Low: 'Low' };
-    return map[raw] ?? raw;
-  }
+  const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
-  function priorityColor(label: string): string {
-    if (label === 'Alta' || label === 'High') return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
-    if (label === 'Média' || label === 'Medium') return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
+  function priorityColor(raw: string): string {
+    if (raw === 'high') return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
+    if (raw === 'medium') return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
     return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
   }
 
@@ -709,21 +706,21 @@
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-border bg-muted/50 text-left">
-                <th class="p-3 border-r border-border font-semibold">Ação</th>
-                <th class="p-3 border-r border-border font-semibold">Resultado</th>
-                <th class="p-3 font-semibold">Prioridade</th>
+                <th class="p-3 border-r border-border font-semibold">{$tNavStore('common.userAction')}</th>
+                <th class="p-3 border-r border-border font-semibold">{$tNavStore('common.expectedResult')}</th>
+                <th class="p-3 font-semibold">{$tNavStore('common.priority')}</th>
               </tr>
             </thead>
             <tbody>
               {#each [1,2,3,4,5,6] as i}
                 {#if $tStore(`testes.functional.item${i}.action`)}
                   {@const raw = $tStore(`testes.functional.item${i}.priority`)}
-                  {@const label = priorityLabel(raw)}
+                  {@const label = $tNavStore(priorityKeyMap[raw] ?? 'common.high')}
                   <tr class="border-b border-border last:border-0 hover:bg-muted/5">
                     <td class="p-3 border-r border-border text-xs">{$tStore(`testes.functional.item${i}.action`)}</td>
                     <td class="p-3 border-r border-border text-xs text-muted-foreground">{$tStore(`testes.functional.item${i}.result`)}</td>
                     <td class="p-3">
-                      <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium {priorityColor(label)}">{label}</span>
+                      <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium {priorityColor(raw)}">{label}</span>
                     </td>
                   </tr>
                 {/if}
@@ -738,9 +735,9 @@
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-border bg-muted/50 text-left">
-                <th class="p-3 border-r border-border font-semibold">Critério</th>
-                <th class="p-3 border-r border-border font-semibold">Nível</th>
-                <th class="p-3 font-semibold">Como testar</th>
+                <th class="p-3 border-r border-border font-semibold">{$locale === 'en' ? 'Criterion' : $locale === 'es' ? 'Criterio' : 'Critério'}</th>
+                <th class="p-3 border-r border-border font-semibold">WCAG</th>
+                <th class="p-3 font-semibold">{$locale === 'en' ? 'How to verify' : $locale === 'es' ? 'Cómo verificar' : 'Como verificar'}</th>
               </tr>
             </thead>
             <tbody>
@@ -765,19 +762,19 @@
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-border bg-muted/50 text-left">
-                <th class="p-3 border-r border-border font-semibold">Story</th>
-                <th class="p-3 font-semibold">Prioridade</th>
+                <th class="p-3 border-r border-border font-semibold">{$tNavStore('common.storyState')}</th>
+                <th class="p-3 font-semibold">{$tNavStore('common.priority')}</th>
               </tr>
             </thead>
             <tbody>
               {#each [1,2,3,4] as i}
                 {#if $tStore(`testes.visual.item${i}.story`)}
                   {@const raw = $tStore(`testes.visual.item${i}.priority`)}
-                  {@const label = priorityLabel(raw)}
+                  {@const label = $tNavStore(priorityKeyMap[raw] ?? 'common.high')}
                   <tr class="border-b border-border last:border-0 hover:bg-muted/5">
                     <td class="p-3 border-r border-border text-xs">{$tStore(`testes.visual.item${i}.story`)}</td>
                     <td class="p-3">
-                      <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium {priorityColor(label)}">{label}</span>
+                      <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium {priorityColor(raw)}">{label}</span>
                     </td>
                   </tr>
                 {/if}
