@@ -411,6 +411,13 @@ Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplic
 />
 ```
 
+> **Debt — AlertDocs.svelte**: a docs page do Alert implementa esta seção inline (não usa `DocsTestes`). Padrão canônico para novos componentes é o container acima. Se implementar inline, os cabeçalhos das tabelas **devem** usar `$tNavStore`:
+> - Funcional: `$tNavStore('common.userAction')`, `$tNavStore('common.expectedResult')`, `$tNavStore('common.priority')`
+> - Acessibilidade: inline locale-aware (`$locale === 'en' ? 'Criterion' : ...`)
+> - Visual: `$tNavStore('common.storyState')`, `$tNavStore('common.priority')`
+> - Labels de prioridade: `$tNavStore(priorityKeyMap[raw] ?? 'common.high')` onde `priorityKeyMap = { high: 'common.high', medium: 'common.medium', low: 'common.low' }`
+> - `priorityColor()` deve comparar o `raw` (ex: `"high"`) — nunca o label traduzido.
+
 ---
 
 ## Padrões Especiais por Componente

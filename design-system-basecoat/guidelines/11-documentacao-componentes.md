@@ -438,6 +438,13 @@ content.appendChild(createDocsTestes({
 }));
 ```
 
+> **Debt — AlertDocs.ts**: a docs page do Alert implementa esta seção inline (não usa `createDocsTestes`). Padrão canônico para novos componentes é o container acima. Se implementar inline, os cabeçalhos das tabelas **devem** usar `tNav()`:
+> - Funcional: `tNav('common.userAction')`, `tNav('common.expectedResult')`, `tNav('common.priority')`
+> - Acessibilidade: inline locale-aware (`getLocale() === 'en' ? 'Criterion' : ...`)
+> - Visual: `tNav('common.storyState')`, `tNav('common.priority')`
+> - Labels de prioridade: usar `tNav({ high: 'common.high', medium: 'common.medium', low: 'common.low' }[raw] ?? 'common.high')`
+> - `priorityColor()` deve comparar o `raw` (ex: `"high"`) — nunca o label traduzido.
+
 ---
 
 ## Padrões Especiais por Componente

@@ -83,6 +83,12 @@ import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react"
 - `AlertTitle` é opcional — omitir quando a `AlertDescription` já é autoexplicativa
 - Para variantes success e warning, usar `bg-*/10` e `border-*/30` para fundo suave — não fundo sólido
 
+**Divergência de implementação cross-stack (intencional)**:
+O posicionamento do ícone difere entre stacks por razões de versão do Shadcn/UI — **não corrigir**:
+- React: `[&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4` + `[&>svg~*]:pl-7` (seletor de irmão)
+- Vue/Svelte: `has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr]` (CSS grid, Shadcn mais recente)
+- Basecoat: classe CSS `.alert` definida em `globals.css`
+
 **Acessibilidade** (ver `11-acessibilidade.md`):
 - O Shadcn aplica `role="alert"` automaticamente — o leitor de tela anuncia o conteúdo ao ser inserido no DOM
 - Para alerts inseridos dinamicamente (não renderizados na montagem), adicionar `aria-live="polite"` no container pai
