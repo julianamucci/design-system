@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { ComponentDemo } from '@/components/ComponentDemo';
 
 export interface DocsExampleItem {
@@ -23,13 +24,14 @@ function ExampleCard({ item }: { item: DocsExampleItem }) {
       )}
       <ComponentDemo>{item.preview}</ComponentDemo>
       <div>
-        <button
+        <Button
           type="button"
+          variant="link"
+          size="sm"
           onClick={() => setOpen((v) => !v)}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
         >
           {open ? 'Ocultar código' : 'Ver código'}
-        </button>
+        </Button>
         {open && (
           <div className="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-2">
             <code className="whitespace-pre">{item.code}</code>

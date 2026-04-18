@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { Card, CardContent } from '@/components/ui/card';
+  import { Button } from '@/components/ui/button';
 
   interface DocsExampleItem {
     title: string;
@@ -25,17 +27,19 @@
         {#if item.description}
           <p class="text-sm text-muted-foreground">{item.description}</p>
         {/if}
-        <div class="flex items-center justify-center p-10 border rounded-xl bg-background shadow-sm">
-          {@render item.preview()}
-        </div>
+        <Card>
+          <CardContent class="p-10 flex items-center justify-center">
+            {@render item.preview()}
+          </CardContent>
+        </Card>
         <div>
-          <button
-            type="button"
-            class="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+          <Button
+            variant="link"
+            size="sm"
             onclick={() => toggleCode(i)}
           >
             {openStates[i] ? 'Ocultar código' : 'Ver código'}
-          </button>
+          </Button>
           {#if openStates[i]}
             <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-2">
               <code class="whitespace-pre">{item.code}</code>

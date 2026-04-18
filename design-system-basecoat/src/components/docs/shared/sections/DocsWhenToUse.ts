@@ -1,4 +1,6 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createCard } from '@/components/ui/card';
+import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
 export interface DocsWhenToUseScenario { s: string; u: string; a: string }
 export interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?: string }
@@ -20,13 +22,15 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   h2.className = 'text-xl font-semibold mb-4';
   h2.textContent = props.title;
 
-  const card = document.createElement('div');
-  card.className = 'border rounded-xl p-6 shadow-sm space-y-6';
+  const card = createCard({ className: 'p-6 space-y-6' });
 
-  // Guidelines
-  const guidelinesBlock = document.createElement('div');
-  guidelinesBlock.className = 'bg-muted/30 rounded-lg p-4 space-y-3';
-  guidelinesBlock.innerHTML = `<h3 class="font-medium text-sm">${sanitizeHtml(props.guidelines.title)}</h3>`;
+  // ── Guidelines ───────────────────────────────────────────────────────────────
+  const guidelinesBlock = createCard({ className: 'bg-muted/30 border-0 shadow-none rounded-lg p-4 space-y-3' });
+  const guidelinesTitle = document.createElement('h3');
+  guidelinesTitle.className = 'font-medium text-sm';
+  guidelinesTitle.textContent = props.guidelines.title;
+  guidelinesBlock.appendChild(guidelinesTitle);
+
   const guidelinesList = document.createElement('ul');
   guidelinesList.className = 'list-disc pl-5 space-y-2 text-sm text-muted-foreground';
   props.guidelines.items.forEach(item => {
@@ -36,77 +40,102 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   });
   guidelinesBlock.appendChild(guidelinesList);
 
-  // Scenarios table
+  // ── Scenarios table ───────────────────────────────────────────────────────────
   const scenariosBlock = document.createElement('div');
   scenariosBlock.className = 'overflow-x-auto';
-  scenariosBlock.innerHTML = `
-    <table class="w-full border-collapse text-sm">
-      <thead>
-        <tr class="border-b border-border text-left bg-muted/50 font-medium">
-          <th class="p-3 border-r border-border">${sanitizeHtml(props.scenarios.cols.scenario)}</th>
-          <th class="p-3 border-r border-border">${sanitizeHtml(props.scenarios.cols.use)}</th>
-          <th class="p-3">${sanitizeHtml(props.scenarios.cols.alternative)}</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${props.scenarios.items.map(item => `
-          <tr class="border-b border-border hover:bg-muted/5">
-            <td class="p-3 border-r border-border">${sanitizeHtml(item.s)}</td>
-            <td class="p-3 border-r border-border font-medium text-primary">${sanitizeHtml(item.u)}</td>
-            <td class="p-3 text-muted-foreground">${sanitizeHtml(item.a)}</td>
-          </tr>`).join('')}
-      </tbody>
-    </table>`;
 
-  // UX Writing table
+  const { wrapper: scenariosTableWrapper, table: scenariosTable } = createTable('w-full border-collapse text-sm');
+
+  const scenariosThead = createTableHeader();
+  const scenariosHeaderRow = createTableRow('border-b border-border text-left bg-muted/50 font-medium');
+  scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.scenario, 'p-3 border-r border-border'));
+  scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.use, 'p-3 border-r border-border'));
+  scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.alternative, 'p-3'));
+  scenariosThead.appendChild(scenariosHeaderRow);
+
+  const scenariosTbody = createTableBody();
+  props.scenarios.items.forEach(item => {
+    const row = createTableRow('border-b border-border hover:bg-muted/5');
+    row.appendChild(createTableCell(item.s, 'p-3 border-r border-border'));
+    row.appendChild(createTableCell(item.u, 'p-3 border-r border-border font-medium text-primary'));
+    row.appendChild(createTableCell(item.a, 'p-3 text-muted-foreground'));
+    scenariosTbody.appendChild(row);
+  });
+
+  scenariosTable.append(scenariosThead, scenariosTbody);
+  scenariosBlock.appendChild(scenariosTableWrapper);
+
+  // ── UX Writing table ──────────────────────────────────────────────────────────
   const uxBlock = document.createElement('div');
   uxBlock.className = 'space-y-3';
-  uxBlock.innerHTML = `
-    <h3 class="font-medium text-sm">${sanitizeHtml(props.uxWriting.title)}</h3>
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse text-sm">
-        <thead>
-          <tr class="border-b border-border bg-muted/70 text-left">
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(props.uxWriting.cols.element)}</th>
-            ${props.uxWriting.cols.rules ? `<th class="p-3 border-r border-border font-semibold">${sanitizeHtml(props.uxWriting.cols.rules)}</th>` : ''}
-            <th class="p-3 border-r border-border font-semibold text-green-700">✓ ${sanitizeHtml(props.uxWriting.cols.do)}</th>
-            <th class="p-3 font-semibold text-red-700">✗ ${sanitizeHtml(props.uxWriting.cols.dont)}</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${props.uxWriting.items.map(row => `
-            <tr class="border-b border-border last:border-0 hover:bg-muted/5">
-              <td class="p-3 border-r border-border font-medium">${sanitizeHtml(row.element)}</td>
-              ${props.uxWriting.cols.rules ? `<td class="p-3 border-r border-border text-muted-foreground">${sanitizeHtml(row.rules ?? '')}</td>` : ''}
-              <td class="p-3 border-r border-border font-medium text-green-600">${sanitizeHtml(row.do)}</td>
-              <td class="p-3 font-medium text-red-600">${sanitizeHtml(row.dont)}</td>
-            </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>`;
 
-  // Do / Don't cards
+  const uxTitle = document.createElement('h3');
+  uxTitle.className = 'font-medium text-sm';
+  uxTitle.textContent = props.uxWriting.title;
+  uxBlock.appendChild(uxTitle);
+
+  const uxTableWrap = document.createElement('div');
+  uxTableWrap.className = 'overflow-x-auto';
+
+  const { wrapper: uxInnerTableWrapper, table: uxTable } = createTable('w-full border-collapse text-sm');
+
+  const uxThead = createTableHeader();
+  const uxHeaderRow = createTableRow('border-b border-border bg-muted/70 text-left');
+  uxHeaderRow.appendChild(createTableHead(props.uxWriting.cols.element, 'p-3 border-r border-border font-semibold'));
+  if (props.uxWriting.cols.rules) {
+    uxHeaderRow.appendChild(createTableHead(props.uxWriting.cols.rules, 'p-3 border-r border-border font-semibold'));
+  }
+  uxHeaderRow.appendChild(createTableHead(`✓ ${props.uxWriting.cols.do}`, 'p-3 border-r border-border font-semibold text-green-700'));
+  uxHeaderRow.appendChild(createTableHead(`✗ ${props.uxWriting.cols.dont}`, 'p-3 font-semibold text-red-700'));
+  uxThead.appendChild(uxHeaderRow);
+
+  const uxTbody = createTableBody();
+  props.uxWriting.items.forEach(row => {
+    const tr = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
+    tr.appendChild(createTableCell(row.element, 'p-3 border-r border-border font-medium'));
+    if (props.uxWriting.cols.rules) {
+      tr.appendChild(createTableCell(row.rules ?? '', 'p-3 border-r border-border text-muted-foreground'));
+    }
+    tr.appendChild(createTableCell(row.do, 'p-3 border-r border-border font-medium text-green-600'));
+    tr.appendChild(createTableCell(row.dont, 'p-3 font-medium text-red-600'));
+    uxTbody.appendChild(tr);
+  });
+
+  uxTable.append(uxThead, uxTbody);
+  uxTableWrap.appendChild(uxInnerTableWrapper);
+  uxBlock.appendChild(uxTableWrap);
+
+  // ── Do / Don't cards ──────────────────────────────────────────────────────────
   const doBlock = document.createElement('div');
   doBlock.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
-  doBlock.innerHTML = `
-    <div class="bg-card border rounded-xl p-4 shadow-sm">
-      <h3 class="mb-3 text-sm font-semibold text-green-600 flex items-center gap-2">
-        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-xs font-bold flex-shrink-0">✓</span>
-        ${sanitizeHtml(props.do.title)}
-      </h3>
-      <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
-        ${props.do.items.map(i => `<li>${sanitizeHtml(i)}</li>`).join('')}
-      </ul>
-    </div>
-    <div class="bg-card border rounded-xl p-4 shadow-sm">
-      <h3 class="mb-3 text-sm font-semibold text-red-600 flex items-center gap-2">
-        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-xs font-bold flex-shrink-0">✗</span>
-        ${sanitizeHtml(props.dont.title)}
-      </h3>
-      <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
-        ${props.dont.items.map(i => `<li>${sanitizeHtml(i)}</li>`).join('')}
-      </ul>
-    </div>`;
+
+  const doCard = createCard({ className: 'p-4 shadow-sm' });
+  const doTitle = document.createElement('h3');
+  doTitle.className = 'mb-3 text-sm font-semibold text-green-600 flex items-center gap-2';
+  doTitle.innerHTML = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-xs font-bold flex-shrink-0">✓</span>${sanitizeHtml(props.do.title)}`;
+  const doList = document.createElement('ul');
+  doList.className = 'list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed';
+  props.do.items.forEach(i => {
+    const li = document.createElement('li');
+    li.innerHTML = sanitizeHtml(i);
+    doList.appendChild(li);
+  });
+  doCard.append(doTitle, doList);
+
+  const dontCard = createCard({ className: 'p-4 shadow-sm' });
+  const dontTitle = document.createElement('h3');
+  dontTitle.className = 'mb-3 text-sm font-semibold text-red-600 flex items-center gap-2';
+  dontTitle.innerHTML = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-xs font-bold flex-shrink-0">✗</span>${sanitizeHtml(props.dont.title)}`;
+  const dontList = document.createElement('ul');
+  dontList.className = 'list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed';
+  props.dont.items.forEach(i => {
+    const li = document.createElement('li');
+    li.innerHTML = sanitizeHtml(i);
+    dontList.appendChild(li);
+  });
+  dontCard.append(dontTitle, dontList);
+
+  doBlock.append(doCard, dontCard);
 
   card.append(guidelinesBlock, scenariosBlock, uxBlock, doBlock);
   section.append(h2, card);

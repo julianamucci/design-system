@@ -1,4 +1,6 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createCard } from '@/components/ui/card';
+import { createButton } from '@/components/ui/button';
 
 export interface DocsExampleItem {
   title: string;
@@ -40,27 +42,27 @@ export function createDocsExamples(props: DocsExamplesProps): HTMLElement {
       block.appendChild(desc);
     }
 
-    const preview = document.createElement('div');
-    preview.className = 'flex items-center justify-center p-10 border rounded-xl bg-background shadow-sm';
+    const preview = createCard({ className: 'flex items-center justify-center p-10 shadow-sm' });
     preview.appendChild(item.previewFactory());
     block.appendChild(preview);
 
     const toggleWrap = document.createElement('div');
     let codeVisible = false;
-    const toggle = document.createElement('button');
-    toggle.type = 'button';
-    toggle.className = 'text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2';
-    toggle.textContent = 'Ver código';
+
+    const toggle = createButton({
+      variant: 'ghost',
+      label: 'Ver código',
+      class: 'text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2 p-0 h-auto',
+      onClick: () => {
+        codeVisible = !codeVisible;
+        toggle.textContent = codeVisible ? 'Ocultar código' : 'Ver código';
+        codeBlock.classList.toggle('hidden', !codeVisible);
+      },
+    });
 
     const codeBlock = document.createElement('div');
     codeBlock.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-2 hidden';
     codeBlock.innerHTML = `<code class="whitespace-pre">${sanitizeHtml(item.code)}</code>`;
-
-    toggle.addEventListener('click', () => {
-      codeVisible = !codeVisible;
-      toggle.textContent = codeVisible ? 'Ocultar código' : 'Ver código';
-      codeBlock.classList.toggle('hidden', !codeVisible);
-    });
 
     toggleWrap.append(toggle, codeBlock);
     block.appendChild(toggleWrap);

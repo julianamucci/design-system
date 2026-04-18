@@ -1,4 +1,5 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createCard } from '@/components/ui/card';
 
 export interface DocsKeyboardItem { key: string; description: string }
 export interface DocsAccessibilityProps {
@@ -21,8 +22,7 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
   const container = document.createElement('div');
   container.className = 'space-y-6';
 
-  const summaryBlock = document.createElement('div');
-  summaryBlock.className = 'border rounded-xl p-6 shadow-sm space-y-4';
+  const summaryBlock = createCard({ className: 'space-y-4 p-6' });
   summaryBlock.innerHTML = `
     <p class="text-sm text-muted-foreground leading-relaxed">${sanitizeHtml(props.summary)}</p>
     <ul class="space-y-2 text-sm list-none p-0 m-0">
@@ -34,11 +34,14 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
   const kbGrid = document.createElement('div');
   kbGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
   props.keyboardItems.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'flex items-start gap-3 border rounded-lg p-3 bg-muted/30';
-    card.innerHTML = `
-      <kbd class="inline-flex items-center justify-center rounded border border-border bg-background px-2 py-1 text-xs font-mono font-semibold shrink-0 shadow-sm">${sanitizeHtml(item.key)}</kbd>
-      <span class="text-sm text-muted-foreground leading-relaxed">${sanitizeHtml(item.description)}</span>`;
+    const card = createCard({ className: 'flex items-start gap-3 border-0 shadow-none bg-muted/30 rounded-lg p-3' });
+    const kbd = document.createElement('kbd');
+    kbd.className = 'inline-flex items-center justify-center rounded border border-border bg-background px-2 py-1 text-xs font-mono font-semibold shrink-0 shadow-sm';
+    kbd.textContent = item.key;
+    const span = document.createElement('span');
+    span.className = 'text-sm text-muted-foreground leading-relaxed';
+    span.textContent = item.description;
+    card.append(kbd, span);
     kbGrid.appendChild(card);
   });
   keyboardBlock.appendChild(kbGrid);

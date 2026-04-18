@@ -1,4 +1,7 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createCard } from '@/components/ui/card';
+import { createBadge } from '@/components/ui/badge';
+import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
 export interface DocsTestItem { action: string; result: string; priority: string }
 export interface DocsA11yTestItem { criterion: string; level: string; how: string }
@@ -11,8 +14,8 @@ export interface DocsTestesProps {
   visual: { title: string; cols: { story: string; priority: string }; items: DocsVisualTestItem[] };
 }
 
-const priorityClass = (p: string) =>
-  ({ Alta: 'text-red-600', Média: 'text-yellow-600', Baixa: 'text-green-600', High: 'text-red-600', Medium: 'text-yellow-600', Low: 'text-green-600' } as Record<string, string>)[p] ?? '';
+const priorityBadgeClass = (p: string): string =>
+  ({ Alta: 'bg-red-100 text-red-700 border-red-200', Média: 'bg-yellow-100 text-yellow-700 border-yellow-200', Baixa: 'bg-green-100 text-green-700 border-green-200', High: 'bg-red-100 text-red-700 border-red-200', Medium: 'bg-yellow-100 text-yellow-700 border-yellow-200', Low: 'bg-green-100 text-green-700 border-green-200' } as Record<string, string>)[p] ?? '';
 
 export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   const section = document.createElement('section');
@@ -26,72 +29,99 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   const container = document.createElement('div');
   container.className = 'space-y-8';
 
-  // Functional
+  // ── Functional ──────────────────────────────────────────────────────────────
   const funcBlock = document.createElement('div');
   funcBlock.className = 'space-y-3';
-  funcBlock.innerHTML = `
-    <h3 class="text-base font-semibold">${sanitizeHtml(props.functional.title)}</h3>
-    <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead>
-          <tr class="border-b border-border bg-muted/50 text-left">
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(props.functional.cols.action)}</th>
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(props.functional.cols.result)}</th>
-            <th class="p-3 font-semibold">${sanitizeHtml(props.functional.cols.priority)}</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${props.functional.items.map(item => `
-            <tr class="border-b border-border last:border-0 hover:bg-muted/5">
-              <td class="p-3 border-r border-border">${sanitizeHtml(item.action)}</td>
-              <td class="p-3 border-r border-border text-muted-foreground">${sanitizeHtml(item.result)}</td>
-              <td class="p-3 font-medium ${priorityClass(item.priority)}">${sanitizeHtml(item.priority)}</td>
-            </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>`;
 
-  // Accessibility
+  const funcTitle = document.createElement('h3');
+  funcTitle.className = 'text-base font-semibold';
+  funcTitle.textContent = props.functional.title;
+  funcBlock.appendChild(funcTitle);
+
+  const funcWrapper = createCard({ className: 'rounded-lg p-4' });
+  const { wrapper: funcTableWrapper, table: funcTable } = createTable('w-full text-sm');
+
+  const funcThead = createTableHeader();
+  const funcHeaderRow = createTableRow('border-b border-border bg-muted/50 text-left');
+  funcHeaderRow.appendChild(createTableHead(props.functional.cols.action, 'p-3 border-r border-border font-semibold'));
+  funcHeaderRow.appendChild(createTableHead(props.functional.cols.result, 'p-3 border-r border-border font-semibold'));
+  funcHeaderRow.appendChild(createTableHead(props.functional.cols.priority, 'p-3 font-semibold'));
+  funcThead.appendChild(funcHeaderRow);
+
+  const funcTbody = createTableBody();
+  props.functional.items.forEach(item => {
+    const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
+    row.appendChild(createTableCell(item.action, 'p-3 border-r border-border'));
+    row.appendChild(createTableCell(item.result, 'p-3 border-r border-border text-muted-foreground'));
+    const priorityCell = createTableCell('', 'p-3 font-medium');
+    priorityCell.appendChild(createBadge({ text: item.priority, className: priorityBadgeClass(item.priority) }));
+    row.appendChild(priorityCell);
+    funcTbody.appendChild(row);
+  });
+
+  funcTable.append(funcThead, funcTbody);
+  funcWrapper.appendChild(funcTableWrapper);
+  funcBlock.appendChild(funcWrapper);
+
+  // ── Accessibility ────────────────────────────────────────────────────────────
   const a11yBlock = document.createElement('div');
   a11yBlock.className = 'space-y-3';
-  a11yBlock.innerHTML = `<h3 class="text-base font-semibold">${sanitizeHtml(props.accessibility.title)}</h3>`;
+
+  const a11yTitle = document.createElement('h3');
+  a11yTitle.className = 'text-base font-semibold';
+  a11yTitle.textContent = props.accessibility.title;
+  a11yBlock.appendChild(a11yTitle);
+
   const a11yGrid = document.createElement('div');
   a11yGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
   props.accessibility.items.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'border rounded-lg p-3 bg-muted/30 space-y-1';
-    card.innerHTML = `
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-mono font-bold text-primary border border-primary/20 rounded px-1.5 py-0.5 bg-primary/5">${sanitizeHtml(item.level)}</span>
-        <span class="text-sm font-medium">${sanitizeHtml(item.criterion)}</span>
-      </div>
-      <p class="text-xs text-muted-foreground pl-0.5">${sanitizeHtml(item.how)}</p>`;
+    const card = createCard({ className: 'border rounded-lg p-3 bg-muted/30 shadow-none space-y-1' });
+    const top = document.createElement('div');
+    top.className = 'flex items-center gap-2';
+    const levelBadge = createBadge({ text: item.level, className: 'text-xs font-mono font-bold text-primary border border-primary/20 rounded px-1.5 py-0.5 bg-primary/5' });
+    const criterionSpan = document.createElement('span');
+    criterionSpan.className = 'text-sm font-medium';
+    criterionSpan.textContent = item.criterion;
+    top.append(levelBadge, criterionSpan);
+    const howP = document.createElement('p');
+    howP.className = 'text-xs text-muted-foreground pl-0.5';
+    howP.textContent = item.how;
+    card.append(top, howP);
     a11yGrid.appendChild(card);
   });
   a11yBlock.appendChild(a11yGrid);
 
-  // Visual
+  // ── Visual ───────────────────────────────────────────────────────────────────
   const visualBlock = document.createElement('div');
   visualBlock.className = 'space-y-3';
-  visualBlock.innerHTML = `
-    <h3 class="text-base font-semibold">${sanitizeHtml(props.visual.title)}</h3>
-    <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead>
-          <tr class="border-b border-border bg-muted/50 text-left">
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(props.visual.cols.story)}</th>
-            <th class="p-3 font-semibold">${sanitizeHtml(props.visual.cols.priority)}</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${props.visual.items.map(item => `
-            <tr class="border-b border-border last:border-0 hover:bg-muted/5">
-              <td class="p-3 border-r border-border font-mono text-xs">${sanitizeHtml(item.story)}</td>
-              <td class="p-3 font-medium ${priorityClass(item.priority)}">${sanitizeHtml(item.priority)}</td>
-            </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>`;
+
+  const visualTitle = document.createElement('h3');
+  visualTitle.className = 'text-base font-semibold';
+  visualTitle.textContent = props.visual.title;
+  visualBlock.appendChild(visualTitle);
+
+  const visualWrapper = createCard({ className: 'rounded-lg p-4' });
+  const { wrapper: visualTableWrapper, table: visualTable } = createTable('w-full text-sm');
+
+  const visualThead = createTableHeader();
+  const visualHeaderRow = createTableRow('border-b border-border bg-muted/50 text-left');
+  visualHeaderRow.appendChild(createTableHead(props.visual.cols.story, 'p-3 border-r border-border font-semibold'));
+  visualHeaderRow.appendChild(createTableHead(props.visual.cols.priority, 'p-3 font-semibold'));
+  visualThead.appendChild(visualHeaderRow);
+
+  const visualTbody = createTableBody();
+  props.visual.items.forEach(item => {
+    const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
+    row.appendChild(createTableCell(item.story, 'p-3 border-r border-border font-mono text-xs'));
+    const priorityCell = createTableCell('', 'p-3 font-medium');
+    priorityCell.appendChild(createBadge({ text: item.priority, className: priorityBadgeClass(item.priority) }));
+    row.appendChild(priorityCell);
+    visualTbody.appendChild(row);
+  });
+
+  visualTable.append(visualThead, visualTbody);
+  visualWrapper.appendChild(visualTableWrapper);
+  visualBlock.appendChild(visualWrapper);
 
   container.append(funcBlock, a11yBlock, visualBlock);
   section.appendChild(container);

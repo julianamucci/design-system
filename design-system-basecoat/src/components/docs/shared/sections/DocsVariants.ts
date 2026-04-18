@@ -1,4 +1,5 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createCard } from '@/components/ui/card';
 
 export interface DocsVariantItem {
   name: string;
@@ -24,8 +25,7 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
   grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4';
 
   props.items.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'border rounded-xl p-5 shadow-sm space-y-3 bg-card';
+    const card = createCard({ className: 'p-5 space-y-3' });
 
     const previewWrap = document.createElement('div');
     previewWrap.className = 'flex items-center justify-center min-h-[60px]';

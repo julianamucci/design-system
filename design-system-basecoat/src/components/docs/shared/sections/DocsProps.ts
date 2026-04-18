@@ -1,4 +1,6 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createCard } from '@/components/ui/card';
+import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
 export interface DocsPropItem {
   name: string; type: string; defaultValue: string; required: string; description: string;
@@ -16,32 +18,45 @@ export interface DocsPropsProps {
   extensibilityNotes?: string;
 }
 
-function renderTable(def: DocsPropsTableDef): string {
-  return `
-    ${def.title ? `<h3 class="text-base font-semibold">${sanitizeHtml(def.title)}</h3>` : ''}
-    <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead>
-          <tr class="border-b border-border bg-muted/50 text-left">
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(def.cols.prop)}</th>
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(def.cols.type)}</th>
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(def.cols.default)}</th>
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(def.cols.required)}</th>
-            <th class="p-3 font-semibold">${sanitizeHtml(def.cols.description)}</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${def.items.map(item => `
-            <tr class="border-b border-border last:border-0 hover:bg-muted/5">
-              <td class="p-3 border-r border-border font-mono font-bold text-primary">${sanitizeHtml(item.name)}</td>
-              <td class="p-3 border-r border-border font-mono text-muted-foreground">${sanitizeHtml(item.type)}</td>
-              <td class="p-3 border-r border-border text-muted-foreground">${sanitizeHtml(item.defaultValue)}</td>
-              <td class="p-3 border-r border-border text-muted-foreground">${sanitizeHtml(item.required)}</td>
-              <td class="p-3 text-muted-foreground">${sanitizeHtml(item.description)}</td>
-            </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>`;
+function buildTable(def: DocsPropsTableDef): DocumentFragment {
+  const frag = document.createDocumentFragment();
+
+  if (def.title) {
+    const h3 = document.createElement('h3');
+    h3.className = 'text-base font-semibold';
+    h3.textContent = def.title;
+    frag.appendChild(h3);
+  }
+
+  const wrapper = createCard({ className: 'rounded-lg p-4' });
+
+  const { wrapper: tableWrapper, table } = createTable('w-full text-sm');
+
+  const thead = createTableHeader();
+  const headerRow = createTableRow('border-b border-border bg-muted/50 text-left');
+  headerRow.appendChild(createTableHead(def.cols.prop, 'p-3 border-r border-border font-semibold'));
+  headerRow.appendChild(createTableHead(def.cols.type, 'p-3 border-r border-border font-semibold'));
+  headerRow.appendChild(createTableHead(def.cols.default, 'p-3 border-r border-border font-semibold'));
+  headerRow.appendChild(createTableHead(def.cols.required, 'p-3 border-r border-border font-semibold'));
+  headerRow.appendChild(createTableHead(def.cols.description, 'p-3 font-semibold'));
+  thead.appendChild(headerRow);
+
+  const tbody = createTableBody();
+  def.items.forEach(item => {
+    const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
+    row.appendChild(createTableCell(item.name, 'p-3 border-r border-border font-mono font-bold text-primary'));
+    row.appendChild(createTableCell(item.type, 'p-3 border-r border-border font-mono text-muted-foreground'));
+    row.appendChild(createTableCell(item.defaultValue, 'p-3 border-r border-border text-muted-foreground'));
+    row.appendChild(createTableCell(item.required, 'p-3 border-r border-border text-muted-foreground'));
+    row.appendChild(createTableCell(item.description, 'p-3 text-muted-foreground'));
+    tbody.appendChild(row);
+  });
+
+  table.append(thead, tbody);
+  wrapper.appendChild(tableWrapper);
+  frag.appendChild(wrapper);
+
+  return frag;
 }
 
 export function createDocsProps(props: DocsPropsProps): HTMLElement {
@@ -55,18 +70,30 @@ export function createDocsProps(props: DocsPropsProps): HTMLElement {
 
   const container = document.createElement('div');
   container.className = 'space-y-8';
-  container.innerHTML = props.tables.map(renderTable).join('');
+
+  props.tables.forEach(def => container.appendChild(buildTable(def)));
 
   if (props.interfaceCode) {
-    container.innerHTML += `<div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code class="whitespace-pre">${sanitizeHtml(props.interfaceCode)}</code></div>`;
+    const codeBlock = document.createElement('div');
+    codeBlock.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto';
+    codeBlock.innerHTML = `<code class="whitespace-pre">${sanitizeHtml(props.interfaceCode)}</code>`;
+    container.appendChild(codeBlock);
   }
 
   if (props.extensibilityTitle) {
-    container.innerHTML += `
-      <div class="space-y-2">
-        <h3 class="text-base font-semibold">${sanitizeHtml(props.extensibilityTitle)}</h3>
-        ${props.extensibilityNotes ? `<div class="text-sm text-muted-foreground leading-relaxed">${sanitizeHtml(props.extensibilityNotes)}</div>` : ''}
-      </div>`;
+    const extBlock = document.createElement('div');
+    extBlock.className = 'space-y-2';
+    const extH3 = document.createElement('h3');
+    extH3.className = 'text-base font-semibold';
+    extH3.textContent = props.extensibilityTitle;
+    extBlock.appendChild(extH3);
+    if (props.extensibilityNotes) {
+      const extNotes = document.createElement('div');
+      extNotes.className = 'text-sm text-muted-foreground leading-relaxed';
+      extNotes.innerHTML = sanitizeHtml(props.extensibilityNotes);
+      extBlock.appendChild(extNotes);
+    }
+    container.appendChild(extBlock);
   }
 
   section.appendChild(container);

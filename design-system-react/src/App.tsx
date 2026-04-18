@@ -7,77 +7,22 @@ import { Sidebar, SidebarContent, SidebarHeader, SidebarProvider, SidebarInset, 
 import { Button } from './components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion';
 import { Toaster } from './components/ui/sonner';
-import { Moon, Sun, Home, LayoutGrid, MousePointer, Palette, FileText, Settings, Database, MessageSquare, Sparkles } from 'lucide-react';
+import { Moon, Sun, Home, Palette, FileText, Database, MessageSquare, Sparkles } from 'lucide-react';
 import { HomePage } from './components/HomePage';
 import { ThemeSelector } from './components/ThemeSelector';
 import { getThemeInfo, themeDisplayNames } from '@shared/themes/theme-config';
 
 // Lazy-loaded documentation pages — only loaded when the user navigates to them
 const lazyDocs: Record<string, React.LazyExoticComponent<React.ComponentType>> = {
-  'alert': lazy(() => import('./components/docs/AlertDocs').then(m => ({ default: m.AlertDocs }))),
-  'accordion': lazy(() => import('./components/docs/AccordionDocs').then(m => ({ default: m.AccordionDocs }))),
-'aspect-ratio': lazy(() => import('./components/docs/AspectRatioDocs').then(m => ({ default: m.AspectRatioDocs }))),
-  'avatar': lazy(() => import('./components/docs/AvatarDocs').then(m => ({ default: m.AvatarDocs }))),
-  'badge': lazy(() => import('./components/docs/BadgeDocs').then(m => ({ default: m.BadgeDocs }))),
-  'breadcrumb': lazy(() => import('./components/docs/BreadcrumbDocs').then(m => ({ default: m.BreadcrumbDocs }))),
-  'button': lazy(() => import('./components/docs/ButtonDocs').then(m => ({ default: m.ButtonDocs }))),
-  'button-group': lazy(() => import('./components/docs/ButtonGroupDocs').then(m => ({ default: m.ButtonGroupDocs }))),
-  'calendar': lazy(() => import('./components/docs/CalendarDocs').then(m => ({ default: m.CalendarDocs }))),
-  'card': lazy(() => import('./components/docs/CardDocs').then(m => ({ default: m.CardDocs }))),
-  'carousel': lazy(() => import('./components/docs/CarouselDocs').then(m => ({ default: m.CarouselDocs }))),
-  'chart': lazy(() => import('./components/docs/ChartDocs').then(m => ({ default: m.ChartDocs }))),
-  'checkbox': lazy(() => import('./components/docs/CheckboxDocs').then(m => ({ default: m.CheckboxDocs }))),
-  'collapsible': lazy(() => import('./components/docs/CollapsibleDocs').then(m => ({ default: m.CollapsibleDocs }))),
-  'command': lazy(() => import('./components/docs/CommandDocs').then(m => ({ default: m.CommandDocs }))),
-  'context-menu': lazy(() => import('./components/docs/ContextMenuDocs').then(m => ({ default: m.ContextMenuDocs }))),
-  'design-tokens': lazy(() => import('./components/docs/DesignTokensDocs').then(m => ({ default: m.DesignTokensDocs }))),
-  'dialog': lazy(() => import('./components/docs/DialogDocs').then(m => ({ default: m.DialogDocs }))),
-  'display-showcase': lazy(() => import('./components/docs/DisplayShowcaseDocs').then(m => ({ default: m.DisplayShowcaseDocs }))),
-  'drawer': lazy(() => import('./components/docs/DrawerDocs').then(m => ({ default: m.DrawerDocs }))),
-  'dropdown-menu': lazy(() => import('./components/docs/DropdownMenuDocs').then(m => ({ default: m.DropdownMenuDocs }))),
-  'empty': lazy(() => import('./components/docs/EmptyDocs').then(m => ({ default: m.EmptyDocs }))),
-  'feedback-showcase': lazy(() => import('./components/docs/FeedbackShowcaseDocs').then(m => ({ default: m.FeedbackShowcaseDocs }))),
-  'field': lazy(() => import('./components/docs/FieldDocs').then(m => ({ default: m.FieldDocs }))),
-  'form': lazy(() => import('./components/docs/FormDocs').then(m => ({ default: m.FormDocs }))),
-  'form-showcase': lazy(() => import('./components/docs/FormShowcaseDocs').then(m => ({ default: m.FormShowcaseDocs }))),
-  'hover-card': lazy(() => import('./components/docs/HoverCardDocs').then(m => ({ default: m.HoverCardDocs }))),
-  'input': lazy(() => import('./components/docs/InputDocs').then(m => ({ default: m.InputDocs }))),
-  'input-group': lazy(() => import('./components/docs/InputGroupDocs').then(m => ({ default: m.InputGroupDocs }))),
-  'input-otp': lazy(() => import('./components/docs/InputOtpDocs').then(m => ({ default: m.InputOtpDocs }))),
-  'item': lazy(() => import('./components/docs/ItemDocs').then(m => ({ default: m.ItemDocs }))),
-  'kbd': lazy(() => import('./components/docs/KbdDocs').then(m => ({ default: m.KbdDocs }))),
-  'label': lazy(() => import('./components/docs/LabelDocs').then(m => ({ default: m.LabelDocs }))),
-  'layout-showcase': lazy(() => import('./components/docs/LayoutShowcaseDocs').then(m => ({ default: m.LayoutShowcaseDocs }))),
-  'menubar': lazy(() => import('./components/docs/MenubarDocs').then(m => ({ default: m.MenubarDocs }))),
-  'navigation-menu': lazy(() => import('./components/docs/NavigationMenuDocs').then(m => ({ default: m.NavigationMenuDocs }))),
-  'navigation-showcase': lazy(() => import('./components/docs/NavigationShowcaseDocs').then(m => ({ default: m.NavigationShowcaseDocs }))),
-  'overlay-showcase': lazy(() => import('./components/docs/OverlayShowcaseDocs').then(m => ({ default: m.OverlayShowcaseDocs }))),
-  'pagination': lazy(() => import('./components/docs/PaginationDocs').then(m => ({ default: m.PaginationDocs }))),
-  'popover': lazy(() => import('./components/docs/PopoverDocs').then(m => ({ default: m.PopoverDocs }))),
-  'progress': lazy(() => import('./components/docs/ProgressDocs').then(m => ({ default: m.ProgressDocs }))),
-  'radio-group': lazy(() => import('./components/docs/RadioGroupDocs').then(m => ({ default: m.RadioGroupDocs }))),
-  'resizable': lazy(() => import('./components/docs/ResizableDocs').then(m => ({ default: m.ResizableDocs }))),
-  'scroll-area': lazy(() => import('./components/docs/ScrollAreaDocs').then(m => ({ default: m.ScrollAreaDocs }))),
-  'select': lazy(() => import('./components/docs/SelectDocs').then(m => ({ default: m.SelectDocs }))),
-  'separator': lazy(() => import('./components/docs/SeparatorDocs').then(m => ({ default: m.SeparatorDocs }))),
-  'sheet': lazy(() => import('./components/docs/SheetDocs').then(m => ({ default: m.SheetDocs }))),
-  'sidebar': lazy(() => import('./components/docs/SidebarDocs').then(m => ({ default: m.SidebarDocs }))),
-  'skeleton': lazy(() => import('./components/docs/SkeletonDocs').then(m => ({ default: m.SkeletonDocs }))),
-  'slider': lazy(() => import('./components/docs/SliderDocs').then(m => ({ default: m.SliderDocs }))),
-  'sonner': lazy(() => import('./components/docs/SonnerDocs').then(m => ({ default: m.SonnerDocs }))),
-  'spinner': lazy(() => import('./components/docs/SpinnerDocs').then(m => ({ default: m.SpinnerDocs }))),
-  'stepper': lazy(() => import('./components/docs/StepperDocs').then(m => ({ default: m.StepperDocs }))),
-  'switch': lazy(() => import('./components/docs/SwitchDocs').then(m => ({ default: m.SwitchDocs }))),
-  'table': lazy(() => import('./components/docs/TableDocs').then(m => ({ default: m.TableDocs }))),
-  'tabs': lazy(() => import('./components/docs/TabsDocs').then(m => ({ default: m.TabsDocs }))),
-  'textarea': lazy(() => import('./components/docs/TextareaDocs').then(m => ({ default: m.TextareaDocs }))),
-  'theming': lazy(() => import('./components/docs/ThemingDocs').then(m => ({ default: m.ThemingDocs }))),
-  'toggle': lazy(() => import('./components/docs/ToggleDocs').then(m => ({ default: m.ToggleDocs }))),
-  'toggle-group': lazy(() => import('./components/docs/ToggleGroupDocs').then(m => ({ default: m.ToggleGroupDocs }))),
-  'tooltip': lazy(() => import('./components/docs/TooltipDocs').then(m => ({ default: m.TooltipDocs }))),
-  'use-mobile': lazy(() => import('./components/docs/UseMobileDocs').then(m => ({ default: m.UseMobileDocs }))),
-  'utilities-showcase': lazy(() => import('./components/docs/UtilitiesShowcaseDocs').then(m => ({ default: m.UtilitiesShowcaseDocs }))),
-  'utils': lazy(() => import('./components/docs/UtilsDocs').then(m => ({ default: m.UtilsDocs }))),
+  'accordion':    lazy(() => import('./components/docs/AccordionDocs').then(m => ({ default: m.AccordionDocs }))),
+  'alert':        lazy(() => import('./components/docs/AlertDocs').then(m => ({ default: m.AlertDocs }))),
+  'alert-dialog': lazy(() => import('./components/docs/AlertDialogDocs').then(m => ({ default: m.AlertDialogDocs }))),
+  'button':       lazy(() => import('./components/docs/ButtonDocs').then(m => ({ default: m.ButtonDocs }))),
+  'icons':        lazy(() => import('./components/docs/IconsDocs').then(m => ({ default: m.IconsDocs }))),
+  'sonner':       lazy(() => import('./components/docs/SonnerDocs').then(m => ({ default: m.SonnerDocs }))),
+  'table':        lazy(() => import('./components/docs/TableDocs').then(m => ({ default: m.TableDocs }))),
+  'theme-colors': lazy(() => import('./components/docs/ThemeColorsDocs').then(m => ({ default: m.ThemeColorsDocs }))),
+  'theming':      lazy(() => import('./components/docs/ThemingDocs').then(m => ({ default: m.ThemingDocs }))),
 };
 
 const componentCategories = [
@@ -85,114 +30,39 @@ const componentCategories = [
     name: "Foundations",
     icon: Sparkles,
     items: [
-      { name: "Design Tokens", path: "design-tokens" },
       { name: "Theming", path: "theming" },
-      { name: "Icons", path: "icons" },
-      { name: "Utils", path: "utils" }
-    ]
-  },
-  {
-    name: "Layout",
-    icon: LayoutGrid,
-    items: [
-      { name: "Layout Showcase", path: "layout-showcase" },
-      { name: "Aspect Ratio", path: "aspect-ratio" },
-      { name: "Card", path: "card" },
-      { name: "Resizable", path: "resizable" },
-      { name: "Scroll Area", path: "scroll-area" },
-      { name: "Separator", path: "separator" },
-      { name: "Sidebar", path: "sidebar" }
-    ]
-  },
-  {
-    name: "Navigation",
-    icon: MousePointer,
-    items: [
-      { name: "Navigation Showcase", path: "navigation-showcase" },
-      { name: "Breadcrumb", path: "breadcrumb" },
-      { name: "Menubar", path: "menubar" },
-      { name: "Navigation Menu", path: "navigation-menu" },
-      { name: "Pagination", path: "pagination" },
-      { name: "Stepper", path: "stepper" },
-      { name: "Tabs", path: "tabs" }
+      { name: "Theme Colors", path: "theme-colors" },
+      { name: "Icons", path: "icons" }
     ]
   },
   {
     name: "Form",
     icon: FileText,
     items: [
-      { name: "Form Showcase", path: "form-showcase" },
-      { name: "Button", path: "button" },
-      { name: "Button Group", path: "button-group" },
-      { name: "Calendar", path: "calendar" },
-      { name: "Checkbox", path: "checkbox" },
-      { name: "Field", path: "field" },
-      { name: "Form", path: "form" },
-      { name: "Input", path: "input" },
-      { name: "Input Group", path: "input-group" },
-      { name: "Input OTP", path: "input-otp" },
-      { name: "Label", path: "label" },
-      { name: "Radio Group", path: "radio-group" },
-      { name: "Select", path: "select" },
-      { name: "Slider", path: "slider" },
-      { name: "Switch", path: "switch" },
-      { name: "Textarea", path: "textarea" },
-      { name: "Toggle", path: "toggle" },
-      { name: "Toggle Group", path: "toggle-group" }
+      { name: "Button", path: "button" }
     ]
   },
   {
     name: "Feedback",
     icon: MessageSquare,
     items: [
-      { name: "Feedback Showcase", path: "feedback-showcase" },
       { name: "Alert", path: "alert" },
       { name: "Alert Dialog", path: "alert-dialog" },
-      { name: "Badge", path: "badge" },
-      { name: "Empty", path: "empty" },
-      { name: "Kbd", path: "kbd" },
-      { name: "Progress", path: "progress" },
-      { name: "Skeleton", path: "skeleton" },
-      { name: "Sonner", path: "sonner" },
-      { name: "Spinner", path: "spinner" }
+      { name: "Sonner", path: "sonner" }
     ]
   },
   {
     name: "Display",
     icon: Palette,
     items: [
-      { name: "Display Showcase", path: "display-showcase" },
-      { name: "Avatar", path: "avatar" },
-      { name: "Carousel", path: "carousel" },
-      { name: "Chart", path: "chart" },
-      { name: "Item", path: "item" },
       { name: "Table", path: "table" }
-    ]
-  },
-  {
-    name: "Overlay",
-    icon: Settings,
-    items: [
-      { name: "Overlay Showcase", path: "overlay-showcase" },
-      { name: "Command", path: "command" },
-      { name: "Context Menu", path: "context-menu" },
-      { name: "Dialog", path: "dialog" },
-      { name: "Drawer", path: "drawer" },
-      { name: "Dropdown Menu", path: "dropdown-menu" },
-      { name: "Hover Card", path: "hover-card" },
-      { name: "Popover", path: "popover" },
-      { name: "Sheet", path: "sheet" },
-      { name: "Tooltip", path: "tooltip" }
     ]
   },
   {
     name: "Utilities",
     icon: Database,
     items: [
-      { name: "Utilities Showcase", path: "utilities-showcase" },
-      { name: "Accordion", path: "accordion" },
-      { name: "Collapsible", path: "collapsible" },
-      { name: "useIsMobile", path: "use-mobile" }
+      { name: "Accordion", path: "accordion" }
     ]
   }
 ];

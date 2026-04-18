@@ -1,4 +1,5 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createCard } from '@/components/ui/card';
 
 export interface DocsAnatomyProps {
   title: string;
@@ -15,8 +16,7 @@ export function createDocsAnatomy(props: DocsAnatomyProps): HTMLElement {
   h2.className = 'text-xl font-semibold mb-4';
   h2.textContent = props.title;
 
-  const card = document.createElement('div');
-  card.className = 'flex items-center justify-center p-10 mt-6 border rounded-xl bg-background shadow-sm';
+  const card = createCard({ className: 'flex items-center justify-center p-10 mt-6 shadow-sm' });
 
   const inner = document.createElement('div');
   inner.className = 'space-y-4 w-full';

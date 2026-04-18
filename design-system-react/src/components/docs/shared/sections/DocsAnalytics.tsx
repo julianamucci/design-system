@@ -1,4 +1,13 @@
 import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table';
 
 export interface DocsAnalyticsEventItem {
   event: string;
@@ -16,26 +25,28 @@ export function DocsAnalytics({ title, cols, items }: DocsAnalyticsProps) {
   return (
     <section id="analytics">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <div className="rounded-lg border border-border p-4 shadow-sm overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border bg-muted/50 text-left">
-              <th className="p-3 border-r border-border font-semibold">{cols.event}</th>
-              <th className="p-3 border-r border-border font-semibold">{cols.trigger}</th>
-              <th className="p-3 font-semibold">{cols.payload}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item, i) => (
-              <tr key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                <td className="p-3 border-r border-border font-mono text-primary">{item.event}</td>
-                <td className="p-3 border-r border-border text-muted-foreground">{item.trigger}</td>
-                <td className="p-3 font-mono text-xs text-muted-foreground">{item.payload}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Card className="shadow-sm overflow-x-auto">
+        <CardContent className="p-4">
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border bg-muted/50 text-left">
+                <TableHead className="p-3 border-r border-border font-semibold">{cols.event}</TableHead>
+                <TableHead className="p-3 border-r border-border font-semibold">{cols.trigger}</TableHead>
+                <TableHead className="p-3 font-semibold">{cols.payload}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {items.map((item, i) => (
+                <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
+                  <TableCell className="p-3 border-r border-border font-mono text-primary">{item.event}</TableCell>
+                  <TableCell className="p-3 border-r border-border text-muted-foreground">{item.trigger}</TableCell>
+                  <TableCell className="p-3 font-mono text-xs text-muted-foreground">{item.payload}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </section>
   );
 }

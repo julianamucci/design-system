@@ -1,4 +1,13 @@
 import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 
 export interface DocsPropItem {
@@ -27,30 +36,32 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
   return (
     <div className="space-y-3">
       {def.title && <h3 className="text-base font-semibold">{def.title}</h3>}
-      <div className="rounded-lg border border-border p-4 shadow-sm overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border bg-muted/50 text-left">
-              <th className="p-3 border-r border-border font-semibold">{def.cols.prop}</th>
-              <th className="p-3 border-r border-border font-semibold">{def.cols.type}</th>
-              <th className="p-3 border-r border-border font-semibold">{def.cols.default}</th>
-              <th className="p-3 border-r border-border font-semibold">{def.cols.required}</th>
-              <th className="p-3 font-semibold">{def.cols.description}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {def.items.map((item, i) => (
-              <tr key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                <td className="p-3 border-r border-border font-mono font-bold text-primary">{item.name}</td>
-                <td className="p-3 border-r border-border font-mono text-muted-foreground">{item.type}</td>
-                <td className="p-3 border-r border-border text-muted-foreground">{item.defaultValue}</td>
-                <td className="p-3 border-r border-border text-muted-foreground">{item.required}</td>
-                <td className="p-3 text-muted-foreground">{item.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Card className="shadow-sm overflow-x-auto">
+        <CardContent className="p-4">
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border bg-muted/50 text-left">
+                <TableHead className="p-3 border-r border-border font-semibold">{def.cols.prop}</TableHead>
+                <TableHead className="p-3 border-r border-border font-semibold">{def.cols.type}</TableHead>
+                <TableHead className="p-3 border-r border-border font-semibold">{def.cols.default}</TableHead>
+                <TableHead className="p-3 border-r border-border font-semibold">{def.cols.required}</TableHead>
+                <TableHead className="p-3 font-semibold">{def.cols.description}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {def.items.map((item, i) => (
+                <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
+                  <TableCell className="p-3 border-r border-border font-mono font-bold text-primary">{item.name}</TableCell>
+                  <TableCell className="p-3 border-r border-border font-mono text-muted-foreground">{item.type}</TableCell>
+                  <TableCell className="p-3 border-r border-border text-muted-foreground">{item.defaultValue}</TableCell>
+                  <TableCell className="p-3 border-r border-border text-muted-foreground">{item.required}</TableCell>
+                  <TableCell className="p-3 text-muted-foreground">{item.description}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }

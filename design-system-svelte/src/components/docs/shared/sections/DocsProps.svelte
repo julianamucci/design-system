@@ -1,5 +1,7 @@
 <script lang="ts">
   import { sanitizeHtml } from '@/lib/sanitize-html';
+  import { Card, CardContent } from '@/components/ui/card';
+  import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
   interface DocsPropItem {
     name: string; type: string; defaultValue: string; required: string; description: string;
@@ -27,30 +29,32 @@
         {#if def.title}
           <h3 class="text-base font-semibold">{def.title}</h3>
         {/if}
-        <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="border-b border-border bg-muted/50 text-left">
-                <th class="p-3 border-r border-border font-semibold">{def.cols.prop}</th>
-                <th class="p-3 border-r border-border font-semibold">{def.cols.type}</th>
-                <th class="p-3 border-r border-border font-semibold">{def.cols.default}</th>
-                <th class="p-3 border-r border-border font-semibold">{def.cols.required}</th>
-                <th class="p-3 font-semibold">{def.cols.description}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {#each def.items as item}
-                <tr class="border-b border-border last:border-0 hover:bg-muted/5">
-                  <td class="p-3 border-r border-border font-mono font-bold text-primary">{item.name}</td>
-                  <td class="p-3 border-r border-border font-mono text-muted-foreground">{item.type}</td>
-                  <td class="p-3 border-r border-border text-muted-foreground">{item.defaultValue}</td>
-                  <td class="p-3 border-r border-border text-muted-foreground">{item.required}</td>
-                  <td class="p-3 text-muted-foreground">{item.description}</td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
+        <Card class="overflow-x-auto">
+          <CardContent class="p-4">
+            <Table class="w-full text-sm">
+              <TableHeader>
+                <TableRow class="border-b border-border bg-muted/50 text-left">
+                  <TableHead class="p-3 border-r border-border font-semibold">{def.cols.prop}</TableHead>
+                  <TableHead class="p-3 border-r border-border font-semibold">{def.cols.type}</TableHead>
+                  <TableHead class="p-3 border-r border-border font-semibold">{def.cols.default}</TableHead>
+                  <TableHead class="p-3 border-r border-border font-semibold">{def.cols.required}</TableHead>
+                  <TableHead class="p-3 font-semibold">{def.cols.description}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {#each def.items as item}
+                  <TableRow class="border-b border-border last:border-0 hover:bg-muted/5">
+                    <TableCell class="p-3 border-r border-border font-mono font-bold text-primary">{item.name}</TableCell>
+                    <TableCell class="p-3 border-r border-border font-mono text-muted-foreground">{item.type}</TableCell>
+                    <TableCell class="p-3 border-r border-border text-muted-foreground">{item.defaultValue}</TableCell>
+                    <TableCell class="p-3 border-r border-border text-muted-foreground">{item.required}</TableCell>
+                    <TableCell class="p-3 text-muted-foreground">{item.description}</TableCell>
+                  </TableRow>
+                {/each}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </div>
     {/each}
     {#if interfaceCode}

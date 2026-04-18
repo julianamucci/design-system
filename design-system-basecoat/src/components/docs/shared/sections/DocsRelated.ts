@@ -1,4 +1,5 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createButton } from '@/components/ui/button';
 
 export interface DocsRelatedItem { name: string; description: string; path: string }
 export interface DocsRelatedProps { title: string; items: DocsRelatedItem[] }
@@ -16,15 +17,14 @@ export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
   grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-4';
 
   props.items.forEach(item => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'text-left border rounded-xl p-4 shadow-sm bg-card hover:bg-muted/50 transition-colors space-y-1 cursor-pointer';
+    const btn = createButton({
+      variant: 'outline',
+      class: 'text-left rounded-xl p-4 shadow-sm bg-card hover:bg-muted/50 transition-colors space-y-1 cursor-pointer h-auto flex-col items-start',
+      onClick: () => { (window.top ?? window).location.href = item.path; },
+    });
     btn.innerHTML = `
       <p class="text-sm font-semibold text-primary">${sanitizeHtml(item.name)}</p>
       <p class="text-xs text-muted-foreground leading-relaxed">${sanitizeHtml(item.description)}</p>`;
-    btn.addEventListener('click', () => {
-      (window.top ?? window).location.href = item.path;
-    });
     grid.appendChild(btn);
   });
 
