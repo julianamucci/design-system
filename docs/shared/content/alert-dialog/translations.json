@@ -1,0 +1,926 @@
+{
+  "pt-BR": {
+    "title": "AlertDialog",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Janela modal de confirmação para ações destrutivas ou irreversíveis. Exige decisão explícita do usuário antes de prosseguir.",
+    "seo": {
+      "title": "AlertDialog — Overlay · Design System",
+      "description": "Documentação do AlertDialog: modal de confirmação para ações destrutivas, foco gerenciado, acessibilidade WCAG e integração com formulários.",
+      "aiSummary": "Componente AlertDialog para confirmações críticas — modal com foco gerenciado, role alertdialog, botões de ação e cancelamento, animações de entrada/saída.",
+      "aiEntities": "AlertDialog, Radix UI, React, Tailwind CSS, WCAG 2.1, WAI-ARIA, modal, dialog",
+      "aiIntent": "informational"
+    },
+    "installation": "npx shadcn@latest add alert-dialog",
+    "demonstration": {
+      "title": "Demonstração Padrão",
+      "labels": {
+        "trigger": "Excluir conta",
+        "title": "Excluir conta",
+        "description": "Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.",
+        "cancel": "Cancelar",
+        "confirm": "Excluir",
+        "triggerDestructive": "Excluir item",
+        "titleDestructive": "Excluir item selecionado",
+        "descriptionDestructive": "O item será removido permanentemente da sua lista. Esta ação não pode ser desfeita.",
+        "triggerNeutral": "Confirmar envio",
+        "titleNeutral": "Confirmar envio do relatório",
+        "descriptionNeutral": "O relatório será enviado para todos os destinatários da lista. Você poderá reenviar depois se necessário.",
+        "confirmNeutral": "Enviar"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>AlertDialog</strong> — raiz do componente, gerencia o estado aberto/fechado",
+      "item2": "<strong>AlertDialogTrigger</strong> — elemento que abre o diálogo ao ser ativado",
+      "item3": "<strong>AlertDialogContent</strong> — container do conteúdo modal com overlay e animações",
+      "item4": "<strong>AlertDialogHeader</strong> — agrupa título e descrição no topo",
+      "item5": "<strong>AlertDialogTitle</strong> — título obrigatório, anunciado por leitores de tela",
+      "item6": "<strong>AlertDialogDescription</strong> — descreve a consequência da ação",
+      "item7": "<strong>AlertDialogFooter</strong> — agrupa os botões de ação e cancelamento",
+      "item8": "<strong>AlertDialogAction</strong> — botão que confirma e executa a ação",
+      "item9": "<strong>AlertDialogCancel</strong> — botão que cancela e fecha o diálogo",
+      "structureLabel": "Estrutura de subcomponentes",
+      "structureCode": "<AlertDialog>\n  <AlertDialogTrigger />\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle />\n      <AlertDialogDescription />\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel />\n      <AlertDialogAction />\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Diretrizes de uso",
+        "item1": "Use para ações irreversíveis que apagam, removem ou alteram dados permanentemente.",
+        "item2": "O título deve nomear a ação; a descrição deve explicar a consequência.",
+        "item3": "O botão de confirmação deve repetir o verbo do título (ex: título 'Excluir conta' → botão 'Excluir').",
+        "item4": "Não use AlertDialog para confirmações de baixo risco — prefira Dialog ou Toast."
+      },
+      "scenarios": {
+        "title": "Quando usar",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Excluir conta ou dados", "u": "AlertDialog", "a": "—" },
+        "item2": { "s": "Cancelar formulário preenchido", "u": "AlertDialog", "a": "Dialog" },
+        "item3": { "s": "Confirmação de baixo risco", "u": "Dialog ou Toast", "a": "AlertDialog" },
+        "item4": { "s": "Ação reversível (ex: arquivar)", "u": "Dialog ou Toast", "a": "AlertDialog" },
+        "item5": { "s": "Confirmar envio irreversível", "u": "AlertDialog", "a": "—" }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "A ação é irreversível e pode causar perda de dados.",
+        "item2": "O usuário precisa tomar uma decisão consciente antes de prosseguir.",
+        "item3": "A consequência da ação é grave o suficiente para interromper o fluxo."
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A ação pode ser desfeita facilmente.",
+        "item2": "A confirmação é de baixo risco ou impacto mínimo.",
+        "item3": "Você já usa um Toast ou Alert para dar feedback da mesma ação."
+      }
+    },
+    "uxWriting": {
+      "title": "UX Writing",
+      "table": {
+        "element": "Elemento",
+        "rules": "Regra",
+        "correct": "Correto",
+        "avoid": "Evitar",
+        "title": {
+          "name": "Título",
+          "format": "Substantivo + verbo no infinitivo, sem ponto final",
+          "good": "Excluir conta",
+          "bad": "Tem certeza?"
+        },
+        "description": {
+          "name": "Descrição",
+          "format": "Consequência da ação, máximo 2 frases com ponto final",
+          "good": "Todos os dados serão removidos. Esta ação não pode ser desfeita.",
+          "bad": "Isso vai apagar TUDO!"
+        },
+        "action": {
+          "name": "Botão de confirmação",
+          "format": "Verbo que repete o título, sem 'Sim,' ou 'Confirmar'",
+          "good": "Excluir",
+          "bad": "Sim, excluir"
+        }
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Botão primário repete o verbo do título — reforça o que acontecerá.",
+        "dont": "Botão vago como 'OK' ou 'Sim' não comunica a ação claramente."
+      },
+      "pair2": {
+        "do": "Título nomeia a ação; descrição detalha a consequência.",
+        "dont": "Título como 'Tem certeza?' gera ambiguidade e ansiedade desnecessária."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Importe os subcomponentes necessários de uma única fonte:",
+      "full": "Para uso completo com todos os subcomponentes:"
+    },
+    "examples": {
+      "title": "Exemplos de Código",
+      "basic": "Uso básico — ação destrutiva",
+      "neutral": "Ação neutra — confirmação sem destruição",
+      "withForm": "Com formulário interno",
+      "customTrigger": "Trigger personalizado"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Tipos de uso",
+      "items": {
+        "destructive": "Ação destrutiva irreversível — excluir, remover permanentemente",
+        "neutral": "Confirmação de ação sem destruição — enviar, publicar, confirmar"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "table": {
+        "state": "Estado",
+        "visual": "Visual",
+        "trigger": "Gatilho"
+      },
+      "closed": "Fechado — estado padrão, overlay invisível",
+      "open": "Aberto — overlay escuro, modal centralizado visível",
+      "closedTrigger": "Estado inicial ou após Cancelar/Escape",
+      "openTrigger": "Clique no AlertDialogTrigger"
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface",
+      "extensibilityTitle": "Extensibilidade",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição"
+      },
+      "rows": {
+        "open": "Controla o estado aberto/fechado de forma controlada",
+        "defaultOpen": "Estado aberto inicial quando não controlado",
+        "onOpenChange": "Callback chamado quando o estado muda",
+        "asChild": "Renderiza como filho em vez do elemento padrão",
+        "className": "Classes CSS adicionais aplicadas ao elemento"
+      },
+      "extensibility": {
+        "classNameNote": "Todos os subcomponentes aceitam <code>className</code> para sobrescrever ou adicionar estilos.",
+        "asChildNote": "Use <code>asChild</code> no <code>AlertDialogTrigger</code> para usar qualquer elemento como gatilho."
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "customizationTitle": "Customização via CSS tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe Tailwind",
+        "part": "Onde é usado"
+      },
+      "rows": {
+        "background": "Fundo do conteúdo do modal",
+        "border": "Borda do modal",
+        "foreground": "Cor do título",
+        "mutedForeground": "Cor da descrição",
+        "primary": "Fundo do botão de confirmação padrão",
+        "destructive": "Fundo do botão de confirmação destrutivo",
+        "radius": "Arredondamento dos cantos do modal",
+        "ring": "Anel de foco nos botões"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Segue WCAG 2.1 AA com role <code>alertdialog</code>, foco gerenciado e trap de foco.",
+      "item1": "Usa <code>role=\"alertdialog\"</code> — anuncia imediatamente para leitores de tela ao abrir.",
+      "item2": "Foco é movido automaticamente para o diálogo ao abrir e retorna ao trigger ao fechar.",
+      "item3": "Focus trap ativo — Tab navega apenas entre os elementos dentro do modal enquanto aberto.",
+      "item4": "Tecla Escape fecha o diálogo (comportamento nativo do Radix UI).",
+      "item5": "Clique no overlay fecha o diálogo — comportamento desabilitado por padrão no AlertDialog para forçar decisão explícita.",
+      "keyboardTitle": "Navegação por teclado",
+      "keyboard": {
+        "tab": "Navega entre os botões dentro do modal (focus trap ativo)",
+        "enter": "Ativa o botão com foco",
+        "space": "Ativa o botão com foco",
+        "escape": "Fecha o diálogo e retorna foco ao trigger"
+      },
+      "ariaTitle": "Atributos ARIA",
+      "aria": {
+        "role": "<code>role=\"alertdialog\"</code> no AlertDialogContent",
+        "labelledby": "<code>aria-labelledby</code> aponta para o AlertDialogTitle",
+        "describedby": "<code>aria-describedby</code> aponta para o AlertDialogDescription",
+        "modal": "<code>aria-modal=\"true\"</code> no container do modal"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "dialog": "Dialog — janela modal para formulários e conteúdo sem caráter destrutivo",
+      "drawer": "Drawer — painel lateral para ações ou navegação contextual",
+      "sonner": "Sonner — notificações não-bloqueantes para feedback pós-ação",
+      "button": "Button — usado nos botões de ação e cancelamento do AlertDialog"
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "Não use <code>AlertDialogAction</code> para ações não destrutivas — prefira <code>Dialog</code> com um botão primário comum.",
+      "tip2": "O overlay do AlertDialog não fecha ao ser clicado, diferente do Dialog. Isso é intencional — o usuário deve escolher explicitamente Cancelar ou Confirmar."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastreie interações com AlertDialog para entender padrões de confirmação e cancelamento.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Montagem da docs page",
+        "pageViewPayload": "{ component, locale }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Seção entra no viewport",
+        "sectionViewedPayload": "{ section_id, component, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Clique no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }",
+        "open": "alert_dialog_opened",
+        "openTrigger": "AlertDialogTrigger ativado",
+        "openPayload": "{ dialog_id, trigger_label }",
+        "confirm": "alert_dialog_confirmed",
+        "confirmTrigger": "AlertDialogAction clicado",
+        "confirmPayload": "{ dialog_id, action_label }",
+        "cancel": "alert_dialog_cancelled",
+        "cancelTrigger": "AlertDialogCancel clicado ou Escape",
+        "cancelPayload": "{ dialog_id, method: 'button' | 'escape' }"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Testes Funcionais",
+        "description": "Cobertura de interações via play functions no Storybook.",
+        "item1": { "action": "Clicar no trigger", "result": "Modal abre com overlay e foco no primeiro botão", "priority": "high" },
+        "item2": { "action": "Clicar em Cancelar", "result": "Modal fecha e foco retorna ao trigger", "priority": "high" },
+        "item3": { "action": "Pressionar Escape com modal aberto", "result": "Modal fecha e foco retorna ao trigger", "priority": "high" },
+        "item4": { "action": "Pressionar Tab dentro do modal", "result": "Foco navega apenas entre os botões (focus trap)", "priority": "high" },
+        "item5": { "action": "Clicar na ação de confirmação", "result": "Modal fecha e callback onConfirm é chamado", "priority": "high" },
+        "item6": { "action": "Clicar no overlay", "result": "Modal não fecha (comportamento intencional do AlertDialog)", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Testes de Acessibilidade",
+        "description": "Critérios axe-playwright verificados automaticamente em todas as stories.",
+        "item1": "role alertdialog presente no container do modal quando aberto",
+        "item2": "aria-labelledby aponta para AlertDialogTitle visível",
+        "item3": "aria-describedby aponta para AlertDialogDescription",
+        "item4": "Focus trap ativo — Tab não sai do modal enquanto aberto",
+        "item5": "Foco retorna ao elemento trigger após fechar",
+        "item6": "Contraste do texto sobre overlay atende WCAG 1.4.3 (4.5:1)"
+      },
+      "visual": {
+        "title": "Testes Visuais",
+        "description": "Capturas Chromatic para regressão visual em light e dark mode.",
+        "required": "Obrigatório",
+        "item1": { "story": "Playground — estado aberto", "priority": "high" },
+        "item2": { "story": "Ação destrutiva — botão vermelho", "priority": "high" },
+        "item3": { "story": "Ação neutra — botão primário", "priority": "medium" },
+        "item4": { "story": "Trigger desabilitado", "priority": "medium" },
+        "item5": { "story": "Mobile — layout em coluna", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "examples": "Exemplos",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "AlertDialog",
+    "category": "Overlay",
+    "type": "Component",
+    "description": "Modal confirmation dialog for destructive or irreversible actions. Requires explicit user decision before proceeding.",
+    "seo": {
+      "title": "AlertDialog — Overlay · Design System",
+      "description": "AlertDialog documentation: confirmation modal for destructive actions, managed focus, WCAG accessibility and form integration.",
+      "aiSummary": "AlertDialog component for critical confirmations — modal with managed focus, role alertdialog, action and cancel buttons, enter/exit animations.",
+      "aiEntities": "AlertDialog, Radix UI, React, Tailwind CSS, WCAG 2.1, WAI-ARIA, modal, dialog",
+      "aiIntent": "informational"
+    },
+    "installation": "npx shadcn@latest add alert-dialog",
+    "demonstration": {
+      "title": "Default Demonstration",
+      "labels": {
+        "trigger": "Delete account",
+        "title": "Delete account",
+        "description": "All your data will be permanently removed. This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete",
+        "triggerDestructive": "Delete item",
+        "titleDestructive": "Delete selected item",
+        "descriptionDestructive": "The item will be permanently removed from your list. This action cannot be undone.",
+        "triggerNeutral": "Confirm submission",
+        "titleNeutral": "Confirm report submission",
+        "descriptionNeutral": "The report will be sent to all recipients on the list. You can resend it later if needed.",
+        "confirmNeutral": "Submit"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>AlertDialog</strong> — root component, manages the open/closed state",
+      "item2": "<strong>AlertDialogTrigger</strong> — element that opens the dialog when activated",
+      "item3": "<strong>AlertDialogContent</strong> — modal content container with overlay and animations",
+      "item4": "<strong>AlertDialogHeader</strong> — groups the title and description at the top",
+      "item5": "<strong>AlertDialogTitle</strong> — required title, announced by screen readers",
+      "item6": "<strong>AlertDialogDescription</strong> — describes the consequence of the action",
+      "item7": "<strong>AlertDialogFooter</strong> — groups the action and cancel buttons",
+      "item8": "<strong>AlertDialogAction</strong> — button that confirms and executes the action",
+      "item9": "<strong>AlertDialogCancel</strong> — button that cancels and closes the dialog",
+      "structureLabel": "Subcomponent structure",
+      "structureCode": "<AlertDialog>\n  <AlertDialogTrigger />\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle />\n      <AlertDialogDescription />\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel />\n      <AlertDialogAction />\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Usage guidelines",
+        "item1": "Use for irreversible actions that permanently delete, remove or alter data.",
+        "item2": "The title names the action; the description explains the consequence.",
+        "item3": "The confirm button should repeat the verb from the title (e.g., title 'Delete account' → button 'Delete').",
+        "item4": "Avoid AlertDialog for low-risk confirmations — prefer Dialog or Toast instead."
+      },
+      "scenarios": {
+        "title": "When to use",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Delete account or data", "u": "AlertDialog", "a": "—" },
+        "item2": { "s": "Cancel filled form", "u": "AlertDialog", "a": "Dialog" },
+        "item3": { "s": "Low-risk confirmation", "u": "Dialog or Toast", "a": "AlertDialog" },
+        "item4": { "s": "Reversible action (e.g. archive)", "u": "Dialog or Toast", "a": "AlertDialog" },
+        "item5": { "s": "Confirm irreversible send", "u": "AlertDialog", "a": "—" }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The action is irreversible and may cause data loss.",
+        "item2": "The user must make a conscious decision before proceeding.",
+        "item3": "The consequence is serious enough to interrupt the user flow."
+      },
+      "dont": {
+        "title": "Avoid when",
+        "item1": "The action can be easily undone.",
+        "item2": "The confirmation is low-risk or has minimal impact.",
+        "item3": "A Toast or Alert already provides feedback for the same action."
+      }
+    },
+    "uxWriting": {
+      "title": "UX Writing",
+      "table": {
+        "element": "Element",
+        "rules": "Rule",
+        "correct": "Correct",
+        "avoid": "Avoid",
+        "title": {
+          "name": "Title",
+          "format": "Noun + infinitive verb, no period",
+          "good": "Delete account",
+          "bad": "Are you sure?"
+        },
+        "description": {
+          "name": "Description",
+          "format": "Consequence of the action, max 2 sentences ending with period",
+          "good": "All data will be removed. This action cannot be undone.",
+          "bad": "This will delete EVERYTHING!"
+        },
+        "action": {
+          "name": "Confirm button",
+          "format": "Verb repeating the title, without 'Yes,' or 'Confirm'",
+          "good": "Delete",
+          "bad": "Yes, delete"
+        }
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "The primary button repeats the title verb — reinforces what will happen.",
+        "dont": "Vague buttons like 'OK' or 'Yes' don't communicate the action clearly."
+      },
+      "pair2": {
+        "do": "The title names the action; the description details the consequence.",
+        "dont": "Titles like 'Are you sure?' create ambiguity and unnecessary anxiety."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Import the required subcomponents from a single source:",
+      "full": "Full import with all subcomponents:"
+    },
+    "examples": {
+      "title": "Code Examples",
+      "basic": "Basic usage — destructive action",
+      "neutral": "Neutral action — non-destructive confirmation",
+      "withForm": "With internal form",
+      "customTrigger": "Custom trigger"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Usage types",
+      "items": {
+        "destructive": "Irreversible destructive action — delete, permanently remove",
+        "neutral": "Non-destructive confirmation — send, publish, confirm"
+      }
+    },
+    "states": {
+      "title": "States",
+      "table": {
+        "state": "State",
+        "visual": "Visual",
+        "trigger": "Trigger"
+      },
+      "closed": "Closed — default state, invisible overlay",
+      "open": "Open — dark overlay, centered modal visible",
+      "closedTrigger": "Initial state or after Cancel/Escape",
+      "openTrigger": "Click on AlertDialogTrigger"
+    },
+    "props": {
+      "title": "Props",
+      "interface": "Interface",
+      "extensibilityTitle": "Extensibility",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description"
+      },
+      "rows": {
+        "open": "Controls the open/closed state in a controlled manner",
+        "defaultOpen": "Initial open state when uncontrolled",
+        "onOpenChange": "Callback called when the state changes",
+        "asChild": "Renders as child instead of the default element",
+        "className": "Additional CSS classes applied to the element"
+      },
+      "extensibility": {
+        "classNameNote": "All subcomponents accept <code>className</code> to override or add styles.",
+        "asChildNote": "Use <code>asChild</code> on <code>AlertDialogTrigger</code> to use any element as a trigger."
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "customizationTitle": "Customization via CSS tokens",
+      "table": {
+        "token": "Token",
+        "class": "Tailwind Class",
+        "part": "Where it's used"
+      },
+      "rows": {
+        "background": "Modal content background",
+        "border": "Modal border",
+        "foreground": "Title color",
+        "mutedForeground": "Description color",
+        "primary": "Default confirm button background",
+        "destructive": "Destructive confirm button background",
+        "radius": "Modal corner radius",
+        "ring": "Focus ring on buttons"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Follows WCAG 2.1 AA with <code>role alertdialog</code>, managed focus and focus trap.",
+      "item1": "Uses <code>role=\"alertdialog\"</code> — immediately announced to screen readers when opened.",
+      "item2": "Focus automatically moves to the dialog on open and returns to the trigger on close.",
+      "item3": "Active focus trap — Tab navigates only between elements inside the modal while open.",
+      "item4": "Escape key closes the dialog (native Radix UI behavior).",
+      "item5": "Overlay click does not close the dialog — intentional to force explicit user decision.",
+      "keyboardTitle": "Keyboard navigation",
+      "keyboard": {
+        "tab": "Navigate between buttons inside the modal (focus trap active)",
+        "enter": "Activate the focused button",
+        "space": "Activate the focused button",
+        "escape": "Close the dialog and return focus to the trigger"
+      },
+      "ariaTitle": "ARIA attributes",
+      "aria": {
+        "role": "<code>role=\"alertdialog\"</code> on AlertDialogContent",
+        "labelledby": "<code>aria-labelledby</code> points to AlertDialogTitle",
+        "describedby": "<code>aria-describedby</code> points to AlertDialogDescription",
+        "modal": "<code>aria-modal=\"true\"</code> on the modal container"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "dialog": "Dialog — modal for forms and content without destructive intent",
+      "drawer": "Drawer — side panel for contextual actions or navigation",
+      "sonner": "Sonner — non-blocking notifications for post-action feedback",
+      "button": "Button — used in the action and cancel buttons of AlertDialog"
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "Don't use <code>AlertDialogAction</code> for non-destructive actions — prefer <code>Dialog</code> with a regular primary button.",
+      "tip2": "The AlertDialog overlay does not close on click, unlike Dialog. This is intentional — the user must explicitly choose Cancel or Confirm."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Track AlertDialog interactions to understand confirmation and cancellation patterns.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Docs page mounted",
+        "pageViewPayload": "{ component, locale }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Section enters viewport",
+        "sectionViewedPayload": "{ section_id, component, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "LanguageSwitcher click",
+        "langSwitchPayload": "{ previous_language, new_language }",
+        "open": "alert_dialog_opened",
+        "openTrigger": "AlertDialogTrigger activated",
+        "openPayload": "{ dialog_id, trigger_label }",
+        "confirm": "alert_dialog_confirmed",
+        "confirmTrigger": "AlertDialogAction clicked",
+        "confirmPayload": "{ dialog_id, action_label }",
+        "cancel": "alert_dialog_cancelled",
+        "cancelTrigger": "AlertDialogCancel clicked or Escape",
+        "cancelPayload": "{ dialog_id, method: 'button' | 'escape' }"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional Tests",
+        "description": "Interaction coverage via play functions in Storybook.",
+        "item1": { "action": "Click the trigger", "result": "Modal opens with overlay and focus on first button", "priority": "high" },
+        "item2": { "action": "Click Cancel", "result": "Modal closes and focus returns to trigger", "priority": "high" },
+        "item3": { "action": "Press Escape with modal open", "result": "Modal closes and focus returns to trigger", "priority": "high" },
+        "item4": { "action": "Press Tab inside modal", "result": "Focus navigates only between buttons (focus trap)", "priority": "high" },
+        "item5": { "action": "Click confirm action", "result": "Modal closes and onConfirm callback is called", "priority": "high" },
+        "item6": { "action": "Click overlay", "result": "Modal does not close (intentional AlertDialog behavior)", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accessibility Tests",
+        "description": "axe-playwright criteria automatically verified on all stories.",
+        "item1": "role alertdialog present on modal container when open",
+        "item2": "aria-labelledby points to visible AlertDialogTitle",
+        "item3": "aria-describedby points to AlertDialogDescription",
+        "item4": "Focus trap active — Tab does not leave modal while open",
+        "item5": "Focus returns to trigger element after closing",
+        "item6": "Text contrast over overlay meets WCAG 1.4.3 (4.5:1)"
+      },
+      "visual": {
+        "title": "Visual Tests",
+        "description": "Chromatic snapshots for visual regression in light and dark mode.",
+        "required": "Required",
+        "item1": { "story": "Playground — open state", "priority": "high" },
+        "item2": { "story": "Destructive action — red button", "priority": "high" },
+        "item3": { "story": "Neutral action — primary button", "priority": "medium" },
+        "item4": { "story": "Disabled trigger", "priority": "medium" },
+        "item5": { "story": "Mobile — column layout", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "examples": "Examples",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Props",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "AlertDialog",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Ventana modal de confirmación para acciones destructivas o irreversibles. Requiere decisión explícita del usuario antes de continuar.",
+    "seo": {
+      "title": "AlertDialog — Overlay · Design System",
+      "description": "Documentación del AlertDialog: modal de confirmación para acciones destructivas, foco gestionado, accesibilidad WCAG e integración con formularios.",
+      "aiSummary": "Componente AlertDialog para confirmaciones críticas — modal con foco gestionado, role alertdialog, botones de acción y cancelación, animaciones de entrada/salida.",
+      "aiEntities": "AlertDialog, Radix UI, React, Tailwind CSS, WCAG 2.1, WAI-ARIA, modal, dialog",
+      "aiIntent": "informational"
+    },
+    "installation": "npx shadcn@latest add alert-dialog",
+    "demonstration": {
+      "title": "Demostración Predeterminada",
+      "labels": {
+        "trigger": "Eliminar cuenta",
+        "title": "Eliminar cuenta",
+        "description": "Todos tus datos serán eliminados permanentemente. Esta acción no se puede deshacer.",
+        "cancel": "Cancelar",
+        "confirm": "Eliminar",
+        "triggerDestructive": "Eliminar elemento",
+        "titleDestructive": "Eliminar elemento seleccionado",
+        "descriptionDestructive": "El elemento será eliminado permanentemente de tu lista. Esta acción no se puede deshacer.",
+        "triggerNeutral": "Confirmar envío",
+        "titleNeutral": "Confirmar envío del informe",
+        "descriptionNeutral": "El informe será enviado a todos los destinatarios de la lista. Podrás reenviarlo después si es necesario.",
+        "confirmNeutral": "Enviar"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>AlertDialog</strong> — raíz del componente, gestiona el estado abierto/cerrado",
+      "item2": "<strong>AlertDialogTrigger</strong> — elemento que abre el diálogo al activarse",
+      "item3": "<strong>AlertDialogContent</strong> — contenedor del contenido modal con overlay y animaciones",
+      "item4": "<strong>AlertDialogHeader</strong> — agrupa el título y la descripción en la parte superior",
+      "item5": "<strong>AlertDialogTitle</strong> — título obligatorio, anunciado por lectores de pantalla",
+      "item6": "<strong>AlertDialogDescription</strong> — describe la consecuencia de la acción",
+      "item7": "<strong>AlertDialogFooter</strong> — agrupa los botones de acción y cancelación",
+      "item8": "<strong>AlertDialogAction</strong> — botón que confirma y ejecuta la acción",
+      "item9": "<strong>AlertDialogCancel</strong> — botón que cancela y cierra el diálogo",
+      "structureLabel": "Estructura de subcomponentes",
+      "structureCode": "<AlertDialog>\n  <AlertDialogTrigger />\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle />\n      <AlertDialogDescription />\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel />\n      <AlertDialogAction />\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Directrices de uso",
+        "item1": "Usa para acciones irreversibles que eliminan o modifican datos permanentemente.",
+        "item2": "El título nombra la acción; la descripción explica la consecuencia.",
+        "item3": "El botón de confirmación debe repetir el verbo del título (ej: título 'Eliminar cuenta' → botón 'Eliminar').",
+        "item4": "No uses AlertDialog para confirmaciones de bajo riesgo — prefiere Dialog o Toast."
+      },
+      "scenarios": {
+        "title": "Cuándo usar",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usar",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Eliminar cuenta o datos", "u": "AlertDialog", "a": "—" },
+        "item2": { "s": "Cancelar formulario completado", "u": "AlertDialog", "a": "Dialog" },
+        "item3": { "s": "Confirmación de bajo riesgo", "u": "Dialog o Toast", "a": "AlertDialog" },
+        "item4": { "s": "Acción reversible (ej: archivar)", "u": "Dialog o Toast", "a": "AlertDialog" },
+        "item5": { "s": "Confirmar envío irreversible", "u": "AlertDialog", "a": "—" }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "La acción es irreversible y puede causar pérdida de datos.",
+        "item2": "El usuario debe tomar una decisión consciente antes de continuar.",
+        "item3": "La consecuencia es grave como para interrumpir el flujo del usuario."
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La acción se puede deshacer fácilmente.",
+        "item2": "La confirmación es de bajo riesgo o impacto mínimo.",
+        "item3": "Ya usas un Toast o Alert para dar feedback de la misma acción."
+      }
+    },
+    "uxWriting": {
+      "title": "UX Writing",
+      "table": {
+        "element": "Elemento",
+        "rules": "Regla",
+        "correct": "Correcto",
+        "avoid": "Evitar",
+        "title": {
+          "name": "Título",
+          "format": "Sustantivo + verbo en infinitivo, sin punto final",
+          "good": "Eliminar cuenta",
+          "bad": "¿Estás seguro?"
+        },
+        "description": {
+          "name": "Descripción",
+          "format": "Consecuencia de la acción, máximo 2 frases con punto final",
+          "good": "Todos los datos serán eliminados. Esta acción no se puede deshacer.",
+          "bad": "¡Esto borrará TODO!"
+        },
+        "action": {
+          "name": "Botón de confirmación",
+          "format": "Verbo que repite el título, sin 'Sí,' o 'Confirmar'",
+          "good": "Eliminar",
+          "bad": "Sí, eliminar"
+        }
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "El botón primario repite el verbo del título — refuerza lo que ocurrirá.",
+        "dont": "Botones vagos como 'OK' o 'Sí' no comunican la acción claramente."
+      },
+      "pair2": {
+        "do": "El título nombra la acción; la descripción detalla la consecuencia.",
+        "dont": "Títulos como '¿Estás seguro?' generan ambigüedad y ansiedad innecesaria."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Importa los subcomponentes necesarios desde una única fuente:",
+      "full": "Importación completa con todos los subcomponentes:"
+    },
+    "examples": {
+      "title": "Ejemplos de Código",
+      "basic": "Uso básico — acción destructiva",
+      "neutral": "Acción neutral — confirmación sin destrucción",
+      "withForm": "Con formulario interno",
+      "customTrigger": "Trigger personalizado"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Tipos de uso",
+      "items": {
+        "destructive": "Acción destructiva irreversible — eliminar, remover permanentemente",
+        "neutral": "Confirmación de acción sin destrucción — enviar, publicar, confirmar"
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "table": {
+        "state": "Estado",
+        "visual": "Visual",
+        "trigger": "Disparador"
+      },
+      "closed": "Cerrado — estado predeterminado, overlay invisible",
+      "open": "Abierto — overlay oscuro, modal centrado visible",
+      "closedTrigger": "Estado inicial o tras Cancelar/Escape",
+      "openTrigger": "Clic en AlertDialogTrigger"
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz",
+      "extensibilityTitle": "Extensibilidad",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción"
+      },
+      "rows": {
+        "open": "Controla el estado abierto/cerrado de forma controlada",
+        "defaultOpen": "Estado abierto inicial cuando no controlado",
+        "onOpenChange": "Callback llamado cuando el estado cambia",
+        "asChild": "Renderiza como hijo en lugar del elemento predeterminado",
+        "className": "Clases CSS adicionales aplicadas al elemento"
+      },
+      "extensibility": {
+        "classNameNote": "Todos los subcomponentes aceptan <code>className</code> para sobrescribir o añadir estilos.",
+        "asChildNote": "Usa <code>asChild</code> en <code>AlertDialogTrigger</code> para usar cualquier elemento como disparador."
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "customizationTitle": "Personalización mediante CSS tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase Tailwind",
+        "part": "Dónde se usa"
+      },
+      "rows": {
+        "background": "Fondo del contenido del modal",
+        "border": "Borde del modal",
+        "foreground": "Color del título",
+        "mutedForeground": "Color de la descripción",
+        "primary": "Fondo del botón de confirmación predeterminado",
+        "destructive": "Fondo del botón de confirmación destructivo",
+        "radius": "Radio de esquinas del modal",
+        "ring": "Anillo de foco en los botones"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Sigue WCAG 2.1 AA con <code>role alertdialog</code>, foco gestionado y trampa de foco.",
+      "item1": "Usa <code>role=\"alertdialog\"</code> — se anuncia inmediatamente a los lectores de pantalla al abrirse.",
+      "item2": "El foco se mueve automáticamente al diálogo al abrirse y vuelve al trigger al cerrarse.",
+      "item3": "Trampa de foco activa — Tab navega solo entre los elementos dentro del modal mientras está abierto.",
+      "item4": "La tecla Escape cierra el diálogo (comportamiento nativo de Radix UI).",
+      "item5": "El clic en el overlay no cierra el diálogo — intencional para forzar decisión explícita del usuario.",
+      "keyboardTitle": "Navegación por teclado",
+      "keyboard": {
+        "tab": "Navega entre los botones dentro del modal (trampa de foco activa)",
+        "enter": "Activa el botón enfocado",
+        "space": "Activa el botón enfocado",
+        "escape": "Cierra el diálogo y devuelve el foco al trigger"
+      },
+      "ariaTitle": "Atributos ARIA",
+      "aria": {
+        "role": "<code>role=\"alertdialog\"</code> en AlertDialogContent",
+        "labelledby": "<code>aria-labelledby</code> apunta al AlertDialogTitle",
+        "describedby": "<code>aria-describedby</code> apunta al AlertDialogDescription",
+        "modal": "<code>aria-modal=\"true\"</code> en el contenedor del modal"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "dialog": "Dialog — ventana modal para formularios y contenido sin carácter destructivo",
+      "drawer": "Drawer — panel lateral para acciones o navegación contextual",
+      "sonner": "Sonner — notificaciones no bloqueantes para feedback post-acción",
+      "button": "Button — usado en los botones de acción y cancelación del AlertDialog"
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "No uses <code>AlertDialogAction</code> para acciones no destructivas — prefiere <code>Dialog</code> con un botón primario común.",
+      "tip2": "El overlay del AlertDialog no se cierra al hacer clic, a diferencia del Dialog. Esto es intencional — el usuario debe elegir explícitamente Cancelar o Confirmar."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastrea las interacciones con AlertDialog para comprender los patrones de confirmación y cancelación.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Montaje de la docs page",
+        "pageViewPayload": "{ component, locale }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Sección entra en el viewport",
+        "sectionViewedPayload": "{ section_id, component, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Clic en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }",
+        "open": "alert_dialog_opened",
+        "openTrigger": "AlertDialogTrigger activado",
+        "openPayload": "{ dialog_id, trigger_label }",
+        "confirm": "alert_dialog_confirmed",
+        "confirmTrigger": "AlertDialogAction clicado",
+        "confirmPayload": "{ dialog_id, action_label }",
+        "cancel": "alert_dialog_cancelled",
+        "cancelTrigger": "AlertDialogCancel clicado o Escape",
+        "cancelPayload": "{ dialog_id, method: 'button' | 'escape' }"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Pruebas Funcionales",
+        "description": "Cobertura de interacciones mediante play functions en Storybook.",
+        "item1": { "action": "Hacer clic en el trigger", "result": "Modal se abre con overlay y foco en el primer botón", "priority": "high" },
+        "item2": { "action": "Hacer clic en Cancelar", "result": "Modal se cierra y el foco vuelve al trigger", "priority": "high" },
+        "item3": { "action": "Presionar Escape con modal abierto", "result": "Modal se cierra y el foco vuelve al trigger", "priority": "high" },
+        "item4": { "action": "Presionar Tab dentro del modal", "result": "El foco navega solo entre los botones (trampa de foco)", "priority": "high" },
+        "item5": { "action": "Hacer clic en la acción de confirmación", "result": "Modal se cierra y se llama al callback onConfirm", "priority": "high" },
+        "item6": { "action": "Hacer clic en el overlay", "result": "Modal no se cierra (comportamiento intencional del AlertDialog)", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Pruebas de Accesibilidad",
+        "description": "Criterios axe-playwright verificados automáticamente en todas las stories.",
+        "item1": "role alertdialog presente en el contenedor del modal cuando está abierto",
+        "item2": "aria-labelledby apunta al AlertDialogTitle visible",
+        "item3": "aria-describedby apunta al AlertDialogDescription",
+        "item4": "Trampa de foco activa — Tab no sale del modal mientras está abierto",
+        "item5": "El foco vuelve al elemento trigger tras cerrarse",
+        "item6": "Contraste del texto sobre overlay cumple WCAG 1.4.3 (4.5:1)"
+      },
+      "visual": {
+        "title": "Pruebas Visuales",
+        "description": "Capturas Chromatic para regresión visual en modo claro y oscuro.",
+        "required": "Obligatorio",
+        "item1": { "story": "Playground — estado abierto", "priority": "high" },
+        "item2": { "story": "Acción destructiva — botón rojo", "priority": "high" },
+        "item3": { "story": "Acción neutral — botón primario", "priority": "medium" },
+        "item4": { "story": "Trigger deshabilitado", "priority": "medium" },
+        "item5": { "story": "Mobile — diseño en columna", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Descripción General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "examples": "Ejemplos",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}

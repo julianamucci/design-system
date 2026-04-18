@@ -20,7 +20,7 @@ function scrollTo(id: string) {
 </script>
 
 <template>
-  <nav class="space-y-6">
+  <div class="space-y-6">
     <div v-for="group in groups" :key="group.label">
       <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2">
         {{ group.label }}
@@ -32,6 +32,7 @@ function scrollTo(id: string) {
             :aria-current="activeSection === section.id ? 'location' : undefined"
             :class="[
               'w-full text-left px-2 py-1.5 text-sm rounded-md transition-colors',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
               activeSection === section.id
                 ? 'bg-primary/10 text-primary font-medium'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
@@ -43,5 +44,5 @@ function scrollTo(id: string) {
         </li>
       </ul>
     </div>
-  </nav>
+  </div>
 </template>

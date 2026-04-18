@@ -70,22 +70,6 @@ alert.className = cn(alert.className, 'bg-warning/10 text-warning border-warning
 createAlert({ variant: 'warning', message: 'Atenção' });
 ```
 
-## Tipografia
-
-* **Tamanhos disponíveis**: `--text-h1`, `--text-h2`, `--text-h3`, `--text-h4`, `--text-p`, `--text-label`
-* **Pesos**: `--font-weight-extra-bold` (800), `--font-weight-semi-bold` (600), `--font-weight-medium` (500), `--font-weight-regular` (400)
-* **Elementos HTML** (h1, h2, p, etc.) já têm estilos base aplicados — não sobrescrever com Tailwind
-
-## Famílias de Fonte
-
-* **Fonte Display**: `--font-display` (Gabriela) — títulos decorativos
-* **Fontes Corpo**:
-  - `--font-body-inter` (Inter)
-  - `--font-body-lxgw` (LXGW WenKai TC)
-  - `--font-body-pt-serif` (PT Serif)
-  - `--font-body-lexend` (Lexend)
-* **Aplicação**: `element.style.fontFamily = 'var(--font-token-name)'`
-
 ## Temas
 
 ```css

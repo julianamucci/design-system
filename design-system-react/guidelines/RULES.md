@@ -47,7 +47,7 @@ Regras permanentes:
 - `DialogTitle` e `DialogDescription` obrigatórios em todo Dialog, Sheet, Drawer — são a base do `aria-labelledby`
 - `TableCaption` obrigatório em toda Table (pode ser `sr-only`)
 - `scope="col"` em todo `TableHead`
-- `TooltipProvider` no root da aplicação (App.tsx) — sem ele tooltips não aparecem
+- `TooltipProvider` no root — em Storybook: via `decorator` em `preview.ts`; em App.tsx sandbox: no topo do JSX
 - `aria-invalid` dentro de `FormField`: automático via `FormControl` — não adicionar manualmente. Fora de `FormField`: adicionar manualmente com `aria-errormessage`
 
 Referência completa: `../../docs/shared/guidelines/01-acessibilidade.md`.
@@ -69,8 +69,6 @@ Referência: `02-jsx-caracteres-especiais.md`.
 
 ---
 
----
-
 ## 5. Alinhamento de botões
 
 - Primário sempre à **direita** — usar `justify-end` ou `ml-auto`
@@ -86,7 +84,7 @@ Ao editar qualquer seção de um arquivo existente:
 - Preservar exports, interfaces e props intactos
 - Não modificar código fora do escopo solicitado
 
-Referência: `../../docs/shared/guidelines/03-edicoes-parciais.md`.
+Referência: `14-categoria-showcase.md` (padrões gerais de edição).
 
 ---
 
@@ -107,8 +105,6 @@ Nunca inventar props que não existem. Casos frequentes:
 `CollapsibleTrigger`, `DialogTrigger`, `SheetTrigger`, `AlertDialogTrigger`, `DropdownMenuTrigger`, `PopoverTrigger`, `TooltipTrigger`: sempre com `asChild`.
 
 Referência por categoria: `04-layout-components.md` a `10-overlay-components.md`.
-
----
 
 ---
 

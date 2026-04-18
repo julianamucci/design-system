@@ -41,6 +41,28 @@
 - `collapsible` permite fechar o item aberto — obrigatório em `type="single"` para UX acessível
 - Animações de expand/collapse: `motion-reduce:animate-none` em animações customizadas
 
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
+```svelte
+<script lang="ts">
+  import { track } from '$lib/analytics';
+
+  let currentValue = $state<string | undefined>(undefined);
+
+  function handleValueChange(value: string | undefined) {
+    if (value) {
+      track('accordion_expand', { label: value });
+    } else {
+      track('accordion_collapse', { label: currentValue ?? '' });
+    }
+    currentValue = value;
+  }
+</script>
+
+<Accordion type="single" collapsible bind:value={currentValue} onValueChange={handleValueChange}>
+  <!-- itens -->
+</Accordion>
+```
+
 ---
 
 ## Collapsible

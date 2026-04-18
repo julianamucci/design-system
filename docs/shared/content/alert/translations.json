@@ -1,0 +1,756 @@
+{
+  "pt-BR": {
+    "title": "Alert",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Exibe mensagens de status, avisos e erros do sistema em um contêiner visualmente destacado, com suporte a ícones e dois níveis de variante.",
+    "seo": {
+      "title": "Alert — Feedback · Design System",
+      "description": "Documentação do Alert: 2 variantes (default, destructive), suporte a ícones, acessibilidade WCAG 2.1 AA com role=alert.",
+      "aiSummary": "Componente Alert para exibir mensagens de status, avisos e erros com 2 variantes visuais, suporte a ícones e role=alert para leitores de tela.",
+      "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role=alert",
+      "aiIntent": "informational"
+    },
+    "installation": "Instalação",
+    "demonstration": {
+      "title": "Demonstração Padrão",
+      "labels": {
+        "infoTitle": "Informação",
+        "infoDesc": "Esta ação pode afetar configurações da sua conta.",
+        "warnTitle": "Atenção",
+        "warnDesc": "Sua sessão expira em 5 minutos.",
+        "errorTitle": "Erro",
+        "errorDesc": "Não foi possível salvar as alterações. Tente novamente."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Alert</strong> — contêiner principal (<code>&lt;div role=\"alert\"&gt;</code>). Recebe a prop <code>variant</code> e qualquer atributo HTML de div.",
+      "item2": "<strong>AlertTitle</strong> — título do alerta (<code>&lt;h5&gt;</code>). Opcional, mas recomendado para leitores de tela.",
+      "item3": "<strong>AlertDescription</strong> — corpo de texto do alerta (<code>&lt;div&gt;</code>). Aceita parágrafos e conteúdo rico.",
+      "item4": "<strong>Ícone (opcional)</strong> — qualquer SVG como filho direto de <code>Alert</code>. Posicionado automaticamente à esquerda via CSS.",
+      "structureLabel": "Estrutura de subcomponentes:",
+      "structureCode": "<Alert variant=\"default\">\n  <Icon />           {/* ícone opcional — filho direto */}\n  <AlertTitle />     {/* h5 — opcional mas recomendado */}\n  <AlertDescription />{/* div — corpo do alerta */}\n</Alert>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "📋 Guidelines Obrigatórias",
+        "item1": "Use <code>variant=\"default\"</code> para mensagens informativas e de sucesso.",
+        "item2": "Use <code>variant=\"destructive\"</code> apenas para erros ou situações que requerem ação imediata.",
+        "item3": "Sempre forneça <code>AlertTitle</code> para contexto — leitores de tela anunciam o alerta com o título.",
+        "item4": "Não use Alert para mensagens temporárias (toasts) — use o componente <code>Sonner</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar Alert?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Erro de validação de formulário", "u": "Sim, destructive", "a": "-" },
+        "item2": { "s": "Mensagem de sucesso temporária", "u": "Não", "a": "Sonner (toast)" },
+        "item3": { "s": "Aviso permanente de configuração", "u": "Sim, default", "a": "-" },
+        "item4": { "s": "Confirmação de ação destrutiva", "u": "Não", "a": "AlertDialog" },
+        "item5": { "s": "Status de loading/processamento", "u": "Não", "a": "Skeleton / Spinner" }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O usuário precisa ser informado sobre o estado do sistema",
+        "item2": "Uma ação resultou em erro e o usuário precisa saber o motivo",
+        "item3": "Uma seção da página tem restrições ou condições especiais",
+        "item4": "Um aviso de segurança ou dado sensível precisa de destaque"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A mensagem é temporária — use <code>Sonner</code>",
+        "item2": "A mensagem requer confirmação — use <code>AlertDialog</code>",
+        "item3": "Há muitos alertas na mesma página — revise o fluxo de UX"
+      }
+    },
+    "uxWriting": {
+      "title": "✍️ UX Writing",
+      "table": {
+        "element": "Elemento",
+        "rules": "Regras de formato",
+        "correct": "Correto",
+        "avoid": "Evitar",
+        "title": {
+          "name": "AlertTitle",
+          "format": "Substantivo ou verbo nominal · máx. 5 palavras · sem ponto final",
+          "good": "\"Erro ao salvar\", \"Atenção\"",
+          "bad": "\"Ocorreu um erro inesperado no sistema!\""
+        },
+        "desc": {
+          "name": "AlertDescription",
+          "format": "Frase completa · tom neutro · indica ação quando possível",
+          "good": "\"Verifique sua conexão e tente novamente.\"",
+          "bad": "\"Erro 500\", \"Falha.\""
+        }
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Título claro + descrição com instrução de ação. Ícone reforça o tipo da mensagem.",
+        "dont": "Alerta sem título dificulta a identificação rápida, especialmente para leitores de tela."
+      },
+      "pair2": {
+        "do": "Variante destructive reservada para erros reais que impedem o fluxo.",
+        "dont": "Usar destructive para avisos informativos cria ansiedade desnecessária."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import dos subcomponentes:",
+      "variants": "Com variantes (para compor classes fora do componente):"
+    },
+    "examples": {
+      "title": "Exemplos de Código",
+      "basic": {
+        "title": "Alerta informativo básico",
+        "desc": "Alert default com ícone, título e descrição."
+      },
+      "destructive": {
+        "title": "Alerta de erro (destructive)",
+        "desc": "Usado para erros que impedem o fluxo do usuário."
+      },
+      "iconOnly": {
+        "title": "Sem ícone",
+        "desc": "Alert pode ser usado sem ícone quando o título é suficientemente claro."
+      }
+    },
+    "variants": {
+      "title": "Variantes",
+      "default": {
+        "name": "Default",
+        "desc": "Para mensagens informativas, avisos neutros e confirmações. Fundo neutro com borda padrão."
+      },
+      "destructive": {
+        "name": "Destructive",
+        "desc": "Para erros e falhas que bloqueiam o fluxo. Texto e borda em vermelho de destrutivo."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": { "state": "Estado", "trigger": "Gatilho", "behavior": "Comportamento" },
+      "default": { "label": "Default", "trigger": "variant=\"default\"", "behavior": "Fundo neutro, texto foreground, borda padrão" },
+      "destructive": { "label": "Destructive", "trigger": "variant=\"destructive\"", "behavior": "Texto e ícone em cor destrutiva, borda destructive/50" },
+      "withIcon": { "label": "Com ícone", "trigger": "SVG como filho direto", "behavior": "Ícone posicionado absoluto à esquerda; conteúdo recuado via pl-7" },
+      "withoutTitle": { "label": "Sem título", "trigger": "AlertTitle omitido", "behavior": "Somente AlertDescription exibido; acessibilidade reduzida" }
+    },
+    "props": {
+      "title": "Propriedades",
+      "alert": {
+        "title": "Alert",
+        "cols": { "prop": "Prop", "type": "Tipo", "default": "Padrão", "required": "Obrigatório", "description": "Descrição" },
+        "variant": { "type": "\"default\" | \"destructive\"", "default": "\"default\"", "required": "Não", "description": "Estilo visual do alerta" },
+        "className": { "type": "string", "default": "—", "required": "Não", "description": "Classe CSS adicional para o contêiner" },
+        "children": { "type": "React.ReactNode", "default": "—", "required": "Sim", "description": "Conteúdo do alerta (AlertTitle, AlertDescription, ícone)" }
+      },
+      "alertTitle": {
+        "title": "AlertTitle",
+        "cols": { "prop": "Prop", "type": "Tipo", "default": "Padrão", "required": "Obrigatório", "description": "Descrição" },
+        "className": { "type": "string", "default": "—", "required": "Não", "description": "Classe CSS adicional para o h5" },
+        "children": { "type": "React.ReactNode", "default": "—", "required": "Sim", "description": "Texto do título" }
+      },
+      "alertDesc": {
+        "title": "AlertDescription",
+        "cols": { "prop": "Prop", "type": "Tipo", "default": "Padrão", "required": "Obrigatório", "description": "Descrição" },
+        "className": { "type": "string", "default": "—", "required": "Não", "description": "Classe CSS adicional para o div" },
+        "children": { "type": "React.ReactNode", "default": "—", "required": "Sim", "description": "Corpo do alerta" }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": {
+        "classNameNote": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para sobrescrever estilos Tailwind. Prefira extensão via tokens CSS; use <code>className</code> apenas para ajustes pontuais que não pertencem ao tema."
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "cols": { "token": "CSS Token", "value": "Valor (tema padrão)", "description": "Uso" },
+      "background": { "token": "--background", "value": "oklch(1 0 0)", "description": "Fundo do alerta (variant default)" },
+      "foreground": { "token": "--foreground", "value": "oklch(0.145 0 0)", "description": "Texto e ícone (variant default)" },
+      "destructive": { "token": "--destructive", "value": "oklch(0.577 0.245 27.325)", "description": "Texto, ícone e borda (variant destructive)" },
+      "border": { "token": "--border", "value": "oklch(0.922 0 0)", "description": "Borda (variant default)" },
+      "radius": { "token": "--radius", "value": "0.625rem", "description": "Border radius do contêiner" },
+      "customizationTitle": "Customização via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O componente <code>Alert</code> usa <code>role=\"alert\"</code> nativamente, o que aciona anúncio automático por leitores de tela (ARIA Live Region implícita com <code>aria-live=\"assertive\"</code>). Atende WCAG 2.1 nível AA.",
+      "item1": "<strong>role=\"alert\"</strong> — anúncio automático por assistências tecnológicas quando o alerta é inserido no DOM.",
+      "item2": "<strong>Contraste</strong> — variant destructive atinge ≥ 4.5:1 entre texto e fundo em modo claro e escuro.",
+      "item3": "<strong>Não interativo</strong> — Alert não recebe foco; não requer navegação por teclado específica.",
+      "item4": "<strong>AlertTitle obrigatório</strong> — fornece contexto semântico; leitores de tela anunciam o título como parte do alerta.",
+      "keyboardTitle": "Navegação por Teclado",
+      "keyboard": {
+        "tab": "Não aplicável — Alert é apenas informativo, sem foco próprio.",
+        "screenReader": "O leitor de tela anuncia o conteúdo automaticamente ao inserir o alerta no DOM."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "sonner": { "name": "Sonner (Toast)", "desc": "Para mensagens temporárias que desaparecem automaticamente.", "path": "?path=/docs/ui-sonner--docs" },
+      "alertDialog": { "name": "AlertDialog", "desc": "Para confirmações de ações destrutivas que requerem resposta do usuário.", "path": "?path=/docs/ui-alert-dialog--docs" },
+      "badge": { "name": "Badge", "desc": "Para indicadores de status compactos inline.", "path": "?path=/docs/ui-badge--docs" }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "note1": {
+        "title": "role=\"alert\" aciona leitores de tela imediatamente",
+        "content": "Quando um Alert é inserido dinamicamente no DOM, leitores de tela como VoiceOver e NVDA anunciam o conteúdo imediatamente. Evite renderizar alertas desnecessários para não interromper o fluxo do usuário."
+      },
+      "note2": {
+        "title": "Ícone posicionado via CSS absoluto",
+        "content": "O estilo <code>[&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4</code> posiciona qualquer SVG filho direto. Certifique-se de que o SVG tem tamanho definido (ex: <code>h-4 w-4</code>) para evitar ícones fora de proporção."
+      }
+    },
+    "analytics": {
+      "title": "Analytics",
+      "cols": { "event": "Evento", "trigger": "Gatilho", "payload": "Payload adicional" },
+      "item1": { "event": "docs_page_view", "trigger": "Ao abrir a docs page ou trocar idioma", "payload": "{ component_name, locale, page_title }" },
+      "item2": { "event": "docs_section_viewed", "trigger": "Ao rolar até uma seção (IntersectionObserver)", "payload": "{ section_id, component_name, locale }" },
+      "item3": { "event": "language_switched", "trigger": "Ao trocar idioma via LanguageSwitcher", "payload": "{ previous_language, new_language }" }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "cols": { "action": "Ação", "result": "Resultado esperado", "priority": "Prioridade" },
+        "item1": { "action": "Renderizar Alert default", "result": "Elemento div com role=alert, fundo neutro, borda padrão", "priority": "Alta" },
+        "item2": { "action": "Renderizar Alert destructive", "result": "Texto e borda em cor destructive", "priority": "Alta" },
+        "item3": { "action": "Inserir ícone SVG como filho direto", "result": "Ícone posicionado à esquerda; conteúdo recuado", "priority": "Média" },
+        "item4": { "action": "Renderizar sem AlertTitle", "result": "Apenas AlertDescription visível; sem erro de layout", "priority": "Média" },
+        "item5": { "action": "Aplicar className adicional", "result": "Classe aplicada sem remover as classes padrão", "priority": "Baixa" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "cols": { "criterion": "Critério WCAG", "level": "Nível", "how": "Como verificar" },
+        "item1": { "criterion": "1.4.3 Contraste mínimo", "level": "AA", "how": "axe-core verifica contraste em todas as variantes" },
+        "item2": { "criterion": "4.1.3 Mensagens de status", "level": "AA", "how": "role=alert garante anúncio automático — verificar com VoiceOver/NVDA" },
+        "item3": { "criterion": "1.3.1 Informação e relações", "level": "A", "how": "AlertTitle como h5 fornece hierarquia semântica" }
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "cols": { "story": "Story", "priority": "Prioridade" },
+        "item1": { "story": "Variante default com ícone", "priority": "Alta" },
+        "item2": { "story": "Variante destructive com ícone", "priority": "Alta" },
+        "item3": { "story": "Sem ícone (só texto)", "priority": "Média" },
+        "item4": { "story": "Sem título (só descrição)", "priority": "Média" },
+        "item5": { "story": "Modo escuro — ambas variantes", "priority": "Alta" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "examples": "Exemplos",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes",
+      "common": { "do": "Faça", "dont": "Evite" }
+    }
+  },
+  "en": {
+    "title": "Alert",
+    "category": "Feedback",
+    "type": "Component",
+    "description": "Displays system status messages, warnings, and errors in a visually distinct container with icon support and two variant levels.",
+    "seo": {
+      "title": "Alert — Feedback · Design System",
+      "description": "Alert documentation: 2 variants (default, destructive), icon support, WCAG 2.1 AA accessibility with role=alert.",
+      "aiSummary": "Alert component for status messages, warnings, and errors with 2 visual variants, icon support, and role=alert for screen readers.",
+      "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role=alert",
+      "aiIntent": "informational"
+    },
+    "installation": "Installation",
+    "demonstration": {
+      "title": "Default Demonstration",
+      "labels": {
+        "infoTitle": "Information",
+        "infoDesc": "This action may affect your account settings.",
+        "warnTitle": "Warning",
+        "warnDesc": "Your session expires in 5 minutes.",
+        "errorTitle": "Error",
+        "errorDesc": "Could not save changes. Please try again."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Alert</strong> — root container (<code>&lt;div role=\"alert\"&gt;</code>). Accepts the <code>variant</code> prop and any div HTML attribute.",
+      "item2": "<strong>AlertTitle</strong> — alert title (<code>&lt;h5&gt;</code>). Optional but recommended for screen readers.",
+      "item3": "<strong>AlertDescription</strong> — alert body text (<code>&lt;div&gt;</code>). Accepts paragraphs and rich content.",
+      "item4": "<strong>Icon (optional)</strong> — any SVG as a direct child of <code>Alert</code>. Automatically positioned to the left via CSS.",
+      "structureLabel": "Subcomponent structure:",
+      "structureCode": "<Alert variant=\"default\">\n  <Icon />            {/* optional icon — direct child */}\n  <AlertTitle />      {/* h5 — optional but recommended */}\n  <AlertDescription />{/* div — alert body */}\n</Alert>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "📋 Required Guidelines",
+        "item1": "Use <code>variant=\"default\"</code> for informational messages and success states.",
+        "item2": "Use <code>variant=\"destructive\"</code> only for errors or situations requiring immediate action.",
+        "item3": "Always provide <code>AlertTitle</code> for context — screen readers announce the alert with the title.",
+        "item4": "Don't use Alert for temporary messages (toasts) — use the <code>Sonner</code> component."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": { "scenario": "Scenario", "use": "Use Alert?", "alternative": "Alternative" },
+        "item1": { "s": "Form validation error", "u": "Yes, destructive", "a": "-" },
+        "item2": { "s": "Temporary success message", "u": "No", "a": "Sonner (toast)" },
+        "item3": { "s": "Permanent configuration warning", "u": "Yes, default", "a": "-" },
+        "item4": { "s": "Destructive action confirmation", "u": "No", "a": "AlertDialog" },
+        "item5": { "s": "Loading / processing status", "u": "No", "a": "Skeleton / Spinner" }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The user needs to be informed about system state",
+        "item2": "An action resulted in an error and the user needs to know why",
+        "item3": "A page section has special restrictions or conditions",
+        "item4": "A security notice or sensitive data requires emphasis"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The message is temporary — use <code>Sonner</code>",
+        "item2": "The message requires confirmation — use <code>AlertDialog</code>",
+        "item3": "There are many alerts on the same page — review the UX flow"
+      }
+    },
+    "uxWriting": {
+      "title": "✍️ UX Writing",
+      "table": {
+        "element": "Element",
+        "rules": "Format rules",
+        "correct": "Correct",
+        "avoid": "Avoid",
+        "title": {
+          "name": "AlertTitle",
+          "format": "Noun or nominal verb · max. 5 words · no period",
+          "good": "\"Save error\", \"Warning\"",
+          "bad": "\"An unexpected system error has occurred!\""
+        },
+        "desc": {
+          "name": "AlertDescription",
+          "format": "Full sentence · neutral tone · include action when possible",
+          "good": "\"Check your connection and try again.\"",
+          "bad": "\"Error 500\", \"Failure.\""
+        }
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Clear title + description with action instruction. Icon reinforces the message type.",
+        "dont": "Alert without a title makes quick identification harder, especially for screen readers."
+      },
+      "pair2": {
+        "do": "Destructive variant reserved for real errors that block the flow.",
+        "dont": "Using destructive for informational warnings creates unnecessary anxiety."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Import subcomponents:",
+      "variants": "With variants (to compose classes outside the component):"
+    },
+    "examples": {
+      "title": "Code Examples",
+      "basic": { "title": "Basic informational alert", "desc": "Default Alert with icon, title, and description." },
+      "destructive": { "title": "Error alert (destructive)", "desc": "Used for errors that block the user flow." },
+      "iconOnly": { "title": "Without icon", "desc": "Alert can be used without an icon when the title is clear enough." }
+    },
+    "variants": {
+      "title": "Variants",
+      "default": { "name": "Default", "desc": "For informational messages, neutral warnings, and confirmations. Neutral background with default border." },
+      "destructive": { "name": "Destructive", "desc": "For errors and failures that block the flow. Text and border in destructive red." }
+    },
+    "states": {
+      "title": "States",
+      "cols": { "state": "State", "trigger": "Trigger", "behavior": "Behavior" },
+      "default": { "label": "Default", "trigger": "variant=\"default\"", "behavior": "Neutral background, foreground text, default border" },
+      "destructive": { "label": "Destructive", "trigger": "variant=\"destructive\"", "behavior": "Text and icon in destructive color, destructive/50 border" },
+      "withIcon": { "label": "With icon", "trigger": "SVG as direct child", "behavior": "Icon absolutely positioned left; content indented via pl-7" },
+      "withoutTitle": { "label": "Without title", "trigger": "AlertTitle omitted", "behavior": "Only AlertDescription shown; reduced accessibility" }
+    },
+    "props": {
+      "title": "Properties",
+      "alert": {
+        "title": "Alert",
+        "cols": { "prop": "Prop", "type": "Type", "default": "Default", "required": "Required", "description": "Description" },
+        "variant": { "type": "\"default\" | \"destructive\"", "default": "\"default\"", "required": "No", "description": "Visual style of the alert" },
+        "className": { "type": "string", "default": "—", "required": "No", "description": "Additional CSS class for the container" },
+        "children": { "type": "React.ReactNode", "default": "—", "required": "Yes", "description": "Alert content (AlertTitle, AlertDescription, icon)" }
+      },
+      "alertTitle": {
+        "title": "AlertTitle",
+        "cols": { "prop": "Prop", "type": "Type", "default": "Default", "required": "Required", "description": "Description" },
+        "className": { "type": "string", "default": "—", "required": "No", "description": "Additional CSS class for h5" },
+        "children": { "type": "React.ReactNode", "default": "—", "required": "Yes", "description": "Title text" }
+      },
+      "alertDesc": {
+        "title": "AlertDescription",
+        "cols": { "prop": "Prop", "type": "Type", "default": "Default", "required": "Required", "description": "Description" },
+        "className": { "type": "string", "default": "—", "required": "No", "description": "Additional CSS class for div" },
+        "children": { "type": "React.ReactNode", "default": "—", "required": "Yes", "description": "Alert body content" }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": {
+        "classNameNote": "<code>className</code> — all subcomponents accept <code>className</code> to override Tailwind styles. Prefer extension via CSS tokens; use <code>className</code> only for one-off adjustments."
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "cols": { "token": "CSS Token", "value": "Value (default theme)", "description": "Usage" },
+      "background": { "token": "--background", "value": "oklch(1 0 0)", "description": "Alert background (default variant)" },
+      "foreground": { "token": "--foreground", "value": "oklch(0.145 0 0)", "description": "Text and icon (default variant)" },
+      "destructive": { "token": "--destructive", "value": "oklch(0.577 0.245 27.325)", "description": "Text, icon, and border (destructive variant)" },
+      "border": { "token": "--border", "value": "oklch(0.922 0 0)", "description": "Border (default variant)" },
+      "radius": { "token": "--radius", "value": "0.625rem", "description": "Container border radius" },
+      "customizationTitle": "Theme customization:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "The <code>Alert</code> component uses <code>role=\"alert\"</code> natively, which triggers automatic announcement by screen readers (implicit ARIA Live Region with <code>aria-live=\"assertive\"</code>). Meets WCAG 2.1 level AA.",
+      "item1": "<strong>role=\"alert\"</strong> — automatic announcement by assistive technologies when the alert is inserted into the DOM.",
+      "item2": "<strong>Contrast</strong> — destructive variant achieves ≥ 4.5:1 contrast between text and background in both light and dark modes.",
+      "item3": "<strong>Non-interactive</strong> — Alert does not receive focus; no specific keyboard navigation required.",
+      "item4": "<strong>AlertTitle required</strong> — provides semantic context; screen readers announce the title as part of the alert.",
+      "keyboardTitle": "Keyboard Navigation",
+      "keyboard": {
+        "tab": "Not applicable — Alert is informational only, with no own focus.",
+        "screenReader": "Screen reader announces content automatically when the alert is inserted into the DOM."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "sonner": { "name": "Sonner (Toast)", "desc": "For temporary messages that disappear automatically.", "path": "?path=/docs/ui-sonner--docs" },
+      "alertDialog": { "name": "AlertDialog", "desc": "For destructive action confirmations that require user response.", "path": "?path=/docs/ui-alert-dialog--docs" },
+      "badge": { "name": "Badge", "desc": "For compact inline status indicators.", "path": "?path=/docs/ui-badge--docs" }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "note1": {
+        "title": "role=\"alert\" triggers screen readers immediately",
+        "content": "When an Alert is dynamically inserted into the DOM, screen readers like VoiceOver and NVDA announce the content immediately. Avoid rendering unnecessary alerts to not interrupt the user's flow."
+      },
+      "note2": {
+        "title": "Icon positioned via absolute CSS",
+        "content": "The style <code>[&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4</code> positions any direct child SVG. Ensure the SVG has a defined size (e.g., <code>h-4 w-4</code>) to avoid out-of-proportion icons."
+      }
+    },
+    "analytics": {
+      "title": "Analytics",
+      "cols": { "event": "Event", "trigger": "Trigger", "payload": "Additional payload" },
+      "item1": { "event": "docs_page_view", "trigger": "On docs page open or language switch", "payload": "{ component_name, locale, page_title }" },
+      "item2": { "event": "docs_section_viewed", "trigger": "On scrolling to a section (IntersectionObserver)", "payload": "{ section_id, component_name, locale }" },
+      "item3": { "event": "language_switched", "trigger": "On language switch via LanguageSwitcher", "payload": "{ previous_language, new_language }" }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "cols": { "action": "Action", "result": "Expected result", "priority": "Priority" },
+        "item1": { "action": "Render default Alert", "result": "div with role=alert, neutral background, default border", "priority": "High" },
+        "item2": { "action": "Render destructive Alert", "result": "Text and border in destructive color", "priority": "High" },
+        "item3": { "action": "Insert SVG icon as direct child", "result": "Icon positioned left; content indented", "priority": "Medium" },
+        "item4": { "action": "Render without AlertTitle", "result": "Only AlertDescription visible; no layout error", "priority": "Medium" },
+        "item5": { "action": "Apply additional className", "result": "Class applied without removing default classes", "priority": "Low" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "cols": { "criterion": "WCAG Criterion", "level": "Level", "how": "How to verify" },
+        "item1": { "criterion": "1.4.3 Minimum contrast", "level": "AA", "how": "axe-core checks contrast in all variants" },
+        "item2": { "criterion": "4.1.3 Status messages", "level": "AA", "how": "role=alert ensures automatic announcement — verify with VoiceOver/NVDA" },
+        "item3": { "criterion": "1.3.1 Info and relationships", "level": "A", "how": "AlertTitle as h5 provides semantic hierarchy" }
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "cols": { "story": "Story", "priority": "Priority" },
+        "item1": { "story": "Default variant with icon", "priority": "High" },
+        "item2": { "story": "Destructive variant with icon", "priority": "High" },
+        "item3": { "story": "Without icon (text only)", "priority": "Medium" },
+        "item4": { "story": "Without title (description only)", "priority": "Medium" },
+        "item5": { "story": "Dark mode — both variants", "priority": "High" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "examples": "Examples",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests",
+      "common": { "do": "Do", "dont": "Don't" }
+    }
+  },
+  "es": {
+    "title": "Alert",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Muestra mensajes de estado, advertencias y errores del sistema en un contenedor visualmente destacado con soporte para iconos y dos niveles de variante.",
+    "seo": {
+      "title": "Alert — Feedback · Design System",
+      "description": "Documentación del Alert: 2 variantes (default, destructive), soporte para iconos, accesibilidad WCAG 2.1 AA con role=alert.",
+      "aiSummary": "Componente Alert para mensajes de estado, advertencias y errores con 2 variantes visuales, soporte para iconos y role=alert para lectores de pantalla.",
+      "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role=alert",
+      "aiIntent": "informational"
+    },
+    "installation": "Instalación",
+    "demonstration": {
+      "title": "Demostración Estándar",
+      "labels": {
+        "infoTitle": "Información",
+        "infoDesc": "Esta acción puede afectar la configuración de tu cuenta.",
+        "warnTitle": "Atención",
+        "warnDesc": "Tu sesión expira en 5 minutos.",
+        "errorTitle": "Error",
+        "errorDesc": "No se pudieron guardar los cambios. Inténtalo de nuevo."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Alert</strong> — contenedor raíz (<code>&lt;div role=\"alert\"&gt;</code>). Acepta la prop <code>variant</code> y cualquier atributo HTML de div.",
+      "item2": "<strong>AlertTitle</strong> — título del alerta (<code>&lt;h5&gt;</code>). Opcional pero recomendado para lectores de pantalla.",
+      "item3": "<strong>AlertDescription</strong> — cuerpo de texto del alerta (<code>&lt;div&gt;</code>). Acepta párrafos y contenido enriquecido.",
+      "item4": "<strong>Ícono (opcional)</strong> — cualquier SVG como hijo directo de <code>Alert</code>. Posicionado automáticamente a la izquierda vía CSS.",
+      "structureLabel": "Estructura de subcomponentes:",
+      "structureCode": "<Alert variant=\"default\">\n  <Icon />            {/* icono opcional — hijo directo */}\n  <AlertTitle />      {/* h5 — opcional pero recomendado */}\n  <AlertDescription />{/* div — cuerpo del alerta */}\n</Alert>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "📋 Directrices Obligatorias",
+        "item1": "Usa <code>variant=\"default\"</code> para mensajes informativos y estados de éxito.",
+        "item2": "Usa <code>variant=\"destructive\"</code> solo para errores o situaciones que requieren acción inmediata.",
+        "item3": "Siempre proporciona <code>AlertTitle</code> para contexto — los lectores de pantalla anuncian el alerta con el título.",
+        "item4": "No uses Alert para mensajes temporales (toasts) — usa el componente <code>Sonner</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": { "scenario": "Escenario", "use": "¿Usar Alert?", "alternative": "Alternativa" },
+        "item1": { "s": "Error de validación de formulario", "u": "Sí, destructive", "a": "-" },
+        "item2": { "s": "Mensaje de éxito temporal", "u": "No", "a": "Sonner (toast)" },
+        "item3": { "s": "Advertencia permanente de configuración", "u": "Sí, default", "a": "-" },
+        "item4": { "s": "Confirmación de acción destructiva", "u": "No", "a": "AlertDialog" },
+        "item5": { "s": "Estado de carga / procesamiento", "u": "No", "a": "Skeleton / Spinner" }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "El usuario necesita ser informado sobre el estado del sistema",
+        "item2": "Una acción resultó en un error y el usuario necesita saber el motivo",
+        "item3": "Una sección de la página tiene restricciones o condiciones especiales",
+        "item4": "Un aviso de seguridad o dato sensible necesita destacarse"
+      },
+      "dont": {
+        "title": "No lo uses cuando",
+        "item1": "El mensaje es temporal — usa <code>Sonner</code>",
+        "item2": "El mensaje requiere confirmación — usa <code>AlertDialog</code>",
+        "item3": "Hay muchas alertas en la misma página — revisa el flujo de UX"
+      }
+    },
+    "uxWriting": {
+      "title": "✍️ UX Writing",
+      "table": {
+        "element": "Elemento",
+        "rules": "Reglas de formato",
+        "correct": "Correcto",
+        "avoid": "Evitar",
+        "title": {
+          "name": "AlertTitle",
+          "format": "Sustantivo o verbo nominal · máx. 5 palabras · sin punto final",
+          "good": "\"Error al guardar\", \"Atención\"",
+          "bad": "\"¡Ocurrió un error inesperado en el sistema!\""
+        },
+        "desc": {
+          "name": "AlertDescription",
+          "format": "Frase completa · tono neutro · indica acción cuando es posible",
+          "good": "\"Verifica tu conexión e inténtalo de nuevo.\"",
+          "bad": "\"Error 500\", \"Fallo.\""
+        }
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Título claro + descripción con instrucción de acción. El ícono refuerza el tipo de mensaje.",
+        "dont": "Una alerta sin título dificulta la identificación rápida, especialmente para lectores de pantalla."
+      },
+      "pair2": {
+        "do": "Variante destructive reservada para errores reales que bloquean el flujo.",
+        "dont": "Usar destructive para advertencias informativas genera ansiedad innecesaria."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Importar subcomponentes:",
+      "variants": "Con variantes (para componer clases fuera del componente):"
+    },
+    "examples": {
+      "title": "Ejemplos de Código",
+      "basic": { "title": "Alerta informativa básica", "desc": "Alert default con ícono, título y descripción." },
+      "destructive": { "title": "Alerta de error (destructive)", "desc": "Usado para errores que bloquean el flujo del usuario." },
+      "iconOnly": { "title": "Sin ícono", "desc": "Alert puede usarse sin ícono cuando el título es suficientemente claro." }
+    },
+    "variants": {
+      "title": "Variantes",
+      "default": { "name": "Default", "desc": "Para mensajes informativos, advertencias neutras y confirmaciones. Fondo neutro con borde estándar." },
+      "destructive": { "name": "Destructive", "desc": "Para errores y fallos que bloquean el flujo. Texto y borde en rojo destructivo." }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": { "state": "Estado", "trigger": "Disparador", "behavior": "Comportamiento" },
+      "default": { "label": "Default", "trigger": "variant=\"default\"", "behavior": "Fondo neutro, texto foreground, borde estándar" },
+      "destructive": { "label": "Destructive", "trigger": "variant=\"destructive\"", "behavior": "Texto e ícono en color destructivo, borde destructive/50" },
+      "withIcon": { "label": "Con ícono", "trigger": "SVG como hijo directo", "behavior": "Ícono posicionado a la izquierda; contenido sangrado vía pl-7" },
+      "withoutTitle": { "label": "Sin título", "trigger": "AlertTitle omitido", "behavior": "Solo AlertDescription visible; accesibilidad reducida" }
+    },
+    "props": {
+      "title": "Propiedades",
+      "alert": {
+        "title": "Alert",
+        "cols": { "prop": "Prop", "type": "Tipo", "default": "Valor por defecto", "required": "Obligatorio", "description": "Descripción" },
+        "variant": { "type": "\"default\" | \"destructive\"", "default": "\"default\"", "required": "No", "description": "Estilo visual del alerta" },
+        "className": { "type": "string", "default": "—", "required": "No", "description": "Clase CSS adicional para el contenedor" },
+        "children": { "type": "React.ReactNode", "default": "—", "required": "Sí", "description": "Contenido del alerta (AlertTitle, AlertDescription, ícono)" }
+      },
+      "alertTitle": {
+        "title": "AlertTitle",
+        "cols": { "prop": "Prop", "type": "Tipo", "default": "Valor por defecto", "required": "Obligatorio", "description": "Descripción" },
+        "className": { "type": "string", "default": "—", "required": "No", "description": "Clase CSS adicional para el h5" },
+        "children": { "type": "React.ReactNode", "default": "—", "required": "Sí", "description": "Texto del título" }
+      },
+      "alertDesc": {
+        "title": "AlertDescription",
+        "cols": { "prop": "Prop", "type": "Tipo", "default": "Valor por defecto", "required": "Obligatorio", "description": "Descripción" },
+        "className": { "type": "string", "default": "—", "required": "No", "description": "Clase CSS adicional para el div" },
+        "children": { "type": "React.ReactNode", "default": "—", "required": "Sí", "description": "Contenido del cuerpo del alerta" }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": {
+        "classNameNote": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para sobrescribir estilos Tailwind. Prefiere la extensión vía tokens CSS; usa <code>className</code> solo para ajustes puntuales."
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "cols": { "token": "CSS Token", "value": "Valor (tema por defecto)", "description": "Uso" },
+      "background": { "token": "--background", "value": "oklch(1 0 0)", "description": "Fondo del alerta (variante default)" },
+      "foreground": { "token": "--foreground", "value": "oklch(0.145 0 0)", "description": "Texto e ícono (variante default)" },
+      "destructive": { "token": "--destructive", "value": "oklch(0.577 0.245 27.325)", "description": "Texto, ícono y borde (variante destructive)" },
+      "border": { "token": "--border", "value": "oklch(0.922 0 0)", "description": "Borde (variante default)" },
+      "radius": { "token": "--radius", "value": "0.625rem", "description": "Border radius del contenedor" },
+      "customizationTitle": "Personalización vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El componente <code>Alert</code> usa <code>role=\"alert\"</code> de forma nativa, lo que activa el anuncio automático por lectores de pantalla (ARIA Live Region implícita con <code>aria-live=\"assertive\"</code>). Cumple WCAG 2.1 nivel AA.",
+      "item1": "<strong>role=\"alert\"</strong> — anuncio automático por tecnologías asistivas al insertar el alerta en el DOM.",
+      "item2": "<strong>Contraste</strong> — la variante destructive logra ≥ 4.5:1 entre texto y fondo en modo claro y oscuro.",
+      "item3": "<strong>No interactivo</strong> — Alert no recibe foco; no requiere navegación por teclado específica.",
+      "item4": "<strong>AlertTitle obligatorio</strong> — proporciona contexto semántico; los lectores de pantalla anuncian el título como parte del alerta.",
+      "keyboardTitle": "Navegación por Teclado",
+      "keyboard": {
+        "tab": "No aplica — Alert es solo informativo, sin foco propio.",
+        "screenReader": "El lector de pantalla anuncia el contenido automáticamente al insertar el alerta en el DOM."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "sonner": { "name": "Sonner (Toast)", "desc": "Para mensajes temporales que desaparecen automáticamente.", "path": "?path=/docs/ui-sonner--docs" },
+      "alertDialog": { "name": "AlertDialog", "desc": "Para confirmaciones de acciones destructivas que requieren respuesta del usuario.", "path": "?path=/docs/ui-alert-dialog--docs" },
+      "badge": { "name": "Badge", "desc": "Para indicadores de estado compactos en línea.", "path": "?path=/docs/ui-badge--docs" }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "note1": {
+        "title": "role=\"alert\" activa lectores de pantalla de inmediato",
+        "content": "Cuando un Alert se inserta dinámicamente en el DOM, lectores de pantalla como VoiceOver y NVDA anuncian el contenido inmediatamente. Evita renderizar alertas innecesarias para no interrumpir el flujo del usuario."
+      },
+      "note2": {
+        "title": "Ícono posicionado vía CSS absoluto",
+        "content": "El estilo <code>[&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4</code> posiciona cualquier SVG hijo directo. Asegúrate de que el SVG tiene un tamaño definido (ej: <code>h-4 w-4</code>) para evitar íconos fuera de proporción."
+      }
+    },
+    "analytics": {
+      "title": "Analytics",
+      "cols": { "event": "Evento", "trigger": "Disparador", "payload": "Payload adicional" },
+      "item1": { "event": "docs_page_view", "trigger": "Al abrir la docs page o cambiar idioma", "payload": "{ component_name, locale, page_title }" },
+      "item2": { "event": "docs_section_viewed", "trigger": "Al hacer scroll hasta una sección (IntersectionObserver)", "payload": "{ section_id, component_name, locale }" },
+      "item3": { "event": "language_switched", "trigger": "Al cambiar idioma vía LanguageSwitcher", "payload": "{ previous_language, new_language }" }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "cols": { "action": "Acción", "result": "Resultado esperado", "priority": "Prioridad" },
+        "item1": { "action": "Renderizar Alert default", "result": "div con role=alert, fondo neutro, borde estándar", "priority": "Alta" },
+        "item2": { "action": "Renderizar Alert destructive", "result": "Texto y borde en color destructivo", "priority": "Alta" },
+        "item3": { "action": "Insertar SVG como hijo directo", "result": "Ícono posicionado a la izquierda; contenido sangrado", "priority": "Media" },
+        "item4": { "action": "Renderizar sin AlertTitle", "result": "Solo AlertDescription visible; sin error de layout", "priority": "Media" },
+        "item5": { "action": "Aplicar className adicional", "result": "Clase aplicada sin eliminar las clases por defecto", "priority": "Baja" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "cols": { "criterion": "Criterio WCAG", "level": "Nivel", "how": "Cómo verificar" },
+        "item1": { "criterion": "1.4.3 Contraste mínimo", "level": "AA", "how": "axe-core verifica contraste en todas las variantes" },
+        "item2": { "criterion": "4.1.3 Mensajes de estado", "level": "AA", "how": "role=alert garantiza anuncio automático — verificar con VoiceOver/NVDA" },
+        "item3": { "criterion": "1.3.1 Información y relaciones", "level": "A", "how": "AlertTitle como h5 proporciona jerarquía semántica" }
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "cols": { "story": "Story", "priority": "Prioridad" },
+        "item1": { "story": "Variante default con ícono", "priority": "Alta" },
+        "item2": { "story": "Variante destructive con ícono", "priority": "Alta" },
+        "item3": { "story": "Sin ícono (solo texto)", "priority": "Media" },
+        "item4": { "story": "Sin título (solo descripción)", "priority": "Media" },
+        "item5": { "story": "Modo oscuro — ambas variantes", "priority": "Alta" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "examples": "Ejemplos",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas",
+      "common": { "do": "Haz", "dont": "Evita" }
+    }
+  }
+}

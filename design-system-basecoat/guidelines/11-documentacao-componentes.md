@@ -1,330 +1,504 @@
-# Estrutura Padronizada de Documentação de Componentes (Basecoat)
+# Documentação de Componentes Basecoat (Vanilla TS) — Regras Obrigatórias
 
-## Visão Geral
+## Princípio Fundamental: Use os Section Containers
 
-A documentação é composta de duas partes:
+Todas as docs pages Basecoat **DEVEM usar as factory functions** em `src/components/docs/shared/sections/`. Cada seção é uma função `createDocsXxx(props): HTMLElement` que encapsula o layout, o wrapper card, os headings, os grids e a semântica. A docs page é apenas o **orquestrador** — constrói o DOM chamando essas factories e passando dados + **factory functions de preview**.
 
-1. **ComponentDocs** — função TypeScript que retorna `HTMLElement` com a documentação visual.
-2. **Stories** — arquivos `@storybook/html` que expõem o componente.
+```ts
+import { createDocsHeader }        from '@/components/docs/shared/sections/DocsHeader';
+import { createDocsDemonstration } from '@/components/docs/shared/sections/DocsDemonstration';
+import { createDocsAnatomy }       from '@/components/docs/shared/sections/DocsAnatomy';
+import { createDocsWhenToUse }     from '@/components/docs/shared/sections/DocsWhenToUse';
+import { createDocsDoDont }        from '@/components/docs/shared/sections/DocsDoDont';
+import { createDocsImport }        from '@/components/docs/shared/sections/DocsImport';
+import { createDocsExamples }      from '@/components/docs/shared/sections/DocsExamples';
+import { createDocsVariants }      from '@/components/docs/shared/sections/DocsVariants';
+import { createDocsStates }        from '@/components/docs/shared/sections/DocsStates';
+import { createDocsProps }         from '@/components/docs/shared/sections/DocsProps';
+import { createDocsTokens }        from '@/components/docs/shared/sections/DocsTokens';
+import { createDocsAccessibility } from '@/components/docs/shared/sections/DocsAccessibility';
+import { createDocsRelated }       from '@/components/docs/shared/sections/DocsRelated';
+import { createDocsNotes }         from '@/components/docs/shared/sections/DocsNotes';
+import { createDocsAnalytics }     from '@/components/docs/shared/sections/DocsAnalytics';
+import { createDocsTestes }        from '@/components/docs/shared/sections/DocsTestes';
+```
 
-**Referência**: `STORYBOOK-ARCHITECTURE.md`
+**NUNCA** reimplemente inline o HTML de uma seção. Se precisar de um layout novo, estenda o container correspondente — não duplique no consumo.
 
 ---
 
-## Parte 1 — ComponentDocs (arquivo TypeScript)
+## Regras Basecoat-Específicas
 
-### Arquivo e exportação
+### Factory functions de preview
 
-```
-src/components/docs/NomeComponenteDocs.ts
-```
+Em Basecoat não há slots/snippets. Previews são passados como **factory functions** `() => HTMLElement`:
 
 ```ts
-import { applyStorybookSeo } from '@/lib/use-seo';
+{
+  doPreviewFactory: () => {
+    const alert = createAlert({ variant: 'default' });
+    alert.innerHTML = `<h5>Título claro</h5>`;
+    return alert;
+  },
+}
+```
 
-export function createNomeComponenteDocs(): HTMLElement {
-  applyStorybookSeo({
-    title: 'NomeComponente — Categoria · Design System',
-    description: 'Documentação do NomeComponente: [N] variantes, estados interativos e exemplos.',
-    locale: 'pt-BR',
-    componentSlug: 'nome-componente',
-  });
+O container chama a factory e adiciona o resultado ao DOM no local correto. Sempre retorne um **novo elemento** em cada chamada — evite reutilizar referências.
 
+### Bridge para Docs Tab
+
+`parameters.docs.page` do Storybook espera React. O `withAutoDocsTab` em `src/lib/` monta a docs page (função `createAlertDocs(): HTMLElement`) num container React para renderizar no Docs tab.
+
+```ts
+parameters: {
+  docs: { page: withAutoDocsTab(createAlertDocs) },
+},
+```
+
+### i18n reativo
+
+Basecoat não tem reatividade automática. A docs page:
+1. Lê o locale inicial de `getCurrentLocale()`
+2. Renderiza tudo com `translations[locale]`
+3. Registra listener no locale store para re-renderizar o root quando mudar
+4. Ao re-renderizar, chama `applySeo()` e `track('docs_page_view')` novamente
+
+### Analytics
+
+- `track('docs_page_view', {...})` no início da função + ao trocar locale
+- `IntersectionObserver` registrado para disparar `track('docs_section_viewed', {...})` por seção
+
+---
+
+## Estrutura Obrigatória da Docs Page
+
+```ts
+import { applySeo } from '@/lib/use-seo';
+import { track } from '@/lib/analytics';
+import { getCurrentLocale, subscribeLocale } from '@/lib/i18n';
+import { sanitizeHtml } from '@/lib/sanitize-html';
+import uiTranslations from '@/i18n/ui.json';
+import componentTranslations from '../../../docs/shared/content/<slug>/translations.json';
+// imports dos containers (listados acima)
+import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
+import { createDocsNav } from '@/components/docs/shared/DocsNav';
+
+export function createAlertDocs(): HTMLElement {
   const root = document.createElement('div');
-  root.className = 'p-8 max-w-5xl mx-auto';
+  root.className = 'ds-docs p-8 max-w-5xl mx-auto';
 
-  root.appendChild(createHeader());
-  root.appendChild(createContent());
+  function render() {
+    const locale = getCurrentLocale() as 'pt-BR' | 'en' | 'es';
+    const tContent = (key: string) => /* lookup em componentTranslations[locale] */;
+    const tNav = (key: string) => /* lookup em uiTranslations[locale] */;
 
+    // SEO + analytics reativos ao locale
+    applySeo({
+      title: tContent('seo.title'),
+      description: tContent('seo.description'),
+      locale,
+      componentSlug: '<slug>',
+    });
+    track('docs_page_view', {
+      component_name: '<slug>',
+      locale,
+      page_title: `${tContent('title')} · Design System`,
+    });
+
+    // Reset do DOM
+    root.innerHTML = '';
+
+    // Header (fora do nav)
+    root.appendChild(createDocsHeader({
+      title: tContent('title'),
+      description: tContent('description'),
+      category: tContent('category'),
+      type: tContent('type'),
+      installNote: 'npx shadcn@latest add <slug>',
+    }));
+
+    // Container de duas colunas
+    const layout = document.createElement('div');
+    layout.className = 'flex gap-16 items-start';
+
+    // Nav sticky
+    const nav = document.createElement('nav');
+    nav.setAttribute('aria-label', 'Navegação das seções do componente');
+    nav.className = 'sticky top-8 w-52 shrink-0 self-start space-y-5';
+
+    const navGroups = [
+      { label: tNav('nav.overview'), sections: [
+        { id: 'demonstracao', label: tNav('nav.demonstration') },
+        { id: 'anatomia',     label: tNav('nav.anatomy') },
+        { id: 'quando-usar',  label: tNav('nav.usage') },
+        { id: 'do-dont',      label: tNav('nav.doDont') },
+      ]},
+      { label: tNav('nav.techRef'), sections: [
+        { id: 'importacao',   label: tNav('nav.import') },
+        { id: 'exemplos',     label: tNav('nav.examples') },
+        { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'estados',      label: tNav('nav.states') },
+        { id: 'propriedades', label: tNav('nav.props') },
+        { id: 'tokens',       label: tNav('nav.tokens') },
+      ]},
+      { label: tNav('nav.context'), sections: [
+        { id: 'acessibilidade', label: tNav('nav.accessibility') },
+        { id: 'relacionados',   label: tNav('nav.related') },
+        { id: 'notas',          label: tNav('nav.notes') },
+      ]},
+      { label: tNav('nav.quality'), sections: [
+        { id: 'analytics', label: tNav('nav.analytics') },
+        { id: 'testes',    label: tNav('nav.testes') },
+      ]},
+    ];
+    const docsNav = createDocsNav({ groups: navGroups });
+    nav.appendChild(docsNav.element);
+    layout.appendChild(nav);
+
+    // Conteúdo principal
+    const content = document.createElement('div');
+    content.className = 'ds-docs flex-1 min-w-0 space-y-12';
+
+    content.appendChild(createDocsDemonstration({
+      title: tContent('demonstration.title'),
+      demoFactory: () => {
+        // Retornar o componente real de @/components/ui/<slug>
+        const alert = createAlert({ variant: 'default' });
+        return alert;
+      },
+    }));
+
+    // demais containers...
+
+    layout.appendChild(content);
+    root.appendChild(layout);
+
+    // IntersectionObserver para active section + analytics
+    const ids = navGroups.flatMap(g => g.sections.map(s => s.id));
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) if (entry.isIntersecting) {
+        docsNav.setActiveSection(entry.target.id);
+        track('docs_section_viewed', { section_id: entry.target.id, component_name: '<slug>', locale });
+        break;
+      }
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+    ids.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+  }
+
+  render();
+  const unsubscribe = subscribeLocale(() => render());
+
+  // Cleanup ao remover do DOM (via MutationObserver ou Storybook teardown)
   return root;
 }
-
-function createHeader(): HTMLElement {
-  const header = document.createElement('header');
-  header.className = 'ds-docs mb-12 border-b pb-8 border-border/50';
-
-  // Badges
-  const badges = document.createElement('div');
-  badges.className = 'flex items-center gap-2 mb-4';
-  // ... adicionar badge de categoria e tipo
-
-  // Título
-  const h1 = document.createElement('h1');
-  h1.className = 'text-4xl font-bold tracking-tight text-foreground';
-  h1.textContent = 'NomeComponente';
-
-  // Descrição
-  const desc = document.createElement('p');
-  desc.className = 'text-muted-foreground max-w-3xl';
-  desc.textContent = 'Descrição do componente.';
-
-  header.append(badges, h1, desc);
-  return header;
-}
 ```
 
-### SEO — `applyStorybookSeo` obrigatório
-
-Todo ComponentDocs **deve** chamar `applyStorybookSeo` de `@/lib/use-seo.ts`. Ele detecta o iframe do Storybook e escreve metatags no documento pai automaticamente.
-
-> Ver `../../docs/shared/guidelines/06-seo-geo.md`.
+**Regras do layout:**
+- `<nav>` com `sticky top-8 w-52 shrink-0 self-start` é obrigatório — sem ele, `DocsNav` rola junto com a página
+- `aria-label` no `<nav>` diferencia a navegação de outras `<nav>`
+- `flex-1 min-w-0` no conteúdo permite overflow responsivo
+- `.ds-docs` aplica resets tipográficos específicos da doc
 
 ---
 
-## As 14 Seções
+## Seções — Uso dos Containers
 
-Cada seção é uma função que retorna `HTMLElement`:
-
-```ts
-function createSection(id: string, title: string, content: HTMLElement): HTMLElement {
-  const section = document.createElement('section');
-  section.id = id;
-
-  const h2 = document.createElement('h2');
-  h2.className = 'text-xl font-semibold mb-4';
-  h2.textContent = title;
-
-  section.append(h2, content);
-  return section;
-}
-
-// Seção 2 — Demonstração
-function createDemoSection(): HTMLElement {
-  const demo = document.createElement('div');
-  demo.className = 'rounded-md border border-border p-6';
-  demo.appendChild(createButton({ label: 'Exemplo', variant: 'default' }));
-  return createSection('demonstracao', 'Demonstração Padrão', demo);
-}
-```
-
-**Seções obrigatórias** (mesmas 14 do padrão React):
-1. Header (Hero)
-2. Demonstração Padrão
-3. Anatomia
-4. Quando e Como Usar (tabela de cenários + UX Writing)
-5. Do & Don't
-6. Importação
-7. Exemplos de Código
-8. Variantes e Tamanhos
-9. Estados
-10. Propriedades / Opções
-11. Design Tokens
-12. Acessibilidade
-13. Componentes Relacionados
-14. Notas e Dicas
-(15. Critérios de Teste)
-
----
-
-## Parte 2 — Stories (`@storybook/html`)
-
-### Estrutura de arquivos
-
-```
-src/components/ui/
-  ├── nome-componente.ts                      (função createNomeComponente)
-  ├── nome-componente.stories.ts              (meta + Playground)
-  ├── nome-componente-variantes.stories.ts
-  ├── nome-componente-tamanhos.stories.ts
-  ├── nome-componente-composicoes.stories.ts
-  └── nome-componente-estados.stories.ts
-```
-
-### Arquivo Principal
+### 1. Header (fora do `<nav>`)
 
 ```ts
-import type { Meta, StoryObj } from '@storybook/html';
-import { fn, userEvent, within, expect } from '@storybook/test';
-import { createNomeComponente, type NomeComponenteOptions } from './nome-componente';
-import { createNomeComponenteDocs } from '../../components/docs/NomeComponenteDocs';
-import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+root.appendChild(createDocsHeader({
+  title: tContent('title'),
+  description: tContent('description'),
+  category: tContent('category'),
+  type: tContent('type'),
+  installNote: 'npx shadcn@latest add <slug>',
+}));
+```
 
-type Args = NomeComponenteOptions;
+### 2. Demonstração (`id="demonstracao"`)
 
-const meta: Meta<Args> = {
-  title: 'UI/NomeComponente',
-  tags: ['autodocs'],
-  parameters: {
-    docs: { page: withAutoDocsTab(createNomeComponenteDocs) },
+Passe `demoFactory` retornando o componente real de `@/components/ui/<slug>`.
+
+```ts
+content.appendChild(createDocsDemonstration({
+  title: tContent('demonstration.title'),
+  demoFactory: () => {
+    const alert = createAlert({ variant: 'default' });
+    alert.innerHTML = `
+      <h5 class="mb-1 font-medium leading-none tracking-tight">${tContent('demonstration.exampleTitle')}</h5>
+      <div class="text-sm [&_p]:leading-relaxed">${tContent('demonstration.exampleDescription')}</div>
+    `;
+    return alert;
   },
-  argTypes: {
-    variant: {
-      control: 'select',
-      options: ['default', 'outline', 'ghost'],
-      description: 'Estilo visual do componente',
+}));
+```
+
+### 3. Anatomia (`id="anatomia"`)
+
+```ts
+content.appendChild(createDocsAnatomy({
+  title: tContent('anatomy.title'),
+  items: [tContent('anatomy.item1'), tContent('anatomy.item2'), tContent('anatomy.item3')],
+  structureCode: tContent('anatomy.structureCode'),
+}));
+```
+
+`items` aceita HTML inline — o container sanitiza.
+
+### 4. Quando Usar (`id="quando-usar"`)
+
+```ts
+content.appendChild(createDocsWhenToUse({
+  title: tContent('usage.title'),
+  guidelines: { title: tContent('usage.guidelines.title'), items: [1,2,3,4].map(i => tContent(`usage.guidelines.item${i}`)) },
+  scenarios: { title: tContent('usage.scenarios.title'), cols: {...}, items: [...] },
+  uxWriting: { title: ..., cols: {...}, items: [...] },
+  do: { title: tContent('usage.do.title'), items: [...] },
+  dont: { title: tContent('usage.dont.title'), items: [...] },
+}));
+```
+
+### 5. Do & Don't (`id="do-dont"`) — CRÍTICO
+
+`createDocsDoDont` emite **um grid por par** (previne bug DO|DO vs DON'T|DON'T). Use `doPreviewFactory` e `dontPreviewFactory` por par.
+
+```ts
+content.appendChild(createDocsDoDont({
+  title: tContent('doDont.title'),
+  pairs: [
+    {
+      doLabel: tNav('common.do'),
+      dontLabel: tNav('common.dont'),
+      doCaption: tContent('doDont.pair1.do'),
+      dontCaption: tContent('doDont.pair1.dont'),
+      doPreviewFactory: () => {
+        const el = createAlert({ variant: 'default' });
+        el.innerHTML = `<h5>Título claro</h5>`;
+        return el;
+      },
+      dontPreviewFactory: () => {
+        const el = createAlert({ variant: 'destructive' });
+        el.innerHTML = `<h5>Erro</h5>`;
+        return el;
+      },
     },
-    label: {
-      control: 'text',
-      description: 'Texto exibido no componente',
-    },
-  },
-  args: {
-    label: 'Botão',
-    variant: 'default',
-  },
-  render: (args) => {
-    return createNomeComponente(args);
-  },
-};
-
-export default meta;
-type Story = StoryObj<Args>;
-
-export const Playground: Story = {
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const element = canvas.getByRole('button');
-
-    await step('Elemento está acessível', async () => {
-      await expect(element).toBeInTheDocument();
-      await expect(element).toBeEnabled();
-    });
-
-    await step('Recebe foco via teclado', async () => {
-      element.focus();
-      await expect(element).toHaveFocus();
-    });
-  },
-};
+    { /* pair 2 */ },
+  ],
+}));
 ```
 
-### Variantes
+**NUNCA** itere pares em um grid único no consumidor — deixe o container fazer isso.
+
+### 6. Importação (`id="importacao"`)
 
 ```ts
-import type { Meta, StoryObj } from '@storybook/html';
-import { createNomeComponente, type NomeComponenteOptions } from './nome-componente';
+content.appendChild(createDocsImport({
+  title: tContent('import.title'),
+  description: tContent('import.description'),
+  code: `import { createAlert } from '@/components/ui/alert';`,
+}));
+```
 
-const meta: Meta<NomeComponenteOptions> = {
-  title: 'UI/NomeComponente/Variantes',
-  render: (args) => createNomeComponente(args),
-  args: { label: 'Exemplo' },
-};
+### 7. Exemplos (`id="exemplos"`)
 
-export default meta;
-type Story = StoryObj<NomeComponenteOptions>;
+```ts
+content.appendChild(createDocsExamples({
+  title: tContent('examples.title'),
+  items: [
+    {
+      title: tContent('examples.item1.title'),
+      code: `createAlert({ variant: 'default' })`,
+      previewFactory: () => createAlert({ variant: 'default' }),
+    },
+    {
+      title: tContent('examples.item2.title'),
+      code: `createAlert({ variant: 'destructive' })`,
+      previewFactory: () => createAlert({ variant: 'destructive' }),
+    },
+  ],
+}));
+```
 
-export const Default: Story = {
-  args: { variant: 'default' },
-  parameters: { docs: { description: { story: 'Variante padrão para ações primárias.' } } },
-};
+### 8. Variantes (`id="variantes"`)
+
+```ts
+content.appendChild(createDocsVariants({
+  title: tContent('variants.title'),
+  items: [
+    { name: 'default', description: tContent('variants.default'), previewFactory: () => createAlert({ variant: 'default' }) },
+    { name: 'destructive', description: tContent('variants.destructive'), previewFactory: () => createAlert({ variant: 'destructive' }) },
+  ],
+}));
+```
+
+### 9. Estados (`id="estados"`)
+
+O container já aplica `font-medium` na primeira coluna — não passe classes de badge.
+
+```ts
+content.appendChild(createDocsStates({
+  title: tContent('states.title'),
+  cols: { state: 'Estado', trigger: 'Gatilho', behavior: 'Comportamento' },
+  items: [
+    { label: 'Default', trigger: 'Inicial', behavior: 'Exibe título e descrição' },
+    { label: 'Destructive', trigger: `variant='destructive'`, behavior: 'Aplica cor de erro' },
+  ],
+}));
+```
+
+### 10. Propriedades (`id="propriedades"`)
+
+`tables` é array — um table por subcomponente.
+
+```ts
+content.appendChild(createDocsProps({
+  title: tContent('props.title'),
+  tables: [
+    {
+      title: 'createAlert (options)',
+      cols: { prop: 'Prop', type: 'Tipo', default: 'Padrão', required: 'Obrig.', description: 'Descrição' },
+      items: [
+        { name: 'variant', type: `'default' | 'destructive'`, defaultValue: `'default'`, required: 'Não', description: '...' },
+      ],
+    },
+  ],
+  interfaceCode: `interface AlertOptions { variant?: 'default' | 'destructive' }`,
+  extensibilityTitle: tContent('props.extensibilityTitle'),
+  extensibilityNotes: tContent('props.extensibilityNotes'),
+}));
+```
+
+### 11. Tokens (`id="tokens"`)
+
+```ts
+content.appendChild(createDocsTokens({
+  title: tContent('tokens.title'),
+  cols: { token: 'Token', value: 'Valor', description: 'Uso' },
+  items: [
+    { token: '--background', value: 'hsl(...)', description: 'Fundo padrão' },
+    { token: '--destructive', value: 'hsl(...)', description: 'Fundo destructive' },
+  ],
+  customizationTitle: tContent('tokens.customizationTitle'),
+  customizationCode: tContent('tokens.customizationCode'),
+}));
+```
+
+### 12. Acessibilidade (`id="acessibilidade"`)
+
+```ts
+content.appendChild(createDocsAccessibility({
+  title: tContent('accessibility.title'),
+  summary: tContent('accessibility.summary'),
+  items: [tContent('accessibility.item1'), tContent('accessibility.item2')],
+  keyboardTitle: tContent('accessibility.keyboardTitle'),
+  keyboardItems: [{ key: 'Tab', description: '...' }],
+}));
+```
+
+### 13. Relacionados (`id="relacionados"`)
+
+```ts
+content.appendChild(createDocsRelated({
+  title: tContent('related.title'),
+  items: [
+    { name: 'Alert Dialog', description: tContent('related.alertDialog'), path: '?path=/docs/ui-alertdialog--docs' },
+  ],
+}));
+```
+
+### 14. Notas (`id="notas"`)
+
+```ts
+content.appendChild(createDocsNotes({
+  title: tContent('notes.title'),
+  items: [{ title: tContent('notes.item1.title'), content: tContent('notes.item1.content') }],
+}));
+```
+
+### 15. Analytics (`id="analytics"`)
+
+```ts
+content.appendChild(createDocsAnalytics({
+  title: tContent('analytics.title'),
+  cols: { event: 'Evento', trigger: 'Gatilho', payload: 'Payload' },
+  items: [
+    { event: 'docs_page_view', trigger: 'Ao carregar', payload: '{ component_name, locale }' },
+  ],
+}));
+```
+
+### 16. Testes (`id="testes"`)
+
+```ts
+content.appendChild(createDocsTestes({
+  title: tContent('testes.title'),
+  functional: { title: ..., cols: {...}, items: [...] },
+  accessibility: { title: ..., cols: {...}, items: [...] },
+  visual: { title: ..., cols: {...}, items: [...] },
+}));
 ```
 
 ---
 
-### Componentes Provider + API imperativa (Sonner)
+## Padrões Especiais por Componente
 
-Componentes como Sonner expõem duas superfícies: um **provider** e uma **função imperativa** (`toast()`). No Basecoat, como o pacote `sonner` não existe para vanilla TS, a stack usa uma **implementação própria** em `toast-utils.ts`.
+### Componentes com Provider (Sonner)
 
-**Diferenças da implementação vanilla:**
+Use 2 tables em `DocsProps` — uma para mount options (`createToaster()`), outra para API imperativa (`toast()`).
 
-1. `toast-utils.ts` — utilitário DOM puro que replica a API do Sonner: `toast()`, `toast.success()`, `toast.error()`, `toast.promise()`, `toast.dismiss()`.
-2. Toasts são criados via `document.createElement` com classes Tailwind equivalentes às do Sonner original.
-3. Container usa `role="region"` + `aria-label="Notifications"`. Cada toast usa `role="status"` + `aria-live="polite"`.
-4. `injectToastStyles()` adiciona a animação CSS do spinner de loading.
+### Componentes Compostos (Table, Accordion, AlertDialog)
 
-**Adaptações nas docs pages e stories** (mesmas que React):
+N tables em `DocsProps`, uma por subcomponente ou factory function.
 
-1. **"Variantes" → "Tipos de Toast"** — 6 tipos via API, não via `cva()`.
-2. **"Propriedades"** — duas tabelas: Toaster provider + toast() options.
-3. **"Importação"** — duas seções (provider + função).
-4. **"Demonstração"** — botões interativos. Evento `toast_demo_triggered`.
-5. **"Anatomia"** — 7 items.
+### HTML de conteúdo
 
-**Estrutura de stories:**
+Sempre use `sanitizeHtml()` antes de atribuir a `innerHTML`:
 
+```ts
+el.innerHTML = sanitizeHtml(tContent('anatomy.item1'));
 ```
-src/components/ui/
-  ├── toast-utils.ts                            (implementação vanilla)
-  ├── sonner.stories.ts                         (meta + Playground)
-  ├── sonner-tipos.stories.ts                   (6 tipos)
-  ├── sonner-posicoes.stories.ts                (6 posições)
-  ├── sonner-composicoes.stories.ts             (com ação, descrição, promise, rich colors)
-  └── sonner-estados.stories.ts                 (expandido, dismiss, close button, duração)
-```
+
+Containers já fazem isso para os props de texto que aceitam HTML. No consumidor, só sanitize quando montar `innerHTML` diretamente em factories.
+
+### Alert e componentes não-interativos
+
+- Stories sem handlers de clique
+- Play functions testam `getByRole('alert')`, classes CSS
+- `DocsStates` cobre default/destructive (visuais), não loading/disabled
+
+### AlertDialog e overlays
+
+- Docs page explica `role="alertdialog"` vs `role="dialog"`
+- Play functions: abrir, fechar com Escape, focus trap, retorno de foco
+- `DocsStates` cobre `open`/`closed`
 
 ---
 
-### Componentes Presentacionais Compostos (padrão Table)
+## Proibições
 
-Componentes como **Table** expõem múltiplas **fábricas vanilla** que constroem elementos DOM semânticos com as mesmas classes Tailwind das demais stacks. O arquivo `src/components/ui/table.ts` exporta 8 fábricas: `createTable` (retorna `{ wrapper, table }`), `createTableHeader`, `createTableBody`, `createTableFooter`, `createTableRow`, `createTableHead`, `createTableCell`, `createTableCaption` — mais a constante `TABLE_TOKENS` com as classes para uso externo. **Sem** `cva()` — apenas `mergeClass(base, extra?)`. Seguem o mesmo template de 15 seções, com as seguintes adaptações:
+- ❌ **NUNCA** reimplemente inline o HTML de uma seção — use a factory do container
+- ❌ **NUNCA** copie classes Tailwind dos containers para blocos `innerHTML`
+- ❌ **NUNCA** use `<pre><code>` em blocos de código (exceto `structureCode` em `DocsAnatomy`)
+- ❌ **NUNCA** itere pares Do/Don't em um único grid — deixe `createDocsDoDont` fazer o split
+- ❌ **NUNCA** recrie variantes com divs/classes manuais — use sempre a factory do componente real
+- ❌ **NUNCA** use `innerHTML` com string não sanitizada vinda de `translations.json`
+- ❌ **NUNCA** omita o wrapper `<nav sticky>` do `DocsNav`
+- ❌ **NUNCA** retorne a mesma referência em múltiplas chamadas de factory — crie novos elementos
 
-1. **Anatomia** — uma entrada por fábrica (`anatomy.item1` a `anatomy.item8`). `structureCode` mostra a estrutura HTML resultante (`<div><table><thead>…`) — não código TS da fábrica.
+## Checklist Final
 
-2. **Variantes → Composições** — sem `cva()`. `variants.items` lista composições recorrentes (`basic`, `withCaption`, `withFooter`, `empty`). Título da seção: `"Composições e Tamanhos"` (`variants.title`). Cards seguem §11.1 do guideline 08. A área de preview monta a composição chamando as fábricas (`const { wrapper, table } = createTable(); const thead = createTableHeader(); …`) e faz `.appendChild` na ordem correta.
-
-3. **Tamanhos → Padrões de Densidade** — `variants.sizes` descreve convenções de altura aplicadas via parâmetro `extraClass` de `createTableHead`/`createTableCell` (`h-8` compact, `h-10` default, `h-12` comfortable) — **não** são argumentos dedicados. Cards seguem o mesmo layout de 3 linhas de §11.2 do guideline 08.
-
-4. **Estados** — apenas estados estruturais: `hover` (automático via `hover:bg-muted/50`), `selected` (atribuído via `tr.setAttribute('data-state', 'selected')`), `empty` (renderização condicional com `colspan`), `scroll` (automático via `overflow-x-auto` no wrapper). **Omitir** `disabled`/`loading` — tabelas não são interativas.
-
-5. **Propriedades → Argumentos de fábrica** — cada fábrica aceita apenas `extraClass?: string` (append às classes base). Para atributos HTML, manipular o elemento retornado (`th.setAttribute('scope', 'col')`, `td.colSpan = 2`, `tr.dataset.state = 'selected'`). Documentar chaves `props.table.*`: `extraClass`, `colspan`, `rowspan`, `scope`, `dataState`. **Não** há interface TypeScript de props — exibir assinatura da função: `createTable(extraClass?: string): { wrapper, table }`.
-
-6. **Analytics** — componente estrutural; dispara apenas eventos da docs page (`docs_page_view`, `docs_section_viewed`, `language_switched`). Eventos de domínio (`table_sorted`, `row_selected`) pertencem a wrappers (ex: futuro `createDataTable`), não às fábricas puras. A chave `analytics.description` deve explicitar: "Table é estrutural — não dispara eventos próprios".
-
-7. **Estrutura de stories**:
-   ```
-   src/components/ui/
-     ├── table.ts                                  (8 fábricas + TABLE_TOKENS)
-     ├── table.stories.ts                          (meta + Playground com invoice demo)
-     ├── table-composicoes.stories.ts              (basic, withCaption, withFooter, withSelection)
-     ├── table-estados.stories.ts                  (hover, selected, empty, scroll)
-     └── table-densidades.stories.ts               (compact, default, comfortable via extraClass)
-   ```
-   **Omitir** `table-variantes` e `table-tamanhos` — não existem argumentos `variant`/`size`. O `render` de cada story retorna o `wrapper` de `createTable()` após montar a composição:
-   ```ts
-   render: (args) => {
-     const { wrapper, table } = createTable();
-     const thead = createTableHeader();
-     // ... monta a árvore e appendChild
-     return wrapper;
-   }
-   ```
-
-8. **Play functions** — focam em estrutura semântica (não em interações):
-   - `<caption>` presente e visível (caption-bottom)
-   - Headers usam `<th>` com atributo `scope`
-   - `data-state="selected"` aplica `bg-muted` persistente
-   - `colspan` em footer cobre colunas corretas
-   - Overflow horizontal aparece em viewport estreito
-   - Estado vazio renderiza linha única com colspan total
-
-### Componentes Compostos Interativos com Disclosure (padrão Accordion)
-
-Componentes como **Accordion** são implementados em Vanilla TS como funções que constroem elementos DOM. Não possuem variantes visuais — diferem por modo de operação. Seguem o template de 15 seções com as seguintes adaptações:
-
-1. **Seção "Variantes" → "Modos de Operação"** — `variants.items` lista modos (`single`, `multiple`, `controlled`). **Omitir** seção "Tamanhos".
-
-2. **Implementação Vanilla** — criar `createAccordion(options)` e `createAccordionItem(options)` que retornam `HTMLElement`. Gerenciar estado `open`/`closed` via dataset (`el.dataset.state`). Emit events via `CustomEvent` para `onValueChange`.
-
-3. **ARIA obrigatório** — setar manualmente: `button.setAttribute('aria-expanded', 'false')`, `button.setAttribute('aria-controls', contentId)`, `content.setAttribute('id', contentId)`, `content.setAttribute('role', 'region')`.
-
-4. **Estrutura de stories**:
-   ```
-   src/components/ui/
-     ├── accordion.ts
-     ├── accordion.stories.ts
-     ├── accordion-modos.stories.ts
-     ├── accordion-estados.stories.ts
-     └── accordion-composicoes.stories.ts
-   ```
-   **Omitir** `accordion-variantes` e `accordion-tamanhos`.
-
-5. **Props table** — em Basecoat, **não** usar chaves aninhadas como `props.table.type.name` (conflita com a chave de cabeçalho `props.table.type = "Tipo"`). Hardcode `name`, `type` e `default` no array de dados; buscar apenas a **descrição** via chave flat: `t('props.table.{propDescKey}')`. Para props com nome igual a coluna (ex: `type`), usar sufixo `_prop` no JSON: `props.table.type_prop`.
-
-6. **`doDont.pair${n}.dontExample`** — texto de exemplo visual na caixa "don't". Adicionar ao `translations.json` junto com `do`/`dont`.
-
-7. **`notes.tip${i}Title`** — título flat separado de `notes.tip${i}` (descrição). Não usar `notes.tip${i}.title` — cria conflito de caminho com a string de descrição.
-
-8. **Play functions** — verificar `getAttribute('aria-expanded')` após interação. Animar via `dataset.state` + CSS transitions em vez de animações JS.
-
----
-
-## Checklist de implementação
-
-- [ ] `translations.json` criado em `src/components/docs/content/{slug}/`
-- [ ] `createNomeComponenteDocs()` com as 14 seções
-- [ ] `applyStorybookSeo` chamado com `{ title, description, locale, componentSlug }`
-- [ ] 5 arquivos de stories (ou menos se não aplicável)
-- [ ] Story principal com `parameters.docs.page: withAutoDocsTab(createNomeComponenteDocs)`
-- [ ] Playground com play function
-- [ ] Todos os argTypes com description em pt-BR
-- [ ] `render` retorna `HTMLElement` criado pela função de componente
+- [ ] Todos os containers importados de `src/components/docs/shared/sections/`
+- [ ] Nenhum HTML de seção inline no consumidor
+- [ ] `createDocsHeader` com category/type/installNote
+- [ ] `createDocsDemonstration` com `demoFactory` retornando o componente real
+- [ ] `createDocsDoDont` com `doPreviewFactory` / `dontPreviewFactory` por par
+- [ ] `createDocsProps` com tables array (múltiplos para componentes compostos)
+- [ ] `createDocsStates` — labels em texto plano (container aplica `font-medium`)
+- [ ] Layout `flex gap-16 items-start` com `<nav sticky top-8 w-52 shrink-0 self-start>`
+- [ ] `applySeo` chamado no início + ao trocar locale
+- [ ] `track('docs_page_view')` chamado no início + ao trocar locale
+- [ ] IntersectionObserver dispara `track('docs_section_viewed')`
+- [ ] `withAutoDocsTab` monta a função `createAlertDocs`
+- [ ] Listener de locale re-renderiza o root
+- [ ] `translations.json` com 3 idiomas completos
+- [ ] `sanitizeHtml()` em todo `innerHTML` com conteúdo de translations

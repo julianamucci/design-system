@@ -69,7 +69,7 @@
 </Card>
 ```
 
-**Tokens obrigatórios** (ver `16-padroes-design-sistema.md`):
+**Tokens obrigatórios** (ver `03-sistema-design.md`):
 - Fundo: `bg-card`
 - Texto: `text-card-foreground`
 - Borda: `border-border`
@@ -233,7 +233,7 @@
 
 **Estrutura obrigatória** (gerenciada pelo `SidebarProvider` — nunca replicar manualmente):
 ```tsx
-{/* SidebarProvider envolve todo o layout — colocar no root da aplicação (App.tsx) */}
+{/* SidebarProvider envolve todo o layout — em produção: root da aplicação; no Storybook: decorator da story */}
 <SidebarProvider>
   <nav aria-label="Navegação principal">
     <Sidebar>
@@ -246,7 +246,7 @@
         </Accordion>
       </SidebarContent>
       <SidebarFooter>
-        <ThemeSelector />
+        {/* Conteúdo do rodapé — ex: perfil do usuário, configurações */}
       </SidebarFooter>
     </Sidebar>
   </nav>
@@ -257,7 +257,7 @@
       <SidebarTrigger aria-label="Abrir navegação principal" />
     </header>
     <main id="main-content" tabIndex={-1}>
-      {renderCurrentPage()}
+      {children}
     </main>
   </SidebarInset>
 </SidebarProvider>
@@ -279,9 +279,9 @@
 ```tsx
 {/* Item de navegação com estado ativo */}
 <SidebarMenuButton
-  isActive={currentPage === item.path}
-  aria-current={currentPage === item.path ? "page" : undefined}
-  onClick={() => navigateTo(item.path, item.name)}
+  isActive={isActive}
+  aria-current={isActive ? "page" : undefined}
+  onClick={() => onNavigate(item.path)}
 >
   <item.icon aria-hidden="true" />
   <span>{item.name}</span>
@@ -306,7 +306,7 @@
 
 **Analytics** (ver `21-analytics.md`):
 - Clique em item de menu: `navigation_click` com `label` (nome da seção) e `destination` (path)
-- A função `navigateTo()` deve disparar `page_view` internamente — ver `11-acessibilidade.md` → "Anúncio de mudança de página"
+- O handler de navegação deve disparar `page_view` — ver `11-acessibilidade.md` → "Anúncio de mudança de página"
 - Não rastrear duplamente: `navigation_click` + `page_view` são eventos distintos com propósitos distintos
 
 ```tsx
@@ -316,9 +316,9 @@
       component: "sidebar",
       location: "main_nav",
       label: item.name,
-      destination: item.path
+      destination: item.path,
     });
-    navigateTo(item.path, item.name);
+    onNavigate(item.path);
   }}
 >
 ```
@@ -339,7 +339,7 @@
 
 **Acessibilidade transversal**:
 - Componentes de container (Card, ScrollArea, AspectRatio) não são interativos por si — a interatividade e os `aria-label` estão no conteúdo dentro deles
-- Ordem do DOM sempre reflete a ordem visual — nunca usar `order-*` ou `flex-row-reverse` (ver `16-padroes-design-sistema.md`)
+- Ordem do DOM sempre reflete a ordem visual — nunca usar `order-*` ou `flex-row-reverse` (ver `03-sistema-design.md`)
 - `aria-label` de qualquer elemento interativo dentro de um container de layout deve incluir o contexto que o container fornece visualmente
 
 **Analytics transversal**:

@@ -103,6 +103,24 @@ export function createAccordion({ items, type = 'single', collapsible = true }: 
 }
 ```
 
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
+
+Adicione as chamadas de `track` dentro do event listener de clique, antes da lógica de toggle:
+
+```ts
+import { track } from '@/lib/analytics';
+
+btn.addEventListener('click', () => {
+  const willOpen = !openItems.has(value);
+  if (willOpen) {
+    track('accordion_expand', { label: trigger });
+  } else {
+    track('accordion_collapse', { label: trigger });
+  }
+  // ... lógica de toggle existente
+});
+```
+
 ---
 
 ## Collapsible

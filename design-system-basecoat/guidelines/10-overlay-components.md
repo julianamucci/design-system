@@ -134,6 +134,24 @@ export function createDialog({ title, description, content, footer, onClose }: D
 
 **Obrigatório**: `role="dialog"` + `aria-modal="true"` + `aria-labelledby` + `aria-describedby`.
 
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
+
+Adicione chamadas de `track` nas funções `open` e `close`:
+
+```ts
+import { track } from '@/lib/analytics';
+
+function open() {
+  track('dialog_open', { component: 'dialog', trigger: 'button' });
+  // ... lógica existente
+}
+
+function close() {
+  track('dialog_close', { component: 'dialog' });
+  // ... lógica existente
+}
+```
+
 ---
 
 ## Dropdown Menu

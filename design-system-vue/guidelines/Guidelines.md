@@ -41,7 +41,6 @@ Em `docs/shared/guidelines/` — se aplicam a React, Vue, Svelte e Basecoat:
 - **[11-documentacao-componentes.md](./11-documentacao-componentes.md)** — Template de ComponentDocs Vue + stories
 - **[12-arquitetura-projeto.md](./12-arquitetura-projeto.md)** — Arquitetura Storybook-centric Vue
 - **[13-system-design.md](./13-system-design.md)** — Padrões Vue 3: composables, Pinia, Vee-validate
-- **[14-categoria-showcase.md](./14-categoria-showcase.md)** — Showcase pages no Storybook Vue
 
 ---
 
@@ -57,10 +56,9 @@ Em `docs/shared/guidelines/` — se aplicam a React, Vue, Svelte e Basecoat:
 8. **Arquitetura** (12) — Storybook como interface principal
 9. **Design Sistema** (04-shared) — tokens CSS
 10. **System Design** (13) — composables, estado, performance
-11. **Showcase** (14)
-12. **Tom de Voz** (05-shared)
-13. **SEO/GEO** (06-shared)
-14. **Analytics** (07-shared)
+11. **Tom de Voz** (05-shared)
+12. **SEO/GEO** (06-shared)
+13. **Analytics** (07-shared)
 
 ---
 

@@ -2,6 +2,8 @@
 
 Esta documentação está organizada em arquivos separados por escopo para facilitar a navegação e manutenção.
 
+> **Leia primeiro**: [`STORYBOOK-ARCHITECTURE.md`](../STORYBOOK-ARCHITECTURE.md) — Storybook é a interface principal.
+
 > **Stack**: Vanilla TypeScript + HTML/CSS + Tailwind CSS 4 + lucide (vanilla) + Zod + axe-playwright + Chromatic + Storybook 10 (`@storybook/html-vite`)
 
 ---
@@ -44,7 +46,6 @@ Estas guidelines estão em `docs/shared/guidelines/` e se aplicam a qualquer sta
 ### 4. Arquitetura e Design Sistema (Basecoat)
 
 - **[13-system-design.md](./13-system-design.md)** — Padrões de código TypeScript, DOM, eventos, performance e estratégia de testes
-- **[14-categoria-showcase.md](./14-categoria-showcase.md)** — Estrutura de páginas Showcase de categorias no Storybook HTML
 
 ---
 
@@ -69,10 +70,9 @@ Estas guidelines estão em `docs/shared/guidelines/` e se aplicam a qualquer sta
 8. **Arquitetura** (12) — Storybook é a interface principal
 9. **Design Sistema** (04-shared) — Implementação prática de tokens CSS
 10. **System Design** (13) — Padrões de código, performance, segurança
-11. **Categoria Showcase** (14) — Estrutura de páginas Showcase no Storybook
-12. **Tom de Voz** (05-shared) — Personalidade, terminologia e padrões de escrita
-13. **SEO e GEO** (06-shared) — Metatags, Schema.org e otimização para buscadores e IAs
-14. **Analytics** (07-shared) — Rastreamento de componentes: nomenclatura de eventos e payloads
+11. **Tom de Voz** (05-shared) — Personalidade, terminologia e padrões de escrita
+12. **SEO e GEO** (06-shared) — Metatags, Schema.org e otimização para buscadores e IAs
+13. **Analytics** (07-shared) — Rastreamento de componentes: nomenclatura de eventos e payloads
 
 ---
 

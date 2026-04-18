@@ -79,6 +79,30 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 - Botão destrutivo: repete o verbo do título — "Excluir conta"
 - Botão cancelar: sempre "Cancelar" — à esquerda
 
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
+```svelte
+<script lang="ts">
+  import { track } from '$lib/analytics';
+</script>
+
+<AlertDialog onOpenChange={(open) => {
+  if (open) track('dialog_open', { component: 'alert_dialog', trigger: 'button' });
+}}>
+  <AlertDialogTrigger asChild let:builder>
+    <Button builders={[builder]} variant="destructive">Excluir conta</Button>
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <!-- ... -->
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+      <AlertDialogAction onclick={() => track('dialog_confirm', { component: 'alert_dialog' })}>
+        Excluir conta
+      </AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
 ---
 
 ## Dialog
@@ -116,6 +140,14 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 ```
 
 **Obrigatório**: `DialogTitle` e `DialogDescription` em todo Dialog.
+
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
+```svelte
+<Dialog onOpenChange={(open) => {
+  if (open) track('dialog_open', { component: 'dialog', trigger: 'button' });
+  else track('dialog_close', { component: 'dialog' });
+}}>
+```
 
 ---
 

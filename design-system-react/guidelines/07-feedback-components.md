@@ -90,14 +90,14 @@ import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react"
 - Ícones com `aria-hidden="true"` — o texto já descreve o estado
 - Nunca usar cor como único indicador de estado — sempre acompanhar com ícone + texto (ver arquivo 11, seção daltonismo)
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Sucesso: passado simples, breve, sem exclamação — "Perfil atualizado."
 - Aviso: consequência + ação disponível — "Assinatura expira em 3 dias. Renove agora."
 - Erro: causa + orientação, sem culpar — "Não foi possível salvar. Verifique sua conexão."
 - `AlertTitle`: frase nominal curta, sem ponto final
 - `AlertDescription`: frase completa com ponto final, máximo 2 linhas
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
 - Raramente rastreado — apenas quando o alerta tem ação relevante para o produto
 - Quando o usuário descarta um alerta importante: `alert_dismiss` com `label` (título do alerta)
 
@@ -172,7 +172,7 @@ import { Badge } from "@/components/ui/badge"
 - Badge de status sem contexto visual adjacente: `aria-label` descritivo — ex: `aria-label="Status: Ativo"`
 - Ícones dentro do badge: `aria-hidden="true"` — o texto do badge já descreve o estado
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Adjetivo ou substantivo de estado, 1–2 palavras, sem verbo, sem ponto final
 - Correto: "Ativo", "Pendente", "Em análise", "Novo", "Pro"
 - Incorreto: "Está ativo", "Aguardando análise", "É novo"
@@ -324,7 +324,7 @@ export function App() {
       <SidebarProvider>
         {/* ... conteúdo da aplicação ... */}
       </SidebarProvider>
-      <Toaster position="bottom-right" richColors />
+      <Toaster position="top-right" richColors />
     </>
   )
 }
@@ -371,19 +371,19 @@ toast.error("Falha crítica no servidor.", {
 ```
 
 **Posições disponíveis**:
-- `bottom-right` — **padrão do Sonner**, convencional para web desktop
-- `top-right` — adequado quando a área inferior tem elementos importantes
+- `top-right` — **padrão do projeto**, área superior direita (não conflita com conteúdo fixo inferior)
+- `bottom-right` — padrão do Sonner; evitar quando há footer fixo ou bottom navigation
 - `bottom-center` — mobile e layouts centralizados
 - `top-center`, `top-left`, `bottom-left` — casos específicos
 
-> A posição padrão do Sonner é `bottom-right`. O projeto define `bottom-right` como padrão obrigatório — especificar explicitamente para evitar diferenças entre versões.
+> O projeto define `top-right` como posição padrão obrigatória — especificar explicitamente no `<Toaster />` para evitar diferenças entre versões.
 
 **Regras**:
 - Máximo 3 toasts visíveis simultaneamente — o Sonner gerencia a fila automaticamente
 - Duração padrão: 4000ms — não alterar para mensagens de sucesso e informativas
 - Usar `duration: Infinity` apenas para erros críticos que exigem ação do usuário
 - `toast.promise()` para qualquer operação assíncrona — evita toasts manuais de loading
-- Nunca usar toast para mensagens que exigem leitura longa — máximo 1 frase (ver arquivo 19)
+- Nunca usar toast para mensagens que exigem leitura longa — máximo 1 frase (ver `../../docs/shared/guidelines/05-tom-de-voz.md`)
 - `richColors` no `<Toaster />` para aplicar as cores do tema automaticamente
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
@@ -391,13 +391,13 @@ toast.error("Falha crítica no servidor.", {
 - Toasts com ação (`action.label`) são focáveis por teclado — o usuário pode Tab para o botão de ação
 - Não usar Sonner para erros de formulário — usar `FormMessage` que já gerencia `aria-invalid`
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Máximo 1 frase no título, sem pontuação de ênfase
 - Passado simples para confirmações: "Perfil atualizado." não "Perfil atualizado com sucesso!"
 - Causa + orientação para erros: "Não foi possível salvar. Tente novamente."
 - Label da ação: verbo no infinitivo — "Desfazer", "Ver detalhes"
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
 - O toast em si não dispara evento — o evento é da ação que o originou
 - Botão de ação dentro do toast: `toast_action_click` com `label`
 
@@ -437,7 +437,7 @@ toast("Mensagem excluída.", {
 - `aria-live="polite"` para mudanças dinâmicas não críticas; `aria-live="assertive"` apenas para erros críticos
 - `motion-reduce:animate-none` obrigatório em Skeleton
 
-**Analytics transversal** (ver `21-analytics.md`):
+**Analytics transversal** (ver `../../docs/shared/guidelines/07-analytics.md`):
 
 | Componente | Evento | Quando |
 |------------|--------|--------|
@@ -446,7 +446,7 @@ toast("Mensagem excluída.", {
 | Sonner | `toast_action_click` | Clique no botão de ação do toast |
 | Badge, Progress, Skeleton | — | Componentes passivos, sem eventos |
 
-**UX Writing transversal** (ver `19-tom-de-voz.md`):
+**UX Writing transversal** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Sucesso: afirmativo, passado, breve — "Salvo.", "Enviado."
 - Erro: causa + orientação — "Não foi possível conectar. Verifique sua rede."
 - Aviso: consequência + opção — "Sessão expira em 5 min. Salve seu trabalho."

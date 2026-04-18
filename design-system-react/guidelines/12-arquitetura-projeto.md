@@ -43,13 +43,26 @@ design-system-react/
 │   │   │   ├── content/
 │   │   │   │   └── button/
 │   │   │   │       └── translations.json  # UI text em pt-BR / en / es
-│   │   │   ├── shared/                    # Building blocks reutilizáveis
-│   │   │   │   ├── DocsHeader.tsx
-│   │   │   │   ├── DocsSection.tsx
-│   │   │   │   ├── DoDont.tsx
-│   │   │   │   ├── DocsNav.tsx
-│   │   │   │   ├── Anatomy.tsx
-│   │   │   │   └── UXWritingTable.tsx
+│   │   │   ├── shared/
+│   │   │   │   ├── DocsNav.tsx            # Navegação lateral das docs pages
+│   │   │   │   └── sections/              # 16 containers de seção reutilizáveis
+│   │   │   │       ├── DocsHeader.tsx
+│   │   │   │       ├── DocsDemonstration.tsx
+│   │   │   │       ├── DocsAnatomy.tsx
+│   │   │   │       ├── DocsWhenToUse.tsx
+│   │   │   │       ├── DocsDoDont.tsx
+│   │   │   │       ├── DocsImport.tsx
+│   │   │   │       ├── DocsExamples.tsx
+│   │   │   │       ├── DocsVariants.tsx
+│   │   │   │       ├── DocsStates.tsx
+│   │   │   │       ├── DocsProps.tsx
+│   │   │   │       ├── DocsTokens.tsx
+│   │   │   │       ├── DocsAccessibility.tsx
+│   │   │   │       ├── DocsRelated.tsx
+│   │   │   │       ├── DocsNotes.tsx
+│   │   │   │       ├── DocsAnalytics.tsx
+│   │   │   │       ├── DocsTestes.tsx
+│   │   │   │       └── index.ts
 │   │   │   ├── ThemingDocs.tsx            # Página de fundamentos
 │   │   │   ├── ThemingDocs.mdx            # Entry MDX unattached
 │   │   │   └── ThemingDocs.stories.tsx    # Stub para evitar conflito de título
@@ -128,7 +141,7 @@ Para adicionar um novo tema: ver seção "Adicionar Novo Tema" abaixo.
 ```
 src/components/docs/NovoComponenteDocs.tsx
 ```
-Seguir o template de 14 seções de `12-documentacao-componentes.md`. Usar `ButtonDocs.tsx` como referência.
+Seguir o template de 15 seções de `11-documentacao-componentes.md`. Usar `ButtonDocs.tsx` como referência.
 
 **2. Criar translations.json**
 ```
@@ -253,4 +266,4 @@ Responsabilidades atuais:
 | Docs page não carrega | `withAutoDocsTab` não importado | Verificar `parameters.docs.page: withAutoDocsTab(ComponenteDocs)` |
 | i18n não funciona na docs page | `translations.json` ausente | Criar `src/components/docs/content/{slug}/translations.json` |
 | Violação de a11y bloqueia CI | `parameters.a11y.test: 'error'` | Corrigir a violação; ou para falso positivo: `parameters.a11y.config.rules` |
-| Focus ring não aparece | Falta classe `focus-visible:ring-2` | Seguir `11-acessibilidade.md` e `16-padroes-design-sistema.md` |
+| Focus ring não aparece | Falta classe `focus-visible:ring-2` | Seguir `11-acessibilidade.md` e `03-sistema-design.md` |

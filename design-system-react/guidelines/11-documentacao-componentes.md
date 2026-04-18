@@ -2,14 +2,43 @@
 
 ## Visão Geral
 
-Este arquivo define a estrutura obrigatória para documentar componentes no Design System. Ela se divide em duas partes:
+Este arquivo define a estrutura obrigatória para documentar componentes no Design System React. Ela se divide em duas partes:
 
-1. **ComponentDocs** — o arquivo TSX/Vue com a documentação visual e textual do componente.
+1. **ComponentDocs** — o arquivo TSX com a documentação visual e textual do componente, composto a partir dos **section containers** genéricos.
 2. **Stories** — os arquivos Storybook que expõem o componente para exploração, testes e catálogo visual.
 
-Ambas as partes seguem uma organização padronizada de **14 seções** (agrupadas em 4 blocos) e **5 grupos de stories**.
+Ambas as partes seguem uma organização padronizada de **15 seções** (agrupadas em 4 blocos) e **5 grupos de stories**.
 
 **Referência de implementação:** `ButtonDocs.tsx` e `button*.stories.tsx`.
+
+---
+
+## Princípio Fundamental: Use os Section Containers
+
+Existem 16 componentes genéricos em `src/components/docs/shared/sections/` — um por seção. A docs page **deve** importar e compor esses containers em vez de reimplementar JSX. Eles encapsulam layout, classes CSS, acessibilidade, sanitização e hierarquia HTML. Nenhuma docs page nova deve repetir esse HTML.
+
+```tsx
+import {
+  DocsHeader,
+  DocsDemonstration,
+  DocsAnatomy,
+  DocsWhenToUse,
+  DocsDoDont,
+  DocsImport,
+  DocsExamples,
+  DocsVariants,
+  DocsStates,
+  DocsProps,
+  DocsTokens,
+  DocsAccessibility,
+  DocsRelated,
+  DocsNotes,
+  DocsAnalytics,
+  DocsTestes,
+} from '@/components/docs/shared/sections';
+```
+
+Se você precisa de um layout que nenhum container cobre, abra uma PR no container correspondente — não reimplemente inline. É **proibido** copiar o HTML interno de um container para a docs page.
 
 ---
 
@@ -17,25 +46,35 @@ Ambas as partes seguem uma organização padronizada de **14 seções** (agrupad
 
 ### Arquitetura e Layout
 
-O ComponentDocs é um componente React/Vue que renderiza a documentação completa. Ele é referenciado no Storybook via `parameters.docs.page` no arquivo principal de stories.
+O ComponentDocs é um componente React que renderiza a documentação completa. Ele é referenciado no Storybook via `parameters.docs.page: withAutoDocsTab(NomeComponenteDocs)` no arquivo principal de stories.
 
 #### Layout obrigatório: Header + Sidebar + Conteúdo
 
 ```tsx
 export function NomeComponenteDocs() {
+  // i18n, SEO, analytics, navGroups, activeSection, data computadas...
+
   return (
     <div className="p-8 max-w-5xl mx-auto">
 
-      {/* ── Header (Hero) ──────────────────────────────────────────── */}
-      <header className="ds-docs mb-12 border-b pb-8 border-border/50">
-        ...
-      </header>
+      <DocsHeader
+        title={t('title')}
+        description={t('description')}
+        category={t('category')}
+        type={t('type')}
+        installNote="npx shadcn@latest add nome-componente"
+      />
 
-      {/* ── Layout: sidebar + conteúdo ─────────────────────────────── */}
       <div className="flex gap-16 items-start">
-        <ComponentDocsSidebar />
-        <div className="ds-docs flex-1 space-y-12">
-          {/* Seções 2–14 aqui */}
+        <nav
+          aria-label="Navegação das seções do componente"
+          className="sticky top-8 w-52 shrink-0 self-start space-y-5"
+        >
+          <DocsNav groups={navGroups} activeSection={activeSection} />
+        </nav>
+
+        <div className="ds-docs flex-1 min-w-0 space-y-12">
+          {/* Seções 2–16 compostas via DocsXxx containers */}
         </div>
       </div>
 
@@ -46,10 +85,11 @@ export function NomeComponenteDocs() {
 
 **Regras de layout:**
 - Container raiz: `p-8 max-w-5xl mx-auto`
-- Header separado do conteúdo com `border-b` e `mb-12`
-- Layout de duas colunas: sidebar `sticky` à esquerda + conteúdo `flex-1` à direita
+- `DocsHeader` cuida do bloco superior (badges, h1, LanguageSwitcher, description, install note) — não escreva header manualmente
+- Layout de duas colunas: `<nav>` sticky à esquerda + conteúdo `flex-1` à direita
 - Gap entre colunas: `gap-16`
-- Conteúdo envolvido na classe `.ds-docs` para neutralizar resets de CSS do Storybook
+- Wrapper do conteúdo: `ds-docs flex-1 min-w-0 space-y-12` (obrigatório para neutralizar CSS do Storybook)
+- Sidebar: `sticky top-8 w-52 shrink-0 self-start space-y-5`
 
 ---
 
@@ -58,358 +98,546 @@ export function NomeComponenteDocs() {
 O Storybook injeta CSS-in-JS unlayered com especificidade `(0,1,0)` que reseta margens, fontes e listas. A classe `.ds-docs` no `globals.css` restaura os utilitários do Tailwind com especificidade `(0,2,N)`.
 
 **Regras:**
-- O wrapper `.ds-docs` deve envolver o `<header>` e o container de conteúdo `flex-1`
-- Toda seção que requeira margens ou fontes controladas deve estar dentro de `.ds-docs`
+- O wrapper `.ds-docs` deve envolver o container de conteúdo `flex-1`
+- `DocsHeader` já aplica `ds-docs` internamente
 - As regras CSS estão no bloco unlayered no final do `globals.css`
 
 ---
 
-### SEO e GEO (Guideline 20) — useSeoEffect obrigatório
+### SEO e GEO — `useSeoEffect` obrigatório
 
-Todo ComponentDocs **deve** chamar o hook `useSeoEffect` de `@/lib/use-seo.ts`. Ele detecta automaticamente o contexto de iframe do Storybook e escreve todas as metatags no documento pai (manager do Storybook), garantindo que o título da aba e os metadados sejam atualizados corretamente.
+Todo ComponentDocs **deve** chamar o hook `useSeoEffect` de `@/lib/use-seo.ts`. Ele detecta automaticamente o contexto de iframe do Storybook e escreve todas as metatags no documento pai.
 
 ```tsx
 import { useSeoEffect } from '@/lib/use-seo';
 
-export function NomeComponenteDocs() {
-  useSeoEffect({
-    title: "NomeComponente — Categoria · Design System",
-    description: "Documentação do NomeComponente: [N] variantes, estados interativos, propriedades TypeScript e exemplos de código.",
-    locale: "pt-BR",
-    componentSlug: "nome-componente",
-  });
-
-  return ( /* ... */ );
-}
+useSeoEffect({
+  title: t('seo.title'),
+  description: t('seo.description'),
+  locale,
+  componentSlug: 'nome-componente',
+});
 ```
 
-O hook gerencia internamente: `document.title`, `<meta name="description">`, `<meta property="og:*">`, `<meta name="ai:summary">`, `<meta name="ai:entities">`, `<meta name="ai:intent">`, JSON-LD (TechArticle + SoftwareSourceCode), `lang="pt-BR"` no `<html>`, e cleanup ao desmontar.
+O hook gerencia internamente: `document.title`, `<meta name="description">`, `<meta property="og:*">`, `<meta name="ai:summary">`, `<meta name="ai:entities">`, `<meta name="ai:intent">`, JSON-LD (TechArticle + SoftwareSourceCode), `lang` no `<html>`, `hreflang` para pt-BR/en/es, e cleanup ao desmontar.
 
-> Ver `STORYBOOK-ARCHITECTURE.md` Seção 9 e `docs/shared/guidelines/20-seo-geo.md` para regras de conteúdo (title, description, ai:summary, entities).
+> Ver `STORYBOOK-ARCHITECTURE.md` Seção 9 e `docs/shared/guidelines/06-seo-geo.md`.
+
+---
+
+### i18n — `useTranslation` obrigatório
+
+```tsx
+import { useTranslation } from '@/lib/i18n';
+import uiTranslations from '@/i18n/ui.json';
+import componentTranslations from '@shared/content/nome-componente/translations.json';
+
+const { t: tNav } = useTranslation(uiTranslations);
+const { t, locale } = useTranslation({ ...uiTranslations, ...componentTranslations });
+```
+
+`LanguageSwitcher` é renderizado automaticamente pelo `DocsHeader`.
+
+---
+
+### Analytics — `docs_page_view` + `docs_section_viewed`
+
+```tsx
+useEffect(() => {
+  track('docs_page_view', {
+    component_name: 'nome-componente',
+    locale,
+    page_title: `${t('title')} · Design System`,
+  });
+}, [locale, t]);
+
+const handleSectionChange = useCallback((id: string) => {
+  track('docs_section_viewed', {
+    section_id: id,
+    component_name: 'nome-componente',
+    locale,
+  });
+}, [locale]);
+
+const activeSection = useActiveSection(allSectionIds, handleSectionChange);
+```
 
 ---
 
 ### Navegação Interna (Sidebar)
 
-A navegação é uma sidebar vertical `sticky` que usa `IntersectionObserver` para destacar a seção visível (scroll-spy).
+A navegação é um `<nav>` sticky que usa `IntersectionObserver` para destacar a seção visível (scroll-spy). O componente `DocsNav` cuida do HTML; a docs page fornece os grupos:
 
 ```tsx
-const navGroups = [
+const navGroups = useMemo(() => [
   {
-    label: "Visão Geral",
+    label: tNav('nav.overview'),
     sections: [
-      { id: "demonstracao", label: "Demonstração" },
-      { id: "anatomia",     label: "Anatomia"     },
-      { id: "quando-usar",  label: "Quando Usar"  },
-      { id: "do-dont",      label: "Do & Don't"   },
+      { id: 'demonstracao', label: tNav('nav.demonstration') },
+      { id: 'anatomia',     label: tNav('nav.anatomy')       },
+      { id: 'quando-usar',  label: tNav('nav.usage')         },
+      { id: 'do-dont',      label: tNav('nav.doDont')        },
     ],
   },
   {
-    label: "Referência Técnica",
+    label: tNav('nav.techRef'),
     sections: [
-      { id: "importacao",   label: "Importação"   },
-      { id: "exemplos",     label: "Exemplos"     },
-      { id: "variantes",    label: "Variantes"    },
-      { id: "estados",      label: "Estados"      },
-      { id: "propriedades", label: "Propriedades" },
-      { id: "tokens",       label: "Tokens"       },
+      { id: 'importacao',   label: tNav('nav.import')    },
+      { id: 'exemplos',     label: tNav('nav.examples')  },
+      { id: 'variantes',    label: tNav('nav.variants')  },
+      { id: 'estados',      label: tNav('nav.states')    },
+      { id: 'propriedades', label: tNav('nav.props')     },
+      { id: 'tokens',       label: tNav('nav.tokens')    },
     ],
   },
   {
-    label: "Contexto",
+    label: tNav('nav.context'),
     sections: [
-      { id: "acessibilidade", label: "Acessibilidade" },
-      { id: "relacionados",   label: "Relacionados"   },
-      { id: "notas",          label: "Notas"          },
+      { id: 'acessibilidade', label: tNav('nav.accessibility') },
+      { id: 'relacionados',   label: tNav('nav.related')       },
+      { id: 'notas',          label: tNav('nav.notes')         },
     ],
   },
   {
-    label: "Qualidade",
+    label: tNav('nav.quality'),
     sections: [
-      { id: "testes", label: "Testes" },
+      { id: 'analytics', label: tNav('nav.analytics') },
+      { id: 'testes',    label: tNav('nav.testes')    },
     ],
   },
-] as const;
+], [tNav]);
 ```
 
-**Regras da sidebar:**
-- Container: `sticky top-8 w-52 shrink-0 self-start space-y-5`
-- Labels de grupo: `text-[0.65rem] font-semibold uppercase tracking-widest text-muted-foreground`
-- Items: `<ul className="list-none">` com `<button>` para cada seção
-- Seção ativa: `font-semibold text-foreground bg-muted`
-- Seção inativa: `text-muted-foreground hover:text-foreground hover:bg-muted/50`
-- `aria-current="location"` na seção ativa
-- `aria-label` no `<nav>` raiz
-- **Seções opcionais:** remover do array `navGroups` qualquer seção não aplicável ao componente
+**Regras:**
+- Os `id` de cada seção **devem** bater exatamente com os `id` que os containers emitem (`demonstracao`, `anatomia`, `quando-usar`, `do-dont`, `importacao`, `exemplos`, `variantes`, `estados`, `propriedades`, `tokens`, `acessibilidade`, `relacionados`, `notas`, `analytics`, `testes`)
+- **Seções opcionais:** remover do array `navGroups` e **não renderizar** o container correspondente no conteúdo
+- `aria-label` no `<nav>` raiz é obrigatório
 
 ---
 
-### Template das 14 Seções
+### Template das 15 Seções
 
-As seções estão organizadas em 4 blocos com propósitos e públicos distintos:
+As seções estão organizadas em 4 blocos:
 
-- **Bloco 1 — Visão Geral** (seções 1–5): para quem está avaliando o componente.
-- **Bloco 2 — Referência Técnica** (seções 6–11): para quem vai implementar.
-- **Bloco 3 — Contexto** (seções 12–14): acessibilidade, componentes relacionados e boas práticas.
-- **Bloco 4 — Qualidade** (seção 15): critérios de teste para dev e QA.
+- **Bloco 1 — Visão Geral** (2–5): para quem está avaliando o componente
+- **Bloco 2 — Referência Técnica** (6–11): para quem vai implementar
+- **Bloco 3 — Contexto** (12–14): acessibilidade, relacionados, notas
+- **Bloco 4 — Qualidade** (15–16): analytics e testes
 
 ---
 
-#### Seção 1 — Header (Hero)
+#### Seção 1 — Header
 
-O header identifica o componente. Não possui `id` — é o topo da página.
+Renderizado pelo `DocsHeader` já antes do layout de duas colunas (ver bloco de Layout acima). Não possui `id`.
 
 ```tsx
-<header className="ds-docs mb-12 border-b pb-8 border-border/50">
-  {/* Badges de categoria */}
-  <div className="flex items-center gap-2 mb-4">
-    <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
-      {/* Categoria: Layout | Navigation | Form | Feedback | Display | Overlay */}
-    </Badge>
-    <Badge variant="outline" className="text-muted-foreground font-normal px-2 py-0">
-      Componente
-    </Badge>
-  </div>
-
-  {/* Título + descrição */}
-  <div className="space-y-4">
-    <h1 className="text-4xl font-bold tracking-tight text-foreground">
-      NomeComponente
-    </h1>
-    <p className="text-muted-foreground text-lg max-w-3xl leading-relaxed">
-      Descrição de uma linha sobre o propósito do componente.
-    </p>
-  </div>
-
-  {/* Comando de instalação Shadcn */}
-  <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground/80">
-    <span className="flex items-center gap-1.5">
-      <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono border border-border/50">
-        npx shadcn@latest add nome-componente
-      </code>
-    </span>
-  </div>
-</header>
+<DocsHeader
+  title={t('title')}
+  description={t('description')}
+  category={t('category')}
+  type={t('type')}
+  installNote="npx shadcn@latest add nome-componente"
+/>
 ```
 
-**Regras do Header:**
-- Badge de categoria: `bg-primary/5 text-primary` (sempre a primeira)
-- Badge de tipo: `text-muted-foreground font-normal` (segunda)
-- Título: `text-4xl font-bold tracking-tight`
-- Descrição: `text-lg max-w-3xl leading-relaxed`
-- Comando Shadcn: em `<code>` com fundo `bg-muted` e borda sutil
+**Regras:**
+- `category` — Layout | Navigation | Form | Feedback | Display | Overlay
+- `type` — sempre "Componente" (ou "Provider", "Hook")
+- `installNote` — opcional; se omitido, a linha do comando shadcn não é renderizada
+- `LanguageSwitcher` é incluso automaticamente
 
 ---
 
 #### Seção 2 — Demonstração Padrão
 
 ```tsx
-<section id="demonstracao">
-  <h2 className="text-xl font-semibold mb-4">Demonstração Padrão</h2>
-  <ComponentDemo>
-    {/* Renderizar o componente nos cenários mais comuns */}
-  </ComponentDemo>
-</section>
+<DocsDemonstration title={t('demonstration.title')}>
+  <Componente />
+  <Componente variant="outline" />
+  {/* ... componente REAL importado de @/components/ui/<slug> */}
+</DocsDemonstration>
 ```
+
+**Regras:**
+- `children` deve renderizar o **componente real** importado de `@/components/ui/<slug>` — nunca HTML inline com classes manuais
+- O container aplica `ComponentDemo` wrapper (card com padding e shadow)
 
 ---
 
 #### Seção 3 — Anatomia
 
-Diagrama ou tabela mostrando as partes internas do componente (root, trigger, content, etc).
+```tsx
+<DocsAnatomy
+  title={t('anatomy.title')}
+  items={[1, 2, 3, 4].map(i => t(`anatomy.item${i}`))}
+  structureCode={t('anatomy.structureCode')}
+  structureLabel={t('anatomy.structureLabel')}
+/>
+```
+
+**Regras:**
+- `items` é um array de strings com HTML inline (`<strong>`, `<code>`). O container sanitiza e renderiza como lista numerada
+- `structureCode` é renderizado em `<pre>` (diagrama ASCII); o container adiciona `overflow-x-auto`
+- Uma entrada por sub-componente / parte anatômica
 
 ---
 
 #### Seção 4 — Quando e Como Usar
 
-Contém dois subtópicos obrigatórios:
-
-**4a. Tabela de cenários** — Colunas: Cenário | Usar este componente? | Alternativa.
-
-**4b. ✍️ UX Writing** — Tabela de regras de redação para os textos do componente. Obrigatória para todo componente que exibe texto ao usuário (labels, títulos, mensagens, placeholders).
-
 ```tsx
-<div className="space-y-8 w-full">
-
-  {/* 4a — Tabela de cenários */}
-  <div className="w-full overflow-x-auto">
-    <table className="w-full border-collapse text-sm">
-      {/* Cenário | Usar? | Alternativa */}
-    </table>
-  </div>
-
-  {/* 4b — UX Writing */}
-  <div className="space-y-4">
-    <h4 className="font-medium text-sm">✍️ UX Writing</h4>
-    <div className="w-full overflow-x-auto">
-      <table className="w-full border-collapse text-sm">
-        <thead>
-          <tr className="border-b border-border">
-            <th className="text-left p-3 bg-muted/50 border-r border-border">Elemento</th>
-            <th className="text-left p-3 bg-muted/50 border-r border-border">Regras de formato</th>
-            <th className="text-left p-3 bg-muted/50 border-r border-border">✅ Correto</th>
-            <th className="text-left p-3 bg-muted/50">❌ Evitar</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Listar cada elemento textual do componente:
-              - Botões: label, tooltip
-              - Diálogos: título, descrição, action, cancel
-              - Forms: label, placeholder, erro, hint
-              - Feedback: título, mensagem
-          */}
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
+<DocsWhenToUse
+  title={t('usage.title')}
+  guidelines={{
+    title: t('usage.guidelines.title'),
+    items: [1, 2, 3, 4].map(i => t(`usage.guidelines.item${i}`)),
+  }}
+  scenarios={{
+    cols: {
+      scenario:    t('usage.scenarios.cols.scenario'),
+      use:         t('usage.scenarios.cols.use'),
+      alternative: t('usage.scenarios.cols.alternative'),
+    },
+    items: [1, 2, 3].map(i => ({
+      s: t(`usage.scenarios.item${i}.s`),
+      u: t(`usage.scenarios.item${i}.u`),
+      a: t(`usage.scenarios.item${i}.a`),
+    })),
+  }}
+  uxWriting={{
+    title: t('uxWriting.title'),
+    cols: {
+      element: t('uxWriting.table.element'),
+      do:      t('uxWriting.table.correct'),
+      dont:    t('uxWriting.table.avoid'),
+      rules:   t('uxWriting.table.rules'),
+    },
+    items: [/* linhas por elemento textual */],
+  }}
+  do={{ title: t('usage.do.title'),   items: [1, 2, 3].map(i => t(`usage.do.item${i}`))   }}
+  dont={{ title: t('usage.dont.title'), items: [1, 2, 3].map(i => t(`usage.dont.item${i}`)) }}
+/>
 ```
 
-**Regras de preenchimento do UX Writing:**
-- Uma linha por elemento textual do componente (ex: Label, Título, Descrição, Botão Action)
-- Coluna "Regras": tom, comprimento, capitalização, pontuação
-- Coluna "Correto": 2-3 exemplos reais em pt-BR
-- Coluna "Evitar": 2-3 contra-exemplos comuns
-- Para componentes sem texto visível (ex: Separator, AspectRatio): omitir o subtópico
+**Regras do UX Writing:**
+- Uma linha por elemento textual do componente (label, título, descrição, botão action)
+- Para componentes sem texto visível (ex: Separator, AspectRatio): omitir o bloco `uxWriting`
+- `cols.rules` é opcional — se não passar, o container oculta a coluna
 
+---
 
-#### Seção 5 — Do & Don't
-
-Grid de 2 colunas comparando uso correto vs incorreto.
+#### Seção 5 — Do & Don't (visual)
 
 ```tsx
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  <div className="space-y-3">
-    <div className="flex items-center gap-2">
-      <span className="text-green-600 font-bold text-sm">✓</span>
-      <span className="text-sm font-medium text-green-600">Faça isso</span>
-    </div>
-    <div className="border border-green-200 rounded-md p-4 bg-green-50">
-      {/* Exemplo correto */}
-    </div>
-    <p className="text-sm text-muted-foreground">Explicação.</p>
-  </div>
-  <div className="space-y-3">
-    <div className="flex items-center gap-2">
-      <span className="text-red-600 font-bold text-sm">✗</span>
-      <span className="text-sm font-medium text-red-600">Não faça isso</span>
-    </div>
-    <div className="border border-red-200 rounded-md p-4 bg-red-50">
-      {/* Exemplo incorreto */}
-    </div>
-    <p className="text-sm text-muted-foreground">Explicação.</p>
-  </div>
-</div>
+<DocsDoDont
+  title={t('doDont.title')}
+  pairs={[
+    {
+      doLabel:   tNav('common.do'),
+      dontLabel: tNav('common.dont'),
+      doPreview:   <Componente /* uso correto */ />,
+      dontPreview: <Componente /* uso incorreto */ />,
+      doCaption:   t('doDont.pair1.do'),
+      dontCaption: t('doDont.pair1.dont'),
+    },
+    {
+      doLabel:   tNav('common.do'),
+      dontLabel: tNav('common.dont'),
+      doPreview:   <Componente /* ... */ />,
+      dontPreview: <Componente /* ... */ />,
+      doCaption:   t('doDont.pair2.do'),
+      dontCaption: t('doDont.pair2.dont'),
+    },
+  ]}
+/>
 ```
+
+**Regras críticas:**
+- O container gera **um grid por par** (DO à esquerda, DON'T à direita). **Nunca** tente empilhar DO/DON'T verticalmente ou colocar múltiplos pares no mesmo grid — isso é prevenido pelo componente
+- `doPreview` / `dontPreview` devem usar o **componente real** de `@/components/ui/<slug>` ou conteúdo semântico, nunca caixas vazias
 
 ---
 
 #### Seção 6 — Importação
 
-Bloco de código mostrando a importação correta.
+```tsx
+<DocsImport
+  title={t('import.title')}
+  description={t('import.description')}
+  code={`import { Componente } from '@/components/ui/componente';`}
+/>
+```
+
+Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescription`.
 
 ---
 
 #### Seção 7 — Exemplos de Código
 
-Código copiável para 2-4 cenários de uso recorrentes.
+```tsx
+<DocsExamples
+  title={t('examples.title')}
+  items={[
+    {
+      title:       t('examples.basic.title'),
+      description: t('examples.basic.description'),
+      code:        codeBasic,
+      preview:     <Componente />,
+    },
+    /* ... 2-4 cenários recorrentes */
+  ]}
+/>
+```
+
+**Regras:**
+- Cada item tem preview com o componente real + bloco de código colapsável (expande ao clicar em "Ver código")
+- 2 a 4 exemplos recorrentes, cobrindo as variantes mais usadas
 
 ---
 
-#### Seção 8 — Variantes e Tamanhos
-
-Layout de **grid de cards** — cada card mostra o componente centralizado + metadado técnico abaixo.
+#### Seção 8 — Variantes
 
 ```tsx
-<section id="variantes">
-  <h2 className="text-xl font-semibold mb-6">Variantes e Tamanhos</h2>
-
-  <div className="ds-docs space-y-10 w-full">
-    {/* Subseção: título com border-l */}
-    <div>
-      <h3 className="text-sm font-semibold text-muted-foreground mb-6 px-1 border-l-2 border-primary/20 pl-3">
-        Variantes Disponíveis
-      </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-        {variantes.map(({ variant, label, desc }) => (
-          <div key={variant} className="border border-border/60 rounded-xl overflow-hidden bg-card/50 flex flex-col transition-colors hover:border-border">
-            {/* Área de preview */}
-            <div className="flex-1 flex items-center justify-center p-8 bg-muted/5 min-h-[140px]">
-              <Componente variant={variant} />
-            </div>
-            {/* Área de metadados */}
-            <div className="p-4 border-t border-border/40 bg-muted/10 space-y-1">
-              <p className="text-[11px] uppercase font-mono text-primary font-bold tracking-wider px-1.5 py-0.5 bg-primary/5 rounded-sm inline-block mb-1">
-                {label}
-              </p>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {desc}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    {/* Repetir para tamanhos com lg:grid-cols-4 */}
-  </div>
-</section>
+<DocsVariants
+  title={t('variants.title')}
+  items={[
+    {
+      name:        'default',
+      description: t('variants.items.default'),
+      preview:     <Componente variant="default" />,
+    },
+    {
+      name:        'destructive',
+      description: t('variants.items.destructive'),
+      preview:     <Componente variant="destructive" />,
+    },
+    /* uma entrada por variante visual */
+  ]}
+/>
 ```
 
-**Regras dos cards de variante:**
-- Grid responsivo: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` (variantes) ou `lg:grid-cols-4` (tamanhos)
-- Área de preview: `p-8 bg-muted/5 min-h-[140px]` com componente centralizado
-- Área de metadados: label em `font-mono text-primary` + descrição em `text-muted-foreground`
-- Subtítulos de subseção: `text-sm font-semibold border-l-2 border-primary/20 pl-3` (**sem** caixa alta)
-- O wrapper `ds-docs space-y-10` é obrigatório para espaçamento correto no Storybook
+**Regras:**
+- Cada card: preview do componente real + nome + descrição
+- Uma entrada por valor de `cva()` — jamais gerar variantes com `<div>` estilizadas
+- Componentes sem `cva()` (ex: Table, Accordion, AlertDialog): usar `DocsVariants` para "Composições" / "Modos de Operação" — mesma API, o que muda é o conteúdo dos previews
 
 ---
 
 #### Seção 9 — Estados
 
-Tabela com colunas: Estado | Visual | Como ativar.
+```tsx
+<DocsStates
+  title={t('states.title')}
+  cols={{
+    state:    t('states.cols.state'),
+    trigger:  t('states.cols.trigger'),
+    behavior: t('states.cols.behavior'),
+  }}
+  items={['default', 'disabled', 'loading', 'focus'].map(key => ({
+    label:    t(`states.${key}.label`),
+    trigger:  t(`states.${key}.trigger`),
+    behavior: t(`states.${key}.behavior`),
+  }))}
+/>
+```
+
+**Regras:**
+- A primeira coluna (`label`) é renderizada em `font-medium` simples — o container **não** aplica badge/pill
+- Componentes não interativos (ex: Alert, Badge): omitir `disabled`/`loading`
+- Componentes puramente estruturais (ex: Separator): omitir a seção inteira
 
 ---
 
 #### Seção 10 — Propriedades
 
-Tabela de API com colunas: Prop | Tipo | Padrão | Descrição.
+```tsx
+<DocsProps
+  title={t('props.title')}
+  tables={[
+    {
+      cols: {
+        prop:        t('props.table.prop'),
+        type:        t('props.table.type'),
+        default:     t('props.table.default'),
+        required:    t('props.table.required'),
+        description: t('props.table.description'),
+      },
+      items: [
+        { name: 'variant',  type: '"default" | "destructive"', defaultValue: '"default"', required: 'Não', description: t('props.table.variant')  },
+        { name: 'disabled', type: 'boolean',                    defaultValue: 'false',     required: 'Não', description: t('props.table.disabled') },
+        /* ... demais props */
+      ],
+    },
+  ]}
+  interfaceCode={`interface ComponenteProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'destructive';
+  disabled?: boolean;
+}`}
+  extensibilityTitle={t('props.extensibility.title')}
+  extensibilityNotes={t('props.extensibility.notes')}
+/>
+```
+
+**Regras:**
+- Use múltiplas entradas em `tables` para componentes compostos (ex: Alert tem 3 tabelas: Alert, AlertTitle, AlertDescription; Sonner tem 2: Toaster provider + toast() API)
+- `interfaceCode` opcional — bloco em `<code>` mostrando a interface TypeScript
+- `extensibilityNotes` aceita HTML (sanitizado pelo container)
+- Nome da prop: renderizado em `font-mono font-bold text-primary` pelo container
 
 ---
 
 #### Seção 11 — Design Tokens
 
-Tabela com colunas: Token | Valor Padrão | Contexto.
+```tsx
+<DocsTokens
+  title={t('tokens.title')}
+  cols={{
+    token:       t('tokens.cols.token'),
+    value:       t('tokens.cols.value'),
+    description: t('tokens.cols.description'),
+  }}
+  items={[
+    { token: '--primary',   value: 'hsl(...)',   description: t('tokens.table.primary')   },
+    { token: '--radius',    value: '0.5rem',     description: t('tokens.table.radius')    },
+    /* ... */
+  ]}
+  customizationTitle={t('tokens.customization.title')}
+  customizationCode={`/* globals.css */\n:root { --primary: #...; }`}
+/>
+```
 
 ---
 
 #### Seção 12 — Acessibilidade
 
-Lista de critérios WCAG aplicáveis com `<ul className="list-disc">`.
+```tsx
+<DocsAccessibility
+  title={t('accessibility.title')}
+  summary={t('accessibility.summary')}
+  items={[1, 2, 3, 4].map(i => t(`accessibility.item${i}`))}
+  keyboardTitle={t('accessibility.keyboard.title')}
+  keyboardItems={[
+    { key: 'Tab',    description: t('accessibility.keyboard.tab')    },
+    { key: 'Enter',  description: t('accessibility.keyboard.enter')  },
+    { key: 'Space',  description: t('accessibility.keyboard.space')  },
+    { key: 'Escape', description: t('accessibility.keyboard.escape') },
+  ]}
+/>
+```
+
+**Regras:**
+- `summary` e `items` aceitam HTML (sanitizado pelo container)
+- `keyboardItems` vazio se o componente não recebe foco (ex: Alert, Badge)
 
 ---
 
 #### Seção 13 — Componentes Relacionados
 
-Lista de componentes que complementam ou substituem o componente atual.
+```tsx
+<DocsRelated
+  title={t('related.title')}
+  items={[
+    { name: 'Sonner',      description: t('related.sonner'),      path: '?path=/docs/ui-sonner--docs' },
+    { name: 'AlertDialog', description: t('related.alertDialog'), path: '?path=/docs/ui-alertdialog--docs' },
+    { name: 'Badge',       description: t('related.badge'),       path: '?path=/docs/ui-badge--docs' },
+  ]}
+/>
+```
+
+**Regras:**
+- `path` é a URL relativa do Storybook — o container usa `(window.top ?? window).location.href = path` para navegar no manager, não no iframe
 
 ---
 
 #### Seção 14 — Notas e Dicas
 
-Texto corrido com observações, boas práticas e alertas sobre gotchas.
+```tsx
+<DocsNotes
+  title={t('notes.title')}
+  items={[
+    { title: t('notes.note1.title'), content: t('notes.note1.content') },
+    { title: t('notes.note2.title'), content: t('notes.note2.content') },
+  ]}
+/>
+```
+
+Cada nota é um callout com borda esquerda colorida (`border-l-4 border-primary/40`). `content` aceita HTML sanitizado.
 
 ---
 
-#### Seção 15 — Critérios de Teste
+#### Seção 15 — Analytics
 
-Tabela dividida em dois blocos:
+```tsx
+<DocsAnalytics
+  title={t('analytics.title')}
+  cols={{
+    event:   t('analytics.cols.event'),
+    trigger: t('analytics.cols.trigger'),
+    payload: t('analytics.cols.payload'),
+  }}
+  items={[
+    { event: 'docs_page_view',     trigger: t('analytics.item1.trigger'), payload: '{ component, locale }' },
+    { event: 'docs_section_viewed', trigger: t('analytics.item2.trigger'), payload: '{ section_id, component, locale }' },
+    /* eventos de produto, se houver */
+  ]}
+/>
+```
 
-1. **Comportamento Funcional** — tabela com colunas: Ação do usuário | Resultado esperado | Prioridade
-2. **Acessibilidade Verificável** — lista de critérios para ferramentas automatizadas (jest-axe, axe-core)
+**Regras:**
+- Sempre listar os eventos da docs page (`docs_page_view`, `docs_section_viewed`, `language_switched`)
+- Componentes interativos podem adicionar eventos de produto (ex: `button_click`, `accordion_expand`, `dialog_open`)
+- Componentes estruturais (Table, Alert, Separator): explicitar na descrição que o componente não dispara eventos próprios
 
-**Importante:** os critérios documentados aqui devem estar cobertos pela `play` function do Playground no Storybook (veja Parte 2).
+---
+
+#### Seção 16 — Critérios de Teste
+
+```tsx
+<DocsTestes
+  title={t('testes.title')}
+  functional={{
+    title: t('testes.functional.title'),
+    cols: {
+      action:   t('testes.functional.cols.action'),
+      result:   t('testes.functional.cols.result'),
+      priority: t('testes.functional.cols.priority'),
+    },
+    items: [1, 2, 3, 4, 5].map(i => ({
+      action:   t(`testes.functional.item${i}.action`),
+      result:   t(`testes.functional.item${i}.result`),
+      priority: t(`testes.functional.item${i}.priority`),
+    })),
+  }}
+  accessibility={{
+    title: t('testes.accessibility.title'),
+    cols: {
+      criterion: t('testes.accessibility.cols.criterion'),
+      level:     t('testes.accessibility.cols.level'),
+      how:       t('testes.accessibility.cols.how'),
+    },
+    items: [1, 2, 3].map(i => ({
+      criterion: t(`testes.accessibility.item${i}.criterion`),
+      level:     t(`testes.accessibility.item${i}.level`),
+      how:       t(`testes.accessibility.item${i}.how`),
+    })),
+  }}
+  visual={{
+    title: t('testes.visual.title'),
+    cols: {
+      story:    t('testes.visual.cols.story'),
+      priority: t('testes.visual.cols.priority'),
+    },
+    items: [1, 2, 3, 4, 5].map(i => ({
+      story:    t(`testes.visual.item${i}.story`),
+      priority: t(`testes.visual.item${i}.priority`),
+    })),
+  }}
+/>
+```
+
+**Regras:**
+- 3 sub-seções obrigatórias: funcional, acessibilidade, visual
+- `priority` = "Alta" | "Média" | "Baixa" — o container aplica cores automaticamente (vermelho/amarelo/verde)
+- Os critérios documentados aqui devem estar cobertos pelas play functions das stories
 
 ---
 
@@ -417,73 +645,45 @@ Tabela dividida em dois blocos:
 
 ### Estrutura de arquivos obrigatória
 
-Cada componente deve ter **5 arquivos de stories**, organizados em subgrupos na sidebar:
+Cada componente deve ter até **5 arquivos de stories**:
 
 ```
 src/components/ui/
   ├── nome-componente.tsx                      (componente)
-  ├── nome-componente.stories.tsx              (meta + Playground)
-  ├── nome-componente-variantes.stories.tsx     (variantes visuais)
-  ├── nome-componente-tamanhos.stories.tsx      (tamanhos)
-  ├── nome-componente-composicoes.stories.tsx   (composições: ícones, asChild, slots)
-  └── nome-componente-estados.stories.tsx       (estados: disabled, loading)
-```
-
-**Resultado na sidebar do Storybook:**
-
-```
-UI / NomeComponente
-  ├── Docs                    ← página de documentação completa
-  ├── Playground              ← sandbox com todos os controles + play function
-  ├── Variantes/
-  │   ├── Default
-  │   ├── Secondary
-  │   └── ...
-  ├── Tamanhos/
-  │   ├── Small
-  │   ├── Default
-  │   └── ...
-  ├── Composições/
-  │   ├── Com ícone
-  │   ├── Como link (asChild)
-  │   └── ...
-  └── Estados/
-      ├── Disabled
-      └── Loading
+  ├── nome-componente.stories.tsx              (meta + Playground + withAutoDocsTab)
+  ├── nome-componente-variantes.stories.tsx     (1 story por variante)
+  ├── nome-componente-tamanhos.stories.tsx      (1 story por tamanho — omitir se não tem prop size)
+  ├── nome-componente-composicoes.stories.tsx   (com ícone, asChild, slots compostos)
+  └── nome-componente-estados.stories.tsx       (disabled, loading — omitir se não aplicável)
 ```
 
 ---
 
 ### Arquivo Principal — `nome-componente.stories.tsx`
 
-Este arquivo contém:
-- O `meta` compartilhado com `tags: ["autodocs"]` e `parameters.docs.page: NomeComponenteDocs`
-- Todos os `argTypes` com controles e descrições
-- `onClick: { action: "clicked" }` em argTypes + `onClick: fn()` em args
-- A story **Playground** com a `play` function que cobre os critérios de teste documentados
-
 ```tsx
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn, userEvent, within, expect } from "@storybook/test";
-import { NomeComponente } from "./nome-componente";
-import { NomeComponenteDocs } from "@/components/docs/NomeComponenteDocs";
+import type { Meta, StoryObj } from '@storybook/react';
+import { fn, userEvent, within, expect } from 'storybook/test';
+import { Componente } from './componente';
+import { ComponenteDocs } from '@/components/docs/ComponenteDocs';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta = {
-  title: "UI/NomeComponente",
-  component: NomeComponente,
-  tags: ["autodocs"],
+  title: 'UI/Componente',
+  component: Componente,
+  tags: ['autodocs'],
   parameters: {
-    docs: { page: NomeComponenteDocs },
+    docs: { page: withAutoDocsTab(ComponenteDocs) },
   },
   argTypes: {
-    // Todos os controles com description em pt-BR
-    onClick: { action: "clicked" },
+    variant: { control: 'select', options: ['default', 'destructive'], description: 'Estilo visual' },
+    onClick: { action: 'clicked' },
   },
   args: {
-    // Valores padrão
+    variant: 'default',
     onClick: fn(),
   },
-} satisfies Meta<typeof NomeComponente>;
+} satisfies Meta<typeof Componente>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -491,135 +691,42 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const element = canvas.getByRole("...");
+    const element = canvas.getByRole('button');
 
-    // Os steps devem espelhar os critérios da Seção 15 (Testes) do ComponentDocs.
-    // Exemplo para um componente interativo:
-
-    await step("Clica no elemento habilitado", async () => {
+    await step('Clique dispara callback', async () => {
       await userEvent.click(element);
-      await expect(args.onClick).toHaveBeenCalledTimes(1);
+      await expect(args.onClick).toHaveBeenCalled();
     });
 
-    await step("Verifica que o elemento continua habilitado", async () => {
-      await expect(element).toBeEnabled();
-    });
-
-    await step("Elemento recebe foco → focus-visible disponível", async () => {
-      element.focus();
-      await expect(element).toHaveFocus();
-    });
-
-    await step("Enter com foco dispara onClick", async () => {
-      element.focus();
-      const countBefore = (args.onClick as ReturnType<typeof fn>).mock.calls.length;
-      await userEvent.keyboard("{Enter}");
-      await expect(args.onClick).toHaveBeenCalledTimes(countBefore + 1);
-    });
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "Descrição dos critérios cobertos pela play function.",
-      },
-    },
+    // Steps alinhados com a Seção "Testes" da docs page
   },
 };
 ```
 
-**Regras da play function:**
-- Usar `button.focus()` em vez de `userEvent.tab()` — o tab navega por elementos internos do iframe do Storybook e produz falsos negativos
-- Cada `step` deve ter nome descritivo em pt-BR
-- Os steps devem corresponder 1:1 aos critérios da Seção 15 do ComponentDocs
-- Para testes de clique: usar `args.onClick` (que é `fn()`) para contar chamadas
-- Para componentes sem interação de clique (ex: Badge, Separator): a play function pode ser omitida
+**Regras:**
+- `withAutoDocsTab(ComponenteDocs)` em `parameters.docs.page` — bridge que injeta a docs page na aba Docs do Storybook
+- `onClick: { action: 'clicked' }` em `argTypes` **apenas** quando a story tem `play` function testando cliques
+- Em `args`, use `fn()` para callbacks testáveis
+- Para componentes não-interativos (Alert, Badge, Separator): **omitir** `argTypes.onClick`, `args.onClick` e a play function, ou testar estrutura/role em vez de cliques
 
 ---
 
-### Arquivo de Variantes — `nome-componente-variantes.stories.tsx`
+### Arquivos secundários — Variantes / Tamanhos / Composições / Estados
+
+Cada um tem seu próprio meta com `title: 'UI/Componente/Variantes'` etc. Não precisam de `withAutoDocsTab` (a docs page já está no arquivo principal).
 
 ```tsx
 const meta = {
-  title: "UI/NomeComponente/Variantes",
-  component: NomeComponente,
-  argTypes: {
-    onClick: { action: "clicked" },
-  },
-  args: { /* defaults */ },
-} satisfies Meta<typeof NomeComponente>;
+  title: 'UI/Componente/Variantes',
+  component: Componente,
+  args: { variant: 'default' /* sem onClick se não tem play function */ },
+} satisfies Meta<typeof Componente>;
 
-// Uma story por variante visual
 export const Default: Story = {
-  args: { variant: "default" },
-  parameters: {
-    docs: {
-      description: {
-        story: "Descrição de quando usar esta variante.",
-      },
-    },
-  },
+  args: { variant: 'default' },
+  parameters: { docs: { description: { story: 'Quando usar…' } } },
 };
 ```
-
----
-
-### Arquivo de Tamanhos — `nome-componente-tamanhos.stories.tsx`
-
-Mesmo modelo, com `title: "UI/NomeComponente/Tamanhos"`.
-
----
-
-### Arquivo de Composições — `nome-componente-composicoes.stories.tsx`
-
-Para stories que usam `render` customizado (ícones, asChild, slots compostos).
-
-```tsx
-const meta = {
-  title: "UI/NomeComponente/Composições",
-  // ...
-};
-
-export const WithIconLeading: Story = {
-  name: "Ícone à esquerda",
-  render: (args) => (
-    <NomeComponente {...args}>
-      <IconeExemplo className="h-4 w-4" />
-      Label
-    </NomeComponente>
-  ),
-};
-```
-
-**Regra:** usar `name` em pt-BR para stories de composição.
-
----
-
-### Arquivo de Estados — `nome-componente-estados.stories.tsx`
-
-Para estados visuais como `disabled` e `loading`.
-
-```tsx
-const meta = {
-  title: "UI/NomeComponente/Estados",
-  // ...
-};
-
-export const Disabled: Story = {
-  args: { disabled: true },
-};
-
-export const Loading: Story = {
-  name: "Loading",
-  render: (args) => (
-    <NomeComponente {...args} disabled>
-      <Loader2 className="h-4 w-4 animate-spin" />
-      Aguarde…
-    </NomeComponente>
-  ),
-};
-```
-
-**Nota sobre Loading:** O Shadcn/UI não possui prop `loading` nativa. O padrão é combinar `disabled` + ícone `Loader2` com `animate-spin`.
 
 ---
 
@@ -637,149 +744,110 @@ export const Loading: Story = {
 
 ### Checklist de implementação
 
-Para cada componente novo, verificar:
-
-- [ ] `translations.json` criado em `src/components/docs/content/{slug}/` com estrutura `{ "pt-BR": {...}, "en": {...}, "es": {...} }`
-- [ ] ComponentDocs criado com as 14 seções aplicáveis
-- [ ] Header com badges, h1, descrição e comando Shadcn
-- [ ] `LanguageSwitcher` importado e renderizado no header da docs page
+- [ ] `translations.json` em `docs/shared/content/{slug}/` com `{ "pt-BR": {...}, "en": {...}, "es": {...} }`
+- [ ] ComponentDocs composta exclusivamente com containers `Docs*` de `@/components/docs/shared/sections` — **zero JSX inline de seção**
+- [ ] `DocsHeader` usado (inclui `LanguageSwitcher` automaticamente)
 - [ ] `useSeoEffect` chamado com `{ title, description, locale, componentSlug }`
-- [ ] Sidebar de navegação com navGroups correspondentes
-- [ ] Wrapper `.ds-docs` aplicado no header e no conteúdo
-- [ ] 5 arquivos de stories criados (ou menos se não aplicável)
-- [ ] Story principal com `parameters.docs.page: withAutoDocsTab(NomeComponenteDocs)`
-- [ ] Playground com play function alinhada à Seção 15
-- [ ] `onClick: fn()` no meta args e `{ action: "clicked" }` no argTypes
-- [ ] Todos os argTypes com description em pt-BR
-- [ ] Stories de composição com `name` em pt-BR
-- [ ] Estado Loading documentado (se o componente for interativo)
+- [ ] `useTranslation` com `uiTranslations + componentTranslations`
+- [ ] `track('docs_page_view', ...)` em `useEffect([locale])`
+- [ ] `useActiveSection` ligado ao `IntersectionObserver` + `track('docs_section_viewed', ...)`
+- [ ] `<nav aria-label>` com `sticky top-8 w-52 shrink-0` envolvendo `<DocsNav>`
+- [ ] Wrapper `.ds-docs` aplicado no container `flex-1`
+- [ ] `navGroups` com `id` que batem exatamente com os containers renderizados
+- [ ] Demonstração, exemplos, variantes e Do/Don't usam o **componente real** de `@/components/ui/<slug>` — nunca HTML inline com classes manuais
+- [ ] Até 5 arquivos de stories criados (menos se não aplicável)
+- [ ] Story principal com `parameters.docs.page: withAutoDocsTab(ComponenteDocs)`
+- [ ] `onClick: fn()` + `argTypes.onClick: { action: 'clicked' }` **somente** se há play function testando clique
+- [ ] Play function alinhada com a Seção "Testes" da docs page
+- [ ] Todos os `argTypes` com `description` em pt-BR
+
+### Proibições
+
+- **Proibido** reimplementar o HTML interno de qualquer container `Docs*` dentro da docs page
+- **Proibido** copiar classes Tailwind de seção (tabelas, cards, grids Do/Don't) — use o container
+- **Proibido** usar `<pre><code>` em docs pages (exceto em `anatomy.structureCode`, onde o container já cuida). Blocos de código inline usam `<div><code>`, que é o que o container já renderiza
+- **Proibido** renderizar variantes/estados com `<div>` + classes CSS manuais em vez do componente real importado de `@/components/ui/<slug>`
 
 ### Componentes sem interação
 
 Para componentes estáticos (Badge, Separator, Avatar):
 - Omitir grupos que não se aplicam (Composições, Estados)
-- Omitir play function do Playground
-- Remover seções da sidebar que foram omitidas
-- Manter no mínimo: Header + Demonstração + Variantes + Propriedades + Acessibilidade
-
-### Componentes Provider + API imperativa (Sonner)
-
-Componentes como Sonner expõem duas superfícies: um **provider** (`<Toaster />`) e uma **função imperativa** (`toast()`). As docs pages desses componentes seguem o mesmo template de 14 seções mas com adaptações:
-
-**Diferenças na estrutura de conteúdo** (`translations.json`):
-
-1. **Seção "Variantes"** → "Tipos de Toast" — `variants.items` lista tipos de API (`default`, `success`, `error`, `warning`, `info`, `loading`) em vez de variantes `cva()`. Os cards de preview chamam a API programaticamente (ex: `toast.success('Mensagem')`) em vez de renderizar com prop `variant`.
-
-2. **Subseção "Posições"** — `variants.positions` com 6 opções de posicionamento. Cada posição tem par `{key}` (descrição) + `{key}Use` (contexto de uso), no mesmo padrão dos size cards.
-
-3. **Seção "Propriedades"** — duas tabelas separadas:
-   - `props.toasterTitle` + `props.table.*` — props do `<Toaster />` provider
-   - `props.toastTitle` + `props.toastTable.*` — opções do `toast()` por notificação
-
-4. **Seção "Importação"** — duas seções:
-   - `import.basic` — import do provider (`Toaster`)
-   - `import.usage` — import da função `toast` (de `sonner`)
-
-5. **Seção "Demonstração"** — botões interativos que disparam toasts. Evento `toast_demo_triggered` emitido ao clicar.
-
-6. **Seção "Anatomia"** — 7 items (provider, container, ícone de tipo, título, descrição, botão de ação, botão de fechar). A `structureCode` mostra chamadas de API em vez de JSX aninhado.
-
-**Estrutura de stories**:
-
-```
-src/components/ui/
-  ├── sonner.tsx                              (componente wrapper)
-  ├── sonner.stories.tsx                      (meta + Playground)
-  ├── sonner-tipos.stories.tsx                (default, success, error, warning, info, loading)
-  ├── sonner-posicoes.stories.tsx             (6 posições)
-  ├── sonner-composicoes.stories.tsx          (com ação, com descrição, promise, rich colors)
-  └── sonner-estados.stories.tsx              (expandido, dismiss, múltiplos empilhados)
-```
-
-**Playground play function**: deve cobrir os 8 critérios funcionais da seção de testes — disparar toast, aguardar timeout, clicar ação, fechar, promise resolve/reject, múltiplos, hover expand.
+- Omitir `onClick`/play function do Playground
+- Remover seções correspondentes de `navGroups` e **não** renderizar o container
+- Manter no mínimo: `DocsHeader` + `DocsDemonstration` + `DocsVariants` + `DocsProps` + `DocsAccessibility`
 
 ---
+
+## Padrões por tipo de componente
+
+As seções abaixo documentam ajustes de **conteúdo** (quais chaves de tradução preencher, quais containers omitir). As **APIs dos containers não mudam** — só o que se passa para eles.
+
+### Componentes Provider + API imperativa (padrão Sonner)
+
+Componentes como **Sonner** expõem duas superfícies: um **provider** (`<Toaster />`) e uma **função imperativa** (`toast()`).
+
+1. **`DocsVariants`** — `items` lista **tipos de toast** (`default`, `success`, `error`, `warning`, `info`, `loading`) em vez de variantes `cva()`. Cada `preview` chama a API programaticamente (`<Button onClick={() => toast.success('...')}>`).
+2. **Subseção de posições** — para documentar 6 posições, use uma segunda chamada de `DocsVariants` dentro da mesma docs page, com `title = t('variants.positions.title')`.
+3. **`DocsProps`** — passe **duas entradas** em `tables`: uma para `<Toaster />` provider, outra para opções de `toast()`.
+4. **`DocsImport`** — use `secondaryCode` + `secondaryDescription` para separar import do provider e import da função `toast`.
+5. **`DocsAnatomy`** — 7 items; `structureCode` mostra chamadas de API em vez de JSX.
+6. **Analytics** — emitir evento `toast_demo_triggered` ao clicar nos botões de demonstração.
 
 ### Componentes Presentacionais Compostos (padrão Table)
 
-Componentes como **Table** expõem múltiplos sub-componentes independentes (8 para Table: `Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`), cada um envolvendo um elemento HTML semântico via `React.forwardRef` com classes estáticas (sem `cva()`). Seguem o mesmo template de 15 seções, com as seguintes adaptações:
+Componentes como **Table** têm múltiplos sub-componentes (`Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`), todos `React.forwardRef` sobre elementos HTML nativos.
 
-1. **Anatomia** — uma entrada por sub-componente (`anatomy.item1` a `anatomy.item8` para Table). `structureCode` mostra a árvore JSX aninhada com `&lt;Table&gt;` na raiz.
-
-2. **Variantes → Composições** — sem `cva()`. `variants.items` lista composições recorrentes (`basic`, `withCaption`, `withFooter`, `empty`). Título da seção: `"Composições e Tamanhos"` (`variants.title`). Cards seguem §11.1 do guideline 08, mas a área de preview renderiza a composição montada (ex: `<Table><TableHeader>…<TableBody>…`) em vez de passar uma prop `variant`.
-
-3. **Tamanhos → Padrões de Densidade** — `variants.sizes` descreve convenções de altura aplicadas via `className` no `TableHead`/`TableCell` (`h-8` compact, `h-10` default, `h-12` comfortable) — **não** são props do componente. Cards seguem o mesmo layout de 3 linhas de §11.2 do guideline 08.
-
-4. **Estados** — apenas estados estruturais: `hover` (automático via `hover:bg-muted/50`), `selected` (via `data-state="selected"`), `empty` (renderização condicional com `colSpan`), `scroll` (automático via `overflow-x-auto`). **Omitir** `disabled`/`loading` — tabelas não são interativas.
-
-5. **Propriedades** — cada sub-componente aceita atributos HTML nativos. Documentar chaves `props.table.*`: `className`, `children`, `colSpan`, `rowSpan`, `scope` (em `TableHead`), `dataState` (em `TableRow`). Interface TypeScript exibe `React.HTMLAttributes<HTMLTableElement>` (e variantes `HTMLTableSectionElement`, `HTMLTableRowElement`, `HTMLTableCellElement`, `HTMLTableCaptionElement`). **Sem** props customizadas (`variant`, `size`).
-
-6. **Analytics** — componente estrutural; dispara apenas eventos da docs page (`docs_page_view`, `docs_section_viewed`, `language_switched`). Eventos de domínio (`table_sorted`, `row_selected`) pertencem a wrappers (ex: futuro `DataTable`), não à Table pura. A chave `analytics.description` deve explicitar: "Table é estrutural — não dispara eventos próprios".
-
-7. **Estrutura de stories**:
-   ```
-   src/components/ui/
-     ├── table.tsx                                 (8 forwardRef sub-componentes)
-     ├── table.stories.tsx                         (meta + Playground com invoice demo)
-     ├── table-composicoes.stories.tsx             (basic, withCaption, withFooter, withSelection)
-     ├── table-estados.stories.tsx                 (hover, selected, empty, scroll)
-     └── table-densidades.stories.tsx              (compact, default, comfortable via className)
-   ```
-   **Omitir** `table-variantes` e `table-tamanhos` — não existem props `variant`/`size`.
-
-8. **Play functions** — focam em estrutura semântica (não em interações):
-   - `<caption>` presente e visível (caption-bottom)
-   - Headers usam `<th>` com atributo `scope`
-   - `data-state="selected"` aplica `bg-muted` persistente
-   - `colSpan` em footer cobre colunas corretas
-   - Overflow horizontal aparece em viewport estreito
-   - Estado vazio renderiza linha única com colSpan total
-
----
+1. **`DocsAnatomy`** — 8 items (um por sub-componente). `structureCode` mostra JSX aninhado.
+2. **`DocsVariants`** — **title**: "Composições e Tamanhos". `items` lista composições recorrentes (`basic`, `withCaption`, `withFooter`, `empty`). Cada `preview` monta a tabela completa.
+3. **Densidades** — segunda chamada de `DocsVariants` com composições aplicando `className="h-8|h-10|h-12"` no `TableHead`/`TableCell`. Esclarecer que densidade **não** é prop do componente.
+4. **`DocsStates`** — apenas estados estruturais: `hover`, `selected` (via `data-state`), `empty`, `scroll`. Omitir `disabled`/`loading`.
+5. **`DocsProps`** — 8 entradas em `tables`, uma por sub-componente, documentando `className`, `children`, `colSpan`, `rowSpan`, `scope`, `data-state`. Sem props customizadas.
+6. **`DocsAnalytics`** — explicitar na descrição que Table é estrutural e não emite eventos próprios.
+7. **Stories** — omitir `table-variantes` e `table-tamanhos`. Arquivos: `.stories.tsx`, `-composicoes`, `-estados`, `-densidades`.
 
 ### Componentes Compostos Interativos com Disclosure (padrão Accordion)
 
-Componentes como **Accordion** expõem múltiplos sub-componentes (`Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`) que implementam o padrão ARIA Disclosure. Não possuem variantes visuais via `cva()` — diferem por modo de operação (`type="single"` | `type="multiple"`). Seguem o template de 15 seções com as seguintes adaptações:
+Componentes como **Accordion** (`Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`) implementam ARIA Disclosure.
 
-1. **Seção "Variantes" → "Modos de Operação"** — `variants.items` lista modos operacionais em vez de variantes visuais: `single`, `multiple`, `controlled`. Título da seção no JSON: `"Modos de Operação"` (`variants.title`). Cards de preview mostram o accordion funcionando em cada modo (não mudam cor ou estilo). **Omitir** seção "Tamanhos" — accordion não tem prop `size`.
+1. **`DocsAnatomy`** — 4 items (Root, Item, Trigger, Content).
+2. **`DocsVariants`** — **title**: "Modos de Operação". `items`: `single`, `multiple`, `controlled`. Cada `preview` mostra o accordion funcionando no modo (não muda cor/estilo).
+3. **`DocsStates`** — `closed`, `open`, `focus`, `disabled`. Omitir `loading`. Cada entrada documenta o `data-state` correspondente.
+4. **`DocsProps`** — 4 entradas em `tables`: `Accordion` (Root), `AccordionItem`, `AccordionTrigger`, `AccordionContent`.
+5. **`DocsTokens`** — inclui `--animate-accordion-up` / `--animate-accordion-down` (animações definidas no `globals.css`).
+6. **Analytics** — além dos eventos de docs, `accordion_expand { label }` ao abrir um item e `accordion_collapse { label }` ao fechar. Ver `docs/shared/guidelines/07-analytics.md`.
+7. **Stories** — omitir `accordion-variantes` e `accordion-tamanhos`. Arquivos: `.stories.tsx`, `-modos`, `-estados`, `-composicoes`.
+8. **Play function** — cobrir 6 critérios: clicar trigger fechado abre; clicar aberto (collapsible) fecha; modo single alterna; disabled bloqueia; Enter expande; Space expande. Verificar `aria-expanded` via `toHaveAttribute('aria-expanded', 'true'|'false')`.
+9. **Chaves de tradução** — conflito: `props.table.type` é coluna "Tipo"; para descrever a prop `type` use sufixo `_prop` (`props.table.type_prop`).
 
-2. **Anatomia** — 4 items (Root, Item, Trigger, Content). `structureCode` mostra a árvore JSX aninhada completa.
+### Componentes de Feedback Não-Interativos (padrão Alert)
 
-3. **Estados** — apenas estados de disclosure: `closed`, `open`, `focus`, `disabled`. **Omitir** `loading` — não aplicável. Cada estado documenta o atributo `data-state` correspondente (`open` | `closed`).
+Componentes como **Alert** (`Alert` + `AlertTitle` + `AlertDescription`) são banners de status. Não recebem foco, não têm `disabled`/`loading`.
 
-4. **Propriedades** — props por sub-componente, documentadas em 4 blocos separados:
-   - `props.rootTitle` — `Accordion` (Root): `type`, `collapsible`, `value`, `defaultValue`, `onValueChange`
-   - `props.itemTitle` — `AccordionItem`: `value` (obrigatório), `disabled`, `className`
-   - `props.triggerTitle` — `AccordionTrigger`: `className`, `children`
-   - `props.contentTitle` — `AccordionContent`: `className`, `children`
+1. **`DocsAnatomy`** — 4 items: `Alert` (`div[role=alert]`), `AlertTitle` (`h5`), `AlertDescription` (`div`), ícone SVG opcional (filho direto do `Alert`).
+2. **`DocsVariants`** — 2 entradas (`default`, `destructive`). Cada `preview` mostra o alerta completo (ícone + `AlertTitle` + `AlertDescription`), não isolado. Omitir seção de tamanhos.
+3. **`DocsStates`** — `default`, `destructive`, `withIcon`, `withoutTitle`. Omitir `loading`/`disabled`.
+4. **`DocsProps`** — 3 entradas em `tables`: `Alert` (variant, className, children), `AlertTitle` (className, children), `AlertDescription` (className, children). Todos aceitam atributos HTML nativos via `forwardRef`.
+5. **Play function** — estrutura e a11y, não interação:
+   - `role="alert"` no elemento raiz (`getByRole('alert')`)
+   - Variante `destructive` aplica a classe correta
+   - Ícone SVG filho direto recebe posicionamento absoluto via seletor CSS
+   - `AlertTitle` renderiza como `h5`
+6. **`DocsAnalytics`** — Alert é estrutural: listar apenas `docs_page_view`, `docs_section_viewed`, `language_switched`. Não documentar `alert_shown` ou `alert_dismissed`.
+7. **Stories** — omitir `alert-tamanhos`. Arquivos: `.stories.tsx`, `-variantes`, `-composicoes`, `-estados`.
+8. **`role="alert"` + WCAG 4.1.3** — inserção dinâmica no DOM é anunciada por leitores de tela (ARIA Live Region implícita). Cobrir na seção de Acessibilidade e verificar com `getByRole('alert')`.
+9. **Ícone via CSS absoluto** — `[&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4` no `alertVariants` posiciona qualquer SVG filho direto. Texto recuado via `[&>svg~*]:pl-7`. Documentar em `notes.note2` e na Anatomia.
 
-5. **Tokens CSS** — sem tokens de cor específicos (herda `border`, `foreground`, `muted-foreground`). Tokens de animação (`--animate-accordion-up`, `--animate-accordion-down`) configurados no `globals.css` via `@keyframes`. Documentar no `tokens.table`.
+### Componentes Modais de Confirmação (padrão AlertDialog)
 
-6. **Estrutura de stories**:
-   ```
-   src/components/ui/
-     ├── accordion.tsx                          (4 sub-componentes forwardRef)
-     ├── accordion.stories.tsx                  (meta + Playground — type single, collapsible)
-     ├── accordion-modos.stories.tsx            (single, multiple, controlled)
-     ├── accordion-estados.stories.tsx          (disabled item, focus via keyboard)
-     └── accordion-composicoes.stories.tsx      (dentro de card, conteúdo rico, FAQ)
-   ```
-   **Omitir** `accordion-variantes` e `accordion-tamanhos` — não existem props `variant`/`size`.
+Componentes como **AlertDialog** são overlays de decisão forçada.
 
-7. **Playground play function** — deve cobrir os 6 critérios da seção de testes:
-   - Clicar trigger fechado → item abre (`data-state="open"`)
-   - Clicar trigger aberto (collapsible) → item fecha
-   - No modo single, abrir segundo item → primeiro fecha
-   - Trigger disabled → nenhuma mudança de estado
-   - Enter no trigger focado → item expande
-   - Space no trigger focado → item expande
-
-8. **Analytics** — accordion é interativo; além dos eventos de docs page (`docs_page_view`, `docs_section_viewed`), documenta evento de produto: `accordion_toggle` com payload `{ item_value, state: 'open' | 'closed' }`.
-
-9. **`aria-expanded`** — verificar via `expect(trigger).toHaveAttribute('aria-expanded', 'true')` após abrir e `'false'` após fechar. Essencial para conformidade WCAG 2.1 AA (critério 4.1.2).
-
-10. **Chaves de tradução — conflito de caminho** — `props.table` usa chaves para cabeçalhos de coluna (`type` = "Tipo") E chaves para descrições de props. Para evitar conflito com prop de mesmo nome, usar sufixo `_prop`: `props.table.type_prop` = "Modo de operação do accordion". Padrão: cabeçalhos de coluna usam o nome canônico; descrições de prop com nome igual a coluna usam `{prop}_prop`.
-
-11. **`doDont.pair${n}.dontExample`** — texto de exemplo visual na caixa "don't" (aparece antes da caption). Adicionar ao `translations.json` junto com `do`/`dont`.
-
-12. **`notes.tip${i}Title`** — título flat separado de `notes.tip${i}` (descrição). Não usar `notes.tip${i}.title` — `flattenDict` não indexa objetos intermediários, então o caminho `notes.tip1` precisa ser uma string leaf.
+1. **Sem `cva()`** — não há prop `variant`. `DocsVariants.items` documenta **tipos de uso** (`destructive`, `neutral`) — padrões contextuais. Cada `preview` usa `defaultOpen` na instância para renderizar o modal aberto no card.
+2. **`DocsAnatomy`** — 9 items cobrindo todos os sub-componentes.
+3. **`DocsStates`** — `closed` (padrão) e `open`. Omitir `loading`/`disabled`.
+4. **`DocsProps`** — props do root (`open`, `defaultOpen`, `onOpenChange`) + prop `asChild` no Trigger.
+5. **`DocsNotes`** — overlay não fecha ao clicar (diferente do Dialog). Documentar em uma nota dedicada.
+6. **`DocsAccessibility`** — `role="alertdialog"` anuncia imediatamente sem foco (diferente de `dialog`).
+7. **Stories** — omitir `alert-dialog-tamanhos`. Usar `defaultOpen={true}` nas stories de variantes/estados para que Chromatic capture o modal visível.
+8. **Play function** — 6 critérios: trigger abre modal com `role="alertdialog"`; Cancel fecha e retorna foco; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
+9. **Analytics de produto** — `dialog_open { component: "alert_dialog", location, label }` ao abrir; `dialog_confirm { component: "alert_dialog", location, label }` ao confirmar; `dialog_close { component: "alert_dialog", location, label, trigger: "cancel_button" | "escape" }` ao cancelar. Ver `docs/shared/guidelines/07-analytics.md`.
+10. **`notes.tip${i}Title`** — título separado de `notes.tip${i}` (descrição). Não aninhar (`flattenDict` não indexa objetos intermediários).

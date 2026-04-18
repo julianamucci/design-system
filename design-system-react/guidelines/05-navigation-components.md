@@ -57,44 +57,20 @@
 **SEO** (ver `20-seo-geo.md`):
 O Breadcrumb é o único componente de navegação com impacto direto em rich snippets — o Google exibe o caminho de navegação nos resultados de busca quando o Schema.org `BreadcrumbList` está presente.
 
+O JSON-LD do Breadcrumb é gerado automaticamente pelo hook `useSeoEffect` (ver `@/lib/use-seo.ts`) quando o parâmetro `breadcrumb` é passado. **Não** injete o script manualmente com `useEffect`.
+
 ```tsx
-// Injetar via useEffect junto com as demais metatags da página
-useEffect(() => {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Início",
-        "item": "https://exemplo.com/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Componentes",
-        "item": "https://exemplo.com/componentes"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Button"
-        // Sem "item" no último nível — é a página atual
-      }
-    ]
-  };
-
-  const script = document.createElement("script");
-  script.type = "application/ld+json";
-  script.id = "breadcrumb-schema";
-  script.textContent = JSON.stringify(schema);
-  document.head.appendChild(script);
-
-  return () => {
-    document.getElementById("breadcrumb-schema")?.remove();
-  };
-}, [currentPage]);
+useSeoEffect({
+  title: currentPage.title,
+  description: currentPage.description,
+  locale,
+  componentSlug: currentPage.slug,
+  breadcrumb: [
+    { name: 'Início', item: 'https://exemplo.com/' },
+    { name: 'Componentes', item: 'https://exemplo.com/componentes' },
+    { name: currentPage.title }, // último item: sem "item" — é a página atual
+  ],
+});
 ```
 
 **Analytics** (ver `21-analytics.md`):

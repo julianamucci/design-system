@@ -131,13 +131,13 @@ import {
 - `AlertDialogTitle` e `AlertDialogDescription` obrigatórios — base para `aria-labelledby` e `aria-describedby`
 - `aria-label` contextual no `AlertDialogAction` quando o texto do botão sozinho não tem contexto suficiente para leitores de tela
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Título: frase nominal que nomeia a ação — "Excluir conta", "Cancelar assinatura"
 - Descrição: consequência em frase completa — "Esta ação não pode ser desfeita."
 - `AlertDialogAction`: repete o verbo do título — "Excluir"
 - `AlertDialogCancel`: sempre "Cancelar"
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
 ```tsx
 <AlertDialog onOpenChange={(open) => {
   if (open) track("dialog_open", { component: "alert_dialog", location: currentPage, label: "Excluir conta" })
@@ -492,13 +492,13 @@ import {
 - `Escape` fecha o Dialog — comportamento nativo, não sobrescrever
 - `aria-labelledby` e `aria-describedby` aplicados automaticamente via `DialogTitle` e `DialogDescription`
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - `DialogTitle`: frase nominal que nomeia a ação — "Editar perfil", "Adicionar item"
 - `DialogDescription`: contexto ou instrução, frase completa com ponto — "Atualize suas informações. Clique em salvar ao terminar."
 - Botão primário: repete o verbo do título — "Editar" → "Salvar edições" ou simplesmente "Salvar"
 - Botão secundário: sempre "Cancelar"
 
-**Analytics** (ver `21-analytics.md`):
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
 ```tsx
 <Dialog
   open={open}
@@ -674,7 +674,7 @@ import {
 - Radix aplica `role="menu"` e `role="menuitem"` automaticamente
 - Arrow keys navegam entre itens — comportamento nativo
 
-**Analytics** (ver `21-analytics.md`): `menu_item_click` com `label` e `menu` (nome do menu pai).
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`): `menu_item_click` com `label` e `menu` (nome do menu pai).
 
 ---
 
@@ -871,7 +871,7 @@ import {
 - Overlay (backdrop) escuro automático — não desabilitar
 - `Escape` fecha o Sheet — comportamento nativo
 
-**Analytics** (ver `21-analytics.md`): mesmo padrão do Dialog — `dialog_open`, `dialog_close`, `dialog_confirm` com `component: "sheet"`.
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`): mesmo padrão do Dialog — `dialog_open`, `dialog_close`, `dialog_confirm` com `component: "sheet"`.
 
 ---
 
@@ -938,12 +938,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 - Tooltip aparece no foco por teclado além do hover — comportamento nativo do Radix
 - **Nunca usar o Tooltip como único portador de informação crítica** — deve complementar, não substituir
 
-**UX Writing** (ver `19-tom-de-voz.md`):
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Complementa o label visível: se o botão diz "Salvar", o tooltip pode dizer "Salvar como rascunho"
 - Nunca repetir o label: botão "Editar" + tooltip "Editar" — inútil
 - Sem ponto final em textos curtos de tooltip (1 linha)
 
-**Analytics** (ver `21-analytics.md`): `tooltip_view` — rastrear apenas quando medir se usuários precisam de ajuda contextual em uma feature específica.
+**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`): `tooltip_view` — rastrear apenas quando medir se usuários precisam de ajuda contextual em uma feature específica.
 
 ---
 
@@ -1050,7 +1050,7 @@ export function ResponsiveOverlay({ open, onOpenChange }: { open: boolean; onOpe
 - `TooltipProvider` no root obrigatório para Tooltip funcionar
 - ContextMenu sempre com alternativa acessível — right-click não é descobrível
 
-**Analytics transversal** (ver `21-analytics.md`):
+**Analytics transversal** (ver `../../docs/shared/guidelines/07-analytics.md`):
 
 | Componente | Evento | Payload |
 |------------|--------|---------|
@@ -1061,7 +1061,7 @@ export function ResponsiveOverlay({ open, onOpenChange }: { open: boolean; onOpe
 | Tooltip | `tooltip_view` | `label` (apenas em funis críticos) |
 | Command | — | Rastrear via `onSelect` de cada item |
 
-**UX Writing transversal** (ver `19-tom-de-voz.md`):
+**UX Writing transversal** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Títulos de overlay: frase nominal, ação no infinitivo — "Editar perfil", "Excluir conta"
 - Descrições: frase completa, ponto final, explica consequência ou contexto
 - Botão primário: repete o verbo do título

@@ -1,310 +1,471 @@
-# Estrutura Padronizada de Documentação de Componentes (Svelte)
+# Documentação de Componentes Svelte 5 — Regras Obrigatórias
 
-## Visão Geral
+## Princípio Fundamental: Use os Section Containers
 
-A documentação de componentes é composta de duas partes:
-
-1. **ComponentDocs** — arquivo `.svelte` com a documentação visual e textual.
-2. **Stories** — arquivos Storybook que expõem o componente para exploração.
-
-Ambas seguem **14 seções** organizadas em 4 blocos, e **5 grupos de stories**.
-
-**Referência**: `STORYBOOK-ARCHITECTURE.md`
-
----
-
-## Parte 1 — ComponentDocs (arquivo Svelte)
-
-### Arquivo e exportação
-
-```
-src/components/docs/NomeComponenteDocs.svelte
-```
+Todas as docs pages Svelte **DEVEM usar os containers genéricos** em `src/components/docs/shared/sections/`. Esses componentes encapsulam o layout, o wrapper card, os headings, os grids e a semântica de cada seção. A docs page é apenas o **orquestrador** — passa dados via props e previews via **snippets** (Svelte 5 `{#snippet}` + `{@render}`).
 
 ```svelte
 <script lang="ts">
-  import { applyStorybookSeo } from '$lib/use-seo';
-  import DocsHeader from './shared/DocsHeader.svelte';
-  import DocsSection from './shared/DocsSection.svelte';
+  import DocsHeader from '$lib/../components/docs/shared/sections/DocsHeader.svelte';
+  import DocsDemonstration from '$lib/../components/docs/shared/sections/DocsDemonstration.svelte';
+  import DocsAnatomy from '$lib/../components/docs/shared/sections/DocsAnatomy.svelte';
+  import DocsWhenToUse from '$lib/../components/docs/shared/sections/DocsWhenToUse.svelte';
+  import DocsDoDont from '$lib/../components/docs/shared/sections/DocsDoDont.svelte';
+  import DocsImport from '$lib/../components/docs/shared/sections/DocsImport.svelte';
+  import DocsExamples from '$lib/../components/docs/shared/sections/DocsExamples.svelte';
+  import DocsVariants from '$lib/../components/docs/shared/sections/DocsVariants.svelte';
+  import DocsStates from '$lib/../components/docs/shared/sections/DocsStates.svelte';
+  import DocsProps from '$lib/../components/docs/shared/sections/DocsProps.svelte';
+  import DocsTokens from '$lib/../components/docs/shared/sections/DocsTokens.svelte';
+  import DocsAccessibility from '$lib/../components/docs/shared/sections/DocsAccessibility.svelte';
+  import DocsRelated from '$lib/../components/docs/shared/sections/DocsRelated.svelte';
+  import DocsNotes from '$lib/../components/docs/shared/sections/DocsNotes.svelte';
+  import DocsAnalytics from '$lib/../components/docs/shared/sections/DocsAnalytics.svelte';
+  import DocsTestes from '$lib/../components/docs/shared/sections/DocsTestes.svelte';
+</script>
+```
 
-  applyStorybookSeo({
-    title: 'NomeComponente — Categoria · Design System',
-    description: 'Documentação do NomeComponente: [N] variantes, estados interativos e exemplos.',
-    locale: 'pt-BR',
-    componentSlug: 'nome-componente',
+**NUNCA** reimplemente inline o HTML das seções. Se precisar de um layout novo, estenda o container correspondente — não duplique no consumo.
+
+---
+
+## Regras Svelte-Específicas
+
+### Svelte 5 Runes
+
+- Use `$props()` para props, **nunca** `export let`.
+- Use `$state()` para estado reativo local.
+- Use `$effect(...)` para side effects (SEO, analytics, IntersectionObserver).
+- Use `$derived(...)` para computed values.
+- Use `{#snippet name()}` + `{@render name()}` para passar conteúdo a containers (equivalente a children/slots).
+
+### Wrapper Story Svelte
+
+Stories Svelte em Storybook 10 precisam de um `StoryWrapper.svelte` que garante labels e props corretos — similar ao `ButtonStory.svelte`.
+
+```ts
+// AlertStory.svelte — wrapper genérico
+// Usado em meta.component para que stories recebam props via args
+```
+
+### Docs Tab Bridge
+
+Storybook espera React em `parameters.docs.page`. O `withAutoDocsTab.tsx` (em `src/lib/`) converte a docs page `.svelte` para um componente React montável dentro do Docs tab.
+
+```ts
+parameters: {
+  docs: { page: withAutoDocsTab(AlertDocs) },
+},
+```
+
+---
+
+## Estrutura Obrigatória da Docs Page
+
+### Layout `.svelte`
+
+```svelte
+<script lang="ts">
+  import { t, locale } from '$lib/i18n';
+  import { applySeo } from '$lib/use-seo';
+  import { track } from '$lib/analytics';
+  import { sanitizeHtml } from '$lib/sanitize-html';
+  import LanguageSwitcher from '$lib/../components/product/LanguageSwitcher.svelte';
+  import DocsNav from '$lib/../components/docs/shared/DocsNav.svelte';
+  import uiTranslations from '$lib/i18n/ui.json';
+  import componentTranslations from '$lib/../../../docs/shared/content/<slug>/translations.json';
+
+  // Containers genéricos (listados acima)
+
+  // Helper t() reativo — locale store do projeto
+  const tContent = $derived((key: string) => /* lookup em componentTranslations */);
+  const tNav = $derived((key: string) => /* lookup em uiTranslations */);
+
+  // SEO reativo
+  $effect(() => {
+    applySeo({
+      title: tContent('seo.title'),
+      description: tContent('seo.description'),
+      locale: $locale,
+      componentSlug: '<slug>',
+    });
+  });
+
+  // Analytics — page view
+  $effect(() => {
+    track('docs_page_view', {
+      component_name: '<slug>',
+      locale: $locale,
+      page_title: `${tContent('title')} · Design System`,
+    });
+  });
+
+  // Active section tracking
+  let activeSection = $state('demonstracao');
+  function handleSectionChange(id: string) {
+    activeSection = id;
+    track('docs_section_viewed', { section_id: id, component_name: '<slug>', locale: $locale });
+  }
+
+  const navGroups = $derived([
+    { label: tNav('nav.overview'), sections: [
+      { id: 'demonstracao', label: tNav('nav.demonstration') },
+      { id: 'anatomia',     label: tNav('nav.anatomy') },
+      { id: 'quando-usar',  label: tNav('nav.usage') },
+      { id: 'do-dont',      label: tNav('nav.doDont') },
+    ]},
+    { label: tNav('nav.techRef'), sections: [
+      { id: 'importacao',   label: tNav('nav.import') },
+      { id: 'exemplos',     label: tNav('nav.examples') },
+      { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'estados',      label: tNav('nav.states') },
+      { id: 'propriedades', label: tNav('nav.props') },
+      { id: 'tokens',       label: tNav('nav.tokens') },
+    ]},
+    { label: tNav('nav.context'), sections: [
+      { id: 'acessibilidade', label: tNav('nav.accessibility') },
+      { id: 'relacionados',   label: tNav('nav.related') },
+      { id: 'notas',          label: tNav('nav.notes') },
+    ]},
+    { label: tNav('nav.quality'), sections: [
+      { id: 'analytics', label: tNav('nav.analytics') },
+      { id: 'testes',    label: tNav('nav.testes') },
+    ]},
+  ]);
+
+  $effect(() => {
+    const ids = navGroups.flatMap(g => g.sections.map(s => s.id));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) if (entry.isIntersecting) { handleSectionChange(entry.target.id); break; }
+      },
+      { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
+    );
+    ids.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+    return () => observer.disconnect();
   });
 </script>
 
-<div class="p-8 max-w-5xl mx-auto">
-  <!-- Header Hero -->
-  <header class="ds-docs mb-12 border-b pb-8 border-border/50">
-    ...
-  </header>
+<div class="ds-docs p-8 max-w-5xl mx-auto">
+  <DocsHeader
+    title={tContent('title')}
+    description={tContent('description')}
+    category={tContent('category')}
+    type={tContent('type')}
+    installNote="npx shadcn@latest add <slug>"
+  />
 
-  <!-- Layout: sidebar + conteúdo -->
   <div class="flex gap-16 items-start">
-    <ComponentDocsSidebar />
-    <div class="ds-docs flex-1 space-y-12">
-      <!-- Seções 2–14 aqui -->
+    <nav
+      aria-label="Navegação das seções do componente"
+      class="sticky top-8 w-52 shrink-0 self-start space-y-5"
+    >
+      <DocsNav groups={navGroups} {activeSection} />
+    </nav>
+
+    <div class="ds-docs flex-1 min-w-0 space-y-12">
+      <!-- Containers de seção, na ordem canônica -->
     </div>
   </div>
 </div>
 ```
 
-### SEO — `applyStorybookSeo` obrigatório
+**Regras do layout:**
+- `<nav>` com `sticky top-8 w-52 shrink-0 self-start` é obrigatório — sem ele, `DocsNav` rola junto com a página
+- `aria-label` no `<nav>` diferencia a navegação de outras `<nav>`
+- `flex-1 min-w-0` no conteúdo permite overflow responsivo
+- `.ds-docs` aplica resets tipográficos específicos da doc
 
-Todo ComponentDocs **deve** chamar `applyStorybookSeo` de `$lib/use-seo.ts`. Ele detecta o iframe do Storybook e escreve metatags no documento pai.
+---
 
-> Ver `STORYBOOK-ARCHITECTURE.md` Seção 9 e `../../docs/shared/guidelines/06-seo-geo.md`.
+## Seções — Uso dos Containers
 
-### i18n
+### 1. Header (fora do `<nav>`)
 
 ```svelte
-<script lang="ts">
-  import { useTranslation } from '$lib/i18n';
-  import LanguageSwitcher from '$lib/components/product/LanguageSwitcher.svelte';
+<DocsHeader
+  title={tContent('title')}
+  description={tContent('description')}
+  category={tContent('category')}
+  type={tContent('type')}
+  installNote="npx shadcn@latest add <slug>"
+/>
+```
 
-  const t = useTranslation('button'); // slug do componente
+### 2. Demonstração (`id="demonstracao"`)
+
+Use snippet `children` (snippet padrão) com o componente real de `$lib/../components/ui/<slug>`.
+
+```svelte
+<DocsDemonstration title={tContent('demonstration.title')}>
+  <Alert>
+    <AlertTitle>{tContent('demonstration.exampleTitle')}</AlertTitle>
+    <AlertDescription>{tContent('demonstration.exampleDescription')}</AlertDescription>
+  </Alert>
+</DocsDemonstration>
+```
+
+### 3. Anatomia (`id="anatomia"`)
+
+```svelte
+<DocsAnatomy
+  title={tContent('anatomy.title')}
+  items={[tContent('anatomy.item1'), tContent('anatomy.item2'), tContent('anatomy.item3')]}
+  structureCode={tContent('anatomy.structureCode')}
+/>
+```
+
+`items` aceita HTML inline — o container sanitiza.
+
+### 4. Quando Usar (`id="quando-usar"`)
+
+```svelte
+<DocsWhenToUse
+  title={tContent('usage.title')}
+  guidelines={{ title: tContent('usage.guidelines.title'), items: [1,2,3,4].map(i => tContent(`usage.guidelines.item${i}`)) }}
+  scenarios={{ title: tContent('usage.scenarios.title'), cols: {...}, items: [...] }}
+  uxWriting={{ title: ..., cols: {...}, items: [...] }}
+  do={{ title: tContent('usage.do.title'), items: [...] }}
+  dont={{ title: tContent('usage.dont.title'), items: [...] }}
+/>
+```
+
+### 5. Do & Don't (`id="do-dont"`) — CRÍTICO
+
+`DocsDoDont` emite **um grid por par** (previne bug DO|DO vs DON'T|DON'T). Use **snippets por par** no consumidor.
+
+```svelte
+<script>
+  const doDontPairs = $derived([
+    {
+      doLabel: tNav('common.do'),
+      dontLabel: tNav('common.dont'),
+      doCaption: tContent('doDont.pair1.do'),
+      dontCaption: tContent('doDont.pair1.dont'),
+      doPreview: do1,
+      dontPreview: dont1,
+    },
+    { /* pair 2 */ },
+  ]);
 </script>
 
-<LanguageSwitcher />
-<h1>{t('title')}</h1>
+{#snippet do1()}
+  <Alert><AlertTitle>Título claro</AlertTitle></Alert>
+{/snippet}
+{#snippet dont1()}
+  <Alert><AlertTitle>Erro</AlertTitle></Alert>
+{/snippet}
+
+<DocsDoDont title={tContent('doDont.title')} pairs={doDontPairs} />
 ```
 
-Translations em: `src/components/docs/content/{slug}/translations.json`
+O container renderiza cada par com `{@render pair.doPreview()}` e `{@render pair.dontPreview()}`. **NUNCA** itere pares em um grid único no consumidor.
 
----
-
-## As 14 Seções
-
-Idênticas ao padrão React (`11-documentacao-componentes.md` do React). Usar a mesma estrutura visual com `class` em vez de `className`:
+### 6. Importação (`id="importacao"`)
 
 ```svelte
-<!-- Seção 1 — Header -->
-<header class="ds-docs mb-12 border-b pb-8 border-border/50">
-  <div class="flex items-center gap-2 mb-4">
-    <Badge variant="secondary" class="bg-primary/5 text-primary border-primary/10 font-medium px-2 py-0">
-      Layout
-    </Badge>
-    <Badge variant="outline" class="text-muted-foreground font-normal px-2 py-0">
-      Componente
-    </Badge>
-  </div>
-  <div class="space-y-4">
-    <h1 class="text-4xl font-bold tracking-tight text-foreground">NomeComponente</h1>
-    <p class="text-muted-foreground max-w-3xl">Descrição do componente.</p>
-  </div>
-</header>
-
-<!-- Seções 2-14 com <section id="..."> -->
-<section id="demonstracao">
-  <h2 class="text-xl font-semibold mb-4">Demonstração Padrão</h2>
-  <ComponentDemo>
-    <NomeComponente />
-  </ComponentDemo>
-</section>
+<DocsImport
+  title={tContent('import.title')}
+  description={tContent('import.description')}
+  code={`import { Alert, AlertTitle, AlertDescription } from '$lib/../components/ui/alert';`}
+/>
 ```
 
----
+### 7. Exemplos (`id="exemplos"`)
 
-## Parte 2 — Stories
+Passe snippets `preview0`, `preview1`, etc. no array `items`.
 
-### Estrutura de arquivos
+```svelte
+{#snippet ex0()}<Alert>...</Alert>{/snippet}
+{#snippet ex1()}<Alert variant="destructive">...</Alert>{/snippet}
 
+<DocsExamples
+  title={tContent('examples.title')}
+  items={[
+    { title: tContent('examples.item1.title'), code: `<Alert>...</Alert>`, preview: ex0 },
+    { title: tContent('examples.item2.title'), code: `<Alert variant="destructive">...</Alert>`, preview: ex1 },
+  ]}
+/>
 ```
-src/lib/components/ui/
-  ├── nome-componente/
-  │   └── index.ts                            (componente)
-  ├── nome-componente.stories.ts              (meta + Playground)
-  ├── nome-componente-variantes.stories.ts     (variantes visuais)
-  ├── nome-componente-tamanhos.stories.ts      (tamanhos)
-  ├── nome-componente-composicoes.stories.ts   (composições)
-  └── nome-componente-estados.stories.ts       (estados)
+
+### 8. Variantes (`id="variantes"`)
+
+```svelte
+{#snippet vDefault()}<Alert>...</Alert>{/snippet}
+{#snippet vDestructive()}<Alert variant="destructive">...</Alert>{/snippet}
+
+<DocsVariants
+  title={tContent('variants.title')}
+  items={[
+    { name: 'default', description: tContent('variants.default'), preview: vDefault },
+    { name: 'destructive', description: tContent('variants.destructive'), preview: vDestructive },
+  ]}
+/>
 ```
 
-### Arquivo Principal
+### 9. Estados (`id="estados"`)
 
-```ts
-import type { Meta, StoryObj } from '@storybook/svelte';
-import { fn, userEvent, within, expect } from '@storybook/test';
-import NomeComponente from '$lib/components/ui/nome-componente/NomeComponente.svelte';
-import NomeComponenteDocs from '../../components/docs/NomeComponenteDocs.svelte';
-import { withAutoDocsTab } from '$lib/withAutoDocsTab';
+Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplica.
 
-const meta = {
-  title: 'UI/NomeComponente',
-  component: NomeComponente,
-  tags: ['autodocs'],
-  parameters: {
-    docs: { page: withAutoDocsTab(NomeComponenteDocs) },
-  },
-  argTypes: {
-    // Todos os controles com description em pt-BR
-    variant: {
-      control: 'select',
-      options: ['default', 'outline', 'ghost'],
-      description: 'Estilo visual do componente',
+```svelte
+<DocsStates
+  title={tContent('states.title')}
+  cols={{ state: 'Estado', trigger: 'Gatilho', behavior: 'Comportamento' }}
+  items={[
+    { label: 'Default', trigger: 'Inicial', behavior: 'Exibe título e descrição' },
+    { label: 'Destructive', trigger: 'variant="destructive"', behavior: 'Aplica cor de erro' },
+  ]}
+/>
+```
+
+### 10. Propriedades (`id="propriedades"`)
+
+`tables` é array — um table por subcomponente em componentes compostos.
+
+```svelte
+<DocsProps
+  title={tContent('props.title')}
+  tables={[
+    {
+      title: 'Alert',
+      cols: { prop: 'Prop', type: 'Tipo', default: 'Padrão', required: 'Obrig.', description: 'Descrição' },
+      items: [
+        { name: 'variant', type: '"default" | "destructive"', defaultValue: '"default"', required: 'Não', description: '...' },
+      ],
     },
-  },
-  args: {
-    // Valores padrão
-  },
-} satisfies Meta<typeof NomeComponente>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Playground: Story = {
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const element = canvas.getByRole('button');
-
-    await step('Elemento está acessível', async () => {
-      await expect(element).toBeInTheDocument();
-      await expect(element).toBeEnabled();
-    });
-
-    await step('Recebe foco via teclado', async () => {
-      element.focus();
-      await expect(element).toHaveFocus();
-    });
-  },
-};
+    { title: 'AlertTitle', cols: {...}, items: [...] },
+  ]}
+  interfaceCode={`interface AlertProps extends HTMLAttributes<HTMLDivElement> { variant?: 'default' | 'destructive' }`}
+  extensibilityTitle={tContent('props.extensibilityTitle')}
+  extensibilityNotes={tContent('props.extensibilityNotes')}
+/>
 ```
 
-### Arquivos de Variantes / Tamanhos / Estados
+### 11. Tokens (`id="tokens"`)
 
-```ts
-import type { Meta, StoryObj } from '@storybook/svelte';
-import NomeComponente from '$lib/components/ui/nome-componente/NomeComponente.svelte';
+```svelte
+<DocsTokens
+  title={tContent('tokens.title')}
+  cols={{ token: 'Token', value: 'Valor', description: 'Uso' }}
+  items={[
+    { token: '--background', value: 'hsl(...)', description: 'Fundo padrão' },
+    { token: '--destructive', value: 'hsl(...)', description: 'Fundo destructive' },
+  ]}
+  customizationTitle={tContent('tokens.customizationTitle')}
+  customizationCode={tContent('tokens.customizationCode')}
+/>
+```
 
-const meta = {
-  title: 'UI/NomeComponente/Variantes',
-  component: NomeComponente,
-} satisfies Meta<typeof NomeComponente>;
+### 12. Acessibilidade (`id="acessibilidade"`)
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+```svelte
+<DocsAccessibility
+  title={tContent('accessibility.title')}
+  summary={tContent('accessibility.summary')}
+  items={[tContent('accessibility.item1'), tContent('accessibility.item2')]}
+  keyboardTitle={tContent('accessibility.keyboardTitle')}
+  keyboardItems={[{ key: 'Tab', description: '...' }]}
+/>
+```
 
-export const Default: Story = {
-  args: { variant: 'default' },
-  parameters: { docs: { description: { story: 'Variante padrão para ações primárias.' } } },
-};
+### 13. Relacionados (`id="relacionados"`)
+
+```svelte
+<DocsRelated
+  title={tContent('related.title')}
+  items={[
+    { name: 'Alert Dialog', description: tContent('related.alertDialog'), path: '?path=/docs/ui-alertdialog--docs' },
+  ]}
+/>
+```
+
+### 14. Notas (`id="notas"`)
+
+```svelte
+<DocsNotes
+  title={tContent('notes.title')}
+  items={[{ title: tContent('notes.item1.title'), content: tContent('notes.item1.content') }]}
+/>
+```
+
+### 15. Analytics (`id="analytics"`)
+
+```svelte
+<DocsAnalytics
+  title={tContent('analytics.title')}
+  cols={{ event: 'Evento', trigger: 'Gatilho', payload: 'Payload' }}
+  items={[
+    { event: 'docs_page_view', trigger: 'Ao carregar', payload: '{ component_name, locale }' },
+  ]}
+/>
+```
+
+### 16. Testes (`id="testes"`)
+
+```svelte
+<DocsTestes
+  title={tContent('testes.title')}
+  functional={{ title: ..., cols: {...}, items: [...] }}
+  accessibility={{ title: ..., cols: {...}, items: [...] }}
+  visual={{ title: ..., cols: {...}, items: [...] }}
+/>
 ```
 
 ---
 
-### Componentes Provider + API imperativa (Sonner)
+## Padrões Especiais por Componente
 
-Componentes como Sonner expõem duas superfícies: um **provider** (`<Toaster />`) e uma **função imperativa** (`toast()`). As docs pages seguem o mesmo template de 14 seções mas com adaptações:
+### Componentes com Provider (Sonner)
 
-1. **"Variantes" → "Tipos de Toast"** — `variants.items` lista tipos de API (`default`, `success`, `error`, `warning`, `info`, `loading`) em vez de variantes `cva()`.
-2. **Subseção "Posições"** — `variants.positions` com 6 opções de posicionamento.
-3. **"Propriedades"** — duas tabelas: props do `<Toaster />` provider + opções do `toast()`.
-4. **"Importação"** — duas seções: import do provider + import da função `toast`.
-5. **"Demonstração"** — botões interativos que disparam toasts. Evento `toast_demo_triggered`.
-6. **"Anatomia"** — 7 items (provider, container, ícone, título, descrição, botão de ação, botão de fechar).
+Use 2 tables em `DocsProps` — uma para `<Toaster />`, outra para API imperativa `toast()`.
 
-**Estrutura de stories** (usa `SonnerStory.svelte` como wrapper):
+### Componentes Compostos (Table, Accordion, AlertDialog)
 
-```
-src/components/ui/
-  ├── Sonner.svelte                             (componente wrapper)
-  ├── SonnerStory.svelte                        (wrapper para stories)
-  ├── sonner.stories.ts                         (meta + Playground)
-  ├── sonner-tipos.stories.ts                   (6 tipos)
-  ├── sonner-posicoes.stories.ts                (6 posições)
-  ├── sonner-composicoes.stories.ts             (com ação, descrição, promise, rich colors)
-  └── sonner-estados.stories.ts                 (expandido, dismiss, close button, duração)
-```
+N tables em `DocsProps`, uma por subcomponente.
 
----
+### Bits UI e `dangerouslySetInnerHTML` equivalente
 
-### Componentes Presentacionais Compostos (padrão Table)
+Svelte usa `{@html}` para conteúdo HTML. Sempre sanitize: `{@html sanitizeHtml(value)}`. Componentes Bits que recebem children internamente podem precisar de `<span>{@html ...}</span>` wrapper.
 
-Componentes como **Table** expõem múltiplos sub-componentes independentes (8 no Svelte: `Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`), instalados via `npx shadcn-svelte@latest add table`. Cada sub-componente envolve um elemento HTML semântico via `<script lang="ts">` + `$props()` com classes estáticas (sem `cva()`). Seguem o mesmo template de 15 seções, com as seguintes adaptações:
+### Alert e não-interativos
 
-1. **Anatomia** — uma entrada por sub-componente (`anatomy.item1` a `anatomy.item8`). `structureCode` mostra a árvore aninhada com `&lt;Table&gt;` na raiz usando sintaxe Svelte (`{#each}`, `{@html}` quando aplicável via `sanitizeHtml`).
+- Stories sem handlers de clique
+- Play functions testam `getByRole('alert')`, classes CSS
+- `DocsStates` cobre default/destructive (visuais), não loading/disabled
 
-2. **Variantes → Composições** — sem `cva()`. `variants.items` lista composições recorrentes (`basic`, `withCaption`, `withFooter`, `empty`). Título da seção: `"Composições e Tamanhos"` (`variants.title`). Cards seguem §11.1 do guideline 08, mas a área de preview renderiza a composição montada (`<Table.Root><Table.Header>…<Table.Body>…` ou usando imports diretos) em vez de passar uma prop `variant`.
+### AlertDialog e overlays
 
-3. **Tamanhos → Padrões de Densidade** — `variants.sizes` descreve convenções de altura aplicadas via `class` no `TableHead`/`TableCell` (`h-8` compact, `h-10` default, `h-12` comfortable) — **não** são props do componente. Cards seguem o mesmo layout de 3 linhas de §11.2 do guideline 08.
-
-4. **Estados** — apenas estados estruturais: `hover` (automático via `hover:bg-muted/50`), `selected` (via `data-state="selected"`), `empty` (renderização condicional com `colspan`), `scroll` (automático via `overflow-x-auto`). **Omitir** `disabled`/`loading` — tabelas não são interativas.
-
-5. **Propriedades** — cada sub-componente aceita atributos HTML nativos via `$props()` spread `{...restProps}`. Documentar chaves `props.table.*`: `class`, `children` (snippet), `colspan`, `rowspan`, `scope` (em `TableHead`), `data-state` (em `TableRow`). Interface TypeScript exibe `HTMLAttributes<HTMLTableElement>` (e variantes para section/row/cell/caption). **Sem** props customizadas (`variant`, `size`).
-
-6. **Analytics** — componente estrutural; dispara apenas eventos da docs page (`docs_page_view`, `docs_section_viewed`, `language_switched`). Eventos de domínio (`table_sorted`, `row_selected`) pertencem a wrappers (ex: futuro `DataTable`), não à Table pura. A chave `analytics.description` deve explicitar: "Table é estrutural — não dispara eventos próprios".
-
-7. **Estrutura de stories**:
-   ```
-   src/components/ui/table/
-     ├── index.ts                                  (barrel export)
-     ├── table.svelte                              (wrapper div + <table>)
-     ├── table-header.svelte, table-body.svelte, table-footer.svelte
-     ├── table-row.svelte, table-head.svelte, table-cell.svelte
-     └── table-caption.svelte
-
-   src/components/ui/
-     ├── TableStory.svelte                         (wrapper para stories — monta composição)
-     ├── table.stories.ts                          (meta + Playground com invoice demo)
-     ├── table-composicoes.stories.ts              (basic, withCaption, withFooter, withSelection)
-     ├── table-estados.stories.ts                  (hover, selected, empty, scroll)
-     └── table-densidades.stories.ts               (compact, default, comfortable via class)
-   ```
-   **Omitir** `table-variantes` e `table-tamanhos` — não existem props `variant`/`size`. Stories passam um prop `composition: 'basic' | 'withCaption' | ...` ao `TableStory.svelte`, que renderiza a árvore correspondente.
-
-8. **Play functions** — focam em estrutura semântica (não em interações):
-   - `<caption>` presente e visível (caption-bottom)
-   - Headers usam `<th>` com atributo `scope`
-   - `data-state="selected"` aplica `bg-muted` persistente
-   - `colspan` em footer cobre colunas corretas
-   - Overflow horizontal aparece em viewport estreito
-   - Estado vazio renderiza linha única com colspan total
+- Explicar `role="alertdialog"` vs `role="dialog"`
+- Play functions: abrir, fechar com Escape, focus trap, retorno de foco
+- `DocsStates` cobre `open`/`closed`
 
 ---
 
-### Componentes Compostos Interativos com Disclosure (padrão Accordion)
+## Proibições
 
-Componentes como **Accordion** expõem múltiplos sub-componentes (via Bits UI) que implementam o padrão ARIA Disclosure. Não possuem variantes visuais via `cva()` — diferem por modo de operação. Seguem o template de 15 seções com as seguintes adaptações:
+- ❌ **NUNCA** reimplemente inline o HTML de uma seção — use o container
+- ❌ **NUNCA** copie classes Tailwind dos containers para o template da docs
+- ❌ **NUNCA** use `<pre><code>` em blocos de código (exceto `structureCode` em `DocsAnatomy`)
+- ❌ **NUNCA** itere pares Do/Don't em um único grid — deixe `DocsDoDont` fazer o split
+- ❌ **NUNCA** recrie variantes com divs/classes manuais — use sempre o componente real
+- ❌ **NUNCA** use `export let` — use sempre `$props()` (Svelte 5)
+- ❌ **NUNCA** omita o wrapper `<nav sticky>` do `DocsNav`
+- ❌ **NUNCA** use `{@html ...}` sem `sanitizeHtml()`
 
-1. **Seção "Variantes" → "Modos de Operação"** — `variants.items` lista modos (`single`, `multiple`, `controlled`). **Omitir** seção "Tamanhos".
+## Checklist Final
 
-2. **Bits UI** — usar `Accordion.Root`, `Accordion.Item`, `Accordion.Header`, `Accordion.Trigger`, `Accordion.Content` de `bits-ui`. Props kebab-case no template Svelte: `type`, `value`, `onValueChange`, `disabled`.
-
-3. **Estrutura de stories**:
-   ```
-   src/components/ui/
-     ├── accordion/
-     │   ├── accordion.svelte + accordion-item.svelte + ...
-     ├── accordion.stories.ts
-     ├── accordion-modos.stories.ts
-     ├── accordion-estados.stories.ts
-     └── accordion-composicoes.stories.ts
-   ```
-   **Omitir** `accordion-variantes` e `accordion-tamanhos`.
-
-4. **Props table** — em Svelte, **não** usar chaves aninhadas como `props.table.type.name` (conflita com a chave de cabeçalho `props.table.type = "Tipo"`). Hardcode `name`, `type` e `default` no array de dados do script; buscar apenas a **descrição** via chave flat: `$tStore('props.table.{propDescKey}')`. Para props com nome igual a coluna (ex: `type`), usar sufixo `_prop` no JSON: `props.table.type_prop`.
-
-5. **`doDont.pair${n}.dontExample`** — texto de exemplo visual na caixa "don't". Adicionar ao `translations.json` junto com `do`/`dont`.
-
-6. **`notes.tip${i}Title`** — título flat separado de `notes.tip${i}` (descrição). Não usar `notes.tip${i}.title` — cria conflito de caminho com a string de descrição.
-
-7. **Play functions** — verificar `aria-expanded` no trigger após interação. `{@html sanitizeHtml(...)}` no conteúdo de items com HTML.
-
----
-
-## Checklist de implementação
-
-- [ ] `translations.json` criado em `src/components/docs/content/{slug}/`
-- [ ] `NomeComponenteDocs.svelte` com as 14 seções
-- [ ] Header com badges, h1, descrição
-- [ ] `LanguageSwitcher` importado e renderizado no header
-- [ ] `applyStorybookSeo` chamado com `{ title, description, locale, componentSlug }`
-- [ ] Sidebar de navegação com navGroups
-- [ ] Wrapper `.ds-docs` no header e conteúdo
-- [ ] 5 arquivos de stories (ou menos se não aplicável)
-- [ ] Story principal com `parameters.docs.page: withAutoDocsTab(NomeComponenteDocs)`
-- [ ] Playground com play function alinhada à Seção 15
-- [ ] Todos os argTypes com description em pt-BR
-- [ ] Stories de composição com `name` em pt-BR
+- [ ] Todos os containers importados de `src/components/docs/shared/sections/`
+- [ ] Nenhum HTML de seção inline no template
+- [ ] `DocsHeader` com category/type/installNote
+- [ ] `DocsDemonstration` com children snippet usando o componente real
+- [ ] `DocsDoDont` com snippets individuais por par (`preview: snippetRef`)
+- [ ] `DocsProps` com tables array (múltiplos para componentes compostos)
+- [ ] `DocsStates` — labels em texto plano (container já aplica `font-medium`)
+- [ ] Layout `flex gap-16 items-start` com `<nav sticky top-8 w-52 shrink-0 self-start>`
+- [ ] Svelte 5 runes: `$props`, `$state`, `$derived`, `$effect`
+- [ ] `applySeo` em `$effect` — reativo ao `$locale`
+- [ ] `track('docs_page_view')` em `$effect` reativo ao locale
+- [ ] IntersectionObserver dispara `track('docs_section_viewed')`
+- [ ] `withAutoDocsTab` usa a docs page Svelte
+- [ ] `translations.json` com 3 idiomas completos
+- [ ] `sanitizeHtml()` em todo `{@html}`

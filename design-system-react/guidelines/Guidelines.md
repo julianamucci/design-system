@@ -44,7 +44,6 @@ Estas guidelines estão em `docs/shared/guidelines/` e se aplicam a qualquer sta
 ### 4. Arquitetura e Design Sistema (React)
 
 - **[13-system-design.md](./13-system-design.md)** - Padrões de código, performance, segurança e estratégia de testes
-- **[14-categoria-showcase.md](./14-categoria-showcase.md)** - Estrutura de páginas Showcase de categorias no Storybook
 
 ---
 
@@ -70,10 +69,9 @@ Estas guidelines estão em `docs/shared/guidelines/` e se aplicam a qualquer sta
 8. **STORYBOOK-ARCHITECTURE.md + Arquitetura** (12) — Storybook é a interface principal; consulte `STORYBOOK-ARCHITECTURE.md` primeiro, depois `12-arquitetura-projeto.md`
 9. **Design Sistema** (04-shared) — Implementação prática de tokens CSS
 10. **System Design** (13) — Padrões de código, performance, segurança
-11. **Categoria Showcase** (14) — Estrutura de páginas Showcase no Storybook
-12. **Tom de Voz** (05-shared) — Personalidade, terminologia e padrões de escrita
-13. **SEO e GEO** (06-shared) — Metatags, Schema.org e otimização para buscadores e IAs
-14. **Analytics** (07-shared) — Rastreamento de componentes: nomenclatura de eventos e payloads
+11. **Tom de Voz** (05-shared) — Personalidade, terminologia e padrões de escrita
+12. **SEO e GEO** (06-shared) — Metatags, Schema.org e otimização para buscadores e IAs
+13. **Analytics** (07-shared) — Rastreamento de componentes: nomenclatura de eventos e payloads
 
 ---
 

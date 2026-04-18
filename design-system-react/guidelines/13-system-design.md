@@ -2,8 +2,8 @@
 
 Este documento descreve o **System Design** (Design de Sistemas) do projeto, focando em decisões técnicas de arquitetura, performance, escalabilidade e padrões de código avançados.
 
-**Para estrutura de pastas e componentes principais, consulte**: `15-arquitetura-projeto.md`
-**Para tokens CSS e padrões visuais, consulte**: `16-padroes-design-sistema.md`
+**Para estrutura de pastas e componentes principais, consulte**: `12-arquitetura-projeto.md`
+**Para tokens CSS e padrões visuais, consulte**: `03-sistema-design.md`
 
 ---
 
@@ -15,7 +15,7 @@ Este documento descreve o **System Design** (Design de Sistemas) do projeto, foc
 - **Frontend-only** - Sem backend ou servidor
 - **Static** - Pode ser deployado em qualquer CDN/hosting estático
 
-> Para arquitetura completa do projeto, ver `15-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md`.
+> Para arquitetura completa do projeto, ver `12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md`.
 
 ### Stack Tecnológica
 
@@ -164,7 +164,7 @@ storySort: {
 
 O `App.tsx` mantém state-based routing **apenas para o sandbox de desenvolvimento** (rota `?view=admin`). Novos componentes não devem ser registrados lá para fins de navegação — o título da story é suficiente.
 
-> Para o processo completo de adicionar um novo componente, ver `15-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md` Seção 14.
+> Para o processo completo de adicionar um novo componente, ver `12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md` Seção 14.
 
 ---
 
@@ -299,7 +299,7 @@ html.tema-personalizado.dark {
 }
 ```
 
-> **Formato obrigatório**: variáveis de cor sempre em HSL sem vírgulas (ex: `220 44% 57%`). Seletores de tema sempre com prefixo `html.` (ex: `html.tema-personalizado`). Consulte `16-padroes-design-sistema.md` → "Formato Obrigatório: HSL".
+> **Formato obrigatório**: variáveis de cor sempre em HSL sem vírgulas (ex: `220 44% 57%`). Seletores de tema sempre com prefixo `html.` (ex: `html.tema-personalizado`). Consulte `03-sistema-design.md` → "Formato Obrigatório: HSL".
 
 **2. Aplicação via JavaScript**
 
@@ -337,10 +337,10 @@ useEffect(() => {
 
 **Complexidade**: O(1) — criar os arquivos, o Storybook registra automaticamente.
 
-**Processo** (5 passos — detalhado em `15-arquitetura-projeto.md`):
+**Processo** (5 passos — detalhado em `12-arquitetura-projeto.md`):
 
 ```
-1. src/components/docs/NovoComponenteDocs.tsx  ← docs page (14 seções)
+1. src/components/docs/NovoComponenteDocs.tsx  ← docs page (15 seções)
 2. src/components/docs/content/{slug}/translations.json  ← i18n
 3. src/components/ui/novo-componente.stories.tsx  ← story principal + Playground
 4. src/components/ui/novo-componente-{variantes,tamanhos,estados,composicoes}.stories.tsx
@@ -574,7 +574,7 @@ function DemoSection() { }
 
 ### 4. Roteamento
 
-**Escolhido**: State-based routing
+**Escolhido**: Storybook sidebar (docs) + state-based routing (sandbox)
 
 **Alternativas consideradas**:
 - React Router
@@ -582,10 +582,10 @@ function DemoSection() { }
 - Wouter
 
 **Razões**:
-- ✅ Sem necessidade de URLs
-- ✅ Menos dependências
-- ✅ Controle total
-- ✅ Mais simples
+- ✅ Storybook sidebar gerencia navegação de docs via `storySort` — zero config
+- ✅ State-based routing em `App.tsx` apenas para o sandbox (`?view=admin`)
+- ✅ Sem dependência de router para a interface principal
+- ✅ Novos componentes aparecem na sidebar automaticamente pelo título da story
 
 ---
 
@@ -820,23 +820,27 @@ jobs:
 ### Diagrama de Componentes
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                        App.tsx                          │
-│  - currentPage: string                                  │
-│  - isDark: boolean                                      │
-│  - currentTheme: string                                 │
-│  - renderCurrentPage(): ReactNode                       │
-└────────────────┬─────��──────────────────────────────────┘
-                 │
-        ┌────────┴────────┐
-        │                 │
-┌───────▼────────┐  ┌────▼──────────────────────┐
-│   Sidebar      │  │    SidebarInset           │
-│                │  │                           │
-│ - Categories   │  │  - Header (Dark Toggle)   │
-│ - Navigation   │  │  - Content Area           │
-│ - ThemeSelector│  │    └─ [Current Page]      │
-└────────────────┘  └───────────────────────────┘
+┌──────────────────────────────────────────────────────┐
+│                   Storybook                          │
+│  - Manager (shell, sidebar, toolbar)                 │
+│  - Canvas (iframe com a story renderizada)           │
+│  - Docs tab (iframe com ComponentDocs)               │
+└──────────────┬───────────────────────────────────────┘
+               │
+    ┌──────────┴──────────┐
+    │                     │
+┌───▼────────────┐  ┌─────▼───────────────────────────┐
+│  Toolbar       │  │  ComponentDocs.tsx               │
+│  - Light/Dark  │  │  - DocsHeader                   │
+│  - Brand theme │  │  - DocsNav (sticky sidebar)      │
+│  - Language    │  │  - 15 Section containers         │
+└───┬────────────┘  │  - useSeoEffect (metatags)       │
+    │               │  - useTranslation (i18n)         │
+    │ globals       │  - track() (analytics)           │
+    ▼               └─────────────────────────────────┘
+decorator em
+preview.ts
+(classNames no <html>)
 ```
 
 ### Diagrama de Fluxo de Dados
@@ -845,77 +849,62 @@ jobs:
 ┌──────────┐
 │  User    │
 └────┬─────┘
-     │ Click
+     │ Clica na sidebar do Storybook
      ▼
-┌─────────────┐
-│  Sidebar    │
-│  MenuItem   │
-└────┬────────┘
-     │ onClick(path)
+┌─────────────────────┐
+│  Storybook Manager  │
+│  (storySort config) │
+└────┬────────────────┘
+     │ Carrega story / docs page
      ▼
-┌──────────────────┐
-│ setCurrentPage   │
-│   (setState)     │
-└────┬─────────────┘
-     │ Update State
+┌──────────────────────────┐
+│  Canvas iframe           │
+│  ComponentDocs.tsx       │
+└────┬─────────────────────┘
+     │ Monta
      ▼
-┌──────────────────┐
-│    App.tsx       │
-│  currentPage =   │
-│    "button"      │
-└────┬─────────────┘
-     │ Re-render
-     ▼
-┌──────────────────┐
-│renderCurrentPage │
-│   ()             │
-└────┬─────────────┘
-     │ Returns
-     ▼
-┌──────────────────┐
-│  ButtonDocs      │
-│  Component       │
-└──────────────────┘
+┌──────────────────────────┐
+│  useSeoEffect            │
+│  → metatags no doc pai   │
+├──────────────────────────┤
+│  useTranslation          │
+│  → texto no locale atual │
+├──────────────────────────┤
+│  track('docs_page_view') │
+│  → GA4                   │
+└──────────────────────────┘
 ```
 
 ### Diagrama de Tema
 
 ```
-┌─────────────────────┐
-│  User Action        │
-│  - Toggle Dark Mode │
-│  - Select Theme     │
-└──────────┬──────────┘
+┌────────────────────────┐
+│  User Action           │
+│  - Toolbar Light/Dark  │
+│  - Toolbar Brand       │
+└──────────┬─────────────┘
+           │ globals param na URL
+           ▼
+┌──────────────────────────┐
+│  decorator em preview.ts │
+│  withThemeByClassName    │
+│  + brand decorator       │
+└──────────┬───────────────┘
+           │ classList no <html>
+           ▼
+┌──────────────────────────┐
+│  document.documentElement│
+│  .classList              │
+│  add('dark')             │
+│  add('tema-um')          │
+└──────────┬───────────────┘
            │
            ▼
-┌──────────────────────┐
-│  setState            │
-│  - setIsDark(true)   │
-│  - setTheme('mais-  │
-│    rotina')          │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│  useEffect           │
-│  - Remove classes    │
-│  - Add classes       │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│  document.           │
-│  documentElement     │
-│  .classList          │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│  CSS Recalculate     │
-│  - Apply new         │
-│    variables         │
-│  - GPU Paint         │
-└──────────────────────┘
+┌──────────────────────────┐
+│  CSS Variables           │
+│  :root[.dark][.tema-um]  │
+│  → GPU Paint             │
+└──────────────────────────┘
 ```
 
 ---
