@@ -1,10 +1,28 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
-import { createAlert, createAlertTitle, createAlertDescription } from '@/components/ui/alert';
+import { getLocale, onLocaleChange, createTranslation, setLocale } from '@/lib/i18n';
+import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertIconType, type AlertVariant } from '@/components/ui/alert';
 import uiTranslations from '@/i18n/ui.json';
 import alertTranslations from '@shared/content/alert/translations.json';
+
+import {
+  createDocsHeader,
+  createDocsDemonstration,
+  createDocsAnatomy,
+  createDocsWhenToUse,
+  createDocsDoDont,
+  createDocsImport,
+  createDocsExamples,
+  createDocsVariants,
+  createDocsStates,
+  createDocsProps,
+  createDocsTokens,
+  createDocsAccessibility,
+  createDocsRelated,
+  createDocsNotes,
+  createDocsAnalytics,
+  createDocsTestes,
+} from '@/components/docs/shared/sections';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -17,37 +35,29 @@ function stripHtml(s: string): string {
   return s.replace(/<[^>]*>/g, '');
 }
 
+const priorityKeyMap: Record<string, string> = {
+  high: 'common.high',
+  medium: 'common.medium',
+  low: 'common.low',
+};
+
 function priorityLabel(raw: string): string {
-  const keyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
-  return tNav(keyMap[raw] ?? 'common.high');
+  return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-function priorityColor(raw: string): string {
-  if (raw === 'high')   return 'text-destructive font-medium';
-  if (raw === 'medium') return 'text-yellow-600 font-medium';
-  return 'text-muted-foreground';
-}
-
-function infoSvg(): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`;
-}
-
-function errorSvg(): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
-}
-
-function successSvg(): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
-}
-
-function warningSvg(): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`;
-}
-
-function buildAlertHtml(variant: 'default' | 'destructive' | string, extraClass: string, svgFn: () => string, titleKey: string, descKey: string): string {
-  const variantClass = variant === 'destructive' ? 'alert alert-destructive' : 'alert';
-  const cls = [variantClass, extraClass].filter(Boolean).join(' ');
-  return `<div role="alert" class="${cls}">${svgFn()}<h5 class="mb-1 font-medium leading-none tracking-tight">${sanitizeHtml(t(titleKey))}</h5><div class="text-sm">${sanitizeHtml(t(descKey))}</div></div>`;
+function buildAlert(
+  variant: AlertVariant,
+  className: string,
+  icon: AlertIconType | null,
+  titleKey: string | null,
+  descKey: string,
+  extraClass = '',
+): HTMLElement {
+  const el = createAlert({ variant, className: [className, extraClass].filter(Boolean).join(' ') });
+  if (icon) el.appendChild(createAlertIcon(icon));
+  if (titleKey) el.appendChild(createAlertTitle({ text: stripHtml(t(titleKey)) }));
+  el.appendChild(createAlertDescription({ text: stripHtml(t(descKey)) }));
+  return el;
 }
 
 // ─── createAlertDocs ──────────────────────────────────────────────────────────
@@ -73,78 +83,57 @@ export function createAlertDocs(): HTMLElement {
   }
   let cleanupSeo = updateSeo();
   cleanups.push(() => cleanupSeo());
-  const unsubSeo = subscribe(() => { cleanupSeo(); cleanupSeo = updateSeo(); });
-  cleanups.push(unsubSeo);
+  cleanups.push(subscribe(() => { cleanupSeo(); cleanupSeo = updateSeo(); }));
 
-  // ── Header ───────────────────────────────────────────────────────────────
+  // ── Header slot (created by createDocsHeader on each update) ────────────
 
-  const header = document.createElement('header');
-  header.className = 'mb-12 border-b pb-8 border-border/50';
-
-  const topRow = document.createElement('div');
-  topRow.className = 'flex items-center justify-between mb-4';
-
-  const badgeRow = document.createElement('div');
-  badgeRow.className = 'flex items-center gap-2';
-
-  const badgeCategory = document.createElement('span');
-  badgeCategory.className = 'inline-flex items-center rounded-md border border-primary/10 bg-primary/5 px-2 py-0 text-xs font-medium text-primary';
-
-  const badgeType = document.createElement('span');
-  badgeType.className = 'inline-flex items-center rounded-md border border-border px-2 py-0 text-xs font-normal text-muted-foreground';
-  badgeRow.append(badgeCategory, badgeType);
+  const headerSlot = document.createElement('div');
 
   type Locale = 'pt-BR' | 'en' | 'es';
-  const switcherWrapper = document.createElement('div');
-  switcherWrapper.className = 'flex items-center gap-1 bg-muted/30 p-1 rounded-lg border border-border/40';
   const localeDefs: { value: Locale; label: string; ariaLabel: string }[] = [
     { value: 'pt-BR', label: 'PT', ariaLabel: 'Português' },
     { value: 'en',    label: 'EN', ariaLabel: 'English'   },
     { value: 'es',    label: 'ES', ariaLabel: 'Español'   },
   ];
-  const langButtons: HTMLButtonElement[] = [];
 
-  function updateLangButtons() {
+  function createLanguageSwitcher(): HTMLElement {
+    const wrap = document.createElement('div');
+    wrap.className = 'flex items-center gap-1 bg-muted/30 p-1 rounded-lg border border-border/40';
     const current = getLocale();
-    langButtons.forEach(b => {
-      const active = b.dataset.locale === current;
+    localeDefs.forEach(({ value, label, ariaLabel }) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.dataset.locale = value;
+      b.setAttribute('aria-label', ariaLabel);
+      b.textContent = label;
+      const active = value === current;
       b.className = active
         ? 'h-6 px-2 text-[10px] font-bold rounded bg-secondary text-secondary-foreground shadow-sm transition-all'
         : 'h-6 px-2 text-[10px] font-bold rounded text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all';
       b.setAttribute('aria-pressed', String(active));
+      b.addEventListener('click', () => {
+        const prev = getLocale();
+        if (prev === value) return;
+        track('language_switched', { previous_language: prev, new_language: value });
+        setLocale(value);
+      });
+      wrap.appendChild(b);
     });
+    return wrap;
   }
-  localeDefs.forEach(({ value, label, ariaLabel }) => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.dataset.locale = value;
-    b.setAttribute('aria-label', ariaLabel);
-    b.textContent = label;
-    b.addEventListener('click', () => {
-      const prev = getLocale();
-      if (prev === value) return;
-      track('language_switched', { previous_language: prev, new_language: value });
-      import('@/lib/i18n').then(({ setLocale }) => setLocale(value as Locale));
+
+  function renderHeader() {
+    const header = createDocsHeader({
+      title: t('title'),
+      description: t('description'),
+      category: t('category'),
+      type: t('type'),
+      installNote: 'npx shadcn@latest add alert',
     });
-    langButtons.push(b);
-    switcherWrapper.appendChild(b);
-  });
-  updateLangButtons();
-  cleanups.push(onLocaleChange(updateLangButtons));
-
-  topRow.append(badgeRow, switcherWrapper);
-
-  const h1 = document.createElement('h1');
-  h1.className = 'text-4xl font-bold tracking-tight text-foreground';
-
-  const desc = document.createElement('p');
-  desc.className = 'text-muted-foreground text-lg max-w-3xl leading-relaxed';
-
-  const installBadge = document.createElement('div');
-  installBadge.className = 'mt-6 flex items-center gap-3 text-sm text-muted-foreground/80';
-  installBadge.innerHTML = `<code class="bg-muted px-1.5 py-0.5 rounded text-xs font-mono border border-border/50">shadcn/ui</code>`;
-
-  header.append(topRow, h1, desc, installBadge);
+    const topRow = header.firstElementChild as HTMLElement | null;
+    if (topRow) topRow.appendChild(createLanguageSwitcher());
+    headerSlot.replaceChildren(header);
+  }
 
   // ── Layout ───────────────────────────────────────────────────────────────
 
@@ -185,6 +174,7 @@ export function createAlertDocs(): HTMLElement {
 
   function buildSidebar() {
     sidebar.innerHTML = '';
+    sidebarNavItems.length = 0;
     NAV_GROUPS().forEach(group => {
       const groupDiv = document.createElement('div');
       const groupLabel = document.createElement('p');
@@ -210,7 +200,6 @@ export function createAlertDocs(): HTMLElement {
       sidebar.appendChild(groupDiv);
     });
   }
-  buildSidebar();
 
   function updateActiveNav(activeId: string) {
     sidebarNavItems.forEach(({ el, id }) => {
@@ -224,469 +213,486 @@ export function createAlertDocs(): HTMLElement {
   main.className = 'flex-1 min-w-0 space-y-12';
   layout.append(sidebar, main);
 
-  // ── Sections ──────────────────────────────────────────────────────────────
+  // ── Sections (rebuilt on locale change) ───────────────────────────────────
 
-  const secDemo      = createSection('demonstracao');
-  const secAnatomia  = createSection('anatomia');
-  const secWhen      = createSection('quando-usar');
-  const secDoDont    = createSection('do-dont');
-  const secImport    = createSection('importacao');
-  const secExamples  = createSection('exemplos');
-  const secVariants  = createSection('variantes');
-  const secStates    = createSection('estados');
-  const secProps     = createSection('propriedades');
-  const secTokens    = createSection('tokens');
-  const secA11y      = createSection('acessibilidade');
-  const secRelated   = createSection('relacionados');
-  const secNotes     = createSection('notas');
-  const secAnalytics = createSection('analytics');
-  const secTestes    = createSection('testes');
+  const sectionOrder = [
+    'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
+    'importacao', 'exemplos', 'variantes', 'estados', 'propriedades', 'tokens',
+    'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
+  ] as const;
+  type SectionId = typeof sectionOrder[number];
 
-  main.append(
-    secDemo.el, secAnatomia.el, secWhen.el, secDoDont.el,
-    secImport.el, secExamples.el, secVariants.el, secStates.el, secProps.el, secTokens.el,
-    secA11y.el, secRelated.el, secNotes.el, secAnalytics.el, secTestes.el,
-  );
+  const sectionEls: Record<SectionId, HTMLElement> = {} as Record<SectionId, HTMLElement>;
+
+  function buildSection(id: SectionId): HTMLElement {
+    switch (id) {
+      case 'demonstracao':
+        return createDocsDemonstration({
+          title: t('demonstration.title'),
+          demoFactory: () => {
+            const wrap = document.createElement('div');
+            wrap.className = 'w-full space-y-3';
+            wrap.append(
+              buildAlert('default', '', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
+              buildAlert('destructive', '', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
+              buildAlert('default', 'bg-success/10 text-success border-success/30', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
+              buildAlert('default', 'bg-warning/10 text-warning border-warning/30', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+            );
+            return wrap;
+          },
+        });
+
+      case 'anatomia':
+        return createDocsAnatomy({
+          title: t('anatomy.title'),
+          items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'), t('anatomy.item4')],
+          structureLabel: t('anatomy.structureLabel'),
+          structureCode: t('anatomy.structureCode'),
+        });
+
+      case 'quando-usar':
+        return createDocsWhenToUse({
+          title: t('usage.title'),
+          guidelines: {
+            title: t('usage.guidelines.title'),
+            items: [
+              t('usage.guidelines.item1'),
+              t('usage.guidelines.item2'),
+              t('usage.guidelines.item3'),
+              t('usage.guidelines.item4'),
+            ],
+          },
+          scenarios: {
+            title: t('usage.scenarios.title'),
+            cols: {
+              scenario: t('usage.scenarios.cols.scenario'),
+              use: t('usage.scenarios.cols.use'),
+              alternative: t('usage.scenarios.cols.alternative'),
+            },
+            items: [1, 2, 3, 4].map(i => ({
+              s: t(`usage.scenarios.item${i}.s`),
+              u: t(`usage.scenarios.item${i}.u`),
+              a: t(`usage.scenarios.item${i}.a`),
+            })),
+          },
+          uxWriting: {
+            title: t('usage.uxWriting.title'),
+            cols: {
+              element: t('usage.uxWriting.table.element'),
+              rules: t('usage.uxWriting.table.rules'),
+              do: t('usage.uxWriting.table.correct'),
+              dont: t('usage.uxWriting.table.avoid'),
+            },
+            items: ['title', 'description', 'error', 'warning'].map(key => ({
+              element: t(`usage.uxWriting.table.${key}.name`),
+              rules: t(`usage.uxWriting.table.${key}.format`),
+              do: t(`usage.uxWriting.table.${key}.good`),
+              dont: t(`usage.uxWriting.table.${key}.bad`),
+            })),
+          },
+          do: {
+            title: t('usage.do.title'),
+            items: [
+              t('usage.do.item1'),
+              t('usage.do.item2'),
+              t('usage.do.item3'),
+              t('usage.do.item4'),
+            ],
+          },
+          dont: {
+            title: t('usage.dont.title'),
+            items: [
+              t('usage.dont.item1'),
+              t('usage.dont.item2'),
+              t('usage.dont.item3'),
+            ],
+          },
+        });
+
+      case 'do-dont':
+        return createDocsDoDont({
+          title: t('doDont.title'),
+          pairs: [
+            {
+              doLabel: tNav('common.do'),
+              dontLabel: tNav('common.dont'),
+              doCaption: t('doDont.pair1.do'),
+              dontCaption: t('doDont.pair1.dont'),
+              doPreviewFactory: () => {
+                const el = createAlert({ variant: 'default' });
+                el.appendChild(createAlertIcon('info'));
+                el.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));
+                el.appendChild(createAlertDescription({ text: 'Não foi possível salvar. Verifique sua conexão.' }));
+                return el;
+              },
+              dontPreviewFactory: () => {
+                const el = createAlert({ variant: 'default' });
+                el.appendChild(createAlertDescription({ text: 'Salvo!' }));
+                return el;
+              },
+            },
+            {
+              doLabel: tNav('common.do'),
+              dontLabel: tNav('common.dont'),
+              doCaption: t('doDont.pair2.do'),
+              dontCaption: t('doDont.pair2.dont'),
+              doPreviewFactory: () => {
+                const el = createAlert({ variant: 'destructive' });
+                el.appendChild(createAlertIcon('error'));
+                el.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));
+                el.appendChild(createAlertDescription({ text: 'Verifique sua conexão.' }));
+                return el;
+              },
+              dontPreviewFactory: () => {
+                const el = createAlert({ variant: 'destructive' });
+                el.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));
+                el.appendChild(createAlertDescription({ text: 'Verifique sua conexão.' }));
+                return el;
+              },
+            },
+          ],
+        });
+
+      case 'importacao':
+        return createDocsImport({
+          title: t('import.title'),
+          description: t('import.basic'),
+          code: `import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from '@/components/ui/alert';`,
+          secondaryDescription: t('import.withIcon'),
+          secondaryCode: `import { createAlertIcon } from '@/components/ui/alert';\n// createAlertIcon('info' | 'error' | 'success' | 'warning')`,
+        });
+
+      case 'exemplos': {
+        const codeDefault = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
+        const codeDestructive = `const alert = createAlert({ variant: 'destructive' });\nalert.appendChild(createAlertIcon('error'));\nalert.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));\nalert.appendChild(createAlertDescription({ text: 'Não foi possível salvar. Verifique sua conexão e tente novamente.' }));`;
+        const codeSuccess = `const alert = createAlert({ variant: 'default', className: 'bg-success/10 text-success border-success/30' });\nalert.appendChild(createAlertIcon('success'));\nalert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));\nalert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));`;
+        const codeWarning = `const alert = createAlert({ variant: 'default', className: 'bg-warning/10 text-warning border-warning/30' });\nalert.appendChild(createAlertIcon('warning'));\nalert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));\nalert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));`;
+        const codeWithoutTitle = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
+
+        return createDocsExamples({
+          title: t('examples.title'),
+          items: [
+            {
+              title: t('examples.default'),
+              code: codeDefault,
+              previewFactory: () => buildAlert('default', '', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
+            },
+            {
+              title: t('examples.destructive'),
+              code: codeDestructive,
+              previewFactory: () => buildAlert('destructive', '', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
+            },
+            {
+              title: t('examples.success'),
+              code: codeSuccess,
+              previewFactory: () => buildAlert('default', 'bg-success/10 text-success border-success/30', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
+            },
+            {
+              title: t('examples.warning'),
+              code: codeWarning,
+              previewFactory: () => buildAlert('default', 'bg-warning/10 text-warning border-warning/30', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+            },
+            {
+              title: t('examples.withoutTitle'),
+              code: codeWithoutTitle,
+              previewFactory: () => buildAlert('default', '', 'info', null, 'demonstration.labels.infoDesc'),
+            },
+          ],
+        });
+      }
+
+      case 'variantes':
+        return createDocsVariants({
+          title: t('variants.title'),
+          items: [
+            {
+              name: 'default',
+              description: stripHtml(t('variants.items.default')),
+              previewFactory: () => buildAlert('default', 'w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
+            },
+            {
+              name: 'destructive',
+              description: stripHtml(t('variants.items.destructive')),
+              previewFactory: () => buildAlert('destructive', 'w-full', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
+            },
+            {
+              name: 'success',
+              description: stripHtml(t('variants.items.success')),
+              previewFactory: () => buildAlert('default', 'w-full bg-success/10 text-success border-success/30', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
+            },
+            {
+              name: 'warning',
+              description: stripHtml(t('variants.items.warning')),
+              previewFactory: () => buildAlert('default', 'w-full bg-warning/10 text-warning border-warning/30', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+            },
+          ],
+        });
+
+      case 'estados':
+        return createDocsStates({
+          title: t('states.title'),
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
+          items: [
+            { label: t('states.complete.label'),      trigger: stripHtml(t('states.complete.trigger')),      behavior: t('states.complete.behavior') },
+            { label: t('states.withoutTitle.label'),  trigger: stripHtml(t('states.withoutTitle.trigger')),  behavior: t('states.withoutTitle.behavior') },
+            { label: t('states.withoutIcon.label'),   trigger: t('states.withoutIcon.trigger'),              behavior: t('states.withoutIcon.behavior') },
+            { label: t('states.dynamicInsert.label'), trigger: t('states.dynamicInsert.trigger'),            behavior: stripHtml(t('states.dynamicInsert.behavior')) },
+          ],
+        });
+
+      case 'propriedades': {
+        const interfaceCode = `// createAlert(options)
+export interface AlertOptions {
+  variant?: 'default' | 'destructive';
+  className?: string;
+}
+
+// createAlertTitle(options), createAlertDescription(options)
+export interface AlertTitleOptions {
+  text?: string;
+  className?: string;
+}`;
+
+        const propsCols = {
+          prop: t('props.table.prop'),
+          type: t('props.table.type'),
+          default: t('props.table.default'),
+          required: t('props.table.required'),
+          description: t('props.table.description'),
+        };
+
+        return createDocsProps({
+          title: t('props.title'),
+          tables: [
+            {
+              title: t('props.alertTitle'),
+              cols: propsCols,
+              items: [
+                { name: 'variant',   type: '"default" | "destructive"', defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant')) },
+                { name: 'className', type: 'string',                    defaultValue: '—',         required: 'Não', description: t('props.table.className') },
+              ],
+            },
+            {
+              title: t('props.alertTitleTitle'),
+              cols: propsCols,
+              items: [
+                { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
+                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+              ],
+            },
+            {
+              title: t('props.alertDescTitle'),
+              cols: propsCols,
+              items: [
+                { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
+                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+              ],
+            },
+          ],
+          interfaceCode,
+          extensibilityTitle: t('props.extensibilityTitle'),
+          extensibilityNotes: t('props.extensibility'),
+        });
+      }
+
+      case 'tokens': {
+        const customizationCode = `/* Em styles.css — definir tokens semânticos */
+:root {
+  --success: 142 76% 36%;
+  --warning: 38 92% 50%;
+}
+
+.dark {
+  --success: 142 69% 58%;
+  --warning: 48 96% 53%;
+}`;
+
+        return createDocsTokens({
+          title: t('tokens.title'),
+          cols: {
+            token: t('tokens.table.token'),
+            value: t('tokens.table.class'),
+            description: t('tokens.table.part'),
+          },
+          items: [
+            { token: '--background',  value: 'bg-background',                                        description: t('tokens.table.background') },
+            { token: '--foreground',  value: 'text-foreground',                                      description: t('tokens.table.foreground') },
+            { token: '--border',      value: 'border',                                               description: t('tokens.table.border') },
+            { token: '--destructive', value: 'border-destructive/50',                                description: t('tokens.table.destructiveBorder') },
+            { token: '--destructive', value: 'text-destructive',                                     description: t('tokens.table.destructiveText') },
+            { token: '--success',     value: 'bg-success/10 text-success border-success/30',         description: t('tokens.table.success') },
+            { token: '--warning',     value: 'bg-warning/10 text-warning border-warning/30',         description: t('tokens.table.warning') },
+            { token: '--radius',      value: 'rounded-lg',                                           description: t('tokens.table.radius') },
+          ],
+          customizationTitle: t('tokens.customizationTitle'),
+          customizationCode,
+        });
+      }
+
+      case 'acessibilidade':
+        return createDocsAccessibility({
+          title: t('accessibility.title'),
+          summary: t('accessibility.summary'),
+          items: [
+            t('accessibility.item1'),
+            t('accessibility.item2'),
+            t('accessibility.item3'),
+            t('accessibility.item4'),
+            t('accessibility.item5'),
+          ],
+          keyboardTitle: t('accessibility.keyboardTitle'),
+          keyboardItems: [
+            { key: 'Tab',   description: t('accessibility.keyboard.tab') },
+            { key: 'Enter', description: t('accessibility.keyboard.enter') },
+            { key: '—',     description: t('accessibility.keyboard.noKeyboard') },
+          ],
+        });
+
+      case 'relacionados':
+        return createDocsRelated({
+          title: t('related.title'),
+          items: [
+            { name: 'Sonner',      description: t('related.sonner'),      path: '?path=/docs/ui-sonner--docs' },
+            { name: 'AlertDialog', description: t('related.alertDialog'), path: '?path=/docs/ui-alertdialog--docs' },
+            { name: 'Badge',       description: t('related.badge'),       path: '?path=/docs/ui-badge--docs' },
+            { name: 'Progress',    description: t('related.progress'),    path: '?path=/docs/ui-progress--docs' },
+          ],
+        });
+
+      case 'notas':
+        return createDocsNotes({
+          title: t('notes.title'),
+          items: [
+            { title: '', content: t('notes.tip1') },
+            { title: '', content: t('notes.tip2') },
+            { title: '', content: t('notes.tip3') },
+          ],
+        });
+
+      case 'analytics':
+        return createDocsAnalytics({
+          title: t('analytics.title'),
+          cols: {
+            event: t('analytics.table.event'),
+            trigger: t('analytics.table.trigger'),
+            payload: t('analytics.table.payload'),
+          },
+          items: [
+            { event: t('analytics.table.dismiss'),       trigger: t('analytics.table.dismissTrigger'),       payload: t('analytics.table.dismissPayload') },
+            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+          ],
+        });
+
+      case 'testes': {
+        const locale = getLocale();
+        const criterionLabel = locale === 'en' ? 'Criterion' : locale === 'es' ? 'Criterio' : 'Critério';
+        const howLabel       = locale === 'en' ? 'How to verify' : locale === 'es' ? 'Cómo verificar' : 'Como verificar';
+
+        return createDocsTestes({
+          title: t('testes.title'),
+          functional: {
+            title: t('testes.functional.title'),
+            cols: {
+              action: tNav('common.userAction'),
+              result: tNav('common.expectedResult'),
+              priority: tNav('common.priority'),
+            },
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
+              action: t(`testes.functional.item${i}.action`),
+              result: t(`testes.functional.item${i}.result`),
+              priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
+            })),
+          },
+          accessibility: {
+            title: t('testes.accessibility.title'),
+            cols: { criterion: criterionLabel, level: 'WCAG', how: howLabel },
+            items: [1, 2, 3, 4].map(i => ({
+              criterion: t(`testes.accessibility.item${i}.criterion`),
+              level: t(`testes.accessibility.item${i}.level`),
+              how: t(`testes.accessibility.item${i}.how`),
+            })),
+          },
+          visual: {
+            title: t('testes.visual.title'),
+            cols: {
+              story: tNav('common.storyState'),
+              priority: tNav('common.priority'),
+            },
+            items: [1, 2, 3, 4].map(i => ({
+              story: t(`testes.visual.item${i}.story`),
+              priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
+            })),
+          },
+        });
+      }
+    }
+  }
+
+  function renderAllSections() {
+    for (const id of sectionOrder) {
+      const fresh = buildSection(id);
+      const existing = sectionEls[id];
+      if (existing && existing.parentNode) {
+        existing.replaceWith(fresh);
+      } else {
+        main.appendChild(fresh);
+      }
+      sectionEls[id] = fresh;
+    }
+    attachObserver();
+  }
 
   // ── IntersectionObserver ─────────────────────────────────────────────────
 
-  const allIds = NAV_GROUPS().flatMap(g => g.sections.map(s => s.id));
-  const observer = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        updateActiveNav(id);
-        track('docs_section_viewed', { section_id: id, component_name: 'alert', locale: getLocale() });
-        break;
+  let observer: IntersectionObserver | null = null;
+
+  function attachObserver() {
+    observer?.disconnect();
+    observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          updateActiveNav(id);
+          track('docs_section_viewed', { section_id: id, component_name: 'alert', locale: getLocale() });
+          break;
+        }
       }
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+    for (const id of sectionOrder) {
+      const el = sectionEls[id];
+      if (el) observer.observe(el);
     }
-  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
-
-  Promise.resolve().then(() => {
-    allIds.forEach(id => {
-      const el = root.querySelector(`#${id}`);
-      if (el) observer.observe(el as HTMLElement);
-    });
-  });
-  cleanups.push(() => observer.disconnect());
-
-  // ── Update function ───────────────────────────────────────────────────────
-
-  function update() {
-    // Header
-    badgeCategory.textContent = t('category');
-    badgeType.textContent     = t('type');
-    h1.textContent            = t('title');
-    desc.textContent          = t('description');
-    updateLangButtons();
-    buildSidebar();
-
-    // Demonstração
-    secDemo.h2.textContent = t('demonstration.title');
-    secDemo.content.innerHTML = `
-      <div class="flex items-center justify-center p-10 mt-6 border rounded-xl bg-background shadow-sm">
-        <div class="space-y-3 w-full max-w-lg">
-          ${buildAlertHtml('default', '', infoSvg, 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc')}
-          ${buildAlertHtml('destructive', '', errorSvg, 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc')}
-        </div>
-      </div>`;
-
-    // Anatomia
-    secAnatomia.h2.textContent = t('anatomy.title');
-    secAnatomia.content.innerHTML = `
-      <ol class="space-y-2 mb-6 list-none p-0 m-0">
-        ${[1,2,3,4].map(i => `
-          <li class="flex gap-3 items-start list-none">
-            <span class="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">${i}</span>
-            <span class="text-sm text-muted-foreground leading-relaxed">${sanitizeHtml(t(`anatomy.item${i}`))}</span>
-          </li>`).join('')}
-      </ol>
-      <div class="rounded-lg bg-muted/50 border border-border/40 px-4 pt-3 pb-4 overflow-x-auto">
-        <p class="text-xs text-muted-foreground mb-2">${sanitizeHtml(t('anatomy.structureLabel'))}</p>
-        <pre class="text-xs font-mono leading-relaxed">${sanitizeHtml(t('anatomy.structureCode'))}</pre>
-      </div>`;
-
-    // Quando usar
-    secWhen.h2.textContent = t('usage.title');
-    secWhen.content.innerHTML = `
-      <div class="border rounded-xl p-6 shadow-sm space-y-6">
-        <div class="bg-muted/30 rounded-lg p-4 space-y-3">
-          <h3 class="font-medium text-sm">${sanitizeHtml(t('usage.guidelines.title'))}</h3>
-          <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
-            ${[1,2,3,4].map(i => `<li>${sanitizeHtml(t(`usage.guidelines.item${i}`))}</li>`).join('')}
-          </ul>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full border-collapse text-sm">
-            <thead><tr class="border-b border-border text-left bg-muted/50 font-medium">
-              <th class="p-3 border-r border-border">${sanitizeHtml(t('usage.scenarios.cols.scenario'))}</th>
-              <th class="p-3 border-r border-border">${sanitizeHtml(t('usage.scenarios.cols.use'))}</th>
-              <th class="p-3">${sanitizeHtml(t('usage.scenarios.cols.alternative'))}</th>
-            </tr></thead>
-            <tbody>${[1,2,3,4].map(i => `<tr class="border-b border-border hover:bg-muted/5">
-              <td class="p-3 border-r border-border">${sanitizeHtml(t(`usage.scenarios.item${i}.s`))}</td>
-              <td class="p-3 border-r border-border font-medium text-primary">${sanitizeHtml(t(`usage.scenarios.item${i}.u`))}</td>
-              <td class="p-3 text-muted-foreground">${sanitizeHtml(t(`usage.scenarios.item${i}.a`))}</td>
-            </tr>`).join('')}</tbody>
-          </table>
-        </div>
-        <div class="space-y-3">
-          <h3 class="font-medium text-sm">${sanitizeHtml(t('usage.uxWriting.title'))}</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full border-collapse text-sm">
-              <thead><tr class="border-b border-border bg-muted/70 text-left">
-                <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('usage.uxWriting.table.element'))}</th>
-                <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('usage.uxWriting.table.rules'))}</th>
-                <th class="p-3 border-r border-border font-semibold text-green-700">${sanitizeHtml(t('usage.uxWriting.table.correct'))}</th>
-                <th class="p-3 font-semibold text-red-700">${sanitizeHtml(t('usage.uxWriting.table.avoid'))}</th>
-              </tr></thead>
-              <tbody>${['title', 'description', 'error', 'warning'].map(key => `<tr class="border-b border-border last:border-0">
-                <td class="p-3 border-r border-border font-medium">${sanitizeHtml(t(`usage.uxWriting.table.${key}.name`))}</td>
-                <td class="p-3 border-r border-border text-muted-foreground">${sanitizeHtml(t(`usage.uxWriting.table.${key}.format`))}</td>
-                <td class="p-3 border-r border-border text-green-600">${sanitizeHtml(t(`usage.uxWriting.table.${key}.good`))}</td>
-                <td class="p-3 text-red-600">${sanitizeHtml(t(`usage.uxWriting.table.${key}.bad`))}</td>
-              </tr>`).join('')}</tbody>
-            </table>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-card border border-emerald-200 rounded-xl p-4 shadow-sm">
-            <h3 class="font-medium text-sm text-emerald-700 mb-2">${sanitizeHtml(t('usage.do.title'))}</h3>
-            <ul class="space-y-2 list-none p-0 m-0">
-              ${[1,2,3,4].map(i => `<li class="flex gap-2 items-start text-sm text-muted-foreground list-none"><span class="text-emerald-600 font-bold">✓</span>${sanitizeHtml(t(`usage.do.item${i}`))}</li>`).join('')}
-            </ul>
-          </div>
-          <div class="bg-card border border-red-200 rounded-xl p-4 shadow-sm">
-            <h3 class="font-medium text-sm text-red-700 mb-2">${sanitizeHtml(t('usage.dont.title'))}</h3>
-            <ul class="space-y-2 list-none p-0 m-0">
-              ${[1,2,3].map(i => `<li class="flex gap-2 items-start text-sm text-muted-foreground list-none"><span class="text-destructive font-bold">✗</span>${sanitizeHtml(t(`usage.dont.item${i}`))}</li>`).join('')}
-            </ul>
-          </div>
-        </div>
-      </div>`;
-
-    // Do & Don't
-    secDoDont.h2.textContent = t('doDont.title');
-    secDoDont.content.innerHTML = `
-      <div class="flex items-center justify-center p-10 mt-6 border rounded-xl bg-background shadow-sm">
-        <div class="space-y-8 w-full">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-3">
-              <div class="flex items-center gap-2 text-green-600">
-                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-xs font-bold flex-shrink-0">✓</span>
-                <span class="text-sm font-semibold uppercase tracking-wider">${sanitizeHtml(tNav('common.do'))}</span>
-              </div>
-              <div class="border border-green-200 rounded-xl p-6 bg-green-50/50">
-                ${buildAlertHtml('default', '', infoSvg, 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc')}
-              </div>
-              <p class="text-sm text-muted-foreground italic px-1">${sanitizeHtml(t('doDont.pair1.do'))}</p>
-            </div>
-            <div class="space-y-3">
-              <div class="flex items-center gap-2 text-red-600">
-                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-xs font-bold flex-shrink-0">✗</span>
-                <span class="text-sm font-semibold uppercase tracking-wider">${sanitizeHtml(tNav('common.dont'))}</span>
-              </div>
-              <div class="border border-red-200 rounded-xl p-6 bg-red-50/50">
-                ${buildAlertHtml('destructive', '', infoSvg, 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc')}
-              </div>
-              <p class="text-sm text-muted-foreground italic px-1">${sanitizeHtml(t('doDont.pair1.dont'))}</p>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-3">
-              <div class="flex items-center gap-2 text-green-600">
-                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-xs font-bold flex-shrink-0">✓</span>
-                <span class="text-sm font-semibold uppercase tracking-wider">${sanitizeHtml(tNav('common.do'))}</span>
-              </div>
-              <div class="border border-green-200 rounded-xl p-6 bg-green-50/50">
-                ${buildAlertHtml('default', 'bg-success/10 text-success border-success/30', successSvg, 'demonstration.labels.successTitle', 'demonstration.labels.successDesc')}
-              </div>
-              <p class="text-sm text-muted-foreground italic px-1">${sanitizeHtml(t('doDont.pair2.do'))}</p>
-            </div>
-            <div class="space-y-3">
-              <div class="flex items-center gap-2 text-red-600">
-                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-xs font-bold flex-shrink-0">✗</span>
-                <span class="text-sm font-semibold uppercase tracking-wider">${sanitizeHtml(tNav('common.dont'))}</span>
-              </div>
-              <div class="border border-red-200 rounded-xl p-6 bg-red-50/50">
-                ${buildAlertHtml('default', 'bg-green-100 text-green-900 border-green-300', infoSvg, 'demonstration.labels.successTitle', 'demonstration.labels.successDesc')}
-              </div>
-              <p class="text-sm text-muted-foreground italic px-1">${sanitizeHtml(t('doDont.pair2.dont'))}</p>
-            </div>
-          </div>
-        </div>
-      </div>`;
-
-    // Importação
-    secImport.h2.textContent = t('import.title');
-    secImport.content.innerHTML = `
-      <p class="text-sm text-muted-foreground mb-3">${sanitizeHtml(t('import.basic'))}</p>
-      <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mb-4">
-        <code class="whitespace-pre">import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';</code>
-      </div>
-      <p class="text-sm text-muted-foreground mb-3">${sanitizeHtml(t('import.withIcon'))}</p>
-      <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">
-        <code class="whitespace-pre">import { createIcons, Info } from 'lucide';</code>
-      </div>`;
-
-    // Exemplos
-    secExamples.h2.textContent = t('examples.title');
-    const examplesData = [
-      { key: 'default',      fn: () => buildAlertHtml('default', '', infoSvg, 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc') },
-      { key: 'destructive',  fn: () => buildAlertHtml('destructive', '', errorSvg, 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc') },
-      { key: 'success',      fn: () => buildAlertHtml('default', 'bg-success/10 text-success border-success/30', successSvg, 'demonstration.labels.successTitle', 'demonstration.labels.successDesc') },
-      { key: 'warning',      fn: () => buildAlertHtml('default', 'bg-warning/10 text-warning border-warning/30', warningSvg, 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc') },
-      { key: 'withoutTitle', fn: () => `<div role="alert" class="alert">${infoSvg()}<div class="text-sm">${sanitizeHtml(t('demonstration.labels.infoDesc'))}</div></div>` },
-    ] as const;
-    secExamples.content.innerHTML = `<div class="space-y-6">
-      ${examplesData.map(({ key, fn }) => `
-        <div>
-          <h3 class="font-medium text-sm mb-2">${sanitizeHtml(t(`examples.${key}`))}</h3>
-          <div class="rounded-lg border border-border">
-            <div class="flex items-center justify-center p-8 border-b border-border bg-muted/5">
-              <div class="w-full max-w-md">${fn()}</div>
-            </div>
-          </div>
-        </div>`).join('')}
-    </div>`;
-
-    // Variantes
-    secVariants.h2.textContent = t('variants.title');
-    const variantData = [
-      { key: 'default',     fn: () => buildAlertHtml('default', '', infoSvg, 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc') },
-      { key: 'destructive', fn: () => buildAlertHtml('destructive', '', errorSvg, 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc') },
-      { key: 'success',     fn: () => buildAlertHtml('default', 'bg-success/10 text-success border-success/30', successSvg, 'demonstration.labels.successTitle', 'demonstration.labels.successDesc') },
-      { key: 'warning',     fn: () => buildAlertHtml('default', 'bg-warning/10 text-warning border-warning/30', warningSvg, 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc') },
-    ] as const;
-    secVariants.content.innerHTML = `
-      <p class="text-sm text-muted-foreground mb-4">${sanitizeHtml(t('variants.visualTitle'))}</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        ${variantData.map(({ key, fn }) => `
-          <div class="rounded-xl border border-border p-4 space-y-3 shadow-sm">
-            <div class="p-4 bg-muted/20 rounded-lg">${fn()}</div>
-            <p class="font-medium text-sm font-mono">${key}</p>
-            <p class="text-xs text-muted-foreground">${sanitizeHtml(t(`variants.items.${key}`))}</p>
-          </div>`).join('')}
-      </div>
-      <p class="text-xs text-muted-foreground mt-4 bg-muted/30 rounded-lg p-3">${sanitizeHtml(t('variants.note'))}</p>`;
-
-    // Estados
-    secStates.h2.textContent = t('states.title');
-    const stateKeys = ['complete', 'withoutTitle', 'withoutIcon', 'dynamicInsert'] as const;
-    secStates.content.innerHTML = `
-      <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead><tr class="border-b border-border bg-muted/50 text-left">
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('states.cols.state'))}</th>
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('states.cols.trigger'))}</th>
-            <th class="p-3 font-semibold">${sanitizeHtml(t('states.cols.behavior'))}</th>
-          </tr></thead>
-          <tbody>${stateKeys.map(key => `<tr class="border-b border-border last:border-0 hover:bg-muted/5">
-            <td class="p-3 border-r border-border font-medium">${sanitizeHtml(t(`states.${key}.label`))}</td>
-            <td class="p-3 border-r border-border text-muted-foreground">${stripHtml(t(`states.${key}.trigger`))}</td>
-            <td class="p-3 text-muted-foreground">${stripHtml(t(`states.${key}.behavior`))}</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>`;
-
-    // Propriedades
-    secProps.h2.textContent = t('props.title');
-    const propRows = [
-      { name: 'variant',  type: '"default" | "destructive"', def: '"default"', req: 'Não', key: 'variant'   },
-      { name: 'class',    type: 'string',                    def: '—',         req: 'Não', key: 'className'  },
-      { name: 'children', type: 'HTMLElement | string',      def: '—',         req: 'Não', key: 'children'   },
-    ];
-    secProps.content.innerHTML = `
-      <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto mb-4">
-        <table class="w-full text-sm">
-          <thead><tr class="border-b border-border bg-muted/50 text-left">
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('props.table.prop'))}</th>
-            <th class="p-3 border-r border-border font-semibold">Tipo</th>
-            <th class="p-3 border-r border-border font-semibold">Padrão</th>
-            <th class="p-3 border-r border-border font-semibold">Obrig.</th>
-            <th class="p-3 font-semibold">Descrição</th>
-          </tr></thead>
-          <tbody>${propRows.map(row => `<tr class="border-b border-border last:border-0">
-            <td class="p-3 border-r border-border font-mono font-bold text-primary text-xs">${row.name}</td>
-            <td class="p-3 border-r border-border font-mono text-muted-foreground text-xs">${row.type}</td>
-            <td class="p-3 border-r border-border font-mono text-xs">${row.def}</td>
-            <td class="p-3 border-r border-border text-xs">${row.req}</td>
-            <td class="p-3 text-xs text-muted-foreground">${sanitizeHtml(t(`props.table.${row.key}`))}</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>
-      <div class="bg-muted p-4 rounded-lg font-mono text-xs border overflow-x-auto mb-4">
-        <code class="whitespace-pre">${sanitizeHtml(t('props.interface'))}</code>
-      </div>
-      <div class="bg-muted/30 rounded-lg p-4 text-sm">
-        <p class="font-medium mb-1">${sanitizeHtml(t('props.extensibilityTitle'))}</p>
-        <p class="text-muted-foreground">${sanitizeHtml(t('props.extensibility'))}</p>
-      </div>`;
-
-    // Tokens
-    secTokens.h2.textContent = t('tokens.title');
-    const tokenRows = [
-      { token: '--background',  key: 'background'       },
-      { token: '--foreground',  key: 'foreground'        },
-      { token: '--border',      key: 'border'            },
-      { token: '--destructive', key: 'destructiveBorder' },
-      { token: '--success',     key: 'success'           },
-      { token: '--warning',     key: 'warning'           },
-      { token: '--radius',      key: 'radius'            },
-    ];
-    secTokens.content.innerHTML = `
-      <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto mb-4">
-        <table class="w-full text-sm">
-          <thead><tr class="border-b border-border bg-muted/50 text-left">
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('tokens.table.token'))}</th>
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('tokens.table.class'))}</th>
-            <th class="p-3 font-semibold">${sanitizeHtml(t('tokens.table.part'))}</th>
-          </tr></thead>
-          <tbody>${tokenRows.map(row => `<tr class="border-b border-border last:border-0">
-            <td class="p-3 border-r border-border font-mono text-primary text-xs">${row.token}</td>
-            <td class="p-3 border-r border-border font-mono text-muted-foreground text-xs">${row.token}</td>
-            <td class="p-3 text-xs text-muted-foreground">${sanitizeHtml(t(`tokens.table.${row.key}`))}</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>
-      <p class="text-sm font-medium mb-2">${sanitizeHtml(t('tokens.customizationTitle'))}</p>
-      <div class="bg-muted p-4 rounded-lg font-mono text-xs border overflow-x-auto">
-        <code class="whitespace-pre">.dark [data-slot="alert"] {\n  /* override tokens per theme */\n}</code>
-      </div>`;
-
-    // Acessibilidade
-    secA11y.h2.textContent = t('accessibility.title');
-    const kbdKeys = ['tab', 'enter', 'noKeyboard'] as const;
-    const ariaKeys = ['role', 'ariaLive', 'ariaLiveAssertive', 'ariaHidden'] as const;
-    secA11y.content.innerHTML = `
-      <p class="text-sm text-muted-foreground mb-4">${sanitizeHtml(t('accessibility.summary'))}</p>
-      <ul class="space-y-2 list-none p-0 m-0 mb-6">
-        ${[1,2,3,4,5].map(i => `<li class="flex gap-2 items-start text-sm list-none"><span class="text-primary mt-0.5">•</span>${sanitizeHtml(t(`accessibility.item${i}`))}</li>`).join('')}
-      </ul>
-      <h3 class="font-medium text-sm mb-3">${sanitizeHtml(t('accessibility.keyboardTitle'))}</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-        ${kbdKeys.map(key => `<div class="flex gap-3 items-start rounded-lg border border-border p-3">
-          <kbd class="bg-muted border border-border rounded px-1.5 py-0.5 text-xs font-mono shrink-0">${key === 'noKeyboard' ? '—' : key.charAt(0).toUpperCase() + key.slice(1)}</kbd>
-          <p class="text-xs text-muted-foreground">${sanitizeHtml(t(`accessibility.keyboard.${key}`))}</p>
-        </div>`).join('')}
-      </div>
-      <h3 class="font-medium text-sm mb-3">ARIA</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        ${ariaKeys.map(key => `<div class="flex gap-3 items-start rounded-lg border border-border p-3">
-          <code class="bg-muted border border-border rounded px-1.5 py-0.5 text-xs font-mono shrink-0 text-primary">${key}</code>
-          <p class="text-xs text-muted-foreground">${sanitizeHtml(t(`accessibility.aria.${key}`))}</p>
-        </div>`).join('')}
-      </div>`;
-
-    // Relacionados
-    secRelated.h2.textContent = t('related.title');
-    const relatedItems = [
-      { name: 'Sonner',      key: 'sonner',      path: '?path=/docs/ui-sonner--docs'      },
-      { name: 'AlertDialog', key: 'alertDialog', path: '?path=/docs/ui-alertdialog--docs' },
-      { name: 'Badge',       key: 'badge',       path: '?path=/docs/ui-badge--docs'       },
-      { name: 'Progress',    key: 'progress',    path: '?path=/docs/ui-progress--docs'    },
-    ];
-    secRelated.content.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      ${relatedItems.map(item => `
-        <button type="button" data-path="${item.path}" class="text-left rounded-xl border border-border p-4 hover:border-primary/50 hover:bg-muted/30 transition-colors group">
-          <p class="font-semibold text-sm group-hover:text-primary transition-colors">${item.name}</p>
-          <p class="text-xs text-muted-foreground mt-0.5">${sanitizeHtml(t(`related.${item.key}`))}</p>
-        </button>`).join('')}
-    </div>`;
-    secRelated.content.querySelectorAll('button[data-path]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const path = (btn as HTMLElement).dataset.path ?? '';
-        (window.top ?? window).location.href = path;
-      });
-    });
-
-    // Notas
-    secNotes.h2.textContent = t('notes.title');
-    secNotes.content.innerHTML = `<div class="space-y-3">
-      ${[1,2,3].map(i => `<div class="bg-muted/30 rounded-lg border-l-4 border-primary/40 p-4">
-        <p class="text-sm text-muted-foreground">${sanitizeHtml(t(`notes.tip${i}`))}</p>
-      </div>`).join('')}
-    </div>`;
-
-    // Analytics
-    secAnalytics.h2.textContent = t('analytics.title');
-    const analyticsKeys = ['pageView', 'sectionViewed', 'langSwitch', 'dismiss'] as const;
-    secAnalytics.content.innerHTML = `
-      <p class="text-sm text-muted-foreground mb-4">${sanitizeHtml(t('analytics.description'))}</p>
-      <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead><tr class="border-b border-border bg-muted/50 text-left">
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('analytics.table.event'))}</th>
-            <th class="p-3 border-r border-border font-semibold">${sanitizeHtml(t('analytics.table.trigger'))}</th>
-            <th class="p-3 font-semibold">${sanitizeHtml(t('analytics.table.payload'))}</th>
-          </tr></thead>
-          <tbody>${analyticsKeys.map(key => `<tr class="border-b border-border last:border-0">
-            <td class="p-3 border-r border-border font-mono text-primary text-xs">${sanitizeHtml(t(`analytics.table.${key}`))}</td>
-            <td class="p-3 border-r border-border text-xs text-muted-foreground">${sanitizeHtml(t(`analytics.table.${key}Trigger`))}</td>
-            <td class="p-3 font-mono text-xs text-muted-foreground">${sanitizeHtml(t(`analytics.table.${key}Payload`))}</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>`;
-
-    // Testes
-    secTestes.h2.textContent = t('testes.title');
-    secTestes.content.innerHTML = `
-      <h3 class="text-base font-medium mb-3">${sanitizeHtml(t('testes.functional.title'))}</h3>
-      <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto mb-6">
-        <table class="w-full text-sm">
-          <thead><tr class="border-b border-border">
-            <th class="text-left p-3 text-muted-foreground font-medium">${sanitizeHtml(tNav('common.userAction'))}</th>
-            <th class="text-left p-3 text-muted-foreground font-medium">${sanitizeHtml(tNav('common.expectedResult'))}</th>
-            <th class="text-left p-3 text-muted-foreground font-medium">${sanitizeHtml(tNav('common.priority'))}</th>
-          </tr></thead>
-          <tbody>${[1,2,3,4,5,6].map(i => `<tr class="border-b border-border/50 last:border-0">
-            <td class="p-3 text-xs">${sanitizeHtml(t(`testes.functional.item${i}.action`))}</td>
-            <td class="p-3 text-xs text-muted-foreground">${sanitizeHtml(t(`testes.functional.item${i}.result`))}</td>
-            <td class="p-3 text-xs ${priorityColor(t(`testes.functional.item${i}.priority`))}">${priorityLabel(t(`testes.functional.item${i}.priority`))}</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>
-      <h3 class="text-base font-medium mb-3">${sanitizeHtml(t('testes.accessibility.title'))}</h3>
-      <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto mb-6">
-        <table class="w-full text-sm">
-          <thead><tr class="border-b border-border">
-            <th class="text-left p-3 text-muted-foreground font-medium">${getLocale() === 'en' ? 'Criterion' : getLocale() === 'es' ? 'Criterio' : 'Critério'}</th>
-            <th class="text-left p-3 text-muted-foreground font-medium">WCAG</th>
-            <th class="text-left p-3 text-muted-foreground font-medium">${getLocale() === 'en' ? 'How to verify' : getLocale() === 'es' ? 'Cómo verificar' : 'Como verificar'}</th>
-          </tr></thead>
-          <tbody>${[1,2,3,4].map(i => `<tr class="border-b border-border/50 last:border-0">
-            <td class="p-3 text-xs">${sanitizeHtml(t(`testes.accessibility.item${i}.criterion`))}</td>
-            <td class="p-3">
-              <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-blue-100 text-blue-700">${sanitizeHtml(t(`testes.accessibility.item${i}.level`))}</span>
-            </td>
-            <td class="p-3 text-xs text-muted-foreground">${sanitizeHtml(t(`testes.accessibility.item${i}.how`))}</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>
-      <h3 class="text-base font-medium mb-3">${sanitizeHtml(t('testes.visual.title'))}</h3>
-      <div class="rounded-lg border border-border p-4 shadow-sm overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead><tr class="border-b border-border">
-            <th class="text-left p-3 text-muted-foreground font-medium">${sanitizeHtml(tNav('common.storyState'))}</th>
-            <th class="text-left p-3 text-muted-foreground font-medium">${sanitizeHtml(tNav('common.priority'))}</th>
-          </tr></thead>
-          <tbody>${[1,2,3,4].map(i => `<tr class="border-b border-border/50 last:border-0">
-            <td class="p-3 text-xs">${sanitizeHtml(t(`testes.visual.item${i}.story`))}</td>
-            <td class="p-3 text-xs ${priorityColor(t(`testes.visual.item${i}.priority`))}">${priorityLabel(t(`testes.visual.item${i}.priority`))}</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>`;
   }
+  cleanups.push(() => observer?.disconnect());
 
-  update();
+  // ── Initial render ────────────────────────────────────────────────────────
 
-  const unsubUpdate = subscribe(update);
-  cleanups.push(unsubUpdate);
-  cleanups.push(onLocaleChange(() => { buildSidebar(); update(); }));
+  renderHeader();
+  buildSidebar();
+  renderAllSections();
 
-  root.append(header, layout);
+  cleanups.push(subscribe(() => {
+    renderHeader();
+    buildSidebar();
+    renderAllSections();
+  }));
+  cleanups.push(onLocaleChange(() => {
+    renderHeader();
+    buildSidebar();
+    renderAllSections();
+  }));
 
-  // cleanup on disconnect
+  root.append(headerSlot, layout);
+
+  // ── Cleanup on disconnect ────────────────────────────────────────────────
+
   const mo = new MutationObserver(() => {
     if (!document.body.contains(root)) {
       cleanups.forEach(fn => fn());
@@ -696,16 +702,4 @@ export function createAlertDocs(): HTMLElement {
   mo.observe(document.body, { childList: true, subtree: true });
 
   return root;
-}
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function createSection(id: string): { el: HTMLElement; h2: HTMLHeadingElement; content: HTMLElement } {
-  const el = document.createElement('section');
-  el.id = id;
-  const h2 = document.createElement('h2');
-  h2.className = 'text-xl font-semibold mb-4';
-  const content = document.createElement('div');
-  el.append(h2, content);
-  return { el, h2, content };
 }
