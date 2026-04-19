@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 
 export interface DocsNoteItem {
@@ -18,13 +18,12 @@ export function DocsNotes({ title, items }: DocsNotesProps) {
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
       <div className="space-y-4">
         {items.map((item, i) => (
-          <Card key={i} className="bg-muted/30 border-l-4 border-primary/40 shadow-none rounded-lg p-4">
-              <p className="text-sm font-semibold mb-1">{item.title}</p>
-              <div
-                className="text-sm text-muted-foreground leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }}
-              />
-          </Card>
+          <Alert key={i} variant="default">
+            <AlertTitle>{item.title}</AlertTitle>
+            <AlertDescription
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }}
+            />
+          </Alert>
         ))}
       </div>
     </section>

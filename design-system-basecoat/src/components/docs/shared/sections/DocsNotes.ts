@@ -1,5 +1,5 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
-import { createCard } from '@/components/ui/card';
+import { createAlert, createAlertTitle, createAlertDescription } from '@/components/ui/alert';
 
 export interface DocsNoteItem { title: string; content: string }
 export interface DocsNotesProps { title: string; items: DocsNoteItem[] }
@@ -17,11 +17,12 @@ export function createDocsNotes(props: DocsNotesProps): HTMLElement {
   container.className = 'space-y-4';
 
   props.items.forEach(item => {
-    const card = createCard({ className: 'bg-muted/30 border-l-4 border-primary/40 shadow-none rounded-lg p-4' });
-    card.innerHTML = `
-      <p class="text-sm font-semibold mb-1">${sanitizeHtml(item.title)}</p>
-      <div class="text-sm text-muted-foreground leading-relaxed">${sanitizeHtml(item.content)}</div>`;
-    container.appendChild(card);
+    const alert = createAlert({ variant: 'default' });
+    const alertTitle = createAlertTitle({ text: item.title });
+    const alertDescription = createAlertDescription();
+    alertDescription.innerHTML = sanitizeHtml(item.content);
+    alert.append(alertTitle, alertDescription);
+    container.appendChild(alert);
   });
 
   section.appendChild(container);
