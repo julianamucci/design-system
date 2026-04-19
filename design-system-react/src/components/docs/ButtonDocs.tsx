@@ -204,17 +204,34 @@ import { Plus } from "lucide-react";`;
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
             <div className="flex flex-wrap gap-3">
-              <Button>{tContent("demonstration.labels.primary")}</Button>
-              <Button variant="secondary">{tContent("demonstration.labels.secondary")}</Button>
-              <Button variant="destructive">{tContent("demonstration.labels.destructive")}</Button>
-              <Button variant="outline">{tContent("demonstration.labels.outline")}</Button>
-              <Button variant="ghost">{tContent("demonstration.labels.ghost")}</Button>
-              <Button variant="link">{tContent("demonstration.labels.link")}</Button>
-              <Button variant="outline">
+              {([
+                { variant: undefined,     label: tContent("demonstration.labels.primary") },
+                { variant: "secondary",   label: tContent("demonstration.labels.secondary") },
+                { variant: "destructive", label: tContent("demonstration.labels.destructive") },
+                { variant: "outline",     label: tContent("demonstration.labels.outline") },
+                { variant: "ghost",       label: tContent("demonstration.labels.ghost") },
+                { variant: "link",        label: tContent("demonstration.labels.link") },
+              ] as const).map(({ variant, label }) => (
+                <Button
+                  key={label}
+                  {...(variant ? { variant } : {})}
+                  onClick={() => track("button_click", { component: "button", variant: variant ?? "default", label, location: "docs_demonstration" })}
+                >
+                  {label}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                onClick={() => track("button_click", { component: "button", variant: "outline", label: tContent("demonstration.labels.withIcon"), location: "docs_demonstration" })}
+              >
                 <Plus aria-hidden="true" />
                 {tContent("demonstration.labels.withIcon")}
               </Button>
-              <Button size="icon" aria-label={tContent("demonstration.labels.iconOnly")}>
+              <Button
+                size="icon"
+                aria-label={tContent("demonstration.labels.iconOnly")}
+                onClick={() => track("button_click", { component: "button", variant: "default", label: tContent("demonstration.labels.iconOnly"), location: "docs_demonstration" })}
+              >
                 <Trash2 aria-hidden="true" />
               </Button>
             </div>

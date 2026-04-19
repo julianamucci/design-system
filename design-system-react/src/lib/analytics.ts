@@ -42,6 +42,14 @@ interface AnalyticsEvents {
     locale: Locale;
     page_title: string;
   };
+
+  /** Disparado quando o usuário aciona um botão rastreado. */
+  button_click: {
+    component: string;
+    variant?: string;
+    label?: string;
+    location?: string;
+  };
 }
 
 // ─── Função pública ───────────────────────────────────────────────────────────
