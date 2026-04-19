@@ -75,7 +75,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   const a11yGrid = document.createElement('div');
   a11yGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
   props.accessibility.items.forEach(item => {
-    const card = createCard({ className: 'border rounded-lg p-3 bg-muted/30 shadow-none space-y-1' });
+    const card = createCard({ className: 'bg-muted/30 border-0 shadow-none p-3 space-y-1' });
     const top = document.createElement('div');
     top.className = 'flex items-center gap-2';
     const levelBadge = createBadge({ text: item.level, className: 'text-xs font-mono font-bold text-primary border border-primary/20 rounded px-1.5 py-0.5 bg-primary/5' });

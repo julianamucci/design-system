@@ -107,16 +107,14 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
           <h3 className="text-base font-semibold">{accessibility.title}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {accessibility.items.map((item, i) => (
-              <Card key={i} className="bg-muted/30 border-0 shadow-none p-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-bold text-primary border border-primary/20 rounded px-1.5 py-0.5 bg-primary/5">
-                        {item.level}
-                      </span>
-                      <span className="text-sm font-medium">{item.criterion}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground pl-0.5">{item.how}</p>
+              <Card key={i} className="bg-muted/30 border-0 shadow-none p-3 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono font-bold text-primary border border-primary/20 rounded px-1.5 py-0.5 bg-primary/5">
+                      {item.level}
+                    </span>
+                    <span className="text-sm font-medium">{item.criterion}</span>
                   </div>
+                  <p className="text-xs text-muted-foreground pl-0.5">{item.how}</p>
               </Card>
             ))}
           </div>
