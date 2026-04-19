@@ -19,8 +19,8 @@ export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboa
   return (
     <section id="acessibilidade">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <div className="space-y-6">
-        <Card className="p-4 space-y-4">
+      <Card className="p-4 space-y-6">
+        <div className="space-y-4">
           <p
             className="text-sm text-muted-foreground leading-relaxed"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(summary) }}
@@ -34,7 +34,7 @@ export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboa
               />
             ))}
           </ul>
-        </Card>
+        </div>
 
         <div>
           <h3 className="text-base font-semibold mb-3">{keyboardTitle}</h3>
@@ -51,7 +51,7 @@ export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboa
             ))}
           </div>
         </div>
-      </div>
+      </Card>
     </section>
   );
 }
