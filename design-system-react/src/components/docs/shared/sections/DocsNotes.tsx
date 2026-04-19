@@ -19,7 +19,7 @@ export function DocsNotes({ title, items }: DocsNotesProps) {
       <div className="space-y-4">
         {items.map((item, i) => (
           <Alert key={i} variant="default">
-            <AlertTitle>{item.title}</AlertTitle>
+            {item.title && <AlertTitle>{item.title}</AlertTitle>}
             <AlertDescription
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }}
             />

@@ -18,10 +18,12 @@ export function createDocsNotes(props: DocsNotesProps): HTMLElement {
 
   props.items.forEach(item => {
     const alert = createAlert({ variant: 'default' });
-    const alertTitle = createAlertTitle({ text: item.title });
+    if (item.title) {
+      alert.appendChild(createAlertTitle({ text: item.title }));
+    }
     const alertDescription = createAlertDescription();
     alertDescription.innerHTML = sanitizeHtml(item.content);
-    alert.append(alertTitle, alertDescription);
+    alert.appendChild(alertDescription);
     container.appendChild(alert);
   });
 

@@ -12,7 +12,9 @@
   <div class="space-y-4">
     {#each items as item}
       <Alert variant="default">
-        <AlertTitle>{item.title}</AlertTitle>
+        {#if item.title}
+          <AlertTitle>{item.title}</AlertTitle>
+        {/if}
         <AlertDescription>{@html sanitizeHtml(item.content)}</AlertDescription>
       </Alert>
     {/each}

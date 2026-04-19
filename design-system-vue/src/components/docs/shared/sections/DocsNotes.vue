@@ -15,7 +15,7 @@ defineProps<{
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
     <div class="space-y-4">
       <Alert v-for="(item, i) in items" :key="i" variant="default">
-        <AlertTitle>{{ item.title }}</AlertTitle>
+        <AlertTitle v-if="item.title">{{ item.title }}</AlertTitle>
         <AlertDescription v-html="sanitizeHtml(item.content)" />
       </Alert>
     </div>
