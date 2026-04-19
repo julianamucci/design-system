@@ -1,7 +1,8 @@
 import { icons as ALL_ICONS } from 'lucide';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { getLocale, onLocaleChange, createTranslation, type Locale } from '@/lib/i18n';
+import { getLocale, createTranslation } from '@/lib/i18n';
+import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import iconsTranslations from '@shared/content/icons/translations.json';
 
 // ─── Catálogo de ícones ──────────────────────────────────────────────────────
@@ -87,51 +88,7 @@ export function createIconsDocs(): HTMLElement {
 
   badgeRow.append(badgeCategory, badgeType);
 
-  // Language switcher
-  const switcherWrapper = document.createElement('div');
-  switcherWrapper.className = 'flex items-center gap-1 bg-muted/30 p-1 rounded-lg border border-border/40';
-
-  const localeDefs: { value: Locale; label: string; ariaLabel: string }[] = [
-    { value: 'pt-BR', label: 'PT', ariaLabel: 'Português' },
-    { value: 'en',    label: 'EN', ariaLabel: 'English'   },
-    { value: 'es',    label: 'ES', ariaLabel: 'Español'   },
-  ];
-  const langButtons: HTMLButtonElement[] = [];
-
-  function updateLangButtons() {
-    const current = getLocale();
-    langButtons.forEach((btn) => {
-      const val = btn.dataset.locale as Locale;
-      if (val === current) {
-        btn.className = 'h-6 px-2 text-[10px] font-bold rounded bg-secondary text-secondary-foreground shadow-sm transition-all';
-        btn.setAttribute('aria-pressed', 'true');
-      } else {
-        btn.className = 'h-6 px-2 text-[10px] font-bold rounded text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all';
-        btn.setAttribute('aria-pressed', 'false');
-      }
-    });
-  }
-
-  localeDefs.forEach(({ value, label, ariaLabel }) => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.dataset.locale = value;
-    btn.setAttribute('aria-label', ariaLabel);
-    btn.textContent = label;
-    btn.addEventListener('click', () => {
-      const prev = getLocale();
-      if (prev === value) return;
-      track('language_switched', { previous_language: prev, new_language: value });
-      import('@/lib/i18n').then(({ setLocale }) => setLocale(value));
-    });
-    langButtons.push(btn);
-    switcherWrapper.appendChild(btn);
-  });
-
-  updateLangButtons();
-  cleanups.push(onLocaleChange(updateLangButtons));
-
-  topRow.append(badgeRow, switcherWrapper);
+  topRow.append(badgeRow, createLanguageSwitcher());
 
   const h1 = document.createElement('h1');
   h1.className = 'text-4xl font-bold tracking-tight text-foreground';

@@ -561,9 +561,9 @@ interface AlertProps {
         accessibility={{
           title: $tStore('testes.accessibility.title'),
           cols: {
-            criterion: $locale === 'en' ? 'Criterion' : $locale === 'es' ? 'Criterio' : 'Critério',
+            criterion: $tNavStore('common.criterion'),
             level: 'WCAG',
-            how: $locale === 'en' ? 'How to verify' : $locale === 'es' ? 'Cómo verificar' : 'Como verificar',
+            how: $tNavStore('common.howToVerify'),
           },
           items: [
             { criterion: $tStore('testes.accessibility.item1.criterion'), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },

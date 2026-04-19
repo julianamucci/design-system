@@ -34,7 +34,9 @@
       "low": "Baixa",
       "storyState": "Story / Estado",
       "themeLight": "Tema light",
-      "themeDark": "Tema dark"
+      "themeDark": "Tema dark",
+      "criterion": "Critério",
+      "howToVerify": "Como verificar"
     }
   },
   "en": {
@@ -72,7 +74,9 @@
       "low": "Low",
       "storyState": "Story / State",
       "themeLight": "Light theme",
-      "themeDark": "Dark theme"
+      "themeDark": "Dark theme",
+      "criterion": "Criterion",
+      "howToVerify": "How to verify"
     }
   },
   "es": {
@@ -110,7 +114,9 @@
       "low": "Baja",
       "storyState": "Story / Estado",
       "themeLight": "Tema light",
-      "themeDark": "Tema dark"
+      "themeDark": "Tema dark",
+      "criterion": "Criterio",
+      "howToVerify": "Cómo verificar"
     }
   }
 }

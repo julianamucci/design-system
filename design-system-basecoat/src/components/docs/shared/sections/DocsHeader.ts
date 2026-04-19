@@ -1,4 +1,5 @@
 import { createBadge } from '@/components/ui/badge';
+import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 
 export interface DocsHeaderProps {
@@ -21,6 +22,7 @@ export function createDocsHeader(props: DocsHeaderProps): HTMLElement {
   badges.appendChild(createBadge({ text: props.category, variant: 'secondary', className: 'bg-primary/5 text-primary border-primary/10 font-medium px-2 py-0' }));
   badges.appendChild(createBadge({ text: props.type, variant: 'outline', className: 'text-muted-foreground font-normal px-2 py-0' }));
   top.appendChild(badges);
+  top.appendChild(createLanguageSwitcher());
   header.appendChild(top);
 
   const content = document.createElement('div');

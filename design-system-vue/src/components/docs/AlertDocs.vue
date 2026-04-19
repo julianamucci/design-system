@@ -5,7 +5,6 @@ import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
-import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import DocsNav from '@/components/docs/shared/DocsNav.vue';
 import uiTranslations from '@/i18n/ui.json';
 import alertTranslations from '@shared/content/alert/translations.json';
@@ -284,9 +283,9 @@ const analyticsItems = computed(() => [
 ]);
 
 const a11yCritCols = computed(() => ({
-  criterion: locale.value === 'en' ? 'Criterion' : locale.value === 'es' ? 'Criterio' : 'Critério',
+  criterion: tNav('common.criterion'),
   level: 'WCAG',
-  how: locale.value === 'en' ? 'How to verify' : locale.value === 'es' ? 'Cómo verificar' : 'Como verificar',
+  how: tNav('common.howToVerify'),
 }));
 
 const functionalTestItems = computed(() => [

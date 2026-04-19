@@ -12,6 +12,7 @@ import { track } from "@/lib/analytics";
 import uiTranslations from "@/i18n/ui.json";
 import alertTranslations from "@shared/content/alert/translations.json";
 
+import { DocsNav }           from "@/components/docs/shared/DocsNav";
 import { DocsHeader }        from "@/components/docs/shared/sections/DocsHeader";
 import { DocsDemonstration } from "@/components/docs/shared/sections/DocsDemonstration";
 import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy";
@@ -106,56 +107,6 @@ function useActiveSection(ids: string[], onSectionChange?: (id: string) => void)
   return activeId;
 }
 
-function ComponentDocsSidebar({
-  navGroups,
-  allIds,
-  onSectionChange,
-}: {
-  navGroups: { label: string; sections: { id: string; label: string }[] }[];
-  allIds: string[];
-  onSectionChange?: (id: string) => void;
-}) {
-  const activeId = useActiveSection(allIds, onSectionChange);
-
-  const scrollTo = useCallback((id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
-
-  return (
-    <nav
-      aria-label="Navegação das seções do componente"
-      className="sticky top-8 w-52 shrink-0 self-start space-y-5"
-    >
-      {navGroups.map((group) => (
-        <div key={group.label}>
-          <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-muted-foreground mb-1 px-2">
-            {group.label}
-          </p>
-          <ul className="list-none space-y-0.5">
-            {group.sections.map((section) => (
-              <li key={section.id} className="list-none">
-                <button
-                  onClick={() => scrollTo(section.id)}
-                  aria-current={activeId === section.id ? "location" : undefined}
-                  className={[
-                    "w-full text-left text-sm px-2 py-1 rounded-md transition-colors",
-                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-                    activeId === section.id
-                      ? "font-semibold text-foreground bg-muted"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                  ].join(" ")}
-                >
-                  {section.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </nav>
-  );
-}
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function AlertDocs() {
@@ -193,6 +144,8 @@ export function AlertDocs() {
     },
     [locale]
   );
+
+  const activeId = useActiveSection(allIds, handleSectionChange);
 
   // ─── Code strings ───────────────────────────────────────────────────────────
 
@@ -272,7 +225,12 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
       />
 
       <div className="flex gap-16 items-start">
-        <ComponentDocsSidebar navGroups={navGroups} allIds={allIds} onSectionChange={handleSectionChange} />
+        <nav
+          aria-label="Navegação das seções do componente"
+          className="sticky top-8 w-52 shrink-0 self-start space-y-5"
+        >
+          <DocsNav groups={navGroups} activeSection={activeId} />
+        </nav>
 
         <div className="ds-docs flex-1 min-w-0 space-y-12">
 
@@ -797,9 +755,9 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
             accessibility={{
               title: tContent("testes.accessibility.title"),
               cols: {
-                criterion: locale === "en" ? "Criterion" : locale === "es" ? "Criterio" : "Critério",
+                criterion: tNav("common.criterion"),
                 level: "WCAG",
-                how: locale === "en" ? "How to verify" : locale === "es" ? "Cómo verificar" : "Como verificar",
+                how: tNav("common.howToVerify"),
               },
               items: [
                 {

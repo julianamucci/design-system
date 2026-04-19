@@ -1,10 +1,11 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { getLocale, onLocaleChange, createTranslation, setLocale } from '@/lib/i18n';
+import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertIconType, type AlertVariant } from '@/components/ui/alert';
 import uiTranslations from '@/i18n/ui.json';
 import alertTranslations from '@shared/content/alert/translations.json';
 
+import { createDocsNav, type DocsNavHandle } from '@/components/docs/shared/DocsNav';
 import {
   createDocsHeader,
   createDocsDemonstration,
@@ -88,39 +89,6 @@ export function createAlertDocs(): HTMLElement {
 
   const headerSlot = document.createElement('div');
 
-  type Locale = 'pt-BR' | 'en' | 'es';
-  const localeDefs: { value: Locale; label: string; ariaLabel: string }[] = [
-    { value: 'pt-BR', label: 'PT', ariaLabel: 'Português' },
-    { value: 'en',    label: 'EN', ariaLabel: 'English'   },
-    { value: 'es',    label: 'ES', ariaLabel: 'Español'   },
-  ];
-
-  function createLanguageSwitcher(): HTMLElement {
-    const wrap = document.createElement('div');
-    wrap.className = 'flex items-center gap-1 bg-muted/30 p-1 rounded-lg border border-border/40';
-    const current = getLocale();
-    localeDefs.forEach(({ value, label, ariaLabel }) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.dataset.locale = value;
-      b.setAttribute('aria-label', ariaLabel);
-      b.textContent = label;
-      const active = value === current;
-      b.className = active
-        ? 'h-6 px-2 text-[10px] font-bold rounded bg-secondary text-secondary-foreground shadow-sm transition-all'
-        : 'h-6 px-2 text-[10px] font-bold rounded text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all';
-      b.setAttribute('aria-pressed', String(active));
-      b.addEventListener('click', () => {
-        const prev = getLocale();
-        if (prev === value) return;
-        track('language_switched', { previous_language: prev, new_language: value });
-        setLocale(value);
-      });
-      wrap.appendChild(b);
-    });
-    return wrap;
-  }
-
   function renderHeader() {
     const header = createDocsHeader({
       title: t('title'),
@@ -129,8 +97,6 @@ export function createAlertDocs(): HTMLElement {
       type: t('type'),
       installNote: 'npx shadcn@latest add alert',
     });
-    const topRow = header.firstElementChild as HTMLElement | null;
-    if (topRow) topRow.appendChild(createLanguageSwitcher());
     headerSlot.replaceChildren(header);
   }
 
@@ -143,7 +109,7 @@ export function createAlertDocs(): HTMLElement {
   sidebar.setAttribute('aria-label', 'Navegação das seções do componente');
   sidebar.className = 'sticky top-8 w-52 shrink-0 self-start space-y-5';
 
-  const NAV_GROUPS = () => [
+  const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }[] }[] = [
     { labelKey: 'nav.overview', sections: [
       { id: 'demonstracao', labelKey: 'nav.demonstration' },
       { id: 'anatomia',     labelKey: 'nav.anatomy'       },
@@ -168,43 +134,19 @@ export function createAlertDocs(): HTMLElement {
     ]},
   ];
 
-  const sidebarNavItems: { el: HTMLButtonElement; id: string }[] = [];
+  let navHandle: DocsNavHandle | null = null;
 
   function buildSidebar() {
-    sidebar.innerHTML = '';
-    sidebarNavItems.length = 0;
-    NAV_GROUPS().forEach(group => {
-      const groupDiv = document.createElement('div');
-      const groupLabel = document.createElement('p');
-      groupLabel.className = 'text-[0.65rem] font-semibold uppercase tracking-widest text-muted-foreground mb-1 px-2';
-      groupLabel.textContent = tNav(group.labelKey);
-      const ul = document.createElement('ul');
-      ul.className = 'list-none p-0 m-0 space-y-0.5';
-      group.sections.forEach(({ id, labelKey }) => {
-        const li = document.createElement('li');
-        li.className = 'list-none';
-        const navBtn = document.createElement('button');
-        navBtn.type = 'button';
-        navBtn.className = 'w-full text-left text-sm px-2 py-1 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50';
-        navBtn.textContent = tNav(labelKey);
-        navBtn.addEventListener('click', () => {
-          root.querySelector(`#${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-        sidebarNavItems.push({ el: navBtn, id });
-        li.appendChild(navBtn);
-        ul.appendChild(li);
-      });
-      groupDiv.append(groupLabel, ul);
-      sidebar.appendChild(groupDiv);
-    });
+    const groups = NAV_GROUPS.map(g => ({
+      label: tNav(g.labelKey),
+      sections: g.sections.map(s => ({ id: s.id, label: tNav(s.labelKey) })),
+    }));
+    navHandle = createDocsNav({ groups });
+    sidebar.replaceChildren(navHandle.element);
   }
 
   function updateActiveNav(activeId: string) {
-    sidebarNavItems.forEach(({ el, id }) => {
-      el.className = id === activeId
-        ? 'w-full text-left text-sm px-2 py-1 rounded-md transition-colors font-semibold text-foreground bg-muted'
-        : 'w-full text-left text-sm px-2 py-1 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50';
-    });
+    navHandle?.setActiveSection(activeId);
   }
 
   const main = document.createElement('div');
@@ -566,10 +508,6 @@ export interface AlertTitleOptions {
         });
 
       case 'testes': {
-        const locale = getLocale();
-        const criterionLabel = locale === 'en' ? 'Criterion' : locale === 'es' ? 'Criterio' : 'Critério';
-        const howLabel       = locale === 'en' ? 'How to verify' : locale === 'es' ? 'Cómo verificar' : 'Como verificar';
-
         return createDocsTestes({
           title: t('testes.title'),
           functional: {
@@ -587,7 +525,7 @@ export interface AlertTitleOptions {
           },
           accessibility: {
             title: t('testes.accessibility.title'),
-            cols: { criterion: criterionLabel, level: 'WCAG', how: howLabel },
+            cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
             items: [1, 2, 3, 4].map(i => ({
               criterion: t(`testes.accessibility.item${i}.criterion`),
               level: t(`testes.accessibility.item${i}.level`),
