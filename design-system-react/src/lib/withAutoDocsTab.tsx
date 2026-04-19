@@ -66,9 +66,9 @@ function ApiReferencePage() {
  * A aba "Documentação" mantém o componente original intacto.
  *
  * @example
- * // button.stories.tsx
+ * // alert.stories.tsx
  * parameters: {
- *   docs: { page: withAutoDocsTab(ButtonDocs) },
+ *   docs: { page: withAutoDocsTab(AlertDocs) },
  * }
  */
 export function withAutoDocsTab(CustomDocs: () => React.JSX.Element) {

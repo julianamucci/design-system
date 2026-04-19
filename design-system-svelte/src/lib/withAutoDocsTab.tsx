@@ -63,9 +63,9 @@ function ApiReferencePage() {
  * O componente Svelte é montado via bridge `mount()`/`unmount()` dentro do React.
  *
  * @example
- * // button.stories.ts
+ * // alert.stories.ts
  * parameters: {
- *   docs: { page: withAutoDocsTab(ButtonDocs) },
+ *   docs: { page: withAutoDocsTab(AlertDocs) },
  * }
  */
 export function withAutoDocsTab(SvelteComponent: Component) {

@@ -72,7 +72,7 @@ import { Button } from '@/components/ui/button'
 
 ```ts
 // defineAsyncComponent para code splitting por página
-const ButtonDocs = defineAsyncComponent(() => import('./components/docs/ButtonDocs.vue'))
+const AlertDocs = defineAsyncComponent(() => import('./components/docs/AlertDocs.vue'))
 
 // Uso com Suspense obrigatório
 ```

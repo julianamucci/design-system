@@ -64,9 +64,9 @@ function ApiReferencePage() {
  * e mostra o autodocs na aba "API Reference".
  *
  * @example
- * // button.stories.ts
+ * // alert.stories.ts
  * parameters: {
- *   docs: { page: withAutoDocsTab(ButtonDocs) },
+ *   docs: { page: withAutoDocsTab(AlertDocs) },
  * }
  */
 export function withAutoDocsTab(VueComponent: Component) {

@@ -22,7 +22,9 @@ export function createDocsNotes(props: DocsNotesProps): HTMLElement {
       alert.appendChild(createAlertTitle({ text: item.title }));
     }
     const alertDescription = createAlertDescription();
-    alertDescription.innerHTML = sanitizeHtml(item.content);
+    const p = document.createElement('p');
+    p.innerHTML = sanitizeHtml(item.content);
+    alertDescription.appendChild(p);
     alert.appendChild(alertDescription);
     container.appendChild(alert);
   });

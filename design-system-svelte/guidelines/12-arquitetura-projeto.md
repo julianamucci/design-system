@@ -31,19 +31,20 @@ design-system-svelte/
 │   ├── lib/
 │   │   ├── components/
 │   │   │   ├── ui/              # Primitivos (shadcn-svelte/Bits UI) + stories
-│   │   │   │   ├── button/
+│   │   │   │   ├── alert/
 │   │   │   │   │   ├── index.ts
-│   │   │   │   │   └── Button.svelte
-│   │   │   │   ├── button.stories.ts
-│   │   │   │   ├── button-variantes.stories.ts
-│   │   │   │   ├── button-tamanhos.stories.ts
-│   │   │   │   ├── button-estados.stories.ts
-│   │   │   │   └── button-composicoes.stories.ts
+│   │   │   │   │   ├── Alert.svelte
+│   │   │   │   │   ├── AlertTitle.svelte
+│   │   │   │   │   └── AlertDescription.svelte
+│   │   │   │   ├── alert.stories.ts
+│   │   │   │   ├── alert-variantes.stories.ts
+│   │   │   │   ├── alert-estados.stories.ts
+│   │   │   │   └── alert-composicoes.stories.ts
 │   │   │   │
 │   │   │   ├── docs/            # Páginas de documentação
-│   │   │   │   ├── ButtonDocs.svelte
+│   │   │   │   ├── AlertDocs.svelte
 │   │   │   │   ├── content/
-│   │   │   │   │   └── button/
+│   │   │   │   │   └── alert/
 │   │   │   │   │       └── translations.json
 │   │   │   │   └── shared/
 │   │   │   │       ├── DocsHeader.svelte

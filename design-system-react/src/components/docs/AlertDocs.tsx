@@ -501,7 +501,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 ),
               },
               {
-                name: tContent("examples.withoutTitle"),
+                name: tContent("states.withoutTitle.label"),
                 description: tContent("states.withoutTitle.behavior"),
                 code: codeWithoutTitle,
                 preview: (

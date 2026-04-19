@@ -27,18 +27,18 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
   container.className = 'space-y-4';
 
   props.items.forEach(item => {
-    const card = createCard({ className: 'p-4 space-y-3' });
-
-    const previewWrap = document.createElement('div');
-    previewWrap.className = 'flex items-center justify-center min-h-[60px]';
-    previewWrap.appendChild(item.previewFactory());
+    const card = createCard({ className: 'p-4 gap-2' });
 
     const info = document.createElement('div');
     info.innerHTML = `
       <p class="text-sm font-semibold">${sanitizeHtml(item.name)}</p>
       <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">${sanitizeHtml(item.description)}</p>`;
 
-    card.append(previewWrap, info);
+    const previewWrap = document.createElement('div');
+    previewWrap.className = 'flex items-center justify-center';
+    previewWrap.appendChild(item.previewFactory());
+
+    card.append(info, previewWrap);
 
     if (item.code) {
       const toggleWrap = document.createElement('div');

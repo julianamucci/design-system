@@ -31,17 +31,16 @@ design-system-react/
 ├── src/
 │   ├── components/
 │   │   ├── ui/                  # Primitivos (shadcn/ui) + stories
-│   │   │   ├── button.tsx
-│   │   │   ├── button.stories.tsx           # Story principal (Playground + docs.page)
-│   │   │   ├── button-variantes.stories.tsx
-│   │   │   ├── button-tamanhos.stories.tsx
-│   │   │   ├── button-estados.stories.tsx
-│   │   │   └── button-composicoes.stories.tsx
+│   │   │   ├── alert.tsx
+│   │   │   ├── alert.stories.tsx            # Story principal (Playground + docs.page)
+│   │   │   ├── alert-variantes.stories.tsx
+│   │   │   ├── alert-estados.stories.tsx
+│   │   │   └── alert-composicoes.stories.tsx
 │   │   │
 │   │   ├── docs/                # Páginas de documentação ricas
-│   │   │   ├── ButtonDocs.tsx              # Referência de implementação
+│   │   │   ├── AlertDocs.tsx               # Referência de implementação
 │   │   │   ├── content/
-│   │   │   │   └── button/
+│   │   │   │   └── alert/
 │   │   │   │       └── translations.json  # UI text em pt-BR / en / es
 │   │   │   ├── shared/
 │   │   │   │   ├── DocsNav.tsx            # Navegação lateral das docs pages
@@ -140,7 +139,7 @@ Para adicionar um novo tema: ver seção "Adicionar Novo Tema" abaixo.
 ```
 src/components/docs/NovoComponenteDocs.tsx
 ```
-Seguir o template de 15 seções de `11-documentacao-componentes.md`. Usar `ButtonDocs.tsx` como referência.
+Seguir o template de 15 seções de `11-documentacao-componentes.md`. Usar `AlertDocs.tsx` como referência.
 
 **2. Criar translations.json**
 ```

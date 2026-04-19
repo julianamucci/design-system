@@ -17,16 +17,16 @@ O projeto usa **Storybook** como interface principal de documentação. Os `Comp
 **Implementação obrigatória para ComponentDocs:**
 
 ```tsx
-// Em cada ComponentDocs (ex: ButtonDocs.tsx)
+// Em cada ComponentDocs (ex: AlertDocs.tsx)
 // Usar o hook useSeoEffect de @/lib/use-seo.ts
 import { useSeoEffect } from '@/lib/use-seo';
 
-export function ButtonDocs() {
+export function AlertDocs() {
   useSeoEffect({
-    title: "Button — Formulários · Design System",
-    description: "Documentação do Button: 6 variantes, 4 tamanhos, estados disabled e loading, acessibilidade WCAG e integração com formulários.",
+    title: "Alert — Feedback · Design System",
+    description: "Documentação do Alert: variantes default e destructive, composição com AlertTitle e AlertDescription, acessibilidade WCAG via role='alert'.",
     locale: "pt-BR",
-    componentSlug: "button",
+    componentSlug: "alert",
   });
 
   return ( /* ... */ );
@@ -135,7 +135,7 @@ Representa a intenção de busca mais direta que a página atende. Extraída do 
 
 | Página | Palavra-chave principal |
 |--------|------------------------|
-| ButtonDocs | "button shadcn tailwind" |
+| AlertDocs | "alert shadcn tailwind" |
 | DialogDocs | "dialog radix ui react" |
 | ThemingDocs | "temas css variables design system" |
 
@@ -276,12 +276,12 @@ ai:intent:   informational
 Schema:      TechArticle
 ```
 
-**Exemplo — ButtonDocs:**
+**Exemplo — AlertDocs:**
 ```
-Title:       Button — Formulários · Design System
-Description: Documentação do Button: 6 variantes, 4 tamanhos, estados disabled e loading, acessibilidade focus-visible e integração com React Hook Form.
-Keyword:     button shadcn tailwind react
-Slug:        button
+Title:       Alert — Feedback · Design System
+Description: Documentação do Alert: variantes default e destructive, composição com AlertTitle e AlertDescription, acessibilidade WCAG via role='alert'.
+Keyword:     alert shadcn tailwind react
+Slug:        alert
 ai:intent:   informational
 ```
 

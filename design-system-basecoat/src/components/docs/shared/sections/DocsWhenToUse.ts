@@ -85,8 +85,17 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   if (props.uxWriting.cols.rules) {
     uxHeaderRow.appendChild(createTableHead(props.uxWriting.cols.rules, 'p-3 border-r border-border font-semibold'));
   }
-  uxHeaderRow.appendChild(createTableHead(`✓ ${props.uxWriting.cols.do}`, 'p-3 border-r border-border font-semibold text-green-700'));
-  uxHeaderRow.appendChild(createTableHead(`✗ ${props.uxWriting.cols.dont}`, 'p-3 font-semibold text-red-700'));
+
+  const doHead = document.createElement('th');
+  doHead.className = 'text-muted-foreground p-3 border-r border-border font-semibold text-green-700';
+  doHead.innerHTML = `<span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 text-xs font-bold flex-shrink-0">✓</span>${sanitizeHtml(props.uxWriting.cols.do)}</span>`;
+  uxHeaderRow.appendChild(doHead);
+
+  const dontHead = document.createElement('th');
+  dontHead.className = 'text-muted-foreground p-3 font-semibold text-red-700';
+  dontHead.innerHTML = `<span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 text-xs font-bold flex-shrink-0">✗</span>${sanitizeHtml(props.uxWriting.cols.dont)}</span>`;
+  uxHeaderRow.appendChild(dontHead);
+
   uxThead.appendChild(uxHeaderRow);
 
   const uxTbody = createTableBody();
@@ -112,7 +121,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   const doCard = createCard({ className: 'p-4 shadow-sm' });
   const doTitle = document.createElement('h3');
   doTitle.className = 'mb-3 text-sm font-semibold text-green-600 flex items-center gap-2';
-  doTitle.innerHTML = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-xs font-bold flex-shrink-0">✓</span>${sanitizeHtml(props.do.title)}`;
+  doTitle.innerHTML = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 text-xs font-bold flex-shrink-0">✓</span>${sanitizeHtml(props.do.title)}`;
   const doList = document.createElement('ul');
   doList.className = 'list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed';
   props.do.items.forEach(i => {
@@ -125,7 +134,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   const dontCard = createCard({ className: 'p-4 shadow-sm' });
   const dontTitle = document.createElement('h3');
   dontTitle.className = 'mb-3 text-sm font-semibold text-red-600 flex items-center gap-2';
-  dontTitle.innerHTML = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-xs font-bold flex-shrink-0">✗</span>${sanitizeHtml(props.dont.title)}`;
+  dontTitle.innerHTML = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 text-xs font-bold flex-shrink-0">✗</span>${sanitizeHtml(props.dont.title)}`;
   const dontList = document.createElement('ul');
   dontList.className = 'list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed';
   props.dont.items.forEach(i => {

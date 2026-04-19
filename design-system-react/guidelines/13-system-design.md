@@ -136,11 +136,11 @@ A navegação entre componentes é gerenciada pela **sidebar do Storybook** — 
 ```tsx
 // ✅ CORRETO — navegação via Storybook sidebar (título da story)
 export default {
-  title: "UI/Button",   // → aparece em UI > Button na sidebar
-} satisfies Meta<typeof Button>;
+  title: "UI/Alert",   // → aparece em UI > Alert na sidebar
+} satisfies Meta<typeof Alert>;
 
 // ❌ EVITAR — registrar no App.tsx para fins de navegação
-// { name: "Button", path: "button", component: ButtonDocs }
+// { name: "Alert", path: "alert", component: AlertDocs }
 ```
 
 ---
@@ -180,7 +180,7 @@ O `App.tsx` mantém state-based routing **apenas para o sandbox de desenvolvimen
 
 ```tsx
 // App.tsx — uso exclusivo do sandbox
-const ButtonDocs = lazy(() => import('./components/docs/ButtonDocs'));
+const AlertDocs = lazy(() => import('./components/docs/AlertDocs'));
 ```
 
 Isso não afeta a performance do Storybook.
@@ -383,7 +383,7 @@ class ComponentName extends React.Component {
 
 ```tsx
 // ✅ Páginas de documentação: Named export
-export function ButtonDocs() { }
+export function AlertDocs() { }
 
 // ✅ App.tsx: Default export (entry point)
 export default function App() { }
@@ -652,13 +652,13 @@ npm audit fix
 ### 1. Unit Tests (Componentes Isolados)
 
 ```tsx
-// ButtonDocs.test.tsx
+// AlertDocs.test.tsx
 import { render, screen } from '@testing-library/react';
-import { ButtonDocs } from './ButtonDocs';
+import { AlertDocs } from './AlertDocs';
 
 test('renderiza título corretamente', () => {
-  render(<ButtonDocs />);
-  expect(screen.getByText('Button')).toBeInTheDocument();
+  render(<AlertDocs />);
+  expect(screen.getByText('Alert')).toBeInTheDocument();
 });
 ```
 

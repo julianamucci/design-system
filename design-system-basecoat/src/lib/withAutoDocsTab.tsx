@@ -61,9 +61,9 @@ function ApiReferencePage() {
  * na aba "Documentação" e mostra o autodocs na aba "API Reference".
  *
  * @example
- * // button.stories.ts
+ * // alert.stories.ts
  * parameters: {
- *   docs: { page: withAutoDocsTab(createButtonDocs) },
+ *   docs: { page: withAutoDocsTab(createAlertDocs) },
  * }
  */
 export function withAutoDocsTab(createDocs: () => HTMLElement) {

@@ -199,7 +199,7 @@ Toda tabela de documentação deve estar dentro de **uma única div** com `borde
 </div>
 ```
 
-> **`ComponentDemo`** é exclusivo para demonstrações interativas de componentes de UI (ex: mostrar um `<Button>` funcionando). **Nunca** use `ComponentDemo` para envolver tabelas de dados — as tabelas não são demos, são conteúdo de documentação.
+> **`ComponentDemo`** é exclusivo para demonstrações interativas de componentes de UI (ex: mostrar um `<Alert>` funcionando). **Nunca** use `ComponentDemo` para envolver tabelas de dados — as tabelas não são demos, são conteúdo de documentação.
 
 ### 3.3 Herança de font-size em células
 
@@ -493,7 +493,7 @@ Itere sobre `item1`…`itemN` dinamicamente (não hardcode o array). Exemplo em 
 })}
 ```
 
-Consulte `ButtonDocs.tsx` como implementação de referência completa.
+Consulte `AlertDocs.tsx` como implementação de referência completa.
 
 ---
 
@@ -615,16 +615,14 @@ A tabela de props deve ter **5 colunas** e cobrir **todas as props** do componen
 Exibir sempre a interface **explícita** (não abreviada via `VariantProps`), em bloco `<div class="bg-muted p-4 rounded-lg font-mono text-xs border overflow-x-auto whitespace-pre leading-relaxed">`:
 
 ```tsx
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
-  size?: "default" | "sm" | "lg" | "icon"
-  asChild?: boolean
+interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "destructive"
 }
 ```
 
-### Props mínimas a documentar (Button)
+### Props mínimas a documentar (Alert)
 
-`variant`, `size`, `disabled`, `asChild` / sem asChild em stacks sem Radix, `onClick` / `onclick`, `type`, `className` / `class`
+`variant`, `className` / `class`, `role` (sempre `"alert"`), composição via subcomponentes (`AlertTitle`, `AlertDescription`)
 
 ### Bloco de extensibilidade obrigatório
 
@@ -656,9 +654,9 @@ A tabela de tokens deve ter **5 colunas** e cobrir **todos os tokens CSS** usado
 
 > **Valores HSL não pertencem aqui.** Os valores por tema (light/dark HSL) serão documentados na seção de Temas do design system. A tabela de tokens da docs page de componente lista apenas quais tokens o componente **usa** e para qual parte visual.
 
-### Tokens mínimos a documentar (Button)
+### Tokens mínimos a documentar (Alert)
 
-`--primary`, `--primary-foreground`, `--secondary`, `--destructive`, `--border`, `--ring`, `--radius`
+`--background`, `--foreground`, `--card`, `--card-foreground`, `--destructive`, `--border`, `--radius`
 
 ### Bloco de customização obrigatório
 

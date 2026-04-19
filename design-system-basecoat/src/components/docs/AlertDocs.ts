@@ -395,7 +395,7 @@ export function createAlertDocs(): HTMLElement {
               previewFactory: () => buildAlert('default', 'w-full bg-warning/10 text-warning border-warning/30', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
             },
             {
-              name: t('examples.withoutTitle'),
+              name: t('states.withoutTitle.label'),
               description: t('states.withoutTitle.behavior'),
               code: codeWithoutTitle,
               previewFactory: () => buildAlert('default', 'w-full', 'info', null, 'demonstration.labels.infoDesc'),

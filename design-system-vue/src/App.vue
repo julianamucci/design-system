@@ -13,12 +13,8 @@ const isAdminView = new URLSearchParams(window.location.search).get('view') === 
 
 // ─── Lazy-loaded documentation pages ────────────────────────────────────────
 const lazyDocs: Record<string, ReturnType<typeof defineAsyncComponent>> = {
-  'accordion':    defineAsyncComponent(() => import('./components/docs/AccordionDocs.vue')),
-  'alert-dialog': defineAsyncComponent(() => import('./components/docs/AlertDialogDocs.vue')),
   'alert':        defineAsyncComponent(() => import('./components/docs/AlertDocs.vue')),
-  'button':       defineAsyncComponent(() => import('./components/docs/ButtonDocs.vue')),
   'icons':        defineAsyncComponent(() => import('./components/docs/IconsDocs.vue')),
-  'sonner':       defineAsyncComponent(() => import('./components/docs/SonnerDocs.vue')),
   'theming':      defineAsyncComponent(() => import('./components/docs/ThemingDocs.vue')),
 }
 
@@ -61,26 +57,10 @@ const componentCategories = [
     ],
   },
   {
-    name: 'Form',
-    icon: FileText,
-    items: [
-      { name: 'Button', path: 'button' },
-    ],
-  },
-  {
     name: 'Feedback',
     icon: MessageSquare,
     items: [
       { name: 'Alert', path: 'alert' },
-      { name: 'Alert Dialog', path: 'alert-dialog' },
-      { name: 'Sonner', path: 'sonner' },
-    ],
-  },
-  {
-    name: 'Utilities',
-    icon: Database,
-    items: [
-      { name: 'Accordion', path: 'accordion' },
     ],
   },
 ]

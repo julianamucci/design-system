@@ -9,7 +9,7 @@ Este arquivo define a estrutura obrigatória para documentar componentes no Desi
 
 Ambas as partes seguem uma organização padronizada de **15 seções** (agrupadas em 4 blocos) e **5 grupos de stories**.
 
-**Referência de implementação:** `ButtonDocs.tsx` e `button*.stories.tsx`.
+**Referência de implementação:** `AlertDocs.tsx` e `alert*.stories.tsx`.
 
 ---
 
@@ -716,11 +716,11 @@ export const Default: Story = {
 
 | Item | Convenção | Exemplo |
 |---|---|---|
-| Arquivo docs | `NomeComponenteDocs.tsx` | `ButtonDocs.tsx` |
-| Arquivo stories principal | `nome-componente.stories.tsx` | `button.stories.tsx` |
-| Arquivos stories secundários | `nome-componente-grupo.stories.tsx` | `button-variantes.stories.tsx` |
-| Title do meta principal | `"UI/NomeComponente"` | `"UI/Button"` |
-| Title dos subgrupos | `"UI/NomeComponente/Grupo"` | `"UI/Button/Variantes"` |
+| Arquivo docs | `NomeComponenteDocs.tsx` | `AlertDocs.tsx` |
+| Arquivo stories principal | `nome-componente.stories.tsx` | `alert.stories.tsx` |
+| Arquivos stories secundários | `nome-componente-grupo.stories.tsx` | `alert-variantes.stories.tsx` |
+| Title do meta principal | `"UI/NomeComponente"` | `"UI/Alert"` |
+| Title dos subgrupos | `"UI/NomeComponente/Grupo"` | `"UI/Alert/Variantes"` |
 
 ### Checklist de implementação
 

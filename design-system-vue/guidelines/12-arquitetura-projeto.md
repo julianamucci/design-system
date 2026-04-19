@@ -178,7 +178,7 @@ const { isMobile } = useIsMobile()
 ### Convenções de nomenclatura
 
 **Arquivos**:
-- Componentes: `PascalCase.vue` (ex: `ButtonDocs.vue`)
+- Componentes: `PascalCase.vue` (ex: `AlertDocs.vue`)
 - Composables: `use-camelCase.ts` (ex: `use-mobile.ts`)
 - Utilitários: `camelCase.ts` (ex: `utils.ts`)
 

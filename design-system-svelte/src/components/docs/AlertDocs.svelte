@@ -355,7 +355,7 @@ interface AlertProps {
           { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')),  code: codeDestructive,  preview: variantDestructive  },
           { name: 'success',     description: stripHtml($tStore('variants.items.success')),      code: codeSuccess,      preview: variantSuccess      },
           { name: 'warning',     description: stripHtml($tStore('variants.items.warning')),      code: codeWarning,      preview: variantWarning      },
-          { name: $tStore('examples.withoutTitle'), description: $tStore('states.withoutTitle.behavior'), code: codeWithoutTitle, preview: variantWithoutTitle },
+          { name: $tStore('states.withoutTitle.label'), description: $tStore('states.withoutTitle.behavior'), code: codeWithoutTitle, preview: variantWithoutTitle },
         ]}
       />
 

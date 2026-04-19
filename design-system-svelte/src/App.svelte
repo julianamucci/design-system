@@ -1,9 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import {
-    Moon, Sun, Home, LayoutGrid, MousePointer, Palette,
-    FileText, Settings, Database, MessageSquare, Sparkles,
-  } from 'lucide-svelte';
+  import { Moon, Sun, Home, MousePointer, Database } from 'lucide-svelte';
   import DocsEditor from './admin/DocsEditor.svelte';
 
   const isAdminView = new URLSearchParams(window.location.search).get('view') === 'admin';
@@ -17,36 +14,16 @@
   // ─── Lazy-loaded docs ───────────────────────────────────────────────────────
 
   const lazyDocs: Record<string, () => Promise<{ default: any }>> = {
-    'accordion':     () => import('./components/docs/AccordionDocs.svelte'),
-    'alert-dialog':  () => import('./components/docs/AlertDialogDocs.svelte'),
-    'alert':         () => import('./components/docs/AlertDocs.svelte'),
-    'badge':         () => import('./components/docs/BadgeDocs.svelte'),
-    'breadcrumb':    () => import('./components/docs/BreadcrumbDocs.svelte'),
-    'button':        () => import('./components/docs/ButtonDocs.svelte'),
-    'card':          () => import('./components/docs/CardDocs.svelte'),
-    'checkbox':      () => import('./components/docs/CheckboxDocs.svelte'),
-    'dialog':        () => import('./components/docs/DialogDocs.svelte'),
-    'input':         () => import('./components/docs/InputDocs.svelte'),
-    'select':        () => import('./components/docs/SelectDocs.svelte'),
-    'switch':        () => import('./components/docs/SwitchDocs.svelte'),
-    'table':         () => import('./components/docs/TableDocs.svelte'),
-    'tabs':          () => import('./components/docs/TabsDocs.svelte'),
-    'toast':         () => import('./components/docs/ToastDocs.svelte'),
-    'tooltip':       () => import('./components/docs/TooltipDocs.svelte'),
+    'alert':  () => import('./components/docs/AlertDocs.svelte'),
+    'icons':  () => import('./components/docs/IconsDocs.svelte'),
   };
 
   // ─── Navegação ──────────────────────────────────────────────────────────────
 
   const navItems = [
-    { group: 'Visão Geral',     icon: Home,        id: null,         label: 'Início'          },
-    { group: 'Componentes',     icon: LayoutGrid,   id: 'button',     label: 'Button'          },
-    { group: 'Componentes',     icon: MousePointer, id: 'alert',      label: 'Alert'           },
-    { group: 'Componentes',     icon: MessageSquare,id: 'dialog',     label: 'Dialog'          },
-    { group: 'Fundamentos',     icon: Palette,      id: 'theming',    label: 'Theming'         },
-    { group: 'Fundamentos',     icon: FileText,     id: 'tokens',     label: 'Design Tokens'  },
-    { group: 'Fundamentos',     icon: Database,     id: 'icons',      label: 'Icons'           },
-    { group: 'Configurações',   icon: Settings,     id: 'settings',   label: 'Configurações'  },
-    { group: 'Experimental',    icon: Sparkles,     id: 'ai',         label: 'IA Features'    },
+    { group: 'Visão Geral', icon: Home,         id: null,    label: 'Início' },
+    { group: 'Componentes', icon: MousePointer, id: 'alert', label: 'Alert'  },
+    { group: 'Fundamentos', icon: Database,     id: 'icons', label: 'Icons'  },
   ];
 
   let CurrentDoc = $state<{ default: any } | null>(null);
@@ -199,18 +176,11 @@
           </p>
           <div class="grid gap-3 sm:grid-cols-2">
             <button
-              onclick={() => navigate('button')}
+              onclick={() => navigate('alert')}
               class="rounded-lg border border-border p-4 text-left hover:bg-muted/50 transition-colors"
             >
-              <p class="font-medium">Button</p>
-              <p class="text-sm text-muted-foreground">Ações e interações do usuário</p>
-            </button>
-            <button
-              onclick={() => navigate('alert-dialog')}
-              class="rounded-lg border border-border p-4 text-left hover:bg-muted/50 transition-colors"
-            >
-              <p class="font-medium">Alert Dialog</p>
-              <p class="text-sm text-muted-foreground">Confirmações e mensagens críticas</p>
+              <p class="font-medium">Alert</p>
+              <p class="text-sm text-muted-foreground">Feedback visual para o usuário</p>
             </button>
           </div>
         </div>

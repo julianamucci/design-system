@@ -117,14 +117,6 @@
       "basic": "Import básico:",
       "withIcon": "Com ícone Lucide:"
     },
-    "examples": {
-      "title": "Exemplos de Código",
-      "default": "Informativo (default)",
-      "destructive": "Erro (destructive)",
-      "success": "Sucesso (via className)",
-      "warning": "Aviso (via className)",
-      "withoutTitle": "Sem título"
-    },
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponíveis",
@@ -299,7 +291,6 @@
       "doDont": "Do & Don't",
       "techRef": "Referência Técnica",
       "import": "Importação",
-      "examples": "Exemplos",
       "variants": "Variantes",
       "states": "Configurações",
       "props": "Propriedades",
@@ -430,14 +421,6 @@
       "title": "Import",
       "basic": "Basic import:",
       "withIcon": "With Lucide icon:"
-    },
-    "examples": {
-      "title": "Code Examples",
-      "default": "Informational (default)",
-      "destructive": "Error (destructive)",
-      "success": "Success (via className)",
-      "warning": "Warning (via className)",
-      "withoutTitle": "Without title"
     },
     "variants": {
       "title": "Variants",
@@ -613,7 +596,6 @@
       "doDont": "Do & Don't",
       "techRef": "Technical Reference",
       "import": "Import",
-      "examples": "Examples",
       "variants": "Variants",
       "states": "Configurations",
       "props": "Properties",
@@ -744,14 +726,6 @@
       "title": "Importación",
       "basic": "Import básico:",
       "withIcon": "Con ícono Lucide:"
-    },
-    "examples": {
-      "title": "Ejemplos de Código",
-      "default": "Informativo (default)",
-      "destructive": "Error (destructive)",
-      "success": "Éxito (vía className)",
-      "warning": "Advertencia (vía className)",
-      "withoutTitle": "Sin título"
     },
     "variants": {
       "title": "Variantes",
@@ -927,7 +901,6 @@
       "doDont": "Do & Don't",
       "techRef": "Referencia Técnica",
       "import": "Importación",
-      "examples": "Ejemplos",
       "variants": "Variantes",
       "states": "Configuraciones",
       "props": "Propiedades",

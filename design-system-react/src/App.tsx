@@ -14,13 +14,8 @@ import { getThemeInfo, themeDisplayNames } from '@shared/themes/theme-config';
 
 // Lazy-loaded documentation pages — only loaded when the user navigates to them
 const lazyDocs: Record<string, React.LazyExoticComponent<React.ComponentType>> = {
-  'accordion':    lazy(() => import('./components/docs/AccordionDocs').then(m => ({ default: m.AccordionDocs }))),
   'alert':        lazy(() => import('./components/docs/AlertDocs').then(m => ({ default: m.AlertDocs }))),
-  'alert-dialog': lazy(() => import('./components/docs/AlertDialogDocs').then(m => ({ default: m.AlertDialogDocs }))),
-  'button':       lazy(() => import('./components/docs/ButtonDocs').then(m => ({ default: m.ButtonDocs }))),
   'icons':        lazy(() => import('./components/docs/IconsDocs').then(m => ({ default: m.IconsDocs }))),
-  'sonner':       lazy(() => import('./components/docs/SonnerDocs').then(m => ({ default: m.SonnerDocs }))),
-  'table':        lazy(() => import('./components/docs/TableDocs').then(m => ({ default: m.TableDocs }))),
   'theme-colors': lazy(() => import('./components/docs/ThemeColorsDocs').then(m => ({ default: m.ThemeColorsDocs }))),
   'theming':      lazy(() => import('./components/docs/ThemingDocs').then(m => ({ default: m.ThemingDocs }))),
 };
@@ -36,33 +31,10 @@ const componentCategories = [
     ]
   },
   {
-    name: "Form",
-    icon: FileText,
-    items: [
-      { name: "Button", path: "button" }
-    ]
-  },
-  {
     name: "Feedback",
     icon: MessageSquare,
     items: [
-      { name: "Alert", path: "alert" },
-      { name: "Alert Dialog", path: "alert-dialog" },
-      { name: "Sonner", path: "sonner" }
-    ]
-  },
-  {
-    name: "Display",
-    icon: Palette,
-    items: [
-      { name: "Table", path: "table" }
-    ]
-  },
-  {
-    name: "Utilities",
-    icon: Database,
-    items: [
-      { name: "Accordion", path: "accordion" }
+      { name: "Alert", path: "alert" }
     ]
   }
 ];

@@ -14,7 +14,8 @@ export function createTable(extraClass?: string): {
   wrapper.className = 'relative w-full overflow-x-auto';
 
   const table = document.createElement('table');
-  table.className = cls('table', extraClass);
+  // PATCH: basecoat-css força `whitespace-nowrap` em th/td via `.table`, causando overflow horizontal em docs pages. Override explícito para permitir wrap natural.
+  table.className = cls('table [&_th]:whitespace-normal [&_td]:whitespace-normal', extraClass);
 
   wrapper.appendChild(table);
   return { wrapper, table };

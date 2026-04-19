@@ -7,7 +7,18 @@ import { createDocsEditor } from '@/admin/DocsEditor';
 type DocFactory = () => Promise<{ render: (container: HTMLElement) => (() => void) | void }>;
 
 const docRegistry: Record<string, DocFactory> = {
-  button: () => import('./components/docs/ButtonDocs'),
+  alert: () => import('./components/docs/AlertDocs').then((m) => ({
+    render: (container: HTMLElement) => {
+      container.innerHTML = '';
+      container.appendChild(m.createAlertDocs());
+    },
+  })),
+  icons: () => import('./components/docs/IconsDocs').then((m) => ({
+    render: (container: HTMLElement) => {
+      container.innerHTML = '';
+      container.appendChild(m.createIconsDocs());
+    },
+  })),
 };
 
 // ─── Estado ───────────────────────────────────────────────────────────────────
@@ -21,8 +32,9 @@ let localeCleanup: (() => void) | null = null;
 
 function renderSidebar(root: HTMLElement): void {
   const items = [
-    { id: null,     label: 'Início',        group: 'Visão Geral'  },
-    { id: 'button', label: 'Button',        group: 'Componentes'  },
+    { id: null,    label: 'Início', group: 'Visão Geral' },
+    { id: 'alert', label: 'Alert',  group: 'Componentes' },
+    { id: 'icons', label: 'Icons',  group: 'Fundamentos' },
   ];
 
   const groups = items.reduce((acc, item) => {
@@ -79,9 +91,9 @@ function renderHome(container: HTMLElement): void {
            class="underline hover:text-foreground">Basecoat UI</a> e Tailwind CSS.
       </p>
       <div class="grid gap-3 sm:grid-cols-2">
-        <button data-nav="button" class="ds-home-nav rounded-lg border border-border p-4 text-left hover:bg-muted/50 transition-colors">
-          <p class="font-medium">Button</p>
-          <p class="text-sm text-muted-foreground">Ações e interações do usuário</p>
+        <button data-nav="alert" class="ds-home-nav rounded-lg border border-border p-4 text-left hover:bg-muted/50 transition-colors">
+          <p class="font-medium">Alert</p>
+          <p class="text-sm text-muted-foreground">Feedback visual para o usuário</p>
         </button>
       </div>
     </div>

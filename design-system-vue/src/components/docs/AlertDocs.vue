@@ -216,7 +216,7 @@ const variantItems = computed(() => [
   { name: 'destructive', description: stripHtml(tContent('variants.items.destructive')), code: codeDestructive  },
   { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess      },
   { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning      },
-  { name: tContent('examples.withoutTitle'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
+  { name: tContent('states.withoutTitle.label'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
 ]);
 
 const stateItems = computed(() => [

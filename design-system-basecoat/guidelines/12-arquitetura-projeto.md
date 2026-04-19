@@ -28,17 +28,16 @@ design-system-basecoat/
 ├── src/
 │   ├── components/
 │   │   ├── ui/                  # Funções de criação de componentes + stories
-│   │   │   ├── button.ts                        # createButton()
-│   │   │   ├── button.stories.ts                # Story principal + Playground
-│   │   │   ├── button-variantes.stories.ts
-│   │   │   ├── button-tamanhos.stories.ts
-│   │   │   ├── button-estados.stories.ts
-│   │   │   └── button-composicoes.stories.ts
+│   │   │   ├── alert.ts                         # createAlert(), createAlertTitle(), createAlertDescription()
+│   │   │   ├── alert.stories.ts                 # Story principal + Playground
+│   │   │   ├── alert-variantes.stories.ts
+│   │   │   ├── alert-estados.stories.ts
+│   │   │   └── alert-composicoes.stories.ts
 │   │   │
 │   │   └── docs/                # Páginas de documentação
-│   │       ├── ButtonDocs.ts               # createButtonDocs() → HTMLElement
+│   │       ├── AlertDocs.ts                # createAlertDocs() → HTMLElement
 │   │       ├── content/
-│   │       │   └── button/
+│   │       │   └── alert/
 │   │       │       └── translations.json
 │   │       └── shared/
 │   │           ├── createDocsHeader.ts

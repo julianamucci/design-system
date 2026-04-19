@@ -17,13 +17,13 @@ export interface DocsVariantsProps {
 function VariantCard({ item }: { item: DocsVariantItem }) {
   const [open, setOpen] = useState(false);
   return (
-    <Card className="p-4 space-y-3">
-      <div className="flex items-center justify-center min-h-[60px]">
-        {item.preview}
-      </div>
+    <Card className="p-4 space-y-2">
       <div>
         <p className="text-sm font-semibold">{item.name}</p>
         <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.description}</p>
+      </div>
+      <div className="flex items-center justify-center">
+        {item.preview}
       </div>
       {item.code && (
         <div>

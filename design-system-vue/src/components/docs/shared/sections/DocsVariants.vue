@@ -24,13 +24,13 @@ function toggleCode(i: number) {
   <section id="variantes">
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
     <div class="space-y-4">
-      <Card v-for="(item, i) in items" :key="i" class="p-4 space-y-3">
-        <div class="flex items-center justify-center min-h-[60px]">
-          <slot :name="`variant-preview-${i}`" />
-        </div>
+      <Card v-for="(item, i) in items" :key="i" class="p-4 gap-2">
         <div>
           <p class="text-sm font-semibold">{{ item.name }}</p>
           <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">{{ item.description }}</p>
+        </div>
+        <div class="flex items-center justify-center">
+          <slot :name="`variant-preview-${i}`" />
         </div>
         <div v-if="item.code">
           <Button variant="link" size="sm" class="px-0 h-auto" @click="toggleCode(i)">

@@ -132,7 +132,7 @@ Docs pages são pesadas (traduções, analytics, SEO, componentes demo). DEVEM s
 **React:**
 ```tsx
 // CORRETO
-const ButtonDocs = React.lazy(() => import('./components/docs/ButtonDocs'));
+const AlertDocs = React.lazy(() => import('./components/docs/AlertDocs'));
 
 // No Storybook — withAutoDocsTab já faz isso internamente
 ```
