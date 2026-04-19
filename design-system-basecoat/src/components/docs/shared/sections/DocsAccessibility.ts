@@ -25,8 +25,8 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
   const summaryBlock = createCard({ className: 'space-y-4 p-6' });
   summaryBlock.innerHTML = `
     <p class="text-sm text-muted-foreground leading-relaxed">${sanitizeHtml(props.summary)}</p>
-    <ul class="space-y-2 text-sm list-none p-0 m-0">
-      ${props.items.map(item => `<li class="flex gap-2 list-none">${sanitizeHtml(item)}</li>`).join('')}
+    <ul class="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">
+      ${props.items.map(item => `<li class="leading-relaxed">${sanitizeHtml(item)}</li>`).join('')}
     </ul>`;
 
   const keyboardBlock = document.createElement('div');

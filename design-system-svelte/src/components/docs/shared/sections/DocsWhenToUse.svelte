@@ -21,7 +21,7 @@
   <Card class="p-6 space-y-6">
 
       <!-- Guidelines -->
-      <Card class="bg-muted/30 border-0 shadow-none p-4 space-y-3">
+      <Card class="bg-muted/50 border border-border/40 shadow-none p-4 space-y-3">
           <h3 class="font-medium text-sm">{guidelines.title}</h3>
           <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
             {#each guidelines.items as item}

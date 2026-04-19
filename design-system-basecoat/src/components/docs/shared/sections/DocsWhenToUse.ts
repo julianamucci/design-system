@@ -22,10 +22,10 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   h2.className = 'text-xl font-semibold mb-4';
   h2.textContent = props.title;
 
-  const card = createCard({ className: 'p-6 space-y-6' });
+  const card = createCard({ className: 'p-4 space-y-6' });
 
   // ── Guidelines ───────────────────────────────────────────────────────────────
-  const guidelinesBlock = createCard({ className: 'bg-muted/30 border-0 shadow-none rounded-lg p-4 space-y-3' });
+  const guidelinesBlock = createCard({ className: 'bg-muted/50 border border-border/40 shadow-none rounded-lg p-4 space-y-3' });
   const guidelinesTitle = document.createElement('h3');
   guidelinesTitle.className = 'font-medium text-sm';
   guidelinesTitle.textContent = props.guidelines.title;

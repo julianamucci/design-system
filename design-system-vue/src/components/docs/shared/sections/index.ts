@@ -4,7 +4,6 @@ export { default as DocsAnatomy } from './DocsAnatomy.vue';
 export { default as DocsWhenToUse } from './DocsWhenToUse.vue';
 export { default as DocsDoDont } from './DocsDoDont.vue';
 export { default as DocsImport } from './DocsImport.vue';
-export { default as DocsExamples } from './DocsExamples.vue';
 export { default as DocsVariants } from './DocsVariants.vue';
 export { default as DocsStates } from './DocsStates.vue';
 export { default as DocsProps } from './DocsProps.vue';

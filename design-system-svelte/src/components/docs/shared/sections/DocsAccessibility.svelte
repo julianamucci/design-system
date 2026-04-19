@@ -18,9 +18,9 @@
   <div class="space-y-6">
     <Card class="p-6 space-y-4">
         <p class="text-sm text-muted-foreground leading-relaxed">{@html sanitizeHtml(summary)}</p>
-        <ul class="space-y-2 text-sm list-none p-0 m-0">
+        <ul class="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">
           {#each items as item}
-            <li class="flex gap-2 list-none">{@html sanitizeHtml(item)}</li>
+            <li class="leading-relaxed">{@html sanitizeHtml(item)}</li>
           {/each}
         </ul>
     </Card>

@@ -3,6 +3,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import AlertDocs from '@/components/docs/AlertDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { Info } from 'lucide-vue-next';
 
 const meta = {
   title: 'UI/Alert',
@@ -28,13 +29,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => ({
-    components: { Alert, AlertTitle, AlertDescription },
+    components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return { args }; },
     template: `
       <Alert v-bind="args">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-        </svg>
+        <Info class="h-4 w-4" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>

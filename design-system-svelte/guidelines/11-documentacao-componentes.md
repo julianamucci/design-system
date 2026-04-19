@@ -12,7 +12,6 @@ Todas as docs pages Svelte **DEVEM usar os containers genéricos** em `src/compo
   import DocsWhenToUse from '$lib/../components/docs/shared/sections/DocsWhenToUse.svelte';
   import DocsDoDont from '$lib/../components/docs/shared/sections/DocsDoDont.svelte';
   import DocsImport from '$lib/../components/docs/shared/sections/DocsImport.svelte';
-  import DocsExamples from '$lib/../components/docs/shared/sections/DocsExamples.svelte';
   import DocsVariants from '$lib/../components/docs/shared/sections/DocsVariants.svelte';
   import DocsStates from '$lib/../components/docs/shared/sections/DocsStates.svelte';
   import DocsProps from '$lib/../components/docs/shared/sections/DocsProps.svelte';
@@ -116,7 +115,6 @@ parameters: {
     ]},
     { label: tNav('nav.techRef'), sections: [
       { id: 'importacao',   label: tNav('nav.import') },
-      { id: 'exemplos',     label: tNav('nav.examples') },
       { id: 'variantes',    label: tNav('nav.variants') },
       { id: 'estados',      label: tNav('nav.states') },
       { id: 'propriedades', label: tNav('nav.props') },
@@ -271,24 +269,13 @@ O container renderiza cada par com `{@render pair.doPreview()}` e `{@render pair
 />
 ```
 
-### 7. Exemplos (`id="exemplos"`)
+### 7. Variantes (`id="variantes"`)
 
-Passe snippets `preview0`, `preview1`, etc. no array `items`.
+O campo `code` é **opcional** — quando presente, o container renderiza um botão "Ver código" que expande um bloco de código.
 
-```svelte
-{#snippet ex0()}<Alert>...</Alert>{/snippet}
-{#snippet ex1()}<Alert variant="destructive">...</Alert>{/snippet}
+**Layout obrigatório: vertical (`space-y-4`).** Cada card ocupa largura total — não usar grid.
 
-<DocsExamples
-  title={tContent('examples.title')}
-  items={[
-    { title: tContent('examples.item1.title'), code: `<Alert>...</Alert>`, preview: ex0 },
-    { title: tContent('examples.item2.title'), code: `<Alert variant="destructive">...</Alert>`, preview: ex1 },
-  ]}
-/>
-```
-
-### 8. Variantes (`id="variantes"`)
+**DocsExamples foi removido:** exemplos de código agora ficam embutidos em cada item de `DocsVariants` via o campo `code`.
 
 ```svelte
 {#snippet vDefault()}<Alert>...</Alert>{/snippet}
@@ -297,13 +284,23 @@ Passe snippets `preview0`, `preview1`, etc. no array `items`.
 <DocsVariants
   title={tContent('variants.title')}
   items={[
-    { name: 'default', description: tContent('variants.default'), preview: vDefault },
-    { name: 'destructive', description: tContent('variants.destructive'), preview: vDestructive },
+    {
+      name: 'default',
+      description: tContent('variants.default'),
+      code: `<Alert>\n  <AlertTitle>Título</AlertTitle>\n  <AlertDescription>Descrição</AlertDescription>\n</Alert>`,
+      preview: vDefault
+    },
+    {
+      name: 'destructive',
+      description: tContent('variants.destructive'),
+      code: `<Alert variant="destructive">...</Alert>`,
+      preview: vDestructive
+    },
   ]}
 />
 ```
 
-### 9. Estados (`id="estados"`)
+### 8. Estados (`id="estados"`)
 
 Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplica.
 
@@ -318,7 +315,7 @@ Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplic
 />
 ```
 
-### 10. Propriedades (`id="propriedades"`)
+### 9. Propriedades (`id="propriedades"`)
 
 `tables` é array — um table por subcomponente em componentes compostos.
 
@@ -341,7 +338,7 @@ Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplic
 />
 ```
 
-### 11. Tokens (`id="tokens"`)
+### 10. Tokens (`id="tokens"`)
 
 ```svelte
 <DocsTokens
@@ -356,7 +353,7 @@ Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplic
 />
 ```
 
-### 12. Acessibilidade (`id="acessibilidade"`)
+### 11. Acessibilidade (`id="acessibilidade"`)
 
 ```svelte
 <DocsAccessibility
@@ -368,7 +365,7 @@ Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplic
 />
 ```
 
-### 13. Relacionados (`id="relacionados"`)
+### 12. Relacionados (`id="relacionados"`)
 
 ```svelte
 <DocsRelated
@@ -379,7 +376,7 @@ Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplic
 />
 ```
 
-### 14. Notas (`id="notas"`)
+### 13. Notas (`id="notas"`)
 
 ```svelte
 <DocsNotes
@@ -388,7 +385,7 @@ Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplic
 />
 ```
 
-### 15. Analytics (`id="analytics"`)
+### 14. Analytics (`id="analytics"`)
 
 ```svelte
 <DocsAnalytics
@@ -400,7 +397,7 @@ Labels da primeira coluna: `font-medium` (nunca badge) — o container já aplic
 />
 ```
 
-### 16. Testes (`id="testes"`)
+### 15. Testes (`id="testes"`)
 
 ```svelte
 <DocsTestes
@@ -465,6 +462,7 @@ Svelte usa `{@html}` para conteúdo HTML. Sempre sanitize: `{@html sanitizeHtml(
 - [ ] Nenhum HTML de seção inline no template
 - [ ] `DocsHeader` com category/type/installNote
 - [ ] `DocsDemonstration` com children snippet usando o componente real
+- [ ] `DocsVariants` com layout vertical (`space-y-4`) e campo `code` opcional por item
 - [ ] `DocsDoDont` com snippets individuais por par (`preview: snippetRef`)
 - [ ] `DocsProps` com tables array (múltiplos para componentes compostos)
 - [ ] `DocsStates` — labels em texto plano (container já aplica `font-medium`)

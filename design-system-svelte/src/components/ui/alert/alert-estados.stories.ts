@@ -19,6 +19,7 @@ export const Completo: Story = {
       title: 'Atenção',
       description: 'Suas alterações serão aplicadas na próxima sessão.',
       showIcon: true,
+      icon: 'info',
     },
   }),
   play: async ({ canvasElement, step }) => {
@@ -43,6 +44,7 @@ export const SemTitulo: Story = {
       title: '',
       description: 'Suas alterações serão aplicadas na próxima sessão.',
       showIcon: true,
+      icon: 'info',
     },
   }),
   play: async ({ canvasElement, step }) => {
@@ -93,6 +95,7 @@ export const InsercaoDinamica: Story = {
       title: 'Operação concluída',
       description: 'O relatório foi gerado com sucesso.',
       showIcon: true,
+      icon: 'success',
     },
   }),
   play: async ({ canvasElement, step }) => {

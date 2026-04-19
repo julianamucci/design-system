@@ -18,7 +18,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsExamples }      from "@/components/docs/shared/sections/DocsExamples";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -57,7 +56,6 @@ const getNavGroups = (t: (key: string) => string) => [
     label: t("nav.techRef"),
     sections: [
       { id: "importacao",   label: t("nav.import") },
-      { id: "exemplos",     label: t("nav.examples") },
       { id: "variantes",    label: t("nav.variants") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
@@ -450,67 +448,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
             secondaryCode={codeImportWithIcon}
           />
 
-          {/* ── Exemplos ──────────────────────────────────────────────── */}
-          <DocsExamples
-            title={tContent("examples.title")}
-            items={[
-              {
-                title: tContent("examples.default"),
-                preview: (
-                  <Alert>
-                    <Info aria-hidden="true" className="h-4 w-4" />
-                    <AlertTitle>{tContent("demonstration.labels.infoTitle")}</AlertTitle>
-                    <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
-                  </Alert>
-                ),
-                code: codeDefault,
-              },
-              {
-                title: tContent("examples.destructive"),
-                preview: (
-                  <Alert variant="destructive">
-                    <AlertCircle aria-hidden="true" className="h-4 w-4" />
-                    <AlertTitle>{tContent("demonstration.labels.errorTitle")}</AlertTitle>
-                    <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
-                  </Alert>
-                ),
-                code: codeDestructive,
-              },
-              {
-                title: tContent("examples.success"),
-                preview: (
-                  <Alert className="bg-success/10 text-success border-success/30">
-                    <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
-                    <AlertTitle>{tContent("demonstration.labels.successTitle")}</AlertTitle>
-                    <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
-                  </Alert>
-                ),
-                code: codeSuccess,
-              },
-              {
-                title: tContent("examples.warning"),
-                preview: (
-                  <Alert className="bg-warning/10 text-warning border-warning/30">
-                    <TriangleAlert aria-hidden="true" className="h-4 w-4" />
-                    <AlertTitle>{tContent("demonstration.labels.warningTitle")}</AlertTitle>
-                    <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
-                  </Alert>
-                ),
-                code: codeWarning,
-              },
-              {
-                title: tContent("examples.withoutTitle"),
-                preview: (
-                  <Alert>
-                    <Info aria-hidden="true" className="h-4 w-4" />
-                    <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
-                  </Alert>
-                ),
-                code: codeWithoutTitle,
-              },
-            ]}
-          />
-
           {/* ── Variantes ─────────────────────────────────────────────── */}
           <DocsVariants
             title={tContent("variants.title")}
@@ -518,6 +455,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               {
                 name: "default",
                 description: tContent("variants.items.default"),
+                code: codeDefault,
                 preview: (
                   <Alert className="w-full">
                     <Info aria-hidden="true" className="h-4 w-4" />
@@ -529,6 +467,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               {
                 name: "destructive",
                 description: stripHtml(tContent("variants.items.destructive")),
+                code: codeDestructive,
                 preview: (
                   <Alert variant="destructive" className="w-full">
                     <AlertCircle aria-hidden="true" className="h-4 w-4" />
@@ -540,6 +479,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               {
                 name: "success",
                 description: stripHtml(tContent("variants.items.success")),
+                code: codeSuccess,
                 preview: (
                   <Alert className="w-full bg-success/10 text-success border-success/30">
                     <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
@@ -551,11 +491,23 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               {
                 name: "warning",
                 description: stripHtml(tContent("variants.items.warning")),
+                code: codeWarning,
                 preview: (
                   <Alert className="w-full bg-warning/10 text-warning border-warning/30">
                     <TriangleAlert aria-hidden="true" className="h-4 w-4" />
                     <AlertTitle>{tContent("demonstration.labels.warningTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
+                  </Alert>
+                ),
+              },
+              {
+                name: tContent("examples.withoutTitle"),
+                description: tContent("states.withoutTitle.behavior"),
+                code: codeWithoutTitle,
+                preview: (
+                  <Alert className="w-full">
+                    <Info aria-hidden="true" className="h-4 w-4" />
+                    <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
                   </Alert>
                 ),
               },

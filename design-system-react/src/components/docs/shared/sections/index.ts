@@ -16,9 +16,6 @@ export type { DocsDoDontProps, DocsDoDontPair } from './DocsDoDont';
 export { DocsImport } from './DocsImport';
 export type { DocsImportProps } from './DocsImport';
 
-export { DocsExamples } from './DocsExamples';
-export type { DocsExamplesProps, DocsExampleItem } from './DocsExamples';
-
 export { DocsVariants } from './DocsVariants';
 export type { DocsVariantsProps, DocsVariantItem } from './DocsVariants';
 

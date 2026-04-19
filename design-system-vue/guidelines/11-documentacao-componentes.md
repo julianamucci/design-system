@@ -11,7 +11,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsExamples      from '@/components/docs/shared/sections/DocsExamples.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -174,7 +173,6 @@ const navGroups = computed(() => [
   ]},
   { label: tNav('nav.techRef'), sections: [
     { id: 'importacao',   label: tNav('nav.import') },
-    { id: 'exemplos',     label: tNav('nav.examples') },
     { id: 'variantes',    label: tNav('nav.variants') },
     { id: 'estados',      label: tNav('nav.states') },
     { id: 'propriedades', label: tNav('nav.props') },
@@ -324,33 +322,28 @@ Passe a demo via slot padrão. A demo **DEVE** importar o componente real de `@/
 />
 ```
 
-### 7. Exemplos (`id="exemplos"`)
+### 7. Variantes (`id="variantes"`)
 
-Use slot `#preview-{index}` por item.
+Slot `#variant-preview-{index}` por variante. O campo `code` é **opcional** — quando presente, o container renderiza um botão "Ver código" que expande um bloco de código.
 
-```vue
-<DocsExamples
-  :title="tContent('examples.title')"
-  :items="[
-    { title: tContent('examples.item1.title'), code: `<Alert>...</Alert>` },
-    { title: tContent('examples.item2.title'), code: `<Alert variant=\\\"destructive\\\">...</Alert>` },
-  ]"
->
-  <template #preview-0><Alert>...</Alert></template>
-  <template #preview-1><Alert variant="destructive">...</Alert></template>
-</DocsExamples>
-```
+**Layout obrigatório: vertical (`space-y-4`).** Cada card ocupa largura total — não usar grid.
 
-### 8. Variantes (`id="variantes"`)
-
-Slot `#variant-preview-{index}` por variante.
+**DocsExamples foi removido:** exemplos de código agora ficam embutidos em cada item de `DocsVariants` via o campo `code`.
 
 ```vue
 <DocsVariants
   :title="tContent('variants.title')"
   :items="[
-    { name: 'default', description: tContent('variants.default') },
-    { name: 'destructive', description: tContent('variants.destructive') },
+    {
+      name: 'default',
+      description: tContent('variants.default'),
+      code: `<Alert>\n  <AlertTitle>Título</AlertTitle>\n  <AlertDescription>Descrição</AlertDescription>\n</Alert>`
+    },
+    {
+      name: 'destructive',
+      description: tContent('variants.destructive'),
+      code: `<Alert variant=\"destructive\">...</Alert>`
+    },
   ]"
 >
   <template #variant-preview-0><Alert>...</Alert></template>
@@ -358,7 +351,7 @@ Slot `#variant-preview-{index}` por variante.
 </DocsVariants>
 ```
 
-### 9. Estados (`id="estados"`)
+### 8. Estados (`id="estados"`)
 
 Tabela de estados — label da primeira coluna é `font-medium` (nunca badge).
 
@@ -373,7 +366,7 @@ Tabela de estados — label da primeira coluna é `font-medium` (nunca badge).
 />
 ```
 
-### 10. Propriedades (`id="propriedades"`)
+### 9. Propriedades (`id="propriedades"`)
 
 `tables` é array — para componentes compostos (ex: Alert/AlertTitle/AlertDescription), use um table por subcomponente.
 
@@ -397,7 +390,7 @@ Tabela de estados — label da primeira coluna é `font-medium` (nunca badge).
 />
 ```
 
-### 11. Tokens (`id="tokens"`)
+### 10. Tokens (`id="tokens"`)
 
 ```vue
 <DocsTokens
@@ -412,7 +405,7 @@ Tabela de estados — label da primeira coluna é `font-medium` (nunca badge).
 />
 ```
 
-### 12. Acessibilidade (`id="acessibilidade"`)
+### 11. Acessibilidade (`id="acessibilidade"`)
 
 ```vue
 <DocsAccessibility
@@ -429,7 +422,7 @@ Tabela de estados — label da primeira coluna é `font-medium` (nunca badge).
 />
 ```
 
-### 13. Relacionados (`id="relacionados"`)
+### 12. Relacionados (`id="relacionados"`)
 
 Cards navegam via `(window.top ?? window).location.href` — trabalha bem dentro do iframe do Storybook.
 
@@ -443,7 +436,7 @@ Cards navegam via `(window.top ?? window).location.href` — trabalha bem dentro
 />
 ```
 
-### 14. Notas (`id="notas"`)
+### 13. Notas (`id="notas"`)
 
 ```vue
 <DocsNotes
@@ -454,7 +447,7 @@ Cards navegam via `(window.top ?? window).location.href` — trabalha bem dentro
 />
 ```
 
-### 15. Analytics (`id="analytics"`)
+### 14. Analytics (`id="analytics"`)
 
 ```vue
 <DocsAnalytics
@@ -467,7 +460,7 @@ Cards navegam via `(window.top ?? window).location.href` — trabalha bem dentro
 />
 ```
 
-### 16. Testes (`id="testes"`)
+### 15. Testes (`id="testes"`)
 
 ```vue
 <DocsTestes
@@ -533,6 +526,7 @@ Componentes Radix/Reka com children internos **não** aceitam `dangerouslySetInn
 - [ ] Nenhum HTML de seção inline no `<template>` da docs
 - [ ] `DocsHeader` com category/type/installNote
 - [ ] `DocsDemonstration` com slot padrão usando o componente real
+- [ ] `DocsVariants` com layout vertical (`space-y-4`) e campo `code` opcional por item
 - [ ] `DocsDoDont` com slots `#do-preview-N` / `#dont-preview-N` (um por par)
 - [ ] `DocsProps` com tables array (múltiplos para componentes compostos)
 - [ ] `DocsStates` — labels `font-medium`, sem badges

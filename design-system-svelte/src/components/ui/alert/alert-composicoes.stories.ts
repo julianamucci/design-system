@@ -10,13 +10,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComIconeSVG: Story = {
+export const ComIcone: Story = {
   render: () => ({
     Component: AlertStory,
     props: {
       title: 'Informação',
-      description: 'Ícone SVG posicionado automaticamente via CSS grid.',
+      description: 'Ícone posicionado automaticamente via CSS grid.',
       showIcon: true,
+      icon: 'info',
     },
   }),
 };
@@ -28,6 +29,7 @@ export const SemTituloCompacto: Story = {
       title: '',
       description: 'Formulário incompleto — preencha todos os campos obrigatórios.',
       showIcon: true,
+      icon: 'error',
     },
   }),
 };
@@ -40,6 +42,7 @@ export const DestructiveComIcone: Story = {
       title: 'Erro ao salvar',
       description: 'Não foi possível salvar. Verifique sua conexão e tente novamente.',
       showIcon: true,
+      icon: 'error',
     },
   }),
 };
@@ -51,7 +54,9 @@ export const MultiplasCores: Story = {
       title: 'Perfil atualizado',
       description: 'Suas informações foram salvas com sucesso.',
       showIcon: true,
+      icon: 'success',
       class: 'bg-success/10 text-success border-success/30',
+      descriptionClass: 'text-success/90',
     },
   }),
 };

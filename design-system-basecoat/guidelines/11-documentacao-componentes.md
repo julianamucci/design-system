@@ -11,7 +11,6 @@ import { createDocsAnatomy }       from '@/components/docs/shared/sections/DocsA
 import { createDocsWhenToUse }     from '@/components/docs/shared/sections/DocsWhenToUse';
 import { createDocsDoDont }        from '@/components/docs/shared/sections/DocsDoDont';
 import { createDocsImport }        from '@/components/docs/shared/sections/DocsImport';
-import { createDocsExamples }      from '@/components/docs/shared/sections/DocsExamples';
 import { createDocsVariants }      from '@/components/docs/shared/sections/DocsVariants';
 import { createDocsStates }        from '@/components/docs/shared/sections/DocsStates';
 import { createDocsProps }         from '@/components/docs/shared/sections/DocsProps';
@@ -135,7 +134,6 @@ export function createAlertDocs(): HTMLElement {
       ]},
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import') },
-        { id: 'exemplos',     label: tNav('nav.examples') },
         { id: 'variantes',    label: tNav('nav.variants') },
         { id: 'estados',      label: tNav('nav.states') },
         { id: 'propriedades', label: tNav('nav.props') },
@@ -299,39 +297,35 @@ content.appendChild(createDocsImport({
 }));
 ```
 
-### 7. Exemplos (`id="exemplos"`)
+### 7. Variantes (`id="variantes"`)
 
-```ts
-content.appendChild(createDocsExamples({
-  title: tContent('examples.title'),
-  items: [
-    {
-      title: tContent('examples.item1.title'),
-      code: `createAlert({ variant: 'default' })`,
-      previewFactory: () => createAlert({ variant: 'default' }),
-    },
-    {
-      title: tContent('examples.item2.title'),
-      code: `createAlert({ variant: 'destructive' })`,
-      previewFactory: () => createAlert({ variant: 'destructive' }),
-    },
-  ],
-}));
-```
+O campo `code` é **opcional** — quando presente, o container renderiza um botão "Ver código" que expande um bloco de código via `toggle`.
 
-### 8. Variantes (`id="variantes"`)
+**Layout obrigatório: vertical (`space-y-4`).** Cada card ocupa largura total — não usar grid.
+
+**DocsExamples foi removido:** exemplos de código agora ficam embutidos em cada item de `DocsVariants` via o campo `code`.
 
 ```ts
 content.appendChild(createDocsVariants({
   title: tContent('variants.title'),
   items: [
-    { name: 'default', description: tContent('variants.default'), previewFactory: () => createAlert({ variant: 'default' }) },
-    { name: 'destructive', description: tContent('variants.destructive'), previewFactory: () => createAlert({ variant: 'destructive' }) },
+    {
+      name: 'default',
+      description: tContent('variants.default'),
+      code: `const alert = createAlert({ variant: 'default' });\nalert.innerHTML = '<h5>Título</h5><p>Descrição</p>';`,
+      previewFactory: () => createAlert({ variant: 'default' })
+    },
+    {
+      name: 'destructive',
+      description: tContent('variants.destructive'),
+      code: `createAlert({ variant: 'destructive' })`,
+      previewFactory: () => createAlert({ variant: 'destructive' })
+    },
   ],
 }));
 ```
 
-### 9. Estados (`id="estados"`)
+### 8. Estados (`id="estados"`)
 
 O container já aplica `font-medium` na primeira coluna — não passe classes de badge.
 
@@ -346,7 +340,7 @@ content.appendChild(createDocsStates({
 }));
 ```
 
-### 10. Propriedades (`id="propriedades"`)
+### 9. Propriedades (`id="propriedades"`)
 
 `tables` é array — um table por subcomponente.
 
@@ -368,7 +362,7 @@ content.appendChild(createDocsProps({
 }));
 ```
 
-### 11. Tokens (`id="tokens"`)
+### 10. Tokens (`id="tokens"`)
 
 ```ts
 content.appendChild(createDocsTokens({
@@ -383,7 +377,7 @@ content.appendChild(createDocsTokens({
 }));
 ```
 
-### 12. Acessibilidade (`id="acessibilidade"`)
+### 11. Acessibilidade (`id="acessibilidade"`)
 
 ```ts
 content.appendChild(createDocsAccessibility({
@@ -395,7 +389,7 @@ content.appendChild(createDocsAccessibility({
 }));
 ```
 
-### 13. Relacionados (`id="relacionados"`)
+### 12. Relacionados (`id="relacionados"`)
 
 ```ts
 content.appendChild(createDocsRelated({
@@ -406,7 +400,7 @@ content.appendChild(createDocsRelated({
 }));
 ```
 
-### 14. Notas (`id="notas"`)
+### 13. Notas (`id="notas"`)
 
 ```ts
 content.appendChild(createDocsNotes({
@@ -415,7 +409,7 @@ content.appendChild(createDocsNotes({
 }));
 ```
 
-### 15. Analytics (`id="analytics"`)
+### 14. Analytics (`id="analytics"`)
 
 ```ts
 content.appendChild(createDocsAnalytics({
@@ -427,7 +421,7 @@ content.appendChild(createDocsAnalytics({
 }));
 ```
 
-### 16. Testes (`id="testes"`)
+### 15. Testes (`id="testes"`)
 
 ```ts
 content.appendChild(createDocsTestes({
@@ -498,6 +492,7 @@ Containers já fazem isso para os props de texto que aceitam HTML. No consumidor
 - [ ] Nenhum HTML de seção inline no consumidor
 - [ ] `createDocsHeader` com category/type/installNote
 - [ ] `createDocsDemonstration` com `demoFactory` retornando o componente real
+- [ ] `createDocsVariants` com layout vertical (`space-y-4`) e campo `code` opcional por item
 - [ ] `createDocsDoDont` com `doPreviewFactory` / `dontPreviewFactory` por par
 - [ ] `createDocsProps` com tables array (múltiplos para componentes compostos)
 - [ ] `createDocsStates` — labels em texto plano (container aplica `font-medium`)

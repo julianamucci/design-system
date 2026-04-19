@@ -83,47 +83,47 @@
 
 /* Restaura space-y-* para divs (Storybook reseta margin de todas as divs) */
 .ds-docs .space-y-0\.5>*+* {
-  margin-top: 0.125rem;
+  margin-top: 0.125rem !important;
 }
 
 .ds-docs .space-y-1>*+* {
-  margin-top: 0.25rem;
+  margin-top: 0.25rem !important;
 }
 
 .ds-docs .space-y-1\.5>*+* {
-  margin-top: 0.375rem;
+  margin-top: 0.375rem !important;
 }
 
 .ds-docs .space-y-2>*+* {
-  margin-top: 0.5rem;
+  margin-top: 0.5rem !important;
 }
 
 .ds-docs .space-y-3>*+* {
-  margin-top: 0.75rem;
+  margin-top: 0.75rem !important;
 }
 
 .ds-docs .space-y-4>*+* {
-  margin-top: 1rem;
+  margin-top: 1rem !important;
 }
 
 .ds-docs .space-y-5>*+* {
-  margin-top: 1.25rem;
+  margin-top: 1.25rem !important;
 }
 
 .ds-docs .space-y-6>*+* {
-  margin-top: 1.5rem;
+  margin-top: 1.5rem !important;
 }
 
 .ds-docs .space-y-8>*+* {
-  margin-top: 2rem;
+  margin-top: 2rem !important;
 }
 
 .ds-docs .space-y-10>*+* {
-  margin-top: 2.5rem;
+  margin-top: 2.5rem !important;
 }
 
 .ds-docs .space-y-12>*+* {
-  margin-top: 3rem;
+  margin-top: 3rem !important;
 }
 
 /* Restaura utilitários de margem individuais (Storybook reseta div margin) */

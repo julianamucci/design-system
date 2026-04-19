@@ -4,6 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
 import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import DocsNav from '@/components/docs/shared/DocsNav.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -15,7 +16,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsExamples      from '@/components/docs/shared/sections/DocsExamples.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -95,7 +95,6 @@ const navGroups = computed(() => [
     label: tNav('nav.techRef'),
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
-      { id: 'exemplos',     label: tNav('nav.examples') },
       { id: 'variantes',    label: tNav('nav.variants') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
@@ -213,10 +212,11 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: 'default',     description: tContent('variants.items.default')                },
-  { name: 'destructive', description: stripHtml(tContent('variants.items.destructive')) },
-  { name: 'success',     description: stripHtml(tContent('variants.items.success'))     },
-  { name: 'warning',     description: stripHtml(tContent('variants.items.warning'))     },
+  { name: 'default',     description: tContent('variants.items.default'),                code: codeDefault      },
+  { name: 'destructive', description: stripHtml(tContent('variants.items.destructive')), code: codeDestructive  },
+  { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess      },
+  { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning      },
+  { name: tContent('examples.withoutTitle'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
 ]);
 
 const stateItems = computed(() => [
@@ -342,30 +342,22 @@ const visualTestItems = computed(() => [
         <DocsDemonstration :title="tContent('demonstration.title')">
           <div class="w-full space-y-3">
             <Alert>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
-              </svg>
+              <Info class="h-4 w-4" aria-hidden="true" />
               <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
               <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
             </Alert>
             <Alert variant="destructive">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-              </svg>
+              <AlertCircle class="h-4 w-4" aria-hidden="true" />
               <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
               <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
             </Alert>
             <Alert class="bg-success/10 text-success border-success/30">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-              </svg>
+              <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
               <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
               <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
             </Alert>
             <Alert class="bg-warning/10 text-warning border-warning/30">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-              </svg>
+              <TriangleAlert class="h-4 w-4" aria-hidden="true" />
               <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
               <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
             </Alert>
@@ -421,7 +413,7 @@ const visualTestItems = computed(() => [
         >
           <template #do-preview-0>
             <Alert>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <AlertCircle class="h-4 w-4" aria-hidden="true" />
               <AlertTitle>Erro ao salvar</AlertTitle>
               <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
             </Alert>
@@ -431,7 +423,7 @@ const visualTestItems = computed(() => [
           </template>
           <template #do-preview-1>
             <Alert variant="destructive">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <AlertCircle class="h-4 w-4" aria-hidden="true" />
               <AlertTitle>Erro ao salvar</AlertTitle>
               <AlertDescription>Verifique sua conexão.</AlertDescription>
             </Alert>
@@ -453,81 +445,40 @@ const visualTestItems = computed(() => [
           :secondary-code="codeImportWithIcon"
         />
 
-        <!-- ── Exemplos ───────────────────────────────────────────────── -->
-        <DocsExamples
-          :title="tContent('examples.title')"
-          :items="[
-            { title: tContent('examples.default'),      code: codeDefault      },
-            { title: tContent('examples.destructive'),  code: codeDestructive  },
-            { title: tContent('examples.success'),      code: codeSuccess      },
-            { title: tContent('examples.warning'),      code: codeWarning      },
-            { title: tContent('examples.withoutTitle'), code: codeWithoutTitle },
-          ]"
-        >
-          <template #preview-0>
-            <Alert>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-              <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-          <template #preview-1>
-            <Alert variant="destructive">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-          <template #preview-2>
-            <Alert class="bg-success/10 text-success border-success/30">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-          <template #preview-3>
-            <Alert class="bg-warning/10 text-warning border-warning/30">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-          <template #preview-4>
-            <Alert>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-              <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-        </DocsExamples>
-
         <!-- ── Variantes ──────────────────────────────────────────────── -->
         <DocsVariants :title="tContent('variants.title')" :items="variantItems">
           <template #variant-preview-0>
             <Alert class="w-full">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <Info class="h-4 w-4" aria-hidden="true" />
               <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
               <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
             </Alert>
           </template>
           <template #variant-preview-1>
             <Alert variant="destructive" class="w-full">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <AlertCircle class="h-4 w-4" aria-hidden="true" />
               <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
               <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
             </Alert>
           </template>
           <template #variant-preview-2>
             <Alert class="w-full bg-success/10 text-success border-success/30">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
               <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
               <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
             </Alert>
           </template>
           <template #variant-preview-3>
             <Alert class="w-full bg-warning/10 text-warning border-warning/30">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <TriangleAlert class="h-4 w-4" aria-hidden="true" />
               <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
               <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
+            </Alert>
+          </template>
+          <template #variant-preview-4>
+            <Alert class="w-full">
+              <Info class="h-4 w-4" aria-hidden="true" />
+              <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
             </Alert>
           </template>
         </DocsVariants>

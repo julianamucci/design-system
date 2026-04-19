@@ -52,7 +52,6 @@ design-system-react/
 │   │   │   │       ├── DocsWhenToUse.tsx
 │   │   │   │       ├── DocsDoDont.tsx
 │   │   │   │       ├── DocsImport.tsx
-│   │   │   │       ├── DocsExamples.tsx
 │   │   │   │       ├── DocsVariants.tsx
 │   │   │   │       ├── DocsStates.tsx
 │   │   │   │       ├── DocsProps.tsx

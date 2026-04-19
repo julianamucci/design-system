@@ -55,7 +55,9 @@ const preview: Preview = {
       const html = document.documentElement;
       html.classList.remove('tema-um', 'tema-dois');
       if (brand !== 'default') html.classList.add(brand);
-      setMode(html.classList.contains('dark') ? 'dark' : 'light');
+      queueMicrotask(() => {
+        setMode(html.classList.contains('dark') ? 'dark' : 'light');
+      });
       return Story();
     },
   ],

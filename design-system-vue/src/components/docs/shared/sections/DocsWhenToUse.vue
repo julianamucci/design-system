@@ -6,7 +6,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@
 interface DocsWhenToUseScenario { s: string; u: string; a: string }
 interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?: string }
 
-defineProps<{
+const props = defineProps<{
   title: string;
   guidelines: { title: string; items: string[] };
   scenarios: {
@@ -30,7 +30,7 @@ defineProps<{
     <Card class="p-6 space-y-6">
 
         <!-- Guidelines -->
-        <Card class="bg-muted/30 border-0 shadow-none p-4 space-y-3">
+        <Card class="bg-muted/40 border border-border/40 shadow-none p-4 space-y-3">
             <h3 class="font-medium text-sm">{{ guidelines.title }}</h3>
             <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
               <li v-for="(item, i) in guidelines.items" :key="i" v-html="sanitizeHtml(item)" />
@@ -97,19 +97,19 @@ defineProps<{
           <Card class="p-4">
               <h3 class="mb-3 text-sm font-semibold text-green-600 flex items-center gap-2">
                 <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
-                {{ do.title }}
+                {{ props.do.title }}
               </h3>
               <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
-                <li v-for="(item, i) in do.items" :key="i" v-html="sanitizeHtml(item)" />
+                <li v-for="(item, i) in props.do.items" :key="i" v-html="sanitizeHtml(item)" />
               </ul>
           </Card>
           <Card class="p-4">
               <h3 class="mb-3 text-sm font-semibold text-red-600 flex items-center gap-2">
                 <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
-                {{ dont.title }}
+                {{ props.dont.title }}
               </h3>
               <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
-                <li v-for="(item, i) in dont.items" :key="i" v-html="sanitizeHtml(item)" />
+                <li v-for="(item, i) in props.dont.items" :key="i" v-html="sanitizeHtml(item)" />
               </ul>
           </Card>
         </div>

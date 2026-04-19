@@ -12,7 +12,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsExamples,
   createDocsVariants,
   createDocsStates,
   createDocsProps,
@@ -153,7 +152,6 @@ export function createAlertDocs(): HTMLElement {
     ]},
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
-      { id: 'exemplos',     labelKey: 'nav.examples' },
       { id: 'variantes',    labelKey: 'nav.variants' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
@@ -217,7 +215,7 @@ export function createAlertDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'exemplos', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -362,71 +360,49 @@ export function createAlertDocs(): HTMLElement {
           secondaryCode: `import { createAlertIcon } from '@/components/ui/alert';\n// createAlertIcon('info' | 'error' | 'success' | 'warning')`,
         });
 
-      case 'exemplos': {
+      case 'variantes': {
         const codeDefault = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
         const codeDestructive = `const alert = createAlert({ variant: 'destructive' });\nalert.appendChild(createAlertIcon('error'));\nalert.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));\nalert.appendChild(createAlertDescription({ text: 'Não foi possível salvar. Verifique sua conexão e tente novamente.' }));`;
         const codeSuccess = `const alert = createAlert({ variant: 'default', className: 'bg-success/10 text-success border-success/30' });\nalert.appendChild(createAlertIcon('success'));\nalert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));\nalert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));`;
         const codeWarning = `const alert = createAlert({ variant: 'default', className: 'bg-warning/10 text-warning border-warning/30' });\nalert.appendChild(createAlertIcon('warning'));\nalert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));\nalert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));`;
         const codeWithoutTitle = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
 
-        return createDocsExamples({
-          title: t('examples.title'),
-          items: [
-            {
-              title: t('examples.default'),
-              code: codeDefault,
-              previewFactory: () => buildAlert('default', '', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
-            },
-            {
-              title: t('examples.destructive'),
-              code: codeDestructive,
-              previewFactory: () => buildAlert('destructive', '', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
-            },
-            {
-              title: t('examples.success'),
-              code: codeSuccess,
-              previewFactory: () => buildAlert('default', 'bg-success/10 text-success border-success/30', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
-            },
-            {
-              title: t('examples.warning'),
-              code: codeWarning,
-              previewFactory: () => buildAlert('default', 'bg-warning/10 text-warning border-warning/30', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
-            },
-            {
-              title: t('examples.withoutTitle'),
-              code: codeWithoutTitle,
-              previewFactory: () => buildAlert('default', '', 'info', null, 'demonstration.labels.infoDesc'),
-            },
-          ],
-        });
-      }
-
-      case 'variantes':
         return createDocsVariants({
           title: t('variants.title'),
           items: [
             {
               name: 'default',
               description: stripHtml(t('variants.items.default')),
+              code: codeDefault,
               previewFactory: () => buildAlert('default', 'w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
             },
             {
               name: 'destructive',
               description: stripHtml(t('variants.items.destructive')),
+              code: codeDestructive,
               previewFactory: () => buildAlert('destructive', 'w-full', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
             },
             {
               name: 'success',
               description: stripHtml(t('variants.items.success')),
+              code: codeSuccess,
               previewFactory: () => buildAlert('default', 'w-full bg-success/10 text-success border-success/30', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
             },
             {
               name: 'warning',
               description: stripHtml(t('variants.items.warning')),
+              code: codeWarning,
               previewFactory: () => buildAlert('default', 'w-full bg-warning/10 text-warning border-warning/30', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+            },
+            {
+              name: t('examples.withoutTitle'),
+              description: t('states.withoutTitle.behavior'),
+              code: codeWithoutTitle,
+              previewFactory: () => buildAlert('default', 'w-full', 'info', null, 'demonstration.labels.infoDesc'),
             },
           ],
         });
+      }
 
       case 'estados':
         return createDocsStates({

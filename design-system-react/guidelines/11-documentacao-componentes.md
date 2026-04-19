@@ -25,7 +25,6 @@ import {
   DocsWhenToUse,
   DocsDoDont,
   DocsImport,
-  DocsExamples,
   DocsVariants,
   DocsStates,
   DocsProps,
@@ -183,7 +182,6 @@ const navGroups = useMemo(() => [
     label: tNav('nav.techRef'),
     sections: [
       { id: 'importacao',   label: tNav('nav.import')    },
-      { id: 'exemplos',     label: tNav('nav.examples')  },
       { id: 'variantes',    label: tNav('nav.variants')  },
       { id: 'estados',      label: tNav('nav.states')    },
       { id: 'propriedades', label: tNav('nav.props')     },
@@ -209,7 +207,7 @@ const navGroups = useMemo(() => [
 ```
 
 **Regras:**
-- Os `id` de cada seção **devem** bater exatamente com os `id` que os containers emitem (`demonstracao`, `anatomia`, `quando-usar`, `do-dont`, `importacao`, `exemplos`, `variantes`, `estados`, `propriedades`, `tokens`, `acessibilidade`, `relacionados`, `notas`, `analytics`, `testes`)
+- Os `id` de cada seção **devem** bater exatamente com os `id` que os containers emitem (`demonstracao`, `anatomia`, `quando-usar`, `do-dont`, `importacao`, `variantes`, `estados`, `propriedades`, `tokens`, `acessibilidade`, `relacionados`, `notas`, `analytics`, `testes`)
 - **Seções opcionais:** remover do array `navGroups` e **não renderizar** o container correspondente no conteúdo
 - `aria-label` no `<nav>` raiz é obrigatório
 
@@ -371,30 +369,7 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 
 ---
 
-#### Seção 7 — Exemplos de Código
-
-```tsx
-<DocsExamples
-  title={t('examples.title')}
-  items={[
-    {
-      title:       t('examples.basic.title'),
-      description: t('examples.basic.description'),
-      code:        codeBasic,
-      preview:     <Componente />,
-    },
-    /* ... 2-4 cenários recorrentes */
-  ]}
-/>
-```
-
-**Regras:**
-- Cada item tem preview com o componente real + bloco de código colapsável (expande ao clicar em "Ver código")
-- 2 a 4 exemplos recorrentes, cobrindo as variantes mais usadas
-
----
-
-#### Seção 8 — Variantes
+#### Seção 7 — Variantes
 
 ```tsx
 <DocsVariants
@@ -403,11 +378,13 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
     {
       name:        'default',
       description: t('variants.items.default'),
+      code:        codeDefault,
       preview:     <Componente variant="default" />,
     },
     {
       name:        'destructive',
       description: t('variants.items.destructive'),
+      code:        codeDestructive,
       preview:     <Componente variant="destructive" />,
     },
     /* uma entrada por variante visual */
@@ -416,13 +393,16 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 ```
 
 **Regras:**
-- Cada card: preview do componente real + nome + descrição
+- Layout vertical (`space-y-4`) — uma variante por linha em card dedicado
+- Cada card: preview do componente real + nome + descrição + toggle "Ver código" (opcional)
+- `code` é opcional — se presente, exibe botão de toggle que mostra o snippet colapsável
 - Uma entrada por valor de `cva()` — jamais gerar variantes com `<div>` estilizadas
 - Componentes sem `cva()` (ex: Table, Accordion, AlertDialog): usar `DocsVariants` para "Composições" / "Modos de Operação" — mesma API, o que muda é o conteúdo dos previews
+- **DocsExamples foi removido:** exemplos de código agora ficam embutidos em cada item de `DocsVariants` via o campo `code`
 
 ---
 
-#### Seção 9 — Estados
+#### Seção 8 — Estados
 
 ```tsx
 <DocsStates
@@ -447,7 +427,7 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 
 ---
 
-#### Seção 10 — Propriedades
+#### Seção 9 — Propriedades
 
 ```tsx
 <DocsProps
@@ -485,7 +465,7 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 
 ---
 
-#### Seção 11 — Design Tokens
+#### Seção 10 — Design Tokens
 
 ```tsx
 <DocsTokens
@@ -507,7 +487,7 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 
 ---
 
-#### Seção 12 — Acessibilidade
+#### Seção 11 — Acessibilidade
 
 ```tsx
 <DocsAccessibility
@@ -530,7 +510,7 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 
 ---
 
-#### Seção 13 — Componentes Relacionados
+#### Seção 12 — Componentes Relacionados
 
 ```tsx
 <DocsRelated
@@ -548,7 +528,7 @@ Se houver provider + API (ex: Sonner), passe `secondaryCode` + `secondaryDescrip
 
 ---
 
-#### Seção 14 — Notas e Dicas
+#### Seção 13 — Notas e Dicas
 
 ```tsx
 <DocsNotes
@@ -564,7 +544,7 @@ Cada nota é um callout com borda esquerda colorida (`border-l-4 border-primary/
 
 ---
 
-#### Seção 15 — Analytics
+#### Seção 14 — Analytics
 
 ```tsx
 <DocsAnalytics
@@ -589,7 +569,7 @@ Cada nota é um callout com borda esquerda colorida (`border-l-4 border-primary/
 
 ---
 
-#### Seção 16 — Critérios de Teste
+#### Seção 15 — Critérios de Teste
 
 ```tsx
 <DocsTestes
@@ -754,7 +734,7 @@ export const Default: Story = {
 - [ ] `<nav aria-label>` com `sticky top-8 w-52 shrink-0` envolvendo `<DocsNav>`
 - [ ] Wrapper `.ds-docs` aplicado no container `flex-1`
 - [ ] `navGroups` com `id` que batem exatamente com os containers renderizados
-- [ ] Demonstração, exemplos, variantes e Do/Don't usam o **componente real** de `@/components/ui/<slug>` — nunca HTML inline com classes manuais
+- [ ] Demonstração, variantes e Do/Don't usam o **componente real** de `@/components/ui/<slug>` — nunca HTML inline com classes manuais
 - [ ] Até 5 arquivos de stories criados (menos se não aplicável)
 - [ ] Story principal com `parameters.docs.page: withAutoDocsTab(ComponenteDocs)`
 - [ ] `onClick: fn()` + `argTypes.onClick: { action: 'clicked' }` **somente** se há play function testando clique

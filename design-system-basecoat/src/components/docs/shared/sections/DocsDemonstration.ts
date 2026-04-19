@@ -1,4 +1,4 @@
-import { createCard } from '@/components/ui/card';
+import { createComponentDemo } from '@/components/ComponentDemo';
 
 export interface DocsDemonstrationProps {
   title: string;
@@ -13,9 +13,8 @@ export function createDocsDemonstration(props: DocsDemonstrationProps): HTMLElem
   h2.className = 'text-xl font-semibold mb-4';
   h2.textContent = props.title;
 
-  const card = createCard({ className: 'flex items-center justify-center p-10 mt-6 shadow-sm' });
-  card.appendChild(props.demoFactory());
+  const demo = createComponentDemo(props.demoFactory());
 
-  section.append(h2, card);
+  section.append(h2, demo);
   return section;
 }

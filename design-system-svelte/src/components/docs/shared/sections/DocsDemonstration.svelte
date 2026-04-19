@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { Card } from '@/components/ui/card';
+  import ComponentDemo from '@/components/ComponentDemo.svelte';
 
   const { title, children }: { title: string; children: Snippet } = $props();
 </script>
 
 <section id="demonstracao">
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
-  <Card class="p-10 mt-6 flex items-center justify-center">
-      {@render children()}
-  </Card>
+  <ComponentDemo>
+    {@render children()}
+  </ComponentDemo>
 </section>

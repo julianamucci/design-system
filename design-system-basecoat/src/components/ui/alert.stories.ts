@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { userEvent, within, expect } from 'storybook/test';
-import { createAlert, createAlertTitle, createAlertDescription } from './alert';
+import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
 import { createAlertDocs } from '@/components/docs/AlertDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -41,6 +41,7 @@ type Story = StoryObj<AlertArgs>;
 
 function buildAlert(args: AlertArgs): HTMLElement {
   const alert = createAlert({ variant: args.variant });
+  alert.appendChild(createAlertIcon(args.variant === 'destructive' ? 'error' : 'info'));
   if (args.title) alert.appendChild(createAlertTitle({ text: args.title }));
   alert.appendChild(createAlertDescription({ text: args.description }));
   return alert;

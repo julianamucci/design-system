@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { within, expect } from 'storybook/test';
-import { createAlert, createAlertTitle, createAlertDescription } from './alert';
+import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
 
 const meta: Meta = {
   title: 'UI/Alert/Estados',
@@ -12,6 +12,7 @@ type Story = StoryObj;
 export const Completo: Story = {
   render: () => {
     const alert = createAlert();
+    alert.appendChild(createAlertIcon('info'));
     alert.appendChild(createAlertTitle({ text: 'Atenção' }));
     alert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));
     return alert;
@@ -33,6 +34,7 @@ export const Completo: Story = {
 export const SemTitulo: Story = {
   render: () => {
     const alert = createAlert();
+    alert.appendChild(createAlertIcon('info'));
     alert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));
     return alert;
   },
@@ -78,6 +80,7 @@ export const InsercaoDinamica: Story = {
     const wrapper = document.createElement('div');
     wrapper.setAttribute('aria-live', 'polite');
     const alert = createAlert();
+    alert.appendChild(createAlertIcon('success'));
     alert.appendChild(createAlertTitle({ text: 'Operação concluída' }));
     alert.appendChild(createAlertDescription({ text: 'O relatório foi gerado com sucesso.' }));
     wrapper.appendChild(alert);

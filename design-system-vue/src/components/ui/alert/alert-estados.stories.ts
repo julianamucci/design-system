@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
 import { within, expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
+import { Info } from 'lucide-vue-next';
 
 const meta = {
   title: 'UI/Alert/Estados',
@@ -12,13 +13,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Completo: Story = {
   render: () => ({
-    components: { Alert, AlertTitle, AlertDescription },
+    components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return {}; },
     template: `
       <Alert>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-        </svg>
+        <Info class="h-4 w-4" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
@@ -40,13 +39,11 @@ export const Completo: Story = {
 
 export const SemTitulo: Story = {
   render: () => ({
-    components: { Alert, AlertDescription },
+    components: { Alert, AlertDescription, Info },
     setup() { return {}; },
     template: `
       <Alert>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-        </svg>
+        <Info class="h-4 w-4" aria-hidden="true" />
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
     `,
@@ -94,14 +91,12 @@ export const SemIcone: Story = {
 
 export const InsercaoDinamica: Story = {
   render: () => ({
-    components: { Alert, AlertTitle, AlertDescription },
+    components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return {}; },
     template: `
       <div aria-live="polite">
         <Alert>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-          </svg>
+          <Info class="h-4 w-4" aria-hidden="true" />
           <AlertTitle>Operação concluída</AlertTitle>
           <AlertDescription>O relatório foi gerado com sucesso.</AlertDescription>
         </Alert>

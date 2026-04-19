@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "validate:docs": "npx tsx scripts/validate-docs-consistency.ts",
+    "patches:list":  "node scripts/list-patches.mjs",
+    "patches:diff":  "node scripts/diff-shadcn.mjs",
     "dev:react":    "npm run dev --prefix design-system-react",
     "dev:vue":      "npm run dev --prefix design-system-vue",
     "dev:svelte":   "npm run dev --prefix design-system-svelte",
