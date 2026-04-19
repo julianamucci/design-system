@@ -1,0 +1,76 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { Button } from "./button";
+
+const meta = {
+  title: "UI/Button/Variantes",
+  component: Button,
+} satisfies Meta<typeof Button>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  render: () => <Button>Salvar</Button>,
+  parameters: {
+    docs: {
+      description: {
+        story: "Variante primária. Use para a ação principal de uma seção.",
+      },
+    },
+  },
+};
+
+export const Destructive: Story = {
+  render: () => <Button variant="destructive">Excluir conta</Button>,
+  parameters: {
+    docs: {
+      description: {
+        story: "Variante destrutiva. Use para ações irreversíveis como excluir ou remover.",
+      },
+    },
+  },
+};
+
+export const Outline: Story = {
+  render: () => <Button variant="outline">Cancelar</Button>,
+  parameters: {
+    docs: {
+      description: {
+        story: "Variante secundária com borda. Use ao lado da ação primária em pares de ações.",
+      },
+    },
+  },
+};
+
+export const Secondary: Story = {
+  render: () => <Button variant="secondary">Ver detalhes</Button>,
+  parameters: {
+    docs: {
+      description: {
+        story: "Variante secundária sólida. Use para ações complementares de menor ênfase.",
+      },
+    },
+  },
+};
+
+export const Ghost: Story = {
+  render: () => <Button variant="ghost">Fechar</Button>,
+  parameters: {
+    docs: {
+      description: {
+        story: "Variante sem borda ou fundo. Use em toolbars e menus para reduzir ruído visual.",
+      },
+    },
+  },
+};
+
+export const Link: Story = {
+  render: () => <Button variant="link">Saiba mais</Button>,
+  parameters: {
+    docs: {
+      description: {
+        story: "Variante com aparência de link. Use quando a ação for navegacional em contexto textual.",
+      },
+    },
+  },
+};
