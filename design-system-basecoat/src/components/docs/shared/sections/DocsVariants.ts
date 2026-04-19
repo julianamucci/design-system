@@ -12,11 +12,12 @@ export interface DocsVariantItem {
 export interface DocsVariantsProps {
   title: string;
   items: DocsVariantItem[];
+  id?: string;
 }
 
 export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
   const section = document.createElement('section');
-  section.id = 'variantes';
+  section.id = props.id ?? 'variantes';
 
   const h2 = document.createElement('h2');
   h2.className = 'text-xl font-semibold mb-4';

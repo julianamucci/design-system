@@ -32,6 +32,12 @@ interface AnalyticsEvents {
     toast_type: string;
     locale: Locale;
   };
+  button_click: {
+    component: string;
+    variant?: string;
+    label?: string;
+    location?: string;
+  };
 }
 
 export function track<T extends keyof AnalyticsEvents>(
