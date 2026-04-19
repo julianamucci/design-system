@@ -7,10 +7,6 @@ defineProps<{
   title: string;
   items: DocsRelatedItem[];
 }>();
-
-function navigate(path: string) {
-  (window.top ?? window).location.href = path;
-}
 </script>
 
 <template>
@@ -20,9 +16,11 @@ function navigate(path: string) {
       <Button
         v-for="(item, i) in items"
         :key="i"
+        as="a"
+        :href="item.path"
+        target="_top"
         variant="ghost"
         class="text-left h-auto p-4 border rounded-xl shadow-sm bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
-        @click="navigate(item.path)"
       >
         <p class="text-sm font-semibold text-primary">{{ item.name }}</p>
         <p class="text-xs text-muted-foreground leading-relaxed">{{ item.description }}</p>

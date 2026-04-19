@@ -4,10 +4,6 @@
   interface DocsRelatedItem { name: string; description: string; path: string }
 
   const { title, items }: { title: string; items: DocsRelatedItem[] } = $props();
-
-  function navigate(path: string) {
-    (window.top ?? window).location.href = path;
-  }
 </script>
 
 <section id="relacionados">
@@ -16,8 +12,9 @@
     {#each items as item}
       <Button
         variant="ghost"
+        href={item.path}
+        target="_top"
         class="text-left h-auto p-4 border rounded-xl shadow-sm bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
-        onclick={() => navigate(item.path)}
       >
         <p class="text-sm font-semibold text-primary">{item.name}</p>
         <p class="text-xs text-muted-foreground leading-relaxed">{item.description}</p>

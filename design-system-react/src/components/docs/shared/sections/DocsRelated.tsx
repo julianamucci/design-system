@@ -20,15 +20,14 @@ export function DocsRelated({ title, items }: DocsRelatedProps) {
         {items.map((item, i) => (
           <Button
             key={i}
-            type="button"
+            asChild
             variant="ghost"
-            className="text-left h-auto p-4 border rounded-xl shadow-sm bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 cursor-pointer whitespace-normal"
-            onClick={() => {
-              (window.top ?? window).location.href = item.path;
-            }}
+            className="text-left h-auto p-4 border rounded-xl shadow-sm bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
           >
-            <p className="text-sm font-semibold text-primary">{item.name}</p>
-            <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
+            <a href={item.path} target="_top">
+              <p className="text-sm font-semibold text-primary">{item.name}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
+            </a>
           </Button>
         ))}
       </div>
