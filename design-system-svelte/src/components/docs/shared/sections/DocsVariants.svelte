@@ -10,7 +10,7 @@
     preview: Snippet;
   }
 
-  const { title, items }: { title: string; items: DocsVariantItem[] } = $props();
+  const { title, items, id = 'variantes' }: { title: string; items: DocsVariantItem[]; id?: string } = $props();
 
   let openStates = $state<Record<number, boolean>>({});
   function toggleCode(i: number) {
@@ -18,7 +18,7 @@
   }
 </script>
 
-<section id="variantes">
+<section {id}>
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
   <div class="space-y-4">
     {#each items as item, i}

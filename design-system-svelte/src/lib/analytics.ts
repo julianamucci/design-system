@@ -38,6 +38,13 @@ interface AnalyticsEvents {
     locale: Locale;
     page_title: string;
   };
+
+  button_click: {
+    component: string;
+    variant?: string;
+    label?: string;
+    location?: string;
+  };
 }
 
 // ─── Função pública ───────────────────────────────────────────────────────────
