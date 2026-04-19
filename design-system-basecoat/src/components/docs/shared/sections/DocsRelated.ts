@@ -19,7 +19,7 @@ export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
   props.items.forEach(item => {
     const btn = createButton({
       variant: 'outline',
-      class: 'text-left rounded-xl p-4 shadow-sm bg-card hover:bg-muted/50 transition-colors space-y-1 cursor-pointer h-auto flex-col items-start',
+      class: 'text-left rounded-xl p-4 shadow-sm bg-card hover:bg-muted/50 transition-colors space-y-1 cursor-pointer h-auto flex-col items-start whitespace-normal w-full',
       onClick: () => { (window.top ?? window).location.href = item.path; },
     });
     btn.innerHTML = `

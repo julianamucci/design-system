@@ -22,7 +22,7 @@ export function DocsRelated({ title, items }: DocsRelatedProps) {
             key={i}
             type="button"
             variant="ghost"
-            className="text-left h-auto p-4 border rounded-xl shadow-sm bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 cursor-pointer"
+            className="text-left h-auto p-4 border rounded-xl shadow-sm bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 cursor-pointer whitespace-normal"
             onClick={() => {
               (window.top ?? window).location.href = item.path;
             }}

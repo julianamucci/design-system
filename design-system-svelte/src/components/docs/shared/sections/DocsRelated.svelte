@@ -16,7 +16,7 @@
     {#each items as item}
       <Button
         variant="ghost"
-        class="text-left h-auto p-4 border rounded-xl shadow-sm bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1"
+        class="text-left h-auto p-4 border rounded-xl shadow-sm bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
         onclick={() => navigate(item.path)}
       >
         <p class="text-sm font-semibold text-primary">{item.name}</p>
