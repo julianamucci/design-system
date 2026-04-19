@@ -40,7 +40,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
         <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
         <span class="text-sm font-semibold uppercase tracking-wider">${sanitizeHtml(pair.doLabel)}</span>
       </div>`;
-    const doBox = createCard({ className: 'border-green-200 p-6 bg-green-50/50 shadow-none rounded-xl' });
+    const doBox = createCard({ className: 'border-green-200 p-4 bg-green-50/50 shadow-none rounded-xl' });
     doBox.appendChild(pair.doPreviewFactory());
     const doCaption = document.createElement('p');
     doCaption.className = 'text-sm text-muted-foreground italic px-1';
@@ -55,7 +55,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
         <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
         <span class="text-sm font-semibold uppercase tracking-wider">${sanitizeHtml(pair.dontLabel)}</span>
       </div>`;
-    const dontBox = createCard({ className: 'border-red-200 p-6 bg-red-50/50 shadow-none rounded-xl' });
+    const dontBox = createCard({ className: 'border-red-200 p-4 bg-red-50/50 shadow-none rounded-xl' });
     dontBox.appendChild(pair.dontPreviewFactory());
     const dontCaption = document.createElement('p');
     dontCaption.className = 'text-sm text-muted-foreground italic px-1';

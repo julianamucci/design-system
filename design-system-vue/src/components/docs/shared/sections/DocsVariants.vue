@@ -24,7 +24,7 @@ function toggleCode(i: number) {
   <section id="variantes">
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
     <div class="space-y-4">
-      <Card v-for="(item, i) in items" :key="i" class="p-5 space-y-3">
+      <Card v-for="(item, i) in items" :key="i" class="p-4 space-y-3">
         <div class="flex items-center justify-center min-h-[60px]">
           <slot :name="`variant-preview-${i}`" />
         </div>

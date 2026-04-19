@@ -223,20 +223,26 @@ O `text-sm` é definido **apenas no `<table>`**. As células `<td>` e `<th>` **h
 </table>
 ```
 
-### 3.4 Padding mínimo em todos os cards de conteúdo
+### 3.4 Padding padrão de containers em docs pages
 
-Todo elemento que atua como **card de conteúdo** (border + rounded + qualquer background) deve ter padding mínimo de `p-4`. `p-3` é insuficiente.
+**`p-4` é o padding padrão de todos os containers de conteúdo em docs pages.** Aplica-se a: Card wrappers de shared sections (DocsAccessibility, DocsWhenToUse, DocsDoDont, DocsVariants, DocsStates, DocsProps, DocsTokens, DocsAnalytics, DocsTestes), preview boxes (Do/Don't), e qualquer `<div>` com `border + rounded + background`. Não use `p-3` (insuficiente), nem `p-5`/`p-6`/`p-10` (cria inconsistência entre seções).
 
 ```html
-<!-- ✅ p-4 ou maior -->
+<!-- ✅ p-4 padrão -->
 <div class="bg-muted/10 rounded-lg border border-border/40 p-4">...</div>
 <div class="bg-card border rounded-xl p-4 shadow-sm">...</div>
 
 <!-- ❌ p-3 insuficiente -->
 <div class="bg-muted/10 rounded-lg border p-3">...</div>
+
+<!-- ❌ p-6/p-10 fora do padrão -->
+<Card class="p-6 space-y-4">...</Card>
+<Card class="p-10 mt-6">...</Card>
 ```
 
-**Exceção válida**: cards de showcase de componentes que usam `overflow-hidden` para clip de imagens/demos visuais (ex: `border border-border/60 rounded-xl overflow-hidden bg-card/50 flex flex-col`) — esses têm padding interno nas sub-seções do card, não no wrapper.
+**Exceções válidas** (continuam válidas em `p-4`):
+- **Células de tabela** (`<th>`, `<td>`): usam `p-3` — padding de célula é independente do padding de container.
+- **Cards de showcase com `overflow-hidden`**: padding vai nas sub-seções do card, não no wrapper.
 
 Aplica-se a todas as stacks: React, Vue, Svelte e Basecoat.
 

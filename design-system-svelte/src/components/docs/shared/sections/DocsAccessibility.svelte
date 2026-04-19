@@ -16,7 +16,7 @@
 <section id="acessibilidade">
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
   <div class="space-y-6">
-    <Card class="p-6 space-y-4">
+    <Card class="p-4 space-y-4">
         <p class="text-sm text-muted-foreground leading-relaxed">{@html sanitizeHtml(summary)}</p>
         <ul class="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">
           {#each items as item}

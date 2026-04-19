@@ -22,7 +22,7 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
   const container = document.createElement('div');
   container.className = 'space-y-6';
 
-  const summaryBlock = createCard({ className: 'space-y-4 p-6' });
+  const summaryBlock = createCard({ className: 'space-y-4 p-4' });
   summaryBlock.innerHTML = `
     <p class="text-sm text-muted-foreground leading-relaxed">${sanitizeHtml(props.summary)}</p>
     <ul class="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">

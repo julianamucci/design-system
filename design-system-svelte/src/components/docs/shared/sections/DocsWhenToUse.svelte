@@ -18,7 +18,7 @@
 
 <section id="quando-usar">
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
-  <Card class="p-6 space-y-6">
+  <Card class="p-4 space-y-6">
 
       <!-- Guidelines -->
       <Card class="bg-muted/50 border border-border/40 shadow-none p-4 space-y-3">

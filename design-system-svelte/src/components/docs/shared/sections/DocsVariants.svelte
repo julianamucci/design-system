@@ -22,7 +22,7 @@
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
   <div class="space-y-4">
     {#each items as item, i}
-      <Card class="p-5 space-y-3">
+      <Card class="p-4 space-y-3">
         <div class="flex items-center justify-center min-h-[60px]">
           {@render item.preview()}
         </div>

@@ -47,7 +47,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
   return (
     <section id="quando-usar">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <Card className="p-6 space-y-6">
+      <Card className="p-4 space-y-6">
 
         {/* Guidelines */}
         <Card className="bg-muted/50 border border-border/40 shadow-none p-4 rounded-lg">

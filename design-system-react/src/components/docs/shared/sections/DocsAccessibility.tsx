@@ -20,7 +20,7 @@ export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboa
     <section id="acessibilidade">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
       <div className="space-y-6">
-        <Card className="p-6 space-y-4">
+        <Card className="p-4 space-y-4">
           <p
             className="text-sm text-muted-foreground leading-relaxed"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(summary) }}

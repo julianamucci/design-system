@@ -27,7 +27,7 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
   container.className = 'space-y-4';
 
   props.items.forEach(item => {
-    const card = createCard({ className: 'p-5 space-y-3' });
+    const card = createCard({ className: 'p-4 space-y-3' });
 
     const previewWrap = document.createElement('div');
     previewWrap.className = 'flex items-center justify-center min-h-[60px]';
