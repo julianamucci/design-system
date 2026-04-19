@@ -12,6 +12,7 @@ export interface DocsVariantItem {
 export interface DocsVariantsProps {
   title: string;
   items: DocsVariantItem[];
+  id?: string;
 }
 
 function VariantCard({ item }: { item: DocsVariantItem }) {
@@ -47,9 +48,9 @@ function VariantCard({ item }: { item: DocsVariantItem }) {
   );
 }
 
-export function DocsVariants({ title, items }: DocsVariantsProps) {
+export function DocsVariants({ title, items, id = "variantes" }: DocsVariantsProps) {
   return (
-    <section id="variantes">
+    <section id={id}>
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
       <div className="space-y-4">
         {items.map((item, i) => (

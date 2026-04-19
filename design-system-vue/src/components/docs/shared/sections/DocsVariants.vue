@@ -9,10 +9,13 @@ interface DocsVariantItem {
   code?: string;
 }
 
-defineProps<{
+const props = withDefaults(defineProps<{
   title: string;
   items: DocsVariantItem[];
-}>();
+  id?: string;
+}>(), {
+  id: 'variantes',
+});
 
 const openStates = ref<Record<number, boolean>>({});
 function toggleCode(i: number) {
@@ -21,7 +24,7 @@ function toggleCode(i: number) {
 </script>
 
 <template>
-  <section id="variantes">
+  <section :id="props.id">
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
     <div class="space-y-4">
       <Card v-for="(item, i) in items" :key="i" class="p-4 gap-2">

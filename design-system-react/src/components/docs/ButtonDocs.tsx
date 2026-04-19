@@ -49,6 +49,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "tamanhos",     label: t("nav.sizes") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
