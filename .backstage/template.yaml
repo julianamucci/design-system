@@ -74,12 +74,17 @@ spec:
             - vue
             - svelte
             - basecoat
-          enumNames:
-            - "React 19 (shadcn/ui + Radix UI)"
-            - "Vue 3 (shadcn-vue + Reka UI)"
-            - "Svelte 5 (shadcn-svelte + Bits UI)"
-            - "Basecoat — Vanilla TS (basecoat-css + Tailwind)"
           default: react
+          ui:options:
+            enumOptions:
+              - value: react
+                label: "React 19 (shadcn/ui + Radix UI)"
+              - value: vue
+                label: "Vue 3 (shadcn-vue + Reka UI)"
+              - value: svelte
+                label: "Svelte 5 (shadcn-svelte + Bits UI)"
+              - value: basecoat
+                label: "Basecoat — Vanilla TS (basecoat-css + Tailwind)"
 
         includeChromatic:
           type: boolean
