@@ -248,21 +248,6 @@ export function createAspectRatioDocs(): HTMLElement {
               a: t(`usage.scenarios.item${i}.a`),
             })),
           },
-          uxWriting: {
-            title: t('usage.uxWriting.title'),
-            cols: {
-              element: t('usage.uxWriting.table.element'),
-              rules:   t('usage.uxWriting.table.rules'),
-              do:      t('usage.uxWriting.table.correct'),
-              dont:    t('usage.uxWriting.table.avoid'),
-            },
-            items: ['alt', 'altDecorative', 'iframe', 'video'].map(key => ({
-              element: t(`usage.uxWriting.table.${key}.name`),
-              rules:   t(`usage.uxWriting.table.${key}.format`),
-              do:      t(`usage.uxWriting.table.${key}.good`),
-              dont:    t(`usage.uxWriting.table.${key}.bad`),
-            })),
-          },
           do: {
             title: t('usage.do.title'),
             items: [

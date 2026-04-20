@@ -241,21 +241,6 @@
             { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: stripHtml($tStore('usage.scenarios.item5.a')) },
           ],
         }}
-        uxWriting={{
-          title: $tStore('usage.uxWriting.title'),
-          cols: {
-            element: $tStore('usage.uxWriting.table.element'),
-            rules: $tStore('usage.uxWriting.table.rules'),
-            do: $tStore('usage.uxWriting.table.correct'),
-            dont: $tStore('usage.uxWriting.table.avoid'),
-          },
-          items: [
-            { element: $tStore('usage.uxWriting.table.alt.name'),           rules: $tStore('usage.uxWriting.table.alt.format'),           do: $tStore('usage.uxWriting.table.alt.good'),           dont: $tStore('usage.uxWriting.table.alt.bad')           },
-            { element: $tStore('usage.uxWriting.table.altDecorative.name'), rules: $tStore('usage.uxWriting.table.altDecorative.format'), do: $tStore('usage.uxWriting.table.altDecorative.good'), dont: $tStore('usage.uxWriting.table.altDecorative.bad') },
-            { element: $tStore('usage.uxWriting.table.iframe.name'),        rules: $tStore('usage.uxWriting.table.iframe.format'),        do: $tStore('usage.uxWriting.table.iframe.good'),        dont: $tStore('usage.uxWriting.table.iframe.bad')        },
-            { element: $tStore('usage.uxWriting.table.video.name'),         rules: $tStore('usage.uxWriting.table.video.format'),         do: $tStore('usage.uxWriting.table.video.good'),         dont: $tStore('usage.uxWriting.table.video.bad')         },
-          ],
-        }}
         do={{
           title: $tStore('usage.do.title'),
           items: [
