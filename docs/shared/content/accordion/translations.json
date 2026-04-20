@@ -50,11 +50,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "FAQ com múltiplas perguntas", "u": "Sim, type=\"single\" + collapsible", "a": "—" },
-        "item2": { "s": "Uma única seção expansível", "u": "Não", "a": "Collapsible" },
-        "item3": { "s": "Alternância entre views paralelas", "u": "Não", "a": "Tabs" },
-        "item4": { "s": "Especificações comparáveis", "u": "Sim, type=\"multiple\"", "a": "—" },
-        "item5": { "s": "Etapas sequenciais obrigatórias", "u": "Não", "a": "Stepper" }
+        "item1": {
+          "s": "FAQ com múltiplas perguntas",
+          "u": "Sim, type=\"single\" + collapsible",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Uma única seção expansível",
+          "u": "Não",
+          "a": "Collapsible"
+        },
+        "item3": {
+          "s": "Alternância entre views paralelas",
+          "u": "Não",
+          "a": "Tabs"
+        },
+        "item4": {
+          "s": "Especificações comparáveis",
+          "u": "Sim, type=\"multiple\"",
+          "a": "—"
+        },
+        "item5": {
+          "s": "Etapas sequenciais obrigatórias",
+          "u": "Não",
+          "a": "Stepper"
+        }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -104,7 +124,7 @@
       "note": "Quatro subcomponentes exportados. Todos necessários para o uso básico."
     },
     "variants": {
-      "title": "Tipos",
+      "title": "Modos de Operação",
       "single": {
         "label": "Single (padrão)",
         "description": "Apenas um item aberto por vez. Com <code>collapsible</code>, permite fechar o item ativo. Ideal para FAQ."
@@ -151,20 +171,119 @@
         "description": "Descrição",
         "prop": "Prop",
         "items": {
-          "type": { "name": "type", "type": "\"single\" | \"multiple\"", "default": "—", "required": "Sim", "description": "Define se um ou múltiplos itens podem ser abertos simultaneamente." },
-          "collapsible": { "name": "collapsible", "type": "boolean", "default": "false", "required": "Não", "description": "Permite fechar o item ativo (só para type=\"single\")." },
-          "defaultValue": { "name": "defaultValue", "type": "string | string[]", "default": "—", "required": "Não", "description": "Valor(es) aberto(s) por padrão (não controlado)." },
-          "value": { "name": "value", "type": "string | string[]", "default": "—", "required": "Não", "description": "Valor(es) controlado(s). Use com onValueChange." },
-          "onValueChange": { "name": "onValueChange", "type": "(value: string | string[]) => void", "default": "—", "required": "Não", "description": "Callback ao abrir/fechar item." },
-          "className": { "name": "className", "type": "string", "default": "—", "required": "Não", "description": "Classes CSS adicionais para o container." }
+          "type": {
+            "name": "type",
+            "type": "\"single\" | \"multiple\"",
+            "default": "—",
+            "required": "Sim",
+            "description": "Define se um ou múltiplos itens podem ser abertos simultaneamente."
+          },
+          "collapsible": {
+            "name": "collapsible",
+            "type": "boolean",
+            "default": "false",
+            "required": "Não",
+            "description": "Permite fechar o item ativo (só para type=\"single\")."
+          },
+          "defaultValue": {
+            "name": "defaultValue",
+            "type": "string | string[]",
+            "default": "—",
+            "required": "Não",
+            "description": "Valor(es) aberto(s) por padrão (não controlado)."
+          },
+          "value": {
+            "name": "value",
+            "type": "string | string[]",
+            "default": "—",
+            "required": "Não",
+            "description": "Valor(es) controlado(s). Use com onValueChange."
+          },
+          "onValueChange": {
+            "name": "onValueChange",
+            "type": "(value: string | string[]) => void",
+            "default": "—",
+            "required": "Não",
+            "description": "Callback ao abrir/fechar item."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "Não",
+            "description": "Classes CSS adicionais para o container."
+          }
         }
       },
       "item": {
         "title": "AccordionItem",
         "items": {
-          "value": { "name": "value", "type": "string", "default": "—", "required": "Sim", "description": "Identificador único do item. Usado pelo Accordion para controlar estado." },
-          "disabled": { "name": "disabled", "type": "boolean", "default": "false", "required": "Não", "description": "Desabilita o item. Trigger não responde a cliques." },
-          "className": { "name": "className", "type": "string", "default": "—", "required": "Não", "description": "Classes CSS adicionais." }
+          "value": {
+            "name": "value",
+            "type": "string",
+            "default": "—",
+            "required": "Sim",
+            "description": "Identificador único do item. Usado pelo Accordion para controlar estado."
+          },
+          "disabled": {
+            "name": "disabled",
+            "type": "boolean",
+            "default": "false",
+            "required": "Não",
+            "description": "Desabilita o item. Trigger não responde a cliques."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "Não",
+            "description": "Classes CSS adicionais."
+          }
+        }
+      },
+      "trigger": {
+        "title": "AccordionTrigger",
+        "items": {
+          "asChild": {
+            "name": "asChild",
+            "type": "boolean",
+            "default": "false",
+            "required": "Não",
+            "description": "Renderiza o trigger como filho (asChild pattern)."
+          },
+          "onClick": {
+            "name": "onClick",
+            "type": "(e: MouseEvent) => void",
+            "default": "—",
+            "required": "Não",
+            "description": "Callback ao clicar no trigger. Use data-state para detectar abertura."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "Não",
+            "description": "Classes CSS adicionais."
+          }
+        }
+      },
+      "content": {
+        "title": "AccordionContent",
+        "items": {
+          "forceMount": {
+            "name": "forceMount",
+            "type": "boolean",
+            "default": "false",
+            "required": "Não",
+            "description": "Mantém o conteúdo montado mesmo quando fechado (útil para SSR e animações externas)."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "Não",
+            "description": "Classes CSS adicionais."
+          }
         }
       }
     },
@@ -176,11 +295,41 @@
         "part": "Parte"
       },
       "items": {
-        "border": { "token": "--border", "class": "border-b", "part": "AccordionItem — separador inferior" },
-        "foreground": { "token": "--foreground", "class": "text-foreground", "part": "AccordionTrigger — texto do título" },
-        "mutedForeground": { "token": "--muted-foreground", "class": "text-muted-foreground", "part": "Chevron — ícone de indicação" },
-        "background": { "token": "--background", "class": "bg-background", "part": "AccordionContent — fundo do conteúdo" },
-        "ring": { "token": "--ring", "class": "ring-ring", "part": "AccordionTrigger — focus ring" }
+        "border": {
+          "token": "--border",
+          "class": "border-b",
+          "part": "AccordionItem — separador inferior"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "class": "text-foreground",
+          "part": "AccordionTrigger — texto do título"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "class": "text-muted-foreground",
+          "part": "Chevron — ícone de indicação"
+        },
+        "background": {
+          "token": "--background",
+          "class": "bg-background",
+          "part": "AccordionContent — fundo do conteúdo"
+        },
+        "ring": {
+          "token": "--ring",
+          "class": "ring-ring",
+          "part": "AccordionTrigger — focus ring"
+        },
+        "animateDown": {
+          "token": "--animate-accordion-down",
+          "class": "animate-accordion-down",
+          "part": "AccordionContent — animação de abertura"
+        },
+        "animateUp": {
+          "token": "--animate-accordion-up",
+          "class": "animate-accordion-up",
+          "part": "AccordionContent — animação de fechamento"
+        }
       },
       "customizationTitle": "Customização via tokens",
       "customizationCode": "/* Aumentar separador entre itens */\n.my-accordion .accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger com background em hover */\n.my-accordion [data-state] {\n  @apply hover:bg-muted/40 rounded-md;\n}"
@@ -221,9 +370,21 @@
     },
     "related": {
       "title": "Componentes Relacionados",
-      "collapsible": { "name": "Collapsible", "description": "Use para uma única seção expansível isolada.", "href": "disclosure-collapsible--playground" },
-      "tabs": { "name": "Tabs", "description": "Use para alternância entre views paralelas.", "href": "navigation-tabs--playground" },
-      "sidebar": { "name": "Sidebar", "description": "Accordion aninhado em Sidebar para navegação hierárquica.", "href": "layout-sidebar--playground" }
+      "collapsible": {
+        "name": "Collapsible",
+        "description": "Use para uma única seção expansível isolada.",
+        "href": "disclosure-collapsible--playground"
+      },
+      "tabs": {
+        "name": "Tabs",
+        "description": "Use para alternância entre views paralelas.",
+        "href": "navigation-tabs--playground"
+      },
+      "sidebar": {
+        "name": "Sidebar",
+        "description": "Accordion aninhado em Sidebar para navegação hierárquica.",
+        "href": "layout-sidebar--playground"
+      }
     },
     "notes": {
       "title": "Notas de Implementação",
@@ -237,8 +398,16 @@
       "title": "Analytics",
       "description": "Rastreie interações do usuário com o Accordion para entender quais seções são mais acessadas.",
       "events": {
-        "expand": { "event": "accordion_expand", "trigger": "Usuário abre um item", "payload": "{ component: \"accordion\", label: string, location: string }" },
-        "collapse": { "event": "accordion_collapse", "trigger": "Usuário fecha um item", "payload": "{ component: \"accordion\", label: string, location: string }" }
+        "expand": {
+          "event": "accordion_expand",
+          "trigger": "Usuário abre um item",
+          "payload": "{ component: \"accordion\", label: string, location: string }"
+        },
+        "collapse": {
+          "event": "accordion_collapse",
+          "trigger": "Usuário fecha um item",
+          "payload": "{ component: \"accordion\", label: string, location: string }"
+        }
       },
       "note": "Use <code>data-state=\"closed\"</code> no trigger para detectar se o clique vai abrir — o Radix atualiza o estado após o evento."
     },
@@ -247,31 +416,90 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Accordion.",
-        "item1": { "action": "Clicar em AccordionTrigger fechado", "result": "Item expande; AccordionContent fica visível", "priority": "high" },
-        "item2": { "action": "Clicar em AccordionTrigger aberto (collapsible=true)", "result": "Item colapsa; AccordionContent some da tela", "priority": "high" },
-        "item3": { "action": "Clicar em segundo item com type=\"single\"", "result": "Primeiro item fecha automaticamente; segundo abre", "priority": "high" },
-        "item4": { "action": "Clicar em segundo item com type=\"multiple\"", "result": "Ambos os itens ficam abertos simultaneamente", "priority": "high" },
-        "item5": { "action": "Clicar em item com disabled=true", "result": "Item não expande; onClick não disparado", "priority": "medium" },
-        "item6": { "action": "Renderizar com defaultValue=\"item-1\"", "result": "Item 1 começa aberto sem modo controlado", "priority": "medium" }
+        "item1": {
+          "action": "Clicar em AccordionTrigger fechado",
+          "result": "Item expande; AccordionContent fica visível",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar em AccordionTrigger aberto (collapsible=true)",
+          "result": "Item colapsa; AccordionContent some da tela",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clicar em segundo item com type=\"single\"",
+          "result": "Primeiro item fecha automaticamente; segundo abre",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Clicar em segundo item com type=\"multiple\"",
+          "result": "Ambos os itens ficam abertos simultaneamente",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Clicar em item com disabled=true",
+          "result": "Item não expande; onClick não disparado",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Renderizar com defaultValue=\"item-1\"",
+          "result": "Item 1 começa aberto sem modo controlado",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "Sem violações axe-core no estado padrão e aberto", "level": "AA", "how": "axe-playwright no test-runner do Storybook" },
-        "item2": { "criterion": "aria-expanded=\"false\" no trigger fechado / \"true\" aberto", "level": "AA", "how": "getByRole('button') + toHaveAttribute('aria-expanded', 'true')" },
-        "item3": { "criterion": "Focus ring visível ao navegar por Tab", "level": "AA", "how": "Inspecionar :focus-visible manualmente" },
-        "item4": { "criterion": "Enter e Space expandem/colapsam o item focado", "level": "A", "how": "userEvent.keyboard('{Enter}') / userEvent.keyboard(' ')" },
-        "item5": { "criterion": "Item desabilitado tem aria-disabled ou disabled nativo", "level": "AA", "how": "expect(trigger).toBeDisabled()" }
+        "item1": {
+          "criterion": "Sem violações axe-core no estado padrão e aberto",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        },
+        "item2": {
+          "criterion": "aria-expanded=\"false\" no trigger fechado / \"true\" aberto",
+          "level": "AA",
+          "how": "getByRole('button') + toHaveAttribute('aria-expanded', 'true')"
+        },
+        "item3": {
+          "criterion": "Focus ring visível ao navegar por Tab",
+          "level": "AA",
+          "how": "Inspecionar :focus-visible manualmente"
+        },
+        "item4": {
+          "criterion": "Enter e Space expandem/colapsam o item focado",
+          "level": "A",
+          "how": "userEvent.keyboard('{Enter}') / userEvent.keyboard(' ')"
+        },
+        "item5": {
+          "criterion": "Item desabilitado tem aria-disabled ou disabled nativo",
+          "level": "AA",
+          "how": "expect(trigger).toBeDisabled()"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
         "required": "✓ Obrigatório",
-        "item1": { "story": "Playground — type single, item 1 aberto", "priority": "high" },
-        "item2": { "story": "Variantes — single, multiple, controlled, defaultOpen", "priority": "high" },
-        "item3": { "story": "Estados — aberto, fechado, disabled", "priority": "high" },
-        "item4": { "story": "Composições — com ícone no trigger, conteúdo rico", "priority": "medium" },
-        "item5": { "story": "Interativo — animação de abertura capturada", "priority": "medium" }
+        "item1": {
+          "story": "Playground — type single, item 1 aberto",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — single, multiple, controlled, defaultOpen",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — aberto, fechado, disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Composições — com ícone no trigger, conteúdo rico",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Interativo — animação de abertura capturada",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -282,7 +510,7 @@
       "doDont": "Do & Don't",
       "techRef": "Referência Técnica",
       "import": "Importação",
-      "variants": "Tipos",
+      "variants": "Modos",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -346,11 +574,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "FAQ with multiple questions", "u": "Yes, type=\"single\" + collapsible", "a": "—" },
-        "item2": { "s": "A single expandable section", "u": "No", "a": "Collapsible" },
-        "item3": { "s": "Switching between parallel views", "u": "No", "a": "Tabs" },
-        "item4": { "s": "Comparable specifications", "u": "Yes, type=\"multiple\"", "a": "—" },
-        "item5": { "s": "Required sequential steps", "u": "No", "a": "Stepper" }
+        "item1": {
+          "s": "FAQ with multiple questions",
+          "u": "Yes, type=\"single\" + collapsible",
+          "a": "—"
+        },
+        "item2": {
+          "s": "A single expandable section",
+          "u": "No",
+          "a": "Collapsible"
+        },
+        "item3": {
+          "s": "Switching between parallel views",
+          "u": "No",
+          "a": "Tabs"
+        },
+        "item4": {
+          "s": "Comparable specifications",
+          "u": "Yes, type=\"multiple\"",
+          "a": "—"
+        },
+        "item5": {
+          "s": "Required sequential steps",
+          "u": "No",
+          "a": "Stepper"
+        }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -400,7 +648,7 @@
       "note": "Four exported subcomponents. All required for basic use."
     },
     "variants": {
-      "title": "Types",
+      "title": "Operation Modes",
       "single": {
         "label": "Single (default)",
         "description": "Only one item open at a time. With <code>collapsible</code>, allows closing the active item. Ideal for FAQ."
@@ -447,20 +695,119 @@
         "description": "Description",
         "prop": "Prop",
         "items": {
-          "type": { "name": "type", "type": "\"single\" | \"multiple\"", "default": "—", "required": "Yes", "description": "Defines whether one or multiple items can be open simultaneously." },
-          "collapsible": { "name": "collapsible", "type": "boolean", "default": "false", "required": "No", "description": "Allows closing the active item (only for type=\"single\")." },
-          "defaultValue": { "name": "defaultValue", "type": "string | string[]", "default": "—", "required": "No", "description": "Default open value(s) (uncontrolled)." },
-          "value": { "name": "value", "type": "string | string[]", "default": "—", "required": "No", "description": "Controlled value(s). Use with onValueChange." },
-          "onValueChange": { "name": "onValueChange", "type": "(value: string | string[]) => void", "default": "—", "required": "No", "description": "Callback when opening/closing an item." },
-          "className": { "name": "className", "type": "string", "default": "—", "required": "No", "description": "Additional CSS classes for the container." }
+          "type": {
+            "name": "type",
+            "type": "\"single\" | \"multiple\"",
+            "default": "—",
+            "required": "Yes",
+            "description": "Defines whether one or multiple items can be open simultaneously."
+          },
+          "collapsible": {
+            "name": "collapsible",
+            "type": "boolean",
+            "default": "false",
+            "required": "No",
+            "description": "Allows closing the active item (only for type=\"single\")."
+          },
+          "defaultValue": {
+            "name": "defaultValue",
+            "type": "string | string[]",
+            "default": "—",
+            "required": "No",
+            "description": "Default open value(s) (uncontrolled)."
+          },
+          "value": {
+            "name": "value",
+            "type": "string | string[]",
+            "default": "—",
+            "required": "No",
+            "description": "Controlled value(s). Use with onValueChange."
+          },
+          "onValueChange": {
+            "name": "onValueChange",
+            "type": "(value: string | string[]) => void",
+            "default": "—",
+            "required": "No",
+            "description": "Callback when opening/closing an item."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "No",
+            "description": "Additional CSS classes for the container."
+          }
         }
       },
       "item": {
         "title": "AccordionItem",
         "items": {
-          "value": { "name": "value", "type": "string", "default": "—", "required": "Yes", "description": "Unique item identifier. Used by Accordion to control state." },
-          "disabled": { "name": "disabled", "type": "boolean", "default": "false", "required": "No", "description": "Disables the item. Trigger doesn't respond to clicks." },
-          "className": { "name": "className", "type": "string", "default": "—", "required": "No", "description": "Additional CSS classes." }
+          "value": {
+            "name": "value",
+            "type": "string",
+            "default": "—",
+            "required": "Yes",
+            "description": "Unique item identifier. Used by Accordion to control state."
+          },
+          "disabled": {
+            "name": "disabled",
+            "type": "boolean",
+            "default": "false",
+            "required": "No",
+            "description": "Disables the item. Trigger doesn't respond to clicks."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "No",
+            "description": "Additional CSS classes."
+          }
+        }
+      },
+      "trigger": {
+        "title": "AccordionTrigger",
+        "items": {
+          "asChild": {
+            "name": "asChild",
+            "type": "boolean",
+            "default": "false",
+            "required": "No",
+            "description": "Renders trigger as child (asChild pattern)."
+          },
+          "onClick": {
+            "name": "onClick",
+            "type": "(e: MouseEvent) => void",
+            "default": "—",
+            "required": "No",
+            "description": "Callback on trigger click. Use data-state to detect opening."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "No",
+            "description": "Additional CSS classes."
+          }
+        }
+      },
+      "content": {
+        "title": "AccordionContent",
+        "items": {
+          "forceMount": {
+            "name": "forceMount",
+            "type": "boolean",
+            "default": "false",
+            "required": "No",
+            "description": "Keeps content mounted even when closed (useful for SSR and external animations)."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "No",
+            "description": "Additional CSS classes."
+          }
         }
       }
     },
@@ -472,11 +819,41 @@
         "part": "Part"
       },
       "items": {
-        "border": { "token": "--border", "class": "border-b", "part": "AccordionItem — bottom separator" },
-        "foreground": { "token": "--foreground", "class": "text-foreground", "part": "AccordionTrigger — title text" },
-        "mutedForeground": { "token": "--muted-foreground", "class": "text-muted-foreground", "part": "Chevron — indicator icon" },
-        "background": { "token": "--background", "class": "bg-background", "part": "AccordionContent — content background" },
-        "ring": { "token": "--ring", "class": "ring-ring", "part": "AccordionTrigger — focus ring" }
+        "border": {
+          "token": "--border",
+          "class": "border-b",
+          "part": "AccordionItem — bottom separator"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "class": "text-foreground",
+          "part": "AccordionTrigger — title text"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "class": "text-muted-foreground",
+          "part": "Chevron — indicator icon"
+        },
+        "background": {
+          "token": "--background",
+          "class": "bg-background",
+          "part": "AccordionContent — content background"
+        },
+        "ring": {
+          "token": "--ring",
+          "class": "ring-ring",
+          "part": "AccordionTrigger — focus ring"
+        },
+        "animateDown": {
+          "token": "--animate-accordion-down",
+          "class": "animate-accordion-down",
+          "part": "AccordionContent — open animation"
+        },
+        "animateUp": {
+          "token": "--animate-accordion-up",
+          "class": "animate-accordion-up",
+          "part": "AccordionContent — close animation"
+        }
       },
       "customizationTitle": "Customization via tokens",
       "customizationCode": "/* Increase separator between items */\n.my-accordion .accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger with background on hover */\n.my-accordion [data-state] {\n  @apply hover:bg-muted/40 rounded-md;\n}"
@@ -517,9 +894,21 @@
     },
     "related": {
       "title": "Related Components",
-      "collapsible": { "name": "Collapsible", "description": "Use for a single isolated expandable section.", "href": "disclosure-collapsible--playground" },
-      "tabs": { "name": "Tabs", "description": "Use for switching between parallel views.", "href": "navigation-tabs--playground" },
-      "sidebar": { "name": "Sidebar", "description": "Nested Accordion in Sidebar for hierarchical navigation.", "href": "layout-sidebar--playground" }
+      "collapsible": {
+        "name": "Collapsible",
+        "description": "Use for a single isolated expandable section.",
+        "href": "disclosure-collapsible--playground"
+      },
+      "tabs": {
+        "name": "Tabs",
+        "description": "Use for switching between parallel views.",
+        "href": "navigation-tabs--playground"
+      },
+      "sidebar": {
+        "name": "Sidebar",
+        "description": "Nested Accordion in Sidebar for hierarchical navigation.",
+        "href": "layout-sidebar--playground"
+      }
     },
     "notes": {
       "title": "Implementation Notes",
@@ -533,8 +922,16 @@
       "title": "Analytics",
       "description": "Track user interactions with the Accordion to understand which sections are most accessed.",
       "events": {
-        "expand": { "event": "accordion_expand", "trigger": "User opens an item", "payload": "{ component: \"accordion\", label: string, location: string }" },
-        "collapse": { "event": "accordion_collapse", "trigger": "User closes an item", "payload": "{ component: \"accordion\", label: string, location: string }" }
+        "expand": {
+          "event": "accordion_expand",
+          "trigger": "User opens an item",
+          "payload": "{ component: \"accordion\", label: string, location: string }"
+        },
+        "collapse": {
+          "event": "accordion_collapse",
+          "trigger": "User closes an item",
+          "payload": "{ component: \"accordion\", label: string, location: string }"
+        }
       },
       "note": "Use <code>data-state=\"closed\"</code> on the trigger to detect if the click will open — Radix updates the state after the event."
     },
@@ -543,31 +940,90 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each Accordion interaction.",
-        "item1": { "action": "Click closed AccordionTrigger", "result": "Item expands; AccordionContent becomes visible", "priority": "high" },
-        "item2": { "action": "Click open AccordionTrigger (collapsible=true)", "result": "Item collapses; AccordionContent hidden", "priority": "high" },
-        "item3": { "action": "Click second item with type=\"single\"", "result": "First item closes automatically; second opens", "priority": "high" },
-        "item4": { "action": "Click second item with type=\"multiple\"", "result": "Both items remain open simultaneously", "priority": "high" },
-        "item5": { "action": "Click item with disabled=true", "result": "Item doesn't expand; onClick not fired", "priority": "medium" },
-        "item6": { "action": "Render with defaultValue=\"item-1\"", "result": "Item 1 starts open without controlled mode", "priority": "medium" }
+        "item1": {
+          "action": "Click closed AccordionTrigger",
+          "result": "Item expands; AccordionContent becomes visible",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click open AccordionTrigger (collapsible=true)",
+          "result": "Item collapses; AccordionContent hidden",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Click second item with type=\"single\"",
+          "result": "First item closes automatically; second opens",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Click second item with type=\"multiple\"",
+          "result": "Both items remain open simultaneously",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Click item with disabled=true",
+          "result": "Item doesn't expand; onClick not fired",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Render with defaultValue=\"item-1\"",
+          "result": "Item 1 starts open without controlled mode",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "No axe-core violations in default and open state", "level": "AA", "how": "axe-playwright in Storybook test-runner" },
-        "item2": { "criterion": "aria-expanded=\"false\" on closed trigger / \"true\" open", "level": "AA", "how": "getByRole('button') + toHaveAttribute('aria-expanded', 'true')" },
-        "item3": { "criterion": "Focus ring visible when navigating by Tab", "level": "AA", "how": "Inspect :focus-visible manually" },
-        "item4": { "criterion": "Enter and Space expand/collapse the focused item", "level": "A", "how": "userEvent.keyboard('{Enter}') / userEvent.keyboard(' ')" },
-        "item5": { "criterion": "Disabled item has aria-disabled or native disabled", "level": "AA", "how": "expect(trigger).toBeDisabled()" }
+        "item1": {
+          "criterion": "No axe-core violations in default and open state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        },
+        "item2": {
+          "criterion": "aria-expanded=\"false\" on closed trigger / \"true\" open",
+          "level": "AA",
+          "how": "getByRole('button') + toHaveAttribute('aria-expanded', 'true')"
+        },
+        "item3": {
+          "criterion": "Focus ring visible when navigating by Tab",
+          "level": "AA",
+          "how": "Inspect :focus-visible manually"
+        },
+        "item4": {
+          "criterion": "Enter and Space expand/collapse the focused item",
+          "level": "A",
+          "how": "userEvent.keyboard('{Enter}') / userEvent.keyboard(' ')"
+        },
+        "item5": {
+          "criterion": "Disabled item has aria-disabled or native disabled",
+          "level": "AA",
+          "how": "expect(trigger).toBeDisabled()"
+        }
       },
       "visual": {
         "title": "Visual Regression (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
         "required": "✓ Required",
-        "item1": { "story": "Playground — single type, item 1 open", "priority": "high" },
-        "item2": { "story": "Variants — single, multiple, controlled, defaultOpen", "priority": "high" },
-        "item3": { "story": "States — open, closed, disabled", "priority": "high" },
-        "item4": { "story": "Compositions — with icon in trigger, rich content", "priority": "medium" },
-        "item5": { "story": "Interactive — open animation captured", "priority": "medium" }
+        "item1": {
+          "story": "Playground — single type, item 1 open",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variants — single, multiple, controlled, defaultOpen",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — open, closed, disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Compositions — with icon in trigger, rich content",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Interactive — open animation captured",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -578,7 +1034,7 @@
       "doDont": "Do & Don't",
       "techRef": "Technical Reference",
       "import": "Import",
-      "variants": "Types",
+      "variants": "Modes",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -642,11 +1098,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "FAQ con múltiples preguntas", "u": "Sí, type=\"single\" + collapsible", "a": "—" },
-        "item2": { "s": "Una única sección expandible", "u": "No", "a": "Collapsible" },
-        "item3": { "s": "Alternar entre vistas paralelas", "u": "No", "a": "Tabs" },
-        "item4": { "s": "Especificaciones comparables", "u": "Sí, type=\"multiple\"", "a": "—" },
-        "item5": { "s": "Pasos secuenciales obligatorios", "u": "No", "a": "Stepper" }
+        "item1": {
+          "s": "FAQ con múltiples preguntas",
+          "u": "Sí, type=\"single\" + collapsible",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Una única sección expandible",
+          "u": "No",
+          "a": "Collapsible"
+        },
+        "item3": {
+          "s": "Alternar entre vistas paralelas",
+          "u": "No",
+          "a": "Tabs"
+        },
+        "item4": {
+          "s": "Especificaciones comparables",
+          "u": "Sí, type=\"multiple\"",
+          "a": "—"
+        },
+        "item5": {
+          "s": "Pasos secuenciales obligatorios",
+          "u": "No",
+          "a": "Stepper"
+        }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -696,7 +1172,7 @@
       "note": "Cuatro subcomponentes exportados. Todos necesarios para el uso básico."
     },
     "variants": {
-      "title": "Tipos",
+      "title": "Modos de Operación",
       "single": {
         "label": "Single (predeterminado)",
         "description": "Solo un ítem abierto a la vez. Con <code>collapsible</code>, permite cerrar el ítem activo. Ideal para FAQ."
@@ -743,20 +1219,119 @@
         "description": "Descripción",
         "prop": "Prop",
         "items": {
-          "type": { "name": "type", "type": "\"single\" | \"multiple\"", "default": "—", "required": "Sí", "description": "Define si uno o múltiples ítems pueden estar abiertos simultáneamente." },
-          "collapsible": { "name": "collapsible", "type": "boolean", "default": "false", "required": "No", "description": "Permite cerrar el ítem activo (solo para type=\"single\")." },
-          "defaultValue": { "name": "defaultValue", "type": "string | string[]", "default": "—", "required": "No", "description": "Valor(es) abierto(s) por defecto (no controlado)." },
-          "value": { "name": "value", "type": "string | string[]", "default": "—", "required": "No", "description": "Valor(es) controlado(s). Usa con onValueChange." },
-          "onValueChange": { "name": "onValueChange", "type": "(value: string | string[]) => void", "default": "—", "required": "No", "description": "Callback al abrir/cerrar un ítem." },
-          "className": { "name": "className", "type": "string", "default": "—", "required": "No", "description": "Clases CSS adicionales para el contenedor." }
+          "type": {
+            "name": "type",
+            "type": "\"single\" | \"multiple\"",
+            "default": "—",
+            "required": "Sí",
+            "description": "Define si uno o múltiples ítems pueden estar abiertos simultáneamente."
+          },
+          "collapsible": {
+            "name": "collapsible",
+            "type": "boolean",
+            "default": "false",
+            "required": "No",
+            "description": "Permite cerrar el ítem activo (solo para type=\"single\")."
+          },
+          "defaultValue": {
+            "name": "defaultValue",
+            "type": "string | string[]",
+            "default": "—",
+            "required": "No",
+            "description": "Valor(es) abierto(s) por defecto (no controlado)."
+          },
+          "value": {
+            "name": "value",
+            "type": "string | string[]",
+            "default": "—",
+            "required": "No",
+            "description": "Valor(es) controlado(s). Usa con onValueChange."
+          },
+          "onValueChange": {
+            "name": "onValueChange",
+            "type": "(value: string | string[]) => void",
+            "default": "—",
+            "required": "No",
+            "description": "Callback al abrir/cerrar un ítem."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "No",
+            "description": "Clases CSS adicionales para el contenedor."
+          }
         }
       },
       "item": {
         "title": "AccordionItem",
         "items": {
-          "value": { "name": "value", "type": "string", "default": "—", "required": "Sí", "description": "Identificador único del ítem. Usado por Accordion para controlar el estado." },
-          "disabled": { "name": "disabled", "type": "boolean", "default": "false", "required": "No", "description": "Deshabilita el ítem. El trigger no responde a clics." },
-          "className": { "name": "className", "type": "string", "default": "—", "required": "No", "description": "Clases CSS adicionales." }
+          "value": {
+            "name": "value",
+            "type": "string",
+            "default": "—",
+            "required": "Sí",
+            "description": "Identificador único del ítem. Usado por Accordion para controlar el estado."
+          },
+          "disabled": {
+            "name": "disabled",
+            "type": "boolean",
+            "default": "false",
+            "required": "No",
+            "description": "Deshabilita el ítem. El trigger no responde a clics."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "No",
+            "description": "Clases CSS adicionales."
+          }
+        }
+      },
+      "trigger": {
+        "title": "AccordionTrigger",
+        "items": {
+          "asChild": {
+            "name": "asChild",
+            "type": "boolean",
+            "default": "false",
+            "required": "No",
+            "description": "Renderiza el trigger como hijo (patrón asChild)."
+          },
+          "onClick": {
+            "name": "onClick",
+            "type": "(e: MouseEvent) => void",
+            "default": "—",
+            "required": "No",
+            "description": "Callback al hacer clic en el trigger. Usa data-state para detectar apertura."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "No",
+            "description": "Clases CSS adicionales."
+          }
+        }
+      },
+      "content": {
+        "title": "AccordionContent",
+        "items": {
+          "forceMount": {
+            "name": "forceMount",
+            "type": "boolean",
+            "default": "false",
+            "required": "No",
+            "description": "Mantiene el contenido montado incluso cuando está cerrado (útil para SSR y animaciones externas)."
+          },
+          "className": {
+            "name": "className",
+            "type": "string",
+            "default": "—",
+            "required": "No",
+            "description": "Clases CSS adicionales."
+          }
         }
       }
     },
@@ -768,11 +1343,41 @@
         "part": "Parte"
       },
       "items": {
-        "border": { "token": "--border", "class": "border-b", "part": "AccordionItem — separador inferior" },
-        "foreground": { "token": "--foreground", "class": "text-foreground", "part": "AccordionTrigger — texto del título" },
-        "mutedForeground": { "token": "--muted-foreground", "class": "text-muted-foreground", "part": "Chevron — icono indicador" },
-        "background": { "token": "--background", "class": "bg-background", "part": "AccordionContent — fondo del contenido" },
-        "ring": { "token": "--ring", "class": "ring-ring", "part": "AccordionTrigger — focus ring" }
+        "border": {
+          "token": "--border",
+          "class": "border-b",
+          "part": "AccordionItem — separador inferior"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "class": "text-foreground",
+          "part": "AccordionTrigger — texto del título"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "class": "text-muted-foreground",
+          "part": "Chevron — icono indicador"
+        },
+        "background": {
+          "token": "--background",
+          "class": "bg-background",
+          "part": "AccordionContent — fondo del contenido"
+        },
+        "ring": {
+          "token": "--ring",
+          "class": "ring-ring",
+          "part": "AccordionTrigger — focus ring"
+        },
+        "animateDown": {
+          "token": "--animate-accordion-down",
+          "class": "animate-accordion-down",
+          "part": "AccordionContent — animación de apertura"
+        },
+        "animateUp": {
+          "token": "--animate-accordion-up",
+          "class": "animate-accordion-up",
+          "part": "AccordionContent — animación de cierre"
+        }
       },
       "customizationTitle": "Personalización via tokens",
       "customizationCode": "/* Aumentar separador entre ítems */\n.my-accordion .accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger con fondo en hover */\n.my-accordion [data-state] {\n  @apply hover:bg-muted/40 rounded-md;\n}"
@@ -813,9 +1418,21 @@
     },
     "related": {
       "title": "Componentes Relacionados",
-      "collapsible": { "name": "Collapsible", "description": "Usa para una única sección expandible aislada.", "href": "disclosure-collapsible--playground" },
-      "tabs": { "name": "Tabs", "description": "Usa para alternar entre vistas paralelas.", "href": "navigation-tabs--playground" },
-      "sidebar": { "name": "Sidebar", "description": "Accordion anidado en Sidebar para navegación jerárquica.", "href": "layout-sidebar--playground" }
+      "collapsible": {
+        "name": "Collapsible",
+        "description": "Usa para una única sección expandible aislada.",
+        "href": "disclosure-collapsible--playground"
+      },
+      "tabs": {
+        "name": "Tabs",
+        "description": "Usa para alternar entre vistas paralelas.",
+        "href": "navigation-tabs--playground"
+      },
+      "sidebar": {
+        "name": "Sidebar",
+        "description": "Accordion anidado en Sidebar para navegación jerárquica.",
+        "href": "layout-sidebar--playground"
+      }
     },
     "notes": {
       "title": "Notas de Implementación",
@@ -829,8 +1446,16 @@
       "title": "Analytics",
       "description": "Rastrea las interacciones del usuario con el Accordion para entender qué secciones se acceden más.",
       "events": {
-        "expand": { "event": "accordion_expand", "trigger": "Usuario abre un ítem", "payload": "{ component: \"accordion\", label: string, location: string }" },
-        "collapse": { "event": "accordion_collapse", "trigger": "Usuario cierra un ítem", "payload": "{ component: \"accordion\", label: string, location: string }" }
+        "expand": {
+          "event": "accordion_expand",
+          "trigger": "Usuario abre un ítem",
+          "payload": "{ component: \"accordion\", label: string, location: string }"
+        },
+        "collapse": {
+          "event": "accordion_collapse",
+          "trigger": "Usuario cierra un ítem",
+          "payload": "{ component: \"accordion\", label: string, location: string }"
+        }
       },
       "note": "Usa <code>data-state=\"closed\"</code> en el trigger para detectar si el clic va a abrir — Radix actualiza el estado después del evento."
     },
@@ -839,31 +1464,90 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción con el Accordion.",
-        "item1": { "action": "Hacer clic en AccordionTrigger cerrado", "result": "Ítem se expande; AccordionContent queda visible", "priority": "high" },
-        "item2": { "action": "Hacer clic en AccordionTrigger abierto (collapsible=true)", "result": "Ítem colapsa; AccordionContent desaparece", "priority": "high" },
-        "item3": { "action": "Hacer clic en segundo ítem con type=\"single\"", "result": "Primer ítem cierra automáticamente; segundo abre", "priority": "high" },
-        "item4": { "action": "Hacer clic en segundo ítem con type=\"multiple\"", "result": "Ambos ítems permanecen abiertos simultáneamente", "priority": "high" },
-        "item5": { "action": "Hacer clic en ítem con disabled=true", "result": "Ítem no se expande; onClick no se dispara", "priority": "medium" },
-        "item6": { "action": "Renderizar con defaultValue=\"item-1\"", "result": "Ítem 1 comienza abierto sin modo controlado", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en AccordionTrigger cerrado",
+          "result": "Ítem se expande; AccordionContent queda visible",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Hacer clic en AccordionTrigger abierto (collapsible=true)",
+          "result": "Ítem colapsa; AccordionContent desaparece",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Hacer clic en segundo ítem con type=\"single\"",
+          "result": "Primer ítem cierra automáticamente; segundo abre",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Hacer clic en segundo ítem con type=\"multiple\"",
+          "result": "Ambos ítems permanecen abiertos simultáneamente",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Hacer clic en ítem con disabled=true",
+          "result": "Ítem no se expande; onClick no se dispara",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Renderizar con defaultValue=\"item-1\"",
+          "result": "Ítem 1 comienza abierto sin modo controlado",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "Sin violaciones axe-core en estado predeterminado y abierto", "level": "AA", "how": "axe-playwright en el test-runner de Storybook" },
-        "item2": { "criterion": "aria-expanded=\"false\" en trigger cerrado / \"true\" abierto", "level": "AA", "how": "getByRole('button') + toHaveAttribute('aria-expanded', 'true')" },
-        "item3": { "criterion": "Focus ring visible al navegar por Tab", "level": "AA", "how": "Inspeccionar :focus-visible manualmente" },
-        "item4": { "criterion": "Enter y Space expanden/colapsan el ítem enfocado", "level": "A", "how": "userEvent.keyboard('{Enter}') / userEvent.keyboard(' ')" },
-        "item5": { "criterion": "Ítem deshabilitado tiene aria-disabled o disabled nativo", "level": "AA", "how": "expect(trigger).toBeDisabled()" }
+        "item1": {
+          "criterion": "Sin violaciones axe-core en estado predeterminado y abierto",
+          "level": "AA",
+          "how": "axe-playwright en el test-runner de Storybook"
+        },
+        "item2": {
+          "criterion": "aria-expanded=\"false\" en trigger cerrado / \"true\" abierto",
+          "level": "AA",
+          "how": "getByRole('button') + toHaveAttribute('aria-expanded', 'true')"
+        },
+        "item3": {
+          "criterion": "Focus ring visible al navegar por Tab",
+          "level": "AA",
+          "how": "Inspeccionar :focus-visible manualmente"
+        },
+        "item4": {
+          "criterion": "Enter y Space expanden/colapsan el ítem enfocado",
+          "level": "A",
+          "how": "userEvent.keyboard('{Enter}') / userEvent.keyboard(' ')"
+        },
+        "item5": {
+          "criterion": "Ítem deshabilitado tiene aria-disabled o disabled nativo",
+          "level": "AA",
+          "how": "expect(trigger).toBeDisabled()"
+        }
       },
       "visual": {
         "title": "Regresión Visual (Chromatic)",
         "description": "Cada story es capturada automáticamente para regresión visual.",
         "required": "✓ Obligatorio",
-        "item1": { "story": "Playground — tipo single, ítem 1 abierto", "priority": "high" },
-        "item2": { "story": "Variantes — single, multiple, controlled, defaultOpen", "priority": "high" },
-        "item3": { "story": "Estados — abierto, cerrado, deshabilitado", "priority": "high" },
-        "item4": { "story": "Composiciones — con icono en trigger, contenido rico", "priority": "medium" },
-        "item5": { "story": "Interactivo — animación de apertura capturada", "priority": "medium" }
+        "item1": {
+          "story": "Playground — tipo single, ítem 1 abierto",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — single, multiple, controlled, defaultOpen",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — abierto, cerrado, deshabilitado",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Composiciones — con icono en trigger, contenido rico",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Interactivo — animación de apertura capturada",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -874,7 +1558,7 @@
       "doDont": "Do & Don't",
       "techRef": "Referencia Técnica",
       "import": "Importación",
-      "variants": "Tipos",
+      "variants": "Modos",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",
