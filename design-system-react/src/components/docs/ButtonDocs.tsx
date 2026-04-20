@@ -7,8 +7,8 @@ import { track } from "@/lib/analytics";
 import uiTranslations from "@/i18n/ui.json";
 import buttonTranslations from "@shared/content/button/translations.json";
 
-import { DocsNav }           from "@/components/docs/shared/DocsNav";
 import { DocsHeader }        from "@/components/docs/shared/sections/DocsHeader";
+import { DocsPageLayout }    from "@/components/docs/shared/sections/DocsPageLayout";
 import { DocsDemonstration } from "@/components/docs/shared/sections/DocsDemonstration";
 import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy";
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
@@ -181,26 +181,19 @@ import { Plus } from "lucide-react";`;
 }`;
 
   return (
-    <div className="ds-docs p-8 max-w-5xl mx-auto">
-
-      <DocsHeader
-        title={tContent("title")}
-        description={tContent("description")}
-        category={tContent("category")}
-        type={tContent("type")}
-        installNote="npx shadcn@latest add button"
-      />
-
-      <div className="flex gap-16 items-start">
-        <nav
-          aria-label="Navegação das seções do componente"
-          className="sticky top-8 w-52 shrink-0 self-start space-y-5"
-        >
-          <DocsNav groups={navGroups} activeSection={activeId} />
-        </nav>
-
-        <div className="ds-docs flex-1 min-w-0 space-y-12">
-
+    <DocsPageLayout
+      navGroups={navGroups}
+      activeSection={activeId}
+      header={
+        <DocsHeader
+          title={tContent("title")}
+          description={tContent("description")}
+          category={tContent("category")}
+          type={tContent("type")}
+          installNote="npx shadcn@latest add button"
+        />
+      }
+    >
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
             <div className="flex flex-wrap gap-3">
@@ -747,9 +740,6 @@ import { Plus } from "lucide-react";`;
               })),
             }}
           />
-
-        </div>
-      </div>
-    </div>
+    </DocsPageLayout>
   );
 }

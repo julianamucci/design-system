@@ -5,7 +5,7 @@ import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
-import DocsNav from '@/components/docs/shared/DocsNav.vue';
+import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import alertTranslations from '@shared/content/alert/translations.json';
 
@@ -313,29 +313,16 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <div class="ds-docs p-8 max-w-5xl mx-auto">
-
-    <DocsHeader
-      :title="tContent('title')"
-      :description="tContent('description')"
-      :category="tContent('category')"
-      :type="tContent('type')"
-      install-note="npx shadcn-vue@latest add alert"
-    />
-
-    <div class="flex gap-16 items-start">
-      <nav
-        aria-label="Navegação das seções do componente"
-        class="sticky top-8 w-52 shrink-0 self-start space-y-5"
-      >
-        <DocsNav
-          :groups="navGroups"
-          :active-section="activeSection"
-          @navigate="(id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
-        />
-      </nav>
-
-      <div class="ds-docs flex-1 min-w-0 space-y-12">
+  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+    <template #header>
+      <DocsHeader
+        :title="tContent('title')"
+        :description="tContent('description')"
+        :category="tContent('category')"
+        :type="tContent('type')"
+        install-note="npx shadcn-vue@latest add alert"
+      />
+    </template>
 
         <!-- ── Demonstração ───────────────────────────────────────────── -->
         <DocsDemonstration :title="tContent('demonstration.title')">
@@ -552,8 +539,5 @@ const visualTestItems = computed(() => [
             items: visualTestItems,
           }"
         />
-
-      </div>
-    </div>
-  </div>
+  </DocsPageLayout>
 </template>

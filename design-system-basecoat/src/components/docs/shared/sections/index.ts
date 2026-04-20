@@ -42,3 +42,6 @@ export type { DocsAnalyticsProps, DocsAnalyticsEventItem } from './DocsAnalytics
 
 export { createDocsTestes } from './DocsTestes';
 export type { DocsTestesProps, DocsTestItem, DocsA11yTestItem, DocsVisualTestItem } from './DocsTestes';
+
+export { createDocsPageLayout } from './DocsPageLayout';
+export type { DocsPageLayoutProps, DocsPageLayoutHandle } from './DocsPageLayout';

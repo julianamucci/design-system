@@ -13,3 +13,4 @@ export { default as DocsRelated } from './DocsRelated.svelte';
 export { default as DocsNotes } from './DocsNotes.svelte';
 export { default as DocsAnalytics } from './DocsAnalytics.svelte';
 export { default as DocsTestes } from './DocsTestes.svelte';
+export { default as DocsPageLayout } from './DocsPageLayout.svelte';

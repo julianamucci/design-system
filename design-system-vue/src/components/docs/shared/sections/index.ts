@@ -13,3 +13,4 @@ export { default as DocsRelated } from './DocsRelated.vue';
 export { default as DocsNotes } from './DocsNotes.vue';
 export { default as DocsAnalytics } from './DocsAnalytics.vue';
 export { default as DocsTestes } from './DocsTestes.vue';
+export { default as DocsPageLayout } from './DocsPageLayout.vue';

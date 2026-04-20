@@ -4,7 +4,7 @@
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
-  import DocsNav from '@/components/docs/shared/DocsNav.svelte';
+  import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
     DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
@@ -157,28 +157,16 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 // adequados se \`disabled\`. Caso contrário, renderiza <button>.`;
 </script>
 
-<div class="ds-docs p-8 max-w-5xl mx-auto">
-
-  <DocsHeader
-    title={$tStore('title')}
-    description={$tStore('description')}
-    category={$tStore('category')}
-    type={$tStore('type')}
-    installNote="npx shadcn-svelte@latest add button"
-  />
-
-  <div class="flex gap-16 items-start">
-    <nav
-      aria-label="Navegação das seções do componente"
-      class="sticky top-8 w-52 shrink-0 self-start space-y-5"
-    >
-      <DocsNav
-        groups={NAV_GROUPS}
-        {activeSection}
-      />
-    </nav>
-
-    <div class="ds-docs flex-1 min-w-0 space-y-12">
+<DocsPageLayout navGroups={NAV_GROUPS} {activeSection}>
+  {#snippet header()}
+    <DocsHeader
+      title={$tStore('title')}
+      description={$tStore('description')}
+      category={$tStore('category')}
+      type={$tStore('type')}
+      installNote="npx shadcn-svelte@latest add button"
+    />
+  {/snippet}
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
@@ -575,7 +563,4 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           ],
         }}
       />
-
-    </div>
-  </div>
-</div>
+</DocsPageLayout>

@@ -5,7 +5,6 @@ import { createAccordion } from '@/components/ui/accordion';
 import uiTranslations from '@/i18n/ui.json';
 import accordionTranslations from '@shared/content/accordion/translations.json';
 
-import { createDocsNav, type DocsNavHandle } from '@/components/docs/shared/DocsNav';
 import {
   createDocsHeader,
   createDocsDemonstration,
@@ -22,6 +21,7 @@ import {
   createDocsNotes,
   createDocsAnalytics,
   createDocsTestes,
+  createDocsPageLayout,
 } from '@/components/docs/shared/sections';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
@@ -109,9 +109,6 @@ function getPropItems(tableKey: string): Array<{ name: string; type: string; def
 export function createAccordionDocs(): HTMLElement {
   const cleanups: Array<() => void> = [];
 
-  const root = document.createElement('div');
-  root.className = 'ds-docs p-8 max-w-5xl mx-auto';
-
   // ── SEO + Analytics ──────────────────────────────────────────────────────
 
   function updateSeo() {
@@ -129,29 +126,7 @@ export function createAccordionDocs(): HTMLElement {
   cleanups.push(() => cleanupSeo());
   cleanups.push(subscribe(() => { cleanupSeo(); cleanupSeo = updateSeo(); }));
 
-  // ── Header slot ──────────────────────────────────────────────────────────
-
-  const headerSlot = document.createElement('div');
-
-  function renderHeader() {
-    const header = createDocsHeader({
-      title: t('title'),
-      description: t('description'),
-      category: t('category'),
-      type: t('type'),
-      installNote: 'npx shadcn@latest add accordion',
-    });
-    headerSlot.replaceChildren(header);
-  }
-
-  // ── Layout ───────────────────────────────────────────────────────────────
-
-  const layout = document.createElement('div');
-  layout.className = 'flex gap-16 items-start';
-
-  const sidebar = document.createElement('nav');
-  sidebar.setAttribute('aria-label', 'Navegação das seções do componente');
-  sidebar.className = 'sticky top-8 w-52 shrink-0 self-start space-y-5';
+  // ── Nav groups ───────────────────────────────────────────────────────────
 
   const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }[] }[] = [
     { labelKey: 'nav.overview', sections: [
@@ -178,24 +153,36 @@ export function createAccordionDocs(): HTMLElement {
     ]},
   ];
 
-  let navHandle: DocsNavHandle | null = null;
-
-  function buildSidebar() {
-    const groups = NAV_GROUPS.map(g => ({
+  function buildNavGroups() {
+    return NAV_GROUPS.map(g => ({
       label: tNav(g.labelKey),
       sections: g.sections.map(s => ({ id: s.id, label: tNav(s.labelKey) })),
     }));
-    navHandle = createDocsNav({ groups });
-    sidebar.replaceChildren(navHandle.element);
+  }
+
+  const pageLayout = createDocsPageLayout({ navGroups: buildNavGroups() });
+  const root = pageLayout.root;
+  const headerSlot = pageLayout.headerSlot;
+  const main = pageLayout.main;
+
+  function renderHeader() {
+    const header = createDocsHeader({
+      title: t('title'),
+      description: t('description'),
+      category: t('category'),
+      type: t('type'),
+      installNote: 'npx shadcn@latest add accordion',
+    });
+    headerSlot.replaceChildren(header);
+  }
+
+  function buildSidebar() {
+    pageLayout.rebuildNav(buildNavGroups());
   }
 
   function updateActiveNav(activeId: string) {
-    navHandle?.setActiveSection(activeId);
+    pageLayout.setActiveSection(activeId);
   }
-
-  const main = document.createElement('div');
-  main.className = 'flex-1 min-w-0 space-y-12';
-  layout.append(sidebar, main);
 
   // ── Sections ─────────────────────────────────────────────────────────────
 
@@ -583,8 +570,6 @@ export function createAccordionDocs(): HTMLElement {
     buildSidebar();
     renderAllSections();
   }));
-
-  root.append(headerSlot, layout);
 
   // ── Cleanup on disconnect ────────────────────────────────────────────────
 

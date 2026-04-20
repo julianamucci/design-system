@@ -12,9 +12,9 @@ export interface DocsHeaderProps {
 
 export function DocsHeader({ title, description, category, type, installNote }: DocsHeaderProps) {
   return (
-    <header className="ds-docs mb-12 border-b pb-8 border-border/50">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
+    <header className="ds-docs mb-8 sm:mb-12 border-b pb-6 sm:pb-8 border-border/50">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-2 flex-wrap">
           <Badge
             variant="secondary"
             className="bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
@@ -28,9 +28,9 @@ export function DocsHeader({ title, description, category, type, installNote }: 
         <LanguageSwitcher />
       </div>
 
-      <div className="space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground">{title}</h1>
-        <p className="text-muted-foreground text-lg max-w-3xl leading-relaxed">{description}</p>
+      <div className="space-y-3 sm:space-y-4">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground">{title}</h1>
+        <p className="text-muted-foreground text-base sm:text-lg max-w-3xl leading-relaxed">{description}</p>
       </div>
 
       {installNote && (

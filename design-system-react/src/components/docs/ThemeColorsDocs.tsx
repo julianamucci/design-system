@@ -109,7 +109,7 @@ export function ThemeColorsDocs() {
 
   return (
     <div className="ds-docs flex-1 h-full overflow-auto bg-background scroll-smooth">
-      <div className="p-8 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
         
         {/* --- Header --- */}
         <header id="introducao" className="space-y-4 border-b pb-8 mb-12">
@@ -129,7 +129,7 @@ export function ThemeColorsDocs() {
           </p>
         </header>
 
-        <div className="flex gap-16 items-start">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
           
           {/* --- Conteúdo Principal --- */}
           <div className="flex-1 min-w-0 space-y-20">

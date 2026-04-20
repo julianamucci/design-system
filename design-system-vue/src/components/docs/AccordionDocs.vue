@@ -10,7 +10,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Info, AlertTriangle, CheckCircle } from 'lucide-vue-next';
-import DocsNav from '@/components/docs/shared/DocsNav.vue';
+import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import accordionTranslations from '@shared/content/accordion/translations.json';
 
@@ -339,29 +339,16 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
 </script>
 
 <template>
-  <div class="ds-docs p-8 max-w-5xl mx-auto">
-
-    <DocsHeader
-      :title="tContent('title')"
-      :description="tContent('description')"
-      :category="tContent('category')"
-      :type="tContent('type')"
-      install-note="npx shadcn-vue@latest add accordion"
-    />
-
-    <div class="flex gap-16 items-start">
-      <nav
-        aria-label="Navegação das seções do componente"
-        class="sticky top-8 w-52 shrink-0 self-start space-y-5"
-      >
-        <DocsNav
-          :groups="navGroups"
-          :active-section="activeSection"
-          @navigate="(id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
-        />
-      </nav>
-
-      <div class="ds-docs flex-1 min-w-0 space-y-12">
+  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+    <template #header>
+      <DocsHeader
+        :title="tContent('title')"
+        :description="tContent('description')"
+        :category="tContent('category')"
+        :type="tContent('type')"
+        install-note="npx shadcn-vue@latest add accordion"
+      />
+    </template>
 
         <!-- ── Demonstração ───────────────────────────────────────────── -->
         <DocsDemonstration :title="tContent('demonstration.title')">
@@ -613,8 +600,5 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
             items: visualTestItems,
           }"
         />
-
-      </div>
-    </div>
-  </div>
+  </DocsPageLayout>
 </template>

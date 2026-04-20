@@ -5,7 +5,6 @@ import { createButton, createButtonIcon, type ButtonVariant, type ButtonSize } f
 import uiTranslations from '@/i18n/ui.json';
 import buttonTranslations from '@shared/content/button/translations.json';
 
-import { createDocsNav, type DocsNavHandle } from '@/components/docs/shared/DocsNav';
 import {
   createDocsHeader,
   createDocsDemonstration,
@@ -22,6 +21,7 @@ import {
   createDocsNotes,
   createDocsAnalytics,
   createDocsTestes,
+  createDocsPageLayout,
 } from '@/components/docs/shared/sections';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
@@ -66,9 +66,6 @@ function buildIconButton(variant: ButtonVariant, size: ButtonSize, ariaLabel: st
 export function createButtonDocs(): HTMLElement {
   const cleanups: Array<() => void> = [];
 
-  const root = document.createElement('div');
-  root.className = 'ds-docs p-8 max-w-5xl mx-auto';
-
   // ── SEO + Analytics ──────────────────────────────────────────────────────
 
   function updateSeo() {
@@ -86,29 +83,7 @@ export function createButtonDocs(): HTMLElement {
   cleanups.push(() => cleanupSeo());
   cleanups.push(subscribe(() => { cleanupSeo(); cleanupSeo = updateSeo(); }));
 
-  // ── Header slot ──────────────────────────────────────────────────────────
-
-  const headerSlot = document.createElement('div');
-
-  function renderHeader() {
-    const header = createDocsHeader({
-      title: t('title'),
-      description: t('description'),
-      category: t('category'),
-      type: t('type'),
-      installNote: 'npx shadcn@latest add button',
-    });
-    headerSlot.replaceChildren(header);
-  }
-
-  // ── Layout ───────────────────────────────────────────────────────────────
-
-  const layout = document.createElement('div');
-  layout.className = 'flex gap-16 items-start';
-
-  const sidebar = document.createElement('nav');
-  sidebar.setAttribute('aria-label', 'Navegação das seções do componente');
-  sidebar.className = 'sticky top-8 w-52 shrink-0 self-start space-y-5';
+  // ── Nav groups ───────────────────────────────────────────────────────────
 
   const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }[] }[] = [
     { labelKey: 'nav.overview', sections: [
@@ -136,24 +111,36 @@ export function createButtonDocs(): HTMLElement {
     ]},
   ];
 
-  let navHandle: DocsNavHandle | null = null;
-
-  function buildSidebar() {
-    const groups = NAV_GROUPS.map(g => ({
+  function buildNavGroups() {
+    return NAV_GROUPS.map(g => ({
       label: tNav(g.labelKey),
       sections: g.sections.map(s => ({ id: s.id, label: tNav(s.labelKey) })),
     }));
-    navHandle = createDocsNav({ groups });
-    sidebar.replaceChildren(navHandle.element);
+  }
+
+  const pageLayout = createDocsPageLayout({ navGroups: buildNavGroups() });
+  const root = pageLayout.root;
+  const headerSlot = pageLayout.headerSlot;
+  const main = pageLayout.main;
+
+  function renderHeader() {
+    const header = createDocsHeader({
+      title: t('title'),
+      description: t('description'),
+      category: t('category'),
+      type: t('type'),
+      installNote: 'npx shadcn@latest add button',
+    });
+    headerSlot.replaceChildren(header);
+  }
+
+  function buildSidebar() {
+    pageLayout.rebuildNav(buildNavGroups());
   }
 
   function updateActiveNav(activeId: string) {
-    navHandle?.setActiveSection(activeId);
+    pageLayout.setActiveSection(activeId);
   }
-
-  const main = document.createElement('div');
-  main.className = 'flex-1 min-w-0 space-y-12';
-  layout.append(sidebar, main);
 
   // ── Sections ─────────────────────────────────────────────────────────────
 
@@ -675,8 +662,6 @@ export interface ButtonOptions {
     buildSidebar();
     renderAllSections();
   }));
-
-  root.append(headerSlot, layout);
 
   // ── Cleanup on disconnect ────────────────────────────────────────────────
 

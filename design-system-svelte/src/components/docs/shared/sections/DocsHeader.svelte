@@ -11,9 +11,9 @@
   } = $props();
 </script>
 
-<header class="ds-docs mb-12 border-b pb-8 border-border/50">
-  <div class="flex items-center justify-between mb-4">
-    <div class="flex items-center gap-2">
+<header class="ds-docs mb-8 sm:mb-12 border-b pb-6 sm:pb-8 border-border/50">
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+    <div class="flex items-center gap-2 flex-wrap">
       <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
         {category}
       </Badge>
@@ -23,9 +23,9 @@
     </div>
     <LanguageSwitcher />
   </div>
-  <div class="space-y-4">
-    <h1 class="text-4xl font-bold tracking-tight text-foreground">{title}</h1>
-    <p class="text-muted-foreground text-lg max-w-3xl leading-relaxed">{description}</p>
+  <div class="space-y-3 sm:space-y-4">
+    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground">{title}</h1>
+    <p class="text-muted-foreground text-base sm:text-lg max-w-3xl leading-relaxed">{description}</p>
   </div>
   {#if installNote}
     <div class="mt-6 flex items-center gap-3 text-sm text-muted-foreground/80">
