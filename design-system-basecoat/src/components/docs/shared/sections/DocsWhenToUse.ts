@@ -9,7 +9,7 @@ export interface DocsWhenToUseProps {
   title: string;
   guidelines: { title: string; items: string[] };
   scenarios: { title?: string; cols: { scenario: string; use: string; alternative: string }; items: DocsWhenToUseScenario[] };
-  uxWriting: { title: string; cols: { element: string; do: string; dont: string; rules?: string }; items: DocsWhenToUseUXRow[] };
+  uxWriting?: { title: string; cols: { element: string; do: string; dont: string; rules?: string }; items: DocsWhenToUseUXRow[] };
   do: { title: string; items: string[] };
   dont: { title: string; items: string[] };
 }
@@ -65,54 +65,58 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   scenariosTable.append(scenariosThead, scenariosTbody);
   scenariosBlock.appendChild(scenariosTableWrapper);
 
-  // ── UX Writing table ──────────────────────────────────────────────────────────
-  const uxBlock = document.createElement('div');
-  uxBlock.className = 'space-y-3';
+  // ── UX Writing table (optional) ───────────────────────────────────────────────
+  let uxBlock: HTMLElement | null = null;
+  if (props.uxWriting) {
+    const ux = props.uxWriting;
+    uxBlock = document.createElement('div');
+    uxBlock.className = 'space-y-3';
 
-  const uxTitle = document.createElement('h3');
-  uxTitle.className = 'font-medium text-sm';
-  uxTitle.textContent = props.uxWriting.title;
-  uxBlock.appendChild(uxTitle);
+    const uxTitle = document.createElement('h3');
+    uxTitle.className = 'font-medium text-sm';
+    uxTitle.textContent = ux.title;
+    uxBlock.appendChild(uxTitle);
 
-  const uxTableWrap = document.createElement('div');
-  uxTableWrap.className = 'overflow-x-auto';
+    const uxTableWrap = document.createElement('div');
+    uxTableWrap.className = 'overflow-x-auto';
 
-  const { wrapper: uxInnerTableWrapper, table: uxTable } = createTable('w-full border-collapse text-sm');
+    const { wrapper: uxInnerTableWrapper, table: uxTable } = createTable('w-full border-collapse text-sm');
 
-  const uxThead = createTableHeader();
-  const uxHeaderRow = createTableRow('border-b border-border bg-muted/70 text-left');
-  uxHeaderRow.appendChild(createTableHead(props.uxWriting.cols.element, 'p-3 border-r border-border font-semibold'));
-  if (props.uxWriting.cols.rules) {
-    uxHeaderRow.appendChild(createTableHead(props.uxWriting.cols.rules, 'p-3 border-r border-border font-semibold'));
-  }
-
-  const doHead = document.createElement('th');
-  doHead.className = 'text-muted-foreground p-3 border-r border-border font-semibold text-green-700';
-  doHead.innerHTML = `<span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 text-xs font-bold flex-shrink-0">✓</span>${sanitizeHtml(props.uxWriting.cols.do)}</span>`;
-  uxHeaderRow.appendChild(doHead);
-
-  const dontHead = document.createElement('th');
-  dontHead.className = 'text-muted-foreground p-3 font-semibold text-red-700';
-  dontHead.innerHTML = `<span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 text-xs font-bold flex-shrink-0">✗</span>${sanitizeHtml(props.uxWriting.cols.dont)}</span>`;
-  uxHeaderRow.appendChild(dontHead);
-
-  uxThead.appendChild(uxHeaderRow);
-
-  const uxTbody = createTableBody();
-  props.uxWriting.items.forEach(row => {
-    const tr = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
-    tr.appendChild(createTableCell(row.element, 'p-3 border-r border-border font-medium'));
-    if (props.uxWriting.cols.rules) {
-      tr.appendChild(createTableCell(row.rules ?? '', 'p-3 border-r border-border text-muted-foreground'));
+    const uxThead = createTableHeader();
+    const uxHeaderRow = createTableRow('border-b border-border bg-muted/70 text-left');
+    uxHeaderRow.appendChild(createTableHead(ux.cols.element, 'p-3 border-r border-border font-semibold'));
+    if (ux.cols.rules) {
+      uxHeaderRow.appendChild(createTableHead(ux.cols.rules, 'p-3 border-r border-border font-semibold'));
     }
-    tr.appendChild(createTableCell(row.do, 'p-3 border-r border-border font-medium text-green-600'));
-    tr.appendChild(createTableCell(row.dont, 'p-3 font-medium text-red-600'));
-    uxTbody.appendChild(tr);
-  });
 
-  uxTable.append(uxThead, uxTbody);
-  uxTableWrap.appendChild(uxInnerTableWrapper);
-  uxBlock.appendChild(uxTableWrap);
+    const doHead = document.createElement('th');
+    doHead.className = 'text-muted-foreground p-3 border-r border-border font-semibold text-green-700';
+    doHead.innerHTML = `<span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 text-xs font-bold flex-shrink-0">✓</span>${sanitizeHtml(ux.cols.do)}</span>`;
+    uxHeaderRow.appendChild(doHead);
+
+    const dontHead = document.createElement('th');
+    dontHead.className = 'text-muted-foreground p-3 font-semibold text-red-700';
+    dontHead.innerHTML = `<span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 text-xs font-bold flex-shrink-0">✗</span>${sanitizeHtml(ux.cols.dont)}</span>`;
+    uxHeaderRow.appendChild(dontHead);
+
+    uxThead.appendChild(uxHeaderRow);
+
+    const uxTbody = createTableBody();
+    ux.items.forEach(row => {
+      const tr = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
+      tr.appendChild(createTableCell(row.element, 'p-3 border-r border-border font-medium'));
+      if (ux.cols.rules) {
+        tr.appendChild(createTableCell(row.rules ?? '', 'p-3 border-r border-border text-muted-foreground'));
+      }
+      tr.appendChild(createTableCell(row.do, 'p-3 border-r border-border font-medium text-green-600'));
+      tr.appendChild(createTableCell(row.dont, 'p-3 font-medium text-red-600'));
+      uxTbody.appendChild(tr);
+    });
+
+    uxTable.append(uxThead, uxTbody);
+    uxTableWrap.appendChild(uxInnerTableWrapper);
+    uxBlock.appendChild(uxTableWrap);
+  }
 
   // ── Do / Don't cards ──────────────────────────────────────────────────────────
   const doBlock = document.createElement('div');
@@ -146,7 +150,9 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
 
   doBlock.append(doCard, dontCard);
 
-  card.append(guidelinesBlock, scenariosBlock, uxBlock, doBlock);
+  card.append(guidelinesBlock, scenariosBlock);
+  if (uxBlock) card.append(uxBlock);
+  card.append(doBlock);
   section.append(h2, card);
   return section;
 }

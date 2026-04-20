@@ -10,7 +10,7 @@
     title: string;
     guidelines: { title: string; items: string[] };
     scenarios: { title?: string; cols: { scenario: string; use: string; alternative: string }; items: Scenario[] };
-    uxWriting: { title: string; cols: { element: string; do: string; dont: string; rules?: string }; items: UXRow[] };
+    uxWriting?: { title: string; cols: { element: string; do: string; dont: string; rules?: string }; items: UXRow[] };
     do: { title: string; items: string[] };
     dont: { title: string; items: string[] };
   } = $props();
@@ -53,6 +53,7 @@
       </div>
 
       <!-- UX Writing -->
+      {#if uxWriting}
       <div class="space-y-3">
         <h3 class="font-medium text-sm">{uxWriting.title}</h3>
         <div class="overflow-x-auto">
@@ -92,6 +93,7 @@
           </Table>
         </div>
       </div>
+      {/if}
 
       <!-- Do / Don't cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
