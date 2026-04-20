@@ -14,7 +14,12 @@
     "storybook:react":   "npm run storybook --prefix design-system-react",
     "storybook:vue":     "npm run storybook --prefix design-system-vue",
     "storybook:svelte":  "npm run storybook --prefix design-system-svelte",
-    "storybook:vanilla": "npm run storybook --prefix design-system-basecoat"
+    "storybook:vanilla": "npm run storybook --prefix design-system-basecoat",
+    "chromatic:react":   "npm run chromatic --prefix design-system-react",
+    "chromatic:vue":     "npm run chromatic --prefix design-system-vue",
+    "chromatic:svelte":  "npm run chromatic --prefix design-system-svelte",
+    "chromatic:vanilla": "npm run chromatic --prefix design-system-basecoat",
+    "chromatic:all":     "npm run chromatic:react && npm run chromatic:vue && npm run chromatic:svelte && npm run chromatic:vanilla"
   },
   "devDependencies": {
     "tsx": "^4.19.3",
