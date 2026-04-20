@@ -15,7 +15,6 @@ const isAdminView = new URLSearchParams(window.location.search).get('view') === 
 const lazyDocs: Record<string, ReturnType<typeof defineAsyncComponent>> = {
   'alert':        defineAsyncComponent(() => import('./components/docs/AlertDocs.vue')),
   'icons':        defineAsyncComponent(() => import('./components/docs/IconsDocs.vue')),
-  'theming':      defineAsyncComponent(() => import('./components/docs/ThemingDocs.vue')),
 }
 
 // ─── State ───────────────────────────────────────────────────────────────────
@@ -52,7 +51,6 @@ const componentCategories = [
     name: 'Foundations',
     icon: Sparkles,
     items: [
-      { name: 'Theming', path: 'theming' },
       { name: 'Icons', path: 'icons' },
     ],
   },

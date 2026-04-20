@@ -17,7 +17,6 @@ const lazyDocs: Record<string, React.LazyExoticComponent<React.ComponentType>> =
   'alert':        lazy(() => import('./components/docs/AlertDocs').then(m => ({ default: m.AlertDocs }))),
   'icons':        lazy(() => import('./components/docs/IconsDocs').then(m => ({ default: m.IconsDocs }))),
   'theme-colors': lazy(() => import('./components/docs/ThemeColorsDocs').then(m => ({ default: m.ThemeColorsDocs }))),
-  'theming':      lazy(() => import('./components/docs/ThemingDocs').then(m => ({ default: m.ThemingDocs }))),
 };
 
 const componentCategories = [
@@ -25,7 +24,6 @@ const componentCategories = [
     name: "Foundations",
     icon: Sparkles,
     items: [
-      { name: "Theming", path: "theming" },
       { name: "Theme Colors", path: "theme-colors" },
       { name: "Icons", path: "icons" }
     ]

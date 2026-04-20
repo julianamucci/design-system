@@ -32,7 +32,6 @@ const STACKS: { id: Stack; label: string; port: number }[] = [
 const STORY_ID_OVERRIDES: Record<string, string> = {
   'icons':           'foundations-icons',
   'cores-e-temas':   'foundations-cores-e-temas',
-  'theming':         'foundations-multi-tenancy--theming',
 };
 
 function storyId(slug: string): string {
