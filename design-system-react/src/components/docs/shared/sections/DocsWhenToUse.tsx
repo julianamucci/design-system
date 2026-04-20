@@ -34,7 +34,7 @@ export interface DocsWhenToUseProps {
     cols: { scenario: string; use: string; alternative: string };
     items: DocsWhenToUseScenario[];
   };
-  uxWriting: {
+  uxWriting?: {
     title: string;
     cols: { element: string; do: string; dont: string; rules?: string };
     items: DocsWhenToUseUXRow[];
@@ -82,45 +82,47 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
         </div>
 
         {/* UX Writing */}
-        <div className="space-y-3">
-          <h3 className="font-medium text-sm">{uxWriting.title}</h3>
-          <div className="overflow-x-auto">
-            <Table className="w-full border-collapse text-sm">
-              <TableHeader>
-                <TableRow className="border-b border-border bg-muted/70 text-left">
-                  <TableHead className="p-3 border-r border-border font-semibold">{uxWriting.cols.element}</TableHead>
-                  {uxWriting.cols.rules && (
-                    <TableHead className="p-3 border-r border-border font-semibold">{uxWriting.cols.rules}</TableHead>
-                  )}
-                  <TableHead className="p-3 border-r border-border font-semibold text-green-700 dark:text-green-400">
-                    <span className="flex items-center gap-1.5">
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
-                      {uxWriting.cols.do}
-                    </span>
-                  </TableHead>
-                  <TableHead className="p-3 font-semibold text-red-700 dark:text-red-400">
-                    <span className="flex items-center gap-1.5">
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
-                      {uxWriting.cols.dont}
-                    </span>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {uxWriting.items.map((row, i) => (
-                  <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                    <TableCell className="p-3 border-r border-border font-medium">{row.element}</TableCell>
+        {uxWriting && (
+          <div className="space-y-3">
+            <h3 className="font-medium text-sm">{uxWriting.title}</h3>
+            <div className="overflow-x-auto">
+              <Table className="w-full border-collapse text-sm">
+                <TableHeader>
+                  <TableRow className="border-b border-border bg-muted/70 text-left">
+                    <TableHead className="p-3 border-r border-border font-semibold">{uxWriting.cols.element}</TableHead>
                     {uxWriting.cols.rules && (
-                      <TableCell className="p-3 border-r border-border text-muted-foreground">{row.rules}</TableCell>
+                      <TableHead className="p-3 border-r border-border font-semibold">{uxWriting.cols.rules}</TableHead>
                     )}
-                    <TableCell className="p-3 border-r border-border font-medium text-green-600 dark:text-green-500">{row.do}</TableCell>
-                    <TableCell className="p-3 font-medium text-red-600 dark:text-red-500">{row.dont}</TableCell>
+                    <TableHead className="p-3 border-r border-border font-semibold text-green-700 dark:text-green-400">
+                      <span className="flex items-center gap-1.5">
+                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
+                        {uxWriting.cols.do}
+                      </span>
+                    </TableHead>
+                    <TableHead className="p-3 font-semibold text-red-700 dark:text-red-400">
+                      <span className="flex items-center gap-1.5">
+                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
+                        {uxWriting.cols.dont}
+                      </span>
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {uxWriting.items.map((row, i) => (
+                    <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
+                      <TableCell className="p-3 border-r border-border font-medium">{row.element}</TableCell>
+                      {uxWriting.cols.rules && (
+                        <TableCell className="p-3 border-r border-border text-muted-foreground">{row.rules}</TableCell>
+                      )}
+                      <TableCell className="p-3 border-r border-border font-medium text-green-600 dark:text-green-500">{row.do}</TableCell>
+                      <TableCell className="p-3 font-medium text-red-600 dark:text-red-500">{row.dont}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Do / Don't cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
