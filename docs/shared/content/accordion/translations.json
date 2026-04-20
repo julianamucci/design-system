@@ -159,6 +159,11 @@
       "focused": {
         "label": "Com foco",
         "description": "Focus ring visível ao navegar por teclado. Totalmente operável via Tab, Enter e Space."
+      },
+      "cols": {
+        "state": "Configuração",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -285,7 +290,9 @@
             "description": "Classes CSS adicionais."
           }
         }
-      }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code>. Use tokens semânticos para customização — nunca cores hardcoded."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -342,7 +349,8 @@
       "pair2": {
         "do": "Use type=\"multiple\" quando o usuário precisa comparar seções abertas.",
         "dont": "Não use Accordion para uma única seção expansível — use Collapsible."
-      }
+      },
+      "title": "Do & Don't"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -366,7 +374,8 @@
         "open": "Trigger anunciado como \"expandido\" (expanded). Conteúdo acessível por Tab.",
         "disabled": "Item desabilitado anunciado como \"desabilitado\" — não recebe foco em alguns leitores."
       },
-      "contrast": "Contraste mínimo 4.5:1 para o texto do trigger. Chevron usa <code>text-muted-foreground</code> — verificar contraste em temas customizados."
+      "contrast": "Contraste mínimo 4.5:1 para o texto do trigger. Chevron usa <code>text-muted-foreground</code> — verificar contraste em temas customizados.",
+      "keyboardTitle": "Navegação por Teclado"
     },
     "related": {
       "title": "Componentes Relacionados",
@@ -409,7 +418,12 @@
           "payload": "{ component: \"accordion\", label: string, location: string }"
         }
       },
-      "note": "Use <code>data-state=\"closed\"</code> no trigger para detectar se o clique vai abrir — o Radix atualiza o estado após o evento."
+      "note": "Use <code>data-state=\"closed\"</code> no trigger para detectar se o clique vai abrir — o Radix atualiza o estado após o evento.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional"
+      }
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -683,6 +697,11 @@
       "focused": {
         "label": "Focused",
         "description": "Visible focus ring when navigating by keyboard. Fully operable via Tab, Enter and Space."
+      },
+      "cols": {
+        "state": "Configuration",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -809,7 +828,9 @@
             "description": "Additional CSS classes."
           }
         }
-      }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code>. Use semantic tokens for customization — never hardcoded colors."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -866,7 +887,8 @@
       "pair2": {
         "do": "Use type=\"multiple\" when users need to compare open sections.",
         "dont": "Don't use Accordion for a single expandable section — use Collapsible."
-      }
+      },
+      "title": "Do & Don't"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -890,7 +912,8 @@
         "open": "Trigger announced as \"expanded\". Content accessible via Tab.",
         "disabled": "Disabled item announced as \"disabled\" — may not receive focus in some readers."
       },
-      "contrast": "Minimum 4.5:1 contrast for trigger text. Chevron uses <code>text-muted-foreground</code> — check contrast in custom themes."
+      "contrast": "Minimum 4.5:1 contrast for trigger text. Chevron uses <code>text-muted-foreground</code> — check contrast in custom themes.",
+      "keyboardTitle": "Keyboard Navigation"
     },
     "related": {
       "title": "Related Components",
@@ -933,7 +956,12 @@
           "payload": "{ component: \"accordion\", label: string, location: string }"
         }
       },
-      "note": "Use <code>data-state=\"closed\"</code> on the trigger to detect if the click will open — Radix updates the state after the event."
+      "note": "Use <code>data-state=\"closed\"</code> on the trigger to detect if the click will open — Radix updates the state after the event.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload"
+      }
     },
     "testes": {
       "title": "Test Criteria",
@@ -1207,6 +1235,11 @@
       "focused": {
         "label": "Con foco",
         "description": "Focus ring visible al navegar por teclado. Completamente operable via Tab, Enter y Space."
+      },
+      "cols": {
+        "state": "Configuración",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
       }
     },
     "props": {
@@ -1333,7 +1366,9 @@
             "description": "Clases CSS adicionales."
           }
         }
-      }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code>. Usa tokens semánticos para personalización — nunca colores codificados."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1390,7 +1425,8 @@
       "pair2": {
         "do": "Usa type=\"multiple\" cuando el usuario necesita comparar secciones abiertas.",
         "dont": "No uses Accordion para una única sección expandible — usa Collapsible."
-      }
+      },
+      "title": "Do & Don't"
     },
     "accessibility": {
       "title": "Accesibilidad",
@@ -1414,7 +1450,8 @@
         "open": "Trigger anunciado como \"expandido\" (expanded). Contenido accesible via Tab.",
         "disabled": "Ítem deshabilitado anunciado como \"deshabilitado\" — puede no recibir foco en algunos lectores."
       },
-      "contrast": "Contraste mínimo 4.5:1 para el texto del trigger. El chevron usa <code>text-muted-foreground</code> — verificar contraste en temas personalizados."
+      "contrast": "Contraste mínimo 4.5:1 para el texto del trigger. El chevron usa <code>text-muted-foreground</code> — verificar contraste en temas personalizados.",
+      "keyboardTitle": "Navegación por Teclado"
     },
     "related": {
       "title": "Componentes Relacionados",
@@ -1457,7 +1494,12 @@
           "payload": "{ component: \"accordion\", label: string, location: string }"
         }
       },
-      "note": "Usa <code>data-state=\"closed\"</code> en el trigger para detectar si el clic va a abrir — Radix actualiza el estado después del evento."
+      "note": "Usa <code>data-state=\"closed\"</code> en el trigger para detectar si el clic va a abrir — Radix actualiza el estado después del evento.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional"
+      }
     },
     "testes": {
       "title": "Criterios de Prueba",
