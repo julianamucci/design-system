@@ -327,6 +327,24 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         { element: $tStore('usage.uxWriting.table.cancel.name'),      rules: $tStore('usage.uxWriting.table.cancel.format'),      do: $tStore('usage.uxWriting.table.cancel.good'),      dont: $tStore('usage.uxWriting.table.cancel.bad') },
       ],
     }}
+    do={{
+      title: $tStore('usage.do.title'),
+      items: [
+        $tStore('usage.do.item1'),
+        $tStore('usage.do.item2'),
+        $tStore('usage.do.item3'),
+        $tStore('usage.do.item4'),
+      ],
+    }}
+    dont={{
+      title: $tStore('usage.dont.title'),
+      items: [
+        stripHtml($tStore('usage.dont.item1')),
+        stripHtml($tStore('usage.dont.item2')),
+        stripHtml($tStore('usage.dont.item3')),
+        $tStore('usage.dont.item4'),
+      ],
+    }}
   />
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->

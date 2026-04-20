@@ -485,6 +485,24 @@ const a11yCritCols = computed(() => ({
           { element: tContent('usage.uxWriting.table.cancel.name'),      rules: tContent('usage.uxWriting.table.cancel.format'),      do: tContent('usage.uxWriting.table.cancel.good'),      dont: tContent('usage.uxWriting.table.cancel.bad')      },
         ],
       }"
+      :do="{
+        title: tContent('usage.do.title'),
+        items: [
+          tContent('usage.do.item1'),
+          tContent('usage.do.item2'),
+          tContent('usage.do.item3'),
+          tContent('usage.do.item4'),
+        ],
+      }"
+      :dont="{
+        title: tContent('usage.dont.title'),
+        items: [
+          stripHtml(tContent('usage.dont.item1')),
+          stripHtml(tContent('usage.dont.item2')),
+          stripHtml(tContent('usage.dont.item3')),
+          tContent('usage.dont.item4'),
+        ],
+      }"
     />
 
     <!-- ── Do & Don't ───────────────────────────────────────────── -->

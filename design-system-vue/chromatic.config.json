@@ -1,13 +1,6 @@
 {
+  "onlyChanged": true,
   "projectToken": "chpt_5fa79354d971331",
   "storybookBaseDir": "design-system-vue",
-  "zip": true,
-  "onlyStoryFiles": [
-    "src/**/*-variantes.stories.ts",
-    "src/**/*-tamanhos.stories.ts",
-    "src/**/*-estados.stories.ts",
-    "src/**/*-composicoes.stories.ts",
-    "src/**/*-modos.stories.ts",
-    "src/**/icons.stories.ts"
-  ]
+  "zip": true
 }
