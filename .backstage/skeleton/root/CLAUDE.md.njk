@@ -1,0 +1,74 @@
+# ${{ values.displayName }} — Claude Code
+
+Este é um design system multi-stack gerado a partir do template **Design System Multi-Stack**.
+
+## Stacks neste projeto
+
+{% for stack in values.stacks %}
+- **`design-system-{{ stack }}/`** — ver `design-system-{{ stack }}/CLAUDE.md`
+{% endfor %}
+
+## Estrutura de documentação
+
+- `docs/shared/content/<slug>/translations.json` — conteúdo trilíngue de cada componente
+- `docs/shared/guidelines/` — regras compartilhadas entre todas as stacks
+- `docs/shared/themes/` — temas CSS customizáveis
+- `docs/shared/tokens/` — tokens de design (cores, espaçamento, tipografia)
+
+## Skills disponíveis
+
+{% if values.includeClaudeSkills %}
+As skills do Claude Code estão em `.claude/commands/`. Use-as assim:
+
+### Criar um componente novo do zero
+
+```
+/pipeline new <slug>
+```
+
+Executa o pipeline completo: conteúdo trilíngue → docs page → stories → testes → SEO → analytics → segurança → consistência cross-stack.
+
+### Auditar um componente existente
+
+```
+/pipeline audit <slug>
+```
+
+### Fluxo individual
+
+```
+/ux-writer <slug>          # Gera translations.json trilíngue
+/dev-react <slug>          # Implementa React
+/dev-vue <slug>            # Implementa Vue
+/dev-svelte <slug>         # Implementa Svelte
+/dev-basecoat <slug>       # Implementa Vanilla TS
+/cross-stack <slug>        # Verifica consistência visual
+/quality <slug>            # Play functions e acessibilidade
+/security <slug>           # Auditoria XSS
+/seo-geo <slug>            # Metatags e GEO
+/analytics <slug>          # Eventos GA4
+/product <slug>            # Sincroniza guidelines ↔ código
+```
+
+{% else %}
+As skills do Claude Code não foram incluídas nesta instalação.
+Para adicioná-las depois, copie o diretório `.claude/commands/` do repositório
+de template: https://github.com/[org]/design-system-template
+{% endif %}
+
+## Customizar temas
+
+1. Edite `docs/shared/themes/*.css` com as variáveis HSL do seu produto
+2. Registre o novo tema em `docs/shared/themes/theme-config.ts`
+3. Atualize o toolbar de cada `.storybook/preview.ts` com o novo `ThemeId`
+
+## Adicionar novos componentes
+
+Siga o guia em `docs/shared/guidelines/08-docs-pages-foundations.md`
+ou use `/pipeline new <slug>` para automatizar o processo.
+
+## Adicionar uma nova stack
+
+Execute o scaffolder novamente no Backstage escolhendo a stack adicional
+e aponte para o mesmo repositório — o step de publicação fará um commit
+com a nova stack.

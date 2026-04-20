@@ -1,0 +1,7 @@
+/*
+ * ─── Temas de Marca ───────────────────────────────────────────────────────────
+ * Todos os projetos importam via: @import "@shared/themes/index.css"
+ * Adicione novos temas aqui.
+ */
+@import "./crystal.css";
+@import "./industrial.css";

@@ -1,0 +1,25 @@
+[07:53:18.991] [INFO] storybook v10.3.5
+[07:53:19.454] [DEBUG] Getting package.json info for C:/Users/julia/Documents/design-system/design-system-vue/package.json...
+[07:53:20.708] [WARN] No story files found for the specified pattern: [34msrc\**\*.mdx[39m
+[07:53:20.769] [WARN] 🚨 Unable to index ./src/components/ui/button/Button.stories.ts:
+  SyntaxError: Unexpected token (53:2)
+    at constructor (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-JXXWBFBF.js:12171:21)
+    at Parser.raise (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-JXXWBFBF.js:16356:71)
+    at Parser.unexpected (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-JXXWBFBF.js:16373:20)
+    at Parser.parseExprAtom (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-JXXWBFBF.js:19368:26)
+    at Parser.parseExprAtom (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-JXXWBFBF.js:15093:181)
+    at Parser.parseExprSubscripts (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-JXXWBFBF.js:19165:105)
+    at Parser.parseUpdate (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-JXXWBFBF.js:19156:57)
+    at Parser.parseMaybeUnary (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-JXXWBFBF.js:19141:25)
+    at Parser.parseMaybeUnary (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-JXXWBFBF.js:18366:95)
+    at Parser.parseMaybeUnaryOrPrivate (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-JXXWBFBF.js:19049:65)
+[07:53:20.776] [ERROR] Error: Unable to index ./src/components/ui/button/Button.stories.ts
+    at _StoryIndexGenerator.getIndexAndStats (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:6282:15)
+    at async _StoryIndexGenerator.getIndex (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:6271:13)
+    at async Object.experimental_serverChannel (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/@storybook/addon-vitest/dist/preset.js:464:14)
+    at async buildDevStandalone (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/core-server/index.js:8027:32)
+    at async withTelemetry (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/_node-chunks/chunk-FIR43JGQ.js:225:12)
+    at async dev (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/bin/core.js:2736:3)
+    at async _Command.<anonymous> (file:///C:/Users/julia/Documents/design-system/design-system-vue/node_modules/storybook/dist/bin/core.js:2806:92)
+[07:53:20.780] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.

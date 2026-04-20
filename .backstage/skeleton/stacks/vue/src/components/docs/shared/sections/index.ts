@@ -1,0 +1,15 @@
+export { default as DocsHeader } from './DocsHeader.vue';
+export { default as DocsDemonstration } from './DocsDemonstration.vue';
+export { default as DocsAnatomy } from './DocsAnatomy.vue';
+export { default as DocsWhenToUse } from './DocsWhenToUse.vue';
+export { default as DocsDoDont } from './DocsDoDont.vue';
+export { default as DocsImport } from './DocsImport.vue';
+export { default as DocsVariants } from './DocsVariants.vue';
+export { default as DocsStates } from './DocsStates.vue';
+export { default as DocsProps } from './DocsProps.vue';
+export { default as DocsTokens } from './DocsTokens.vue';
+export { default as DocsAccessibility } from './DocsAccessibility.vue';
+export { default as DocsRelated } from './DocsRelated.vue';
+export { default as DocsNotes } from './DocsNotes.vue';
+export { default as DocsAnalytics } from './DocsAnalytics.vue';
+export { default as DocsTestes } from './DocsTestes.vue';

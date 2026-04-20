@@ -1,0 +1,125 @@
+{
+  "pt-BR": {
+    "title": "Arquitetura Multi-brand",
+    "category": "Foundations",
+    "badge": "Arquitetura",
+    "subtitle": "Multi-tenancy & Theming",
+    "description": "O Nortear Design System utiliza uma arquitetura de temas baseada em subdomínios, permitindo que múltiplas marcas utilizem o mesmo core de componentes com identidades visuais distintas.",
+    "howItWorks": {
+      "title": "Como funciona",
+      "description": "A seleção do tema ocorre de forma automática no nível de aplicação (App.tsx). O sistema extrai o subdomínio da URL atual e injeta uma classe CSS correspondente na tag html.",
+      "step1Title": "Detecção",
+      "step1Desc": "A URL crystal.localhost:5173 é processada para identificar o termo 'crystal'.",
+      "step2Title": "Mapeamento",
+      "step2Desc": "O theme-config.ts traduz 'crystal' para a classe .tema-um.",
+      "step3Title": "Injeção",
+      "step3Desc": "A classe .tema-um é aplicada ao documentElement, ativando as variáveis CSS específicas."
+    },
+    "guide": {
+      "title": "Guia: Adicionando uma Nova Marca",
+      "stepA": "Defina as Variáveis CSS",
+      "stepADesc": "Crie um novo arquivo em src/styles/themes/nome-da-marca.css. Sempre use o seletor da classe do tema.",
+      "stepB": "Registre no Global",
+      "stepBDesc": "No arquivo globals.css, importe o novo tema no final da lista.",
+      "stepC": "Configure o Subdomínio",
+      "stepCDesc": "Associe a URL à classe CSS no arquivo src/lib/theme-config.ts."
+    },
+    "localTesting": {
+      "title": "Testes Locais",
+      "description": "Como subdomínios no localhost podem ser complexos de configurar, recomendamos dois caminhos:",
+      "method1Title": "Método 1: Parâmetro de URL (Desenvolvimento)",
+      "method1Desc": "O sistema permite forçar a abertura do 'Seletor de Temas' via query string.",
+      "method2Title": "Método 2: Simulador de Hosts",
+      "method2Desc": "Edite seu arquivo de hosts para apontar para o localhost:",
+      "note": "Nota: O Chrome pode exigir que você digite http:// explicitly para subdomínios no localhost."
+    },
+    "bestPractices": {
+      "title": "Melhores Práticas para Marcas",
+      "item1": "Sempre defina o tema Dark correspondente usando o seletor .dark.seu-tema.",
+      "item2": "Não utilize constantes arbitrárias de cores no código. Use sempre as variáveis de sistema.",
+      "item3": "O --radius também deve ser tematizado para manter a personalidade da marca."
+    }
+  },
+  "en": {
+    "title": "Multi-brand Architecture",
+    "category": "Foundations",
+    "badge": "Architecture",
+    "subtitle": "Multi-tenancy & Theming",
+    "description": "The Nortear Design System uses a subdomain-based theme architecture, allowing multiple brands to share the same component core with distinct visual identities.",
+    "howItWorks": {
+      "title": "How it works",
+      "description": "Theme selection happens automatically at the application level (App.tsx). The system extracts the subdomain from the current URL and injects a corresponding CSS class into the html tag.",
+      "step1Title": "Detection",
+      "step1Desc": "The URL crystal.localhost:5173 is processed to identify the 'crystal' term.",
+      "step2Title": "Mapping",
+      "step2Desc": "The theme-config.ts translates 'crystal' to the .tema-um class.",
+      "step3Title": "Injection",
+      "step3Desc": "The .tema-um class is applied to the documentElement, activating the specific CSS variables."
+    },
+    "guide": {
+      "title": "Guide: Adding a New Brand",
+      "stepA": "Define CSS Variables",
+      "stepADesc": "Create a new file in src/styles/themes/brand-name.css. Always use the theme class selector.",
+      "stepB": "Register Globally",
+      "stepBDesc": "In the globals.css file, import the new theme at the end of the list.",
+      "stepC": "Configure Subdomain",
+      "stepCDesc": "Associate the URL with the CSS class in the src/lib/theme-config.ts file."
+    },
+    "localTesting": {
+      "title": "Local Testing",
+      "description": "Since subdomains on localhost can be complex to set up, we recommend two paths:",
+      "method1Title": "Method 1: URL Parameter (Development)",
+      "method1Desc": "The system allows forcing the 'Theme Selector' via a query string.",
+      "method2Title": "Method 2: Hosts Simulator",
+      "method2Desc": "Edit your hosts file to point to localhost:",
+      "note": "Note: Chrome may require you to explicitly type http:// for subdomains on localhost."
+    },
+    "bestPractices": {
+      "title": "Brand Best Practices",
+      "item1": "Always define the corresponding Dark theme using the .dark.your-theme selector.",
+      "item2": "Do not use arbitrary color constants in code. Always use system variables.",
+      "item3": "The --radius should also be themed to maintain the brand personality."
+    }
+  },
+  "es": {
+    "title": "Arquitectura Multimarca",
+    "category": "Foundations",
+    "badge": "Arquitectura",
+    "subtitle": "Multi-tenancy & Tematización",
+    "description": "El Nortear Design System utiliza una arquitectura de temas basada en subdominios, lo que permite que múltiples marcas utilicen el mismo núcleo de componentes con identidades visuales distintas.",
+    "howItWorks": {
+      "title": "Cómo funciona",
+      "description": "La selección del tema ocurre automáticamente a nivel de aplicación (App.tsx). El sistema extrae el subdominio de la URL actual e inyecta una clase CSS correspondiente en la etiqueta html.",
+      "step1Title": "Detección",
+      "step1Desc": "La URL crystal.localhost:5173 se procesa para identificar el término 'crystal'.",
+      "step2Title": "Mapeo",
+      "step2Desc": "El theme-config.ts traduce 'crystal' a la clase .tema-um.",
+      "step3Title": "Inyección",
+      "step3Desc": "La clase .tema-um se aplica al documentElement, activando las variables CSS específicas."
+    },
+    "guide": {
+      "title": "Guía: Adición de una Nueva Marca",
+      "stepA": "Defina las Variables CSS",
+      "stepADesc": "Cree un nuevo archivo en src/styles/themes/nombre-de-la-marca.css. Siempre use el selector de clase del tema.",
+      "stepB": "Registro Global",
+      "stepBDesc": "En el archivo globals.css, importe el nuevo tema al final de la lista.",
+      "stepC": "Configure el Subdominio",
+      "stepCDesc": "Asocie la URL con la clase CSS en el archivo src/lib/theme-config.ts."
+    },
+    "localTesting": {
+      "title": "Pruebas Locales",
+      "description": "Como los subdominios en localhost pueden ser complejos de configurar, recomendamos dos caminos:",
+      "method1Title": "Método 1: Parámetro de URL (Desarrollo)",
+      "method1Desc": "El sistema permite forzar la apertura del 'Selector de Temas' a través de una query string.",
+      "method2Title": "Método 2: Simulador de Hosts",
+      "method2Desc": "Edite su archivo de hosts para apuntar al localhost:",
+      "note": "Nota: Chrome puede requerir que escriba http:// explícitamente para subdominios en localhost."
+    },
+    "bestPractices": {
+      "title": "Mejores Prácticas para Marcas",
+      "item1": "Defina siempre el tema Dark correspondiente utilizando el selector .dark.su-tema.",
+      "item2": "No utilice constantes de color arbitrarias en el código. Utilice siempre variables del sistema.",
+      "item3": "El --radius también debe tener un tema para mantener la personalidad de la marca."
+    }
+  }
+}

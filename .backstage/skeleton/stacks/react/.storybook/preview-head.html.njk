@@ -1,0 +1,62 @@
+<meta name="description" content="${{ values.description }}">
+
+{% if values.gaId %}
+<!-- Google Analytics 4 — ${{ values.gaId }} -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=${{ values.gaId }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '${{ values.gaId }}', {
+    send_page_view: false  /* page views manuais via track('docs_page_view') */
+  });
+</script>
+{% endif %}
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" /></noscript>
+
+<!-- Sincronização de Tema para Docs -->
+<script>
+  (function() {
+    const BRAND_CLASSES = ['tema-um', 'tema-dois', 'tema-tres'];
+
+    const parseGlobals = (raw) => {
+      const result = {};
+      if (!raw) return result;
+      raw.split(';').forEach(pair => {
+        const idx = pair.indexOf(':');
+        if (idx !== -1) result[pair.slice(0, idx)] = pair.slice(idx + 1);
+      });
+      return result;
+    };
+
+    const syncTheme = () => {
+      const globals = parseGlobals(new URLSearchParams(window.location.search).get('globals'));
+      const html = document.documentElement;
+
+      if (globals.theme === 'dark') {
+        html.classList.add('dark');
+        html.style.colorScheme = 'dark';
+      } else {
+        html.classList.remove('dark');
+        html.style.colorScheme = 'light';
+      }
+
+      html.classList.remove(...BRAND_CLASSES);
+      if (globals.brand && globals.brand !== 'default') {
+        html.classList.add(globals.brand);
+      }
+    };
+
+    window.addEventListener('load', syncTheme);
+    window.addEventListener('popstate', syncTheme);
+
+    let lastGlobals = '';
+    setInterval(() => {
+      const current = new URLSearchParams(window.location.search).get('globals') || '';
+      if (current !== lastGlobals) { lastGlobals = current; syncTheme(); }
+    }, 500);
+  })();
+</script>

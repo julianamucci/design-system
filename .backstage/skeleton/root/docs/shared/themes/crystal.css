@@ -1,0 +1,77 @@
+/*
+ * ─── Tema 1: Crystal (Indigo/Violet) ─────────────────────────────────────────
+ * Inspirado no preset b2BVFDx2m do shadcn
+ * Paleta: Indigo/Violet com superfícies frias e acentos vibrantes
+ */
+.tema-um {
+  --background: 240 10% 99%;
+  --foreground: 240 10% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 4%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 4%;
+  --primary: 262.1 83.3% 57.8%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 250 30% 96%;
+  --secondary-foreground: 255 10% 20%;
+  --muted: 250 20% 96%;
+  --muted-foreground: 250 5% 45%;
+  --accent: 250 30% 95%;
+  --accent-foreground: 262 80% 50%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 250 15% 90%;
+  --input: 250 15% 90%;
+  --input-background: 0 0% 100%;
+  --ring: 262.1 83.3% 57.8%;
+  --radius: 0.75rem;
+  --radius-button: 0.75rem;
+  --radius-card: 1rem;
+  --chart-1: 262 83% 58%;
+  --chart-2: 280 65% 60%;
+  --chart-3: 240 60% 55%;
+  --chart-4: 220 70% 50%;
+  --chart-5: 300 50% 45%;
+  --sidebar: 250 20% 97%;
+  --sidebar-foreground: 240 10% 4%;
+  --sidebar-primary: 262.1 83.3% 57.8%;
+  --sidebar-primary-foreground: 210 20% 98%;
+  --sidebar-accent: 250 30% 94%;
+  --sidebar-accent-foreground: 262 80% 50%;
+  --sidebar-border: 250 15% 90%;
+}
+
+.dark.tema-um {
+  --background: 224 71.4% 4.1%;
+  --foreground: 210 20% 98%;
+  --card: 224 50% 6%;
+  --card-foreground: 210 20% 98%;
+  --popover: 224 50% 6%;
+  --popover-foreground: 210 20% 98%;
+  --primary: 263.4 70% 50.4%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 224 40% 12%;
+  --secondary-foreground: 210 20% 90%;
+  --muted: 224 40% 12%;
+  --muted-foreground: 217 15% 55%;
+  --accent: 224 40% 14%;
+  --accent-foreground: 263 70% 65%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --input-background: 224 50% 6%;
+  --ring: 263.4 70% 50.4%;
+  --chart-1: 263 70% 60%;
+  --chart-2: 280 55% 55%;
+  --chart-3: 240 50% 50%;
+  --chart-4: 220 60% 45%;
+  --chart-5: 300 40% 40%;
+  --sidebar: 224 60% 5%;
+  --sidebar-foreground: 210 20% 98%;
+  --sidebar-primary: 263.4 70% 50.4%;
+  --sidebar-primary-foreground: 210 20% 98%;
+  --sidebar-accent: 224 40% 10%;
+  --sidebar-accent-foreground: 263 70% 65%;
+  --sidebar-border: 217.2 32.6% 17.5%;
+}

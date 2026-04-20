@@ -1,0 +1,17 @@
+{/* Unattached docs page — sem componente atrelado (Meta sem prop "of") */}
+import { Meta } from '@storybook/addon-docs/blocks';
+import { IconsDocs } from './IconsDocs';
+
+<Meta
+  title="Foundations/Icons"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+<IconsDocs />

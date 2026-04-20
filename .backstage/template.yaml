@@ -1,39 +1,47 @@
-apiVersion: backstage.io/v1beta2
+apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: design-system-scaffold
   title: Design System — Multi-Stack
   description: >
-    Template para criar um novo design system com documentação centralizada.
-    Escolha entre React (shadcn/ui), Vue (shadcn-vue), Svelte (shadcn-svelte)
-    ou Vanilla JS (Basecoat UI). A documentação é sempre a mesma — apenas os
-    exemplos de código variam por stack.
+    Template para criar um design system com documentação centralizada e suporte
+    a múltiplos frameworks. Inclui Storybook, temas customizáveis e skills do
+    Claude Code para continuar desenvolvendo com IA. Escolha uma ou mais stacks.
   tags:
     - design-system
     - frontend
     - component-library
+    - storybook
     - react
     - vue
     - svelte
     - vanilla
+    - claude-code
 
 spec:
   owner: design-team
   type: library
 
   parameters:
-    - title: Informações do Projeto
+    # ── Passo 1: Identidade do Projeto ──────────────────────────────────────
+    - title: Identidade do Projeto
       required:
         - projectName
         - description
         - owner
+        - displayName
       properties:
         projectName:
           type: string
-          title: Nome do Projeto
-          description: Identificador único (ex. "minha-empresa-ds")
+          title: Nome do projeto (slug)
+          description: Identificador único em kebab-case (ex. "minha-empresa-ds")
           pattern: '^[a-z0-9-]+$'
           ui:autofocus: true
+
+        displayName:
+          type: string
+          title: Nome de exibição
+          description: Nome legível para humanos (ex. "Minha Empresa Design System")
 
         description:
           type: string
@@ -45,84 +53,170 @@ spec:
           title: Time responsável
           description: Squad ou time que mantém o projeto (ex. "squad-plataforma")
 
-    - title: Stack e Repositório
-      required:
-        - stackChoice
-        - repoUrl
-      properties:
-        stackChoice:
+        gaId:
           type: string
-          title: Framework
+          title: Google Analytics 4 Measurement ID (opcional)
+          description: "Formato: G-XXXXXXXXXX. Deixe vazio para desativar analytics."
+          pattern: '^(G-[A-Z0-9]+)?$'
+
+    # ── Passo 2: Stacks ──────────────────────────────────────────────────────
+    - title: Frameworks
+      required:
+        - stacks
+      properties:
+        stacks:
+          type: array
+          title: Stacks incluídas
           description: >
-            Escolha o framework. A documentação textual é idêntica em todos;
-            apenas os exemplos de código são adaptados ao framework escolhido.
-          enum:
-            - react
-            - vue
-            - svelte
-            - vanilla
-          enumNames:
-            - "React (shadcn/ui + Radix)"
+            Selecione uma ou mais. A documentação textual é idêntica em todos os
+            frameworks — apenas os exemplos de código variam. Você pode adicionar
+            mais stacks depois rodando o scaffolder novamente.
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+              - react
+              - vue
+              - svelte
+              - basecoat
+          ui:widget: checkboxes
+          ui:enumNames:
+            - "React 19 (shadcn/ui + Radix UI)"
             - "Vue 3 (shadcn-vue + Reka UI)"
             - "Svelte 5 (shadcn-svelte + Bits UI)"
-            - "Vanilla JS (Basecoat UI + Tailwind)"
-          default: react
+            - "Basecoat — Vanilla TS (basecoat-css + Tailwind)"
 
         includeStorybook:
           type: boolean
-          title: Incluir Storybook
+          title: Incluir Storybook 10
+          description: Interface principal de documentação e testes de componentes
           default: true
 
-        includeBackstageIntegration:
+        includeChromatic:
           type: boolean
-          title: Registrar no catálogo Backstage
-          description: Cria catalog-info.yaml para aparecer no portal
-          default: true
+          title: Incluir Chromatic (visual regression)
+          description: Captura visual de todos os stories para detectar regressões
+          default: false
 
+    # ── Passo 3: Repositório e Integrações ───────────────────────────────────
+    - title: Repositório e Integrações
+      required:
+        - repoUrl
+      properties:
         repoUrl:
-          title: Repositório
+          title: Repositório GitHub
           type: string
           ui:field: RepoUrlPicker
           ui:options:
             allowedHosts:
               - github.com
 
+        includeBackstageIntegration:
+          type: boolean
+          title: Registrar no catálogo Backstage
+          description: Cria catalog-info.yaml para aparecer no portal interno
+          default: true
+
+        includeClaudeSkills:
+          type: boolean
+          title: Incluir skills do Claude Code
+          description: >
+            Adiciona o diretório .claude/commands/ com as skills especializadas
+            para criar componentes, documentação, testes, SEO e qualidade com IA.
+            Requer Claude Code CLI (claude.ai/code).
+          default: true
+
   steps:
-    - id: fetch-template
-      name: Buscar Template
+    # ── Root: arquivos compartilhados entre todas as stacks ─────────────────
+    - id: fetch-root
+      name: Inicializar estrutura raiz
       action: fetch:template
       input:
-        url: ./
+        url: ./skeleton/root
         values:
           projectName: ${{ parameters.projectName }}
+          displayName: ${{ parameters.displayName }}
           description: ${{ parameters.description }}
           owner: ${{ parameters.owner }}
-          stackChoice: ${{ parameters.stackChoice }}
+          gaId: ${{ parameters.gaId }}
+          stacks: ${{ parameters.stacks }}
           includeStorybook: ${{ parameters.includeStorybook }}
+          includeClaudeSkills: ${{ parameters.includeClaudeSkills }}
+          year: ${{ '' | now('YYYY') }}
 
-    - id: copy-shared-docs
-      name: Copiar Documentação Compartilhada
+    # ── Skills do Claude Code ────────────────────────────────────────────────
+    - id: fetch-claude-skills
+      name: Copiar skills do Claude Code
+      if: ${{ parameters.includeClaudeSkills }}
       action: fetch:plain
       input:
-        url: ./docs/shared
-        targetPath: docs/shared
+        url: ./skeleton/root/.claude
+        targetPath: .claude
 
-    - id: copy-stack
-      name: Copiar Stack Selecionada
-      action: fetch:plain
+    # ── Stack: React ─────────────────────────────────────────────────────────
+    - id: fetch-stack-react
+      name: Adicionar stack React
+      if: ${{ 'react' in parameters.stacks }}
+      action: fetch:template
       input:
-        url: ./stacks/${{ parameters.stackChoice }}
-        targetPath: ./
+        url: ./skeleton/stacks/react
+        targetPath: design-system-react
+        values:
+          projectName: ${{ parameters.projectName }}
+          displayName: ${{ parameters.displayName }}
+          description: ${{ parameters.description }}
+          gaId: ${{ parameters.gaId }}
+          includeChromatic: ${{ parameters.includeChromatic }}
 
-    - id: remove-unused-stacks
-      name: Remover Stacks Não Utilizadas
-      action: fs:delete
+    # ── Stack: Vue ───────────────────────────────────────────────────────────
+    - id: fetch-stack-vue
+      name: Adicionar stack Vue
+      if: ${{ 'vue' in parameters.stacks }}
+      action: fetch:template
       input:
-        files:
-          - stacks/
+        url: ./skeleton/stacks/vue
+        targetPath: design-system-vue
+        values:
+          projectName: ${{ parameters.projectName }}
+          displayName: ${{ parameters.displayName }}
+          description: ${{ parameters.description }}
+          gaId: ${{ parameters.gaId }}
+          includeChromatic: ${{ parameters.includeChromatic }}
 
+    # ── Stack: Svelte ────────────────────────────────────────────────────────
+    - id: fetch-stack-svelte
+      name: Adicionar stack Svelte
+      if: ${{ 'svelte' in parameters.stacks }}
+      action: fetch:template
+      input:
+        url: ./skeleton/stacks/svelte
+        targetPath: design-system-svelte
+        values:
+          projectName: ${{ parameters.projectName }}
+          displayName: ${{ parameters.displayName }}
+          description: ${{ parameters.description }}
+          gaId: ${{ parameters.gaId }}
+          includeChromatic: ${{ parameters.includeChromatic }}
+
+    # ── Stack: Basecoat ──────────────────────────────────────────────────────
+    - id: fetch-stack-basecoat
+      name: Adicionar stack Basecoat (Vanilla TS)
+      if: ${{ 'basecoat' in parameters.stacks }}
+      action: fetch:template
+      input:
+        url: ./skeleton/stacks/basecoat
+        targetPath: design-system-basecoat
+        values:
+          projectName: ${{ parameters.projectName }}
+          displayName: ${{ parameters.displayName }}
+          description: ${{ parameters.description }}
+          gaId: ${{ parameters.gaId }}
+          includeChromatic: ${{ parameters.includeChromatic }}
+
+    # ── Publicar no GitHub ───────────────────────────────────────────────────
     - id: publish
-      name: Publicar Repositório
+      name: Publicar repositório no GitHub
       action: publish:github
       input:
         allowedHosts:
@@ -131,20 +225,53 @@ spec:
         repoUrl: ${{ parameters.repoUrl }}
         defaultBranch: main
         repoVisibility: private
+        gitCommitMessage: "chore: initialize design system from template"
 
+    # ── Registrar no catálogo Backstage ──────────────────────────────────────
     - id: register
-      name: Registrar no Catálogo
+      name: Registrar no catálogo Backstage
       if: ${{ parameters.includeBackstageIntegration }}
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
         catalogInfoPath: /catalog-info.yaml
 
   output:
     links:
       - title: Repositório no GitHub
-        url: ${{ steps.publish.output.remoteUrl }}
-      - title: Ver no Catálogo Backstage
+        url: ${{ steps['publish'].output.remoteUrl }}
+        icon: github
+      - title: Ver no catálogo Backstage
         if: ${{ parameters.includeBackstageIntegration }}
         icon: catalog
-        entityRef: ${{ steps.register.output.entityRef }}
+        entityRef: ${{ steps['register'].output.entityRef }}
+    text:
+      - title: Próximos passos
+        content: |
+          ## Design System criado com sucesso! 🎉
+
+          **Stacks incluídas:** ${{ parameters.stacks | join(', ') }}
+
+          ### Instalar dependências
+          ```bash
+          {% for stack in parameters.stacks %}
+          cd design-system-${{ stack }} && npm install && cd ..
+          {% endfor %}
+          ```
+
+          ### Abrir o Storybook
+          ```bash
+          {% for stack in parameters.stacks %}
+          npm run storybook:${{ stack }}   # http://localhost:6006
+          {% endfor %}
+          ```
+
+          ### Customizar temas
+          Edite `docs/shared/themes/` para ajustar as cores do seu produto.
+          Cada tema é um arquivo `.css` com variáveis HSL.
+
+          {% if parameters.includeClaudeSkills %}
+          ### Usar as skills do Claude Code
+          Abra o projeto no Claude Code e use `/pipeline new <componente>` para criar
+          um novo componente com documentação completa em todas as stacks.
+          {% endif %}

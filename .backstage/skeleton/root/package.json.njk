@@ -1,0 +1,21 @@
+{
+  "name": "${{ values.projectName }}",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "${{ values.description }}",
+  "scripts": {
+    "validate:docs": "npx tsx scripts/validate-docs-consistency.ts",
+{% for stack in values.stacks %}
+    "dev:{{ stack }}": "npm run dev --prefix design-system-{{ stack }}",
+    "storybook:{{ stack }}": "npm run storybook --prefix design-system-{{ stack }}",
+    "build:{{ stack }}": "npm run build-storybook --prefix design-system-{{ stack }}",
+{% endfor %}
+    "storybook:all": "concurrently{% for stack in values.stacks %} \"npm run storybook:{{ stack }}\"{% endfor %}"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,164 @@
+/*
+ * ─── Design Tokens — Source of Truth ─────────────────────────────────────────
+ * Gerado a partir de docs/shared/tokens/tokens.json
+ * Todos os projetos importam este arquivo via @import "@shared/tokens/tokens.css"
+ * NÃO edite diretamente — edite tokens.json e regenere.
+ */
+
+/* ── Google Fonts ─────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── Light mode (default) ─────────────────────────────────────────────────── */
+:root {
+  --font-size: 16px;
+
+  /* Typography — font sizes */
+  --text-h1: 48px;
+  --text-h2: 30px;
+  --text-h3: 20px;
+  --text-h4: 16px;
+  --text-p: 14px;
+  --text-label: 12px;
+
+  /* Typography — font family */
+  --font-family: 'Inter', sans-serif;
+
+  /* Typography — font weights */
+  --font-weight-extra-bold: 800;
+  --font-weight-semi-bold: 600;
+  --font-weight-medium: 500;
+  --font-weight-regular: 400;
+
+  /* Typography — line heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+
+  /* Typography — letter spacing */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.02em;
+
+  /* Surfaces */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 4%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 4%;
+
+  /* Brand / Interactive */
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 4%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 9%;
+
+  /* Feedback */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --success: 142 71% 45%;
+  --success-foreground: 0 0% 100%;
+  --warning: 48 96% 53%;
+  --warning-foreground: 0 0% 4%;
+  --info: 221 83% 53%;
+  --info-foreground: 0 0% 100%;
+
+  /* Structure */
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --input-background: 0 0% 100%;
+  --ring: 0 0% 45%;
+  --ring-offset-width: 2px;
+  --ring-offset-color: 0 0% 100%;
+
+  /* Elevation / Shadows */
+  --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
+  --elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --elevation-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Charts */
+  --chart-1: 199 89% 65%;
+  --chart-2: 200 100% 50%;
+  --chart-3: 201 98% 48%;
+  --chart-4: 201 88% 43%;
+  --chart-5: 210 71% 23%;
+
+  /* Radius */
+  --radius: 8px;
+  --radius-button: 8px;
+  --radius-card: 8px;
+
+  /* Transitions */
+  --transition-fast: 150ms;
+  --transition-normal: 300ms;
+  --transition-slow: 500ms;
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+
+  /* Sidebar */
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 0 0% 4%;
+  --sidebar-primary: 0 0% 9%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 0 0% 96%;
+  --sidebar-accent-foreground: 0 0% 9%;
+  --sidebar-border: 0 0% 83%;
+  --sidebar-ring: 0 0% 45%;
+}
+
+/* ── Dark mode ────────────────────────────────────────────────────────────── */
+.dark {
+  --background: 0 0% 9%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 15%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --success: 142 71% 45%;
+  --success-foreground: 0 0% 100%;
+  --warning: 48 96% 53%;
+  --warning-foreground: 0 0% 4%;
+  --info: 221 83% 53%;
+  --info-foreground: 0 0% 100%;
+  --border: 0 0% 15%;
+  --input: 0 0% 15%;
+  --input-background: 0 0% 9%;
+  --ring: 0 0% 45%;
+  --ring-offset-color: 0 0% 9%;
+  --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.3), 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.3), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --elevation-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.3), 0px 10px 10px -5px rgba(0, 0, 0, 0.1);
+  --sidebar: 0 0% 9%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-primary: 0 0% 98%;
+  --sidebar-primary-foreground: 0 0% 9%;
+  --sidebar-accent: 0 0% 15%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 0 0% 15%;
+  --sidebar-ring: 0 0% 45%;
+}

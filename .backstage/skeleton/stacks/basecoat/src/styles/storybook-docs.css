@@ -1,0 +1,248 @@
+/*
+ * ─── .ds-docs: componente de documentação do design system ───────────────────
+ *
+ * CSS unlayered (fora de qualquer @layer) com especificidade (0,2,N).
+ * O Storybook injeta via CSS-in-JS (unlayered) com especificidade (0,1,0).
+ * Nossa especificidade (0,2,N) > (0,1,0) → ganhamos na cascade sem !important.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+
+/* 
+ * Correção de contraste para textos básicos da documentação.
+ * Em vez de resetar cada tag, definimos a cor na raiz e permitimos herança,
+ * sobrescrevendo também as variáveis internas do Storybook se presentes.
+ */
+
+.ds-docs * {
+  color: revert-layer !important;
+  font-family: var(--font-family) !important;
+  font-size: revert-layer !important;
+  padding: revert-layer !important;
+  margin: revert-layer !important;
+  line-height: revert-layer !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+  --sb-docs-color-text: hsl(var(--foreground));
+  --sb-docs-color-secondary-text: hsl(var(--muted-foreground));
+}
+
+.ds-docs p,
+.ds-docs li,
+.ds-docs td,
+.ds-docs th {
+  color: inherit;
+}
+
+/* Garante que os títulos de tabelas e labels de sidebar tenham contraste */
+.ds-docs th,
+.ds-docs .text-muted-foreground {
+  color: hsl(var(--muted-foreground)) !important;
+  opacity: 1 !important;
+}
+
+/* Garante que utilitários de cor do Tailwind funcionem e tenham prioridade.
+ * Usa seletores exatos — [class*=] casava com substrings (ex: text-primary
+ * casava com text-primary-foreground), quebrando o contraste nos botões.
+ */
+.ds-docs .text-primary {
+  color: hsl(var(--primary)) !important;
+}
+
+.ds-docs .text-foreground {
+  color: hsl(var(--foreground)) !important;
+}
+
+.ds-docs .text-primary-foreground {
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+.ds-docs .text-destructive-foreground {
+  color: hsl(var(--destructive-foreground)) !important;
+}
+
+.ds-docs .text-secondary-foreground {
+  color: hsl(var(--secondary-foreground)) !important;
+}
+
+.ds-docs .text-accent-foreground {
+  color: hsl(var(--accent-foreground)) !important;
+}
+
+/* Correção para Tabelas: Garantimos que o fundo e o texto funcionem no Dark Mode */
+.ds-docs tr {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* Zera a margem injetada pelo Storybook nos elementos p e table */
+.ds-docs p {
+  margin: 0;
+}
+
+/* Remove margin-block que o Storybook injeta em <table>.
+ * Sem isso, tabelas dentro de cards ficam com gap entre a borda e a tabela. */
+.ds-docs table {
+  margin: 0;
+}
+
+/* Restaura space-y-* para divs (Storybook reseta margin de todas as divs) */
+.ds-docs .space-y-0\.5>*+* {
+  margin-top: 0.125rem !important;
+}
+
+.ds-docs .space-y-1>*+* {
+  margin-top: 0.25rem !important;
+}
+
+.ds-docs .space-y-1\.5>*+* {
+  margin-top: 0.375rem !important;
+}
+
+.ds-docs .space-y-2>*+* {
+  margin-top: 0.5rem !important;
+}
+
+.ds-docs .space-y-3>*+* {
+  margin-top: 0.75rem !important;
+}
+
+.ds-docs .space-y-4>*+* {
+  margin-top: 1rem !important;
+}
+
+.ds-docs .space-y-5>*+* {
+  margin-top: 1.25rem !important;
+}
+
+.ds-docs .space-y-6>*+* {
+  margin-top: 1.5rem !important;
+}
+
+.ds-docs .space-y-8>*+* {
+  margin-top: 2rem !important;
+}
+
+.ds-docs .space-y-10>*+* {
+  margin-top: 2.5rem !important;
+}
+
+.ds-docs .space-y-12>*+* {
+  margin-top: 3rem !important;
+}
+
+/* Restaura utilitários de margem individuais (Storybook reseta div margin) */
+.ds-docs .mb-4 {
+  margin-bottom: 1rem !important;
+}
+
+.ds-docs .mb-6 {
+  margin-bottom: 1.5rem !important;
+}
+
+.ds-docs .mb-8 {
+  margin-bottom: 2rem !important;
+}
+
+.ds-docs .mb-10 {
+  margin-bottom: 2.5rem !important;
+}
+
+.ds-docs .mb-12 {
+  margin-bottom: 3rem !important;
+}
+
+.ds-docs .mt-6 {
+  margin-top: 1.5rem !important;
+}
+
+/* Restaura list-style-* contra os resets agressivos do Storybook */
+.ds-docs ul.list-none {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+
+.ds-docs ul.list-disc {
+  list-style: disc !important;
+  padding-left: 1.25rem !important;
+}
+
+.ds-docs li {
+  list-style: inherit;
+}
+
+/* 
+ * Reset de tipografia e bordas do Storybook 
+ * Neutraliza o border-bottom em h2 e força fontes do projeto 
+ */
+.ds-docs h1,
+.ds-docs h2,
+.ds-docs h3,
+.ds-docs h4 {
+  font-family: inherit !important;
+  border-bottom: none !important;
+  margin-bottom: 0;
+  margin-top: 0;
+  color: hsl(var(--foreground)) !important;
+}
+
+.ds-docs h1 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.ds-docs h2 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}
+
+.ds-docs h3 {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}
+
+.ds-docs h4 {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+/* 
+ * ─── Storybook Dark Mode Sync ───────────────────────────────────────────────
+ * 
+ * Garante que as páginas de documentação (Docs/Autodocs) do Storybook 8+ 
+ * herdem o tema dark corretamente e não fiquem com o fundo branco padrão.
+ */
+
+:is(.dark) .sbdocs-wrapper,
+:is(.dark) .sbdocs-container,
+:is(.dark) .sbdocs-content,
+:is(.dark) .docs-story {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Garante que os containers de código e blocos de documentação também respeitem o tema */
+:is(.dark) .sbdocs-preview {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+:is(.dark) .sbdocs-info {
+  background-color: hsl(var(--muted)) !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Correção para blocos de código inline no meio do texto */
+.ds-docs code {
+  background-color: hsl(var(--muted)) !important;
+  color: hsl(var(--foreground)) !important;
+  padding: 0.2rem 0.4rem !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.85em !important;
+  border: 1px solid hsl(var(--border) / 0.5) !important;
+}

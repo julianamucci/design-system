@@ -1,0 +1,76 @@
+/*
+ * ─── Tema 2: Dark Industrial (Amber/Slate) ───────────────────────────────────
+ * Paleta: Amber quente sobre superfícies neutras com bordas retas (radius: 0)
+ */
+.tema-dois {
+  --background: 0 0% 98%;
+  --foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+  --primary: 37.9 97.2% 53.9%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 40 10% 94%;
+  --secondary-foreground: 0 0% 15%;
+  --muted: 40 8% 94%;
+  --muted-foreground: 0 0% 40%;
+  --accent: 40 15% 92%;
+  --accent-foreground: 37.9 97.2% 40%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 80%;
+  --input: 0 0% 80%;
+  --input-background: 0 0% 100%;
+  --ring: 37.9 97.2% 53.9%;
+  --radius: 0px;
+  --radius-button: 0px;
+  --radius-card: 0px;
+  --chart-1: 38 97% 54%;
+  --chart-2: 25 90% 50%;
+  --chart-3: 45 85% 48%;
+  --chart-4: 15 80% 45%;
+  --chart-5: 50 70% 40%;
+  --sidebar: 40 8% 96%;
+  --sidebar-foreground: 0 0% 10%;
+  --sidebar-primary: 37.9 97.2% 53.9%;
+  --sidebar-primary-foreground: 0 0% 0%;
+  --sidebar-accent: 40 15% 92%;
+  --sidebar-accent-foreground: 37.9 97.2% 40%;
+  --sidebar-border: 0 0% 80%;
+}
+
+.dark.tema-dois {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 80%;
+  --card: 0 0% 4%;
+  --card-foreground: 0 0% 80%;
+  --popover: 0 0% 4%;
+  --popover-foreground: 0 0% 80%;
+  --primary: 37.9 97.2% 53.9%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 75%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 12%;
+  --accent-foreground: 37.9 97.2% 55%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --input-background: 0 0% 4%;
+  --ring: 37.9 97.2% 53.9%;
+  --chart-1: 38 97% 54%;
+  --chart-2: 25 80% 50%;
+  --chart-3: 45 75% 48%;
+  --chart-4: 15 70% 45%;
+  --chart-5: 50 60% 40%;
+  --sidebar: 0 0% 2%;
+  --sidebar-foreground: 0 0% 80%;
+  --sidebar-primary: 37.9 97.2% 53.9%;
+  --sidebar-primary-foreground: 0 0% 0%;
+  --sidebar-accent: 0 0% 8%;
+  --sidebar-accent-foreground: 37.9 97.2% 55%;
+  --sidebar-border: 0 0% 20%;
+}
