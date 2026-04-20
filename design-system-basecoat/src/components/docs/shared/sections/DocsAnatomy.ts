@@ -17,7 +17,7 @@ export function createDocsAnatomy(props: DocsAnatomyProps): HTMLElement {
   h2.textContent = props.title;
 
   const inner = document.createElement('div');
-  inner.className = 'space-y-4 w-full';
+  inner.className = 'space-y-4 w-full min-w-0';
 
   const ol = document.createElement('ol');
   ol.className = 'space-y-3 text-sm list-none p-0 m-0';
