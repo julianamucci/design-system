@@ -121,12 +121,15 @@ spec:
           default: true
 
   steps:
-    # ── Root: arquivos compartilhados ───────────────────────────────────────
+    # ── Root: arquivos que precisam de template (README, package.json, etc) ──
     - id: fetch-root
       name: Inicializar estrutura raiz
       action: fetch:template
       input:
         url: ./skeleton/root
+        copyWithoutTemplating:
+          - 'docs/**/*'
+          - '.claude/**/*'
         values:
           projectName: ${{ parameters.projectName }}
           displayName: ${{ parameters.displayName }}
@@ -137,15 +140,6 @@ spec:
           includeClaudeSkills: ${{ parameters.includeClaudeSkills }}
           year: ${{ '' | now('YYYY') }}
 
-    # ── Skills do Claude Code ────────────────────────────────────────────────
-    - id: fetch-claude-skills
-      name: Copiar skills do Claude Code
-      if: ${{ parameters.includeClaudeSkills }}
-      action: fetch:plain
-      input:
-        url: ./skeleton/root/.claude
-        targetPath: .claude
-
     # ── Stack única ─────────────────────────────────────────────────────────
     - id: fetch-stack
       name: Adicionar stack escolhida
@@ -153,6 +147,10 @@ spec:
       input:
         url: ./skeleton/stacks/${{ parameters.stack }}
         targetPath: design-system-${{ parameters.stack }}
+        copyWithoutTemplating:
+          - 'src/**/*'
+          - 'public/**/*'
+          - '**/*.md'
         values:
           projectName: ${{ parameters.projectName }}
           displayName: ${{ parameters.displayName }}
