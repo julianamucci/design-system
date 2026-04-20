@@ -1,0 +1,20 @@
+[10:45:36.465] [INFO] storybook v10.3.5
+[10:46:31.614] [PROMPT] Port 6006 is not available. 
+Would you like to run Storybook on port 6009 instead? {"choice":true}
+[10:46:38.129] [DEBUG] Getting package.json info for C:/Users/julia/Documents/design-system/design-system-basecoat/package.json...
+[10:46:51.429] [DEBUG] Serving static files from [36mdesign-system-basecoat/node_modules/@chromatic-com/storybook/assets[39m at [36m/addon-visual-tests-assets[39m
+[10:46:51.430] [INFO] Starting...
+[10:46:55.946] [DEBUG] Starting preview..
+[10:46:58.521] [ERROR] [38;2;241;97;97mError: listen EADDRINUSE: address already in use :::6009[39m
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at _Polka.listen (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:7175:110)
+    at file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:7513:39
+    at new Promise (<anonymous>)
+    at storybookDevServer (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:7512:19)
+    at async buildOrThrow (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:4508:12)
+    at async buildDevStandalone (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/core-server/index.js:8033:41)
+    at async withTelemetry (file:///C:/Users/julia/Documents/design-system/design-system-basecoat/node_modules/storybook/dist/_node-chunks/chunk-FIR43JGQ.js:225:12)
+[10:46:58.537] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.
