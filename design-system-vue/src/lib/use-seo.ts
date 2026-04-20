@@ -1,4 +1,5 @@
 import { watchEffect, type Ref, type ComputedRef } from 'vue';
+import { track } from './analytics';
 
 type Locale = 'pt-BR' | 'en' | 'es';
 
@@ -77,6 +78,14 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
       link.setAttribute(HREFLANG_ATTR, 'true');
       targetDoc.head.appendChild(link);
       hreflangLinks.push(link);
+    });
+
+    // ── GA4 page_view ─────────────────────────────────────────────────────
+    track('page_view', {
+      page_location: targetWin.location.href,
+      page_title: fullTitle,
+      component_name: componentSlug,
+      locale,
     });
 
     onCleanup(() => {

@@ -11,6 +11,7 @@
  */
 
 import { useEffect } from 'react';
+import { track } from './analytics';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -128,6 +129,16 @@ export function useSeoEffect({ title, description, locale, componentSlug }: SeoP
     const base = `${targetWin.location.origin}${targetWin.location.pathname}?component=${componentSlug}`;
     SUPPORTED_LOCALES.forEach((lang) => addHreflang(lang, buildLangUrl(base, lang)));
     addHreflang('x-default', base); // x-default aponta para a URL sem lang (pt-BR padrão)
+
+    // ── GA4 page_view ─────────────────────────────────────────────────────
+    // Dispara um page_view no GA4 do manager a cada troca de título/locale.
+    // Sem isso, o GA4 só vê a URL inicial do manager e nada das stories.
+    track('page_view', {
+      page_location: targetWin.location.href,
+      page_title: fullTitle,
+      component_name: componentSlug,
+      locale,
+    });
 
     // ── Cleanup ───────────────────────────────────────────────────────────
     return () => {

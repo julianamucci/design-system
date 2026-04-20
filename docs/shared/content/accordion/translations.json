@@ -104,14 +104,14 @@
         }
       },
       "do": {
-        "title": "✅ Use quando",
+        "title": "Use quando",
         "item1": "Há múltiplas seções relacionadas e o usuário expande apenas o que precisa.",
         "item2": "O conteúdo é denso e mostrar tudo simultaneamente sobrecarregaria a página.",
         "item3": "FAQ, documentação com seções, especificações de produto.",
         "item4": "O conteúdo de cada item cabe em até 3–4 linhas."
       },
       "dont": {
-        "title": "❌ Não use quando",
+        "title": "Não use quando",
         "item1": "Há apenas uma seção expansível — use Collapsible.",
         "item2": "O conteúdo exige visualização simultânea das seções — use Tabs.",
         "item3": "O item tem conteúdo tão longo que deveria ser uma página própria.",
@@ -642,14 +642,14 @@
         }
       },
       "do": {
-        "title": "✅ Use when",
+        "title": "Use when",
         "item1": "There are multiple related sections and the user only expands what they need.",
         "item2": "Content is dense and showing everything simultaneously would overwhelm the page.",
         "item3": "FAQ, documentation with sections, product specifications.",
         "item4": "Each item's content fits within 3–4 lines."
       },
       "dont": {
-        "title": "❌ Don't use when",
+        "title": "Don't use when",
         "item1": "There's only one expandable section — use Collapsible.",
         "item2": "Content requires simultaneous section viewing — use Tabs.",
         "item3": "The item has content so long it should be its own page.",
@@ -1180,14 +1180,14 @@
         }
       },
       "do": {
-        "title": "✅ Usa cuando",
+        "title": "Usa cuando",
         "item1": "Hay múltiples secciones relacionadas y el usuario solo expande lo que necesita.",
         "item2": "El contenido es denso y mostrar todo simultáneamente sobrecargaría la página.",
         "item3": "FAQ, documentación con secciones, especificaciones de producto.",
         "item4": "El contenido de cada ítem cabe en hasta 3–4 líneas."
       },
       "dont": {
-        "title": "❌ No uses cuando",
+        "title": "No uses cuando",
         "item1": "Solo hay una sección expandible — usa Collapsible.",
         "item2": "El contenido requiere visualización simultánea de secciones — usa Tabs.",
         "item3": "El ítem tiene contenido tan largo que debería ser su propia página.",

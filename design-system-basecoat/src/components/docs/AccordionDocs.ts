@@ -384,10 +384,10 @@ export function createAccordionDocs(): HTMLElement {
             behavior: t('states.cols.behavior'),
           },
           items: [
-            { label: t('states.closed.label'),   trigger: t('states.closed.description'),           behavior: t('states.closed.description')           },
-            { label: t('states.open.label'),     trigger: t('states.open.description'),             behavior: t('states.open.description')             },
-            { label: t('states.disabled.label'), trigger: stripHtml(t('states.disabled.description')), behavior: stripHtml(t('states.disabled.description')) },
-            { label: t('states.focused.label'),  trigger: t('states.focused.description'),          behavior: t('states.focused.description')          },
+            { label: t('states.closed.label'),   trigger: '—',                     behavior: t('states.closed.description')              },
+            { label: t('states.open.label'),     trigger: 'Click / Enter / Space', behavior: t('states.open.description')                },
+            { label: t('states.disabled.label'), trigger: '—',                     behavior: stripHtml(t('states.disabled.description')) },
+            { label: t('states.focused.label'),  trigger: 'Tab',                   behavior: t('states.focused.description')             },
           ],
         });
 

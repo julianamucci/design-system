@@ -3,6 +3,8 @@
  * Versão Vanilla JS: retorna cleanup, deve ser chamada com re-invoke manual em locale change.
  */
 
+import { track } from './analytics';
+
 type Locale = 'pt-BR' | 'en' | 'es';
 
 interface SeoProps {
@@ -90,6 +92,14 @@ export function applySeo({ title, description, locale, componentSlug }: SeoProps
     link.setAttribute(HREFLANG_ATTR, 'true');
     targetDoc.head.appendChild(link);
     hreflangLinks.push(link);
+  });
+
+  // ── GA4 page_view ───────────────────────────────────────────────────────
+  track('page_view', {
+    page_location: targetWin.location.href,
+    page_title: fullTitle,
+    component_name: componentSlug,
+    locale,
   });
 
   return () => {

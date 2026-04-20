@@ -429,10 +429,10 @@ type AccordionProps = Accordion.RootProps & {
           behavior: $tStore('states.cols.behavior'),
         }}
         items={[
-          { label: $tStore('states.closed.label'),   trigger: $tStore('states.closed.description'),   behavior: $tStore('states.closed.description')   },
-          { label: $tStore('states.open.label'),     trigger: $tStore('states.open.description'),     behavior: $tStore('states.open.description')     },
-          { label: $tStore('states.disabled.label'), trigger: stripHtml($tStore('states.disabled.description')), behavior: stripHtml($tStore('states.disabled.description')) },
-          { label: $tStore('states.focused.label'),  trigger: $tStore('states.focused.description'),  behavior: $tStore('states.focused.description')  },
+          { label: $tStore('states.closed.label'),   trigger: '—',                     behavior: $tStore('states.closed.description')              },
+          { label: $tStore('states.open.label'),     trigger: 'Click / Enter / Space', behavior: $tStore('states.open.description')                },
+          { label: $tStore('states.disabled.label'), trigger: '—',                     behavior: stripHtml($tStore('states.disabled.description')) },
+          { label: $tStore('states.focused.label'),  trigger: 'Tab',                   behavior: $tStore('states.focused.description')             },
         ]}
       />
 

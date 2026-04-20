@@ -39,9 +39,27 @@ O hook `useSeoEffect` gerencia internamente:
 - `<meta name="ai:summary">`, `<meta name="ai:entities">`, `<meta name="ai:intent">`
 - JSON-LD (TechArticle + SoftwareSourceCode)
 - `lang="pt-BR"` no `<html>` do documento pai
+- **GA4 `page_view`** — dispara `track('page_view', { page_location, page_title, component_name, locale })` a cada troca de story/locale
 - Cleanup ao desmontar o componente
 
 > Ver `STORYBOOK-ARCHITECTURE.md` Seção 9 para detalhes de implementação do hook.
+
+### GA4 no manager, não no iframe
+
+O Google Analytics 4 é carregado **exclusivamente no `.storybook/manager-head.html`** de cada stack, com `send_page_view: false`. O `preview-head.html` (iframe) **não deve carregar gtag.js**.
+
+Motivo: a URL que o navegador mostra é a do manager (`/?path=/docs/ui-accordion--docs`); a URL do iframe é sempre `/iframe.html?...`. Se o GA4 rodasse no iframe, todo `page_view` registraria `iframe.html` como página — foi exatamente o bug encontrado em produção, com 99% dos dados agregados em uma única URL.
+
+**Fluxo correto:**
+1. Manager carrega `gtag.js` com `send_page_view: false`
+2. `analytics.ts` expõe `track()` que resolve `window.top.gtag` e encaminha o evento para o manager
+3. `useSeoEffect` dispara `track('page_view', { page_location: window.top.location.href, page_title, component_name, locale })` após atualizar as metatags
+4. Cada story aparece como página distinta no relatório "Páginas e telas" do GA4
+
+**Regras de manutenção:**
+- Ao criar uma nova stack do design system, criar `manager-head.html` com o script GA4 antes de criar `preview-head.html`
+- Nunca copiar o script GA4 para `preview-head.html`
+- Nunca chamar `window.gtag` diretamente nas docs pages — sempre via `track()`
 
 > **Contexto App.tsx**: se a docs page também for usada no sandbox `App.tsx` (fora do Storybook), o `useSeoEffect` detecta a ausência de iframe e escreve no documento corrente normalmente.
 

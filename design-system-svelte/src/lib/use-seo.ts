@@ -3,6 +3,8 @@
  * Versão Svelte: expõe uma função imperativa para ser chamada em $effect.
  */
 
+import { track } from './analytics';
+
 type Locale = 'pt-BR' | 'en' | 'es';
 
 interface SeoProps {
@@ -104,6 +106,14 @@ export function applySeo({ title, description, locale, componentSlug }: SeoProps
   xDefault.setAttribute(HREFLANG_ATTR, 'true');
   targetDoc.head.appendChild(xDefault);
   hreflangLinks.push(xDefault);
+
+  // ── GA4 page_view ───────────────────────────────────────────────────────
+  track('page_view', {
+    page_location: targetWin.location.href,
+    page_title: fullTitle,
+    component_name: componentSlug,
+    locale,
+  });
 
   return () => {
     targetDoc.title = prevTitle;
