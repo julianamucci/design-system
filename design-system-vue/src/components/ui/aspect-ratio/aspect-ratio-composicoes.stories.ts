@@ -27,6 +27,8 @@ export const ComImagem: Story = {
           <img
             src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=800&auto=format"
             alt="Paisagem ao amanhecer com montanhas e céu laranja"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>
@@ -61,6 +63,8 @@ export const ComVideo: Story = {
         <AspectRatio :ratio="16 / 9">
           <video
             controls
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
             poster="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=800&auto=format"
           >
@@ -83,6 +87,8 @@ export const EmGrid: Story = {
           <img
             src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format"
             alt="Miniatura 1"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>
@@ -90,6 +96,8 @@ export const EmGrid: Story = {
           <img
             src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format"
             alt="Miniatura 2"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>
@@ -97,6 +105,8 @@ export const EmGrid: Story = {
           <img
             src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&auto=format"
             alt="Miniatura 3"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>
@@ -104,6 +114,8 @@ export const EmGrid: Story = {
           <img
             src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&auto=format"
             alt="Miniatura 4"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>
@@ -111,6 +123,8 @@ export const EmGrid: Story = {
           <img
             src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=400&auto=format"
             alt="Miniatura 5"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>
@@ -118,6 +132,8 @@ export const EmGrid: Story = {
           <img
             src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format"
             alt="Miniatura 6"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>

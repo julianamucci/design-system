@@ -28,6 +28,8 @@ export const SixteenNine: Story = {
           <img
             src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=800&auto=format"
             alt="Paisagem 16:9"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>
@@ -46,6 +48,8 @@ export const FourThree: Story = {
           <img
             src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format"
             alt="Produto 4:3"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>
@@ -64,6 +68,8 @@ export const Square: Story = {
           <img
             src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format"
             alt="Avatar quadrado"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>
@@ -82,6 +88,8 @@ export const ThreeFour: Story = {
           <img
             src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&auto=format"
             alt="Capa vertical 3:4"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>
@@ -100,6 +108,8 @@ export const UltraWide: Story = {
           <img
             src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format"
             alt="Cabeçalho panorâmico 21:9"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>

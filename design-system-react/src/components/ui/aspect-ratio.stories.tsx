@@ -38,6 +38,8 @@ export const Playground: Story = {
         <ImageWithFallback
           src={LANDSCAPE_SRC}
           alt="Paisagem ao entardecer"
+          loading="lazy"
+          decoding="async"
           className="rounded-md object-cover w-full h-full"
         />
       </AspectRatio>

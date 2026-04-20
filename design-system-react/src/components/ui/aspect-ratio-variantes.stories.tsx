@@ -35,6 +35,8 @@ export const SixteenNine: Story = {
         <ImageWithFallback
           src={LANDSCAPE_SRC}
           alt="Paisagem ao entardecer"
+          loading="lazy"
+          decoding="async"
           className="rounded-md object-cover w-full h-full"
         />
       </AspectRatio>
@@ -49,6 +51,8 @@ export const FourThree: Story = {
         <ImageWithFallback
           src={PRODUCT_SRC}
           alt="Tênis de corrida"
+          loading="lazy"
+          decoding="async"
           className="rounded-md object-cover w-full h-full"
         />
       </AspectRatio>
@@ -63,6 +67,8 @@ export const Square: Story = {
         <ImageWithFallback
           src={SQUARE_SRC}
           alt="Avatar de Maria Silva"
+          loading="lazy"
+          decoding="async"
           className="rounded-md object-cover w-full h-full"
         />
       </AspectRatio>
@@ -77,6 +83,8 @@ export const ThreeFour: Story = {
         <ImageWithFallback
           src={PORTRAIT_SRC}
           alt="Capa de retrato vertical"
+          loading="lazy"
+          decoding="async"
           className="rounded-md object-cover w-full h-full"
         />
       </AspectRatio>
@@ -91,6 +99,8 @@ export const UltraWide: Story = {
         <ImageWithFallback
           src={LANDSCAPE_SRC}
           alt="Panorâmica da cordilheira"
+          loading="lazy"
+          decoding="async"
           className="rounded-md object-cover w-full h-full"
         />
       </AspectRatio>

@@ -127,23 +127,23 @@
 </AspectRatio>`;
 
   const codeSixteenNine = `<AspectRatio ratio={16 / 9}>
-  <img src="/video-cover.jpg" alt="Tutorial" class="w-full h-full object-cover rounded-md" />
+  <img src="/video-cover.jpg" alt="Tutorial" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
 </AspectRatio>`;
 
   const codeFourThree = `<AspectRatio ratio={4 / 3}>
-  <img src="/product.jpg" alt="Sapato azul tamanho 42" class="w-full h-full object-cover rounded-md" />
+  <img src="/product.jpg" alt="Sapato azul tamanho 42" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
 </AspectRatio>`;
 
   const codeSquare = `<AspectRatio ratio={1}>
-  <img src="/avatar.jpg" alt="Avatar do usuário" class="w-full h-full object-cover rounded-md" />
+  <img src="/avatar.jpg" alt="Avatar do usuário" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
 </AspectRatio>`;
 
   const codeThreeFour = `<AspectRatio ratio={3 / 4}>
-  <img src="/cover.jpg" alt="Capa do livro" class="w-full h-full object-cover rounded-md" />
+  <img src="/cover.jpg" alt="Capa do livro" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
 </AspectRatio>`;
 
   const codeUltraWide = `<AspectRatio ratio={21 / 9}>
-  <img src="/hero-wide.jpg" alt="Hero panorâmico" class="w-full h-full object-cover rounded-md" />
+  <img src="/hero-wide.jpg" alt="Hero panorâmico" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
 </AspectRatio>`;
 
   const interfaceCode = `interface AspectRatioProps {
@@ -177,25 +177,25 @@
             <div class="space-y-2">
               <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.sixteenNine')}</p>
               <AspectRatio ratio={16 / 9}>
-                <img src={IMG_LANDSCAPE} alt="Paisagem ao entardecer" class="w-full h-full object-cover rounded-md" />
+                <img src={IMG_LANDSCAPE} alt="Paisagem ao entardecer" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
               </AspectRatio>
             </div>
             <div class="space-y-2">
               <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.fourThree')}</p>
               <AspectRatio ratio={4 / 3}>
-                <img src={IMG_PRODUCT} alt="Produto em destaque" class="w-full h-full object-cover rounded-md" />
+                <img src={IMG_PRODUCT} alt="Produto em destaque" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
               </AspectRatio>
             </div>
             <div class="space-y-2">
               <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.square')}</p>
               <AspectRatio ratio={1}>
-                <img src={IMG_AVATAR} alt="Avatar de usuário" class="w-full h-full object-cover rounded-md" />
+                <img src={IMG_AVATAR} alt="Avatar de usuário" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
               </AspectRatio>
             </div>
             <div class="space-y-2">
               <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.threeFour')}</p>
               <AspectRatio ratio={3 / 4}>
-                <img src={IMG_PORTRAIT} alt="Retrato vertical" class="w-full h-full object-cover rounded-md" />
+                <img src={IMG_PORTRAIT} alt="Retrato vertical" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
               </AspectRatio>
             </div>
           </div>
@@ -287,28 +287,28 @@
       {#snippet doPair1()}
         <div class="w-full max-w-xs">
           <AspectRatio ratio={16 / 9}>
-            <img src={IMG_LANDSCAPE} alt="Paisagem com object-cover" class="w-full h-full object-cover rounded-md" />
+            <img src={IMG_LANDSCAPE} alt="Paisagem com object-cover" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
           </AspectRatio>
         </div>
       {/snippet}
       {#snippet dontPair1()}
         <div class="w-full max-w-xs">
           <AspectRatio ratio={16 / 9}>
-            <img src={IMG_LANDSCAPE} alt="Paisagem com object-contain" class="w-full h-full object-contain rounded-md bg-muted" />
+            <img src={IMG_LANDSCAPE} alt="Paisagem com object-contain" loading="lazy" decoding="async" class="w-full h-full object-contain rounded-md bg-muted" />
           </AspectRatio>
         </div>
       {/snippet}
       {#snippet doPair2()}
         <div class="w-full max-w-xs">
           <AspectRatio ratio={1}>
-            <img src={IMG_AVATAR} alt="Avatar arredondado no filho" class="w-full h-full object-cover rounded-md" />
+            <img src={IMG_AVATAR} alt="Avatar arredondado no filho" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
           </AspectRatio>
         </div>
       {/snippet}
       {#snippet dontPair2()}
         <div class="w-full max-w-xs rounded-md overflow-hidden">
           <AspectRatio ratio={1}>
-            <img src={IMG_AVATAR} alt="Radius aplicado ao container" class="w-full h-full object-cover" />
+            <img src={IMG_AVATAR} alt="Radius aplicado ao container" loading="lazy" decoding="async" class="w-full h-full object-cover" />
           </AspectRatio>
         </div>
       {/snippet}
@@ -335,35 +335,35 @@
       {#snippet variantSixteenNine()}
         <div class="w-full max-w-md">
           <AspectRatio ratio={16 / 9}>
-            <img src={IMG_LANDSCAPE} alt="Paisagem 16:9" class="w-full h-full object-cover rounded-md" />
+            <img src={IMG_LANDSCAPE} alt="Paisagem 16:9" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
           </AspectRatio>
         </div>
       {/snippet}
       {#snippet variantFourThree()}
         <div class="w-full max-w-md">
           <AspectRatio ratio={4 / 3}>
-            <img src={IMG_PRODUCT} alt="Imagem de produto 4:3" class="w-full h-full object-cover rounded-md" />
+            <img src={IMG_PRODUCT} alt="Imagem de produto 4:3" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
           </AspectRatio>
         </div>
       {/snippet}
       {#snippet variantSquare()}
         <div class="w-52">
           <AspectRatio ratio={1}>
-            <img src={IMG_AVATAR} alt="Avatar quadrado 1:1" class="w-full h-full object-cover rounded-md" />
+            <img src={IMG_AVATAR} alt="Avatar quadrado 1:1" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
           </AspectRatio>
         </div>
       {/snippet}
       {#snippet variantThreeFour()}
         <div class="w-52">
           <AspectRatio ratio={3 / 4}>
-            <img src={IMG_PORTRAIT} alt="Retrato 3:4" class="w-full h-full object-cover rounded-md" />
+            <img src={IMG_PORTRAIT} alt="Retrato 3:4" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
           </AspectRatio>
         </div>
       {/snippet}
       {#snippet variantUltraWide()}
         <div class="w-full max-w-xl">
           <AspectRatio ratio={21 / 9}>
-            <img src={IMG_ULTRA} alt="Hero ultra-wide 21:9" class="w-full h-full object-cover rounded-md" />
+            <img src={IMG_ULTRA} alt="Hero ultra-wide 21:9" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
           </AspectRatio>
         </div>
       {/snippet}

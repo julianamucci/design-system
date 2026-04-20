@@ -42,6 +42,8 @@ export const Playground: Story = {
           <img
             src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=800&auto=format"
             alt="Paisagem ao amanhecer"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover rounded-md"
           />
         </AspectRatio>

@@ -24,6 +24,8 @@ function buildImage(src: string, alt: string): HTMLImageElement {
   const img = document.createElement('img');
   img.src = src;
   img.alt = alt;
+  img.loading = 'lazy';
+  img.decoding = 'async';
   img.className = 'object-cover w-full h-full rounded-md';
   return img;
 }

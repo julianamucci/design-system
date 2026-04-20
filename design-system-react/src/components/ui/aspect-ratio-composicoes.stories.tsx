@@ -42,6 +42,8 @@ export const ComImagem: Story = {
         <ImageWithFallback
           src={LANDSCAPE_SRC}
           alt="Paisagem ao entardecer"
+          loading="lazy"
+          decoding="async"
           className="rounded-md object-cover w-full h-full"
         />
       </AspectRatio>
@@ -129,6 +131,8 @@ export const GridConsistente: Story = {
             <ImageWithFallback
               src={item.src}
               alt={item.alt}
+              loading="lazy"
+              decoding="async"
               className="rounded-md object-cover w-full h-full"
             />
           </AspectRatio>
@@ -154,6 +158,8 @@ export const ComImagemDecorativa: Story = {
         <ImageWithFallback
           src={LANDSCAPE_SRC}
           alt=""
+          loading="lazy"
+          decoding="async"
           className="rounded-md object-cover w-full h-full"
         />
       </AspectRatio>

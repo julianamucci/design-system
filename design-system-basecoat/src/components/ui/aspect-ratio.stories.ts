@@ -50,6 +50,8 @@ export const Playground: Story = {
     const img = document.createElement('img');
     img.src = args.imageUrl;
     img.alt = args.alt;
+    img.loading = 'lazy';
+    img.decoding = 'async';
     img.className = 'object-cover w-full h-full rounded-md';
 
     const wrapper = document.createElement('div');

@@ -231,6 +231,8 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
       <ImageWithFallback
         src={src}
         alt={alt}
+        loading="lazy"
+        decoding="async"
         className="rounded-md object-cover w-full h-full"
       />
     </AspectRatio>
@@ -355,6 +357,8 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
                 <ImageWithFallback
                   src={LANDSCAPE_SRC}
                   alt="Paisagem ao entardecer"
+                  loading="lazy"
+                  decoding="async"
                   className="rounded-md object-cover w-full h-full"
                 />
               </AspectRatio>
@@ -364,6 +368,8 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
                 <ImageWithFallback
                   src={LANDSCAPE_SRC}
                   alt="Paisagem ao entardecer"
+                  loading="lazy"
+                  decoding="async"
                   className="rounded-md object-contain w-full h-full bg-muted"
                 />
               </AspectRatio>
@@ -379,6 +385,8 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
                 <ImageWithFallback
                   src={PRODUCT_SRC}
                   alt="Tênis de corrida"
+                  loading="lazy"
+                  decoding="async"
                   className="rounded-md object-cover w-full h-full"
                 />
               </AspectRatio>
@@ -388,6 +396,8 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
                 <ImageWithFallback
                   src={PRODUCT_SRC}
                   alt="Tênis de corrida"
+                  loading="lazy"
+                  decoding="async"
                   className="object-cover w-full h-full"
                 />
               </AspectRatio>

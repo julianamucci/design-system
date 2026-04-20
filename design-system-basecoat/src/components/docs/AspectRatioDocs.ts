@@ -59,6 +59,8 @@ function createPreviewImage(src: string, alt: string): HTMLImageElement {
   const img = document.createElement('img');
   img.src = src;
   img.alt = alt;
+  img.loading = 'lazy';
+  img.decoding = 'async';
   img.className = 'object-cover w-full h-full rounded-md';
   return img;
 }
@@ -281,6 +283,8 @@ export function createAspectRatioDocs(): HTMLElement {
                 const img = document.createElement('img');
                 img.src = PREVIEW_IMAGES.landscape;
                 img.alt = 'Paisagem com object-cover';
+                img.loading = 'lazy';
+                img.decoding = 'async';
                 img.className = 'object-cover w-full h-full rounded-md';
                 return createAspectRatio({ ratio: 16 / 9, content: img });
               },
@@ -288,6 +292,8 @@ export function createAspectRatioDocs(): HTMLElement {
                 const img = document.createElement('img');
                 img.src = PREVIEW_IMAGES.portrait;
                 img.alt = 'Retrato com object-contain';
+                img.loading = 'lazy';
+                img.decoding = 'async';
                 img.className = 'object-contain w-full h-full rounded-md bg-muted';
                 return createAspectRatio({ ratio: 16 / 9, content: img });
               },
@@ -301,6 +307,8 @@ export function createAspectRatioDocs(): HTMLElement {
                 const img = document.createElement('img');
                 img.src = PREVIEW_IMAGES.product;
                 img.alt = 'Imagem com rounded-md no filho';
+                img.loading = 'lazy';
+                img.decoding = 'async';
                 img.className = 'object-cover w-full h-full rounded-md';
                 return createAspectRatio({ ratio: 4 / 3, content: img });
               },
@@ -308,6 +316,8 @@ export function createAspectRatioDocs(): HTMLElement {
                 const img = document.createElement('img');
                 img.src = PREVIEW_IMAGES.product;
                 img.alt = 'Imagem sem rounded no filho';
+                img.loading = 'lazy';
+                img.decoding = 'async';
                 img.className = 'object-cover w-full h-full';
                 return createAspectRatio({
                   ratio: 4 / 3,

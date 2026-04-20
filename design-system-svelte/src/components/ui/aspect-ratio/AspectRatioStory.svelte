@@ -31,7 +31,7 @@
 <div class="{width} w-full {className}">
   <AspectRatio {ratio}>
     {#if child === 'img'}
-      <img src={src} alt={alt} class="w-full h-full object-cover rounded-md" />
+      <img src={src} alt={alt} loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
     {:else if child === 'iframe'}
       <iframe
         {src}
