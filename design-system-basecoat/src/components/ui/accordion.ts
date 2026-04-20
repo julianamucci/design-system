@@ -126,7 +126,10 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
       triggerEl.disabled = true;
       triggerEl.className += ' opacity-50 pointer-events-none';
     }
-    triggerEl.innerHTML = `<span>${item.trigger}</span>${CHEVRON_SVG}`;
+    const triggerSpan = document.createElement('span');
+    triggerSpan.textContent = item.trigger;
+    triggerEl.appendChild(triggerSpan);
+    triggerEl.insertAdjacentHTML('beforeend', CHEVRON_SVG);
     headerEl.appendChild(triggerEl);
 
     // Content
