@@ -452,11 +452,20 @@ Svelte usa `{@html}` para conteúdo HTML. Sempre sanitize: `{@html sanitizeHtml(
 - Play functions testam `getByRole('alert')`, classes CSS
 - `DocsStates` cobre configurações visuais (`complete`, `withoutTitle`, `withoutIcon`, `dynamicInsert`) — não loading/disabled
 
-### AlertDialog e overlays
+### Componentes Modais de Confirmação (padrão AlertDialog)
 
-- Explicar `role="alertdialog"` vs `role="dialog"`
-- Play functions: abrir, fechar com Escape, focus trap, retorno de foco
-- `DocsStates` cobre `open`/`closed`
+Componentes como **AlertDialog** (implementado sobre bits-ui) são overlays de decisão forçada — não possuem `cva()` próprio; severidade vem do `Button` usado em Trigger/Action.
+
+1. **Sem `cva()`** — sem prop `variant`. `DocsVariants.items` documenta **tipos de uso** (`destructive`, `default`). Cada `preview` (snippet Svelte) usa `defaultOpen={true}` no Root para Chromatic capturar o modal aberto.
+2. **`DocsAnatomy`** — 9 items: Root, Trigger, Content, Header, Title, Description, Footer, Cancel, Action. `structureCode` mostra a estrutura aninhada.
+3. **`DocsStates`** — `closed`, `open`, `confirmed`, `cancelled`, `controlled`. Omitir `loading`/`disabled`.
+4. **`DocsProps`** — 5 tables: Root (`open`, `defaultOpen`, `onOpenChange`), Trigger (`asChild` via `<AlertDialogTrigger asChild let:builder>`), Content (`class`), Action (`on:click`, `class`), Cancel (`on:click`, `class`). Em Svelte 5, `defaultOpen` é uncontrolled; passar `open` força modo controlado.
+5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, destructiveForeground, radius.
+6. **`DocsNotes`** — overlay **não** fecha ao clicar fora (diferença do Dialog). Documentar em nota dedicada.
+7. **`DocsAccessibility`** — `role="alertdialog"` anuncia imediatamente. Foco inicial no Cancel.
+8. **Stories** — omitir `alert-dialog-tamanhos` e `alert-dialog-variantes`. Usar `AlertDialogStory.svelte` wrapper com prop `defaultOpen` para Chromatic capturar o modal visível. Arquivos: `.stories.ts`, `-composicoes`, `-estados`.
+9. **Play function** — 6 critérios: trigger abre com `role="alertdialog"`; Cancel fecha + retorna foco; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
+10. **Analytics de produto** — além dos eventos de docs: `dialog_open { component, location, label }`, `dialog_confirm { ... }`, `dialog_close { ..., trigger: "cancel_button" | "escape" }`.
 
 ---
 

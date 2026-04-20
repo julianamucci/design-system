@@ -482,11 +482,20 @@ Containers já fazem isso para os props de texto que aceitam HTML. No consumidor
 - Play functions testam `getByRole('alert')`, classes CSS
 - `DocsStates` cobre configurações visuais (`complete`, `withoutTitle`, `withoutIcon`, `dynamicInsert`) — não loading/disabled
 
-### AlertDialog e overlays
+### Componentes Modais de Confirmação (padrão AlertDialog)
 
-- Docs page explica `role="alertdialog"` vs `role="dialog"`
-- Play functions: abrir, fechar com Escape, focus trap, retorno de foco
-- `DocsStates` cobre `open`/`closed`
+Componentes como **AlertDialog** (implementação vanilla-TS com foco-trap manual e `role="alertdialog"`) são overlays de decisão forçada — sem `cva()`; severidade vem da factory do Button usada em Trigger/Action.
+
+1. **Sem `cva()`** — sem prop `variant`. `DocsVariants.items` documenta **tipos de uso** (`destructive`, `default`). Cada `previewFactory` monta o AlertDialog com `open: true` inicial para Chromatic capturar o modal aberto.
+2. **`DocsAnatomy`** — 9 items: Root (wrapper), Trigger (button), Content (dialog), Header, Title (`h2`), Description (`p`), Footer, Cancel (button), Action (button). `structureCode` mostra a estrutura HTML gerada.
+3. **`DocsStates`** — `closed`, `open`, `confirmed`, `cancelled`, `controlled`. Omitir `loading`/`disabled`.
+4. **`DocsProps`** — 5 tables: `createAlertDialog({ open, defaultOpen, onOpenChange })`, `createAlertDialogTrigger`, `createAlertDialogContent({ className })`, `createAlertDialogAction({ onClick, className })`, `createAlertDialogCancel({ onClick, className })`.
+5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, destructiveForeground, radius.
+6. **`DocsNotes`** — overlay **não** fecha ao clicar fora (diferença do Dialog). Documentar em nota dedicada.
+7. **`DocsAccessibility`** — `role="alertdialog"` + `aria-modal="true"` aplicados pela factory. Focus trap manual via listeners `keydown` em Tab/Shift+Tab. Foco inicial no Cancel; `Escape` fecha.
+8. **Stories** — omitir `alert-dialog-tamanhos` e `alert-dialog-variantes`. Usar `open: true` inicial nas stories de estados para Chromatic. Arquivos: `.stories.ts`, `-composicoes`, `-estados`.
+9. **Play function** — 6 critérios: trigger abre com `role="alertdialog"`; Cancel fecha + retorna foco ao trigger; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
+10. **Analytics de produto** — além dos eventos de docs: `dialog_open { component, location, label }`, `dialog_confirm { ... }`, `dialog_close { ..., trigger: "cancel_button" | "escape" }`.
 
 ---
 
