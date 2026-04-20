@@ -1,0 +1,115 @@
+
+> design-system-basecoat@0.0.0 build-storybook
+> storybook build --output-dir=C:\Users\julia\AppData\Local\Temp\chromatic--46400-Um4dHSzQIVMn
+
+
+[90m┌[39m  Building storybook v10.3.5
+[90m│[39m
+[32m◇[39m  Cleaning outputDir:
+[90m│[39m  [36m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn[39m
+[90m│[39m
+[32m◇[39m  Loading presets
+[90m│[39m
+[32m◇[39m  Building manager..
+[90m│[39m
+[34m●[39m  Building preview..
+[90m│[39m  [43mVite[49m [36mvite v6.4.2 [32mbuilding for production...[36m[39m
+[90m│[39m  [43mVite[49m transforming...
+[90m│[39m  [43mVite[49m [32m✓[39m 1733 modules transformed.
+[90m│[39m  [43mVite[49m rendering chunks...
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[32miframe.html[39m[1m[2m[22m
+[90m│[39m  [2m20.33 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[35massets/iframe-B5lhI0sE.css[39m
+[90m│[39m  [35m[39m[1m[2m192.71 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/badge-ISSvNOyA.js[39m[1m[2m[22m
+[90m│[39m  [2m0.29 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/triangle-alert-Dpd55MbV.js[39m[1m[2m[22m
+[90m│[39m  [2m0.85 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/preload-helper-Ct5FWWRu.js[39m[1m[2m[22m
+[90m│[39m  [2m1.23 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/alert-DoPymMkO.js[39m[1m[2m[22m
+[90m│[39m  [2m1.62 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/alert-variantes.stories-Dywl71HD.js[39m[1m[2m[22m
+[90m│[39m  [2m3.25 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/accordion-C5-J8VgO.js[39m[1m[2m[22m
+[90m│[39m  [2m3.32 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/button-variantes.stories-wVU_2dOG.js[39m[1m[2m[22m
+[90m│[39m  [2m3.33 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/button-CndWMcn9.js[39m[1m[2m[22m
+[90m│[39m  [2m3.36 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/button-tamanhos.stories-CrQZQWjV.js[39m[1m[2m[22m
+[90m│[39m  [2m3.67 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/alert-composicoes.stories-Dzq_HZ7h.js[39m[1m[2m[22m
+[90m│[39m  [2m4.28 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/button-estados.stories-IkbOw51w.js[39m[1m[2m[22m
+[90m│[39m  [2m5.73 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/alert-estados.stories-BYMU_0T1.js[39m[1m[2m[22m
+[90m│[39m  [2m5.76 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/accordion-estados.stories-BUeLBqEX.js[39m[1m[2m[22m
+[90m│[39m  [2m6.31 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/button-composicoes.stories-C2ZZ0FPt.js[39m[1m[2m[22m
+[90m│[39m  [2m6.62 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/accordion-modos.stories-DZRNHNiT.js[39m[1m[2m[22m
+[90m│[39m  [2m7.63 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/accordion-composicoes.stories-DaAqDp97.js[39m[1m[2m[22m
+[90m│[39m  [2m14.15 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/utils-C8nBGPD0.js[39m[1m[2m[22m
+[90m│[39m  [2m26.68 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36mvite-inject-mocker-entry.js[39m[1m[2m[22m
+[90m│[39m  [2m28.11 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/matchers-5TDFFDYO-HJu_DfWo.js[39m[1m[2m[22m
+[90m│[39m  [2m29.23 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/withAutoDocsTab-Bp299Ndy.js[39m[1m[2m[22m
+[90m│[39m  [2m33.74 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/alert.stories-U-RRinxx.js[39m[1m[2m[22m
+[90m│[39m  [2m61.14 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/accordion.stories-FO67UzA0.js[39m[1m[2m[22m
+[90m│[39m  [2m68.35 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/button.stories-B0w1c_Re.js[39m[1m[2m[22m
+[90m│[39m  [2m69.50 kB[22m[1m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/axe-Bfy7KpTH.js[39m
+[90m│[39m  [36m[39m[1m[33m583.72 kB[39m[22m
+[90m│[39m  [43mVite[49m
+[90m│[39m  [2m../../../AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn/[22m[36massets/iframe-DbW3G0ri.js[39m
+[90m│[39m  [36m[39m[1m[33m831.75 kB[39m[22m
+[90m│[39m
+[33m▲[39m  [43mVite[49m[33m
+[90m│[39m  (!) Some chunks are larger than 500 kB after minification. Consider:
+[90m│[39m  - Using dynamic import() to code-split the application
+[90m│[39m  - Use build.rollupOptions.output.manualChunks to improve chunking:
+[90m│[39m  ]8;;https://rollupjs.org/configuration-options/#output-manualchunkshttps://rollupjs.org/configuration-options/#output-manualchunks]8;;
+[90m│[39m  - Adjust chunk size limit for this warning via
+[90m│[39m  build.chunkSizeWarningLimit.[39m
+[90m│[39m  [43mVite[49m [32m✓ built in 15.58s[39m
+[90m│[39m
+[32m◇[39m  Output directory:
+[90m│[39m  C:/Users/julia/AppData/Local/Temp/chromatic--46400-Um4dHSzQIVMn
+[90m│[39m
+[90m└[39m  Storybook build completed successfully
+
