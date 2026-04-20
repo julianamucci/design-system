@@ -1,0 +1,890 @@
+{
+  "pt-BR": {
+    "title": "Accordion",
+    "category": "Disclosure",
+    "type": "Componente",
+    "description": "Seções colapsáveis para organizar conteúdo relacionado. Use para FAQ, documentação e configurações agrupadas.",
+    "seo": {
+      "title": "Accordion — Disclosure · Design System",
+      "description": "Documentação do Accordion: tipos single e multiple, modo controlado, acessibilidade WCAG com ARIA automático e animação.",
+      "aiSummary": "Componente Accordion com tipos single e multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI e suporte a keyboard navigation.",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "q1": "Como faço para redefinir minha senha?",
+        "a1": "Acesse a tela de login e clique em \"Esqueci minha senha\". Você receberá um link de redefinição no email cadastrado, válido por 24 horas.",
+        "q2": "Quais formas de pagamento são aceitas?",
+        "a2": "Aceitamos cartão de crédito, Pix e boleto bancário. Parcelamento disponível em até 12 vezes sem juros no cartão.",
+        "q3": "Como cancelo minha assinatura?",
+        "a3": "Você pode cancelar a qualquer momento em Configurações → Assinatura. O acesso permanece ativo até o fim do período já pago.",
+        "q4": "Onde encontro meus dados de acesso?",
+        "a4": "Seus dados de acesso estão disponíveis em Configurações → Conta. Para redefinir a senha, use a opção na tela de login."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Accordion</strong> — container raiz. Define <code>type</code> (<code>single</code> ou <code>multiple</code>) e <code>collapsible</code>.",
+      "item2": "<strong>AccordionItem</strong> — representa um item com <code>value</code> único obrigatório. Renderiza <code>&lt;div&gt;</code> com <code>border-b</code>.",
+      "item3": "<strong>AccordionTrigger</strong> — botão de ação. Inclui <code>aria-expanded</code> automático e chevron rotativo.",
+      "item4": "<strong>AccordionContent</strong> — área de conteúdo com animação de abertura/fechamento via CSS. Respeita <code>prefers-reduced-motion</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "📋 Guidelines Obrigatórias",
+        "item1": "Use <code>type=\"single\"</code> com <code>collapsible</code> para FAQ — permite fechar o item ativo clicando nele novamente.",
+        "item2": "Use <code>type=\"multiple\"</code> para especificações ou configurações onde o usuário compara seções simultâneas.",
+        "item3": "Cada <code>AccordionItem</code> exige prop <code>value</code> única — é o identificador interno para estado controlado.",
+        "item4": "Máximo de 8–10 itens por Accordion. Acima disso, organize por categorias ou adicione busca.",
+        "item5": "Use <code>defaultValue</code> para abrir um item por padrão sem tornar o componente controlado."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "FAQ com múltiplas perguntas", "u": "Sim, type=\"single\" + collapsible", "a": "—" },
+        "item2": { "s": "Uma única seção expansível", "u": "Não", "a": "Collapsible" },
+        "item3": { "s": "Alternância entre views paralelas", "u": "Não", "a": "Tabs" },
+        "item4": { "s": "Especificações comparáveis", "u": "Sim, type=\"multiple\"", "a": "—" },
+        "item5": { "s": "Etapas sequenciais obrigatórias", "u": "Não", "a": "Stepper" }
+      },
+      "uxWriting": {
+        "title": "✍️ UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "trigger": {
+            "name": "AccordionTrigger (FAQ)",
+            "format": "Pergunta interrogativa completa · com ponto de interrogação",
+            "good": "\"Como faço para redefinir minha senha?\"",
+            "bad": "\"Redefinição de senha\", \"Senha\""
+          },
+          "triggerDoc": {
+            "name": "AccordionTrigger (documentação)",
+            "format": "Substantivo ou frase nominal · sem ponto final",
+            "good": "\"Especificações técnicas\", \"Política de devolução\"",
+            "bad": "\"Aqui estão as especificações técnicas.\""
+          },
+          "content": {
+            "name": "AccordionContent",
+            "format": "Resposta objetiva · máx. 3–4 linhas · frase completa com ponto final",
+            "good": "Instrução direta em 2–3 linhas.",
+            "bad": "Conteúdo longo que deveria ser uma página própria"
+          }
+        }
+      },
+      "do": {
+        "title": "✅ Use quando",
+        "item1": "Há múltiplas seções relacionadas e o usuário expande apenas o que precisa.",
+        "item2": "O conteúdo é denso e mostrar tudo simultaneamente sobrecarregaria a página.",
+        "item3": "FAQ, documentação com seções, especificações de produto.",
+        "item4": "O conteúdo de cada item cabe em até 3–4 linhas."
+      },
+      "dont": {
+        "title": "❌ Não use quando",
+        "item1": "Há apenas uma seção expansível — use Collapsible.",
+        "item2": "O conteúdo exige visualização simultânea das seções — use Tabs.",
+        "item3": "O item tem conteúdo tão longo que deveria ser uma página própria.",
+        "item4": "A hierarquia é de navegação — use Sidebar com Accordion aninhado."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "single": "import {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from \"@/components/ui/accordion\"",
+      "note": "Quatro subcomponentes exportados. Todos necessários para o uso básico."
+    },
+    "variants": {
+      "title": "Tipos",
+      "single": {
+        "label": "Single (padrão)",
+        "description": "Apenas um item aberto por vez. Com <code>collapsible</code>, permite fechar o item ativo. Ideal para FAQ."
+      },
+      "multiple": {
+        "label": "Multiple",
+        "description": "Múltiplos itens podem estar abertos simultaneamente. Ideal para especificações e configurações comparáveis."
+      },
+      "controlled": {
+        "label": "Controlado",
+        "description": "Estado gerenciado externamente via <code>value</code> e <code>onValueChange</code>. Útil para sincronizar com URL ou outro estado."
+      },
+      "defaultOpen": {
+        "label": "Com item padrão aberto",
+        "description": "Prop <code>defaultValue</code> abre um item por padrão sem modo controlado. Comum em documentação e onboarding."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "closed": {
+        "label": "Fechado (padrão)",
+        "description": "Item colapsado. Chevron aponta para baixo."
+      },
+      "open": {
+        "label": "Aberto",
+        "description": "Item expandido. Chevron rotaciona 180°. Animação de abertura ativa."
+      },
+      "disabled": {
+        "label": "Desabilitado",
+        "description": "Item com prop <code>disabled</code>. Trigger não responde a cliques; mantém aparência visual reduzida."
+      },
+      "focused": {
+        "label": "Com foco",
+        "description": "Focus ring visível ao navegar por teclado. Totalmente operável via Tab, Enter e Space."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "accordion": {
+        "title": "Accordion (raiz)",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "prop": "Prop",
+        "items": {
+          "type": { "name": "type", "type": "\"single\" | \"multiple\"", "default": "—", "required": "Sim", "description": "Define se um ou múltiplos itens podem ser abertos simultaneamente." },
+          "collapsible": { "name": "collapsible", "type": "boolean", "default": "false", "required": "Não", "description": "Permite fechar o item ativo (só para type=\"single\")." },
+          "defaultValue": { "name": "defaultValue", "type": "string | string[]", "default": "—", "required": "Não", "description": "Valor(es) aberto(s) por padrão (não controlado)." },
+          "value": { "name": "value", "type": "string | string[]", "default": "—", "required": "Não", "description": "Valor(es) controlado(s). Use com onValueChange." },
+          "onValueChange": { "name": "onValueChange", "type": "(value: string | string[]) => void", "default": "—", "required": "Não", "description": "Callback ao abrir/fechar item." },
+          "className": { "name": "className", "type": "string", "default": "—", "required": "Não", "description": "Classes CSS adicionais para o container." }
+        }
+      },
+      "item": {
+        "title": "AccordionItem",
+        "items": {
+          "value": { "name": "value", "type": "string", "default": "—", "required": "Sim", "description": "Identificador único do item. Usado pelo Accordion para controlar estado." },
+          "disabled": { "name": "disabled", "type": "boolean", "default": "false", "required": "Não", "description": "Desabilita o item. Trigger não responde a cliques." },
+          "className": { "name": "className", "type": "string", "default": "—", "required": "Não", "description": "Classes CSS adicionais." }
+        }
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe Tailwind",
+        "part": "Parte"
+      },
+      "items": {
+        "border": { "token": "--border", "class": "border-b", "part": "AccordionItem — separador inferior" },
+        "foreground": { "token": "--foreground", "class": "text-foreground", "part": "AccordionTrigger — texto do título" },
+        "mutedForeground": { "token": "--muted-foreground", "class": "text-muted-foreground", "part": "Chevron — ícone de indicação" },
+        "background": { "token": "--background", "class": "bg-background", "part": "AccordionContent — fundo do conteúdo" },
+        "ring": { "token": "--ring", "class": "ring-ring", "part": "AccordionTrigger — focus ring" }
+      },
+      "customizationTitle": "Customização via tokens",
+      "customizationCode": "/* Aumentar separador entre itens */\n.my-accordion .accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger com background em hover */\n.my-accordion [data-state] {\n  @apply hover:bg-muted/40 rounded-md;\n}"
+    },
+    "doDont": {
+      "pair1": {
+        "do": "Use perguntas interrogativas completas no trigger de FAQ.",
+        "dont": "Não use frases nominais ambíguas ou sem contexto."
+      },
+      "pair2": {
+        "do": "Use type=\"multiple\" quando o usuário precisa comparar seções abertas.",
+        "dont": "Não use Accordion para uma única seção expansível — use Collapsible."
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O Accordion usa o padrão de disclosure do WAI-ARIA. ARIA e roles são aplicados automaticamente pela biblioteca — não reimplementar.",
+      "keyboard": {
+        "tab": "Move o foco para o próximo AccordionTrigger.",
+        "shiftTab": "Move o foco para o AccordionTrigger anterior.",
+        "enter": "Expande ou colapsa o item focado.",
+        "space": "Expande ou colapsa o item focado.",
+        "arrowDown": "Move o foco para o próximo trigger (comportamento nativo Radix/Reka/Bits).",
+        "arrowUp": "Move o foco para o trigger anterior."
+      },
+      "aria": {
+        "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> no trigger — aplicado automaticamente.",
+        "ariaControls": "<code>aria-controls</code> aponta para o id do conteúdo — aplicado automaticamente.",
+        "role": "<code>role=\"region\"</code> no AccordionContent — aplicado automaticamente.",
+        "ariaLabelledBy": "<code>aria-labelledby</code> no content aponta para o trigger — aplicado automaticamente."
+      },
+      "screenReader": {
+        "closed": "Trigger anunciado como botão com estado \"recolhido\" (collapsed).",
+        "open": "Trigger anunciado como \"expandido\" (expanded). Conteúdo acessível por Tab.",
+        "disabled": "Item desabilitado anunciado como \"desabilitado\" — não recebe foco em alguns leitores."
+      },
+      "contrast": "Contraste mínimo 4.5:1 para o texto do trigger. Chevron usa <code>text-muted-foreground</code> — verificar contraste em temas customizados."
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "collapsible": { "name": "Collapsible", "description": "Use para uma única seção expansível isolada.", "href": "disclosure-collapsible--playground" },
+      "tabs": { "name": "Tabs", "description": "Use para alternância entre views paralelas.", "href": "navigation-tabs--playground" },
+      "sidebar": { "name": "Sidebar", "description": "Accordion aninhado em Sidebar para navegação hierárquica.", "href": "layout-sidebar--playground" }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "O chevron rotativo (<code>rotate-180</code>) é aplicado via <code>[&[data-state=open]>svg]:rotate-180</code> no AccordionTrigger — não adicionar manualmente.",
+      "item2": "Animações de abertura/fechamento usam CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas em <code>tailwind.config.ts</code>.",
+      "item3": "Para modo controlado, use <code>value</code> + <code>onValueChange</code>. O estado deve ser <code>string</code> para <code>type=\"single\"</code> e <code>string[]</code> para <code>type=\"multiple\"</code>.",
+      "item4": "Não aninhe Accordions sem propósito claro — prefira Sidebar com Accordion para hierarquia de navegação.",
+      "item5": "<code>collapsible</code> só tem efeito com <code>type=\"single\"</code>. Em <code>type=\"multiple\"</code> todos os itens já são individualmente fecháveis."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastreie interações do usuário com o Accordion para entender quais seções são mais acessadas.",
+      "events": {
+        "expand": { "event": "accordion_expand", "trigger": "Usuário abre um item", "payload": "{ component: \"accordion\", label: string, location: string }" },
+        "collapse": { "event": "accordion_collapse", "trigger": "Usuário fecha um item", "payload": "{ component: \"accordion\", label: string, location: string }" }
+      },
+      "note": "Use <code>data-state=\"closed\"</code> no trigger para detectar se o clique vai abrir — o Radix atualiza o estado após o evento."
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada interação com o Accordion.",
+        "item1": { "action": "Clicar em AccordionTrigger fechado", "result": "Item expande; AccordionContent fica visível", "priority": "high" },
+        "item2": { "action": "Clicar em AccordionTrigger aberto (collapsible=true)", "result": "Item colapsa; AccordionContent some da tela", "priority": "high" },
+        "item3": { "action": "Clicar em segundo item com type=\"single\"", "result": "Primeiro item fecha automaticamente; segundo abre", "priority": "high" },
+        "item4": { "action": "Clicar em segundo item com type=\"multiple\"", "result": "Ambos os itens ficam abertos simultaneamente", "priority": "high" },
+        "item5": { "action": "Clicar em item com disabled=true", "result": "Item não expande; onClick não disparado", "priority": "medium" },
+        "item6": { "action": "Renderizar com defaultValue=\"item-1\"", "result": "Item 1 começa aberto sem modo controlado", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "Sem violações axe-core no estado padrão e aberto", "level": "AA", "how": "axe-playwright no test-runner do Storybook" },
+        "item2": { "criterion": "aria-expanded=\"false\" no trigger fechado / \"true\" aberto", "level": "AA", "how": "getByRole('button') + toHaveAttribute('aria-expanded', 'true')" },
+        "item3": { "criterion": "Focus ring visível ao navegar por Tab", "level": "AA", "how": "Inspecionar :focus-visible manualmente" },
+        "item4": { "criterion": "Enter e Space expandem/colapsam o item focado", "level": "A", "how": "userEvent.keyboard('{Enter}') / userEvent.keyboard(' ')" },
+        "item5": { "criterion": "Item desabilitado tem aria-disabled ou disabled nativo", "level": "AA", "how": "expect(trigger).toBeDisabled()" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "required": "✓ Obrigatório",
+        "item1": { "story": "Playground — type single, item 1 aberto", "priority": "high" },
+        "item2": { "story": "Variantes — single, multiple, controlled, defaultOpen", "priority": "high" },
+        "item3": { "story": "Estados — aberto, fechado, disabled", "priority": "high" },
+        "item4": { "story": "Composições — com ícone no trigger, conteúdo rico", "priority": "medium" },
+        "item5": { "story": "Interativo — animação de abertura capturada", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Tipos",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Accordion",
+    "category": "Disclosure",
+    "type": "Component",
+    "description": "Collapsible sections for organizing related content. Use for FAQ, documentation, and grouped settings.",
+    "seo": {
+      "title": "Accordion — Disclosure · Design System",
+      "description": "Documentation for Accordion: single and multiple types, controlled mode, WCAG accessibility with automatic ARIA and animation.",
+      "aiSummary": "Accordion component with single and multiple types, controlled mode, animated chevron, automatic ARIA via Radix/Reka/Bits UI and keyboard navigation support.",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "q1": "How do I reset my password?",
+        "a1": "Go to the login screen and click \"Forgot my password\". You'll receive a reset link at your registered email, valid for 24 hours.",
+        "q2": "What payment methods are accepted?",
+        "a2": "We accept credit card, Pix and bank slip. Installment available up to 12 interest-free payments by credit card.",
+        "q3": "How do I cancel my subscription?",
+        "a3": "You can cancel at any time in Settings → Subscription. Access remains active until the end of the already paid period.",
+        "q4": "Where do I find my login credentials?",
+        "a4": "Your login credentials are available in Settings → Account. To reset your password, use the option on the login screen."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Accordion</strong> — root container. Defines <code>type</code> (<code>single</code> or <code>multiple</code>) and <code>collapsible</code>.",
+      "item2": "<strong>AccordionItem</strong> — represents an item with a required unique <code>value</code>. Renders <code>&lt;div&gt;</code> with <code>border-b</code>.",
+      "item3": "<strong>AccordionTrigger</strong> — action button. Includes automatic <code>aria-expanded</code> and rotating chevron.",
+      "item4": "<strong>AccordionContent</strong> — content area with open/close animation via CSS. Respects <code>prefers-reduced-motion</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Title</AccordionTrigger>\n    <AccordionContent>Content</AccordionContent>\n  </AccordionItem>\n</Accordion>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "📋 Required Guidelines",
+        "item1": "Use <code>type=\"single\"</code> with <code>collapsible</code> for FAQ — allows closing the active item by clicking it again.",
+        "item2": "Use <code>type=\"multiple\"</code> for specs or settings where users compare simultaneous sections.",
+        "item3": "Each <code>AccordionItem</code> requires a unique <code>value</code> prop — it's the internal identifier for controlled state.",
+        "item4": "Maximum 8–10 items per Accordion. Beyond that, organize by category or add search.",
+        "item5": "Use <code>defaultValue</code> to open an item by default without making the component controlled."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "FAQ with multiple questions", "u": "Yes, type=\"single\" + collapsible", "a": "—" },
+        "item2": { "s": "A single expandable section", "u": "No", "a": "Collapsible" },
+        "item3": { "s": "Switching between parallel views", "u": "No", "a": "Tabs" },
+        "item4": { "s": "Comparable specifications", "u": "Yes, type=\"multiple\"", "a": "—" },
+        "item5": { "s": "Required sequential steps", "u": "No", "a": "Stepper" }
+      },
+      "uxWriting": {
+        "title": "✍️ UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "trigger": {
+            "name": "AccordionTrigger (FAQ)",
+            "format": "Full interrogative question · with question mark",
+            "good": "\"How do I reset my password?\"",
+            "bad": "\"Password reset\", \"Password\""
+          },
+          "triggerDoc": {
+            "name": "AccordionTrigger (documentation)",
+            "format": "Noun or noun phrase · no period",
+            "good": "\"Technical specifications\", \"Return policy\"",
+            "bad": "\"Here are the technical specifications.\""
+          },
+          "content": {
+            "name": "AccordionContent",
+            "format": "Objective answer · max 3–4 lines · complete sentence with period",
+            "good": "Direct instruction in 2–3 lines.",
+            "bad": "Long content that should be its own page"
+          }
+        }
+      },
+      "do": {
+        "title": "✅ Use when",
+        "item1": "There are multiple related sections and the user only expands what they need.",
+        "item2": "Content is dense and showing everything simultaneously would overwhelm the page.",
+        "item3": "FAQ, documentation with sections, product specifications.",
+        "item4": "Each item's content fits within 3–4 lines."
+      },
+      "dont": {
+        "title": "❌ Don't use when",
+        "item1": "There's only one expandable section — use Collapsible.",
+        "item2": "Content requires simultaneous section viewing — use Tabs.",
+        "item3": "The item has content so long it should be its own page.",
+        "item4": "The hierarchy is navigational — use Sidebar with nested Accordion."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "single": "import {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from \"@/components/ui/accordion\"",
+      "note": "Four exported subcomponents. All required for basic use."
+    },
+    "variants": {
+      "title": "Types",
+      "single": {
+        "label": "Single (default)",
+        "description": "Only one item open at a time. With <code>collapsible</code>, allows closing the active item. Ideal for FAQ."
+      },
+      "multiple": {
+        "label": "Multiple",
+        "description": "Multiple items can be open simultaneously. Ideal for specs and comparable settings."
+      },
+      "controlled": {
+        "label": "Controlled",
+        "description": "State managed externally via <code>value</code> and <code>onValueChange</code>. Useful for syncing with URL or other state."
+      },
+      "defaultOpen": {
+        "label": "With default open item",
+        "description": "<code>defaultValue</code> prop opens an item by default without controlled mode. Common in documentation and onboarding."
+      }
+    },
+    "states": {
+      "title": "States",
+      "closed": {
+        "label": "Closed (default)",
+        "description": "Collapsed item. Chevron points down."
+      },
+      "open": {
+        "label": "Open",
+        "description": "Expanded item. Chevron rotates 180°. Opening animation active."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "description": "Item with <code>disabled</code> prop. Trigger doesn't respond to clicks; reduced visual appearance."
+      },
+      "focused": {
+        "label": "Focused",
+        "description": "Visible focus ring when navigating by keyboard. Fully operable via Tab, Enter and Space."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "accordion": {
+        "title": "Accordion (root)",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "prop": "Prop",
+        "items": {
+          "type": { "name": "type", "type": "\"single\" | \"multiple\"", "default": "—", "required": "Yes", "description": "Defines whether one or multiple items can be open simultaneously." },
+          "collapsible": { "name": "collapsible", "type": "boolean", "default": "false", "required": "No", "description": "Allows closing the active item (only for type=\"single\")." },
+          "defaultValue": { "name": "defaultValue", "type": "string | string[]", "default": "—", "required": "No", "description": "Default open value(s) (uncontrolled)." },
+          "value": { "name": "value", "type": "string | string[]", "default": "—", "required": "No", "description": "Controlled value(s). Use with onValueChange." },
+          "onValueChange": { "name": "onValueChange", "type": "(value: string | string[]) => void", "default": "—", "required": "No", "description": "Callback when opening/closing an item." },
+          "className": { "name": "className", "type": "string", "default": "—", "required": "No", "description": "Additional CSS classes for the container." }
+        }
+      },
+      "item": {
+        "title": "AccordionItem",
+        "items": {
+          "value": { "name": "value", "type": "string", "default": "—", "required": "Yes", "description": "Unique item identifier. Used by Accordion to control state." },
+          "disabled": { "name": "disabled", "type": "boolean", "default": "false", "required": "No", "description": "Disables the item. Trigger doesn't respond to clicks." },
+          "className": { "name": "className", "type": "string", "default": "—", "required": "No", "description": "Additional CSS classes." }
+        }
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Tailwind Class",
+        "part": "Part"
+      },
+      "items": {
+        "border": { "token": "--border", "class": "border-b", "part": "AccordionItem — bottom separator" },
+        "foreground": { "token": "--foreground", "class": "text-foreground", "part": "AccordionTrigger — title text" },
+        "mutedForeground": { "token": "--muted-foreground", "class": "text-muted-foreground", "part": "Chevron — indicator icon" },
+        "background": { "token": "--background", "class": "bg-background", "part": "AccordionContent — content background" },
+        "ring": { "token": "--ring", "class": "ring-ring", "part": "AccordionTrigger — focus ring" }
+      },
+      "customizationTitle": "Customization via tokens",
+      "customizationCode": "/* Increase separator between items */\n.my-accordion .accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger with background on hover */\n.my-accordion [data-state] {\n  @apply hover:bg-muted/40 rounded-md;\n}"
+    },
+    "doDont": {
+      "pair1": {
+        "do": "Use complete interrogative questions in the FAQ trigger.",
+        "dont": "Don't use ambiguous nominal phrases without context."
+      },
+      "pair2": {
+        "do": "Use type=\"multiple\" when users need to compare open sections.",
+        "dont": "Don't use Accordion for a single expandable section — use Collapsible."
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Accordion uses the WAI-ARIA disclosure pattern. ARIA and roles are applied automatically by the library — don't reimplement.",
+      "keyboard": {
+        "tab": "Moves focus to the next AccordionTrigger.",
+        "shiftTab": "Moves focus to the previous AccordionTrigger.",
+        "enter": "Expands or collapses the focused item.",
+        "space": "Expands or collapses the focused item.",
+        "arrowDown": "Moves focus to the next trigger (native Radix/Reka/Bits behavior).",
+        "arrowUp": "Moves focus to the previous trigger."
+      },
+      "aria": {
+        "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> on trigger — applied automatically.",
+        "ariaControls": "<code>aria-controls</code> points to the content id — applied automatically.",
+        "role": "<code>role=\"region\"</code> on AccordionContent — applied automatically.",
+        "ariaLabelledBy": "<code>aria-labelledby</code> on content points to trigger — applied automatically."
+      },
+      "screenReader": {
+        "closed": "Trigger announced as button with \"collapsed\" state.",
+        "open": "Trigger announced as \"expanded\". Content accessible via Tab.",
+        "disabled": "Disabled item announced as \"disabled\" — may not receive focus in some readers."
+      },
+      "contrast": "Minimum 4.5:1 contrast for trigger text. Chevron uses <code>text-muted-foreground</code> — check contrast in custom themes."
+    },
+    "related": {
+      "title": "Related Components",
+      "collapsible": { "name": "Collapsible", "description": "Use for a single isolated expandable section.", "href": "disclosure-collapsible--playground" },
+      "tabs": { "name": "Tabs", "description": "Use for switching between parallel views.", "href": "navigation-tabs--playground" },
+      "sidebar": { "name": "Sidebar", "description": "Nested Accordion in Sidebar for hierarchical navigation.", "href": "layout-sidebar--playground" }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "The rotating chevron (<code>rotate-180</code>) is applied via <code>[&[data-state=open]>svg]:rotate-180</code> in AccordionTrigger — don't add manually.",
+      "item2": "Open/close animations use CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) defined in <code>tailwind.config.ts</code>.",
+      "item3": "For controlled mode, use <code>value</code> + <code>onValueChange</code>. State should be <code>string</code> for <code>type=\"single\"</code> and <code>string[]</code> for <code>type=\"multiple\"</code>.",
+      "item4": "Don't nest Accordions without a clear purpose — prefer Sidebar with Accordion for navigation hierarchy.",
+      "item5": "<code>collapsible</code> only takes effect with <code>type=\"single\"</code>. In <code>type=\"multiple\"</code> all items are individually closable already."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Track user interactions with the Accordion to understand which sections are most accessed.",
+      "events": {
+        "expand": { "event": "accordion_expand", "trigger": "User opens an item", "payload": "{ component: \"accordion\", label: string, location: string }" },
+        "collapse": { "event": "accordion_collapse", "trigger": "User closes an item", "payload": "{ component: \"accordion\", label: string, location: string }" }
+      },
+      "note": "Use <code>data-state=\"closed\"</code> on the trigger to detect if the click will open — Radix updates the state after the event."
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen on each Accordion interaction.",
+        "item1": { "action": "Click closed AccordionTrigger", "result": "Item expands; AccordionContent becomes visible", "priority": "high" },
+        "item2": { "action": "Click open AccordionTrigger (collapsible=true)", "result": "Item collapses; AccordionContent hidden", "priority": "high" },
+        "item3": { "action": "Click second item with type=\"single\"", "result": "First item closes automatically; second opens", "priority": "high" },
+        "item4": { "action": "Click second item with type=\"multiple\"", "result": "Both items remain open simultaneously", "priority": "high" },
+        "item5": { "action": "Click item with disabled=true", "result": "Item doesn't expand; onClick not fired", "priority": "medium" },
+        "item6": { "action": "Render with defaultValue=\"item-1\"", "result": "Item 1 starts open without controlled mode", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "No axe-core violations in default and open state", "level": "AA", "how": "axe-playwright in Storybook test-runner" },
+        "item2": { "criterion": "aria-expanded=\"false\" on closed trigger / \"true\" open", "level": "AA", "how": "getByRole('button') + toHaveAttribute('aria-expanded', 'true')" },
+        "item3": { "criterion": "Focus ring visible when navigating by Tab", "level": "AA", "how": "Inspect :focus-visible manually" },
+        "item4": { "criterion": "Enter and Space expand/collapse the focused item", "level": "A", "how": "userEvent.keyboard('{Enter}') / userEvent.keyboard(' ')" },
+        "item5": { "criterion": "Disabled item has aria-disabled or native disabled", "level": "AA", "how": "expect(trigger).toBeDisabled()" }
+      },
+      "visual": {
+        "title": "Visual Regression (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "required": "✓ Required",
+        "item1": { "story": "Playground — single type, item 1 open", "priority": "high" },
+        "item2": { "story": "Variants — single, multiple, controlled, defaultOpen", "priority": "high" },
+        "item3": { "story": "States — open, closed, disabled", "priority": "high" },
+        "item4": { "story": "Compositions — with icon in trigger, rich content", "priority": "medium" },
+        "item5": { "story": "Interactive — open animation captured", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Types",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Accordion",
+    "category": "Disclosure",
+    "type": "Componente",
+    "description": "Secciones colapsables para organizar contenido relacionado. Usa para FAQ, documentación y configuraciones agrupadas.",
+    "seo": {
+      "title": "Accordion — Disclosure · Design System",
+      "description": "Documentación del Accordion: tipos single y multiple, modo controlado, accesibilidad WCAG con ARIA automático y animación.",
+      "aiSummary": "Componente Accordion con tipos single y multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI y soporte de navegación por teclado.",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "q1": "¿Cómo restablezco mi contraseña?",
+        "a1": "Accede a la pantalla de inicio de sesión y haz clic en \"Olvidé mi contraseña\". Recibirás un enlace de restablecimiento en el correo registrado, válido por 24 horas.",
+        "q2": "¿Qué formas de pago se aceptan?",
+        "a2": "Aceptamos tarjeta de crédito, Pix y transferencia bancaria. Pago a plazos disponible en hasta 12 cuotas sin intereses con tarjeta.",
+        "q3": "¿Cómo cancelo mi suscripción?",
+        "a3": "Puedes cancelar en cualquier momento en Configuración → Suscripción. El acceso permanece activo hasta el final del período ya pagado.",
+        "q4": "¿Dónde encuentro mis datos de acceso?",
+        "a4": "Tus datos de acceso están disponibles en Configuración → Cuenta. Para restablecer la contraseña, usa la opción en la pantalla de inicio de sesión."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Accordion</strong> — contenedor raíz. Define <code>type</code> (<code>single</code> o <code>multiple</code>) y <code>collapsible</code>.",
+      "item2": "<strong>AccordionItem</strong> — representa un ítem con <code>value</code> único obligatorio. Renderiza <code>&lt;div&gt;</code> con <code>border-b</code>.",
+      "item3": "<strong>AccordionTrigger</strong> — botón de acción. Incluye <code>aria-expanded</code> automático y chevron rotativo.",
+      "item4": "<strong>AccordionContent</strong> — área de contenido con animación de apertura/cierre via CSS. Respeta <code>prefers-reduced-motion</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "📋 Guías Obligatorias",
+        "item1": "Usa <code>type=\"single\"</code> con <code>collapsible</code> para FAQ — permite cerrar el ítem activo haciendo clic en él nuevamente.",
+        "item2": "Usa <code>type=\"multiple\"</code> para especificaciones o configuraciones donde el usuario compara secciones simultáneas.",
+        "item3": "Cada <code>AccordionItem</code> requiere prop <code>value</code> única — es el identificador interno para el estado controlado.",
+        "item4": "Máximo 8–10 ítems por Accordion. Más de eso, organiza por categorías o agrega búsqueda.",
+        "item5": "Usa <code>defaultValue</code> para abrir un ítem por defecto sin convertir el componente en controlado."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "FAQ con múltiples preguntas", "u": "Sí, type=\"single\" + collapsible", "a": "—" },
+        "item2": { "s": "Una única sección expandible", "u": "No", "a": "Collapsible" },
+        "item3": { "s": "Alternar entre vistas paralelas", "u": "No", "a": "Tabs" },
+        "item4": { "s": "Especificaciones comparables", "u": "Sí, type=\"multiple\"", "a": "—" },
+        "item5": { "s": "Pasos secuenciales obligatorios", "u": "No", "a": "Stepper" }
+      },
+      "uxWriting": {
+        "title": "✍️ UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "trigger": {
+            "name": "AccordionTrigger (FAQ)",
+            "format": "Pregunta interrogativa completa · con signo de interrogación",
+            "good": "\"¿Cómo restablezco mi contraseña?\"",
+            "bad": "\"Restablecimiento de contraseña\", \"Contraseña\""
+          },
+          "triggerDoc": {
+            "name": "AccordionTrigger (documentación)",
+            "format": "Sustantivo o frase nominal · sin punto final",
+            "good": "\"Especificaciones técnicas\", \"Política de devolución\"",
+            "bad": "\"Aquí están las especificaciones técnicas.\""
+          },
+          "content": {
+            "name": "AccordionContent",
+            "format": "Respuesta objetiva · máx. 3–4 líneas · frase completa con punto final",
+            "good": "Instrucción directa en 2–3 líneas.",
+            "bad": "Contenido largo que debería ser su propia página"
+          }
+        }
+      },
+      "do": {
+        "title": "✅ Usa cuando",
+        "item1": "Hay múltiples secciones relacionadas y el usuario solo expande lo que necesita.",
+        "item2": "El contenido es denso y mostrar todo simultáneamente sobrecargaría la página.",
+        "item3": "FAQ, documentación con secciones, especificaciones de producto.",
+        "item4": "El contenido de cada ítem cabe en hasta 3–4 líneas."
+      },
+      "dont": {
+        "title": "❌ No uses cuando",
+        "item1": "Solo hay una sección expandible — usa Collapsible.",
+        "item2": "El contenido requiere visualización simultánea de secciones — usa Tabs.",
+        "item3": "El ítem tiene contenido tan largo que debería ser su propia página.",
+        "item4": "La jerarquía es de navegación — usa Sidebar con Accordion anidado."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "single": "import {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from \"@/components/ui/accordion\"",
+      "note": "Cuatro subcomponentes exportados. Todos necesarios para el uso básico."
+    },
+    "variants": {
+      "title": "Tipos",
+      "single": {
+        "label": "Single (predeterminado)",
+        "description": "Solo un ítem abierto a la vez. Con <code>collapsible</code>, permite cerrar el ítem activo. Ideal para FAQ."
+      },
+      "multiple": {
+        "label": "Multiple",
+        "description": "Múltiples ítems pueden estar abiertos simultáneamente. Ideal para especificaciones y configuraciones comparables."
+      },
+      "controlled": {
+        "label": "Controlado",
+        "description": "Estado gestionado externamente via <code>value</code> y <code>onValueChange</code>. Útil para sincronizar con URL u otro estado."
+      },
+      "defaultOpen": {
+        "label": "Con ítem abierto por defecto",
+        "description": "La prop <code>defaultValue</code> abre un ítem por defecto sin modo controlado. Común en documentación y onboarding."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "closed": {
+        "label": "Cerrado (predeterminado)",
+        "description": "Ítem colapsado. El chevron apunta hacia abajo."
+      },
+      "open": {
+        "label": "Abierto",
+        "description": "Ítem expandido. El chevron rota 180°. Animación de apertura activa."
+      },
+      "disabled": {
+        "label": "Deshabilitado",
+        "description": "Ítem con prop <code>disabled</code>. El trigger no responde a clics; apariencia visual reducida."
+      },
+      "focused": {
+        "label": "Con foco",
+        "description": "Focus ring visible al navegar por teclado. Completamente operable via Tab, Enter y Space."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "accordion": {
+        "title": "Accordion (raíz)",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "prop": "Prop",
+        "items": {
+          "type": { "name": "type", "type": "\"single\" | \"multiple\"", "default": "—", "required": "Sí", "description": "Define si uno o múltiples ítems pueden estar abiertos simultáneamente." },
+          "collapsible": { "name": "collapsible", "type": "boolean", "default": "false", "required": "No", "description": "Permite cerrar el ítem activo (solo para type=\"single\")." },
+          "defaultValue": { "name": "defaultValue", "type": "string | string[]", "default": "—", "required": "No", "description": "Valor(es) abierto(s) por defecto (no controlado)." },
+          "value": { "name": "value", "type": "string | string[]", "default": "—", "required": "No", "description": "Valor(es) controlado(s). Usa con onValueChange." },
+          "onValueChange": { "name": "onValueChange", "type": "(value: string | string[]) => void", "default": "—", "required": "No", "description": "Callback al abrir/cerrar un ítem." },
+          "className": { "name": "className", "type": "string", "default": "—", "required": "No", "description": "Clases CSS adicionales para el contenedor." }
+        }
+      },
+      "item": {
+        "title": "AccordionItem",
+        "items": {
+          "value": { "name": "value", "type": "string", "default": "—", "required": "Sí", "description": "Identificador único del ítem. Usado por Accordion para controlar el estado." },
+          "disabled": { "name": "disabled", "type": "boolean", "default": "false", "required": "No", "description": "Deshabilita el ítem. El trigger no responde a clics." },
+          "className": { "name": "className", "type": "string", "default": "—", "required": "No", "description": "Clases CSS adicionales." }
+        }
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase Tailwind",
+        "part": "Parte"
+      },
+      "items": {
+        "border": { "token": "--border", "class": "border-b", "part": "AccordionItem — separador inferior" },
+        "foreground": { "token": "--foreground", "class": "text-foreground", "part": "AccordionTrigger — texto del título" },
+        "mutedForeground": { "token": "--muted-foreground", "class": "text-muted-foreground", "part": "Chevron — icono indicador" },
+        "background": { "token": "--background", "class": "bg-background", "part": "AccordionContent — fondo del contenido" },
+        "ring": { "token": "--ring", "class": "ring-ring", "part": "AccordionTrigger — focus ring" }
+      },
+      "customizationTitle": "Personalización via tokens",
+      "customizationCode": "/* Aumentar separador entre ítems */\n.my-accordion .accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger con fondo en hover */\n.my-accordion [data-state] {\n  @apply hover:bg-muted/40 rounded-md;\n}"
+    },
+    "doDont": {
+      "pair1": {
+        "do": "Usa preguntas interrogativas completas en el trigger de FAQ.",
+        "dont": "No uses frases nominales ambiguas sin contexto."
+      },
+      "pair2": {
+        "do": "Usa type=\"multiple\" cuando el usuario necesita comparar secciones abiertas.",
+        "dont": "No uses Accordion para una única sección expandible — usa Collapsible."
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Accordion usa el patrón de disclosure de WAI-ARIA. ARIA y roles son aplicados automáticamente por la librería — no reimplementar.",
+      "keyboard": {
+        "tab": "Mueve el foco al siguiente AccordionTrigger.",
+        "shiftTab": "Mueve el foco al AccordionTrigger anterior.",
+        "enter": "Expande o colapsa el ítem enfocado.",
+        "space": "Expande o colapsa el ítem enfocado.",
+        "arrowDown": "Mueve el foco al siguiente trigger (comportamiento nativo Radix/Reka/Bits).",
+        "arrowUp": "Mueve el foco al trigger anterior."
+      },
+      "aria": {
+        "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> en el trigger — aplicado automáticamente.",
+        "ariaControls": "<code>aria-controls</code> apunta al id del contenido — aplicado automáticamente.",
+        "role": "<code>role=\"region\"</code> en AccordionContent — aplicado automáticamente.",
+        "ariaLabelledBy": "<code>aria-labelledby</code> en el contenido apunta al trigger — aplicado automáticamente."
+      },
+      "screenReader": {
+        "closed": "Trigger anunciado como botón con estado \"contraído\" (collapsed).",
+        "open": "Trigger anunciado como \"expandido\" (expanded). Contenido accesible via Tab.",
+        "disabled": "Ítem deshabilitado anunciado como \"deshabilitado\" — puede no recibir foco en algunos lectores."
+      },
+      "contrast": "Contraste mínimo 4.5:1 para el texto del trigger. El chevron usa <code>text-muted-foreground</code> — verificar contraste en temas personalizados."
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "collapsible": { "name": "Collapsible", "description": "Usa para una única sección expandible aislada.", "href": "disclosure-collapsible--playground" },
+      "tabs": { "name": "Tabs", "description": "Usa para alternar entre vistas paralelas.", "href": "navigation-tabs--playground" },
+      "sidebar": { "name": "Sidebar", "description": "Accordion anidado en Sidebar para navegación jerárquica.", "href": "layout-sidebar--playground" }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "El chevron rotativo (<code>rotate-180</code>) se aplica via <code>[&[data-state=open]>svg]:rotate-180</code> en AccordionTrigger — no agregar manualmente.",
+      "item2": "Las animaciones de apertura/cierre usan CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas en <code>tailwind.config.ts</code>.",
+      "item3": "Para modo controlado, usa <code>value</code> + <code>onValueChange</code>. El estado debe ser <code>string</code> para <code>type=\"single\"</code> y <code>string[]</code> para <code>type=\"multiple\"</code>.",
+      "item4": "No anides Accordions sin un propósito claro — prefiere Sidebar con Accordion para jerarquía de navegación.",
+      "item5": "<code>collapsible</code> solo tiene efecto con <code>type=\"single\"</code>. En <code>type=\"multiple\"</code> todos los ítems ya son individualmente cerrables."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastrea las interacciones del usuario con el Accordion para entender qué secciones se acceden más.",
+      "events": {
+        "expand": { "event": "accordion_expand", "trigger": "Usuario abre un ítem", "payload": "{ component: \"accordion\", label: string, location: string }" },
+        "collapse": { "event": "accordion_collapse", "trigger": "Usuario cierra un ítem", "payload": "{ component: \"accordion\", label: string, location: string }" }
+      },
+      "note": "Usa <code>data-state=\"closed\"</code> en el trigger para detectar si el clic va a abrir — Radix actualiza el estado después del evento."
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en cada interacción con el Accordion.",
+        "item1": { "action": "Hacer clic en AccordionTrigger cerrado", "result": "Ítem se expande; AccordionContent queda visible", "priority": "high" },
+        "item2": { "action": "Hacer clic en AccordionTrigger abierto (collapsible=true)", "result": "Ítem colapsa; AccordionContent desaparece", "priority": "high" },
+        "item3": { "action": "Hacer clic en segundo ítem con type=\"single\"", "result": "Primer ítem cierra automáticamente; segundo abre", "priority": "high" },
+        "item4": { "action": "Hacer clic en segundo ítem con type=\"multiple\"", "result": "Ambos ítems permanecen abiertos simultáneamente", "priority": "high" },
+        "item5": { "action": "Hacer clic en ítem con disabled=true", "result": "Ítem no se expande; onClick no se dispara", "priority": "medium" },
+        "item6": { "action": "Renderizar con defaultValue=\"item-1\"", "result": "Ítem 1 comienza abierto sin modo controlado", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "Sin violaciones axe-core en estado predeterminado y abierto", "level": "AA", "how": "axe-playwright en el test-runner de Storybook" },
+        "item2": { "criterion": "aria-expanded=\"false\" en trigger cerrado / \"true\" abierto", "level": "AA", "how": "getByRole('button') + toHaveAttribute('aria-expanded', 'true')" },
+        "item3": { "criterion": "Focus ring visible al navegar por Tab", "level": "AA", "how": "Inspeccionar :focus-visible manualmente" },
+        "item4": { "criterion": "Enter y Space expanden/colapsan el ítem enfocado", "level": "A", "how": "userEvent.keyboard('{Enter}') / userEvent.keyboard(' ')" },
+        "item5": { "criterion": "Ítem deshabilitado tiene aria-disabled o disabled nativo", "level": "AA", "how": "expect(trigger).toBeDisabled()" }
+      },
+      "visual": {
+        "title": "Regresión Visual (Chromatic)",
+        "description": "Cada story es capturada automáticamente para regresión visual.",
+        "required": "✓ Obligatorio",
+        "item1": { "story": "Playground — tipo single, ítem 1 abierto", "priority": "high" },
+        "item2": { "story": "Variantes — single, multiple, controlled, defaultOpen", "priority": "high" },
+        "item3": { "story": "Estados — abierto, cerrado, deshabilitado", "priority": "high" },
+        "item4": { "story": "Composiciones — con icono en trigger, contenido rico", "priority": "medium" },
+        "item5": { "story": "Interactivo — animación de apertura capturada", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Descripción General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Tipos",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
