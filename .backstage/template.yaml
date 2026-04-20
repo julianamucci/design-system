@@ -2,20 +2,17 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: design-system-scaffold
-  title: Design System — Multi-Stack
+  title: Design System — Single Stack
   description: >
-    Template para criar um design system com documentação centralizada e suporte
-    a múltiplos frameworks. Inclui Storybook, temas customizáveis e skills do
-    Claude Code para continuar desenvolvendo com IA. Escolha uma ou mais stacks.
+    Template para criar um design system com documentação centralizada e um
+    framework de sua escolha. Inclui Storybook, temas customizáveis e skills
+    do Claude Code para continuar desenvolvendo com IA. Um projeto = uma stack.
+    Para usar múltiplas stacks, gere projetos separados.
   tags:
     - design-system
     - frontend
     - component-library
     - storybook
-    - react
-    - vue
-    - svelte
-    - vanilla
     - claude-code
 
 spec:
@@ -59,39 +56,30 @@ spec:
           description: "Formato: G-XXXXXXXXXX. Deixe vazio para desativar analytics."
           pattern: '^(G-[A-Z0-9]+)?$'
 
-    # ── Passo 2: Stacks ──────────────────────────────────────────────────────
-    - title: Frameworks
+    # ── Passo 2: Framework ───────────────────────────────────────────────────
+    - title: Framework
       required:
-        - stacks
+        - stack
       properties:
-        stacks:
-          type: array
-          title: Stacks incluídas
+        stack:
+          type: string
+          title: Framework escolhido
           description: >
-            Selecione uma ou mais. A documentação textual é idêntica em todos os
-            frameworks — apenas os exemplos de código variam. Você pode adicionar
-            mais stacks depois rodando o scaffolder novamente.
-          minItems: 1
-          uniqueItems: true
-          items:
-            type: string
-            enum:
-              - react
-              - vue
-              - svelte
-              - basecoat
-          ui:widget: checkboxes
-          ui:enumNames:
+            Um projeto gera apenas uma stack. Para usar mais de um framework,
+            gere projetos separados (ex. "meu-ds-react" e "meu-ds-vue").
+            A documentação textual é idêntica em todos os frameworks — apenas
+            os exemplos de código variam.
+          enum:
+            - react
+            - vue
+            - svelte
+            - basecoat
+          enumNames:
             - "React 19 (shadcn/ui + Radix UI)"
             - "Vue 3 (shadcn-vue + Reka UI)"
             - "Svelte 5 (shadcn-svelte + Bits UI)"
             - "Basecoat — Vanilla TS (basecoat-css + Tailwind)"
-
-        includeStorybook:
-          type: boolean
-          title: Incluir Storybook 10
-          description: Interface principal de documentação e testes de componentes
-          default: true
+          default: react
 
         includeChromatic:
           type: boolean
@@ -128,7 +116,7 @@ spec:
           default: true
 
   steps:
-    # ── Root: arquivos compartilhados entre todas as stacks ─────────────────
+    # ── Root: arquivos compartilhados ───────────────────────────────────────
     - id: fetch-root
       name: Inicializar estrutura raiz
       action: fetch:template
@@ -140,8 +128,7 @@ spec:
           description: ${{ parameters.description }}
           owner: ${{ parameters.owner }}
           gaId: ${{ parameters.gaId }}
-          stacks: ${{ parameters.stacks }}
-          includeStorybook: ${{ parameters.includeStorybook }}
+          stack: ${{ parameters.stack }}
           includeClaudeSkills: ${{ parameters.includeClaudeSkills }}
           year: ${{ '' | now('YYYY') }}
 
@@ -154,59 +141,13 @@ spec:
         url: ./skeleton/root/.claude
         targetPath: .claude
 
-    # ── Stack: React ─────────────────────────────────────────────────────────
-    - id: fetch-stack-react
-      name: Adicionar stack React
-      if: ${{ 'react' in parameters.stacks }}
+    # ── Stack única ─────────────────────────────────────────────────────────
+    - id: fetch-stack
+      name: Adicionar stack escolhida
       action: fetch:template
       input:
-        url: ./skeleton/stacks/react
-        targetPath: design-system-react
-        values:
-          projectName: ${{ parameters.projectName }}
-          displayName: ${{ parameters.displayName }}
-          description: ${{ parameters.description }}
-          gaId: ${{ parameters.gaId }}
-          includeChromatic: ${{ parameters.includeChromatic }}
-
-    # ── Stack: Vue ───────────────────────────────────────────────────────────
-    - id: fetch-stack-vue
-      name: Adicionar stack Vue
-      if: ${{ 'vue' in parameters.stacks }}
-      action: fetch:template
-      input:
-        url: ./skeleton/stacks/vue
-        targetPath: design-system-vue
-        values:
-          projectName: ${{ parameters.projectName }}
-          displayName: ${{ parameters.displayName }}
-          description: ${{ parameters.description }}
-          gaId: ${{ parameters.gaId }}
-          includeChromatic: ${{ parameters.includeChromatic }}
-
-    # ── Stack: Svelte ────────────────────────────────────────────────────────
-    - id: fetch-stack-svelte
-      name: Adicionar stack Svelte
-      if: ${{ 'svelte' in parameters.stacks }}
-      action: fetch:template
-      input:
-        url: ./skeleton/stacks/svelte
-        targetPath: design-system-svelte
-        values:
-          projectName: ${{ parameters.projectName }}
-          displayName: ${{ parameters.displayName }}
-          description: ${{ parameters.description }}
-          gaId: ${{ parameters.gaId }}
-          includeChromatic: ${{ parameters.includeChromatic }}
-
-    # ── Stack: Basecoat ──────────────────────────────────────────────────────
-    - id: fetch-stack-basecoat
-      name: Adicionar stack Basecoat (Vanilla TS)
-      if: ${{ 'basecoat' in parameters.stacks }}
-      action: fetch:template
-      input:
-        url: ./skeleton/stacks/basecoat
-        targetPath: design-system-basecoat
+        url: ./skeleton/stacks/${{ parameters.stack }}
+        targetPath: design-system-${{ parameters.stack }}
         values:
           projectName: ${{ parameters.projectName }}
           displayName: ${{ parameters.displayName }}
@@ -250,20 +191,17 @@ spec:
         content: |
           ## Design System criado com sucesso! 🎉
 
-          **Stacks incluídas:** ${{ parameters.stacks | join(', ') }}
+          **Stack escolhida:** ${{ parameters.stack }}
 
           ### Instalar dependências
           ```bash
-          {% for stack in parameters.stacks %}
-          cd design-system-${{ stack }} && npm install && cd ..
-          {% endfor %}
+          cd design-system-${{ parameters.stack }}
+          npm install
           ```
 
           ### Abrir o Storybook
           ```bash
-          {% for stack in parameters.stacks %}
-          npm run storybook:${{ stack }}   # http://localhost:6006
-          {% endfor %}
+          npm run storybook   # http://localhost:6006
           ```
 
           ### Customizar temas
@@ -273,5 +211,8 @@ spec:
           {% if parameters.includeClaudeSkills %}
           ### Usar as skills do Claude Code
           Abra o projeto no Claude Code e use `/pipeline new <componente>` para criar
-          um novo componente com documentação completa em todas as stacks.
+          um novo componente com documentação completa.
+
+          Para gerar o mesmo design system em outra stack, rode este template novamente
+          escolhendo outro framework (ex. "meu-ds-react" → "meu-ds-vue").
           {% endif %}

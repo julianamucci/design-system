@@ -5,21 +5,16 @@ metadata:
   title: ${{ values.displayName }}
   description: ${{ values.description }}
   annotations:
-    github.com/project-slug: ${{ values.repoUrl | replace("https://github.com/", "") }}
     backstage.io/techdocs-ref: dir:.
   tags:
     - design-system
     - frontend
     - storybook
-{% for stack in values.stacks %}
-    - ${{ stack }}
-{% endfor %}
+    - ${{ values.stack }}
   links:
-{% for stack in values.stacks %}
-    - url: https://your-storybook-url/{{ stack }}
-      title: Storybook — {{ stack }}
+    - url: https://your-storybook-url
+      title: Storybook
       icon: dashboard
-{% endfor %}
 
 spec:
   type: library
