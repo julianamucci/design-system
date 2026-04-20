@@ -497,6 +497,22 @@ Componentes como **AlertDialog** (implementação vanilla-TS com foco-trap manua
 9. **Play function** — 6 critérios: trigger abre com `role="alertdialog"`; Cancel fecha + retorna foco ao trigger; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
 10. **Analytics de produto** — além dos eventos de docs: `dialog_open { component, location, label }`, `dialog_confirm { ... }`, `dialog_close { ..., trigger: "cancel_button" | "escape" }`.
 
+### Containers Passivos Stateless (padrão AspectRatio)
+
+Componentes como **AspectRatio** usam a factory `createAspectRatio({ ratio, content, className })` de `./aspect-ratio`. Preservam proporção largura/altura do filho via `padding-bottom: (1 / ratio) * 100%` + inner `position: absolute; inset: 0`. Sem estado, sem eventos, sem `cva()`, sem `size`.
+
+1. **`createDocsDemonstration`** — `demoFactory` retorna grid responsivo (`grid-cols-1 sm:grid-cols-2 gap-6`) com 4 ratios canônicos. Labels em `<p class="text-xs font-medium text-muted-foreground">`. Ratios 1/1 e 3/4 em wrapper `max-w-[220px]` / `max-w-[260px]`.
+2. **`createDocsAnatomy`** — 3 items: Root (wrapper com `padding-bottom` calculado manualmente), inner `absolute inset-0` e o filho (`img | video | iframe`). `structureCode` mostra a hierarquia.
+3. **`createDocsWhenToUse`** — **omitir `uxWriting`**: AspectRatio não tem texto visível próprio. Passar apenas `guidelines`, `scenarios` (5 linhas) e `do`/`dont` (4 items cada).
+4. **`createDocsVariants`** — renderizar como "Ratios Canônicos", não variantes `cva()`. `items` com 5 entradas fixas (`16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`, `21 / 9`). Cada `previewFactory` chama `createAspectRatio({ ratio, content: imgEl })`. `variants.note` no JSON deixa explícito que são padrões canônicos.
+5. **`createDocsStates`** — 3 linhas descrevendo **ownership transfer** ao filho: `Conteúdo carregado` / `Conteúdo ausente` / `Conteúdo falhou`. `states.note` explica que o componente é stateless.
+6. **`createDocsProps`** — 1 tabela única com 4 linhas: `ratio` (number, default 1), `content` (`HTMLElement`, obrigatório — **não existe** `asChild` no Basecoat), `className` (string), e opcionalmente demais atributos HTML. Documentar a diferença frente às demais stacks (`content` em vez de `children`).
+7. **`createDocsTokens`** — Basecoat AspectRatio não usa tokens próprios. Documentar apenas os tokens aplicáveis **quando usado como placeholder**: `--radius` → `rounded-md`, `--border` → `border`, `--muted` → `bg-muted`. `tokens.note` no JSON explica que sem `content` o container é transparente. `customizationCode` instrui a aplicar classes no elemento passado como `content`, nunca no wrapper.
+8. **`createDocsAccessibility`** — `keyboardItems` com linha `{ key: "—", description: "sem tab stops próprios" }` + nota sobre foco delegado ao filho. Foca em `data-slot="aspect-ratio"` e `alt`/`title` do elemento `content`.
+9. **`createDocsAnalytics`** — tabela com **uma única linha passiva**: `{ event: '—', trigger: stripHtml(t('analytics.note')), payload: '—' }`. Não listar `docs_page_view`/`docs_section_viewed` aqui.
+10. **Stories** — criar apenas `.stories.ts`, `-variantes` e `-composicoes`. **Omitir** `-tamanhos` (sem `size`) e `-estados` (stateless). Previews chamam `createAspectRatio({ ratio, content })` onde `content` é criado via `document.createElement('img')` com `alt`, `loading="lazy"`, `decoding="async"` e classes `rounded-md object-cover w-full h-full`.
+11. **`rounded-md` / `border` no `content`** — regra visual absoluta: nunca aplicar no wrapper AspectRatio; aplicar sempre no elemento `HTMLElement` passado como `content`.
+
 ---
 
 ## Proibições

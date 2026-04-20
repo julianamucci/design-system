@@ -530,6 +530,22 @@ Componentes como **AlertDialog** são overlays de decisão forçada — não pos
 9. **Play function** — 6 critérios: trigger abre com `role="alertdialog"`; Cancel fecha + retorna foco; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
 10. **Analytics de produto** — além dos eventos de docs: `dialog_open { component: "alert_dialog", location, label }` ao abrir; `dialog_confirm { ... }` ao confirmar; `dialog_close { ..., trigger: "cancel_button" | "escape" }` ao cancelar.
 
+### Containers Passivos Stateless (padrão AspectRatio)
+
+Componentes como **AspectRatio** (base: `reka-ui`) preservam proporção largura/altura do filho. Não têm estado, não disparam eventos, não possuem `cva()` nem prop `size` — toda interação é do filho.
+
+1. **`DocsDemonstration`** — grid responsivo (`grid-cols-1 sm:grid-cols-2 gap-6`) com 4 ratios canônicos rotulados. Labels em `<p class="text-xs font-medium text-muted-foreground">`. Ratios que crescem muito (1/1, 3/4) usam wrapper `max-w-[220px]` / `max-w-[260px]`.
+2. **`DocsAnatomy`** — 3 items: Root (`data-slot="aspect-ratio"` com `padding-bottom` calculado pelo Reka), inner `absolute inset-0` e o filho (`img | video | iframe`).
+3. **`DocsWhenToUse`** — **omitir `uxWriting`**: AspectRatio não tem texto visível próprio. Passar apenas `guidelines`, `scenarios` (5 linhas) e `do`/`dont` (4 items cada).
+4. **`DocsVariants`** — renderizar como "Ratios Canônicos", não variantes `cva()`. `items` com 5 entradas fixas (`16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`, `21 / 9`). O `name` é o próprio ratio. `variants.note` no JSON deixa explícito que são padrões canônicos, não `cva()`.
+5. **`DocsStates`** — 3 linhas descrevendo **ownership transfer** ao filho: `Conteúdo carregado` / `Conteúdo ausente` / `Conteúdo falhou`. Coluna "Gatilho" descreve o estado do filho; "Comportamento" descreve a inércia do container. `states.note` explica que o componente é stateless.
+6. **`DocsProps`** — 1 tabela única com 4 linhas: `ratio` (number, default 1), `children` / slot (obrigatório), `asChild` (boolean, default false), `class` (string).
+7. **`DocsTokens`** — AspectRatio não usa tokens próprios. Documentar apenas os tokens aplicáveis **quando usado como placeholder** (skeleton): `--radius` → `rounded-md`, `--border` → `border border-border`, `--muted` → `bg-muted`. `tokens.note` no JSON deixa claro que o container é transparente sem filho. `customizationCode` instrui a aplicar borda/radius **no filho**, nunca no wrapper.
+8. **`DocsAccessibility`** — `keyboardItems` com linha `{ key: "—", description: "sem tab stops próprios" }` + nota sobre foco passar ao filho. `accessibility.aria.item*` foca em `data-slot="aspect-ratio"` e `alt`/`title` do filho.
+9. **`DocsAnalytics`** — tabela com **uma única linha passiva**: `{ event: '—', trigger: tContent('analytics.note'), payload: '—' }`. Não listar `docs_page_view`/`docs_section_viewed` aqui (são do layer de docs, não do componente).
+10. **Stories** — criar apenas `.stories.ts`, `-variantes` e `-composicoes`. **Omitir** `-tamanhos` (sem `size`) e `-estados` (stateless). Só o arquivo principal leva `tags: ["autodocs"]`.
+11. **`rounded-md` / `border` no filho** — regra visual absoluta: nunca aplicar no wrapper AspectRatio.
+
 ---
 
 ## Proibições
