@@ -14,7 +14,7 @@ const props = defineProps<{
     cols: { scenario: string; use: string; alternative: string };
     items: DocsWhenToUseScenario[];
   };
-  uxWriting: {
+  uxWriting?: {
     title: string;
     cols: { element: string; do: string; dont: string; rules?: string };
     items: DocsWhenToUseUXRow[];
@@ -58,7 +58,7 @@ const props = defineProps<{
         </div>
 
         <!-- UX Writing -->
-        <div class="space-y-3">
+        <div v-if="uxWriting" class="space-y-3">
           <h3 class="font-medium text-sm">{{ uxWriting.title }}</h3>
           <div class="overflow-x-auto">
             <Table>
@@ -83,7 +83,7 @@ const props = defineProps<{
               <TableBody>
                 <TableRow v-for="(row, i) in uxWriting.items" :key="i" class="border-b border-border last:border-0 hover:bg-muted/5">
                   <TableCell class="p-3 border-r border-border font-medium">{{ row.element }}</TableCell>
-                  <TableCell v-if="uxWriting.cols.rules" class="p-3 border-r border-border text-muted-foreground">{{ row.rules }}</TableCell>
+                  <TableCell v-if="uxWriting!.cols.rules" class="p-3 border-r border-border text-muted-foreground">{{ row.rules }}</TableCell>
                   <TableCell class="p-3 border-r border-border font-medium text-green-600 dark:text-green-500">{{ row.do }}</TableCell>
                   <TableCell class="p-3 font-medium text-red-600 dark:text-red-500">{{ row.dont }}</TableCell>
                 </TableRow>
