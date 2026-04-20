@@ -1,0 +1,998 @@
+{
+  "pt-BR": {
+    "title": "AspectRatio",
+    "category": "Layout",
+    "type": "Componente",
+    "description": "Container que preserva uma proporção fixa de largura-altura para mídia responsiva — imagens, vídeos, iframes e mapas.",
+    "seo": {
+      "title": "AspectRatio — Layout · Design System",
+      "description": "Documentação do AspectRatio: container que preserva proporção fixa para imagens, vídeos e iframes, com 5 ratios canônicos e comportamento responsivo.",
+      "aiSummary": "Componente AspectRatio container passivo que preserva proporção largura/altura em imagens, vídeos e iframes via Radix UI, Reka UI e Bits UI; sem estado, sem eventos.",
+      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, CSS padding-bottom, responsive media",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "sixteenNine": "16 / 9 — Vídeo",
+        "fourThree": "4 / 3 — Produto",
+        "square": "1 / 1 — Avatar",
+        "threeFour": "3 / 4 — Retrato"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Root</strong> — wrapper que aplica a proporção via <code>padding-bottom</code> calculado.",
+      "item2": "<strong>Slot</strong> — elemento filho (imagem, vídeo, iframe) que preenche o container absolutamente.",
+      "item3": "<strong>ratio</strong> — número representando largura dividida por altura (<code>16/9</code>, <code>1</code>, <code>4/3</code>)."
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Envolver toda mídia cuja proporção precisa ser preservada independente do tamanho do container.",
+        "item2": "Aplicar <code>object-cover w-full h-full</code> no elemento filho para preencher sem distorcer.",
+        "item3": "Usar <code>rounded-md</code> no filho, nunca no container AspectRatio — o raio se aplica à mídia visível.",
+        "item4": "Imagens devem ter <code>alt</code> descritivo; decorativas recebem <code>alt=\"\"</code>.",
+        "item5": "Usar <code>ImageWithFallback</code> para imagens externas que podem falhar ao carregar."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Vídeo embed ou thumbnail",
+          "u": "AspectRatio 16/9",
+          "a": "Hardcode <code>aspect-video</code>"
+        },
+        "item2": {
+          "s": "Avatar ou thumbnail quadrado",
+          "u": "AspectRatio 1/1",
+          "a": "Avatar (inclui fallback)"
+        },
+        "item3": {
+          "s": "Imagem de produto",
+          "u": "AspectRatio 4/3",
+          "a": "Card com imagem livre"
+        },
+        "item4": {
+          "s": "Retrato ou capa vertical",
+          "u": "AspectRatio 3/4",
+          "a": "Grid fixo com altura"
+        },
+        "item5": {
+          "s": "Conteúdo de altura variável",
+          "u": "Container sem ratio",
+          "a": "AspectRatio força proporção"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regra",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "alt": {
+            "name": "alt de imagem informativa",
+            "format": "Descrever conteúdo, não aparência",
+            "good": "Gráfico de vendas 2025 por trimestre",
+            "bad": "Imagem colorida de barras"
+          },
+          "altDecorative": {
+            "name": "alt de imagem decorativa",
+            "format": "String vazia",
+            "good": "alt=\"\"",
+            "bad": "alt=\"decoração\""
+          },
+          "iframe": {
+            "name": "title de iframe",
+            "format": "Descrever o conteúdo embedado",
+            "good": "Mapa do escritório em São Paulo",
+            "bad": "Google Maps"
+          },
+          "video": {
+            "name": "caption de vídeo",
+            "format": "Legendas sincronizadas obrigatórias",
+            "good": "Vídeo com legendas e transcrição",
+            "bad": "Vídeo sem alternativa textual"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Mídia precisa manter proporção em containers responsivos.",
+        "item2": "Layout exige consistência de altura entre itens da grid.",
+        "item3": "Placeholders de carregamento precisam reservar espaço.",
+        "item4": "Iframes de mapa, vídeo ou conteúdo externo."
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "Conteúdo tem altura intrínseca variável (texto, listas).",
+        "item2": "A proporção não é crítica para o layout.",
+        "item3": "Existe componente mais específico como <code>Avatar</code>.",
+        "item4": "Você só quer definir uma altura fixa em px."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Imagem com <code>object-cover</code> preenche o container sem distorcer.",
+        "dont": "Imagem com <code>object-contain</code> deixa bordas vazias dentro do ratio."
+      },
+      "pair2": {
+        "do": "<code>rounded-md</code> aplicado ao filho, container sem borda.",
+        "dont": "<code>rounded-md</code> aplicado ao AspectRatio corta filho sem cantos arredondados."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Ratios Canônicos",
+      "note": "AspectRatio não tem variantes via <code>cva()</code>. Os cinco ratios abaixo são padrões canônicos adotados no design system.",
+      "items": {
+        "sixteenNine": "Paisagem 16:9 — vídeos, banners, hero images.",
+        "fourThree": "Paisagem 4:3 — imagens de produto, cards de conteúdo.",
+        "square": "Quadrado 1:1 — avatares, thumbnails, ícones grandes.",
+        "threeFour": "Retrato 3:4 — capas verticais, fotos de pessoa.",
+        "ultraWide": "Ultra-wide 21:9 — hero cinematográfico, cabeçalhos panorâmicos."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "note": "AspectRatio é um container passivo e stateless. Não tem <code>disabled</code>, <code>loading</code> ou <code>error</code> — quem tem estado é o conteúdo filho (imagem carregando, vídeo pausado, iframe falhando).",
+      "item1": {
+        "label": "Conteúdo carregado",
+        "trigger": "Filho renderizado",
+        "behavior": "Ocupa 100% da área definida pelo ratio"
+      },
+      "item2": {
+        "label": "Conteúdo ausente",
+        "trigger": "Sem filho",
+        "behavior": "Container mantém o espaço reservado (útil como skeleton)"
+      },
+      "item3": {
+        "label": "Imagem falhou",
+        "trigger": "Erro de rede ou URL inválida",
+        "behavior": "Usar <code>ImageWithFallback</code> para substituir por placeholder"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "ratio": "Proporção largura/altura. Exemplos: <code>16/9</code>, <code>4/3</code>, <code>1</code>, <code>3/4</code>.",
+        "children": "Conteúdo a preservar a proporção — geralmente <code>img</code>, <code>video</code> ou <code>iframe</code>.",
+        "asChild": "Quando <code>true</code>, mescla as props no primeiro filho em vez de renderizar um <code>div</code>.",
+        "className": "Classes CSS adicionais no wrapper. Evite alterar <code>position</code> ou <code>display</code>."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "Use <code>className</code> para espaçamento externo, border-radius e sombras no wrapper. Aplique <code>object-cover</code>, <code>rounded-md</code> e <code>w-full h-full</code> no filho. Quando precisar substituir o <code>div</code> raiz, use <code>asChild</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "note": "AspectRatio é um container de layout sem cor própria. Não usa tokens semânticos — herda do filho.",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Parte",
+        "radius": "Raio aplicado à mídia filha (não ao container)",
+        "border": "Borda opcional quando usado como placeholder",
+        "muted": "Fundo de placeholder enquanto o conteúdo carrega"
+      },
+      "customizationTitle": "Customização",
+      "customization": "Aplique tokens de cor e raio ao elemento filho — nunca ao AspectRatio. Exemplo: <code>&lt;img class=\"rounded-md object-cover w-full h-full\" /&gt;</code>."
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "AspectRatio não tem semântica própria. Toda a acessibilidade vem do conteúdo filho — atenda WCAG 2.1 AA no <code>alt</code>, <code>title</code>, legendas e foco.",
+      "keyboard": {
+        "title": "Teclado",
+        "note": "Container não é focalizável. Se o filho for interativo (vídeo com controles, link), o foco segue o comportamento nativo do filho.",
+        "item1": "Sem tab stops próprios — AspectRatio é puramente visual."
+      },
+      "aria": {
+        "title": "ARIA",
+        "note": "AspectRatio não adiciona ARIA ao DOM. Use <code>data-slot=\"aspect-ratio\"</code> para targeting em CSS ou testes.",
+        "item1": "<code>data-slot=\"aspect-ratio\"</code> presente no wrapper.",
+        "item2": "Imagem informativa: <code>alt</code> descritivo obrigatório.",
+        "item3": "Imagem decorativa: <code>alt=\"\"</code> obrigatório (sem omitir o atributo).",
+        "item4": "Iframe: <code>title</code> obrigatório descrevendo o conteúdo embedado.",
+        "item5": "Vídeo: <code>&lt;track kind=\"captions\"&gt;</code> com legendas sincronizadas."
+      },
+      "screenReader": {
+        "title": "Leitor de tela",
+        "item1": "Container é transparente para leitores — anuncia o filho diretamente.",
+        "item2": "Imagem informativa é anunciada pelo <code>alt</code>.",
+        "item3": "Imagem decorativa é ignorada quando <code>alt=\"\"</code>.",
+        "item4": "Iframe é anunciado pelo <code>title</code>."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "aspectRatio": "AspectRatio — este componente.",
+      "avatar": "Avatar para imagens circulares de perfil com fallback automático.",
+      "card": "Card quando a mídia é parte de um agrupamento semântico maior.",
+      "skeleton": "Skeleton para estado de carregamento sem reservar a proporção final."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "Radix UI e Reka UI usam <code>padding-bottom</code> calculado para preservar o ratio antes do carregamento da mídia.",
+      "item2": "Bits UI (Svelte) usa a mesma técnica com runes.",
+      "item3": "Basecoat implementa manualmente via <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
+      "item4": "Aspect Ratio nativa do CSS (<code>aspect-ratio: 16 / 9</code>) é alternativa moderna sem JS — use AspectRatio quando precisar de compatibilidade ampla ou composição com Radix/Reka/Bits."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "note": "AspectRatio é container passivo e não dispara eventos próprios. Analytics de mídia (play, pause, erro de imagem) é responsabilidade do filho.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparo",
+        "payload": "Payload"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada uso do AspectRatio.",
+        "item1": {
+          "action": "Renderizar com <code>ratio={16/9}</code>",
+          "result": "Container aplica <code>padding-bottom: 56.25%</code>",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar com <code>ratio={1}</code>",
+          "result": "Container fica quadrado (<code>padding-bottom: 100%</code>)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Filho com <code>object-cover w-full h-full</code>",
+          "result": "Preenche o container sem distorcer",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Redimensionar a janela",
+          "result": "Proporção é mantida; altura recalcula a partir da largura",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Renderizar sem filho",
+          "result": "Container reserva espaço para skeleton/placeholder",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis pelo axe-core e manualmente.",
+        "item1": {
+          "criterion": "Imagem informativa tem <code>alt</code> não vazio",
+          "level": "A",
+          "how": "axe-core regra image-alt"
+        },
+        "item2": {
+          "criterion": "Imagem decorativa tem <code>alt=\"\"</code>",
+          "level": "A",
+          "how": "Inspeção manual + axe-core"
+        },
+        "item3": {
+          "criterion": "Iframe tem atributo <code>title</code>",
+          "level": "A",
+          "how": "axe-core regra frame-title"
+        },
+        "item4": {
+          "criterion": "Vídeo tem faixa de legendas",
+          "level": "AA",
+          "how": "Inspeção manual — <code>&lt;track kind=\"captions\"&gt;</code>"
+        },
+        "item5": {
+          "criterion": "Foco navega para controles de mídia interativos",
+          "level": "A",
+          "how": "userEvent.tab() dentro do filho"
+        }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada ratio é capturado para regressão visual.",
+        "required": "Obrigatório",
+        "item1": { "story": "Ratio 16/9 com imagem paisagem", "priority": "high" },
+        "item2": { "story": "Ratio 4/3 com imagem de produto", "priority": "high" },
+        "item3": { "story": "Ratio 1/1 com avatar", "priority": "high" },
+        "item4": { "story": "Ratio 3/4 com capa vertical", "priority": "medium" },
+        "item5": { "story": "Ratio 21/9 ultra-wide", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Ratios",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "AspectRatio",
+    "category": "Layout",
+    "type": "Component",
+    "description": "Container that preserves a fixed width-to-height ratio for responsive media — images, videos, iframes, and maps.",
+    "seo": {
+      "title": "AspectRatio — Layout · Design System",
+      "description": "Documentation for AspectRatio: container that preserves fixed ratio for images, videos, and iframes, with 5 canonical ratios and responsive behavior.",
+      "aiSummary": "AspectRatio component is a passive container that preserves width-to-height ratio for images, videos, and iframes via Radix UI, Reka UI, and Bits UI; no state, no events.",
+      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, CSS padding-bottom, responsive media",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "sixteenNine": "16 / 9 — Video",
+        "fourThree": "4 / 3 — Product",
+        "square": "1 / 1 — Avatar",
+        "threeFour": "3 / 4 — Portrait"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Root</strong> — wrapper that enforces the ratio via calculated <code>padding-bottom</code>.",
+      "item2": "<strong>Slot</strong> — child element (image, video, iframe) that fills the container absolutely.",
+      "item3": "<strong>ratio</strong> — number representing width divided by height (<code>16/9</code>, <code>1</code>, <code>4/3</code>)."
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Wrap any media whose ratio must be preserved independently of container size.",
+        "item2": "Apply <code>object-cover w-full h-full</code> on the child to fill without distortion.",
+        "item3": "Apply <code>rounded-md</code> to the child, never to the AspectRatio container — the radius belongs to the visible media.",
+        "item4": "Images need descriptive <code>alt</code>; decorative images use <code>alt=\"\"</code>.",
+        "item5": "Use <code>ImageWithFallback</code> for external images that may fail to load."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Embedded video or thumbnail",
+          "u": "AspectRatio 16/9",
+          "a": "Hardcoded <code>aspect-video</code>"
+        },
+        "item2": {
+          "s": "Avatar or square thumbnail",
+          "u": "AspectRatio 1/1",
+          "a": "Avatar (has fallback)"
+        },
+        "item3": {
+          "s": "Product image",
+          "u": "AspectRatio 4/3",
+          "a": "Card with free image"
+        },
+        "item4": {
+          "s": "Portrait or vertical cover",
+          "u": "AspectRatio 3/4",
+          "a": "Grid with fixed height"
+        },
+        "item5": {
+          "s": "Variable-height content",
+          "u": "Container without ratio",
+          "a": "AspectRatio forces a ratio"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Rule",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "alt": {
+            "name": "informative image alt",
+            "format": "Describe content, not appearance",
+            "good": "2025 quarterly sales chart",
+            "bad": "Colorful bar image"
+          },
+          "altDecorative": {
+            "name": "decorative image alt",
+            "format": "Empty string",
+            "good": "alt=\"\"",
+            "bad": "alt=\"decoration\""
+          },
+          "iframe": {
+            "name": "iframe title",
+            "format": "Describe embedded content",
+            "good": "São Paulo office location map",
+            "bad": "Google Maps"
+          },
+          "video": {
+            "name": "video caption",
+            "format": "Synchronized captions required",
+            "good": "Video with captions and transcript",
+            "bad": "Video without text alternative"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Media must keep a ratio across responsive containers.",
+        "item2": "Layout requires consistent heights across grid items.",
+        "item3": "Loading placeholders must reserve space upfront.",
+        "item4": "Iframes for maps, video, or embedded content."
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "Content has intrinsic variable height (text, lists).",
+        "item2": "Ratio is not critical to the layout.",
+        "item3": "A more specific component exists — like <code>Avatar</code>.",
+        "item4": "You only need a fixed pixel height."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Image with <code>object-cover</code> fills the container without distortion.",
+        "dont": "Image with <code>object-contain</code> leaves empty borders inside the ratio."
+      },
+      "pair2": {
+        "do": "<code>rounded-md</code> applied to the child, container without border.",
+        "dont": "<code>rounded-md</code> on AspectRatio clips a child without rounded corners."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Canonical Ratios",
+      "note": "AspectRatio has no <code>cva()</code> variants. The five ratios below are canonical patterns adopted in the design system.",
+      "items": {
+        "sixteenNine": "Landscape 16:9 — videos, banners, hero images.",
+        "fourThree": "Landscape 4:3 — product images, content cards.",
+        "square": "Square 1:1 — avatars, thumbnails, large icons.",
+        "threeFour": "Portrait 3:4 — vertical covers, portrait photos.",
+        "ultraWide": "Ultra-wide 21:9 — cinematic hero, panoramic headers."
+      }
+    },
+    "states": {
+      "title": "States",
+      "note": "AspectRatio is a passive, stateless container. It has no <code>disabled</code>, <code>loading</code>, or <code>error</code> — the child content owns state (image loading, video paused, iframe failing).",
+      "item1": {
+        "label": "Content loaded",
+        "trigger": "Child rendered",
+        "behavior": "Fills 100% of the ratio-defined area"
+      },
+      "item2": {
+        "label": "No content",
+        "trigger": "No child",
+        "behavior": "Container keeps the reserved space (useful as skeleton)"
+      },
+      "item3": {
+        "label": "Image failed",
+        "trigger": "Network error or invalid URL",
+        "behavior": "Use <code>ImageWithFallback</code> to swap for a placeholder"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "ratio": "Width-to-height ratio. Examples: <code>16/9</code>, <code>4/3</code>, <code>1</code>, <code>3/4</code>.",
+        "children": "Content to preserve the ratio — typically <code>img</code>, <code>video</code>, or <code>iframe</code>.",
+        "asChild": "When <code>true</code>, merges props onto the first child instead of rendering a <code>div</code>.",
+        "className": "Extra CSS classes on the wrapper. Do not override <code>position</code> or <code>display</code>."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "Use <code>className</code> for outer spacing, border-radius, and shadows on the wrapper. Apply <code>object-cover</code>, <code>rounded-md</code>, and <code>w-full h-full</code> to the child. When you must replace the root <code>div</code>, use <code>asChild</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "note": "AspectRatio is a layout container without its own color. It does not use semantic tokens — it inherits from the child.",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Part",
+        "radius": "Radius applied to the child media (not the container)",
+        "border": "Optional border when used as a placeholder",
+        "muted": "Placeholder background while content loads"
+      },
+      "customizationTitle": "Customization",
+      "customization": "Apply color and radius tokens to the child element — never to AspectRatio. Example: <code>&lt;img class=\"rounded-md object-cover w-full h-full\" /&gt;</code>."
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "AspectRatio has no semantics of its own. All accessibility comes from the child — meet WCAG 2.1 AA on <code>alt</code>, <code>title</code>, captions, and focus.",
+      "keyboard": {
+        "title": "Keyboard",
+        "note": "The container is not focusable. If the child is interactive (video with controls, link), focus follows the child's native behavior.",
+        "item1": "No tab stops of its own — AspectRatio is purely visual."
+      },
+      "aria": {
+        "title": "ARIA",
+        "note": "AspectRatio adds no ARIA to the DOM. Use <code>data-slot=\"aspect-ratio\"</code> for CSS or test targeting.",
+        "item1": "<code>data-slot=\"aspect-ratio\"</code> present on the wrapper.",
+        "item2": "Informative image: descriptive <code>alt</code> required.",
+        "item3": "Decorative image: <code>alt=\"\"</code> required (do not omit the attribute).",
+        "item4": "Iframe: <code>title</code> required describing the embedded content.",
+        "item5": "Video: <code>&lt;track kind=\"captions\"&gt;</code> with synchronized captions."
+      },
+      "screenReader": {
+        "title": "Screen reader",
+        "item1": "Container is transparent to screen readers — announces the child directly.",
+        "item2": "Informative image is announced via <code>alt</code>.",
+        "item3": "Decorative image is ignored when <code>alt=\"\"</code>.",
+        "item4": "Iframe is announced via <code>title</code>."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "aspectRatio": "AspectRatio — this component.",
+      "avatar": "Avatar for circular profile images with automatic fallback.",
+      "card": "Card when media is part of a larger semantic grouping.",
+      "skeleton": "Skeleton for loading state without reserving the final ratio."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "Radix UI and Reka UI use calculated <code>padding-bottom</code> to preserve the ratio before media loads.",
+      "item2": "Bits UI (Svelte) uses the same technique with runes.",
+      "item3": "Basecoat implements it manually via <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
+      "item4": "The native CSS aspect-ratio (<code>aspect-ratio: 16 / 9</code>) is a modern JS-free alternative — use AspectRatio when you need broad support or Radix/Reka/Bits composition."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "note": "AspectRatio is a passive container and does not fire its own events. Media analytics (play, pause, image error) are the child's responsibility.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in each AspectRatio use.",
+        "item1": {
+          "action": "Render with <code>ratio={16/9}</code>",
+          "result": "Container applies <code>padding-bottom: 56.25%</code>",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render with <code>ratio={1}</code>",
+          "result": "Container is square (<code>padding-bottom: 100%</code>)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Child with <code>object-cover w-full h-full</code>",
+          "result": "Fills the container without distortion",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Resize the window",
+          "result": "Ratio is preserved; height recalculates from width",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Render with no child",
+          "result": "Container reserves space for skeleton/placeholder",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manually.",
+        "item1": {
+          "criterion": "Informative image has non-empty <code>alt</code>",
+          "level": "A",
+          "how": "axe-core image-alt rule"
+        },
+        "item2": {
+          "criterion": "Decorative image has <code>alt=\"\"</code>",
+          "level": "A",
+          "how": "Manual inspection + axe-core"
+        },
+        "item3": {
+          "criterion": "Iframe has <code>title</code> attribute",
+          "level": "A",
+          "how": "axe-core frame-title rule"
+        },
+        "item4": {
+          "criterion": "Video has captions track",
+          "level": "AA",
+          "how": "Manual inspection — <code>&lt;track kind=\"captions\"&gt;</code>"
+        },
+        "item5": {
+          "criterion": "Focus navigates to interactive media controls",
+          "level": "A",
+          "how": "userEvent.tab() inside the child"
+        }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each ratio is captured for visual regression.",
+        "required": "Required",
+        "item1": { "story": "Ratio 16/9 with landscape image", "priority": "high" },
+        "item2": { "story": "Ratio 4/3 with product image", "priority": "high" },
+        "item3": { "story": "Ratio 1/1 with avatar", "priority": "high" },
+        "item4": { "story": "Ratio 3/4 with vertical cover", "priority": "medium" },
+        "item5": { "story": "Ratio 21/9 ultra-wide", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Ratios",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "AspectRatio",
+    "category": "Layout",
+    "type": "Componente",
+    "description": "Contenedor que preserva una proporción fija ancho-alto para medios responsivos — imágenes, vídeos, iframes y mapas.",
+    "seo": {
+      "title": "AspectRatio — Layout · Design System",
+      "description": "Documentación del AspectRatio: contenedor que preserva proporción fija para imágenes, vídeos e iframes, con 5 ratios canónicos y comportamiento responsivo.",
+      "aiSummary": "Componente AspectRatio contenedor pasivo que preserva proporción ancho/alto en imágenes, vídeos e iframes vía Radix UI, Reka UI y Bits UI; sin estado, sin eventos.",
+      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, CSS padding-bottom, responsive media",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "sixteenNine": "16 / 9 — Vídeo",
+        "fourThree": "4 / 3 — Producto",
+        "square": "1 / 1 — Avatar",
+        "threeFour": "3 / 4 — Retrato"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Root</strong> — wrapper que aplica la proporción vía <code>padding-bottom</code> calculado.",
+      "item2": "<strong>Slot</strong> — elemento hijo (imagen, vídeo, iframe) que rellena el contenedor de forma absoluta.",
+      "item3": "<strong>ratio</strong> — número que representa ancho dividido por alto (<code>16/9</code>, <code>1</code>, <code>4/3</code>)."
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Envolver cualquier medio cuya proporción deba preservarse independiente del tamaño del contenedor.",
+        "item2": "Aplicar <code>object-cover w-full h-full</code> en el hijo para rellenar sin distorsionar.",
+        "item3": "Usar <code>rounded-md</code> en el hijo, nunca en el contenedor AspectRatio — el radio pertenece al medio visible.",
+        "item4": "Imágenes deben tener <code>alt</code> descriptivo; decorativas reciben <code>alt=\"\"</code>.",
+        "item5": "Usar <code>ImageWithFallback</code> para imágenes externas que puedan fallar al cargar."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Vídeo embebido o miniatura",
+          "u": "AspectRatio 16/9",
+          "a": "Hardcode <code>aspect-video</code>"
+        },
+        "item2": {
+          "s": "Avatar o miniatura cuadrada",
+          "u": "AspectRatio 1/1",
+          "a": "Avatar (incluye fallback)"
+        },
+        "item3": {
+          "s": "Imagen de producto",
+          "u": "AspectRatio 4/3",
+          "a": "Card con imagen libre"
+        },
+        "item4": {
+          "s": "Retrato o portada vertical",
+          "u": "AspectRatio 3/4",
+          "a": "Grid con altura fija"
+        },
+        "item5": {
+          "s": "Contenido de altura variable",
+          "u": "Contenedor sin ratio",
+          "a": "AspectRatio fuerza una proporción"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regla",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "alt": {
+            "name": "alt de imagen informativa",
+            "format": "Describir contenido, no apariencia",
+            "good": "Gráfico de ventas 2025 por trimestre",
+            "bad": "Imagen colorida de barras"
+          },
+          "altDecorative": {
+            "name": "alt de imagen decorativa",
+            "format": "String vacío",
+            "good": "alt=\"\"",
+            "bad": "alt=\"decoración\""
+          },
+          "iframe": {
+            "name": "title de iframe",
+            "format": "Describir el contenido embebido",
+            "good": "Mapa de la oficina en São Paulo",
+            "bad": "Google Maps"
+          },
+          "video": {
+            "name": "caption de vídeo",
+            "format": "Subtítulos sincronizados obligatorios",
+            "good": "Vídeo con subtítulos y transcripción",
+            "bad": "Vídeo sin alternativa textual"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "El medio debe mantener proporción en contenedores responsivos.",
+        "item2": "El layout requiere altura consistente entre ítems de la grid.",
+        "item3": "Placeholders de carga necesitan reservar espacio.",
+        "item4": "Iframes de mapa, vídeo o contenido externo."
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El contenido tiene altura intrínseca variable (texto, listas).",
+        "item2": "La proporción no es crítica para el layout.",
+        "item3": "Existe un componente más específico como <code>Avatar</code>.",
+        "item4": "Solo quieres fijar una altura en px."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Imagen con <code>object-cover</code> rellena el contenedor sin distorsionar.",
+        "dont": "Imagen con <code>object-contain</code> deja bordes vacíos dentro del ratio."
+      },
+      "pair2": {
+        "do": "<code>rounded-md</code> aplicado al hijo, contenedor sin borde.",
+        "dont": "<code>rounded-md</code> aplicado al AspectRatio recorta un hijo sin esquinas redondeadas."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Ratios Canónicos",
+      "note": "AspectRatio no tiene variantes vía <code>cva()</code>. Los cinco ratios siguientes son patrones canónicos adoptados en el design system.",
+      "items": {
+        "sixteenNine": "Paisaje 16:9 — vídeos, banners, hero images.",
+        "fourThree": "Paisaje 4:3 — imágenes de producto, cards de contenido.",
+        "square": "Cuadrado 1:1 — avatares, miniaturas, íconos grandes.",
+        "threeFour": "Retrato 3:4 — portadas verticales, fotos de persona.",
+        "ultraWide": "Ultra-wide 21:9 — hero cinematográfico, cabeceras panorámicas."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "note": "AspectRatio es un contenedor pasivo y sin estado. No tiene <code>disabled</code>, <code>loading</code> ni <code>error</code> — el contenido hijo tiene el estado (imagen cargando, vídeo pausado, iframe fallando).",
+      "item1": {
+        "label": "Contenido cargado",
+        "trigger": "Hijo renderizado",
+        "behavior": "Ocupa 100% del área definida por el ratio"
+      },
+      "item2": {
+        "label": "Sin contenido",
+        "trigger": "Sin hijo",
+        "behavior": "Contenedor mantiene el espacio reservado (útil como skeleton)"
+      },
+      "item3": {
+        "label": "Imagen falló",
+        "trigger": "Error de red o URL inválida",
+        "behavior": "Usar <code>ImageWithFallback</code> para sustituir por placeholder"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "ratio": "Proporción ancho/alto. Ejemplos: <code>16/9</code>, <code>4/3</code>, <code>1</code>, <code>3/4</code>.",
+        "children": "Contenido que preservará la proporción — típicamente <code>img</code>, <code>video</code> o <code>iframe</code>.",
+        "asChild": "Cuando <code>true</code>, fusiona las props en el primer hijo en vez de renderizar un <code>div</code>.",
+        "className": "Clases CSS adicionales en el wrapper. No alterar <code>position</code> ni <code>display</code>."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "Usa <code>className</code> para espaciado externo, border-radius y sombras en el wrapper. Aplica <code>object-cover</code>, <code>rounded-md</code> y <code>w-full h-full</code> al hijo. Cuando necesites reemplazar el <code>div</code> raíz, usa <code>asChild</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "note": "AspectRatio es un contenedor de layout sin color propio. No usa tokens semánticos — hereda del hijo.",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Parte",
+        "radius": "Radio aplicado al medio hijo (no al contenedor)",
+        "border": "Borde opcional cuando se usa como placeholder",
+        "muted": "Fondo de placeholder mientras el contenido carga"
+      },
+      "customizationTitle": "Customización",
+      "customization": "Aplica tokens de color y radio al elemento hijo — nunca al AspectRatio. Ejemplo: <code>&lt;img class=\"rounded-md object-cover w-full h-full\" /&gt;</code>."
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "AspectRatio no tiene semántica propia. Toda la accesibilidad viene del contenido hijo — cumple WCAG 2.1 AA en <code>alt</code>, <code>title</code>, subtítulos y foco.",
+      "keyboard": {
+        "title": "Teclado",
+        "note": "El contenedor no es enfocable. Si el hijo es interactivo (vídeo con controles, enlace), el foco sigue el comportamiento nativo del hijo.",
+        "item1": "Sin tab stops propios — AspectRatio es puramente visual."
+      },
+      "aria": {
+        "title": "ARIA",
+        "note": "AspectRatio no añade ARIA al DOM. Usa <code>data-slot=\"aspect-ratio\"</code> para targeting en CSS o pruebas.",
+        "item1": "<code>data-slot=\"aspect-ratio\"</code> presente en el wrapper.",
+        "item2": "Imagen informativa: <code>alt</code> descriptivo obligatorio.",
+        "item3": "Imagen decorativa: <code>alt=\"\"</code> obligatorio (no omitir el atributo).",
+        "item4": "Iframe: <code>title</code> obligatorio describiendo el contenido embebido.",
+        "item5": "Vídeo: <code>&lt;track kind=\"captions\"&gt;</code> con subtítulos sincronizados."
+      },
+      "screenReader": {
+        "title": "Lector de pantalla",
+        "item1": "Contenedor es transparente para lectores — anuncia el hijo directamente.",
+        "item2": "Imagen informativa se anuncia por el <code>alt</code>.",
+        "item3": "Imagen decorativa se ignora cuando <code>alt=\"\"</code>.",
+        "item4": "Iframe se anuncia por el <code>title</code>."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "aspectRatio": "AspectRatio — este componente.",
+      "avatar": "Avatar para imágenes circulares de perfil con fallback automático.",
+      "card": "Card cuando el medio es parte de una agrupación semántica mayor.",
+      "skeleton": "Skeleton para estado de carga sin reservar la proporción final."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "Radix UI y Reka UI usan <code>padding-bottom</code> calculado para preservar el ratio antes de la carga del medio.",
+      "item2": "Bits UI (Svelte) usa la misma técnica con runes.",
+      "item3": "Basecoat la implementa manualmente vía <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
+      "item4": "El aspect-ratio nativo del CSS (<code>aspect-ratio: 16 / 9</code>) es alternativa moderna sin JS — usa AspectRatio cuando necesites soporte amplio o composición con Radix/Reka/Bits."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "note": "AspectRatio es contenedor pasivo y no dispara eventos propios. Analytics de medio (play, pause, error de imagen) es responsabilidad del hijo.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparo",
+        "payload": "Payload"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Qué debe pasar en cada uso de AspectRatio.",
+        "item1": {
+          "action": "Renderizar con <code>ratio={16/9}</code>",
+          "result": "Contenedor aplica <code>padding-bottom: 56.25%</code>",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar con <code>ratio={1}</code>",
+          "result": "Contenedor es cuadrado (<code>padding-bottom: 100%</code>)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Hijo con <code>object-cover w-full h-full</code>",
+          "result": "Rellena el contenedor sin distorsionar",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Redimensionar la ventana",
+          "result": "Proporción se mantiene; altura recalcula desde el ancho",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Renderizar sin hijo",
+          "result": "Contenedor reserva espacio para skeleton/placeholder",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y manualmente.",
+        "item1": {
+          "criterion": "Imagen informativa tiene <code>alt</code> no vacío",
+          "level": "A",
+          "how": "Regla image-alt de axe-core"
+        },
+        "item2": {
+          "criterion": "Imagen decorativa tiene <code>alt=\"\"</code>",
+          "level": "A",
+          "how": "Inspección manual + axe-core"
+        },
+        "item3": {
+          "criterion": "Iframe tiene atributo <code>title</code>",
+          "level": "A",
+          "how": "Regla frame-title de axe-core"
+        },
+        "item4": {
+          "criterion": "Vídeo tiene pista de subtítulos",
+          "level": "AA",
+          "how": "Inspección manual — <code>&lt;track kind=\"captions\"&gt;</code>"
+        },
+        "item5": {
+          "criterion": "Foco navega a controles de medio interactivos",
+          "level": "A",
+          "how": "userEvent.tab() dentro del hijo"
+        }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada ratio se captura para regresión visual.",
+        "required": "Obligatorio",
+        "item1": { "story": "Ratio 16/9 con imagen paisaje", "priority": "high" },
+        "item2": { "story": "Ratio 4/3 con imagen de producto", "priority": "high" },
+        "item3": { "story": "Ratio 1/1 con avatar", "priority": "high" },
+        "item4": { "story": "Ratio 3/4 con portada vertical", "priority": "medium" },
+        "item5": { "story": "Ratio 21/9 ultra-wide", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Ratios",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
