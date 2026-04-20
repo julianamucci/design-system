@@ -474,9 +474,7 @@
           payload: $tStore('analytics.table.payload'),
         }}
         items={[
-          { event: 'docs_page_view',      trigger: 'Docs page mount',          payload: 'component_name, locale, page_title' },
-          { event: 'docs_section_viewed', trigger: 'Seção entra no viewport',  payload: 'section_id, component_name, locale' },
-          { event: 'language_switched',   trigger: 'Troca de idioma',          payload: 'from_locale, to_locale' },
+          { event: '—', trigger: stripHtml($tStore('analytics.note')), payload: '—' },
         ]}
       />
 
