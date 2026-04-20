@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "storybook/test";
 import { AspectRatio } from "./aspect-ratio";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
@@ -69,6 +70,13 @@ export const ComIframe: Story = {
       </AspectRatio>
     </div>
   ),
+  play: async ({ canvasElement, step }) => {
+    await step("Iframe tem atributo title não vazio (WCAG 4.1.2)", async () => {
+      const iframe = canvasElement.querySelector("iframe");
+      await expect(iframe).toBeInTheDocument();
+      await expect(iframe).toHaveAttribute("title", "Mapa do escritório em São Paulo");
+    });
+  },
 };
 
 export const ComVideo: Story = {

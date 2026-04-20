@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { within, expect } from 'storybook/test';
 import { AspectRatio } from './index';
 import AspectRatioStory from './AspectRatioStory.svelte';
 import AspectRatioDocs from '@/components/docs/AspectRatioDocs.svelte';
@@ -42,4 +43,24 @@ export const Playground: Story = {
       alt: 'Paisagem ao entardecer',
     },
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Wrapper com data-slot aspect-ratio está presente', async () => {
+      const wrapper = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+      await expect(wrapper).toBeInTheDocument();
+    });
+
+    await step('Imagem filha renderiza com alt descritivo', async () => {
+      const img = await canvas.findByRole('img', { name: /Paisagem ao entardecer/i });
+      await expect(img).toHaveAttribute('alt', 'Paisagem ao entardecer');
+    });
+
+    await step('Imagem preenche o container com object-cover', async () => {
+      const img = await canvas.findByRole('img', { name: /Paisagem ao entardecer/i });
+      await expect(img).toHaveClass('object-cover');
+      await expect(img).toHaveClass('w-full');
+      await expect(img).toHaveClass('h-full');
+    });
+  },
 };
