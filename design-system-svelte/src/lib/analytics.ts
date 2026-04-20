@@ -45,6 +45,18 @@ interface AnalyticsEvents {
     label?: string;
     location?: string;
   };
+
+  accordion_expand: {
+    component: string;
+    label?: string;
+    location?: string;
+  };
+
+  accordion_collapse: {
+    component: string;
+    label?: string;
+    location?: string;
+  };
 }
 
 // ─── Função pública ───────────────────────────────────────────────────────────

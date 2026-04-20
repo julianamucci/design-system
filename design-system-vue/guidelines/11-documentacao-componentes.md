@@ -491,6 +491,20 @@ Use 2 tables em `DocsProps`:
 
 Use N tables em `DocsProps`, uma por subcomponente. Exemplo Accordion: `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`.
 
+### Componentes Compostos Interativos com Disclosure (padrão Accordion)
+
+Componentes como **Accordion** implementam ARIA Disclosure via sub-componentes (Root, Item, Trigger, Content).
+
+1. **`DocsVariants`** — `title`: "Modos de Operação". `items`: `single`, `multiple`, `controlled`. `id` da seção: `"modos"` (não `"variantes"`). Atualizar `navGroups` para usar `{ id: 'modos', label: tNav('nav.variants') }`.
+2. **`DocsAnatomy`** — 4 items: Root, Item, Trigger, Content.
+3. **`DocsStates`** — `closed`, `open`, `focus`, `disabled`. Omitir `loading`.
+4. **`DocsProps`** — 4 tables: `Accordion` (Root), `AccordionItem`, `AccordionTrigger`, `AccordionContent`.
+5. **`DocsTokens`** — 7 tokens; incluir `--animate-accordion-up` / `--animate-accordion-down`.
+6. **Analytics** — além dos eventos de docs, `accordion_expand { label }` ao expandir e `accordion_collapse { label }` ao fechar.
+7. **Stories** — arquivos: `.stories.ts`, `-modos`, `-estados`, `-composicoes`. Omitir `-variantes` e `-tamanhos`.
+8. **Play function** — 6 critérios: clicar trigger fechado abre; clicar aberto (collapsible) fecha; modo single alterna; disabled bloqueia; Enter expande; Space expande. Verificar `aria-expanded` via `toHaveAttribute`.
+9. **Chave de tradução conflitante** — `props.table.type` nomeia a coluna "Tipo"; usar `props.table.type_prop` para descrever a prop `type` (evita ambiguidade no `flattenDict`).
+
 ### Componentes Radix com `dangerouslySetInnerHTML`
 
 Componentes Radix/Reka com children internos **não** aceitam `dangerouslySetInnerHTML` direto. Use `<span v-html="...">` dentro do slot.

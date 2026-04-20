@@ -208,6 +208,7 @@ const navGroups = useMemo(() => [
 
 **Regras:**
 - Os `id` de cada seção **devem** bater exatamente com os `id` que os containers emitem (`demonstracao`, `anatomia`, `quando-usar`, `do-dont`, `importacao`, `variantes`, `estados`, `propriedades`, `tokens`, `acessibilidade`, `relacionados`, `notas`, `analytics`, `testes`)
+- **Exceção por tipo de componente:** componentes sem variantes `cva()` usam `id: 'variantes'` com label e conteúdo redefinidos. Ex: Accordion usa `id: 'modos'` (Modos de Operação), Table usa `id: 'variantes'` com título "Composições e Tamanhos". O `id` em `navGroups` deve bater com o `id` que `DocsVariants` emite — a docs page controla o `id` via prop `id` do container
 - **Seções opcionais:** remover do array `navGroups` e **não renderizar** o container correspondente no conteúdo
 - `aria-label` no `<nav>` raiz é obrigatório
 

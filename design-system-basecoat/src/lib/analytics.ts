@@ -32,6 +32,18 @@ interface AnalyticsEvents {
     toast_type: string;
     locale: Locale;
   };
+  accordion_expand: {
+    component: string;
+    label?: string;
+    location?: string;
+  };
+
+  accordion_collapse: {
+    component: string;
+    label?: string;
+    location?: string;
+  };
+
   button_click: {
     component: string;
     variant?: string;

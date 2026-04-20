@@ -427,6 +427,21 @@ Use 2 tables em `DocsProps` — uma para `<Toaster />`, outra para API imperativ
 
 N tables em `DocsProps`, uma por subcomponente.
 
+### Componentes Compostos Interativos com Disclosure (padrão Accordion)
+
+Componentes como **Accordion** (Bits UI `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`) implementam ARIA Disclosure.
+
+1. **`DocsVariants`** — `title`: "Modos de Operação". `items`: `single`, `multiple`, `controlled`. Seção usa `id="modos"` (não `id="variantes"`). Atualizar navGroups para `{ id: 'modos', label: tNav('nav.variants') }`.
+2. **`DocsAnatomy`** — 4 items: Root, Item, Trigger, Content.
+3. **`DocsStates`** — `closed`, `open`, `focus`, `disabled`. Omitir `loading`.
+4. **`DocsProps`** — 4 tables: `Accordion` (Root), `AccordionItem`, `AccordionTrigger`, `AccordionContent`.
+5. **`DocsTokens`** — 7 tokens; incluir `--animate-accordion-up` / `--animate-accordion-down`.
+6. **Analytics** — além dos eventos de docs, `accordion_expand { label }` ao expandir e `accordion_collapse { label }` ao fechar.
+7. **Wrapper story** — `AccordionStory.svelte` recebe `type`, `collapsible`, `defaultValue`, `items[]`. `AccordionControlledStory.svelte` usa `$state` + `onValueChange` de Bits UI. `AccordionBadgeStory.svelte` para composição com Badge.
+8. **Stories** — arquivos: `.stories.ts`, `-modos`, `-estados`, `-composicoes`. Omitir `-variantes` e `-tamanhos`.
+9. **Play function** — 6 critérios: abrir, fechar (collapsible), modo single alterna, disabled bloqueia, Enter, Space.
+10. **Chave de tradução conflitante** — usar `props.table.type_prop` para a prop `type` (evita colidir com a chave de coluna `type`).
+
 ### Bits UI e `dangerouslySetInnerHTML` equivalente
 
 Svelte usa `{@html}` para conteúdo HTML. Sempre sanitize: `{@html sanitizeHtml(value)}`. Componentes Bits que recebem children internamente podem precisar de `<span>{@html ...}</span>` wrapper.

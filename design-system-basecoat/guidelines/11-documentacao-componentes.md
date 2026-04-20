@@ -451,6 +451,21 @@ Use 2 tables em `DocsProps` — uma para mount options (`createToaster()`), outr
 
 N tables em `DocsProps`, uma por subcomponente ou factory function.
 
+### Componentes Compostos Interativos com Disclosure (padrão Accordion)
+
+Componentes como **Accordion** usam a factory `createAccordion(options)` de `./accordion`.
+
+1. **`createDocsVariants`** — `title`: "Modos de Operação". Items: `single`, `multiple`, `controlled`. A seção emite `id="modos"` — atualizar o array `navGroups` para `{ id: 'modos', label: tNav('nav.variants') }`.
+2. **`createDocsAnatomy`** — 4 items: Root (`div[data-slot="accordion"]`), Item, Trigger (`button[data-slot="accordion-trigger"]`), Content.
+3. **`createDocsStates`** — `closed`, `open`, `focus`, `disabled`. Omitir `loading`.
+4. **`createDocsProps`** — 4 tables para `AccordionOptions` (root), item options, trigger attributes, content attributes.
+5. **`createDocsTokens`** — 7 tokens; incluir `--animate-accordion-up` / `--animate-accordion-down`.
+6. **Analytics** — além dos eventos de docs, `accordion_expand { label }` ao expandir e `accordion_collapse { label }` ao fechar.
+7. **XSS** — trigger text via `textContent`, não `innerHTML`. CHEVRON_SVG via `insertAdjacentHTML` apenas por ser constante compile-time.
+8. **Stories** — arquivos: `.stories.ts`, `-modos`, `-estados`, `-composicoes`. Omitir `-variantes` e `-tamanhos`.
+9. **Ícones Lucide** — usar `import { Info } from 'lucide'` + cast `Info as unknown as LucideIconNode[]` + helper `createIcon(nodes)` com `createElementNS` loop. Nunca `.toSvg()`.
+10. **Chave de tradução conflitante** — usar `props.table.type_prop` para a prop `type`.
+
 ### HTML de conteúdo
 
 Sempre use `sanitizeHtml()` antes de atribuir a `innerHTML`:

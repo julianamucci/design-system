@@ -50,6 +50,20 @@ interface AnalyticsEvents {
     label?: string;
     location?: string;
   };
+
+  /** Disparado quando o usuário abre um item do Accordion. */
+  accordion_expand: {
+    component: string;
+    label?: string;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário fecha um item do Accordion. */
+  accordion_collapse: {
+    component: string;
+    label?: string;
+    location?: string;
+  };
 }
 
 // ─── Função pública ───────────────────────────────────────────────────────────
