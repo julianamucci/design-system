@@ -515,6 +515,20 @@ Componentes Radix/Reka com children internos **não** aceitam `dangerouslySetInn
 - Play functions testam estrutura: `getByRole('alert')`, `toBeVisible()`, classes CSS de variante
 - Seção `DocsStates` descreve configurações visuais (`complete`, `withoutTitle`, `withoutIcon`, `dynamicInsert`) — não estados funcionais (disabled, loading)
 
+### Componentes de Feedback Não-Interativos Inline (padrão Badge)
+
+Componentes como **Badge** (single root `<div>`) são rótulos visuais compactos para status, contagens, categorias ou tags. Não têm `size` prop, não recebem foco, não têm `disabled`/`loading`. Nome, categoria **Feedback**, translations em `docs/shared/content/badge/translations.json`.
+
+1. **`DocsAnatomy`** — 4 items: `Badge` (`<div>` inline-flex), conteúdo (texto/número), ícone opcional (`aria-hidden="true"`), prop `variant`.
+2. **`DocsVariants`** — 4 entradas nativas do `cva()`: `default`, `secondary`, `destructive`, `outline`. Cada slot `#variant-preview-N` renderiza `<Badge variant="...">` importado de `@/components/ui/badge`. **Omitir seção de tamanhos** — Badge não tem prop `size`.
+3. **`DocsStates`** — 4 configurações contextuais: `withIcon`, `countBadge`, `asLink`, `asTrigger`. **Omitir `disabled`/`loading`**.
+4. **`DocsProps`** — 1 única table para `Badge`: `variant`, `class`, default slot (`children`). Nota de extensibilidade (`props.extensibility`) deixa claro que o root aceita atributos HTML nativos (`onClick`, `aria-*`, `data-*`); para interação, preferir envolver em `<button>`/`<a>`.
+5. **Play function** — estrutura e a11y, sem interação: cada variante aplica a classe correta; `getByText` confirma o rótulo; ícone filho com `aria-hidden="true"`.
+6. **`DocsAnalytics`** — Badge é estrutural: listar apenas `docs_page_view`, `docs_section_viewed`, `language_switched`. Incluir `badge_click` (payload: `{ label, variant }`) **apenas** quando o Badge for envolto em trigger clicável.
+7. **Stories** — **omitir `badge-tamanhos` e `badge-estados`**. Arquivos obrigatórios: `badge.stories.ts` (Playground com `parameters.docs.page: withAutoDocsTab(BadgeDocs)` + `tags: ["autodocs"]`), `badge-variantes.stories.ts` (Default, Secondary, Destructive, Outline), `badge-composicoes.stories.ts` (WithIcon, CountBadge, AsLink, InCard).
+8. **Sem foco próprio** — `keyboardItems` no `DocsAccessibility` pode usar `{ key: "—", description: "sem tab stops próprios" }` ou ser omitido. Foco vem do wrapper interativo pai.
+9. **Cor ≠ significado** — WCAG 1.4.1: texto deve comunicar estado sem depender de cor (ex: "Ativo" em vez de só fundo verde). Documentar em `accessibility.item2` e em par Do/Don't.
+
 ### Componentes Modais de Confirmação (padrão AlertDialog)
 
 Componentes como **AlertDialog** são overlays de decisão forçada — não possuem `cva()` próprio; severidade vem do `Button` usado em Trigger/Action.
