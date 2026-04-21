@@ -17,8 +17,8 @@ Avatar
 ```tsx
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-{/* Tamanho padrão do projeto: h-8 w-8 */}
-<Avatar className="h-8 w-8">
+{/* Tamanho padrão do projeto: h-10 w-10 (aplicado pelo componente) */}
+<Avatar>
   <AvatarImage
     src="https://github.com/shadcn.png"
     alt="Foto de perfil de João da Silva"
@@ -27,41 +27,42 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 </Avatar>
 
 {/* Tamanhos via className — não existe prop size */}
-<Avatar className="h-6 w-6">...</Avatar>   {/* Pequeno */}
-<Avatar className="h-8 w-8">...</Avatar>   {/* Padrão — preferência obrigatória */}
-<Avatar className="h-10 w-10">...</Avatar>  {/* Médio */}
+<Avatar className="h-6 w-6">...</Avatar>    {/* Pequeno */}
+<Avatar className="h-8 w-8">...</Avatar>    {/* Médio-compacto */}
+<Avatar>...</Avatar>                         {/* Padrão — h-10 w-10 */}
 <Avatar className="h-12 w-12">...</Avatar>  {/* Grande */}
 
 {/* Com indicador de status — elemento posicionado absolutamente */}
 <div className="relative">
-  <Avatar className="h-8 w-8">
+  <Avatar>
     <AvatarImage src="..." alt="Foto de perfil de Maria" />
     <AvatarFallback>MS</AvatarFallback>
   </Avatar>
   <span
-    className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-success ring-2 ring-background"
+    className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
     aria-label="Online"
   />
 </div>
 
 {/* Grupo de avatares sobrepostos */}
 <div className="flex -space-x-2">
-  <Avatar className="h-8 w-8 ring-2 ring-background">
+  <Avatar className="ring-2 ring-background">
     <AvatarImage src="..." alt="João" />
     <AvatarFallback>JS</AvatarFallback>
   </Avatar>
-  <Avatar className="h-8 w-8 ring-2 ring-background">
+  <Avatar className="ring-2 ring-background">
     <AvatarImage src="..." alt="Maria" />
     <AvatarFallback>MS</AvatarFallback>
   </Avatar>
-  <Avatar className="h-8 w-8 ring-2 ring-background bg-muted">
+  <Avatar className="ring-2 ring-background bg-muted">
     <AvatarFallback className="text-xs">+3</AvatarFallback>
   </Avatar>
 </div>
 ```
 
 **Regras**:
-- Tamanho padrão obrigatório: `h-8 w-8` — não existe prop `size`
+- Tamanho padrão: `h-10 w-10` — aplicado internamente pelo componente; não existe prop `size`
+- Tamanhos disponíveis via `className`: `h-6 w-6`, `h-8 w-8`, `h-10 w-10` (padrão), `h-12 w-12`
 - `AvatarFallback` obrigatório — sem ele, falha de imagem resulta em elemento vazio
 - `delayMs={600}` no `AvatarFallback` — previne flash do fallback durante carregamento normal de rede
 - Formato circular padrão: `rounded-full` já aplicado internamente pelo componente
@@ -90,7 +91,7 @@ function getInitials(name: string): string {
 ```tsx
 {/* Avatar com nome visível — fallback é decorativo */}
 <div className="flex items-center gap-2">
-  <Avatar className="h-8 w-8">
+  <Avatar>
     <AvatarImage src="..." alt="" />
     <AvatarFallback aria-hidden="true">JS</AvatarFallback>
   </Avatar>
@@ -98,7 +99,7 @@ function getInitials(name: string): string {
 </div>
 
 {/* Avatar sem nome visível — alt descritivo obrigatório */}
-<Avatar className="h-8 w-8">
+<Avatar>
   <AvatarImage src="..." alt="Foto de perfil de João da Silva" />
   <AvatarFallback>JS</AvatarFallback>
 </Avatar>

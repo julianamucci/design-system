@@ -40,7 +40,7 @@
         "item1": "Sempre inclua <code>AvatarFallback</code> — ele aparece enquanto a imagem carrega e quando ela falha.",
         "item2": "Defina <code>delayMs={600}</code> no fallback para evitar flash quando a imagem carrega rápido.",
         "item3": "Use iniciais como fallback (primeira letra do nome + primeira letra do sobrenome). Nunca mais de 2 letras.",
-        "item4": "O tamanho é controlado por <code>className</code> (<code>h-8 w-8</code> é o padrão do projeto) — não existe prop <code>size</code>."
+        "item4": "O tamanho é controlado por <code>className</code> (<code>h-10 w-10</code> é o padrão do projeto) — não existe prop <code>size</code>."
       },
       "scenarios": {
         "title": "Tabela de Cenários",
