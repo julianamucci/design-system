@@ -97,6 +97,7 @@
 
   /* Dimension tokens — altura default de interativos (Button, Input, Select, Toggle, Badge...) */
   /* Nota: Tailwind v4 consome via h-(--height-*) / size-(--size-*) / px-(--spacing-*) */
+  --height-badge: 1.25rem;    /* 20px — h-5 (compacto, só para Badge) */
   --height-xs: 1.5rem;        /* 24px — h-6 default */
   --height-sm: 1.75rem;       /* 28px — h-7 */
   --height-default: 2rem;     /* 32px — h-8 */

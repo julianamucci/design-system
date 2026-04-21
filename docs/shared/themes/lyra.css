@@ -13,6 +13,7 @@
   --radius-card: 0px;
 
   /* Dimensões — Lyra é compacto (default h-6 como Nova, mas mais denso) */
+  --height-badge: 1rem;      /* 16px — ultra compacto */
   --height-xs: 1.25rem;      /* 20px */
   --height-sm: 1.5rem;       /* 24px */
   --height-default: 1.75rem; /* 28px */

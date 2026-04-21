@@ -13,6 +13,7 @@
   --radius-card: 4px;
 
   /* Dimensões — Mira é o mais compacto */
+  --height-badge: 1rem;      /* 16px */
   --height-xs: 1.25rem;      /* 20px */
   --height-sm: 1.5rem;       /* 24px */
   --height-default: 1.75rem; /* 28px — h-7 */

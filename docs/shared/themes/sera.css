@@ -13,6 +13,7 @@
   --radius-card: 12px;
 
   /* Dimensões — neutro, como Nova */
+  --height-badge: 1.25rem;   /* 20px */
   --height-xs: 1.5rem;
   --height-sm: 1.75rem;
   --height-default: 2rem;

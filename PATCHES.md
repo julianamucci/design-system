@@ -80,46 +80,59 @@ npm run patches:diff -- --stack react --component alert
 
 <!-- ordenar alfabeticamente por stack > componente -->
 
-### button — dimensões tokenizadas (React/Vue/Svelte) {#button-dimension-tokens}
+### Dimensões tokenizadas em componentes interativos — multi-tema (React/Vue/Svelte)
 
-- **Status:** PATCH ATIVO nas 3 stacks que suportam Tailwind v4 arbitrary values com custom properties (`h-(--var)`).
-- **Arquivos:**
-  - `design-system-react/src/components/ui/button.tsx`
-  - `design-system-vue/src/components/ui/button/index.ts`
-  - `design-system-svelte/src/components/ui/button/button.svelte`
-  - (`design-system-basecoat/src/components/ui/button.ts` — NÃO patchado: Basecoat usa classes `.btn` do pacote `basecoat-css`, não Tailwind)
-- **Categoria:** theme (multi-tema com densidades distintas)
-- **Data:** 2026-04-21
-- **Upstream ref:** shadcn/ui (`base-nova`), shadcn-vue (`reka-nova`), shadcn-svelte (`nova`) — todos hardcodam `h-8`, `h-7`, `h-9`, `size-8` etc. no `cva()`
+Patches múltiplos agrupados por propósito. Todos substituem classes Tailwind hardcoded (`h-8`, `size-9`, etc.) por custom properties (`h-(--height-default)`, `size-(--size-default)`, etc.), permitindo que os 7 temas (Nova, Vega, Maia, Lyra, Mira, Luma, Sera) apliquem densidades distintas sem forking de componentes.
 
-**Antes (upstream):**
-```ts
-size: {
-  default: "h-8 gap-1.5 px-2.5 ...",
-  xs:      "h-6 ...",
-  sm:      "h-7 ...",
-  lg:      "h-9 ...",
-  icon:    "size-8",
-  // ...
-}
-```
+**Tokens definidos em `docs/shared/tokens/tokens.css`:**
+- `--height-badge` (20px), `--height-xs` (24px), `--height-sm` (28px), `--height-default` (32px), `--height-lg` (36px), `--height-xl` (40px)
+- `--size-xs`/`-sm`/`-default`/`-lg`/`-xl` (valores equivalentes para ícones quadrados)
 
-**Depois (custom):**
-```ts
-// PATCH: theme — alturas via tokens (--height-*) ...
-size: {
-  default: "h-(--height-default) gap-1.5 px-2.5 ...",
-  xs:      "h-(--height-xs) ...",
-  sm:      "h-(--height-sm) ...",
-  lg:      "h-(--height-lg) ...",
-  icon:    "size-(--size-default)",
-  // ...
-}
-```
+Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, Lyra h-default=28px, Maia h-default=40px, etc.).
 
-**Motivo:** os 7 temas do design system (Nova, Vega, Maia, Lyra, Mira, Luma, Sera) replicam os 7 styles do shadcn — cada um com **densidade visual distinta**. Sem tokenizar altura/size no componente, seria impossível fazer Vega mostrar Button h-10 (clássico) e Lyra mostrar h-7 (brutalista compacto) a partir do mesmo componente React/Vue/Svelte. A abordagem via `h-(--height-default)` usa o shortcut de Tailwind v4.1+ para consumir custom properties CSS — zero runtime cost, zero dependência JS.
+**Basecoat NÃO é patchado** em nenhum deles: usa classes `.btn`, `.input`, `.badge` do pacote `basecoat-css`, não Tailwind — tokenização requereria fork do pacote.
 
-**Verificação após bump:** conferir se o registry do shadcn passa a usar tokens CSS nativos (improvável em curto prazo; shadcn mantém hardcoded para simplicidade de exemplo). Re-aplicar o patch se `shadcn add button` sobrescrever.
+#### #button-dimension-tokens
+
+- **Arquivos patched:** React `button.tsx`, Vue `button/index.ts`, Svelte `button/button.svelte`
+- **Tokens usados:** `--height-default`, `--height-xs`, `--height-sm`, `--height-lg`, `--size-default`, `--size-xs`, `--size-sm`, `--size-lg`
+- **Antes:** `h-8 ... h-7 ... h-9 ... size-8 ...`
+- **Depois:** `h-(--height-default) ... h-(--height-sm) ... h-(--height-lg) ... size-(--size-default) ...`
+
+#### #input-dimension-tokens
+
+- **Arquivos patched:** React `input.tsx`, Vue `input/Input.vue`, Svelte `input/input.svelte`
+- **Tokens usados:** `--height-default`, `--height-xs` (para file input inline)
+- **Antes:** `h-8 ... file:h-6`
+- **Depois:** `h-(--height-default) ... file:h-(--height-xs)`
+
+#### #select-dimension-tokens
+
+- **Arquivos patched:** React `select.tsx`, Vue `select/SelectTrigger.vue`, Svelte `select/select-trigger.svelte`
+- **Tokens usados:** `--height-default`, `--height-sm`
+- **Antes:** `data-[size=default]:h-8 data-[size=sm]:h-7`
+- **Depois:** `data-[size=default]:h-(--height-default) data-[size=sm]:h-(--height-sm)`
+
+#### #toggle-dimension-tokens
+
+- **Arquivos patched:** React `toggle.tsx`, Vue `toggle/index.ts`, Svelte `toggle/toggle.svelte`
+- **Tokens usados:** `--height-default`, `--height-sm`, `--height-lg`
+- **Antes:** `h-8 min-w-8 ... h-7 min-w-7 ... h-9 min-w-9`
+- **Depois:** `h-(--height-default) min-w-(--height-default) ... h-(--height-sm) min-w-(--height-sm) ... h-(--height-lg) min-w-(--height-lg)`
+
+#### #badge-dimension-tokens
+
+- **Arquivos patched:** React `badge.tsx`, Vue `badge/index.ts`, Svelte `badge/badge.svelte`
+- **Tokens usados:** `--height-badge` (20px base; varia de 16px em Lyra/Mira até 24px em Vega/Maia/Luma)
+- **Antes:** `h-5`
+- **Depois:** `h-(--height-badge)`
+
+**Motivo coletivo:** o design system suporta 7 temas inspirados nos styles do shadcn (Vega clássico h-10, Lyra brutalista h-7, Maia friendly pill-shaped h-10, etc.). Sem tokenização, cada tema exigiria fork dos componentes — inviável para manter 7×N cópias. A abordagem `h-(--height-default)` usa o shortcut de Tailwind v4.1+ que compila para `height: var(--height-default)` — zero runtime cost, zero dependência JS.
+
+**Categoria:** theme
+**Data:** 2026-04-21
+**Upstream ref:** shadcn/ui (`base-nova`), shadcn-vue (`reka-nova`), shadcn-svelte (`nova`) — todos hardcodam dimensões.
+**Verificação após bump:** conferir se algum `shadcn add <component>` sobrescreve o arquivo. Se sim, re-aplicar patch.
 
 ### react/alert — SVG usa `text-current` para herdar cor da variante — ✅ RESOLVIDO UPSTREAM (2026-04-21)
 
