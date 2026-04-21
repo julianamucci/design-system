@@ -1,4 +1,3 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
 import { createCard } from '@/components/ui/card';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
@@ -57,7 +56,10 @@ export function createDocsTokens(props: DocsTokensProps): HTMLElement {
     if (props.customizationCode) {
       const codeBlock = document.createElement('div');
       codeBlock.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto';
-      codeBlock.innerHTML = `<code class="whitespace-pre">${sanitizeHtml(props.customizationCode)}</code>`;
+      const codeEl = document.createElement('code');
+      codeEl.className = 'whitespace-pre';
+      codeEl.textContent = props.customizationCode;
+      codeBlock.appendChild(codeEl);
       customBlock.appendChild(codeBlock);
     }
     container.appendChild(customBlock);

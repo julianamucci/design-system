@@ -1,5 +1,3 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
-
 export interface DocsImportProps {
   title: string;
   description?: string;
@@ -26,7 +24,10 @@ export function createDocsImport(props: DocsImportProps): HTMLElement {
 
   const codeBlock = document.createElement('div');
   codeBlock.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto';
-  codeBlock.innerHTML = `<code class="whitespace-pre">${sanitizeHtml(props.code)}</code>`;
+  const codeEl = document.createElement('code');
+  codeEl.className = 'whitespace-pre';
+  codeEl.textContent = props.code;
+  codeBlock.appendChild(codeEl);
   section.appendChild(codeBlock);
 
   if (props.secondaryCode) {
@@ -38,7 +39,10 @@ export function createDocsImport(props: DocsImportProps): HTMLElement {
     }
     const codeBlock2 = document.createElement('div');
     codeBlock2.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-3';
-    codeBlock2.innerHTML = `<code class="whitespace-pre">${sanitizeHtml(props.secondaryCode)}</code>`;
+    const codeEl2 = document.createElement('code');
+    codeEl2.className = 'whitespace-pre';
+    codeEl2.textContent = props.secondaryCode;
+    codeBlock2.appendChild(codeEl2);
     section.appendChild(codeBlock2);
   }
 

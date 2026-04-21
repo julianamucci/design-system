@@ -76,7 +76,10 @@ export function createDocsProps(props: DocsPropsProps): HTMLElement {
   if (props.interfaceCode) {
     const codeBlock = document.createElement('div');
     codeBlock.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto';
-    codeBlock.innerHTML = `<code class="whitespace-pre">${sanitizeHtml(props.interfaceCode)}</code>`;
+    const codeEl = document.createElement('code');
+    codeEl.className = 'whitespace-pre';
+    codeEl.textContent = props.interfaceCode;
+    codeBlock.appendChild(codeEl);
     container.appendChild(codeBlock);
   }
 

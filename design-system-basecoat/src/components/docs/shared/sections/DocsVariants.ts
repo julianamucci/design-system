@@ -58,7 +58,10 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
 
       const codeBlock = document.createElement('div');
       codeBlock.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-2 hidden';
-      codeBlock.innerHTML = `<code class="whitespace-pre">${sanitizeHtml(item.code)}</code>`;
+      const codeEl = document.createElement('code');
+      codeEl.className = 'whitespace-pre';
+      codeEl.textContent = item.code;
+      codeBlock.appendChild(codeEl);
 
       toggleWrap.append(toggle, codeBlock);
       card.appendChild(toggleWrap);
