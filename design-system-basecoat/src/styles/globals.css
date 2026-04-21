@@ -5,6 +5,9 @@
 @import "@shared/tokens/tokens.css";
 @import "@shared/themes/index.css";
 
+/* ── Overrides do basecoat-css para respeitar tokens de densidade (7 temas) ── */
+@import "./basecoat-theme-overrides.css";
+
 /* Customizações Storybook Docs */
 @import "./storybook-docs.css";
 

@@ -90,7 +90,7 @@ Patches múltiplos agrupados por propósito. Todos substituem classes Tailwind h
 
 Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, Lyra h-default=28px, Maia h-default=40px, etc.).
 
-**Basecoat NÃO é patchado** em nenhum deles: usa classes `.btn`, `.input`, `.badge` do pacote `basecoat-css`, não Tailwind — tokenização requereria fork do pacote.
+**Basecoat usa abordagem diferente**: em vez de patch nos componentes (que usam classes `.btn`/`.input`/`.badge` do pacote `basecoat-css`), adicionamos um CSS override em `design-system-basecoat/src/styles/basecoat-theme-overrides.css` que redeclara as dimensões dos componentes upstream usando `height: var(--height-*)`. Importado depois de `basecoat-css` no `globals.css` para vencer a cascade dentro do mesmo `@layer components`. Ver seção #basecoat-theme-overrides abaixo.
 
 #### #button-dimension-tokens
 
@@ -126,6 +126,22 @@ Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, 
 - **Tokens usados:** `--height-badge` (20px base; varia de 16px em Lyra/Mira até 24px em Vega/Maia/Luma)
 - **Antes:** `h-5`
 - **Depois:** `h-(--height-badge)`
+
+#### #basecoat-theme-overrides
+
+- **Arquivo:** `design-system-basecoat/src/styles/basecoat-theme-overrides.css`
+- **Tokens usados:** `--height-default`, `--height-sm`, `--height-lg`, `--height-xs`, `--height-badge`, `--size-default`, `--size-sm`, `--size-lg`
+- **Estratégia:** em vez de patchar o pacote `basecoat-css` (impraticável — é dependência npm), adicionamos CSS override que redeclara as dimensões dos componentes upstream usando `height: var(--height-*)` e `width: var(--size-*)` dentro do mesmo `@layer components`. Ordem de import em `globals.css` garante que vença a cascade:
+  ```css
+  @import "tailwindcss";
+  @import "basecoat-css";         /* declara .btn { height: h-9 } */
+  @import "@shared/tokens/tokens.css";
+  @import "@shared/themes/index.css";
+  @import "./basecoat-theme-overrides.css";  /* redeclara .btn { height: var(--height-default) } */
+  ```
+- **Componentes afetados:** Button (default/sm/lg + icon), Input (+ file-selector-button), Select trigger, Kbd, Command input, Sidebar menu buttons.
+- **Badge:** o upstream não hardcoda altura — pequenos paddings ditam. Regra preparada mas comentada para ativação futura.
+- **Verificação após bump `basecoat-css`:** se o upstream mudar seletores (ex: `button.select` → `[data-slot="select-trigger"]`), o arquivo precisa ser atualizado. Rodar `grep -E "@apply.*\bh-[0-9]" node_modules/basecoat-css/dist/basecoat.css` e comparar com a lista em `basecoat-theme-overrides.css`.
 
 **Motivo coletivo:** o design system suporta 7 temas inspirados nos styles do shadcn (Vega clássico h-10, Lyra brutalista h-7, Maia friendly pill-shaped h-10, etc.). Sem tokenização, cada tema exigiria fork dos componentes — inviável para manter 7×N cópias. A abordagem `h-(--height-default)` usa o shortcut de Tailwind v4.1+ que compila para `height: var(--height-default)` — zero runtime cost, zero dependência JS.
 

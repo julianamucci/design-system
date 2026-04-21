@@ -52,9 +52,18 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## NOTA — Tokenização de dimensões (Basecoat)
 
-Basecoat usa classes semânticas (`.btn`, `.input`, `.badge`, `.card`) do pacote `basecoat-css`. Dimensões dos componentes primitivos **não são tokenizáveis** pelo consumidor — vêm do pacote upstream. Isso significa que o tema ativo (Nova/Vega/Maia/etc.) **não altera visualmente os componentes Basecoat**.
+Basecoat usa classes semânticas (`.btn`, `.input`, `.badge`, `.card`) do pacote `basecoat-css`. Dimensões dos componentes primitivos **são** tokenizadas via arquivo de override:
 
-**Porém**, docs pages em Basecoat usam Tailwind para layout (containers, grids, cards de exemplo) — nessas partes, siga `docs/shared/guidelines/12-tokenizacao-dimensoes.md` normalmente. Ex: um wrapper de demo em docs page deve usar `h-(--height-default)` quando aplicável, não `h-8`.
+**Arquivo:** `design-system-basecoat/src/styles/basecoat-theme-overrides.css`
+
+Redeclarações que usam `height: var(--height-*)`/`width: var(--size-*)` no mesmo `@layer components` que o pacote, importado **depois** no `globals.css` para vencer a cascade. Documentado em `PATCHES.md#basecoat-theme-overrides`.
+
+**Regras ao criar/modificar componentes Basecoat:**
+
+1. **Componentes UI**: basta usar a classe do basecoat-css (`createButton`, `createInput`, etc.). As dimensões virão do override automaticamente — zero intervenção.
+2. **Docs pages + stories**: usam Tailwind para layout (containers, grids, cards de demo). Nessas partes, siga `docs/shared/guidelines/12-tokenizacao-dimensoes.md` — evite `h-8`, use `h-(--height-default)`.
+3. **Se basecoat-css ganhar um novo componente com altura hardcoded** (ex: versão nova adiciona `.chip { @apply h-6 }`), adicione uma regra em `basecoat-theme-overrides.css`.
+4. **Se o upstream mudar seletores** (ex: Basecoat 1.0 adicionar `[data-slot="button"]`), o override precisa ser atualizado — consulte PATCHES.md para o processo de revalidação.
 
 ---
 

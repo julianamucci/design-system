@@ -1,0 +1,135 @@
+/*
+ * ─── Basecoat Theme Overrides ─────────────────────────────────────────────────
+ *
+ * Sobrescreve dimensões hardcoded do pacote `basecoat-css` usando nossos
+ * tokens (--height-*, --size-*), permitindo que os 7 temas (Nova, Vega, Maia,
+ * Lyra, Mira, Luma, Sera) alterem a densidade visual também no Basecoat.
+ *
+ * Como funciona:
+ * - basecoat-css declara `.btn { @apply h-9 ... }` no @layer components
+ * - Este arquivo redeclara no mesmo layer, DEPOIS, com novos tokens
+ * - Em Tailwind v4, a ordem de declaração dentro do mesmo layer ganha
+ *
+ * Ordem de import obrigatória em globals.css:
+ *   @import "tailwindcss";
+ *   @import "basecoat-css";
+ *   @import "@shared/tokens/tokens.css";
+ *   @import "@shared/themes/index.css";
+ *   @import "./basecoat-theme-overrides.css";  ← ESTE depois de tokens e temas
+ *
+ * Ver: docs/shared/guidelines/12-tokenizacao-dimensoes.md
+ */
+
+@layer components {
+  /* ── Button (default size) ──────────────────────────────────────────────── */
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline,
+  .btn-ghost,
+  .btn-link,
+  .btn-destructive {
+    height: var(--height-default);
+  }
+  .btn-icon,
+  .btn-icon-primary,
+  .btn-icon-secondary,
+  .btn-icon-outline,
+  .btn-icon-ghost,
+  .btn-icon-link,
+  .btn-icon-destructive {
+    width: var(--size-default);
+    height: var(--size-default);
+  }
+
+  /* ── Button (sm) ────────────────────────────────────────────────────────── */
+  .btn-sm,
+  .btn-sm-primary,
+  .btn-sm-secondary,
+  .btn-sm-outline,
+  .btn-sm-ghost,
+  .btn-sm-link,
+  .btn-sm-destructive {
+    height: var(--height-sm);
+  }
+  .btn-sm-icon,
+  .btn-sm-icon-primary,
+  .btn-sm-icon-secondary,
+  .btn-sm-icon-outline,
+  .btn-sm-icon-ghost,
+  .btn-sm-icon-link,
+  .btn-sm-icon-destructive {
+    width: var(--size-sm);
+    height: var(--size-sm);
+  }
+
+  /* ── Button (lg) ────────────────────────────────────────────────────────── */
+  .btn-lg,
+  .btn-lg-primary,
+  .btn-lg-secondary,
+  .btn-lg-outline,
+  .btn-lg-ghost,
+  .btn-lg-link,
+  .btn-lg-destructive {
+    height: var(--height-lg);
+  }
+  .btn-lg-icon,
+  .btn-lg-icon-primary,
+  .btn-lg-icon-secondary,
+  .btn-lg-icon-outline,
+  .btn-lg-icon-ghost,
+  .btn-lg-icon-link,
+  .btn-lg-icon-destructive {
+    width: var(--size-lg);
+    height: var(--size-lg);
+  }
+
+  /* ── Input ──────────────────────────────────────────────────────────────── */
+  input.input {
+    height: var(--height-default);
+  }
+  input.input::file-selector-button {
+    height: var(--height-xs);
+  }
+
+  /* ── Select trigger ─────────────────────────────────────────────────────── */
+  button.select,
+  .select {
+    height: var(--height-default);
+  }
+
+  /* ── Badge ──────────────────────────────────────────────────────────────── */
+  /* Basecoat não declara altura fixa para .badge — padding vertical dita.
+     Se no futuro o upstream adicionar, descomentar:
+     .badge, .badge-primary, .badge-secondary, .badge-destructive, .badge-outline {
+       height: var(--height-badge);
+     }
+  */
+
+  /* ── Kbd ────────────────────────────────────────────────────────────────── */
+  kbd.kbd {
+    height: var(--height-badge);
+    min-width: var(--height-badge);
+  }
+
+  /* ── Command input ──────────────────────────────────────────────────────── */
+  .command input {
+    height: var(--height-xl);
+  }
+  .command > [role="group"] > [role="heading"] {
+    /* header do comando é menor — mantém compacto */
+    height: var(--height-default);
+  }
+
+  /* ── Sidebar ────────────────────────────────────────────────────────────── */
+  .sidebar [data-sidebar-group-label],
+  .sidebar [data-sidebar-menu-button][data-size="default"] {
+    height: var(--height-default);
+  }
+  .sidebar [data-sidebar-menu-button][data-size="sm"] {
+    height: var(--height-sm);
+  }
+  .sidebar [data-sidebar-menu-button][data-size="lg"] {
+    height: var(--height-lg);
+  }
+}
