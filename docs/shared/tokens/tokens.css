@@ -54,17 +54,18 @@
   --secondary: 0 0% 96%;
   --secondary-foreground: 0 0% 4%;
   --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 45%;
+  --muted-foreground: 0 0% 40%;
   --accent: 0 0% 96%;
   --accent-foreground: 0 0% 9%;
 
-  /* Feedback — cores com contraste WCAG 2.1 AA (≥4.5:1) para texto sobre bg colorido */
-  --destructive: 0 72% 51%;
+  /* Feedback — cores com contraste WCAG 2.1 AA (≥4.5:1) para texto sobre bg colorido
+     E também para text-<color> sobre bg-<color>/10 (soft variants do shadcn radix-nova) */
+  --destructive: 0 74% 42%;
   --destructive-foreground: 0 0% 100%;
-  --success: 142 76% 36%;
+  --success: 142 85% 22%;
   --success-foreground: 0 0% 100%;
-  --warning: 38 92% 50%;
-  --warning-foreground: 0 0% 0%;
+  --warning: 31 92% 32%;
+  --warning-foreground: 0 0% 100%;
   --info: 221 83% 43%;
   --info-foreground: 0 0% 100%;
 
@@ -133,12 +134,12 @@
   --secondary: 0 0% 15%;
   --secondary-foreground: 0 0% 98%;
   --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 45%;
+  --muted-foreground: 0 0% 70%;
   --accent: 0 0% 15%;
   --accent-foreground: 0 0% 98%;
-  --destructive: 0 72% 51%;
+  --destructive: 0 85% 70%;
   --destructive-foreground: 0 0% 100%;
-  --success: 142 71% 45%;
+  --success: 142 71% 55%;
   --success-foreground: 0 0% 0%;
   --warning: 38 92% 50%;
   --warning-foreground: 0 0% 0%;
