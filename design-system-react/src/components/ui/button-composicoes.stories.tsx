@@ -100,14 +100,14 @@ export const ParDeAcoes: Story = {
 
 export const AsChildAsLink: Story = {
   render: () => (
-    <Button asChild variant="link">
-      <a href="#docs">Ver documentação</a>
+    <Button render={<a href="#docs" />} variant="link">
+      Ver documentação
     </Button>
   ),
   parameters: {
     docs: {
       description: {
-        story: "Usando asChild com Radix Slot para renderizar um <a> com estilos de botão, preservando semântica de link.",
+        story: "Usando a prop render do Base UI para renderizar um <a> com estilos de botão, preservando semântica de link.",
       },
     },
   },

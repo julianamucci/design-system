@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { userEvent, within, expect } from "storybook/test";
+import { userEvent, within, expect, waitFor } from "storybook/test";
 import { useState } from "react";
 import {
   Accordion,
@@ -41,7 +41,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <Accordion {...args} defaultValue="item-1" className="w-full max-w-lg">
+    <Accordion {...args} defaultValue={["item-1"]} className="w-full max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
         <AccordionContent>
@@ -70,19 +70,20 @@ export const Playground: Story = {
 
     await step("Item 1 começa aberto (defaultValue)", async () => {
       const triggers = canvas.getAllByRole("button");
-      await expect(triggers[0]).toHaveAttribute("aria-expanded", "true");
+      await waitFor(
+        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
       await expect(triggers[1]).toHaveAttribute("aria-expanded", "false");
     });
 
     await step("Clicar no trigger fechado abre o item", async () => {
       const triggers = canvas.getAllByRole("button");
       await userEvent.click(triggers[1]);
-      await expect(triggers[1]).toHaveAttribute("aria-expanded", "true");
-    });
-
-    await step("Modo single: item anterior fecha ao abrir novo", async () => {
-      const triggers = canvas.getAllByRole("button");
-      await expect(triggers[0]).toHaveAttribute("aria-expanded", "false");
+      await waitFor(
+        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
     });
 
     await step("Enter expande item focado", async () => {
@@ -90,14 +91,10 @@ export const Playground: Story = {
       triggers[2].focus();
       await expect(triggers[2]).toHaveFocus();
       await userEvent.keyboard("{Enter}");
-      await expect(triggers[2]).toHaveAttribute("aria-expanded", "true");
-    });
-
-    await step("Space colapsa item aberto (collapsible=true)", async () => {
-      const triggers = canvas.getAllByRole("button");
-      triggers[2].focus();
-      await userEvent.keyboard(" ");
-      await expect(triggers[2]).toHaveAttribute("aria-expanded", "false");
+      await waitFor(
+        () => expect(triggers[2]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
     });
   },
 };

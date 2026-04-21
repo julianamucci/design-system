@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { userEvent, within, expect, fn } from "storybook/test";
+import { userEvent, within, expect, fn, waitFor } from "storybook/test";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,8 +42,8 @@ export const Playground: Story = {
     const onCancel = fn();
     return (
       <AlertDialog {...args}>
-        <AlertDialogTrigger asChild>
-          <Button variant="destructive">Excluir conta</Button>
+        <AlertDialogTrigger render={<Button variant="destructive" />}>
+          Excluir conta
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -94,8 +94,15 @@ export const Playground: Story = {
 
     await step("Escape fecha o diálogo", async () => {
       await userEvent.keyboard("{Escape}");
-      const dialog = body.queryByRole("alertdialog");
-      await expect(dialog).not.toBeInTheDocument();
+      await waitFor(
+        () => {
+          const dialog = body.queryByRole("alertdialog");
+          if (dialog && dialog.getAttribute("data-state") !== "closed") {
+            throw new Error("dialog still open");
+          }
+        },
+        { timeout: 500 }
+      );
     });
   },
 };

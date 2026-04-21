@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { userEvent, within, expect } from "storybook/test";
+import { userEvent, within, expect, waitFor } from "storybook/test";
 import {
   Accordion,
   AccordionContent,
@@ -43,7 +43,7 @@ export const Fechado: Story = {
 
 export const Aberto: Story = {
   render: () => (
-    <Accordion type="single" collapsible defaultValue="item-1" className="w-full max-w-lg">
+    <Accordion type="single" collapsible defaultValue={["item-1"]} className="w-full max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Item aberto</AccordionTrigger>
         <AccordionContent>
@@ -65,7 +65,10 @@ export const Aberto: Story = {
     const trigger = canvas.getByRole("button");
 
     await step("Trigger tem aria-expanded=true", async () => {
-      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+      await waitFor(
+        () => expect(trigger).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
     });
   },
 };
@@ -96,7 +99,7 @@ export const Disabled: Story = {
     const triggers = canvas.getAllByRole("button");
 
     await step("Segundo trigger está desabilitado", async () => {
-      await expect(triggers[1]).toBeDisabled();
+      await expect(triggers[1]).toHaveAttribute("aria-disabled", "true");
     });
 
     await step("Clicar no disabled não abre o item", async () => {
@@ -108,7 +111,7 @@ export const Disabled: Story = {
 
 export const FocusVisible: Story = {
   render: () => (
-    <Accordion type="single" collapsible defaultValue="item-1" className="w-full max-w-lg">
+    <Accordion type="single" collapsible defaultValue={["item-1"]} className="w-full max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Navegar com Tab para ver focus ring</AccordionTrigger>
         <AccordionContent>Focus ring visível ao navegar por teclado.</AccordionContent>
