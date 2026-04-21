@@ -84,7 +84,7 @@ export const Failed: Story = {
 export const NoImage: Story = {
   render: () => (
     <Avatar>
-      <AvatarFallback aria-label="Usuário genérico">
+      <AvatarFallback role="img" aria-label="Usuário genérico">
         <User aria-hidden="true" className="h-5 w-5" />
       </AvatarFallback>
     </Avatar>

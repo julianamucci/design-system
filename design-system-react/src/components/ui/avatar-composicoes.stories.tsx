@@ -59,7 +59,7 @@ export const WithInitials: Story = {
 export const WithIcon: Story = {
   render: () => (
     <Avatar>
-      <AvatarFallback aria-label="Usuário genérico">
+      <AvatarFallback role="img" aria-label="Usuário genérico">
         <User aria-hidden="true" className="h-5 w-5" />
       </AvatarFallback>
     </Avatar>
@@ -116,6 +116,7 @@ export const WithStatus: Story = {
         <AvatarFallback aria-hidden="true">MR</AvatarFallback>
       </Avatar>
       <span
+        role="status"
         aria-label="online"
         className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
       />

@@ -58,14 +58,14 @@
   --accent: 0 0% 96%;
   --accent-foreground: 0 0% 9%;
 
-  /* Feedback */
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 98%;
-  --success: 142 71% 45%;
+  /* Feedback — cores com contraste WCAG 2.1 AA (≥4.5:1) para texto sobre bg colorido */
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 142 76% 36%;
   --success-foreground: 0 0% 100%;
-  --warning: 48 96% 53%;
-  --warning-foreground: 0 0% 4%;
-  --info: 221 83% 53%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 0%;
+  --info: 221 83% 43%;
   --info-foreground: 0 0% 100%;
 
   /* Structure */
@@ -136,12 +136,12 @@
   --muted-foreground: 0 0% 45%;
   --accent: 0 0% 15%;
   --accent-foreground: 0 0% 98%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 98%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
   --success: 142 71% 45%;
-  --success-foreground: 0 0% 100%;
-  --warning: 48 96% 53%;
-  --warning-foreground: 0 0% 4%;
+  --success-foreground: 0 0% 0%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 0%;
   --info: 221 83% 53%;
   --info-foreground: 0 0% 100%;
   --border: 0 0% 15%;
