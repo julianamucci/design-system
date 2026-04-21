@@ -154,17 +154,18 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
 
 ### avatar — `object-cover` na imagem (4 stacks) {#avatar-object-cover} — ⚠️ PARCIALMENTE RESOLVIDO UPSTREAM (2026-04-21)
 
-- **Status:** React (`base-nova`) e Vue (`reka-nova`) absorveram o patch — AvatarImage agora inclui `object-cover` por padrão. Svelte e Basecoat **ainda precisam do patch** — marker permanece nesses 2 arquivos.
+- **Status:** React (`base-nova`), Vue (`reka-nova`) e Svelte (`nova`) absorveram o patch — AvatarImage agora inclui `object-cover` por padrão. Basecoat **ainda precisa do patch** — marker permanece nesse único arquivo.
 - **Arquivos:**
   - ~~`design-system-react/src/components/ui/avatar.tsx` (AvatarImage)~~ ✅ absorvido upstream (radix-nova → base-nova)
   - ~~`design-system-vue/src/components/ui/avatar/AvatarImage.vue`~~ ✅ absorvido upstream (reka-nova)
-  - `design-system-svelte/src/components/ui/avatar/avatar-image.svelte` — PATCH ATIVO
+  - ~~`design-system-svelte/src/components/ui/avatar/avatar-image.svelte`~~ ✅ absorvido upstream (shadcn-svelte nova)
   - `design-system-basecoat/src/components/ui/avatar.ts` (`createAvatarImage`) — PATCH ATIVO
 - **Categoria:** bugfix (distorção visual)
 - **Data original:** 2026-04-21
 - **Data resolução React:** 2026-04-21 (migração shadcn `new-york` → `radix-nova` → `base-nova`)
 - **Data resolução Vue:** 2026-04-21 (migração shadcn-vue `new-york` → `reka-nova` + bump 2.9.5 → 2.9.6)
-- **Upstream ref:** shadcn/ui (base-nova) e shadcn-vue (reka-nova) incluem `object-cover`. shadcn-svelte — ainda não.
+- **Data resolução Svelte:** 2026-04-21 (migração shadcn-svelte `new-york` → `nova` + bump bits-ui 2.17.3 → 2.18.0)
+- **Upstream ref:** shadcn/ui (base-nova), shadcn-vue (reka-nova) e shadcn-svelte (nova) incluem `object-cover`. basecoat-css — ainda não.
 
 **Antes (upstream):**
 ```tsx
