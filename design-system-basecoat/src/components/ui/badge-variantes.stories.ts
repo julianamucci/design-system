@@ -1,0 +1,66 @@
+import type { Meta, StoryObj } from '@storybook/html';
+import { within, expect } from 'storybook/test';
+import { createBadge } from './badge';
+
+const meta: Meta = {
+  title: 'UI/Badge/Variantes',
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component:
+          'As 4 variantes nativas do Badge renderizadas via createBadge({ variant, children }). ' +
+          'Cada variante aplica classes CSS distintas para hierarquia visual — sem prop size.',
+      },
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj;
+
+// ─── Variantes ────────────────────────────────────────────────────────────────
+
+export const Default: Story = {
+  render: () => createBadge({ variant: 'default', children: 'Novo' }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('Novo')).toBeVisible();
+    const el = canvasElement.querySelector('.badge');
+    await expect(el).not.toBeNull();
+    // Default não aplica modificador — apenas .badge.
+    await expect(el?.classList.contains('badge-secondary')).toBe(false);
+    await expect(el?.classList.contains('badge-destructive')).toBe(false);
+    await expect(el?.classList.contains('badge-outline')).toBe(false);
+  },
+};
+
+export const Secondary: Story = {
+  render: () => createBadge({ variant: 'secondary', children: 'Beta' }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('Beta')).toBeVisible();
+    const el = canvasElement.querySelector('.badge.badge-secondary');
+    await expect(el).not.toBeNull();
+  },
+};
+
+export const Destructive: Story = {
+  render: () => createBadge({ variant: 'destructive', children: 'Urgente' }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('Urgente')).toBeVisible();
+    const el = canvasElement.querySelector('.badge.badge-destructive');
+    await expect(el).not.toBeNull();
+  },
+};
+
+export const Outline: Story = {
+  render: () => createBadge({ variant: 'outline', children: 'Rascunho' }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('Rascunho')).toBeVisible();
+    const el = canvasElement.querySelector('.badge.badge-outline');
+    await expect(el).not.toBeNull();
+  },
+};
