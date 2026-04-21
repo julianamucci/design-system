@@ -13,8 +13,13 @@ const emit = defineEmits<{
 const open = ref(false)
 
 const themes = [
-  { id: 'default', name: 'Padrão' },
-  { id: 'tema-personalizado', name: 'Tema Personalizado' },
+  { id: 'nova', name: 'Nova' },
+  { id: 'vega', name: 'Vega' },
+  { id: 'maia', name: 'Maia' },
+  { id: 'lyra', name: 'Lyra' },
+  { id: 'mira', name: 'Mira' },
+  { id: 'luma', name: 'Luma' },
+  { id: 'sera', name: 'Sera' },
 ]
 
 function select(id: string) {

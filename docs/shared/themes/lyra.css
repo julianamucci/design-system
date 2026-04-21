@@ -1,0 +1,35 @@
+/*
+ * ─── Tema: Lyra ───────────────────────────────────────────────────────────────
+ * Referência shadcn: style `base-lyra` / `radix-lyra`.
+ * Vibe: Brutalista, high-contrast. Cantos retos, densidade compacta,
+ *        shadows hard-offset (não difusas) tipo neo-brutalismo.
+ *
+ * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
+ */
+.tema-lyra {
+  /* Radius — Lyra é retangular puro */
+  --radius: 0px;
+  --radius-button: 0px;
+  --radius-card: 0px;
+
+  /* Dimensões — Lyra é compacto (default h-6 como Nova, mas mais denso) */
+  --height-xs: 1.25rem;      /* 20px */
+  --height-sm: 1.5rem;       /* 24px */
+  --height-default: 1.75rem; /* 28px */
+  --height-lg: 2rem;         /* 32px */
+  --height-xl: 2.25rem;      /* 36px */
+  --size-xs: 1.25rem;
+  --size-sm: 1.5rem;
+  --size-default: 1.75rem;
+  --size-lg: 2rem;
+  --size-xl: 2.25rem;
+
+  /* Elevation — hard-offset shadows (brutalista) */
+  --elevation-sm: 2px 2px 0 0 rgba(0, 0, 0, 1);
+  --elevation-md: 4px 4px 0 0 rgba(0, 0, 0, 1);
+  --elevation-lg: 6px 6px 0 0 rgba(0, 0, 0, 1);
+  --elevation-xl: 8px 8px 0 0 rgba(0, 0, 0, 1);
+
+  /* Borders mais grossos (impressão tipográfica) */
+  --border-width-default: 2px;
+}

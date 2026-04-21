@@ -1,7 +1,15 @@
 /*
  * ─── Temas de Marca ───────────────────────────────────────────────────────────
+ * Os 7 temas do shadcn (Base Color: Neutral em todos).
+ * Nova é o tema padrão (valores em tokens.css aplicados em :root).
+ * Outros temas aplicam overrides via classe .tema-<nome>.
+ *
  * Todos os projetos importam via: @import "@shared/themes/index.css"
- * Adicione novos temas aqui.
  */
-@import "./crystal.css";
-@import "./industrial.css";
+@import "./nova.css";   /* padrão — só marker; valores vêm de tokens.css */
+@import "./vega.css";   /* clássico, rounded-md, h-10, shadows pronunciados */
+@import "./maia.css";   /* pill-shaped, rounded-full, h-10, shadows soft */
+@import "./lyra.css";   /* brutalista, rounded-0, h-7 denso, hard-shadows */
+@import "./mira.css";   /* minimalista, rounded-sm, h-7, shadows mínimas */
+@import "./luma.css";   /* elegante, rounded-xl, h-10, shadows frias */
+@import "./sera.css";   /* orgânico, rounded-10px, h-8, shadows warm */

@@ -20,15 +20,16 @@ const lazyDocs: Record<string, ReturnType<typeof defineAsyncComponent>> = {
 // ─── State ───────────────────────────────────────────────────────────────────
 const currentPage = ref('home')
 const isDark = ref(false)
-const currentTheme = ref('default')
+const currentTheme = ref('nova')
 const sidebarOpen = ref(true)
 const openCategories = ref<string[]>([])
 const currentComponent = shallowRef<ReturnType<typeof defineAsyncComponent> | null>(null)
 
 watch([currentPage, isDark, currentTheme], () => {
-  document.documentElement.classList.remove('default', 'tema-personalizado', 'dark')
-  if (currentTheme.value === 'tema-personalizado') {
-    document.documentElement.classList.add('tema-personalizado')
+  const themeClasses = ['tema-vega', 'tema-maia', 'tema-lyra', 'tema-mira', 'tema-luma', 'tema-sera']
+  document.documentElement.classList.remove(...themeClasses, 'dark')
+  if (currentTheme.value !== 'nova') {
+    document.documentElement.classList.add(`tema-${currentTheme.value}`)
   }
   if (isDark.value) {
     document.documentElement.classList.add('dark')

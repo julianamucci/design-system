@@ -37,15 +37,19 @@ const preview: Preview = {
   // Definição do seletor de Marca na barra de ferramentas
   globalTypes: {
     brand: {
-      description: 'Tema de Marca (Multi-tenancy)',
-      defaultValue: 'default',
+      description: 'Style do shadcn (cada tema aplica radius, dimensões e shadows distintos)',
+      defaultValue: 'nova',
       toolbar: {
-        title: 'Marca',
+        title: 'Style',
         icon: 'paintbrush',
         items: [
-          { value: 'default', title: 'Nortear (Padrão)' },
-          { value: 'tema-um', title: 'Crystal (Indigo)' },
-          { value: 'tema-dois', title: 'Industrial (Amber)' },
+          { value: 'nova', title: 'Nova (padrão)' },
+          { value: 'vega', title: 'Vega (clássico)' },
+          { value: 'maia', title: 'Maia (friendly)' },
+          { value: 'lyra', title: 'Lyra (brutalista)' },
+          { value: 'mira', title: 'Mira (minimalista)' },
+          { value: 'luma', title: 'Luma (elegante)' },
+          { value: 'sera', title: 'Sera (orgânico)' },
         ],
         showName: true,
       },
@@ -63,20 +67,20 @@ const preview: Preview = {
       parentSelector: 'html',
     }),
 
-    // 2. Gerencia a Marca (Brand Theme) via classe manual na tag html
+    // 2. Gerencia o Style (tema) via classe manual na tag html
     (Story, context) => {
-      const brand = context.globals.brand || 'default';
-      
+      const brand = context.globals.brand || 'nova';
+
       useEffect(() => {
-        const brands = ['tema-um', 'tema-dois'];
+        const themeClasses = ['tema-vega', 'tema-maia', 'tema-lyra', 'tema-mira', 'tema-luma', 'tema-sera'];
         const html = document.documentElement;
-        
-        // Remove classes de outras marcas
-        html.classList.remove(...brands);
-        
-        // Adiciona a classe da marca selecionada (se não for default)
-        if (brand !== 'default') {
-          html.classList.add(brand);
+
+        // Remove classes de outros temas
+        html.classList.remove(...themeClasses);
+
+        // Nova é o default (sem classe); outros aplicam via .tema-<id>
+        if (brand !== 'nova') {
+          html.classList.add(`tema-${brand}`);
         }
       }, [brand]);
 

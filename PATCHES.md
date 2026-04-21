@@ -80,6 +80,47 @@ npm run patches:diff -- --stack react --component alert
 
 <!-- ordenar alfabeticamente por stack > componente -->
 
+### button — dimensões tokenizadas (React/Vue/Svelte) {#button-dimension-tokens}
+
+- **Status:** PATCH ATIVO nas 3 stacks que suportam Tailwind v4 arbitrary values com custom properties (`h-(--var)`).
+- **Arquivos:**
+  - `design-system-react/src/components/ui/button.tsx`
+  - `design-system-vue/src/components/ui/button/index.ts`
+  - `design-system-svelte/src/components/ui/button/button.svelte`
+  - (`design-system-basecoat/src/components/ui/button.ts` — NÃO patchado: Basecoat usa classes `.btn` do pacote `basecoat-css`, não Tailwind)
+- **Categoria:** theme (multi-tema com densidades distintas)
+- **Data:** 2026-04-21
+- **Upstream ref:** shadcn/ui (`base-nova`), shadcn-vue (`reka-nova`), shadcn-svelte (`nova`) — todos hardcodam `h-8`, `h-7`, `h-9`, `size-8` etc. no `cva()`
+
+**Antes (upstream):**
+```ts
+size: {
+  default: "h-8 gap-1.5 px-2.5 ...",
+  xs:      "h-6 ...",
+  sm:      "h-7 ...",
+  lg:      "h-9 ...",
+  icon:    "size-8",
+  // ...
+}
+```
+
+**Depois (custom):**
+```ts
+// PATCH: theme — alturas via tokens (--height-*) ...
+size: {
+  default: "h-(--height-default) gap-1.5 px-2.5 ...",
+  xs:      "h-(--height-xs) ...",
+  sm:      "h-(--height-sm) ...",
+  lg:      "h-(--height-lg) ...",
+  icon:    "size-(--size-default)",
+  // ...
+}
+```
+
+**Motivo:** os 7 temas do design system (Nova, Vega, Maia, Lyra, Mira, Luma, Sera) replicam os 7 styles do shadcn — cada um com **densidade visual distinta**. Sem tokenizar altura/size no componente, seria impossível fazer Vega mostrar Button h-10 (clássico) e Lyra mostrar h-7 (brutalista compacto) a partir do mesmo componente React/Vue/Svelte. A abordagem via `h-(--height-default)` usa o shortcut de Tailwind v4.1+ para consumir custom properties CSS — zero runtime cost, zero dependência JS.
+
+**Verificação após bump:** conferir se o registry do shadcn passa a usar tokens CSS nativos (improvável em curto prazo; shadcn mantém hardcoded para simplicidade de exemplo). Re-aplicar o patch se `shadcn add button` sobrescrever.
+
 ### react/alert — SVG usa `text-current` para herdar cor da variante — ✅ RESOLVIDO UPSTREAM (2026-04-21)
 
 - **Status:** Absorvido pelo upstream no registry `radix-nova`, mantido no `base-nova`. O Alert atual usa `*:[svg]:text-current` e `bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90`. Patch não é mais necessário — marker removido do código.

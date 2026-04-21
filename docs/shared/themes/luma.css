@@ -1,0 +1,32 @@
+/*
+ * ─── Tema: Luma ───────────────────────────────────────────────────────────────
+ * Referência shadcn: style `base-luma` / `radix-luma`.
+ * Vibe: Soft, elegante, próximo ao Maia mas com cantos menos extremos e
+ *        sombras coloridas sutis. Densidade confortável.
+ *
+ * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
+ */
+.tema-luma {
+  /* Radius — arredondado mas não pill */
+  --radius: 1rem;           /* 16px */
+  --radius-button: 1.25rem; /* 20px */
+  --radius-card: 1.5rem;    /* 24px */
+
+  /* Dimensões — Luma é generoso como Maia */
+  --height-xs: 1.75rem;      /* 28px */
+  --height-sm: 2rem;         /* 32px */
+  --height-default: 2.5rem;  /* 40px */
+  --height-lg: 2.75rem;      /* 44px */
+  --height-xl: 3rem;         /* 48px */
+  --size-xs: 1.75rem;
+  --size-sm: 2rem;
+  --size-default: 2.5rem;
+  --size-lg: 2.75rem;
+  --size-xl: 3rem;
+
+  /* Elevation — shadows elegantes com leve tom frio */
+  --elevation-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --elevation-md: 0 4px 12px 0 rgba(15, 23, 42, 0.08), 0 2px 4px 0 rgba(15, 23, 42, 0.04);
+  --elevation-lg: 0 12px 24px -6px rgba(15, 23, 42, 0.12), 0 4px 8px 0 rgba(15, 23, 42, 0.06);
+  --elevation-xl: 0 24px 48px -12px rgba(15, 23, 42, 0.18), 0 8px 16px 0 rgba(15, 23, 42, 0.08);
+}

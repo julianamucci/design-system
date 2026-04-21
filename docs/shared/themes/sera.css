@@ -1,0 +1,32 @@
+/*
+ * ─── Tema: Sera ───────────────────────────────────────────────────────────────
+ * Referência shadcn: style `radix-sera` (entrada mais recente do registry).
+ * Vibe: Orgânico, natural. Radius intermediário, densidade padrão, shadows
+ *        com toque warm. Equilíbrio entre Vega (clássico) e Maia (friendly).
+ *
+ * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
+ */
+.tema-sera {
+  /* Radius — caminho do meio */
+  --radius: 10px;
+  --radius-button: 10px;
+  --radius-card: 12px;
+
+  /* Dimensões — neutro, como Nova */
+  --height-xs: 1.5rem;
+  --height-sm: 1.75rem;
+  --height-default: 2rem;
+  --height-lg: 2.25rem;
+  --height-xl: 2.5rem;
+  --size-xs: 1.5rem;
+  --size-sm: 1.75rem;
+  --size-default: 2rem;
+  --size-lg: 2.25rem;
+  --size-xl: 2.5rem;
+
+  /* Elevation — shadows com leve matiz warm (tom marrom) */
+  --elevation-sm: 0 1px 3px 0 rgba(68, 45, 30, 0.08), 0 1px 2px 0 rgba(68, 45, 30, 0.05);
+  --elevation-md: 0 4px 8px -2px rgba(68, 45, 30, 0.1), 0 2px 4px -1px rgba(68, 45, 30, 0.06);
+  --elevation-lg: 0 10px 16px -4px rgba(68, 45, 30, 0.12), 0 4px 8px -2px rgba(68, 45, 30, 0.07);
+  --elevation-xl: 0 20px 32px -8px rgba(68, 45, 30, 0.14), 0 8px 16px -4px rgba(68, 45, 30, 0.08);
+}

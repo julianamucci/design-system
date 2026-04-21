@@ -1,11 +1,15 @@
 /**
  * theme-config.ts — Configuração de temas compartilhada entre todos os stacks.
  * Importar via: import { ... } from '@shared/themes/theme-config'
+ *
+ * Temas espelham os 7 styles do shadcn (Nova, Vega, Maia, Lyra, Mira, Luma, Sera).
+ * Todos usam Base Color: Neutral, Theme Color: Neutral, Chart Color: Neutral.
+ * O que varia entre temas: radius, dimensões (--height-*, --size-*) e shadows.
  */
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export type ThemeId = 'default' | 'tema-um' | 'tema-dois' | 'tema-tres';
+export type ThemeId = 'nova' | 'vega' | 'maia' | 'lyra' | 'mira' | 'luma' | 'sera';
 
 export interface ThemeDefinition {
   id: ThemeId;
@@ -18,28 +22,46 @@ export interface ThemeDefinition {
 
 export const themes: ThemeDefinition[] = [
   {
-    id: 'default',
-    label: 'Nortear (padrão)',
-    description: 'Tema neutro em preto e branco',
+    id: 'nova',
+    label: 'Nova',
+    description: 'Moderno, compacto, cantos suaves — tema padrão',
     cssClass: '',
   },
   {
-    id: 'tema-um',
-    label: 'Crystal',
-    description: 'Indigo/Violet — identidade visual Crystal',
-    cssClass: 'tema-um',
+    id: 'vega',
+    label: 'Vega',
+    description: 'Clássico, rounded-md, densidade folgada, shadows pronunciados',
+    cssClass: 'tema-vega',
   },
   {
-    id: 'tema-dois',
-    label: 'Dark Industrial',
-    description: 'Amber/Slate — tema industrial escuro',
-    cssClass: 'tema-dois',
+    id: 'maia',
+    label: 'Maia',
+    description: 'Pill-shaped, friendly, shadows soft e difusas',
+    cssClass: 'tema-maia',
   },
   {
-    id: 'tema-tres',
-    label: 'Crystal UI',
-    description: 'Variante clara do Crystal',
-    cssClass: 'tema-tres',
+    id: 'lyra',
+    label: 'Lyra',
+    description: 'Brutalista, cantos retos, hard-offset shadows',
+    cssClass: 'tema-lyra',
+  },
+  {
+    id: 'mira',
+    label: 'Mira',
+    description: 'Minimalista, ultra-compacto, shadows sutis',
+    cssClass: 'tema-mira',
+  },
+  {
+    id: 'luma',
+    label: 'Luma',
+    description: 'Elegante, rounded-xl, shadows frias e soft',
+    cssClass: 'tema-luma',
+  },
+  {
+    id: 'sera',
+    label: 'Sera',
+    description: 'Orgânico, radius intermediário, shadows warm-toned',
+    cssClass: 'tema-sera',
   },
 ];
 
@@ -56,10 +78,9 @@ export const themeCssClasses: Record<ThemeId, string> = Object.fromEntries(
 // ─── Subdomínio → tema ────────────────────────────────────────────────────────
 
 export const subdomainThemeMap: Record<string, ThemeId> = {
-  localhost:  'default',
-  crystal:    'tema-um',
-  nortear:    'default',
-  admin:      'tema-dois',
+  localhost: 'nova',
+  nortear:   'nova',
+  admin:     'lyra',
 };
 
 // ─── Domínios de produção ─────────────────────────────────────────────────────
@@ -78,7 +99,7 @@ export function getCurrentSubdomain(): string {
 
 export function getThemeFromSubdomain(): ThemeId {
   const sub = getCurrentSubdomain();
-  return subdomainThemeMap[sub] ?? 'default';
+  return subdomainThemeMap[sub] ?? 'nova';
 }
 
 export function isDevMode(): boolean {

@@ -24,15 +24,19 @@ const preview: Preview = {
 
   globalTypes: {
     brand: {
-      description: 'Tema de Marca (Multi-tenancy)',
-      defaultValue: 'default',
+      description: 'Style do shadcn (cada tema aplica radius, dimensões e shadows distintos)',
+      defaultValue: 'nova',
       toolbar: {
-        title: 'Marca',
+        title: 'Style',
         icon: 'paintbrush',
         items: [
-          { value: 'default',   title: 'Nortear (Padrão)'   },
-          { value: 'tema-um',   title: 'Crystal (Indigo)'   },
-          { value: 'tema-dois', title: 'Industrial (Amber)' },
+          { value: 'nova', title: 'Nova (padrão)' },
+          { value: 'vega', title: 'Vega (clássico)' },
+          { value: 'maia', title: 'Maia (friendly)' },
+          { value: 'lyra', title: 'Lyra (brutalista)' },
+          { value: 'mira', title: 'Mira (minimalista)' },
+          { value: 'luma', title: 'Luma (elegante)' },
+          { value: 'sera', title: 'Sera (orgânico)' },
         ],
         // @ts-expect-error — showName is valid at runtime but missing in some type definitions
         showName: true,
@@ -50,10 +54,10 @@ const preview: Preview = {
 
     // Decorator 2: manages brand class on <html>
     (Story, context) => {
-      const brand = context.globals['brand'] || 'default';
+      const brand = context.globals['brand'] || 'nova';
       const html = document.documentElement;
-      html.classList.remove('tema-um', 'tema-dois');
-      if (brand !== 'default') html.classList.add(brand);
+      html.classList.remove('tema-vega', 'tema-maia', 'tema-lyra', 'tema-mira', 'tema-luma', 'tema-sera');
+      if (brand !== 'nova') html.classList.add(`tema-${brand}`);
       return Story();
     },
   ],

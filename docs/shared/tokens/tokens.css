@@ -95,6 +95,27 @@
   --radius-button: 8px;
   --radius-card: 8px;
 
+  /* Dimension tokens — altura default de interativos (Button, Input, Select, Toggle, Badge...) */
+  /* Nota: Tailwind v4 consome via h-(--height-*) / size-(--size-*) / px-(--spacing-*) */
+  --height-xs: 1.5rem;        /* 24px — h-6 default */
+  --height-sm: 1.75rem;       /* 28px — h-7 */
+  --height-default: 2rem;     /* 32px — h-8 */
+  --height-lg: 2.25rem;       /* 36px — h-9 */
+  --height-xl: 2.5rem;        /* 40px — h-10 */
+
+  --size-xs: 1.5rem;          /* 24px — size-6 */
+  --size-sm: 1.75rem;         /* 28px — size-7 */
+  --size-default: 2rem;       /* 32px — size-8 */
+  --size-lg: 2.25rem;         /* 36px — size-9 */
+  --size-xl: 2.5rem;          /* 40px — size-10 */
+
+  --spacing-btn-x: 0.625rem;  /* 10px — px-2.5 default */
+  --spacing-btn-x-sm: 0.625rem;
+  --spacing-btn-x-lg: 0.625rem;
+
+  /* Stroke (para variantes com borda visível) */
+  --border-width-default: 1px;
+
   /* Transitions */
   --transition-fast: 150ms;
   --transition-normal: 300ms;

@@ -45,7 +45,7 @@ export default function App() {
 
   const [currentPage, setCurrentPage] = useState('home');
   const [isDark, setIsDark] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState('default');
+  const [currentTheme, setCurrentTheme] = useState('nova');
 
   // Inicialização do tema por subdomínio
   useEffect(() => {
@@ -58,16 +58,18 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Remove all possible theme classes
-    const allThemes = Object.keys(themeDisplayNames);
-    document.documentElement.classList.remove('dark', ...allThemes);
+    // Remove todas as possíveis classes de tema
+    const themeClassNames = Object.keys(themeDisplayNames)
+      .filter((id) => id !== 'nova')
+      .map((id) => `tema-${id}`);
+    document.documentElement.classList.remove('dark', ...themeClassNames);
 
-    // Apply current theme
-    if (currentTheme !== 'default') {
-      document.documentElement.classList.add(currentTheme);
+    // Aplica o tema atual (Nova é o padrão e não tem classe)
+    if (currentTheme !== 'nova') {
+      document.documentElement.classList.add(`tema-${currentTheme}`);
     }
 
-    // Apply dark mode
+    // Aplica dark mode
     if (isDark) {
       document.documentElement.classList.add('dark');
     }
