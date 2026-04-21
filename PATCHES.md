@@ -70,12 +70,14 @@ npm run patches:diff -- --stack react --component alert
 
 <!-- ordenar alfabeticamente por stack > componente -->
 
-### react/alert — SVG usa `text-current` para herdar cor da variante
+### react/alert — SVG usa `text-current` para herdar cor da variante — ✅ RESOLVIDO UPSTREAM (2026-04-21)
 
+- **Status:** Absorvido pelo upstream no registry `radix-nova`. O Alert atual usa `*:[svg]:text-current` e `bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90`. Patch não é mais necessário — marker removido do código.
 - **Arquivo:** `design-system-react/src/components/ui/alert.tsx`
 - **Categoria:** a11y (contraste de ícone em variantes semânticas)
-- **Data:** 2026-04-18
-- **Upstream ref:** shadcn/ui — `new-york/alert.tsx`
+- **Data original:** 2026-04-18
+- **Data resolução:** 2026-04-21 (migração shadcn `new-york` → `radix-nova`)
+- **Upstream ref:** shadcn/ui — `radix-nova/alert.tsx`
 
 **Antes (shadcn upstream):**
 ```tsx
@@ -146,16 +148,18 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
 
 **Verificação após bump:** inspecionar `node_modules/basecoat-css/dist/basecoat.css` — se o seletor `> section` for substituído por `> div` ou `[data-slot="alert-description"]`, ajustar a factory conforme o novo contrato.
 
-### avatar — `object-cover` na imagem (4 stacks) {#avatar-object-cover}
+### avatar — `object-cover` na imagem (4 stacks) {#avatar-object-cover} — ⚠️ PARCIALMENTE RESOLVIDO UPSTREAM (2026-04-21)
 
+- **Status:** React absorveu o patch no registry `radix-nova` (AvatarImage agora inclui `object-cover` por padrão). Vue, Svelte e Basecoat **ainda precisam do patch** — marker permanece nesses 3 arquivos.
 - **Arquivos:**
-  - `design-system-react/src/components/ui/avatar.tsx` (AvatarImage)
-  - `design-system-vue/src/components/ui/avatar/AvatarImage.vue`
-  - `design-system-svelte/src/components/ui/avatar/avatar-image.svelte`
-  - `design-system-basecoat/src/components/ui/avatar.ts` (`createAvatarImage`)
+  - ~~`design-system-react/src/components/ui/avatar.tsx` (AvatarImage)~~ ✅ absorvido upstream
+  - `design-system-vue/src/components/ui/avatar/AvatarImage.vue` — PATCH ATIVO
+  - `design-system-svelte/src/components/ui/avatar/avatar-image.svelte` — PATCH ATIVO
+  - `design-system-basecoat/src/components/ui/avatar.ts` (`createAvatarImage`) — PATCH ATIVO
 - **Categoria:** bugfix (distorção visual)
-- **Data:** 2026-04-21
-- **Upstream ref:** shadcn/ui, shadcn-vue, shadcn-svelte — todos entregam `AvatarImage` sem `object-cover`
+- **Data original:** 2026-04-21
+- **Data resolução React:** 2026-04-21 (migração shadcn `new-york` → `radix-nova`)
+- **Upstream ref:** shadcn/ui (radix-nova) inclui `object-cover`. shadcn-vue, shadcn-svelte — ainda não.
 
 **Antes (upstream):**
 ```tsx
