@@ -22,8 +22,8 @@ export function createLanguageSwitcher(): HTMLElement {
       b.textContent = label;
       const active = value === current;
       b.className = active
-        ? 'h-6 px-2 text-[10px] font-bold rounded bg-secondary text-secondary-foreground shadow-sm transition-all'
-        : 'h-6 px-2 text-[10px] font-bold rounded text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all';
+        ? 'h-(--height-xs) px-2 text-[10px] font-bold rounded bg-secondary text-secondary-foreground shadow-sm transition-all'
+        : 'h-(--height-xs) px-2 text-[10px] font-bold rounded text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all';
       b.setAttribute('aria-pressed', String(active));
       b.addEventListener('click', () => {
         const prev = getLocale();

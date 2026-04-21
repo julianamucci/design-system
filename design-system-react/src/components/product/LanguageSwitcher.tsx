@@ -30,26 +30,26 @@ export function LanguageSwitcher() {
         }}
         variant="outline"
         size="sm"
-        className="h-7"
+        className="h-(--height-sm)"
       >
         <ToggleGroupItem
           value="pt-BR"
           aria-label="Português"
-          className="h-6 px-2 text-[10px] data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
+          className="h-(--height-xs) px-2 text-[10px] data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
         >
           PT
         </ToggleGroupItem>
         <ToggleGroupItem
           value="en"
           aria-label="English"
-          className="h-6 px-2 text-[10px] data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
+          className="h-(--height-xs) px-2 text-[10px] data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
         >
           EN
         </ToggleGroupItem>
         <ToggleGroupItem
           value="es"
           aria-label="Español"
-          className="h-6 px-2 text-[10px] data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
+          className="h-(--height-xs) px-2 text-[10px] data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
         >
           ES
         </ToggleGroupItem>

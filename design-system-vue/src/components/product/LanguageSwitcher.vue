@@ -25,7 +25,7 @@ function handleChange(value: string) {
       v-for="lang in locales"
       :key="lang.value"
       @click="handleChange(lang.value)"
-      :class="['h-6 px-2 text-[10px] font-bold rounded transition-all',
+      :class="['h-(--height-xs) px-2 text-[10px] font-bold rounded transition-all',
         store.locale === lang.value
           ? 'bg-secondary text-secondary-foreground shadow-sm'
           : 'text-muted-foreground hover:text-foreground hover:bg-muted/50']"
