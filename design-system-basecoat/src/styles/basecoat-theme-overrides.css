@@ -1,90 +1,177 @@
 /*
  * ─── Basecoat Theme Overrides ─────────────────────────────────────────────────
  *
- * Sobrescreve dimensões hardcoded do pacote `basecoat-css` usando nossos
- * tokens (--height-*, --size-*), permitindo que os 7 temas (Nova, Vega, Maia,
- * Lyra, Mira, Luma, Sera) alterem a densidade visual também no Basecoat.
+ * Dois propósitos combinados:
+ *   1. Tokenização de dimensões — altura/size dos componentes basecoat usam
+ *      os tokens compartilhados (--height-*, --size-*) para que os 7 temas
+ *      (Nova, Vega, Maia, Lyra, Mira, Luma, Sera) variem a densidade.
+ *   2. Paridade visual com o estilo "nova" — basecoat-css v0.3.11 ainda usa
+ *      o estilo "new-york" (destructive sólido, sem sizes xs/icon-xs).
+ *      Alinhamos com os ports do shadcn (base-nova/reka-nova/shadcn-svelte-nova)
+ *      sem forkar o pacote.
  *
- * Como funciona:
- * - basecoat-css declara `.btn { @apply h-9 ... }` no @layer components
- * - Este arquivo redeclara no mesmo layer, DEPOIS, com novos tokens
- * - Em Tailwind v4, a ordem de declaração dentro do mesmo layer ganha
+ * IMPORTANTE: usar APENAS CSS puro com var(), sem @apply aninhado extensamente,
+ * para manter o build rápido. Ver:
+ *   docs/shared/guidelines/12-tokenizacao-dimensoes.md
+ *   PATCHES.md#basecoat-theme-overrides
+ *   PATCHES.md#basecoat-nova-parity
  *
- * Ordem de import obrigatória em globals.css:
+ * Ordem de import em globals.css:
  *   @import "tailwindcss";
  *   @import "basecoat-css";
  *   @import "@shared/tokens/tokens.css";
  *   @import "@shared/themes/index.css";
- *   @import "./basecoat-theme-overrides.css";  ← ESTE depois de tokens e temas
- *
- * Ver: docs/shared/guidelines/12-tokenizacao-dimensoes.md
+ *   @import "./basecoat-theme-overrides.css";  ← ESTE por último
  */
 
 @layer components {
-  /* ── Button (default size) ──────────────────────────────────────────────── */
-  .btn,
-  .btn-primary,
-  .btn-secondary,
-  .btn-outline,
-  .btn-ghost,
-  .btn-link,
-  .btn-destructive {
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   * 1. BUTTON — dimensões tokenizadas
+   * ═══════════════════════════════════════════════════════════════════════════ */
+
+  .btn, .btn-primary, .btn-secondary, .btn-outline, .btn-ghost, .btn-link, .btn-destructive {
     height: var(--height-default);
   }
-  .btn-icon,
-  .btn-icon-primary,
-  .btn-icon-secondary,
-  .btn-icon-outline,
-  .btn-icon-ghost,
-  .btn-icon-link,
-  .btn-icon-destructive {
+  .btn-icon, .btn-icon-primary, .btn-icon-secondary, .btn-icon-outline, .btn-icon-ghost, .btn-icon-link, .btn-icon-destructive {
     width: var(--size-default);
     height: var(--size-default);
   }
 
-  /* ── Button (sm) ────────────────────────────────────────────────────────── */
-  .btn-sm,
-  .btn-sm-primary,
-  .btn-sm-secondary,
-  .btn-sm-outline,
-  .btn-sm-ghost,
-  .btn-sm-link,
-  .btn-sm-destructive {
+  .btn-sm, .btn-sm-primary, .btn-sm-secondary, .btn-sm-outline, .btn-sm-ghost, .btn-sm-link, .btn-sm-destructive {
     height: var(--height-sm);
   }
-  .btn-sm-icon,
-  .btn-sm-icon-primary,
-  .btn-sm-icon-secondary,
-  .btn-sm-icon-outline,
-  .btn-sm-icon-ghost,
-  .btn-sm-icon-link,
-  .btn-sm-icon-destructive {
+  .btn-sm-icon, .btn-sm-icon-primary, .btn-sm-icon-secondary, .btn-sm-icon-outline, .btn-sm-icon-ghost, .btn-sm-icon-link, .btn-sm-icon-destructive {
     width: var(--size-sm);
     height: var(--size-sm);
   }
 
-  /* ── Button (lg) ────────────────────────────────────────────────────────── */
-  .btn-lg,
-  .btn-lg-primary,
-  .btn-lg-secondary,
-  .btn-lg-outline,
-  .btn-lg-ghost,
-  .btn-lg-link,
-  .btn-lg-destructive {
+  .btn-lg, .btn-lg-primary, .btn-lg-secondary, .btn-lg-outline, .btn-lg-ghost, .btn-lg-link, .btn-lg-destructive {
     height: var(--height-lg);
   }
-  .btn-lg-icon,
-  .btn-lg-icon-primary,
-  .btn-lg-icon-secondary,
-  .btn-lg-icon-outline,
-  .btn-lg-icon-ghost,
-  .btn-lg-icon-link,
-  .btn-lg-icon-destructive {
+  .btn-lg-icon, .btn-lg-icon-primary, .btn-lg-icon-secondary, .btn-lg-icon-outline, .btn-lg-icon-ghost, .btn-lg-icon-link, .btn-lg-icon-destructive {
     width: var(--size-lg);
     height: var(--size-lg);
   }
 
-  /* ── Input ──────────────────────────────────────────────────────────────── */
+  /* ═══════════════════════════════════════════════════════════════════════════
+   * 2. BUTTON XS — novo size (não existe no upstream)
+   *    Herda base do .btn pelo Basecoat; sobrescreve padding + font + radius.
+   * ═══════════════════════════════════════════════════════════════════════════ */
+
+  .btn-xs, .btn-xs-primary, .btn-xs-secondary, .btn-xs-outline, .btn-xs-ghost, .btn-xs-link, .btn-xs-destructive {
+    /* Base aplicada por @apply para compartilhar regras do basecoat */
+    @apply inline-flex items-center justify-center whitespace-nowrap text-xs font-medium transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer rounded-md border border-transparent gap-1 px-2;
+    height: var(--height-xs);
+  }
+  .btn-xs-icon, .btn-xs-icon-primary, .btn-xs-icon-secondary, .btn-xs-icon-outline, .btn-xs-icon-ghost, .btn-xs-icon-link, .btn-xs-icon-destructive {
+    @apply inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 aria-invalid:border-destructive cursor-pointer rounded-md border border-transparent;
+    width: var(--size-xs);
+    height: var(--size-xs);
+  }
+
+  /* Variantes do xs — replica as cores dos tamanhos maiores */
+  .btn-xs, .btn-xs-primary, .btn-xs-icon, .btn-xs-icon-primary {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+  .btn-xs:hover, .btn-xs-primary:hover, .btn-xs-icon:hover, .btn-xs-icon-primary:hover {
+    background-color: hsl(var(--primary) / 0.8);
+  }
+  .btn-xs-secondary, .btn-xs-icon-secondary {
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+  .btn-xs-secondary:hover, .btn-xs-icon-secondary:hover {
+    background-color: hsl(var(--secondary) / 0.8);
+  }
+  .btn-xs-outline, .btn-xs-icon-outline {
+    border-color: hsl(var(--border));
+    background-color: hsl(var(--background));
+  }
+  .btn-xs-outline:hover, .btn-xs-icon-outline:hover {
+    background-color: hsl(var(--muted));
+    color: hsl(var(--foreground));
+  }
+  .btn-xs-ghost:hover, .btn-xs-icon-ghost:hover {
+    background-color: hsl(var(--muted));
+    color: hsl(var(--foreground));
+  }
+  .btn-xs-link, .btn-xs-icon-link {
+    color: hsl(var(--primary));
+    text-underline-offset: 4px;
+  }
+  .btn-xs-link:hover, .btn-xs-icon-link:hover {
+    text-decoration: underline;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   * 3. DESTRUCTIVE — vira SOFT (bg-destructive/10) em todas as sizes
+   * ═══════════════════════════════════════════════════════════════════════════ */
+
+  .btn-destructive,
+  .btn-sm-destructive,
+  .btn-lg-destructive,
+  .btn-xs-destructive,
+  .btn-icon-destructive,
+  .btn-sm-icon-destructive,
+  .btn-lg-icon-destructive,
+  .btn-xs-icon-destructive {
+    background-color: hsl(var(--destructive) / 0.10);
+    color: hsl(var(--destructive));
+    box-shadow: none;
+  }
+  .btn-destructive:hover,
+  .btn-sm-destructive:hover,
+  .btn-lg-destructive:hover,
+  .btn-xs-destructive:hover,
+  .btn-icon-destructive:hover,
+  .btn-sm-icon-destructive:hover,
+  .btn-lg-icon-destructive:hover,
+  .btn-xs-icon-destructive:hover {
+    background-color: hsl(var(--destructive) / 0.20);
+  }
+  .dark .btn-destructive,
+  .dark .btn-sm-destructive,
+  .dark .btn-lg-destructive,
+  .dark .btn-xs-destructive,
+  .dark .btn-icon-destructive,
+  .dark .btn-sm-icon-destructive,
+  .dark .btn-lg-icon-destructive,
+  .dark .btn-xs-icon-destructive {
+    background-color: hsl(var(--destructive) / 0.20);
+  }
+  .dark .btn-destructive:hover,
+  .dark .btn-sm-destructive:hover,
+  .dark .btn-lg-destructive:hover,
+  .dark .btn-xs-destructive:hover,
+  .dark .btn-icon-destructive:hover,
+  .dark .btn-sm-icon-destructive:hover,
+  .dark .btn-lg-icon-destructive:hover,
+  .dark .btn-xs-icon-destructive:hover {
+    background-color: hsl(var(--destructive) / 0.30);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   * 4. BADGE — altura tokenizada + destructive soft
+   * ═══════════════════════════════════════════════════════════════════════════ */
+
+  .badge, .badge-primary, .badge-secondary, .badge-destructive, .badge-outline {
+    height: var(--height-badge);
+  }
+  .badge-destructive {
+    background-color: hsl(var(--destructive) / 0.10);
+    color: hsl(var(--destructive));
+    border-color: transparent;
+  }
+  .dark .badge-destructive {
+    background-color: hsl(var(--destructive) / 0.20);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   * 5. INPUT + SELECT — altura tokenizada + focus ring consistente
+   * ═══════════════════════════════════════════════════════════════════════════ */
+
   input.input {
     height: var(--height-default);
   }
@@ -92,36 +179,31 @@
     height: var(--height-xs);
   }
 
-  /* ── Select trigger ─────────────────────────────────────────────────────── */
   button.select,
   .select {
     height: var(--height-default);
   }
+  .select[aria-expanded='true'] {
+    background-color: hsl(var(--muted));
+    color: hsl(var(--foreground));
+  }
 
-  /* ── Badge ──────────────────────────────────────────────────────────────── */
-  /* Basecoat não declara altura fixa para .badge — padding vertical dita.
-     Se no futuro o upstream adicionar, descomentar:
-     .badge, .badge-primary, .badge-secondary, .badge-destructive, .badge-outline {
-       height: var(--height-badge);
-     }
-  */
+  /* ═══════════════════════════════════════════════════════════════════════════
+   * 6. KBD + COMMAND + SIDEBAR — alturas tokenizadas
+   * ═══════════════════════════════════════════════════════════════════════════ */
 
-  /* ── Kbd ────────────────────────────────────────────────────────────────── */
   kbd.kbd {
     height: var(--height-badge);
     min-width: var(--height-badge);
   }
 
-  /* ── Command input ──────────────────────────────────────────────────────── */
   .command input {
     height: var(--height-xl);
   }
   .command > [role="group"] > [role="heading"] {
-    /* header do comando é menor — mantém compacto */
     height: var(--height-default);
   }
 
-  /* ── Sidebar ────────────────────────────────────────────────────────────── */
   .sidebar [data-sidebar-group-label],
   .sidebar [data-sidebar-menu-button][data-size="default"] {
     height: var(--height-default);
@@ -131,5 +213,14 @@
   }
   .sidebar [data-sidebar-menu-button][data-size="lg"] {
     height: var(--height-lg);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   * 7. ALERT — ícone herda color (compat com variantes success/warning custom)
+   * ═══════════════════════════════════════════════════════════════════════════ */
+
+  .alert svg,
+  .alert-destructive svg {
+    color: currentColor;
   }
 }

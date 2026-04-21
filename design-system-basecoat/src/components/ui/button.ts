@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type ButtonVariant = 'default' | 'secondary' | 'outline' | 'ghost' | 'link' | 'destructive';
-export type ButtonSize = 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg';
+export type ButtonSize = 'default' | 'xs' | 'sm' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg';
 
 export type ButtonOptions = {
   variant?: ButtonVariant;
@@ -24,8 +24,10 @@ export type ButtonOptions = {
 export function btnClass(variant: ButtonVariant | string = 'default', size: ButtonSize | string = 'default'): string {
   const prefix =
     size === 'icon'    ? 'btn-icon' :
+    size === 'icon-xs' ? 'btn-xs-icon' :
     size === 'icon-sm' ? 'btn-sm-icon' :
     size === 'icon-lg' ? 'btn-lg-icon' :
+    size === 'xs'      ? 'btn-xs' :
     size === 'sm'      ? 'btn-sm' :
     size === 'lg'      ? 'btn-lg' :
                          'btn';

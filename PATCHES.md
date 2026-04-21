@@ -127,21 +127,42 @@ Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, 
 - **Antes:** `h-5`
 - **Depois:** `h-(--height-badge)`
 
-#### #basecoat-theme-overrides
+#### #basecoat-theme-overrides + #basecoat-nova-parity
 
 - **Arquivo:** `design-system-basecoat/src/styles/basecoat-theme-overrides.css`
-- **Tokens usados:** `--height-default`, `--height-sm`, `--height-lg`, `--height-xs`, `--height-badge`, `--size-default`, `--size-sm`, `--size-lg`
-- **Estratégia:** em vez de patchar o pacote `basecoat-css` (impraticável — é dependência npm), adicionamos CSS override que redeclara as dimensões dos componentes upstream usando `height: var(--height-*)` e `width: var(--size-*)` dentro do mesmo `@layer components`. Ordem de import em `globals.css` garante que vença a cascade:
-  ```css
-  @import "tailwindcss";
-  @import "basecoat-css";         /* declara .btn { height: h-9 } */
-  @import "@shared/tokens/tokens.css";
-  @import "@shared/themes/index.css";
-  @import "./basecoat-theme-overrides.css";  /* redeclara .btn { height: var(--height-default) } */
-  ```
-- **Componentes afetados:** Button (default/sm/lg + icon), Input (+ file-selector-button), Select trigger, Kbd, Command input, Sidebar menu buttons.
-- **Badge:** o upstream não hardcoda altura — pequenos paddings ditam. Regra preparada mas comentada para ativação futura.
-- **Verificação após bump `basecoat-css`:** se o upstream mudar seletores (ex: `button.select` → `[data-slot="select-trigger"]`), o arquivo precisa ser atualizado. Rodar `grep -E "@apply.*\bh-[0-9]" node_modules/basecoat-css/dist/basecoat.css` e comparar com a lista em `basecoat-theme-overrides.css`.
+- **Factory atualizada:** `design-system-basecoat/src/components/ui/button.ts` — tipo `ButtonSize` inclui `xs`/`icon-xs`, `btnClass` mapeia pra `btn-xs`/`btn-xs-icon`.
+
+**Duas responsabilidades combinadas:**
+
+1. **Tokenização de dimensões** (`#basecoat-theme-overrides`): redeclara alturas usando `--height-*`/`--size-*` para que os 7 temas variem densidade no Basecoat.
+2. **Paridade visual com o estilo nova** (`#basecoat-nova-parity`): o pacote `basecoat-css` v0.3.11 ainda usa o estilo "new-york" (destructive sólido, sem sizes `xs`/`icon-xs`, sem `aria-expanded` states). Fazemos o Basecoat parecer com os outros ports do shadcn (base-nova/reka-nova/shadcn-svelte-nova).
+
+**Estratégia** (sem forkar o pacote): adicionamos CSS override dentro do mesmo `@layer components` do basecoat, importado **depois** no `globals.css`:
+
+```css
+@import "tailwindcss";
+@import "basecoat-css";                /* declara .btn { @apply h-9 bg-destructive text-white } */
+@import "@shared/tokens/tokens.css";
+@import "@shared/themes/index.css";
+@import "./basecoat-theme-overrides.css";  /* redeclara: soft destructive, altura tokenizada, novos sizes */
+```
+
+**Componentes com dimensão tokenizada:**
+Button (todos sizes + icons), Input (+ file-selector-button), Select, Kbd, Command input, Sidebar menu buttons, Badge.
+
+**Paridade nova aplicada:**
+- Button + Badge `destructive` → **soft** (`bg-destructive/10 text-destructive`)
+- Novos sizes `btn-xs`, `btn-xs-icon` (adicionados do zero — não existem no upstream)
+- `.select[aria-expanded='true']` → bg-muted (visual feedback de menu aberto)
+- `.alert svg` → `color: currentColor` (permite ícone herdar cor da variante)
+
+**Performance:**
+Usamos **CSS puro com `hsl(var(--token) / 0.10)`** em vez de `@apply bg-destructive/10` em cascades extensas — reduz drasticamente o tempo de compile (primeira versão quebrou com timeouts em 50s por story; versão final compila em <15s/story). Regra: se precisar declarar a mesma cor em >5 seletores, prefira `background-color: hsl(var(--x) / 0.1)` ao `@apply bg-x/10`.
+
+**Verificação após bump `basecoat-css`:**
+- Rodar `grep -E "@apply.*\bh-[0-9]" node_modules/basecoat-css/dist/basecoat.css` e comparar com `basecoat-theme-overrides.css`.
+- Testar se `.btn-destructive` ainda é override com success (upstream pode eventualmente migrar pro soft).
+- Se `basecoat-css` passar a suportar sizes `xs` nativamente, remover as regras do bloco `btn-xs` para não duplicar.
 
 **Motivo coletivo:** o design system suporta 7 temas inspirados nos styles do shadcn (Vega clássico h-10, Lyra brutalista h-7, Maia friendly pill-shaped h-10, etc.). Sem tokenização, cada tema exigiria fork dos componentes — inviável para manter 7×N cópias. A abordagem `h-(--height-default)` usa o shortcut de Tailwind v4.1+ que compila para `height: var(--height-default)` — zero runtime cost, zero dependência JS.
 
