@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import type { WithClassAsProps } from "./interface"
+import type { WithClassAsProps } from './interface'
+
 import type { ButtonVariants } from '@/components/ui/button'
-import { ArrowRight } from "lucide-vue-next"
-import { cn } from "@/lib/utils"
+import { ChevronRightIcon } from 'lucide-vue-next'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { useCarousel } from "./useCarousel"
+import { useCarousel } from './useCarousel'
 
 const props = withDefaults(defineProps<{
-  variant?: ButtonVariants["variant"]
-  size?: ButtonVariants["size"]
+  variant?: ButtonVariants['variant']
+  size?: ButtonVariants['size']
 }
 & WithClassAsProps>(), {
-  variant: "outline",
-  size: "icon",
+  variant: 'outline',
+  size: 'icon-sm',
 })
 
 const { orientation, canScrollNext, scrollNext } = useCarousel()
@@ -23,7 +24,7 @@ const { orientation, canScrollNext, scrollNext } = useCarousel()
     data-slot="carousel-next"
     :disabled="!canScrollNext"
     :class="cn(
-      'absolute size-8 rounded-full',
+      'rounded-full absolute touch-manipulation',
       orientation === 'horizontal'
         ? 'top-1/2 -right-12 -translate-y-1/2'
         : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
@@ -34,8 +35,8 @@ const { orientation, canScrollNext, scrollNext } = useCarousel()
     @click="scrollNext"
   >
     <slot>
-      <ArrowRight />
-      <span class="sr-only">Next Slide</span>
+      <ChevronRightIcon class="cn-rtl-flip" />
+      <span class="sr-only">Next slide</span>
     </slot>
   </Button>
 </template>

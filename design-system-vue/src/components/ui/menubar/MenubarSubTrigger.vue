@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type { MenubarSubTriggerProps } from "reka-ui"
-import type { HTMLAttributes } from "vue"
-import { reactiveOmit } from "@vueuse/core"
-import { ChevronRight } from "lucide-vue-next"
-import { MenubarSubTrigger, useForwardProps } from "reka-ui"
-import { cn } from "@/lib/utils"
+import type { MenubarSubTriggerProps } from 'reka-ui'
 
-const props = defineProps<MenubarSubTriggerProps & { class?: HTMLAttributes["class"], inset?: boolean }>()
+import type { HTMLAttributes } from 'vue'
+import { reactiveOmit } from '@vueuse/core'
+import { ChevronRightIcon } from 'lucide-vue-next'
+import { MenubarSubTrigger, useForwardProps } from 'reka-ui'
+import { cn } from '@/lib/utils'
 
-const delegatedProps = reactiveOmit(props, "class", "inset")
+const props = defineProps<MenubarSubTriggerProps & { class?: HTMLAttributes['class'], inset?: boolean }>()
+
+const delegatedProps = reactiveOmit(props, 'class', 'inset')
 const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
@@ -18,11 +19,11 @@ const forwardedProps = useForwardProps(delegatedProps)
     :data-inset="inset ? '' : undefined"
     v-bind="forwardedProps"
     :class="cn(
-      'focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none data-[inset]:pl-8',
+      'focus:bg-accent focus:text-accent-foreground data-open:bg-accent data-open:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 flex cursor-default items-center outline-none select-none',
       props.class,
     )"
   >
     <slot />
-    <ChevronRight class="ml-auto size-4" />
+    <ChevronRightIcon class="cn-rtl-flip ml-auto size-4" />
   </MenubarSubTrigger>
 </template>
