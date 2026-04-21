@@ -10,6 +10,8 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build",
+    "test-storybook": "test-storybook --url http://127.0.0.1:6007",
+    "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npx http-server storybook-static --port 6007 --silent\" \"npx wait-on tcp:6007 && npm run test-storybook\"",
     "chromatic": "npx chromatic"
   },
   "dependencies": {
@@ -42,6 +44,7 @@
     "@storybook/addon-onboarding": "^10.3.5",
     "@storybook/addon-themes": "^10.3.5",
     "@storybook/addon-vitest": "^10.3.5",
+    "@storybook/test-runner": "^0.24.3",
     "@storybook/vue3-vite": "^10.3.5",
     "@tailwindcss/vite": "^4.2.2",
     "@tsconfig/node22": "^22.0.5",
@@ -51,9 +54,11 @@
     "@vitest/coverage-v8": "^4.1.4",
     "@vue/tsconfig": "^0.7.0",
     "axe-playwright": "^2.2.2",
+    "concurrently": "^9.2.1",
     "eslint": "^9.39.4",
     "eslint-plugin-storybook": "^10.3.5",
     "globals": "^17.4.0",
+    "http-server": "^14.1.1",
     "playwright": "^1.59.1",
     "storybook": "^10.3.5",
     "tailwindcss": "^4.0.0",
@@ -61,7 +66,8 @@
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vitest": "^4.1.4",
-    "vue-tsc": "^2.2.10"
+    "vue-tsc": "^2.2.10",
+    "wait-on": "^9.0.5"
   },
   "eslintConfig": {
     "extends": [

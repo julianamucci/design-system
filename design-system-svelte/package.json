@@ -10,6 +10,8 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6008",
     "build-storybook": "storybook build",
+    "test-storybook": "test-storybook --url http://127.0.0.1:6008",
+    "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npx http-server storybook-static --port 6008 --silent\" \"npx wait-on tcp:6008 && npm run test-storybook\"",
     "chromatic": "npx chromatic"
   },
   "dependencies": {
@@ -35,6 +37,7 @@
     "@storybook/addon-themes": "^10.3.5",
     "@storybook/addon-vitest": "^10.3.5",
     "@storybook/svelte-vite": "^10.3.5",
+    "@storybook/test-runner": "^0.24.3",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tailwindcss/vite": "^4.2.2",
     "@tsconfig/svelte": "^5.0.4",
@@ -43,10 +46,12 @@
     "@vitest/coverage-v8": "^4.1.4",
     "axe-playwright": "^2.2.2",
     "bits-ui": "^2.17.3",
+    "concurrently": "^9.2.1",
     "embla-carousel-svelte": "^8.6.0",
     "eslint": "^9.39.4",
     "eslint-plugin-storybook": "^10.3.5",
     "formsnap": "^2.0.1",
+    "http-server": "^14.1.1",
     "layerchart": "^2.0.0-next.48",
     "mode-watcher": "^1.1.0",
     "paneforge": "^1.0.2",
@@ -60,7 +65,8 @@
     "typescript": "^5.8.3",
     "vaul-svelte": "^1.0.0-next.7",
     "vite": "^6.3.5",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.4",
+    "wait-on": "^9.0.5"
   },
   "eslintConfig": {
     "extends": [
