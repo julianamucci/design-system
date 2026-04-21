@@ -11,7 +11,7 @@ const props = defineProps<{
 <template>
   <AvatarRoot
     data-slot="avatar"
-    :class="cn('relative flex size-10 shrink-0 overflow-hidden rounded-full', props.class)"
+    :class="cn('relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full', props.class)"
   >
     <slot />
   </AvatarRoot>
