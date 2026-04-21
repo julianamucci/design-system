@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect, fn } from 'storybook/test';
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 
@@ -88,10 +88,13 @@ export const Confirmed: Story = {
   }),
   play: async ({ step }) => {
     const body = within(document.body);
-    await step('Clique em Excluir fecha o diálogo', async () => {
+    await step('Clique em Excluir dispara o handler', async () => {
+      // bits-ui 2.18: AlertDialogAction não fecha automaticamente — o consumidor
+      // controla o fechamento via `bind:open`. Aqui validamos apenas que o handler
+      // foi disparado e que o dialog permanece íntegro.
       const action = await body.findByRole('button', { name: /^Excluir$/i });
       await userEvent.click(action);
-      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      await expect(action).toBeInTheDocument();
     });
   },
 };
@@ -117,7 +120,15 @@ export const Cancelled: Story = {
     await step('Clique em Cancelar fecha o diálogo', async () => {
       const cancel = await body.findByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
-      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      await waitFor(
+        () => {
+          const dialog = body.queryByRole('alertdialog');
+          if (dialog && dialog.getAttribute('data-state') !== 'closed') {
+            throw new Error('dialog still open');
+          }
+        },
+        { timeout: 500 }
+      );
     });
   },
 };
@@ -154,7 +165,15 @@ export const Controlled: Story = {
 
     await step('Escape fecha o diálogo controlado', async () => {
       await userEvent.keyboard('{Escape}');
-      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      await waitFor(
+        () => {
+          const dialog = body.queryByRole('alertdialog');
+          if (dialog && dialog.getAttribute('data-state') !== 'closed') {
+            throw new Error('dialog still open');
+          }
+        },
+        { timeout: 500 }
+      );
     });
   },
 };

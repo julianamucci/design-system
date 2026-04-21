@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect, fn } from 'storybook/test';
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogDocs from '@/components/docs/AlertDialogDocs.svelte';
@@ -63,7 +63,15 @@ export const Playground: Story = {
 
     await step('Escape fecha o diálogo', async () => {
       await userEvent.keyboard('{Escape}');
-      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      await waitFor(
+        () => {
+          const dialog = body.queryByRole('alertdialog');
+          if (dialog && dialog.getAttribute('data-state') !== 'closed') {
+            throw new Error('dialog still open');
+          }
+        },
+        { timeout: 500 }
+      );
     });
   },
 };

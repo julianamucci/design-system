@@ -46,7 +46,6 @@ export const Success: Story = {
       showIcon: true,
       icon: 'success',
       class: 'bg-success/10 text-success border-success/30',
-      descriptionClass: 'text-success/90',
     },
   }),
 };
@@ -61,7 +60,6 @@ export const Warning: Story = {
       showIcon: true,
       icon: 'warning',
       class: 'bg-warning/10 text-warning border-warning/30',
-      descriptionClass: 'text-warning/90',
     },
   }),
 };

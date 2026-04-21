@@ -33,13 +33,32 @@
     disabledItem,
     class: className = 'w-full max-w-lg',
   }: Props = $props();
+
+  // bits-ui não expõe defaultValue — usamos `value` bindable inicializado com
+  // o valor recebido. Mantém comportamento "uncontrolled" do ponto de vista do consumidor
+  // (qualquer clique atualiza `value` localmente).
+  let singleValue = $state<string>(type === 'single' ? (defaultValue ?? '') : '');
+  let multipleValue = $state<string[]>(
+    type === 'multiple' && defaultValue ? [defaultValue] : []
+  );
 </script>
 
-<Accordion {type} {collapsible} {defaultValue} class={className}>
-  {#each items as item (item.value)}
-    <AccordionItem value={item.value} disabled={disabledItem === item.value}>
-      <AccordionTrigger>{item.q}</AccordionTrigger>
-      <AccordionContent>{item.a}</AccordionContent>
-    </AccordionItem>
-  {/each}
-</Accordion>
+{#if type === 'single'}
+  <Accordion type="single" {collapsible} bind:value={singleValue} class={className}>
+    {#each items as item (item.value)}
+      <AccordionItem value={item.value} disabled={disabledItem === item.value}>
+        <AccordionTrigger>{item.q}</AccordionTrigger>
+        <AccordionContent>{item.a}</AccordionContent>
+      </AccordionItem>
+    {/each}
+  </Accordion>
+{:else}
+  <Accordion type="multiple" bind:value={multipleValue} class={className}>
+    {#each items as item (item.value)}
+      <AccordionItem value={item.value} disabled={disabledItem === item.value}>
+        <AccordionTrigger>{item.q}</AccordionTrigger>
+        <AccordionContent>{item.a}</AccordionContent>
+      </AccordionItem>
+    {/each}
+  </Accordion>
+{/if}

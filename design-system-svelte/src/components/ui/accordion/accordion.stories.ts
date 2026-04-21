@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 import AccordionDocs from '@/components/docs/AccordionDocs.svelte';
@@ -46,7 +46,10 @@ export const Playground: Story = {
 
     await step('Item 1 começa aberto (defaultValue)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+      await waitFor(
+        () => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'),
+        { timeout: 500 }
+      );
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
     });
 

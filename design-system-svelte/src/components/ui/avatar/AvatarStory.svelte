@@ -43,7 +43,7 @@
   </Avatar>
 {:else if variant === 'icon'}
   <Avatar class={sizeClass}>
-    <AvatarFallback aria-label="Usuário genérico">
+    <AvatarFallback role="img" aria-label="Usuário genérico">
       <User class="h-4 w-4 text-muted-foreground" aria-hidden="true" />
     </AvatarFallback>
   </Avatar>
@@ -65,6 +65,7 @@
       <AvatarFallback>{initials}</AvatarFallback>
     </Avatar>
     <span
+      role="status"
       aria-label={statusLabel}
       class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
     ></span>

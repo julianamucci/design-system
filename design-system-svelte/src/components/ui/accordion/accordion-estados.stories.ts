@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 
@@ -68,7 +68,10 @@ export const Aberto: Story = {
     const trigger = canvas.getByRole('button');
 
     await step('Trigger tem aria-expanded=true', async () => {
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await waitFor(
+        () => expect(trigger).toHaveAttribute('aria-expanded', 'true'),
+        { timeout: 500 }
+      );
     });
   },
 };
@@ -90,7 +93,7 @@ export const Disabled: Story = {
     const triggers = canvas.getAllByRole('button');
 
     await step('Segundo trigger está desabilitado', async () => {
-      await expect(triggers[1]).toBeDisabled();
+      await expect(triggers[1]).toHaveAttribute('aria-disabled', 'true');
     });
 
     await step('Clicar no disabled não abre o item', async () => {
