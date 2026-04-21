@@ -61,21 +61,22 @@ Corrigir em:
 - `design-system-basecoat/src/components/ui/avatar-composicoes.stories.ts` (stories)
 - Avaliar se afeta outras stacks (React/Vue/Svelte) e aplicar PATCH se sim.
 
-### 3. Bug funcional — Avatar Failed estado
+### 3. Bug funcional — Avatar Failed estado ✅ CORRIGIDO (commit 17ef7d8)
 
-`UI/Avatar/Estados › Failed` — teste `play-test` falha com `expect(element).toBeVisible()` porque o fallback está com `style="display: none;"`. Não é violação de a11y, é bug real: o `onError` handler não está mostrando o fallback quando a imagem falha.
+`UI/Avatar/Estados › Failed` — teste `play-test` falhava com `expect(element).toBeVisible()` porque o fallback estava com `style="display: none;"`. Causa real: a lógica iniciava ocultando o fallback e só o mostrava no evento `onerror` — em ambiente headless o evento nem sempre disparava dentro da janela do teste.
 
-**Story afetada**:
-- `avatar-estados.stories.ts` linha 208
+**Correção aplicada**:
+- `avatar.ts`: inversão da lógica. Fallback passa a ser o estado inicial visível. Imagem inicia com `display:none` e aparece no evento `load`. Reconciliação de estado via `img.complete` + `naturalWidth` quando a imagem já está em cache.
+- `avatar-estados.stories.ts`: teste `Loaded` ajustado de `getByRole` para `findByRole` (aguarda a imagem ficar acessível após load).
 
-**Ação**: corrigir lógica do `onError` em `design-system-basecoat/src/components/ui/avatar.ts` para alternar visibilidade do fallback.
+Resultado: `avatar-estados` suíte 4/4 passando.
 
 ## Priorização Sugerida
 
 | Prioridade | Task | Escopo |
 |------------|------|--------|
 | **P1** | Ajustar tokens `destructive`/`success`/`warning` para atingir 4.5:1 | `docs/shared/themes/*.css` (afeta todas as stacks) |
-| **P1** | Corrigir Avatar Failed fallback | `design-system-basecoat/src/components/ui/avatar.ts` |
+| ~~**P1**~~ | ~~Corrigir Avatar Failed fallback~~ ✅ resolvido (17ef7d8) | ~~`design-system-basecoat/src/components/ui/avatar.ts`~~ |
 | **P2** | Remover `aria-label` de `<span>` sem `role` | avatar Basecoat + avaliar outras stacks |
 | **P3** | Validar test-runner em React/Vue/Svelte após correções | executar `test-storybook:ci` em cada |
 
