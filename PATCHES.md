@@ -15,7 +15,7 @@ Este arquivo registra toda divergência intencional entre os componentes deste d
 
 > **Histórico de stack de primitivas (React):**
 > - Até 2026-04-21: `@radix-ui/react-*` individuais (modo legado)
-> - De 2026-04-21 em diante: `@base-ui/react` (registry `base-nova` do shadcn). Apenas `@radix-ui/react-label`, `@radix-ui/react-slot` e `@radix-ui/react-toast` foram mantidos (usados por `form.tsx` e `toast.tsx` — componentes sem equivalente no `base-nova`).
+> - De 2026-04-21 em diante: `@base-ui/react` (registry `base-nova` do shadcn). **Zero deps `@radix-ui/*`** — `form.tsx`, `toast.tsx`, `toaster.tsx` e `use-toast.ts` foram deletados (órfãos; App.tsx já usava `sonner` há algum tempo).
 
 ## Fluxo de atualização
 
