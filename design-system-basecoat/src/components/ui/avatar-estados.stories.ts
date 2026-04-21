@@ -34,7 +34,8 @@ export const Loaded: Story = {
     }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const img = (await canvas.findByRole('img')) as HTMLImageElement;
+    // hidden:true — img começa com display:none até o load completar.
+    const img = (await canvas.findByRole('img', { hidden: true })) as HTMLImageElement;
     await expect(img).toBeInTheDocument();
     await expect(img.alt).toBe('Foto de perfil de Maria Rodrigues');
   },

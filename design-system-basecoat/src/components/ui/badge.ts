@@ -17,7 +17,10 @@ export interface BadgeOptions {
 }
 
 function badgeClass(variant: BadgeVariant = 'default'): string {
-  return variant === 'default' ? 'badge' : `badge badge-${variant}`;
+  // PATCH: bugfix — cada variante do basecoat-css é self-contained (define bg/text completos).
+  // Antes aplicávamos "badge badge-outline", o que fazia .badge (bg-primary + text-primary-foreground)
+  // vazar para a outline (que só redefine text-foreground), quebrando contraste (axe color-contrast).
+  return variant === 'default' ? 'badge' : `badge-${variant}`;
 }
 
 export function createBadge(options: BadgeOptions = {}): HTMLElement {

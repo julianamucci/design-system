@@ -52,7 +52,8 @@ export const Size10: Story = {
   render: () => buildAvatar('h-10 w-10'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const img = canvas.getByRole('img') as HTMLImageElement;
+    // hidden:true — img começa com display:none até o load completar.
+    const img = (await canvas.findByRole('img', { hidden: true })) as HTMLImageElement;
     await expect(img).toBeInTheDocument();
   },
 };

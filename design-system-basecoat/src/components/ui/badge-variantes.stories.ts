@@ -40,7 +40,7 @@ export const Secondary: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Beta')).toBeVisible();
-    const el = canvasElement.querySelector('.badge.badge-secondary');
+    const el = canvasElement.querySelector('.badge-secondary');
     await expect(el).not.toBeNull();
   },
 };
@@ -50,7 +50,7 @@ export const Destructive: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Urgente')).toBeVisible();
-    const el = canvasElement.querySelector('.badge.badge-destructive');
+    const el = canvasElement.querySelector('.badge-destructive');
     await expect(el).not.toBeNull();
   },
 };
@@ -60,7 +60,7 @@ export const Outline: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Rascunho')).toBeVisible();
-    const el = canvasElement.querySelector('.badge.badge-outline');
+    const el = canvasElement.querySelector('.badge-outline');
     await expect(el).not.toBeNull();
   },
 };

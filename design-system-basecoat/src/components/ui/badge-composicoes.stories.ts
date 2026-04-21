@@ -107,7 +107,7 @@ export const AsLink: Story = {
     await expect(link).not.toBeNull();
     await expect(link?.getAttribute('aria-label')).toBe('Ver todos os itens da categoria Design');
     // Badge fica como filho do link — é o link que é focável.
-    const badge = link?.querySelector('.badge.badge-secondary');
+    const badge = link?.querySelector('.badge-secondary');
     await expect(badge).not.toBeNull();
   },
 };
@@ -128,7 +128,7 @@ export const AsButton: Story = {
     const btn = canvas.getByRole('button', { name: 'Filtrar por React' });
     await expect(btn).toBeVisible();
     // O botão é o elemento focável — o Badge interno permanece decorativo.
-    const badge = btn.querySelector('.badge.badge-outline');
+    const badge = btn.querySelector('.badge-outline');
     await expect(badge).not.toBeNull();
   },
 };

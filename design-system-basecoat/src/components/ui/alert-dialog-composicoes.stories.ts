@@ -80,7 +80,8 @@ export const Destrutiva: Story = {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
     await expect(dialog).toBeVisible();
-    const action = await body.findByRole('button', { name: /Excluir conta/i });
+    // Trigger e action têm o mesmo rótulo — o action fica dentro do dialog.
+    const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
     await expect(action).toHaveClass('bg-destructive');
   },
 };

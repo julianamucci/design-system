@@ -51,7 +51,11 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
 
     panelEl = document.createElement('div');
     panelEl.className = cn(
-      'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg dialog',
+      // PATCH: bugfix — removida a classe `dialog` do basecoat-css; ela aplica
+      // `opacity-0` por padrão e só revela quando o elemento é um <dialog> nativo
+      // com [open]/:popover-open. Usamos <div role="alertdialog"> (portal manual),
+      // então aquele seletor mantinha o painel invisível nos testes.
+      'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg',
       options.class
     );
     panelEl.setAttribute('role', 'alertdialog');
@@ -130,6 +134,24 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
   actionButton.addEventListener('click', close);
 
   trigger.addEventListener('click', open);
+
+  // PATCH: bugfix — fechar o diálogo quando o wrapper é removido do DOM
+  // (Storybook troca stories remount → panel + overlay ficavam órfãos em document.body,
+  // poluindo próximos testes com "multiple elements with role 'alertdialog'").
+  if (typeof MutationObserver !== 'undefined') {
+    const observer = new MutationObserver(() => {
+      if (!wrapper.isConnected && panelEl) {
+        close();
+      }
+    });
+    // Observe document.body para detectar tanto remount do wrapper quanto
+    // limpeza de #storybook-root entre stories.
+    const startObserve = () => {
+      observer.observe(document.body, { childList: true, subtree: true });
+    };
+    if (document.body) startObserve();
+    else queueMicrotask(startObserve);
+  }
 
   return wrapper;
 }

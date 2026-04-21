@@ -141,7 +141,9 @@ export const Confirmed: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step('Clique em Excluir fecha o diálogo', async () => {
-      const action = await body.findByRole('button', { name: /^Excluir$/i });
+      // Trigger e action têm rótulo "Excluir" — desambigua via scope do dialog.
+      const dialog = await body.findByRole('alertdialog');
+      const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
       await userEvent.click(action);
       await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
     });

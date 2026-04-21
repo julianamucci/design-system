@@ -60,7 +60,9 @@ export const WithImage: Story = {
     }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const img = canvas.getByRole('img') as HTMLImageElement;
+    // findBy* com hidden: true cobre o caso em que a imagem ainda está
+    // com display:none (fallback pré-load) — a tag <img> continua no DOM.
+    const img = (await canvas.findByRole('img', { hidden: true })) as HTMLImageElement;
     await expect(img).toBeInTheDocument();
     await expect(img.alt).toBe('Foto de perfil de Maria Rodrigues');
   },
@@ -96,6 +98,8 @@ export const WithIcon: Story = {
   render: () => {
     const root = createAvatarRoot();
     const fallback = createAvatarFallback();
+    // role="img" permite aria-label (senão axe aponta aria-prohibited-attr no <span>).
+    fallback.setAttribute('role', 'img');
     fallback.setAttribute('aria-label', 'Usuário genérico');
     fallback.appendChild(createUserIconSvg());
     root.appendChild(fallback);
@@ -160,6 +164,8 @@ export const WithStatus: Story = {
     const status = document.createElement('span');
     status.className =
       'absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background';
+    // role="status" permite aria-label em <span> (senão axe aponta aria-prohibited-attr).
+    status.setAttribute('role', 'status');
     status.setAttribute('aria-label', 'online');
 
     wrapper.append(avatar, status);

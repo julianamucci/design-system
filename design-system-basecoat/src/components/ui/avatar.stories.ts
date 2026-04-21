@@ -57,12 +57,13 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
 
     await step('Avatar está presente no DOM', async () => {
-      const img = canvas.getByRole('img');
+      // hidden:true — img começa com display:none até o load completar.
+      const img = await canvas.findByRole('img', { hidden: true });
       await expect(img).toBeInTheDocument();
     });
 
     await step('Imagem tem atributo alt', async () => {
-      const img = canvas.getByRole('img') as HTMLImageElement;
+      const img = (await canvas.findByRole('img', { hidden: true })) as HTMLImageElement;
       await expect(img.alt).toBeTruthy();
     });
   },

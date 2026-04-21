@@ -74,12 +74,15 @@ export const Playground: Story = {
     });
 
     await step('Enter expande um item fechado', async () => {
-      await userEvent.click(triggers[2]);
+      // triggers[2] está fechado (single-mode fechou ao abrir triggers[1]).
+      // Focamos e pressionamos Enter — deve abrir (não clicar+Enter, que toggla duas vezes).
+      triggers[2].focus();
       await userEvent.keyboard('{Enter}');
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Space colapsa um item aberto (collapsible=true)', async () => {
+      // triggers[2] está aberto do step anterior — Space toggla para fechado.
       triggers[2].focus();
       await userEvent.keyboard(' ');
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
