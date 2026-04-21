@@ -9,10 +9,9 @@
 	}: AvatarPrimitive.ImageProps = $props();
 </script>
 
-<!-- PATCH: bugfix — object-cover evita distorção de imagens não-quadradas em container circular (ver PATCHES.md#avatar-object-cover) -->
 <AvatarPrimitive.Image
 	bind:ref
 	data-slot="avatar-image"
-	class={cn("aspect-square h-full w-full object-cover", className)}
+	class={cn("rounded-full aspect-square size-full object-cover", className)}
 	{...restProps}
 />
