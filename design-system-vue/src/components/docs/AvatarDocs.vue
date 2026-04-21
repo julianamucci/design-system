@@ -359,22 +359,32 @@ const visualTestItems = computed(() => [
 
         <!-- ── Demonstração ───────────────────────────────────────────── -->
         <DocsDemonstration :title="tContent('demonstration.title')">
-          <div class="flex flex-wrap items-center gap-6">
-            <Avatar>
-              <AvatarImage :src="imgMaria" :alt="tContent('demonstration.labels.withImageAlt')" />
-              <AvatarFallback :delay-ms="600">MR</AvatarFallback>
-            </Avatar>
-            <Avatar>
-              <AvatarFallback>{{ tContent('demonstration.labels.withFallbackInitials') }}</AvatarFallback>
-            </Avatar>
-            <Avatar>
-              <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
-                <User class="h-5 w-5" aria-hidden="true" />
-              </AvatarFallback>
-            </Avatar>
+          <div class="flex flex-wrap items-end justify-center gap-8">
+            <div class="flex flex-col items-center gap-2">
+              <Avatar>
+                <AvatarImage :src="imgMaria" :alt="tContent('demonstration.labels.withImageAlt')" />
+                <AvatarFallback :delay-ms="600">MR</AvatarFallback>
+              </Avatar>
+              <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withImage') }}</span>
+            </div>
 
-            <div class="flex flex-col gap-2">
-              <span class="text-sm text-muted-foreground">{{ tContent('demonstration.labels.groupTitle') }}</span>
+            <div class="flex flex-col items-center gap-2">
+              <Avatar>
+                <AvatarFallback>{{ tContent('demonstration.labels.withFallbackInitials') }}</AvatarFallback>
+              </Avatar>
+              <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withFallback') }}</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-2">
+              <Avatar>
+                <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
+                  <User class="h-5 w-5" aria-hidden="true" />
+                </AvatarFallback>
+              </Avatar>
+              <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withIcon') }}</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-2">
               <div class="flex -space-x-2">
                 <Avatar class="ring-2 ring-background">
                   <AvatarImage :src="imgMaria" alt="" />
@@ -392,10 +402,10 @@ const visualTestItems = computed(() => [
                   <AvatarFallback class="text-xs" aria-hidden="true">+3</AvatarFallback>
                 </Avatar>
               </div>
+              <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.groupTitle') }}</span>
             </div>
 
-            <div class="flex flex-col gap-2">
-              <span class="text-sm text-muted-foreground">{{ tContent('demonstration.labels.statusTitle') }}</span>
+            <div class="flex flex-col items-center gap-2">
               <div class="relative inline-block">
                 <Avatar>
                   <AvatarImage :src="imgMaria" :alt="tContent('demonstration.labels.withImageAlt')" />
@@ -406,6 +416,7 @@ const visualTestItems = computed(() => [
                   :aria-label="tContent('demonstration.labels.statusOnline')"
                 />
               </div>
+              <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.statusTitle') }}</span>
             </div>
           </div>
         </DocsDemonstration>

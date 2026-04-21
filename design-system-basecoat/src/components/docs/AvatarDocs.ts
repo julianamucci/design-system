@@ -250,13 +250,24 @@ export function createAvatarDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-wrap items-center justify-center gap-6';
+            wrap.className = 'flex flex-wrap items-end justify-center gap-8';
+
+            const withLabel = (child: HTMLElement, labelKey: string): HTMLElement => {
+              const item = document.createElement('div');
+              item.className = 'flex flex-col items-center gap-2';
+              const label = document.createElement('span');
+              label.className = 'text-xs text-muted-foreground';
+              label.textContent = stripHtml(t(labelKey));
+              item.append(child, label);
+              return item;
+            };
+
             wrap.append(
-              buildImageAvatar(),
-              buildInitialsAvatar('', 'JP'),
-              buildIconAvatar(),
-              buildGroupAvatar(),
-              buildStatusAvatar(),
+              withLabel(buildImageAvatar(),              'demonstration.labels.withImage'),
+              withLabel(buildInitialsAvatar('', 'JP'),   'demonstration.labels.withFallback'),
+              withLabel(buildIconAvatar(),               'demonstration.labels.withIcon'),
+              withLabel(buildGroupAvatar(),              'demonstration.labels.groupTitle'),
+              withLabel(buildStatusAvatar(),             'demonstration.labels.statusTitle'),
             );
             return wrap;
           },

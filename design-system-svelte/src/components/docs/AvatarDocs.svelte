@@ -193,27 +193,27 @@ interface AvatarFallbackProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex flex-wrap items-center gap-6">
-        <div class="flex items-center gap-3">
+      <div class="flex flex-wrap items-end justify-center gap-8">
+        <div class="flex flex-col items-center gap-2">
           <Avatar>
             <AvatarImage src={IMG_MARIA} alt={$tStore('demonstration.labels.withImageAlt')} />
             <AvatarFallback delayMs={600}>MR</AvatarFallback>
           </Avatar>
-          <span class="text-sm">{$tStore('demonstration.labels.withImage')}</span>
+          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.withImage')}</span>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex flex-col items-center gap-2">
           <Avatar>
             <AvatarFallback>{$tStore('demonstration.labels.withFallbackInitials')}</AvatarFallback>
           </Avatar>
-          <span class="text-sm">{$tStore('demonstration.labels.withFallback')}</span>
+          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.withFallback')}</span>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex flex-col items-center gap-2">
           <Avatar>
             <AvatarFallback aria-label={$tStore('demonstration.labels.withIcon')}>
-              <User class="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <User class="h-5 w-5" aria-hidden="true" />
             </AvatarFallback>
           </Avatar>
-          <span class="text-sm">{$tStore('demonstration.labels.withIcon')}</span>
+          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.withIcon')}</span>
         </div>
         <div class="flex flex-col items-center gap-2">
           <div class="flex -space-x-2" role="group" aria-label={$tStore('demonstration.labels.groupTitle')}>
