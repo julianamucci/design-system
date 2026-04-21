@@ -8,7 +8,8 @@
 <!-- Sincronização de Tema para Docs -->
 <script>
   (function() {
-    const BRAND_CLASSES = ['tema-um', 'tema-dois'];
+    // Temas do shadcn (Nova é o default e não tem classe; outros aplicam .tema-<id>)
+    const BRAND_CLASSES = ['tema-vega', 'tema-maia', 'tema-lyra', 'tema-mira', 'tema-luma', 'tema-sera'];
 
     const parseGlobals = (raw) => {
       const result = {};
@@ -33,8 +34,8 @@
       }
 
       html.classList.remove(...BRAND_CLASSES);
-      if (globals.brand && globals.brand !== 'default') {
-        html.classList.add(globals.brand);
+      if (globals.brand && globals.brand !== 'nova') {
+        html.classList.add('tema-' + globals.brand);
       }
     };
 
