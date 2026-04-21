@@ -1,0 +1,917 @@
+{
+  "pt-BR": {
+    "title": "Badge",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Rótulo visual compacto para destacar status, contagens ou categorias inline com outros elementos.",
+    "seo": {
+      "title": "Badge — Feedback · Design System",
+      "description": "Documentação do Badge: 4 variantes (default, secondary, destructive, outline), uso inline para status, contagens e categorias com tokens semânticos.",
+      "aiSummary": "Componente Badge com 4 variantes (default, secondary, destructive, outline), sem size prop, não interativo por padrão, baseado em div com suporte a HTMLAttributes.",
+      "aiEntities": "Badge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, status indicator, tag, pill",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "defaultLabel": "Novo",
+        "secondaryLabel": "Beta",
+        "destructiveLabel": "Urgente",
+        "outlineLabel": "Rascunho",
+        "countLabel": "12",
+        "statusLabel": "Ativo",
+        "categoryLabel": "Design",
+        "tagLabel": "React"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Badge</strong> — container <code>&lt;div&gt;</code>. Recebe todos os atributos HTML do elemento.",
+      "item2": "<strong>Conteúdo</strong> — texto curto ou número. Ideal: 1 a 3 palavras ou valores numéricos compactos.",
+      "item3": "<strong>Ícone (opcional)</strong> — usado antes do texto para reforçar status. Deve ter <code>aria-hidden=\"true\"</code>.",
+      "item4": "<strong>Variante</strong> — definida via prop <code>variant</code>: default, secondary, destructive ou outline.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Badge variant=\"default\">   {/* Container inline-flex */}\n  <Icon />              {/* Ícone opcional, aria-hidden */}\n  Texto                 {/* Rótulo curto */}\n</Badge>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para rótulos curtos — status, contagens, categorias ou tags. Nunca para frases completas.",
+        "item2": "Escolha a variante pela hierarquia: <code>default</code> destaca, <code>secondary</code> informa, <code>destructive</code> alerta, <code>outline</code> é neutro.",
+        "item3": "Nunca use cor como único indicador — combine com texto claro ou ícone semântico.",
+        "item4": "Badge não é interativo por padrão. Para tornar clicável, envolva em <code>&lt;button&gt;</code> ou <code>&lt;a&gt;</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Status curto em tabela ou card", "u": "Sim, variant default ou secondary", "a": "-" },
+        "item2": { "s": "Mensagem completa com título", "u": "Não", "a": "Alert" },
+        "item3": { "s": "Filtro clicável e removível", "u": "Não", "a": "Chip ou Tag" },
+        "item4": { "s": "Contador de notificações", "u": "Sim, variant destructive", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "label": {
+            "name": "Texto do Badge",
+            "format": "Frase nominal curta · sem ponto final · 1 a 3 palavras",
+            "good": "\"Novo\", \"Ativo\", \"12\"",
+            "bad": "\"Este item é novo.\", \"Clique aqui\""
+          },
+          "status": {
+            "name": "Variante destructive",
+            "format": "Indica urgência ou erro · palavra direta",
+            "good": "\"Expirado\", \"Urgente\", \"Erro\"",
+            "bad": "\"Algo deu errado agora\""
+          },
+          "count": {
+            "name": "Badge de contagem",
+            "format": "Número puro · truncar com + a partir de 99",
+            "good": "\"3\", \"12\", \"99+\"",
+            "bad": "\"128 itens\", \"Você tem 3\""
+          },
+          "category": {
+            "name": "Badge de categoria",
+            "format": "Substantivo único · sem artigos",
+            "good": "\"Design\", \"React\", \"Beta\"",
+            "bad": "\"A categoria Design\", \"Em Beta agora\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Um status precisa ser visível em um card, linha de tabela ou lista",
+        "item2": "Um contador de notificações ou itens exige destaque compacto",
+        "item3": "Categorias ou tags classificam um conteúdo inline",
+        "item4": "Um rótulo rápido diferencia estados (Novo, Beta, Rascunho)"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A mensagem exige título e descrição — use <code>Alert</code>",
+        "item2": "O rótulo precisa ser removível ou clicável como filtro — use <code>Chip</code> ou <code>Tag</code>",
+        "item3": "A ação é primária no fluxo — use <code>Button</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Texto curto e direto (1 a 3 palavras). Rótulo complementa o item, não substitui.",
+        "dont": "Frases completas ou texto longo que quebra o layout inline."
+      },
+      "pair2": {
+        "do": "Variante destructive apenas para alertas reais (erro, urgência, expirado).",
+        "dont": "Variante destructive para chamar atenção de forma decorativa."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withIcon": "Com ícone Lucide:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Variantes Disponíveis",
+      "note": "O Badge oferece 4 variantes nativas via prop <code>variant</code>. Não possui prop <code>size</code> — a dimensão é única (<code>text-xs font-semibold px-2.5 py-0.5</code>).",
+      "items": {
+        "default": "Destaque principal. Fundo <code>primary</code>, ideal para itens novos ou ações em evidência.",
+        "secondary": "Neutro informativo. Fundo <code>secondary</code>, ideal para categorias e tags.",
+        "destructive": "Alerta ou erro. Fundo <code>destructive</code>, uso restrito a estados críticos.",
+        "outline": "Baixa ênfase. Apenas borda e texto, sem fundo, ideal para rascunhos ou status secundários."
+      }
+    },
+    "states": {
+      "title": "Configurações",
+      "cols": {
+        "state": "Configuração",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "withIcon": {
+        "label": "Com ícone",
+        "trigger": "Incluir <code>&lt;Icon /&gt;</code> como primeiro filho",
+        "behavior": "Ícone à esquerda do texto. Garantir <code>aria-hidden=\"true\"</code> no SVG"
+      },
+      "countBadge": {
+        "label": "Contador",
+        "trigger": "Conteúdo numérico com truncamento (<code>99+</code>)",
+        "behavior": "Número centralizado. Para valores acima de 99, exiba <code>99+</code>"
+      },
+      "asLink": {
+        "label": "Como link",
+        "trigger": "Envolver em <code>&lt;a&gt;</code> ou renderizar com <code>asChild</code>",
+        "behavior": "Herda foco e hover do elemento pai. Inclua <code>aria-label</code> descritivo no link"
+      },
+      "asTrigger": {
+        "label": "Como trigger clicável",
+        "trigger": "Envolver em <code>&lt;button&gt;</code>",
+        "behavior": "O botão pai gerencia foco, teclado e eventos. Badge permanece decorativo"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "badgeTitle": "Badge",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "variant": "Variante visual: <code>\"default\" | \"secondary\" | \"destructive\" | \"outline\"</code>.",
+        "className": "Classes Tailwind adicionais para customizações pontuais (ex: cor semântica custom).",
+        "children": "Conteúdo do Badge: texto curto, número ou ícone + texto."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "<code>Badge</code> estende <code>HTMLAttributes&lt;HTMLDivElement&gt;</code> — aceita <code>onClick</code>, <code>aria-*</code>, <code>data-*</code>. Para torná-lo interativo, prefira envolvê-lo em <code>&lt;button&gt;</code> ou <code>&lt;a&gt;</code> em vez de usar <code>onClick</code> direto."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "primary": "Fundo (variante default)",
+        "primaryForeground": "Texto (variante default)",
+        "secondary": "Fundo (variante secondary)",
+        "secondaryForeground": "Texto (variante secondary)",
+        "destructive": "Fundo (variante destructive)",
+        "destructiveForeground": "Texto (variante destructive)",
+        "foreground": "Texto (variante outline)",
+        "ring": "Cor do foco visível",
+        "background": "Offset do anel de foco"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "O Badge é um elemento visual não interativo por padrão. Quando usado para comunicar estado, garanta que o significado também esteja no texto — cor sozinha não comunica status (WCAG 1.4.1).",
+      "item1": "<strong>Não interativo por padrão</strong> — Badge é um <code>&lt;div&gt;</code> sem foco nem tabindex. Para interação, envolva em <code>&lt;button&gt;</code> ou <code>&lt;a&gt;</code>.",
+      "item2": "<strong>Texto descritivo</strong> — o rótulo do Badge deve comunicar o estado sem depender da cor. Ex: \"Ativo\" em vez de apenas fundo verde.",
+      "item3": "<strong>Badge de contagem</strong> — use <code>aria-label</code> no elemento pai para dar contexto. Ex: <code>aria-label=\"12 notificações não lidas\"</code>.",
+      "item4": "<strong>Ícones decorativos</strong> — sempre <code>aria-hidden=\"true\"</code>. O texto ao lado deve carregar o significado.",
+      "item5": "<strong>Contraste</strong> — todas as variantes cumprem WCAG AA (4.5:1) nos tokens semânticos default. Ao customizar cores, revalide o contraste."
+    },
+    "keyboard": {
+      "noFocus": "Badge por padrão não recebe foco via <kbd>Tab</kbd> — é apenas visual.",
+      "wrappedInButton": "Quando envolvido em <code>&lt;button&gt;</code>: recebe foco com <kbd>Tab</kbd> e ativa com <kbd>Enter</kbd> ou <kbd>Space</kbd>.",
+      "wrappedInLink": "Quando envolvido em <code>&lt;a&gt;</code>: recebe foco com <kbd>Tab</kbd> e ativa com <kbd>Enter</kbd>.",
+      "focusRing": "Foco visível via <code>focus:ring-2 focus:ring-ring focus:ring-offset-2</code> herdado do elemento interativo pai."
+    },
+    "aria": {
+      "ariaHidden": "<code>aria-hidden=\"true\"</code> — em ícones decorativos dentro do Badge.",
+      "ariaLabel": "<code>aria-label</code> — no elemento pai interativo quando Badge é usado como ícone ou contador sem texto explícito.",
+      "role": "Por padrão o Badge não declara <code>role</code>. Para estados dinâmicos (ex: contador que atualiza), considere <code>role=\"status\"</code> no container pai.",
+      "ariaLive": "<code>aria-live=\"polite\"</code> — no container pai quando o valor do Badge muda dinamicamente (ex: contagem de itens)."
+    },
+    "screenReader": {
+      "onRender": "Ao renderizar: o leitor anuncia o texto do Badge como parte do fluxo normal.",
+      "onUpdate": "Ao atualizar valor: o leitor anuncia a mudança apenas se <code>aria-live</code> estiver no container pai.",
+      "icons": "Ícones com <code>aria-hidden</code> são ignorados — apenas o texto é lido."
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "alert": "Para mensagens com título e descrição que exigem mais contexto.",
+      "chip": "Para rótulos interativos, removíveis ou filtráveis (quando existir no projeto).",
+      "tag": "Para classificações agrupadas e editáveis pelo usuário.",
+      "button": "Para tornar o Badge clicável, envolva em Button ou use como slot interno."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "Badge não tem prop <code>size</code>. Se precisar de variações de tamanho, crie utilitárias via <code>className</code> com tokens do projeto — nunca altere o componente base.",
+      "tip2": "Para contadores acima de 99, trunque para <code>99+</code> no código da aplicação. O Badge não faz esse tratamento automaticamente.",
+      "tip3": "Para Badge interativo, prefira compor com <code>&lt;button&gt;</code> externo em vez de adicionar <code>onClick</code> no <code>&lt;div&gt;</code> — preserva semântica e acessibilidade de teclado."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Badge raramente emite eventos. Rastreie apenas quando funciona como trigger clicável (ex: filtro ou navegação).",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "click": "badge_click",
+        "clickTrigger": "Badge clicável é acionado como filtro ou atalho",
+        "clickPayload": "{ label: string, variant: string }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada configuração do Badge.",
+        "item1": { "action": "Renderizar variante default", "result": "Container com bg-primary, text-primary-foreground e borda transparente", "priority": "high" },
+        "item2": { "action": "Renderizar variante secondary", "result": "bg-secondary com text-secondary-foreground aplicados", "priority": "high" },
+        "item3": { "action": "Renderizar variante destructive", "result": "bg-destructive com text-destructive-foreground aplicados", "priority": "high" },
+        "item4": { "action": "Renderizar variante outline", "result": "Apenas borda padrão e text-foreground, sem fundo", "priority": "high" },
+        "item5": { "action": "Renderizar com ícone filho", "result": "Ícone alinhado à esquerda via inline-flex items-center", "priority": "medium" },
+        "item6": { "action": "Badge envolto em button", "result": "Pai recebe foco e dispara onClick corretamente", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "Texto do Badge comunica estado sem depender de cor", "level": "AA", "how": "Revisão de conteúdo + teste em modo alto contraste" },
+        "item2": { "criterion": "Ícones com aria-hidden=\"true\"", "level": "AA", "how": "Inspecionar atributos do SVG no DOM" },
+        "item3": { "criterion": "Contraste mínimo 4.5:1 em todas as variantes", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item4": { "criterion": "Badge interativo (wrapped) recebe foco visível", "level": "AA", "how": "Tab navigation + inspecionar focus ring" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Playground — variante default", "priority": "high" },
+        "item2": { "story": "Variantes — default, secondary, destructive, outline", "priority": "high" },
+        "item3": { "story": "Configurações — com ícone, contador, como link", "priority": "medium" },
+        "item4": { "story": "Composições — Badge dentro de Card, Table e List", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Configurações",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Badge",
+    "category": "Feedback",
+    "type": "Component",
+    "description": "Compact visual label for highlighting status, counts, or categories inline with other elements.",
+    "seo": {
+      "title": "Badge — Feedback · Design System",
+      "description": "Documentation for Badge: 4 variants (default, secondary, destructive, outline), inline use for status, counts, and categories with semantic tokens.",
+      "aiSummary": "Badge component with 4 variants (default, secondary, destructive, outline), no size prop, non-interactive by default, built on div with HTMLAttributes support.",
+      "aiEntities": "Badge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, status indicator, tag, pill",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "defaultLabel": "New",
+        "secondaryLabel": "Beta",
+        "destructiveLabel": "Urgent",
+        "outlineLabel": "Draft",
+        "countLabel": "12",
+        "statusLabel": "Active",
+        "categoryLabel": "Design",
+        "tagLabel": "React"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Badge</strong> — <code>&lt;div&gt;</code> container. Accepts all HTML div attributes.",
+      "item2": "<strong>Content</strong> — short text or number. Ideal: 1 to 3 words or compact numeric values.",
+      "item3": "<strong>Icon (optional)</strong> — placed before text to reinforce status. Must have <code>aria-hidden=\"true\"</code>.",
+      "item4": "<strong>Variant</strong> — set via the <code>variant</code> prop: default, secondary, destructive, or outline.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Badge variant=\"default\">   {/* inline-flex container */}\n  <Icon />              {/* Optional icon, aria-hidden */}\n  Text                  {/* Short label */}\n</Badge>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for short labels — status, counts, categories, or tags. Never for full sentences.",
+        "item2": "Choose the variant by hierarchy: <code>default</code> highlights, <code>secondary</code> informs, <code>destructive</code> alerts, <code>outline</code> stays neutral.",
+        "item3": "Never rely on color alone — combine with clear text or a semantic icon.",
+        "item4": "Badge is not interactive by default. To make it clickable, wrap it in a <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Short status in a table or card", "u": "Yes, default or secondary variant", "a": "-" },
+        "item2": { "s": "Full message with title", "u": "No", "a": "Alert" },
+        "item3": { "s": "Clickable, removable filter", "u": "No", "a": "Chip or Tag" },
+        "item4": { "s": "Notification counter", "u": "Yes, destructive variant", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "label": {
+            "name": "Badge text",
+            "format": "Short noun phrase · no period · 1 to 3 words",
+            "good": "\"New\", \"Active\", \"12\"",
+            "bad": "\"This item is new.\", \"Click here\""
+          },
+          "status": {
+            "name": "Destructive variant",
+            "format": "Signals urgency or error · direct word",
+            "good": "\"Expired\", \"Urgent\", \"Error\"",
+            "bad": "\"Something went wrong just now\""
+          },
+          "count": {
+            "name": "Count badge",
+            "format": "Raw number · truncate with + past 99",
+            "good": "\"3\", \"12\", \"99+\"",
+            "bad": "\"128 items\", \"You have 3\""
+          },
+          "category": {
+            "name": "Category badge",
+            "format": "Single noun · no articles",
+            "good": "\"Design\", \"React\", \"Beta\"",
+            "bad": "\"The Design category\", \"Now in Beta\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "A status needs to stay visible inside a card, table row, or list",
+        "item2": "A notification or item counter needs compact emphasis",
+        "item3": "Categories or tags classify content inline",
+        "item4": "A quick label differentiates states (New, Beta, Draft)"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The message needs a title and description — use <code>Alert</code>",
+        "item2": "The label must be removable or clickable as a filter — use <code>Chip</code> or <code>Tag</code>",
+        "item3": "The action is primary in the flow — use <code>Button</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Short, direct text (1 to 3 words). The label complements the item, never replaces it.",
+        "dont": "Full sentences or long text that breaks the inline layout."
+      },
+      "pair2": {
+        "do": "Destructive variant only for real alerts (error, urgency, expired).",
+        "dont": "Destructive variant used as decorative attention-grabber."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withIcon": "With Lucide icon:"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Available Variants",
+      "note": "Badge offers 4 native variants via the <code>variant</code> prop. It has no <code>size</code> prop — the dimension is fixed (<code>text-xs font-semibold px-2.5 py-0.5</code>).",
+      "items": {
+        "default": "Primary emphasis. <code>primary</code> background, ideal for new items or highlighted actions.",
+        "secondary": "Neutral informational. <code>secondary</code> background, ideal for categories and tags.",
+        "destructive": "Alert or error. <code>destructive</code> background, reserved for critical states only.",
+        "outline": "Low emphasis. Border and text only, no background, ideal for drafts or secondary statuses."
+      }
+    },
+    "states": {
+      "title": "Configurations",
+      "cols": {
+        "state": "Configuration",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "withIcon": {
+        "label": "With icon",
+        "trigger": "Include <code>&lt;Icon /&gt;</code> as the first child",
+        "behavior": "Icon placed to the left of the text. Ensure <code>aria-hidden=\"true\"</code> on the SVG"
+      },
+      "countBadge": {
+        "label": "Counter",
+        "trigger": "Numeric content with truncation (<code>99+</code>)",
+        "behavior": "Number centered. For values above 99, display <code>99+</code>"
+      },
+      "asLink": {
+        "label": "As link",
+        "trigger": "Wrap in <code>&lt;a&gt;</code> or render with <code>asChild</code>",
+        "behavior": "Inherits focus and hover from the parent element. Add a descriptive <code>aria-label</code> to the link"
+      },
+      "asTrigger": {
+        "label": "As clickable trigger",
+        "trigger": "Wrap in <code>&lt;button&gt;</code>",
+        "behavior": "The parent button handles focus, keyboard, and events. Badge stays decorative"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "badgeTitle": "Badge",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "variant": "Visual variant: <code>\"default\" | \"secondary\" | \"destructive\" | \"outline\"</code>.",
+        "className": "Additional Tailwind classes for targeted customization (e.g., custom semantic color).",
+        "children": "Badge content: short text, number, or icon + text."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "<code>Badge</code> extends <code>HTMLAttributes&lt;HTMLDivElement&gt;</code> — accepts <code>onClick</code>, <code>aria-*</code>, <code>data-*</code>. To make it interactive, prefer wrapping in <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code> rather than attaching <code>onClick</code> directly."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "primary": "Background (default variant)",
+        "primaryForeground": "Text (default variant)",
+        "secondary": "Background (secondary variant)",
+        "secondaryForeground": "Text (secondary variant)",
+        "destructive": "Background (destructive variant)",
+        "destructiveForeground": "Text (destructive variant)",
+        "foreground": "Text (outline variant)",
+        "ring": "Visible focus color",
+        "background": "Focus ring offset"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "Badge is a non-interactive visual element by default. When used to communicate state, make sure the meaning is also in the text — color alone does not convey status (WCAG 1.4.1).",
+      "item1": "<strong>Non-interactive by default</strong> — Badge is a <code>&lt;div&gt;</code> with no focus or tabindex. For interaction, wrap it in a <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>.",
+      "item2": "<strong>Descriptive text</strong> — the Badge label must communicate state without relying on color. Ex: \"Active\" instead of just a green background.",
+      "item3": "<strong>Count badge</strong> — use <code>aria-label</code> on the parent to provide context. Ex: <code>aria-label=\"12 unread notifications\"</code>.",
+      "item4": "<strong>Decorative icons</strong> — always <code>aria-hidden=\"true\"</code>. The adjacent text must carry the meaning.",
+      "item5": "<strong>Contrast</strong> — all variants meet WCAG AA (4.5:1) with default semantic tokens. When customizing colors, re-validate contrast."
+    },
+    "keyboard": {
+      "noFocus": "Badge does not receive focus via <kbd>Tab</kbd> by default — it is purely visual.",
+      "wrappedInButton": "When wrapped in a <code>&lt;button&gt;</code>: receives focus with <kbd>Tab</kbd> and activates with <kbd>Enter</kbd> or <kbd>Space</kbd>.",
+      "wrappedInLink": "When wrapped in an <code>&lt;a&gt;</code>: receives focus with <kbd>Tab</kbd> and activates with <kbd>Enter</kbd>.",
+      "focusRing": "Visible focus via <code>focus:ring-2 focus:ring-ring focus:ring-offset-2</code> inherited from the interactive parent."
+    },
+    "aria": {
+      "ariaHidden": "<code>aria-hidden=\"true\"</code> — on decorative icons inside the Badge.",
+      "ariaLabel": "<code>aria-label</code> — on the interactive parent when Badge is used as an icon or counter without explicit text.",
+      "role": "Badge does not declare a <code>role</code> by default. For dynamic states (e.g., an updating counter), consider <code>role=\"status\"</code> on the parent container.",
+      "ariaLive": "<code>aria-live=\"polite\"</code> — on the parent container when the Badge value changes dynamically (e.g., item count)."
+    },
+    "screenReader": {
+      "onRender": "On render: the reader announces the Badge text as part of the normal flow.",
+      "onUpdate": "On value update: the reader announces changes only if <code>aria-live</code> is on the parent container.",
+      "icons": "Icons with <code>aria-hidden</code> are ignored — only the text is read."
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "alert": "For messages with title and description that need more context.",
+      "chip": "For interactive, removable, or filterable labels (when available in the project).",
+      "tag": "For grouped, user-editable classifications.",
+      "button": "To make Badge clickable, wrap it in a Button or use it as an internal slot."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "Badge has no <code>size</code> prop. If you need size variations, create utilities via <code>className</code> with project tokens — never modify the base component.",
+      "tip2": "For counters above 99, truncate to <code>99+</code> at the application level. Badge does not handle this automatically.",
+      "tip3": "For an interactive Badge, prefer composing with an outer <code>&lt;button&gt;</code> rather than attaching <code>onClick</code> to the <code>&lt;div&gt;</code> — it preserves semantics and keyboard accessibility."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Badge rarely emits events. Track only when it acts as a clickable trigger (e.g., filter or navigation).",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "click": "badge_click",
+        "clickTrigger": "Clickable Badge is activated as a filter or shortcut",
+        "clickPayload": "{ label: string, variant: string }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Badge configuration.",
+        "item1": { "action": "Render default variant", "result": "Container with bg-primary, text-primary-foreground, and transparent border", "priority": "high" },
+        "item2": { "action": "Render secondary variant", "result": "bg-secondary with text-secondary-foreground applied", "priority": "high" },
+        "item3": { "action": "Render destructive variant", "result": "bg-destructive with text-destructive-foreground applied", "priority": "high" },
+        "item4": { "action": "Render outline variant", "result": "Only default border and text-foreground, no background", "priority": "high" },
+        "item5": { "action": "Render with icon child", "result": "Icon aligned left via inline-flex items-center", "priority": "medium" },
+        "item6": { "action": "Badge wrapped in button", "result": "Parent receives focus and fires onClick correctly", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "Badge text communicates state without relying on color", "level": "AA", "how": "Content review + high-contrast mode test" },
+        "item2": { "criterion": "Icons with aria-hidden=\"true\"", "level": "AA", "how": "Inspect SVG attributes in DOM" },
+        "item3": { "criterion": "Minimum contrast 4.5:1 across all variants", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item4": { "criterion": "Interactive (wrapped) Badge has visible focus", "level": "AA", "how": "Tab navigation + inspect focus ring" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Playground — default variant", "priority": "high" },
+        "item2": { "story": "Variants — default, secondary, destructive, outline", "priority": "high" },
+        "item3": { "story": "Configurations — with icon, counter, as link", "priority": "medium" },
+        "item4": { "story": "Compositions — Badge inside Card, Table, and List", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "Configurations",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Badge",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Etiqueta visual compacta para destacar estados, conteos o categorías inline junto a otros elementos.",
+    "seo": {
+      "title": "Badge — Feedback · Design System",
+      "description": "Documentación del Badge: 4 variantes (default, secondary, destructive, outline), uso inline para estados, conteos y categorías con tokens semánticos.",
+      "aiSummary": "Componente Badge con 4 variantes (default, secondary, destructive, outline), sin prop size, no interactivo por defecto, basado en div con soporte para HTMLAttributes.",
+      "aiEntities": "Badge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, status indicator, tag, pill",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "defaultLabel": "Nuevo",
+        "secondaryLabel": "Beta",
+        "destructiveLabel": "Urgente",
+        "outlineLabel": "Borrador",
+        "countLabel": "12",
+        "statusLabel": "Activo",
+        "categoryLabel": "Diseño",
+        "tagLabel": "React"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Badge</strong> — contenedor <code>&lt;div&gt;</code>. Acepta todos los atributos HTML del elemento.",
+      "item2": "<strong>Contenido</strong> — texto corto o número. Ideal: 1 a 3 palabras o valores numéricos compactos.",
+      "item3": "<strong>Ícono (opcional)</strong> — colocado antes del texto para reforzar el estado. Debe tener <code>aria-hidden=\"true\"</code>.",
+      "item4": "<strong>Variante</strong> — definida vía prop <code>variant</code>: default, secondary, destructive u outline.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Badge variant=\"default\">   {/* Contenedor inline-flex */}\n  <Icon />              {/* Ícono opcional, aria-hidden */}\n  Texto                 {/* Etiqueta corta */}\n</Badge>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Úsalo para etiquetas cortas — estados, conteos, categorías o tags. Nunca para frases completas.",
+        "item2": "Elige la variante según la jerarquía: <code>default</code> destaca, <code>secondary</code> informa, <code>destructive</code> alerta, <code>outline</code> es neutro.",
+        "item3": "Nunca uses el color como único indicador — combínalo con texto claro o ícono semántico.",
+        "item4": "Badge no es interactivo por defecto. Para hacerlo clicable, envuélvelo en <code>&lt;button&gt;</code> o <code>&lt;a&gt;</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Estado corto en tabla o card", "u": "Sí, variante default o secondary", "a": "-" },
+        "item2": { "s": "Mensaje completo con título", "u": "No", "a": "Alert" },
+        "item3": { "s": "Filtro clicable y removible", "u": "No", "a": "Chip o Tag" },
+        "item4": { "s": "Contador de notificaciones", "u": "Sí, variante destructive", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "label": {
+            "name": "Texto del Badge",
+            "format": "Frase nominal corta · sin punto final · 1 a 3 palabras",
+            "good": "\"Nuevo\", \"Activo\", \"12\"",
+            "bad": "\"Este ítem es nuevo.\", \"Haz clic aquí\""
+          },
+          "status": {
+            "name": "Variante destructive",
+            "format": "Indica urgencia o error · palabra directa",
+            "good": "\"Expirado\", \"Urgente\", \"Error\"",
+            "bad": "\"Algo salió mal ahora\""
+          },
+          "count": {
+            "name": "Badge de conteo",
+            "format": "Número puro · truncar con + a partir de 99",
+            "good": "\"3\", \"12\", \"99+\"",
+            "bad": "\"128 ítems\", \"Tienes 3\""
+          },
+          "category": {
+            "name": "Badge de categoría",
+            "format": "Sustantivo único · sin artículos",
+            "good": "\"Diseño\", \"React\", \"Beta\"",
+            "bad": "\"La categoría Diseño\", \"En Beta ahora\""
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "Un estado debe permanecer visible en una card, fila de tabla o lista",
+        "item2": "Un contador de notificaciones o ítems requiere énfasis compacto",
+        "item3": "Categorías o tags clasifican un contenido inline",
+        "item4": "Una etiqueta rápida diferencia estados (Nuevo, Beta, Borrador)"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El mensaje requiere título y descripción — usa <code>Alert</code>",
+        "item2": "La etiqueta debe ser removible o clicable como filtro — usa <code>Chip</code> o <code>Tag</code>",
+        "item3": "La acción es primaria en el flujo — usa <code>Button</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Texto corto y directo (1 a 3 palabras). La etiqueta complementa al ítem, no lo sustituye.",
+        "dont": "Frases completas o texto largo que rompe el layout inline."
+      },
+      "pair2": {
+        "do": "Variante destructive solo para alertas reales (error, urgencia, expirado).",
+        "dont": "Variante destructive usada como recurso decorativo para llamar atención."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withIcon": "Con ícono Lucide:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Variantes Disponibles",
+      "note": "Badge ofrece 4 variantes nativas vía la prop <code>variant</code>. No tiene prop <code>size</code> — la dimensión es única (<code>text-xs font-semibold px-2.5 py-0.5</code>).",
+      "items": {
+        "default": "Énfasis principal. Fondo <code>primary</code>, ideal para ítems nuevos o acciones destacadas.",
+        "secondary": "Neutro informativo. Fondo <code>secondary</code>, ideal para categorías y tags.",
+        "destructive": "Alerta o error. Fondo <code>destructive</code>, reservado para estados críticos.",
+        "outline": "Baja énfasis. Solo borde y texto, sin fondo, ideal para borradores o estados secundarios."
+      }
+    },
+    "states": {
+      "title": "Configuraciones",
+      "cols": {
+        "state": "Configuración",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "withIcon": {
+        "label": "Con ícono",
+        "trigger": "Incluir <code>&lt;Icon /&gt;</code> como primer hijo",
+        "behavior": "Ícono a la izquierda del texto. Garantizar <code>aria-hidden=\"true\"</code> en el SVG"
+      },
+      "countBadge": {
+        "label": "Contador",
+        "trigger": "Contenido numérico con truncamiento (<code>99+</code>)",
+        "behavior": "Número centrado. Para valores mayores a 99, mostrar <code>99+</code>"
+      },
+      "asLink": {
+        "label": "Como link",
+        "trigger": "Envolver en <code>&lt;a&gt;</code> o renderizar con <code>asChild</code>",
+        "behavior": "Hereda foco y hover del elemento padre. Incluye <code>aria-label</code> descriptivo en el link"
+      },
+      "asTrigger": {
+        "label": "Como trigger clicable",
+        "trigger": "Envolver en <code>&lt;button&gt;</code>",
+        "behavior": "El botón padre gestiona foco, teclado y eventos. Badge permanece decorativo"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "badgeTitle": "Badge",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "variant": "Variante visual: <code>\"default\" | \"secondary\" | \"destructive\" | \"outline\"</code>.",
+        "className": "Clases Tailwind adicionales para personalizaciones puntuales (ej: color semántico custom).",
+        "children": "Contenido del Badge: texto corto, número o ícono + texto."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "<code>Badge</code> extiende <code>HTMLAttributes&lt;HTMLDivElement&gt;</code> — acepta <code>onClick</code>, <code>aria-*</code>, <code>data-*</code>. Para hacerlo interactivo, prefiere envolverlo en <code>&lt;button&gt;</code> o <code>&lt;a&gt;</code> en lugar de usar <code>onClick</code> directo."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "primary": "Fondo (variante default)",
+        "primaryForeground": "Texto (variante default)",
+        "secondary": "Fondo (variante secondary)",
+        "secondaryForeground": "Texto (variante secondary)",
+        "destructive": "Fondo (variante destructive)",
+        "destructiveForeground": "Texto (variante destructive)",
+        "foreground": "Texto (variante outline)",
+        "ring": "Color del foco visible",
+        "background": "Offset del anillo de foco"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "Badge es un elemento visual no interactivo por defecto. Cuando comunica estado, asegúrate de que el significado también esté en el texto — el color solo no comunica estado (WCAG 1.4.1).",
+      "item1": "<strong>No interactivo por defecto</strong> — Badge es un <code>&lt;div&gt;</code> sin foco ni tabindex. Para interacción, envuélvelo en <code>&lt;button&gt;</code> o <code>&lt;a&gt;</code>.",
+      "item2": "<strong>Texto descriptivo</strong> — la etiqueta del Badge debe comunicar el estado sin depender del color. Ej: \"Activo\" en lugar de solo un fondo verde.",
+      "item3": "<strong>Badge de conteo</strong> — usa <code>aria-label</code> en el elemento padre para dar contexto. Ej: <code>aria-label=\"12 notificaciones sin leer\"</code>.",
+      "item4": "<strong>Íconos decorativos</strong> — siempre <code>aria-hidden=\"true\"</code>. El texto adyacente debe cargar el significado.",
+      "item5": "<strong>Contraste</strong> — todas las variantes cumplen WCAG AA (4.5:1) con los tokens semánticos por defecto. Al personalizar colores, revalida el contraste."
+    },
+    "keyboard": {
+      "noFocus": "Badge por defecto no recibe foco vía <kbd>Tab</kbd> — es solo visual.",
+      "wrappedInButton": "Cuando se envuelve en <code>&lt;button&gt;</code>: recibe foco con <kbd>Tab</kbd> y se activa con <kbd>Enter</kbd> o <kbd>Space</kbd>.",
+      "wrappedInLink": "Cuando se envuelve en <code>&lt;a&gt;</code>: recibe foco con <kbd>Tab</kbd> y se activa con <kbd>Enter</kbd>.",
+      "focusRing": "Foco visible vía <code>focus:ring-2 focus:ring-ring focus:ring-offset-2</code> heredado del elemento interactivo padre."
+    },
+    "aria": {
+      "ariaHidden": "<code>aria-hidden=\"true\"</code> — en íconos decorativos dentro del Badge.",
+      "ariaLabel": "<code>aria-label</code> — en el elemento padre interactivo cuando Badge se usa como ícono o contador sin texto explícito.",
+      "role": "Por defecto Badge no declara <code>role</code>. Para estados dinámicos (ej: contador que se actualiza), considera <code>role=\"status\"</code> en el contenedor padre.",
+      "ariaLive": "<code>aria-live=\"polite\"</code> — en el contenedor padre cuando el valor del Badge cambia dinámicamente (ej: cantidad de ítems)."
+    },
+    "screenReader": {
+      "onRender": "Al renderizar: el lector anuncia el texto del Badge como parte del flujo normal.",
+      "onUpdate": "Al actualizar valor: el lector anuncia cambios solo si <code>aria-live</code> está en el contenedor padre.",
+      "icons": "Íconos con <code>aria-hidden</code> son ignorados — solo se lee el texto."
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "alert": "Para mensajes con título y descripción que requieren más contexto.",
+      "chip": "Para etiquetas interactivas, removibles o filtrables (cuando exista en el proyecto).",
+      "tag": "Para clasificaciones agrupadas y editables por el usuario.",
+      "button": "Para hacer Badge clicable, envuélvelo en Button o úsalo como slot interno."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "Badge no tiene prop <code>size</code>. Si necesitas variaciones de tamaño, crea utilitarias vía <code>className</code> con tokens del proyecto — nunca modifiques el componente base.",
+      "tip2": "Para contadores mayores a 99, trunca a <code>99+</code> en el código de la aplicación. Badge no hace este tratamiento automáticamente.",
+      "tip3": "Para un Badge interactivo, prefiere componer con un <code>&lt;button&gt;</code> externo en lugar de agregar <code>onClick</code> al <code>&lt;div&gt;</code> — preserva semántica y accesibilidad de teclado."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Badge raramente emite eventos. Rastrea solo cuando funciona como trigger clicable (ej: filtro o navegación).",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "click": "badge_click",
+        "clickTrigger": "Badge clicable se activa como filtro o atajo",
+        "clickPayload": "{ label: string, variant: string }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada configuración del Badge.",
+        "item1": { "action": "Renderizar variante default", "result": "Contenedor con bg-primary, text-primary-foreground y borde transparente", "priority": "high" },
+        "item2": { "action": "Renderizar variante secondary", "result": "bg-secondary con text-secondary-foreground aplicados", "priority": "high" },
+        "item3": { "action": "Renderizar variante destructive", "result": "bg-destructive con text-destructive-foreground aplicados", "priority": "high" },
+        "item4": { "action": "Renderizar variante outline", "result": "Solo borde predeterminado y text-foreground, sin fondo", "priority": "high" },
+        "item5": { "action": "Renderizar con ícono hijo", "result": "Ícono alineado a la izquierda vía inline-flex items-center", "priority": "medium" },
+        "item6": { "action": "Badge envuelto en button", "result": "El padre recibe foco y dispara onClick correctamente", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "Texto del Badge comunica estado sin depender del color", "level": "AA", "how": "Revisión de contenido + prueba en alto contraste" },
+        "item2": { "criterion": "Íconos con aria-hidden=\"true\"", "level": "AA", "how": "Inspeccionar atributos del SVG en el DOM" },
+        "item3": { "criterion": "Contraste mínimo 4.5:1 en todas las variantes", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item4": { "criterion": "Badge interactivo (wrapped) tiene foco visible", "level": "AA", "how": "Navegación con Tab + inspeccionar focus ring" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Playground — variante default", "priority": "high" },
+        "item2": { "story": "Variantes — default, secondary, destructive, outline", "priority": "high" },
+        "item3": { "story": "Configuraciones — con ícono, contador, como link", "priority": "medium" },
+        "item4": { "story": "Composiciones — Badge dentro de Card, Table y List", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Configuraciones",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
