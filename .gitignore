@@ -36,5 +36,8 @@ Thumbs.db
 
 # AI/Cache
 .gemini/
-.claude/
+.claude/settings.local.json
+.claude/plans/
+.claude/worktrees/
+.claude/scheduled_tasks.lock
 .history/
