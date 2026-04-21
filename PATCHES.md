@@ -11,7 +11,11 @@ Este arquivo registra toda divergência intencional entre os componentes deste d
    ```
    Categorias permitidas: `a11y`, `i18n`, `theme`, `security`, `bugfix`.
 3. **Todo patch é descrito aqui.** Uma entrada por patch, com diff antes/depois, justificativa e link para PR/issue upstream se houver.
-4. **Revisão obrigatória no bump.** Ao atualizar `radix-ui`, `reka-ui`, `bits-ui`, `basecoat-css` ou re-gerar componentes via `shadcn@latest`, rode `npm run patches:list` e re-valide cada entrada.
+4. **Revisão obrigatória no bump.** Ao atualizar `@base-ui/react`, `reka-ui`, `bits-ui`, `basecoat-css` ou re-gerar componentes via `shadcn@latest`, rode `npm run patches:list` e re-valide cada entrada.
+
+> **Histórico de stack de primitivas (React):**
+> - Até 2026-04-21: `@radix-ui/react-*` individuais (modo legado)
+> - De 2026-04-21 em diante: `@base-ui/react` (registry `base-nova` do shadcn). Apenas `@radix-ui/react-label`, `@radix-ui/react-slot` e `@radix-ui/react-toast` foram mantidos (usados por `form.tsx` e `toast.tsx` — componentes sem equivalente no `base-nova`).
 
 ## Fluxo de atualização
 
@@ -72,12 +76,12 @@ npm run patches:diff -- --stack react --component alert
 
 ### react/alert — SVG usa `text-current` para herdar cor da variante — ✅ RESOLVIDO UPSTREAM (2026-04-21)
 
-- **Status:** Absorvido pelo upstream no registry `radix-nova`. O Alert atual usa `*:[svg]:text-current` e `bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90`. Patch não é mais necessário — marker removido do código.
+- **Status:** Absorvido pelo upstream no registry `radix-nova`, mantido no `base-nova`. O Alert atual usa `*:[svg]:text-current` e `bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90`. Patch não é mais necessário — marker removido do código.
 - **Arquivo:** `design-system-react/src/components/ui/alert.tsx`
 - **Categoria:** a11y (contraste de ícone em variantes semânticas)
 - **Data original:** 2026-04-18
-- **Data resolução:** 2026-04-21 (migração shadcn `new-york` → `radix-nova`)
-- **Upstream ref:** shadcn/ui — `radix-nova/alert.tsx`
+- **Data resolução:** 2026-04-21 (migração shadcn `new-york` → `radix-nova`; consolidada em `base-nova` no mesmo dia)
+- **Upstream ref:** shadcn/ui — `base-nova/alert.tsx`
 
 **Antes (shadcn upstream):**
 ```tsx
@@ -150,17 +154,17 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
 
 ### avatar — `object-cover` na imagem (4 stacks) {#avatar-object-cover} — ⚠️ PARCIALMENTE RESOLVIDO UPSTREAM (2026-04-21)
 
-- **Status:** React (`radix-nova`) e Vue (`reka-nova`) absorveram o patch — AvatarImage agora inclui `object-cover` por padrão. Svelte e Basecoat **ainda precisam do patch** — marker permanece nesses 2 arquivos.
+- **Status:** React (`base-nova`) e Vue (`reka-nova`) absorveram o patch — AvatarImage agora inclui `object-cover` por padrão. Svelte e Basecoat **ainda precisam do patch** — marker permanece nesses 2 arquivos.
 - **Arquivos:**
-  - ~~`design-system-react/src/components/ui/avatar.tsx` (AvatarImage)~~ ✅ absorvido upstream (radix-nova)
+  - ~~`design-system-react/src/components/ui/avatar.tsx` (AvatarImage)~~ ✅ absorvido upstream (radix-nova → base-nova)
   - ~~`design-system-vue/src/components/ui/avatar/AvatarImage.vue`~~ ✅ absorvido upstream (reka-nova)
   - `design-system-svelte/src/components/ui/avatar/avatar-image.svelte` — PATCH ATIVO
   - `design-system-basecoat/src/components/ui/avatar.ts` (`createAvatarImage`) — PATCH ATIVO
 - **Categoria:** bugfix (distorção visual)
 - **Data original:** 2026-04-21
-- **Data resolução React:** 2026-04-21 (migração shadcn `new-york` → `radix-nova`)
+- **Data resolução React:** 2026-04-21 (migração shadcn `new-york` → `radix-nova` → `base-nova`)
 - **Data resolução Vue:** 2026-04-21 (migração shadcn-vue `new-york` → `reka-nova` + bump 2.9.5 → 2.9.6)
-- **Upstream ref:** shadcn/ui (radix-nova) e shadcn-vue (reka-nova) incluem `object-cover`. shadcn-svelte — ainda não.
+- **Upstream ref:** shadcn/ui (base-nova) e shadcn-vue (reka-nova) incluem `object-cover`. shadcn-svelte — ainda não.
 
 **Antes (upstream):**
 ```tsx
