@@ -128,8 +128,10 @@ const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map
 
 // ─── IntersectionObserver ─────────────────────────────────────────────────────
 
+let observer: IntersectionObserver | null = null;
+
 onMounted(() => {
-  const observer = new IntersectionObserver(
+  observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting) { handleSectionChange(entry.target.id); break; }
@@ -139,9 +141,13 @@ onMounted(() => {
   );
   allSectionIds.value.forEach((id) => {
     const el = document.getElementById(id);
-    if (el) observer.observe(el);
+    if (el) observer!.observe(el);
   });
-  onUnmounted(() => observer.disconnect());
+});
+
+onUnmounted(() => {
+  observer?.disconnect();
+  observer = null;
 });
 
 // ─── Code strings ─────────────────────────────────────────────────────────────
