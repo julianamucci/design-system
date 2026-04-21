@@ -7,7 +7,6 @@ import { createButton } from './button';
 
 const meta: Meta = {
   title: 'UI/AlertDialog/Composições',
-  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {

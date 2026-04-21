@@ -1,0 +1,878 @@
+{
+  "pt-BR": {
+    "title": "Avatar",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Representação visual de um usuário via foto, iniciais ou ícone genérico. Suporta agrupamento, tamanhos e indicador de status.",
+    "seo": {
+      "title": "Avatar — Display · Design System",
+      "description": "Documentação do Avatar: composição com imagem e fallback, tamanhos via className, agrupamento e indicador de status.",
+      "aiSummary": "Componente Avatar baseado em Radix com Avatar, AvatarImage e AvatarFallback; tamanhos via className (h-6, h-8, h-10, h-12), suporte a agrupamento e status.",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, Tailwind CSS, WCAG 2.1",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "withImage": "Maria Rodrigues",
+        "withImageAlt": "Foto de perfil de Maria Rodrigues",
+        "withFallback": "João Pereira",
+        "withFallbackInitials": "JP",
+        "withIcon": "Usuário genérico",
+        "groupTitle": "Agrupamento",
+        "statusTitle": "Com status",
+        "statusOnline": "online"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Avatar</strong> — container com forma circular, define o tamanho e recorte. Aceita <code>className</code> para variar o diâmetro.",
+      "item2": "<strong>AvatarImage</strong> — <code>&lt;img&gt;</code> que carrega a foto. Requer <code>alt</code> descritivo ou vazio se decorativo.",
+      "item3": "<strong>AvatarFallback</strong> — conteúdo exibido quando a imagem falha ou demora a carregar. Pode ser iniciais ou ícone.",
+      "item4": "<strong>Indicador de status (opcional)</strong> — elemento irmão posicionado absolutamente sobre o Avatar. Não é prop.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Avatar>                {/* Container circular */}\n  <AvatarImage />       {/* Imagem com alt */}\n  <AvatarFallback />    {/* Iniciais ou ícone */}\n</Avatar>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Sempre inclua <code>AvatarFallback</code> — ele aparece enquanto a imagem carrega e quando ela falha.",
+        "item2": "Defina <code>delayMs={600}</code> no fallback para evitar flash quando a imagem carrega rápido.",
+        "item3": "Use iniciais como fallback (primeira letra do nome + primeira letra do sobrenome). Nunca mais de 2 letras.",
+        "item4": "O tamanho é controlado por <code>className</code> (<code>h-8 w-8</code> é o padrão do projeto) — não existe prop <code>size</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Identificar autor de um comentário", "u": "Sim, com imagem e iniciais", "a": "-" },
+        "item2": { "s": "Mostrar grupo de participantes", "u": "Sim, agrupado com <code>-space-x-2</code>", "a": "AvatarGroup padrão" },
+        "item3": { "s": "Ícone de marca ou logo", "u": "Não", "a": "Usar <code>&lt;img&gt;</code> ou SVG direto" },
+        "item4": { "s": "Foto de produto em card", "u": "Não", "a": "<code>AspectRatio</code> com <code>&lt;img&gt;</code>" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "alt": {
+            "name": "AvatarImage alt",
+            "format": "Foto de perfil de [Nome completo] · ou vazio se decorativo",
+            "good": "\"Foto de perfil de Maria Rodrigues\" · <code>alt=\"\"</code>",
+            "bad": "\"Avatar\", \"Imagem\", \"Usuário\""
+          },
+          "initials": {
+            "name": "AvatarFallback",
+            "format": "2 letras maiúsculas · primeira do nome + primeira do sobrenome",
+            "good": "\"MR\" (Maria Rodrigues) · \"JS\" (João da Silva)",
+            "bad": "\"MAR\", \"maria\", \"MARIA\", \"M\""
+          },
+          "status": {
+            "name": "Rótulo de status",
+            "format": "Adjetivo curto · minúsculo · sem pontuação",
+            "good": "\"online\", \"ausente\", \"ocupado\"",
+            "bad": "\"Online.\", \"Está online\", \"ATIVO\""
+          },
+          "decorative": {
+            "name": "Avatar decorativo",
+            "format": "<code>alt=\"\"</code> na imagem · fallback com <code>aria-hidden=\"true\"</code>",
+            "good": "Card estatístico com foto ilustrativa",
+            "bad": "Avatar que identifica pessoa real sem alt descritivo"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Um usuário ou pessoa precisa ser identificado visualmente",
+        "item2": "Uma lista mostra contribuidores, participantes ou autores",
+        "item3": "Um comentário ou mensagem precisa do rosto de quem escreveu",
+        "item4": "Um header de perfil exibe a foto principal do usuário"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A imagem representa um produto ou objeto — use <code>&lt;img&gt;</code> dentro de <code>AspectRatio</code>",
+        "item2": "A imagem é um logo de marca — use <code>&lt;img&gt;</code> ou SVG com <code>alt</code> específico",
+        "item3": "A foto precisa manter proporção não-circular — Avatar sempre recorta em círculo"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Foto com <code>alt</code> descritivo e fallback com iniciais.",
+        "dont": "Avatar sem fallback — quebra visualmente se a imagem falhar."
+      },
+      "pair2": {
+        "do": "Iniciais em 2 letras maiúsculas a partir do nome.",
+        "dont": "Fallback com 3+ letras ou caracteres minúsculos."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withIcon": "Com ícone como fallback:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Variantes Disponíveis",
+      "note": "Avatar não tem variantes visuais via prop — as <em>variações</em> abaixo combinam tamanho, conteúdo e composição. Use <code>className</code> para ajustar o diâmetro.",
+      "items": {
+        "image": "Com imagem carregada. AvatarImage exibe a foto; fallback fica oculto após o carregamento.",
+        "initials": "Com iniciais como fallback. Usado quando não há imagem ou ela falha ao carregar.",
+        "icon": "Com ícone genérico (ex: <code>User</code>) como fallback. Indica usuário anônimo ou placeholder.",
+        "group": "Avatares agrupados com sobreposição via <code>-space-x-2</code> + <code>ring-2 ring-background</code>.",
+        "withStatus": "Com indicador de status posicionado absolutamente. Sinaliza presença ou disponibilidade."
+      }
+    },
+    "states": {
+      "title": "Configurações",
+      "cols": {
+        "state": "Configuração",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "loaded": {
+        "label": "Imagem carregada",
+        "trigger": "<code>AvatarImage</code> com <code>src</code> válido",
+        "behavior": "Foto exibida; fallback permanece no DOM mas oculto via CSS"
+      },
+      "loading": {
+        "label": "Carregando",
+        "trigger": "Imagem em fetch — aguardar <code>delayMs</code>",
+        "behavior": "Fallback exibido após o delay para evitar flash em conexões rápidas"
+      },
+      "failed": {
+        "label": "Imagem falhou",
+        "trigger": "<code>src</code> inválido, 404 ou offline",
+        "behavior": "Fallback exibido permanentemente (iniciais ou ícone)"
+      },
+      "noImage": {
+        "label": "Sem imagem",
+        "trigger": "Omitir <code>AvatarImage</code>",
+        "behavior": "Fallback exibido imediatamente, sem tentativa de carregamento"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "avatarTitle": "Avatar",
+      "avatarImageTitle": "AvatarImage",
+      "avatarFallbackTitle": "AvatarFallback",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "className": "Classes Tailwind adicionais — use para ajustar tamanho (<code>h-8 w-8</code>, <code>h-10 w-10</code>) e forma.",
+        "children": "Conteúdo do Avatar: AvatarImage e AvatarFallback.",
+        "src": "URL da imagem a carregar. Formatos suportados: JPG, PNG, WebP, SVG.",
+        "alt": "Texto alternativo para leitores de tela. Use descrição da pessoa ou vazio se decorativo.",
+        "onLoadingStatusChange": "Callback disparado quando o status de carregamento muda: <code>idle | loading | loaded | error</code>.",
+        "delayMs": "Atraso em milissegundos antes de exibir o fallback. Previne flash em imagens que carregam rápido."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Use tokens semânticos (<code>bg-muted</code>, <code>text-muted-foreground</code>) no fallback para respeitar o tema."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "muted": "Fundo do AvatarFallback",
+        "mutedForeground": "Texto do AvatarFallback (iniciais)",
+        "background": "Cor do ring no agrupamento (<code>ring-background</code>)",
+        "border": "Borda opcional do container",
+        "primary": "Cor de fundo do indicador de status online",
+        "radius": "Border radius — Avatar sempre usa <code>rounded-full</code>",
+        "ring": "Anel de foco ao receber foco via teclado"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "Avatar em si não é interativo. Quando usado como trigger (link ou botão), deve receber foco e ter <code>aria-label</code> descritivo. Cumpre WCAG 2.1 AA: 1.1.1 (texto alternativo), 1.4.3 (contraste) e 4.1.2 (nome e papel).",
+      "item1": "<strong>Imagem identificadora</strong> — <code>alt</code> descritivo com o nome da pessoa: <code>\"Foto de perfil de Maria Rodrigues\"</code>. Nunca use \"avatar\" ou \"imagem\" genérico.",
+      "item2": "<strong>Imagem decorativa</strong> — <code>alt=\"\"</code> quando o nome já aparece ao lado. Leitor de tela ignora a imagem e lê apenas o texto.",
+      "item3": "<strong>Fallback não decorativo</strong> — iniciais e ícones do fallback devem ter <code>aria-hidden=\"true\"</code> quando a imagem tem <code>alt</code> descritivo. Evita duplicação na leitura.",
+      "item4": "<strong>Avatar como link ou botão</strong> — envolva em <code>&lt;a&gt;</code> ou <code>&lt;button&gt;</code> com <code>aria-label</code> contextual: <code>\"Ver perfil de Maria Rodrigues\"</code>.",
+      "item5": "<strong>Indicador de status</strong> — comunique também via texto (<code>sr-only</code>) ou <code>aria-label</code>. Nunca use apenas cor para comunicar status (WCAG 1.4.1)."
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "badge": "Para indicadores de status compactos que acompanham o Avatar.",
+      "aspectRatio": "Para imagens de produto ou mídia que não devem ser recortadas em círculo.",
+      "tooltip": "Para mostrar o nome completo ao passar o mouse sobre o Avatar.",
+      "card": "Para cards de perfil que combinam Avatar, nome e metadados."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "O Avatar do projeto é baseado no Radix <code>AvatarPrimitive</code> — segue o padrão do Shadcn. Isso garante acessibilidade e comportamento de loading consistente entre stacks.",
+      "tip2": "Para agrupar avatares, aplique <code>-space-x-2</code> no container e <code>ring-2 ring-background</code> em cada Avatar. Isso cria a sobreposição com separação visual no dark e light mode.",
+      "tip3": "O indicador de status é um <code>&lt;span&gt;</code> irmão, não uma prop do Avatar. Posicione com <code>absolute bottom-0 right-0</code> dentro de um wrapper <code>relative</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Avatar em si não emite eventos. Quando usado como trigger de navegação, rastreie o container (link ou botão), não o Avatar.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "profileClick": "profile_click",
+        "profileClickTrigger": "Usuário clica no Avatar para abrir um perfil",
+        "profileClickPayload": "{ user_id, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada configuração do Avatar.",
+        "item1": { "action": "Renderizar com src válido", "result": "Imagem carregada; fallback oculto após onLoadingStatusChange='loaded'", "priority": "high" },
+        "item2": { "action": "Renderizar com src inválido ou 404", "result": "Fallback exibido permanentemente; imagem oculta", "priority": "high" },
+        "item3": { "action": "Renderizar sem AvatarImage", "result": "Fallback exibido imediatamente sem delay", "priority": "high" },
+        "item4": { "action": "Renderizar com delayMs=600", "result": "Fallback aguarda 600ms antes de aparecer em conexões rápidas", "priority": "medium" },
+        "item5": { "action": "Renderizar em grupo com -space-x-2", "result": "Avatares sobrepostos com ring-2 separando cada um", "priority": "medium" },
+        "item6": { "action": "Renderizar com tamanho via className", "result": "h-8 w-8, h-10 w-10, h-12 w-12 aplicam diâmetros corretos", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "AvatarImage com alt descritivo quando identifica pessoa", "level": "AA", "how": "Inspecionar atributo alt no DOM" },
+        "item2": { "criterion": "AvatarFallback com aria-hidden=\"true\" quando alt é descritivo", "level": "AA", "how": "Inspecionar atributos no DOM" },
+        "item3": { "criterion": "Contraste mínimo 4.5:1 entre iniciais e fundo do fallback", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Playground — com imagem válida", "priority": "high" },
+        "item2": { "story": "Fallback — iniciais e ícone", "priority": "high" },
+        "item3": { "story": "Tamanhos — h-6, h-8, h-10, h-12", "priority": "medium" },
+        "item4": { "story": "Composições — grupo e com status", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Configurações",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Avatar",
+    "category": "Display",
+    "type": "Component",
+    "description": "Visual representation of a user via photo, initials, or generic icon. Supports grouping, sizes, and status indicator.",
+    "seo": {
+      "title": "Avatar — Display · Design System",
+      "description": "Documentation for Avatar: image and fallback composition, sizes via className, grouping, and status indicator.",
+      "aiSummary": "Radix-based Avatar component with Avatar, AvatarImage, and AvatarFallback; sizes via className (h-6, h-8, h-10, h-12), with grouping and status support.",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, Tailwind CSS, WCAG 2.1",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "withImage": "Maria Rodrigues",
+        "withImageAlt": "Profile picture of Maria Rodrigues",
+        "withFallback": "John Pereira",
+        "withFallbackInitials": "JP",
+        "withIcon": "Generic user",
+        "groupTitle": "Grouping",
+        "statusTitle": "With status",
+        "statusOnline": "online"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Avatar</strong> — circular container that defines size and clipping. Accepts <code>className</code> to vary the diameter.",
+      "item2": "<strong>AvatarImage</strong> — <code>&lt;img&gt;</code> that loads the photo. Requires a descriptive <code>alt</code>, or empty if decorative.",
+      "item3": "<strong>AvatarFallback</strong> — content displayed while the image loads or when it fails. Can be initials or an icon.",
+      "item4": "<strong>Status indicator (optional)</strong> — a sibling element positioned absolutely over the Avatar. Not a prop.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Avatar>                {/* Circular container */}\n  <AvatarImage />       {/* Image with alt */}\n  <AvatarFallback />    {/* Initials or icon */}\n</Avatar>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Always include <code>AvatarFallback</code> — it appears while the image loads and when it fails.",
+        "item2": "Set <code>delayMs={600}</code> on the fallback to prevent flash when the image loads quickly.",
+        "item3": "Use initials as fallback (first letter of first name + first letter of last name). Never more than 2 letters.",
+        "item4": "Size is controlled via <code>className</code> (<code>h-8 w-8</code> is the project default) — there is no <code>size</code> prop."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Identifying a comment author", "u": "Yes, with image and initials", "a": "-" },
+        "item2": { "s": "Showing a group of participants", "u": "Yes, grouped with <code>-space-x-2</code>", "a": "Standard AvatarGroup" },
+        "item3": { "s": "Brand or logo icon", "u": "No", "a": "Use <code>&lt;img&gt;</code> or SVG directly" },
+        "item4": { "s": "Product photo in a card", "u": "No", "a": "<code>AspectRatio</code> with <code>&lt;img&gt;</code>" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "alt": {
+            "name": "AvatarImage alt",
+            "format": "Profile picture of [Full name] · or empty if decorative",
+            "good": "\"Profile picture of Maria Rodrigues\" · <code>alt=\"\"</code>",
+            "bad": "\"Avatar\", \"Image\", \"User\""
+          },
+          "initials": {
+            "name": "AvatarFallback",
+            "format": "2 uppercase letters · first of given + first of family name",
+            "good": "\"MR\" (Maria Rodrigues) · \"JS\" (John Smith)",
+            "bad": "\"MAR\", \"maria\", \"MARIA\", \"M\""
+          },
+          "status": {
+            "name": "Status label",
+            "format": "Short adjective · lowercase · no punctuation",
+            "good": "\"online\", \"away\", \"busy\"",
+            "bad": "\"Online.\", \"Is online\", \"ACTIVE\""
+          },
+          "decorative": {
+            "name": "Decorative Avatar",
+            "format": "<code>alt=\"\"</code> on image · fallback with <code>aria-hidden=\"true\"</code>",
+            "good": "Statistical card with illustrative photo",
+            "bad": "Avatar identifying a real person without descriptive alt"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "A user or person needs to be visually identified",
+        "item2": "A list shows contributors, participants, or authors",
+        "item3": "A comment or message needs the face of its author",
+        "item4": "A profile header displays the user's primary photo"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The image represents a product or object — use <code>&lt;img&gt;</code> inside <code>AspectRatio</code>",
+        "item2": "The image is a brand logo — use <code>&lt;img&gt;</code> or SVG with specific <code>alt</code>",
+        "item3": "The photo needs to keep a non-circular aspect ratio — Avatar always crops to a circle"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Photo with descriptive <code>alt</code> and initials fallback.",
+        "dont": "Avatar without a fallback — breaks visually if the image fails."
+      },
+      "pair2": {
+        "do": "Initials as 2 uppercase letters derived from the name.",
+        "dont": "Fallback with 3+ letters or lowercase characters."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withIcon": "With icon as fallback:"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Available Variants",
+      "note": "Avatar has no visual variants via prop — the <em>variations</em> below combine size, content, and composition. Use <code>className</code> to adjust the diameter.",
+      "items": {
+        "image": "With loaded image. AvatarImage displays the photo; fallback is hidden after loading.",
+        "initials": "With initials as fallback. Used when there is no image or it fails to load.",
+        "icon": "With a generic icon (e.g. <code>User</code>) as fallback. Indicates anonymous or placeholder user.",
+        "group": "Avatars grouped with overlap via <code>-space-x-2</code> + <code>ring-2 ring-background</code>.",
+        "withStatus": "With an absolutely positioned status indicator. Signals presence or availability."
+      }
+    },
+    "states": {
+      "title": "Configurations",
+      "cols": {
+        "state": "Configuration",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "loaded": {
+        "label": "Image loaded",
+        "trigger": "<code>AvatarImage</code> with valid <code>src</code>",
+        "behavior": "Photo shown; fallback remains in DOM but hidden via CSS"
+      },
+      "loading": {
+        "label": "Loading",
+        "trigger": "Image in fetch — waiting for <code>delayMs</code>",
+        "behavior": "Fallback shown after the delay to prevent flash on fast connections"
+      },
+      "failed": {
+        "label": "Image failed",
+        "trigger": "Invalid <code>src</code>, 404, or offline",
+        "behavior": "Fallback shown permanently (initials or icon)"
+      },
+      "noImage": {
+        "label": "No image",
+        "trigger": "Omit <code>AvatarImage</code>",
+        "behavior": "Fallback shown immediately, no loading attempt"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "avatarTitle": "Avatar",
+      "avatarImageTitle": "AvatarImage",
+      "avatarFallbackTitle": "AvatarFallback",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "className": "Additional Tailwind classes — use to adjust size (<code>h-8 w-8</code>, <code>h-10 w-10</code>) and shape.",
+        "children": "Avatar content: AvatarImage and AvatarFallback.",
+        "src": "URL of the image to load. Supported formats: JPG, PNG, WebP, SVG.",
+        "alt": "Alternative text for screen readers. Use a person description or empty string if decorative.",
+        "onLoadingStatusChange": "Callback fired when loading status changes: <code>idle | loading | loaded | error</code>.",
+        "delayMs": "Delay in milliseconds before showing the fallback. Prevents flash for fast-loading images."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. Use semantic tokens (<code>bg-muted</code>, <code>text-muted-foreground</code>) on the fallback to respect the theme."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "muted": "AvatarFallback background",
+        "mutedForeground": "AvatarFallback text (initials)",
+        "background": "Ring color in grouping (<code>ring-background</code>)",
+        "border": "Optional container border",
+        "primary": "Background color of the online status indicator",
+        "radius": "Border radius — Avatar always uses <code>rounded-full</code>",
+        "ring": "Focus ring when receiving keyboard focus"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "Avatar itself is not interactive. When used as a trigger (link or button), it must be focusable and have a descriptive <code>aria-label</code>. Meets WCAG 2.1 AA: 1.1.1 (text alternative), 1.4.3 (contrast), and 4.1.2 (name and role).",
+      "item1": "<strong>Identifying image</strong> — descriptive <code>alt</code> with the person's name: <code>\"Profile picture of Maria Rodrigues\"</code>. Never use generic \"avatar\" or \"image\".",
+      "item2": "<strong>Decorative image</strong> — <code>alt=\"\"</code> when the name already appears next to it. Screen reader ignores the image and reads only the text.",
+      "item3": "<strong>Non-decorative fallback</strong> — initials and icons in the fallback must have <code>aria-hidden=\"true\"</code> when the image has a descriptive <code>alt</code>. Avoids duplication.",
+      "item4": "<strong>Avatar as link or button</strong> — wrap in <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> with contextual <code>aria-label</code>: <code>\"View Maria Rodrigues's profile\"</code>.",
+      "item5": "<strong>Status indicator</strong> — also communicate via text (<code>sr-only</code>) or <code>aria-label</code>. Never use color alone to communicate status (WCAG 1.4.1)."
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "badge": "For compact status indicators paired with the Avatar.",
+      "aspectRatio": "For product images or media that shouldn't be cropped to a circle.",
+      "tooltip": "To show the full name on hover over the Avatar.",
+      "card": "For profile cards combining Avatar, name, and metadata."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "The project's Avatar is based on Radix <code>AvatarPrimitive</code> — follows the Shadcn pattern. This ensures accessibility and consistent loading behavior across stacks.",
+      "tip2": "To group avatars, apply <code>-space-x-2</code> to the container and <code>ring-2 ring-background</code> on each Avatar. This creates the overlap with visual separation in both dark and light modes.",
+      "tip3": "The status indicator is a sibling <code>&lt;span&gt;</code>, not an Avatar prop. Position it with <code>absolute bottom-0 right-0</code> inside a <code>relative</code> wrapper."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Avatar itself emits no events. When used as a navigation trigger, track the container (link or button), not the Avatar.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "profileClick": "profile_click",
+        "profileClickTrigger": "User clicks the Avatar to open a profile",
+        "profileClickPayload": "{ user_id, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Avatar configuration.",
+        "item1": { "action": "Render with valid src", "result": "Image loaded; fallback hidden after onLoadingStatusChange='loaded'", "priority": "high" },
+        "item2": { "action": "Render with invalid src or 404", "result": "Fallback shown permanently; image hidden", "priority": "high" },
+        "item3": { "action": "Render without AvatarImage", "result": "Fallback shown immediately with no delay", "priority": "high" },
+        "item4": { "action": "Render with delayMs=600", "result": "Fallback waits 600ms before appearing on fast connections", "priority": "medium" },
+        "item5": { "action": "Render in a group with -space-x-2", "result": "Avatars overlap with ring-2 separating each one", "priority": "medium" },
+        "item6": { "action": "Render with size via className", "result": "h-8 w-8, h-10 w-10, h-12 w-12 apply correct diameters", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "AvatarImage with descriptive alt when identifying a person", "level": "AA", "how": "Inspect alt attribute in DOM" },
+        "item2": { "criterion": "AvatarFallback with aria-hidden=\"true\" when alt is descriptive", "level": "AA", "how": "Inspect attributes in DOM" },
+        "item3": { "criterion": "Minimum 4.5:1 contrast between initials and fallback background", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Playground — with valid image", "priority": "high" },
+        "item2": { "story": "Fallback — initials and icon", "priority": "high" },
+        "item3": { "story": "Sizes — h-6, h-8, h-10, h-12", "priority": "medium" },
+        "item4": { "story": "Compositions — group and with status", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "Configurations",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Avatar",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Representación visual de un usuario vía foto, iniciales o ícono genérico. Admite agrupación, tamaños e indicador de estado.",
+    "seo": {
+      "title": "Avatar — Display · Design System",
+      "description": "Documentación del Avatar: composición con imagen y fallback, tamaños vía className, agrupación e indicador de estado.",
+      "aiSummary": "Componente Avatar basado en Radix con Avatar, AvatarImage y AvatarFallback; tamaños vía className (h-6, h-8, h-10, h-12), soporte para agrupación y estado.",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, Tailwind CSS, WCAG 2.1",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "withImage": "Maria Rodrigues",
+        "withImageAlt": "Foto de perfil de Maria Rodrigues",
+        "withFallback": "Juan Pereira",
+        "withFallbackInitials": "JP",
+        "withIcon": "Usuario genérico",
+        "groupTitle": "Agrupación",
+        "statusTitle": "Con estado",
+        "statusOnline": "en línea"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Avatar</strong> — contenedor circular que define tamaño y recorte. Acepta <code>className</code> para variar el diámetro.",
+      "item2": "<strong>AvatarImage</strong> — <code>&lt;img&gt;</code> que carga la foto. Requiere <code>alt</code> descriptivo o vacío si es decorativo.",
+      "item3": "<strong>AvatarFallback</strong> — contenido mostrado mientras la imagen carga o cuando falla. Puede ser iniciales o un ícono.",
+      "item4": "<strong>Indicador de estado (opcional)</strong> — elemento hermano posicionado absolutamente sobre el Avatar. No es prop.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Avatar>                {/* Contenedor circular */}\n  <AvatarImage />       {/* Imagen con alt */}\n  <AvatarFallback />    {/* Iniciales o ícono */}\n</Avatar>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Incluye siempre <code>AvatarFallback</code> — aparece mientras la imagen carga y cuando falla.",
+        "item2": "Define <code>delayMs={600}</code> en el fallback para evitar flash cuando la imagen carga rápido.",
+        "item3": "Usa iniciales como fallback (primera letra del nombre + primera letra del apellido). Nunca más de 2 letras.",
+        "item4": "El tamaño se controla vía <code>className</code> (<code>h-8 w-8</code> es el predeterminado del proyecto) — no existe prop <code>size</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Identificar autor de un comentario", "u": "Sí, con imagen e iniciales", "a": "-" },
+        "item2": { "s": "Mostrar grupo de participantes", "u": "Sí, agrupado con <code>-space-x-2</code>", "a": "AvatarGroup estándar" },
+        "item3": { "s": "Ícono de marca o logo", "u": "No", "a": "Usar <code>&lt;img&gt;</code> o SVG directo" },
+        "item4": { "s": "Foto de producto en card", "u": "No", "a": "<code>AspectRatio</code> con <code>&lt;img&gt;</code>" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "alt": {
+            "name": "AvatarImage alt",
+            "format": "Foto de perfil de [Nombre completo] · o vacío si es decorativo",
+            "good": "\"Foto de perfil de Maria Rodrigues\" · <code>alt=\"\"</code>",
+            "bad": "\"Avatar\", \"Imagen\", \"Usuario\""
+          },
+          "initials": {
+            "name": "AvatarFallback",
+            "format": "2 letras mayúsculas · primera del nombre + primera del apellido",
+            "good": "\"MR\" (Maria Rodrigues) · \"JP\" (Juan Pereira)",
+            "bad": "\"MAR\", \"maria\", \"MARIA\", \"M\""
+          },
+          "status": {
+            "name": "Etiqueta de estado",
+            "format": "Adjetivo corto · minúscula · sin puntuación",
+            "good": "\"en línea\", \"ausente\", \"ocupado\"",
+            "bad": "\"En línea.\", \"Está en línea\", \"ACTIVO\""
+          },
+          "decorative": {
+            "name": "Avatar decorativo",
+            "format": "<code>alt=\"\"</code> en la imagen · fallback con <code>aria-hidden=\"true\"</code>",
+            "good": "Card estadístico con foto ilustrativa",
+            "bad": "Avatar que identifica persona real sin alt descriptivo"
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "Un usuario o persona necesita ser identificado visualmente",
+        "item2": "Una lista muestra colaboradores, participantes o autores",
+        "item3": "Un comentario o mensaje necesita el rostro de quien escribió",
+        "item4": "Un header de perfil exhibe la foto principal del usuario"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La imagen representa un producto u objeto — usa <code>&lt;img&gt;</code> dentro de <code>AspectRatio</code>",
+        "item2": "La imagen es un logo de marca — usa <code>&lt;img&gt;</code> o SVG con <code>alt</code> específico",
+        "item3": "La foto necesita mantener proporción no circular — Avatar siempre recorta en círculo"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Foto con <code>alt</code> descriptivo y fallback con iniciales.",
+        "dont": "Avatar sin fallback — rompe visualmente si la imagen falla."
+      },
+      "pair2": {
+        "do": "Iniciales en 2 letras mayúsculas derivadas del nombre.",
+        "dont": "Fallback con 3+ letras o caracteres minúsculos."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withIcon": "Con ícono como fallback:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Variantes Disponibles",
+      "note": "Avatar no tiene variantes visuales vía prop — las <em>variaciones</em> siguientes combinan tamaño, contenido y composición. Usa <code>className</code> para ajustar el diámetro.",
+      "items": {
+        "image": "Con imagen cargada. AvatarImage exhibe la foto; el fallback queda oculto tras la carga.",
+        "initials": "Con iniciales como fallback. Usado cuando no hay imagen o falla al cargar.",
+        "icon": "Con ícono genérico (ej: <code>User</code>) como fallback. Indica usuario anónimo o placeholder.",
+        "group": "Avatares agrupados con superposición vía <code>-space-x-2</code> + <code>ring-2 ring-background</code>.",
+        "withStatus": "Con indicador de estado posicionado absolutamente. Señala presencia o disponibilidad."
+      }
+    },
+    "states": {
+      "title": "Configuraciones",
+      "cols": {
+        "state": "Configuración",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "loaded": {
+        "label": "Imagen cargada",
+        "trigger": "<code>AvatarImage</code> con <code>src</code> válido",
+        "behavior": "Foto mostrada; fallback permanece en el DOM pero oculto vía CSS"
+      },
+      "loading": {
+        "label": "Cargando",
+        "trigger": "Imagen en fetch — esperando <code>delayMs</code>",
+        "behavior": "Fallback mostrado tras el delay para evitar flash en conexiones rápidas"
+      },
+      "failed": {
+        "label": "Imagen falló",
+        "trigger": "<code>src</code> inválido, 404 o sin conexión",
+        "behavior": "Fallback mostrado permanentemente (iniciales o ícono)"
+      },
+      "noImage": {
+        "label": "Sin imagen",
+        "trigger": "Omitir <code>AvatarImage</code>",
+        "behavior": "Fallback mostrado inmediatamente, sin intento de carga"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "avatarTitle": "Avatar",
+      "avatarImageTitle": "AvatarImage",
+      "avatarFallbackTitle": "AvatarFallback",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "className": "Clases Tailwind adicionales — usar para ajustar tamaño (<code>h-8 w-8</code>, <code>h-10 w-10</code>) y forma.",
+        "children": "Contenido del Avatar: AvatarImage y AvatarFallback.",
+        "src": "URL de la imagen a cargar. Formatos admitidos: JPG, PNG, WebP, SVG.",
+        "alt": "Texto alternativo para lectores de pantalla. Usa descripción de la persona o vacío si es decorativo.",
+        "onLoadingStatusChange": "Callback disparado cuando cambia el estado de carga: <code>idle | loading | loaded | error</code>.",
+        "delayMs": "Retraso en milisegundos antes de mostrar el fallback. Previene flash en imágenes que cargan rápido."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Usa tokens semánticos (<code>bg-muted</code>, <code>text-muted-foreground</code>) en el fallback para respetar el tema."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "muted": "Fondo del AvatarFallback",
+        "mutedForeground": "Texto del AvatarFallback (iniciales)",
+        "background": "Color del ring en la agrupación (<code>ring-background</code>)",
+        "border": "Borde opcional del contenedor",
+        "primary": "Color de fondo del indicador de estado en línea",
+        "radius": "Border radius — Avatar siempre usa <code>rounded-full</code>",
+        "ring": "Anillo de foco al recibir foco vía teclado"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "Avatar en sí no es interactivo. Cuando se usa como trigger (link o botón), debe recibir foco y tener <code>aria-label</code> descriptivo. Cumple WCAG 2.1 AA: 1.1.1 (texto alternativo), 1.4.3 (contraste) y 4.1.2 (nombre y rol).",
+      "item1": "<strong>Imagen identificadora</strong> — <code>alt</code> descriptivo con el nombre de la persona: <code>\"Foto de perfil de Maria Rodrigues\"</code>. Nunca uses \"avatar\" o \"imagen\" genérico.",
+      "item2": "<strong>Imagen decorativa</strong> — <code>alt=\"\"</code> cuando el nombre ya aparece al lado. El lector de pantalla ignora la imagen y lee solo el texto.",
+      "item3": "<strong>Fallback no decorativo</strong> — iniciales e íconos del fallback deben tener <code>aria-hidden=\"true\"</code> cuando la imagen tiene <code>alt</code> descriptivo. Evita duplicación en la lectura.",
+      "item4": "<strong>Avatar como link o botón</strong> — envuelve en <code>&lt;a&gt;</code> o <code>&lt;button&gt;</code> con <code>aria-label</code> contextual: <code>\"Ver perfil de Maria Rodrigues\"</code>.",
+      "item5": "<strong>Indicador de estado</strong> — comunica también vía texto (<code>sr-only</code>) o <code>aria-label</code>. Nunca uses solo color para comunicar estado (WCAG 1.4.1)."
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "badge": "Para indicadores de estado compactos que acompañan al Avatar.",
+      "aspectRatio": "Para imágenes de producto o media que no deben ser recortadas en círculo.",
+      "tooltip": "Para mostrar el nombre completo al pasar el cursor sobre el Avatar.",
+      "card": "Para cards de perfil que combinan Avatar, nombre y metadatos."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "El Avatar del proyecto se basa en Radix <code>AvatarPrimitive</code> — sigue el patrón de Shadcn. Esto garantiza accesibilidad y comportamiento de carga consistentes entre stacks.",
+      "tip2": "Para agrupar avatares, aplica <code>-space-x-2</code> en el contenedor y <code>ring-2 ring-background</code> en cada Avatar. Esto crea la superposición con separación visual en dark y light mode.",
+      "tip3": "El indicador de estado es un <code>&lt;span&gt;</code> hermano, no una prop del Avatar. Posiciónalo con <code>absolute bottom-0 right-0</code> dentro de un wrapper <code>relative</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Avatar por sí solo no emite eventos. Cuando se usa como trigger de navegación, rastrea el contenedor (link o botón), no el Avatar.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "profileClick": "profile_click",
+        "profileClickTrigger": "Usuario hace click en el Avatar para abrir un perfil",
+        "profileClickPayload": "{ user_id, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada configuración del Avatar.",
+        "item1": { "action": "Renderizar con src válido", "result": "Imagen cargada; fallback oculto tras onLoadingStatusChange='loaded'", "priority": "high" },
+        "item2": { "action": "Renderizar con src inválido o 404", "result": "Fallback mostrado permanentemente; imagen oculta", "priority": "high" },
+        "item3": { "action": "Renderizar sin AvatarImage", "result": "Fallback mostrado inmediatamente sin delay", "priority": "high" },
+        "item4": { "action": "Renderizar con delayMs=600", "result": "Fallback espera 600ms antes de aparecer en conexiones rápidas", "priority": "medium" },
+        "item5": { "action": "Renderizar en grupo con -space-x-2", "result": "Avatares superpuestos con ring-2 separando cada uno", "priority": "medium" },
+        "item6": { "action": "Renderizar con tamaño vía className", "result": "h-8 w-8, h-10 w-10, h-12 w-12 aplican diámetros correctos", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "AvatarImage con alt descriptivo cuando identifica persona", "level": "AA", "how": "Inspeccionar atributo alt en el DOM" },
+        "item2": { "criterion": "AvatarFallback con aria-hidden=\"true\" cuando alt es descriptivo", "level": "AA", "how": "Inspeccionar atributos en el DOM" },
+        "item3": { "criterion": "Contraste mínimo 4.5:1 entre iniciales y fondo del fallback", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Playground — con imagen válida", "priority": "high" },
+        "item2": { "story": "Fallback — iniciales e ícono", "priority": "high" },
+        "item3": { "story": "Tamaños — h-6, h-8, h-10, h-12", "priority": "medium" },
+        "item4": { "story": "Composiciones — grupo y con estado", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Configuraciones",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}

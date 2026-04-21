@@ -6,7 +6,6 @@ import AlertDialogStory from './AlertDialogStory.svelte';
 const meta = {
   title: 'UI/AlertDialog/Composições',
   component: AlertDialog,
-  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {

@@ -16,7 +16,6 @@ import { Button } from '@/components/ui/button';
 const meta = {
   title: 'UI/AlertDialog/Composições',
   component: AlertDialog,
-  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {

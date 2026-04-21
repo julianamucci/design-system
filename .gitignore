@@ -3,6 +3,9 @@ node_modules/
 .pnp
 .pnp.js
 
+# Pipeline context cache (gerado por /pipeline, transitório)
+.pipeline-context/
+
 # Testing
 coverage/
 
