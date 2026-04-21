@@ -34,7 +34,7 @@ export const Loaded: Story = {
     }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const img = canvas.getByRole('img') as HTMLImageElement;
+    const img = (await canvas.findByRole('img')) as HTMLImageElement;
     await expect(img).toBeInTheDocument();
     await expect(img.alt).toBe('Foto de perfil de Maria Rodrigues');
   },

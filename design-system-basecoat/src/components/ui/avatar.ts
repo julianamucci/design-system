@@ -74,17 +74,28 @@ export function createAvatar(options: AvatarComposedOptions = {}): HTMLElement {
   if (src) {
     const img = createAvatarImage({ src, alt });
 
-    // Hide fallback while image is present and loading.
-    fallback.style.display = 'none';
-
-    img.addEventListener('error', () => {
+    const showImage = () => {
+      img.style.display = '';
+      fallback.style.display = 'none';
+    };
+    const showFallback = () => {
       img.style.display = 'none';
       fallback.style.display = '';
-    });
+    };
 
-    img.addEventListener('load', () => {
-      fallback.style.display = 'none';
-    });
+    // Fallback is visible by default so screen readers and tests see content
+    // even if the image is still loading or fails.
+    img.style.display = 'none';
+
+    img.addEventListener('load', showImage);
+    img.addEventListener('error', showFallback);
+
+    // If the browser resolved the image synchronously (cached) before listeners
+    // were attached, reconcile state now.
+    if (img.complete) {
+      if (img.naturalWidth > 0) showImage();
+      else showFallback();
+    }
 
     root.appendChild(img);
   }
