@@ -16,6 +16,12 @@ Este arquivo registra toda divergência intencional entre os componentes deste d
 > **Histórico de stack de primitivas (React):**
 > - Até 2026-04-21: `@radix-ui/react-*` individuais (modo legado)
 > - De 2026-04-21 em diante: `@base-ui/react` (registry `base-nova` do shadcn). **Zero deps `@radix-ui/*`** — `form.tsx`, `toast.tsx`, `toaster.tsx` e `use-toast.ts` foram deletados (órfãos; App.tsx já usava `sonner` há algum tempo).
+>
+> **Breaking changes de comportamento cross-stack pós-migração nova (2026-04-21):**
+> - **React (base-ui):** `asChild` prop removido — usar `render={<Component />}` prop. `Accordion` usa `aria-disabled` em vez de atributo `disabled` nativo.
+> - **Svelte (bits-ui 2.18):** `AlertDialogAction` **não fecha automaticamente** o dialog — consumidor precisa fazer `open = false` no handler. `Accordion` não aceita mais `defaultValue` — usar `bind:value`.
+> - **Vue (reka-ui 2.9.6):** `AvatarImage` força `role="img"` no `<img>` — alt vazio (`alt=""`) causa violação `aria-allowed-role`. Sempre usar alt descritivo.
+> - **Todas stacks:** variante `destructive` agora é soft (`bg-destructive/10 text-destructive`) em vez de sólida. Mudança visual esperada.
 
 ## Fluxo de atualização
 
