@@ -460,7 +460,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             ),
             dontPreview: (
               <Avatar>
-                <AvatarFallback className="text-[10px]">mar</AvatarFallback>
+                <AvatarFallback className="text-xs">mar</AvatarFallback>
               </Avatar>
             ),
             doCaption: tContent("doDont.pair2.do"),
