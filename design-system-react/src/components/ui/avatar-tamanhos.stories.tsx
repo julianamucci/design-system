@@ -53,7 +53,7 @@ export const Size8: Story = {
 };
 
 export const Size10: Story = {
-  name: "h-10 w-10 (padrão)",
+  name: "size-8 (padrão)",
   render: () => (
     <Avatar>
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
@@ -61,10 +61,10 @@ export const Size10: Story = {
     </Avatar>
   ),
   play: async ({ canvasElement, step }) => {
-    const root = canvasElement.querySelector('[class*="rounded-full"]');
-    await step("Tamanho padrão h-10 w-10 aplicado sem className extra", async () => {
-      await expect(root).toHaveClass("h-10");
-      await expect(root).toHaveClass("w-10");
+    const root = canvasElement.querySelector('[data-slot="avatar"]');
+    await step("Tamanho padrão size-8 aplicado sem className extra (radix-nova)", async () => {
+      await expect(root).toHaveClass("size-8");
+      await expect(root).toHaveAttribute("data-size", "default");
     });
   },
 };

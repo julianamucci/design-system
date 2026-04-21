@@ -47,16 +47,16 @@ export const Playground: Story = {
       await expect(img || fallback).toBeTruthy();
     });
 
-    await step("Container circular com overflow-hidden", async () => {
-      const root = canvasElement.querySelector('[class*="rounded-full"]');
+    await step("Container circular renderizado", async () => {
+      const root = canvasElement.querySelector('[data-slot="avatar"]');
       await expect(root).toBeInTheDocument();
-      await expect(root).toHaveClass("overflow-hidden");
+      await expect(root).toHaveClass("rounded-full");
     });
 
-    await step("Tamanho padrão é h-10 w-10", async () => {
-      const root = canvasElement.querySelector('[class*="rounded-full"]');
-      await expect(root).toHaveClass("h-10");
-      await expect(root).toHaveClass("w-10");
+    await step("Tamanho padrão é size-8 (radix-nova)", async () => {
+      const root = canvasElement.querySelector('[data-slot="avatar"]');
+      await expect(root).toHaveClass("size-8");
+      await expect(root).toHaveAttribute("data-size", "default");
     });
   },
 };

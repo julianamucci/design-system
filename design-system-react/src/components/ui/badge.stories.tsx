@@ -41,12 +41,13 @@ export const Playground: Story = {
       await expect(badge).toBeVisible();
     });
 
-    await step("Variante default aplica bg-primary", async () => {
+    await step("Badge expõe data-slot e data-variant para tooling", async () => {
       const badge = canvas.getByText(String(args.children));
-      await expect(badge).toHaveClass("bg-primary");
+      await expect(badge).toHaveAttribute("data-slot", "badge");
+      await expect(badge).toHaveAttribute("data-variant", String(args.variant ?? "default"));
     });
 
-    await step("Badge usa classes base de inline-flex", async () => {
+    await step("Badge usa layout inline-flex", async () => {
       const badge = canvas.getByText(String(args.children));
       await expect(badge).toHaveClass("inline-flex");
       await expect(badge).toHaveClass("items-center");
@@ -55,7 +56,7 @@ export const Playground: Story = {
     await step("Badge tem tipografia compacta", async () => {
       const badge = canvas.getByText(String(args.children));
       await expect(badge).toHaveClass("text-xs");
-      await expect(badge).toHaveClass("font-semibold");
+      await expect(badge).toHaveClass("font-medium");
     });
   },
 };
