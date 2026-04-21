@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import type { AvatarImageProps } from "reka-ui"
-import { AvatarImage } from "reka-ui"
+import type { AvatarImageProps } from 'reka-ui'
+import { AvatarImage } from 'reka-ui'
 
 const props = defineProps<AvatarImageProps>()
 </script>
 
 <template>
-  <!-- PATCH: bugfix — object-cover evita distorção de imagens não-quadradas em container circular (ver PATCHES.md#avatar-object-cover) -->
   <AvatarImage
     data-slot="avatar-image"
     v-bind="props"
-    class="aspect-square h-full w-full object-cover"
+    class="rounded-full aspect-square size-full object-cover"
   >
     <slot />
   </AvatarImage>

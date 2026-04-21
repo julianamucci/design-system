@@ -9,8 +9,8 @@ const props = defineProps<{
 
 <template>
   <div
-    data-slot="alert-description"
-    :class="cn('text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground', props.class)"
+    data-slot="alert-action"
+    :class="cn('absolute top-2 right-2', props.class)"
   >
     <slot />
   </div>
