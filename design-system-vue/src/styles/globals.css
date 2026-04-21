@@ -49,6 +49,9 @@
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
+  /* Spacing base (Tailwind v4) — p-{n}, gap-{n}, m-{n} = n × --spacing */
+  --spacing: var(--spacing-base);
+
   /* Typography Mappings */
   --font-sans: var(--font-family);
   --font-base-size: var(--font-size);

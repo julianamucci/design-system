@@ -7,6 +7,9 @@
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-luma {
+  /* Spacing — Luma é 25% mais folgado (elegante, soft) */
+  --spacing-base: 0.3125rem; /* 5px base (vs 4px Nova) */
+
   /* Radius — arredondado mas não pill */
   --radius: 1rem;           /* 16px */
   --radius-button: 1.25rem; /* 20px */

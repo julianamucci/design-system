@@ -7,6 +7,9 @@
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-vega {
+  /* Spacing — Vega é 10% mais folgado que Nova (paddings, gaps, margins) */
+  --spacing-base: 0.275rem; /* 4.4px base (vs 4px Nova) */
+
   /* Radius — Vega usa rounded-md (6px) em vez do 8px padrão */
   --radius: 6px;
   --radius-button: 6px;

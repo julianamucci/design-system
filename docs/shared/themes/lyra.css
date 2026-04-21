@@ -7,6 +7,9 @@
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-lyra {
+  /* Spacing — Lyra é 20% mais compacto (denso, brutalista) */
+  --spacing-base: 0.2rem; /* 3.2px base (vs 4px Nova) */
+
   /* Radius — Lyra é retangular puro */
   --radius: 0px;
   --radius-button: 0px;

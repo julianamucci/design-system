@@ -7,6 +7,9 @@
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-maia {
+  /* Spacing — Maia é 25% mais folgado (friendly, acolhedor) */
+  --spacing-base: 0.3125rem; /* 5px base (vs 4px Nova) */
+
   /* Radius — Maia é pill-shaped */
   --radius: 1rem;           /* 16px */
   --radius-button: 9999px;  /* full-round */

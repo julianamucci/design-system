@@ -7,6 +7,9 @@
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-sera {
+  /* Spacing — Sera mantém baseline de Nova (equilíbrio/orgânico) */
+  /* --spacing-base: 0.25rem; — herda do default; não override */
+
   /* Radius — caminho do meio */
   --radius: 10px;
   --radius-button: 10px;

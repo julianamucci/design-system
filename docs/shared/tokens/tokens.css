@@ -77,6 +77,12 @@
   --ring-offset-width: 2px;
   --ring-offset-color: 0 0% 100%;
 
+  /* Spacing base — consumido pelo Tailwind v4 via @theme inline (--spacing).
+     Tailwind calcula p-{n}, gap-{n}, m-{n}, space-{n}, etc. como n × --spacing-base.
+     Temas podem override este valor para ficarem mais densos (Lyra/Mira) ou
+     folgados (Maia/Luma), afetando TODOS os espaçamentos proporcionalmente. */
+  --spacing-base: 0.25rem; /* 4px — padrão Tailwind */
+
   /* Elevation / Shadows */
   --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
   --elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
