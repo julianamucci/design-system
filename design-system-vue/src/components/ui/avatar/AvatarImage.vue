@@ -6,6 +6,7 @@ const props = defineProps<AvatarImageProps>()
 </script>
 
 <template>
+  <!-- PATCH: bugfix — object-cover evita distorção de imagens não-quadradas em container circular (ver PATCHES.md#avatar-object-cover) -->
   <AvatarImage
     data-slot="avatar-image"
     v-bind="props"

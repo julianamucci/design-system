@@ -145,3 +145,29 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
 **Motivo:** `basecoat-css` define `.alert { display: grid; grid-cols: [ícone 16px][1fr] }` e aplica `col-start-2` via seletor `> section` (e `> h5`). A factory original retornava `<div>`, então a descrição ficava fora do selector e renderizava na coluna estreita do ícone, quebrando visualmente quando há SVG presente.
 
 **Verificação após bump:** inspecionar `node_modules/basecoat-css/dist/basecoat.css` — se o seletor `> section` for substituído por `> div` ou `[data-slot="alert-description"]`, ajustar a factory conforme o novo contrato.
+
+### avatar — `object-cover` na imagem (4 stacks) {#avatar-object-cover}
+
+- **Arquivos:**
+  - `design-system-react/src/components/ui/avatar.tsx` (AvatarImage)
+  - `design-system-vue/src/components/ui/avatar/AvatarImage.vue`
+  - `design-system-svelte/src/components/ui/avatar/avatar-image.svelte`
+  - `design-system-basecoat/src/components/ui/avatar.ts` (`createAvatarImage`)
+- **Categoria:** bugfix (distorção visual)
+- **Data:** 2026-04-21
+- **Upstream ref:** shadcn/ui, shadcn-vue, shadcn-svelte — todos entregam `AvatarImage` sem `object-cover`
+
+**Antes (upstream):**
+```tsx
+className={cn("aspect-square h-full w-full", className)}
+```
+
+**Depois (custom):**
+```tsx
+// PATCH: bugfix — object-cover evita distorção de imagens não-quadradas em container circular (ver PATCHES.md#avatar-object-cover)
+className={cn("aspect-square h-full w-full object-cover", className)}
+```
+
+**Motivo:** o container do Avatar é `rounded-full` com `aspect-square`, mas sem `object-cover` imagens não-quadradas são esticadas/achatadas em vez de cortadas, causando distorção visível no retrato (ex: rosto achatado horizontalmente). `object-cover` preserva a proporção da imagem e corta o excedente — comportamento esperado de avatar em todo produto consumidor. Wrapper não resolve porque o `<img>` é renderizado pelo primitive (Radix/Reka/Bits); a única forma limpa é passar a classe no próprio componente.
+
+**Verificação após bump:** se `shadcn@latest add avatar` passar a incluir `object-cover` por padrão, remover markers e marcar como RESOLVIDO UPSTREAM. Teste visual: usar imagem retangular (ex: `https://picsum.photos/400/600`) — no bom o rosto/objeto mantém proporção; no ruim fica esticado.

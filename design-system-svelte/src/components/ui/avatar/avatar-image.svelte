@@ -9,6 +9,7 @@
 	}: AvatarPrimitive.ImageProps = $props();
 </script>
 
+<!-- PATCH: bugfix — object-cover evita distorção de imagens não-quadradas em container circular (ver PATCHES.md#avatar-object-cover) -->
 <AvatarPrimitive.Image
 	bind:ref
 	data-slot="avatar-image"

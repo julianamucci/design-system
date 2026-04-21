@@ -42,6 +42,7 @@ export function createAvatarImage(options: AvatarImageOptions): HTMLImageElement
   const img = document.createElement('img');
   img.src = src;
   img.alt = alt;
+  // PATCH: bugfix — object-cover evita distorção de imagens não-quadradas em container circular (ver PATCHES.md#avatar-object-cover)
   img.className = 'aspect-square h-full w-full object-cover';
   if (className) img.classList.add(...className.split(' ').filter(Boolean));
 
