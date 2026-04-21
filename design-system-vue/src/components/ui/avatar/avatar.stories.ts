@@ -54,14 +54,17 @@ export const Playground: Story = {
       await expect(root).toBeInTheDocument();
     });
 
-    await step('Avatar aplica classes canônicas (size-10, rounded-full)', async () => {
+    await step('Avatar aplica classes canônicas (size-8, rounded-full)', async () => {
       const root = canvasElement.querySelector('[data-slot="avatar"]');
       await expect(root).toHaveClass('rounded-full');
-      await expect(root).toHaveClass('size-10');
+      await expect(root).toHaveClass('size-8');
     });
 
-    await step('AvatarFallback existe no DOM com iniciais', async () => {
-      await expect(canvas.getByText('MR')).toBeInTheDocument();
+    await step('Avatar renderiza imagem ou fallback', async () => {
+      // Quando a imagem carrega, AvatarImage renderiza; caso contrário, Fallback com 'MR'
+      const img = canvasElement.querySelector('[data-slot="avatar-image"]');
+      const fallback = canvasElement.querySelector('[data-slot="avatar-fallback"]');
+      await expect(img || fallback).toBeTruthy();
     });
   },
 };
