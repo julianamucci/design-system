@@ -1,0 +1,76 @@
+import type { Meta, StoryObj } from '@storybook/vue3';
+import { Avatar, AvatarImage, AvatarFallback } from './index';
+
+const meta = {
+  title: 'UI/Avatar/Tamanhos',
+  component: Avatar,
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component:
+          'Tamanhos são controlados via className (h-6 w-6, h-8 w-8, h-10 w-10 padrão, h-12 w-12). Não existe prop size.',
+      },
+    },
+  },
+} satisfies Meta<typeof Avatar>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+const demoSrc =
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format';
+const demoAlt = 'Foto de perfil de Maria Rodrigues';
+
+export const Size6: Story = {
+  render: () => ({
+    components: { Avatar, AvatarImage, AvatarFallback },
+    setup() { return { demoSrc, demoAlt }; },
+    template: `
+      <Avatar class="h-6 w-6">
+        <AvatarImage :src="demoSrc" :alt="demoAlt" />
+        <AvatarFallback class="text-[0.625rem]">MR</AvatarFallback>
+      </Avatar>
+    `,
+  }),
+};
+
+export const Size8: Story = {
+  render: () => ({
+    components: { Avatar, AvatarImage, AvatarFallback },
+    setup() { return { demoSrc, demoAlt }; },
+    template: `
+      <Avatar class="h-8 w-8">
+        <AvatarImage :src="demoSrc" :alt="demoAlt" />
+        <AvatarFallback class="text-xs">MR</AvatarFallback>
+      </Avatar>
+    `,
+  }),
+};
+
+export const Size10: Story = {
+  name: 'Size10 (default)',
+  render: () => ({
+    components: { Avatar, AvatarImage, AvatarFallback },
+    setup() { return { demoSrc, demoAlt }; },
+    template: `
+      <Avatar>
+        <AvatarImage :src="demoSrc" :alt="demoAlt" />
+        <AvatarFallback>MR</AvatarFallback>
+      </Avatar>
+    `,
+  }),
+};
+
+export const Size12: Story = {
+  render: () => ({
+    components: { Avatar, AvatarImage, AvatarFallback },
+    setup() { return { demoSrc, demoAlt }; },
+    template: `
+      <Avatar class="h-12 w-12">
+        <AvatarImage :src="demoSrc" :alt="demoAlt" />
+        <AvatarFallback>MR</AvatarFallback>
+      </Avatar>
+    `,
+  }),
+};
