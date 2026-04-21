@@ -751,11 +751,13 @@ export const Default: Story = {
 
 ### Componentes sem interação
 
-Para componentes estáticos (Badge, Separator, Avatar):
+Para componentes estáticos (Badge, Separator):
 - Omitir grupos que não se aplicam (Composições, Estados)
 - Omitir `onClick`/play function do Playground
 - Remover seções correspondentes de `navGroups` e **não** renderizar o container
 - Manter no mínimo: `DocsHeader` + `DocsDemonstration` + `DocsVariants` + `DocsProps` + `DocsAccessibility`
+
+> Avatar **não entra aqui** — apesar de não ser interativo, tem composições, estados (`loaded`/`loading`/`failed`/`noImage`) e tokens próprios. Ver padrão dedicado na seção abaixo.
 
 ---
 
@@ -849,3 +851,20 @@ Componentes como **AspectRatio** (`@radix-ui/react-aspect-ratio`) preservam prop
 10. **Stories** — criar apenas `aspect-ratio.stories.tsx`, `aspect-ratio-variantes.stories.tsx` e `aspect-ratio-composicoes.stories.tsx`. **Omitir** `-tamanhos` (não tem prop `size`) e `-estados` (stateless). Apenas o arquivo principal leva `tags: ["autodocs"]` + `withAutoDocsTab(AspectRatioDocs)`.
 11. **`rounded-md` / `border` no filho** — regra visual absoluta. Nunca aplicar no wrapper AspectRatio (o raio cortaria o cálculo de `padding-bottom` e borderia um container vazio). Documentado nos pares Do/Don't e em `notes`.
 12. **`ImageWithFallback`** — em React, usar sempre `@/components/figma/ImageWithFallback` para `<img>` dentro de AspectRatio (loading lazy/decoding async já embutidos). Nunca `<img>` cru em docs previews.
+
+### Componentes Display Compositionais com Estados (padrão Avatar)
+
+Componentes como **Avatar** (`@radix-ui/react-avatar`: `Avatar`, `AvatarImage`, `AvatarFallback`) são displays passivos com **composições** em vez de variantes `cva()` — todas as "variantes" são padrões de composição de filhos. Têm tamanho padrão embutido e estados internos de carregamento de imagem.
+
+1. **Sem `cva()` / sem prop `size`** — o Root aplica `h-10 w-10` fixo internamente. Tamanhos adicionais (`h-6 w-6`, `h-8 w-8`, `h-10 w-10`, `h-12 w-12`) vêm **sempre** via `className`. **Não criar prop `size`.**
+2. **`DocsVariants`** — **title**: "Composições" ou equivalente. `items` com 5 entradas canônicas: `image`, `initials`, `icon`, `group`, `withStatus`. Cada `preview` monta a composição completa (Root + filhos + wrappers absolutos quando aplicável). Não há variantes `cva()`.
+3. **`DocsAnatomy`** — 4 items: `Avatar` (Root), `AvatarImage`, `AvatarFallback`, e o elemento sibling de status (quando aplicável) / ring em grupos. `structureCode` mostra a hierarquia `<Avatar><AvatarImage /><AvatarFallback>…</AvatarFallback></Avatar>`.
+4. **`DocsStates`** — 4 linhas: `loaded`, `loading`, `failed`, `noImage`. Omitir `disabled`/`error` — Avatar é passivo. A coluna "Gatilho" descreve o estado da imagem (`onLoadingStatusChange`); "Comportamento" descreve qual filho é renderizado pelo Radix.
+5. **`DocsProps`** — 3 tables: `Avatar` (`className`, `asChild`, `children`), `AvatarImage` (`src`, `alt`, `onLoadingStatusChange`, `className`), `AvatarFallback` (`delayMs`, `className`, `children`). `src` e `alt` são **obrigatórios** em `AvatarImage`. `delayMs={600}` é o valor canônico no `AvatarFallback`.
+6. **`DocsTokens`** — 7 tokens: `--muted` (`bg-muted` no Fallback), `--muted-foreground` (texto das iniciais), `--background` (`ring-background` em grupos e status), `--border`, `--primary` (indicador de status online), `--radius` (`rounded-full` fixo), `--ring` (foco via Radix quando dentro de link/botão).
+7. **`DocsAccessibility`** — regras obrigatórias: (a) `alt` descritivo (`"Foto de perfil de [Nome]"`) em `AvatarImage` quando é a única pista visual; (b) `alt=""` + `AvatarFallback aria-hidden="true"` quando o nome já está visível ao lado; (c) indicador de status com `<span aria-label="Online">` (ou equivalente); (d) grupo opcional com `role="group" aria-label="Participantes"` no wrapper; (e) contraste das iniciais ≥ 4.5:1.
+8. **`DocsAnalytics`** — Avatar é passivo: listar apenas os eventos da docs (`docs_page_view`, `docs_section_viewed`, `language_switched`). Incluir `avatar_click` (`{ component: 'avatar', location, label }`) **apenas** quando o Avatar está envolvido por link/botão em produto.
+9. **`DocsDoDont`** — pares canônicos: (a) "com fallback de iniciais" vs "sem fallback" (imagem quebrada resulta em container vazio); (b) "iniciais como 2 letras maiúsculas" vs "iniciais em minúsculas/3+ letras".
+10. **Stories** — criar 4 arquivos: `avatar.stories.tsx` (Playground + `tags: ["autodocs"]` + `withAutoDocsTab(AvatarDocs)`), `avatar-composicoes.stories.tsx` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-tamanhos.stories.tsx` (Size6, Size8, Size10 default, Size12), `avatar-estados.stories.tsx` (Loaded, Loading com `delayMs`, Failed, NoImage). **Não criar `avatar-variantes.stories.tsx`** — as "variantes" são composicionais e vão em `-composicoes`. Apenas o arquivo principal leva `tags: ["autodocs"]`.
+11. **`AvatarFallback` obrigatório** — regra visual absoluta: toda instância com `AvatarImage` precisa de `AvatarFallback` irmão. Sem ele, quando `src` falha/demora, o container fica vazio. Documentar no par Do/Don't e em `notes`.
+12. **Iniciais canônicas** — 2 letras maiúsculas: primeira letra do nome + primeira do sobrenome (`"João da Silva"` → `"JS"`, `"Maria"` → `"MA"`). Regra de UX writing fica em `usage.uxWriting.table.initials`.

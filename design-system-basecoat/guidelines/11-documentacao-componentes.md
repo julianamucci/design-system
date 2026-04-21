@@ -513,6 +513,23 @@ Componentes como **AspectRatio** usam a factory `createAspectRatio({ ratio, cont
 10. **Stories** — criar apenas `.stories.ts`, `-variantes` e `-composicoes`. **Omitir** `-tamanhos` (sem `size`) e `-estados` (stateless). Previews chamam `createAspectRatio({ ratio, content })` onde `content` é criado via `document.createElement('img')` com `alt`, `loading="lazy"`, `decoding="async"` e classes `rounded-md object-cover w-full h-full`.
 11. **`rounded-md` / `border` no `content`** — regra visual absoluta: nunca aplicar no wrapper AspectRatio; aplicar sempre no elemento `HTMLElement` passado como `content`.
 
+### Componentes Display Compositionais com Estados (padrão Avatar)
+
+Componentes como **Avatar** usam as factories vanilla-TS `createAvatar`, `createAvatarRoot`, `createAvatarImage`, `createAvatarFallback` de `./avatar`. São displays passivos com **composições** em vez de variantes `cva()`. O Root aplica `h-10 w-10` por padrão.
+
+1. **Sem `cva()` / sem `size`** — `createAvatarRoot` sempre renderiza `h-10 w-10`. Outros tamanhos (`h-6 w-6`, `h-8 w-8`, `h-12 w-12`) vêm via `className`. **Não aceitar `size` na factory.**
+2. **`createDocsVariants`** — `items` com 5 entradas: `com imagem`, `com iniciais`, `com ícone`, `agrupamento`, `com status`. Cada `previewFactory` retorna um `HTMLElement` montado via as factories de avatar (ou combinações manuais com `document.createElement` para wrappers como `flex -space-x-2` e `relative inline-block`). Sem `cva()`.
+3. **`createDocsAnatomy`** — 4 items: Root (`createAvatarRoot`), Image (`createAvatarImage`), Fallback (`createAvatarFallback`), e o sibling de status ou o ring em grupos.
+4. **`createDocsStates`** — 4 linhas: `loaded`, `loading`, `failed`, `noImage`. Omitir `disabled`/`error`. Como a base é vanilla, o fallback troca via listener `onerror` da `<img>` (a própria factory cuida disso quando `createAvatar` é chamado com `src` + `fallbackText`).
+5. **`createDocsProps`** — 3 tables: `createAvatarRoot` (`className`), `createAvatarImage` (`src`, `alt`, `className`), `createAvatarFallback` (`text`, `className`). A factory de alto nível `createAvatar({ src, alt, fallbackText, className })` pode ser documentada em nota ou em um 4º table — escolher uma das abordagens e manter consistente. **Não existe `delayMs` na factory vanilla** — documentar ausência em `notes` quando for relevante (outras stacks aceitam `delayMs`).
+6. **`createDocsTokens`** — 7 tokens: `--muted`, `--muted-foreground`, `--background`, `--border`, `--primary`, `--radius` (`rounded-full` fixo), `--ring`.
+7. **`createDocsAccessibility`** — (a) `alt` descritivo em `createAvatarImage` quando é única pista visual; (b) `alt=""` + `setAttribute('aria-hidden', 'true')` no fallback quando o nome está visível; (c) `setAttribute('aria-label', 'Online')` no `<span>` de status; (d) `role="group"` + `aria-label` no wrapper de grupo; (e) contraste iniciais ≥ 4.5:1.
+8. **`createDocsAnalytics`** — Avatar é passivo: apenas eventos da docs. Incluir `avatar_click` só quando envolvido por link/botão em produto.
+9. **`createDocsDoDont`** — pares canônicos: (a) "com fallback" (`createAvatar({ src, alt, fallbackText })`) vs "sem fallback" (`createAvatarRoot()` + `createAvatarImage()` sem `createAvatarFallback`); (b) "iniciais 2 letras maiúsculas" vs "iniciais minúsculas/3+ letras".
+10. **Stories** — 4 arquivos: `avatar.stories.ts` (Playground + `withAutoDocsTab`), `avatar-composicoes.stories.ts` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-tamanhos.stories.ts` (Size6, Size8, Size10 default, Size12), `avatar-estados.stories.ts` (Loaded, Loading, Failed, NoImage). **Não criar `avatar-variantes.stories.ts`**. Apenas o principal leva `tags: ["autodocs"]`. As sub-stories chamam a factory que constrói o elemento e fazem `render: () => el`.
+11. **`AvatarFallback` obrigatório** — toda composição com `createAvatarImage` deve incluir `createAvatarFallback` irmão. Sem ele, erro de `src` deixa o container vazio. Documentar em par Do/Don't e em `notes`.
+12. **Iniciais canônicas** — 2 letras maiúsculas: primeira do nome + primeira do sobrenome. Regra em `usage.uxWriting.table.initials`.
+
 ---
 
 ## Proibições

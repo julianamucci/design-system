@@ -483,6 +483,23 @@ Componentes como **AspectRatio** (base: `bits-ui`) preservam proporção largura
 10. **Stories** — criar apenas `.stories.ts`, `-variantes` e `-composicoes`. **Omitir** `-tamanhos` (sem `size`) e `-estados` (stateless).
 11. **`rounded-md` / `border` no filho** — regra visual absoluta: nunca aplicar no wrapper AspectRatio.
 
+### Componentes Display Compositionais com Estados (padrão Avatar)
+
+Componentes como **Avatar** (base: `bits-ui` — `Avatar`, `AvatarImage`, `AvatarFallback`) são displays passivos com **composições** em vez de variantes `cva()`. Têm tamanho padrão (`h-10 w-10`) no Root e estados internos de carregamento.
+
+1. **Sem `cva()` / sem prop `size`** — o Root aplica `h-10 w-10` fixo. Tamanhos (`h-6 w-6`, `h-8 w-8`, `h-10 w-10`, `h-12 w-12`) vêm **sempre** via `class`. **Não criar prop `size`.**
+2. **`DocsVariants`** — **title**: "Composições". `items` com 5 entradas: `image`, `initials`, `icon`, `group`, `withStatus`. Cada snippet `variantN()` monta a composição completa usando o componente real (`<Avatar>` + filhos). Sem `cva()`.
+3. **`DocsAnatomy`** — 4 items: `Avatar` (Root), `AvatarImage`, `AvatarFallback`, e o sibling de status ou o ring em grupos. `structureCode` com `<Avatar><AvatarImage /><AvatarFallback>…</AvatarFallback></Avatar>`.
+4. **`DocsStates`** — 4 linhas: `loaded`, `loading`, `failed`, `noImage`. Omitir `disabled`/`error`. Em Svelte 5, o `onLoadingStatusChange` do `AvatarImage` do bits-ui dispara o gatilho; o próprio componente decide qual filho renderizar.
+5. **`DocsProps`** — 3 tables: `Avatar` (`class`, children Snippet), `AvatarImage` (`src`, `alt`, `onLoadingStatusChange`, `class`), `AvatarFallback` (`delayMs`, `class`, children Snippet). `src`/`alt` obrigatórios. Usar `delayMs={600}` como valor canônico.
+6. **`DocsTokens`** — 7 tokens: `--muted`, `--muted-foreground`, `--background`, `--border`, `--primary`, `--radius` (`rounded-full` fixo), `--ring`.
+7. **`DocsAccessibility`** — (a) `alt` descritivo (`"Foto de perfil de [Nome]"`) em `AvatarImage` quando é única pista visual; (b) `alt=""` + `AvatarFallback aria-hidden="true"` quando o nome está ao lado; (c) `<span aria-label="…">` no indicador de status; (d) grupo com `role="group" aria-label="…"` no wrapper; (e) contraste iniciais ≥ 4.5:1.
+8. **`DocsAnalytics`** — Avatar é passivo: apenas eventos da docs. Incluir `avatar_click` só quando envolvido por link/botão em produto.
+9. **`DocsDoDont`** — pares canônicos: (a) "com fallback" vs "sem fallback"; (b) "iniciais 2 letras maiúsculas" vs "iniciais minúsculas/3+ letras".
+10. **Stories** — 4 arquivos: `avatar.stories.ts` (+ `withAutoDocsTab(AvatarDocs)`), `avatar-composicoes.stories.ts` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-tamanhos.stories.ts` (Size6, Size8, Size10 default, Size12), `avatar-estados.stories.ts` (Loaded, Loading com `delayMs`, Failed, NoImage). **Não criar `avatar-variantes.stories.ts`**. Apenas o principal leva `tags: ["autodocs"]`. Quando for preciso wrapper de interação, usar `AvatarStory.svelte`.
+11. **`AvatarFallback` obrigatório** — toda instância com `AvatarImage` precisa de `AvatarFallback` irmão. Sem ele, falha/demora resulta em container vazio. Documentar em par Do/Don't e em `notes`.
+12. **Iniciais canônicas** — 2 letras maiúsculas: primeira letra do nome + primeira do sobrenome. Regra em `usage.uxWriting.table.initials`.
+
 ---
 
 ## Proibições
