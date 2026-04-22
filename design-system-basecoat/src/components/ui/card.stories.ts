@@ -47,8 +47,6 @@ type Story = StoryObj<CardArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 function buildPlaygroundCard(args: CardArgs): HTMLElement {
-  // Ciência: a API vanilla atual (createCard/Header/Title/Description/Content/Footer)
-  // não expõe prop size, data-slot="card" nem CardAction. Usamos apenas o que existe.
   const card = createCard({ className: 'w-full max-w-sm' });
 
   const header = createCardHeader();
@@ -90,14 +88,11 @@ export const Playground: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Card é um container estrutural presente no DOM', async () => {
-      // Ciência: o vanilla atual não adiciona data-slot="card" — validamos a classe .card.
-      const card = canvasElement.querySelector('.card') as HTMLElement | null;
+    await step('Card é um container estrutural com data-slot="card" e data-size="default"', async () => {
+      const card = canvasElement.querySelector('[data-slot="card"]') as HTMLElement | null;
       await expect(card).toBeInTheDocument();
-      // Se um dia o data-slot for adicionado, a asserção abaixo passa a fazer sentido:
-      if (card?.hasAttribute('data-slot')) {
-        await expect(card.getAttribute('data-slot')).toBe('card');
-      }
+      await expect(card?.getAttribute('data-slot')).toBe('card');
+      await expect(card?.getAttribute('data-size')).toBe('default');
     });
 
     await step('CardTitle (heading) é acessível pelo nome', async () => {

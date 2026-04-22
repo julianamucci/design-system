@@ -111,7 +111,7 @@ export const WithFooter: Story = {
     docs: {
       description: {
         story:
-          'Card com CardFooter e botões de ação. No vanilla atual o footer não reduz automaticamente o padding inferior do Card — mantemos o default `p-6 pt-0` do footer para alinhar bordas.',
+          'Card com CardFooter e botões de ação — o Card detecta o footer via `has-data-[slot=card-footer]:pb-0` e remove o padding-bottom automaticamente para alinhar a borda superior do footer com o container.',
       },
     },
   },

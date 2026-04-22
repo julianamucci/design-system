@@ -8,10 +8,6 @@ import {
   createCardContent,
 } from './card';
 
-// Ciência: a API vanilla de Card NÃO expõe prop `size`. No React/Vue/Svelte,
-// `size="default"|"sm"` propaga via `data-size` e ajusta padding + fonte via
-// `group-data-[size=sm]/card:*`. Enquanto o vanilla não implementa, simulamos
-// o tamanho compacto combinando className (p-3 + gap-2) e level={4} no título.
 const meta: Meta = {
   title: 'UI/Card/Tamanhos',
   parameters: {
@@ -19,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Tamanhos disponíveis do Card. A API vanilla atual não tem prop `size`; o tamanho compacto é simulado via className até a paridade com React.',
+          'Tamanhos disponíveis do Card. A API vanilla expõe `size: "default" | "sm"`, que propaga via `data-size` e ajusta padding/fonte via `group-data-[size=sm]/card:*`.',
       },
     },
   },
@@ -43,11 +39,10 @@ function buildProductCard(): HTMLElement {
 }
 
 function buildSmallCard(): HTMLElement {
-  // Ciência: size="sm" inexistente — compactamos o Card via className.
-  const card = createCard({ className: 'w-full max-w-xs p-3 gap-2' });
-  const header = createCardHeader({ className: 'p-0' });
-  header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 4, className: 'text-sm' }));
-  const content = createCardContent({ className: 'p-0' });
+  const card = createCard({ size: 'sm', className: 'w-full max-w-xs' });
+  const header = createCardHeader();
+  header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 4 }));
+  const content = createCardContent();
   const value = document.createElement('p');
   value.className = 'text-lg font-semibold';
   value.textContent = '8.742';
@@ -60,13 +55,16 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Tamanho padrão do Card — padding completo (`p-6` no header/content) e título em `text-base`.',
+        story: 'Tamanho padrão do Card — `data-size="default"`, padding `py-4 px-4` e título em `text-base`.',
       },
     },
   },
   render: () => buildProductCard(),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const card = canvasElement.querySelector('[data-slot="card"]') as HTMLElement | null;
+    await expect(card).toBeInTheDocument();
+    await expect(card?.getAttribute('data-size')).toBe('default');
     await expect(canvas.getByRole('heading', { name: 'Cadeira Gamer Pro' })).toBeInTheDocument();
   },
 };
@@ -76,13 +74,16 @@ export const Small: Story = {
     docs: {
       description: {
         story:
-          'Ciência: API vanilla sem prop `size`. Simula-se o tamanho compacto via `className="p-3 gap-2"` no Card e `text-sm` no CardTitle. Em listas densas e dashboards.',
+          'Card compacto via `createCard({ size: "sm" })` — propaga `data-size="sm"`, reduz padding/gap e ajusta o título para `text-sm`. Ideal para listas densas e dashboards.',
       },
     },
   },
   render: () => buildSmallCard(),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const card = canvasElement.querySelector('[data-slot="card"]') as HTMLElement | null;
+    await expect(card).toBeInTheDocument();
+    await expect(card?.getAttribute('data-size')).toBe('sm');
     await expect(canvas.getByRole('heading', { name: 'Assinantes ativos' })).toBeInTheDocument();
   },
 };

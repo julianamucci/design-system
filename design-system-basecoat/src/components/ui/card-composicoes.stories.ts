@@ -5,6 +5,7 @@ import {
   createCardHeader,
   createCardTitle,
   createCardDescription,
+  createCardAction,
   createCardContent,
   createCardFooter,
 } from './card';
@@ -17,7 +18,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições canônicas do Card: com footer (ações), com slot de ação no header e com imagem como primeiro filho.',
+          'Composições canônicas do Card: com footer (ações), com slot de ação no header via `createCardAction` e com imagem como primeiro filho (padding automático removido).',
       },
     },
   },
@@ -77,22 +78,19 @@ export const WithAction: Story = {
     docs: {
       description: {
         story:
-          'Ciência: não existe `createCardAction` no vanilla. Para posicionar um botão/menu à direita do CardHeader, emule com `flex flex-row items-start justify-between` no header.',
+          'Slot de ação no header via `createCardAction` — posiciona o botão em `col-start-2 row-span-2` ao lado do título/descrição, usando o grid `has-data-[slot=card-action]:grid-cols-[1fr_auto]` do CardHeader.',
       },
     },
   },
   render: () => {
     const card = createCard({ className: 'w-full max-w-sm' });
 
-    const header = createCardHeader({ className: 'flex flex-row items-start justify-between' });
+    const header = createCardHeader();
+    header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 3 }));
+    header.appendChild(createCardDescription({ text: '+12% no mês' }));
 
-    const titleWrap = document.createElement('div');
-    titleWrap.className = 'flex flex-col space-y-1.5';
-    titleWrap.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 3 }));
-    titleWrap.appendChild(createCardDescription({ text: '+12% no mês' }));
-
-    header.appendChild(titleWrap);
-    header.appendChild(
+    const action = createCardAction();
+    action.appendChild(
       createButton({
         variant: 'outline',
         size: 'sm',
@@ -100,6 +98,7 @@ export const WithAction: Story = {
         ariaLabel: 'Editar métrica Assinantes ativos',
       }),
     );
+    header.appendChild(action);
 
     const content = createCardContent();
     const value = document.createElement('p');
@@ -112,6 +111,8 @@ export const WithAction: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const action = canvasElement.querySelector('[data-slot="card-action"]') as HTMLElement | null;
+    await expect(action).toBeInTheDocument();
     await expect(canvas.getByRole('heading', { name: 'Assinantes ativos' })).toBeInTheDocument();
     await expect(canvas.getByRole('button', { name: 'Editar métrica Assinantes ativos' })).toBeInTheDocument();
   },
@@ -122,17 +123,17 @@ export const WithImage: Story = {
     docs: {
       description: {
         story:
-          'Ciência: a vanilla não detecta `img:first-child` automaticamente. Aplique `rounded-t-md` na imagem e remova o `pt` do Card via `p-0` + `CardHeader` normal.',
+          'Imagem como primeiro filho do Card — a classe `has-[>img:first-child]:pt-0` remove o padding-top automaticamente, e `*:[img:first-child]:rounded-t-(--radius-card)` arredonda o topo da imagem.',
       },
     },
   },
   render: () => {
-    const card = createCard({ className: 'w-full max-w-sm p-0' });
+    const card = createCard({ className: 'w-full max-w-sm' });
 
     const img = document.createElement('img');
     img.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80';
     img.alt = 'Cadeira Gamer Pro';
-    img.className = 'w-full h-40 object-cover rounded-t-md';
+    img.className = 'w-full h-40 object-cover';
 
     const header = createCardHeader();
     header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));

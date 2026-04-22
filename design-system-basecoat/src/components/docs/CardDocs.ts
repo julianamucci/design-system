@@ -6,6 +6,7 @@ import {
   createCardHeader,
   createCardTitle,
   createCardDescription,
+  createCardAction,
   createCardContent,
   createCardFooter,
 } from '@/components/ui/card';
@@ -55,14 +56,11 @@ function priorityLabel(raw: string): string {
 
 // ─── Card preview builders ───────────────────────────────────────────────────
 //
-// Ciência: o vanilla `createCard` atual NÃO suporta:
-//   - prop `size` (e portanto não propaga `data-size` nem altera padding/título).
-//   - `data-slot="card"` no root (classes modernas Shadcn/Tailwind 4).
-//   - `createCardAction` (slot à direita no header via grid `[1fr_auto]`).
-//   - detecção automática de CardFooter (pb-0), imagem first/last child, etc.
-// Os previews abaixo compõem a API existente (createCard, createCardHeader,
-// createCardTitle, createCardDescription, createCardContent, createCardFooter)
-// e usam classes Tailwind soltas quando a API não tem primitiva dedicada.
+// API vanilla alinhada ao primitive React (shadcn v2):
+//   - `createCard({ size })` propaga `data-slot="card"` + `data-size`.
+//   - `createCardAction` posiciona slot à direita no header (grid `[1fr_auto]`).
+//   - CardFooter detectado via `has-data-[slot=card-footer]:pb-0`.
+//   - Imagem first/last child ganha radius + `pt-0` automático via classes do Card.
 
 function buildProductCardPreview(): HTMLElement {
   const card = createCard({ className: 'w-full max-w-sm' });
@@ -126,11 +124,10 @@ function buildMetricCardPreview(): HTMLElement {
 }
 
 function buildSmallCardPreview(): HTMLElement {
-  // Ciência: vanilla não suporta size="sm"; simulamos compactando via className.
-  const card = createCard({ className: 'w-full max-w-xs p-3 gap-2' });
-  const header = createCardHeader({ className: 'p-0' });
-  header.appendChild(createCardTitle({ text: t('demonstration.labels.metricTitle'), level: 4, className: 'text-sm' }));
-  const content = createCardContent({ className: 'p-0' });
+  const card = createCard({ size: 'sm', className: 'w-full max-w-xs' });
+  const header = createCardHeader();
+  header.appendChild(createCardTitle({ text: t('demonstration.labels.metricTitle'), level: 4 }));
+  const content = createCardContent();
   const value = document.createElement('p');
   value.className = 'text-lg font-semibold';
   value.textContent = t('demonstration.labels.metricValue');
@@ -148,16 +145,14 @@ function buildWithFooterPreview(): HTMLElement {
 }
 
 function buildWithActionPreview(): HTMLElement {
-  // Ciência: sem createCardAction; emulamos um slot de ação no header via flex.
   const card = createCard({ className: 'w-full max-w-sm' });
 
-  const header = createCardHeader({ className: 'flex flex-row items-start justify-between' });
-  const titleWrap = document.createElement('div');
-  titleWrap.className = 'flex flex-col space-y-1.5';
-  titleWrap.appendChild(createCardTitle({ text: t('demonstration.labels.metricTitle'), level: 3 }));
-  titleWrap.appendChild(createCardDescription({ text: t('demonstration.labels.metricTrend') }));
-  header.appendChild(titleWrap);
-  header.appendChild(
+  const header = createCardHeader();
+  header.appendChild(createCardTitle({ text: t('demonstration.labels.metricTitle'), level: 3 }));
+  header.appendChild(createCardDescription({ text: t('demonstration.labels.metricTrend') }));
+
+  const action = createCardAction();
+  action.appendChild(
     createButton({
       variant: 'outline',
       size: 'sm',
@@ -165,6 +160,7 @@ function buildWithActionPreview(): HTMLElement {
       ariaLabel: `${t('demonstration.labels.actionEdit')} ${t('demonstration.labels.metricTitle')}`,
     }),
   );
+  header.appendChild(action);
 
   const content = createCardContent();
   const value = document.createElement('p');
@@ -177,13 +173,11 @@ function buildWithActionPreview(): HTMLElement {
 }
 
 function buildWithImagePreview(): HTMLElement {
-  // Ciência: sem detecção automática de img-first-child no vanilla. Aplicamos
-  // a classe de arredondamento manualmente no <img>.
-  const card = createCard({ className: 'w-full max-w-sm p-0' });
+  const card = createCard({ className: 'w-full max-w-sm' });
   const img = document.createElement('img');
   img.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80';
   img.alt = t('demonstration.labels.productTitle');
-  img.className = 'w-full h-40 object-cover rounded-t-md';
+  img.className = 'w-full h-40 object-cover';
 
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: t('demonstration.labels.productTitle'), level: 3 }));
@@ -432,6 +426,7 @@ export function createCardDocs(): HTMLElement {
   createCardHeader,
   createCardTitle,
   createCardDescription,
+  createCardAction,
   createCardContent,
   createCardFooter,
 } from '@/components/ui/card';`,
@@ -461,27 +456,34 @@ const content = createCardContent();
 content.textContent = 'R$ 1.299,00';
 card.append(header, content);`;
 
-        const codeSm = `// Ciência: vanilla não suporta prop size. Compacte via className.
-const card = createCard({ className: 'w-full max-w-xs p-3 gap-2' });
-const header = createCardHeader({ className: 'p-0' });
-header.appendChild(createCardTitle({ text: 'Compacto', level: 4, className: 'text-sm' }));`;
+        const codeSm = `// size: 'sm' propaga data-size="sm"; subcomponentes reagem via group-data.
+const card = createCard({ size: 'sm', className: 'w-full max-w-xs' });
+const header = createCardHeader();
+header.appendChild(createCardTitle({ text: 'Compacto', level: 4 }));
+const content = createCardContent();
+card.append(header, content);`;
 
-        const codeWithFooter = `// Ciência: vanilla NÃO aplica pb-0 automático ao detectar footer.
-// O padding do Card já é p-6; mantenha o footer com p-6 pt-0 (default).
+        const codeWithFooter = `// Card detecta o footer via has-data-[slot=card-footer]:pb-0.
+// O pb do Card é removido automaticamente para alinhar a borda superior.
 const card = createCard();
-card.append(header, content, createCardFooter({ className: 'justify-end' }));`;
+const footer = createCardFooter({ className: 'justify-end gap-2' });
+card.append(header, content, footer);`;
 
-        const codeWithAction = `// Ciência: sem createCardAction. Emule com flex no CardHeader.
-const header = createCardHeader({ className: 'flex flex-row items-start justify-between' });
-header.appendChild(titleWrap);
-header.appendChild(createButton({ variant: 'outline', size: 'sm', label: 'Editar' }));`;
+        const codeWithAction = `// createCardAction ocupa col-start-2 row-span-2 no grid do CardHeader.
+const header = createCardHeader();
+header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 3 }));
+header.appendChild(createCardDescription({ text: '+12% no mês' }));
 
-        const codeWithImage = `// Ciência: vanilla NÃO detecta img-first-child.
-// Aplique rounded-t-md + remova padding-top manualmente.
-const card = createCard({ className: 'p-0' });
+const action = createCardAction();
+action.appendChild(createButton({ variant: 'outline', size: 'sm', label: 'Editar' }));
+header.appendChild(action);`;
+
+        const codeWithImage = `// Card detecta img:first-child via has-[>img:first-child]:pt-0
+// e aplica rounded-t-(--radius-card) na imagem automaticamente.
+const card = createCard();
 const img = document.createElement('img');
 img.src = '/produto.jpg';
-img.className = 'w-full h-40 object-cover rounded-t-md';
+img.className = 'w-full h-40 object-cover';
 card.append(img, header);`;
 
         return createDocsVariants({
@@ -559,14 +561,15 @@ card.append(img, header);`;
         });
 
       case 'propriedades': {
-        // Interface atual da API vanilla (sem size, sem action).
-        const interfaceCode = `// Ciência: API vanilla enxuta. Sem prop "size", sem CardAction.
-export interface CardOptions          { className?: string; }
-export interface CardHeaderOptions    { className?: string; }
-export interface CardTitleOptions     { text?: string; level?: 1|2|3|4|5|6; className?: string; }
+        const interfaceCode = `export type CardSize = 'default' | 'sm';
+
+export interface CardOptions            { size?: CardSize; className?: string; }
+export interface CardHeaderOptions      { className?: string; }
+export interface CardTitleOptions       { text?: string; level?: 1|2|3|4|5|6; className?: string; }
 export interface CardDescriptionOptions { text?: string; className?: string; }
-export interface CardContentOptions   { className?: string; }
-export interface CardFooterOptions    { className?: string; }`;
+export interface CardActionOptions      { className?: string; }
+export interface CardContentOptions     { className?: string; }
+export interface CardFooterOptions      { className?: string; }`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -593,11 +596,11 @@ export interface CardFooterOptions    { className?: string; }`;
               items: [
                 {
                   name: 'size',
-                  type: '— (não implementado)',
-                  defaultValue: '—',
-                  required: '—',
+                  type: `'default' | 'sm'`,
+                  defaultValue: `'default'`,
+                  required: 'Não',
                   description:
-                    'Ciência: a API vanilla atual não expõe prop size. Use className (p-3 + gap-2) para simular o size=sm.',
+                    'Tamanho do Card. Propaga via data-size e afeta padding/font dos subcomponentes (group-data-[size=sm]/card).',
                 },
                 classNameItem,
               ],
@@ -633,16 +636,7 @@ export interface CardFooterOptions    { className?: string; }`;
             {
               title: t('props.actionTitle'),
               cols: propsCols,
-              items: [
-                {
-                  name: '—',
-                  type: '— (não implementado)',
-                  defaultValue: '—',
-                  required: '—',
-                  description:
-                    'Ciência: não existe createCardAction no vanilla. Emule com um flex no CardHeader (items-start justify-between) e coloque o botão como segundo filho.',
-                },
-              ],
+              items: [classNameItem],
             },
             {
               title: t('props.contentTitle'),
@@ -664,7 +658,7 @@ export interface CardFooterOptions    { className?: string; }`;
       case 'tokens': {
         const customizationCode = `/* Em styles.css — tokens padrão do Card */
 :root {
-  --radius-card: 0.75rem;
+  --radius-card: 0.75rem; /* rounded-(--radius-card) no Card + Header + Footer */
   --card: 0 0% 100%;
   --card-foreground: 222 47% 11%;
   --muted: 210 40% 96%;
