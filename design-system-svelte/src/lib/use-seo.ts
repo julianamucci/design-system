@@ -7,15 +7,22 @@ import { track } from './analytics';
 
 type Locale = 'pt-BR' | 'en' | 'es';
 
+export interface BreadcrumbEntry {
+  name: string;
+  item?: string;
+}
+
 interface SeoProps {
   title: string;
   description: string;
   locale: Locale;
   componentSlug: string;
+  breadcrumb?: BreadcrumbEntry[];
 }
 
 const SUPPORTED_LOCALES: Locale[] = ['pt-BR', 'en', 'es'];
 const HREFLANG_ATTR = 'data-ds-hreflang';
+const BREADCRUMB_JSONLD_ATTR = 'data-ds-breadcrumb-jsonld';
 
 function buildLangUrl(base: string, lang: string): string {
   try {
@@ -56,7 +63,7 @@ function upsertMeta(
  * Aplica SEO e retorna uma função de cleanup.
  * Usar dentro de $effect(() => { return applySeo({...}); })
  */
-export function applySeo({ title, description, locale, componentSlug }: SeoProps): () => void {
+export function applySeo({ title, description, locale, componentSlug, breadcrumb }: SeoProps): () => void {
   const isIframe = window.self !== window.top;
   const targetDoc = isIframe ? window.parent.document : document;
   const targetWin = isIframe ? window.parent : window;
@@ -107,6 +114,30 @@ export function applySeo({ title, description, locale, componentSlug }: SeoProps
   targetDoc.head.appendChild(xDefault);
   hreflangLinks.push(xDefault);
 
+  // ── JSON-LD BreadcrumbList (Schema.org) ─────────────────────────────────
+  targetDoc.querySelectorAll(`script[${BREADCRUMB_JSONLD_ATTR}]`).forEach((el) => el.remove());
+  let breadcrumbScript: HTMLScriptElement | null = null;
+  if (breadcrumb && breadcrumb.length > 0) {
+    const itemListElement = breadcrumb.map((entry, i) => {
+      const node: Record<string, unknown> = {
+        '@type': 'ListItem',
+        position: i + 1,
+        name: entry.name,
+      };
+      if (entry.item) node.item = entry.item;
+      return node;
+    });
+    breadcrumbScript = targetDoc.createElement('script');
+    breadcrumbScript.setAttribute('type', 'application/ld+json');
+    breadcrumbScript.setAttribute(BREADCRUMB_JSONLD_ATTR, 'true');
+    breadcrumbScript.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement,
+    });
+    targetDoc.head.appendChild(breadcrumbScript);
+  }
+
   // ── GA4 page_view ───────────────────────────────────────────────────────
   track('page_view', {
     page_location: targetWin.location.href,
@@ -126,5 +157,6 @@ export function applySeo({ title, description, locale, componentSlug }: SeoProps
       }
     });
     hreflangLinks.forEach((el) => el.remove());
+    if (breadcrumbScript) breadcrumbScript.remove();
   };
 }

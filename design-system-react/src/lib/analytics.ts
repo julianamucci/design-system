@@ -78,6 +78,21 @@ interface AnalyticsEvents {
     label?: string;
     location?: string;
   };
+
+  /** Disparado quando o usuário clica em um link de navegação (Breadcrumb, NavigationMenu). */
+  navigation_click: {
+    component: 'breadcrumb' | 'navigation_menu';
+    label: string;
+    destination: string;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário abre o DropdownMenu do BreadcrumbEllipsis. */
+  breadcrumb_ellipsis_open: {
+    component: 'breadcrumb';
+    hidden_count: number;
+    location?: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

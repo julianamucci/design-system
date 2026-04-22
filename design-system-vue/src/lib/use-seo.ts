@@ -3,15 +3,22 @@ import { track } from './analytics';
 
 type Locale = 'pt-BR' | 'en' | 'es';
 
+export interface BreadcrumbEntry {
+  name: string;
+  item?: string;
+}
+
 interface SeoProps {
   title: string;
   description: string;
   locale: Locale;
   componentSlug: string;
+  breadcrumb?: BreadcrumbEntry[];
 }
 
 const SUPPORTED_LOCALES: Locale[] = ['pt-BR', 'en', 'es'];
 const HREFLANG_ATTR = 'data-ds-hreflang';
+const BREADCRUMB_JSONLD_ATTR = 'data-ds-breadcrumb-jsonld';
 
 function buildLangUrl(base: string, lang: string): string {
   try {
@@ -31,7 +38,7 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
   watchEffect((onCleanup) => {
     // Unwrap reactive ref if needed
     const props = 'value' in propsOrRef ? propsOrRef.value : propsOrRef;
-    const { title, description, locale, componentSlug } = props;
+    const { title, description, locale, componentSlug, breadcrumb } = props;
 
     const isIframe = window.self !== window.top;
     const targetDoc = isIframe ? window.parent.document : document;
@@ -80,6 +87,30 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
       hreflangLinks.push(link);
     });
 
+    // ── JSON-LD BreadcrumbList (Schema.org) ───────────────────────────────
+    targetDoc.querySelectorAll(`script[${BREADCRUMB_JSONLD_ATTR}]`).forEach(el => (el as HTMLElement).remove());
+    let breadcrumbScript: HTMLScriptElement | null = null;
+    if (breadcrumb && breadcrumb.length > 0) {
+      const itemListElement = breadcrumb.map((entry, i) => {
+        const node: Record<string, unknown> = {
+          '@type': 'ListItem',
+          position: i + 1,
+          name: entry.name,
+        };
+        if (entry.item) node.item = entry.item;
+        return node;
+      });
+      breadcrumbScript = targetDoc.createElement('script');
+      breadcrumbScript.setAttribute('type', 'application/ld+json');
+      breadcrumbScript.setAttribute(BREADCRUMB_JSONLD_ATTR, 'true');
+      breadcrumbScript.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement,
+      });
+      targetDoc.head.appendChild(breadcrumbScript);
+    }
+
     // ── GA4 page_view ─────────────────────────────────────────────────────
     track('page_view', {
       page_location: targetWin.location.href,
@@ -95,6 +126,7 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
         if (isNew) el.remove(); else if (prev !== null) el.setAttribute('content', prev);
       });
       hreflangLinks.forEach(el => el.remove());
+      if (breadcrumbScript) breadcrumbScript.remove();
     });
   });
 }

@@ -17,6 +17,13 @@ import { track } from './analytics';
 
 type Locale = 'pt-BR' | 'en' | 'es';
 
+/** Entrada do breadcrumb para JSON-LD Schema.org BreadcrumbList.
+ *  Item atual (página visível): omitir `item`. Itens anteriores: `name` + `item` (URL absoluta). */
+export interface BreadcrumbEntry {
+  name: string;
+  item?: string;
+}
+
 interface SeoProps {
   /** Título do componente, sem o sufixo "· Design System". */
   title: string;
@@ -26,6 +33,8 @@ interface SeoProps {
   locale: Locale;
   /** Slug único do componente (ex: "button", "alert-dialog"). Usado na URL canônica. */
   componentSlug: string;
+  /** Caminho navegacional para JSON-LD BreadcrumbList (rich snippets). */
+  breadcrumb?: BreadcrumbEntry[];
 }
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -34,6 +43,9 @@ const SUPPORTED_LOCALES: Locale[] = ['pt-BR', 'en', 'es'];
 
 /** Atributo sentinela para identificar os <link hreflang> injetados por este hook. */
 const HREFLANG_ATTR = 'data-ds-hreflang';
+
+/** Atributo sentinela para identificar o <script> JSON-LD BreadcrumbList injetado. */
+const BREADCRUMB_JSONLD_ATTR = 'data-ds-breadcrumb-jsonld';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -76,7 +88,7 @@ function upsertMeta(
 
 // ─── Hook principal ───────────────────────────────────────────────────────────
 
-export function useSeoEffect({ title, description, locale, componentSlug }: SeoProps): void {
+export function useSeoEffect({ title, description, locale, componentSlug, breadcrumb }: SeoProps): void {
   useEffect(() => {
     const isIframe = window.self !== window.top;
     const targetDoc = isIframe ? window.parent.document : document;
@@ -130,6 +142,31 @@ export function useSeoEffect({ title, description, locale, componentSlug }: SeoP
     SUPPORTED_LOCALES.forEach((lang) => addHreflang(lang, buildLangUrl(base, lang)));
     addHreflang('x-default', base); // x-default aponta para a URL sem lang (pt-BR padrão)
 
+    // ── JSON-LD BreadcrumbList (Schema.org) ───────────────────────────────
+    // Gera rich snippets de trilha navegacional no Google. Item sem `item` = página atual.
+    targetDoc.querySelectorAll(`script[${BREADCRUMB_JSONLD_ATTR}]`).forEach((el) => el.remove());
+    let breadcrumbScript: HTMLScriptElement | null = null;
+    if (breadcrumb && breadcrumb.length > 0) {
+      const itemListElement = breadcrumb.map((entry, i) => {
+        const node: Record<string, unknown> = {
+          '@type': 'ListItem',
+          position: i + 1,
+          name: entry.name,
+        };
+        if (entry.item) node.item = entry.item;
+        return node;
+      });
+      breadcrumbScript = targetDoc.createElement('script');
+      breadcrumbScript.setAttribute('type', 'application/ld+json');
+      breadcrumbScript.setAttribute(BREADCRUMB_JSONLD_ATTR, 'true');
+      breadcrumbScript.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement,
+      });
+      targetDoc.head.appendChild(breadcrumbScript);
+    }
+
     // ── GA4 page_view ─────────────────────────────────────────────────────
     // Dispara um page_view no GA4 do manager a cada troca de título/locale.
     // Sem isso, o GA4 só vê a URL inicial do manager e nada das stories.
@@ -152,6 +189,7 @@ export function useSeoEffect({ title, description, locale, componentSlug }: SeoP
         }
       });
       hreflangLinks.forEach((el) => el.remove());
+      if (breadcrumbScript) breadcrumbScript.remove();
     };
-  }, [title, description, locale, componentSlug]);
+  }, [title, description, locale, componentSlug, breadcrumb]);
 }

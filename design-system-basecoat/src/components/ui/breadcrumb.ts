@@ -53,7 +53,7 @@ export function createBreadcrumbList(options: BreadcrumbListOptions = {}): HTMLE
 
   const ol = document.createElement('ol');
   ol.className =
-    'flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5';
+    'flex flex-wrap items-center gap-1.5 text-sm wrap-break-word text-muted-foreground';
   if (className) ol.classList.add(...className.split(' ').filter(Boolean));
 
   return ol;
@@ -63,7 +63,7 @@ export function createBreadcrumbItem(options: BreadcrumbItemOptions = {}): HTMLE
   const { className } = options;
 
   const li = document.createElement('li');
-  li.className = 'inline-flex items-center gap-1.5';
+  li.className = 'inline-flex items-center gap-1';
   if (className) li.classList.add(...className.split(' ').filter(Boolean));
 
   return li;
@@ -116,17 +116,27 @@ export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = 
 /**
  * Renders an ellipsis indicator used when some breadcrumb items are collapsed.
  * Callers should wire up a click handler to expand the hidden items.
+ *
+ * Paridade com React: ícone MoreHorizontal + `sr-only "More"` para leitores de tela.
  */
 export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}): HTMLElement {
-  const { label = 'More pages', className } = options;
+  const { label = 'More', className } = options;
 
   const span = document.createElement('span');
   span.setAttribute('role', 'presentation');
-  span.setAttribute('aria-label', label);
-  span.className =
-    'inline-flex h-9 w-9 items-center justify-center';
+  span.setAttribute('aria-hidden', 'true');
+  span.className = 'flex size-5 items-center justify-center [&>svg]:size-4';
   if (className) span.classList.add(...className.split(' ').filter(Boolean));
-  span.textContent = '…';
+
+  // Ícone MoreHorizontal (paridade com lucide-react MoreHorizontalIcon)
+  span.innerHTML =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>';
+
+  // Texto acessível para leitores de tela
+  const srOnly = document.createElement('span');
+  srOnly.className = 'sr-only';
+  srOnly.textContent = label;
+  span.appendChild(srOnly);
 
   return span;
 }
