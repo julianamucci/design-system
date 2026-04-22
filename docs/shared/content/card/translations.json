@@ -7,8 +7,8 @@
     "seo": {
       "title": "Card — Layout · Design System",
       "description": "Documentação do Card: 2 tamanhos (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens de tema.",
-      "aiSummary": "Componente Card estrutural com 2 sizes (default, sm), composição via 7 subcomponentes (Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter) e tokens --radius-card/bg-card.",
-      "aiEntities": "Card, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container",
+      "aiSummary": "Componente Card estrutural com 2 sizes (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens --radius-card/bg-card.",
+      "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container, Composition, Slot",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -342,8 +342,8 @@
     "seo": {
       "title": "Card — Layout · Design System",
       "description": "Documentation for Card: 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and theme tokens.",
-      "aiSummary": "Structural Card component with 2 sizes (default, sm), composition via 7 subcomponents (Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter) and --radius-card/bg-card tokens.",
-      "aiEntities": "Card, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container",
+      "aiSummary": "Structural Card component with 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and --radius-card/bg-card tokens.",
+      "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container, Composition, Slot",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -677,8 +677,8 @@
     "seo": {
       "title": "Card — Layout · Design System",
       "description": "Documentación del Card: 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens de tema.",
-      "aiSummary": "Componente Card estructural con 2 tamaños (default, sm), composición vía 7 subcomponentes (Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter) y tokens --radius-card/bg-card.",
-      "aiEntities": "Card, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container",
+      "aiSummary": "Componente Card estructural con 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens --radius-card/bg-card.",
+      "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container, Composition, Slot",
       "aiIntent": "informational"
     },
     "demonstration": {
