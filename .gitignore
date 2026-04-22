@@ -4,7 +4,10 @@ node_modules/
 .pnp.js
 
 # Pipeline context cache (gerado por /pipeline, transitório)
-.pipeline-context/
+# Mas templates de audit-prompts são versionados (não-transitórios)
+.pipeline-context/*
+!.pipeline-context/audit-prompts/
+!.pipeline-context/audit-prompts/**
 
 # Testing
 coverage/
