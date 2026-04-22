@@ -14,7 +14,7 @@
   --radius-card:   calc(var(--radius) * 1.4);  /* 14px */
   --radius-badge:  calc(var(--radius) * 2.6);  /* 26px */
   --radius-input:  calc(var(--radius) * 0.8);  /* 8px */
-  --radius-alert:  calc(var(--radius) * 1.4);  /* 14px */
+  --radius-alert:  var(--radius);              /* 10px (shadcn: 1×) */
 
   /* Dimensões — shadcn: sm 32px / default 36px / lg 40px */
   --height-badge: 1.375rem;     /* 22px */

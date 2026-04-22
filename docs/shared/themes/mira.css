@@ -14,7 +14,7 @@
   --radius-card:   var(--radius);              /* 10px */
   --radius-badge:  9999px;                     /* pill (Mira especial) */
   --radius-input:  calc(var(--radius) * 0.8);  /* 8px */
-  --radius-alert:  calc(var(--radius) * 1.4);  /* 14px */
+  --radius-alert:  var(--radius);              /* 10px (shadcn: 1×) */
 
   /* Dimensões — shadcn: sm 24px / default 28px / lg 32px (o mais compacto) */
   --height-badge: 1rem;         /* 16px */

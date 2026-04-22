@@ -14,7 +14,7 @@
   --radius-card:   calc(var(--radius) * 1.8);  /* 18px */
   --radius-badge:  calc(var(--radius) * 2.6);  /* 26px */
   --radius-input:  calc(var(--radius) * 2.6);  /* 26px */
-  --radius-alert:  calc(var(--radius) * 2.6);  /* 26px */
+  --radius-alert:  var(--radius);              /* 10px (shadcn: 1×) */
 
   /* Dimensões — shadcn: sm 32px / default 36px / lg 40px (igual Vega) */
   --height-badge: 1.5rem;       /* 24px */
