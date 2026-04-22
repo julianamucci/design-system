@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { userEvent, within, expect } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 const meta: Meta = {
   title: 'UI/Accordion/Modos',
@@ -83,7 +84,7 @@ export const Controlled: Story = {
 
     const setIndicator = (val: string | string[]) => {
       const display = Array.isArray(val) ? val.join(', ') : val || '(nenhum)';
-      indicator.innerHTML = `Item ativo: <code class="font-mono">${display}</code>`;
+      indicator.innerHTML = sanitizeHtml(`Item ativo: <code class="font-mono">${display}</code>`);
     };
     setIndicator('item-1');
 

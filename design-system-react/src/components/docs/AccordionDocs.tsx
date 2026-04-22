@@ -141,6 +141,18 @@ export function AccordionDocs() {
 
   const activeId = useActiveSection(allIds, handleSectionChange);
 
+  const handleDemoTriggerClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>, label: string) => {
+      const isOpening = e.currentTarget.getAttribute("data-state") === "closed";
+      track(isOpening ? "accordion_expand" : "accordion_collapse", {
+        component: "accordion",
+        label,
+        location: "docs_demonstration",
+      });
+    },
+    []
+  );
+
   const codeImport = `import {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from "@/components/ui/accordion"`;
 
   const codeSingle = `<Accordion type="single" collapsible defaultValue="item-1">
@@ -233,25 +245,21 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
             <Accordion type="single" collapsible defaultValue="item-1" className="w-full">
-              {([1, 2, 3, 4] as const).map((i) => (
+              {([1, 2, 3, 4] as const).map((i) => {
+                const label = tContent(`demonstration.labels.q${i}`);
+                return (
                 <AccordionItem key={i} value={`item-${i}`}>
                   <AccordionTrigger
-                    onClick={(e) => {
-                      const isOpening = e.currentTarget.getAttribute("data-state") === "closed";
-                      track(isOpening ? "accordion_expand" : "accordion_collapse", {
-                        component: "accordion",
-                        label: tContent(`demonstration.labels.q${i}`),
-                        location: "docs_demonstration",
-                      });
-                    }}
+                    onClick={(e) => handleDemoTriggerClick(e, label)}
                   >
-                    {tContent(`demonstration.labels.q${i}`)}
+                    {label}
                   </AccordionTrigger>
                   <AccordionContent>
                     {tContent(`demonstration.labels.a${i}`)}
                   </AccordionContent>
                 </AccordionItem>
-              ))}
+                );
+              })}
             </Accordion>
           </DocsDemonstration>
 
