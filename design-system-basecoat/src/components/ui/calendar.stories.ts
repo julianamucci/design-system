@@ -22,7 +22,7 @@ type Story = StoryObj;
 
 export const Playground: Story = {
   render: () =>
-    createCalendar({
+    createCalendar({ locale: 'pt-BR',
       value: new Date(2026, 3, 12),
       class: 'rounded-md border',
     }),

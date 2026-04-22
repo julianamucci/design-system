@@ -34,7 +34,7 @@ type Story = StoryObj;
 
 export const CaptionLabel: Story = {
   render: () =>
-    createCalendar({
+    createCalendar({ locale: 'pt-BR',
       value: new Date(2026, 3, 12),
       class: 'rounded-md border',
     }),
@@ -50,7 +50,7 @@ export const CaptionLabel: Story = {
 
 export const Bordered: Story = {
   render: () =>
-    createCalendar({
+    createCalendar({ locale: 'pt-BR',
       value: new Date(2026, 3, 12),
       class: 'rounded-md border shadow-sm',
     }),
@@ -65,7 +65,7 @@ export const Bordered: Story = {
 };
 
 export const Bare: Story = {
-  render: () => createCalendar({ value: new Date(2026, 3, 12) }),
+  render: () => createCalendar({ locale: 'pt-BR', value: new Date(2026, 3, 12) }),
   parameters: {
     docs: {
       description: {

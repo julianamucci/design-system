@@ -189,7 +189,7 @@ export function createCalendarDocs(): HTMLElement {
             const wrap = document.createElement('div');
             wrap.className = 'w-full flex justify-center';
             wrap.appendChild(
-              createCalendar({
+              createCalendar({ locale: 'pt-BR',
                 value: referenceDate(),
                 class: 'rounded-md border',
               }),
@@ -268,9 +268,9 @@ export function createCalendarDocs(): HTMLElement {
               doCaption: stripHtml(t('doDont.pair1.do')),
               dontCaption: stripHtml(t('doDont.pair1.dont')),
               doPreviewFactory: () =>
-                createCalendar({ value: referenceDate(), class: 'rounded-md border' }),
+                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'rounded-md border' }),
               dontPreviewFactory: () =>
-                createCalendar({ value: referenceDate(), class: 'rounded-md border opacity-80' }),
+                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'rounded-md border opacity-80' }),
             },
             {
               doLabel: tNav('common.do'),
@@ -278,13 +278,13 @@ export function createCalendarDocs(): HTMLElement {
               doCaption: stripHtml(t('doDont.pair2.do')),
               dontCaption: stripHtml(t('doDont.pair2.dont')),
               doPreviewFactory: () =>
-                createCalendar({
+                createCalendar({ locale: 'pt-BR',
                   value: referenceDate(),
                   disabled: (d) => d < new Date(2026, 3, 1),
                   class: 'rounded-md border',
                 }),
               dontPreviewFactory: () =>
-                createCalendar({ value: new Date(2020, 0, 15), class: 'rounded-md border' }),
+                createCalendar({ locale: 'pt-BR', value: new Date(2020, 0, 15), class: 'rounded-md border' }),
             },
           ],
         });
@@ -296,7 +296,7 @@ export function createCalendarDocs(): HTMLElement {
           code: `import { createCalendar } from '@/components/ui/calendar';`,
           secondaryDescription: t('import.withLocale'),
           secondaryCode: `// Uso básico
-const el = createCalendar({
+const el = createCalendar({ locale: 'pt-BR',
   value: new Date(),
   onSelect: (date) => console.log(date),
 });
@@ -304,15 +304,15 @@ document.body.appendChild(el);`,
         });
 
       case 'variantes': {
-        const codeSingle = `const el = createCalendar({
+        const codeSingle = `const el = createCalendar({ locale: 'pt-BR',
   value: new Date(),
   onSelect: (date) => console.log(date),
 });`;
-        const codeDisabled = `const el = createCalendar({
+        const codeDisabled = `const el = createCalendar({ locale: 'pt-BR',
   value: new Date(),
   disabled: (d) => d.getDay() === 0 || d.getDay() === 6,
 });`;
-        const codeCustomClass = `const el = createCalendar({
+        const codeCustomClass = `const el = createCalendar({ locale: 'pt-BR',
   value: new Date(),
   class: 'rounded-md border shadow-sm',
 });`;
@@ -325,14 +325,14 @@ document.body.appendChild(el);`,
               description: stripHtml(t('variants.items.single')),
               code: codeSingle,
               previewFactory: () =>
-                createCalendar({ value: referenceDate(), class: 'rounded-md border' }),
+                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'rounded-md border' }),
             },
             {
               name: 'withDisabledDates',
               description: stripHtml(t('states.disabled.behavior')),
               code: codeDisabled,
               previewFactory: () =>
-                createCalendar({
+                createCalendar({ locale: 'pt-BR',
                   value: referenceDate(),
                   disabled: withDisabledWeekends(),
                   class: 'rounded-md border',
@@ -343,7 +343,7 @@ document.body.appendChild(el);`,
               description: stripHtml(t('props.table.className')),
               code: codeCustomClass,
               previewFactory: () =>
-                createCalendar({
+                createCalendar({ locale: 'pt-BR',
                   value: referenceDate(),
                   class: 'rounded-md border shadow-sm',
                 }),

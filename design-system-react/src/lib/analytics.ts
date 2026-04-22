@@ -93,6 +93,21 @@ interface AnalyticsEvents {
     hidden_count: number;
     location?: string;
   };
+
+  /** Disparado quando o valor de um campo de seleção muda (Checkbox, Switch, Select, Calendar, RadioGroup, Slider, Toggle). */
+  field_change: {
+    component: string;
+    field_name: string;
+    value?: string;
+    location?: string;
+  };
+
+  /** Disparado quando um Dialog/Popover/Sheet é aberto (inclui DatePicker composto com Calendar). */
+  dialog_open: {
+    component: string;
+    label?: string;
+    location?: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

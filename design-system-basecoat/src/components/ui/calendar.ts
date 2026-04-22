@@ -6,16 +6,31 @@ export type CalendarOptions = {
   value?: Date;
   onSelect?: (date: Date) => void;
   disabled?: (date: Date) => boolean;
+  /** BCP 47 locale tag (ex: "pt-BR", "en-US", "es-ES"). Default: "en-US". */
+  locale?: string;
   class?: string;
 };
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// ─── Locale helpers ───────────────────────────────────────────────────────────
 
-const DAY_NAMES = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
+/** Derives short weekday initials (2 letters) starting from Sunday. */
+function getDayNames(locale: string): string[] {
+  const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short' });
+  // Sunday = 2020-01-05 (known Sunday as anchor)
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(2020, 0, 5 + i);
+    return fmt.format(d);
+  });
+}
+
+/** Derives full month names. */
+function getMonthNames(locale: string): string[] {
+  const fmt = new Intl.DateTimeFormat(locale, { month: 'long' });
+  return Array.from({ length: 12 }, (_, m) => {
+    const d = new Date(2020, m, 1);
+    return fmt.format(d);
+  });
+}
 
 const CHEVRON_LEFT =
   '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
@@ -35,7 +50,13 @@ function isToday(date: Date): boolean {
 // ─── createCalendar ───────────────────────────────────────────────────────────
 
 export function createCalendar(options: CalendarOptions = {}): HTMLElement {
-  const { onSelect, disabled } = options;
+  const { onSelect, disabled, locale = 'en-US' } = options;
+
+  const dayNames = getDayNames(locale);
+  const monthNames = getMonthNames(locale);
+  const dayButtonLabelFmt = new Intl.DateTimeFormat(locale, {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+  });
 
   const today = new Date();
   let viewYear = options.value ? options.value.getFullYear() : today.getFullYear();
@@ -68,7 +89,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
     const monthLabel = document.createElement('div');
     monthLabel.className = 'text-sm font-medium';
-    monthLabel.textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
+    monthLabel.textContent = `${monthNames[viewMonth]} ${viewYear}`;
 
     const nextBtn = document.createElement('button');
     nextBtn.type = 'button';
@@ -92,13 +113,13 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     const table = document.createElement('table');
     table.className = 'w-full border-collapse space-y-1';
     table.setAttribute('role', 'grid');
-    table.setAttribute('aria-label', `${MONTH_NAMES[viewMonth]} ${viewYear}`);
+    table.setAttribute('aria-label', `${monthNames[viewMonth]} ${viewYear}`);
 
     // Header row
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
     headerRow.className = 'flex';
-    DAY_NAMES.forEach((day) => {
+    dayNames.forEach((day) => {
       const th = document.createElement('th');
       th.setAttribute('scope', 'col');
       th.className = 'text-muted-foreground rounded-md w-8 font-normal text-[0.8rem] text-center';
@@ -134,7 +155,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
           const btn = document.createElement('button');
           btn.type = 'button';
           btn.textContent = String(dayCount);
-          btn.setAttribute('aria-label', date.toLocaleDateString());
+          btn.setAttribute('aria-label', dayButtonLabelFmt.format(date));
           if (isSelected) btn.setAttribute('aria-selected', 'true');
           if (isDisabled) btn.disabled = true;
 

@@ -79,6 +79,19 @@ interface AnalyticsEvents {
     hidden_count: number;
     location?: string;
   };
+
+  field_change: {
+    component: string;
+    field_name: string;
+    value?: string;
+    location?: string;
+  };
+
+  dialog_open: {
+    component: string;
+    label?: string;
+    location?: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
