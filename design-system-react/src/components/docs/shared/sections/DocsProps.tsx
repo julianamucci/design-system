@@ -40,20 +40,20 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
           <Table className="w-full text-sm">
             <TableHeader>
               <TableRow className="border-b border-border bg-muted/50 text-left">
-                <TableHead className="p-3 border-r border-border font-semibold">{def.cols.prop}</TableHead>
-                <TableHead className="p-3 border-r border-border font-semibold">{def.cols.type}</TableHead>
-                <TableHead className="p-3 border-r border-border font-semibold">{def.cols.default}</TableHead>
-                <TableHead className="p-3 border-r border-border font-semibold">{def.cols.required}</TableHead>
+                <TableHead className="p-3 font-semibold">{def.cols.prop}</TableHead>
+                <TableHead className="p-3 font-semibold">{def.cols.type}</TableHead>
+                <TableHead className="p-3 font-semibold">{def.cols.default}</TableHead>
+                <TableHead className="p-3 font-semibold">{def.cols.required}</TableHead>
                 <TableHead className="p-3 font-semibold">{def.cols.description}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {def.items.map((item, i) => (
                 <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                  <TableCell className="p-3 border-r border-border font-mono font-bold text-primary">{item.name}</TableCell>
-                  <TableCell className="p-3 border-r border-border font-mono text-muted-foreground">{item.type}</TableCell>
-                  <TableCell className="p-3 border-r border-border text-muted-foreground">{item.defaultValue}</TableCell>
-                  <TableCell className="p-3 border-r border-border text-muted-foreground">{item.required}</TableCell>
+                  <TableCell className="p-3 font-mono font-bold text-primary">{item.name}</TableCell>
+                  <TableCell className="p-3 font-mono text-muted-foreground">{item.type}</TableCell>
+                  <TableCell className="p-3 text-muted-foreground">{item.defaultValue}</TableCell>
+                  <TableCell className="p-3 text-muted-foreground">{item.required}</TableCell>
                   <TableCell className="p-3 text-muted-foreground">{item.description}</TableCell>
                 </TableRow>
               ))}

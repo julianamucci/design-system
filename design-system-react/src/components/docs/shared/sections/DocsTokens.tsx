@@ -32,16 +32,16 @@ export function DocsTokens({ title, cols, items, customizationTitle, customizati
             <Table className="w-full text-sm">
               <TableHeader>
                 <TableRow className="border-b border-border bg-muted/50 text-left">
-                  <TableHead className="p-3 border-r border-border font-semibold">{cols.token}</TableHead>
-                  <TableHead className="p-3 border-r border-border font-semibold">{cols.value}</TableHead>
+                  <TableHead className="p-3 font-semibold">{cols.token}</TableHead>
+                  <TableHead className="p-3 font-semibold">{cols.value}</TableHead>
                   <TableHead className="p-3 font-semibold">{cols.description}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {items.map((item, i) => (
                   <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                    <TableCell className="p-3 border-r border-border font-mono text-primary">{item.token}</TableCell>
-                    <TableCell className="p-3 border-r border-border font-mono text-muted-foreground">{item.value}</TableCell>
+                    <TableCell className="p-3 font-mono text-primary">{item.token}</TableCell>
+                    <TableCell className="p-3 font-mono text-muted-foreground">{item.value}</TableCell>
                     <TableCell className="p-3 text-muted-foreground">{item.description}</TableCell>
                   </TableRow>
                 ))}

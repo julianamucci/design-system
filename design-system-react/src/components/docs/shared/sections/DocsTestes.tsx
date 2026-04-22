@@ -84,16 +84,16 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
               <Table className="w-full text-sm">
                 <TableHeader>
                   <TableRow className="border-b border-border bg-muted/50 text-left">
-                    <TableHead className="p-3 border-r border-border font-semibold">{functional.cols.action}</TableHead>
-                    <TableHead className="p-3 border-r border-border font-semibold">{functional.cols.result}</TableHead>
+                    <TableHead className="p-3 font-semibold">{functional.cols.action}</TableHead>
+                    <TableHead className="p-3 font-semibold">{functional.cols.result}</TableHead>
                     <TableHead className="p-3 font-semibold">{functional.cols.priority}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {functional.items.map((item, i) => (
                     <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                      <TableCell className="p-3 border-r border-border">{item.action}</TableCell>
-                      <TableCell className="p-3 border-r border-border text-muted-foreground">{item.result}</TableCell>
+                      <TableCell className="p-3">{item.action}</TableCell>
+                      <TableCell className="p-3 text-muted-foreground">{item.result}</TableCell>
                       <TableCell className="p-3"><PriorityBadge priority={item.priority} /></TableCell>
                     </TableRow>
                   ))}
@@ -127,14 +127,14 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
               <Table className="w-full text-sm">
                 <TableHeader>
                   <TableRow className="border-b border-border bg-muted/50 text-left">
-                    <TableHead className="p-3 border-r border-border font-semibold">{visual.cols.story}</TableHead>
+                    <TableHead className="p-3 font-semibold">{visual.cols.story}</TableHead>
                     <TableHead className="p-3 font-semibold">{visual.cols.priority}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {visual.items.map((item, i) => (
                     <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                      <TableCell className="p-3 border-r border-border font-mono text-xs">{item.story}</TableCell>
+                      <TableCell className="p-3 font-mono text-xs">{item.story}</TableCell>
                       <TableCell className="p-3"><PriorityBadge priority={item.priority} /></TableCell>
                     </TableRow>
                   ))}

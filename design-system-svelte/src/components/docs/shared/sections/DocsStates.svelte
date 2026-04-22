@@ -17,16 +17,16 @@
       <Table class="w-full text-sm">
         <TableHeader>
           <TableRow class="border-b border-border bg-muted/50 text-left">
-            <TableHead class="p-3 border-r border-border font-semibold">{cols.state}</TableHead>
-            <TableHead class="p-3 border-r border-border font-semibold">{cols.trigger}</TableHead>
+            <TableHead class="p-3 font-semibold">{cols.state}</TableHead>
+            <TableHead class="p-3 font-semibold">{cols.trigger}</TableHead>
             <TableHead class="p-3 font-semibold">{cols.behavior}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {#each items as item}
             <TableRow class="border-b border-border last:border-0 hover:bg-muted/5">
-              <TableCell class="p-3 border-r border-border font-medium">{item.label}</TableCell>
-              <TableCell class="p-3 border-r border-border text-muted-foreground">{item.trigger}</TableCell>
+              <TableCell class="p-3 font-medium">{item.label}</TableCell>
+              <TableCell class="p-3 text-muted-foreground">{item.trigger}</TableCell>
               <TableCell class="p-3 text-muted-foreground">{item.behavior}</TableCell>
             </TableRow>
           {/each}

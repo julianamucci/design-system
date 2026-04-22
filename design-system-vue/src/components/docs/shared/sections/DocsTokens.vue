@@ -21,15 +21,15 @@ defineProps<{
           <Table>
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/50 text-left">
-                <TableHead class="p-3 border-r border-border font-semibold">{{ cols.token }}</TableHead>
-                <TableHead class="p-3 border-r border-border font-semibold">{{ cols.value }}</TableHead>
+                <TableHead class="p-3 font-semibold">{{ cols.token }}</TableHead>
+                <TableHead class="p-3 font-semibold">{{ cols.value }}</TableHead>
                 <TableHead class="p-3 font-semibold">{{ cols.description }}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow v-for="(item, i) in items" :key="i" class="border-b border-border last:border-0 hover:bg-muted/5">
-                <TableCell class="p-3 border-r border-border font-mono text-primary">{{ item.token }}</TableCell>
-                <TableCell class="p-3 border-r border-border font-mono text-muted-foreground">{{ item.value }}</TableCell>
+                <TableCell class="p-3 font-mono text-primary">{{ item.token }}</TableCell>
+                <TableCell class="p-3 font-mono text-muted-foreground">{{ item.value }}</TableCell>
                 <TableCell class="p-3 text-muted-foreground">{{ item.description }}</TableCell>
               </TableRow>
             </TableBody>

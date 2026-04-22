@@ -34,20 +34,20 @@ function buildTable(def: DocsPropsTableDef): DocumentFragment {
 
   const thead = createTableHeader();
   const headerRow = createTableRow('border-b border-border bg-muted/50 text-left');
-  headerRow.appendChild(createTableHead(def.cols.prop, 'p-3 border-r border-border font-semibold'));
-  headerRow.appendChild(createTableHead(def.cols.type, 'p-3 border-r border-border font-semibold'));
-  headerRow.appendChild(createTableHead(def.cols.default, 'p-3 border-r border-border font-semibold'));
-  headerRow.appendChild(createTableHead(def.cols.required, 'p-3 border-r border-border font-semibold'));
+  headerRow.appendChild(createTableHead(def.cols.prop, 'p-3 font-semibold'));
+  headerRow.appendChild(createTableHead(def.cols.type, 'p-3 font-semibold'));
+  headerRow.appendChild(createTableHead(def.cols.default, 'p-3 font-semibold'));
+  headerRow.appendChild(createTableHead(def.cols.required, 'p-3 font-semibold'));
   headerRow.appendChild(createTableHead(def.cols.description, 'p-3 font-semibold'));
   thead.appendChild(headerRow);
 
   const tbody = createTableBody();
   def.items.forEach(item => {
     const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
-    row.appendChild(createTableCell(item.name, 'p-3 border-r border-border font-mono font-bold text-primary'));
-    row.appendChild(createTableCell(item.type, 'p-3 border-r border-border font-mono text-muted-foreground'));
-    row.appendChild(createTableCell(item.defaultValue, 'p-3 border-r border-border text-muted-foreground'));
-    row.appendChild(createTableCell(item.required, 'p-3 border-r border-border text-muted-foreground'));
+    row.appendChild(createTableCell(item.name, 'p-3 font-mono font-bold text-primary'));
+    row.appendChild(createTableCell(item.type, 'p-3 font-mono text-muted-foreground'));
+    row.appendChild(createTableCell(item.defaultValue, 'p-3 text-muted-foreground'));
+    row.appendChild(createTableCell(item.required, 'p-3 text-muted-foreground'));
     row.appendChild(createTableCell(item.description, 'p-3 text-muted-foreground'));
     tbody.appendChild(row);
   });

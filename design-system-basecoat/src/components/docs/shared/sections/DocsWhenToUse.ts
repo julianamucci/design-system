@@ -47,16 +47,16 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
 
   const scenariosThead = createTableHeader();
   const scenariosHeaderRow = createTableRow('border-b border-border text-left bg-muted/50 font-medium');
-  scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.scenario, 'p-3 border-r border-border'));
-  scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.use, 'p-3 border-r border-border'));
+  scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.scenario, 'p-3'));
+  scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.use, 'p-3'));
   scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.alternative, 'p-3'));
   scenariosThead.appendChild(scenariosHeaderRow);
 
   const scenariosTbody = createTableBody();
   props.scenarios.items.forEach(item => {
     const row = createTableRow('border-b border-border hover:bg-muted/5');
-    row.appendChild(createTableCell(item.s, 'p-3 border-r border-border'));
-    row.appendChild(createTableCell(item.u, 'p-3 border-r border-border font-medium text-primary'));
+    row.appendChild(createTableCell(item.s, 'p-3'));
+    row.appendChild(createTableCell(item.u, 'p-3font-medium text-primary'));
     row.appendChild(createTableCell(item.a, 'p-3 text-muted-foreground'));
     scenariosTbody.appendChild(row);
   });
@@ -82,13 +82,13 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
 
     const uxThead = createTableHeader();
     const uxHeaderRow = createTableRow('border-b border-border bg-muted/70 text-left');
-    uxHeaderRow.appendChild(createTableHead(ux.cols.element, 'p-3 border-r border-border font-semibold'));
+    uxHeaderRow.appendChild(createTableHead(ux.cols.element, 'p-3font-semibold'));
     if (ux.cols.rules) {
-      uxHeaderRow.appendChild(createTableHead(ux.cols.rules, 'p-3 border-r border-border font-semibold'));
+      uxHeaderRow.appendChild(createTableHead(ux.cols.rules, 'p-3font-semibold'));
     }
 
     const doHead = document.createElement('th');
-    doHead.className = 'text-muted-foreground p-3 border-r border-border font-semibold text-green-700';
+    doHead.className = 'text-muted-foreground p-3font-semibold text-green-700';
     doHead.innerHTML = `<span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 text-xs font-bold flex-shrink-0">✓</span>${sanitizeHtml(ux.cols.do)}</span>`;
     uxHeaderRow.appendChild(doHead);
 
@@ -102,11 +102,11 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
     const uxTbody = createTableBody();
     ux.items.forEach(row => {
       const tr = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
-      tr.appendChild(createTableCell(row.element, 'p-3 border-r border-border font-medium'));
+      tr.appendChild(createTableCell(row.element, 'p-3font-medium'));
       if (ux.cols.rules) {
-        tr.appendChild(createTableCell(row.rules ?? '', 'p-3 border-r border-border text-muted-foreground'));
+        tr.appendChild(createTableCell(row.rules ?? '', 'p-3text-muted-foreground'));
       }
-      tr.appendChild(createTableCell(row.do, 'p-3 border-r border-border font-medium text-green-600'));
+      tr.appendChild(createTableCell(row.do, 'p-3font-medium text-green-600'));
       tr.appendChild(createTableCell(row.dont, 'p-3 font-medium text-red-600'));
       uxTbody.appendChild(tr);
     });

@@ -23,16 +23,16 @@ export function createDocsAnalytics(props: DocsAnalyticsProps): HTMLElement {
 
   const thead = createTableHeader();
   const headerRow = createTableRow('border-b border-border bg-muted/50 text-left');
-  headerRow.appendChild(createTableHead(props.cols.event, 'p-3 border-r border-border font-semibold'));
-  headerRow.appendChild(createTableHead(props.cols.trigger, 'p-3 border-r border-border font-semibold'));
+  headerRow.appendChild(createTableHead(props.cols.event, 'p-3 font-semibold'));
+  headerRow.appendChild(createTableHead(props.cols.trigger, 'p-3 font-semibold'));
   headerRow.appendChild(createTableHead(props.cols.payload, 'p-3 font-semibold'));
   thead.appendChild(headerRow);
 
   const tbody = createTableBody();
   props.items.forEach(item => {
     const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
-    row.appendChild(createTableCell(item.event, 'p-3 border-r border-border font-mono text-primary'));
-    row.appendChild(createTableCell(item.trigger, 'p-3 border-r border-border text-muted-foreground'));
+    row.appendChild(createTableCell(item.event, 'p-3 font-mono text-primary'));
+    row.appendChild(createTableCell(item.trigger, 'p-3 text-muted-foreground'));
     row.appendChild(createTableCell(item.payload, 'p-3 font-mono text-xs text-muted-foreground'));
     tbody.appendChild(row);
   });

@@ -43,16 +43,16 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
 
   const funcThead = createTableHeader();
   const funcHeaderRow = createTableRow('border-b border-border bg-muted/50 text-left');
-  funcHeaderRow.appendChild(createTableHead(props.functional.cols.action, 'p-3 border-r border-border font-semibold'));
-  funcHeaderRow.appendChild(createTableHead(props.functional.cols.result, 'p-3 border-r border-border font-semibold'));
+  funcHeaderRow.appendChild(createTableHead(props.functional.cols.action, 'p-3 font-semibold'));
+  funcHeaderRow.appendChild(createTableHead(props.functional.cols.result, 'p-3 font-semibold'));
   funcHeaderRow.appendChild(createTableHead(props.functional.cols.priority, 'p-3 font-semibold'));
   funcThead.appendChild(funcHeaderRow);
 
   const funcTbody = createTableBody();
   props.functional.items.forEach(item => {
     const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
-    row.appendChild(createTableCell(item.action, 'p-3 border-r border-border'));
-    row.appendChild(createTableCell(item.result, 'p-3 border-r border-border text-muted-foreground'));
+    row.appendChild(createTableCell(item.action, 'p-3'));
+    row.appendChild(createTableCell(item.result, 'p-3 text-muted-foreground'));
     const priorityCell = createTableCell('', 'p-3 font-medium');
     priorityCell.appendChild(createBadge({ text: item.priority, className: priorityBadgeClass(item.priority) }));
     row.appendChild(priorityCell);
@@ -105,14 +105,14 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
 
   const visualThead = createTableHeader();
   const visualHeaderRow = createTableRow('border-b border-border bg-muted/50 text-left');
-  visualHeaderRow.appendChild(createTableHead(props.visual.cols.story, 'p-3 border-r border-border font-semibold'));
+  visualHeaderRow.appendChild(createTableHead(props.visual.cols.story, 'p-3 font-semibold'));
   visualHeaderRow.appendChild(createTableHead(props.visual.cols.priority, 'p-3 font-semibold'));
   visualThead.appendChild(visualHeaderRow);
 
   const visualTbody = createTableBody();
   props.visual.items.forEach(item => {
     const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
-    row.appendChild(createTableCell(item.story, 'p-3 border-r border-border font-mono text-xs'));
+    row.appendChild(createTableCell(item.story, 'p-3 font-mono text-xs'));
     const priorityCell = createTableCell('', 'p-3 font-medium');
     priorityCell.appendChild(createBadge({ text: item.priority, className: priorityBadgeClass(item.priority) }));
     row.appendChild(priorityCell);

@@ -64,16 +64,16 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
           <Table className="w-full border-collapse text-sm">
             <TableHeader>
               <TableRow className="border-b border-border text-left bg-muted/50 font-medium">
-                <TableHead className="p-3 border-r border-border">{scenarios.cols.scenario}</TableHead>
-                <TableHead className="p-3 border-r border-border">{scenarios.cols.use}</TableHead>
+                <TableHead className="p-3">{scenarios.cols.scenario}</TableHead>
+                <TableHead className="p-3">{scenarios.cols.use}</TableHead>
                 <TableHead className="p-3">{scenarios.cols.alternative}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {scenarios.items.map((item, i) => (
                 <TableRow key={i} className="border-b border-border hover:bg-muted/5">
-                  <TableCell className="p-3 border-r border-border">{item.s}</TableCell>
-                  <TableCell className="p-3 border-r border-border font-medium text-primary">{item.u}</TableCell>
+                  <TableCell className="p-3">{item.s}</TableCell>
+                  <TableCell className="p-3font-medium text-primary">{item.u}</TableCell>
                   <TableCell className="p-3 text-muted-foreground">{item.a}</TableCell>
                 </TableRow>
               ))}
@@ -89,11 +89,11 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
               <Table className="w-full border-collapse text-sm">
                 <TableHeader>
                   <TableRow className="border-b border-border bg-muted/70 text-left">
-                    <TableHead className="p-3 border-r border-border font-semibold">{uxWriting.cols.element}</TableHead>
+                    <TableHead className="p-3font-semibold">{uxWriting.cols.element}</TableHead>
                     {uxWriting.cols.rules && (
-                      <TableHead className="p-3 border-r border-border font-semibold">{uxWriting.cols.rules}</TableHead>
+                      <TableHead className="p-3font-semibold">{uxWriting.cols.rules}</TableHead>
                     )}
-                    <TableHead className="p-3 border-r border-border font-semibold text-green-700 dark:text-green-400">
+                    <TableHead className="p-3font-semibold text-green-700 dark:text-green-400">
                       <span className="flex items-center gap-1.5">
                         <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
                         {uxWriting.cols.do}
@@ -110,11 +110,11 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
                 <TableBody>
                   {uxWriting.items.map((row, i) => (
                     <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                      <TableCell className="p-3 border-r border-border font-medium">{row.element}</TableCell>
+                      <TableCell className="p-3font-medium">{row.element}</TableCell>
                       {uxWriting.cols.rules && (
-                        <TableCell className="p-3 border-r border-border text-muted-foreground">{row.rules}</TableCell>
+                        <TableCell className="p-3text-muted-foreground">{row.rules}</TableCell>
                       )}
-                      <TableCell className="p-3 border-r border-border font-medium text-green-600 dark:text-green-500">{row.do}</TableCell>
+                      <TableCell className="p-3font-medium text-green-600 dark:text-green-500">{row.do}</TableCell>
                       <TableCell className="p-3 font-medium text-red-600 dark:text-red-500">{row.dont}</TableCell>
                     </TableRow>
                   ))}

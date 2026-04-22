@@ -42,15 +42,15 @@ const priorityClass = (p: string) =>
             <Table>
               <TableHeader>
                 <TableRow class="border-b border-border bg-muted/50 text-left">
-                  <TableHead class="p-3 border-r border-border font-semibold">{{ functional.cols.action }}</TableHead>
-                  <TableHead class="p-3 border-r border-border font-semibold">{{ functional.cols.result }}</TableHead>
+                  <TableHead class="p-3 font-semibold">{{ functional.cols.action }}</TableHead>
+                  <TableHead class="p-3 font-semibold">{{ functional.cols.result }}</TableHead>
                   <TableHead class="p-3 font-semibold">{{ functional.cols.priority }}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <TableRow v-for="(item, i) in functional.items" :key="i" class="border-b border-border last:border-0 hover:bg-muted/5">
-                  <TableCell class="p-3 border-r border-border">{{ item.action }}</TableCell>
-                  <TableCell class="p-3 border-r border-border text-muted-foreground">{{ item.result }}</TableCell>
+                  <TableCell class="p-3">{{ item.action }}</TableCell>
+                  <TableCell class="p-3 text-muted-foreground">{{ item.result }}</TableCell>
                   <TableCell class="p-3">
                     <Badge variant="outline" :class="priorityClass(item.priority)">{{ item.priority }}</Badge>
                   </TableCell>
@@ -81,13 +81,13 @@ const priorityClass = (p: string) =>
             <Table>
               <TableHeader>
                 <TableRow class="border-b border-border bg-muted/50 text-left">
-                  <TableHead class="p-3 border-r border-border font-semibold">{{ visual.cols.story }}</TableHead>
+                  <TableHead class="p-3 font-semibold">{{ visual.cols.story }}</TableHead>
                   <TableHead class="p-3 font-semibold">{{ visual.cols.priority }}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <TableRow v-for="(item, i) in visual.items" :key="i" class="border-b border-border last:border-0 hover:bg-muted/5">
-                  <TableCell class="p-3 border-r border-border font-mono text-xs">{{ item.story }}</TableCell>
+                  <TableCell class="p-3 font-mono text-xs">{{ item.story }}</TableCell>
                   <TableCell class="p-3">
                     <Badge variant="outline" :class="priorityClass(item.priority)">{{ item.priority }}</Badge>
                   </TableCell>
