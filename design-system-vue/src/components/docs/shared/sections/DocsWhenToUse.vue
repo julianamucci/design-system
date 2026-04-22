@@ -48,7 +48,7 @@ const props = defineProps<{
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow v-for="(item, i) in scenarios.items" :key="i" class="border-b border-border hover:bg-muted/5">
+              <TableRow v-for="(item, i) in scenarios.items" :key="i" class="border-b border-border last:border-0 hover:bg-muted/5">
                 <TableCell class="p-3">{{ item.s }}</TableCell>
                 <TableCell class="p-3 font-medium text-primary">{{ item.u }}</TableCell>
                 <TableCell class="p-3 text-muted-foreground">{{ item.a }}</TableCell>
@@ -61,7 +61,7 @@ const props = defineProps<{
         <div v-if="uxWriting" class="space-y-3">
           <h3 class="font-medium text-sm">{{ uxWriting.title }}</h3>
           <Card class="shadow-sm overflow-x-auto md:overflow-visible p-4">
-            <Table>
+            <Table class="[&_th]:whitespace-normal [&_td]:whitespace-normal">
               <TableHeader>
                 <TableRow class="border-b border-border bg-muted/70 text-left">
                   <TableHead class="p-3 font-semibold">{{ uxWriting.cols.element }}</TableHead>

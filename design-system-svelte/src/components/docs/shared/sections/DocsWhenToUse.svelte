@@ -42,7 +42,7 @@
           </TableHeader>
           <TableBody>
             {#each scenarios.items as item}
-              <TableRow class="border-b border-border hover:bg-muted/5">
+              <TableRow class="border-b border-border last:border-0 hover:bg-muted/5">
                 <TableCell class="p-3">{item.s}</TableCell>
                 <TableCell class="p-3 font-medium text-primary">{item.u}</TableCell>
                 <TableCell class="p-3 text-muted-foreground">{item.a}</TableCell>

@@ -71,7 +71,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
             </TableHeader>
             <TableBody>
               {scenarios.items.map((item, i) => (
-                <TableRow key={i} className="border-b border-border hover:bg-muted/5">
+                <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
                   <TableCell className="p-3">{item.s}</TableCell>
                   <TableCell className="p-3 font-medium text-primary">{item.u}</TableCell>
                   <TableCell className="p-3 text-muted-foreground">{item.a}</TableCell>

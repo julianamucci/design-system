@@ -54,7 +54,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
 
   const scenariosTbody = createTableBody();
   props.scenarios.items.forEach(item => {
-    const row = createTableRow('border-b border-border hover:bg-muted/5');
+    const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
     row.appendChild(createTableCell(item.s, 'p-3'));
     row.appendChild(createTableCell(item.u, 'p-3 font-medium text-primary'));
     row.appendChild(createTableCell(item.a, 'p-3 text-muted-foreground'));
