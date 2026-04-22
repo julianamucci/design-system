@@ -4,7 +4,7 @@ argument-hint: [component-slug|all] [mode]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent]
 ---
 
-# Pipeline de Qualidade (otimizada)
+# Pipeline de Qualidade (otimizada v2)
 
 Você é o orquestrador do design system. Seu trabalho é descobrir componentes e executar as skills especializadas na sequência certa, **paralelizando etapas independentes** e **evitando leituras redundantes**.
 
@@ -15,25 +15,22 @@ O usuário invocou o comando com: **$ARGUMENTS**
 - **`component-slug`** (opcional) — slug específico (ex: `button`) ou `all` para todos os componentes (padrão: `all`)
 - **`mode`** (opcional):
   - `full` — pipeline completo: dev → content → quality → audit (padrão)
-  - `audit` — apenas auditoria: cross-stack + security + performance + quality
+  - `audit` — apenas auditoria (scripts + agents com julgamento)
   - `content` — apenas conteúdo: ux-writer + seo-geo + analytics
-  - `new` — componente novo: dev (todas as stacks) + content + quality + audit
+  - `new` — componente novo: dev + content + quality + audit
 
 ---
 
-## Princípios de Performance
+## Princípios (ordem de impacto)
 
-Siga estes princípios em TODO o fluxo — eles cortam ~50% do consumo de tokens em relação à execução ingênua, além de ~40-50% de wall-clock:
-
-1. **Paralelize entre skills, serial entre componentes.** Dev-skills das 4 stacks e os 4 auditores por componente são independentes — rode em paralelo no mesmo `Agent` batch. Mas rode serial entre componentes (accordion → alert → …) para evitar colisão de commits concorrentes no git.
-2. **Context-cache por componente.** Em `new`/`full`/`audit`, escreva `.pipeline-context/<slug>.md` com o subset relevante (variantes, props, tokens, **lista de arquivos por stack**). Agents leem só esse resumo. Reuse se existir e for do mesmo dia.
-3. **Pre-scan global** (modo `audit`). Antes de disparar auditores, gere **um único** `.pipeline-context/scans.json` varrendo padrões conhecidos (HTML dinâmico, dimensões hardcoded, onUnmounted aninhado, etc.) para **todos** os componentes. Agents consultam JSON em vez de fazer grep — economiza 5-10 tool calls/agent.
-4. **Templates de prompt** (`.pipeline-context/audit-prompts/<skill>.md`). Preenche placeholders `{{slug}}`, `{{context_cache_path}}`, `{{prescan_path}}`, `{{*_files}}`. Agents recebem instruções concisas (~60 palavras) em vez de prompts inflados (~200 palavras).
-5. **Early-exit via pre-scan.** Se `scans.json[slug]` está limpo em todas as categorias relevantes, **não dispare o agent**. A pipeline reporta direto `10/10 — pre-scan limpo`.
-6. **Audit-mode report-only.** Em modo `audit`, agents NUNCA editam ou commitam — só relatam. Fixes são agrupados em `FIXES-NEEDED.md` e aplicados em batch pela pipeline ao final. Skills isoladas (fora de pipeline) continuam em fix-mode.
-7. **Use Glob e Grep nativos.** Evite `for stack in ...; do ls ...` e outros loops bash no Windows — use Glob que varre 4 diretórios de uma vez.
-8. **Regras anti-boilerplate explícitas** nos prompts dos dev-agents.
-9. **Agents recebem briefing auto-contido.** Passe no prompt: slug, modo, caminho do context-cache, lista exata de arquivos a criar/editar. Não delegue "descubra o que fazer".
+1. **Scripts antes de agents.** Tudo que é grep+regex determinístico vive em `scripts/audit.mjs` e roda em <1s para todos os componentes do projeto. Só escale para um `Agent` quando o check exige julgamento (contexto visual, UX writing, divergência de API entre stacks).
+2. **Inline checks nos dev-skills.** Antes de commitar, cada `/dev-<stack>` roda `node scripts/audit.mjs <slug> --category security` (e equivalentes) e corrige localmente o que for determinístico. Isso elimina ~1 rodada inteira de auditoria em modo `new`.
+3. **Cross-stack por último.** Ele compara as 4 implementações entre si — rodar depois dos outros 5 auditores faz com que reporte apenas divergências **pós-fix**, não cascata redundante.
+4. **Paralelize entre skills, serial entre componentes.** Dev-skills das 4 stacks e os auditores por componente são independentes — batch paralelo de `Agent`. Serial entre componentes evita colisão de commits no git.
+5. **Context-cache por componente.** `.pipeline-context/<slug>.md` com subset relevante (variantes, props, tokens, lista de arquivos). Agents leem só esse resumo. Reuse se for do mesmo dia.
+6. **Audit-mode é report-only.** Agents chamados pela pipeline em `audit` reportam; fixes vão para `FIXES-NEEDED.md` e rodam em batch com aprovação do usuário. Skills isoladas (`/quality` fora de pipeline) continuam fix-mode.
+7. **Glob e Grep nativos, não loops bash.** No Windows loops são lentos e difíceis de parsear; tools do Claude já varrem em paralelo.
+8. **Prompts auto-contidos.** Passe slug, modo, caminho do context-cache, lista exata de arquivos. Não delegue "descubra o que fazer".
 
 ---
 
@@ -48,297 +45,271 @@ Use `Glob` (não loops bash) para descobrir os slugs. Um `Glob` por stack:
 - `design-system-svelte/src/components/ui/*/index.ts`
 - `design-system-basecoat/src/components/ui/*.ts`
 
-Os 4 `Glob` podem ser chamados em paralelo no mesmo turno. Para o React: extraia o basename, filtre `*.stories.*` e sufixos de variação (`-variantes`, `-tamanhos`, `-estados`, `-composicoes`), e intersecte com os demais.
+Os 4 `Glob` em paralelo no mesmo turno. Extraia basename, filtre `*.stories.*` e sufixos de variação (`-variantes`, `-tamanhos`, `-estados`, `-composicoes`, `-modos`, `-layouts`, `-composicoes`), e intersecte com os demais.
 
-**Slugs a ignorar** (não são componentes standalone): `index`, `utils`, `cn`, `icons`
+**Slugs a ignorar**: `index`, `utils`, `cn`, `icons`
 
-### Se `component-slug` for um slug específico:
-
-Use apenas esse slug — pule a descoberta.
+### Se `component-slug` for um slug específico: pule a descoberta.
 
 ---
 
 ## Passo 2 — Verificar Estado Atual
 
-Para cada slug, faça **uma chamada** paralela com `Glob` em paralelo com `Read` de `docs/shared/content/<slug>/translations.json` (se existir). Não rode loops bash.
-
-Os `Glob` a disparar em paralelo (um batch só):
+Um único batch de `Glob` para cada slug (paralelo):
 
 - `design-system-{react,vue,svelte,basecoat}/src/components/ui/<slug>*`
 - `design-system-{react,vue,svelte,basecoat}/src/components/docs/*<Slug>Docs.*`
 - `design-system-{react,vue,svelte,basecoat}/src/components/ui/<slug>*.stories.*` (e `<slug>/<slug>-*.stories.*` para Vue/Svelte)
 - `docs/shared/content/<slug>/translations.json`
 
-Derive o estado (completo / falta X stack / sem translations / sem docs page) desses resultados direto.
+Derive o estado (completo / falta X stack / sem translations / sem docs page).
 
 ---
 
-## Passo 3 — Montar Plano de Execução
+## Passo 3 — Plano de Execução
 
-Mostre uma tabela com o plano. Para modo `new`, a tabela é sempre igual ao fluxo completo.
+Tabela com o plano. Se o usuário já disse "pode seguir" / "execute tudo" na mensagem atual, não pergunte — siga direto.
 
 ```
 ## Plano de Execução — Pipeline <mode>
 
 | Componente | Estado | Skills a executar |
-|------------|--------|-------------------|
-| ...        | ...    | ...               |
 ```
-
-Se o usuário já pediu "execute autonomously" / "execute tudo" na mensagem atual, **não pergunte** — siga direto. Caso contrário, aguarde confirmação.
 
 ---
 
-## Passo 4 — Gerar Context Cache + Pre-scan global
+## Passo 4 — Audit determinístico (script)
 
-### 4a. Context-cache por componente (modos `new`, `full`, **`audit`**)
+Antes de qualquer agent, rode:
 
-Depois de rodar `/ux-writer <slug>` + `/product <slug> --from-content` (ou, em `audit`, antes de disparar auditores), escreva `.pipeline-context/<slug>.md` com:
+```bash
+node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json
+# ou para todos:
+node scripts/audit.mjs --all --json > .pipeline-context/scans.json
+```
 
-- Slug, categoria do componente
-- Variantes e tamanhos (extraídos do componente UI)
+O script cobre:
+- **security**: HTML dinâmico sem sanitize, href sem validação
+- **performance**: wildcard lucide imports, dimensões hardcoded em cva, onUnmounted aninhado, top-level Date em stories
+- **quality**: seções obrigatórias faltando, a11y.disable, sub-stories sem play
+- **analytics**: eventos de translations não tipados em AnalyticsEvents, `@/lib/analytics` importado em UI primitive
+
+Exit codes: 0 = limpo, 1 = high violations, 2 = medium/low.
+
+**Regra de ouro**: se `scan-<slug>.json` está vazio para uma categoria, **NÃO dispare o agent dessa categoria**. Reporte `10/10 — script limpo, agente pulado`. Os agents ficam só com o que exige julgamento (UX writing, consistência visual cross-stack, decisões de API).
+
+---
+
+## Passo 5 — Context cache (modos `new` / `full` / `audit`)
+
+Depois de rodar `/ux-writer` + `/product --from-content` (em `new`), ou antes de disparar auditores (em `audit`), escreva `.pipeline-context/<slug>.md` com:
+
+- Slug, categoria
+- Variantes/tamanhos (do componente UI)
 - Props e tipos (do componente UI)
-- Tokens CSS usados
-- Seções especiais exigidas pela guideline 11 da categoria
-- Chaves críticas de `translations.json` (lista de seções presentes)
-- **Lista de arquivos das 4 stacks** (para os templates usarem como `{{*_files}}`)
+- Tokens CSS
+- Seções especiais da guideline 11 da categoria
+- Chaves críticas de `translations.json`
+- **Lista de arquivos das 4 stacks** (para os prompts)
 
-Esse arquivo é o briefing que os dev-agents e audit-agents leem. É tipicamente **≤120 linhas** — muito menor que reler 10 guidelines inteiras.
-
-Reuse o cache se existir e for do mesmo dia. Caso contrário, regenere.
-
-### 4b. Pre-scan global (apenas modo `audit`)
-
-Antes de disparar qualquer auditor, gere **um único** `.pipeline-context/scans.json` varrendo **todos** os componentes alvo de uma vez. Estrutura:
-
-```json
-{
-  "<slug>": {
-    "html_dynamic_unsanitized": ["file:line", ...],
-    "href_unvalidated": ["file:line", ...],
-    "hardcoded_dimensions": ["file:line", ...],
-    "missing_testes_section": false,
-    "missing_accessibility_section": false,
-    "text_below_12px": ["file:line", ...],
-    "onunmounted_nested": false,
-    "wildcard_imports": ["file:line", ...],
-    "style_inline": ["file:line", ...],
-    "intersection_observer_no_cleanup": ["file:line", ...]
-  }
-}
-```
-
-Use Grep nativo (não loops bash) em batches:
-```
-Grep "dangerouslySetInnerHTML|v-html|\\{@html|\\.innerHTML" em ui/ e docs/ sem sanitizeHtml()
-Grep "\\bh-(5|6|7|8|9|10|11|12)\\b|\\bsize-(5|6|7|8|9|10)\\b" em cva/tv
-Grep "onMounted.*\\n.*onUnmounted" multiline em .vue
-Grep "from 'lucide-?.*'" sem "import {"
-Grep "style=\\{\\{|:style=\"\\{" em .tsx/.vue
-```
-
-**Resultado**: um único arquivo JSON consultável por todos os 28 agents. Evita ~5-10 grep calls por agent.
-
-Se `scans.json` existir e for do mesmo dia, reuse. Caso contrário, regenere.
+Tipicamente ≤120 linhas. Reuse se for do mesmo dia.
 
 ---
 
-## Passo 5 — Executar Skills
+## Passo 6 — Executar Skills
 
-### Sequência `new` (otimizada)
+### Sequência `new`
 
 ```
-Fase A (serial, obrigatoriamente nesta ordem):
+Fase A (serial):
   1. /ux-writer <slug>
   2. /product <slug> --from-content
-  3. (Gerar .pipeline-context/<slug>.md — ver Passo 4)
+  3. Gerar .pipeline-context/<slug>.md (Passo 5)
+  4. node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json
 
 Fase B (4 agents em PARALELO — dev-skills):
-  /dev-react <slug>
-  /dev-vue <slug>
-  /dev-svelte <slug>
-  /dev-basecoat <slug>
+  /dev-react <slug>     ← antes de commitar, roda audit.mjs --category security,performance,analytics,quality
+  /dev-vue <slug>       ← idem
+  /dev-svelte <slug>    ← idem
+  /dev-basecoat <slug>  ← idem
 
-Fase C (4 agents em PARALELO — audit read-only):
-  /cross-stack <slug>
-  /quality <slug>
-  /security <slug>
-  /performance <slug>
+Fase C (serial):
+  node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json (re-scan pós-dev)
 
-Fase D (2 agents em PARALELO — content audit):
-  /seo-geo <slug>
-  /analytics <slug>
+Fase D (até 5 agents em PARALELO — apenas se o script reportou violações na categoria):
+  /security <slug>     (só se scan.security[].length > 0)
+  /performance <slug>  (só se scan.performance[].length > 0)
+  /quality <slug>      (só se scan.quality[].length > 0)
+  /seo-geo <slug>      (sempre — depende de content, não de scripts)
+  /analytics <slug>    (só se scan.analytics[].length > 0)
 
-Fase E (serial):
-  /product <slug>  (from-code fine-tuning)
+Fase E (1 agent — último, compara pós-fix):
+  /cross-stack <slug>  (sempre — agora compara estado pós-fix)
+
+Fase F (serial):
+  Consolidar FIXES-NEEDED.md se restaram violações que precisam julgamento
 ```
 
-**Como paralelizar fases B/C/D:** emita múltiplos `Agent` tool-uses no mesmo turno. Cada agent recebe um prompt auto-contido conforme "Prompts dos dev-agents" abaixo. O runtime aguarda os 4 terminarem antes de você avançar para a próxima fase.
+### Sequência `audit`
+
+```
+Fase A (serial, 1x):
+  1. node scripts/audit.mjs --all --json > .pipeline-context/scans.json
+  2. Gerar/reusar .pipeline-context/<slug>.md para cada componente
+
+Fase B (serial entre componentes, paralelo entre skills — pular categorias limpas):
+  Para cada <slug>:
+    Disparar N agents em paralelo (N = número de categorias com violações não-triviais + seo-geo):
+      /security | /performance | /quality | /analytics (só se scan reportou)
+      /seo-geo  (sempre)
+
+Fase C (1 agent):
+  /cross-stack <slug>  (por último, compara pós-agents)
+
+Fase D (serial):
+  Consolidar FIXES-NEEDED.md. Perguntar ao usuário:
+  > N violações em X componentes. Aplicar: [1] críticos / [2] críticos+médios / [3] todos / [4] nenhum?
+```
 
 ### Sequência `full`
 
 ```
-Fase A (se translations ausente): /ux-writer <slug> + gerar context-cache
-Fase B (4 agents paralelos — só stacks ausentes): /dev-<stack> <slug>
-Fase C (4 agents paralelos): /cross-stack, /quality, /security, /performance
-Fase D (2 agents paralelos): /seo-geo, /analytics (se docs page existe)
+Fase A (se translations ausente): /ux-writer + context-cache
+Fase B (dev-skills, só stacks ausentes): /dev-<stack> com inline checks
+Fase C: node scripts/audit.mjs <slug> pós-dev
+Fase D (agents paralelos, só categorias com violações): security, performance, quality, seo-geo, analytics
+Fase E: /cross-stack (por último)
+Fase F: consolidar FIXES-NEEDED
 ```
-
-### Sequência `audit` (otimizada)
-
-```
-Fase A (serial, 1x para a pipeline inteira):
-  1. Gerar/reusar .pipeline-context/scans.json (Passo 4b)
-  2. Gerar/reusar .pipeline-context/<slug>.md para cada componente alvo (Passo 4a)
-
-Fase B (serial entre componentes, paralelo entre skills):
-  Para cada <slug>:
-    Disparar 4 agents em paralelo no MESMO turno:
-      /cross-stack <slug>  (template audit-prompts/cross-stack.md)
-      /quality <slug>      (template audit-prompts/quality.md)
-      /security <slug>     (template audit-prompts/security.md)
-      /performance <slug>  (template audit-prompts/performance.md)
-    Aguardar os 4 terminarem antes de passar para o próximo <slug>.
-
-Fase C (serial):
-  Consolidar violações em FIXES-NEEDED.md agrupado por categoria.
-  Usuário decide quais aplicar. Skills isoladas (/quality, /security) em fix-mode
-  corrigem e commitam.
-```
-
-**Por que serial entre componentes?** Evita colisão de commits concorrentes no git quando múltiplos auditores corrigem o mesmo arquivo (ex: `basecoat-theme-overrides.css` sendo editado por 2 agents ao mesmo tempo).
-
-**Por que paralelo entre skills?** Zero conflito: cross-stack/quality/security/performance olham coisas diferentes do mesmo componente. Ganho de wall-clock sem risco.
-
-**Por que audit-mode report-only?** Agentes que apenas reportam terminam mais rápido e produzem menos tokens de output. Fixes são agrupados e aplicados no final pela pipeline (otim 7).
 
 ### Sequência `content`
 
 ```
-Fase A (serial): /ux-writer
-Fase B (2 agents paralelos): /seo-geo, /analytics
+Fase A: /ux-writer
+Fase B (paralelo): /seo-geo, /analytics
 ```
 
 ---
 
 ## Prompts dos dev-agents
 
-Cada dev-agent (react/vue/svelte/basecoat) deve receber um prompt auto-contido com:
+Cada dev-agent recebe prompt auto-contido com:
 
-1. Nome do skill a invocar (ex: `/dev-react alert-dialog`)
-2. Caminho do context-cache: `.pipeline-context/<slug>.md` (ler PRIMEIRO, antes de qualquer outra coisa)
-3. **Regras anti-boilerplate obrigatórias** (copie literalmente no prompt):
+1. Skill a invocar (`/dev-react <slug>`)
+2. Caminho do context-cache: `.pipeline-context/<slug>.md` (ler PRIMEIRO)
+3. **Regras anti-boilerplate** (copie literalmente):
 
 ```
 REGRAS ANTI-BOILERPLATE:
-- Apenas o meta principal (`<slug>.stories.*`) carrega `tags: ["autodocs"]`. Sub-stories (`<slug>-variantes`, `<slug>-tamanhos`, `<slug>-estados`, `<slug>-composicoes`) NUNCA incluem `tags: ["autodocs"]` — isso gera páginas Docs duplicadas na sidebar.
-- A docs page principal é injetada via `parameters: { docs: { page: withAutoDocsTab(<Slug>Docs) } }` — apenas no arquivo `<slug>.stories.*`.
+- Apenas o meta principal (`<slug>.stories.*`) carrega `tags: ["autodocs"]`. Sub-stories NUNCA.
+- Docs page principal via `parameters: { docs: { page: withAutoDocsTab(<Slug>Docs) } }` — só no arquivo principal.
 - Sub-stories têm apenas `title`, `component`, `parameters.layout`, `parameters.docs.description.component`.
-- Categorias de sub-story a gerar dependem do tipo de componente: respeite o que a guideline da categoria manda (ex: overlays de confirmação como AlertDialog NÃO têm `-variantes` nem `-tamanhos`).
-- Antes de escrever HTML inline, cheque se existe componente em `./components/ui/` que resolva.
+- Use componentes reais de `./components/ui/` em previews — nunca HTML inline.
+- Use APENAS section containers de `@/components/docs/shared/sections` — zero JSX de seção inline.
 ```
 
-4. Lista exata dos arquivos que o agent deve produzir (ex: `<Slug>Docs.tsx`, `<slug>.stories.tsx`, `<slug>-estados.stories.tsx`, `<slug>-composicoes.stories.tsx`)
-5. Instrução de commit: `skill(dev-<stack>): <slug>` ao final.
+4. **Inline audit check antes de commit** (copie literalmente):
 
-**Não coloque `isolation: "worktree"`** — os 4 agents precisam do mesmo repo para que os commits apareçam em sequência.
+```
+ANTES DE COMMITAR, rode:
+  node scripts/audit.mjs <slug> --category security --json
+  node scripts/audit.mjs <slug> --category performance --json
+  node scripts/audit.mjs <slug> --category analytics --json
+  node scripts/audit.mjs <slug> --category quality --json
 
----
+Para cada violação da sua stack, corrija ANTES do commit. Se não puder corrigir
+(ex: exige mudar o UI primitive), inclua no commit message: "ciência: <rule> em <file> — <motivo>".
+```
 
-## Prompts dos audit-agents (audit-mode report-only)
+5. Lista exata dos arquivos a produzir.
+6. Commit: `skill(dev-<stack>): <slug>`.
 
-**Use os templates em `.pipeline-context/audit-prompts/<skill>.md`**. Cada template é auto-contido e incorpora:
-
-- **Early-exit via pre-scan** (otim 3): agent consulta `scans.json` primeiro; se limpo, retorna em 1-2 tool calls
-- **Lista de arquivos embutida** (otim 6): evita agent fazer Glob para descobrir arquivos
-- **Audit-mode puro** (otim 7): instrução explícita "NÃO edite, NÃO commite, apenas reporte"
-- **Sem auto-commit** (otim 8): templates proíbem emitir mensagens de commit — a pipeline agrupa fixes em `FIXES-NEEDED.md` no final
-
-### Como preencher o template
-
-Substitua placeholders antes de passar para o Agent:
-
-| Placeholder | Valor |
-|-------------|-------|
-| `{{slug}}` | componente (ex: `button`) |
-| `{{category}}` | categoria da guideline (ex: `Form`) |
-| `{{context_cache_path}}` | `.pipeline-context/<slug>.md` |
-| `{{prescan_path}}` | `.pipeline-context/scans.json` |
-| `{{react_files}}` | lista separada por espaço dos arquivos React relevantes |
-| `{{vue_files}}` | idem Vue |
-| `{{svelte_files}}` | idem Svelte |
-| `{{basecoat_files}}` | idem Basecoat |
-| `{{ui_files}}` | só componentes `ui/` (security/performance) |
-| `{{docs_files}}` | só docs pages (security/performance) |
-
-Os valores saem do context-cache (seção "Arquivos").
-
-### Regra de ouro
-
-Se o pre-scan diz que o componente está limpo em todas as categorias relevantes, **não chame o agent**. A pipeline deve checar `scans.json` antes de disparar cada auditor. Reporta direto: "X/10 — pre-scan limpo, agente não disparado".
-
-### Fallback (sem templates)
-
-Se por algum motivo os templates em `.pipeline-context/audit-prompts/` não existirem, caia no modo legado:
-1. Skill a invocar
-2. Caminho do context-cache
-3. "Apenas reporte; NÃO edite; NÃO commite. Resposta ≤150 palavras."
+**Não coloque `isolation: "worktree"`** — os 4 agents precisam do mesmo repo.
 
 ---
 
-## Passo 6 — Relatório Consolidado + FIXES-NEEDED.md
+## Prompts dos audit-agents (report-only)
 
-### 6a. Relatório (chat)
+Cada audit-agent recebe:
+
+1. Skill a invocar (`/security <slug>`, `/cross-stack <slug>`, etc.)
+2. `cat .pipeline-context/scan-<slug>.json` para ver o que o script já detectou
+3. `cat .pipeline-context/<slug>.md` para o contexto
+4. Instrução:
+
+```
+Você é chamado pelo pipeline em MODO AUDIT (report-only). O script determinístico
+já rodou — seu trabalho é cobrir o que o script NÃO pega (julgamento, contexto,
+consistência visual, UX writing).
+
+NÃO re-detecte o que o script já encontrou. Foque em:
+- <listar áreas específicas da skill que exigem olho humano>
+
+NÃO edite, NÃO commite. Reporte em ≤150 palavras:
+- Violações novas (não listadas no scan)
+- Score /10
+- Arquivo:linha das violações
+```
+
+**Cross-stack prompt adicional** (é o último agent):
+
+```
+Você compara as 4 implementações PÓS-FIX. Os outros auditores já rodaram e
+corrigiram o que puderam. Reporte apenas:
+- Divergências de API aceitáveis (diferenças idiomáticas entre libs)
+- Divergências reais que exigem alinhamento (classes Tailwind diferentes para
+  o mesmo efeito, comportamentos diferentes em play functions)
+- Decisões que precisam de julgamento humano (ex: qual lib adotar como fonte
+  de verdade quando a API diverge muito)
+```
+
+---
+
+## Passo 7 — Relatório + FIXES-NEEDED.md
+
+### 7a. Relatório (chat)
 
 ```
 ## Relatório Pipeline — <mode> — <data>
 
 ### Componentes Processados: X
 
-| Componente | Cross-stack | Quality | Security | Perf | Issues |
-|------------|-------------|---------|----------|------|--------|
-
-### Issues por Categoria
-...
-
-### Próximos passos sugeridos
+| Componente | Script scan | Fase B dev | Fase D audits | Fase E cross-stack |
+|------------|-------------|------------|---------------|--------------------|
+| calendar   | 4 high, 3 low | ✓ 4 stacks | 2 agents disparados | 1 divergência |
 ```
 
-### 6b. FIXES-NEEDED.md (apenas modo `audit`)
+### 7b. FIXES-NEEDED.md
 
-Agrupa todas as violações reportadas pelos agents em um único arquivo `.pipeline-context/FIXES-NEEDED.md`, organizado por categoria e ordenado por severidade:
+Agrupa violações reportadas por agents (não pelos scripts — esses já foram aplicados inline) organizadas por severidade:
 
 ```md
-# Fixes Pendentes — Pipeline audit <data>
+# Fixes Pendentes — Pipeline <mode> <data>
 
-## Críticos (security, a11y grave)
-- [ ] <slug>: <descrição curta> (`path/to/file.tsx:42`) — skill: `/security <slug>`
+## Críticos
+- [ ] <slug>: <descrição> (`file.tsx:42`) — skill: `/security <slug>`
+
+## Médios
 ...
 
-## Médios (performance, tokenização)
-...
-
-## Baixos (divergências cross-stack cosméticas)
+## Baixos
 ...
 ```
 
-Ao fim do audit, a pipeline exibe o resumo e pergunta:
-> 28 violações em 7 componentes. Aplicar: [1] críticos / [2] críticos+médios / [3] todos / [4] nenhum?
-
-Usuário escolhe; pipeline dispara skills em **fix-mode** (fora do audit-prompts) e commita em batch com mensagens `skill(<nome>): <slug>` agrupadas por componente.
+Ao fim, pergunte: **"N violações em X componentes. Aplicar: [1] críticos / [2] críticos+médios / [3] todos / [4] nenhum?"**
 
 ---
 
 ## Regras de Operação
 
-- **Nunca pule uma skill** sem registrar o motivo.
-- **Paralelize sempre que possível.** Emita múltiplos `Agent` no mesmo turno para Fases B, C, D.
-- **Cache de contexto é obrigatório em modo `new` e `full`.** Não delegue aos agents redescobrir o componente.
-- **Anti-boilerplate no prompt.** A regra de `autodocs` só no meta principal é a mais importante — ela já causou bug em sessão anterior.
-- **Erros em uma skill** não bloqueiam as próximas da mesma fase — registre e continue. Erros em Fase A (serial) bloqueiam Fase B.
+- **Scripts antes de agents.** Sempre rode `node scripts/audit.mjs` primeiro. Se não há violação na categoria, pule o agent inteiro.
+- **Cross-stack é sempre o último auditor.** Ele compara estado pós-fix, não pré.
+- **Nunca pule uma skill sem registrar o motivo.** Se o script está limpo, registre `script-clean, agent skipped`.
+- **Paralelize Fases B, D sempre que possível.** Emita múltiplos `Agent` no mesmo turno.
+- **Cache de contexto obrigatório em `new` e `full`.**
+- **Anti-boilerplate no prompt dos dev-agents.** A regra de `autodocs` só no meta principal é a mais importante.
+- **Erros em uma skill** não bloqueiam as próximas da mesma fase — registre e continue.
 - **Mostre progresso fase a fase:** `✓ Fase B concluída (4 stacks paralelas, 3 min)`.
-- **Limpe `.pipeline-context/<slug>.md`** ao final do modo `new` (ou deixe para próxima execução — é cache, não verdade).
-- **Paralelize entre skills, serial entre componentes.** Em modo `audit`, dispare os 4 auditores de um componente em paralelo, mas aguarde os 4 terminarem antes do próximo componente. Paralelizar entre componentes causa colisão de commits.
-- **Use pre-scan + templates em modo `audit`.** Gere `scans.json` antes de tudo; consulte antes de disparar cada agent. Se pre-scan limpo, não dispare o agent — reporte `10/10` direto.
-- **Audit-mode ≠ fix-mode.** Agents chamados pela pipeline em `audit` são report-only. Skills isoladas (`/quality <slug>` fora de pipeline) continuam em fix-mode normal.
-- **Consolide fixes em FIXES-NEEDED.md.** Não peça ao auditor para commitar. A pipeline agrupa e aplica em batch no fim, permitindo ao usuário escolher severidade.
+- **Audit-mode ≠ fix-mode.** Agents em `audit` são report-only. Skills isoladas (`/quality <slug>`) fora do pipeline continuam em fix-mode.
+- **FIXES-NEEDED.md agrupa só violações pós-script.** As violações determinísticas já foram corrigidas inline pelos dev-agents.
+- **Commits**: fase A/B geram commits próprios (`skill(ux-writer): <slug>`, `skill(dev-react): <slug>`); fase F agrupa fixes em batches (`fix(<slug>): <resumo do batch>`).
