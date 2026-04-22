@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
-import { within, expect } from 'storybook/test';
+import { within, expect, fn, userEvent } from 'storybook/test';
 import {
   createBreadcrumb,
   createBreadcrumbList,
@@ -27,15 +27,29 @@ export default meta;
 type Story = StoryObj;
 
 export const Simple: Story = {
-  render: () => {
+  args: {
+    onNavigate: fn(),
+  },
+  render: (args) => {
     const nav = createBreadcrumb();
     const list = createBreadcrumbList();
+    const onNavigate = (args as { onNavigate: (payload: unknown) => void }).onNavigate;
 
     const home = createBreadcrumbItem();
-    home.appendChild(createBreadcrumbLink({ href: '#', text: 'Início' }));
+    const homeLink = createBreadcrumbLink({ href: '#', text: 'Início' });
+    homeLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      onNavigate({ event: 'navigation_click', label: 'Início' });
+    });
+    home.appendChild(homeLink);
 
     const components = createBreadcrumbItem();
-    components.appendChild(createBreadcrumbLink({ href: '#', text: 'Componentes' }));
+    const componentsLink = createBreadcrumbLink({ href: '#', text: 'Componentes' });
+    componentsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      onNavigate({ event: 'navigation_click', label: 'Componentes' });
+    });
+    components.appendChild(componentsLink);
 
     const current = createBreadcrumbItem();
     current.appendChild(createBreadcrumbPage({ text: 'Breadcrumb' }));
@@ -59,8 +73,9 @@ export const Simple: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const onNavigate = (args as { onNavigate: ReturnType<typeof fn> }).onNavigate;
 
     await step('Nav com aria-label="breadcrumb"', async () => {
       await expect(canvas.getByRole('navigation', { name: 'breadcrumb' })).toBeInTheDocument();
@@ -71,6 +86,29 @@ export const Simple: Story = {
       const current = nav.querySelector('[aria-current="page"]');
       await expect(current).toBeInTheDocument();
       await expect(current?.tagName.toLowerCase()).not.toBe('a');
+    });
+
+    const links = canvas.getAllByRole('link');
+
+    await step('F3: clicar em BreadcrumbLink dispara navigation_click', async () => {
+      await userEvent.click(links[0]);
+      await expect(onNavigate).toHaveBeenCalled();
+    });
+
+    await step('F6: Tab foca links em ordem e Enter ativa o link focado', async () => {
+      (links[0] as HTMLElement).blur();
+      onNavigate.mockClear();
+      await userEvent.tab();
+      await expect(links[0]).toHaveFocus();
+      await userEvent.tab();
+      await expect(links[1]).toHaveFocus();
+      await userEvent.keyboard('{Enter}');
+      await expect(onNavigate).toHaveBeenCalled();
+    });
+
+    await step('A5: focus ring visível — link aceita foco programático', async () => {
+      (links[0] as HTMLElement).focus();
+      await expect(links[0]).toHaveFocus();
     });
   },
 };

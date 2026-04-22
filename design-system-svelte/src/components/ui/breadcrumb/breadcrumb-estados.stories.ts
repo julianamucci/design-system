@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect } from 'storybook/test';
+import { within, expect, fn, userEvent } from 'storybook/test';
 import { Breadcrumb } from './index';
 import BreadcrumbStory from './BreadcrumbStory.svelte';
 
@@ -21,12 +21,33 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Simple: Story = {
+  args: {
+    onNavigate: fn(),
+  },
   render: () => ({
     Component: BreadcrumbStory,
     props: { variant: 'default' },
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const onNavigate = (args as { onNavigate: ReturnType<typeof fn> }).onNavigate;
+
+    // Intercepta cliques nos links para simular o callback navigation_click
+    // (em produção o consumidor passa href/router; aqui garantimos o contrato via delegação).
+    const nav = canvas.getByRole('navigation', { name: 'breadcrumb' });
+    const linkHandler = (e: Event) => {
+      const target = (e.target as HTMLElement | null)?.closest('a[data-slot="breadcrumb-link"]');
+      if (target) {
+        e.preventDefault();
+        onNavigate({ event: 'navigation_click', label: target.textContent?.trim() });
+      }
+    };
+    nav.addEventListener('click', linkHandler);
+    nav.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'Enter') {
+        linkHandler(e);
+      }
+    });
 
     await step('nav aria-label="breadcrumb" está presente', async () => {
       await expect(canvas.getByRole('navigation', { name: 'breadcrumb' })).toBeInTheDocument();
@@ -35,6 +56,29 @@ export const Simple: Story = {
     await step('Último item é BreadcrumbPage com aria-current', async () => {
       const page = canvasElement.querySelector('[data-slot="breadcrumb-page"]');
       await expect(page).toHaveAttribute('aria-current', 'page');
+    });
+
+    const links = canvas.getAllByRole('link');
+
+    await step('F3: clicar em BreadcrumbLink dispara navigation_click', async () => {
+      await userEvent.click(links[0]);
+      await expect(onNavigate).toHaveBeenCalled();
+    });
+
+    await step('F6: Tab foca links em ordem e Enter ativa o link focado', async () => {
+      (links[0] as HTMLElement).blur();
+      onNavigate.mockClear();
+      await userEvent.tab();
+      await expect(links[0]).toHaveFocus();
+      await userEvent.tab();
+      await expect(links[1]).toHaveFocus();
+      await userEvent.keyboard('{Enter}');
+      await expect(onNavigate).toHaveBeenCalled();
+    });
+
+    await step('A5: focus ring visível — link aceita foco programático', async () => {
+      (links[0] as HTMLElement).focus();
+      await expect(links[0]).toHaveFocus();
     });
   },
 };

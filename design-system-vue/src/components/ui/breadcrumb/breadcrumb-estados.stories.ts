@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import { within, expect, fn, userEvent } from 'storybook/test';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -29,7 +29,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Simple: Story = {
-  render: () => ({
+  args: {
+    onNavigate: fn(),
+  },
+  render: (args) => ({
     components: {
       Breadcrumb,
       BreadcrumbList,
@@ -38,15 +41,23 @@ export const Simple: Story = {
       BreadcrumbPage,
       BreadcrumbSeparator,
     },
+    setup() {
+      const onNavigate = (args as { onNavigate: (payload: unknown) => void }).onNavigate;
+      const handleClick = (label: string) => (e: Event) => {
+        e.preventDefault();
+        onNavigate({ event: 'navigation_click', label });
+      };
+      return { handleClick };
+    },
     template: `
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="#">Início</BreadcrumbLink>
+            <BreadcrumbLink href="#" @click="handleClick('Início')">Início</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="#">Componentes</BreadcrumbLink>
+            <BreadcrumbLink href="#" @click="handleClick('Componentes')">Componentes</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -56,8 +67,9 @@ export const Simple: Story = {
       </Breadcrumb>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const onNavigate = (args as { onNavigate: ReturnType<typeof fn> }).onNavigate;
 
     await step('nav aria-label="breadcrumb" está presente', async () => {
       await expect(canvas.getByRole('navigation', { name: 'breadcrumb' })).toBeInTheDocument();
@@ -66,6 +78,29 @@ export const Simple: Story = {
     await step('Último item é BreadcrumbPage com aria-current', async () => {
       const page = canvasElement.querySelector('[data-slot="breadcrumb-page"]');
       await expect(page).toHaveAttribute('aria-current', 'page');
+    });
+
+    const links = canvas.getAllByRole('link');
+
+    await step('F3: clicar em BreadcrumbLink dispara navigation_click', async () => {
+      await userEvent.click(links[0]);
+      await expect(onNavigate).toHaveBeenCalled();
+    });
+
+    await step('F6: Tab foca links em ordem e Enter ativa o link focado', async () => {
+      (links[0] as HTMLElement).blur();
+      onNavigate.mockClear();
+      await userEvent.tab();
+      await expect(links[0]).toHaveFocus();
+      await userEvent.tab();
+      await expect(links[1]).toHaveFocus();
+      await userEvent.keyboard('{Enter}');
+      await expect(onNavigate).toHaveBeenCalled();
+    });
+
+    await step('A5: focus ring visível — link aceita foco programático', async () => {
+      (links[0] as HTMLElement).focus();
+      await expect(links[0]).toHaveFocus();
     });
   },
 };

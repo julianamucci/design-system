@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Slash } from "lucide-react";
+import { expect, fn, userEvent, within } from "storybook/test";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -28,11 +29,25 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Simple: Story = {
-  render: () => (
+  args: {
+    onNavigate: fn(),
+  },
+  render: (args) => (
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">Início</BreadcrumbLink>
+          <BreadcrumbLink
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              (args as { onNavigate?: (e: unknown) => void }).onNavigate?.({
+                event: "navigation_click",
+                label: "Início",
+              });
+            }}
+          >
+            Início
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
@@ -47,6 +62,30 @@ export const Simple: Story = {
         story: "Composição básica com 2 níveis — link inicial + BreadcrumbPage.",
       },
     },
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const onNavigate = (args as { onNavigate: ReturnType<typeof fn> }).onNavigate;
+    const link = canvas.getByRole("link", { name: "Início" });
+
+    await step("F3: clicar no BreadcrumbLink dispara navigation_click", async () => {
+      await userEvent.click(link);
+      await expect(onNavigate).toHaveBeenCalled();
+    });
+
+    await step("F6: Tab foca o link e Enter ativa o handler", async () => {
+      link.blur();
+      onNavigate.mockClear();
+      await userEvent.tab();
+      await expect(link).toHaveFocus();
+      await userEvent.keyboard("{Enter}");
+      await expect(onNavigate).toHaveBeenCalled();
+    });
+
+    await step("A5: focus ring visível — link aceita foco programático", async () => {
+      link.focus();
+      await expect(link).toHaveFocus();
+    });
   },
 };
 
