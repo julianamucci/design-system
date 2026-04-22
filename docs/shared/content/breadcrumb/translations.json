@@ -1,0 +1,950 @@
+{
+  "pt-BR": {
+    "title": "Breadcrumb",
+    "category": "Navegação",
+    "type": "Componente",
+    "description": "Navegação hierárquica que mostra a localização do usuário na estrutura do site e permite voltar a níveis anteriores.",
+    "seo": {
+      "title": "Breadcrumb — Navegação · Design System",
+      "description": "Documentação do Breadcrumb: navegação hierárquica acessível com separadores customizáveis, ellipsis para níveis longos e suporte a JSON-LD.",
+      "aiSummary": "Componente Breadcrumb composto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator e BreadcrumbEllipsis — navegação hierárquica com aria-current automático.",
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "home": "Início",
+        "components": "Componentes",
+        "navigation": "Navegação",
+        "breadcrumb": "Breadcrumb",
+        "docs": "Documentação",
+        "guide": "Guia",
+        "more": "Mais"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Breadcrumb</strong> — container <code>&lt;nav&gt;</code> com <code>aria-label=\"breadcrumb\"</code>.",
+      "item2": "<strong>BreadcrumbList</strong> — lista ordenada <code>&lt;ol&gt;</code> que agrupa os itens.",
+      "item3": "<strong>BreadcrumbItem</strong> — elemento <code>&lt;li&gt;</code> de cada nível da hierarquia.",
+      "item4": "<strong>BreadcrumbLink</strong> — link <code>&lt;a&gt;</code> navegável para níveis anteriores.",
+      "item5": "<strong>BreadcrumbPage</strong> — último item com <code>aria-current=\"page\"</code>; nunca é link.",
+      "item6": "<strong>BreadcrumbSeparator</strong> — separador decorativo com <code>aria-hidden=\"true\"</code>; padrão é <code>ChevronRight</code>.",
+      "item7": "<strong>BreadcrumbEllipsis</strong> — indicador de níveis ocultos quando a hierarquia é muito longa.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use em páginas com hierarquia de 2 ou mais níveis — não use na raiz (home, login).",
+        "item2": "O primeiro item deve sempre ser um link para a página inicial.",
+        "item3": "O último item é a página atual — use <code>BreadcrumbPage</code>, nunca <code>BreadcrumbLink</code>.",
+        "item4": "Máximo de 4 níveis visíveis — acima disso, colapse os intermediários com <code>BreadcrumbEllipsis</code>.",
+        "item5": "O label do item atual deve refletir exatamente o <code>&lt;h1&gt;</code> da página."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Navegação hierárquica com 2+ níveis", "u": "Sim", "a": "-" },
+        "item2": { "s": "Navegação principal do app", "u": "Não", "a": "NavigationMenu ou Sidebar" },
+        "item3": { "s": "Passos sequenciais de um fluxo", "u": "Não", "a": "Stepper" },
+        "item4": { "s": "Paginação de lista", "u": "Não", "a": "Pagination" },
+        "item5": { "s": "Hierarquia com 5+ níveis", "u": "Sim, com ellipsis", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "link": {
+            "name": "BreadcrumbLink",
+            "format": "Substantivo ou frase nominal · sem verbo · sem ponto final",
+            "good": "\"Início\", \"Componentes\", \"Navegação\"",
+            "bad": "\"Ir para início\", \"Componentes.\", \"Clique aqui\""
+          },
+          "page": {
+            "name": "BreadcrumbPage",
+            "format": "Espelha o <code>&lt;h1&gt;</code> da página · máx. 3 palavras",
+            "good": "\"Breadcrumb\" (quando o <code>h1</code> é \"Breadcrumb\")",
+            "bad": "\"Vis. geral\" (abreviação), \"Página atual\""
+          },
+          "separator": {
+            "name": "Separador",
+            "format": "Sempre decorativo · <code>aria-hidden=\"true\"</code>",
+            "good": "<code>ChevronRight</code>, <code>/</code>, <code>&gt;</code>",
+            "bad": "Texto legível \"até\" ou setas animadas"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "A página tem hierarquia de 2 ou mais níveis",
+        "item2": "O usuário precisa voltar facilmente a níveis anteriores",
+        "item3": "A URL reflete a hierarquia navegacional",
+        "item4": "O SEO se beneficia de rich snippets com BreadcrumbList"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A página é de nível único (home, login, landing)",
+        "item2": "A navegação não é hierárquica — use <code>Tabs</code> ou <code>NavigationMenu</code>",
+        "item3": "O fluxo é sequencial com etapas obrigatórias — use <code>Stepper</code>",
+        "item4": "Há apenas 1 nível de profundidade além da home"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Início > Componentes > Breadcrumb — último item é a página atual sem link.",
+        "dont": "Breadcrumb com todos os itens como link — o atual deve ser <code>BreadcrumbPage</code>."
+      },
+      "pair2": {
+        "do": "Início > … > Componentes > Breadcrumb — ellipsis para colapsar níveis longos.",
+        "dont": "Breadcrumb com 6+ níveis expandidos — quebra o layout e confunde o usuário."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withEllipsis": "Com ellipsis e DropdownMenu:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Configurações Disponíveis",
+      "note": "O Breadcrumb não tem variantes visuais — sua aparência é consistente. O que varia é a <strong>composição</strong>: com ou sem ellipsis, separador customizado, colapso responsivo.",
+      "items": {
+        "default": "Composição padrão com <code>ChevronRight</code> como separador.",
+        "withEllipsis": "Níveis intermediários colapsados em <code>BreadcrumbEllipsis</code> quando a hierarquia excede 4 níveis.",
+        "customSeparator": "Separador customizado via <code>children</code> de <code>BreadcrumbSeparator</code> (ex: <code>/</code>, <code>•</code>).",
+        "responsive": "No mobile, use <code>DropdownMenu</code> dentro do <code>BreadcrumbEllipsis</code> para exibir os níveis ocultos."
+      }
+    },
+    "states": {
+      "title": "Configurações",
+      "cols": {
+        "state": "Configuração",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "simple": {
+        "label": "Simples",
+        "trigger": "Sequência de <code>BreadcrumbItem</code> + <code>BreadcrumbSeparator</code>",
+        "behavior": "Lista horizontal com separadores <code>ChevronRight</code>; último item em <code>BreadcrumbPage</code>"
+      },
+      "withEllipsis": {
+        "label": "Com ellipsis",
+        "trigger": "Inserir <code>BreadcrumbEllipsis</code> entre níveis intermediários",
+        "behavior": "Oculta níveis do meio com ícone <code>MoreHorizontal</code>; abre <code>DropdownMenu</code> ao clicar"
+      },
+      "customSeparator": {
+        "label": "Separador customizado",
+        "trigger": "Passar ícone ou texto como <code>children</code> de <code>BreadcrumbSeparator</code>",
+        "behavior": "Substitui o <code>ChevronRight</code> padrão; mantém <code>aria-hidden=\"true\"</code>"
+      },
+      "asChildLink": {
+        "label": "Link customizado",
+        "trigger": "Usar <code>render</code> (React) ou <code>asChild</code> (Vue/Svelte) em <code>BreadcrumbLink</code>",
+        "behavior": "Renderiza um componente de roteamento (Link do router) em vez de <code>&lt;a&gt;</code> nativo"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "breadcrumbTitle": "Breadcrumb",
+      "listTitle": "BreadcrumbList",
+      "itemTitle": "BreadcrumbItem",
+      "linkTitle": "BreadcrumbLink",
+      "pageTitle": "BreadcrumbPage",
+      "separatorTitle": "BreadcrumbSeparator",
+      "ellipsisTitle": "BreadcrumbEllipsis",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "className": "Classes Tailwind adicionais para customização visual.",
+        "children": "Conteúdo do elemento (ícones, texto, componentes filhos).",
+        "href": "URL de destino do link. Omitir em <code>BreadcrumbPage</code>.",
+        "render": "Função de renderização customizada (React) — permite integração com routers.",
+        "asChild": "Renderiza o primeiro filho como o elemento raiz (Vue/Svelte)."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Para integração com routers (Next.js, React Router, Vue Router), use <code>render</code> (React) ou <code>asChild</code> (Vue/Svelte) no <code>BreadcrumbLink</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "mutedForeground": "Cor do texto dos links inativos",
+        "foreground": "Cor do texto no hover e da página atual",
+        "ring": "Focus ring nos links",
+        "textSm": "Tamanho de fonte da lista",
+        "gap": "Espaçamento entre itens da lista",
+        "sizeSeparator": "Tamanho do ícone de separador",
+        "sizeEllipsis": "Tamanho do ícone de ellipsis"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "O Breadcrumb usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> e <code>aria-current=\"page\"</code> no item atual. Cumpre WCAG 2.1 AA: 2.4.8 (localização), 4.1.2 (nome, função, valor).",
+      "item1": "<strong>nav com aria-label</strong> — o container usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, diferenciando-se de outros <code>&lt;nav&gt;</code> da página.",
+      "item2": "<strong>aria-current=\"page\"</strong> — aplicado automaticamente no <code>BreadcrumbPage</code>; leitor de tela anuncia como página atual.",
+      "item3": "<strong>Separadores decorativos</strong> — <code>BreadcrumbSeparator</code> tem <code>role=\"presentation\"</code> e <code>aria-hidden=\"true\"</code>; não são lidos.",
+      "item4": "<strong>Ellipsis com sr-only</strong> — <code>BreadcrumbEllipsis</code> inclui texto <code>sr-only</code> \"More\" para leitores de tela.",
+      "item5": "<strong>Contraste</strong> — texto <code>muted-foreground</code> cumpre 4.5:1 sobre <code>background</code> em ambos os modos.",
+      "keyboard": {
+        "tab": "Move foco entre os links do Breadcrumb.",
+        "enter": "Ativa o link focado e navega para o destino.",
+        "shiftTab": "Move foco para o link anterior."
+      },
+      "aria": {
+        "navLabel": "<code>aria-label=\"breadcrumb\"</code> — aplicado no <code>&lt;nav&gt;</code> raiz para identificar o propósito.",
+        "current": "<code>aria-current=\"page\"</code> — aplicado automaticamente em <code>BreadcrumbPage</code>.",
+        "hidden": "<code>aria-hidden=\"true\"</code> — aplicado em <code>BreadcrumbSeparator</code> e <code>BreadcrumbEllipsis</code>.",
+        "role": "<code>role=\"presentation\"</code> — em separadores e ellipsis para remover da árvore de acessibilidade."
+      },
+      "screenReader": {
+        "onEnter": "Ao focar o Breadcrumb: leitor anuncia \"navegação, breadcrumb\" e o número total de itens.",
+        "onLink": "Em cada link: leitor anuncia o texto do link e sua função como \"link\".",
+        "onPage": "No item atual: leitor anuncia \"página atual\" junto ao nome da página.",
+        "separators": "Separadores são ignorados pelo leitor de tela — não têm conteúdo semântico."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "navigationMenu": "Para navegação principal horizontal sem hierarquia.",
+      "stepper": "Para fluxos sequenciais com etapas obrigatórias.",
+      "tabs": "Para alternar entre views paralelas do mesmo nível.",
+      "dropdownMenu": "Para exibir níveis ocultos dentro de <code>BreadcrumbEllipsis</code> no mobile."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "O Breadcrumb gera automaticamente o JSON-LD <code>BreadcrumbList</code> quando passado ao hook <code>useSeoEffect</code> — não injete <code>&lt;script type=\"application/ld+json\"&gt;</code> manualmente.",
+      "tip2": "No mobile, envolva o <code>BreadcrumbEllipsis</code> em um <code>DropdownMenu</code> para expor os níveis ocultos via clique; nunca os esconda permanentemente.",
+      "tip3": "Para integração com routers, use <code>render</code> (React) ou <code>asChild</code> (Vue/Svelte) — isso preserva o comportamento de pré-carregamento do router.",
+      "tip4": "O label do <code>BreadcrumbPage</code> deve espelhar o <code>&lt;h1&gt;</code> da página — evita inconsistência entre navegação e conteúdo."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastreie apenas cliques em links do Breadcrumb — nunca no <code>BreadcrumbPage</code> (item atual não é navegável).",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "navigationClick": "navigation_click",
+        "navigationClickTrigger": "Usuário clica em um <code>BreadcrumbLink</code>",
+        "navigationClickPayload": "{ component: 'breadcrumb', label, destination, location }",
+        "ellipsisOpen": "breadcrumb_ellipsis_open",
+        "ellipsisOpenTrigger": "Usuário abre o <code>DropdownMenu</code> do ellipsis",
+        "ellipsisOpenPayload": "{ component: 'breadcrumb', hidden_count: number }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada configuração do Breadcrumb.",
+        "item1": { "action": "Renderizar composição padrão", "result": "<code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> com <code>&lt;ol&gt;</code> de <code>BreadcrumbItem</code> e separadores", "priority": "high" },
+        "item2": { "action": "Renderizar último item como BreadcrumbPage", "result": "<code>&lt;span aria-current=\"page\"&gt;</code> sem <code>href</code>", "priority": "high" },
+        "item3": { "action": "Clicar em BreadcrumbLink", "result": "Navega para o <code>href</code> informado e dispara <code>navigation_click</code>", "priority": "high" },
+        "item4": { "action": "Renderizar BreadcrumbSeparator customizado", "result": "Substitui o <code>ChevronRight</code> padrão pelo <code>children</code> passado", "priority": "medium" },
+        "item5": { "action": "Renderizar com BreadcrumbEllipsis", "result": "Exibe <code>MoreHorizontal</code> com texto <code>sr-only</code> \"More\"", "priority": "medium" },
+        "item6": { "action": "Navegar por teclado", "result": "<kbd>Tab</kbd> foca links em ordem; <kbd>Enter</kbd> ativa link focado", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "<code>&lt;nav&gt;</code> com <code>aria-label=\"breadcrumb\"</code>", "level": "AA", "how": "getByRole('navigation', { name: 'breadcrumb' })" },
+        "item2": { "criterion": "BreadcrumbPage com <code>aria-current=\"page\"</code>", "level": "AA", "how": "Inspecionar atributo no DOM" },
+        "item3": { "criterion": "Separadores com <code>aria-hidden=\"true\"</code>", "level": "AA", "how": "axe-core / inspeção manual" },
+        "item4": { "criterion": "Contraste mínimo 4.5:1 em links inativos", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item5": { "criterion": "Focus ring visível em todos os links", "level": "AA", "how": "Navegação manual por <kbd>Tab</kbd>" },
+        "item6": { "criterion": "Sem violações axe-core", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Playground — composição padrão", "priority": "high" },
+        "item2": { "story": "Configurações — com e sem ellipsis", "priority": "high" },
+        "item3": { "story": "Configurações — separador customizado", "priority": "medium" },
+        "item4": { "story": "Composições — com DropdownMenu no mobile", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Configurações",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Breadcrumb",
+    "category": "Navigation",
+    "type": "Component",
+    "description": "Hierarchical navigation that shows the user's location in the site structure and allows returning to previous levels.",
+    "seo": {
+      "title": "Breadcrumb — Navigation · Design System",
+      "description": "Documentation for Breadcrumb: accessible hierarchical navigation with customizable separators, ellipsis for long paths, and JSON-LD support.",
+      "aiSummary": "Breadcrumb component composed of BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, and BreadcrumbEllipsis — hierarchical navigation with automatic aria-current.",
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "home": "Home",
+        "components": "Components",
+        "navigation": "Navigation",
+        "breadcrumb": "Breadcrumb",
+        "docs": "Docs",
+        "guide": "Guide",
+        "more": "More"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Breadcrumb</strong> — <code>&lt;nav&gt;</code> container with <code>aria-label=\"breadcrumb\"</code>.",
+      "item2": "<strong>BreadcrumbList</strong> — ordered list <code>&lt;ol&gt;</code> grouping the items.",
+      "item3": "<strong>BreadcrumbItem</strong> — <code>&lt;li&gt;</code> element for each hierarchy level.",
+      "item4": "<strong>BreadcrumbLink</strong> — <code>&lt;a&gt;</code> link navigable to previous levels.",
+      "item5": "<strong>BreadcrumbPage</strong> — last item with <code>aria-current=\"page\"</code>; never a link.",
+      "item6": "<strong>BreadcrumbSeparator</strong> — decorative separator with <code>aria-hidden=\"true\"</code>; default is <code>ChevronRight</code>.",
+      "item7": "<strong>BreadcrumbEllipsis</strong> — indicator for hidden levels when the hierarchy is too long.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use on pages with 2 or more hierarchy levels — not on single-level pages (home, login).",
+        "item2": "The first item should always be a link to the home page.",
+        "item3": "The last item is the current page — use <code>BreadcrumbPage</code>, never <code>BreadcrumbLink</code>.",
+        "item4": "Max of 4 visible levels — beyond that, collapse intermediates with <code>BreadcrumbEllipsis</code>.",
+        "item5": "The current item label must exactly mirror the page's <code>&lt;h1&gt;</code>."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Hierarchical navigation with 2+ levels", "u": "Yes", "a": "-" },
+        "item2": { "s": "App main navigation", "u": "No", "a": "NavigationMenu or Sidebar" },
+        "item3": { "s": "Sequential flow steps", "u": "No", "a": "Stepper" },
+        "item4": { "s": "List pagination", "u": "No", "a": "Pagination" },
+        "item5": { "s": "Hierarchy with 5+ levels", "u": "Yes, with ellipsis", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "link": {
+            "name": "BreadcrumbLink",
+            "format": "Noun or noun phrase · no verb · no period",
+            "good": "\"Home\", \"Components\", \"Navigation\"",
+            "bad": "\"Go to home\", \"Components.\", \"Click here\""
+          },
+          "page": {
+            "name": "BreadcrumbPage",
+            "format": "Mirrors page <code>&lt;h1&gt;</code> · max. 3 words",
+            "good": "\"Breadcrumb\" (when the <code>h1</code> is \"Breadcrumb\")",
+            "bad": "\"Overv.\" (abbreviation), \"Current page\""
+          },
+          "separator": {
+            "name": "Separator",
+            "format": "Always decorative · <code>aria-hidden=\"true\"</code>",
+            "good": "<code>ChevronRight</code>, <code>/</code>, <code>&gt;</code>",
+            "bad": "Readable text \"to\" or animated arrows"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The page has 2 or more hierarchy levels",
+        "item2": "The user needs to easily return to previous levels",
+        "item3": "The URL reflects the navigational hierarchy",
+        "item4": "SEO benefits from BreadcrumbList rich snippets"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The page is single-level (home, login, landing)",
+        "item2": "Navigation is not hierarchical — use <code>Tabs</code> or <code>NavigationMenu</code>",
+        "item3": "The flow is sequential with required steps — use <code>Stepper</code>",
+        "item4": "There is only 1 level of depth beyond home"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Home > Components > Breadcrumb — last item is the current page without a link.",
+        "dont": "Breadcrumb with every item as a link — the current one must be <code>BreadcrumbPage</code>."
+      },
+      "pair2": {
+        "do": "Home > … > Components > Breadcrumb — ellipsis to collapse long paths.",
+        "dont": "Breadcrumb with 6+ expanded levels — breaks the layout and confuses the user."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withEllipsis": "With ellipsis and DropdownMenu:"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Available Configurations",
+      "note": "Breadcrumb has no visual variants — its appearance is consistent. What varies is the <strong>composition</strong>: with or without ellipsis, custom separator, responsive collapse.",
+      "items": {
+        "default": "Default composition with <code>ChevronRight</code> as separator.",
+        "withEllipsis": "Intermediate levels collapsed into <code>BreadcrumbEllipsis</code> when hierarchy exceeds 4 levels.",
+        "customSeparator": "Custom separator via <code>children</code> of <code>BreadcrumbSeparator</code> (e.g., <code>/</code>, <code>•</code>).",
+        "responsive": "On mobile, use <code>DropdownMenu</code> inside <code>BreadcrumbEllipsis</code> to expose the hidden levels."
+      }
+    },
+    "states": {
+      "title": "Configurations",
+      "cols": {
+        "state": "Configuration",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "simple": {
+        "label": "Simple",
+        "trigger": "Sequence of <code>BreadcrumbItem</code> + <code>BreadcrumbSeparator</code>",
+        "behavior": "Horizontal list with <code>ChevronRight</code> separators; last item as <code>BreadcrumbPage</code>"
+      },
+      "withEllipsis": {
+        "label": "With ellipsis",
+        "trigger": "Insert <code>BreadcrumbEllipsis</code> between intermediate levels",
+        "behavior": "Hides middle levels with <code>MoreHorizontal</code> icon; opens <code>DropdownMenu</code> on click"
+      },
+      "customSeparator": {
+        "label": "Custom separator",
+        "trigger": "Pass icon or text as <code>children</code> of <code>BreadcrumbSeparator</code>",
+        "behavior": "Replaces the default <code>ChevronRight</code>; keeps <code>aria-hidden=\"true\"</code>"
+      },
+      "asChildLink": {
+        "label": "Custom link",
+        "trigger": "Use <code>render</code> (React) or <code>asChild</code> (Vue/Svelte) on <code>BreadcrumbLink</code>",
+        "behavior": "Renders a routing component (router Link) instead of the native <code>&lt;a&gt;</code>"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "breadcrumbTitle": "Breadcrumb",
+      "listTitle": "BreadcrumbList",
+      "itemTitle": "BreadcrumbItem",
+      "linkTitle": "BreadcrumbLink",
+      "pageTitle": "BreadcrumbPage",
+      "separatorTitle": "BreadcrumbSeparator",
+      "ellipsisTitle": "BreadcrumbEllipsis",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "className": "Additional Tailwind classes for visual customization.",
+        "children": "Element content (icons, text, child components).",
+        "href": "Link destination URL. Omit on <code>BreadcrumbPage</code>.",
+        "render": "Custom render function (React) — enables router integration.",
+        "asChild": "Renders the first child as the root element (Vue/Svelte)."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. For router integration (Next.js, React Router, Vue Router), use <code>render</code> (React) or <code>asChild</code> (Vue/Svelte) on <code>BreadcrumbLink</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "mutedForeground": "Color of inactive link text",
+        "foreground": "Color of hover text and current page",
+        "ring": "Focus ring on links",
+        "textSm": "Font size of the list",
+        "gap": "Spacing between list items",
+        "sizeSeparator": "Separator icon size",
+        "sizeEllipsis": "Ellipsis icon size"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "Breadcrumb uses <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> and <code>aria-current=\"page\"</code> on the current item. Meets WCAG 2.1 AA: 2.4.8 (location), 4.1.2 (name, role, value).",
+      "item1": "<strong>nav with aria-label</strong> — the container uses <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, distinguishing it from other <code>&lt;nav&gt;</code> elements on the page.",
+      "item2": "<strong>aria-current=\"page\"</strong> — automatically applied on <code>BreadcrumbPage</code>; screen readers announce it as the current page.",
+      "item3": "<strong>Decorative separators</strong> — <code>BreadcrumbSeparator</code> has <code>role=\"presentation\"</code> and <code>aria-hidden=\"true\"</code>; not read.",
+      "item4": "<strong>Ellipsis with sr-only</strong> — <code>BreadcrumbEllipsis</code> includes <code>sr-only</code> text \"More\" for screen readers.",
+      "item5": "<strong>Contrast</strong> — <code>muted-foreground</code> text meets 4.5:1 over <code>background</code> in both modes.",
+      "keyboard": {
+        "tab": "Moves focus between Breadcrumb links.",
+        "enter": "Activates the focused link and navigates to the destination.",
+        "shiftTab": "Moves focus to the previous link."
+      },
+      "aria": {
+        "navLabel": "<code>aria-label=\"breadcrumb\"</code> — applied on the root <code>&lt;nav&gt;</code> to identify the purpose.",
+        "current": "<code>aria-current=\"page\"</code> — automatically applied on <code>BreadcrumbPage</code>.",
+        "hidden": "<code>aria-hidden=\"true\"</code> — applied on <code>BreadcrumbSeparator</code> and <code>BreadcrumbEllipsis</code>.",
+        "role": "<code>role=\"presentation\"</code> — on separators and ellipsis to remove them from the accessibility tree."
+      },
+      "screenReader": {
+        "onEnter": "On focusing the Breadcrumb: reader announces \"navigation, breadcrumb\" and the total number of items.",
+        "onLink": "On each link: reader announces the link text and its role as \"link\".",
+        "onPage": "On the current item: reader announces \"current page\" alongside the page name.",
+        "separators": "Separators are ignored by the screen reader — they have no semantic content."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "navigationMenu": "For horizontal main navigation without hierarchy.",
+      "stepper": "For sequential flows with required steps.",
+      "tabs": "For switching between parallel views at the same level.",
+      "dropdownMenu": "For exposing hidden levels inside <code>BreadcrumbEllipsis</code> on mobile."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "Breadcrumb automatically generates the <code>BreadcrumbList</code> JSON-LD when passed to the <code>useSeoEffect</code> hook — don't inject <code>&lt;script type=\"application/ld+json\"&gt;</code> manually.",
+      "tip2": "On mobile, wrap <code>BreadcrumbEllipsis</code> in a <code>DropdownMenu</code> to expose the hidden levels on click; never hide them permanently.",
+      "tip3": "For router integration, use <code>render</code> (React) or <code>asChild</code> (Vue/Svelte) — this preserves the router's prefetch behavior.",
+      "tip4": "The <code>BreadcrumbPage</code> label must mirror the page's <code>&lt;h1&gt;</code> — prevents inconsistency between navigation and content."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Track only link clicks in the Breadcrumb — never on <code>BreadcrumbPage</code> (the current item is not navigable).",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "navigationClick": "navigation_click",
+        "navigationClickTrigger": "User clicks a <code>BreadcrumbLink</code>",
+        "navigationClickPayload": "{ component: 'breadcrumb', label, destination, location }",
+        "ellipsisOpen": "breadcrumb_ellipsis_open",
+        "ellipsisOpenTrigger": "User opens the <code>DropdownMenu</code> of the ellipsis",
+        "ellipsisOpenPayload": "{ component: 'breadcrumb', hidden_count: number }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Breadcrumb configuration.",
+        "item1": { "action": "Render default composition", "result": "<code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> with <code>&lt;ol&gt;</code> of <code>BreadcrumbItem</code> and separators", "priority": "high" },
+        "item2": { "action": "Render last item as BreadcrumbPage", "result": "<code>&lt;span aria-current=\"page\"&gt;</code> without <code>href</code>", "priority": "high" },
+        "item3": { "action": "Click BreadcrumbLink", "result": "Navigates to the given <code>href</code> and fires <code>navigation_click</code>", "priority": "high" },
+        "item4": { "action": "Render custom BreadcrumbSeparator", "result": "Replaces the default <code>ChevronRight</code> with the passed <code>children</code>", "priority": "medium" },
+        "item5": { "action": "Render with BreadcrumbEllipsis", "result": "Shows <code>MoreHorizontal</code> with <code>sr-only</code> text \"More\"", "priority": "medium" },
+        "item6": { "action": "Navigate via keyboard", "result": "<kbd>Tab</kbd> focuses links in order; <kbd>Enter</kbd> activates focused link", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "<code>&lt;nav&gt;</code> with <code>aria-label=\"breadcrumb\"</code>", "level": "AA", "how": "getByRole('navigation', { name: 'breadcrumb' })" },
+        "item2": { "criterion": "BreadcrumbPage with <code>aria-current=\"page\"</code>", "level": "AA", "how": "Inspect attribute in DOM" },
+        "item3": { "criterion": "Separators with <code>aria-hidden=\"true\"</code>", "level": "AA", "how": "axe-core / manual inspection" },
+        "item4": { "criterion": "Minimum contrast 4.5:1 on inactive links", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item5": { "criterion": "Focus ring visible on all links", "level": "AA", "how": "Manual <kbd>Tab</kbd> navigation" },
+        "item6": { "criterion": "No axe-core violations", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Playground — default composition", "priority": "high" },
+        "item2": { "story": "Configurations — with and without ellipsis", "priority": "high" },
+        "item3": { "story": "Configurations — custom separator", "priority": "medium" },
+        "item4": { "story": "Compositions — with DropdownMenu on mobile", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "Configurations",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Breadcrumb",
+    "category": "Navegación",
+    "type": "Componente",
+    "description": "Navegación jerárquica que muestra la ubicación del usuario en la estructura del sitio y permite volver a niveles anteriores.",
+    "seo": {
+      "title": "Breadcrumb — Navegación · Design System",
+      "description": "Documentación del Breadcrumb: navegación jerárquica accesible con separadores personalizables, ellipsis para rutas largas y soporte a JSON-LD.",
+      "aiSummary": "Componente Breadcrumb compuesto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator y BreadcrumbEllipsis — navegación jerárquica con aria-current automático.",
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "home": "Inicio",
+        "components": "Componentes",
+        "navigation": "Navegación",
+        "breadcrumb": "Breadcrumb",
+        "docs": "Documentación",
+        "guide": "Guía",
+        "more": "Más"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Breadcrumb</strong> — contenedor <code>&lt;nav&gt;</code> con <code>aria-label=\"breadcrumb\"</code>.",
+      "item2": "<strong>BreadcrumbList</strong> — lista ordenada <code>&lt;ol&gt;</code> que agrupa los ítems.",
+      "item3": "<strong>BreadcrumbItem</strong> — elemento <code>&lt;li&gt;</code> de cada nivel de la jerarquía.",
+      "item4": "<strong>BreadcrumbLink</strong> — enlace <code>&lt;a&gt;</code> navegable a niveles anteriores.",
+      "item5": "<strong>BreadcrumbPage</strong> — último ítem con <code>aria-current=\"page\"</code>; nunca es un enlace.",
+      "item6": "<strong>BreadcrumbSeparator</strong> — separador decorativo con <code>aria-hidden=\"true\"</code>; predeterminado es <code>ChevronRight</code>.",
+      "item7": "<strong>BreadcrumbEllipsis</strong> — indicador de niveles ocultos cuando la jerarquía es muy larga.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Úsalo en páginas con 2 o más niveles jerárquicos — no lo uses en la raíz (home, login).",
+        "item2": "El primer ítem siempre debe ser un enlace a la página inicial.",
+        "item3": "El último ítem es la página actual — usa <code>BreadcrumbPage</code>, nunca <code>BreadcrumbLink</code>.",
+        "item4": "Máximo 4 niveles visibles — por encima, colapsa los intermedios con <code>BreadcrumbEllipsis</code>.",
+        "item5": "El label del ítem actual debe reflejar exactamente el <code>&lt;h1&gt;</code> de la página."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Navegación jerárquica con 2+ niveles", "u": "Sí", "a": "-" },
+        "item2": { "s": "Navegación principal del app", "u": "No", "a": "NavigationMenu o Sidebar" },
+        "item3": { "s": "Pasos secuenciales de un flujo", "u": "No", "a": "Stepper" },
+        "item4": { "s": "Paginación de lista", "u": "No", "a": "Pagination" },
+        "item5": { "s": "Jerarquía con 5+ niveles", "u": "Sí, con ellipsis", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "link": {
+            "name": "BreadcrumbLink",
+            "format": "Sustantivo o frase nominal · sin verbo · sin punto final",
+            "good": "\"Inicio\", \"Componentes\", \"Navegación\"",
+            "bad": "\"Ir al inicio\", \"Componentes.\", \"Haz clic aquí\""
+          },
+          "page": {
+            "name": "BreadcrumbPage",
+            "format": "Refleja el <code>&lt;h1&gt;</code> de la página · máx. 3 palabras",
+            "good": "\"Breadcrumb\" (cuando el <code>h1</code> es \"Breadcrumb\")",
+            "bad": "\"Vis. gral.\" (abreviación), \"Página actual\""
+          },
+          "separator": {
+            "name": "Separador",
+            "format": "Siempre decorativo · <code>aria-hidden=\"true\"</code>",
+            "good": "<code>ChevronRight</code>, <code>/</code>, <code>&gt;</code>",
+            "bad": "Texto legible \"hasta\" o flechas animadas"
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "La página tiene 2 o más niveles jerárquicos",
+        "item2": "El usuario necesita volver fácilmente a niveles anteriores",
+        "item3": "La URL refleja la jerarquía navegacional",
+        "item4": "El SEO se beneficia de rich snippets con BreadcrumbList"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La página es de un solo nivel (home, login, landing)",
+        "item2": "La navegación no es jerárquica — usa <code>Tabs</code> o <code>NavigationMenu</code>",
+        "item3": "El flujo es secuencial con pasos obligatorios — usa <code>Stepper</code>",
+        "item4": "Hay solo 1 nivel de profundidad más allá del home"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Inicio > Componentes > Breadcrumb — último ítem es la página actual sin enlace.",
+        "dont": "Breadcrumb con todos los ítems como enlace — el actual debe ser <code>BreadcrumbPage</code>."
+      },
+      "pair2": {
+        "do": "Inicio > … > Componentes > Breadcrumb — ellipsis para colapsar rutas largas.",
+        "dont": "Breadcrumb con 6+ niveles expandidos — rompe el layout y confunde al usuario."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withEllipsis": "Con ellipsis y DropdownMenu:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Configuraciones Disponibles",
+      "note": "Breadcrumb no tiene variantes visuales — su apariencia es consistente. Lo que varía es la <strong>composición</strong>: con o sin ellipsis, separador personalizado, colapso responsivo.",
+      "items": {
+        "default": "Composición predeterminada con <code>ChevronRight</code> como separador.",
+        "withEllipsis": "Niveles intermedios colapsados en <code>BreadcrumbEllipsis</code> cuando la jerarquía supera 4 niveles.",
+        "customSeparator": "Separador personalizado vía <code>children</code> de <code>BreadcrumbSeparator</code> (ej: <code>/</code>, <code>•</code>).",
+        "responsive": "En mobile, usa <code>DropdownMenu</code> dentro de <code>BreadcrumbEllipsis</code> para exponer los niveles ocultos."
+      }
+    },
+    "states": {
+      "title": "Configuraciones",
+      "cols": {
+        "state": "Configuración",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "simple": {
+        "label": "Simple",
+        "trigger": "Secuencia de <code>BreadcrumbItem</code> + <code>BreadcrumbSeparator</code>",
+        "behavior": "Lista horizontal con separadores <code>ChevronRight</code>; último ítem como <code>BreadcrumbPage</code>"
+      },
+      "withEllipsis": {
+        "label": "Con ellipsis",
+        "trigger": "Insertar <code>BreadcrumbEllipsis</code> entre niveles intermedios",
+        "behavior": "Oculta niveles del medio con <code>MoreHorizontal</code>; abre <code>DropdownMenu</code> al hacer clic"
+      },
+      "customSeparator": {
+        "label": "Separador personalizado",
+        "trigger": "Pasar ícono o texto como <code>children</code> de <code>BreadcrumbSeparator</code>",
+        "behavior": "Sustituye el <code>ChevronRight</code> predeterminado; mantiene <code>aria-hidden=\"true\"</code>"
+      },
+      "asChildLink": {
+        "label": "Enlace personalizado",
+        "trigger": "Usar <code>render</code> (React) o <code>asChild</code> (Vue/Svelte) en <code>BreadcrumbLink</code>",
+        "behavior": "Renderiza un componente de routing (Link del router) en lugar del <code>&lt;a&gt;</code> nativo"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "breadcrumbTitle": "Breadcrumb",
+      "listTitle": "BreadcrumbList",
+      "itemTitle": "BreadcrumbItem",
+      "linkTitle": "BreadcrumbLink",
+      "pageTitle": "BreadcrumbPage",
+      "separatorTitle": "BreadcrumbSeparator",
+      "ellipsisTitle": "BreadcrumbEllipsis",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "className": "Clases Tailwind adicionales para personalización visual.",
+        "children": "Contenido del elemento (íconos, texto, componentes hijos).",
+        "href": "URL de destino del enlace. Omitir en <code>BreadcrumbPage</code>.",
+        "render": "Función de render personalizada (React) — permite integración con routers.",
+        "asChild": "Renderiza el primer hijo como elemento raíz (Vue/Svelte)."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Para integración con routers (Next.js, React Router, Vue Router), usa <code>render</code> (React) o <code>asChild</code> (Vue/Svelte) en <code>BreadcrumbLink</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "mutedForeground": "Color del texto de enlaces inactivos",
+        "foreground": "Color del texto en hover y de la página actual",
+        "ring": "Focus ring en los enlaces",
+        "textSm": "Tamaño de fuente de la lista",
+        "gap": "Espaciado entre ítems de la lista",
+        "sizeSeparator": "Tamaño del ícono separador",
+        "sizeEllipsis": "Tamaño del ícono ellipsis"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "Breadcrumb usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> y <code>aria-current=\"page\"</code> en el ítem actual. Cumple WCAG 2.1 AA: 2.4.8 (ubicación), 4.1.2 (nombre, rol, valor).",
+      "item1": "<strong>nav con aria-label</strong> — el contenedor usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, diferenciándose de otros <code>&lt;nav&gt;</code> de la página.",
+      "item2": "<strong>aria-current=\"page\"</strong> — aplicado automáticamente en <code>BreadcrumbPage</code>; el lector de pantalla lo anuncia como página actual.",
+      "item3": "<strong>Separadores decorativos</strong> — <code>BreadcrumbSeparator</code> tiene <code>role=\"presentation\"</code> y <code>aria-hidden=\"true\"</code>; no se leen.",
+      "item4": "<strong>Ellipsis con sr-only</strong> — <code>BreadcrumbEllipsis</code> incluye texto <code>sr-only</code> \"More\" para lectores de pantalla.",
+      "item5": "<strong>Contraste</strong> — texto <code>muted-foreground</code> cumple 4.5:1 sobre <code>background</code> en ambos modos.",
+      "keyboard": {
+        "tab": "Mueve el foco entre los enlaces del Breadcrumb.",
+        "enter": "Activa el enlace enfocado y navega al destino.",
+        "shiftTab": "Mueve el foco al enlace anterior."
+      },
+      "aria": {
+        "navLabel": "<code>aria-label=\"breadcrumb\"</code> — aplicado en el <code>&lt;nav&gt;</code> raíz para identificar el propósito.",
+        "current": "<code>aria-current=\"page\"</code> — aplicado automáticamente en <code>BreadcrumbPage</code>.",
+        "hidden": "<code>aria-hidden=\"true\"</code> — aplicado en <code>BreadcrumbSeparator</code> y <code>BreadcrumbEllipsis</code>.",
+        "role": "<code>role=\"presentation\"</code> — en separadores y ellipsis para removerlos del árbol de accesibilidad."
+      },
+      "screenReader": {
+        "onEnter": "Al enfocar el Breadcrumb: el lector anuncia \"navegación, breadcrumb\" y el número total de ítems.",
+        "onLink": "En cada enlace: el lector anuncia el texto del enlace y su rol como \"link\".",
+        "onPage": "En el ítem actual: el lector anuncia \"página actual\" junto al nombre de la página.",
+        "separators": "Los separadores son ignorados por el lector de pantalla — no tienen contenido semántico."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "navigationMenu": "Para navegación principal horizontal sin jerarquía.",
+      "stepper": "Para flujos secuenciales con pasos obligatorios.",
+      "tabs": "Para alternar entre vistas paralelas del mismo nivel.",
+      "dropdownMenu": "Para exponer niveles ocultos dentro de <code>BreadcrumbEllipsis</code> en mobile."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "El Breadcrumb genera automáticamente el JSON-LD <code>BreadcrumbList</code> cuando se pasa al hook <code>useSeoEffect</code> — no inyectes <code>&lt;script type=\"application/ld+json\"&gt;</code> manualmente.",
+      "tip2": "En mobile, envuelve el <code>BreadcrumbEllipsis</code> en un <code>DropdownMenu</code> para exponer los niveles ocultos al hacer clic; nunca los ocultes permanentemente.",
+      "tip3": "Para integración con routers, usa <code>render</code> (React) o <code>asChild</code> (Vue/Svelte) — esto preserva el comportamiento de prefetch del router.",
+      "tip4": "El label del <code>BreadcrumbPage</code> debe reflejar el <code>&lt;h1&gt;</code> de la página — evita inconsistencia entre navegación y contenido."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastrea solo clics en enlaces del Breadcrumb — nunca en <code>BreadcrumbPage</code> (el ítem actual no es navegable).",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "navigationClick": "navigation_click",
+        "navigationClickTrigger": "Usuario hace clic en un <code>BreadcrumbLink</code>",
+        "navigationClickPayload": "{ component: 'breadcrumb', label, destination, location }",
+        "ellipsisOpen": "breadcrumb_ellipsis_open",
+        "ellipsisOpenTrigger": "Usuario abre el <code>DropdownMenu</code> del ellipsis",
+        "ellipsisOpenPayload": "{ component: 'breadcrumb', hidden_count: number }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada configuración del Breadcrumb.",
+        "item1": { "action": "Renderizar composición predeterminada", "result": "<code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> con <code>&lt;ol&gt;</code> de <code>BreadcrumbItem</code> y separadores", "priority": "high" },
+        "item2": { "action": "Renderizar último ítem como BreadcrumbPage", "result": "<code>&lt;span aria-current=\"page\"&gt;</code> sin <code>href</code>", "priority": "high" },
+        "item3": { "action": "Hacer clic en BreadcrumbLink", "result": "Navega al <code>href</code> indicado y dispara <code>navigation_click</code>", "priority": "high" },
+        "item4": { "action": "Renderizar BreadcrumbSeparator personalizado", "result": "Sustituye el <code>ChevronRight</code> predeterminado por el <code>children</code> pasado", "priority": "medium" },
+        "item5": { "action": "Renderizar con BreadcrumbEllipsis", "result": "Muestra <code>MoreHorizontal</code> con texto <code>sr-only</code> \"More\"", "priority": "medium" },
+        "item6": { "action": "Navegar por teclado", "result": "<kbd>Tab</kbd> enfoca enlaces en orden; <kbd>Enter</kbd> activa el enlace enfocado", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "<code>&lt;nav&gt;</code> con <code>aria-label=\"breadcrumb\"</code>", "level": "AA", "how": "getByRole('navigation', { name: 'breadcrumb' })" },
+        "item2": { "criterion": "BreadcrumbPage con <code>aria-current=\"page\"</code>", "level": "AA", "how": "Inspeccionar atributo en el DOM" },
+        "item3": { "criterion": "Separadores con <code>aria-hidden=\"true\"</code>", "level": "AA", "how": "axe-core / inspección manual" },
+        "item4": { "criterion": "Contraste mínimo 4.5:1 en enlaces inactivos", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item5": { "criterion": "Focus ring visible en todos los enlaces", "level": "AA", "how": "Navegación manual por <kbd>Tab</kbd>" },
+        "item6": { "criterion": "Sin violaciones axe-core", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Playground — composición predeterminada", "priority": "high" },
+        "item2": { "story": "Configuraciones — con y sin ellipsis", "priority": "high" },
+        "item3": { "story": "Configuraciones — separador personalizado", "priority": "medium" },
+        "item4": { "story": "Composiciones — con DropdownMenu en mobile", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Configuraciones",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
