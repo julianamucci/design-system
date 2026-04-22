@@ -79,6 +79,7 @@
 .ds-docs tr {
   background-color: transparent !important;
   color: inherit !important;
+  border-top: revert-layer !important;
 }
 
 /* Zera a margem injetada pelo Storybook nos elementos p e table */
@@ -90,6 +91,11 @@
  * Sem isso, tabelas dentro de cards ficam com gap entre a borda e a tabela. */
 .ds-docs table {
   margin: 0;
+}
+
+.ds-docs td,
+.ds-docs th {
+  border: revert-layer !important;
 }
 
 /* Restaura space-y-* para divs (Storybook reseta margin de todas as divs) */

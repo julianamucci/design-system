@@ -93,6 +93,12 @@
 .ds-docs tr {
   background-color: transparent !important;
   color: inherit !important;
+  border-top: revert-layer !important;
+}
+
+.ds-docs td,
+.ds-docs th {
+  border: revert-layer !important;
 }
 
 /* Zera a margem injetada pelo Storybook nos elementos p */

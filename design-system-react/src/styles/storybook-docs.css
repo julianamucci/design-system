@@ -73,6 +73,7 @@
 .ds-docs tr {
   background-color: transparent !important;
   color: inherit !important;
+  border-top: revert-layer !important;
 }
 
 /* Zera a margem injetada pelo Storybook nos elementos p e table */
@@ -85,6 +86,11 @@
  * entre a borda do card e a borda da tabela, quebrando o padrão edge-to-edge. */
 .ds-docs table {
   margin: 0;
+}
+
+.ds-docs td,
+.ds-docs th {
+  border: revert-layer !important;
 }
 
 /* Restaura space-y-* para divs (Storybook reseta margin de todas as divs) */
