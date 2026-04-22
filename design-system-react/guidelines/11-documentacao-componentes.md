@@ -869,6 +869,33 @@ Componentes como **AspectRatio** (`@radix-ui/react-aspect-ratio`) preservam prop
 11. **`rounded-md` / `border` no filho** — regra visual absoluta. Nunca aplicar no wrapper AspectRatio (o raio cortaria o cálculo de `padding-bottom` e borderia um container vazio). Documentado nos pares Do/Don't e em `notes`.
 12. **`ImageWithFallback`** — em React, usar sempre `@/components/figma/ImageWithFallback` para `<img>` dentro de AspectRatio (loading lazy/decoding async já embutidos). Nunca `<img>` cru em docs previews.
 
+### Componentes de Navegação Hierárquica Compostos (padrão Breadcrumb)
+
+Componentes como **Breadcrumb** (`Breadcrumb`, `BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbLink`, `BreadcrumbPage`, `BreadcrumbSeparator`, `BreadcrumbEllipsis`) são compostos por sub-componentes e **não usam `cva()`**. A aparência é uniforme; o que varia é a **composição** (com/sem ellipsis, separador customizado, colapso responsivo). Categoria **Navigation**, translations em `docs/shared/content/breadcrumb/translations.json`.
+
+1. **Sem `cva()` / sem prop `variant`** — a aparência do Breadcrumb é consistente. Não criar prop `variant` nem `size`. Customização de separador e níveis vêm por **composição** (children) e `className`.
+2. **`DocsAnatomy`** — 7 items: `Breadcrumb` (nav), `BreadcrumbList` (ol), `BreadcrumbItem` (li), `BreadcrumbLink` (a), `BreadcrumbPage` (span + aria-current), `BreadcrumbSeparator` (li + aria-hidden, ChevronRight default), `BreadcrumbEllipsis` (span + sr-only). `structureCode` mostra a hierarquia `nav > ol > li > (a | span)` com separadores intercalados.
+3. **`DocsVariants`** — **title**: "Configurações Disponíveis". `items` com 4 entradas: `default`, `withEllipsis`, `customSeparator`, `responsive`. Cada `preview` monta a composição completa com links reais e último item como `BreadcrumbPage`. **Nota obrigatória** em `variants.note`: "O Breadcrumb não tem variantes visuais — o que varia é a composição."
+4. **`DocsStates`** — 4 configurações: `simple`, `withEllipsis`, `customSeparator`, `asChildLink`. Não são estados funcionais — são padrões de composição. Omitir `disabled`/`loading`/`error`.
+5. **`DocsProps`** — 7 tables (uma por subcomponente): `Breadcrumb`, `BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbLink` (com `href`, `render`), `BreadcrumbPage`, `BreadcrumbSeparator` (com `children` para separador custom), `BreadcrumbEllipsis`. Todos aceitam `className` + atributos HTML nativos.
+6. **`DocsTokens`** — 7 tokens: `--muted-foreground` (links inativos), `--foreground` (hover e página atual), `--ring` (focus), `--text-sm` (fonte da lista), espaçamento `gap-1.5` entre itens, e `size-3.5` (separador) / `size-5` (ellipsis) para ícones.
+7. **`DocsAccessibility`** — regras obrigatórias:
+   - `<nav aria-label="breadcrumb">` no root
+   - `aria-current="page"` no `BreadcrumbPage` (aplicado automaticamente)
+   - `aria-hidden="true"` + `role="presentation"` em `BreadcrumbSeparator` e `BreadcrumbEllipsis`
+   - Texto `sr-only "More"` dentro do `BreadcrumbEllipsis`
+   - Contraste 4.5:1 em links inativos (`muted-foreground` sobre `background`)
+8. **`DocsAnalytics`** — eventos de produto:
+   - `navigation_click` (payload `{ component: 'breadcrumb', label, destination, location }`) em clique de `BreadcrumbLink`
+   - `breadcrumb_ellipsis_open` (payload `{ component: 'breadcrumb', hidden_count }`) quando o usuário expande níveis colapsados
+   - **Nunca** rastrear `BreadcrumbPage` — o item atual não é navegável
+9. **`DocsDoDont`** — pares canônicos: (a) último item como `BreadcrumbPage` (sem link) vs todos os itens como link; (b) ellipsis para ≥5 níveis vs breadcrumb com 6+ níveis expandidos.
+10. **`DocsNotes`** — 4 tips: JSON-LD automático via `useSeoEffect({ breadcrumb: [...] })`, DropdownMenu dentro do Ellipsis em mobile, integração com routers via `render`/`asChild`, label do `BreadcrumbPage` espelhando o `<h1>`.
+11. **Stories** — criar 4 arquivos: `breadcrumb.stories.tsx` (Playground + `tags: ["autodocs"]` + `withAutoDocsTab(BreadcrumbDocs)`), `breadcrumb-composicoes.stories.tsx` (Default, WithEllipsis, CustomSeparator, Responsive), `breadcrumb-estados.stories.tsx` (Simple, WithEllipsis, CustomSeparator, AsChildLink), `breadcrumb-variantes.stories.tsx` (alias de Composições se preferir). **Não criar** `breadcrumb-tamanhos.stories.tsx` — sem prop `size`.
+12. **`BreadcrumbPage` ≠ `BreadcrumbLink`** — regra crítica: o último item **nunca** é link. Validar em play function que o último `<li>` não contém `<a>` e que o `<span>` filho tem `aria-current="page"`.
+13. **Rich snippets / JSON-LD** — o Breadcrumb é o único componente de navegação com impacto em SEO. O hook `useSeoEffect` aceita `breadcrumb: BreadcrumbEntry[]` que gera o JSON-LD `BreadcrumbList` automaticamente. Documentar em `notes.tip1` e na guideline 06-seo-geo.
+14. **Labels** — substantivos ou frases nominais curtas (≤2 palavras no nível principal), sem verbo, sem ponto final. O `BreadcrumbPage` deve refletir exatamente o `<h1>` da página (máx. 3 palavras). Não abreviar ("Visão geral" não "Vis. geral").
+
 ### Componentes Display Compositionais com Estados (padrão Avatar)
 
 Componentes como **Avatar** (`@radix-ui/react-avatar`: `Avatar`, `AvatarImage`, `AvatarFallback`) são displays passivos com **composições** em vez de variantes `cva()` — todas as "variantes" são padrões de composição de filhos. Têm tamanho padrão embutido e estados internos de carregamento de imagem.

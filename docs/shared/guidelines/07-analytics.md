@@ -179,6 +179,9 @@ interface WithFieldName {
 | Evento | Quando disparar | Payload adicional |
 |--------|----------------|-------------------|
 | `navigation_click` | Ao clicar em um link de navegação | `label`, `destination` |
+| `breadcrumb_ellipsis_open` | Ao abrir o DropdownMenu dentro de `BreadcrumbEllipsis` (mobile/colapso) | `hidden_count` |
+
+> **Nunca rastrear `BreadcrumbPage`** — o item atual não é navegável. Trackear apenas cliques em `BreadcrumbLink`.
 
 ---
 
@@ -324,7 +327,7 @@ type EventName =
   | "option_select"
   | "page_change"
   | "slide_change"
-  | "navigation_click"
+  | "navigation_click" | "breadcrumb_ellipsis_open"
   | "tooltip_view" | "alert_dismiss" | "toast_action_click"
   | "collapsible_toggle" | "menu_item_click"
   | "docs_page_view" | "docs_section_viewed" | "language_switched";
@@ -345,6 +348,7 @@ interface TrackPayload {
   field_count?: number;
   page?: number;
   total_pages?: number;
+  hidden_count?: number;
   locale?: string;
   section?: string;
   previous_language?: string;
