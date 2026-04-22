@@ -28,7 +28,7 @@ export function DocsTokens({ title, cols, items, customizationTitle, customizati
     <section id="tokens">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
       <div className="space-y-6">
-        <Card className="shadow-sm overflow-x-auto p-4">
+        <Card className="shadow-sm overflow-x-auto md:overflow-visible p-4">
             <Table className="w-full text-sm">
               <TableHeader>
                 <TableRow className="border-b border-border bg-muted/50 text-left">

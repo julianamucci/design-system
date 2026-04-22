@@ -31,7 +31,7 @@
       </Card>
 
       <!-- Cenários -->
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto md:overflow-visible">
         <Table class="w-full border-collapse text-sm">
           <TableHeader>
             <TableRow class="border-b border-border text-left bg-muted/50 font-medium">
@@ -56,7 +56,7 @@
       {#if uxWriting}
       <div class="space-y-3">
         <h3 class="font-medium text-sm">{uxWriting.title}</h3>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto md:overflow-visible">
           <Table class="w-full border-collapse text-sm">
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/70 text-left">

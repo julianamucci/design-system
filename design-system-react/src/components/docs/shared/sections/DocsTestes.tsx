@@ -80,7 +80,7 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
         {/* Functional */}
         <div className="space-y-3">
           <h3 className="text-base font-semibold">{functional.title}</h3>
-          <Card className="shadow-sm overflow-x-auto p-4">
+          <Card className="shadow-sm overflow-x-auto md:overflow-visible p-4">
               <Table className="w-full text-sm">
                 <TableHeader>
                   <TableRow className="border-b border-border bg-muted/50 text-left">
@@ -123,7 +123,7 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
         {/* Visual */}
         <div className="space-y-3">
           <h3 className="text-base font-semibold">{visual.title}</h3>
-          <Card className="shadow-sm overflow-x-auto p-4">
+          <Card className="shadow-sm overflow-x-auto md:overflow-visible p-4">
               <Table className="w-full text-sm">
                 <TableHeader>
                   <TableRow className="border-b border-border bg-muted/50 text-left">

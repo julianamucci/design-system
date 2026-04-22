@@ -28,7 +28,7 @@ function buildTable(def: DocsPropsTableDef): DocumentFragment {
     frag.appendChild(h3);
   }
 
-  const wrapper = createCard({ className: 'rounded-lg p-4' });
+  const wrapper = createCard({ className: 'rounded-lg p-4 overflow-x-auto md:overflow-visible' });
 
   const { wrapper: tableWrapper, table } = createTable('w-full text-sm');
 

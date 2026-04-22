@@ -38,7 +38,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   funcTitle.textContent = props.functional.title;
   funcBlock.appendChild(funcTitle);
 
-  const funcWrapper = createCard({ className: 'rounded-lg p-4' });
+  const funcWrapper = createCard({ className: 'rounded-lg p-4 overflow-x-auto md:overflow-visible' });
   const { wrapper: funcTableWrapper, table: funcTable } = createTable('w-full text-sm');
 
   const funcThead = createTableHeader();
@@ -100,7 +100,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   visualTitle.textContent = props.visual.title;
   visualBlock.appendChild(visualTitle);
 
-  const visualWrapper = createCard({ className: 'rounded-lg p-4' });
+  const visualWrapper = createCard({ className: 'rounded-lg p-4 overflow-x-auto md:overflow-visible' });
   const { wrapper: visualTableWrapper, table: visualTable } = createTable('w-full text-sm');
 
   const visualThead = createTableHeader();

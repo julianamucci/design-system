@@ -29,7 +29,7 @@
         {#if def.title}
           <h3 class="text-base font-semibold">{def.title}</h3>
         {/if}
-        <Card class="overflow-x-auto p-4">
+        <Card class="overflow-x-auto md:overflow-visible p-4">
             <Table class="w-full text-sm">
               <TableHeader>
                 <TableRow class="border-b border-border bg-muted/50 text-left">

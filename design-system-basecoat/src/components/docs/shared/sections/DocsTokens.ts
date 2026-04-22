@@ -22,7 +22,7 @@ export function createDocsTokens(props: DocsTokensProps): HTMLElement {
   const container = document.createElement('div');
   container.className = 'space-y-6';
 
-  const tableWrapper = createCard({ className: 'rounded-lg p-4' });
+  const tableWrapper = createCard({ className: 'rounded-lg p-4 overflow-x-auto md:overflow-visible' });
 
   const { wrapper: innerTableWrapper, table } = createTable('w-full text-sm');
 

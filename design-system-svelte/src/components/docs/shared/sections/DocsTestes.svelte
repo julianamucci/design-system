@@ -25,7 +25,7 @@
     <!-- Functional -->
     <div class="space-y-3">
       <h3 class="text-base font-semibold">{functional.title}</h3>
-      <Card class="overflow-x-auto p-4">
+      <Card class="overflow-x-auto md:overflow-visible p-4">
           <Table class="w-full text-sm">
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/50 text-left">
@@ -68,7 +68,7 @@
     <!-- Visual -->
     <div class="space-y-3">
       <h3 class="text-base font-semibold">{visual.title}</h3>
-      <Card class="overflow-x-auto p-4">
+      <Card class="overflow-x-auto md:overflow-visible p-4">
           <Table class="w-full text-sm">
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/50 text-left">

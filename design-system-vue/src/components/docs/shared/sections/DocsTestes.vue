@@ -38,7 +38,7 @@ const priorityClass = (p: string) =>
       <!-- Functional -->
       <div class="space-y-3">
         <h3 class="text-base font-semibold">{{ functional.title }}</h3>
-        <Card class="p-4 overflow-x-auto">
+        <Card class="p-4 overflow-x-auto md:overflow-visible">
             <Table>
               <TableHeader>
                 <TableRow class="border-b border-border bg-muted/50 text-left">
@@ -77,7 +77,7 @@ const priorityClass = (p: string) =>
       <!-- Visual -->
       <div class="space-y-3">
         <h3 class="text-base font-semibold">{{ visual.title }}</h3>
-        <Card class="p-4 overflow-x-auto">
+        <Card class="p-4 overflow-x-auto md:overflow-visible">
             <Table>
               <TableHeader>
                 <TableRow class="border-b border-border bg-muted/50 text-left">

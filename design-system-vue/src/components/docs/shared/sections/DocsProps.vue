@@ -32,7 +32,7 @@ defineProps<{
     <div class="space-y-8">
       <div v-for="(def, ti) in tables" :key="ti" class="space-y-3">
         <h3 v-if="def.title" class="text-base font-semibold">{{ def.title }}</h3>
-        <Card class="p-4 overflow-x-auto">
+        <Card class="p-4 overflow-x-auto md:overflow-visible">
             <Table>
               <TableHeader>
                 <TableRow class="border-b border-border bg-muted/50 text-left">

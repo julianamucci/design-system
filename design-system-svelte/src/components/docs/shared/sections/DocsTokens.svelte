@@ -16,7 +16,7 @@
 <section id="tokens">
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
   <div class="space-y-6">
-    <Card class="overflow-x-auto p-4">
+    <Card class="overflow-x-auto md:overflow-visible p-4">
         <Table class="w-full text-sm">
           <TableHeader>
             <TableRow class="border-b border-border bg-muted/50 text-left">

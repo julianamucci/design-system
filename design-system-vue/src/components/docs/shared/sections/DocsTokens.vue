@@ -17,7 +17,7 @@ defineProps<{
   <section id="tokens">
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
     <div class="space-y-6">
-      <Card class="p-4 overflow-x-auto">
+      <Card class="p-4 overflow-x-auto md:overflow-visible">
           <Table>
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/50 text-left">
