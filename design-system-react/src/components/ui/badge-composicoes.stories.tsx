@@ -38,7 +38,7 @@ export const CountBadge: Story = {
       <Bell aria-hidden="true" className="h-6 w-6 text-foreground" />
       <Badge
         variant="destructive"
-        className="absolute -right-2 -top-2 h-5 min-w-[1.25rem] justify-center px-1"
+        className="absolute -right-2 -top-2 min-w-[1.25rem] justify-center px-1"
       >
         12
       </Badge>
