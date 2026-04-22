@@ -245,7 +245,7 @@ interface CardPartProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+      <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
         <Card>
           <img src={productImage} alt={$tStore('demonstration.labels.productTitle')} class="aspect-[4/3] w-full object-cover" />
           <CardHeader>

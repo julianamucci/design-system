@@ -11,6 +11,7 @@ import {
   createCardFooter,
 } from '@/components/ui/card';
 import { createButton } from '@/components/ui/button';
+import { createAvatar } from '@/components/ui/avatar';
 import uiTranslations from '@/i18n/ui.json';
 import cardTranslations from '@shared/content/card/translations.json';
 
@@ -98,11 +99,32 @@ function buildProductCardPreview(): HTMLElement {
   return card;
 }
 
+// Imagem canônica para previews (alinhada ao React)
+const DEMO_IMAGE_AVATAR =
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
+
 function buildProfileCardPreview(): HTMLElement {
   const card = createCard({ className: 'w-full max-w-sm' });
   const header = createCardHeader();
-  header.appendChild(createCardTitle({ text: t('demonstration.labels.profileTitle'), level: 3 }));
-  header.appendChild(createCardDescription({ text: t('demonstration.labels.profileDescription') }));
+
+  // Row: Avatar + (title + description)
+  const row = document.createElement('div');
+  row.className = 'flex items-center gap-3';
+
+  // createAvatar já exibe o fallback (iniciais "MR") se o <img> falhar ou estiver ausente
+  const avatar = createAvatar({
+    src: DEMO_IMAGE_AVATAR,
+    alt: `Foto de perfil de ${t('demonstration.labels.profileTitle')}`,
+    fallbackText: 'MR',
+  });
+
+  const textWrap = document.createElement('div');
+  textWrap.className = 'min-w-0';
+  textWrap.appendChild(createCardTitle({ text: t('demonstration.labels.profileTitle'), level: 3 }));
+  textWrap.appendChild(createCardDescription({ text: t('demonstration.labels.profileDescription') }));
+
+  row.append(avatar, textWrap);
+  header.appendChild(row);
   card.appendChild(header);
   return card;
 }
@@ -317,8 +339,8 @@ export function createCardDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'w-full flex flex-wrap items-start gap-4';
-            wrap.append(buildProductCardPreview(), buildProfileCardPreview(), buildMetricCardPreview());
+            wrap.className = 'w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start';
+            wrap.append(buildProductCardPreview(), buildMetricCardPreview(), buildProfileCardPreview());
             return wrap;
           },
         });

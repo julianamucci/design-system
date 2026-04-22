@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import cardTranslations from '@shared/content/card/translations.json';
@@ -54,6 +55,10 @@ const priorityKeyMap: Record<string, string> = {
 function localPriority(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
+
+// Imagem canônica para previews (alinhada ao React)
+const DEMO_IMAGE_AVATAR =
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
 
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────
 
@@ -407,7 +412,7 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full grid gap-4 md:grid-cols-2">
+      <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
         <Card>
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
@@ -436,6 +441,20 @@ const visualTestItems = computed(() => [
           <CardContent class="text-2xl font-semibold">
             {{ tContent('demonstration.labels.metricValue') }}
           </CardContent>
+        </Card>
+        <Card class="w-full max-w-sm">
+          <CardHeader>
+            <div class="flex items-center gap-3">
+              <Avatar>
+                <AvatarImage :src="DEMO_IMAGE_AVATAR" :alt="`Foto de perfil de ${tContent('demonstration.labels.profileTitle')}`" />
+                <AvatarFallback>MR</AvatarFallback>
+              </Avatar>
+              <div class="min-w-0">
+                <CardTitle>{{ tContent('demonstration.labels.profileTitle') }}</CardTitle>
+                <CardDescription>{{ tContent('demonstration.labels.profileDescription') }}</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
         </Card>
       </div>
     </DocsDemonstration>
