@@ -1,0 +1,1007 @@
+{
+  "pt-BR": {
+    "title": "Card",
+    "category": "Layout",
+    "type": "Componente",
+    "description": "Container que agrupa conteúdo relacionado em uma unidade visualmente delimitada, com header, content e footer opcionais.",
+    "seo": {
+      "title": "Card — Layout · Design System",
+      "description": "Documentação do Card: 2 tamanhos (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens de tema.",
+      "aiSummary": "Componente Card estrutural com 2 sizes (default, sm), composição via 7 subcomponentes (Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter) e tokens --radius-card/bg-card.",
+      "aiEntities": "Card, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "productTitle": "Cadeira Gamer Pro",
+        "productDescription": "Estrutura ergonômica com ajuste de altura e apoio lombar.",
+        "productPrice": "R$ 1.299,00",
+        "productStock": "Em estoque",
+        "actionEdit": "Editar",
+        "actionDelete": "Excluir",
+        "actionCancel": "Cancelar",
+        "actionSave": "Salvar",
+        "profileTitle": "Maria Rodrigues",
+        "profileDescription": "Designer de produto · São Paulo, BR",
+        "metricTitle": "Assinantes ativos",
+        "metricValue": "8.742",
+        "metricTrend": "+12% no mês"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Card</strong> — container <code>&lt;div data-slot=\"card\"&gt;</code> com borda, radius e fundo do tema.",
+      "item2": "<strong>CardHeader</strong> — grid opcional com título, descrição e ação; usa <code>rounded-t-(--radius-card)</code>.",
+      "item3": "<strong>CardTitle</strong> — heading visual do card. <code>text-base</code> padrão, <code>text-sm</code> no size <code>sm</code>.",
+      "item4": "<strong>CardDescription</strong> — texto complementar em <code>text-muted-foreground</code>.",
+      "item5": "<strong>CardAction</strong> — slot para botão, badge ou menu à direita do header (<code>grid-cols-[1fr_auto]</code>).",
+      "item6": "<strong>CardContent</strong> — corpo do card com padding lateral padrão; conteúdo principal.",
+      "item7": "<strong>CardFooter</strong> — rodapé com <code>border-t</code> e <code>bg-muted/50</code>; ideal para ações.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundário */}\n    <CardAction />       {/* slot à direita */}\n  </CardHeader>\n  <CardContent />        {/* corpo */}\n  <CardFooter />         {/* rodapé com bg-muted/50 */}\n</Card>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para agrupar informações que formam <strong>uma unidade semântica</strong> — produto, perfil, métrica, artigo.",
+        "item2": "Inclua sempre <code>CardTitle</code> ou um heading acessível — cards sem título ficam órfãos para leitores de tela.",
+        "item3": "Botões dentro de Card precisam de <code>aria-label</code> contextual incluindo o identificador do card.",
+        "item4": "Use <code>size=\"sm\"</code> em grids densos (listas de métricas, cards compactos); <code>default</code> no resto.",
+        "item5": "<code>CardFooter</code> é o local padrão para ações — alinhe primário à direita conforme guidelines de botões."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Card de produto em catálogo", "u": "Sim", "a": "-" },
+        "item2": { "s": "Apenas dividir seções visualmente", "u": "Não", "a": "Separator ou espaçamento" },
+        "item3": { "s": "Cards numa lista vertical simples", "u": "Sim, size=\"sm\"", "a": "-" },
+        "item4": { "s": "Conteúdo que precisa expandir/recolher", "u": "Não", "a": "Accordion" },
+        "item5": { "s": "Alerta ou mensagem de feedback", "u": "Não", "a": "Alert" },
+        "item6": { "s": "Métrica ou KPI em dashboard", "u": "Sim", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "CardTitle",
+            "format": "Substantivo ou frase nominal · sem verbo · sem ponto final",
+            "good": "\"Cadeira Gamer Pro\", \"Assinantes ativos\", \"Últimos pedidos\"",
+            "bad": "\"Ver produto\", \"Cadeira Gamer Pro.\", \"Clique aqui para detalhes\""
+          },
+          "description": {
+            "name": "CardDescription",
+            "format": "Complemento direto do título · máx. 2 linhas · ponto final",
+            "good": "\"Estrutura ergonômica com ajuste de altura e apoio lombar.\"",
+            "bad": "\"Este é o melhor produto da nossa linha, com muitos recursos...\""
+          },
+          "action": {
+            "name": "Botão no CardFooter",
+            "format": "Verbo no infinitivo · máx. 3 palavras · sem pontuação",
+            "good": "\"Salvar\", \"Excluir\", \"Ver detalhes\"",
+            "bad": "\"Clique para salvar\", \"OK\", \"Sim, excluir\""
+          },
+          "ariaLabel": {
+            "name": "aria-label de botões",
+            "format": "Verbo + objeto + identificador do card",
+            "good": "\"Excluir produto Cadeira Gamer Pro\"",
+            "bad": "\"Excluir\" (ambíguo em listas de cards)"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O conteúdo forma uma unidade semântica com identidade própria",
+        "item2": "Você precisa repetir o mesmo layout em uma grade ou lista",
+        "item3": "Há ações associadas ao conteúdo (editar, excluir, ver mais)",
+        "item4": "O card serve de target de navegação em catálogo ou dashboard"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A intenção é só dividir seções — use <code>Separator</code>",
+        "item2": "O conteúdo é uma mensagem transitória — use <code>Sonner</code>",
+        "item3": "É um status persistente na página — use <code>Alert</code>",
+        "item4": "O conteúdo precisa expandir/recolher — use <code>Accordion</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Card com CardTitle, CardDescription e ações no CardFooter. Unidade semântica clara.",
+        "dont": "Card usado apenas como divisor visual sem título ou conteúdo semântico."
+      },
+      "pair2": {
+        "do": "Botões do CardFooter com <code>aria-label</code> incluindo o título do card.",
+        "dont": "Botões \"Editar\" / \"Excluir\" sem contexto — ambíguos em listas."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "full": "Com todos os subcomponentes:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Tamanhos e Composições",
+      "note": "O Card não tem variantes <code>cva()</code>. O que varia é o <strong>tamanho</strong> (prop <code>size=\"default\"|\"sm\"</code>) e a <strong>composição</strong> de subcomponentes (header, content, footer são opcionais).",
+      "items": {
+        "default": "<code>size=\"default\"</code> — padding <code>py-4</code> + <code>px-4</code>, título em <code>text-base</code>. Padrão para a maioria dos casos.",
+        "sm": "<code>size=\"sm\"</code> — padding <code>py-3</code> + <code>px-3</code>, título em <code>text-sm</code>. Use em listas densas e dashboards.",
+        "withFooter": "Com <code>CardFooter</code> — ganha <code>border-t</code> e fundo <code>bg-muted/50</code>; o Card absorve o <code>pb-0</code> para alinhar o footer.",
+        "withAction": "Com <code>CardAction</code> — header vira grid <code>[1fr_auto]</code>; a ação (Button, Badge, DropdownMenu) fica à direita.",
+        "withImage": "Primeiro ou último filho <code>&lt;img&gt;</code> — o Card aplica <code>rounded-t/b-(--radius-card)</code> automaticamente e remove o padding correspondente."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "default": {
+        "label": "Padrão",
+        "trigger": "Composição básica sem props extras",
+        "behavior": "Fundo <code>bg-card</code>, borda <code>ring-foreground/10</code>, radius <code>--radius-card</code>"
+      },
+      "small": {
+        "label": "Compacto",
+        "trigger": "Prop <code>size=\"sm\"</code>",
+        "behavior": "Padding reduzido (<code>py-3</code>/<code>px-3</code>), título em <code>text-sm</code>"
+      },
+      "interactive": {
+        "label": "Clicável",
+        "trigger": "Envolver o Card em <code>&lt;a&gt;</code> ou <code>&lt;button&gt;</code>",
+        "behavior": "Herda comportamento de link/botão; adicione <code>aria-label</code> com o título e <code>focus-visible:ring</code>"
+      },
+      "withImage": {
+        "label": "Com imagem",
+        "trigger": "<code>&lt;img&gt;</code> como primeiro ou último filho direto",
+        "behavior": "Imagem encaixa com <code>rounded-t/b-(--radius-card)</code>; padding do topo/fundo é removido automaticamente"
+      },
+      "withFooter": {
+        "label": "Com footer",
+        "trigger": "Incluir <code>&lt;CardFooter&gt;</code>",
+        "behavior": "Card absorve <code>pb-0</code>; footer ganha <code>border-t</code> e <code>bg-muted/50</code>"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "cardTitle": "Card",
+      "headerTitle": "CardHeader",
+      "cardTitleTitle": "CardTitle",
+      "descriptionTitle": "CardDescription",
+      "actionTitle": "CardAction",
+      "contentTitle": "CardContent",
+      "footerTitle": "CardFooter",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "size": "Tamanho do Card. <code>\"default\"</code> para uso geral, <code>\"sm\"</code> em listas densas e dashboards.",
+        "className": "Classes Tailwind adicionais — sobrescreve o padding, fundo ou borda padrão quando necessário.",
+        "children": "Conteúdo do Card: header, content e/ou footer compostos."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "Todos os subcomponentes aceitam <code>className</code> e props nativas de <code>&lt;div&gt;</code>. Para Card clicável, envolva em <code>&lt;a&gt;</code> ou <code>&lt;button&gt;</code> com <code>aria-label</code> descritivo — não adicione <code>onClick</code> no Card raiz sem semântica."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "radiusCard": "Raio dos cantos do Card",
+        "card": "Fundo do Card",
+        "cardForeground": "Texto principal do Card",
+        "muted": "Fundo do CardFooter (<code>bg-muted/50</code>)",
+        "mutedForeground": "Texto da CardDescription",
+        "foreground": "Cor do ring em <code>ring-foreground/10</code>",
+        "border": "Linha divisora acima do CardFooter"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "O Card é um container semântico — a interatividade vive no conteúdo interno. Cumpre WCAG 2.1 AA: 1.3.1 (info e relações) via <code>CardTitle</code> semântico, 2.4.6 (títulos e labels) via composição com <code>aria-labelledby</code>, 4.1.2 (nome, função, valor) nos botões internos.",
+      "item1": "<strong>Container passivo</strong> — o Card em si não recebe foco nem evento de teclado. Todos os controles (Button, Link, Badge interativo) herdam acessibilidade própria.",
+      "item2": "<strong>CardTitle como âncora</strong> — use o <code>id</code> do <code>CardTitle</code> como <code>aria-labelledby</code> do container quando o Card todo for anunciado (ex: dentro de uma lista <code>role=\"list\"</code>).",
+      "item3": "<strong>Botões com aria-label contextual</strong> — em listas de cards, \"Excluir\" vira \"Excluir produto Cadeira Gamer Pro\" para evitar ambiguidade.",
+      "item4": "<strong>Card clicável</strong> — envolva em <code>&lt;a&gt;</code> ou <code>&lt;button&gt;</code> com <code>aria-label</code> descritivo; adicione <code>focus-visible:ring-2</code> para foco visível.",
+      "item5": "<strong>Contraste</strong> — <code>text-card-foreground</code> sobre <code>bg-card</code> cumpre 4.5:1; <code>text-muted-foreground</code> na descrição também atinge o limiar AA.",
+      "keyboard": {
+        "tab": "Move foco para os elementos interativos dentro do Card (botões, links, menus).",
+        "enter": "Ativa o elemento focado (botão no footer, link no conteúdo, trigger de menu).",
+        "noKeyboard": "O Card em si não recebe foco — apenas o conteúdo interno navega por teclado."
+      },
+      "aria": {
+        "labelledBy": "<code>aria-labelledby</code> — opcional; aponta para o <code>id</code> do <code>CardTitle</code> quando o Card precisa ser nomeado como região.",
+        "button": "<code>aria-label</code> em botões — obrigatório em listas onde o mesmo label (\"Editar\") se repete; inclua o identificador do card.",
+        "role": "<code>role=\"region\"</code> — opcional; use apenas quando o Card representa uma seção importante da página.",
+        "cardAction": "<code>CardAction</code> mantém a ordem DOM; o grid visual não altera a ordem de leitura."
+      },
+      "screenReader": {
+        "onEnter": "Ao focar um botão dentro do Card: leitor anuncia o <code>aria-label</code> (ex: \"Excluir produto Cadeira Gamer Pro, botão\").",
+        "onTitle": "<code>CardTitle</code> é lido como heading ou texto regular dependendo da tag HTML escolhida (<code>&lt;h3&gt;</code>, <code>&lt;h4&gt;</code>, etc.).",
+        "cards": "Em listas de cards, leitores de tela anunciam cada Card na sequência do DOM — mantenha a ordem visual alinhada à ordem lógica."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "separator": "Para dividir seções sem criar container visual completo.",
+      "accordion": "Para conteúdo que precisa expandir e recolher.",
+      "alert": "Para mensagens de feedback persistentes na página.",
+      "button": "Ações do <code>CardFooter</code> — primário alinhado à direita, secundário à esquerda.",
+      "badge": "Indicadores de status no <code>CardAction</code> ou no corpo.",
+      "avatar": "Em cards de perfil ou autor; fica à esquerda do <code>CardHeader</code>."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "O Card detecta <code>CardFooter</code> via <code>has-data-[slot=card-footer]:pb-0</code> — ao adicionar o footer, o padding do fundo é removido automaticamente para alinhar a borda.",
+      "tip2": "Imagens como primeiro/último filho recebem <code>rounded-t/b-(--radius-card)</code> por CSS; não precisa passar classe manualmente.",
+      "tip3": "A prop <code>size</code> propaga via <code>data-size</code> e <code>group-data-[size=sm]/card</code> — os subcomponentes ajustam padding e fonte sem passar a prop explícita.",
+      "tip4": "Para Card clicável, prefira <code>asChild</code> pattern (envolver em <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) em vez de <code>onClick</code> no container — garante semântica e navegação por teclado."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Card é container estrutural — rastreie apenas os controles interativos dentro dele (botões, links, triggers). Para Card clicável envolvendo toda a unidade, emita <code>card_click</code>.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "buttonClick": "button_click",
+        "buttonClickTrigger": "Clique em botão dentro do CardFooter ou CardAction",
+        "buttonClickPayload": "{ component: 'button', label, location: 'card', variant }",
+        "cardClick": "card_click",
+        "cardClickTrigger": "Clique no Card quando a unidade inteira é navegável (<a> ou <button>)",
+        "cardClickPayload": "{ component: 'card', label, destination, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada configuração do Card.",
+        "item1": { "action": "Renderizar Card com Header, Content e Footer", "result": "3 blocos visíveis; Card com <code>data-slot=\"card\"</code>; footer com <code>border-t</code> e <code>bg-muted/50</code>", "priority": "high" },
+        "item2": { "action": "Renderizar Card com size=\"sm\"", "result": "<code>data-size=\"sm\"</code> no root; padding reduzido; <code>CardTitle</code> em <code>text-sm</code>", "priority": "high" },
+        "item3": { "action": "Renderizar Card com CardAction", "result": "Header vira grid <code>[1fr_auto]</code>; ação fica à direita mantendo ordem DOM original", "priority": "medium" },
+        "item4": { "action": "Renderizar Card com imagem como primeiro filho", "result": "Imagem ganha <code>rounded-t-(--radius-card)</code>; padding do topo é removido", "priority": "medium" },
+        "item5": { "action": "Clicar em botão no CardFooter", "result": "Handler do botão é chamado; evento não borbulha para o Card raiz se houver wrapper clicável", "priority": "high" },
+        "item6": { "action": "Card envolvido em <a> com aria-label", "result": "<kbd>Tab</kbd> foca o Card; <kbd>Enter</kbd> navega; leitor anuncia o <code>aria-label</code>", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "Contraste 4.5:1 no texto do Card", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item2": { "criterion": "Contraste 4.5:1 no <code>CardDescription</code> (muted-foreground)", "level": "AA", "how": "axe-core" },
+        "item3": { "criterion": "Botões internos com <code>aria-label</code> contextual em listas", "level": "AA", "how": "Inspecionar atributo; getByRole('button', { name: /Excluir produto/ })" },
+        "item4": { "criterion": "Focus ring visível em Card clicável e controles internos", "level": "AA", "how": "Navegação manual por <kbd>Tab</kbd>" },
+        "item5": { "criterion": "Ordem DOM reflete ordem visual (CardAction não inverte a leitura)", "level": "AA", "how": "Inspeção manual + leitor de tela" },
+        "item6": { "criterion": "Sem violações axe-core", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Playground — Card com header, content e footer", "priority": "high" },
+        "item2": { "story": "Tamanhos — default e sm lado a lado", "priority": "high" },
+        "item3": { "story": "Composições — com CardAction, com imagem, sem footer", "priority": "medium" },
+        "item4": { "story": "Estados — Card clicável com focus ring", "priority": "medium" },
+        "item5": { "story": "Composições — dentro de grid (catálogo/dashboard)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Card",
+    "category": "Layout",
+    "type": "Component",
+    "description": "Container that groups related content into a visually delimited unit, with optional header, content and footer slots.",
+    "seo": {
+      "title": "Card — Layout · Design System",
+      "description": "Documentation for Card: 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and theme tokens.",
+      "aiSummary": "Structural Card component with 2 sizes (default, sm), composition via 7 subcomponents (Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter) and --radius-card/bg-card tokens.",
+      "aiEntities": "Card, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "productTitle": "Pro Gaming Chair",
+        "productDescription": "Ergonomic frame with height adjustment and lumbar support.",
+        "productPrice": "$249.00",
+        "productStock": "In stock",
+        "actionEdit": "Edit",
+        "actionDelete": "Delete",
+        "actionCancel": "Cancel",
+        "actionSave": "Save",
+        "profileTitle": "Maria Rodrigues",
+        "profileDescription": "Product designer · São Paulo, BR",
+        "metricTitle": "Active subscribers",
+        "metricValue": "8,742",
+        "metricTrend": "+12% this month"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Card</strong> — <code>&lt;div data-slot=\"card\"&gt;</code> container with theme border, radius and background.",
+      "item2": "<strong>CardHeader</strong> — optional grid with title, description and action; uses <code>rounded-t-(--radius-card)</code>.",
+      "item3": "<strong>CardTitle</strong> — visual heading. <code>text-base</code> default, <code>text-sm</code> in <code>sm</code> size.",
+      "item4": "<strong>CardDescription</strong> — complementary text in <code>text-muted-foreground</code>.",
+      "item5": "<strong>CardAction</strong> — slot for button, badge or menu on the right of the header (<code>grid-cols-[1fr_auto]</code>).",
+      "item6": "<strong>CardContent</strong> — card body with default horizontal padding; primary content area.",
+      "item7": "<strong>CardFooter</strong> — footer with <code>border-t</code> and <code>bg-muted/50</code>; ideal for actions.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* optional grid */}\n    <CardTitle />        {/* visual heading */}\n    <CardDescription />  {/* secondary text */}\n    <CardAction />       {/* right-aligned slot */}\n  </CardHeader>\n  <CardContent />        {/* body */}\n  <CardFooter />         {/* footer with bg-muted/50 */}\n</Card>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use to group information that forms <strong>one semantic unit</strong> — product, profile, metric, article.",
+        "item2": "Always include <code>CardTitle</code> or an accessible heading — untitled cards are orphan to screen readers.",
+        "item3": "Buttons inside a Card need contextual <code>aria-label</code> with the card identifier.",
+        "item4": "Use <code>size=\"sm\"</code> in dense grids (metric lists, compact cards); <code>default</code> elsewhere.",
+        "item5": "<code>CardFooter</code> is the default spot for actions — primary aligned to the right per button guidelines."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Product card in a catalog", "u": "Yes", "a": "-" },
+        "item2": { "s": "Just dividing sections visually", "u": "No", "a": "Separator or spacing" },
+        "item3": { "s": "Cards in a simple vertical list", "u": "Yes, size=\"sm\"", "a": "-" },
+        "item4": { "s": "Content needing expand/collapse", "u": "No", "a": "Accordion" },
+        "item5": { "s": "Feedback alert or message", "u": "No", "a": "Alert" },
+        "item6": { "s": "Metric or KPI in a dashboard", "u": "Yes", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "title": {
+            "name": "CardTitle",
+            "format": "Noun or noun phrase · no verb · no period",
+            "good": "\"Pro Gaming Chair\", \"Active subscribers\", \"Recent orders\"",
+            "bad": "\"View product\", \"Pro Gaming Chair.\", \"Click here for details\""
+          },
+          "description": {
+            "name": "CardDescription",
+            "format": "Direct complement to the title · max. 2 lines · period",
+            "good": "\"Ergonomic frame with height adjustment and lumbar support.\"",
+            "bad": "\"This is the best product in our line, with many features...\""
+          },
+          "action": {
+            "name": "Button in CardFooter",
+            "format": "Infinitive verb · max. 3 words · no punctuation",
+            "good": "\"Save\", \"Delete\", \"View details\"",
+            "bad": "\"Click to save\", \"OK\", \"Yes, delete\""
+          },
+          "ariaLabel": {
+            "name": "Button aria-label",
+            "format": "Verb + object + card identifier",
+            "good": "\"Delete product Pro Gaming Chair\"",
+            "bad": "\"Delete\" (ambiguous in card lists)"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The content forms a semantic unit with its own identity",
+        "item2": "You need to repeat the same layout in a grid or list",
+        "item3": "There are actions associated with the content (edit, delete, see more)",
+        "item4": "The card serves as a navigation target in a catalog or dashboard"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "Intent is just to divide sections — use <code>Separator</code>",
+        "item2": "Content is a transient message — use <code>Sonner</code>",
+        "item3": "It's a persistent status on the page — use <code>Alert</code>",
+        "item4": "Content needs to expand/collapse — use <code>Accordion</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Card with CardTitle, CardDescription and actions in CardFooter. Clear semantic unit.",
+        "dont": "Card used only as a visual divider with no title or semantic content."
+      },
+      "pair2": {
+        "do": "CardFooter buttons with <code>aria-label</code> including the card title.",
+        "dont": "\"Edit\" / \"Delete\" buttons without context — ambiguous in lists."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "full": "With all subcomponents:"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Sizes and Compositions",
+      "note": "Card has no <code>cva()</code> variants. What varies is the <strong>size</strong> (prop <code>size=\"default\"|\"sm\"</code>) and the <strong>composition</strong> of subcomponents (header, content, footer are optional).",
+      "items": {
+        "default": "<code>size=\"default\"</code> — <code>py-4</code> + <code>px-4</code> padding, title in <code>text-base</code>. Default for most cases.",
+        "sm": "<code>size=\"sm\"</code> — <code>py-3</code> + <code>px-3</code> padding, title in <code>text-sm</code>. Use in dense lists and dashboards.",
+        "withFooter": "With <code>CardFooter</code> — gains <code>border-t</code> and <code>bg-muted/50</code>; Card absorbs <code>pb-0</code> to align the footer.",
+        "withAction": "With <code>CardAction</code> — header becomes <code>[1fr_auto]</code> grid; the action (Button, Badge, DropdownMenu) sits on the right.",
+        "withImage": "First or last <code>&lt;img&gt;</code> child — Card applies <code>rounded-t/b-(--radius-card)</code> automatically and removes the matching padding."
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "Basic composition without extra props",
+        "behavior": "<code>bg-card</code> background, <code>ring-foreground/10</code> border, <code>--radius-card</code> radius"
+      },
+      "small": {
+        "label": "Compact",
+        "trigger": "<code>size=\"sm\"</code> prop",
+        "behavior": "Reduced padding (<code>py-3</code>/<code>px-3</code>), title in <code>text-sm</code>"
+      },
+      "interactive": {
+        "label": "Clickable",
+        "trigger": "Wrap the Card in <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code>",
+        "behavior": "Inherits link/button behavior; add <code>aria-label</code> with the title and <code>focus-visible:ring</code>"
+      },
+      "withImage": {
+        "label": "With image",
+        "trigger": "<code>&lt;img&gt;</code> as first or last direct child",
+        "behavior": "Image fits with <code>rounded-t/b-(--radius-card)</code>; top/bottom padding is removed automatically"
+      },
+      "withFooter": {
+        "label": "With footer",
+        "trigger": "Include <code>&lt;CardFooter&gt;</code>",
+        "behavior": "Card absorbs <code>pb-0</code>; footer gains <code>border-t</code> and <code>bg-muted/50</code>"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "cardTitle": "Card",
+      "headerTitle": "CardHeader",
+      "cardTitleTitle": "CardTitle",
+      "descriptionTitle": "CardDescription",
+      "actionTitle": "CardAction",
+      "contentTitle": "CardContent",
+      "footerTitle": "CardFooter",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "size": "Card size. <code>\"default\"</code> for general use, <code>\"sm\"</code> in dense lists and dashboards.",
+        "className": "Additional Tailwind classes — override default padding, background or border when needed.",
+        "children": "Card content: header, content and/or footer composed."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "All subcomponents accept <code>className</code> and native <code>&lt;div&gt;</code> props. For a clickable Card, wrap in <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> with a descriptive <code>aria-label</code> — don't add <code>onClick</code> on the Card root without semantics."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "radiusCard": "Card corner radius",
+        "card": "Card background",
+        "cardForeground": "Card main text",
+        "muted": "CardFooter background (<code>bg-muted/50</code>)",
+        "mutedForeground": "CardDescription text",
+        "foreground": "Ring color in <code>ring-foreground/10</code>",
+        "border": "Divider line above CardFooter"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "Card is a semantic container — interactivity lives in the internal content. Meets WCAG 2.1 AA: 1.3.1 (info and relations) via semantic <code>CardTitle</code>, 2.4.6 (headings and labels) via <code>aria-labelledby</code> composition, 4.1.2 (name, role, value) in internal buttons.",
+      "item1": "<strong>Passive container</strong> — Card itself doesn't receive focus or keyboard events. All controls (Button, Link, interactive Badge) bring their own accessibility.",
+      "item2": "<strong>CardTitle as anchor</strong> — use the <code>CardTitle</code> <code>id</code> as <code>aria-labelledby</code> on the container when the whole Card is announced (e.g. inside a <code>role=\"list\"</code>).",
+      "item3": "<strong>Contextual aria-label on buttons</strong> — in card lists, \"Delete\" becomes \"Delete product Pro Gaming Chair\" to avoid ambiguity.",
+      "item4": "<strong>Clickable Card</strong> — wrap in <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> with a descriptive <code>aria-label</code>; add <code>focus-visible:ring-2</code> for visible focus.",
+      "item5": "<strong>Contrast</strong> — <code>text-card-foreground</code> over <code>bg-card</code> meets 4.5:1; <code>text-muted-foreground</code> in descriptions also hits AA.",
+      "keyboard": {
+        "tab": "Moves focus to interactive elements inside the Card (buttons, links, menus).",
+        "enter": "Activates the focused element (footer button, content link, menu trigger).",
+        "noKeyboard": "The Card itself doesn't receive focus — only the internal content is keyboard-navigable."
+      },
+      "aria": {
+        "labelledBy": "<code>aria-labelledby</code> — optional; points to the <code>CardTitle</code> <code>id</code> when the Card needs to be named as a region.",
+        "button": "Button <code>aria-label</code> — required in lists where the same label (\"Edit\") repeats; include the card identifier.",
+        "role": "<code>role=\"region\"</code> — optional; use only when the Card represents an important section of the page.",
+        "cardAction": "<code>CardAction</code> preserves DOM order; the visual grid doesn't alter reading order."
+      },
+      "screenReader": {
+        "onEnter": "On focusing a button inside the Card: reader announces the <code>aria-label</code> (e.g., \"Delete product Pro Gaming Chair, button\").",
+        "onTitle": "<code>CardTitle</code> is read as a heading or regular text depending on the HTML tag chosen (<code>&lt;h3&gt;</code>, <code>&lt;h4&gt;</code>, etc.).",
+        "cards": "In card lists, screen readers announce each Card in DOM order — keep visual order aligned with logical order."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "separator": "To divide sections without creating a full visual container.",
+      "accordion": "For content that needs to expand and collapse.",
+      "alert": "For feedback messages persistent on the page.",
+      "button": "<code>CardFooter</code> actions — primary right-aligned, secondary left.",
+      "badge": "Status indicators in <code>CardAction</code> or the body.",
+      "avatar": "In profile or author cards; sits to the left of <code>CardHeader</code>."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "Card detects <code>CardFooter</code> via <code>has-data-[slot=card-footer]:pb-0</code> — adding the footer removes bottom padding automatically to align the border.",
+      "tip2": "Images as first/last child get <code>rounded-t/b-(--radius-card)</code> via CSS; you don't need to pass a class manually.",
+      "tip3": "The <code>size</code> prop propagates via <code>data-size</code> and <code>group-data-[size=sm]/card</code> — subcomponents adjust padding and font without receiving the prop explicitly.",
+      "tip4": "For a clickable Card, prefer the <code>asChild</code> pattern (wrap in <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) instead of <code>onClick</code> on the container — ensures semantics and keyboard navigation."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Card is a structural container — track only the interactive controls inside it (buttons, links, triggers). For a clickable Card wrapping the whole unit, emit <code>card_click</code>.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "buttonClick": "button_click",
+        "buttonClickTrigger": "Click on a button inside CardFooter or CardAction",
+        "buttonClickPayload": "{ component: 'button', label, location: 'card', variant }",
+        "cardClick": "card_click",
+        "cardClickTrigger": "Click on the Card when the whole unit is navigable (<a> or <button>)",
+        "cardClickPayload": "{ component: 'card', label, destination, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Card configuration.",
+        "item1": { "action": "Render Card with Header, Content and Footer", "result": "3 blocks visible; Card with <code>data-slot=\"card\"</code>; footer with <code>border-t</code> and <code>bg-muted/50</code>", "priority": "high" },
+        "item2": { "action": "Render Card with size=\"sm\"", "result": "<code>data-size=\"sm\"</code> on root; reduced padding; <code>CardTitle</code> in <code>text-sm</code>", "priority": "high" },
+        "item3": { "action": "Render Card with CardAction", "result": "Header becomes <code>[1fr_auto]</code> grid; action stays right with original DOM order", "priority": "medium" },
+        "item4": { "action": "Render Card with image as first child", "result": "Image gets <code>rounded-t-(--radius-card)</code>; top padding is removed", "priority": "medium" },
+        "item5": { "action": "Click a button in CardFooter", "result": "Button handler fires; event doesn't bubble to Card root if there's a clickable wrapper", "priority": "high" },
+        "item6": { "action": "Card wrapped in <a> with aria-label", "result": "<kbd>Tab</kbd> focuses the Card; <kbd>Enter</kbd> navigates; reader announces the <code>aria-label</code>", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "4.5:1 contrast on Card text", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item2": { "criterion": "4.5:1 contrast on <code>CardDescription</code> (muted-foreground)", "level": "AA", "how": "axe-core" },
+        "item3": { "criterion": "Internal buttons with contextual <code>aria-label</code> in lists", "level": "AA", "how": "Inspect attribute; getByRole('button', { name: /Delete product/ })" },
+        "item4": { "criterion": "Visible focus ring on clickable Card and internal controls", "level": "AA", "how": "Manual <kbd>Tab</kbd> navigation" },
+        "item5": { "criterion": "DOM order reflects visual order (CardAction doesn't invert reading)", "level": "AA", "how": "Manual inspection + screen reader" },
+        "item6": { "criterion": "No axe-core violations", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Playground — Card with header, content and footer", "priority": "high" },
+        "item2": { "story": "Sizes — default and sm side by side", "priority": "high" },
+        "item3": { "story": "Compositions — with CardAction, with image, no footer", "priority": "medium" },
+        "item4": { "story": "States — clickable Card with focus ring", "priority": "medium" },
+        "item5": { "story": "Compositions — inside a grid (catalog/dashboard)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Card",
+    "category": "Layout",
+    "type": "Componente",
+    "description": "Contenedor que agrupa contenido relacionado en una unidad visualmente delimitada, con header, content y footer opcionales.",
+    "seo": {
+      "title": "Card — Layout · Design System",
+      "description": "Documentación del Card: 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens de tema.",
+      "aiSummary": "Componente Card estructural con 2 tamaños (default, sm), composición vía 7 subcomponentes (Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter) y tokens --radius-card/bg-card.",
+      "aiEntities": "Card, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "productTitle": "Silla Gamer Pro",
+        "productDescription": "Estructura ergonómica con ajuste de altura y apoyo lumbar.",
+        "productPrice": "$249,00",
+        "productStock": "En stock",
+        "actionEdit": "Editar",
+        "actionDelete": "Eliminar",
+        "actionCancel": "Cancelar",
+        "actionSave": "Guardar",
+        "profileTitle": "Maria Rodrigues",
+        "profileDescription": "Diseñadora de producto · São Paulo, BR",
+        "metricTitle": "Suscriptores activos",
+        "metricValue": "8.742",
+        "metricTrend": "+12% este mes"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Card</strong> — contenedor <code>&lt;div data-slot=\"card\"&gt;</code> con borde, radius y fondo del tema.",
+      "item2": "<strong>CardHeader</strong> — grid opcional con título, descripción y acción; usa <code>rounded-t-(--radius-card)</code>.",
+      "item3": "<strong>CardTitle</strong> — heading visual del card. <code>text-base</code> por defecto, <code>text-sm</code> en el size <code>sm</code>.",
+      "item4": "<strong>CardDescription</strong> — texto complementario en <code>text-muted-foreground</code>.",
+      "item5": "<strong>CardAction</strong> — slot para botón, badge o menú a la derecha del header (<code>grid-cols-[1fr_auto]</code>).",
+      "item6": "<strong>CardContent</strong> — cuerpo del card con padding lateral por defecto; contenido principal.",
+      "item7": "<strong>CardFooter</strong> — pie con <code>border-t</code> y <code>bg-muted/50</code>; ideal para acciones.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundario */}\n    <CardAction />       {/* slot a la derecha */}\n  </CardHeader>\n  <CardContent />        {/* cuerpo */}\n  <CardFooter />         {/* pie con bg-muted/50 */}\n</Card>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Úsalo para agrupar información que forma <strong>una unidad semántica</strong> — producto, perfil, métrica, artículo.",
+        "item2": "Incluye siempre <code>CardTitle</code> o un heading accesible — los cards sin título quedan huérfanos para lectores de pantalla.",
+        "item3": "Los botones dentro del Card necesitan <code>aria-label</code> contextual con el identificador del card.",
+        "item4": "Usa <code>size=\"sm\"</code> en grids densos (listas de métricas, cards compactos); <code>default</code> en el resto.",
+        "item5": "<code>CardFooter</code> es el lugar por defecto para acciones — primario alineado a la derecha según las guías de botones."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Card de producto en catálogo", "u": "Sí", "a": "-" },
+        "item2": { "s": "Solo dividir secciones visualmente", "u": "No", "a": "Separator o espaciado" },
+        "item3": { "s": "Cards en una lista vertical simple", "u": "Sí, size=\"sm\"", "a": "-" },
+        "item4": { "s": "Contenido que debe expandirse/contraerse", "u": "No", "a": "Accordion" },
+        "item5": { "s": "Alerta o mensaje de feedback", "u": "No", "a": "Alert" },
+        "item6": { "s": "Métrica o KPI en un dashboard", "u": "Sí", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "CardTitle",
+            "format": "Sustantivo o frase nominal · sin verbo · sin punto final",
+            "good": "\"Silla Gamer Pro\", \"Suscriptores activos\", \"Últimos pedidos\"",
+            "bad": "\"Ver producto\", \"Silla Gamer Pro.\", \"Haz clic aquí para ver detalles\""
+          },
+          "description": {
+            "name": "CardDescription",
+            "format": "Complemento directo del título · máx. 2 líneas · punto final",
+            "good": "\"Estructura ergonómica con ajuste de altura y apoyo lumbar.\"",
+            "bad": "\"Este es el mejor producto de nuestra línea, con muchas funciones...\""
+          },
+          "action": {
+            "name": "Botón en CardFooter",
+            "format": "Verbo en infinitivo · máx. 3 palabras · sin puntuación",
+            "good": "\"Guardar\", \"Eliminar\", \"Ver detalles\"",
+            "bad": "\"Haz clic para guardar\", \"OK\", \"Sí, eliminar\""
+          },
+          "ariaLabel": {
+            "name": "aria-label de botones",
+            "format": "Verbo + objeto + identificador del card",
+            "good": "\"Eliminar producto Silla Gamer Pro\"",
+            "bad": "\"Eliminar\" (ambiguo en listas de cards)"
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "El contenido forma una unidad semántica con identidad propia",
+        "item2": "Necesitas repetir el mismo layout en una grilla o lista",
+        "item3": "Hay acciones asociadas al contenido (editar, eliminar, ver más)",
+        "item4": "El card sirve como objetivo de navegación en catálogo o dashboard"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La intención es solo dividir secciones — usa <code>Separator</code>",
+        "item2": "El contenido es un mensaje transitorio — usa <code>Sonner</code>",
+        "item3": "Es un estado persistente en la página — usa <code>Alert</code>",
+        "item4": "El contenido necesita expandirse/contraerse — usa <code>Accordion</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Card con CardTitle, CardDescription y acciones en CardFooter. Unidad semántica clara.",
+        "dont": "Card usado solo como divisor visual sin título ni contenido semántico."
+      },
+      "pair2": {
+        "do": "Botones del CardFooter con <code>aria-label</code> incluyendo el título del card.",
+        "dont": "Botones \"Editar\" / \"Eliminar\" sin contexto — ambiguos en listas."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "full": "Con todos los subcomponentes:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Tamaños y Composiciones",
+      "note": "Card no tiene variantes <code>cva()</code>. Lo que varía es el <strong>tamaño</strong> (prop <code>size=\"default\"|\"sm\"</code>) y la <strong>composición</strong> de subcomponentes (header, content, footer son opcionales).",
+      "items": {
+        "default": "<code>size=\"default\"</code> — padding <code>py-4</code> + <code>px-4</code>, título en <code>text-base</code>. Predeterminado para la mayoría de los casos.",
+        "sm": "<code>size=\"sm\"</code> — padding <code>py-3</code> + <code>px-3</code>, título en <code>text-sm</code>. Úsalo en listas densas y dashboards.",
+        "withFooter": "Con <code>CardFooter</code> — gana <code>border-t</code> y fondo <code>bg-muted/50</code>; el Card absorbe <code>pb-0</code> para alinear el footer.",
+        "withAction": "Con <code>CardAction</code> — el header se vuelve grid <code>[1fr_auto]</code>; la acción (Button, Badge, DropdownMenu) queda a la derecha.",
+        "withImage": "Primer o último hijo <code>&lt;img&gt;</code> — el Card aplica <code>rounded-t/b-(--radius-card)</code> automáticamente y elimina el padding correspondiente."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "default": {
+        "label": "Predeterminado",
+        "trigger": "Composición básica sin props extra",
+        "behavior": "Fondo <code>bg-card</code>, borde <code>ring-foreground/10</code>, radius <code>--radius-card</code>"
+      },
+      "small": {
+        "label": "Compacto",
+        "trigger": "Prop <code>size=\"sm\"</code>",
+        "behavior": "Padding reducido (<code>py-3</code>/<code>px-3</code>), título en <code>text-sm</code>"
+      },
+      "interactive": {
+        "label": "Clicable",
+        "trigger": "Envolver el Card en <code>&lt;a&gt;</code> o <code>&lt;button&gt;</code>",
+        "behavior": "Hereda el comportamiento de link/botón; agrega <code>aria-label</code> con el título y <code>focus-visible:ring</code>"
+      },
+      "withImage": {
+        "label": "Con imagen",
+        "trigger": "<code>&lt;img&gt;</code> como primer o último hijo directo",
+        "behavior": "La imagen encaja con <code>rounded-t/b-(--radius-card)</code>; el padding superior/inferior se elimina automáticamente"
+      },
+      "withFooter": {
+        "label": "Con footer",
+        "trigger": "Incluir <code>&lt;CardFooter&gt;</code>",
+        "behavior": "Card absorbe <code>pb-0</code>; el footer gana <code>border-t</code> y <code>bg-muted/50</code>"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "cardTitle": "Card",
+      "headerTitle": "CardHeader",
+      "cardTitleTitle": "CardTitle",
+      "descriptionTitle": "CardDescription",
+      "actionTitle": "CardAction",
+      "contentTitle": "CardContent",
+      "footerTitle": "CardFooter",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "size": "Tamaño del Card. <code>\"default\"</code> para uso general, <code>\"sm\"</code> en listas densas y dashboards.",
+        "className": "Clases Tailwind adicionales — sobrescribe el padding, fondo o borde por defecto cuando sea necesario.",
+        "children": "Contenido del Card: header, content y/o footer compuestos."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "Todos los subcomponentes aceptan <code>className</code> y props nativas de <code>&lt;div&gt;</code>. Para Card clicable, envuelve en <code>&lt;a&gt;</code> o <code>&lt;button&gt;</code> con <code>aria-label</code> descriptivo — no agregues <code>onClick</code> en el Card raíz sin semántica."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "radiusCard": "Radio de los cantos del Card",
+        "card": "Fondo del Card",
+        "cardForeground": "Texto principal del Card",
+        "muted": "Fondo del CardFooter (<code>bg-muted/50</code>)",
+        "mutedForeground": "Texto del CardDescription",
+        "foreground": "Color del ring en <code>ring-foreground/10</code>",
+        "border": "Línea divisora arriba del CardFooter"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "Card es un contenedor semántico — la interactividad vive en el contenido interno. Cumple WCAG 2.1 AA: 1.3.1 (info y relaciones) vía <code>CardTitle</code> semántico, 2.4.6 (títulos y labels) vía composición con <code>aria-labelledby</code>, 4.1.2 (nombre, rol, valor) en los botones internos.",
+      "item1": "<strong>Contenedor pasivo</strong> — el Card en sí no recibe foco ni eventos de teclado. Todos los controles (Button, Link, Badge interactivo) traen su propia accesibilidad.",
+      "item2": "<strong>CardTitle como ancla</strong> — usa el <code>id</code> del <code>CardTitle</code> como <code>aria-labelledby</code> del contenedor cuando el Card completo debe ser anunciado (ej: dentro de un <code>role=\"list\"</code>).",
+      "item3": "<strong>Botones con aria-label contextual</strong> — en listas de cards, \"Eliminar\" se convierte en \"Eliminar producto Silla Gamer Pro\" para evitar ambigüedad.",
+      "item4": "<strong>Card clicable</strong> — envuelve en <code>&lt;a&gt;</code> o <code>&lt;button&gt;</code> con <code>aria-label</code> descriptivo; agrega <code>focus-visible:ring-2</code> para foco visible.",
+      "item5": "<strong>Contraste</strong> — <code>text-card-foreground</code> sobre <code>bg-card</code> cumple 4.5:1; <code>text-muted-foreground</code> en la descripción también alcanza AA.",
+      "keyboard": {
+        "tab": "Mueve el foco a los elementos interactivos dentro del Card (botones, links, menús).",
+        "enter": "Activa el elemento enfocado (botón del footer, link del contenido, trigger de menú).",
+        "noKeyboard": "El Card en sí no recibe foco — solo el contenido interno es navegable por teclado."
+      },
+      "aria": {
+        "labelledBy": "<code>aria-labelledby</code> — opcional; apunta al <code>id</code> del <code>CardTitle</code> cuando el Card debe nombrarse como región.",
+        "button": "<code>aria-label</code> en botones — obligatorio en listas donde el mismo label (\"Editar\") se repite; incluye el identificador del card.",
+        "role": "<code>role=\"region\"</code> — opcional; úsalo solo cuando el Card representa una sección importante de la página.",
+        "cardAction": "<code>CardAction</code> preserva el orden DOM; la grilla visual no altera el orden de lectura."
+      },
+      "screenReader": {
+        "onEnter": "Al enfocar un botón dentro del Card: el lector anuncia el <code>aria-label</code> (ej: \"Eliminar producto Silla Gamer Pro, botón\").",
+        "onTitle": "<code>CardTitle</code> se lee como heading o texto regular según la etiqueta HTML elegida (<code>&lt;h3&gt;</code>, <code>&lt;h4&gt;</code>, etc.).",
+        "cards": "En listas de cards, los lectores anuncian cada Card en el orden DOM — mantén el orden visual alineado al lógico."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "separator": "Para dividir secciones sin crear un contenedor visual completo.",
+      "accordion": "Para contenido que debe expandirse y contraerse.",
+      "alert": "Para mensajes de feedback persistentes en la página.",
+      "button": "Acciones del <code>CardFooter</code> — primario a la derecha, secundario a la izquierda.",
+      "badge": "Indicadores de estado en <code>CardAction</code> o en el cuerpo.",
+      "avatar": "En cards de perfil o autor; a la izquierda del <code>CardHeader</code>."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "El Card detecta <code>CardFooter</code> vía <code>has-data-[slot=card-footer]:pb-0</code> — al agregar el footer, se elimina el padding inferior automáticamente para alinear el borde.",
+      "tip2": "Las imágenes como primer/último hijo reciben <code>rounded-t/b-(--radius-card)</code> vía CSS; no necesitas pasar una clase manualmente.",
+      "tip3": "La prop <code>size</code> se propaga vía <code>data-size</code> y <code>group-data-[size=sm]/card</code> — los subcomponentes ajustan padding y fuente sin recibir la prop explícita.",
+      "tip4": "Para Card clicable, prefiere el patrón <code>asChild</code> (envolver en <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) en lugar de <code>onClick</code> en el contenedor — asegura semántica y navegación por teclado."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Card es un contenedor estructural — rastrea solo los controles interactivos dentro (botones, links, triggers). Para un Card clicable envolviendo toda la unidad, emite <code>card_click</code>.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "buttonClick": "button_click",
+        "buttonClickTrigger": "Clic en un botón dentro de CardFooter o CardAction",
+        "buttonClickPayload": "{ component: 'button', label, location: 'card', variant }",
+        "cardClick": "card_click",
+        "cardClickTrigger": "Clic en el Card cuando la unidad completa es navegable (<a> o <button>)",
+        "cardClickPayload": "{ component: 'card', label, destination, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada configuración del Card.",
+        "item1": { "action": "Renderizar Card con Header, Content y Footer", "result": "3 bloques visibles; Card con <code>data-slot=\"card\"</code>; footer con <code>border-t</code> y <code>bg-muted/50</code>", "priority": "high" },
+        "item2": { "action": "Renderizar Card con size=\"sm\"", "result": "<code>data-size=\"sm\"</code> en el root; padding reducido; <code>CardTitle</code> en <code>text-sm</code>", "priority": "high" },
+        "item3": { "action": "Renderizar Card con CardAction", "result": "Header se vuelve grid <code>[1fr_auto]</code>; la acción queda a la derecha manteniendo el orden DOM original", "priority": "medium" },
+        "item4": { "action": "Renderizar Card con imagen como primer hijo", "result": "La imagen gana <code>rounded-t-(--radius-card)</code>; el padding superior se elimina", "priority": "medium" },
+        "item5": { "action": "Hacer clic en botón del CardFooter", "result": "El handler del botón se llama; el evento no burbujea al Card raíz si hay wrapper clicable", "priority": "high" },
+        "item6": { "action": "Card envuelto en <a> con aria-label", "result": "<kbd>Tab</kbd> enfoca el Card; <kbd>Enter</kbd> navega; el lector anuncia el <code>aria-label</code>", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "Contraste 4.5:1 en el texto del Card", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item2": { "criterion": "Contraste 4.5:1 en <code>CardDescription</code> (muted-foreground)", "level": "AA", "how": "axe-core" },
+        "item3": { "criterion": "Botones internos con <code>aria-label</code> contextual en listas", "level": "AA", "how": "Inspeccionar atributo; getByRole('button', { name: /Eliminar producto/ })" },
+        "item4": { "criterion": "Focus ring visible en Card clicable y controles internos", "level": "AA", "how": "Navegación manual por <kbd>Tab</kbd>" },
+        "item5": { "criterion": "El orden DOM refleja el orden visual (CardAction no invierte la lectura)", "level": "AA", "how": "Inspección manual + lector de pantalla" },
+        "item6": { "criterion": "Sin violaciones axe-core", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Playground — Card con header, content y footer", "priority": "high" },
+        "item2": { "story": "Tamaños — default y sm lado a lado", "priority": "high" },
+        "item3": { "story": "Composiciones — con CardAction, con imagen, sin footer", "priority": "medium" },
+        "item4": { "story": "Estados — Card clicable con focus ring", "priority": "medium" },
+        "item5": { "story": "Composiciones — dentro de grid (catálogo/dashboard)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
