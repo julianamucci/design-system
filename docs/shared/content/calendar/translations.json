@@ -1,0 +1,1016 @@
+{
+  "pt-BR": {
+    "title": "Calendar",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Seletor visual de datas com navegação por mês, suporte a single, multiple e range, locale e datas desabilitadas.",
+    "seo": {
+      "title": "Calendar — Formulário · Design System",
+      "description": "Documentação do Calendar: wrapper de react-day-picker v9 com modos single/multiple/range, captionLayout, locale e acessibilidade WCAG.",
+      "aiSummary": "Componente Calendar baseado em react-day-picker v9 com modos single/multiple/range, captionLayout label/dropdown, suporte a locale pt-BR/en/es e datas desabilitadas.",
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, Shadcn/UI, WCAG 2.1, Tailwind CSS, date-fns",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "singleLabel": "Data selecionada",
+        "rangeLabel": "Período",
+        "noDate": "Nenhuma data selecionada",
+        "pickDate": "Selecione uma data",
+        "pickRange": "Selecione um período"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Calendar</strong> — container <code>&lt;div data-slot=\"calendar\"&gt;</code> que envolve o <code>DayPicker</code>.",
+      "item2": "<strong>Nav</strong> — cabeçalho com botões <code>PrevButton</code>, <code>NextButton</code> e <code>MonthCaption</code>.",
+      "item3": "<strong>MonthCaption</strong> — título do mês em exibição (texto ou dropdowns de mês/ano).",
+      "item4": "<strong>Weekdays</strong> — linha com as iniciais dos dias da semana (seg, ter, qua...).",
+      "item5": "<strong>Day</strong> — cada célula do grid é um <code>Button</code> ghost com estado selected/today/outside/disabled.",
+      "item6": "<strong>DayButton</strong> — botão interno da célula; recebe foco por teclado e dispara <code>onSelect</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback com o valor novo */}\n  locale={ptBR}                  {/* react-day-picker/locale */}\n/>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use <code>mode=\"single\"</code> por padrão — <code>range</code> só quando o fluxo exigir início e fim.",
+        "item2": "<code>locale</code> de <code>react-day-picker/locale</code> é obrigatório — sem ele os rótulos vão em inglês.",
+        "item3": "Dentro de <code>Popover</code>, combine com <code>Button</code> para compor o padrão <code>DatePicker</code>.",
+        "item4": "Use <code>disabled</code> para bloquear datas passadas, futuras ou específicas — aceita função, intervalo ou array.",
+        "item5": "Para formulário, integre via <code>FormField</code> com <code>field.value</code> e <code>field.onChange</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Seleção de data em formulário", "u": "Sim, dentro de Popover", "a": "Padrão DatePicker" },
+        "item2": { "s": "Seleção de período (check-in/out)", "u": "Sim, mode=\"range\"", "a": "-" },
+        "item3": { "s": "Múltiplas datas independentes", "u": "Sim, mode=\"multiple\"", "a": "-" },
+        "item4": { "s": "Apenas hora do dia", "u": "Não", "a": "Input type=\"time\"" },
+        "item5": { "s": "Data e hora combinados", "u": "Sim, + Input time ao lado", "a": "-" },
+        "item6": { "s": "Agendamento com slots", "u": "Não", "a": "Calendar + grid de horários custom" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "label": {
+            "name": "Label do campo",
+            "format": "Substantivo · sem dois-pontos · sem ponto final",
+            "good": "\"Data de nascimento\", \"Período da viagem\"",
+            "bad": "\"Data:\", \"Informe a data\", \"Escolha uma data\""
+          },
+          "trigger": {
+            "name": "Trigger (DatePicker)",
+            "format": "Valor formatado quando preenchido · placeholder quando vazio",
+            "good": "\"12 de março de 2026\" / \"Selecione uma data\"",
+            "bad": "\"Clique para escolher\", \"--/--/----\""
+          },
+          "disabled": {
+            "name": "Datas bloqueadas",
+            "format": "Use <code>disabled</code> · nunca oculte datas passadas",
+            "good": "<code>disabled={{ before: new Date() }}</code>",
+            "bad": "Ocultar visualmente sem desabilitar a tecla"
+          },
+          "srOnly": {
+            "name": "aria-label do botão de data",
+            "format": "Data completa por extenso · inclui dia da semana",
+            "good": "\"sexta-feira, 12 de março de 2026\"",
+            "bad": "\"12/03\", \"dia 12\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O usuário precisa escolher uma data num contexto visual",
+        "item2": "A seleção envolve janela ampla de datas (mês ou mais)",
+        "item3": "O fluxo se beneficia de ver finais de semana, feriados ou intervalos",
+        "item4": "Você quer reforçar disponibilidade com datas desabilitadas"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "Basta um campo de texto com máscara — use <code>Input type=\"date\"</code>",
+        "item2": "A entrada é apenas hora — use <code>Input type=\"time\"</code>",
+        "item3": "O usuário seleciona dentre poucas datas fixas — use <code>Select</code> ou <code>RadioGroup</code>",
+        "item4": "O fluxo exige slots de horário — combine Calendar com grid custom"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Calendar com <code>locale={ptBR}</code> e <code>mode=\"single\"</code> no Popover do DatePicker.",
+        "dont": "Calendar sem <code>locale</code> — meses e dias aparecem em inglês."
+      },
+      "pair2": {
+        "do": "<code>disabled={{ before: new Date() }}</code> para bloquear datas passadas em reservas.",
+        "dont": "Permitir data passada e validar só no submit — o usuário só descobre depois."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withLocale": "Com locale pt-BR:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Modos e Layouts",
+      "note": "O Calendar não tem variantes <code>cva()</code>. O que varia é a <strong>composição</strong>: modo de seleção (<code>mode</code>), layout da legenda (<code>captionLayout</code>) e variante dos botões de navegação (<code>buttonVariant</code>).",
+      "items": {
+        "single": "<code>mode=\"single\"</code> — seleção de uma data única. Valor: <code>Date | undefined</code>.",
+        "multiple": "<code>mode=\"multiple\"</code> — várias datas independentes. Valor: <code>Date[]</code>.",
+        "range": "<code>mode=\"range\"</code> — intervalo contínuo com início e fim. Valor: <code>{ from, to }</code>.",
+        "captionDropdown": "<code>captionLayout=\"dropdown\"</code> — mês e ano viram selects rápidos para navegação longa.",
+        "withWeekNumber": "<code>showWeekNumber</code> — adiciona coluna com o número da semana ISO.",
+        "numberOfMonths": "<code>numberOfMonths={2}</code> — exibe 2 meses lado a lado em <code>range</code>."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "default": {
+        "label": "Padrão",
+        "trigger": "Sem <code>selected</code> ou com data válida",
+        "behavior": "Grid do mês atual; dia de hoje destacado com <code>bg-muted</code>"
+      },
+      "selected": {
+        "label": "Selecionado",
+        "trigger": "Prop <code>selected</code> contém a data",
+        "behavior": "Célula com <code>bg-primary</code> e <code>text-primary-foreground</code>; <code>aria-selected=\"true\"</code>"
+      },
+      "disabled": {
+        "label": "Desabilitado",
+        "trigger": "Date casa com <code>disabled</code> (Date, array, função ou <code>{ before, after }</code>)",
+        "behavior": "<code>opacity-50</code>, <code>pointer-events-none</code>; <code>aria-disabled=\"true\"</code>"
+      },
+      "today": {
+        "label": "Hoje",
+        "trigger": "Automático na data do dia",
+        "behavior": "<code>bg-muted</code> para destacar; sobrescrito se também estiver selecionada"
+      },
+      "outside": {
+        "label": "Fora do mês",
+        "trigger": "<code>showOutsideDays</code> ativo (padrão)",
+        "behavior": "<code>text-muted-foreground</code> — dias do mês anterior/próximo ficam apagados"
+      },
+      "rangeMiddle": {
+        "label": "Meio do intervalo",
+        "trigger": "<code>mode=\"range\"</code> com <code>from</code> e <code>to</code> definidos",
+        "behavior": "Dias entre início e fim recebem <code>bg-muted</code>; extremos mantêm <code>bg-primary</code>"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "calendarTitle": "Calendar",
+      "dayButtonTitle": "CalendarDayButton",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "mode": "Modo de seleção: <code>\"single\"</code>, <code>\"multiple\"</code> ou <code>\"range\"</code>.",
+        "selected": "Valor selecionado — <code>Date</code>, <code>Date[]</code> ou <code>{ from, to }</code> conforme o <code>mode</code>.",
+        "onSelect": "Callback disparado ao escolher uma data. Recebe o novo valor.",
+        "locale": "Locale do <code>react-day-picker/locale</code> — controla nomes de meses e dias.",
+        "disabled": "Datas bloqueadas — aceita <code>Date</code>, array, função ou <code>{ before, after }</code>.",
+        "showOutsideDays": "Exibe dias do mês anterior/próximo apagados nas bordas do grid.",
+        "captionLayout": "Legenda do mês: <code>\"label\"</code> (texto) ou <code>\"dropdown\"</code> (selects).",
+        "buttonVariant": "Variante do <code>Button</code> usada nos controles de navegação.",
+        "numberOfMonths": "Quantidade de meses exibidos lado a lado. Útil para <code>range</code>.",
+        "className": "Classes Tailwind adicionais para customização visual.",
+        "classNames": "Mapa de overrides por slot (<code>root</code>, <code>day</code>, <code>today</code>, etc.)."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "<code>classNames</code> aceita um mapa por slot (<code>day</code>, <code>today</code>, <code>range_start</code>, etc.) — todas as chaves dos <code>defaultClassNames</code> do <code>react-day-picker</code>. Para customizações profundas, use <code>components</code> para substituir partes como <code>DayButton</code> ou <code>Chevron</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "primary": "Fundo e texto da data selecionada",
+        "muted": "Fundo de hoje e do meio do intervalo",
+        "mutedForeground": "Texto dos dias fora do mês e dos dias da semana",
+        "foreground": "Texto das datas padrão",
+        "ring": "Focus ring no DayButton",
+        "cellRadius": "Raio dos cantos das células (<code>--radius-md</code>)",
+        "cellSize": "Tamanho da célula (variável local <code>--cell-size</code>)"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "O Calendar herda do <code>react-day-picker v9</code> toda a acessibilidade nativa: grid com <code>role=\"grid\"</code>, foco por Arrow keys, anúncio de seleção e respeito a <code>prefers-reduced-motion</code>. Cumpre WCAG 2.1 AA: 2.1.1 (teclado), 2.4.7 (foco visível), 4.1.2 (nome, função, valor).",
+      "item1": "<strong>Grid semântico</strong> — <code>role=\"grid\"</code> no calendário com <code>gridcell</code> por célula e <code>rowheader</code> nos dias da semana.",
+      "item2": "<strong>Foco gerenciado</strong> — apenas uma célula tem <code>tabIndex=0</code>; as demais respondem às Arrow keys.",
+      "item3": "<strong>aria-selected</strong> — aplicado automaticamente na(s) data(s) selecionada(s).",
+      "item4": "<strong>aria-disabled</strong> — nos dias bloqueados por <code>disabled</code>; pointer-events desativados.",
+      "item5": "<strong>Ícones decorativos</strong> — <code>ChevronLeft</code>/<code>ChevronRight</code> com <code>aria-hidden=\"true\"</code>; o botão tem <code>aria-label</code> descritivo.",
+      "item6": "<strong>Contraste</strong> — selected cumpre 4.5:1 com <code>primary</code> sobre <code>primary-foreground</code>; disabled mantém relação mínima via <code>opacity-50</code>.",
+      "keyboard": {
+        "arrows": "<kbd>Arrow</kbd> (esquerda/direita) move um dia; <kbd>Arrow</kbd> (cima/baixo) move uma semana.",
+        "pageUpDown": "<kbd>Page Up</kbd>/<kbd>Page Down</kbd> muda de mês; com <kbd>Shift</kbd>, muda de ano.",
+        "homeEnd": "<kbd>Home</kbd>/<kbd>End</kbd> vai para o início/fim da semana.",
+        "enter": "<kbd>Enter</kbd> ou <kbd>Space</kbd> seleciona a data focada.",
+        "tab": "<kbd>Tab</kbd> move para os botões de navegação e sai do grid."
+      },
+      "aria": {
+        "role": "<code>role=\"grid\"</code> no container; <code>role=\"gridcell\"</code> em cada célula; <code>role=\"rowheader\"</code> nos dias da semana.",
+        "selected": "<code>aria-selected=\"true\"</code> na data selecionada.",
+        "disabled": "<code>aria-disabled=\"true\"</code> nos dias bloqueados.",
+        "label": "<code>aria-label</code> do DayButton traz a data por extenso no locale ativo."
+      },
+      "screenReader": {
+        "onFocus": "Ao mover o foco: leitor anuncia a data completa no locale ativo (ex: \"sexta-feira, 12 de março de 2026\").",
+        "onSelect": "Ao selecionar: leitor anuncia \"selecionado\" junto à data.",
+        "onDisabled": "Em data bloqueada: leitor anuncia \"indisponível\" e o foco ainda pode passar, mas a seleção é ignorada.",
+        "nav": "Botões Anterior/Próximo anunciam o mês de destino."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "datePicker": "Calendar dentro de Popover com Button — padrão composto para seleção inline em formulários.",
+      "popover": "Wrapper para esconder o Calendar e acioná-lo por um Button.",
+      "form": "Integração com React Hook Form via <code>FormField</code> e <code>field.onChange</code>.",
+      "input": "Alternativa quando basta <code>type=\"date\"</code> nativo do browser."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "O <code>locale</code> do Calendar vem de <code>react-day-picker/locale</code>. Já o <code>format()</code> do DatePicker vem de <code>date-fns/locale</code> — são pacotes diferentes, ambos precisam estar configurados.",
+      "tip2": "Para formulários, use <code>FormField</code> com <code>field.value</code> e <code>field.onChange</code>. O <code>zodResolver</code> valida tipos <code>Date</code> nativamente.",
+      "tip3": "Em <code>mode=\"range\"</code>, exibir <code>numberOfMonths={2}</code> reduz o número de cliques de navegação em reservas longas.",
+      "tip4": "<code>initialFocus</code> no Calendar dentro de Popover move o foco automaticamente ao abrir — melhora a usabilidade por teclado."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Calendar é um campo de formulário — rastreie a seleção da data como <code>field_change</code>. Para o DatePicker composto, rastreie também a abertura do Popover.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "fieldChange": "field_change",
+        "fieldChangeTrigger": "Usuário seleciona uma data no Calendar",
+        "fieldChangePayload": "{ component: 'calendar', field_name, value: ISO string, location }",
+        "dialogOpen": "dialog_open",
+        "dialogOpenTrigger": "Usuário abre o Popover do DatePicker",
+        "dialogOpenPayload": "{ component: 'date_picker', label, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada configuração do Calendar.",
+        "item1": { "action": "Renderizar mode=\"single\" sem data", "result": "Grid do mês atual; dia de hoje com <code>bg-muted</code>; sem <code>aria-selected</code>", "priority": "high" },
+        "item2": { "action": "Clicar em uma data válida", "result": "Célula recebe <code>data-selected-single=\"true\"</code>; <code>onSelect</code> é chamado com <code>Date</code>", "priority": "high" },
+        "item3": { "action": "Renderizar mode=\"range\" com from e to", "result": "Início/fim com <code>bg-primary</code>; dias do meio com <code>bg-muted</code>", "priority": "high" },
+        "item4": { "action": "Passar disabled={{ before: new Date() }}", "result": "Datas passadas com <code>aria-disabled=\"true\"</code> e <code>opacity-50</code>; clique não dispara onSelect", "priority": "high" },
+        "item5": { "action": "Navegar por teclado com Arrow keys", "result": "Foco percorre o grid conforme o mapeamento; <code>aria-label</code> anuncia a data completa", "priority": "high" },
+        "item6": { "action": "Passar locale={ptBR}", "result": "Meses e dias da semana renderizam em português do Brasil", "priority": "medium" },
+        "item7": { "action": "Renderizar captionLayout=\"dropdown\"", "result": "Mês e ano viram <code>&lt;select&gt;</code> com foco próprio e opções do range configurado", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "Grid com <code>role=\"grid\"</code> e células com <code>role=\"gridcell\"</code>", "level": "AA", "how": "getByRole('grid') + getAllByRole('gridcell')" },
+        "item2": { "criterion": "DayButton com <code>aria-label</code> trazendo a data por extenso", "level": "AA", "how": "Inspecionar atributo no DOM via devtools" },
+        "item3": { "criterion": "Data selecionada com <code>aria-selected=\"true\"</code>", "level": "AA", "how": "axe-playwright + inspeção" },
+        "item4": { "criterion": "Contraste 4.5:1 nas células selected, today e padrão", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item5": { "criterion": "Focus ring visível em DayButton e botões de navegação", "level": "AA", "how": "Navegação por <kbd>Tab</kbd> + <kbd>Arrow</kbd>" },
+        "item6": { "criterion": "Sem violações axe-core no estado padrão e com range selecionado", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Playground — mode=\"single\" com data hoje destacada", "priority": "high" },
+        "item2": { "story": "Modos — Single, Multiple, Range", "priority": "high" },
+        "item3": { "story": "Layouts — captionLayout label vs dropdown", "priority": "medium" },
+        "item4": { "story": "Estados — com datas disabled e outside days", "priority": "medium" },
+        "item5": { "story": "Composições — dentro de Popover (DatePicker)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Calendar",
+    "category": "Form",
+    "type": "Component",
+    "description": "Visual date picker with month navigation, support for single, multiple and range modes, locale and disabled dates.",
+    "seo": {
+      "title": "Calendar — Form · Design System",
+      "description": "Documentation for Calendar: react-day-picker v9 wrapper with single/multiple/range modes, captionLayout, locale and WCAG accessibility.",
+      "aiSummary": "Calendar component built on react-day-picker v9 with single/multiple/range modes, label/dropdown captionLayout, pt-BR/en/es locale support and disabled dates.",
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, Shadcn/UI, WCAG 2.1, Tailwind CSS, date-fns",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "singleLabel": "Selected date",
+        "rangeLabel": "Period",
+        "noDate": "No date selected",
+        "pickDate": "Pick a date",
+        "pickRange": "Pick a period"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Calendar</strong> — <code>&lt;div data-slot=\"calendar\"&gt;</code> container wrapping <code>DayPicker</code>.",
+      "item2": "<strong>Nav</strong> — header with <code>PrevButton</code>, <code>NextButton</code> and <code>MonthCaption</code>.",
+      "item3": "<strong>MonthCaption</strong> — current month label (text or month/year dropdowns).",
+      "item4": "<strong>Weekdays</strong> — row with weekday initials (Mon, Tue, Wed...).",
+      "item5": "<strong>Day</strong> — each grid cell is a ghost <code>Button</code> with selected/today/outside/disabled states.",
+      "item6": "<strong>DayButton</strong> — cell inner button; receives keyboard focus and fires <code>onSelect</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback with new value */}\n  locale={enUS}                  {/* react-day-picker/locale */}\n/>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use <code>mode=\"single\"</code> by default — <code>range</code> only when the flow requires start and end.",
+        "item2": "<code>locale</code> from <code>react-day-picker/locale</code> is required — without it labels fall back to English.",
+        "item3": "Inside a <code>Popover</code>, combine with a <code>Button</code> to compose the <code>DatePicker</code> pattern.",
+        "item4": "Use <code>disabled</code> to block past, future or specific dates — accepts function, range or array.",
+        "item5": "For forms, integrate via <code>FormField</code> with <code>field.value</code> and <code>field.onChange</code>."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Date selection in a form", "u": "Yes, inside Popover", "a": "DatePicker pattern" },
+        "item2": { "s": "Period selection (check-in/out)", "u": "Yes, mode=\"range\"", "a": "-" },
+        "item3": { "s": "Multiple independent dates", "u": "Yes, mode=\"multiple\"", "a": "-" },
+        "item4": { "s": "Time of day only", "u": "No", "a": "Input type=\"time\"" },
+        "item5": { "s": "Date + time combined", "u": "Yes, + time Input next to it", "a": "-" },
+        "item6": { "s": "Slot-based scheduling", "u": "No", "a": "Calendar + custom time grid" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "label": {
+            "name": "Field label",
+            "format": "Noun · no colon · no period",
+            "good": "\"Birth date\", \"Trip period\"",
+            "bad": "\"Date:\", \"Enter the date\", \"Pick a date\""
+          },
+          "trigger": {
+            "name": "Trigger (DatePicker)",
+            "format": "Formatted value when filled · placeholder when empty",
+            "good": "\"March 12, 2026\" / \"Pick a date\"",
+            "bad": "\"Click to pick\", \"--/--/----\""
+          },
+          "disabled": {
+            "name": "Blocked dates",
+            "format": "Use <code>disabled</code> · never hide past dates",
+            "good": "<code>disabled={{ before: new Date() }}</code>",
+            "bad": "Visually hide without disabling the key"
+          },
+          "srOnly": {
+            "name": "DayButton aria-label",
+            "format": "Full date · includes weekday",
+            "good": "\"Friday, March 12, 2026\"",
+            "bad": "\"03/12\", \"day 12\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The user needs to pick a date in a visual context",
+        "item2": "Selection spans a wide window of dates (month or more)",
+        "item3": "The flow benefits from seeing weekends, holidays or intervals",
+        "item4": "You want to reinforce availability via disabled dates"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "A masked text field is enough — use <code>Input type=\"date\"</code>",
+        "item2": "Input is time only — use <code>Input type=\"time\"</code>",
+        "item3": "User picks from a few fixed dates — use <code>Select</code> or <code>RadioGroup</code>",
+        "item4": "Flow requires time slots — combine Calendar with a custom grid"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Calendar with <code>locale={enUS}</code> and <code>mode=\"single\"</code> inside the DatePicker Popover.",
+        "dont": "Calendar without <code>locale</code> — months and weekdays fall back to English."
+      },
+      "pair2": {
+        "do": "<code>disabled={{ before: new Date() }}</code> to block past dates in bookings.",
+        "dont": "Allow past dates and validate only on submit — the user finds out too late."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withLocale": "With en-US locale:"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Modes and Layouts",
+      "note": "Calendar has no <code>cva()</code> variants. What varies is the <strong>composition</strong>: selection <code>mode</code>, caption layout (<code>captionLayout</code>) and navigation button variant (<code>buttonVariant</code>).",
+      "items": {
+        "single": "<code>mode=\"single\"</code> — pick one date. Value: <code>Date | undefined</code>.",
+        "multiple": "<code>mode=\"multiple\"</code> — several independent dates. Value: <code>Date[]</code>.",
+        "range": "<code>mode=\"range\"</code> — continuous range with start and end. Value: <code>{ from, to }</code>.",
+        "captionDropdown": "<code>captionLayout=\"dropdown\"</code> — month and year become quick-jump selects.",
+        "withWeekNumber": "<code>showWeekNumber</code> — adds a column with the ISO week number.",
+        "numberOfMonths": "<code>numberOfMonths={2}</code> — displays 2 months side by side in <code>range</code>."
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "No <code>selected</code> or valid date",
+        "behavior": "Current month grid; today highlighted with <code>bg-muted</code>"
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "<code>selected</code> prop contains the date",
+        "behavior": "Cell with <code>bg-primary</code> and <code>text-primary-foreground</code>; <code>aria-selected=\"true\"</code>"
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Date matches <code>disabled</code> (Date, array, function or <code>{ before, after }</code>)",
+        "behavior": "<code>opacity-50</code>, <code>pointer-events-none</code>; <code>aria-disabled=\"true\"</code>"
+      },
+      "today": {
+        "label": "Today",
+        "trigger": "Automatic on the current day",
+        "behavior": "<code>bg-muted</code> for emphasis; overridden when also selected"
+      },
+      "outside": {
+        "label": "Outside month",
+        "trigger": "<code>showOutsideDays</code> enabled (default)",
+        "behavior": "<code>text-muted-foreground</code> — previous/next month days fade"
+      },
+      "rangeMiddle": {
+        "label": "Range middle",
+        "trigger": "<code>mode=\"range\"</code> with both <code>from</code> and <code>to</code>",
+        "behavior": "Middle days get <code>bg-muted</code>; endpoints keep <code>bg-primary</code>"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "calendarTitle": "Calendar",
+      "dayButtonTitle": "CalendarDayButton",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "mode": "Selection mode: <code>\"single\"</code>, <code>\"multiple\"</code> or <code>\"range\"</code>.",
+        "selected": "Selected value — <code>Date</code>, <code>Date[]</code> or <code>{ from, to }</code> depending on <code>mode</code>.",
+        "onSelect": "Callback fired when a date is picked. Receives the new value.",
+        "locale": "Locale from <code>react-day-picker/locale</code> — controls month and weekday names.",
+        "disabled": "Blocked dates — accepts <code>Date</code>, array, function or <code>{ before, after }</code>.",
+        "showOutsideDays": "Shows faded days from previous/next months at grid edges.",
+        "captionLayout": "Month caption: <code>\"label\"</code> (text) or <code>\"dropdown\"</code> (selects).",
+        "buttonVariant": "<code>Button</code> variant used by navigation controls.",
+        "numberOfMonths": "Number of months shown side by side. Useful for <code>range</code>.",
+        "className": "Additional Tailwind classes for visual customization.",
+        "classNames": "Per-slot override map (<code>root</code>, <code>day</code>, <code>today</code>, etc.)."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "<code>classNames</code> accepts a per-slot map (<code>day</code>, <code>today</code>, <code>range_start</code>, etc.) — all <code>defaultClassNames</code> keys from <code>react-day-picker</code>. For deep customization, use <code>components</code> to swap parts like <code>DayButton</code> or <code>Chevron</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "primary": "Background and text of the selected date",
+        "muted": "Background of today and range middle",
+        "mutedForeground": "Text of outside days and weekday headers",
+        "foreground": "Text of default dates",
+        "ring": "Focus ring on DayButton",
+        "cellRadius": "Cell corner radius (<code>--radius-md</code>)",
+        "cellSize": "Cell size (local <code>--cell-size</code> variable)"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "Calendar inherits full native accessibility from <code>react-day-picker v9</code>: <code>role=\"grid\"</code>, Arrow key focus, selection announcement and <code>prefers-reduced-motion</code> support. Meets WCAG 2.1 AA: 2.1.1 (keyboard), 2.4.7 (focus visible), 4.1.2 (name, role, value).",
+      "item1": "<strong>Semantic grid</strong> — <code>role=\"grid\"</code> on the calendar with <code>gridcell</code> per cell and <code>rowheader</code> on weekday headers.",
+      "item2": "<strong>Managed focus</strong> — only one cell has <code>tabIndex=0</code>; others respond to Arrow keys.",
+      "item3": "<strong>aria-selected</strong> — automatically set on the selected date(s).",
+      "item4": "<strong>aria-disabled</strong> — on dates blocked by <code>disabled</code>; pointer-events off.",
+      "item5": "<strong>Decorative icons</strong> — <code>ChevronLeft</code>/<code>ChevronRight</code> with <code>aria-hidden=\"true\"</code>; the button has a descriptive <code>aria-label</code>.",
+      "item6": "<strong>Contrast</strong> — selected meets 4.5:1 via <code>primary</code> over <code>primary-foreground</code>; disabled keeps minimum ratio via <code>opacity-50</code>.",
+      "keyboard": {
+        "arrows": "<kbd>Arrow</kbd> (left/right) moves one day; <kbd>Arrow</kbd> (up/down) moves one week.",
+        "pageUpDown": "<kbd>Page Up</kbd>/<kbd>Page Down</kbd> changes month; with <kbd>Shift</kbd>, changes year.",
+        "homeEnd": "<kbd>Home</kbd>/<kbd>End</kbd> jumps to start/end of the week.",
+        "enter": "<kbd>Enter</kbd> or <kbd>Space</kbd> selects the focused date.",
+        "tab": "<kbd>Tab</kbd> moves to navigation buttons and out of the grid."
+      },
+      "aria": {
+        "role": "<code>role=\"grid\"</code> on the container; <code>role=\"gridcell\"</code> on each cell; <code>role=\"rowheader\"</code> on weekdays.",
+        "selected": "<code>aria-selected=\"true\"</code> on the selected date.",
+        "disabled": "<code>aria-disabled=\"true\"</code> on blocked days.",
+        "label": "DayButton <code>aria-label</code> carries the full date in the active locale."
+      },
+      "screenReader": {
+        "onFocus": "On focus move: reader announces the full date in the active locale (e.g., \"Friday, March 12, 2026\").",
+        "onSelect": "On selection: reader announces \"selected\" next to the date.",
+        "onDisabled": "On a blocked date: reader announces \"unavailable\"; focus may still pass but selection is ignored.",
+        "nav": "Prev/Next buttons announce the target month."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "datePicker": "Calendar inside Popover with Button — composed pattern for inline date selection in forms.",
+      "popover": "Wrapper to hide the Calendar and trigger it via a Button.",
+      "form": "Integration with React Hook Form via <code>FormField</code> and <code>field.onChange</code>.",
+      "input": "Alternative when the browser's native <code>type=\"date\"</code> is enough."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "Calendar <code>locale</code> comes from <code>react-day-picker/locale</code>. DatePicker's <code>format()</code> comes from <code>date-fns/locale</code> — different packages, both must be set.",
+      "tip2": "For forms, use <code>FormField</code> with <code>field.value</code> and <code>field.onChange</code>. <code>zodResolver</code> validates <code>Date</code> natively.",
+      "tip3": "In <code>mode=\"range\"</code>, showing <code>numberOfMonths={2}</code> reduces navigation clicks on long bookings.",
+      "tip4": "<code>initialFocus</code> on Calendar inside Popover moves focus automatically on open — improves keyboard UX."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Calendar is a form field — track selection as <code>field_change</code>. For the composed DatePicker, also track Popover open.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "fieldChange": "field_change",
+        "fieldChangeTrigger": "User picks a date in Calendar",
+        "fieldChangePayload": "{ component: 'calendar', field_name, value: ISO string, location }",
+        "dialogOpen": "dialog_open",
+        "dialogOpenTrigger": "User opens the DatePicker Popover",
+        "dialogOpenPayload": "{ component: 'date_picker', label, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Calendar configuration.",
+        "item1": { "action": "Render mode=\"single\" with no date", "result": "Current month grid; today with <code>bg-muted</code>; no <code>aria-selected</code>", "priority": "high" },
+        "item2": { "action": "Click a valid date", "result": "Cell gets <code>data-selected-single=\"true\"</code>; <code>onSelect</code> called with <code>Date</code>", "priority": "high" },
+        "item3": { "action": "Render mode=\"range\" with from and to", "result": "Start/end with <code>bg-primary</code>; middle days with <code>bg-muted</code>", "priority": "high" },
+        "item4": { "action": "Pass disabled={{ before: new Date() }}", "result": "Past dates with <code>aria-disabled=\"true\"</code> and <code>opacity-50</code>; click does not fire onSelect", "priority": "high" },
+        "item5": { "action": "Keyboard navigation with Arrow keys", "result": "Focus traverses the grid per mapping; <code>aria-label</code> announces full date", "priority": "high" },
+        "item6": { "action": "Pass locale={enUS}", "result": "Months and weekdays render in English (US)", "priority": "medium" },
+        "item7": { "action": "Render captionLayout=\"dropdown\"", "result": "Month and year become <code>&lt;select&gt;</code> with own focus and configured range options", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "Grid with <code>role=\"grid\"</code> and cells with <code>role=\"gridcell\"</code>", "level": "AA", "how": "getByRole('grid') + getAllByRole('gridcell')" },
+        "item2": { "criterion": "DayButton with <code>aria-label</code> carrying the full date", "level": "AA", "how": "Inspect attribute in DOM via devtools" },
+        "item3": { "criterion": "Selected date with <code>aria-selected=\"true\"</code>", "level": "AA", "how": "axe-playwright + inspection" },
+        "item4": { "criterion": "Contrast 4.5:1 on selected, today and default cells", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item5": { "criterion": "Focus ring visible on DayButton and nav buttons", "level": "AA", "how": "Manual <kbd>Tab</kbd> + <kbd>Arrow</kbd> navigation" },
+        "item6": { "criterion": "No axe-core violations in default state or with range selected", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Playground — mode=\"single\" with today highlighted", "priority": "high" },
+        "item2": { "story": "Modes — Single, Multiple, Range", "priority": "high" },
+        "item3": { "story": "Layouts — captionLayout label vs dropdown", "priority": "medium" },
+        "item4": { "story": "States — with disabled dates and outside days", "priority": "medium" },
+        "item5": { "story": "Compositions — inside Popover (DatePicker)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Calendar",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Selector visual de fechas con navegación por mes, soporte para single, multiple y range, locale y fechas deshabilitadas.",
+    "seo": {
+      "title": "Calendar — Formulario · Design System",
+      "description": "Documentación del Calendar: wrapper de react-day-picker v9 con modos single/multiple/range, captionLayout, locale y accesibilidad WCAG.",
+      "aiSummary": "Componente Calendar basado en react-day-picker v9 con modos single/multiple/range, captionLayout label/dropdown, soporte de locale pt-BR/en/es y fechas deshabilitadas.",
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, Shadcn/UI, WCAG 2.1, Tailwind CSS, date-fns",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "singleLabel": "Fecha seleccionada",
+        "rangeLabel": "Período",
+        "noDate": "Ninguna fecha seleccionada",
+        "pickDate": "Selecciona una fecha",
+        "pickRange": "Selecciona un período"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Calendar</strong> — contenedor <code>&lt;div data-slot=\"calendar\"&gt;</code> que envuelve el <code>DayPicker</code>.",
+      "item2": "<strong>Nav</strong> — cabecera con los botones <code>PrevButton</code>, <code>NextButton</code> y <code>MonthCaption</code>.",
+      "item3": "<strong>MonthCaption</strong> — título del mes (texto o dropdowns de mes/año).",
+      "item4": "<strong>Weekdays</strong> — fila con las iniciales de los días de la semana (lun, mar, mié...).",
+      "item5": "<strong>Day</strong> — cada celda del grid es un <code>Button</code> ghost con estado selected/today/outside/disabled.",
+      "item6": "<strong>DayButton</strong> — botón interno de la celda; recibe foco por teclado y dispara <code>onSelect</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback con el valor nuevo */}\n  locale={es}                    {/* react-day-picker/locale */}\n/>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Usa <code>mode=\"single\"</code> por defecto — <code>range</code> solo cuando el flujo requiera inicio y fin.",
+        "item2": "<code>locale</code> de <code>react-day-picker/locale</code> es obligatorio — sin él los rótulos caen a inglés.",
+        "item3": "Dentro de <code>Popover</code>, combina con <code>Button</code> para componer el patrón <code>DatePicker</code>.",
+        "item4": "Usa <code>disabled</code> para bloquear fechas pasadas, futuras o específicas — acepta función, rango o array.",
+        "item5": "Para formulario, integra vía <code>FormField</code> con <code>field.value</code> y <code>field.onChange</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Selección de fecha en formulario", "u": "Sí, dentro de Popover", "a": "Patrón DatePicker" },
+        "item2": { "s": "Selección de período (check-in/out)", "u": "Sí, mode=\"range\"", "a": "-" },
+        "item3": { "s": "Varias fechas independientes", "u": "Sí, mode=\"multiple\"", "a": "-" },
+        "item4": { "s": "Solo hora del día", "u": "No", "a": "Input type=\"time\"" },
+        "item5": { "s": "Fecha y hora combinadas", "u": "Sí, + Input time al lado", "a": "-" },
+        "item6": { "s": "Agenda basada en slots", "u": "No", "a": "Calendar + grid de horarios custom" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "label": {
+            "name": "Label del campo",
+            "format": "Sustantivo · sin dos puntos · sin punto final",
+            "good": "\"Fecha de nacimiento\", \"Período del viaje\"",
+            "bad": "\"Fecha:\", \"Ingresa la fecha\", \"Elige una fecha\""
+          },
+          "trigger": {
+            "name": "Trigger (DatePicker)",
+            "format": "Valor formateado si está lleno · placeholder si está vacío",
+            "good": "\"12 de marzo de 2026\" / \"Selecciona una fecha\"",
+            "bad": "\"Haz clic para elegir\", \"--/--/----\""
+          },
+          "disabled": {
+            "name": "Fechas bloqueadas",
+            "format": "Usa <code>disabled</code> · nunca ocultes fechas pasadas",
+            "good": "<code>disabled={{ before: new Date() }}</code>",
+            "bad": "Ocultar visualmente sin deshabilitar la tecla"
+          },
+          "srOnly": {
+            "name": "aria-label del DayButton",
+            "format": "Fecha completa · incluye día de la semana",
+            "good": "\"viernes, 12 de marzo de 2026\"",
+            "bad": "\"12/03\", \"día 12\""
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "El usuario necesita elegir una fecha en un contexto visual",
+        "item2": "La selección abarca una ventana amplia (mes o más)",
+        "item3": "El flujo se beneficia de ver fines de semana, feriados o intervalos",
+        "item4": "Quieres reforzar la disponibilidad con fechas deshabilitadas"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Basta un campo de texto con máscara — usa <code>Input type=\"date\"</code>",
+        "item2": "La entrada es solo hora — usa <code>Input type=\"time\"</code>",
+        "item3": "El usuario elige entre pocas fechas fijas — usa <code>Select</code> o <code>RadioGroup</code>",
+        "item4": "El flujo requiere slots de horario — combina Calendar con un grid custom"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Calendar con <code>locale={es}</code> y <code>mode=\"single\"</code> dentro del Popover del DatePicker.",
+        "dont": "Calendar sin <code>locale</code> — los meses y días caen a inglés."
+      },
+      "pair2": {
+        "do": "<code>disabled={{ before: new Date() }}</code> para bloquear fechas pasadas en reservas.",
+        "dont": "Permitir fecha pasada y validar solo al enviar — el usuario lo descubre tarde."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withLocale": "Con locale español:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Modos y Layouts",
+      "note": "Calendar no tiene variantes <code>cva()</code>. Lo que varía es la <strong>composición</strong>: modo de selección (<code>mode</code>), layout de la leyenda (<code>captionLayout</code>) y variante de los botones de navegación (<code>buttonVariant</code>).",
+      "items": {
+        "single": "<code>mode=\"single\"</code> — selección de una sola fecha. Valor: <code>Date | undefined</code>.",
+        "multiple": "<code>mode=\"multiple\"</code> — varias fechas independientes. Valor: <code>Date[]</code>.",
+        "range": "<code>mode=\"range\"</code> — intervalo continuo con inicio y fin. Valor: <code>{ from, to }</code>.",
+        "captionDropdown": "<code>captionLayout=\"dropdown\"</code> — mes y año se vuelven selects de acceso rápido.",
+        "withWeekNumber": "<code>showWeekNumber</code> — agrega una columna con el número de semana ISO.",
+        "numberOfMonths": "<code>numberOfMonths={2}</code> — muestra 2 meses lado a lado en <code>range</code>."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "default": {
+        "label": "Predeterminado",
+        "trigger": "Sin <code>selected</code> o con fecha válida",
+        "behavior": "Grid del mes actual; hoy destacado con <code>bg-muted</code>"
+      },
+      "selected": {
+        "label": "Seleccionado",
+        "trigger": "La prop <code>selected</code> contiene la fecha",
+        "behavior": "Celda con <code>bg-primary</code> y <code>text-primary-foreground</code>; <code>aria-selected=\"true\"</code>"
+      },
+      "disabled": {
+        "label": "Deshabilitado",
+        "trigger": "La fecha coincide con <code>disabled</code> (Date, array, función o <code>{ before, after }</code>)",
+        "behavior": "<code>opacity-50</code>, <code>pointer-events-none</code>; <code>aria-disabled=\"true\"</code>"
+      },
+      "today": {
+        "label": "Hoy",
+        "trigger": "Automático en el día actual",
+        "behavior": "<code>bg-muted</code> para destacar; sobrescrito si también está seleccionado"
+      },
+      "outside": {
+        "label": "Fuera del mes",
+        "trigger": "<code>showOutsideDays</code> activo (predeterminado)",
+        "behavior": "<code>text-muted-foreground</code> — los días del mes anterior/próximo aparecen atenuados"
+      },
+      "rangeMiddle": {
+        "label": "Medio del rango",
+        "trigger": "<code>mode=\"range\"</code> con <code>from</code> y <code>to</code>",
+        "behavior": "Los días intermedios reciben <code>bg-muted</code>; los extremos mantienen <code>bg-primary</code>"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "calendarTitle": "Calendar",
+      "dayButtonTitle": "CalendarDayButton",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "mode": "Modo de selección: <code>\"single\"</code>, <code>\"multiple\"</code> o <code>\"range\"</code>.",
+        "selected": "Valor seleccionado — <code>Date</code>, <code>Date[]</code> o <code>{ from, to }</code> según el <code>mode</code>.",
+        "onSelect": "Callback disparado al elegir una fecha. Recibe el valor nuevo.",
+        "locale": "Locale de <code>react-day-picker/locale</code> — controla nombres de meses y días.",
+        "disabled": "Fechas bloqueadas — acepta <code>Date</code>, array, función o <code>{ before, after }</code>.",
+        "showOutsideDays": "Muestra días del mes anterior/próximo atenuados en los bordes del grid.",
+        "captionLayout": "Leyenda del mes: <code>\"label\"</code> (texto) o <code>\"dropdown\"</code> (selects).",
+        "buttonVariant": "Variante del <code>Button</code> usada en los controles de navegación.",
+        "numberOfMonths": "Cantidad de meses mostrados lado a lado. Útil para <code>range</code>.",
+        "className": "Clases Tailwind adicionales para personalización visual.",
+        "classNames": "Mapa de overrides por slot (<code>root</code>, <code>day</code>, <code>today</code>, etc.)."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "<code>classNames</code> acepta un mapa por slot (<code>day</code>, <code>today</code>, <code>range_start</code>, etc.) — todas las claves de <code>defaultClassNames</code> de <code>react-day-picker</code>. Para personalización profunda, usa <code>components</code> para reemplazar partes como <code>DayButton</code> o <code>Chevron</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "primary": "Fondo y texto de la fecha seleccionada",
+        "muted": "Fondo de hoy y del medio del rango",
+        "mutedForeground": "Texto de los días fuera del mes y de los días de la semana",
+        "foreground": "Texto de las fechas predeterminadas",
+        "ring": "Focus ring en DayButton",
+        "cellRadius": "Radio de los cantos de las celdas (<code>--radius-md</code>)",
+        "cellSize": "Tamaño de celda (variable local <code>--cell-size</code>)"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "Calendar hereda de <code>react-day-picker v9</code> toda la accesibilidad nativa: grid con <code>role=\"grid\"</code>, foco con Arrow keys, anuncio de selección y respeto a <code>prefers-reduced-motion</code>. Cumple WCAG 2.1 AA: 2.1.1 (teclado), 2.4.7 (foco visible), 4.1.2 (nombre, rol, valor).",
+      "item1": "<strong>Grid semántico</strong> — <code>role=\"grid\"</code> en el calendario con <code>gridcell</code> por celda y <code>rowheader</code> en los días de la semana.",
+      "item2": "<strong>Foco gestionado</strong> — solo una celda tiene <code>tabIndex=0</code>; las demás responden a las Arrow keys.",
+      "item3": "<strong>aria-selected</strong> — aplicado automáticamente en la(s) fecha(s) seleccionada(s).",
+      "item4": "<strong>aria-disabled</strong> — en los días bloqueados por <code>disabled</code>; pointer-events desactivados.",
+      "item5": "<strong>Íconos decorativos</strong> — <code>ChevronLeft</code>/<code>ChevronRight</code> con <code>aria-hidden=\"true\"</code>; el botón tiene <code>aria-label</code> descriptivo.",
+      "item6": "<strong>Contraste</strong> — selected cumple 4.5:1 con <code>primary</code> sobre <code>primary-foreground</code>; disabled mantiene relación mínima vía <code>opacity-50</code>.",
+      "keyboard": {
+        "arrows": "<kbd>Arrow</kbd> (izquierda/derecha) mueve un día; <kbd>Arrow</kbd> (arriba/abajo) mueve una semana.",
+        "pageUpDown": "<kbd>Page Up</kbd>/<kbd>Page Down</kbd> cambia de mes; con <kbd>Shift</kbd>, cambia de año.",
+        "homeEnd": "<kbd>Home</kbd>/<kbd>End</kbd> va al inicio/fin de la semana.",
+        "enter": "<kbd>Enter</kbd> o <kbd>Space</kbd> selecciona la fecha enfocada.",
+        "tab": "<kbd>Tab</kbd> mueve a los botones de navegación y sale del grid."
+      },
+      "aria": {
+        "role": "<code>role=\"grid\"</code> en el contenedor; <code>role=\"gridcell\"</code> en cada celda; <code>role=\"rowheader\"</code> en los días.",
+        "selected": "<code>aria-selected=\"true\"</code> en la fecha seleccionada.",
+        "disabled": "<code>aria-disabled=\"true\"</code> en los días bloqueados.",
+        "label": "<code>aria-label</code> del DayButton trae la fecha por extenso en el locale activo."
+      },
+      "screenReader": {
+        "onFocus": "Al mover el foco: el lector anuncia la fecha completa en el locale activo (ej: \"viernes, 12 de marzo de 2026\").",
+        "onSelect": "Al seleccionar: el lector anuncia \"seleccionado\" junto a la fecha.",
+        "onDisabled": "En una fecha bloqueada: el lector anuncia \"no disponible\"; el foco puede pasar pero la selección se ignora.",
+        "nav": "Los botones Anterior/Próximo anuncian el mes de destino."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "datePicker": "Calendar dentro de Popover con Button — patrón compuesto para selección inline en formularios.",
+      "popover": "Wrapper para esconder el Calendar y accionarlo con un Button.",
+      "form": "Integración con React Hook Form vía <code>FormField</code> y <code>field.onChange</code>.",
+      "input": "Alternativa cuando basta <code>type=\"date\"</code> nativo del navegador."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "El <code>locale</code> del Calendar viene de <code>react-day-picker/locale</code>. El <code>format()</code> del DatePicker viene de <code>date-fns/locale</code> — son paquetes distintos, ambos deben estar configurados.",
+      "tip2": "Para formularios, usa <code>FormField</code> con <code>field.value</code> y <code>field.onChange</code>. El <code>zodResolver</code> valida tipos <code>Date</code> nativamente.",
+      "tip3": "En <code>mode=\"range\"</code>, mostrar <code>numberOfMonths={2}</code> reduce clics de navegación en reservas largas.",
+      "tip4": "<code>initialFocus</code> en Calendar dentro de Popover mueve el foco automáticamente al abrir — mejora la UX por teclado."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Calendar es un campo de formulario — rastrea la selección como <code>field_change</code>. Para el DatePicker compuesto, rastrea también la apertura del Popover.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "fieldChange": "field_change",
+        "fieldChangeTrigger": "Usuario selecciona una fecha en Calendar",
+        "fieldChangePayload": "{ component: 'calendar', field_name, value: ISO string, location }",
+        "dialogOpen": "dialog_open",
+        "dialogOpenTrigger": "Usuario abre el Popover del DatePicker",
+        "dialogOpenPayload": "{ component: 'date_picker', label, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada configuración del Calendar.",
+        "item1": { "action": "Renderizar mode=\"single\" sin fecha", "result": "Grid del mes actual; hoy con <code>bg-muted</code>; sin <code>aria-selected</code>", "priority": "high" },
+        "item2": { "action": "Hacer clic en una fecha válida", "result": "La celda recibe <code>data-selected-single=\"true\"</code>; <code>onSelect</code> se llama con <code>Date</code>", "priority": "high" },
+        "item3": { "action": "Renderizar mode=\"range\" con from y to", "result": "Inicio/fin con <code>bg-primary</code>; días intermedios con <code>bg-muted</code>", "priority": "high" },
+        "item4": { "action": "Pasar disabled={{ before: new Date() }}", "result": "Fechas pasadas con <code>aria-disabled=\"true\"</code> y <code>opacity-50</code>; el clic no dispara onSelect", "priority": "high" },
+        "item5": { "action": "Navegar por teclado con Arrow keys", "result": "El foco recorre el grid según el mapeo; <code>aria-label</code> anuncia la fecha completa", "priority": "high" },
+        "item6": { "action": "Pasar locale={es}", "result": "Meses y días de la semana aparecen en español", "priority": "medium" },
+        "item7": { "action": "Renderizar captionLayout=\"dropdown\"", "result": "Mes y año se vuelven <code>&lt;select&gt;</code> con foco propio y opciones del rango configurado", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "Grid con <code>role=\"grid\"</code> y celdas con <code>role=\"gridcell\"</code>", "level": "AA", "how": "getByRole('grid') + getAllByRole('gridcell')" },
+        "item2": { "criterion": "DayButton con <code>aria-label</code> con la fecha completa", "level": "AA", "how": "Inspeccionar atributo en DOM vía devtools" },
+        "item3": { "criterion": "Fecha seleccionada con <code>aria-selected=\"true\"</code>", "level": "AA", "how": "axe-playwright + inspección" },
+        "item4": { "criterion": "Contraste 4.5:1 en celdas selected, today y predeterminadas", "level": "AA", "how": "axe-core / Lighthouse" },
+        "item5": { "criterion": "Focus ring visible en DayButton y botones de navegación", "level": "AA", "how": "Navegación manual con <kbd>Tab</kbd> + <kbd>Arrow</kbd>" },
+        "item6": { "criterion": "Sin violaciones axe-core en estado predeterminado y con range seleccionado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Playground — mode=\"single\" con hoy destacado", "priority": "high" },
+        "item2": { "story": "Modos — Single, Multiple, Range", "priority": "high" },
+        "item3": { "story": "Layouts — captionLayout label vs dropdown", "priority": "medium" },
+        "item4": { "story": "Estados — con disabled dates y outside days", "priority": "medium" },
+        "item5": { "story": "Composiciones — dentro de Popover (DatePicker)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
