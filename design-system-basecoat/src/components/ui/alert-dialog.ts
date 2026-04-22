@@ -138,14 +138,15 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
   // PATCH: bugfix — fechar o diálogo quando o wrapper é removido do DOM
   // (Storybook troca stories remount → panel + overlay ficavam órfãos em document.body,
   // poluindo próximos testes com "multiple elements with role 'alertdialog'").
+  // PERF: observer precisa desconectar assim que o wrapper é removido para não
+  // vazar listener em document.body entre stories (subtree:true é caro).
   if (typeof MutationObserver !== 'undefined') {
     const observer = new MutationObserver(() => {
-      if (!wrapper.isConnected && panelEl) {
-        close();
+      if (!wrapper.isConnected) {
+        if (panelEl) close();
+        observer.disconnect();
       }
     });
-    // Observe document.body para detectar tanto remount do wrapper quanto
-    // limpeza de #storybook-root entre stories.
     const startObserve = () => {
       observer.observe(document.body, { childList: true, subtree: true });
     };
