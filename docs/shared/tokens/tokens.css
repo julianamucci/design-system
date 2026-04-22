@@ -96,10 +96,19 @@
   --chart-4: 201 88% 43%;
   --chart-5: 210 71% 23%;
 
-  /* Radius */
-  --radius: 8px;
-  --radius-button: 8px;
-  --radius-card: 8px;
+  /* Radius — arquitetura fiel ao shadcn (base-nova/reka-nova/etc.):
+     --radius é o tamanho base global. Cada componente consome um token
+     específico (--radius-button, --radius-card, etc.) que no tema padrão
+     Nova é igual ao --radius, mas nos outros temas aplica multiplicadores
+     diferentes (ver docs/shared/themes/<tema>.css).
+
+     Valor base = 0.625rem (10px) bate exatamente com shadcn default. */
+  --radius: 0.625rem;              /* 10px — base global */
+  --radius-button: var(--radius);  /* Nova: 1× */
+  --radius-card: calc(var(--radius) * 1.4);   /* Nova: 14px */
+  --radius-badge: calc(var(--radius) * 2.6);  /* Nova: 26px */
+  --radius-input: var(--radius);   /* Nova: 1× */
+  --radius-alert: var(--radius);   /* Nova: 1× */
 
   /* Dimension tokens — altura default de interativos (Button, Input, Select, Toggle, Badge...) */
   /* Nota: Tailwind v4 consome via h-(--height-*) / size-(--size-*) / px-(--spacing-*) */

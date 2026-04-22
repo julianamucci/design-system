@@ -2,12 +2,14 @@
  * ─── Tema: Nova (padrão) ──────────────────────────────────────────────────────
  * Referência shadcn: style `base-nova` / `reka-nova` / `nova`.
  * Vibe: Moderno, compacto, cantos suaves, densidade média-alta.
- * Valores: consumidos diretamente de tokens.css — este arquivo só existe como
- * documentação explícita do tema "padrão". Aplicar via classe .tema-nova ou
- * sem classe nenhuma (é o default de :root).
+ *
+ * Radius: base 10px; componentes seguem multiplicadores shadcn:
+ *   button: 1×, card: 1.4×, badge: 2.6×, input: 1×, alert: 1×
+ *
+ * Valores de :root em tokens.css já refletem Nova — este arquivo é só marker.
  *
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-nova {
-  /* Herda todos os valores de :root em tokens.css — Nova é o padrão do projeto. */
+  /* Nova é o padrão — herda todos os valores de :root em tokens.css */
 }

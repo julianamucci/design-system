@@ -1,34 +1,35 @@
 /*
  * ─── Tema: Mira ───────────────────────────────────────────────────────────────
- * Referência shadcn: style `base-mira` / `radix-mira`.
- * Vibe: Minimalista, técnico. Cantos levemente arredondados, ultra-compacto,
- *        shadows sutis, tipografia aerada.
+ * Referência shadcn: style `base-mira`. Vibe: Minimalista, técnico.
+ * Multiplicadores shadcn: button 0.8×, card 1×, badge pill, input 0.8×, alert 1.4×
  *
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-mira {
-  /* Spacing — Mira é 20% mais compacto (minimalista, técnico) */
-  --spacing-base: 0.2rem; /* 3.2px base (vs 4px Nova) */
+  /* Spacing */
+  --spacing-base: 0.2rem; /* -20% denso */
 
-  /* Radius — bem leve */
-  --radius: 4px;
-  --radius-button: 4px;
-  --radius-card: 4px;
+  /* Radius por componente (shadcn multiplicadores exatos) */
+  --radius-button: calc(var(--radius) * 0.8);  /* 8px */
+  --radius-card:   var(--radius);              /* 10px */
+  --radius-badge:  9999px;                     /* pill (Mira especial) */
+  --radius-input:  calc(var(--radius) * 0.8);  /* 8px */
+  --radius-alert:  calc(var(--radius) * 1.4);  /* 14px */
 
-  /* Dimensões — Mira é o mais compacto */
-  --height-badge: 1rem;      /* 16px */
-  --height-xs: 1.25rem;      /* 20px */
-  --height-sm: 1.5rem;       /* 24px */
-  --height-default: 1.75rem; /* 28px — h-7 */
-  --height-lg: 2rem;         /* 32px */
-  --height-xl: 2.25rem;      /* 36px */
+  /* Dimensões — Mira é compacto */
+  --height-badge: 1rem;
+  --height-xs: 1.25rem;
+  --height-sm: 1.5rem;
+  --height-default: 1.75rem;
+  --height-lg: 2rem;
+  --height-xl: 2.25rem;
   --size-xs: 1.25rem;
   --size-sm: 1.5rem;
   --size-default: 1.75rem;
   --size-lg: 2rem;
   --size-xl: 2.25rem;
 
-  /* Elevation — shadows quase invisíveis */
+  /* Elevation — shadows sutis */
   --elevation-sm: 0 1px 0 0 rgba(0, 0, 0, 0.05);
   --elevation-md: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
   --elevation-lg: 0 2px 4px 0 rgba(0, 0, 0, 0.04);

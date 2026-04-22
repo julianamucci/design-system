@@ -30,6 +30,37 @@
    * 1. BUTTON — dimensões tokenizadas
    * ═══════════════════════════════════════════════════════════════════════════ */
 
+  /* Radius por componente — shadcn multiplier pattern (permite temas variar
+     radius independente por componente). Ver docs/shared/themes/<tema>.css */
+  .btn, .btn-primary, .btn-secondary, .btn-outline, .btn-ghost, .btn-link, .btn-destructive,
+  .btn-sm, .btn-sm-primary, .btn-sm-secondary, .btn-sm-outline, .btn-sm-ghost, .btn-sm-link, .btn-sm-destructive,
+  .btn-lg, .btn-lg-primary, .btn-lg-secondary, .btn-lg-outline, .btn-lg-ghost, .btn-lg-link, .btn-lg-destructive,
+  .btn-icon, .btn-icon-primary, .btn-icon-secondary, .btn-icon-outline, .btn-icon-ghost, .btn-icon-link, .btn-icon-destructive,
+  .btn-sm-icon, .btn-sm-icon-primary, .btn-sm-icon-secondary, .btn-sm-icon-outline, .btn-sm-icon-ghost, .btn-sm-icon-link, .btn-sm-icon-destructive,
+  .btn-lg-icon, .btn-lg-icon-primary, .btn-lg-icon-secondary, .btn-lg-icon-outline, .btn-lg-icon-ghost, .btn-lg-icon-link, .btn-lg-icon-destructive {
+    border-radius: var(--radius-button);
+  }
+
+  /* Card usa --radius-card */
+  .card {
+    border-radius: var(--radius-card);
+  }
+
+  /* Badge usa --radius-badge */
+  .badge, .badge-primary, .badge-secondary, .badge-destructive, .badge-outline {
+    border-radius: var(--radius-badge);
+  }
+
+  /* Input + Select usam --radius-input */
+  input.input, button.select, .select {
+    border-radius: var(--radius-input);
+  }
+
+  /* Alert usa --radius-alert */
+  .alert, .alert-destructive {
+    border-radius: var(--radius-alert);
+  }
+
   .btn, .btn-primary, .btn-secondary, .btn-outline, .btn-ghost, .btn-link, .btn-destructive {
     height: var(--height-default);
   }

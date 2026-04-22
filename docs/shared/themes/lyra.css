@@ -1,39 +1,39 @@
 /*
  * ─── Tema: Lyra ───────────────────────────────────────────────────────────────
- * Referência shadcn: style `base-lyra` / `radix-lyra`.
- * Vibe: Brutalista, high-contrast. Cantos retos, densidade compacta,
- *        shadows hard-offset (não difusas) tipo neo-brutalismo.
+ * Referência shadcn: style `base-lyra`. Vibe: Brutalista, cantos retos.
+ * Multiplicadores shadcn: tudo 0 (sem radius em nenhum componente).
  *
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-lyra {
-  /* Spacing — Lyra é 20% mais compacto (denso, brutalista) */
-  --spacing-base: 0.2rem; /* 3.2px base (vs 4px Nova) */
+  /* Spacing */
+  --spacing-base: 0.2rem; /* -20% denso */
 
-  /* Radius — Lyra é retangular puro */
-  --radius: 0px;
-  --radius-button: 0px;
-  --radius-card: 0px;
+  /* Radius por componente — Lyra é retangular puro */
+  --radius-button: 0;
+  --radius-card:   0;
+  --radius-badge:  0;
+  --radius-input:  0;
+  --radius-alert:  0;
 
-  /* Dimensões — Lyra é compacto (default h-6 como Nova, mas mais denso) */
-  --height-badge: 1rem;      /* 16px — ultra compacto */
-  --height-xs: 1.25rem;      /* 20px */
-  --height-sm: 1.5rem;       /* 24px */
-  --height-default: 1.75rem; /* 28px */
-  --height-lg: 2rem;         /* 32px */
-  --height-xl: 2.25rem;      /* 36px */
+  /* Dimensões — Lyra é compacto */
+  --height-badge: 1rem;
+  --height-xs: 1.25rem;
+  --height-sm: 1.5rem;
+  --height-default: 1.75rem;
+  --height-lg: 2rem;
+  --height-xl: 2.25rem;
   --size-xs: 1.25rem;
   --size-sm: 1.5rem;
   --size-default: 1.75rem;
   --size-lg: 2rem;
   --size-xl: 2.25rem;
 
-  /* Elevation — hard-offset shadows (brutalista) */
+  /* Elevation — hard-offset (neo-brutalismo) */
   --elevation-sm: 2px 2px 0 0 rgba(0, 0, 0, 1);
   --elevation-md: 4px 4px 0 0 rgba(0, 0, 0, 1);
   --elevation-lg: 6px 6px 0 0 rgba(0, 0, 0, 1);
   --elevation-xl: 8px 8px 0 0 rgba(0, 0, 0, 1);
 
-  /* Borders mais grossos (impressão tipográfica) */
   --border-width-default: 2px;
 }

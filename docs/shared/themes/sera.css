@@ -1,22 +1,25 @@
 /*
  * ─── Tema: Sera ───────────────────────────────────────────────────────────────
- * Referência shadcn: style `radix-sera` (entrada mais recente do registry).
- * Vibe: Orgânico, natural. Radius intermediário, densidade padrão, shadows
- *        com toque warm. Equilíbrio entre Vega (clássico) e Maia (friendly).
+ * Referência shadcn: style `base-sera`. Vibe: Brutalista orgânico, cantos retos.
+ * Descoberta: Sera é igual a Lyra em radius (tudo 0). O diferencial está em
+ * shadows warm-toned e spacing baseline.
+ *
+ * Multiplicadores shadcn: tudo 0 (sem radius).
  *
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-sera {
-  /* Spacing — Sera mantém baseline de Nova (equilíbrio/orgânico) */
-  /* --spacing-base: 0.25rem; — herda do default; não override */
+  /* Spacing — Sera mantém baseline de Nova */
 
-  /* Radius — caminho do meio */
-  --radius: 10px;
-  --radius-button: 10px;
-  --radius-card: 12px;
+  /* Radius por componente — Sera é retangular puro (igual Lyra) */
+  --radius-button: 0;
+  --radius-card:   0;
+  --radius-badge:  0;
+  --radius-input:  0;
+  --radius-alert:  0;
 
-  /* Dimensões — neutro, como Nova */
-  --height-badge: 1.25rem;   /* 20px */
+  /* Dimensões — baseline */
+  --height-badge: 1.25rem;
   --height-xs: 1.5rem;
   --height-sm: 1.75rem;
   --height-default: 2rem;
@@ -28,7 +31,7 @@
   --size-lg: 2.25rem;
   --size-xl: 2.5rem;
 
-  /* Elevation — shadows com leve matiz warm (tom marrom) */
+  /* Elevation — shadows warm (tom marrom) */
   --elevation-sm: 0 1px 3px 0 rgba(68, 45, 30, 0.08), 0 1px 2px 0 rgba(68, 45, 30, 0.05);
   --elevation-md: 0 4px 8px -2px rgba(68, 45, 30, 0.1), 0 2px 4px -1px rgba(68, 45, 30, 0.06);
   --elevation-lg: 0 10px 16px -4px rgba(68, 45, 30, 0.12), 0 4px 8px -2px rgba(68, 45, 30, 0.07);

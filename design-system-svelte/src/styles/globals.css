@@ -75,11 +75,13 @@
   --tracking-normal: var(--letter-spacing-normal);
   --tracking-wide: var(--letter-spacing-wide);
 
-  /* Radius Mappings */
-  --radius-sm: calc(var(--radius) - 2px);
-  --radius-md: var(--radius);
-  --radius-lg: var(--radius-button);
-  --radius-xl: var(--radius-card);
+  /* Radius Mappings — escala Tailwind derivada do --radius base.
+     Tokens específicos por componente (--radius-button, --radius-card, etc.)
+     são aplicados diretamente via `rounded-(--radius-button)` nos componentes. */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 
   /* Shadow Mappings */
   --shadow-sm: var(--elevation-sm);

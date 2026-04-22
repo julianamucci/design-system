@@ -1,27 +1,28 @@
 /*
  * ─── Tema: Maia ───────────────────────────────────────────────────────────────
- * Referência shadcn: style `base-maia` / `radix-maia`.
- * Vibe: Friendly, acolhedor. Cantos arredondados grandes (pill-shaped),
- *        densidade folgada, shadows suaves e difusas.
+ * Referência shadcn: style `base-maia`. Vibe: Friendly, acolhedor.
+ * Multiplicadores shadcn: button 2.6×, card 1.8×, badge 2.6×, input 2.6×, alert 2.6×
  *
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-maia {
-  /* Spacing — Maia é 25% mais folgado (friendly, acolhedor) */
-  --spacing-base: 0.3125rem; /* 5px base (vs 4px Nova) */
+  /* Spacing */
+  --spacing-base: 0.3125rem; /* +25% folgado vs Nova */
 
-  /* Radius — Maia é pill-shaped */
-  --radius: 1rem;           /* 16px */
-  --radius-button: 9999px;  /* full-round */
-  --radius-card: 1.25rem;   /* 20px */
+  /* Radius por componente (shadcn multiplicadores exatos) */
+  --radius-button: calc(var(--radius) * 2.6);  /* 26px */
+  --radius-card:   calc(var(--radius) * 1.8);  /* 18px */
+  --radius-badge:  calc(var(--radius) * 2.6);  /* 26px */
+  --radius-input:  calc(var(--radius) * 2.6);  /* 26px */
+  --radius-alert:  calc(var(--radius) * 2.6);  /* 26px */
 
-  /* Dimensões — Maia é mais generoso */
-  --height-badge: 1.5rem;    /* 24px */
-  --height-xs: 1.75rem;      /* 28px */
-  --height-sm: 2rem;         /* 32px */
-  --height-default: 2.5rem;  /* 40px */
-  --height-lg: 2.75rem;      /* 44px */
-  --height-xl: 3rem;         /* 48px */
+  /* Dimensões */
+  --height-badge: 1.5rem;
+  --height-xs: 1.75rem;
+  --height-sm: 2rem;
+  --height-default: 2.5rem;
+  --height-lg: 2.75rem;
+  --height-xl: 3rem;
   --size-xs: 1.75rem;
   --size-sm: 2rem;
   --size-default: 2.5rem;

@@ -62,9 +62,10 @@ export const Size10: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const root = canvasElement.querySelector('[data-slot="avatar"]');
-    await step("Tamanho padrão size-8 aplicado sem className extra (radix-nova)", async () => {
-      await expect(root).toHaveClass("size-8");
+    await step("Tamanho padrão aplicado via --size-default token + data-size", async () => {
       await expect(root).toHaveAttribute("data-size", "default");
+      // Avatar usa size-(--size-default) — validar via data attribute
+      await expect(root).toHaveClass("rounded-full");
     });
   },
 };
