@@ -21,23 +21,16 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Datas fixas para determinismo dos screenshots Chromatic
-const PLACEHOLDER = new CalendarDate(2026, 4, 15);
-const SINGLE_DATE = new CalendarDate(2026, 4, 12);
-const MULTIPLE_DATES = [
-  new CalendarDate(2026, 4, 8),
-  new CalendarDate(2026, 4, 15),
-  new CalendarDate(2026, 4, 22),
-];
-const RANGE_START = new CalendarDate(2026, 4, 10);
-const RANGE_END = new CalendarDate(2026, 4, 18);
+// Datas fixas para determinismo dos screenshots Chromatic — instanciadas dentro
+// de setup() para evitar criar CalendarDate no import do módulo.
 
 export const Single: Story = {
   render: () => ({
     components: { Calendar },
     setup() {
-      const selected = ref(SINGLE_DATE);
-      return { selected, placeholder: PLACEHOLDER };
+      const placeholder = new CalendarDate(2026, 4, 15);
+      const selected = ref(new CalendarDate(2026, 4, 12));
+      return { selected, placeholder };
     },
     template: `
       <Calendar
@@ -54,8 +47,13 @@ export const Multiple: Story = {
   render: () => ({
     components: { Calendar },
     setup() {
-      const selected = ref(MULTIPLE_DATES);
-      return { selected, placeholder: PLACEHOLDER };
+      const placeholder = new CalendarDate(2026, 4, 15);
+      const selected = ref([
+        new CalendarDate(2026, 4, 8),
+        new CalendarDate(2026, 4, 15),
+        new CalendarDate(2026, 4, 22),
+      ]);
+      return { selected, placeholder };
     },
     template: `
       <Calendar
@@ -73,8 +71,12 @@ export const Range: Story = {
   render: () => ({
     components: { RangeCalendar },
     setup() {
-      const selected = ref({ start: RANGE_START, end: RANGE_END });
-      return { selected, placeholder: PLACEHOLDER };
+      const placeholder = new CalendarDate(2026, 4, 15);
+      const selected = ref({
+        start: new CalendarDate(2026, 4, 10),
+        end: new CalendarDate(2026, 4, 18),
+      });
+      return { selected, placeholder };
     },
     template: `
       <RangeCalendar

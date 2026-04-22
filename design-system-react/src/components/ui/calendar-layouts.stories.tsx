@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import { within, expect } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
 
@@ -55,6 +56,12 @@ export const CaptionDropdown: Story = {
         locale={ptBR}
       />
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // F7 — captionLayout="dropdown" renderiza dois <select> (mês e ano)
+    const comboboxes = canvas.getAllByRole("combobox");
+    await expect(comboboxes.length).toBe(2);
   },
   parameters: {
     docs: {

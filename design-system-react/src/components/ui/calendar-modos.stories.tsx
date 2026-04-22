@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import { userEvent, within, expect, fn } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
 
@@ -21,16 +22,38 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Single: Story = {
-  render: () => {
-    const [date, setDate] = useState<Date | undefined>(new Date());
+  args: {
+    onSelect: fn(),
+  },
+  render: (args) => {
+    const [date, setDate] = useState<Date | undefined>(new Date(2026, 3, 15));
     return (
       <Calendar
         mode="single"
         selected={date}
-        onSelect={setDate}
+        onSelect={(d) => {
+          setDate(d);
+          (args as { onSelect?: (d: Date | undefined) => void }).onSelect?.(d);
+        }}
         locale={ptBR}
       />
     );
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    // F2 — clicar numa célula de data dispara onSelect com Date
+    const dayButtons = canvasElement.querySelectorAll<HTMLButtonElement>(
+      'button[data-day]:not([disabled])',
+    );
+    await expect(dayButtons.length).toBeGreaterThan(0);
+    const target = dayButtons[dayButtons.length - 1];
+    await userEvent.click(target);
+    const onSelect = (args as { onSelect?: ReturnType<typeof fn> }).onSelect!;
+    await expect(onSelect).toHaveBeenCalled();
+    const firstArg = onSelect.mock.calls[0]?.[0];
+    await expect(firstArg instanceof Date).toBe(true);
+    // Confirma grid acessível
+    await expect(canvas.getByRole("grid")).toBeInTheDocument();
   },
   parameters: {
     docs: {

@@ -20,16 +20,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const PLACEHOLDER = new CalendarDate(2026, 4, 15);
-const SINGLE_DATE = new CalendarDate(2026, 4, 12);
+// Datas fixas para determinismo Chromatic — instanciadas dentro de setup()
+// para evitar criar CalendarDate no import do módulo.
 
 // Heading textual (layout default — equivale a captionLayout="label" do React).
 export const CaptionLabel: Story = {
   render: () => ({
     components: { Calendar },
     setup() {
-      const selected = ref(SINGLE_DATE);
-      return { selected, placeholder: PLACEHOLDER };
+      const placeholder = new CalendarDate(2026, 4, 15);
+      const selected = ref(new CalendarDate(2026, 4, 12));
+      return { selected, placeholder };
     },
     template: `
       <Calendar
@@ -47,8 +48,9 @@ export const CaptionDropdown: Story = {
   render: () => ({
     components: { Calendar },
     setup() {
-      const selected = ref(SINGLE_DATE);
-      return { selected, placeholder: PLACEHOLDER };
+      const placeholder = new CalendarDate(2026, 4, 15);
+      const selected = ref(new CalendarDate(2026, 4, 12));
+      return { selected, placeholder };
     },
     template: `
       <Calendar
@@ -67,8 +69,9 @@ export const TwoMonths: Story = {
   render: () => ({
     components: { Calendar },
     setup() {
-      const selected = ref(SINGLE_DATE);
-      return { selected, placeholder: PLACEHOLDER };
+      const placeholder = new CalendarDate(2026, 4, 15);
+      const selected = ref(new CalendarDate(2026, 4, 12));
+      return { selected, placeholder };
     },
     template: `
       <Calendar
@@ -97,8 +100,9 @@ export const WithFixedWeeks: Story = {
   render: () => ({
     components: { Calendar },
     setup() {
-      const selected = ref(SINGLE_DATE);
-      return { selected, placeholder: PLACEHOLDER };
+      const placeholder = new CalendarDate(2026, 4, 15);
+      const selected = ref(new CalendarDate(2026, 4, 12));
+      return { selected, placeholder };
     },
     template: `
       <Calendar

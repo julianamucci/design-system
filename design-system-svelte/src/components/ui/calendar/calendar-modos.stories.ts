@@ -32,3 +32,19 @@ export const Multiple: Story = {
     props: { variant: 'multiple', locale: 'pt-BR' },
   }),
 };
+
+export const RangeFallback: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'bits-ui não expõe RangeCalendar nativo. Para seleção de intervalo, use dois Calendars single lado a lado com estado compartilhado, ou consulte a stack React/Vue que implementa range nativamente.',
+      },
+    },
+  },
+  render: () => ({
+    Component: CalendarStory,
+    props: { variant: 'multiple', locale: 'pt-BR' },
+  }),
+  // sem play function — é uma story documentacional
+};

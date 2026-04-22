@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import { userEvent, within, expect } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
 
@@ -32,6 +33,37 @@ export const Selected: Story = {
         locale={ptBR}
       />
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // F6 — locale ptBR: weekdays em português (dom/seg/ter/qua/qui/sex/sáb)
+    // react-day-picker abrevia com capitalização "seg." ou similar; usa regex case-insensitive.
+    const weekHeaders = canvasElement.querySelectorAll('[role="columnheader"]');
+    const weekdayTexts = Array.from(weekHeaders)
+      .map((h) => (h.textContent ?? "").toLowerCase())
+      .join(" ");
+    await expect(weekdayTexts).toMatch(/seg|ter|qua|qui|sex|s[aá]b|dom/);
+
+    // A5 — focus ring visível via Tab até chegar numa célula (DayButton)
+    const dayButtons = canvasElement.querySelectorAll<HTMLButtonElement>(
+      'button[data-day]',
+    );
+    await expect(dayButtons.length).toBeGreaterThan(0);
+    // Tab até um DayButton. react-day-picker deixa apenas um dia com tabIndex=0.
+    await userEvent.tab();
+    let tries = 0;
+    while (
+      tries < 20 &&
+      !(document.activeElement as HTMLElement | null)?.hasAttribute("data-day")
+    ) {
+      await userEvent.tab();
+      tries += 1;
+    }
+    await expect(
+      (document.activeElement as HTMLElement | null)?.hasAttribute("data-day"),
+    ).toBe(true);
+    // Sanity: grid acessível
+    await expect(canvas.getByRole("grid")).toBeInTheDocument();
   },
   parameters: {
     docs: {

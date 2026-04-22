@@ -102,3 +102,34 @@ export const Today: Story = {
     await expect(selected).toBeNull();
   },
 };
+
+// ─── Stubs documentacionais ───────────────────────────────────────────────────
+// As stories abaixo existem apenas para transparência no Storybook sidebar,
+// espelhando a presença nas stacks React/Vue/Svelte. A factory vanilla do
+// Basecoat não suporta esses modos — ver descrição em cada story.
+
+export const WithOutsideDays: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A factory vanilla do Basecoat não renderiza dias do mês anterior/próximo (células vazias em vez de outside-days esmaecidos). Para esse comportamento, consulte as stacks React/Vue/Svelte, que expõem `showOutsideDays`/`disableDaysOutsideCurrentView` nativamente.',
+      },
+    },
+  },
+  render: () => createCalendar({ locale: 'pt-BR', class: 'rounded-md border' }),
+  // sem play — story documentacional (lacuna da factory vanilla)
+};
+
+export const RangeWithMiddle: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A factory vanilla do Basecoat não suporta `mode="range"`. Não há como destacar dias do meio de um intervalo. Para esse comportamento, use as stacks React (`react-day-picker` com `mode="range"`) ou Vue (`RangeCalendar` do reka-ui).',
+      },
+    },
+  },
+  render: () => createCalendar({ locale: 'pt-BR', class: 'rounded-md border' }),
+  // sem play — story documentacional (lacuna da factory vanilla)
+};

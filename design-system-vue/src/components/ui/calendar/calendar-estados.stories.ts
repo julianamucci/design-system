@@ -21,19 +21,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const PLACEHOLDER = new CalendarDate(2026, 4, 15);
-const SELECTED_DATE = new CalendarDate(2026, 4, 12);
-const DISABLE_BEFORE = new CalendarDate(2026, 4, 10);
+// Datas fixas para determinismo Chromatic — instanciadas dentro de setup()
+// para evitar criar CalendarDate no import do módulo.
 
-// Data fixa "hoje" para não quebrar entre builds — usamos a mesma data de placeholder.
-// O estado "today" real só aparece quando a data atual cai dentro do mês visível.
 // Selected — célula com data-selected + bg-primary.
 export const Selected: Story = {
   render: () => ({
     components: { Calendar },
     setup() {
-      const selected = ref(SELECTED_DATE);
-      return { selected, placeholder: PLACEHOLDER };
+      const placeholder = new CalendarDate(2026, 4, 15);
+      const selected = ref(new CalendarDate(2026, 4, 12));
+      return { selected, placeholder };
     },
     template: `
       <Calendar
@@ -51,9 +49,11 @@ export const Disabled: Story = {
   render: () => ({
     components: { Calendar },
     setup() {
-      const selected = ref(SELECTED_DATE);
-      const isDateDisabled = (d: any) => d.compare(DISABLE_BEFORE) < 0;
-      return { selected, placeholder: PLACEHOLDER, isDateDisabled };
+      const placeholder = new CalendarDate(2026, 4, 15);
+      const selected = ref(new CalendarDate(2026, 4, 12));
+      const disableBefore = new CalendarDate(2026, 4, 10);
+      const isDateDisabled = (d: any) => d.compare(disableBefore) < 0;
+      return { selected, placeholder, isDateDisabled };
     },
     template: `
       <Calendar
@@ -72,8 +72,13 @@ export const Disabled: Story = {
 export const Today: Story = {
   render: () => ({
     components: { Calendar },
+    setup() {
+      // Data fixa para estabilidade do Chromatic — em produção o today é real
+      const placeholder = new CalendarDate(2026, 4, 15);
+      return { placeholder };
+    },
     template: `
-      <Calendar locale="pt-BR" class="rounded-md border" />
+      <Calendar locale="pt-BR" :placeholder="placeholder" class="rounded-md border" />
     `,
   }),
 };
@@ -84,8 +89,9 @@ export const WithOutsideDays: Story = {
   render: () => ({
     components: { Calendar },
     setup() {
-      const selected = ref(SELECTED_DATE);
-      return { selected, placeholder: PLACEHOLDER };
+      const placeholder = new CalendarDate(2026, 4, 15);
+      const selected = ref(new CalendarDate(2026, 4, 12));
+      return { selected, placeholder };
     },
     template: `
       <Calendar
@@ -103,11 +109,12 @@ export const RangeWithMiddle: Story = {
   render: () => ({
     components: { RangeCalendar },
     setup() {
+      const placeholder = new CalendarDate(2026, 4, 15);
       const range = ref({
         start: new CalendarDate(2026, 4, 10),
         end: new CalendarDate(2026, 4, 18),
       });
-      return { range, placeholder: PLACEHOLDER };
+      return { range, placeholder };
     },
     template: `
       <RangeCalendar
