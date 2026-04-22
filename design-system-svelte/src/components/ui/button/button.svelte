@@ -54,6 +54,18 @@
 		children,
 		...restProps
 	}: ButtonProps = $props();
+
+	// PATCH: security — validar protocolo de href para evitar XSS via javascript:/data:/vbscript: (ver guideline 09-seguranca-xss.md)
+	function isSafeUrl(url: string | undefined): url is string {
+		if (!url) return false;
+		try {
+			const parsed = new URL(url, "https://placeholder.invalid");
+			return ["http:", "https:", "mailto:", "tel:"].includes(parsed.protocol);
+		} catch {
+			return url.startsWith("#") || url.startsWith("/");
+		}
+	}
+	const safeHref = $derived(isSafeUrl(href) ? href : undefined);
 </script>
 
 {#if href}
@@ -61,7 +73,7 @@
 		bind:this={ref}
 		data-slot="button"
 		class={cn(buttonVariants({ variant, size }), className)}
-		href={disabled ? undefined : href}
+		href={disabled ? undefined : safeHref}
 		aria-disabled={disabled}
 		role={disabled ? "link" : undefined}
 		tabindex={disabled ? -1 : undefined}
