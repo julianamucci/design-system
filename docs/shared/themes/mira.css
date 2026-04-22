@@ -16,13 +16,13 @@
   --radius-input:  calc(var(--radius) * 0.8);  /* 8px */
   --radius-alert:  calc(var(--radius) * 1.4);  /* 14px */
 
-  /* Dimensões — Mira é compacto */
-  --height-badge: 1rem;
-  --height-xs: 1.25rem;
-  --height-sm: 1.5rem;
-  --height-default: 1.75rem;
-  --height-lg: 2rem;
-  --height-xl: 2.25rem;
+  /* Dimensões — shadcn: sm 24px / default 28px / lg 32px (o mais compacto) */
+  --height-badge: 1rem;         /* 16px */
+  --height-xs: 1.25rem;         /* 20px */
+  --height-sm: 1.5rem;          /* 24px — spacing × 6 */
+  --height-default: 1.75rem;    /* 28px — spacing × 7 */
+  --height-lg: 2rem;            /* 32px — spacing × 8 */
+  --height-xl: 2.25rem;         /* 36px */
   --size-xs: 1.25rem;
   --size-sm: 1.5rem;
   --size-default: 1.75rem;

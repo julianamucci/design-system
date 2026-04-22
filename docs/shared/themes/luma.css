@@ -16,18 +16,18 @@
   --radius-input:  calc(var(--radius) * 2.2);  /* 22px */
   --radius-alert:  calc(var(--radius) * 2.6);  /* 26px */
 
-  /* Dimensões */
-  --height-badge: 1.5rem;
-  --height-xs: 1.75rem;
-  --height-sm: 2rem;
-  --height-default: 2.5rem;
-  --height-lg: 2.75rem;
-  --height-xl: 3rem;
+  /* Dimensões — shadcn: sm 32px / default 36px / lg 40px (igual Vega/Maia) */
+  --height-badge: 1.5rem;       /* 24px */
+  --height-xs: 1.75rem;         /* 28px */
+  --height-sm: 2rem;            /* 32px — spacing × 8 */
+  --height-default: 2.25rem;    /* 36px — spacing × 9 */
+  --height-lg: 2.5rem;          /* 40px — spacing × 10 */
+  --height-xl: 2.75rem;         /* 44px */
   --size-xs: 1.75rem;
   --size-sm: 2rem;
-  --size-default: 2.5rem;
-  --size-lg: 2.75rem;
-  --size-xl: 3rem;
+  --size-default: 2.25rem;
+  --size-lg: 2.5rem;
+  --size-xl: 2.75rem;
 
   /* Elevation — shadows frias, elegantes */
   --elevation-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px 0 rgba(15, 23, 42, 0.04);

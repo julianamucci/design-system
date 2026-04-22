@@ -16,18 +16,18 @@
   --radius-input:  0;
   --radius-alert:  0;
 
-  /* Dimensões — Lyra é compacto */
-  --height-badge: 1rem;
-  --height-xs: 1.25rem;
-  --height-sm: 1.5rem;
-  --height-default: 1.75rem;
-  --height-lg: 2rem;
-  --height-xl: 2.25rem;
-  --size-xs: 1.25rem;
-  --size-sm: 1.5rem;
-  --size-default: 1.75rem;
-  --size-lg: 2rem;
-  --size-xl: 2.25rem;
+  /* Dimensões — shadcn: sm 28px / default 32px / lg 36px (igual Nova) */
+  --height-badge: 1.125rem;     /* 18px */
+  --height-xs: 1.5rem;          /* 24px */
+  --height-sm: 1.75rem;         /* 28px — spacing × 7 */
+  --height-default: 2rem;       /* 32px — spacing × 8 */
+  --height-lg: 2.25rem;         /* 36px — spacing × 9 */
+  --height-xl: 2.5rem;          /* 40px */
+  --size-xs: 1.5rem;
+  --size-sm: 1.75rem;
+  --size-default: 2rem;
+  --size-lg: 2.25rem;
+  --size-xl: 2.5rem;
 
   /* Elevation — hard-offset (neo-brutalismo) */
   --elevation-sm: 2px 2px 0 0 rgba(0, 0, 0, 1);

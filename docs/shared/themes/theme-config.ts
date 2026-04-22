@@ -60,7 +60,7 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'sera',
     label: 'Sera',
-    description: 'Orgânico, radius intermediário, shadows warm-toned',
+    description: 'Editorial, cantos retos, shadows warm-toned',
     cssClass: 'tema-sera',
   },
 ];

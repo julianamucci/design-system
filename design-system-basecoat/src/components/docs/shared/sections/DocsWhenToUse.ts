@@ -41,8 +41,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   guidelinesBlock.appendChild(guidelinesList);
 
   // ── Scenarios table ───────────────────────────────────────────────────────────
-  const scenariosBlock = document.createElement('div');
-  scenariosBlock.className = 'overflow-x-auto md:overflow-visible';
+  const scenariosBlock = createCard({ className: 'shadow-sm overflow-x-auto md:overflow-visible p-4' });
 
   const { wrapper: scenariosTableWrapper, table: scenariosTable } = createTable('w-full border-collapse text-sm');
 
@@ -77,8 +76,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
     uxTitle.textContent = ux.title;
     uxBlock.appendChild(uxTitle);
 
-    const uxTableWrap = document.createElement('div');
-    uxTableWrap.className = 'overflow-x-auto md:overflow-visible';
+    const uxTableWrap = createCard({ className: 'shadow-sm overflow-x-auto md:overflow-visible p-4' });
 
     const { wrapper: uxInnerTableWrapper, table: uxTable } = createTable('w-full border-collapse text-sm');
 

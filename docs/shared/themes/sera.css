@@ -1,15 +1,24 @@
 /*
  * ─── Tema: Sera ───────────────────────────────────────────────────────────────
- * Referência shadcn: style `base-sera`. Vibe: Brutalista orgânico, cantos retos.
- * Descoberta: Sera é igual a Lyra em radius (tudo 0). O diferencial está em
- * shadows warm-toned e spacing baseline.
+ * Referência shadcn: style `base-sera`. Vibe: Editorial.
+ * Cantos retos (estilo jornal/revista), densidade folgada, shadows warm-toned,
+ * tipografia serif (Playfair Display).
+ * Diferencia de Lyra (brutalista hard-offset) pelas sombras suaves em tom marrom
+ * e pela fonte editorial.
  *
  * Multiplicadores shadcn: tudo 0 (sem radius).
+ * Dimensões shadcn: sm 36px / default 40px / lg 44px (o maior dos 7).
+ * Font-heading: Playfair Display (shadcn usa em .style-sera:font-heading).
  *
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
+
+/* Playfair Display — carregada só quando Sera está ativa */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap');
+
 .tema-sera {
-  /* Spacing — Sera mantém baseline de Nova */
+  /* Typography — Sera usa serif como font-heading */
+  --font-heading: 'Playfair Display', ui-serif, Georgia, serif;
 
   /* Radius por componente — Sera é retangular puro (igual Lyra) */
   --radius-button: 0;
@@ -18,22 +27,32 @@
   --radius-input:  0;
   --radius-alert:  0;
 
-  /* Dimensões — baseline */
-  --height-badge: 1.25rem;
-  --height-xs: 1.5rem;
-  --height-sm: 1.75rem;
-  --height-default: 2rem;
-  --height-lg: 2.25rem;
-  --height-xl: 2.5rem;
-  --size-xs: 1.5rem;
-  --size-sm: 1.75rem;
-  --size-default: 2rem;
-  --size-lg: 2.25rem;
-  --size-xl: 2.5rem;
+  /* Dimensões — shadcn: sm 36px / default 40px / lg 44px (maior dos 7) */
+  --height-badge: 1.625rem;     /* 26px */
+  --height-xs: 2rem;            /* 32px */
+  --height-sm: 2.25rem;         /* 36px — spacing × 9 */
+  --height-default: 2.5rem;     /* 40px — spacing × 10 */
+  --height-lg: 2.75rem;         /* 44px — spacing × 11 */
+  --height-xl: 3rem;            /* 48px */
+  --size-xs: 2rem;
+  --size-sm: 2.25rem;
+  --size-default: 2.5rem;
+  --size-lg: 2.75rem;
+  --size-xl: 3rem;
 
   /* Elevation — shadows warm (tom marrom) */
   --elevation-sm: 0 1px 3px 0 rgba(68, 45, 30, 0.08), 0 1px 2px 0 rgba(68, 45, 30, 0.05);
   --elevation-md: 0 4px 8px -2px rgba(68, 45, 30, 0.1), 0 2px 4px -1px rgba(68, 45, 30, 0.06);
   --elevation-lg: 0 10px 16px -4px rgba(68, 45, 30, 0.12), 0 4px 8px -2px rgba(68, 45, 30, 0.07);
   --elevation-xl: 0 20px 32px -8px rgba(68, 45, 30, 0.14), 0 8px 16px -4px rgba(68, 45, 30, 0.08);
+}
+
+/* Aplicar Playfair nos títulos (h1-h4) quando Sera está ativa.
+   Replica .style-sera:font-heading do shadcn. */
+.tema-sera h1,
+.tema-sera h2,
+.tema-sera h3,
+.tema-sera h4,
+.tema-sera .font-heading {
+  font-family: var(--font-heading);
 }

@@ -31,7 +31,7 @@
       </Card>
 
       <!-- Cenários -->
-      <div class="overflow-x-auto md:overflow-visible">
+      <Card class="shadow-sm overflow-x-auto md:overflow-visible p-4">
         <Table class="w-full border-collapse text-sm">
           <TableHeader>
             <TableRow class="border-b border-border text-left bg-muted/50 font-medium">
@@ -50,13 +50,13 @@
             {/each}
           </TableBody>
         </Table>
-      </div>
+      </Card>
 
       <!-- UX Writing -->
       {#if uxWriting}
       <div class="space-y-3">
         <h3 class="font-medium text-sm">{uxWriting.title}</h3>
-        <div class="overflow-x-auto md:overflow-visible">
+        <Card class="shadow-sm overflow-x-auto md:overflow-visible p-4">
           <Table class="w-full border-collapse text-sm">
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/70 text-left">
@@ -91,7 +91,7 @@
               {/each}
             </TableBody>
           </Table>
-        </div>
+        </Card>
       </div>
       {/if}
 
