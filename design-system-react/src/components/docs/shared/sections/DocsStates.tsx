@@ -26,7 +26,7 @@ export function DocsStates({ title, cols, items }: DocsStatesProps) {
     <section id="estados">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
       <Card className="shadow-sm overflow-x-auto md:overflow-visible p-4">
-          <Table className="w-full text-sm">
+          <Table className="w-full text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
             <TableHeader>
               <TableRow className="border-b border-border bg-muted/50 text-left">
                 <TableHead className="p-3 font-semibold">{cols.state}</TableHead>

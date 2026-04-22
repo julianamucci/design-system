@@ -81,7 +81,7 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
         <div className="space-y-3">
           <h3 className="text-base font-semibold">{functional.title}</h3>
           <Card className="shadow-sm overflow-x-auto md:overflow-visible p-4">
-              <Table className="w-full text-sm">
+              <Table className="w-full text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
                 <TableHeader>
                   <TableRow className="border-b border-border bg-muted/50 text-left">
                     <TableHead className="p-3 font-semibold">{functional.cols.action}</TableHead>
@@ -124,7 +124,7 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
         <div className="space-y-3">
           <h3 className="text-base font-semibold">{visual.title}</h3>
           <Card className="shadow-sm overflow-x-auto md:overflow-visible p-4">
-              <Table className="w-full text-sm">
+              <Table className="w-full text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
                 <TableHeader>
                   <TableRow className="border-b border-border bg-muted/50 text-left">
                     <TableHead className="p-3 font-semibold">{visual.cols.story}</TableHead>

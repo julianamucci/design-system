@@ -26,7 +26,7 @@
     <div class="space-y-3">
       <h3 class="text-base font-semibold">{functional.title}</h3>
       <Card class="overflow-x-auto md:overflow-visible p-4">
-          <Table class="w-full text-sm">
+          <Table class="w-full text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/50 text-left">
                 <TableHead class="p-3 font-semibold">{functional.cols.action}</TableHead>
@@ -69,7 +69,7 @@
     <div class="space-y-3">
       <h3 class="text-base font-semibold">{visual.title}</h3>
       <Card class="overflow-x-auto md:overflow-visible p-4">
-          <Table class="w-full text-sm">
+          <Table class="w-full text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/50 text-left">
                 <TableHead class="p-3 font-semibold">{visual.cols.story}</TableHead>

@@ -30,7 +30,7 @@
           <h3 class="text-base font-semibold">{def.title}</h3>
         {/if}
         <Card class="overflow-x-auto md:overflow-visible p-4">
-            <Table class="w-full text-sm">
+            <Table class="w-full text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
               <TableHeader>
                 <TableRow class="border-b border-border bg-muted/50 text-left">
                   <TableHead class="p-3 font-semibold">{def.cols.prop}</TableHead>

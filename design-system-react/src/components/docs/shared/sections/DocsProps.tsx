@@ -37,7 +37,7 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
     <div className="space-y-3">
       {def.title && <h3 className="text-base font-semibold">{def.title}</h3>}
       <Card className="shadow-sm overflow-x-auto md:overflow-visible p-4">
-          <Table className="w-full text-sm">
+          <Table className="w-full text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
             <TableHeader>
               <TableRow className="border-b border-border bg-muted/50 text-left">
                 <TableHead className="p-3 font-semibold">{def.cols.prop}</TableHead>

@@ -15,7 +15,7 @@ defineProps<{
   <section id="estados">
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
     <Card class="p-4 overflow-x-auto md:overflow-visible">
-        <Table>
+        <Table class="[&_th]:whitespace-normal [&_td]:whitespace-normal">
           <TableHeader>
             <TableRow class="border-b border-border bg-muted/50 text-left">
               <TableHead class="p-3 font-semibold">{{ cols.state }}</TableHead>

@@ -32,7 +32,7 @@
 
       <!-- Cenários -->
       <Card class="shadow-sm overflow-x-auto md:overflow-visible p-4">
-        <Table class="w-full border-collapse text-sm">
+        <Table class="w-full border-collapse text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
           <TableHeader>
             <TableRow class="border-b border-border text-left bg-muted/50 font-medium">
               <TableHead class="p-3">{scenarios.cols.scenario}</TableHead>
@@ -44,7 +44,7 @@
             {#each scenarios.items as item}
               <TableRow class="border-b border-border hover:bg-muted/5">
                 <TableCell class="p-3">{item.s}</TableCell>
-                <TableCell class="p-3font-medium text-primary">{item.u}</TableCell>
+                <TableCell class="p-3 font-medium text-primary">{item.u}</TableCell>
                 <TableCell class="p-3 text-muted-foreground">{item.a}</TableCell>
               </TableRow>
             {/each}
@@ -57,14 +57,14 @@
       <div class="space-y-3">
         <h3 class="font-medium text-sm">{uxWriting.title}</h3>
         <Card class="shadow-sm overflow-x-auto md:overflow-visible p-4">
-          <Table class="w-full border-collapse text-sm">
+          <Table class="w-full border-collapse text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
             <TableHeader>
               <TableRow class="border-b border-border bg-muted/70 text-left">
-                <TableHead class="p-3font-semibold">{uxWriting.cols.element}</TableHead>
+                <TableHead class="p-3 font-semibold">{uxWriting.cols.element}</TableHead>
                 {#if uxWriting.cols.rules}
-                  <TableHead class="p-3font-semibold">{uxWriting.cols.rules}</TableHead>
+                  <TableHead class="p-3 font-semibold">{uxWriting.cols.rules}</TableHead>
                 {/if}
-                <TableHead class="p-3font-semibold text-green-700 dark:text-green-400">
+                <TableHead class="p-3 font-semibold text-green-700 dark:text-green-400">
                   <span class="flex items-center gap-1.5">
                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
                     {uxWriting.cols.do}
@@ -81,11 +81,11 @@
             <TableBody>
               {#each uxWriting.items as row}
                 <TableRow class="border-b border-border last:border-0 hover:bg-muted/5">
-                  <TableCell class="p-3font-medium">{row.element}</TableCell>
+                  <TableCell class="p-3 font-medium">{row.element}</TableCell>
                   {#if uxWriting.cols.rules}
-                    <TableCell class="p-3text-muted-foreground">{row.rules ?? ''}</TableCell>
+                    <TableCell class="p-3 text-muted-foreground">{row.rules ?? ''}</TableCell>
                   {/if}
-                  <TableCell class="p-3font-medium text-green-600 dark:text-green-500">{row.do}</TableCell>
+                  <TableCell class="p-3 font-medium text-green-600 dark:text-green-500">{row.do}</TableCell>
                   <TableCell class="p-3 font-medium text-red-600 dark:text-red-500">{row.dont}</TableCell>
                 </TableRow>
               {/each}
