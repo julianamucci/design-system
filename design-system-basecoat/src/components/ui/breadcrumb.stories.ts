@@ -13,40 +13,21 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
-type BreadcrumbArgs = {
-  separator: string;
-  label: string;
-};
-
-const meta: Meta<BreadcrumbArgs> = {
+const meta: Meta = {
   title: 'UI/Breadcrumb',
   tags: ['autodocs'],
   parameters: {
     docs: { page: withAutoDocsTab(createBreadcrumbDocs) },
   },
-  argTypes: {
-    separator: {
-      control: 'text',
-      description: 'Caractere ou texto usado como separador entre os itens.',
-    },
-    label: {
-      control: 'text',
-      description: 'aria-label do elemento <nav>.',
-    },
-  },
-  args: {
-    separator: '›',
-    label: 'breadcrumb',
-  },
 };
 
 export default meta;
-type Story = StoryObj<BreadcrumbArgs>;
+type Story = StoryObj;
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
-function buildPlaygroundBreadcrumb(args: BreadcrumbArgs): HTMLElement {
-  const nav = createBreadcrumb({ label: args.label });
+function buildPlaygroundBreadcrumb(): HTMLElement {
+  const nav = createBreadcrumb({ label: 'breadcrumb' });
   const list = createBreadcrumbList();
 
   const home = createBreadcrumbItem();
@@ -60,9 +41,9 @@ function buildPlaygroundBreadcrumb(args: BreadcrumbArgs): HTMLElement {
 
   list.append(
     home,
-    createBreadcrumbSeparator({ content: args.separator }),
+    createBreadcrumbSeparator(),
     components,
-    createBreadcrumbSeparator({ content: args.separator }),
+    createBreadcrumbSeparator(),
     page,
   );
 
@@ -71,7 +52,7 @@ function buildPlaygroundBreadcrumb(args: BreadcrumbArgs): HTMLElement {
 }
 
 export const Playground: Story = {
-  render: (args) => buildPlaygroundBreadcrumb(args),
+  render: () => buildPlaygroundBreadcrumb(),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
