@@ -30,7 +30,7 @@ export function createAvatarRoot(options: AvatarOptions = {}): HTMLElement {
   const { className } = options;
 
   const el = document.createElement('span');
-  el.className = 'relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full';
+  el.className = 'relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
 
   return el;
@@ -42,6 +42,9 @@ export function createAvatarImage(options: AvatarImageOptions): HTMLImageElement
   const img = document.createElement('img');
   img.src = src;
   img.alt = alt;
+  // Perf: lazy load + async decode para não bloquear o main thread na render inicial
+  img.loading = 'lazy';
+  img.decoding = 'async';
   // PATCH: bugfix — object-cover evita distorção de imagens não-quadradas em container circular (ver PATCHES.md#avatar-object-cover)
   img.className = 'aspect-square h-full w-full object-cover';
   if (className) img.classList.add(...className.split(' ').filter(Boolean));
