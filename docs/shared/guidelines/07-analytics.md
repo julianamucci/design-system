@@ -116,7 +116,7 @@ interface WithFieldName {
 |--------|----------------|-------------------|-------------|
 | `field_focus` | Ao focar no campo | `field_name` | Funis onde medir abandono |
 | `field_blur` | Ao perder foco com valor preenchido | `field_name` | Medir taxa de preenchimento |
-| `field_change` | Ao alterar o valor (Checkbox, Switch, Select) | `field_name`, `value` | Componentes de seleção — não inputs de texto livre |
+| `field_change` | Ao alterar o valor (Checkbox, Switch, Select, Calendar, RadioGroup, Slider, Toggle) | `field_name`, `value` | Componentes de seleção — não inputs de texto livre. Para Calendar, `value` é ISO string |
 | `field_error` | Quando o campo exibe erro de validação | `field_name`, `error_type` | Identificar campos com alta taxa de erro |
 
 > **Regra importante**: nunca rastrear o `value` de campos sensíveis — senha, CPF, cartão de crédito.
