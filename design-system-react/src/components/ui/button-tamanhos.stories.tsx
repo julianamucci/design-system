@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "storybook/test";
 import { Plus } from "lucide-react";
 import { Button } from "./button";
 
@@ -56,6 +57,13 @@ export const Icon: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("Botão icon-only é acessível via aria-label", async () => {
+      const button = canvas.getByRole("button", { name: "Adicionar item" });
+      await expect(button).toBeInTheDocument();
+    });
+  },
 };
 
 export const IconSmall: Story = {
@@ -71,6 +79,13 @@ export const IconSmall: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("Botão icon-only é acessível via aria-label", async () => {
+      const button = canvas.getByRole("button", { name: "Adicionar item" });
+      await expect(button).toBeInTheDocument();
+    });
+  },
 };
 
 export const IconLarge: Story = {
@@ -85,5 +100,12 @@ export const IconLarge: Story = {
         story: "Botão ícone grande (40×40). Use como FAB ou CTAs visuais.",
       },
     },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("Botão icon-only é acessível via aria-label", async () => {
+      const button = canvas.getByRole("button", { name: "Adicionar item" });
+      await expect(button).toBeInTheDocument();
+    });
   },
 };

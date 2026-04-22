@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { within, expect } from 'storybook/test';
 import { Plus } from 'lucide-vue-next';
 import { Button } from './index';
 
@@ -34,6 +35,14 @@ export const Large: Story = {
   parameters: { docs: { description: { story: 'Tamanho grande (40px). Use em CTAs de destaque e hero sections.' } } },
 };
 
+const iconAriaLabelPlay: Story['play'] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
+  await step('Botão icon-only é acessível via aria-label', async () => {
+    const button = canvas.getByRole('button', { name: 'Adicionar item' });
+    await expect(button).toBeInTheDocument();
+  });
+};
+
 export const Icon: Story = {
   render: () => ({
     components: { Button, Plus },
@@ -44,6 +53,7 @@ export const Icon: Story = {
     `,
   }),
   parameters: { docs: { description: { story: 'Botão ícone padrão (36×36). Sempre forneça aria-label descritivo.' } } },
+  play: iconAriaLabelPlay,
 };
 
 export const IconSmall: Story = {
@@ -56,6 +66,7 @@ export const IconSmall: Story = {
     `,
   }),
   parameters: { docs: { description: { story: 'Botão ícone pequeno (32×32). Use em toolbars compactas.' } } },
+  play: iconAriaLabelPlay,
 };
 
 export const IconLarge: Story = {
@@ -68,4 +79,5 @@ export const IconLarge: Story = {
     `,
   }),
   parameters: { docs: { description: { story: 'Botão ícone grande (40×40). Use como FAB ou CTAs visuais.' } } },
+  play: iconAriaLabelPlay,
 };

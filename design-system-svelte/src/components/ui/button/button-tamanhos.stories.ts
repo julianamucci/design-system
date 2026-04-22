@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { within, expect } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 
@@ -25,17 +26,28 @@ export const Large: Story = {
   parameters: { docs: { description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' } } },
 };
 
+const iconAriaLabelPlay: Story['play'] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
+  await step('Botão icon-only é acessível via aria-label', async () => {
+    const button = canvas.getByRole('button', { name: 'Adicionar item' });
+    await expect(button).toBeInTheDocument();
+  });
+};
+
 export const Icon: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
   parameters: { docs: { description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' } } },
+  play: iconAriaLabelPlay,
 };
 
 export const IconSmall: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-sm', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
   parameters: { docs: { description: { story: 'Botão ícone pequeno. Use em toolbars compactas.' } } },
+  play: iconAriaLabelPlay,
 };
 
 export const IconLarge: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-lg', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
   parameters: { docs: { description: { story: 'Botão ícone grande. Use como FAB ou CTAs visuais.' } } },
+  play: iconAriaLabelPlay,
 };
