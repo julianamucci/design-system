@@ -9,7 +9,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Tamanhos do Avatar via className. Não existe prop size — use h-6/h-8/h-10/h-12 com w equivalente.',
+          'Tamanhos do Avatar via className. Não existe prop size — use h-6/h-8 (padrão)/h-10/h-12 com w equivalente.',
       },
     },
   },
@@ -40,22 +40,22 @@ export const Size6: Story = {
 
 export const Size8: Story = {
   parameters: {
-    docs: { description: { story: 'Tamanho médio-compacto (h-8 w-8) — comentários e chips.' } },
+    docs: { description: { story: 'Tamanho padrão do componente (h-8 w-8) — comentários e chips.' } },
   },
   render: () => buildAvatar('h-8 w-8'),
-};
-
-export const Size10: Story = {
-  parameters: {
-    docs: { description: { story: 'Tamanho padrão do componente (h-10 w-10).' } },
-  },
-  render: () => buildAvatar('h-10 w-10'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     // hidden:true — img começa com display:none até o load completar.
     const img = (await canvas.findByRole('img', { hidden: true })) as HTMLImageElement;
     await expect(img).toBeInTheDocument();
   },
+};
+
+export const Size10: Story = {
+  parameters: {
+    docs: { description: { story: 'Tamanho médio-grande (h-10 w-10).' } },
+  },
+  render: () => buildAvatar('h-10 w-10'),
 };
 
 export const Size12: Story = {

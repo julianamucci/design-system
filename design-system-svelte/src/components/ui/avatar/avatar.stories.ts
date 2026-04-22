@@ -17,11 +17,11 @@ const meta = {
     class: {
       control: 'select',
       options: ['h-6 w-6', 'h-8 w-8', 'h-10 w-10', 'h-12 w-12'],
-      description: 'Classe Tailwind para ajustar o diâmetro (padrão: h-10 w-10).',
+      description: 'Classe Tailwind para ajustar o diâmetro (padrão: h-8 w-8).',
     },
   },
   args: {
-    class: 'h-10 w-10',
+    class: '',
   },
 } satisfies Meta<typeof Avatar>;
 
@@ -33,7 +33,7 @@ export const Playground: Story = {
     Component: AvatarStory,
     props: {
       variant: 'image',
-      sizeClass: args.class ?? 'h-10 w-10',
+      sizeClass: args.class ?? '',
       src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=60',
       alt: 'Foto de perfil de Maria Rodrigues',
       initials: 'MR',

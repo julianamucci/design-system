@@ -10,7 +10,7 @@ type AvatarArgs = {
   src: string;
   alt: string;
   fallback: string;
-  size: 'h-6 w-6' | 'h-8 w-8' | 'h-10 w-10' | 'h-12 w-12';
+  size: '' | 'h-6 w-6' | 'h-8 w-8' | 'h-10 w-10' | 'h-12 w-12';
 };
 
 const meta: Meta<AvatarArgs> = {
@@ -25,15 +25,15 @@ const meta: Meta<AvatarArgs> = {
     fallback: { control: 'text', description: 'Iniciais exibidas quando a imagem falha ou está ausente.' },
     size: {
       control: 'select',
-      options: ['h-6 w-6', 'h-8 w-8', 'h-10 w-10', 'h-12 w-12'],
-      description: 'Tamanho do Avatar via className (não existe prop size).',
+      options: ['', 'h-6 w-6', 'h-8 w-8', 'h-10 w-10', 'h-12 w-12'],
+      description: 'Tamanho do Avatar via className (não existe prop size). Padrão: h-8 w-8.',
     },
   },
   args: {
     src: 'https://github.com/shadcn.png',
     alt: 'Foto de perfil de Maria Rodrigues',
     fallback: 'MR',
-    size: 'h-10 w-10',
+    size: '',
   },
 };
 

@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Tamanhos são controlados via className (h-6 w-6, h-8 w-8, h-10 w-10 padrão, h-12 w-12). Não existe prop size.',
+          'Tamanhos são controlados via className (h-6 w-6, h-8 w-8 padrão, h-10 w-10, h-12 w-12). Não existe prop size.',
       },
     },
   },
@@ -36,11 +36,12 @@ export const Size6: Story = {
 };
 
 export const Size8: Story = {
+  name: 'Size8 (default)',
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback },
     setup() { return { demoSrc, demoAlt }; },
     template: `
-      <Avatar class="h-8 w-8">
+      <Avatar>
         <AvatarImage :src="demoSrc" :alt="demoAlt" />
         <AvatarFallback class="text-xs">MR</AvatarFallback>
       </Avatar>
@@ -49,12 +50,11 @@ export const Size8: Story = {
 };
 
 export const Size10: Story = {
-  name: 'Size10 (default)',
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback },
     setup() { return { demoSrc, demoAlt }; },
     template: `
-      <Avatar>
+      <Avatar class="h-10 w-10">
         <AvatarImage :src="demoSrc" :alt="demoAlt" />
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>

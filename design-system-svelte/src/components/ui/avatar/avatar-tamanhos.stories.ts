@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Tamanhos do Avatar aplicados via className (não via prop): h-6, h-8, h-10 (padrão) e h-12.',
+          'Tamanhos do Avatar aplicados via className (não via prop): h-6, h-8 (padrão), h-10 e h-12.',
       },
     },
   },
@@ -35,7 +35,7 @@ export const Size6: Story = {
 };
 
 export const Size8: Story = {
-  name: 'h-8 w-8',
+  name: 'h-8 w-8 (default)',
   render: () => ({
     Component: AvatarStory,
     props: { ...baseProps, sizeClass: 'h-8 w-8' },
@@ -43,7 +43,7 @@ export const Size8: Story = {
 };
 
 export const Size10: Story = {
-  name: 'h-10 w-10 (default)',
+  name: 'h-10 w-10',
   render: () => ({
     Component: AvatarStory,
     props: { ...baseProps, sizeClass: 'h-10 w-10' },

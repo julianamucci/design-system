@@ -19,7 +19,7 @@ const meta = {
     className: {
       control: "text",
       description:
-        "Classes Tailwind adicionais. Use `h-6 w-6`, `h-8 w-8`, `h-10 w-10` (padrão) ou `h-12 w-12` para ajustar o tamanho.",
+        "Classes Tailwind adicionais. Use `h-6 w-6`, `h-8 w-8` (padrão), `h-10 w-10` ou `h-12 w-12` para ajustar o tamanho.",
     },
   },
   args: {
