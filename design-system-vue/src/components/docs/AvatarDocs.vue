@@ -343,6 +343,92 @@ const visualTestItems = computed(() => [
   { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
   { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
 ]);
+
+// ─── Computed props (estabilizam referências para filhos) ────────────────────
+
+const whenToUseGuidelines = computed(() => ({
+  title: tContent('usage.guidelines.title'),
+  items: [tContent('usage.guidelines.item1'), tContent('usage.guidelines.item2'), tContent('usage.guidelines.item3'), tContent('usage.guidelines.item4')],
+}));
+
+const whenToUseScenarios = computed(() => ({
+  title: tContent('usage.scenarios.title'),
+  cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
+  items: [
+    { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
+    { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
+    { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
+    { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
+  ],
+}));
+
+const whenToUseUxWriting = computed(() => ({
+  title: tContent('usage.uxWriting.title'),
+  cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
+  items: [
+    { element: tContent('usage.uxWriting.table.alt.name'), rules: tContent('usage.uxWriting.table.alt.format'), do: tContent('usage.uxWriting.table.alt.good'), dont: tContent('usage.uxWriting.table.alt.bad') },
+    { element: tContent('usage.uxWriting.table.initials.name'), rules: tContent('usage.uxWriting.table.initials.format'), do: tContent('usage.uxWriting.table.initials.good'), dont: tContent('usage.uxWriting.table.initials.bad') },
+    { element: tContent('usage.uxWriting.table.status.name'), rules: tContent('usage.uxWriting.table.status.format'), do: tContent('usage.uxWriting.table.status.good'), dont: tContent('usage.uxWriting.table.status.bad') },
+    { element: tContent('usage.uxWriting.table.decorative.name'), rules: tContent('usage.uxWriting.table.decorative.format'), do: tContent('usage.uxWriting.table.decorative.good'), dont: tContent('usage.uxWriting.table.decorative.bad') },
+  ],
+}));
+
+const whenToUseDo = computed(() => ({
+  title: tContent('usage.do.title'),
+  items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')],
+}));
+
+const whenToUseDont = computed(() => ({
+  title: tContent('usage.dont.title'),
+  items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3')],
+}));
+
+const doDontPairs = computed(() => [
+  { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
+  { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+]);
+
+const statesCols = computed(() => ({
+  state: tContent('states.cols.state'),
+  trigger: tContent('states.cols.trigger'),
+  behavior: tContent('states.cols.behavior'),
+}));
+
+const propsTables = computed(() => [
+  { title: tContent('props.avatarTitle'),         cols: propCols.value, items: avatarPropItems.value         },
+  { title: tContent('props.avatarImageTitle'),    cols: propCols.value, items: avatarImagePropItems.value    },
+  { title: tContent('props.avatarFallbackTitle'), cols: propCols.value, items: avatarFallbackPropItems.value },
+]);
+
+const tokensCols = computed(() => ({
+  token: tContent('tokens.table.token'),
+  value: tContent('tokens.table.class'),
+  description: tContent('tokens.table.part'),
+}));
+
+const analyticsCols = computed(() => ({
+  event: tContent('analytics.table.event'),
+  trigger: tContent('analytics.table.trigger'),
+  payload: tContent('analytics.table.payload'),
+}));
+
+const testesFunctional = computed(() => ({
+  title: tContent('testes.functional.title'),
+  cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
+  items: functionalTestItems.value,
+}));
+
+const testesAccessibility = computed(() => ({
+  title: tContent('testes.accessibility.title'),
+  cols: a11yCritCols.value,
+  items: a11yTestItems.value,
+}));
+
+const testesVisual = computed(() => ({
+  title: tContent('testes.visual.title'),
+  cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
+  items: visualTestItems.value,
+}));
 </script>
 
 <template>
@@ -432,41 +518,17 @@ const visualTestItems = computed(() => [
         <!-- ── Quando Usar ────────────────────────────────────────────── -->
         <DocsWhenToUse
           :title="tContent('usage.title')"
-          :guidelines="{
-            title: tContent('usage.guidelines.title'),
-            items: [tContent('usage.guidelines.item1'), tContent('usage.guidelines.item2'), tContent('usage.guidelines.item3'), tContent('usage.guidelines.item4')],
-          }"
-          :scenarios="{
-            title: tContent('usage.scenarios.title'),
-            cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
-            items: [
-              { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
-              { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-              { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
-              { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
-            ],
-          }"
-          :ux-writing="{
-            title: tContent('usage.uxWriting.title'),
-            cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
-            items: [
-              { element: tContent('usage.uxWriting.table.alt.name'), rules: tContent('usage.uxWriting.table.alt.format'), do: tContent('usage.uxWriting.table.alt.good'), dont: tContent('usage.uxWriting.table.alt.bad') },
-              { element: tContent('usage.uxWriting.table.initials.name'), rules: tContent('usage.uxWriting.table.initials.format'), do: tContent('usage.uxWriting.table.initials.good'), dont: tContent('usage.uxWriting.table.initials.bad') },
-              { element: tContent('usage.uxWriting.table.status.name'), rules: tContent('usage.uxWriting.table.status.format'), do: tContent('usage.uxWriting.table.status.good'), dont: tContent('usage.uxWriting.table.status.bad') },
-              { element: tContent('usage.uxWriting.table.decorative.name'), rules: tContent('usage.uxWriting.table.decorative.format'), do: tContent('usage.uxWriting.table.decorative.good'), dont: tContent('usage.uxWriting.table.decorative.bad') },
-            ],
-          }"
-          :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
-          :dont="{ title: tContent('usage.dont.title'), items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3')] }"
+          :guidelines="whenToUseGuidelines"
+          :scenarios="whenToUseScenarios"
+          :ux-writing="whenToUseUxWriting"
+          :do="whenToUseDo"
+          :dont="whenToUseDont"
         />
 
         <!-- ── Do & Don't ─────────────────────────────────────────────── -->
         <DocsDoDont
           :title="tContent('doDont.title')"
-          :pairs="[
-            { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-            { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
-          ]"
+          :pairs="doDontPairs"
         >
           <template #do-preview-0>
             <Avatar>
@@ -556,18 +618,14 @@ const visualTestItems = computed(() => [
         <!-- ── Configurações (States) ──────────────────────────────────── -->
         <DocsStates
           :title="tContent('states.title')"
-          :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+          :cols="statesCols"
           :items="stateItems"
         />
 
         <!-- ── Propriedades ───────────────────────────────────────────── -->
         <DocsProps
           :title="tContent('props.title')"
-          :tables="[
-            { title: tContent('props.avatarTitle'),         cols: propCols, items: avatarPropItems         },
-            { title: tContent('props.avatarImageTitle'),    cols: propCols, items: avatarImagePropItems    },
-            { title: tContent('props.avatarFallbackTitle'), cols: propCols, items: avatarFallbackPropItems },
-          ]"
+          :tables="propsTables"
           :interface-code="interfaceCode"
           :extensibility-title="tContent('props.extensibilityTitle')"
           :extensibility-notes="tContent('props.extensibility')"
@@ -576,7 +634,7 @@ const visualTestItems = computed(() => [
         <!-- ── Tokens ─────────────────────────────────────────────────── -->
         <DocsTokens
           :title="tContent('tokens.title')"
-          :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
+          :cols="tokensCols"
           :items="tokenRows"
           :customization-title="tContent('tokens.customizationTitle')"
           :customization-code="codeCustomizationTokens"
@@ -600,28 +658,16 @@ const visualTestItems = computed(() => [
         <!-- ── Analytics ─────────────────────────────────────────────── -->
         <DocsAnalytics
           :title="tContent('analytics.title')"
-          :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+          :cols="analyticsCols"
           :items="analyticsItems"
         />
 
         <!-- ── Testes ─────────────────────────────────────────────────── -->
         <DocsTestes
           :title="tContent('testes.title')"
-          :functional="{
-            title: tContent('testes.functional.title'),
-            cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
-            items: functionalTestItems,
-          }"
-          :accessibility="{
-            title: tContent('testes.accessibility.title'),
-            cols: a11yCritCols,
-            items: a11yTestItems,
-          }"
-          :visual="{
-            title: tContent('testes.visual.title'),
-            cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
-            items: visualTestItems,
-          }"
+          :functional="testesFunctional"
+          :accessibility="testesAccessibility"
+          :visual="testesVisual"
         />
   </DocsPageLayout>
 </template>
