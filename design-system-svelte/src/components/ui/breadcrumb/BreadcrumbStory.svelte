@@ -37,10 +37,6 @@
       </BreadcrumbItem>
       <BreadcrumbSeparator />
       <BreadcrumbItem>
-        <BreadcrumbLink href="#">Navegação</BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbSeparator />
-      <BreadcrumbItem>
         <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
       </BreadcrumbItem>
     </BreadcrumbList>

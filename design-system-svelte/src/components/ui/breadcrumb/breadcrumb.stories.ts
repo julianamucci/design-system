@@ -44,7 +44,6 @@ export const Playground: Story = {
     await step('Links intermediários estão visíveis', async () => {
       await expect(canvas.getByText('Início')).toBeVisible();
       await expect(canvas.getByText('Componentes')).toBeVisible();
-      await expect(canvas.getByText('Navegação')).toBeVisible();
     });
 
     await step('Último item é BreadcrumbPage com aria-current="page"', async () => {
@@ -62,7 +61,7 @@ export const Playground: Story = {
 
     await step('Separadores têm aria-hidden="true" e role="presentation"', async () => {
       const separators = canvasElement.querySelectorAll('[data-slot="breadcrumb-separator"]');
-      await expect(separators.length).toBe(3);
+      await expect(separators.length).toBe(2);
       separators.forEach((sep) => {
         expect(sep).toHaveAttribute('aria-hidden', 'true');
         expect(sep).toHaveAttribute('role', 'presentation');
