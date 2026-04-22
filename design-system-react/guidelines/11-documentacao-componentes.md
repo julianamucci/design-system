@@ -940,3 +940,27 @@ Componentes como **Calendar** (`react-day-picker v9`: `Calendar`, `CalendarDayBu
     
     Documentar nos `props.table.mode`/`selected`/`onSelect` que os 3 são interdependentes. Stories devem ter uma variação por `mode` para validar isolamento de tipos.
 14. **`classNames` map** — override granular por slot do `react-day-picker`. Lista de slots válidos: `root`, `months`, `month`, `nav`, `button_previous`, `button_next`, `month_caption`, `caption_label`, `table`, `weekdays`, `weekday`, `week`, `day`, `selected`, `today`, `outside`, `disabled`, `range_start`, `range_middle`, `range_end`. Documentar em `props.table.classNames` que o override é aditivo — usar sempre junto com `cn()` para não apagar os defaults.
+
+### Containers Estruturais com prop `size` (padrão Card)
+
+Componentes como **Card** (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter`) são containers estruturais compostos. **Não usam `cva()`** — em vez disso, têm prop `size="default"|"sm"` que propaga via `data-size` no root e subcomponentes reagem via seletores `group-data-[size=sm]/card`. Categoria **Layout**, translations em `docs/shared/content/card/translations.json`.
+
+1. **Sem `cva()` / com prop `size`** — a variação visual vem da prop `size` em vez de variants de `cva()`. O Card aplica `data-size={size}` no root e os subcomponentes consultam esse atributo via `group-data-[size=sm]/card:*` (padding, font-size). **Não criar variantes `cva()`.**
+2. **`DocsVariants`** — **title**: "Tamanhos e Composições". `items` com 5 entradas: `default`, `sm` (tamanhos), `withFooter`, `withAction`, `withImage` (composições). A nota (`variants.note`) deixa claro que não são variantes `cva()` — são `size` + composição de subcomponentes.
+3. **`DocsAnatomy`** — 7 items (um por subcomponente): Card (root), CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter. `structureCode` mostra a composição hierárquica.
+4. **`DocsStates`** — 5 linhas: `default`, `small`, `interactive`, `withImage`, `withFooter`. Omitir `disabled`/`loading` (Card é passivo).
+5. **`DocsProps`** — **7 tabelas** (uma por subcomponente). O Card tem `size` + `className` + `children`; demais subcomponentes aceitam `className` + atributos HTML nativos de `<div>`. Todos estendem `React.ComponentProps<"div">` via `...props`.
+6. **`DocsTokens`** — 7 tokens: `--radius-card` (CSS var local aplicada via `rounded-(--radius-card)`), `--card` (fundo), `--card-foreground` (texto), `--muted` (footer `bg-muted/50`), `--muted-foreground` (CardDescription), `--foreground` (ring `ring-foreground/10`), `--border` (divisor acima do CardFooter).
+7. **`DocsAccessibility`** — regras obrigatórias:
+   - Container **passivo** — Card não recebe foco nem eventos de teclado
+   - `CardTitle` como âncora via `aria-labelledby` quando o Card é anunciado como região
+   - `aria-label` contextual em botões internos (listas de cards exigem `"Excluir produto Cadeira X"` em vez de `"Excluir"`)
+   - Card clicável: envolver em `<a>` ou `<button>` com `aria-label` descritivo — **não usar `onClick` no root**
+   - `CardAction` preserva ordem DOM mesmo com grid `[1fr_auto]`
+8. **`DocsAnalytics`** — Card é estrutural: listar apenas `docs_page_view`/`docs_section_viewed`/`language_switched` por padrão. Incluir `button_click` (quando há Button no footer) e `card_click` (quando o Card inteiro é navegável via wrapper `<a>`/`<button>`).
+9. **`DocsDoDont`** — pares canônicos: (a) Card com título + descrição + ações vs Card como divisor visual; (b) botões com `aria-label` contextual vs botões ambíguos em listas.
+10. **Stories** — criar 4 arquivos: `card.stories.tsx` (Playground + `tags: ["autodocs"]` + `withAutoDocsTab(CardDocs)`), `card-tamanhos.stories.tsx` (Default, Small), `card-composicoes.stories.tsx` (WithFooter, WithAction, WithImage, ProductCard, MetricCard, ProfileCard), `card-estados.stories.tsx` (Default, Clickable, WithFooter). **Não criar** `card-variantes.stories.tsx` — Card não tem `cva()`. Apenas o arquivo principal leva `tags: ["autodocs"]`.
+11. **`data-size` contagioso** — regra visual absoluta: a prop `size` só fica no Card root. Os subcomponentes **nunca** aceitam prop `size` — eles reagem via `group-data-[size=sm]/card:*` consultando o atributo do root. Documentar em `notes.tip3`.
+12. **`CardFooter` detecta-se via `has-`** — o Card usa `has-data-[slot=card-footer]:pb-0` para absorver o padding inferior quando o footer existe. Sem isso, o footer dobra o espaçamento visual. Documentar em `notes.tip1`.
+13. **Imagem como primeiro/último filho** — o Card aplica `*:[img:first-child]:rounded-t-(--radius-card)` e `*:[img:last-child]:rounded-b-(--radius-card)` + remove o padding correspondente (`has-[>img:first-child]:pt-0`). Não precisa classes manuais nas imagens. Documentar em `notes.tip2`.
+14. **`CardAction` como grid slot** — `grid-cols-[1fr_auto]` ativado apenas quando `CardAction` está presente (via `has-data-[slot=card-action]`). A ação fica à direita mantendo ordem DOM original — leitores de tela anunciam na ordem lógica (título → descrição → ação), não na ordem visual (título → ação → descrição).

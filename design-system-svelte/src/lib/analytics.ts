@@ -92,6 +92,13 @@ interface AnalyticsEvents {
     label?: string;
     location?: string;
   };
+
+  card_click: {
+    component: "card";
+    label: string;
+    destination?: string;
+    location?: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

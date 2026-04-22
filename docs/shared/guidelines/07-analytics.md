@@ -174,6 +174,16 @@ interface WithFieldName {
 
 ---
 
+#### Card (quando envolvido em `<a>`/`<button>`)
+
+| Evento | Quando disparar | Payload adicional |
+|--------|----------------|-------------------|
+| `card_click` | Clique em Card totalmente navegável (envolvido em `<a>`/`<button>`) | `label` (CardTitle), `destination` |
+
+> **Regra**: rastreie `card_click` apenas quando o Card inteiro é um target navegável. Se há botões dentro do footer, rastreie `button_click` neles individualmente.
+
+---
+
 #### Breadcrumb / Navigation Menu
 
 | Evento | Quando disparar | Payload adicional |
@@ -318,7 +328,7 @@ type ComponentName =
   | "language_switcher";
 
 type EventName =
-  | "button_click"
+  | "button_click" | "card_click"
   | "form_submit" | "form_error" | "form_abandon"
   | "field_focus" | "field_blur" | "field_change" | "field_error"
   | "dialog_open" | "dialog_close" | "dialog_confirm"
