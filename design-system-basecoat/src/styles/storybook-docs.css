@@ -24,6 +24,8 @@
   --sb-docs-color-text: hsl(var(--foreground));
   --sb-docs-color-secondary-text: hsl(var(--muted-foreground));
   border-radius: revert-layer !important;
+  border: revert-layer !important;
+  box-shadow: revert-layer !important;
 }
 
 .ds-docs *:not([style*="padding"]) {
