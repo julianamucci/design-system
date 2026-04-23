@@ -25,7 +25,7 @@ function scrollTo(id: string) {
 }
 
 const BUTTON_BASE =
-  'w-full text-left px-2 py-1.5 text-sm rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+  'w-full text-left px-2 py-1.5 text-sm rounded-(--radius-button) transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 const BUTTON_ACTIVE = 'bg-primary/10 text-primary font-medium';
 const BUTTON_INACTIVE = 'text-muted-foreground hover:text-foreground hover:bg-muted/50';
 

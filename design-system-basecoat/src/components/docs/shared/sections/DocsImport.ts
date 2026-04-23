@@ -1,3 +1,5 @@
+import { createCard } from '@/components/ui/card';
+
 export interface DocsImportProps {
   title: string;
   description?: string;
@@ -30,8 +32,7 @@ export function createDocsImport(props: DocsImportProps): HTMLElement {
     section.appendChild(p);
   }
 
-  const codeBlock = document.createElement('div');
-  codeBlock.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto';
+  const codeBlock = createCard({ className: 'bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none' });
   const codeEl = document.createElement('code');
   codeEl.className = 'whitespace-pre';
   codeEl.textContent = props.code;
@@ -45,8 +46,7 @@ export function createDocsImport(props: DocsImportProps): HTMLElement {
       p2.textContent = props.secondaryDescription;
       section.appendChild(p2);
     }
-    const codeBlock2 = document.createElement('div');
-    codeBlock2.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-3';
+    const codeBlock2 = createCard({ className: 'bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-3' });
     const codeEl2 = document.createElement('code');
     codeEl2.className = 'whitespace-pre';
     codeEl2.textContent = props.secondaryCode;

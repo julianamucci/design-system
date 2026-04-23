@@ -68,8 +68,7 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
       }
       toggle.setAttribute('data-track-label', 'Copiar código');
 
-      const codeBlock = document.createElement('div');
-      codeBlock.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-2 hidden';
+      const codeBlock = createCard({ className: 'bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-2 hidden' });
       const codeEl = document.createElement('code');
       codeEl.className = 'whitespace-pre';
       codeEl.textContent = item.code;

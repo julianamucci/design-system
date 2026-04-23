@@ -1,5 +1,6 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { createComponentDemo } from '@/components/ComponentDemo';
+import { createCard } from '@/components/ui/card';
 
 export interface DocsAnatomyProps {
   title: string;
@@ -30,8 +31,7 @@ export function createDocsAnatomy(props: DocsAnatomyProps): HTMLElement {
     ol.appendChild(li);
   });
 
-  const codeBlock = document.createElement('div');
-  codeBlock.className = 'rounded-lg bg-muted/50 border border-border/40 px-4 pt-3 pb-4 overflow-x-auto';
+  const codeBlock = createCard({ className: 'bg-muted/50 border-border/40 shadow-none px-4 pt-3 pb-4 overflow-x-auto' });
   if (props.structureLabel) {
     const label = document.createElement('p');
     label.className = 'text-xs text-muted-foreground mb-2';

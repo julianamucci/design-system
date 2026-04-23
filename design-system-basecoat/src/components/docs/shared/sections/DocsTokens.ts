@@ -54,8 +54,7 @@ export function createDocsTokens(props: DocsTokensProps): HTMLElement {
     customH3.textContent = props.customizationTitle;
     customBlock.appendChild(customH3);
     if (props.customizationCode) {
-      const codeBlock = document.createElement('div');
-      codeBlock.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto';
+      const codeBlock = createCard({ className: 'bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none' });
       const codeEl = document.createElement('code');
       codeEl.className = 'whitespace-pre';
       codeEl.textContent = props.customizationCode;

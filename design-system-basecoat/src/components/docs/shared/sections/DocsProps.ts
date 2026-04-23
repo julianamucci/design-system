@@ -74,8 +74,7 @@ export function createDocsProps(props: DocsPropsProps): HTMLElement {
   props.tables.forEach(def => container.appendChild(buildTable(def)));
 
   if (props.interfaceCode) {
-    const codeBlock = document.createElement('div');
-    codeBlock.className = 'bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto';
+    const codeBlock = createCard({ className: 'bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none' });
     const codeEl = document.createElement('code');
     codeEl.className = 'whitespace-pre';
     codeEl.textContent = props.interfaceCode;

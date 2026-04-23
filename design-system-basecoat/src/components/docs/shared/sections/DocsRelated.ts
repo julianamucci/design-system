@@ -34,7 +34,7 @@ export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
     const a = document.createElement('a');
     a.href = item.path;
     a.target = '_top';
-    a.className = `${btnClass('ghost', 'default')} text-left rounded-xl p-4 shadow-sm bg-card hover:bg-muted/50 transition-colors space-y-1 cursor-pointer h-auto flex-col items-start whitespace-normal w-full`;
+    a.className = `${btnClass('ghost', 'default')} text-left p-4 border bg-card hover:bg-muted/50 transition-colors space-y-1 cursor-pointer h-auto flex-col items-start whitespace-normal w-full`;
     a.setAttribute('data-track', 'related');
     if (props.componentSlug) {
       a.setAttribute('data-track-id', `${props.componentSlug}:related:${slugify(item.name)}`);
