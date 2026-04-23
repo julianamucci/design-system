@@ -37,9 +37,9 @@ defineProps<{
       </Card>
       <div v-if="customizationTitle" class="space-y-3">
         <h3 class="text-base font-semibold">{{ customizationTitle }}</h3>
-        <div v-if="customizationCode" class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">
+        <Card v-if="customizationCode" class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
           <code class="whitespace-pre">{{ customizationCode }}</code>
-        </div>
+        </Card>
       </div>
     </div>
   </section>

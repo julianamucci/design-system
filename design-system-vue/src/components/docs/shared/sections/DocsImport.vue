@@ -8,6 +8,8 @@
  * `data-track-id="{slug}:code:import-primary"` (ou `import-secondary`) +
  * `data-track-label="Copiar import"`.
  */
+import { Card } from '@/components/ui/card';
+
 defineProps<{
   title: string;
   description?: string;
@@ -22,14 +24,14 @@ defineProps<{
   <section id="importacao">
     <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
     <p v-if="description" class="text-sm text-muted-foreground mb-3">{{ description }}</p>
-    <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">
+    <Card class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
       <code class="whitespace-pre">{{ code }}</code>
-    </div>
+    </Card>
     <template v-if="secondaryCode">
       <p v-if="secondaryDescription" class="text-sm text-muted-foreground mt-4 mb-3">{{ secondaryDescription }}</p>
-      <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-3">
+      <Card class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-3">
         <code class="whitespace-pre">{{ secondaryCode }}</code>
-      </div>
+      </Card>
     </template>
   </section>
 </template>

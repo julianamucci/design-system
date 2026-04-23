@@ -55,9 +55,9 @@ defineProps<{
             </Table>
         </Card>
       </div>
-      <div v-if="interfaceCode" class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">
+      <Card v-if="interfaceCode" class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
         <code class="whitespace-pre">{{ interfaceCode }}</code>
-      </div>
+      </Card>
       <div v-if="extensibilityTitle" class="space-y-2">
         <h3 class="text-base font-semibold">{{ extensibilityTitle }}</h3>
         <div

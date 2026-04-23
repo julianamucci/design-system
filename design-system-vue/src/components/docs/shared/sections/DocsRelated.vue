@@ -36,7 +36,7 @@ function trackId(name: string): string | undefined {
         :href="item.path"
         target="_top"
         variant="ghost"
-        class="text-left h-auto p-4 border rounded-xl shadow-sm bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
+        class="text-left h-auto p-4 border bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
         data-track="related"
         :data-track-id="trackId(item.name)"
         :data-track-label="item.name"
