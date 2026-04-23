@@ -61,9 +61,9 @@
               {openStates[i] ? 'Ocultar código' : 'Ver código'}
             </Button>
             {#if openStates[i]}
-              <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-2">
+              <Card class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-2">
                 <code class="whitespace-pre">{item.code}</code>
-              </div>
+              </Card>
             {/if}
           </div>
         {/if}

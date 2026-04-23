@@ -39,7 +39,7 @@
               data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}
               data-track-label={section.label}
               class={[
-                'w-full text-left px-2 py-1.5 text-sm rounded-md transition-colors',
+                'w-full text-left px-2 py-1.5 text-sm rounded-(--radius-button) transition-colors',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                 activeSection === section.id
                   ? 'bg-primary/10 text-primary font-medium'

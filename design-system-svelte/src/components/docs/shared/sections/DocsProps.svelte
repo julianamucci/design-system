@@ -56,9 +56,9 @@
       </div>
     {/each}
     {#if interfaceCode}
-      <div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">
+      <Card class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
         <code class="whitespace-pre">{interfaceCode}</code>
-      </div>
+      </Card>
     {/if}
     {#if extensibilityTitle}
       <div class="space-y-2">

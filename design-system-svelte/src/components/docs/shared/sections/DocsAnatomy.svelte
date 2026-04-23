@@ -1,6 +1,7 @@
 <script lang="ts">
   import { sanitizeHtml } from '@/lib/sanitize-html';
   import ComponentDemo from '@/components/ComponentDemo.svelte';
+  import { Card } from '@/components/ui/card';
 
   const { title, items, structureCode, structureLabel }: {
     title: string;
@@ -24,12 +25,12 @@
             </li>
           {/each}
         </ol>
-        <div class="rounded-lg bg-muted/50 border border-border/40 px-4 pt-3 pb-4 overflow-x-auto">
+        <Card class="bg-muted/50 border-border/40 shadow-none px-4 pt-3 pb-4 overflow-x-auto">
           {#if structureLabel}
             <p class="text-xs text-muted-foreground mb-2">{structureLabel}</p>
           {/if}
           <pre class="font-mono text-sm whitespace-pre">{structureCode}</pre>
-      </div>
+        </Card>
     </div>
   </ComponentDemo>
 </section>
