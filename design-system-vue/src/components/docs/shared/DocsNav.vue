@@ -12,6 +12,8 @@ interface Group {
 defineProps<{
   groups: Group[];
   activeSection?: string;
+  /** Slug do componente — usado no data-track-id (ex: "alert" → `alert:nav:anatomia`). */
+  componentSlug?: string;
 }>();
 
 function scrollTo(id: string) {
@@ -30,6 +32,9 @@ function scrollTo(id: string) {
           <button
             type="button"
             :aria-current="activeSection === section.id ? 'location' : undefined"
+            data-track="nav"
+            :data-track-id="componentSlug ? `${componentSlug}:nav:${section.id}` : undefined"
+            :data-track-label="section.label"
             :class="[
               'w-full text-left px-2 py-1.5 text-sm rounded-md transition-colors',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',

@@ -93,6 +93,47 @@ interface AnalyticsEvents {
     destination?: string;
     location?: string;
   };
+
+  /** Clique em link do DocsNav (sidebar da docs page). */
+  docs_nav_click: {
+    component: string;
+    section_id: string;
+    label: string;
+  };
+
+  /** Clique em botão/trigger dentro de DocsDemonstration. */
+  docs_demo_click: {
+    component: string;
+    element_id: string;
+    label?: string;
+  };
+
+  /** Clique em card/botão dentro de DocsVariants. */
+  docs_variant_click: {
+    component: string;
+    variant_name: string;
+    label?: string;
+  };
+
+  /** Clique em botão copy de blocos de código. */
+  docs_code_copy: {
+    component: string;
+    snippet_id: string;
+  };
+
+  /** Clique em card do DocsRelated. */
+  docs_related_click: {
+    component: string;
+    target_slug: string;
+    label?: string;
+  };
+
+  /** Clique em link externo em notas, UX writing ou qualquer texto. */
+  docs_link_click: {
+    component: string;
+    section_id: string;
+    href: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

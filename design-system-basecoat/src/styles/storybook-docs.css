@@ -23,6 +23,7 @@
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
   --sb-docs-color-text: hsl(var(--foreground));
   --sb-docs-color-secondary-text: hsl(var(--muted-foreground));
+  border-radius: revert-layer !important;
 }
 
 .ds-docs *:not([style*="padding"]) {

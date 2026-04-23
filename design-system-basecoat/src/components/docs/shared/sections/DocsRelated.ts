@@ -2,7 +2,21 @@ import { sanitizeHtml } from '@/lib/sanitize-html';
 import { btnClass } from '@/components/ui/button';
 
 export interface DocsRelatedItem { name: string; description: string; path: string }
-export interface DocsRelatedProps { title: string; items: DocsRelatedItem[] }
+export interface DocsRelatedProps {
+  title: string;
+  items: DocsRelatedItem[];
+  /**
+   * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, cada
+   * card recebe `data-track="related"` +
+   * `data-track-id="{slug}:related:{item.name.slug}"` +
+   * `data-track-label={item.name}`. Se ausente, omite `data-track-id`.
+   */
+  componentSlug?: string;
+}
+
+function slugify(s: string) {
+  return s.toLowerCase().replace(/\s+/g, '-');
+}
 
 export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
   const section = document.createElement('section');
@@ -21,6 +35,11 @@ export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
     a.href = item.path;
     a.target = '_top';
     a.className = `${btnClass('ghost', 'default')} text-left rounded-xl p-4 shadow-sm bg-card hover:bg-muted/50 transition-colors space-y-1 cursor-pointer h-auto flex-col items-start whitespace-normal w-full`;
+    a.setAttribute('data-track', 'related');
+    if (props.componentSlug) {
+      a.setAttribute('data-track-id', `${props.componentSlug}:related:${slugify(item.name)}`);
+    }
+    a.setAttribute('data-track-label', item.name);
     a.innerHTML = `
       <p class="text-sm font-semibold text-primary">${sanitizeHtml(item.name)}</p>
       <p class="text-xs text-muted-foreground leading-relaxed">${sanitizeHtml(item.description)}</p>`;

@@ -11,6 +11,8 @@ export interface DocsNavGroup {
 export interface DocsNavProps {
   groups: DocsNavGroup[];
   activeSection?: string;
+  /** Slug do componente — usado no data-track-id (ex: "alert" → `alert:nav:anatomia`). */
+  componentSlug?: string;
 }
 
 export interface DocsNavHandle {
@@ -52,6 +54,11 @@ export function createDocsNav(props: DocsNavProps): DocsNavHandle {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.textContent = section.label;
+      btn.setAttribute('data-track', 'nav');
+      if (props.componentSlug) {
+        btn.setAttribute('data-track-id', `${props.componentSlug}:nav:${section.id}`);
+      }
+      btn.setAttribute('data-track-label', section.label);
       btn.addEventListener('click', () => scrollTo(section.id));
 
       buttons.set(section.id, btn);

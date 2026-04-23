@@ -205,7 +205,7 @@ export function createBreadcrumbDocs(): HTMLElement {
     }));
   }
 
-  const pageLayout = createDocsPageLayout({ navGroups: buildNavGroups() });
+  const pageLayout = createDocsPageLayout({ navGroups: buildNavGroups(), componentSlug: 'breadcrumb' });
   const root = pageLayout.root;
   const headerSlot = pageLayout.headerSlot;
   const main = pageLayout.main;

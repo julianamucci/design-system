@@ -409,6 +409,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
     <DocsPageLayout
       navGroups={navGroups}
       activeSection={activeId}
+      componentSlug="breadcrumb"
       header={
         <DocsHeader
           title={tContent("title")}

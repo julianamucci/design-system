@@ -1,10 +1,20 @@
 <script lang="ts">
-  const { title, description, code, secondaryCode, secondaryDescription }: {
+  /**
+   * DocsImport — bloco de snippet de importação.
+   *
+   * `componentSlug` é informativo: o snippet renderizado atualmente é apenas
+   * um bloco `<code>` estático, sem botão de "copiar". Se uma futura iteração
+   * adicionar o botão, ele deverá receber `data-track="code"` +
+   * `data-track-id="{slug}:code:import-primary"` (ou `import-secondary`) +
+   * `data-track-label="Copiar import"`.
+   */
+  const { title, description, code, secondaryCode, secondaryDescription, componentSlug }: {
     title: string;
     description?: string;
     code: string;
     secondaryCode?: string;
     secondaryDescription?: string;
+    componentSlug?: string;
   } = $props();
 </script>
 

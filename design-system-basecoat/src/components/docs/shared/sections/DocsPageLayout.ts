@@ -1,8 +1,11 @@
 import { createDocsNav, type DocsNavGroup, type DocsNavHandle } from '../DocsNav';
+import { mountDocsTracking } from '@/lib/docs-tracking';
 
 export interface DocsPageLayoutProps {
   navGroups: DocsNavGroup[];
   activeSection?: string;
+  /** Slug do componente — habilita tracking automático via data-track*. */
+  componentSlug?: string;
 }
 
 export interface DocsPageLayoutHandle {
@@ -16,6 +19,8 @@ export interface DocsPageLayoutHandle {
   rebuildNav(groups: DocsNavGroup[]): void;
   /** Updates the active nav button. */
   setActiveSection(id: string | undefined): void;
+  /** Cleanup do click observer de tracking. Chame ao desmontar. */
+  destroy(): void;
 }
 
 export function createDocsPageLayout(props: DocsPageLayoutProps): DocsPageLayoutHandle {
@@ -40,7 +45,11 @@ export function createDocsPageLayout(props: DocsPageLayoutProps): DocsPageLayout
   let navHandle: DocsNavHandle | null = null;
 
   function rebuildNav(groups: DocsNavGroup[]) {
-    navHandle = createDocsNav({ groups, activeSection: props.activeSection });
+    navHandle = createDocsNav({
+      groups,
+      activeSection: props.activeSection,
+      componentSlug: props.componentSlug,
+    });
     sidebar.replaceChildren(navHandle.element);
   }
 
@@ -50,5 +59,16 @@ export function createDocsPageLayout(props: DocsPageLayoutProps): DocsPageLayout
 
   rebuildNav(props.navGroups);
 
-  return { root, headerSlot, main, rebuildNav, setActiveSection };
+  const trackingCleanup = props.componentSlug
+    ? mountDocsTracking(root, { componentSlug: props.componentSlug })
+    : () => {};
+
+  return {
+    root,
+    headerSlot,
+    main,
+    rebuildNav,
+    setActiveSection,
+    destroy: trackingCleanup,
+  };
 }

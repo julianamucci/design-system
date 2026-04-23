@@ -13,13 +13,15 @@ export interface DocsNavGroup {
 export interface DocsNavProps {
   groups: DocsNavGroup[];
   activeSection?: string;
+  /** Slug do componente (prefixo do `data-track-id` — ex: "alert" → `alert:nav:anatomia`). */
+  componentSlug?: string;
 }
 
 function scrollTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-export function DocsNav({ groups, activeSection }: DocsNavProps) {
+export function DocsNav({ groups, activeSection, componentSlug }: DocsNavProps) {
   return (
     <div className="space-y-6">
       {groups.map((group) => (
@@ -36,6 +38,9 @@ export function DocsNav({ groups, activeSection }: DocsNavProps) {
                     type="button"
                     onClick={() => scrollTo(section.id)}
                     aria-current={isActive ? 'location' : undefined}
+                    data-track="nav"
+                    data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}
+                    data-track-label={section.label}
                     className={[
                       'w-full text-left px-2 py-1.5 text-sm rounded-md transition-colors',
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',

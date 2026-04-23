@@ -1,10 +1,20 @@
 <script setup lang="ts">
+/**
+ * DocsImport — bloco de snippet de importação.
+ *
+ * `componentSlug` é informativo: o snippet renderizado atualmente é apenas um
+ * bloco `<code>` estático, sem botão de "copiar". Se uma futura iteração
+ * adicionar o botão, ele deverá receber `data-track="code"` +
+ * `data-track-id="{slug}:code:import-primary"` (ou `import-secondary`) +
+ * `data-track-label="Copiar import"`.
+ */
 defineProps<{
   title: string;
   description?: string;
   code: string;
   secondaryCode?: string;
   secondaryDescription?: string;
+  componentSlug?: string;
 }>();
 </script>
 

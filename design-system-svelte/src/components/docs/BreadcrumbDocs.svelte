@@ -265,7 +265,7 @@ interface BreadcrumbEllipsisProps {
 }`;
 </script>
 
-<DocsPageLayout navGroups={NAV_GROUPS} {activeSection}>
+<DocsPageLayout navGroups={NAV_GROUPS} {activeSection} componentSlug="breadcrumb">
   {#snippet header()}
     <DocsHeader
       title={$tStore('title')}

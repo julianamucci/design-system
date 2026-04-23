@@ -10,11 +10,28 @@
     preview: Snippet;
   }
 
-  const { title, items, id = 'variantes' }: { title: string; items: DocsVariantItem[]; id?: string } = $props();
+  /**
+   * DocsVariants — lista de variants.
+   *
+   * Quando `componentSlug` é informado, o botão "Ver código / Ocultar código"
+   * de cada variant recebe `data-track="code"` +
+   * `data-track-id="{slug}:code:{variant.name}"` +
+   * `data-track-label="Copiar código"`.
+   */
+  const { title, items, id = 'variantes', componentSlug }: {
+    title: string;
+    items: DocsVariantItem[];
+    id?: string;
+    componentSlug?: string;
+  } = $props();
 
   let openStates = $state<Record<number, boolean>>({});
   function toggleCode(i: number) {
     openStates[i] = !openStates[i];
+  }
+
+  function trackId(name: string): string | undefined {
+    return componentSlug ? `${componentSlug}:code:${name}` : undefined;
   }
 </script>
 
@@ -32,7 +49,15 @@
         </div>
         {#if item.code}
           <div>
-            <Button variant="link" size="sm" class="px-0 h-auto" onclick={() => toggleCode(i)}>
+            <Button
+              variant="link"
+              size="sm"
+              class="px-0 h-auto"
+              data-track="code"
+              data-track-id={trackId(item.name)}
+              data-track-label="Copiar código"
+              onclick={() => toggleCode(i)}
+            >
               {openStates[i] ? 'Ocultar código' : 'Ver código'}
             </Button>
             {#if openStates[i]}

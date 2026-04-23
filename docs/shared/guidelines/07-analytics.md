@@ -199,12 +199,67 @@ interface WithFieldName {
 
 Estes eventos rastreiam comportamento do usuário nas páginas de documentação do design system. São implementados nos `*Docs.tsx`, não nos componentes de UI primitivos.
 
+#### Eventos automáticos (mount e scroll)
+
 | Evento | Onde disparar | Payload obrigatório |
 |--------|--------------|---------------------|
 | `docs_page_view` | No mount de qualquer `*Docs.tsx` | `{ component, locale }` |
 | `docs_section_viewed` | Quando uma seção fica visível (IntersectionObserver) | `{ component, section, locale }` |
 | `language_switched` | No `LanguageSwitcher` ao trocar idioma | `{ previous_language, new_language }` |
-| `{slug}_demo_triggered` | Em docs pages com demonstrações interativas (ex: Sonner) | `{ component, demo_type }` |
+
+#### Eventos de interação (tracking automático via `data-track*`)
+
+Todos os elementos interativos das docs pages ganham `data-track*` attributes. O helper `docs-tracking.ts` (único por stack) monta um click listener global no root do `DocsPageLayout` e emite o evento correto com base em `data-track`.
+
+**Padrão de identificador estruturado (3 partes):** `{component}:{section}:{element}` — ex: `alert:demo:variant-destructive`, `breadcrumb:nav:anatomia`, `calendar:code:copy-single`.
+
+| Evento | Onde disparar | Payload obrigatório | `data-track` |
+|--------|--------------|---------------------|--------------|
+| `docs_nav_click` | Clique em link do `DocsNav` (sidebar) | `{ component, section_id, label }` | `nav` |
+| `docs_demo_click` | Clique em botão/trigger dentro de `DocsDemonstration` | `{ component, element_id, label }` | `demo` |
+| `docs_variant_click` | Clique em card/botão dentro de `DocsVariants` | `{ component, variant_name, label }` | `variant` |
+| `docs_code_copy` | Clique em botão "copiar" de bloco de código (`DocsImport`, `DocsVariants`, etc.) | `{ component, snippet_id }` | `code` |
+| `docs_related_click` | Clique em card do `DocsRelated` | `{ component, target_slug, label }` | `related` |
+| `docs_link_click` | Clique em link externo em notas, UX writing ou outros textos | `{ component, section_id, href }` | `link` |
+
+#### Como instrumentar (padrão obrigatório)
+
+Cada elemento interativo recebe 2-3 atributos:
+
+```html
+<!-- DocsNav link -->
+<a
+  href="#anatomia"
+  data-track="nav"
+  data-track-id="alert:nav:anatomia"
+  data-track-label="Anatomia"
+>Anatomia</a>
+
+<!-- DocsDemonstration botão -->
+<Button
+  data-track="demo"
+  data-track-id="alert:demo:variant-destructive"
+  data-track-label="Ver variant destructive"
+>Destructive</Button>
+
+<!-- DocsVariants card/código com copy button -->
+<button
+  data-track="code"
+  data-track-id="alert:code:copy-destructive"
+>Copiar</button>
+
+<!-- DocsRelated card -->
+<a
+  href="?path=/docs/ui-badge--docs"
+  data-track="related"
+  data-track-id="alert:related:badge"
+  data-track-label="Badge"
+>Badge</a>
+```
+
+**Regra de id:** o 3º segmento (`element`) **deve** ser único dentro da seção — permite distinguir "qual botão de demo" foi clicado numa página com múltiplos botões do mesmo tipo.
+
+**Onde chamar `track()`:** NUNCA dentro do componente de seção ou da docs page. O helper `src/lib/docs-tracking.ts` (único por stack) é quem chama `track()` — os section containers só adicionam os `data-track*`.
 
 ```typescript
 // docs_page_view — no topo do ComponentDocs, junto com useSeoEffect
@@ -340,7 +395,9 @@ type EventName =
   | "navigation_click" | "breadcrumb_ellipsis_open"
   | "tooltip_view" | "alert_dismiss" | "toast_action_click"
   | "collapsible_toggle" | "menu_item_click"
-  | "docs_page_view" | "docs_section_viewed" | "language_switched";
+  | "docs_page_view" | "docs_section_viewed" | "language_switched"
+  | "docs_nav_click" | "docs_demo_click" | "docs_variant_click"
+  | "docs_code_copy" | "docs_related_click" | "docs_link_click";
 
 interface TrackPayload {
   component: ComponentName;

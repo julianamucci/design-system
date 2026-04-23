@@ -6,6 +6,14 @@ export interface DocsImportProps {
   code: string;
   secondaryCode?: string;
   secondaryDescription?: string;
+  /**
+   * Slug do componente para tracking GA4 (ex.: "alert"). Informativo — o snippet
+   * renderizado atualmente é apenas um bloco `<code>` estático, sem botão de
+   * "copiar". Caso uma futura iteração adicione um botão, ele deverá receber
+   * `data-track="code"` + `data-track-id="{slug}:code:import-primary"` (ou
+   * `import-secondary`) + `data-track-label="Copiar import"`.
+   */
+  componentSlug?: string;
 }
 
 export function DocsImport({ title, description, code, secondaryCode, secondaryDescription }: DocsImportProps) {

@@ -420,7 +420,7 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="breadcrumb">
     <template #header>
       <DocsHeader
         :title="tContent('title')"
