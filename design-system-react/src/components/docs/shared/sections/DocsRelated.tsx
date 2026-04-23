@@ -35,7 +35,7 @@ export function DocsRelated({ title, items, componentSlug }: DocsRelatedProps) {
               key={i}
               asChild
               variant="ghost"
-              className="text-left h-auto p-4 border rounded-xl shadow-sm bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
+              className="text-left h-auto p-4 border bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
             >
               <a
                 href={item.path}

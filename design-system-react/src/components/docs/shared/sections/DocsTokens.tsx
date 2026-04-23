@@ -52,9 +52,9 @@ export function DocsTokens({ title, cols, items, customizationTitle, customizati
           <div className="space-y-3">
             <h3 className="text-base font-semibold">{customizationTitle}</h3>
             {customizationCode && (
-              <div className="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">
+              <Card className="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
                 <code className="whitespace-pre">{customizationCode}</code>
-              </div>
+              </Card>
             )}
           </div>
         )}

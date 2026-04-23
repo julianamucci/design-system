@@ -50,9 +50,9 @@ function VariantCard({ item, componentSlug }: { item: DocsVariantItem; component
             {open ? 'Ocultar código' : 'Ver código'}
           </Button>
           {open && (
-            <div className="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-2">
+            <Card className="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-2">
               <code className="whitespace-pre">{item.code}</code>
-            </div>
+            </Card>
           )}
         </div>
       )}

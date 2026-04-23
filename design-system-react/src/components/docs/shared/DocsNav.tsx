@@ -42,7 +42,7 @@ export function DocsNav({ groups, activeSection, componentSlug }: DocsNavProps) 
                     data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}
                     data-track-label={section.label}
                     className={[
-                      'w-full text-left px-2 py-1.5 text-sm rounded-md transition-colors',
+                      'w-full text-left px-2 py-1.5 text-sm rounded-(--radius-button) transition-colors',
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                       isActive
                         ? 'bg-primary/10 text-primary font-medium'

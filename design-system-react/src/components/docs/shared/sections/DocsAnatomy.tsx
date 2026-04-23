@@ -1,5 +1,6 @@
 import React from 'react';
 import { ComponentDemo } from '@/components/ComponentDemo';
+import { Card } from '@/components/ui/card';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 
 export interface DocsAnatomyProps {
@@ -25,12 +26,12 @@ export function DocsAnatomy({ title, items, structureCode, structureLabel }: Doc
               </li>
             ))}
           </ol>
-          <div className="rounded-lg bg-muted/50 border border-border/40 px-4 pt-3 pb-4 overflow-x-auto">
+          <Card className="bg-muted/50 border-border/40 shadow-none px-4 pt-3 pb-4 overflow-x-auto">
             {structureLabel && (
               <p className="text-xs text-muted-foreground mb-2">{structureLabel}</p>
             )}
             <pre className="font-mono text-sm whitespace-pre">{structureCode}</pre>
-          </div>
+          </Card>
         </div>
       </ComponentDemo>
     </section>

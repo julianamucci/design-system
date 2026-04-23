@@ -73,9 +73,9 @@ export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, ex
           <PropsTable key={i} def={def} />
         ))}
         {interfaceCode && (
-          <div className="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">
+          <Card className="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
             <code className="whitespace-pre">{interfaceCode}</code>
-          </div>
+          </Card>
         )}
         {extensibilityTitle && (
           <div className="space-y-2">

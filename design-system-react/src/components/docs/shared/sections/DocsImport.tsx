@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card } from '@/components/ui/card';
 
 export interface DocsImportProps {
   title: string;
@@ -21,17 +22,17 @@ export function DocsImport({ title, description, code, secondaryCode, secondaryD
     <section id="importacao">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
       {description && <p className="text-sm text-muted-foreground mb-3">{description}</p>}
-      <div className="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">
+      <Card className="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
         <code className="whitespace-pre">{code}</code>
-      </div>
+      </Card>
       {secondaryCode && (
         <>
           {secondaryDescription && (
             <p className="text-sm text-muted-foreground mt-4 mb-3">{secondaryDescription}</p>
           )}
-          <div className="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto mt-3">
+          <Card className="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-3">
             <code className="whitespace-pre">{secondaryCode}</code>
-          </div>
+          </Card>
         </>
       )}
     </section>

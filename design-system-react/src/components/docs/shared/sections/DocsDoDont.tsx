@@ -29,9 +29,9 @@ export function DocsDoDont({ title, pairs }: DocsDoDontProps) {
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
                     <span className="text-sm font-semibold uppercase tracking-wider">{pair.doLabel}</span>
                   </div>
-                  <div className="border border-green-200 dark:border-green-900/50 rounded-xl p-4 bg-green-50/50 dark:bg-green-950/10">
+                  <Card className="border-green-200 dark:border-green-900/50 bg-green-50/50 dark:bg-green-950/10 shadow-none p-4">
                     {pair.doPreview}
-                  </div>
+                  </Card>
                   <p className="text-sm text-muted-foreground italic px-1">{pair.doCaption}</p>
                 </div>
                 {/* DON'T */}
@@ -40,9 +40,9 @@ export function DocsDoDont({ title, pairs }: DocsDoDontProps) {
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
                     <span className="text-sm font-semibold uppercase tracking-wider">{pair.dontLabel}</span>
                   </div>
-                  <div className="border border-red-200 dark:border-red-900/50 rounded-xl p-4 bg-red-50/50 dark:bg-red-950/10">
+                  <Card className="border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/10 shadow-none p-4">
                     {pair.dontPreview}
-                  </div>
+                  </Card>
                   <p className="text-sm text-muted-foreground italic px-1">{pair.dontCaption}</p>
                 </div>
               </div>
