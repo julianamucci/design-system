@@ -42,7 +42,7 @@ export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboa
             {keyboardItems.map((item, i) => (
               <Card key={i} className="bg-muted/30 border-0 shadow-none p-4">
                 <div className="flex items-start gap-3">
-                  <kbd className="inline-flex items-center justify-center rounded border border-border bg-background px-2 py-1 text-xs font-mono font-semibold shrink-0 shadow-sm">
+                  <kbd className="inline-flex items-center justify-center rounded border border-border bg-background px-2 py-1 text-xs font-mono font-semibold shrink-0">
                     {item.key}
                   </kbd>
                   <span className="text-sm text-muted-foreground leading-relaxed">{item.description}</span>

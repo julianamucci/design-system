@@ -41,7 +41,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   guidelinesBlock.appendChild(guidelinesList);
 
   // ── Scenarios table ───────────────────────────────────────────────────────────
-  const scenariosBlock = createCard({ className: 'shadow-sm overflow-x-auto md:overflow-visible p-4' });
+  const scenariosBlock = createCard({ className: 'overflow-x-auto md:overflow-visible p-4' });
 
   const { wrapper: scenariosTableWrapper, table: scenariosTable } = createTable('w-full border-collapse text-sm');
 
@@ -76,7 +76,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
     uxTitle.textContent = ux.title;
     uxBlock.appendChild(uxTitle);
 
-    const uxTableWrap = createCard({ className: 'shadow-sm overflow-x-auto md:overflow-visible p-4' });
+    const uxTableWrap = createCard({ className: 'overflow-x-auto md:overflow-visible p-4' });
 
     const { wrapper: uxInnerTableWrapper, table: uxTable } = createTable('w-full border-collapse text-sm');
 
@@ -120,7 +120,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   const doBlock = document.createElement('div');
   doBlock.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
 
-  const doCard = createCard({ className: 'p-4 shadow-sm' });
+  const doCard = createCard({ className: 'p-4' });
   const doTitle = document.createElement('h3');
   doTitle.className = 'mb-3 text-sm font-semibold text-green-600 flex items-center gap-2';
   doTitle.innerHTML = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 text-xs font-bold flex-shrink-0">✓</span>${sanitizeHtml(props.do.title)}`;
@@ -133,7 +133,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   });
   doCard.append(doTitle, doList);
 
-  const dontCard = createCard({ className: 'p-4 shadow-sm' });
+  const dontCard = createCard({ className: 'p-4' });
   const dontTitle = document.createElement('h3');
   dontTitle.className = 'mb-3 text-sm font-semibold text-red-600 flex items-center gap-2';
   dontTitle.innerHTML = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 text-xs font-bold flex-shrink-0">✗</span>${sanitizeHtml(props.dont.title)}`;

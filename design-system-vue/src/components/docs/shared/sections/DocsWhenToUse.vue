@@ -38,7 +38,7 @@ const props = defineProps<{
         </Card>
 
         <!-- Cenários -->
-        <Card class="shadow-sm overflow-x-auto md:overflow-visible p-4">
+        <Card class="overflow-x-auto md:overflow-visible p-4">
           <Table class="[&_th]:whitespace-normal [&_td]:whitespace-normal">
             <TableHeader>
               <TableRow class="border-b border-border text-left bg-muted/50 font-medium">
@@ -60,7 +60,7 @@ const props = defineProps<{
         <!-- UX Writing -->
         <div v-if="uxWriting" class="space-y-3">
           <h3 class="font-medium text-sm">{{ uxWriting.title }}</h3>
-          <Card class="shadow-sm overflow-x-auto md:overflow-visible p-4">
+          <Card class="overflow-x-auto md:overflow-visible p-4">
             <Table class="[&_th]:whitespace-normal [&_td]:whitespace-normal">
               <TableHeader>
                 <TableRow class="border-b border-border bg-muted/70 text-left">

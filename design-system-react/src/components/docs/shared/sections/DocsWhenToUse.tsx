@@ -60,7 +60,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
         </Card>
 
         {/* Cenários */}
-        <Card className="shadow-sm overflow-x-auto md:overflow-visible p-4">
+        <Card className="overflow-x-auto md:overflow-visible p-4">
           <Table className="w-full border-collapse text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
             <TableHeader>
               <TableRow className="border-b border-border text-left bg-muted/50 font-medium">
@@ -85,7 +85,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
         {uxWriting && (
           <div className="space-y-3">
             <h3 className="font-medium text-sm">{uxWriting.title}</h3>
-            <Card className="shadow-sm overflow-x-auto md:overflow-visible p-4">
+            <Card className="overflow-x-auto md:overflow-visible p-4">
               <Table className="w-full border-collapse text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
                 <TableHeader>
                   <TableRow className="border-b border-border bg-muted/70 text-left">

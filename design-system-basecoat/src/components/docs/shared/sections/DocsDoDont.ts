@@ -23,7 +23,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
   h2.className = 'text-xl font-semibold mb-4';
   h2.textContent = props.title;
 
-  const card = createCard({ className: 'flex items-center justify-center p-4 mt-2 shadow-sm' });
+  const card = createCard({ className: 'flex items-center justify-center p-4 mt-2' });
 
   const inner = document.createElement('div');
   inner.className = 'space-y-8 w-full';

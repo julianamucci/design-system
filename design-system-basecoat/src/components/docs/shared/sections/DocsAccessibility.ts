@@ -36,7 +36,7 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
   props.keyboardItems.forEach(item => {
     const card = createCard({ className: 'flex items-start gap-3 border-0 shadow-none bg-muted/30 rounded-lg p-4' });
     const kbd = document.createElement('kbd');
-    kbd.className = 'inline-flex items-center justify-center rounded border border-border bg-background px-2 py-1 text-xs font-mono font-semibold shrink-0 shadow-sm';
+    kbd.className = 'inline-flex items-center justify-center rounded border border-border bg-background px-2 py-1 text-xs font-mono font-semibold shrink-0';
     kbd.textContent = item.key;
     const span = document.createElement('span');
     span.className = 'text-sm text-muted-foreground leading-relaxed';
