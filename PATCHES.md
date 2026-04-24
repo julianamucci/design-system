@@ -249,6 +249,43 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
 
 **Verificação após bump:** inspecionar `node_modules/basecoat-css/dist/basecoat.css` — se o seletor `> section` for substituído por `> div` ou `[data-slot="alert-description"]`, ajustar a factory conforme o novo contrato.
 
+### react/toggle + toggle-group — radius via `--radius-button` {#toggle-radius-token}
+
+- **Arquivos:**
+  - `design-system-react/src/components/ui/toggle.tsx`
+  - `design-system-react/src/components/ui/toggle-group.tsx`
+- **Categoria:** theme
+- **Data:** 2026-04-24
+- **Upstream ref:** shadcn/ui — base-nova v2 ainda hardcoda `rounded-lg` / `rounded-[min(var(--radius-md),10px)]`
+
+**Antes (shadcn upstream):**
+```tsx
+// toggle.tsx — cva base
+"... rounded-lg ..."
+// toggle.tsx — size sm
+"h-(--height-sm) ... rounded-[min(var(--radius-md),12px)] ..."
+// toggle-group.tsx — root
+"... rounded-lg data-[size=sm]:rounded-[min(var(--radius-md),10px)] ..."
+// toggle-group.tsx — item (spacing=0)
+"... first:rounded-l-lg first:rounded-t-lg last:rounded-r-lg last:rounded-b-lg ..."
+```
+
+**Depois (custom):**
+```tsx
+// PATCH: theme — rounded consumido de --radius-button ...
+"... rounded-(--radius-button) ..."
+// size sm: removido override rounded-[min(...)] (usa o base)
+"h-(--height-sm) ... px-2.5 text-[0.8rem] ..."
+// toggle-group root:
+"... rounded-(--radius-button) ..."
+// toggle-group item (spacing=0):
+"... first:rounded-l-(--radius-button) ... last:rounded-r-(--radius-button) ..."
+```
+
+**Motivo:** o Toggle é um controle interativo (seleção on/off), mesma família visual do Button. Sem este patch, usar Toggle/ToggleGroup em tema Lyra (radius 0) renderizava com cantos arredondados do `rounded-lg` default do shadcn, quebrando a identidade brutalista. O LanguageSwitcher (wrapper sobre ToggleGroup) exibia esse bug visível na docs header.
+
+**Verificação após bump:** `node scripts/diff-shadcn.mjs --stack react --component toggle` e `--component toggle-group`. Se o upstream adotar `--radius-button` ou tornar o radius configurável via tema, remover o patch.
+
 ### card — `has-[>[data-slot=card-footer]]` restringe a filho direto (4 stacks) {#card-footer-direct-child}
 
 - **Arquivos:**

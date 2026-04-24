@@ -16,7 +16,7 @@ export function LanguageSwitcher() {
   const { locale, setLocale } = useI18nStore();
 
   return (
-    <div className="flex items-center gap-1 bg-muted/30 p-1 rounded-lg border border-border/40">
+    <div className="flex items-center gap-1 bg-muted/30 p-1 rounded-(--radius-input) border border-border/40">
       <ToggleGroup
         type="single"
         value={locale}
