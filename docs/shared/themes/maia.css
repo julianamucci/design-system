@@ -6,9 +6,6 @@
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-maia {
-  /* Spacing */
-  --spacing-base: 0.3125rem; /* +25% folgado vs Nova */
-
   /* Radius por componente (shadcn multiplicadores exatos) */
   --radius-button: calc(var(--radius) * 2.6);  /* 26px */
   --radius-card:   calc(var(--radius) * 1.8);  /* 18px */

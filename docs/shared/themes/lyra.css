@@ -6,9 +6,6 @@
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-lyra {
-  /* Spacing */
-  --spacing-base: 0.2rem; /* -20% denso */
-
   /* Radius por componente — Lyra é retangular puro */
   --radius-button: 0;
   --radius-card:   0;

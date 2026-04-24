@@ -6,9 +6,6 @@
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-mira {
-  /* Spacing */
-  --spacing-base: 0.2rem; /* -20% denso */
-
   /* Radius por componente (shadcn multiplicadores exatos) */
   --radius-button: calc(var(--radius) * 0.8);  /* 8px */
   --radius-card:   var(--radius);              /* 10px */

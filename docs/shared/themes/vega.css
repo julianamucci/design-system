@@ -6,9 +6,6 @@
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-vega {
-  /* Spacing */
-  --spacing-base: 0.275rem; /* +10% folgado vs Nova */
-
   /* Radius por componente (shadcn multiplicadores exatos) */
   --radius-button: calc(var(--radius) * 0.8);  /* 8px */
   --radius-card:   calc(var(--radius) * 1.4);  /* 14px */
