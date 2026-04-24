@@ -13,7 +13,8 @@ function Card({
       data-size={size}
       className={cn(
         // PATCH: theme — rounded via token --radius-card (ver PATCHES.md#radius-per-component)
-        "group/card flex flex-col gap-4 overflow-hidden rounded-(--radius-card) bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-(--radius-card) *:[img:last-child]:rounded-b-(--radius-card)",
+        // PATCH: bugfix — has-[>[data-slot=card-footer]] restringe a filho direto para não zerar pb em Cards aninhados com footer (ver PATCHES.md#card-footer-direct-child)
+        "group/card flex flex-col gap-4 overflow-hidden rounded-(--radius-card) bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-[>[data-slot=card-footer]]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-[>[data-slot=card-footer]]:pb-0 *:[img:first-child]:rounded-t-(--radius-card) *:[img:last-child]:rounded-b-(--radius-card)",
         className
       )}
       {...props}

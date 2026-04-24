@@ -249,6 +249,34 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
 
 **Verificação após bump:** inspecionar `node_modules/basecoat-css/dist/basecoat.css` — se o seletor `> section` for substituído por `> div` ou `[data-slot="alert-description"]`, ajustar a factory conforme o novo contrato.
 
+### card — `has-[>[data-slot=card-footer]]` restringe a filho direto (4 stacks) {#card-footer-direct-child}
+
+- **Arquivos:**
+  - `design-system-react/src/components/ui/card.tsx` (Card root)
+  - `design-system-vue/src/components/ui/card/Card.vue`
+  - `design-system-svelte/src/components/ui/card/card.svelte`
+  - `design-system-basecoat/src/components/ui/card.ts` (`createCard`)
+- **Categoria:** bugfix
+- **Data:** 2026-04-22
+- **Upstream ref:** shadcn/ui — não há issue aberta (comportamento default do Tailwind `has-data-*`)
+
+**Antes (shadcn upstream):**
+```tsx
+className="... has-data-[slot=card-footer]:pb-0 ... data-[size=sm]:has-data-[slot=card-footer]:pb-0 ..."
+```
+Gera CSS `.card:has([data-slot='card-footer']) { padding-bottom: 0 }` — combinator descendente. Qualquer `CardFooter` em qualquer profundidade casa, zerando o `pb` do ancestral.
+
+**Depois (custom):**
+```tsx
+// PATCH: bugfix — has-[>[data-slot=card-footer]] restringe a filho direto para não zerar pb em Cards aninhados com footer (ver PATCHES.md#card-footer-direct-child)
+className="... has-[>[data-slot=card-footer]]:pb-0 ... data-[size=sm]:has-[>[data-slot=card-footer]]:pb-0 ..."
+```
+Gera CSS `.card:has(>[data-slot='card-footer']) { padding-bottom: 0 }` — combinator filho direto. Só o footer imediato zera o `pb` do Card externo.
+
+**Motivo:** a regra `has-data-[slot=card-footer]:pb-0` serve para o Card absorver o `pb` quando há um `CardFooter` colado na borda inferior (evita `pb-4` + footer com borda dupla visual). Quando um Card externo tem outro Card dentro e esse Card interno tem `CardFooter`, o seletor descendente casa o footer **do filho** e zera o `pb` do Card externo — conteúdo do Card externo fica visualmente colado na borda inferior (print reportado pelo usuário em 2026-04-22, docs pages do Card). Restringir a filho direto (`>`) garante que só o próprio footer do Card ativa o reset.
+
+**Verificação após bump:** rodar `node scripts/diff-shadcn.mjs --stack react --component card`. Se o upstream adotar o mesmo padrão (seletor com `>`) ou substituir por uma implementação compositiva (`CardFooter` aplica `mt-auto` + Card aplica `overflow-hidden` sem precisar do `has-`), remover o PATCH.
+
 ### avatar — `object-cover` na imagem (4 stacks) {#avatar-object-cover} — ⚠️ PARCIALMENTE RESOLVIDO UPSTREAM (2026-04-21)
 
 - **Status:** React (`base-nova`), Vue (`reka-nova`) e Svelte (`nova`) absorveram o patch — AvatarImage agora inclui `object-cover` por padrão. Basecoat **ainda precisa do patch** — marker permanece nesse único arquivo.

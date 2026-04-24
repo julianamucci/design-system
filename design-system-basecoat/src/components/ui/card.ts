@@ -5,7 +5,7 @@
 //   - rounded-(--radius-card) + bg-card + text-card-foreground + ring-1
 //   - group/card — subcomponentes reagem via group-data-[size=sm]/card:*
 //   - 7 factories (Card, Header, Title, Description, Action, Content, Footer)
-//   - CardFooter detectado via has-data-[slot=card-footer]:pb-0 (CSS do Tailwind)
+//   - CardFooter detectado via has-[>[data-slot=card-footer]]:pb-0 (CSS do Tailwind, filho direto)
 //   - Imagem first/last child com radius + padding automáticos (via classes do Card)
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -62,10 +62,12 @@ export function createCard(options: CardOptions = {}): HTMLElement {
     'bg-card text-card-foreground',
     'ring-1 ring-foreground/10',
     'py-4 text-sm',
-    'has-data-[slot=card-footer]:pb-0',
+    // PATCH: bugfix — has-[>[data-slot=card-footer]] restringe a filho direto
+    // para não zerar pb em Cards aninhados com footer (ver PATCHES.md#card-footer-direct-child)
+    'has-[>[data-slot=card-footer]]:pb-0',
     'has-[>img:first-child]:pt-0',
     'data-[size=sm]:gap-3 data-[size=sm]:py-3',
-    'data-[size=sm]:has-data-[slot=card-footer]:pb-0',
+    'data-[size=sm]:has-[>[data-slot=card-footer]]:pb-0',
     '*:[img:first-child]:rounded-t-(--radius-card)',
     '*:[img:last-child]:rounded-b-(--radius-card)',
   ].join(' ');
