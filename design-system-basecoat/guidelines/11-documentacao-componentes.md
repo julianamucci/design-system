@@ -544,6 +544,65 @@ Componentes como **Avatar** usam as factories vanilla-TS `createAvatar`, `create
 11. **`AvatarFallback` obrigatório** — toda composição com `createAvatarImage` deve incluir `createAvatarFallback` irmão. Sem ele, erro de `src` deixa o container vazio. Documentar em par Do/Don't e em `notes`.
 12. **Iniciais canônicas** — 2 letras maiúsculas: primeira do nome + primeira do sobrenome. Regra em `usage.uxWriting.table.initials`.
 
+### Componentes de Visualização de Dados (padrão Chart) — Basecoat
+
+Componentes como **Chart** no Basecoat usam a factory `createChart({ data, type, height, colors })` de `./chart` — API simplificada, **sem Recharts**. Apenas os tipos **`bar`** e **`line`** são suportados via prop `type`. O gráfico é SVG puro renderizado pela factory sem dependências externas. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
+
+**Seções a renderizar (15 seções canônicas):**
+
+| Seção | Container | Chaves principais do translations.json |
+|-------|-----------|----------------------------------------|
+| Header | `createDocsHeader` | `title`, `description`, `category`, `type` |
+| Demonstração | `createDocsDemonstration` | `demonstration.title`, `demonstration.labels.bar`, `demonstration.labels.line`, `demonstration.labels.chartTitle` |
+| Anatomia | `createDocsAnatomy` | `anatomy.title`, `anatomy.item1`–`item4`, `anatomy.structureLabel`, `anatomy.structureCode` |
+| Quando Usar | `createDocsWhenToUse` | `usage.title`, `usage.guidelines.item1`–`item6`, `usage.scenarios.cols.*`, `usage.scenarios.item1`–`item6`, `usage.uxWriting.*`, `usage.do.item1`–`item4`, `usage.dont.item1`–`item3` |
+| Do & Don't | `createDocsDoDont` | `doDont.title`, `doDont.pair1.*`, `doDont.pair2.*` |
+| Importação | `createDocsImport` | `import.title`, `import.basecoat` |
+| Tipos de Gráfico | `createDocsVariants` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`, `variants.items.line` |
+| Estados | `createDocsStates` | `states.title`, `states.cols.*`, `states.empty.*`, `states.loading.*`, `states.singleSeries.*`, `states.multiSeries.*` |
+| Propriedades | `createDocsProps` | `props.title`, `props.containerTitle`, `props.table.config`, `props.table.className`, `props.extensibilityTitle`, `props.extensibility` |
+| Tokens | `createDocsTokens` | `tokens.title`, `tokens.table.*`, `tokens.customizationTitle`, `tokens.note` |
+| Acessibilidade | `createDocsAccessibility` | `accessibility.title`, `accessibility.summary`, `accessibility.item1`–`item6`, `accessibility.keyboardTitle`, `accessibility.keyboard.*` |
+| Relacionados | `createDocsRelated` | `related.title`, `related.alternatives`, `related.usedWith`, `related.table`, `related.card`, `related.dataTable` |
+| Notas | `createDocsNotes` | `notes.title`, `notes.tip1`–`tip5` |
+| Analytics | `createDocsAnalytics` | `analytics.title`, `analytics.description`, `analytics.table.*` |
+| Testes | `createDocsTestes` | `testes.title`, `testes.functional.*`, `testes.accessibility.*`, `testes.visual.*` |
+
+**Regras específicas do Chart Basecoat:**
+
+1. **Apenas `bar` e `line`** — a factory `createChart` suporta apenas `type: 'bar' | 'line'`. `DocsVariants` deve renderizar apenas 2 cards (`bar`, `line`). Os tipos `area`, `pie`, `radar`, `radialBar` aparecem na seção de tipos mas com nota explícita de que não são suportados no Basecoat — exibir `variants.note` via `element.innerHTML = sanitizeHtml(t('variants.note'))` acima dos cards.
+
+2. **API simplificada** — a factory expõe apenas `createChart({ data, type, height, colors })`. `DocsProps` usa **1 tabela** (não 3 como no React), documentando apenas as props da factory:
+   - `data`: array de pontos `{label, value}` ou `{label, values: number[]}`
+   - `type`: `'bar' | 'line'`
+   - `height`: number (pixels)
+   - `colors`: string[] (tokens CSS ou valores hex)
+   Chave de título: `props.containerTitle` (`"createChart"` como título da tabela).
+
+3. **`DocsImport`** — usar apenas `import.basecoat`:
+   ```ts
+   import { createChart } from '@/components/ui/chart';
+   ```
+   Omitir `import.basic` e `import.withRecharts`.
+
+4. **`createDocsDemonstration`** — `demoFactory` deve retornar um container com toggle entre `bar` e `line` (2 botões) usando `labels.bar` e `labels.line`. Dados hardcoded com 6 meses e `labels.chartTitle` como título.
+
+5. **SVG puro — sem Recharts** — previews nas factories não usam Recharts. A factory `createChart` gera SVG puro. Não incluir dependências de `recharts` no Basecoat.
+
+6. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`. Estado `loading` usa `Skeleton` (factory `createSkeleton`) com as mesmas dimensões do container.
+
+7. **`createDocsAccessibility`** — `keyboardItems` com 4 entradas. No Basecoat, `accessibilityLayer` não existe — acessibilidade por teclado é implementada com `tabIndex`, `aria-label`, `role="img"` e `<title>` SVG.
+
+8. **`notes.tip3`** — nota crítica: "No Basecoat, apenas os tipos `bar` e `line` são suportados via prop `type`. A API é simplificada: `createChart({ data, type, height, colors })`." Esta nota já existe em `notes.tip3` e deve ser renderizada de forma destacada (borda diferente ou ícone de aviso no callout).
+
+9. **`createDocsTestes`** — `functional` (6 items — apenas itens 1–3 para `bar`/`line` são diretamente testáveis; itens 4–6 podem ter notas de adaptação), `accessibility` (4 items com `{criterion, level, how}`), `visual` (4 items com `{story, priority}`).
+
+10. **`sanitizeHtml` obrigatório** — todo `innerHTML` com conteúdo do translations.json usa `sanitizeHtml()`. Os campos de tokens, notas e acessibilidade contêm `<code>` inline que devem ser sanitizados.
+
+11. **Stories Basecoat** — criar 4 arquivos: `chart.stories.ts` (Playground + `withAutoDocsTab(createChartDocs)`), `chart-tipos.stories.ts` (Bar, Line — apenas 2 tipos), `chart-composicoes.stories.ts` (WithColors, SingleSeries, MultiSeries), `chart-estados.stories.ts` (Empty, Loading). Não criar `-variantes` nem `-tamanhos`. Previews chamam `createChart({...})` e fazem `render: () => el`.
+
+12. **SEO — descrições longas** — o `translations.json` gerado tem descrições SEO acima de 155 chars nos 3 idiomas. Usar as descrições como estão; gap a ser corrigido pelo ux-writer.
+
 ---
 
 ## Proibições

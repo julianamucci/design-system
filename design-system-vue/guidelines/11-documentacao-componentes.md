@@ -577,6 +577,56 @@ Componentes como **Avatar** (base: `reka-ui` — `Avatar`, `AvatarImage`, `Avata
 11. **`AvatarFallback` obrigatório** — regra absoluta: toda instância com `AvatarImage` precisa de `AvatarFallback` irmão. Sem ele, falha/demora de `src` resulta em container vazio. Documentar em par Do/Don't e em `notes`.
 12. **Iniciais canônicas** — 2 letras maiúsculas: primeira letra do nome + primeira do sobrenome. Regra em `usage.uxWriting.table.initials`.
 
+### Componentes de Visualização de Dados (padrão Chart) — Vue
+
+Componentes como **Chart** usam **`@unovis/vue`** — API completamente diferente do React. Não há `ChartContainer` do design system no Vue; os componentes são `VisXYContainer`, `VisBar`, `VisLine`, `VisArea`, `VisDonut`, `VisAxis`, `ChartCrosshair`, `ChartTooltip` (todos de `@unovis/vue`). O design system Vue fornece apenas wrappers de theming para integrar tokens de cor. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
+
+**Seções a renderizar (15 seções canônicas):**
+
+| Seção | Container | Chaves principais do translations.json |
+|-------|-----------|----------------------------------------|
+| Header | `DocsHeader` | `title`, `description`, `category`, `type` |
+| Demonstração | `DocsDemonstration` | `demonstration.title`, `demonstration.labels.*` |
+| Anatomia | `DocsAnatomy` | `anatomy.title`, `anatomy.item1`–`item4`, `anatomy.structureLabel`, `anatomy.structureCode` |
+| Quando Usar | `DocsWhenToUse` | `usage.title`, `usage.guidelines.item1`–`item6`, `usage.scenarios.cols.*`, `usage.scenarios.item1`–`item6`, `usage.uxWriting.*`, `usage.do.item1`–`item4`, `usage.dont.item1`–`item3` |
+| Do & Don't | `DocsDoDont` | `doDont.title`, `doDont.pair1.*`, `doDont.pair2.*` |
+| Importação | `DocsImport` | `import.title`, `import.basic`, `import.withRecharts` |
+| Tipos de Gráfico | `DocsVariants` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`–`radialBar` |
+| Estados | `DocsStates` | `states.title`, `states.cols.*`, `states.empty.*`, `states.loading.*`, `states.singleSeries.*`, `states.multiSeries.*` |
+| Propriedades | `DocsProps` | `props.title`, `props.containerTitle`, `props.tooltipTitle`, `props.legendTitle`, `props.table.*`, `props.extensibilityTitle`, `props.extensibility` |
+| Tokens | `DocsTokens` | `tokens.title`, `tokens.table.*`, `tokens.customizationTitle`, `tokens.note` |
+| Acessibilidade | `DocsAccessibility` | `accessibility.title`, `accessibility.summary`, `accessibility.item1`–`item6`, `accessibility.keyboardTitle`, `accessibility.keyboard.*` |
+| Relacionados | `DocsRelated` | `related.title`, `related.alternatives`, `related.usedWith`, `related.table`, `related.card`, `related.dataTable` |
+| Notas | `DocsNotes` | `notes.title`, `notes.tip1`–`tip5` |
+| Analytics | `DocsAnalytics` | `analytics.title`, `analytics.description`, `analytics.table.*` |
+| Testes | `DocsTestes` | `testes.title`, `testes.functional.*`, `testes.accessibility.*`, `testes.visual.*` |
+
+**Regras específicas do Chart Vue:**
+
+1. **`@unovis/vue` — não é Recharts** — Vue usa `@unovis/vue` como biblioteca de gráficos subjacente. `ChartCrosshair` e `ChartTooltip` são importados de `@unovis/vue`, não do design system. O `structureCode` na anatomia e os exemplos de import devem refletir a API do Unovis, não a do Recharts.
+
+2. **Sem `cva()` — usar padrão §11.3** — 6 tipos documentados nos cards: `bar`, `line`, `area`, `pie`, `radar`, `radialBar`. O campo `variants.note` deve ser exibido acima dos cards.
+
+3. **`DocsProps` com 3 tabelas** — `ChartContainer` (ou equivalente Unovis), `ChartTooltipContent`, `ChartLegendContent`. Os nomes de props e comportamentos vêm do translations.json — a implementação interna usa Unovis.
+
+4. **`DocsImport`** — omitir a chave `import.basecoat` (não se aplica). Usar `import.basic` e `import.withRecharts` adaptando para Unovis:
+   - Import do wrapper de theming do design system
+   - Import dos primitivos do `@unovis/vue`
+
+5. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`.
+
+6. **`DocsAccessibility`** — `keyboardItems` com 4 entradas via chaves `accessibility.keyboard.*`. No Unovis, acessibilidade por teclado pode diferir do `accessibilityLayer` do Recharts — documentar na nota de implementação Vue.
+
+7. **`DocsNotes`** — `notes.tip4` menciona especificamente que "Vue usa `@unovis/vue` — API diferente do React". Esta é a nota mais crítica para o Vue e deve ser renderizada primeiro ou destacada visualmente.
+
+8. **`DocsTestes`** — `functional` (6 items), `accessibility` (4 items com `{criterion, level, how}`), `visual` (4 items com `{story, priority}`).
+
+9. **Stories Vue** — criar 4 arquivos: `chart.stories.ts` (Playground + `withAutoDocsTab(ChartDocs)`), `chart-tipos.stories.ts` (Bar, Line, Area, Pie, Radar, RadialBar), `chart-composicoes.stories.ts` (WithLegend, MultiSeries, SingleSeries), `chart-estados.stories.ts` (Empty, Loading, SingleSeries, MultiSeries). Não criar `-variantes` nem `-tamanhos`.
+
+10. **Locale de `useTranslation()` sempre** — nunca usar `useLocaleStore`/Pinia para locale em ChartDocs.vue.
+
+11. **SEO — descrições longas** — o `translations.json` gerado tem descrições SEO acima de 155 chars nos 3 idiomas. Usar as descrições como estão; gap a ser corrigido pelo ux-writer.
+
 ---
 
 ## Proibições

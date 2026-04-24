@@ -964,3 +964,68 @@ Componentes como **Card** (`Card`, `CardHeader`, `CardTitle`, `CardDescription`,
 12. **`CardFooter` detecta-se via `has-`** — o Card usa `has-data-[slot=card-footer]:pb-0` para absorver o padding inferior quando o footer existe. Sem isso, o footer dobra o espaçamento visual. Documentar em `notes.tip1`.
 13. **Imagem como primeiro/último filho** — o Card aplica `*:[img:first-child]:rounded-t-(--radius-card)` e `*:[img:last-child]:rounded-b-(--radius-card)` + remove o padding correspondente (`has-[>img:first-child]:pt-0`). Não precisa classes manuais nas imagens. Documentar em `notes.tip2`.
 14. **`CardAction` como grid slot** — `grid-cols-[1fr_auto]` ativado apenas quando `CardAction` está presente (via `has-data-[slot=card-action]`). A ação fica à direita mantendo ordem DOM original — leitores de tela anunciam na ordem lógica (título → descrição → ação), não na ordem visual (título → ação → descrição).
+
+### Componentes de Visualização de Dados (padrão Chart)
+
+Componentes como **Chart** (`ChartContainer`, `ChartTooltip`, `ChartTooltipContent`, `ChartLegend`, `ChartLegendContent`, `ChartStyle`) são wrappers de theming sobre **Recharts** — não substituem Recharts, mas aplicam tokens de cor do design system via `ChartConfig`. Não usam `cva()` próprio; o tipo de gráfico é determinado pelo primitivo Recharts usado dentro do `ChartContainer`. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
+
+**Seções a renderizar (15 seções canônicas):**
+
+| Seção | Container | Chaves principais do translations.json |
+|-------|-----------|----------------------------------------|
+| Header | `DocsHeader` | `title`, `description`, `category`, `type` |
+| Demonstração | `DocsDemonstration` | `demonstration.title`, `demonstration.labels.*` |
+| Anatomia | `DocsAnatomy` | `anatomy.title`, `anatomy.item1`–`item4`, `anatomy.structureLabel`, `anatomy.structureCode` |
+| Quando Usar | `DocsWhenToUse` | `usage.title`, `usage.guidelines.item1`–`item6`, `usage.scenarios.cols.*`, `usage.scenarios.item1`–`item6`, `usage.uxWriting.*`, `usage.do.item1`–`item4`, `usage.dont.item1`–`item3` |
+| Do & Don't | `DocsDoDont` | `doDont.title`, `doDont.pair1.*`, `doDont.pair2.*` |
+| Importação | `DocsImport` | `import.title`, `import.basic`, `import.withRecharts`, `import.basecoat` |
+| Tipos de Gráfico | `DocsVariants` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`–`radialBar` |
+| Estados | `DocsStates` | `states.title`, `states.cols.*`, `states.empty.*`, `states.loading.*`, `states.singleSeries.*`, `states.multiSeries.*` |
+| Propriedades | `DocsProps` | `props.title`, `props.containerTitle`, `props.tooltipTitle`, `props.legendTitle`, `props.table.*`, `props.extensibilityTitle`, `props.extensibility` |
+| Tokens | `DocsTokens` | `tokens.title`, `tokens.table.*`, `tokens.customizationTitle`, `tokens.note` |
+| Acessibilidade | `DocsAccessibility` | `accessibility.title`, `accessibility.summary`, `accessibility.item1`–`item6`, `accessibility.keyboardTitle`, `accessibility.keyboard.*`, `accessibility.aria.*`, `accessibility.screenReader.*` |
+| Relacionados | `DocsRelated` | `related.title`, `related.alternatives`, `related.usedWith`, `related.table`, `related.card`, `related.dataTable` |
+| Notas | `DocsNotes` | `notes.title`, `notes.tip1`–`tip5` |
+| Analytics | `DocsAnalytics` | `analytics.title`, `analytics.description`, `analytics.table.*` |
+| Testes | `DocsTestes` | `testes.title`, `testes.functional.*`, `testes.accessibility.*`, `testes.visual.*` |
+
+**Regras específicas do Chart:**
+
+1. **Sem `cva()` — usar padrão §11.3** — o tipo do gráfico é determinado pelo primitivo Recharts. `DocsVariants` usa o padrão "Cards de tipo" (§11.3): 6 entradas (`bar`, `line`, `area`, `pie`, `radar`, `radialBar`). O campo `variants.note` (chave `variants.note`) deve ser exibido acima dos cards via bloco de texto sanitizado.
+
+2. **`DocsProps` com 3 tabelas** — usar `tables` array com 3 entradas:
+   - `ChartContainer` (config, id, className, children, initialDimension) — chave `props.containerTitle`
+   - `ChartTooltipContent` (indicator, hideLabel, hideIndicator, nameKey, labelKey, formatter, labelFormatter) — chave `props.tooltipTitle`
+   - `ChartLegendContent` (hideIcon, verticalAlign) — chave `props.legendTitle`
+
+3. **`DocsImport` com 3 blocos de código** — a seção import documenta 3 padrões distintos via `secondaryCode` e `tertiaryCode` (ou renderização customizada):
+   - Básico React: `import { ChartContainer, ChartTooltip, ... } from '@/components/ui/chart'`
+   - Com primitivos Recharts: `import { BarChart, Bar, ... } from 'recharts'`
+   - Basecoat (nota informativa apenas, sem import real de componente)
+
+4. **`DocsDemonstration`** — deve renderizar 3 tabs ou toggle entre `bar`, `line` e `area` usando os labels de `demonstration.labels.*`. Os dados de demonstração são hardcoded na docs page — não vêm do translations.json.
+
+5. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Labels via `states.{key}.label`. Omitir `disabled`/`error` — Chart é passivo.
+
+6. **`DocsAccessibility`** — `keyboardItems` com 4 entradas: `Tab` (`accessibility.keyboard.tab`), `ArrowRight` (`accessibility.keyboard.arrowRight`), `ArrowLeft` (`accessibility.keyboard.arrowLeft`), `noOtherKeys` (`accessibility.keyboard.noOtherKeys`).
+
+7. **`DocsRelated`** — 3 items: `Table` (chave `related.table`), `Card` (chave `related.card`), `DataTable` (chave `related.dataTable`).
+
+8. **`DocsNotes`** — 5 tips (`notes.tip1`–`notes.tip5`), sem sub-chave `title` (título é gerado pelo container). Cada tip contém HTML inline com `<code>`.
+
+9. **`DocsAnalytics`** — Chart é passivo: apenas `docs_page_view`, `docs_section_viewed`, `language_switched`. Incluir nota (`analytics.description`) de que interações específicas podem ser rastreadas via callbacks do Recharts.
+
+10. **`DocsTestes`** — estrutura:
+    - `functional`: 6 items (`testes.functional.item1`–`item6`) — `{ action, result, priority }`
+    - `accessibility`: 4 items (`testes.accessibility.item1`–`item4`) — `{ criterion, level, how }`
+    - `visual`: 4 items (`testes.visual.item1`–`item4`) — `{ story, priority }`
+
+11. **Dependência peer Recharts** — `installNote` no `DocsHeader` deve ser `"npx shadcn@latest add chart"`. Recharts é instalado separadamente (`npm install recharts`). Documentado em `notes.tip1`.
+
+12. **`accessibilityLayer` obrigatório** — toda demonstração e preview de variante deve incluir `accessibilityLayer` no componente Recharts raiz (`<BarChart accessibilityLayer>`, `<LineChart accessibilityLayer>`, etc.).
+
+13. **`aria-label` obrigatório** — toda instância de `ChartContainer` em demos/previews deve incluir `aria-label` descritivo.
+
+14. **Stories** — criar 4 arquivos: `chart.stories.tsx` (Playground + `tags: ["autodocs"]` + `withAutoDocsTab(ChartDocs)`), `chart-tipos.stories.tsx` (Bar, Line, Area, Pie, Radar, RadialBar), `chart-composicoes.stories.tsx` (WithLegend, WithTooltipCustom, MultiSeries, SingleSeries), `chart-estados.stories.tsx` (Empty, Loading, SingleSeries, MultiSeries). **Não criar** `chart-variantes.stories.tsx` nem `chart-tamanhos.stories.tsx` — Chart não tem `cva()` nem `size`. Apenas o arquivo principal leva `tags: ["autodocs"]`.
+
+15. **SEO — descrições longas** — o `translations.json` gerado tem descrições SEO acima de 155 chars nos 3 idiomas (pt-BR: 163, en: 160, es: 165). As skills de dev devem usar as descrições como estão (o conteúdo está correto); este gap deve ser corrigido pelo ux-writer numa próxima iteração com `/ux-writer chart --fix-seo`.

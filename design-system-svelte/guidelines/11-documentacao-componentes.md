@@ -514,6 +514,63 @@ Componentes como **Avatar** (base: `bits-ui` — `Avatar`, `AvatarImage`, `Avata
 11. **`AvatarFallback` obrigatório** — toda instância com `AvatarImage` precisa de `AvatarFallback` irmão. Sem ele, falha/demora resulta em container vazio. Documentar em par Do/Don't e em `notes`.
 12. **Iniciais canônicas** — 2 letras maiúsculas: primeira letra do nome + primeira do sobrenome. Regra em `usage.uxWriting.table.initials`.
 
+### Componentes de Visualização de Dados (padrão Chart) — Svelte 5
+
+Componentes como **Chart** no Svelte expõem apenas **`ChartContainer`** e **`ChartTooltip`** como primitivos do design system. Não há `ChartLegend`, `ChartLegendContent` nem `ChartTooltipContent` como componentes separados no Svelte — o tooltip é configurado via props do `ChartTooltip`. Gráficos internos são SVG puro renderizado com `{@html}` a partir de dados calculados. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
+
+**Seções a renderizar (15 seções canônicas):**
+
+| Seção | Container | Chaves principais do translations.json |
+|-------|-----------|----------------------------------------|
+| Header | `DocsHeader` | `title`, `description`, `category`, `type` |
+| Demonstração | `DocsDemonstration` | `demonstration.title`, `demonstration.labels.*` |
+| Anatomia | `DocsAnatomy` | `anatomy.title`, `anatomy.item1`–`item4`, `anatomy.structureLabel`, `anatomy.structureCode` |
+| Quando Usar | `DocsWhenToUse` | `usage.title`, `usage.guidelines.item1`–`item6`, `usage.scenarios.cols.*`, `usage.scenarios.item1`–`item6`, `usage.uxWriting.*`, `usage.do.item1`–`item4`, `usage.dont.item1`–`item3` |
+| Do & Don't | `DocsDoDont` | `doDont.title`, `doDont.pair1.*`, `doDont.pair2.*` |
+| Importação | `DocsImport` | `import.title`, `import.basic` |
+| Tipos de Gráfico | `DocsVariants` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`–`radialBar` |
+| Estados | `DocsStates` | `states.title`, `states.cols.*`, `states.empty.*`, `states.loading.*`, `states.singleSeries.*`, `states.multiSeries.*` |
+| Propriedades | `DocsProps` | `props.title`, `props.containerTitle`, `props.tooltipTitle`, `props.table.*`, `props.extensibilityTitle`, `props.extensibility` |
+| Tokens | `DocsTokens` | `tokens.title`, `tokens.table.*`, `tokens.customizationTitle`, `tokens.note` |
+| Acessibilidade | `DocsAccessibility` | `accessibility.title`, `accessibility.summary`, `accessibility.item1`–`item6`, `accessibility.keyboardTitle`, `accessibility.keyboard.*` |
+| Relacionados | `DocsRelated` | `related.title`, `related.alternatives`, `related.usedWith`, `related.table`, `related.card`, `related.dataTable` |
+| Notas | `DocsNotes` | `notes.title`, `notes.tip1`–`tip5` |
+| Analytics | `DocsAnalytics` | `analytics.title`, `analytics.description`, `analytics.table.*` |
+| Testes | `DocsTestes` | `testes.title`, `testes.functional.*`, `testes.accessibility.*`, `testes.visual.*` |
+
+**Regras específicas do Chart Svelte:**
+
+1. **`ChartContainer` + `ChartTooltip` apenas** — Svelte 5 expõe apenas `ChartContainer` e `ChartTooltip` como componentes do design system. A legenda (`ChartLegend`) e conteúdos de tooltip customizados são implementados com SVG inline ou HTML estruturado dentro do slot do `ChartContainer`.
+
+2. **Sem `cva()` — usar padrão §11.3** — 6 tipos documentados nos cards: `bar`, `line`, `area`, `pie`, `radar`, `radialBar`. O campo `variants.note` deve ser exibido acima dos cards via `{@html sanitizeHtml(tContent('variants.note'))}`.
+
+3. **`DocsProps` com 2 tabelas** — diferente do React (3 tabelas), Svelte usa apenas 2:
+   - `ChartContainer` (config, id, class, children snippet) — chave `props.containerTitle`
+   - `ChartTooltip` (indicator, hideLabel, nameKey, etc.) — chave `props.tooltipTitle`
+   Omitir a tabela `ChartLegendContent` — não existe como componente separado no Svelte.
+
+4. **`DocsImport`** — usar apenas `import.basic`:
+   ```svelte
+   import { ChartContainer, ChartTooltip } from '$lib/../components/ui/chart';
+   ```
+   Omitir `import.withRecharts` e `import.basecoat`.
+
+5. **SVG puro — sem lucide-svelte** — dentro dos previews de gráfico, usar SVG inline gerado programaticamente. Nunca `lucide-svelte` (incompatível com Svelte 5).
+
+6. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`.
+
+7. **`DocsAccessibility`** — `keyboardItems` com 4 entradas via chaves `accessibility.keyboard.*`. O `accessibilityLayer` do Recharts não existe no Svelte — documentar em nota que navegação por teclado é implementada via atributos ARIA manuais no SVG.
+
+8. **`DocsTestes`** — `functional` (6 items), `accessibility` (4 items com `{criterion, level, how}`), `visual` (4 items com `{story, priority}`). Iteração via `$derived` array.
+
+9. **`{@html}` obrigatoriamente sanitizado** — todos os campos HTML do translations.json (`anatomy.item*`, `notes.tip*`, `accessibility.item*`) passam por `sanitizeHtml()` antes de `{@html}`.
+
+10. **Stories Svelte** — criar 4 arquivos: `chart.stories.ts` (Playground + `withAutoDocsTab(ChartDocs)`), `chart-tipos.stories.ts` (Bar, Line — apenas os tipos suportados em preview interativo), `chart-composicoes.stories.ts` (WithTooltip, SingleSeries, MultiSeries), `chart-estados.stories.ts` (Empty, Loading). Não criar `-variantes` nem `-tamanhos`.
+
+11. **Svelte 5 runes** — usar `$state`, `$derived`, `$effect` — nunca `onMount`/`afterUpdate`/`$:`.
+
+12. **SEO — descrições longas** — o `translations.json` gerado tem descrições SEO acima de 155 chars nos 3 idiomas. Usar as descrições como estão; gap a ser corrigido pelo ux-writer.
+
 ---
 
 ## Proibições
