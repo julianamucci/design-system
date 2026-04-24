@@ -1,9 +1,10 @@
 import React from 'react';
+import { Card } from '@/components/ui/card';
 
 export function ComponentDemo({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-center p-4 mt-2 border rounded-xl bg-background shadow-sm">
+    <Card className="flex items-center justify-center p-4 mt-2 bg-background">
       {children}
-    </div>
+    </Card>
   );
 }
