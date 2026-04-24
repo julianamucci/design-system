@@ -90,6 +90,11 @@ function upsertMeta(
 
 export function useSeoEffect({ title, description, locale, componentSlug, breadcrumb }: SeoProps): void {
   useEffect(() => {
+    // Defensive: algumas docs pages importam objetos `locale` de libs externas
+    // (ex: ptBR de react-day-picker). Normaliza para string BCP 47.
+    const localeStr: string = typeof locale === 'string'
+      ? locale
+      : (locale as { code?: string } | undefined)?.code ?? 'pt-BR';
     const isIframe = window.self !== window.top;
     const targetDoc = isIframe ? window.parent.document : document;
     const targetWin = isIframe ? window.parent : window;
@@ -103,7 +108,7 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
 
     // ── Title + lang ──────────────────────────────────────────────────────
     targetDoc.title = fullTitle;
-    targetDoc.documentElement.lang = locale;
+    targetDoc.documentElement.lang = localeStr;
 
     // ── Meta tags ─────────────────────────────────────────────────────────
     const managedMeta = [
@@ -111,13 +116,13 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
       upsertMeta(targetDoc, { name: 'ai:summary' }, description),
       upsertMeta(targetDoc, { property: 'og:title' }, fullTitle),
       upsertMeta(targetDoc, { property: 'og:description' }, description),
-      upsertMeta(targetDoc, { property: 'og:locale' }, locale.replace('-', '_')),
+      upsertMeta(targetDoc, { property: 'og:locale' }, localeStr.replace('-', '_')),
       upsertMeta(
         targetDoc,
         { property: 'og:url' },
         buildLangUrl(
           `${targetWin.location.origin}${targetWin.location.pathname}?component=${componentSlug}`,
-          locale,
+          localeStr,
         ),
       ),
     ];
@@ -174,7 +179,7 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
       page_location: targetWin.location.href,
       page_title: fullTitle,
       component_name: componentSlug,
-      locale,
+      locale: localeStr as 'pt-BR' | 'en' | 'es',
     });
 
     // ── Cleanup ───────────────────────────────────────────────────────────
