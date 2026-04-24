@@ -18,7 +18,7 @@ export function createDocsStates(props: DocsStatesProps): HTMLElement {
   h2.className = 'text-xl font-semibold mb-4';
   h2.textContent = props.title;
 
-  const wrapper = createCard({ className: 'rounded-lg p-4 overflow-x-auto md:overflow-visible' });
+  const wrapper = createCard({ className: 'p-4 overflow-x-auto md:overflow-visible' });
 
   const { wrapper: tableWrapper, table } = createTable('w-full text-sm');
 

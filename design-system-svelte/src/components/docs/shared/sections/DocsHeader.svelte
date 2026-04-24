@@ -14,10 +14,10 @@
 <header class="ds-docs mb-8 sm:mb-12 border-b pb-6 sm:pb-8 border-border/50">
   <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
     <div class="flex items-center gap-2 flex-wrap">
-      <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
+      <Badge variant="secondary" class="bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
         {category}
       </Badge>
-      <Badge variant="outline" class="rounded-md text-muted-foreground font-normal px-2 py-0">
+      <Badge variant="outline" class="text-muted-foreground font-normal px-2 py-0">
         {type}
       </Badge>
     </div>

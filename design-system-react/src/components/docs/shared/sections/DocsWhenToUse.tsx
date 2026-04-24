@@ -50,7 +50,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
       <Card className="p-4 space-y-6">
 
         {/* Guidelines */}
-        <Card className="bg-muted/50 border border-border/40 shadow-none p-4 rounded-lg">
+        <Card className="bg-muted/50 border border-border/40 shadow-none p-4">
           <h3 className="font-medium text-sm mb-3">{guidelines.title}</h3>
           <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
             {guidelines.items.map((item, i) => (
