@@ -211,10 +211,13 @@ export function ThemeColorsDocs() {
               ))}
             </nav>
             <div className="mt-8 pt-6 border-t">
-               <Button variant="link" size="sm" className="h-auto p-0 text-xs text-muted-foreground hover:text-primary" asChild>
-                  <a href="#" className="flex items-center gap-1">
-                    Ver Variáveis HSL <ExternalLink className="size-3" />
-                  </a>
+               <Button
+                  variant="link"
+                  size="sm"
+                  className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
+                  render={<a href="#" className="flex items-center gap-1" />}
+               >
+                  Ver Variáveis HSL <ExternalLink className="size-3" />
                </Button>
             </div>
           </aside>

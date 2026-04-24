@@ -33,20 +33,20 @@ export function DocsRelated({ title, items, componentSlug }: DocsRelatedProps) {
           return (
             <Button
               key={i}
-              asChild
+              render={
+                <a
+                  href={item.path}
+                  target="_top"
+                  data-track="related"
+                  data-track-id={trackId}
+                  data-track-label={item.name}
+                />
+              }
               variant="ghost"
               className="text-left h-auto p-4 border bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
             >
-              <a
-                href={item.path}
-                target="_top"
-                data-track="related"
-                data-track-id={trackId}
-                data-track-label={item.name}
-              >
-                <p className="text-sm font-semibold text-primary">{item.name}</p>
-                <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
-              </a>
+              <p className="text-sm font-semibold text-primary">{item.name}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
             </Button>
           );
         })}
