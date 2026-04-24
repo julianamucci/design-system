@@ -214,6 +214,7 @@ export function ThemeColorsDocs() {
                <Button
                   variant="link"
                   size="sm"
+                  nativeButton={false}
                   className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
                   render={<a href="#" className="flex items-center gap-1" />}
                >

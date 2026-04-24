@@ -33,6 +33,7 @@ export function DocsRelated({ title, items, componentSlug }: DocsRelatedProps) {
           return (
             <Button
               key={i}
+              nativeButton={false}
               render={
                 <a
                   href={item.path}
