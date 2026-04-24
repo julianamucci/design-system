@@ -221,6 +221,14 @@ const codeAreaChart = `<ChartContainer :config="chartConfig" class="h-[300px] w-
   </template>
 </ChartContainer>`;
 
+const codePieChart = `<ChartContainer :config="chartConfig" class="h-[300px] w-full">
+  <template #default>
+    <VisXYContainer :data="pieData" :height="300">
+      <VisDonut :value="(d) => d.value" color="var(--color-desktop)" />
+    </VisXYContainer>
+  </template>
+</ChartContainer>`;
+
 const codeCustomizationTokens = `/* Em globals.css — personalizar tokens de cor das séries */
 :root {
   --chart-1: 221 83% 53%;
@@ -270,6 +278,7 @@ const variantItems = computed(() => [
   { name: 'bar',  description: stripHtml(tContent('variants.items.bar')),  code: codeBarChart  },
   { name: 'line', description: stripHtml(tContent('variants.items.line')), code: codeLineChart },
   { name: 'area', description: stripHtml(tContent('variants.items.area')), code: codeAreaChart },
+  { name: 'pie',  description: stripHtml(tContent('variants.items.pie')),  code: codePieChart  },
 ]);
 
 const stateItems = computed(() => [
@@ -315,6 +324,7 @@ const tokenRows = computed(() => [
   { token: '--chart-4',           value: 'var(--color-[key])', description: tContent('tokens.table.chart4')         },
   { token: '--chart-5',           value: 'var(--color-[key])', description: tContent('tokens.table.chart5')         },
   { token: '--primary',           value: 'bg-primary',         description: tContent('tokens.table.primary')        },
+  { token: '--secondary',         value: 'bg-secondary',       description: tContent('tokens.table.secondary')      },
   { token: '--muted',             value: 'bg-muted',           description: tContent('tokens.table.muted')          },
   { token: '--muted-foreground',  value: 'text-muted-foreground', description: tContent('tokens.table.mutedForeground') },
   { token: '--border',            value: 'border',             description: tContent('tokens.table.border')         },
@@ -621,6 +631,22 @@ const visualTestItems = computed(() => [
                   color="var(--chart-1)"
                 />
                 <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
+              </VisXYContainer>
+            </template>
+          </ChartContainer>
+        </div>
+      </template>
+      <!-- Pie chart -->
+      <template #variant-preview-3>
+        <div class="py-6 px-4 flex flex-col gap-3">
+          <ChartContainer
+            :config="{ desktop: { label: 'Desktop', color: 'var(--chart-1)' }, mobile: { label: 'Mobile', color: 'var(--chart-2)' } }"
+            class="h-[180px] w-[260px]"
+            aria-label="Pie chart"
+          >
+            <template #default>
+              <VisXYContainer :data="[{ value: 60 }, { value: 40 }]" :height="180">
+                <VisDonut :value="(d: any) => d.value" :color-accessor="(_: any, i: number) => i === 0 ? 'var(--chart-1)' : 'var(--chart-2)'" />
               </VisXYContainer>
             </template>
           </ChartContainer>

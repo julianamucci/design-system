@@ -451,7 +451,7 @@ export type ChartOptions = {
                   type: 'string[]',
                   defaultValue: 'design system colors',
                   required: 'Não',
-                  description: stripHtml(t('props.table.indicator')),
+                  description: stripHtml(t('props.table.colors')),
                 },
                 {
                   name: 'class',

@@ -1,3 +1,4 @@
+import { expect, within } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   BarChart,
@@ -66,6 +67,11 @@ export const Vazio: Story = {
       </BarChart>
     </ChartContainer>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const chart = canvas.getByRole("img", { name: /gráfico sem dados/i });
+    await expect(chart).toBeInTheDocument();
+  },
 };
 
 export const UmaSerie: Story = {
@@ -84,6 +90,11 @@ export const UmaSerie: Story = {
       </BarChart>
     </ChartContainer>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const chart = canvas.getByRole("img", { name: /acessos desktop mensais/i });
+    await expect(chart).toBeInTheDocument();
+  },
 };
 
 export const MultiplasSeries: Story = {
@@ -104,4 +115,11 @@ export const MultiplasSeries: Story = {
       </BarChart>
     </ChartContainer>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const chart = canvas.getByRole("img", { name: /acessos mensais desktop e mobile/i });
+    await expect(chart).toBeInTheDocument();
+    await expect(canvas.getByText("Desktop")).toBeInTheDocument();
+    await expect(canvas.getByText("Mobile")).toBeInTheDocument();
+  },
 };

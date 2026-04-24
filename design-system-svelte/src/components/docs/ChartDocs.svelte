@@ -137,6 +137,20 @@
   const codeImportBasic = `import { ChartContainer, ChartTooltip } from '@/components/ui/chart';
 import { BarChart, LineChart } from 'layerchart';`;
 
+  const codeImportSecondary = `// ChartConfig — mapeie chaves de dados para config visual
+import type { ChartConfig } from '@/components/ui/chart';
+
+const chartConfig = {
+  desktop: { label: 'Desktop', color: 'hsl(var(--chart-1))' },
+  mobile:  { label: 'Mobile',  color: 'hsl(var(--chart-2))' },
+} satisfies ChartConfig;`;
+
+  const codePie = `<!-- layerchart não inclui PieChart — use uma lib SVG auxiliar
+     ou SVG puro para gráficos de pizza na stack Svelte. -->
+<ChartContainer config={chartConfig} aria-label="Gráfico de pizza">
+  <!-- PieChart via svelte-path-utils ou similar -->
+</ChartContainer>`;
+
   const codeBar = `<ChartContainer config={chartConfig} aria-label="Gráfico de barras: acessos mensais">
   <BarChart
     {data}
@@ -456,6 +470,7 @@ type ChartConfig = Record<string, {
     title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
+    secondaryCode={codeImportSecondary}
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
@@ -463,9 +478,10 @@ type ChartConfig = Record<string, {
     title={$tStore('variants.title')}
     note={$tStore('variants.note')}
     items={[
-      { name: 'Bar',   description: stripHtml($tStore('variants.items.bar')),   code: codeBar,   preview: variantBar   },
-      { name: 'Linha', description: stripHtml($tStore('variants.items.line')),  code: codeLine,  preview: variantLine  },
-      { name: 'Multi', description: stripHtml($tStore('variants.items.bar')),   code: codeMulti, preview: variantMulti },
+      { name: 'Bar',   description: stripHtml($tStore('variants.items.bar')),        code: codeBar,   preview: variantBar   },
+      { name: 'Linha', description: stripHtml($tStore('variants.items.line')),       code: codeLine,  preview: variantLine  },
+      { name: 'Multi', description: stripHtml($tStore('variants.items.multiSeries')), code: codeMulti, preview: variantMulti },
+      { name: 'Pie',   description: stripHtml($tStore('variants.items.pie')),        code: codePie,   preview: variantPie   },
     ]}
   />
 
@@ -523,6 +539,12 @@ type ChartConfig = Record<string, {
       </BarChart>
     </ChartContainer>
   {/snippet}
+  {#snippet variantPie()}
+    <div class="flex items-center justify-center h-[180px] w-[220px] text-xs text-muted-foreground text-center px-4">
+      Pie chart não suportado nativamente em layerchart.<br />
+      Use SVG puro ou biblioteca auxiliar.
+    </div>
+  {/snippet}
 
   <!-- ── Estados ───────────────────────────────────────────────── -->
   <DocsStates
@@ -577,6 +599,21 @@ type ChartConfig = Record<string, {
           { name: 'labelKey',       type: 'string',                    defaultValue: '—',      required: 'Não', description: $tStore('props.table.labelKey')                  },
           { name: 'formatter',      type: 'Snippet',                   defaultValue: '—',      required: 'Não', description: $tStore('props.table.formatter')                 },
           { name: 'labelFormatter', type: 'function | null',           defaultValue: '—',      required: 'Não', description: $tStore('props.table.labelFormatter')            },
+        ],
+      },
+      {
+        title: $tStore('props.legendTitle'),
+        cols: {
+          prop: $tStore('props.table.prop'),
+          type: $tStore('props.table.type'),
+          default: $tStore('props.table.default'),
+          required: $tStore('props.table.required'),
+          description: $tStore('props.table.description'),
+        },
+        items: [
+          { name: 'hideIcon',      type: 'boolean',          defaultValue: 'false',    required: 'Não', description: $tStore('props.table.hideIcon')      },
+          { name: 'nameKey',       type: 'string',           defaultValue: '—',        required: 'Não', description: stripHtml($tStore('props.table.nameKey'))  },
+          { name: 'verticalAlign', type: '"top" | "bottom"', defaultValue: '"bottom"', required: 'Não', description: $tStore('props.table.verticalAlign')  },
         ],
       },
     ]}

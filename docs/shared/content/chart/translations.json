@@ -6,7 +6,7 @@
     "description": "Visualização de dados quantitativos via gráficos integrados ao sistema de design por tokens de cor. Baseado em Recharts (React/Vue) ou SVG puro (Basecoat).",
     "seo": {
       "title": "Chart — Display · Design System",
-      "description": "Documentação do Chart: gráficos bar, line, area, pie e radar via Recharts, integração de tema por tokens, acessibilidade WCAG com aria-label e accessibilityLayer.",
+      "description": "Documentação do Chart: gráficos bar, line, area, pie e radar via Recharts, integração de tema por tokens e acessibilidade WCAG com aria-label.",
       "aiSummary": "Componente Chart com ChartContainer, ChartTooltipContent e ChartLegendContent. Recharts em React/Vue, SVG puro no Basecoat. Tokens --chart-1 a --chart-5 para cores de séries.",
       "aiEntities": "Chart, Recharts, ChartContainer, ChartConfig, ChartTooltip, ChartLegend, SVG, WCAG 2.1, aria-label, accessibilityLayer",
       "aiIntent": "informational"
@@ -333,7 +333,7 @@
     "description": "Quantitative data visualization via charts integrated to the design system through color tokens. Built on Recharts (React/Vue) or plain SVG (Basecoat).",
     "seo": {
       "title": "Chart — Display · Design System",
-      "description": "Chart documentation: bar, line, area, pie and radar via Recharts, theme integration through tokens, WCAG accessibility with aria-label and accessibilityLayer.",
+      "description": "Chart documentation: bar, line, area, pie and radar via Recharts, theme integration through tokens, and WCAG accessibility with aria-label.",
       "aiSummary": "Chart component with ChartContainer, ChartTooltipContent, and ChartLegendContent. Recharts in React/Vue, plain SVG in Basecoat. Tokens --chart-1 to --chart-5 for series colors.",
       "aiEntities": "Chart, Recharts, ChartContainer, ChartConfig, ChartTooltip, ChartLegend, SVG, WCAG 2.1, aria-label, accessibilityLayer",
       "aiIntent": "informational"
@@ -660,7 +660,7 @@
     "description": "Visualización de datos cuantitativos mediante gráficos integrados al sistema de diseño por tokens de color. Basado en Recharts (React/Vue) o SVG puro (Basecoat).",
     "seo": {
       "title": "Chart — Display · Design System",
-      "description": "Documentación del Chart: gráficos bar, line, area, pie y radar vía Recharts, integración de tema por tokens, accesibilidad WCAG con aria-label y accessibilityLayer.",
+      "description": "Documentación del Chart: gráficos bar, line, area, pie y radar vía Recharts, integración de tema por tokens y accesibilidad WCAG con aria-label.",
       "aiSummary": "Componente Chart con ChartContainer, ChartTooltipContent y ChartLegendContent. Recharts en React/Vue, SVG puro en Basecoat. Tokens --chart-1 a --chart-5 para colores de series.",
       "aiEntities": "Chart, Recharts, ChartContainer, ChartConfig, ChartTooltip, ChartLegend, SVG, WCAG 2.1, aria-label, accessibilityLayer",
       "aiIntent": "informational"
