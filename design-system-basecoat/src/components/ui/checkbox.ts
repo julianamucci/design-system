@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 // ─── Checkbox classes ─────────────────────────────────────────────────────────
 
@@ -63,7 +64,9 @@ export function createCheckbox(options: CheckboxOptions = {}): HTMLElement {
   indicator.className = CHECKBOX_INDICATOR;
   indicator.dataset.slot = 'checkbox-indicator';
   indicator.style.display = checked ? '' : 'none';
-  indicator.innerHTML = CHECK_SVG;
+  // Safe: CHECK_SVG is a static literal constant defined in this module, not user input.
+  // sanitizeHtml used to satisfy the security audit rule.
+  indicator.innerHTML = sanitizeHtml(CHECK_SVG);
 
   wrapper.append(nativeInput, indicator);
 
