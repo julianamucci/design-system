@@ -1,0 +1,971 @@
+{
+  "pt-BR": {
+    "title": "Carousel",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Exibição sequencial de itens em um container com navegação por botões, teclado e gesto de arrastar, construída sobre Embla Carousel.",
+    "seo": {
+      "title": "Carousel — Display · Design System",
+      "description": "Documentação do Carousel: orientação horizontal e vertical, plugin de autoplay, dots via API, acessibilidade WCAG com role region.",
+      "aiSummary": "Componente Carousel baseado em Embla com orientação horizontal/vertical, navegação por teclado, suporte a autoplay via plugin, dots customizados via CarouselApi e role=\"region\" com aria-roledescription=\"carousel\".",
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-roledescription, motion-reduce",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "previous": "Item anterior",
+        "next": "Próximo item",
+        "slide": "Slide",
+        "of": "de",
+        "goToSlide": "Ir para o slide"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Carousel</strong> — container <code>&lt;div role=\"region\" aria-roledescription=\"carousel\"&gt;</code>. Recebe <code>opts</code>, <code>plugins</code>, <code>orientation</code> e <code>setApi</code>.",
+      "item2": "<strong>CarouselContent</strong> — wrapper do viewport que controla overflow e direção do flex.",
+      "item3": "<strong>CarouselItem</strong> — cada slide individual, com <code>role=\"group\"</code> e <code>aria-roledescription=\"slide\"</code>. Use <code>basis-*</code> para definir quantos itens exibir.",
+      "item4": "<strong>CarouselPrevious / CarouselNext</strong> — botões de navegação com estado <code>disabled</code> automático quando não há item anterior ou próximo.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Carousel>                   {/* Container role=\"region\" */}\n  <CarouselContent>          {/* Viewport com overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Botão voltar */}\n  <CarouselNext />           {/* Botão avançar */}\n</Carousel>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Sempre exiba <code>CarouselPrevious</code> e <code>CarouselNext</code> — não oculte a navegação em favor apenas do gesto de arrastar.",
+        "item2": "Use <code>basis-*</code> no <code>CarouselItem</code> para definir quantos itens aparecem por vez (<code>basis-1/2</code>, <code>basis-1/3</code>).",
+        "item3": "Para autoplay, combine <code>loop: true</code> com <code>stopOnInteraction: true</code> — pausa ao usuário interagir.",
+        "item4": "<code>aria-label</code> obrigatório nos botões de navegação quando o idioma não é o do documento."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Galeria de imagens de um produto", "u": "Sim, 1 item por vez", "a": "-" },
+        "item2": { "s": "Lista extensa de cards rolável", "u": "Não", "a": "ScrollArea" },
+        "item3": { "s": "Depoimentos ou destaques em home", "u": "Sim, com autoplay + loop", "a": "Grid estático" },
+        "item4": { "s": "Navegação principal por seções", "u": "Não", "a": "Tabs ou NavigationMenu" },
+        "item5": { "s": "Exibir múltiplos cards responsivos", "u": "Sim, basis responsivo", "a": "Grid responsivo" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "previous": {
+            "name": "CarouselPrevious aria-label",
+            "format": "Frase curta descritiva · máx. 4 palavras",
+            "good": "\"Item anterior\", \"Slide anterior\"",
+            "bad": "\"Voltar\", \"Anterior\", \"&lt;\""
+          },
+          "next": {
+            "name": "CarouselNext aria-label",
+            "format": "Frase curta descritiva · máx. 4 palavras",
+            "good": "\"Próximo item\", \"Próximo slide\"",
+            "bad": "\"Próximo\", \"Avançar\", \"&gt;\""
+          },
+          "dots": {
+            "name": "Dots de navegação",
+            "format": "Posição + total · frase clara",
+            "good": "\"Ir para o slide 2 de 5\"",
+            "bad": "\"Slide 2\", \"Ponto 2\""
+          },
+          "caption": {
+            "name": "Descrição do carrossel",
+            "format": "Frase nominal · contexto do conteúdo",
+            "good": "\"Galeria de fotos do produto\"",
+            "bad": "\"Carrossel\", \"Slider\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O espaço é limitado e os itens têm hierarquia semelhante",
+        "item2": "O usuário não precisa ver todos os itens simultaneamente",
+        "item3": "A navegação sequencial agrega ao conteúdo (galeria, tour)",
+        "item4": "Há ganho claro sobre um grid ou lista estática"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "O conteúdo precisa ser comparado lado a lado — use grid",
+        "item2": "Os itens têm importâncias muito diferentes — use destaques",
+        "item3": "A navegação principal do site depende dele — use <code>Tabs</code> ou <code>NavigationMenu</code>",
+        "item4": "O usuário pode não descobrir o conteúdo além do primeiro slide"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Navegação visível, aria-label descritivo e descrição textual do carrossel.",
+        "dont": "Esconder os botões de navegação — o gesto de arrastar não é descoberto por todos."
+      },
+      "pair2": {
+        "do": "Autoplay com loop e pausa ao interagir; respeite prefers-reduced-motion.",
+        "dont": "Autoplay rápido e sem pausa — cria fadiga visual e quebra WCAG 2.2.2."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withPlugin": "Com plugin de autoplay:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Orientações Disponíveis",
+      "note": "O Carousel não tem variantes visuais via prop. O comportamento de layout é controlado por <code>orientation</code> (horizontal ou vertical) e pela classe <code>basis-*</code> no <code>CarouselItem</code>.",
+      "items": {
+        "horizontal": "Orientação padrão. Slides deslizam lateralmente. Navegação com setas esquerda/direita no teclado.",
+        "vertical": "Slides empilhados verticalmente. Requer altura fixa no container. Botões posicionados acima/abaixo.",
+        "single": "Um item por vez ocupando 100% da largura. Uso típico: galerias de imagens e banners.",
+        "multi": "Vários itens visíveis via <code>basis-1/2</code>, <code>basis-1/3</code> etc. Ideal para cards responsivos."
+      }
+    },
+    "states": {
+      "title": "Configurações",
+      "cols": {
+        "state": "Configuração",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "single": {
+        "label": "Item único",
+        "trigger": "<code>CarouselItem</code> sem <code>basis-*</code>",
+        "behavior": "Cada slide ocupa 100% do viewport. Ideal para galeria de imagens"
+      },
+      "multi": {
+        "label": "Múltiplos itens",
+        "trigger": "<code>CarouselItem</code> com <code>basis-1/2</code> ou <code>basis-1/3</code>",
+        "behavior": "Exibe 2 ou 3 itens por vez. Use breakpoints (<code>md:basis-1/2</code>) para responsividade"
+      },
+      "autoplay": {
+        "label": "Autoplay",
+        "trigger": "Plugin <code>embla-carousel-autoplay</code> em <code>plugins</code>",
+        "behavior": "Avanço automático a cada N ms. Combine com <code>loop: true</code> e <code>stopOnInteraction: true</code>"
+      },
+      "vertical": {
+        "label": "Vertical",
+        "trigger": "<code>orientation=\"vertical\"</code>",
+        "behavior": "Slides empilhados. Requer altura fixa. Botões posicionados acima e abaixo do viewport"
+      },
+      "disabled": {
+        "label": "Extremo (início/fim)",
+        "trigger": "Sem <code>loop: true</code>, no primeiro ou último item",
+        "behavior": "<code>CarouselPrevious</code> ou <code>CarouselNext</code> ficam <code>disabled</code> automaticamente"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "carouselTitle": "Carousel",
+      "contentTitle": "CarouselContent",
+      "itemTitle": "CarouselItem",
+      "navTitle": "CarouselPrevious / CarouselNext",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "opts": "Opções do Embla (<code>loop</code>, <code>align</code>, <code>startIndex</code>, etc.).",
+        "plugins": "Array de plugins do Embla (ex: <code>Autoplay()</code>).",
+        "orientation": "Direção do deslize: <code>\"horizontal\"</code> (padrão) ou <code>\"vertical\"</code>.",
+        "setApi": "Callback que recebe a <code>CarouselApi</code> — use para dots, contadores e sincronização externa.",
+        "className": "Classes Tailwind adicionais aplicadas ao container ou subcomponente.",
+        "children": "Conteúdo do componente (slides, botões, legendas).",
+        "variant": "Variante do Button subjacente — padrão <code>\"outline\"</code>.",
+        "size": "Tamanho do Button subjacente — padrão <code>\"icon-sm\"</code>."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code>. Use <code>basis-*</code> no <code>CarouselItem</code> para controlar quantos itens aparecem por vez. A <code>CarouselApi</code> exposta via <code>setApi</code> permite implementar dots, contadores e sincronização externa sem forks."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "background": "Fundo do Button de navegação (variante outline)",
+        "foreground": "Texto e ícone do Button de navegação",
+        "border": "Borda do Button de navegação",
+        "accent": "Fundo do Button ao hover",
+        "ring": "Anel de foco visível via teclado",
+        "radiusButton": "Raio dos botões de navegação",
+        "primary": "Cor dos dots ativos em dots customizados"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "O Carousel usa <code>role=\"region\"</code> com <code>aria-roledescription=\"carousel\"</code> e cada slide é <code>role=\"group\"</code> com <code>aria-roledescription=\"slide\"</code>. Navegação por teclado com setas. Cumpre WCAG 2.1 AA: 1.4.13 (conteúdo em hover/foco), 2.2.2 (pause/stop/hide para autoplay).",
+      "item1": "<strong>role=\"region\" automático</strong> — o container recebe <code>role=\"region\"</code> e <code>aria-roledescription=\"carousel\"</code>, fazendo leitores de tela anunciarem a natureza do conteúdo.",
+      "item2": "<strong>Slides anunciados</strong> — cada <code>CarouselItem</code> recebe <code>role=\"group\"</code> e <code>aria-roledescription=\"slide\"</code>. Considere adicionar <code>aria-label=\"Slide N de M\"</code>.",
+      "item3": "<strong>Setas do teclado</strong> — <code>ArrowLeft</code> e <code>ArrowRight</code> (ou <code>ArrowUp</code>/<code>ArrowDown</code> em vertical) movem entre slides quando o container tem foco.",
+      "item4": "<strong>Autoplay e WCAG 2.2.2</strong> — sempre permita parar, pausar ou ocultar autoplay com duração maior que 5s. Use <code>stopOnInteraction: true</code>.",
+      "item5": "<strong>prefers-reduced-motion</strong> — o Embla respeita automaticamente a preferência do sistema, reduzindo ou eliminando a animação de deslize.",
+      "keyboard": {
+        "tab": "Leva foco ao carrossel e aos botões de navegação em sequência natural.",
+        "arrowLeft": "Move para o slide anterior (em orientação horizontal).",
+        "arrowRight": "Move para o próximo slide (em orientação horizontal).",
+        "enter": "Ativa o botão de navegação ou dot em foco.",
+        "space": "Ativa o botão de navegação ou dot em foco."
+      },
+      "aria": {
+        "role": "<code>role=\"region\"</code> — aplicado automaticamente no container do Carousel.",
+        "roledescription": "<code>aria-roledescription=\"carousel\"</code> — identifica o componente como carrossel para tecnologias assistivas.",
+        "slideRole": "<code>role=\"group\"</code> + <code>aria-roledescription=\"slide\"</code> — em cada <code>CarouselItem</code>.",
+        "ariaLabel": "<code>aria-label</code> obrigatório nos botões de navegação, especialmente quando só há ícone."
+      },
+      "screenReader": {
+        "onFocus": "Ao focar o carrossel: leitor anuncia \"região, carrossel\" e a descrição configurada.",
+        "onSlideChange": "Ao mudar de slide: o slide atual anuncia seu conteúdo quando recebe foco.",
+        "buttons": "Botões de navegação anunciam o <code>aria-label</code> e o estado <code>disabled</code> nos extremos."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "tabs": "Para navegação explícita entre conteúdos de mesmo nível com rótulos visíveis.",
+      "scrollArea": "Para rolagem livre de conteúdo extenso sem sequência de slides.",
+      "card": "Para compor o conteúdo interno de cada slide com hierarquia visual clara.",
+      "pagination": "Para indicar posição quando há muitos slides (acima de 5)."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "O padrão de espaçamento do Embla é <code>-ml-4</code> no <code>CarouselContent</code> somado a <code>pl-4</code> no <code>CarouselItem</code>. O componente já aplica esse padrão — sobrescreva apenas se necessário.",
+      "tip2": "Para implementar dots, capture a <code>CarouselApi</code> via <code>setApi</code> e escute o evento <code>select</code>. Use <code>scrollTo(i)</code> para ativar o slide pelo índice.",
+      "tip3": "Evite autoplay em conteúdo informacional crítico — usuários com leitores de tela ou motores cognitivos podem perder o conteúdo antes de lê-lo. Prefira loop sem autoplay.",
+      "tip4": "Em orientação vertical, defina altura explícita no container (<code>h-[400px]</code>, por exemplo) — sem altura o Embla não calcula o viewport corretamente."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "O Carousel dispara eventos quando o produto quer medir engajamento com slides ou autoplay. Eventos da docs page já são capturados automaticamente pelo observer de tracking.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "slideChange": "slide_change",
+        "slideChangeTrigger": "Usuário avança ou retrocede para outro slide (botão, teclado ou gesto)",
+        "slideChangePayload": "{ index: number, total: number, trigger: \"button\" | \"swipe\" | \"keyboard\" }",
+        "autoplayPause": "autoplay_paused",
+        "autoplayPauseTrigger": "Usuário interage e o autoplay pausa automaticamente",
+        "autoplayPausePayload": "{ index: number }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada configuração do Carousel.",
+        "item1": { "action": "Renderizar com múltiplos slides", "result": "Viewport exibe primeiro slide; CarouselPrevious começa disabled", "priority": "high" },
+        "item2": { "action": "Clicar em CarouselNext", "result": "Carrossel avança um slide; CarouselPrevious habilita", "priority": "high" },
+        "item3": { "action": "Pressionar ArrowRight com foco no container", "result": "Carrossel avança um slide", "priority": "high" },
+        "item4": { "action": "Chegar no último slide sem loop", "result": "CarouselNext fica disabled", "priority": "high" },
+        "item5": { "action": "Ativar orientation=\"vertical\"", "result": "Slides empilham; botões posicionados acima e abaixo do viewport", "priority": "medium" },
+        "item6": { "action": "Aplicar CarouselItem basis-1/2", "result": "Dois itens visíveis simultaneamente no viewport", "priority": "medium" },
+        "item7": { "action": "Ativar plugin Autoplay com stopOnInteraction", "result": "Autoplay avança a cada delay; pausa ao clicar ou arrastar", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "role=\"region\" e aria-roledescription=\"carousel\" no container", "level": "AA", "how": "getByRole('region') com nome acessível no testing-library" },
+        "item2": { "criterion": "CarouselItem com role=\"group\" e aria-roledescription=\"slide\"", "level": "AA", "how": "Inspecionar atributos dos slides no DOM" },
+        "item3": { "criterion": "Botões de navegação com aria-label descritivo", "level": "AA", "how": "getByRole('button', { name: /próximo item/i })" },
+        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" },
+        "item5": { "criterion": "Contraste mínimo 4.5:1 nos botões de navegação", "level": "AA", "how": "axe-core / Lighthouse" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Playground — estado inicial com 3+ slides", "priority": "high" },
+        "item2": { "story": "Variantes — horizontal e vertical", "priority": "high" },
+        "item3": { "story": "Configurações — múltiplos itens com basis responsivo", "priority": "medium" },
+        "item4": { "story": "Estados — primeiro e último slide (disabled nos extremos)", "priority": "medium" },
+        "item5": { "story": "Composições — com autoplay e dots customizados", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Configurações",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Carousel",
+    "category": "Display",
+    "type": "Component",
+    "description": "Sequential display of items in a container with button, keyboard, and drag navigation, built on top of Embla Carousel.",
+    "seo": {
+      "title": "Carousel — Display · Design System",
+      "description": "Documentation for Carousel: horizontal and vertical orientation, autoplay plugin, API-based dots, WCAG accessibility with region role.",
+      "aiSummary": "Embla-based Carousel component with horizontal/vertical orientation, keyboard navigation, autoplay via plugin, custom dots via CarouselApi, and role=\"region\" with aria-roledescription=\"carousel\".",
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-roledescription, motion-reduce",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "previous": "Previous item",
+        "next": "Next item",
+        "slide": "Slide",
+        "of": "of",
+        "goToSlide": "Go to slide"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Carousel</strong> — <code>&lt;div role=\"region\" aria-roledescription=\"carousel\"&gt;</code> container. Accepts <code>opts</code>, <code>plugins</code>, <code>orientation</code>, and <code>setApi</code>.",
+      "item2": "<strong>CarouselContent</strong> — viewport wrapper that controls overflow and flex direction.",
+      "item3": "<strong>CarouselItem</strong> — each individual slide, with <code>role=\"group\"</code> and <code>aria-roledescription=\"slide\"</code>. Use <code>basis-*</code> to control how many items are visible.",
+      "item4": "<strong>CarouselPrevious / CarouselNext</strong> — navigation buttons with automatic <code>disabled</code> state when there is no previous or next item.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Carousel>                   {/* Container role=\"region\" */}\n  <CarouselContent>          {/* Viewport with overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Back button */}\n  <CarouselNext />           {/* Forward button */}\n</Carousel>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Always show <code>CarouselPrevious</code> and <code>CarouselNext</code> — don't hide navigation in favor of drag alone.",
+        "item2": "Use <code>basis-*</code> on <code>CarouselItem</code> to control how many items appear at once (<code>basis-1/2</code>, <code>basis-1/3</code>).",
+        "item3": "For autoplay, combine <code>loop: true</code> with <code>stopOnInteraction: true</code> — pauses when the user interacts.",
+        "item4": "<code>aria-label</code> is required on navigation buttons when the language differs from the document."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Product image gallery", "u": "Yes, one item at a time", "a": "-" },
+        "item2": { "s": "Long scrollable list of cards", "u": "No", "a": "ScrollArea" },
+        "item3": { "s": "Testimonials or highlights on home", "u": "Yes, with autoplay + loop", "a": "Static grid" },
+        "item4": { "s": "Primary section navigation", "u": "No", "a": "Tabs or NavigationMenu" },
+        "item5": { "s": "Show multiple responsive cards", "u": "Yes, responsive basis", "a": "Responsive grid" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "previous": {
+            "name": "CarouselPrevious aria-label",
+            "format": "Short descriptive phrase · max. 4 words",
+            "good": "\"Previous item\", \"Previous slide\"",
+            "bad": "\"Back\", \"Previous\", \"&lt;\""
+          },
+          "next": {
+            "name": "CarouselNext aria-label",
+            "format": "Short descriptive phrase · max. 4 words",
+            "good": "\"Next item\", \"Next slide\"",
+            "bad": "\"Next\", \"Forward\", \"&gt;\""
+          },
+          "dots": {
+            "name": "Navigation dots",
+            "format": "Position + total · clear phrase",
+            "good": "\"Go to slide 2 of 5\"",
+            "bad": "\"Slide 2\", \"Dot 2\""
+          },
+          "caption": {
+            "name": "Carousel description",
+            "format": "Noun phrase · content context",
+            "good": "\"Product photo gallery\"",
+            "bad": "\"Carousel\", \"Slider\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Space is limited and items share similar hierarchy",
+        "item2": "The user does not need to see all items at once",
+        "item3": "Sequential navigation adds to the content (gallery, tour)",
+        "item4": "There is a clear gain over a grid or static list"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "Content must be compared side by side — use a grid",
+        "item2": "Items have very different importance — use highlights",
+        "item3": "Primary site navigation depends on it — use <code>Tabs</code> or <code>NavigationMenu</code>",
+        "item4": "The user may not discover content beyond the first slide"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Visible navigation, descriptive aria-label, and a text description of the carousel.",
+        "dont": "Hide navigation buttons — drag is not discoverable for everyone."
+      },
+      "pair2": {
+        "do": "Autoplay with loop and pause on interaction; respect prefers-reduced-motion.",
+        "dont": "Fast autoplay without pause — causes visual fatigue and breaks WCAG 2.2.2."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withPlugin": "With autoplay plugin:"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Available Orientations",
+      "note": "Carousel has no visual variants as a prop. Layout behavior is controlled by <code>orientation</code> (horizontal or vertical) and by the <code>basis-*</code> class on <code>CarouselItem</code>.",
+      "items": {
+        "horizontal": "Default orientation. Slides move sideways. Keyboard navigation with left/right arrows.",
+        "vertical": "Slides stacked vertically. Requires fixed container height. Buttons positioned above/below.",
+        "single": "One item at a time taking 100% width. Typical use: image galleries and banners.",
+        "multi": "Multiple items visible via <code>basis-1/2</code>, <code>basis-1/3</code>, etc. Ideal for responsive cards."
+      }
+    },
+    "states": {
+      "title": "Configurations",
+      "cols": {
+        "state": "Configuration",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "single": {
+        "label": "Single item",
+        "trigger": "<code>CarouselItem</code> without <code>basis-*</code>",
+        "behavior": "Each slide fills 100% of the viewport. Ideal for image galleries"
+      },
+      "multi": {
+        "label": "Multiple items",
+        "trigger": "<code>CarouselItem</code> with <code>basis-1/2</code> or <code>basis-1/3</code>",
+        "behavior": "Shows 2 or 3 items at once. Use breakpoints (<code>md:basis-1/2</code>) for responsiveness"
+      },
+      "autoplay": {
+        "label": "Autoplay",
+        "trigger": "<code>embla-carousel-autoplay</code> plugin in <code>plugins</code>",
+        "behavior": "Auto-advances every N ms. Combine with <code>loop: true</code> and <code>stopOnInteraction: true</code>"
+      },
+      "vertical": {
+        "label": "Vertical",
+        "trigger": "<code>orientation=\"vertical\"</code>",
+        "behavior": "Slides stack. Requires fixed height. Buttons positioned above and below the viewport"
+      },
+      "disabled": {
+        "label": "Edge (start/end)",
+        "trigger": "No <code>loop: true</code>, at first or last item",
+        "behavior": "<code>CarouselPrevious</code> or <code>CarouselNext</code> become <code>disabled</code> automatically"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "carouselTitle": "Carousel",
+      "contentTitle": "CarouselContent",
+      "itemTitle": "CarouselItem",
+      "navTitle": "CarouselPrevious / CarouselNext",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "opts": "Embla options (<code>loop</code>, <code>align</code>, <code>startIndex</code>, etc.).",
+        "plugins": "Array of Embla plugins (e.g., <code>Autoplay()</code>).",
+        "orientation": "Slide direction: <code>\"horizontal\"</code> (default) or <code>\"vertical\"</code>.",
+        "setApi": "Callback that receives <code>CarouselApi</code> — use for dots, counters, and external sync.",
+        "className": "Additional Tailwind classes applied to the container or subcomponent.",
+        "children": "Component content (slides, buttons, captions).",
+        "variant": "Underlying Button variant — defaults to <code>\"outline\"</code>.",
+        "size": "Underlying Button size — defaults to <code>\"icon-sm\"</code>."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code>. Use <code>basis-*</code> on <code>CarouselItem</code> to control how many items appear at once. The <code>CarouselApi</code> exposed via <code>setApi</code> lets you implement dots, counters, and external sync without forks."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "background": "Navigation Button background (outline variant)",
+        "foreground": "Navigation Button text and icon",
+        "border": "Navigation Button border",
+        "accent": "Navigation Button hover background",
+        "ring": "Visible focus ring via keyboard",
+        "radiusButton": "Navigation button radius",
+        "primary": "Active dot color in custom dots"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "Carousel uses <code>role=\"region\"</code> with <code>aria-roledescription=\"carousel\"</code>, and each slide is <code>role=\"group\"</code> with <code>aria-roledescription=\"slide\"</code>. Arrow-key keyboard navigation. Meets WCAG 2.1 AA: 1.4.13 (content on hover/focus), 2.2.2 (pause/stop/hide for autoplay).",
+      "item1": "<strong>Automatic role=\"region\"</strong> — the container receives <code>role=\"region\"</code> and <code>aria-roledescription=\"carousel\"</code>, so screen readers announce the nature of the content.",
+      "item2": "<strong>Announced slides</strong> — each <code>CarouselItem</code> receives <code>role=\"group\"</code> and <code>aria-roledescription=\"slide\"</code>. Consider adding <code>aria-label=\"Slide N of M\"</code>.",
+      "item3": "<strong>Keyboard arrows</strong> — <code>ArrowLeft</code> and <code>ArrowRight</code> (or <code>ArrowUp</code>/<code>ArrowDown</code> in vertical) move between slides when the container has focus.",
+      "item4": "<strong>Autoplay and WCAG 2.2.2</strong> — always allow pause, stop, or hide for autoplay longer than 5s. Use <code>stopOnInteraction: true</code>.",
+      "item5": "<strong>prefers-reduced-motion</strong> — Embla automatically respects the system preference, reducing or removing the slide animation.",
+      "keyboard": {
+        "tab": "Moves focus to the carousel and navigation buttons in natural order.",
+        "arrowLeft": "Moves to the previous slide (in horizontal orientation).",
+        "arrowRight": "Moves to the next slide (in horizontal orientation).",
+        "enter": "Activates the focused navigation button or dot.",
+        "space": "Activates the focused navigation button or dot."
+      },
+      "aria": {
+        "role": "<code>role=\"region\"</code> — automatically applied to the Carousel container.",
+        "roledescription": "<code>aria-roledescription=\"carousel\"</code> — identifies the component as a carousel for assistive tech.",
+        "slideRole": "<code>role=\"group\"</code> + <code>aria-roledescription=\"slide\"</code> — on each <code>CarouselItem</code>.",
+        "ariaLabel": "<code>aria-label</code> is required on navigation buttons, especially when only an icon is shown."
+      },
+      "screenReader": {
+        "onFocus": "When the carousel is focused: reader announces \"region, carousel\" and the configured description.",
+        "onSlideChange": "On slide change: the current slide announces its content when it receives focus.",
+        "buttons": "Navigation buttons announce the <code>aria-label</code> and the <code>disabled</code> state at the edges."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "tabs": "For explicit navigation between peer content with visible labels.",
+      "scrollArea": "For free scrolling of long content without a slide sequence.",
+      "card": "For composing the inner content of each slide with clear visual hierarchy.",
+      "pagination": "To indicate position when there are many slides (more than 5)."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "Embla's spacing pattern is <code>-ml-4</code> on <code>CarouselContent</code> plus <code>pl-4</code> on <code>CarouselItem</code>. The component already applies this — override only if needed.",
+      "tip2": "To implement dots, capture the <code>CarouselApi</code> via <code>setApi</code> and listen to the <code>select</code> event. Use <code>scrollTo(i)</code> to activate a slide by index.",
+      "tip3": "Avoid autoplay on critical informational content — screen reader and cognitive users may miss content before reading it. Prefer loop without autoplay.",
+      "tip4": "In vertical orientation, set an explicit height on the container (e.g., <code>h-[400px]</code>) — without height Embla cannot compute the viewport correctly."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Carousel emits events when the product wants to measure slide or autoplay engagement. Docs page events are captured automatically by the tracking observer.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "slideChange": "slide_change",
+        "slideChangeTrigger": "User advances or returns to another slide (button, keyboard, or gesture)",
+        "slideChangePayload": "{ index: number, total: number, trigger: \"button\" | \"swipe\" | \"keyboard\" }",
+        "autoplayPause": "autoplay_paused",
+        "autoplayPauseTrigger": "User interacts and autoplay pauses automatically",
+        "autoplayPausePayload": "{ index: number }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Carousel configuration.",
+        "item1": { "action": "Render with multiple slides", "result": "Viewport shows first slide; CarouselPrevious starts disabled", "priority": "high" },
+        "item2": { "action": "Click CarouselNext", "result": "Carousel advances one slide; CarouselPrevious becomes enabled", "priority": "high" },
+        "item3": { "action": "Press ArrowRight with focus on container", "result": "Carousel advances one slide", "priority": "high" },
+        "item4": { "action": "Reach last slide without loop", "result": "CarouselNext becomes disabled", "priority": "high" },
+        "item5": { "action": "Enable orientation=\"vertical\"", "result": "Slides stack; buttons positioned above and below viewport", "priority": "medium" },
+        "item6": { "action": "Apply CarouselItem basis-1/2", "result": "Two items visible simultaneously in the viewport", "priority": "medium" },
+        "item7": { "action": "Enable Autoplay plugin with stopOnInteraction", "result": "Autoplay advances every delay; pauses on click or drag", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "role=\"region\" and aria-roledescription=\"carousel\" on container", "level": "AA", "how": "getByRole('region') with accessible name in testing-library" },
+        "item2": { "criterion": "CarouselItem with role=\"group\" and aria-roledescription=\"slide\"", "level": "AA", "how": "Inspect slide attributes in DOM" },
+        "item3": { "criterion": "Navigation buttons with descriptive aria-label", "level": "AA", "how": "getByRole('button', { name: /next item/i })" },
+        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" },
+        "item5": { "criterion": "Minimum 4.5:1 contrast on navigation buttons", "level": "AA", "how": "axe-core / Lighthouse" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Playground — initial state with 3+ slides", "priority": "high" },
+        "item2": { "story": "Variants — horizontal and vertical", "priority": "high" },
+        "item3": { "story": "Configurations — multiple items with responsive basis", "priority": "medium" },
+        "item4": { "story": "States — first and last slide (disabled at edges)", "priority": "medium" },
+        "item5": { "story": "Compositions — with autoplay and custom dots", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "Configurations",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Carousel",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Exhibición secuencial de ítems en un contenedor con navegación por botones, teclado y gesto de arrastrar, construido sobre Embla Carousel.",
+    "seo": {
+      "title": "Carousel — Display · Design System",
+      "description": "Documentación del Carousel: orientación horizontal y vertical, plugin de autoplay, dots vía API, accesibilidad WCAG con role region.",
+      "aiSummary": "Componente Carousel basado en Embla con orientación horizontal/vertical, navegación por teclado, soporte a autoplay vía plugin, dots customizados vía CarouselApi y role=\"region\" con aria-roledescription=\"carousel\".",
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-roledescription, motion-reduce",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "previous": "Ítem anterior",
+        "next": "Próximo ítem",
+        "slide": "Slide",
+        "of": "de",
+        "goToSlide": "Ir al slide"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Carousel</strong> — contenedor <code>&lt;div role=\"region\" aria-roledescription=\"carousel\"&gt;</code>. Acepta <code>opts</code>, <code>plugins</code>, <code>orientation</code> y <code>setApi</code>.",
+      "item2": "<strong>CarouselContent</strong> — wrapper del viewport que controla overflow y dirección del flex.",
+      "item3": "<strong>CarouselItem</strong> — cada slide individual, con <code>role=\"group\"</code> y <code>aria-roledescription=\"slide\"</code>. Usa <code>basis-*</code> para definir cuántos ítems mostrar.",
+      "item4": "<strong>CarouselPrevious / CarouselNext</strong> — botones de navegación con estado <code>disabled</code> automático cuando no hay ítem anterior o siguiente.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Carousel>                   {/* Contenedor role=\"region\" */}\n  <CarouselContent>          {/* Viewport con overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Botón volver */}\n  <CarouselNext />           {/* Botón avanzar */}\n</Carousel>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Muestra siempre <code>CarouselPrevious</code> y <code>CarouselNext</code> — no ocultes la navegación en favor solo del gesto de arrastrar.",
+        "item2": "Usa <code>basis-*</code> en <code>CarouselItem</code> para definir cuántos ítems aparecen por vez (<code>basis-1/2</code>, <code>basis-1/3</code>).",
+        "item3": "Para autoplay, combina <code>loop: true</code> con <code>stopOnInteraction: true</code> — pausa al usuario interactuar.",
+        "item4": "<code>aria-label</code> obligatorio en los botones de navegación cuando el idioma difiere del documento."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Galería de imágenes de producto", "u": "Sí, un ítem por vez", "a": "-" },
+        "item2": { "s": "Lista extensa de cards scrolleable", "u": "No", "a": "ScrollArea" },
+        "item3": { "s": "Testimonios o destacados en home", "u": "Sí, con autoplay + loop", "a": "Grid estático" },
+        "item4": { "s": "Navegación principal por secciones", "u": "No", "a": "Tabs o NavigationMenu" },
+        "item5": { "s": "Mostrar múltiples cards responsivos", "u": "Sí, basis responsivo", "a": "Grid responsivo" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "previous": {
+            "name": "CarouselPrevious aria-label",
+            "format": "Frase corta descriptiva · máx. 4 palabras",
+            "good": "\"Ítem anterior\", \"Slide anterior\"",
+            "bad": "\"Volver\", \"Anterior\", \"&lt;\""
+          },
+          "next": {
+            "name": "CarouselNext aria-label",
+            "format": "Frase corta descriptiva · máx. 4 palabras",
+            "good": "\"Próximo ítem\", \"Próximo slide\"",
+            "bad": "\"Próximo\", \"Avanzar\", \"&gt;\""
+          },
+          "dots": {
+            "name": "Dots de navegación",
+            "format": "Posición + total · frase clara",
+            "good": "\"Ir al slide 2 de 5\"",
+            "bad": "\"Slide 2\", \"Punto 2\""
+          },
+          "caption": {
+            "name": "Descripción del carrusel",
+            "format": "Frase nominal · contexto del contenido",
+            "good": "\"Galería de fotos del producto\"",
+            "bad": "\"Carrusel\", \"Slider\""
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "El espacio es limitado y los ítems tienen jerarquía similar",
+        "item2": "El usuario no necesita ver todos los ítems a la vez",
+        "item3": "La navegación secuencial aporta al contenido (galería, tour)",
+        "item4": "Hay ganancia clara sobre un grid o lista estática"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El contenido debe compararse lado a lado — usa grid",
+        "item2": "Los ítems tienen importancias muy distintas — usa destacados",
+        "item3": "La navegación principal del sitio depende de él — usa <code>Tabs</code> o <code>NavigationMenu</code>",
+        "item4": "El usuario puede no descubrir contenido más allá del primer slide"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Navegación visible, aria-label descriptivo y descripción textual del carrusel.",
+        "dont": "Esconder los botones de navegación — el gesto de arrastrar no es descubierto por todos."
+      },
+      "pair2": {
+        "do": "Autoplay con loop y pausa al interactuar; respeta prefers-reduced-motion.",
+        "dont": "Autoplay rápido y sin pausa — genera fatiga visual y rompe WCAG 2.2.2."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withPlugin": "Con plugin de autoplay:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Orientaciones Disponibles",
+      "note": "Carousel no tiene variantes visuales como prop. El comportamiento de layout es controlado por <code>orientation</code> (horizontal o vertical) y por la clase <code>basis-*</code> en <code>CarouselItem</code>.",
+      "items": {
+        "horizontal": "Orientación predeterminada. Slides se deslizan lateralmente. Navegación con flechas izquierda/derecha en el teclado.",
+        "vertical": "Slides apilados verticalmente. Requiere altura fija en el contenedor. Botones posicionados arriba/abajo.",
+        "single": "Un ítem por vez ocupando el 100% del ancho. Uso típico: galerías de imágenes y banners.",
+        "multi": "Varios ítems visibles vía <code>basis-1/2</code>, <code>basis-1/3</code>, etc. Ideal para cards responsivos."
+      }
+    },
+    "states": {
+      "title": "Configuraciones",
+      "cols": {
+        "state": "Configuración",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "single": {
+        "label": "Ítem único",
+        "trigger": "<code>CarouselItem</code> sin <code>basis-*</code>",
+        "behavior": "Cada slide ocupa el 100% del viewport. Ideal para galería de imágenes"
+      },
+      "multi": {
+        "label": "Múltiples ítems",
+        "trigger": "<code>CarouselItem</code> con <code>basis-1/2</code> o <code>basis-1/3</code>",
+        "behavior": "Muestra 2 o 3 ítems a la vez. Usa breakpoints (<code>md:basis-1/2</code>) para responsividad"
+      },
+      "autoplay": {
+        "label": "Autoplay",
+        "trigger": "Plugin <code>embla-carousel-autoplay</code> en <code>plugins</code>",
+        "behavior": "Avance automático cada N ms. Combina con <code>loop: true</code> y <code>stopOnInteraction: true</code>"
+      },
+      "vertical": {
+        "label": "Vertical",
+        "trigger": "<code>orientation=\"vertical\"</code>",
+        "behavior": "Slides apilados. Requiere altura fija. Botones posicionados arriba y abajo del viewport"
+      },
+      "disabled": {
+        "label": "Extremo (inicio/fin)",
+        "trigger": "Sin <code>loop: true</code>, en el primer o último ítem",
+        "behavior": "<code>CarouselPrevious</code> o <code>CarouselNext</code> quedan <code>disabled</code> automáticamente"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "carouselTitle": "Carousel",
+      "contentTitle": "CarouselContent",
+      "itemTitle": "CarouselItem",
+      "navTitle": "CarouselPrevious / CarouselNext",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "opts": "Opciones de Embla (<code>loop</code>, <code>align</code>, <code>startIndex</code>, etc.).",
+        "plugins": "Array de plugins de Embla (ej: <code>Autoplay()</code>).",
+        "orientation": "Dirección del deslizamiento: <code>\"horizontal\"</code> (predeterminado) o <code>\"vertical\"</code>.",
+        "setApi": "Callback que recibe la <code>CarouselApi</code> — úsalo para dots, contadores y sincronización externa.",
+        "className": "Clases Tailwind adicionales aplicadas al contenedor o subcomponente.",
+        "children": "Contenido del componente (slides, botones, subtítulos).",
+        "variant": "Variante del Button subyacente — por defecto <code>\"outline\"</code>.",
+        "size": "Tamaño del Button subyacente — por defecto <code>\"icon-sm\"</code>."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code>. Usa <code>basis-*</code> en <code>CarouselItem</code> para controlar cuántos ítems aparecen por vez. La <code>CarouselApi</code> expuesta vía <code>setApi</code> permite implementar dots, contadores y sincronización externa sin forks."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "background": "Fondo del Button de navegación (variante outline)",
+        "foreground": "Texto e ícono del Button de navegación",
+        "border": "Borde del Button de navegación",
+        "accent": "Fondo del Button al hover",
+        "ring": "Anillo de foco visible vía teclado",
+        "radiusButton": "Radio de los botones de navegación",
+        "primary": "Color de los dots activos en dots customizados"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "Carousel usa <code>role=\"region\"</code> con <code>aria-roledescription=\"carousel\"</code>, y cada slide es <code>role=\"group\"</code> con <code>aria-roledescription=\"slide\"</code>. Navegación por teclado con flechas. Cumple WCAG 2.1 AA: 1.4.13 (contenido en hover/foco), 2.2.2 (pause/stop/hide para autoplay).",
+      "item1": "<strong>role=\"region\" automático</strong> — el contenedor recibe <code>role=\"region\"</code> y <code>aria-roledescription=\"carousel\"</code>, haciendo que los lectores de pantalla anuncien la naturaleza del contenido.",
+      "item2": "<strong>Slides anunciados</strong> — cada <code>CarouselItem</code> recibe <code>role=\"group\"</code> y <code>aria-roledescription=\"slide\"</code>. Considera agregar <code>aria-label=\"Slide N de M\"</code>.",
+      "item3": "<strong>Flechas del teclado</strong> — <code>ArrowLeft</code> y <code>ArrowRight</code> (o <code>ArrowUp</code>/<code>ArrowDown</code> en vertical) mueven entre slides cuando el contenedor tiene foco.",
+      "item4": "<strong>Autoplay y WCAG 2.2.2</strong> — siempre permite pausar, detener u ocultar autoplay con duración mayor a 5s. Usa <code>stopOnInteraction: true</code>.",
+      "item5": "<strong>prefers-reduced-motion</strong> — Embla respeta automáticamente la preferencia del sistema, reduciendo o eliminando la animación del deslizamiento.",
+      "keyboard": {
+        "tab": "Lleva el foco al carrusel y a los botones de navegación en secuencia natural.",
+        "arrowLeft": "Mueve al slide anterior (en orientación horizontal).",
+        "arrowRight": "Mueve al siguiente slide (en orientación horizontal).",
+        "enter": "Activa el botón de navegación o dot en foco.",
+        "space": "Activa el botón de navegación o dot en foco."
+      },
+      "aria": {
+        "role": "<code>role=\"region\"</code> — aplicado automáticamente al contenedor del Carousel.",
+        "roledescription": "<code>aria-roledescription=\"carousel\"</code> — identifica al componente como carrusel para tecnologías asistivas.",
+        "slideRole": "<code>role=\"group\"</code> + <code>aria-roledescription=\"slide\"</code> — en cada <code>CarouselItem</code>.",
+        "ariaLabel": "<code>aria-label</code> obligatorio en los botones de navegación, especialmente cuando solo hay ícono."
+      },
+      "screenReader": {
+        "onFocus": "Al enfocar el carrusel: el lector anuncia \"región, carrusel\" y la descripción configurada.",
+        "onSlideChange": "Al cambiar de slide: el slide actual anuncia su contenido cuando recibe foco.",
+        "buttons": "Los botones de navegación anuncian el <code>aria-label</code> y el estado <code>disabled</code> en los extremos."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "tabs": "Para navegación explícita entre contenidos del mismo nivel con etiquetas visibles.",
+      "scrollArea": "Para scroll libre de contenido extenso sin secuencia de slides.",
+      "card": "Para componer el contenido interno de cada slide con jerarquía visual clara.",
+      "pagination": "Para indicar posición cuando hay muchos slides (más de 5)."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "El patrón de espaciado de Embla es <code>-ml-4</code> en <code>CarouselContent</code> sumado a <code>pl-4</code> en <code>CarouselItem</code>. El componente ya aplica ese patrón — sobrescribe solo si es necesario.",
+      "tip2": "Para implementar dots, captura la <code>CarouselApi</code> vía <code>setApi</code> y escucha el evento <code>select</code>. Usa <code>scrollTo(i)</code> para activar el slide por índice.",
+      "tip3": "Evita autoplay en contenido informacional crítico — usuarios con lectores de pantalla o motores cognitivos pueden perder el contenido antes de leerlo. Prefiere loop sin autoplay.",
+      "tip4": "En orientación vertical, define altura explícita en el contenedor (<code>h-[400px]</code>, por ejemplo) — sin altura Embla no calcula el viewport correctamente."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Carousel dispara eventos cuando el producto quiere medir engagement con slides o autoplay. Eventos de la docs page son capturados automáticamente por el observer de tracking.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "slideChange": "slide_change",
+        "slideChangeTrigger": "Usuario avanza o retrocede a otro slide (botón, teclado o gesto)",
+        "slideChangePayload": "{ index: number, total: number, trigger: \"button\" | \"swipe\" | \"keyboard\" }",
+        "autoplayPause": "autoplay_paused",
+        "autoplayPauseTrigger": "Usuario interactúa y el autoplay pausa automáticamente",
+        "autoplayPausePayload": "{ index: number }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada configuración del Carousel.",
+        "item1": { "action": "Renderizar con múltiples slides", "result": "Viewport muestra el primer slide; CarouselPrevious inicia disabled", "priority": "high" },
+        "item2": { "action": "Clicar CarouselNext", "result": "Carrusel avanza un slide; CarouselPrevious se habilita", "priority": "high" },
+        "item3": { "action": "Pulsar ArrowRight con foco en el contenedor", "result": "Carrusel avanza un slide", "priority": "high" },
+        "item4": { "action": "Llegar al último slide sin loop", "result": "CarouselNext queda disabled", "priority": "high" },
+        "item5": { "action": "Activar orientation=\"vertical\"", "result": "Slides apilan; botones posicionados arriba y abajo del viewport", "priority": "medium" },
+        "item6": { "action": "Aplicar CarouselItem basis-1/2", "result": "Dos ítems visibles simultáneamente en el viewport", "priority": "medium" },
+        "item7": { "action": "Activar plugin Autoplay con stopOnInteraction", "result": "Autoplay avanza cada delay; pausa al clicar o arrastrar", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "role=\"region\" y aria-roledescription=\"carousel\" en contenedor", "level": "AA", "how": "getByRole('region') con nombre accesible en testing-library" },
+        "item2": { "criterion": "CarouselItem con role=\"group\" y aria-roledescription=\"slide\"", "level": "AA", "how": "Inspeccionar atributos de los slides en el DOM" },
+        "item3": { "criterion": "Botones de navegación con aria-label descriptivo", "level": "AA", "how": "getByRole('button', { name: /próximo ítem/i })" },
+        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" },
+        "item5": { "criterion": "Contraste mínimo 4.5:1 en botones de navegación", "level": "AA", "how": "axe-core / Lighthouse" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Playground — estado inicial con 3+ slides", "priority": "high" },
+        "item2": { "story": "Variantes — horizontal y vertical", "priority": "high" },
+        "item3": { "story": "Configuraciones — múltiples ítems con basis responsivo", "priority": "medium" },
+        "item4": { "story": "Estados — primer y último slide (disabled en extremos)", "priority": "medium" },
+        "item5": { "story": "Composiciones — con autoplay y dots customizados", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Configuraciones",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
