@@ -20,14 +20,14 @@ function handleChange(value: string) {
 </script>
 
 <template>
-  <div class="flex items-center gap-1 bg-muted/30 p-1 rounded-lg border border-border/40">
+  <div class="flex items-center gap-1 bg-muted/30 p-1 rounded-(--radius-input) border border-border/40">
     <button
       v-for="lang in locales"
       :key="lang.value"
       @click="handleChange(lang.value)"
-      :class="['h-(--height-xs) px-2 text-[10px] font-bold rounded transition-all',
+      :class="['h-(--height-xs) px-2 text-[10px] font-bold rounded-(--radius-button) transition-all',
         store.locale === lang.value
-          ? 'bg-secondary text-secondary-foreground shadow-sm'
+          ? 'bg-secondary text-secondary-foreground'
           : 'text-muted-foreground hover:text-foreground hover:bg-muted/50']"
       :aria-pressed="store.locale === lang.value"
     >

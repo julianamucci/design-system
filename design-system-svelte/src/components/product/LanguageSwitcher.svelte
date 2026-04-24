@@ -18,7 +18,7 @@
   }
 </script>
 
-<div class="flex items-center gap-1 bg-muted/30 p-1 rounded-lg border border-border/40">
+<div class="flex items-center gap-1 bg-muted/30 p-1 rounded-(--radius-input) border border-border/40">
   {#each locales as lang}
     <button
       type="button"
@@ -26,9 +26,9 @@
       aria-pressed={$locale === lang.value}
       onclick={() => handleChange(lang.value)}
       class={[
-        'h-(--height-xs) px-2 text-[10px] font-bold rounded transition-all',
+        'h-(--height-xs) px-2 text-[10px] font-bold rounded-(--radius-button) transition-all',
         $locale === lang.value
-          ? 'bg-secondary text-secondary-foreground shadow-sm'
+          ? 'bg-secondary text-secondary-foreground'
           : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
       ].join(' ')}
     >
