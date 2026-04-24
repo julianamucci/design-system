@@ -156,6 +156,22 @@ interface AnalyticsEvents {
     section_id: string;
     href: string;
   };
+
+  /** Disparado quando o slide ativo do Carousel muda (botão, teclado, swipe). */
+  slide_change: {
+    component: 'carousel';
+    index: number;
+    total: number;
+    trigger: 'button' | 'swipe' | 'keyboard';
+    location?: string;
+  };
+
+  /** Disparado quando o autoplay do Carousel pausa por interação do usuário. */
+  autoplay_paused: {
+    component: 'carousel';
+    index: number;
+    location?: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
