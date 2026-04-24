@@ -657,8 +657,8 @@ interface CarouselNavProps extends ButtonProps {
       { token: '--foreground',    value: 'text-foreground',      description: $tStore('tokens.table.foreground')   },
       { token: '--border',        value: 'border',               description: $tStore('tokens.table.border')       },
       { token: '--accent',        value: 'hover:bg-accent',      description: $tStore('tokens.table.accent')       },
-      { token: '--ring',          value: 'focus-visible:ring',   description: $tStore('tokens.table.ring')         },
-      { token: '--radius-button', value: 'rounded-full',         description: $tStore('tokens.table.radiusButton') },
+      { token: '--ring',          value: 'focus-visible:ring-ring',        description: $tStore('tokens.table.ring')         },
+      { token: '--radius-button', value: 'rounded-(--radius-button)', description: $tStore('tokens.table.radiusButton') },
       { token: '--primary',       value: 'bg-primary',           description: $tStore('tokens.table.primary')      },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}

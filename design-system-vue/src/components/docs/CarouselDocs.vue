@@ -262,11 +262,13 @@ const carouselPropItems = computed(() => [
   { name: 'opts',        type: 'EmblaOptionsType',               defaultValue: '—',             required: 'Não', description: stripHtml(tContent('props.table.opts'))        },
   { name: 'plugins',     type: 'EmblaPluginType[]',              defaultValue: '—',             required: 'Não', description: stripHtml(tContent('props.table.plugins'))     },
   { name: 'orientation', type: '"horizontal" | "vertical"',     defaultValue: '"horizontal"',  required: 'Não', description: stripHtml(tContent('props.table.orientation')) },
+  { name: '@init-api',   type: '(api: CarouselApi) => void',    defaultValue: '—',             required: 'Não', description: stripHtml(tContent('props.table.setApi'))      },
   { name: 'class',       type: 'string',                         defaultValue: '—',             required: 'Não', description: tContent('props.table.className')              },
 ]);
 
 const contentItemPropItems = computed(() => [
   { name: 'class',       type: 'string',                         defaultValue: '—',             required: 'Não', description: tContent('props.table.className')              },
+  { name: 'default slot', type: 'slots',                         defaultValue: '—',             required: 'Sim', description: tContent('props.table.children')               },
 ]);
 
 const navPropItems = computed(() => [
@@ -281,7 +283,7 @@ const tokenRows = computed(() => [
   { token: '--border',        value: 'border',          description: tContent('tokens.table.border')        },
   { token: '--accent',        value: 'hover:bg-accent', description: tContent('tokens.table.accent')        },
   { token: '--ring',          value: 'focus-visible:ring-ring', description: tContent('tokens.table.ring')  },
-  { token: '--radius-button', value: 'rounded-full',    description: tContent('tokens.table.radiusButton')  },
+  { token: '--radius-button', value: 'rounded-(--radius-button)', description: tContent('tokens.table.radiusButton')  },
   { token: '--primary',       value: 'bg-primary',      description: tContent('tokens.table.primary')       },
 ]);
 

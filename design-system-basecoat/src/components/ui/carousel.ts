@@ -57,6 +57,8 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   prevBtn.type = 'button';
   prevBtn.className = 'btn-icon-outline absolute left-2 top-1/2 -translate-y-1/2 z-10';
   prevBtn.setAttribute('aria-label', 'Previous slide');
+  prevBtn.setAttribute('aria-disabled', 'true');
+  prevBtn.disabled = true;
   prevBtn.innerHTML = CHEVRON_LEFT;
 
   const nextBtn = document.createElement('button');
@@ -72,7 +74,9 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
     currentIndex = (index + items.length) % items.length;
     track.style.transform = `translateX(-${currentIndex * 100}%)`;
     prevBtn.setAttribute('aria-disabled', currentIndex === 0 ? 'true' : 'false');
+    prevBtn.toggleAttribute('disabled', currentIndex === 0);
     nextBtn.setAttribute('aria-disabled', currentIndex === items.length - 1 ? 'true' : 'false');
+    nextBtn.toggleAttribute('disabled', currentIndex === items.length - 1);
     onIndexChange?.(currentIndex);
   }
 
