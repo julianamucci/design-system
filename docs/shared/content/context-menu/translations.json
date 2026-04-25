@@ -1,0 +1,1022 @@
+{
+  "pt-BR": {
+    "title": "Context Menu",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Menu de ações contextuais ativado por clique direito sobre uma área específica. Sempre acompanhado de alternativa acessível.",
+    "seo": {
+      "title": "Context Menu — Overlay · Design System",
+      "description": "Documentação do Context Menu: submenus, checkboxes, radio items, shortcuts e acessibilidade WCAG para menus de clique direito.",
+      "aiSummary": "Componente Context Menu ativado por right-click com suporte a itens, submenus, checkboxes, radio groups, separadores e atalhos de teclado visuais.",
+      "aiEntities": "ContextMenu, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, role menu, aria-haspopup",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "triggerLabel": "Clique com o botão direito aqui",
+        "edit": "Editar",
+        "duplicate": "Duplicar",
+        "share": "Compartilhar",
+        "shareEmail": "Por e-mail",
+        "shareLink": "Por link",
+        "delete": "Excluir",
+        "editShortcut": "⌘E",
+        "deleteShortcut": "⌫"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>ContextMenu</strong> — raiz que gerencia estado de abertura e posicionamento do menu.",
+      "item2": "<strong>ContextMenuTrigger</strong> — área que captura o right-click para abrir o menu.",
+      "item3": "<strong>ContextMenuContent</strong> — painel flutuante com os itens; usa <code>bg-popover</code>.",
+      "item4": "<strong>ContextMenuGroup</strong> — agrupa itens relacionados semanticamente.",
+      "item5": "<strong>ContextMenuLabel</strong> — rótulo não interativo de grupo; aceita <code>inset</code>.",
+      "item6": "<strong>ContextMenuItem</strong> — item de ação padrão; variante <code>default</code> ou <code>destructive</code>.",
+      "item7": "<strong>ContextMenuCheckboxItem</strong> — item com estado marcado/desmarcado.",
+      "item8": "<strong>ContextMenuRadioGroup</strong> + <strong>ContextMenuRadioItem</strong> — seleção exclusiva entre opções.",
+      "item9": "<strong>ContextMenuSub</strong> — raiz do submenu; contém <code>SubTrigger</code> e <code>SubContent</code>.",
+      "item10": "<strong>ContextMenuSeparator</strong> — linha divisória horizontal entre grupos.",
+      "item11": "<strong>ContextMenuShortcut</strong> — span visual de atalho de teclado; apenas decorativo.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Nunca use como único ponto de acesso: right-click não é descobrível em touch e não é óbvio para todos os usuários.",
+        "item2": "Sempre ofereça alternativa explícita (botão, DropdownMenu) para as mesmas ações do menu.",
+        "item3": "Item destrutivo usa <code>className=\"text-destructive focus:text-destructive\"</code> — sem prop de variante.",
+        "item4": "Evite submenus: aumentam carga cognitiva e dificultam navegação por teclado.",
+        "item5": "<code>ContextMenuShortcut</code> é apenas visual — implemente o atalho real via <code>useEffect</code> + listener."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Ações em arquivo ou item de canvas", "u": "Sim", "a": "-" },
+        "item2": { "s": "Ações em linha de tabela", "u": "Com cautela", "a": "DropdownMenu na linha" },
+        "item3": { "s": "Única forma de acesso à ação", "u": "Não", "a": "Botão visível + DropdownMenu" },
+        "item4": { "s": "Dispositivos touch", "u": "Não", "a": "Bottom sheet ou DropdownMenu" }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "As ações fazem sentido no contexto de um elemento específico",
+        "item2": "O contexto é desktop com suporte a mouse e teclado",
+        "item3": "Existe alternativa visível para as mesmas ações",
+        "item4": "O elemento-alvo é um arquivo, item de lista ou área de canvas"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "For o único ponto de acesso a funcionalidades — use <code>DropdownMenu</code>",
+        "item2": "O contexto for mobile ou touch — use bottom sheet ou ações inline",
+        "item3": "As ações não forem relevantes para o elemento clicado"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Ofereça as mesmas ações também via botão ou DropdownMenu visível.",
+        "dont": "Usar o Context Menu como único acesso a funcionalidades críticas."
+      },
+      "pair2": {
+        "do": "Item destrutivo com className text-destructive separado dos demais por Separator.",
+        "dont": "Aninhar múltiplos níveis de submenu — aumenta carga cognitiva."
+      },
+      "pair3": {
+        "do": "ContextMenuShortcut para exibir o atalho visualmente, com listener separado.",
+        "dont": "Esperar que o usuário descubra o menu por right-click sem nenhuma dica visual."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withSub": "Com submenu:",
+      "withCheckbox": "Com checkbox e radio:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "note": "O <code>ContextMenuItem</code> tem 2 variantes via prop <code>variant</code>. Os demais subcomponentes não possuem variante de prop.",
+      "items": {
+        "default": "Item de ação padrão. Foco com <code>bg-accent text-accent-foreground</code>.",
+        "destructive": "Ação destrutiva irreversível (ex: excluir). Texto vermelho com <code>text-destructive</code>; foco com <code>bg-destructive/10</code>."
+      },
+      "checkboxItem": "Item com indicador de marcação (CheckIcon). Estado controlado via prop <code>checked</code>.",
+      "radioItem": "Item de seleção exclusiva dentro de um <code>ContextMenuRadioGroup</code>.",
+      "subTrigger": "Abre submenu ao focar ou clicar; exibe ChevronRightIcon automaticamente à direita.",
+      "label": "Rótulo de grupo não interativo. Prop <code>inset</code> adiciona padding-left para alinhar com itens com ícone."
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "closed": {
+        "label": "Fechado",
+        "trigger": "Estado padrão",
+        "behavior": "Menu invisível; trigger aguarda right-click"
+      },
+      "open": {
+        "label": "Aberto",
+        "trigger": "Right-click na área do trigger",
+        "behavior": "Popup posicionado na coordenada do cursor; animação fade-in + zoom-in-95"
+      },
+      "focused": {
+        "label": "Focado",
+        "trigger": "Arrow keys ou Tab após abertura",
+        "behavior": "Item com foco recebe bg-accent text-accent-foreground"
+      },
+      "disabled": {
+        "label": "Desabilitado",
+        "trigger": "Prop <code>disabled</code> no item",
+        "behavior": "Opacidade 50%; pointer-events desativados; não recebe foco"
+      },
+      "checked": {
+        "label": "Marcado",
+        "trigger": "Prop <code>checked</code> no CheckboxItem",
+        "behavior": "CheckIcon visível à direita do item"
+      },
+      "subOpen": {
+        "label": "Submenu aberto",
+        "trigger": "Foco ou hover no SubTrigger",
+        "behavior": "SubContent aparece à direita; SubTrigger com bg-accent"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "rootTitle": "ContextMenu",
+      "triggerTitle": "ContextMenuTrigger",
+      "contentTitle": "ContextMenuContent",
+      "itemTitle": "ContextMenuItem",
+      "checkboxItemTitle": "ContextMenuCheckboxItem",
+      "radioGroupTitle": "ContextMenuRadioGroup",
+      "radioItemTitle": "ContextMenuRadioItem",
+      "labelTitle": "ContextMenuLabel",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição"
+      },
+      "items": {
+        "onOpenChange": "Callback disparado ao abrir ou fechar o menu.",
+        "align": "Alinhamento do popup em relação ao ponto de clique. Padrão: <code>\"start\"</code>.",
+        "alignOffset": "Deslocamento em px no eixo de alinhamento. Padrão: <code>4</code>.",
+        "side": "Lado preferencial de abertura. Padrão: <code>\"right\"</code>.",
+        "sideOffset": "Distância em px entre cursor e popup. Padrão: <code>0</code>.",
+        "variant": "Variante visual do item: <code>\"default\"</code> ou <code>\"destructive\"</code>.",
+        "inset": "Adiciona <code>padding-left: 1.75rem</code> para alinhar com itens que têm ícone.",
+        "checked": "Estado controlado do CheckboxItem.",
+        "onCheckedChange": "Callback do CheckboxItem ao alternar o estado.",
+        "value": "Valor do RadioItem dentro do RadioGroup.",
+        "onValueChange": "Callback do RadioGroup ao mudar a seleção.",
+        "disabled": "Desabilita o item: opacidade 50%, sem interação.",
+        "onSelect": "Callback disparado ao selecionar o item."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "Todos os subcomponentes aceitam <code>className</code>. Use tokens semânticos do projeto — nunca cores hardcoded."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "popoverBg": "Fundo do popup",
+        "popoverFg": "Texto do popup",
+        "accentBg": "Fundo de item em foco",
+        "accentFg": "Texto de item em foco",
+        "destructive": "Texto de item destrutivo",
+        "destructiveFocus": "Fundo de item destrutivo em foco",
+        "mutedFg": "Texto de label e shortcut",
+        "border": "Linha separadora",
+        "shadow": "Sombra do popup",
+        "radius": "Border radius do popup e dos itens",
+        "zIndex": "Camada de empilhamento (<code>z-50</code>)"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Context Menu implementa <code>role=\"menu\"</code> e <code>role=\"menuitem\"</code> automaticamente via Base UI. Atenção: right-click é inacessível em touch e não descobrível por teclado — toda ação deve ter alternativa acessível. Cumpre WCAG 2.1 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "warning": "Aviso crítico: toda ação disponível no Context Menu deve ter uma alternativa acessível — botão visível, ícone de ação na linha ou DropdownMenu.",
+      "keyboard": {
+        "rightClick": "Clique direito (ou menu key) abre o menu na posição do cursor.",
+        "arrowDown": "Move o foco para o próximo item do menu.",
+        "arrowUp": "Move o foco para o item anterior do menu.",
+        "arrowRight": "Abre o submenu do item focado (SubTrigger).",
+        "arrowLeft": "Fecha o submenu e retorna ao item pai.",
+        "enter": "Ativa o item focado.",
+        "space": "Ativa o item focado (CheckboxItem alterna estado).",
+        "escape": "Fecha o menu e retorna o foco ao trigger.",
+        "tab": "Fecha o menu (o menu não aprisionaa foco como Dialog)."
+      },
+      "aria": {
+        "roleMenu": "<code>role=\"menu\"</code> — aplicado automaticamente no <code>ContextMenuContent</code>.",
+        "roleMenuItem": "<code>role=\"menuitem\"</code> — aplicado em <code>ContextMenuItem</code> e <code>ContextMenuSubTrigger</code>.",
+        "roleMenuitemCheckbox": "<code>role=\"menuitemcheckbox\"</code> — aplicado em <code>ContextMenuCheckboxItem</code>.",
+        "roleMenuitemRadio": "<code>role=\"menuitemradio\"</code> — aplicado em <code>ContextMenuRadioItem</code>.",
+        "ariaChecked": "<code>aria-checked</code> — em CheckboxItem e RadioItem para comunicar estado ao leitor de tela.",
+        "ariaDisabled": "<code>aria-disabled</code> — em itens desabilitados.",
+        "ariaHaspopup": "<code>aria-haspopup=\"menu\"</code> — no SubTrigger para indicar que abre submenu.",
+        "ariaExpanded": "<code>aria-expanded</code> — no SubTrigger, atualizado ao abrir/fechar submenu."
+      },
+      "screenReader": {
+        "onOpen": "Ao abrir: leitor anuncia o menu e o primeiro item focado.",
+        "onNavigate": "Ao navegar: leitor anuncia o label do item e seu estado (checked, disabled).",
+        "onSelect": "Ao selecionar: leitor anuncia a ação realizada.",
+        "shortcuts": "ContextMenuShortcut tem aria-hidden implícito pelo Base UI — não anunciado pelo leitor.",
+        "alternative": "Alternativa acessível obrigatória: o usuário de leitor de tela pode não descobrir o Context Menu."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "dropdownMenu": "Alternativa acessível com trigger explícito — preferida em contextos touch e para ações de linha em tabela.",
+      "menubar": "Para menus de aplicação fixos no topo, sempre visíveis.",
+      "dialog": "Para ações destrutivas que exigem confirmação antes de executar.",
+      "alertDialog": "Para confirmação de ações irreversíveis disparadas por itens do menu.",
+      "tooltip": "Para exibir o atalho de teclado em botões relacionados às ações do menu."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "<code>ContextMenuShortcut</code> é visual: para funcionar, implemente o atalho real via <code>useEffect</code> + <code>addEventListener('keydown')</code>.",
+      "tip2": "Item destrutivo: use <code>className=\"text-destructive focus:text-destructive\"</code> — não existe prop <code>variant=\"destructive\"</code> no componente base.",
+      "tip3": "Submenus aumentam a carga cognitiva: use apenas quando o agrupamento for essencial e nunca aninhe mais de um nível.",
+      "tip4": "O popup usa <code>bg-popover text-popover-foreground</code> — não sobrescreva com <code>bg-card</code>, que é reservado para painéis de conteúdo (Dialog, Sheet).",
+      "tip5": "Para indicar ao usuário que a área tem menu de contexto, exiba uma dica sutil na interface (ex: texto auxiliar ou tooltip no hover)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastreie interações relevantes com o Context Menu para entender quais ações contextuais os usuários utilizam.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "menuOpen": "menu_open",
+        "menuOpenTrigger": "Usuário abre o Context Menu via right-click",
+        "menuOpenPayload": "{ component: \"context_menu\", location, menu }",
+        "itemClick": "menu_item_click",
+        "itemClickTrigger": "Usuário seleciona um item do menu",
+        "itemClickPayload": "{ label: string, menu: string, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada interação com o Context Menu.",
+        "item1": { "action": "Right-click na área do trigger", "result": "Menu abre na posição do cursor com animação fade-in + zoom-in-95", "priority": "high" },
+        "item2": { "action": "Pressionar Escape com menu aberto", "result": "Menu fecha e foco retorna ao trigger", "priority": "high" },
+        "item3": { "action": "Clicar fora da área do menu", "result": "Menu fecha ao perder foco (click outside)", "priority": "high" },
+        "item4": { "action": "Navegar com Arrow Down/Up", "result": "Foco move entre itens; itens disabled são ignorados", "priority": "high" },
+        "item5": { "action": "Focar no SubTrigger e pressionar Arrow Right", "result": "Submenu abre à direita; foco vai para o primeiro item do submenu", "priority": "high" },
+        "item6": { "action": "Pressionar Arrow Left dentro do submenu", "result": "Submenu fecha; foco retorna ao SubTrigger", "priority": "high" },
+        "item7": { "action": "Selecionar CheckboxItem", "result": "Estado checked alterna; CheckIcon aparece/desaparece", "priority": "medium" },
+        "item8": { "action": "Selecionar RadioItem dentro de RadioGroup", "result": "RadioItem selecionado exibe CheckIcon; seleção anterior é limpa", "priority": "medium" },
+        "item9": { "action": "Item com disabled=true", "result": "Opacidade 50%; pointer-events-none; não recebe foco via teclado", "priority": "medium" },
+        "item10": { "action": "Renderizar item com variant destructive", "result": "Texto text-destructive; foco bg-destructive/10 text-destructive", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "role=\"menu\" presente no ContextMenuContent",
+        "item3": "role=\"menuitem\" presente em cada ContextMenuItem",
+        "item4": "role=\"menuitemcheckbox\" e aria-checked em CheckboxItem",
+        "item5": "role=\"menuitemradio\" e aria-checked em RadioItem",
+        "item6": "aria-disabled em itens desabilitados",
+        "item7": "Escape fecha o menu e retorna foco ao trigger",
+        "item8": "Contraste mínimo 4.5:1 em todos os estados de texto"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "required": "Obrigatório",
+        "item1": { "story": "Default — menu com itens, separador e shortcut", "priority": "high" },
+        "item2": { "story": "Com item destructive", "priority": "high" },
+        "item3": { "story": "Com submenu aberto", "priority": "high" },
+        "item4": { "story": "Com CheckboxItem e RadioGroup", "priority": "medium" },
+        "item5": { "story": "Com itens disabled", "priority": "medium" },
+        "item6": { "story": "Dark mode — todas as variantes", "priority": "high" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Context Menu",
+    "category": "Overlay",
+    "type": "Component",
+    "description": "Contextual action menu triggered by right-click on a specific area. Always paired with an accessible alternative.",
+    "seo": {
+      "title": "Context Menu — Overlay · Design System",
+      "description": "Context Menu docs: submenus, checkboxes, radio items, keyboard shortcuts and WCAG accessibility for right-click menus.",
+      "aiSummary": "Context Menu component triggered by right-click with support for items, submenus, checkboxes, radio groups, separators and visual keyboard shortcuts.",
+      "aiEntities": "ContextMenu, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, role menu, aria-haspopup",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "triggerLabel": "Right-click here",
+        "edit": "Edit",
+        "duplicate": "Duplicate",
+        "share": "Share",
+        "shareEmail": "By email",
+        "shareLink": "By link",
+        "delete": "Delete",
+        "editShortcut": "⌘E",
+        "deleteShortcut": "⌫"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>ContextMenu</strong> — root that manages open state and menu positioning.",
+      "item2": "<strong>ContextMenuTrigger</strong> — area that captures the right-click to open the menu.",
+      "item3": "<strong>ContextMenuContent</strong> — floating panel with items; uses <code>bg-popover</code>.",
+      "item4": "<strong>ContextMenuGroup</strong> — semantically groups related items.",
+      "item5": "<strong>ContextMenuLabel</strong> — non-interactive group label; accepts <code>inset</code>.",
+      "item6": "<strong>ContextMenuItem</strong> — standard action item; <code>default</code> or <code>destructive</code> variant.",
+      "item7": "<strong>ContextMenuCheckboxItem</strong> — item with checked/unchecked state.",
+      "item8": "<strong>ContextMenuRadioGroup</strong> + <strong>ContextMenuRadioItem</strong> — exclusive selection among options.",
+      "item9": "<strong>ContextMenuSub</strong> — submenu root; contains <code>SubTrigger</code> and <code>SubContent</code>.",
+      "item10": "<strong>ContextMenuSeparator</strong> — horizontal divider line between groups.",
+      "item11": "<strong>ContextMenuShortcut</strong> — visual keyboard shortcut span; decorative only.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Never use as the only access point: right-click is not discoverable on touch and not obvious to all users.",
+        "item2": "Always provide an explicit alternative (button, DropdownMenu) for the same actions.",
+        "item3": "Destructive item uses <code>className=\"text-destructive focus:text-destructive\"</code> — no variant prop.",
+        "item4": "Avoid submenus: they increase cognitive load and hinder keyboard navigation.",
+        "item5": "<code>ContextMenuShortcut</code> is visual only — implement the real shortcut via <code>useEffect</code> + listener."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Actions on a file or canvas item", "u": "Yes", "a": "-" },
+        "item2": { "s": "Actions on a table row", "u": "With caution", "a": "DropdownMenu in the row" },
+        "item3": { "s": "Only way to access an action", "u": "No", "a": "Visible button + DropdownMenu" },
+        "item4": { "s": "Touch devices", "u": "No", "a": "Bottom sheet or DropdownMenu" }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Actions make sense in the context of a specific element",
+        "item2": "The context is desktop with mouse and keyboard support",
+        "item3": "A visible alternative exists for the same actions",
+        "item4": "The target is a file, list item, or canvas area"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "It's the only access point to features — use <code>DropdownMenu</code>",
+        "item2": "The context is mobile or touch — use bottom sheet or inline actions",
+        "item3": "The actions are not relevant to the clicked element"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Provide the same actions also via a visible button or DropdownMenu.",
+        "dont": "Use Context Menu as the only access point to critical features."
+      },
+      "pair2": {
+        "do": "Destructive item with className text-destructive, separated by a Separator.",
+        "dont": "Nesting multiple submenu levels — increases cognitive load."
+      },
+      "pair3": {
+        "do": "ContextMenuShortcut to display the shortcut visually, with a separate listener.",
+        "dont": "Expect users to discover the menu by right-click with no visual hint."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withSub": "With submenu:",
+      "withCheckbox": "With checkbox and radio:"
+    },
+    "variants": {
+      "title": "Variants",
+      "note": "<code>ContextMenuItem</code> has 2 variants via the <code>variant</code> prop. Other subcomponents have no variant prop.",
+      "items": {
+        "default": "Standard action item. Focus state: <code>bg-accent text-accent-foreground</code>.",
+        "destructive": "Irreversible destructive action (e.g., delete). Red text with <code>text-destructive</code>; focus with <code>bg-destructive/10</code>."
+      },
+      "checkboxItem": "Item with check indicator (CheckIcon). State controlled via the <code>checked</code> prop.",
+      "radioItem": "Exclusive selection item inside a <code>ContextMenuRadioGroup</code>.",
+      "subTrigger": "Opens a submenu on focus or click; automatically displays ChevronRightIcon on the right.",
+      "label": "Non-interactive group label. The <code>inset</code> prop adds padding-left to align with icon items."
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to trigger",
+        "behavior": "Behavior"
+      },
+      "closed": {
+        "label": "Closed",
+        "trigger": "Default state",
+        "behavior": "Menu invisible; trigger awaits right-click"
+      },
+      "open": {
+        "label": "Open",
+        "trigger": "Right-click on trigger area",
+        "behavior": "Popup positioned at cursor coordinates; fade-in + zoom-in-95 animation"
+      },
+      "focused": {
+        "label": "Focused",
+        "trigger": "Arrow keys or Tab after opening",
+        "behavior": "Focused item receives bg-accent text-accent-foreground"
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "<code>disabled</code> prop on item",
+        "behavior": "50% opacity; pointer-events disabled; does not receive focus"
+      },
+      "checked": {
+        "label": "Checked",
+        "trigger": "<code>checked</code> prop on CheckboxItem",
+        "behavior": "CheckIcon visible on the right side of the item"
+      },
+      "subOpen": {
+        "label": "Submenu open",
+        "trigger": "Focus or hover on SubTrigger",
+        "behavior": "SubContent appears to the right; SubTrigger receives bg-accent"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "rootTitle": "ContextMenu",
+      "triggerTitle": "ContextMenuTrigger",
+      "contentTitle": "ContextMenuContent",
+      "itemTitle": "ContextMenuItem",
+      "checkboxItemTitle": "ContextMenuCheckboxItem",
+      "radioGroupTitle": "ContextMenuRadioGroup",
+      "radioItemTitle": "ContextMenuRadioItem",
+      "labelTitle": "ContextMenuLabel",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description"
+      },
+      "items": {
+        "onOpenChange": "Callback fired when the menu opens or closes.",
+        "align": "Popup alignment relative to the click point. Default: <code>\"start\"</code>.",
+        "alignOffset": "Offset in px along the alignment axis. Default: <code>4</code>.",
+        "side": "Preferred opening side. Default: <code>\"right\"</code>.",
+        "sideOffset": "Distance in px between cursor and popup. Default: <code>0</code>.",
+        "variant": "Visual variant of the item: <code>\"default\"</code> or <code>\"destructive\"</code>.",
+        "inset": "Adds <code>padding-left: 1.75rem</code> to align with icon items.",
+        "checked": "Controlled state of CheckboxItem.",
+        "onCheckedChange": "CheckboxItem callback when toggling state.",
+        "value": "RadioItem value within the RadioGroup.",
+        "onValueChange": "RadioGroup callback when selection changes.",
+        "disabled": "Disables the item: 50% opacity, no interaction.",
+        "onSelect": "Callback fired when the item is selected."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "All subcomponents accept <code>className</code>. Use project semantic tokens — never hardcoded colors."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "popoverBg": "Popup background",
+        "popoverFg": "Popup text",
+        "accentBg": "Focused item background",
+        "accentFg": "Focused item text",
+        "destructive": "Destructive item text",
+        "destructiveFocus": "Destructive item focus background",
+        "mutedFg": "Label and shortcut text",
+        "border": "Separator line",
+        "shadow": "Popup shadow",
+        "radius": "Popup and item border radius",
+        "zIndex": "Stacking layer (<code>z-50</code>)"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Context Menu implements <code>role=\"menu\"</code> and <code>role=\"menuitem\"</code> automatically via Base UI. Note: right-click is inaccessible on touch and not keyboard-discoverable — every action must have an accessible alternative. Meets WCAG 2.1 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "warning": "Critical warning: every action in the Context Menu must have an accessible alternative — visible button, inline action icon, or DropdownMenu.",
+      "keyboard": {
+        "rightClick": "Right-click (or menu key) opens the menu at cursor position.",
+        "arrowDown": "Moves focus to the next menu item.",
+        "arrowUp": "Moves focus to the previous menu item.",
+        "arrowRight": "Opens the submenu of the focused item (SubTrigger).",
+        "arrowLeft": "Closes the submenu and returns to the parent item.",
+        "enter": "Activates the focused item.",
+        "space": "Activates the focused item (CheckboxItem toggles state).",
+        "escape": "Closes the menu and returns focus to the trigger.",
+        "tab": "Closes the menu (the menu does not trap focus like Dialog)."
+      },
+      "aria": {
+        "roleMenu": "<code>role=\"menu\"</code> — automatically applied to <code>ContextMenuContent</code>.",
+        "roleMenuItem": "<code>role=\"menuitem\"</code> — applied to <code>ContextMenuItem</code> and <code>ContextMenuSubTrigger</code>.",
+        "roleMenuitemCheckbox": "<code>role=\"menuitemcheckbox\"</code> — applied to <code>ContextMenuCheckboxItem</code>.",
+        "roleMenuitemRadio": "<code>role=\"menuitemradio\"</code> — applied to <code>ContextMenuRadioItem</code>.",
+        "ariaChecked": "<code>aria-checked</code> — on CheckboxItem and RadioItem to communicate state to screen readers.",
+        "ariaDisabled": "<code>aria-disabled</code> — on disabled items.",
+        "ariaHaspopup": "<code>aria-haspopup=\"menu\"</code> — on SubTrigger to indicate it opens a submenu.",
+        "ariaExpanded": "<code>aria-expanded</code> — on SubTrigger, updated when submenu opens/closes."
+      },
+      "screenReader": {
+        "onOpen": "On open: reader announces the menu and the first focused item.",
+        "onNavigate": "On navigation: reader announces the item label and its state (checked, disabled).",
+        "onSelect": "On select: reader announces the action taken.",
+        "shortcuts": "ContextMenuShortcut has implicit aria-hidden via Base UI — not announced by the reader.",
+        "alternative": "Accessible alternative required: screen reader users may not discover the Context Menu."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "dropdownMenu": "Accessible alternative with explicit trigger — preferred in touch contexts and for table row actions.",
+      "menubar": "For fixed application menus at the top, always visible.",
+      "dialog": "For destructive actions requiring confirmation before execution.",
+      "alertDialog": "For confirming irreversible actions triggered by menu items.",
+      "tooltip": "For displaying keyboard shortcuts on buttons related to menu actions."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "<code>ContextMenuShortcut</code> is visual only: to work, implement the real shortcut via <code>useEffect</code> + <code>addEventListener('keydown')</code>.",
+      "tip2": "Destructive item: use <code>className=\"text-destructive focus:text-destructive\"</code> — there is no <code>variant=\"destructive\"</code> prop on the base component.",
+      "tip3": "Submenus increase cognitive load: use only when grouping is essential and never nest more than one level.",
+      "tip4": "The popup uses <code>bg-popover text-popover-foreground</code> — do not override with <code>bg-card</code>, which is reserved for content panels (Dialog, Sheet).",
+      "tip5": "To indicate to the user that an area has a context menu, display a subtle hint in the interface (e.g., helper text or hover tooltip)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Track relevant Context Menu interactions to understand which contextual actions users take.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "menuOpen": "menu_open",
+        "menuOpenTrigger": "User opens the Context Menu via right-click",
+        "menuOpenPayload": "{ component: \"context_menu\", location, menu }",
+        "itemClick": "menu_item_click",
+        "itemClickTrigger": "User selects a menu item",
+        "itemClickPayload": "{ label: string, menu: string, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Context Menu interaction.",
+        "item1": { "action": "Right-click on trigger area", "result": "Menu opens at cursor position with fade-in + zoom-in-95 animation", "priority": "high" },
+        "item2": { "action": "Press Escape with menu open", "result": "Menu closes and focus returns to trigger", "priority": "high" },
+        "item3": { "action": "Click outside menu area", "result": "Menu closes on click outside", "priority": "high" },
+        "item4": { "action": "Navigate with Arrow Down/Up", "result": "Focus moves between items; disabled items are skipped", "priority": "high" },
+        "item5": { "action": "Focus SubTrigger and press Arrow Right", "result": "Submenu opens to the right; focus moves to first submenu item", "priority": "high" },
+        "item6": { "action": "Press Arrow Left inside submenu", "result": "Submenu closes; focus returns to SubTrigger", "priority": "high" },
+        "item7": { "action": "Select CheckboxItem", "result": "Checked state toggles; CheckIcon appears/disappears", "priority": "medium" },
+        "item8": { "action": "Select RadioItem inside RadioGroup", "result": "Selected RadioItem shows CheckIcon; previous selection is cleared", "priority": "medium" },
+        "item9": { "action": "Item with disabled=true", "result": "50% opacity; pointer-events-none; not reachable via keyboard", "priority": "medium" },
+        "item10": { "action": "Render item with destructive variant", "result": "Text text-destructive; focus bg-destructive/10 text-destructive", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": "No violations reported by axe-core in default state",
+        "item2": "role=\"menu\" present on ContextMenuContent",
+        "item3": "role=\"menuitem\" present on each ContextMenuItem",
+        "item4": "role=\"menuitemcheckbox\" and aria-checked on CheckboxItem",
+        "item5": "role=\"menuitemradio\" and aria-checked on RadioItem",
+        "item6": "aria-disabled on disabled items",
+        "item7": "Escape closes the menu and returns focus to trigger",
+        "item8": "Minimum contrast 4.5:1 across all text states"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "Each story is automatically captured for visual regression.",
+        "required": "Required",
+        "item1": { "story": "Default — menu with items, separator and shortcut", "priority": "high" },
+        "item2": { "story": "With destructive item", "priority": "high" },
+        "item3": { "story": "With open submenu", "priority": "high" },
+        "item4": { "story": "With CheckboxItem and RadioGroup", "priority": "medium" },
+        "item5": { "story": "With disabled items", "priority": "medium" },
+        "item6": { "story": "Dark mode — all variants", "priority": "high" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Context Menu",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Menú de acciones contextuales activado por clic derecho sobre un área específica. Siempre acompañado de una alternativa accesible.",
+    "seo": {
+      "title": "Context Menu — Overlay · Design System",
+      "description": "Documentación del Context Menu: submenús, checkboxes, radio items, atajos y accesibilidad WCAG para menús de clic derecho.",
+      "aiSummary": "Componente Context Menu activado por clic derecho con soporte para ítems, submenús, checkboxes, radio groups, separadores y atajos de teclado visuales.",
+      "aiEntities": "ContextMenu, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, role menu, aria-haspopup",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "triggerLabel": "Haz clic derecho aquí",
+        "edit": "Editar",
+        "duplicate": "Duplicar",
+        "share": "Compartir",
+        "shareEmail": "Por correo",
+        "shareLink": "Por enlace",
+        "delete": "Eliminar",
+        "editShortcut": "⌘E",
+        "deleteShortcut": "⌫"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>ContextMenu</strong> — raíz que gestiona el estado de apertura y posicionamiento del menú.",
+      "item2": "<strong>ContextMenuTrigger</strong> — área que captura el clic derecho para abrir el menú.",
+      "item3": "<strong>ContextMenuContent</strong> — panel flotante con los ítems; usa <code>bg-popover</code>.",
+      "item4": "<strong>ContextMenuGroup</strong> — agrupa ítems relacionados semánticamente.",
+      "item5": "<strong>ContextMenuLabel</strong> — etiqueta no interactiva de grupo; acepta <code>inset</code>.",
+      "item6": "<strong>ContextMenuItem</strong> — ítem de acción estándar; variante <code>default</code> o <code>destructive</code>.",
+      "item7": "<strong>ContextMenuCheckboxItem</strong> — ítem con estado marcado/desmarcado.",
+      "item8": "<strong>ContextMenuRadioGroup</strong> + <strong>ContextMenuRadioItem</strong> — selección exclusiva entre opciones.",
+      "item9": "<strong>ContextMenuSub</strong> — raíz del submenú; contiene <code>SubTrigger</code> y <code>SubContent</code>.",
+      "item10": "<strong>ContextMenuSeparator</strong> — línea divisoria horizontal entre grupos.",
+      "item11": "<strong>ContextMenuShortcut</strong> — span visual de atajo de teclado; solo decorativo.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Nunca uses como único punto de acceso: el clic derecho no es descubrible en touch y no es obvio para todos los usuarios.",
+        "item2": "Siempre ofrece una alternativa explícita (botón, DropdownMenu) para las mismas acciones.",
+        "item3": "El ítem destructivo usa <code>className=\"text-destructive focus:text-destructive\"</code> — sin prop de variante.",
+        "item4": "Evita submenús: aumentan la carga cognitiva y dificultan la navegación por teclado.",
+        "item5": "<code>ContextMenuShortcut</code> es solo visual — implementa el atajo real vía <code>useEffect</code> + listener."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Acciones en archivo o ítem de canvas", "u": "Sí", "a": "-" },
+        "item2": { "s": "Acciones en fila de tabla", "u": "Con cautela", "a": "DropdownMenu en la fila" },
+        "item3": { "s": "Único acceso a la acción", "u": "No", "a": "Botón visible + DropdownMenu" },
+        "item4": { "s": "Dispositivos touch", "u": "No", "a": "Bottom sheet o DropdownMenu" }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "Las acciones tienen sentido en el contexto de un elemento específico",
+        "item2": "El contexto es desktop con soporte de mouse y teclado",
+        "item3": "Existe una alternativa visible para las mismas acciones",
+        "item4": "El objetivo es un archivo, ítem de lista o área de canvas"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Sea el único punto de acceso a funcionalidades — usa <code>DropdownMenu</code>",
+        "item2": "El contexto sea móvil o touch — usa bottom sheet o acciones inline",
+        "item3": "Las acciones no sean relevantes para el elemento clicado"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Ofrece las mismas acciones también vía botón visible o DropdownMenu.",
+        "dont": "Usar el Context Menu como único acceso a funcionalidades críticas."
+      },
+      "pair2": {
+        "do": "Ítem destructivo con className text-destructive, separado por un Separator.",
+        "dont": "Anidar múltiples niveles de submenú — aumenta la carga cognitiva."
+      },
+      "pair3": {
+        "do": "ContextMenuShortcut para mostrar el atajo visualmente, con listener separado.",
+        "dont": "Esperar que el usuario descubra el menú por clic derecho sin ninguna pista visual."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withSub": "Con submenú:",
+      "withCheckbox": "Con checkbox y radio:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "note": "<code>ContextMenuItem</code> tiene 2 variantes vía la prop <code>variant</code>. Los demás subcomponentes no tienen prop de variante.",
+      "items": {
+        "default": "Ítem de acción estándar. Estado de foco: <code>bg-accent text-accent-foreground</code>.",
+        "destructive": "Acción destructiva irreversible (ej: eliminar). Texto rojo con <code>text-destructive</code>; foco con <code>bg-destructive/10</code>."
+      },
+      "checkboxItem": "Ítem con indicador de marca (CheckIcon). Estado controlado vía la prop <code>checked</code>.",
+      "radioItem": "Ítem de selección exclusiva dentro de un <code>ContextMenuRadioGroup</code>.",
+      "subTrigger": "Abre submenú al enfocar o clicar; muestra ChevronRightIcon automáticamente a la derecha.",
+      "label": "Etiqueta de grupo no interactiva. La prop <code>inset</code> agrega padding-left para alinear con ítems con ícono."
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "closed": {
+        "label": "Cerrado",
+        "trigger": "Estado predeterminado",
+        "behavior": "Menú invisible; trigger espera el clic derecho"
+      },
+      "open": {
+        "label": "Abierto",
+        "trigger": "Clic derecho en el área del trigger",
+        "behavior": "Popup posicionado en las coordenadas del cursor; animación fade-in + zoom-in-95"
+      },
+      "focused": {
+        "label": "Enfocado",
+        "trigger": "Arrow keys o Tab después de abrir",
+        "behavior": "El ítem enfocado recibe bg-accent text-accent-foreground"
+      },
+      "disabled": {
+        "label": "Deshabilitado",
+        "trigger": "Prop <code>disabled</code> en el ítem",
+        "behavior": "Opacidad 50%; pointer-events desactivados; no recibe foco"
+      },
+      "checked": {
+        "label": "Marcado",
+        "trigger": "Prop <code>checked</code> en el CheckboxItem",
+        "behavior": "CheckIcon visible a la derecha del ítem"
+      },
+      "subOpen": {
+        "label": "Submenú abierto",
+        "trigger": "Foco o hover en SubTrigger",
+        "behavior": "SubContent aparece a la derecha; SubTrigger recibe bg-accent"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "rootTitle": "ContextMenu",
+      "triggerTitle": "ContextMenuTrigger",
+      "contentTitle": "ContextMenuContent",
+      "itemTitle": "ContextMenuItem",
+      "checkboxItemTitle": "ContextMenuCheckboxItem",
+      "radioGroupTitle": "ContextMenuRadioGroup",
+      "radioItemTitle": "ContextMenuRadioItem",
+      "labelTitle": "ContextMenuLabel",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción"
+      },
+      "items": {
+        "onOpenChange": "Callback disparado al abrir o cerrar el menú.",
+        "align": "Alineación del popup respecto al punto de clic. Por defecto: <code>\"start\"</code>.",
+        "alignOffset": "Desplazamiento en px en el eje de alineación. Por defecto: <code>4</code>.",
+        "side": "Lado preferido de apertura. Por defecto: <code>\"right\"</code>.",
+        "sideOffset": "Distancia en px entre el cursor y el popup. Por defecto: <code>0</code>.",
+        "variant": "Variante visual del ítem: <code>\"default\"</code> o <code>\"destructive\"</code>.",
+        "inset": "Agrega <code>padding-left: 1.75rem</code> para alinear con ítems que tienen ícono.",
+        "checked": "Estado controlado del CheckboxItem.",
+        "onCheckedChange": "Callback del CheckboxItem al alternar el estado.",
+        "value": "Valor del RadioItem dentro del RadioGroup.",
+        "onValueChange": "Callback del RadioGroup al cambiar la selección.",
+        "disabled": "Deshabilita el ítem: opacidad 50%, sin interacción.",
+        "onSelect": "Callback disparado al seleccionar el ítem."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "Todos los subcomponentes aceptan <code>className</code>. Usa tokens semánticos del proyecto — nunca colores hardcoded."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "popoverBg": "Fondo del popup",
+        "popoverFg": "Texto del popup",
+        "accentBg": "Fondo de ítem enfocado",
+        "accentFg": "Texto de ítem enfocado",
+        "destructive": "Texto de ítem destructivo",
+        "destructiveFocus": "Fondo de ítem destructivo en foco",
+        "mutedFg": "Texto de etiqueta y atajo",
+        "border": "Línea separadora",
+        "shadow": "Sombra del popup",
+        "radius": "Border radius del popup e ítems",
+        "zIndex": "Capa de apilamiento (<code>z-50</code>)"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Context Menu implementa <code>role=\"menu\"</code> y <code>role=\"menuitem\"</code> automáticamente vía Base UI. Atención: el clic derecho es inaccesible en touch y no es descubrible por teclado — toda acción debe tener una alternativa accesible. Cumple WCAG 2.1 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "warning": "Aviso crítico: toda acción disponible en el Context Menu debe tener una alternativa accesible — botón visible, ícono de acción en la fila o DropdownMenu.",
+      "keyboard": {
+        "rightClick": "Clic derecho (o tecla de menú) abre el menú en la posición del cursor.",
+        "arrowDown": "Mueve el foco al siguiente ítem del menú.",
+        "arrowUp": "Mueve el foco al ítem anterior del menú.",
+        "arrowRight": "Abre el submenú del ítem enfocado (SubTrigger).",
+        "arrowLeft": "Cierra el submenú y regresa al ítem padre.",
+        "enter": "Activa el ítem enfocado.",
+        "space": "Activa el ítem enfocado (CheckboxItem alterna el estado).",
+        "escape": "Cierra el menú y devuelve el foco al trigger.",
+        "tab": "Cierra el menú (el menú no atrapa el foco como Dialog)."
+      },
+      "aria": {
+        "roleMenu": "<code>role=\"menu\"</code> — aplicado automáticamente en <code>ContextMenuContent</code>.",
+        "roleMenuItem": "<code>role=\"menuitem\"</code> — aplicado en <code>ContextMenuItem</code> y <code>ContextMenuSubTrigger</code>.",
+        "roleMenuitemCheckbox": "<code>role=\"menuitemcheckbox\"</code> — aplicado en <code>ContextMenuCheckboxItem</code>.",
+        "roleMenuitemRadio": "<code>role=\"menuitemradio\"</code> — aplicado en <code>ContextMenuRadioItem</code>.",
+        "ariaChecked": "<code>aria-checked</code> — en CheckboxItem y RadioItem para comunicar el estado al lector de pantalla.",
+        "ariaDisabled": "<code>aria-disabled</code> — en ítems deshabilitados.",
+        "ariaHaspopup": "<code>aria-haspopup=\"menu\"</code> — en SubTrigger para indicar que abre un submenú.",
+        "ariaExpanded": "<code>aria-expanded</code> — en SubTrigger, actualizado al abrir/cerrar el submenú."
+      },
+      "screenReader": {
+        "onOpen": "Al abrir: el lector anuncia el menú y el primer ítem enfocado.",
+        "onNavigate": "Al navegar: el lector anuncia la etiqueta del ítem y su estado (checked, disabled).",
+        "onSelect": "Al seleccionar: el lector anuncia la acción realizada.",
+        "shortcuts": "ContextMenuShortcut tiene aria-hidden implícito vía Base UI — no es anunciado por el lector.",
+        "alternative": "Alternativa accesible obligatoria: el usuario de lector de pantalla puede no descubrir el Context Menu."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "dropdownMenu": "Alternativa accesible con trigger explícito — preferida en contextos touch y para acciones de fila en tablas.",
+      "menubar": "Para menús de aplicación fijos en la parte superior, siempre visibles.",
+      "dialog": "Para acciones destructivas que requieren confirmación antes de ejecutarse.",
+      "alertDialog": "Para confirmar acciones irreversibles disparadas por ítems del menú.",
+      "tooltip": "Para mostrar atajos de teclado en botones relacionados con las acciones del menú."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "<code>ContextMenuShortcut</code> es solo visual: para funcionar, implementa el atajo real vía <code>useEffect</code> + <code>addEventListener('keydown')</code>.",
+      "tip2": "Ítem destructivo: usa <code>className=\"text-destructive focus:text-destructive\"</code> — no existe prop <code>variant=\"destructive\"</code> en el componente base.",
+      "tip3": "Los submenús aumentan la carga cognitiva: úsalos solo cuando el agrupamiento sea esencial y nunca anides más de un nivel.",
+      "tip4": "El popup usa <code>bg-popover text-popover-foreground</code> — no sobrescribas con <code>bg-card</code>, que es para paneles de contenido (Dialog, Sheet).",
+      "tip5": "Para indicar al usuario que el área tiene menú de contexto, muestra una pista sutil en la interfaz (ej: texto auxiliar o tooltip al pasar el cursor)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastrea las interacciones relevantes con el Context Menu para entender qué acciones contextuales usan los usuarios.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "menuOpen": "menu_open",
+        "menuOpenTrigger": "Usuario abre el Context Menu vía clic derecho",
+        "menuOpenPayload": "{ component: \"context_menu\", location, menu }",
+        "itemClick": "menu_item_click",
+        "itemClickTrigger": "Usuario selecciona un ítem del menú",
+        "itemClickPayload": "{ label: string, menu: string, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en cada interacción con el Context Menu.",
+        "item1": { "action": "Clic derecho en el área del trigger", "result": "Menú abre en la posición del cursor con animación fade-in + zoom-in-95", "priority": "high" },
+        "item2": { "action": "Presionar Escape con el menú abierto", "result": "Menú cierra y el foco regresa al trigger", "priority": "high" },
+        "item3": { "action": "Clic fuera del área del menú", "result": "Menú cierra al perder foco (click outside)", "priority": "high" },
+        "item4": { "action": "Navegar con Arrow Down/Up", "result": "Foco se mueve entre ítems; ítems disabled son omitidos", "priority": "high" },
+        "item5": { "action": "Enfocar SubTrigger y presionar Arrow Right", "result": "Submenú abre a la derecha; foco va al primer ítem del submenú", "priority": "high" },
+        "item6": { "action": "Presionar Arrow Left dentro del submenú", "result": "Submenú cierra; foco regresa al SubTrigger", "priority": "high" },
+        "item7": { "action": "Seleccionar CheckboxItem", "result": "Estado checked alterna; CheckIcon aparece/desaparece", "priority": "medium" },
+        "item8": { "action": "Seleccionar RadioItem dentro de RadioGroup", "result": "RadioItem seleccionado muestra CheckIcon; selección anterior se limpia", "priority": "medium" },
+        "item9": { "action": "Ítem con disabled=true", "result": "Opacidad 50%; pointer-events-none; no se alcanza vía teclado", "priority": "medium" },
+        "item10": { "action": "Renderizar ítem con variante destructive", "result": "Texto text-destructive; foco bg-destructive/10 text-destructive", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": "Sin violaciones reportadas por axe-core en el estado predeterminado",
+        "item2": "role=\"menu\" presente en ContextMenuContent",
+        "item3": "role=\"menuitem\" presente en cada ContextMenuItem",
+        "item4": "role=\"menuitemcheckbox\" y aria-checked en CheckboxItem",
+        "item5": "role=\"menuitemradio\" y aria-checked en RadioItem",
+        "item6": "aria-disabled en ítems deshabilitados",
+        "item7": "Escape cierra el menú y devuelve el foco al trigger",
+        "item8": "Contraste mínimo 4.5:1 en todos los estados de texto"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "required": "Obligatorio",
+        "item1": { "story": "Default — menú con ítems, separador y atajo", "priority": "high" },
+        "item2": { "story": "Con ítem destructive", "priority": "high" },
+        "item3": { "story": "Con submenú abierto", "priority": "high" },
+        "item4": { "story": "Con CheckboxItem y RadioGroup", "priority": "medium" },
+        "item5": { "story": "Con ítems disabled", "priority": "medium" },
+        "item6": { "story": "Dark mode — todas las variantes", "priority": "high" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
