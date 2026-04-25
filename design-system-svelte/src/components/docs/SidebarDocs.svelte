@@ -263,7 +263,7 @@ interface SidebarMenuButtonProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full min-h-[400px] border rounded-lg overflow-hidden">
+      <div class="w-full min-h-[400px] border rounded-lg overflow-hidden" style="contain: layout">
         <SidebarProvider defaultOpen={true}>
           <nav aria-label={$tStore('demonstration.labels.mainNav')}>
             <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
@@ -415,7 +415,7 @@ interface SidebarMenuButtonProps {
   />
 
   {#snippet doPair1()}
-    <div class="w-full min-h-[200px] border rounded-lg overflow-hidden text-xs">
+    <div class="w-full min-h-[200px] border rounded-lg overflow-hidden text-xs" style="contain: layout">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
@@ -588,7 +588,7 @@ interface SidebarMenuButtonProps {
   />
 
   {#snippet variantSidebar()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden">
+    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
@@ -619,7 +619,7 @@ interface SidebarMenuButtonProps {
   {/snippet}
 
   {#snippet variantFloating()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden">
+    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="floating" collapsible="offcanvas">
@@ -649,7 +649,7 @@ interface SidebarMenuButtonProps {
   {/snippet}
 
   {#snippet variantInset()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden">
+    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="inset" collapsible="offcanvas">
@@ -679,7 +679,7 @@ interface SidebarMenuButtonProps {
   {/snippet}
 
   {#snippet variantIcon()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden">
+    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
       <SidebarProvider defaultOpen={false}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="icon">
@@ -710,7 +710,7 @@ interface SidebarMenuButtonProps {
   {/snippet}
 
   {#snippet variantNone()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden">
+    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="none">
@@ -740,7 +740,7 @@ interface SidebarMenuButtonProps {
   {/snippet}
 
   {#snippet variantRight()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden">
+    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
       <SidebarProvider defaultOpen={true}>
         <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
           <span class="text-xs text-muted-foreground">side="right"</span>

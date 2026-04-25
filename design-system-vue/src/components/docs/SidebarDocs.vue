@@ -431,7 +431,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
 
     <!-- ── Demonstração ───────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full min-h-[400px] flex rounded-lg overflow-hidden border border-border">
+      <div class="w-full min-h-[400px] flex rounded-lg overflow-hidden border border-border" style="contain: layout">
         <SidebarProvider>
           <nav :aria-label="tContent('demonstration.labels.mainNav')">
             <Sidebar collapsible="offcanvas">
@@ -553,7 +553,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
     >
       <!-- Par 1: SidebarProvider na raiz -->
       <template #do-preview-0>
-        <div class="w-full min-h-[180px] flex rounded overflow-hidden border border-border text-xs">
+        <div class="w-full min-h-[180px] flex rounded overflow-hidden border border-border text-xs" style="contain: layout">
           <SidebarProvider>
             <nav aria-label="Navegação principal">
               <Sidebar collapsible="none" class="w-32">
@@ -591,7 +591,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
 
       <!-- Par 2: aria-current no item ativo -->
       <template #do-preview-1>
-        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-border text-xs">
+        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-border text-xs" style="contain: layout">
           <SidebarProvider>
             <nav aria-label="Navegação principal">
               <Sidebar collapsible="none" class="w-32">
@@ -615,7 +615,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5">
+        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5" style="contain: layout">
           <div class="w-32 bg-sidebar border-r border-border p-2">
             <div class="bg-sidebar-accent rounded p-1 text-sidebar-foreground">
               <LayoutDashboard class="inline-block mr-1 size-3" aria-hidden="true" />Dashboard
@@ -627,7 +627,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
 
       <!-- Par 3: SidebarTrigger só em mobile -->
       <template #do-preview-2>
-        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-border text-xs">
+        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-border text-xs" style="contain: layout">
           <SidebarProvider>
             <nav aria-label="Navegação principal">
               <Sidebar collapsible="none" class="w-32">
@@ -657,7 +657,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
         </div>
       </template>
       <template #dont-preview-2>
-        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5">
+        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5" style="contain: layout">
           <SidebarProvider>
             <nav aria-label="Navegação principal">
               <Sidebar collapsible="none" class="w-32">
@@ -701,7 +701,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
     <DocsVariants :title="tContent('variants.title')" :items="variantItems">
       <!-- variant: sidebar -->
       <template #variant-preview-0>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border">
+        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
           <SidebarProvider>
             <nav aria-label="Navegação principal">
               <Sidebar variant="sidebar" collapsible="offcanvas">
@@ -736,7 +736,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
 
       <!-- variant: floating -->
       <template #variant-preview-1>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border">
+        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
           <SidebarProvider>
             <nav aria-label="Navegação principal">
               <Sidebar variant="floating" collapsible="offcanvas">
@@ -771,7 +771,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
 
       <!-- variant: inset -->
       <template #variant-preview-2>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border">
+        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
           <SidebarProvider>
             <nav aria-label="Navegação principal">
               <Sidebar variant="inset" collapsible="offcanvas">
@@ -806,7 +806,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
 
       <!-- collapsible: icon -->
       <template #variant-preview-3>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border">
+        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
           <SidebarProvider :default-open="false">
             <nav aria-label="Navegação principal">
               <Sidebar variant="sidebar" collapsible="icon">
@@ -845,7 +845,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
 
       <!-- collapsible: none -->
       <template #variant-preview-4>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border">
+        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
           <SidebarProvider>
             <nav aria-label="Navegação principal">
               <Sidebar variant="sidebar" collapsible="none">
@@ -879,7 +879,7 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
 
       <!-- side: right -->
       <template #variant-preview-5>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border">
+        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
           <SidebarProvider>
             <SidebarInset>
               <main id="main-content-v6" class="p-3 text-xs text-muted-foreground">side="right"</main>

@@ -142,7 +142,7 @@ function SidebarDemoPreview({
   defaultOpen?: boolean;
 }) {
   return (
-    <div className="min-h-[300px] flex w-full overflow-hidden rounded-lg border border-border">
+    <div className="min-h-[300px] flex w-full overflow-hidden rounded-lg border border-border" style={{ contain: "layout" }}>
       <SidebarProvider defaultOpen={defaultOpen}>
         <nav aria-label="Navegação principal">
           <Sidebar variant={variant} collapsible={collapsible} side={side}>

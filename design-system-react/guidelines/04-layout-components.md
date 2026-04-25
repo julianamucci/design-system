@@ -304,6 +304,44 @@
 - `aria-label` do toggle: contextual e descritivo — não apenas "Menu"
 - Tooltips de ícones no modo colapsado: nome exato da seção
 
+**Docs page — previews de Sidebar usam `contain: layout` obrigatoriamente**:
+
+O componente `Sidebar` usa `position: fixed; inset-y: 0` internamente, o que faz o painel escapar de qualquer container e se sobrepor ao layout da docs page. Para conter a sidebar dentro do preview, aplique `contain: layout` no div wrapper:
+
+```tsx
+// React
+<div className="min-h-[300px] w-full border border-border rounded-lg overflow-hidden"
+     style={{ contain: 'layout' }}>
+  <SidebarProvider>
+    ...
+  </SidebarProvider>
+</div>
+```
+
+```vue
+<!-- Vue -->
+<div class="min-h-[300px] w-full border border-border rounded-lg overflow-hidden"
+     style="contain: layout">
+  <SidebarProvider>...</SidebarProvider>
+</div>
+```
+
+```svelte
+<!-- Svelte -->
+<div class="min-h-[300px] w-full border border-border rounded-lg overflow-hidden" style="contain: layout">
+  <SidebarProvider>...</SidebarProvider>
+</div>
+```
+
+```ts
+// Basecoat
+const container = document.createElement('div');
+container.className = 'min-h-[300px] w-full border border-border rounded-lg overflow-hidden';
+container.style.contain = 'layout';
+```
+
+**Por que `contain: layout`**: a spec CSS Containment Level 2 garante que elementos `position: fixed` dentro de um container com `contain: layout` sejam posicionados relativamente àquele container, não ao viewport. `overflow: hidden` sozinho **não** é suficiente — fixed bypassa overflow. Não existe classe Tailwind para isso; use `style` inline.
+
 **Analytics** (ver `21-analytics.md`):
 - Clique em item de menu: `navigation_click` com `label` (nome da seção) e `destination` (path)
 - O handler de navegação deve disparar `page_view` — ver `11-acessibilidade.md` → "Anúncio de mudança de página"

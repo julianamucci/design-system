@@ -165,6 +165,7 @@ function buildMiniSidebar(opts: {
 
   const container = document.createElement('div');
   container.className = 'min-h-[300px] w-full border border-border rounded-lg overflow-hidden';
+  container.style.contain = 'layout';
   container.appendChild(wrapper);
   return container;
 }
