@@ -36,7 +36,7 @@
     const t = $tStore;
     const l = $locale;
     const cleanup = applySeo({
-      title: `${t('title')} — ${t('category')}`,
+      title: t('seo.title'),
       description: t('seo.description'),
       locale: l,
       componentSlug: 'label',
