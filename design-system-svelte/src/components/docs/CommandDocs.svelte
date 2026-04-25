@@ -1,7 +1,10 @@
 <script lang="ts">
   import * as Command from '@/components/ui/command';
   import { Button } from '@/components/ui/button';
+  import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
   import LanguageSwitcher from '@/components/product/LanguageSwitcher.svelte';
+  import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+  import CheckIcon from '@lucide/svelte/icons/check';
   import Search from '@lucide/svelte/icons/search';
   import FileText from '@lucide/svelte/icons/file-text';
   import Settings from '@lucide/svelte/icons/settings';
@@ -124,6 +127,18 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
+  // ─── Demo combobox state ──────────────────────────────────────────────────
+
+  let comboboxOpen = $state(false);
+  let comboboxValue = $state('');
+  const comboboxItems = [
+    { value: 'button',   label: 'Button'   },
+    { value: 'input',    label: 'Input'    },
+    { value: 'select',   label: 'Select'   },
+    { value: 'textarea', label: 'Textarea' },
+    { value: 'badge',    label: 'Badge'    },
+  ];
+
   // ─── Demo palette state ───────────────────────────────────────────────────
 
   let paletteOpen = $state(false);
@@ -232,6 +247,43 @@
     </Command.Group>
   </Command.List>
 </Command.Root>`;
+
+  const codeVariantCombobox = `<script lang="ts">
+  import * as Command from "@/components/ui/command";
+  import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+  import { Button } from "@/components/ui/button";
+
+  let open = $state(false);
+  let selected = $state('');
+  const items = [
+    { value: 'button', label: 'Button' },
+    { value: 'input', label: 'Input' },
+    { value: 'select', label: 'Select' },
+  ];
+<\/script>
+
+<Popover bind:open>
+  <PopoverTrigger asChild>
+    <Button variant="outline" role="combobox" aria-expanded={open} class="w-56 justify-between">
+      {selected ? items.find(i => i.value === selected)?.label : 'Selecione...'}
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent class="w-56 p-0">
+    <Command.Root>
+      <Command.Input placeholder="Buscar item..." />
+      <Command.List>
+        <Command.Empty>Nenhum resultado.</Command.Empty>
+        <Command.Group>
+          {#each items as item}
+            <Command.Item value={item.value} onselect={() => { selected = item.value; open = false; }}>
+              {item.label}
+            </Command.Item>
+          {/each}
+        </Command.Group>
+      </Command.List>
+    </Command.Root>
+  </PopoverContent>
+</Popover>`;
 
   const codeVariantPalette = `<Command.Dialog bind:open title="Command Palette" description="Busque por um comando...">
   <Command.Input placeholder="Buscar comando ou ação..." />
@@ -574,9 +626,47 @@ interface CommandLoadingProps {
     title={$tStore('variants.title')}
     items={[
       { name: 'inline',   description: stripHtml($tStore('variants.items.inline')),   code: codeVariantInline,   preview: variantInline   },
+      { name: 'combobox', description: stripHtml($tStore('variants.items.combobox')), code: codeVariantCombobox, preview: variantCombobox },
       { name: 'palette',  description: stripHtml($tStore('variants.items.palette')),  code: codeVariantPalette,  preview: variantPalette  },
     ]}
   />
+
+  {#snippet variantCombobox()}
+    <Popover bind:open={comboboxOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={comboboxOpen}
+          class="w-56 justify-between"
+        >
+          {comboboxValue ? comboboxItems.find(i => i.value === comboboxValue)?.label : $tStore('demonstration.labels.selectPlaceholder')}
+          <ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-50" aria-hidden="true" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent class="w-56 p-0">
+        <Command.Root>
+          <Command.Input placeholder={$tStore('demonstration.labels.comboboxSearch')} />
+          <Command.List>
+            <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
+            <Command.Group>
+              {#each comboboxItems as item}
+                <Command.Item
+                  value={item.value}
+                  onselect={() => { comboboxValue = item.value; comboboxOpen = false; }}
+                >
+                  {item.label}
+                  {#if comboboxValue === item.value}
+                    <CheckIcon class="ml-auto size-4" aria-hidden="true" />
+                  {/if}
+                </Command.Item>
+              {/each}
+            </Command.Group>
+          </Command.List>
+        </Command.Root>
+      </PopoverContent>
+    </Popover>
+  {/snippet}
 
   {#snippet variantInline()}
     <div class="w-full max-w-sm rounded-xl border shadow-md">

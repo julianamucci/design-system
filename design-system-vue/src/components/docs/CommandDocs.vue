@@ -44,7 +44,7 @@ import commandTranslations from '@shared/content/command/translations.json';
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
-const { t: tContent, locale } = useTranslation({ ...uiTranslations, ...commandTranslations });
+const { t: tContent, locale } = useTranslation(commandTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
