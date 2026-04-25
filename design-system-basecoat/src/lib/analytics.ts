@@ -44,6 +44,13 @@ interface AnalyticsEvents {
     toast_type: string;
     locale: Locale;
   };
+
+  /** Disparado ao clicar no botão de ação interno de um toast (ex: Desfazer). */
+  toast_action_click: {
+    label: string;
+    component: 'toast';
+    location: string;
+  };
   accordion_expand: {
     component: string;
     label?: string;
