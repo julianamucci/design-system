@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect } from 'storybook/test';
+import { fn, userEvent, within, expect } from 'storybook/test';
 import { Collapsible } from './index';
 import CollapsibleStory from './CollapsibleStory.svelte';
+import CollapsibleControladoStory from './CollapsibleControladoStory.svelte';
 
 const meta = {
   title: 'UI/Collapsible/Estados',
@@ -19,6 +20,40 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Controlado: Story = {
+  name: 'Controlado',
+  render: () => ({
+    Component: CollapsibleControladoStory,
+    props: {
+      label: 'Exibir filtros avançados',
+      contentText: 'Filtro avançado 1 · Filtro avançado 2',
+      onOpenChange: fn(),
+    },
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('painel está fechado no estado inicial', async () => {
+      const trigger = canvas.getByRole('button', { name: /Exibir filtros/i });
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    await step('botão externo abre o painel', async () => {
+      const externalBtn = canvas.getByRole('button', { name: /Abrir via botão externo/i });
+      await userEvent.click(externalBtn);
+      const trigger = canvas.getByRole('button', { name: /Exibir filtros/i });
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    await step('botão externo fecha o painel', async () => {
+      const externalBtn = canvas.getByRole('button', { name: /Fechar via botão externo/i });
+      await userEvent.click(externalBtn);
+      const trigger = canvas.getByRole('button', { name: /Exibir filtros/i });
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+  },
+};
 
 export const NaoControlado: Story = {
   name: 'Não-controlado',

@@ -469,6 +469,7 @@ export function createCollapsibleDocs(): HTMLElement {
             { key: 'Tab',   description: t('accessibility.keyboard.tab')     },
             { key: 'Enter', description: t('accessibility.keyboard.enter')   },
             { key: 'Space', description: t('accessibility.keyboard.space')   },
+            { key: '—',     description: t('accessibility.keyboard.noArrow') },
           ],
         });
 
