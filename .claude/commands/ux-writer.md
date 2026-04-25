@@ -21,12 +21,9 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 Antes de escrever qualquer texto, leia obrigatoriamente:
 
-1. **Tom de voz**: `docs/shared/guidelines/05-tom-de-voz.md`
-2. **Exemplo de referência**: `docs/shared/content/alert/translations.json` (estrutura completa de tradução)
-3. **Componente fonte**: código do componente no React (`design-system-react/src/components/ui/<slug>/`) para entender variantes, props e estados
-4. **AlertDocs.tsx**: `design-system-react/src/components/docs/AlertDocs.tsx` (referência de quais chaves de tradução são usadas)
-5. **Acessibilidade**: `docs/shared/guidelines/01-acessibilidade.md`
-6. **Guideline de categoria** (obrigatório): leia o arquivo correspondente à categoria do componente antes de escrever qualquer conteúdo de variantes, estados, props ou UX Writing:
+1. **Componente fonte**: código do componente no React (`design-system-react/src/components/ui/<slug>/`) para entender variantes, props e estados
+2. **Acessibilidade**: `docs/shared/guidelines/01-acessibilidade.md`
+3. **Guideline de categoria** (obrigatório): leia o arquivo correspondente à categoria do componente antes de escrever qualquer conteúdo de variantes, estados, props ou UX Writing:
 
 | Categoria | Arquivo | Componentes |
 |-----------|---------|-------------|
@@ -195,17 +192,15 @@ Gere parâmetro `description.story` (em pt-BR) para cada story do componente. Ca
 
 1. **Identificar** a categoria do componente e ler o arquivo de guideline correspondente (04–10)
 2. **Ler** o código do componente (variantes, props, estados) — cruzar com as regras da guideline de categoria
-3. **Ler** o `translations.json` do Alert como referência estrutural
-4. **Ler** o guideline de tom de voz
-5. **Gerar** `translations.json` completo nos 3 idiomas, garantindo que:
+3. **Gerar** `translations.json` completo nos 3 idiomas, garantindo que:
    - As variantes documentadas correspondem exatamente às variantes no código (sem inventar)
    - Os estados documentados batem com os estados reais do componente
    - As props documentadas usam os tipos e nomes corretos conforme a guideline de categoria
    - O UX Writing segue os padrões da categoria (ex: labels de botão vs labels de overlay)
-6. **Gerar** descrições de stories
-7. **Validar** que todas as chaves existem nos 3 idiomas (sem chave faltante)
-8. **Validar** limites de caracteres
-9. **Entregar** os arquivos prontos para uso
+4. **Gerar** descrições de stories
+5. **Validar** que todas as chaves existem nos 3 idiomas (sem chave faltante)
+6. **Validar** limites de caracteres
+7. **Entregar** os arquivos prontos para uso
 
 ---
 

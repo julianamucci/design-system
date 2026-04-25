@@ -102,7 +102,7 @@ Exit codes: 0 = limpo, 1 = high violations, 2 = medium/low.
 
 ## Passo 5 — Context cache (modos `new` / `full` / `audit`)
 
-Depois de rodar `/ux-writer` + `/product --from-content` (em `new`), ou antes de disparar auditores (em `audit`), escreva `.pipeline-context/<slug>.md` com:
+Depois de rodar `/ux-writer` ou antes de disparar auditores (em `audit`), escreva `.pipeline-context/<slug>.md` com:
 
 - Slug, categoria
 - Variantes/tamanhos (do componente UI)
@@ -123,7 +123,6 @@ Tipicamente ≤120 linhas. Reuse se for do mesmo dia.
 ```
 Fase A (serial):
   1. /ux-writer <slug>
-  2. /product <slug> --from-content
   3. Gerar .pipeline-context/<slug>.md (Passo 5)
   4. node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json
 

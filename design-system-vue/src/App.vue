@@ -14,6 +14,7 @@ const isAdminView = new URLSearchParams(window.location.search).get('view') === 
 // ─── Lazy-loaded documentation pages ────────────────────────────────────────
 const lazyDocs: Record<string, ReturnType<typeof defineAsyncComponent>> = {
   'alert':        defineAsyncComponent(() => import('./components/docs/AlertDocs.vue')),
+  'checkbox':     defineAsyncComponent(() => import('./components/docs/CheckboxDocs.vue')),
   'icons':        defineAsyncComponent(() => import('./components/docs/IconsDocs.vue')),
 }
 
@@ -60,6 +61,13 @@ const componentCategories = [
     icon: MessageSquare,
     items: [
       { name: 'Alert', path: 'alert' },
+    ],
+  },
+  {
+    name: 'Form',
+    icon: FileText,
+    items: [
+      { name: 'Checkbox', path: 'checkbox' },
     ],
   },
 ]
