@@ -48,7 +48,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
-const { t: tContent, locale } = useTranslation({ ...uiTranslations, ...componentTranslations });
+const { t: tContent, locale } = useTranslation(componentTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -266,11 +266,21 @@ interface UseSidebarReturn {
 
 const anatomyItems = computed(() => Array.from({ length: 16 }, (_, i) => tContent(`anatomy.item${i + 1}`)));
 
+const codeCollapsibleNone = `<Sidebar collapsible="none">
+  <!-- Sidebar sempre visível, sem toggle -->
+</Sidebar>`;
+
+const codeSideRight = `<Sidebar side="right">
+  <!-- Sidebar posicionada na direita -->
+</Sidebar>`;
+
 const variantItems = computed(() => [
   { name: 'sidebar',   description: tContent('variants.sidebar'),   code: codeVariantSidebar   },
   { name: 'floating',  description: tContent('variants.floating'),  code: codeVariantFloating  },
   { name: 'inset',     description: tContent('variants.inset'),     code: codeVariantInset     },
   { name: 'icon',      description: tContent('variants.icon'),      code: codeCollapsibleIcon  },
+  { name: 'none',      description: tContent('variants.none'),      code: codeCollapsibleNone  },
+  { name: 'right',     description: tContent('variants.right'),     code: codeSideRight        },
 ]);
 
 const stateItems = computed(() => [
@@ -306,6 +316,12 @@ const menuButtonPropItems = computed(() => [
   { name: 'variant',  type: '"default" | "outline"',             defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.menuButton.variant'))   },
   { name: 'size',     type: '"default" | "sm" | "lg"',           defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.menuButton.size'))      },
   { name: 'tooltip',  type: 'string | TooltipContentProps',       defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.menuButton.tooltip'))   },
+]);
+
+const menuSubButtonPropItems = computed(() => [
+  { name: 'isActive', type: 'boolean',        defaultValue: 'false',  required: 'Não', description: tContent('props.menuSubButton.isActive')              },
+  { name: 'size',     type: '"sm" | "md"',    defaultValue: '"md"',   required: 'Não', description: stripHtml(tContent('props.menuSubButton.size'))       },
+  { name: 'render',   type: 'Component',      defaultValue: '—',      required: 'Não', description: stripHtml(tContent('props.menuSubButton.render'))     },
 ]);
 
 const menuSkeletonPropItems = computed(() => [
@@ -826,6 +842,70 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
           </SidebarProvider>
         </div>
       </template>
+
+      <!-- collapsible: none -->
+      <template #variant-preview-4>
+        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border">
+          <SidebarProvider>
+            <nav aria-label="Navegação principal">
+              <Sidebar variant="sidebar" collapsible="none">
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">App</SidebarHeader>
+                <SidebarContent>
+                  <SidebarGroup>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                            <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <Blocks aria-hidden="true" /><span>Componentes</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                </SidebarContent>
+              </Sidebar>
+            </nav>
+            <SidebarInset>
+              <main id="main-content-v5" class="p-3 text-xs text-muted-foreground">collapsible="none"</main>
+            </SidebarInset>
+          </SidebarProvider>
+        </div>
+      </template>
+
+      <!-- side: right -->
+      <template #variant-preview-5>
+        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border">
+          <SidebarProvider>
+            <SidebarInset>
+              <main id="main-content-v6" class="p-3 text-xs text-muted-foreground">side="right"</main>
+            </SidebarInset>
+            <nav aria-label="Navegação principal">
+              <Sidebar variant="sidebar" collapsible="offcanvas" side="right">
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">App</SidebarHeader>
+                <SidebarContent>
+                  <SidebarGroup>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                            <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                </SidebarContent>
+                <SidebarRail />
+              </Sidebar>
+            </nav>
+          </SidebarProvider>
+        </div>
+      </template>
     </DocsVariants>
 
     <!-- ── Estados ────────────────────────────────────────────────────── -->
@@ -839,10 +919,11 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: tContent('props.providerTitle'),    cols: propCols, items: providerPropItems    },
-        { title: tContent('props.sidebarTitle'),     cols: propCols, items: sidebarPropItems     },
-        { title: tContent('props.menuButtonTitle'),  cols: propCols, items: menuButtonPropItems  },
-        { title: tContent('props.menuSkeletonTitle'), cols: propCols, items: menuSkeletonPropItems },
+        { title: tContent('props.providerTitle'),       cols: propCols, items: providerPropItems       },
+        { title: tContent('props.sidebarTitle'),        cols: propCols, items: sidebarPropItems        },
+        { title: tContent('props.menuButtonTitle'),     cols: propCols, items: menuButtonPropItems     },
+        { title: tContent('props.menuSubButtonTitle'),  cols: propCols, items: menuSubButtonPropItems  },
+        { title: tContent('props.menuSkeletonTitle'),   cols: propCols, items: menuSkeletonPropItems   },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"

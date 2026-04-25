@@ -189,6 +189,22 @@
   {/* ... */}
 </Sidebar>`;
 
+  const codeCollapsibleIcon = `<Sidebar collapsible="icon">
+  <!-- Labels ocultos; tooltips ao hover -->
+  <SidebarMenuButton tooltip="Dashboard">
+    <LayoutDashboard aria-hidden="true" />
+    <span>Dashboard</span>
+  </SidebarMenuButton>
+</Sidebar>`;
+
+  const codeCollapsibleNone = `<Sidebar collapsible="none">
+  <!-- Sidebar sempre visível, sem toggle -->
+</Sidebar>`;
+
+  const codeSideRight = `<Sidebar side="right">
+  <!-- Sidebar posicionada na direita -->
+</Sidebar>`;
+
   const codeCustomizationTokens = `/* globals.css — personalizar tokens da sidebar */
 :root {
   --sidebar: oklch(0.98 0 0);
@@ -565,6 +581,9 @@ interface SidebarMenuButtonProps {
       { name: 'sidebar',    description: $tStore('variants.sidebar'),    code: codeVariantSidebar,   preview: variantSidebar   },
       { name: 'floating',   description: $tStore('variants.floating'),   code: codeVariantFloating,  preview: variantFloating  },
       { name: 'inset',      description: $tStore('variants.inset'),      code: codeVariantInset,     preview: variantInset     },
+      { name: 'icon',       description: $tStore('variants.icon'),       code: codeCollapsibleIcon,  preview: variantIcon      },
+      { name: 'none',       description: $tStore('variants.none'),       code: codeCollapsibleNone,  preview: variantNone      },
+      { name: 'right',      description: $tStore('variants.right'),      code: codeSideRight,        preview: variantRight     },
     ]}
   />
 
@@ -655,6 +674,98 @@ interface SidebarMenuButtonProps {
         <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
           <span class="text-xs text-muted-foreground">variant="inset"</span>
         </SidebarInset>
+      </SidebarProvider>
+    </div>
+  {/snippet}
+
+  {#snippet variantIcon()}
+    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden">
+      <SidebarProvider defaultOpen={false}>
+        <nav aria-label="Navegação principal">
+          <Sidebar side="left" variant="sidebar" collapsible="icon">
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {#each navItems.slice(0, 3) as item}
+                      <SidebarMenuItem>
+                        <SidebarMenuButton isActive={item.isActive} tooltip={$tStore(item.label)}>
+                          <item.icon aria-hidden="true" />
+                          <span>{$tStore(item.label)}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    {/each}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+            <SidebarRail />
+          </Sidebar>
+        </nav>
+        <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
+          <span class="text-xs text-muted-foreground">collapsible="icon"</span>
+        </SidebarInset>
+      </SidebarProvider>
+    </div>
+  {/snippet}
+
+  {#snippet variantNone()}
+    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden">
+      <SidebarProvider defaultOpen={true}>
+        <nav aria-label="Navegação principal">
+          <Sidebar side="left" variant="sidebar" collapsible="none">
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {#each navItems.slice(0, 3) as item}
+                      <SidebarMenuItem>
+                        <SidebarMenuButton isActive={item.isActive}>
+                          <item.icon aria-hidden="true" />
+                          <span>{$tStore(item.label)}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    {/each}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+          </Sidebar>
+        </nav>
+        <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
+          <span class="text-xs text-muted-foreground">collapsible="none"</span>
+        </SidebarInset>
+      </SidebarProvider>
+    </div>
+  {/snippet}
+
+  {#snippet variantRight()}
+    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden">
+      <SidebarProvider defaultOpen={true}>
+        <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
+          <span class="text-xs text-muted-foreground">side="right"</span>
+        </SidebarInset>
+        <nav aria-label="Navegação principal">
+          <Sidebar side="right" variant="sidebar" collapsible="offcanvas">
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {#each navItems.slice(0, 3) as item}
+                      <SidebarMenuItem>
+                        <SidebarMenuButton isActive={item.isActive} tooltip={$tStore(item.label)}>
+                          <item.icon aria-hidden="true" />
+                          <span>{$tStore(item.label)}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    {/each}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+            <SidebarRail />
+          </Sidebar>
+        </nav>
       </SidebarProvider>
     </div>
   {/snippet}
