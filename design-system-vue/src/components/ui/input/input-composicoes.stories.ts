@@ -8,6 +8,7 @@ const meta = {
   component: Input,
   parameters: {
     layout: 'centered',
+    controls: { disable: true },
     docs: {
       description: {
         component:

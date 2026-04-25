@@ -15,6 +15,7 @@ const meta = {
   component: InputGroup,
   parameters: {
     layout: "centered",
+    controls: { disable: true },
     docs: {
       description: {
         component:

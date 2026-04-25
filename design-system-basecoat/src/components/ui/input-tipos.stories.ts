@@ -5,6 +5,7 @@ import { createInput } from './input';
 const meta: Meta = {
   title: 'UI/Input/Tipos',
   parameters: {
+    controls: { disable: true },
     docs: {
       description: {
         component: 'Tipos HTML disponíveis para o Input. Use sempre o tipo semântico correto para o dado esperado.',

@@ -8,6 +8,7 @@ const meta = {
   component: Input,
   parameters: {
     layout: 'centered',
+    controls: { disable: true },
     docs: {
       description: {
         component: 'Composições do Input com Label e texto de apoio. InputGroup é React-only — em Svelte, use Label + Input com slot nativo.',

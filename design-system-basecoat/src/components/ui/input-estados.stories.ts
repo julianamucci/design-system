@@ -5,6 +5,7 @@ import { createInput } from './input';
 const meta: Meta = {
   title: 'UI/Input/Estados',
   parameters: {
+    controls: { disable: true },
     docs: {
       description: {
         component: 'Estados do Input: padrão, desabilitado, erro (aria-invalid) e com placeholder.',

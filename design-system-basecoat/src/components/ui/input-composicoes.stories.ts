@@ -6,6 +6,7 @@ const meta: Meta = {
   title: 'UI/Input/Composições',
   parameters: {
     layout: 'padded',
+    controls: { disable: true },
     docs: {
       description: {
         component:

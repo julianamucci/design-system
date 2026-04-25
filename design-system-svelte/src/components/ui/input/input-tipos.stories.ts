@@ -8,6 +8,7 @@ const meta = {
   component: InputStory,
   parameters: {
     layout: 'centered',
+    controls: { disable: true },
     docs: {
       description: {
         component: 'Variações de tipo HTML do Input. Use sempre o tipo semântico correto para melhor UX mobile e validação nativa do browser.',

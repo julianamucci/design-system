@@ -8,6 +8,7 @@ const meta = {
   component: InputStory,
   parameters: {
     layout: 'centered',
+    controls: { disable: true },
     docs: {
       description: {
         component: 'Estados do Input: padrão, desabilitado, erro (aria-invalid) e com placeholder.',
