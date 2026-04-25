@@ -1,0 +1,686 @@
+{
+  "pt-BR": {
+    "title": "Label",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Rótulo textual acessível associado a um campo de formulário via htmlFor ou envolvendo o controle.",
+    "seo": {
+      "title": "Label — Formulário · Design System",
+      "description": "Documentação do Label: associação com campos via htmlFor, estados disabled e required, acessibilidade WCAG para formulários.",
+      "aiSummary": "Componente Label para formulários: associação obrigatória via htmlFor/id, suporte a required com asterisco, opacity reduzida quando o campo associado está disabled.",
+      "aiEntities": "Label, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, htmlFor, aria-required",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "default": "Nome completo",
+        "required": "Email profissional",
+        "disabled": "CPF",
+        "withInput": "Telefone",
+        "requiredMarker": "*"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Label</strong> — elemento <code>&lt;label&gt;</code> com <code>data-slot=\"label\"</code>. Recebe todos os atributos HTML nativos do elemento.",
+      "item2": "<strong>Texto do rótulo</strong> — conteúdo <code>children</code> renderizado como filho direto. Substantivo ou frase nominal curta.",
+      "item3": "<strong>Marcador required (opcional)</strong> — <code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> adicionado pelo código consumidor quando o campo é obrigatório.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "{/* Fora de FormField — htmlFor obrigatório */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Campo obrigatório */}\n<Label htmlFor=\"nome\">\n  Nome completo\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"nome\" aria-required=\"true\" />"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Associe o Label ao campo via <code>htmlFor</code> correspondente ao <code>id</code> do controle fora de FormField.",
+        "item2": "Dentro de FormField, use <code>FormLabel</code> — a associação é gerenciada automaticamente pelo contexto.",
+        "item3": "Posicione o Label acima do campo (padrão) ou à esquerda em layouts horizontais.",
+        "item4": "Use texto nominal curto, sem dois-pontos e sem ponto final: 'Nome completo', não 'Nome completo:'."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Abordagem",
+          "alternative": "Observação"
+        },
+        "item1": { "s": "Campo fora de FormField", "u": "Label com htmlFor", "a": "id no campo obrigatório" },
+        "item2": { "s": "Campo dentro de FormField", "u": "FormLabel (sem htmlFor)", "a": "Associação automática" },
+        "item3": { "s": "Campo obrigatório", "u": "span * aria-hidden + aria-required", "a": "Nunca só cor" },
+        "item4": { "s": "Campo disabled", "u": "Label herdará opacity-50", "a": "Via peer-disabled" }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Todo campo de formulário precisa de rótulo visível identificável",
+        "item2": "O campo é obrigatório e precisa indicar isso visualmente",
+        "item3": "O layout horizontal exige label à esquerda do controle"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "O campo já está dentro de <code>FormField</code> — use <code>FormLabel</code>",
+        "item2": "O rótulo seria apenas placeholder — placeholder não substitui Label",
+        "item3": "O campo tem <code>aria-label</code> diretamente — evite duplicar o rótulo"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Label com htmlFor + Input com id correspondente. Associação explícita e acessível.",
+        "dont": "Label sem htmlFor ou sem id no Input. O clique no Label não foca o campo."
+      },
+      "pair2": {
+        "do": "Texto nominal curto sem dois-pontos: 'Nome completo', 'Email profissional'.",
+        "dont": "Instruções como rótulo: 'Informe seu email', 'Digite o CPF'."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "note": "O Label não possui variantes nativas — é unstyled por padrão (font-medium, text-sm, leading-none). Comportamentos visuais de required e disabled são aplicados pelo código consumidor via className ou pelo estado do campo associado.",
+      "default": {
+        "label": "Padrão",
+        "description": "Texto com <code>font-medium text-sm leading-none</code>. Sem variante de cor — herda do tema."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ocorre",
+        "behavior": "Comportamento visual"
+      },
+      "default": {
+        "label": "Padrão",
+        "trigger": "Campo associado ativo",
+        "behavior": "Texto com opacity total, cursor padrão, font-medium"
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Campo associado com <code>disabled</code> ou grupo com <code>data-disabled=true</code>",
+        "behavior": "<code>opacity-50</code> e <code>cursor-not-allowed</code> via <code>peer-disabled</code> ou <code>group-data-[disabled=true]</code>"
+      },
+      "required": {
+        "label": "Required",
+        "trigger": "Campo obrigatório — asterisco adicionado pelo código consumidor",
+        "behavior": "<code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> em <code>text-destructive</code> como filho do Label"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "htmlFor": "Associa o Label ao campo com o <code>id</code> correspondente. Obrigatório fora de FormField.",
+        "className": "Classes Tailwind adicionais para personalização do rótulo.",
+        "children": "Texto do rótulo. Use substantivo ou frase nominal curta."
+      },
+      "note": "O Label estende <code>React.ComponentProps&lt;\"label\"&gt;</code> — aceita todos os atributos HTML nativos do elemento <code>&lt;label&gt;</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "foreground": "Cor do texto padrão",
+        "foregroundMuted": "Cor do texto quando disabled",
+        "fontSize": "Tamanho do texto",
+        "fontWeight": "Peso da fonte",
+        "lineHeight": "Altura de linha",
+        "destructive": "Cor do marcador required (*)"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O Label deve sempre estar associado a um controle de formulário via <code>htmlFor</code>/<code>for</code> ou envolvendo o campo. Cumpre WCAG 2.1 AA: 1.3.1 (informação e relacionamentos), 2.4.6 (headings e labels), 3.3.2 (labels ou instruções).",
+      "item1": "<strong>Associação via htmlFor</strong> — obrigatório fora de FormField. O <code>id</code> do campo deve corresponder ao <code>htmlFor</code> do Label.",
+      "item2": "<strong>Marcador required</strong> — o asterisco (<code>*</code>) deve ter <code>aria-hidden=\"true\"</code>. A obrigatoriedade é comunicada via <code>aria-required=\"true\"</code> no campo.",
+      "item3": "<strong>Estado disabled</strong> — a redução de opacidade é visual; o leitor de tela ignora o Label disabled automaticamente quando o campo está desabilitado.",
+      "item4": "<strong>Nunca substituir por placeholder</strong> — placeholder desaparece ao digitar, não é acessível como label em leitores de tela.",
+      "keyboard": {
+        "tab": "Foca o campo associado ao Label (o Label em si não recebe foco).",
+        "noKeyboard": "O Label não é interativo — o clique no Label transfere foco ao campo via associação htmlFor/id."
+      },
+      "aria": {
+        "htmlFor": "<code>htmlFor</code> — associa o Label ao campo. Equivalente ao atributo <code>for</code> no HTML nativo.",
+        "ariaRequired": "<code>aria-required=\"true\"</code> — aplicado no campo associado, não no Label.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — no <code>&lt;span&gt;*&lt;/span&gt;</code> do marcador required."
+      },
+      "screenReader": {
+        "association": "O leitor de tela lê o texto do Label ao focar o campo associado — mesmo quando o Label está visualmente acima.",
+        "required": "O asterisco (*) é ignorado pelo leitor. O campo deve ter aria-required=\"true\" para anunciar a obrigatoriedade.",
+        "disabled": "Campo desabilitado é anunciado como 'campo desabilitado'. O Label com opacity reduzida não afeta o anúncio do leitor."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "input": "Campo de texto ao qual o Label é associado.",
+      "formLabel": "Versão do Label integrada ao FormField — associação automática via contexto.",
+      "formField": "Container que gerencia a associação entre Label e campo de forma automática.",
+      "checkbox": "Sempre acompanhado de Label com htmlFor para identificar a opção.",
+      "radioGroup": "Cada RadioGroupItem deve ter Label associado via htmlFor."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "Fora de FormField, o <code>htmlFor</code> do Label e o <code>id</code> do campo devem ser idênticos — o vínculo quebra se houver divergência.",
+      "tip2": "O comportamento disabled (<code>peer-disabled:opacity-50</code>) é aplicado via classe CSS quando o campo irmão está disabled — o Label e o Input devem ser siblings no DOM.",
+      "tip3": "Para campos obrigatórios, adicione <code>aria-required=\"true\"</code> no Input e o span com asterisco no Label — as duas partes são necessárias: visual e semântica."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "O Label não emite eventos próprios. Rastreie interações no campo associado (Input, Checkbox, etc.) conforme definido nas guidelines de analytics de cada componente."
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada estado e configuração do Label.",
+        "item1": { "action": "Clicar no Label", "result": "Foco transferido para o campo com id correspondente ao htmlFor", "priority": "high" },
+        "item2": { "action": "Renderizar com campo disabled", "result": "Label com opacity-50 e cursor-not-allowed via peer-disabled", "priority": "high" },
+        "item3": { "action": "Renderizar com span de asterisco", "result": "Asterisco visível em text-destructive com aria-hidden=\"true\"", "priority": "high" },
+        "item4": { "action": "Renderizar dentro de grupo com data-disabled=true", "result": "Label com pointer-events-none e opacity-50 via group-data-[disabled=true]", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "htmlFor do Label corresponde ao id do campo — verificado por getByLabelText() no testing-library",
+        "item3": "Asterisco de required com aria-hidden=\"true\" — inspecionar atributos no DOM",
+        "item4": "Contraste mínimo 4.5:1 para o texto do Label em todos os temas"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "required": "Obrigatório",
+        "item1": { "story": "Default", "priority": "high" },
+        "item2": { "story": "Required — com asterisco", "priority": "high" },
+        "item3": { "story": "Disabled — via peer-disabled", "priority": "high" },
+        "item4": { "story": "Com Input — par completo", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Label",
+    "category": "Form",
+    "type": "Component",
+    "description": "Accessible text label associated with a form control via htmlFor or by wrapping the control.",
+    "seo": {
+      "title": "Label — Form · Design System",
+      "description": "Documentation for Label: field association via htmlFor, disabled and required states, WCAG accessibility for forms.",
+      "aiSummary": "Label component for forms: mandatory association via htmlFor/id, required support with asterisk marker, reduced opacity when the associated field is disabled.",
+      "aiEntities": "Label, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, htmlFor, aria-required",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "default": "Full name",
+        "required": "Work email",
+        "disabled": "Tax ID",
+        "withInput": "Phone number",
+        "requiredMarker": "*"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Label</strong> — <code>&lt;label&gt;</code> element with <code>data-slot=\"label\"</code>. Accepts all native HTML label attributes.",
+      "item2": "<strong>Label text</strong> — <code>children</code> rendered as direct child. Short noun or noun phrase.",
+      "item3": "<strong>Required marker (optional)</strong> — <code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> added by the consumer when the field is required.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "{/* Outside FormField — htmlFor required */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Required field */}\n<Label htmlFor=\"name\">\n  Full name\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"name\" aria-required=\"true\" />"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Associate the Label to the field via <code>htmlFor</code> matching the control's <code>id</code> outside FormField.",
+        "item2": "Inside FormField, use <code>FormLabel</code> — association is handled automatically by the context.",
+        "item3": "Position the Label above the field (default) or to the left in horizontal layouts.",
+        "item4": "Use short nominal text without colons or periods: 'Full name', not 'Full name:'."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Approach",
+          "alternative": "Note"
+        },
+        "item1": { "s": "Field outside FormField", "u": "Label with htmlFor", "a": "id on field required" },
+        "item2": { "s": "Field inside FormField", "u": "FormLabel (no htmlFor)", "a": "Automatic association" },
+        "item3": { "s": "Required field", "u": "span * aria-hidden + aria-required", "a": "Never color alone" },
+        "item4": { "s": "Disabled field", "u": "Label inherits opacity-50", "a": "Via peer-disabled" }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Every form field needs a visible, identifiable label",
+        "item2": "The field is required and must indicate this visually",
+        "item3": "A horizontal layout requires the label to the left of the control"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The field is inside <code>FormField</code> — use <code>FormLabel</code>",
+        "item2": "The label would only be a placeholder — placeholder does not replace Label",
+        "item3": "The field already has a direct <code>aria-label</code> — avoid duplicating the label"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Label with htmlFor + Input with matching id. Explicit and accessible association.",
+        "dont": "Label without htmlFor or Input without id. Clicking the Label won't focus the field."
+      },
+      "pair2": {
+        "do": "Short nominal text without colons: 'Full name', 'Work email'.",
+        "dont": "Instructions as label text: 'Enter your email', 'Type your Tax ID'."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "note": "Label has no native variants — it is unstyled by default (font-medium, text-sm, leading-none). Required and disabled visual behaviors are applied by the consumer via className or by the associated field state.",
+      "default": {
+        "label": "Default",
+        "description": "Text with <code>font-medium text-sm leading-none</code>. No color variant — inherits from the theme."
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How it occurs",
+        "behavior": "Visual behavior"
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "Associated field is active",
+        "behavior": "Full opacity text, default cursor, font-medium"
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Associated field has <code>disabled</code> or group has <code>data-disabled=true</code>",
+        "behavior": "<code>opacity-50</code> and <code>cursor-not-allowed</code> via <code>peer-disabled</code> or <code>group-data-[disabled=true]</code>"
+      },
+      "required": {
+        "label": "Required",
+        "trigger": "Required field — asterisk added by the consumer",
+        "behavior": "<code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> in <code>text-destructive</code> as a child of Label"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "htmlFor": "Associates the Label with the field whose <code>id</code> matches. Required outside FormField.",
+        "className": "Additional Tailwind classes for label customization.",
+        "children": "Label text. Use a short noun or noun phrase."
+      },
+      "note": "Label extends <code>React.ComponentProps&lt;\"label\"&gt;</code> — accepts all native HTML attributes of the <code>&lt;label&gt;</code> element."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component part",
+        "foreground": "Default text color",
+        "foregroundMuted": "Text color when disabled",
+        "fontSize": "Text size",
+        "fontWeight": "Font weight",
+        "lineHeight": "Line height",
+        "destructive": "Required marker (*) color"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Label must always be associated with a form control via <code>htmlFor</code>/<code>for</code> or by wrapping the field. Meets WCAG 2.1 AA: 1.3.1 (info and relationships), 2.4.6 (headings and labels), 3.3.2 (labels or instructions).",
+      "item1": "<strong>Association via htmlFor</strong> — required outside FormField. The field's <code>id</code> must match the Label's <code>htmlFor</code>.",
+      "item2": "<strong>Required marker</strong> — the asterisk (<code>*</code>) must have <code>aria-hidden=\"true\"</code>. The requirement is communicated via <code>aria-required=\"true\"</code> on the field.",
+      "item3": "<strong>Disabled state</strong> — the opacity reduction is visual only; screen readers handle the disabled field announcement independently.",
+      "item4": "<strong>Never replace with placeholder</strong> — placeholder disappears on input and is not accessible as a label in screen readers.",
+      "keyboard": {
+        "tab": "Focuses the field associated with the Label (the Label itself does not receive focus).",
+        "noKeyboard": "Label is not interactive — clicking it transfers focus to the field via htmlFor/id association."
+      },
+      "aria": {
+        "htmlFor": "<code>htmlFor</code> — associates the Label with the field. Equivalent to the native HTML <code>for</code> attribute.",
+        "ariaRequired": "<code>aria-required=\"true\"</code> — applied on the associated field, not on the Label.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — on the <code>&lt;span&gt;*&lt;/span&gt;</code> required marker."
+      },
+      "screenReader": {
+        "association": "Screen reader announces the Label text when the associated field receives focus — even when the Label is visually above.",
+        "required": "The asterisk (*) is ignored by the reader. The field must have aria-required=\"true\" to announce the requirement.",
+        "disabled": "Disabled field is announced as 'dimmed' or 'unavailable'. The opacity-reduced Label does not affect the reader's announcement."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "input": "Text field to which the Label is associated.",
+      "formLabel": "Label version integrated with FormField — automatic association via context.",
+      "formField": "Container that automatically manages the Label-to-field association.",
+      "checkbox": "Always paired with a Label with htmlFor to identify the option.",
+      "radioGroup": "Each RadioGroupItem must have a Label associated via htmlFor."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "Outside FormField, the Label's <code>htmlFor</code> and the field's <code>id</code> must be identical — the link breaks if they differ.",
+      "tip2": "The disabled behavior (<code>peer-disabled:opacity-50</code>) is applied via CSS class when the sibling field is disabled — Label and Input must be siblings in the DOM.",
+      "tip3": "For required fields, add <code>aria-required=\"true\"</code> to the Input and the asterisk span to the Label — both parts are needed: visual and semantic."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Label does not emit its own events. Track interactions on the associated field (Input, Checkbox, etc.) as defined in each component's analytics guidelines."
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Label state and configuration.",
+        "item1": { "action": "Click on Label", "result": "Focus transferred to field with id matching htmlFor", "priority": "high" },
+        "item2": { "action": "Render with disabled field", "result": "Label with opacity-50 and cursor-not-allowed via peer-disabled", "priority": "high" },
+        "item3": { "action": "Render with asterisk span", "result": "Asterisk visible in text-destructive with aria-hidden=\"true\"", "priority": "high" },
+        "item4": { "action": "Render inside group with data-disabled=true", "result": "Label with pointer-events-none and opacity-50 via group-data-[disabled=true]", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": "No violations reported by axe-core in the default state",
+        "item2": "Label htmlFor matches field id — verified by getByLabelText() in testing-library",
+        "item3": "Required asterisk with aria-hidden=\"true\" — inspect attributes in the DOM",
+        "item4": "Minimum contrast 4.5:1 for Label text across all themes"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "Each story is automatically captured for visual regression.",
+        "required": "Required",
+        "item1": { "story": "Default", "priority": "high" },
+        "item2": { "story": "Required — with asterisk", "priority": "high" },
+        "item3": { "story": "Disabled — via peer-disabled", "priority": "high" },
+        "item4": { "story": "With Input — complete pair", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Label",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Etiqueta textual accesible asociada a un campo de formulario mediante for/htmlFor o envolviendo el control.",
+    "seo": {
+      "title": "Label — Formulario · Design System",
+      "description": "Documentación del Label: asociación con campos via htmlFor, estados disabled y required, accesibilidad WCAG para formularios.",
+      "aiSummary": "Componente Label para formularios: asociación obligatoria via htmlFor/id, soporte required con asterisco, opacidad reducida cuando el campo asociado está disabled.",
+      "aiEntities": "Label, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, htmlFor, aria-required",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "default": "Nombre completo",
+        "required": "Email de trabajo",
+        "disabled": "DNI / RFC",
+        "withInput": "Teléfono",
+        "requiredMarker": "*"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Label</strong> — elemento <code>&lt;label&gt;</code> con <code>data-slot=\"label\"</code>. Acepta todos los atributos HTML nativos del elemento.",
+      "item2": "<strong>Texto del rótulo</strong> — contenido <code>children</code> renderizado como hijo directo. Sustantivo o frase nominal corta.",
+      "item3": "<strong>Marcador required (opcional)</strong> — <code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> agregado por el código consumidor cuando el campo es obligatorio.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "{/* Fuera de FormField — htmlFor obligatorio */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Campo obligatorio */}\n<Label htmlFor=\"nombre\">\n  Nombre completo\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"nombre\" aria-required=\"true\" />"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Asocia el Label al campo via <code>htmlFor</code> correspondiente al <code>id</code> del control fuera de FormField.",
+        "item2": "Dentro de FormField, usa <code>FormLabel</code> — la asociación es gestionada automáticamente por el contexto.",
+        "item3": "Posiciona el Label encima del campo (predeterminado) o a la izquierda en layouts horizontales.",
+        "item4": "Usa texto nominal corto sin dos puntos ni punto final: 'Nombre completo', no 'Nombre completo:'."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Enfoque",
+          "alternative": "Nota"
+        },
+        "item1": { "s": "Campo fuera de FormField", "u": "Label con htmlFor", "a": "id en el campo obligatorio" },
+        "item2": { "s": "Campo dentro de FormField", "u": "FormLabel (sin htmlFor)", "a": "Asociación automática" },
+        "item3": { "s": "Campo obligatorio", "u": "span * aria-hidden + aria-required", "a": "Nunca solo color" },
+        "item4": { "s": "Campo disabled", "u": "Label hereda opacity-50", "a": "Via peer-disabled" }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "Todo campo de formulario necesita una etiqueta visible identificable",
+        "item2": "El campo es obligatorio y debe indicarlo visualmente",
+        "item3": "El layout horizontal requiere la etiqueta a la izquierda del control"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El campo está dentro de <code>FormField</code> — usa <code>FormLabel</code>",
+        "item2": "La etiqueta sería solo un placeholder — el placeholder no reemplaza al Label",
+        "item3": "El campo ya tiene <code>aria-label</code> directo — evita duplicar el rótulo"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Label con htmlFor + Input con id correspondiente. Asociación explícita y accesible.",
+        "dont": "Label sin htmlFor o sin id en el Input. Hacer clic en el Label no enfocará el campo."
+      },
+      "pair2": {
+        "do": "Texto nominal corto sin dos puntos: 'Nombre completo', 'Email de trabajo'.",
+        "dont": "Instrucciones como texto del rótulo: 'Ingresa tu email', 'Escribe tu DNI'."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "note": "El Label no tiene variantes nativas — es unstyled por defecto (font-medium, text-sm, leading-none). Los comportamientos visuales de required y disabled los aplica el código consumidor via className o el estado del campo asociado.",
+      "default": {
+        "label": "Predeterminado",
+        "description": "Texto con <code>font-medium text-sm leading-none</code>. Sin variante de color — hereda del tema."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo ocurre",
+        "behavior": "Comportamiento visual"
+      },
+      "default": {
+        "label": "Predeterminado",
+        "trigger": "Campo asociado activo",
+        "behavior": "Texto con opacidad total, cursor predeterminado, font-medium"
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Campo asociado con <code>disabled</code> o grupo con <code>data-disabled=true</code>",
+        "behavior": "<code>opacity-50</code> y <code>cursor-not-allowed</code> via <code>peer-disabled</code> o <code>group-data-[disabled=true]</code>"
+      },
+      "required": {
+        "label": "Required",
+        "trigger": "Campo obligatorio — asterisco agregado por el código consumidor",
+        "behavior": "<code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> en <code>text-destructive</code> como hijo del Label"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "htmlFor": "Asocia el Label al campo cuyo <code>id</code> coincide. Obligatorio fuera de FormField.",
+        "className": "Clases Tailwind adicionales para personalización del rótulo.",
+        "children": "Texto del rótulo. Usa sustantivo o frase nominal corta."
+      },
+      "note": "Label extiende <code>React.ComponentProps&lt;\"label\"&gt;</code> — acepta todos los atributos HTML nativos del elemento <code>&lt;label&gt;</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "foreground": "Color de texto predeterminado",
+        "foregroundMuted": "Color de texto cuando disabled",
+        "fontSize": "Tamaño del texto",
+        "fontWeight": "Peso de la fuente",
+        "lineHeight": "Altura de línea",
+        "destructive": "Color del marcador required (*)"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El Label siempre debe estar asociado a un control de formulario via <code>htmlFor</code>/<code>for</code> o envolviendo el campo. Cumple WCAG 2.1 AA: 1.3.1 (información y relaciones), 2.4.6 (encabezados y etiquetas), 3.3.2 (etiquetas o instrucciones).",
+      "item1": "<strong>Asociación via htmlFor</strong> — obligatorio fuera de FormField. El <code>id</code> del campo debe coincidir con el <code>htmlFor</code> del Label.",
+      "item2": "<strong>Marcador required</strong> — el asterisco (<code>*</code>) debe tener <code>aria-hidden=\"true\"</code>. La obligatoriedad se comunica via <code>aria-required=\"true\"</code> en el campo.",
+      "item3": "<strong>Estado disabled</strong> — la reducción de opacidad es visual; el lector de pantalla ignora el Label con opacidad reducida cuando el campo está deshabilitado.",
+      "item4": "<strong>Nunca reemplazar por placeholder</strong> — el placeholder desaparece al escribir y no es accesible como etiqueta en los lectores de pantalla.",
+      "keyboard": {
+        "tab": "Enfoca el campo asociado al Label (el Label en sí no recibe foco).",
+        "noKeyboard": "El Label no es interactivo — hacer clic en él transfiere el foco al campo via la asociación htmlFor/id."
+      },
+      "aria": {
+        "htmlFor": "<code>htmlFor</code> — asocia el Label al campo. Equivalente al atributo <code>for</code> nativo de HTML.",
+        "ariaRequired": "<code>aria-required=\"true\"</code> — aplicado en el campo asociado, no en el Label.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — en el <code>&lt;span&gt;*&lt;/span&gt;</code> del marcador required."
+      },
+      "screenReader": {
+        "association": "El lector de pantalla lee el texto del Label al enfocar el campo asociado — incluso cuando el Label está visualmente encima.",
+        "required": "El asterisco (*) es ignorado por el lector. El campo debe tener aria-required=\"true\" para anunciar la obligatoriedad.",
+        "disabled": "El campo deshabilitado se anuncia como 'no disponible'. El Label con opacidad reducida no afecta el anuncio del lector."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "input": "Campo de texto al que se asocia el Label.",
+      "formLabel": "Versión del Label integrada con FormField — asociación automática via contexto.",
+      "formField": "Contenedor que gestiona automáticamente la asociación entre Label y campo.",
+      "checkbox": "Siempre acompañado de Label con htmlFor para identificar la opción.",
+      "radioGroup": "Cada RadioGroupItem debe tener un Label asociado via htmlFor."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "Fuera de FormField, el <code>htmlFor</code> del Label y el <code>id</code> del campo deben ser idénticos — el vínculo se rompe si hay divergencia.",
+      "tip2": "El comportamiento disabled (<code>peer-disabled:opacity-50</code>) se aplica via clase CSS cuando el campo hermano está disabled — Label e Input deben ser siblings en el DOM.",
+      "tip3": "Para campos obligatorios, agrega <code>aria-required=\"true\"</code> en el Input y el span con asterisco en el Label — ambas partes son necesarias: visual y semántica."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "El Label no emite eventos propios. Rastrea las interacciones en el campo asociado (Input, Checkbox, etc.) según las guías de analytics de cada componente."
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada estado y configuración del Label.",
+        "item1": { "action": "Hacer clic en el Label", "result": "Foco transferido al campo con id correspondiente al htmlFor", "priority": "high" },
+        "item2": { "action": "Renderizar con campo disabled", "result": "Label con opacity-50 y cursor-not-allowed via peer-disabled", "priority": "high" },
+        "item3": { "action": "Renderizar con span de asterisco", "result": "Asterisco visible en text-destructive con aria-hidden=\"true\"", "priority": "high" },
+        "item4": { "action": "Renderizar dentro de grupo con data-disabled=true", "result": "Label con pointer-events-none y opacity-50 via group-data-[disabled=true]", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": "Sin violaciones reportadas por axe-core en el estado predeterminado",
+        "item2": "htmlFor del Label coincide con el id del campo — verificado por getByLabelText() en testing-library",
+        "item3": "Asterisco de required con aria-hidden=\"true\" — inspeccionar atributos en el DOM",
+        "item4": "Contraste mínimo 4.5:1 para el texto del Label en todos los temas"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "required": "Obligatorio",
+        "item1": { "story": "Default", "priority": "high" },
+        "item2": { "story": "Required — con asterisco", "priority": "high" },
+        "item3": { "story": "Disabled — via peer-disabled", "priority": "high" },
+        "item4": { "story": "Con Input — par completo", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
