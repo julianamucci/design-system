@@ -1,0 +1,932 @@
+{
+  "pt-BR": {
+    "title": "Command",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Interface de busca e seleção rápida de comandos, ações ou itens com filtro fuzzy integrado. Suporta uso inline, combobox e command palette.",
+    "seo": {
+      "title": "Command — Overlay · Design System",
+      "description": "Documentação do Command: busca fuzzy integrada, padrões inline, combobox e command palette (Cmd+K), acessibilidade WCAG com navegação por teclado.",
+      "aiSummary": "Componente Command com filtro fuzzy nativo, 3 padrões de uso (inline, combobox, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut e CommandEmpty.",
+      "aiEntities": "Command, cmdk, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, Combobox, Command Palette",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "searchPlaceholder": "Buscar componente...",
+        "emptyMessage": "Nenhum resultado encontrado.",
+        "groupComponents": "Componentes",
+        "groupUtils": "Utilitários",
+        "itemButton": "Button",
+        "itemInput": "Input",
+        "itemSeparator": "Separator",
+        "shortcutHint": "Pressione",
+        "shortcutKey": "⌘K",
+        "openPalette": "Buscar",
+        "dialogTitle": "Command Palette",
+        "dialogDescription": "Busque por um comando ou ação...",
+        "selectPlaceholder": "Selecione um item...",
+        "comboboxSearch": "Buscar item..."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Command</strong> — container raiz com filtro fuzzy automático via <code>cmdk</code>. Token <code>bg-popover</code>.",
+      "item2": "<strong>CommandInput</strong> — campo de busca com ícone de lupa. Filtro aplicado automaticamente a todos os <code>CommandItem</code>.",
+      "item3": "<strong>CommandList</strong> — container scrollável com <code>max-h-72</code>. Oculta itens que não passam no filtro.",
+      "item4": "<strong>CommandEmpty</strong> — exibido quando nenhum item passa no filtro. Obrigatório para evitar área em branco.",
+      "item5": "<strong>CommandGroup</strong> — agrupa itens com label opcional via prop <code>heading</code>.",
+      "item6": "<strong>CommandItem</strong> — item selecionável com suporte a <code>onSelect</code>, <code>value</code> e estado <code>checked</code>. Exibe <code>CheckIcon</code> quando <code>data-checked=true</code>.",
+      "item7": "<strong>CommandShortcut</strong> — span visual para exibir atalho de teclado dentro de um <code>CommandItem</code>. Apenas visual.",
+      "item8": "<strong>CommandSeparator</strong> — divisor horizontal entre grupos.",
+      "item9": "<strong>CommandDialog</strong> — wrapper que combina <code>Command</code> com <code>Dialog</code> para o padrão command palette.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Rótulo do item\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "<code>CommandEmpty</code> é obrigatório — sem ele a área fica em branco quando não há resultados.",
+        "item2": "Sempre chame <code>setOpen(false)</code> dentro do <code>onSelect</code> ao usar Command em Dialog ou Popover.",
+        "item3": "O atalho Cmd+K não é nativo — implemente via <code>useEffect</code> com <code>addEventListener('keydown')</code>.",
+        "item4": "Exiba sempre uma dica visual do atalho (ex: <kbd>⌘K</kbd>) quando usar command palette — o usuário precisa descobrir o atalho.",
+        "item5": "Use <code>CommandGroup</code> com <code>heading</code> para organizar grupos relacionados; omita o heading quando há apenas um grupo.",
+        "item6": "No Combobox: adicione <code>role=\"combobox\"</code> e <code>aria-expanded</code> ao trigger — o Radix não aplica automaticamente em Button."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Busca rápida de ações globais", "u": "Sim, padrão Command Palette", "a": "-" },
+        "item2": { "s": "Select com busca e 10+ itens", "u": "Sim, padrão Combobox", "a": "Select para listas fixas pequenas" },
+        "item3": { "s": "Lista de ações em menu de contexto", "u": "Não", "a": "DropdownMenu ou ContextMenu" },
+        "item4": { "s": "Busca local em seção da página", "u": "Sim, padrão inline", "a": "-" },
+        "item5": { "s": "Seleção de data ou cor", "u": "Não", "a": "DatePicker ou Popover customizado" }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O usuário precisa buscar e executar ações rapidamente",
+        "item2": "A lista tem 10 ou mais itens e busca por texto é essencial",
+        "item3": "Você precisa de um Select com filtro integrado (combobox)",
+        "item4": "A interface tem atalho de teclado global (command palette)"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A lista tem poucos itens fixos sem necessidade de busca — use <code>Select</code>",
+        "item2": "Você precisa de um menu de ações por clique — use <code>DropdownMenu</code>",
+        "item3": "A ação é destrutiva e exige confirmação — use <code>AlertDialog</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Incluir CommandEmpty com mensagem clara para o estado sem resultados.",
+        "dont": "Omitir CommandEmpty: deixa a lista em branco quando não há resultados."
+      },
+      "pair2": {
+        "do": "Exibir dica visual do atalho (ex: tecla Cmd+K) sempre que usar command palette.",
+        "dont": "Esconder o atalho do usuário: ele não consegue descobrir como abrir o command palette."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withDialog": "Com CommandDialog (command palette):",
+      "withPopover": "Com Popover (combobox):"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Padrões de Uso",
+      "note": "O Command não tem variantes visuais via prop — os três padrões de uso diferem na composição estrutural: inline, dentro de <code>Popover</code> (combobox) ou dentro de <code>CommandDialog</code> (command palette).",
+      "items": {
+        "inline": "Renderizado diretamente na página. Use para busca local ou combobox embutido em formulários.",
+        "combobox": "Command dentro de um <code>Popover</code>. Substituto do Select com busca integrada para listas longas.",
+        "palette": "Command dentro de <code>CommandDialog</code>. Ativado por atalho global (Cmd+K) para acesso rápido a ações da aplicação."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "empty": {
+        "label": "Sem resultados",
+        "trigger": "Digitar texto sem correspondência no <code>CommandInput</code>",
+        "behavior": "<code>CommandEmpty</code> é exibido; todos os <code>CommandItem</code> ficam ocultos automaticamente"
+      },
+      "selected": {
+        "label": "Item selecionado",
+        "trigger": "<code>data-checked=true</code> no <code>CommandItem</code>",
+        "behavior": "<code>CheckIcon</code> aparece à direita do item; oculto quando há <code>CommandShortcut</code> no mesmo item"
+      },
+      "disabled": {
+        "label": "Item desabilitado",
+        "trigger": "Prop <code>disabled</code> no <code>CommandItem</code>",
+        "behavior": "Cursor não permitido; opacidade reduzida; item não responde a cliques nem a teclado"
+      },
+      "loading": {
+        "label": "Carregando",
+        "trigger": "Implementar via <code>CommandLoading</code> do cmdk ou spinner no <code>CommandList</code>",
+        "behavior": "Indicador de carregamento exibido enquanto resultados remotos chegam"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "commandTitle": "Command",
+      "commandInputTitle": "CommandInput",
+      "commandItemTitle": "CommandItem",
+      "commandDialogTitle": "CommandDialog",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "commandFilter": "Função de filtro customizada: <code>(value, search, keywords) => number</code>. Retorna 0 (ocultar) ou 1 (mostrar).",
+        "commandValue": "Valor controlado do item selecionado no Command.",
+        "commandOnValueChange": "Callback disparado ao mudar o item em destaque.",
+        "inputPlaceholder": "Texto de placeholder do campo de busca.",
+        "itemValue": "Valor único do item — usado pelo filtro fuzzy para matching. Obrigatório para filtro correto.",
+        "itemOnSelect": "Callback disparado ao selecionar o item via clique ou Enter.",
+        "itemDisabled": "Desabilita o item: <code>pointer-events-none</code> e opacidade 50%.",
+        "dialogTitle": "Título do Dialog (acessível via <code>sr-only</code>). Padrão: <code>\"Command Palette\"</code>.",
+        "dialogDescription": "Descrição do Dialog (<code>sr-only</code>). Padrão: <code>\"Search for a command to run...\"</code>.",
+        "dialogShowCloseButton": "Exibe o botão X de fechar no Dialog. Padrão: <code>false</code>.",
+        "className": "Classes Tailwind adicionais para customização.",
+        "children": "Conteúdo interno do componente."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "Todos os subcomponentes aceitam <code>className</code>. Use <code>data-slot</code> para seletores CSS específicos: <code>command</code>, <code>command-input</code>, <code>command-list</code>, <code>command-item</code>, <code>command-shortcut</code>, <code>command-empty</code>, <code>command-group</code>, <code>command-separator</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "popoverBg": "Fundo do container Command",
+        "popoverFg": "Texto padrão",
+        "mutedFg": "Texto do heading de grupo e ícone de busca",
+        "inputBg": "Fundo do CommandInput",
+        "inputBorder": "Borda do CommandInput",
+        "selectedBg": "Fundo do item em destaque (<code>data-selected</code>)",
+        "selectedFg": "Texto do item em destaque",
+        "border": "CommandSeparator",
+        "radius": "Border radius do container (<code>rounded-xl</code>) e itens (<code>rounded-sm</code>)"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O Command usa a biblioteca cmdk que implementa o padrão ARIA de Combobox (WAI-ARIA 1.2). Navegação por setas, Enter para selecionar e Escape para fechar são nativos. Cumpre WCAG 2.1 AA: 1.3.1 (informação e relações), 2.1.1 (teclado).",
+      "item1": "<strong>Filtro fuzzy nativo</strong> — o cmdk gerencia automaticamente <code>aria-selected</code> e <code>role=\"option\"</code> nos itens.",
+      "item2": "<strong>CommandShortcut é apenas visual</strong> — a lógica do atalho deve ser implementada via <code>useEffect</code>. Leitores de tela ignoram o conteúdo do shortcut.",
+      "item3": "<strong>Combobox: atributos manuais</strong> — adicione <code>role=\"combobox\"</code> e <code>aria-expanded={open}</code> no trigger quando usar Command dentro de Popover.",
+      "item4": "<strong>CommandDialog</strong> — <code>title</code> e <code>description</code> ficam em <code>sr-only</code>. Forneça valores descritivos mesmo que não visíveis.",
+      "keyboard": {
+        "arrowDown": "Move o destaque para o próximo item da lista.",
+        "arrowUp": "Move o destaque para o item anterior da lista.",
+        "enter": "Seleciona o item em destaque e dispara <code>onSelect</code>.",
+        "escape": "Fecha o Dialog ou Popover e retorna foco ao trigger.",
+        "tab": "Move foco entre elementos focáveis fora do Command (não navega entre itens).",
+        "cmdK": "Atalho global para abrir command palette — implementar manualmente via <code>useEffect</code>."
+      },
+      "aria": {
+        "roleListbox": "<code>role=\"listbox\"</code> — aplicado automaticamente no <code>CommandList</code> pelo cmdk.",
+        "roleOption": "<code>role=\"option\"</code> — aplicado automaticamente em cada <code>CommandItem</code>.",
+        "ariaSelected": "<code>aria-selected</code> — gerenciado pelo cmdk no item em destaque.",
+        "ariaExpanded": "<code>aria-expanded</code> — adicionar manualmente no trigger do Popover em padrão combobox.",
+        "roleCombobox": "<code>role=\"combobox\"</code> — adicionar manualmente no trigger do Popover em padrão combobox.",
+        "srOnly": "Título e descrição do <code>CommandDialog</code> ficam em <code>sr-only</code> — sempre forneça valores descritivos."
+      },
+      "screenReader": {
+        "onOpen": "Ao abrir o CommandDialog: leitor anuncia o título (sr-only) e foca o CommandInput automaticamente.",
+        "onFilter": "Ao digitar no CommandInput: itens filtrados são removidos do DOM. Leitor anuncia o número de resultados via live region do cmdk.",
+        "onSelect": "Ao pressionar Enter ou clicar num item: leitor anuncia o nome do item selecionado.",
+        "onClose": "Ao fechar com Escape: foco retorna ao trigger automaticamente."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "select": "Para listas pequenas e fixas sem necessidade de busca por texto.",
+      "dropdownMenu": "Para listas de ações ativadas por clique em trigger explícito.",
+      "popover": "Container para o padrão Combobox (Command + Popover).",
+      "dialog": "Container para o padrão Command Palette (Command + Dialog).",
+      "inputGroup": "Usado internamente no CommandInput para o campo de busca com ícone."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "O filtro fuzzy é automático e usa o prop <code>value</code> do <code>CommandItem</code> para matching. Para resultados remotos (API), implemente filtro manual via prop <code>filter</code> no <code>Command</code> retornando sempre 1 e controlando os itens via estado.",
+      "tip2": "O <code>CommandShortcut</code> oculta o <code>CheckIcon</code> automaticamente via CSS (<code>group-has-data-[slot=command-shortcut]</code>). Não use ambos no mesmo item — escolha um ou outro.",
+      "tip3": "No padrão Combobox, o <code>PopoverContent</code> deve ter <code>p-0</code> para que o Command ocupe todo o espaço do popover sem padding duplo.",
+      "tip4": "O token <code>bg-popover</code> é aplicado automaticamente no container <code>Command</code> — não sobrescreva com <code>bg-card</code>, pois menus flutuantes devem usar <code>popover</code>, não <code>card</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastreie via <code>onSelect</code> de cada <code>CommandItem</code> — o Command em si não emite eventos. Priorize rastreamento no command palette para medir adoção de atalhos.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "itemSelect": "command_item_select",
+        "itemSelectTrigger": "Usuário seleciona um item via clique ou Enter",
+        "itemSelectPayload": "{ label: string, group: string, pattern: 'inline' | 'combobox' | 'palette' }",
+        "paletteOpen": "command_palette_open",
+        "paletteOpenTrigger": "Usuário abre o command palette (botão ou atalho Cmd+K)",
+        "paletteOpenPayload": "{ trigger: 'keyboard' | 'button' }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada interação com o Command.",
+        "item1": { "action": "Digitar no CommandInput", "result": "Itens que não correspondem ficam ocultos; CommandEmpty aparece quando nenhum resultado", "priority": "high" },
+        "item2": { "action": "Pressionar Enter no item em destaque", "result": "onSelect é disparado com o value do item", "priority": "high" },
+        "item3": { "action": "Pressionar Escape no CommandDialog aberto", "result": "Dialog fecha e foco retorna ao trigger", "priority": "high" },
+        "item4": { "action": "Clicar em CommandItem com disabled=true", "result": "onSelect não é chamado; cursor não permitido; opacidade 50%", "priority": "high" },
+        "item5": { "action": "CommandItem com data-checked=true", "result": "CheckIcon visível à direita; oculto se CommandShortcut presente", "priority": "medium" },
+        "item6": { "action": "Pressionar Cmd+K com listener implementado", "result": "CommandDialog abre; foco vai para CommandInput", "priority": "medium" },
+        "item7": { "action": "Selecionar item no padrão Combobox", "result": "Popover fecha via setOpen(false) e valor selecionado reflete no trigger", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão (inline e dialog)",
+        "item2": "Navegação por Arrow Down/Up percorre todos os CommandItem habilitados em sequência",
+        "item3": "CommandDialog anuncia título (sr-only) ao abrir via leitor de tela",
+        "item4": "Itens desabilitados não recebem foco na navegação por teclado",
+        "item5": "Combobox: trigger tem role=combobox e aria-expanded reflete estado do Popover"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "required": "Obrigatório",
+        "item1": { "story": "Inline — estado padrão com grupos e separador", "priority": "high" },
+        "item2": { "story": "Inline — estado sem resultados (CommandEmpty)", "priority": "high" },
+        "item3": { "story": "Combobox — trigger fechado e aberto", "priority": "high" },
+        "item4": { "story": "Command Palette — dialog aberto com itens e shortcuts", "priority": "high" },
+        "item5": { "story": "CommandItem — estado disabled e estado checked", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Command",
+    "category": "Overlay",
+    "type": "Component",
+    "description": "Fast search and selection interface for commands, actions, or items with built-in fuzzy filtering. Supports inline, combobox, and command palette patterns.",
+    "seo": {
+      "title": "Command — Overlay · Design System",
+      "description": "Documentation for Command: built-in fuzzy search, inline, combobox, and command palette (Cmd+K) patterns, WCAG accessibility with keyboard navigation.",
+      "aiSummary": "Command component with native fuzzy filtering, 3 usage patterns (inline, combobox, command palette), subcomponents CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut, and CommandEmpty.",
+      "aiEntities": "Command, cmdk, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, Combobox, Command Palette",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "searchPlaceholder": "Search component...",
+        "emptyMessage": "No results found.",
+        "groupComponents": "Components",
+        "groupUtils": "Utilities",
+        "itemButton": "Button",
+        "itemInput": "Input",
+        "itemSeparator": "Separator",
+        "shortcutHint": "Press",
+        "shortcutKey": "⌘K",
+        "openPalette": "Search",
+        "dialogTitle": "Command Palette",
+        "dialogDescription": "Search for a command or action...",
+        "selectPlaceholder": "Select an item...",
+        "comboboxSearch": "Search item..."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Command</strong> — root container with automatic fuzzy filtering via <code>cmdk</code>. Uses <code>bg-popover</code> token.",
+      "item2": "<strong>CommandInput</strong> — search field with magnifier icon. Filter applied automatically to all <code>CommandItem</code> elements.",
+      "item3": "<strong>CommandList</strong> — scrollable container with <code>max-h-72</code>. Hides items that don't pass the filter.",
+      "item4": "<strong>CommandEmpty</strong> — displayed when no items pass the filter. Required to avoid a blank area.",
+      "item5": "<strong>CommandGroup</strong> — groups items with optional label via <code>heading</code> prop.",
+      "item6": "<strong>CommandItem</strong> — selectable item with support for <code>onSelect</code>, <code>value</code>, and <code>checked</code> state. Shows <code>CheckIcon</code> when <code>data-checked=true</code>.",
+      "item7": "<strong>CommandShortcut</strong> — visual span for displaying keyboard shortcut inside a <code>CommandItem</code>. Visual only.",
+      "item8": "<strong>CommandSeparator</strong> — horizontal divider between groups.",
+      "item9": "<strong>CommandDialog</strong> — wrapper combining <code>Command</code> with <code>Dialog</code> for the command palette pattern.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Item label\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "<code>CommandEmpty</code> is required — without it the area is blank when there are no results.",
+        "item2": "Always call <code>setOpen(false)</code> inside <code>onSelect</code> when using Command in a Dialog or Popover.",
+        "item3": "The Cmd+K shortcut is not native — implement via <code>useEffect</code> with <code>addEventListener('keydown')</code>.",
+        "item4": "Always display a visual shortcut hint (e.g., <kbd>⌘K</kbd>) when using command palette — users need to discover the shortcut.",
+        "item5": "Use <code>CommandGroup</code> with <code>heading</code> to organize related groups; omit the heading when there is only one group.",
+        "item6": "In Combobox pattern: add <code>role=\"combobox\"</code> and <code>aria-expanded</code> to the trigger — Radix does not apply them automatically to Button."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Quick search for global actions", "u": "Yes, Command Palette pattern", "a": "-" },
+        "item2": { "s": "Select with search and 10+ items", "u": "Yes, Combobox pattern", "a": "Select for small fixed lists" },
+        "item3": { "s": "Action list in context menu", "u": "No", "a": "DropdownMenu or ContextMenu" },
+        "item4": { "s": "Local search in page section", "u": "Yes, inline pattern", "a": "-" },
+        "item5": { "s": "Date or color picker", "u": "No", "a": "DatePicker or custom Popover" }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Users need to find and execute actions quickly",
+        "item2": "The list has 10 or more items and text search is essential",
+        "item3": "A Select with built-in filter is needed (combobox)",
+        "item4": "The interface has a global keyboard shortcut (command palette)"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The list has few fixed items without search — use <code>Select</code>",
+        "item2": "A click-triggered action menu is needed — use <code>DropdownMenu</code>",
+        "item3": "The action is destructive and requires confirmation — use <code>AlertDialog</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Include CommandEmpty with a clear message for the empty state.",
+        "dont": "Omit CommandEmpty: leaves the list blank when there are no results."
+      },
+      "pair2": {
+        "do": "Display a visual shortcut hint (e.g., Cmd+K key) whenever using command palette.",
+        "dont": "Hide the shortcut from users: they cannot discover how to open the command palette."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withDialog": "With CommandDialog (command palette):",
+      "withPopover": "With Popover (combobox):"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Usage Patterns",
+      "note": "Command has no visual variants via prop — the three usage patterns differ in structural composition: inline, inside a <code>Popover</code> (combobox), or inside a <code>CommandDialog</code> (command palette).",
+      "items": {
+        "inline": "Rendered directly on the page. Use for local search or combobox embedded in forms.",
+        "combobox": "Command inside a <code>Popover</code>. Replaces Select with built-in search for long lists.",
+        "palette": "Command inside <code>CommandDialog</code>. Triggered by a global shortcut (Cmd+K) for quick access to application actions."
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "empty": {
+        "label": "No results",
+        "trigger": "Type text with no match in <code>CommandInput</code>",
+        "behavior": "<code>CommandEmpty</code> is shown; all <code>CommandItem</code> elements are automatically hidden"
+      },
+      "selected": {
+        "label": "Selected item",
+        "trigger": "<code>data-checked=true</code> on <code>CommandItem</code>",
+        "behavior": "<code>CheckIcon</code> appears on the right; hidden when <code>CommandShortcut</code> is present in the same item"
+      },
+      "disabled": {
+        "label": "Disabled item",
+        "trigger": "<code>disabled</code> prop on <code>CommandItem</code>",
+        "behavior": "Not-allowed cursor; reduced opacity; item does not respond to clicks or keyboard"
+      },
+      "loading": {
+        "label": "Loading",
+        "trigger": "Implement via cmdk's <code>CommandLoading</code> or a spinner in <code>CommandList</code>",
+        "behavior": "Loading indicator displayed while remote results are fetched"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "commandTitle": "Command",
+      "commandInputTitle": "CommandInput",
+      "commandItemTitle": "CommandItem",
+      "commandDialogTitle": "CommandDialog",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "commandFilter": "Custom filter function: <code>(value, search, keywords) => number</code>. Returns 0 (hide) or 1 (show).",
+        "commandValue": "Controlled value of the selected item in Command.",
+        "commandOnValueChange": "Callback fired when the highlighted item changes.",
+        "inputPlaceholder": "Placeholder text for the search field.",
+        "itemValue": "Unique item value — used by fuzzy filter for matching. Required for correct filtering.",
+        "itemOnSelect": "Callback fired when the item is selected via click or Enter.",
+        "itemDisabled": "Disables the item: <code>pointer-events-none</code> and 50% opacity.",
+        "dialogTitle": "Dialog title (accessible via <code>sr-only</code>). Default: <code>\"Command Palette\"</code>.",
+        "dialogDescription": "Dialog description (<code>sr-only</code>). Default: <code>\"Search for a command to run...\"</code>.",
+        "dialogShowCloseButton": "Shows the X close button in the Dialog. Default: <code>false</code>.",
+        "className": "Additional Tailwind classes for customization.",
+        "children": "Inner content of the component."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "All subcomponents accept <code>className</code>. Use <code>data-slot</code> for specific CSS selectors: <code>command</code>, <code>command-input</code>, <code>command-list</code>, <code>command-item</code>, <code>command-shortcut</code>, <code>command-empty</code>, <code>command-group</code>, <code>command-separator</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "popoverBg": "Command container background",
+        "popoverFg": "Default text color",
+        "mutedFg": "Group heading and search icon text",
+        "inputBg": "CommandInput background",
+        "inputBorder": "CommandInput border",
+        "selectedBg": "Highlighted item background (<code>data-selected</code>)",
+        "selectedFg": "Highlighted item text",
+        "border": "CommandSeparator",
+        "radius": "Container border radius (<code>rounded-xl</code>) and items (<code>rounded-sm</code>)"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Command uses the cmdk library which implements the ARIA Combobox pattern (WAI-ARIA 1.2). Arrow key navigation, Enter to select, and Escape to close are native behaviors. Meets WCAG 2.1 AA: 1.3.1 (info and relationships), 2.1.1 (keyboard).",
+      "item1": "<strong>Native fuzzy filter</strong> — cmdk automatically manages <code>aria-selected</code> and <code>role=\"option\"</code> on items.",
+      "item2": "<strong>CommandShortcut is visual only</strong> — shortcut logic must be implemented via <code>useEffect</code>. Screen readers ignore the shortcut content.",
+      "item3": "<strong>Combobox: manual attributes</strong> — add <code>role=\"combobox\"</code> and <code>aria-expanded={open}</code> to the trigger when using Command inside Popover.",
+      "item4": "<strong>CommandDialog</strong> — <code>title</code> and <code>description</code> are <code>sr-only</code>. Provide descriptive values even if not visible.",
+      "keyboard": {
+        "arrowDown": "Moves highlight to the next item in the list.",
+        "arrowUp": "Moves highlight to the previous item in the list.",
+        "enter": "Selects the highlighted item and fires <code>onSelect</code>.",
+        "escape": "Closes the Dialog or Popover and returns focus to the trigger.",
+        "tab": "Moves focus between focusable elements outside Command (does not navigate between items).",
+        "cmdK": "Global shortcut to open command palette — must be implemented manually via <code>useEffect</code>."
+      },
+      "aria": {
+        "roleListbox": "<code>role=\"listbox\"</code> — automatically applied to <code>CommandList</code> by cmdk.",
+        "roleOption": "<code>role=\"option\"</code> — automatically applied to each <code>CommandItem</code>.",
+        "ariaSelected": "<code>aria-selected</code> — managed by cmdk on the highlighted item.",
+        "ariaExpanded": "<code>aria-expanded</code> — add manually to the Popover trigger in combobox pattern.",
+        "roleCombobox": "<code>role=\"combobox\"</code> — add manually to the Popover trigger in combobox pattern.",
+        "srOnly": "CommandDialog title and description are <code>sr-only</code> — always provide descriptive values."
+      },
+      "screenReader": {
+        "onOpen": "When CommandDialog opens: reader announces the title (sr-only) and focuses CommandInput automatically.",
+        "onFilter": "When typing in CommandInput: filtered items are removed from DOM. Reader announces result count via cmdk live region.",
+        "onSelect": "When pressing Enter or clicking an item: reader announces the selected item name.",
+        "onClose": "When closing with Escape: focus automatically returns to the trigger."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "select": "For small, fixed lists that don't require text search.",
+      "dropdownMenu": "For action lists triggered by an explicit click on a trigger.",
+      "popover": "Container for the Combobox pattern (Command + Popover).",
+      "dialog": "Container for the Command Palette pattern (Command + Dialog).",
+      "inputGroup": "Used internally in CommandInput for the search field with icon."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "Fuzzy filtering is automatic and uses the <code>value</code> prop of each <code>CommandItem</code> for matching. For remote results (API), implement manual filtering via the <code>filter</code> prop on <code>Command</code> (always return 1) and control items via state.",
+      "tip2": "<code>CommandShortcut</code> automatically hides the <code>CheckIcon</code> via CSS (<code>group-has-data-[slot=command-shortcut]</code>). Do not use both in the same item — choose one or the other.",
+      "tip3": "In the Combobox pattern, <code>PopoverContent</code> must have <code>p-0</code> so Command fills the entire popover space without double padding.",
+      "tip4": "The <code>bg-popover</code> token is applied automatically to the <code>Command</code> container — do not override with <code>bg-card</code>, as floating overlays should use <code>popover</code>, not <code>card</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Track via <code>onSelect</code> of each <code>CommandItem</code> — Command itself emits no events. Prioritize tracking in the command palette to measure shortcut adoption.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "itemSelect": "command_item_select",
+        "itemSelectTrigger": "User selects an item via click or Enter",
+        "itemSelectPayload": "{ label: string, group: string, pattern: 'inline' | 'combobox' | 'palette' }",
+        "paletteOpen": "command_palette_open",
+        "paletteOpenTrigger": "User opens the command palette (button or Cmd+K shortcut)",
+        "paletteOpenPayload": "{ trigger: 'keyboard' | 'button' }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen on each interaction with Command.",
+        "item1": { "action": "Type in CommandInput", "result": "Non-matching items are hidden; CommandEmpty appears when no results", "priority": "high" },
+        "item2": { "action": "Press Enter on highlighted item", "result": "onSelect is fired with the item's value", "priority": "high" },
+        "item3": { "action": "Press Escape on open CommandDialog", "result": "Dialog closes and focus returns to the trigger", "priority": "high" },
+        "item4": { "action": "Click CommandItem with disabled=true", "result": "onSelect is not called; not-allowed cursor; 50% opacity", "priority": "high" },
+        "item5": { "action": "CommandItem with data-checked=true", "result": "CheckIcon visible on right; hidden if CommandShortcut is present", "priority": "medium" },
+        "item6": { "action": "Press Cmd+K with listener implemented", "result": "CommandDialog opens; focus goes to CommandInput", "priority": "medium" },
+        "item7": { "action": "Select item in Combobox pattern", "result": "Popover closes via setOpen(false) and selected value reflects in trigger", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": "No violations reported by axe-core in the default state (inline and dialog)",
+        "item2": "Arrow Down/Up navigation cycles through all enabled CommandItem elements in sequence",
+        "item3": "CommandDialog announces title (sr-only) on open via screen reader",
+        "item4": "Disabled items do not receive focus during keyboard navigation",
+        "item5": "Combobox: trigger has role=combobox and aria-expanded reflects Popover state"
+      },
+      "visual": {
+        "title": "Visual Regression (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "required": "Required",
+        "item1": { "story": "Inline — default state with groups and separator", "priority": "high" },
+        "item2": { "story": "Inline — empty state (CommandEmpty)", "priority": "high" },
+        "item3": { "story": "Combobox — closed and open trigger", "priority": "high" },
+        "item4": { "story": "Command Palette — open dialog with items and shortcuts", "priority": "high" },
+        "item5": { "story": "CommandItem — disabled and checked states", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Command",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Interfaz de búsqueda y selección rápida de comandos, acciones o ítems con filtro fuzzy integrado. Soporta los patrones inline, combobox y command palette.",
+    "seo": {
+      "title": "Command — Overlay · Design System",
+      "description": "Documentación del Command: búsqueda fuzzy integrada, patrones inline, combobox y command palette (Cmd+K), accesibilidad WCAG con navegación por teclado.",
+      "aiSummary": "Componente Command con filtro fuzzy nativo, 3 patrones de uso (inline, combobox, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut y CommandEmpty.",
+      "aiEntities": "Command, cmdk, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, Combobox, Command Palette",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "searchPlaceholder": "Buscar componente...",
+        "emptyMessage": "Sin resultados.",
+        "groupComponents": "Componentes",
+        "groupUtils": "Utilidades",
+        "itemButton": "Button",
+        "itemInput": "Input",
+        "itemSeparator": "Separator",
+        "shortcutHint": "Presiona",
+        "shortcutKey": "⌘K",
+        "openPalette": "Buscar",
+        "dialogTitle": "Command Palette",
+        "dialogDescription": "Busca un comando o acción...",
+        "selectPlaceholder": "Selecciona un ítem...",
+        "comboboxSearch": "Buscar ítem..."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Command</strong> — contenedor raíz con filtro fuzzy automático vía <code>cmdk</code>. Usa el token <code>bg-popover</code>.",
+      "item2": "<strong>CommandInput</strong> — campo de búsqueda con ícono de lupa. El filtro se aplica automáticamente a todos los <code>CommandItem</code>.",
+      "item3": "<strong>CommandList</strong> — contenedor con scroll y <code>max-h-72</code>. Oculta los ítems que no pasan el filtro.",
+      "item4": "<strong>CommandEmpty</strong> — se muestra cuando ningún ítem pasa el filtro. Obligatorio para evitar el área en blanco.",
+      "item5": "<strong>CommandGroup</strong> — agrupa ítems con etiqueta opcional vía prop <code>heading</code>.",
+      "item6": "<strong>CommandItem</strong> — ítem seleccionable con soporte para <code>onSelect</code>, <code>value</code> y estado <code>checked</code>. Muestra <code>CheckIcon</code> cuando <code>data-checked=true</code>.",
+      "item7": "<strong>CommandShortcut</strong> — span visual para mostrar el atajo de teclado dentro de un <code>CommandItem</code>. Solo visual.",
+      "item8": "<strong>CommandSeparator</strong> — divisor horizontal entre grupos.",
+      "item9": "<strong>CommandDialog</strong> — wrapper que combina <code>Command</code> con <code>Dialog</code> para el patrón command palette.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Etiqueta del ítem\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "<code>CommandEmpty</code> es obligatorio — sin él, el área queda en blanco cuando no hay resultados.",
+        "item2": "Siempre llama <code>setOpen(false)</code> dentro de <code>onSelect</code> al usar Command en un Dialog o Popover.",
+        "item3": "El atajo Cmd+K no es nativo — impleméntalo vía <code>useEffect</code> con <code>addEventListener('keydown')</code>.",
+        "item4": "Muestra siempre una pista visual del atajo (ej: <kbd>⌘K</kbd>) al usar command palette — el usuario necesita descubrir el atajo.",
+        "item5": "Usa <code>CommandGroup</code> con <code>heading</code> para organizar grupos relacionados; omite el heading cuando hay solo un grupo.",
+        "item6": "En el patrón Combobox: agrega <code>role=\"combobox\"</code> y <code>aria-expanded</code> al trigger — Radix no los aplica automáticamente en Button."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Búsqueda rápida de acciones globales", "u": "Sí, patrón Command Palette", "a": "-" },
+        "item2": { "s": "Select con búsqueda y 10+ ítems", "u": "Sí, patrón Combobox", "a": "Select para listas fijas pequeñas" },
+        "item3": { "s": "Lista de acciones en menú de contexto", "u": "No", "a": "DropdownMenu o ContextMenu" },
+        "item4": { "s": "Búsqueda local en sección de página", "u": "Sí, patrón inline", "a": "-" },
+        "item5": { "s": "Selector de fecha o color", "u": "No", "a": "DatePicker o Popover personalizado" }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "El usuario necesita buscar y ejecutar acciones rápidamente",
+        "item2": "La lista tiene 10 o más ítems y la búsqueda por texto es esencial",
+        "item3": "Se necesita un Select con filtro integrado (combobox)",
+        "item4": "La interfaz tiene un atajo de teclado global (command palette)"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La lista tiene pocos ítems fijos sin necesidad de búsqueda — usa <code>Select</code>",
+        "item2": "Necesitas un menú de acciones activado por clic — usa <code>DropdownMenu</code>",
+        "item3": "La acción es destructiva y requiere confirmación — usa <code>AlertDialog</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Incluir CommandEmpty con un mensaje claro para el estado sin resultados.",
+        "dont": "Omitir CommandEmpty: deja la lista en blanco cuando no hay resultados."
+      },
+      "pair2": {
+        "do": "Mostrar la pista visual del atajo (ej: tecla Cmd+K) siempre que uses command palette.",
+        "dont": "Ocultar el atajo al usuario: no podrá descubrir cómo abrir el command palette."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withDialog": "Con CommandDialog (command palette):",
+      "withPopover": "Con Popover (combobox):"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Patrones de Uso",
+      "note": "Command no tiene variantes visuales vía prop — los tres patrones de uso difieren en la composición estructural: inline, dentro de un <code>Popover</code> (combobox) o dentro de un <code>CommandDialog</code> (command palette).",
+      "items": {
+        "inline": "Renderizado directamente en la página. Usar para búsqueda local o combobox integrado en formularios.",
+        "combobox": "Command dentro de un <code>Popover</code>. Reemplaza el Select con búsqueda integrada para listas largas.",
+        "palette": "Command dentro de <code>CommandDialog</code>. Activado por atajo global (Cmd+K) para acceso rápido a acciones de la aplicación."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "empty": {
+        "label": "Sin resultados",
+        "trigger": "Escribir texto sin coincidencia en <code>CommandInput</code>",
+        "behavior": "<code>CommandEmpty</code> se muestra; todos los <code>CommandItem</code> se ocultan automáticamente"
+      },
+      "selected": {
+        "label": "Ítem seleccionado",
+        "trigger": "<code>data-checked=true</code> en <code>CommandItem</code>",
+        "behavior": "<code>CheckIcon</code> aparece a la derecha; oculto cuando <code>CommandShortcut</code> está en el mismo ítem"
+      },
+      "disabled": {
+        "label": "Ítem deshabilitado",
+        "trigger": "Prop <code>disabled</code> en <code>CommandItem</code>",
+        "behavior": "Cursor no permitido; opacidad reducida; el ítem no responde a clics ni a teclado"
+      },
+      "loading": {
+        "label": "Cargando",
+        "trigger": "Implementar vía <code>CommandLoading</code> de cmdk o spinner en <code>CommandList</code>",
+        "behavior": "Indicador de carga mostrado mientras llegan resultados remotos"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "commandTitle": "Command",
+      "commandInputTitle": "CommandInput",
+      "commandItemTitle": "CommandItem",
+      "commandDialogTitle": "CommandDialog",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "commandFilter": "Función de filtro personalizada: <code>(value, search, keywords) => number</code>. Devuelve 0 (ocultar) o 1 (mostrar).",
+        "commandValue": "Valor controlado del ítem seleccionado en Command.",
+        "commandOnValueChange": "Callback disparado al cambiar el ítem resaltado.",
+        "inputPlaceholder": "Texto placeholder del campo de búsqueda.",
+        "itemValue": "Valor único del ítem — usado por el filtro fuzzy para el matching. Obligatorio para filtro correcto.",
+        "itemOnSelect": "Callback disparado al seleccionar el ítem vía clic o Enter.",
+        "itemDisabled": "Deshabilita el ítem: <code>pointer-events-none</code> y opacidad 50%.",
+        "dialogTitle": "Título del Dialog (accesible vía <code>sr-only</code>). Por defecto: <code>\"Command Palette\"</code>.",
+        "dialogDescription": "Descripción del Dialog (<code>sr-only</code>). Por defecto: <code>\"Search for a command to run...\"</code>.",
+        "dialogShowCloseButton": "Muestra el botón X de cerrar en el Dialog. Por defecto: <code>false</code>.",
+        "className": "Clases Tailwind adicionales para personalización.",
+        "children": "Contenido interno del componente."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "Todos los subcomponentes aceptan <code>className</code>. Usa <code>data-slot</code> para selectores CSS específicos: <code>command</code>, <code>command-input</code>, <code>command-list</code>, <code>command-item</code>, <code>command-shortcut</code>, <code>command-empty</code>, <code>command-group</code>, <code>command-separator</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "popoverBg": "Fondo del contenedor Command",
+        "popoverFg": "Color de texto predeterminado",
+        "mutedFg": "Texto del heading de grupo e ícono de búsqueda",
+        "inputBg": "Fondo del CommandInput",
+        "inputBorder": "Borde del CommandInput",
+        "selectedBg": "Fondo del ítem resaltado (<code>data-selected</code>)",
+        "selectedFg": "Texto del ítem resaltado",
+        "border": "CommandSeparator",
+        "radius": "Border radius del contenedor (<code>rounded-xl</code>) e ítems (<code>rounded-sm</code>)"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Command usa la biblioteca cmdk que implementa el patrón ARIA Combobox (WAI-ARIA 1.2). La navegación por flechas, Enter para seleccionar y Escape para cerrar son comportamientos nativos. Cumple WCAG 2.1 AA: 1.3.1 (información y relaciones), 2.1.1 (teclado).",
+      "item1": "<strong>Filtro fuzzy nativo</strong> — cmdk gestiona automáticamente <code>aria-selected</code> y <code>role=\"option\"</code> en los ítems.",
+      "item2": "<strong>CommandShortcut es solo visual</strong> — la lógica del atajo debe implementarse vía <code>useEffect</code>. Los lectores de pantalla ignoran el contenido del shortcut.",
+      "item3": "<strong>Combobox: atributos manuales</strong> — agrega <code>role=\"combobox\"</code> y <code>aria-expanded={open}</code> al trigger al usar Command dentro de Popover.",
+      "item4": "<strong>CommandDialog</strong> — <code>title</code> y <code>description</code> están en <code>sr-only</code>. Proporciona valores descriptivos aunque no sean visibles.",
+      "keyboard": {
+        "arrowDown": "Mueve el resaltado al siguiente ítem de la lista.",
+        "arrowUp": "Mueve el resaltado al ítem anterior de la lista.",
+        "enter": "Selecciona el ítem resaltado y dispara <code>onSelect</code>.",
+        "escape": "Cierra el Dialog o Popover y devuelve el foco al trigger.",
+        "tab": "Mueve el foco entre elementos enfocables fuera del Command (no navega entre ítems).",
+        "cmdK": "Atajo global para abrir el command palette — debe implementarse manualmente vía <code>useEffect</code>."
+      },
+      "aria": {
+        "roleListbox": "<code>role=\"listbox\"</code> — aplicado automáticamente en <code>CommandList</code> por cmdk.",
+        "roleOption": "<code>role=\"option\"</code> — aplicado automáticamente en cada <code>CommandItem</code>.",
+        "ariaSelected": "<code>aria-selected</code> — gestionado por cmdk en el ítem resaltado.",
+        "ariaExpanded": "<code>aria-expanded</code> — agregar manualmente al trigger del Popover en el patrón combobox.",
+        "roleCombobox": "<code>role=\"combobox\"</code> — agregar manualmente al trigger del Popover en el patrón combobox.",
+        "srOnly": "El título y la descripción de <code>CommandDialog</code> están en <code>sr-only</code> — siempre proporciona valores descriptivos."
+      },
+      "screenReader": {
+        "onOpen": "Al abrir CommandDialog: el lector anuncia el título (sr-only) y enfoca CommandInput automáticamente.",
+        "onFilter": "Al escribir en CommandInput: los ítems filtrados se eliminan del DOM. El lector anuncia el número de resultados vía live region de cmdk.",
+        "onSelect": "Al presionar Enter o hacer clic en un ítem: el lector anuncia el nombre del ítem seleccionado.",
+        "onClose": "Al cerrar con Escape: el foco vuelve automáticamente al trigger."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "select": "Para listas pequeñas y fijas sin necesidad de búsqueda por texto.",
+      "dropdownMenu": "Para listas de acciones activadas por clic explícito en un trigger.",
+      "popover": "Contenedor para el patrón Combobox (Command + Popover).",
+      "dialog": "Contenedor para el patrón Command Palette (Command + Dialog).",
+      "inputGroup": "Usado internamente en CommandInput para el campo de búsqueda con ícono."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "El filtro fuzzy es automático y usa la prop <code>value</code> de cada <code>CommandItem</code> para el matching. Para resultados remotos (API), implementa filtro manual vía la prop <code>filter</code> en <code>Command</code> (devuelve siempre 1) y controla los ítems vía estado.",
+      "tip2": "<code>CommandShortcut</code> oculta automáticamente el <code>CheckIcon</code> vía CSS (<code>group-has-data-[slot=command-shortcut]</code>). No uses ambos en el mismo ítem — elige uno u otro.",
+      "tip3": "En el patrón Combobox, <code>PopoverContent</code> debe tener <code>p-0</code> para que Command ocupe todo el espacio del popover sin padding doble.",
+      "tip4": "El token <code>bg-popover</code> se aplica automáticamente en el contenedor <code>Command</code> — no lo sobreescribas con <code>bg-card</code>, ya que los overlays flotantes deben usar <code>popover</code>, no <code>card</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastrea vía <code>onSelect</code> de cada <code>CommandItem</code> — el Command en sí no emite eventos. Prioriza el tracking en el command palette para medir la adopción de atajos.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "itemSelect": "command_item_select",
+        "itemSelectTrigger": "Usuario selecciona un ítem vía clic o Enter",
+        "itemSelectPayload": "{ label: string, group: string, pattern: 'inline' | 'combobox' | 'palette' }",
+        "paletteOpen": "command_palette_open",
+        "paletteOpenTrigger": "Usuario abre el command palette (botón o atajo Cmd+K)",
+        "paletteOpenPayload": "{ trigger: 'keyboard' | 'button' }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en cada interacción con el Command.",
+        "item1": { "action": "Escribir en CommandInput", "result": "Los ítems sin coincidencia se ocultan; CommandEmpty aparece cuando no hay resultados", "priority": "high" },
+        "item2": { "action": "Presionar Enter en el ítem resaltado", "result": "onSelect se dispara con el value del ítem", "priority": "high" },
+        "item3": { "action": "Presionar Escape con CommandDialog abierto", "result": "El Dialog se cierra y el foco vuelve al trigger", "priority": "high" },
+        "item4": { "action": "Hacer clic en CommandItem con disabled=true", "result": "onSelect no se llama; cursor no permitido; opacidad 50%", "priority": "high" },
+        "item5": { "action": "CommandItem con data-checked=true", "result": "CheckIcon visible a la derecha; oculto si CommandShortcut está presente", "priority": "medium" },
+        "item6": { "action": "Presionar Cmd+K con listener implementado", "result": "CommandDialog se abre; el foco va a CommandInput", "priority": "medium" },
+        "item7": { "action": "Seleccionar ítem en patrón Combobox", "result": "Popover se cierra vía setOpen(false) y el valor seleccionado se refleja en el trigger", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": "Sin violaciones reportadas por axe-core en el estado predeterminado (inline y dialog)",
+        "item2": "La navegación con Arrow Down/Up recorre todos los CommandItem habilitados en secuencia",
+        "item3": "CommandDialog anuncia el título (sr-only) al abrirse vía lector de pantalla",
+        "item4": "Los ítems deshabilitados no reciben foco durante la navegación por teclado",
+        "item5": "Combobox: el trigger tiene role=combobox y aria-expanded refleja el estado del Popover"
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "required": "Obligatorio",
+        "item1": { "story": "Inline — estado predeterminado con grupos y separador", "priority": "high" },
+        "item2": { "story": "Inline — estado sin resultados (CommandEmpty)", "priority": "high" },
+        "item3": { "story": "Combobox — trigger cerrado y abierto", "priority": "high" },
+        "item4": { "story": "Command Palette — dialog abierto con ítems y shortcuts", "priority": "high" },
+        "item5": { "story": "CommandItem — estado disabled y estado checked", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
