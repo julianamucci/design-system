@@ -135,6 +135,13 @@ interface AnalyticsEvents {
     href: string;
   };
 
+  /** Disparado quando o usuário abre ou fecha um Collapsible. */
+  collapsible_toggle: {
+    label: string;
+    value: 'open' | 'closed';
+    location?: string;
+  };
+
   /** Disparado quando o slide ativo do Carousel muda (botão, teclado, swipe). */
   slide_change: {
     component: 'carousel';
