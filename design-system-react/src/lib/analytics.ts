@@ -191,6 +191,20 @@ interface AnalyticsEvents {
   command_palette_open: {
     trigger: 'keyboard' | 'button';
   };
+
+  /** Disparado quando o usuário abre um ContextMenu via right-click. */
+  menu_open: {
+    component: string;
+    location?: string;
+    menu?: string;
+  };
+
+  /** Disparado quando o usuário seleciona um item de um menu (ContextMenu, DropdownMenu, Menubar). */
+  menu_item_click: {
+    label: string;
+    menu: string;
+    location?: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
