@@ -157,6 +157,18 @@ interface AnalyticsEvents {
     index: number;
     location?: string;
   };
+
+  /** Disparado ao selecionar um item do Command via clique ou Enter. */
+  command_item_select: {
+    label: string;
+    group: string;
+    pattern: 'inline' | 'combobox' | 'palette';
+  };
+
+  /** Disparado ao abrir o command palette (botão ou atalho Cmd+K). */
+  command_palette_open: {
+    trigger: 'keyboard' | 'button';
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

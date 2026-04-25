@@ -32,10 +32,28 @@ export function createCommand(options: CommandOptions): HTMLElement {
   const inputWrapper = document.createElement('div');
   inputWrapper.className = 'flex items-center border-b px-3';
 
-  const searchIcon =
-    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 shrink-0 opacity-50" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>';
-
-  inputWrapper.innerHTML = searchIcon;
+  // Build SVG via DOM (avoids innerHTML for static content — scanner-safe)
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const searchIcon = document.createElementNS(svgNS, 'svg');
+  searchIcon.setAttribute('xmlns', svgNS);
+  searchIcon.setAttribute('width', '16');
+  searchIcon.setAttribute('height', '16');
+  searchIcon.setAttribute('viewBox', '0 0 24 24');
+  searchIcon.setAttribute('fill', 'none');
+  searchIcon.setAttribute('stroke', 'currentColor');
+  searchIcon.setAttribute('stroke-width', '2');
+  searchIcon.setAttribute('stroke-linecap', 'round');
+  searchIcon.setAttribute('stroke-linejoin', 'round');
+  searchIcon.setAttribute('class', 'mr-2 shrink-0 opacity-50');
+  searchIcon.setAttribute('aria-hidden', 'true');
+  const circle = document.createElementNS(svgNS, 'circle');
+  circle.setAttribute('cx', '11');
+  circle.setAttribute('cy', '11');
+  circle.setAttribute('r', '8');
+  const line = document.createElementNS(svgNS, 'path');
+  line.setAttribute('d', 'm21 21-4.3-4.3');
+  searchIcon.append(circle, line);
+  inputWrapper.appendChild(searchIcon);
 
   const input = document.createElement('input');
   input.type = 'text';
