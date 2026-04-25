@@ -1,0 +1,1046 @@
+{
+  "pt-BR": {
+    "title": "Sidebar",
+    "category": "Layout",
+    "type": "Componente",
+    "description": "Navegação principal persistente da aplicação com suporte a recolhimento, modo flutuante e overlay em mobile.",
+    "seo": {
+      "title": "Sidebar — Layout · Design System",
+      "description": "Documentação da Sidebar: variantes sidebar, floating e inset, collapsible offcanvas e icon, acessibilidade WCAG e atalho Ctrl+B.",
+      "aiSummary": "Componente Sidebar com 3 variantes (sidebar, floating, inset), 3 modos de recolhimento (offcanvas, icon, none), overlay mobile via Sheet e atalho de teclado Ctrl+B.",
+      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-current",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "dashboard": "Dashboard",
+        "components": "Componentes",
+        "tokens": "Tokens",
+        "settings": "Configurações",
+        "profile": "Perfil",
+        "search": "Buscar...",
+        "notifications": "Notificações",
+        "mainNav": "Navegação principal",
+        "toggleOpen": "Expandir navegação",
+        "toggleClose": "Recolher navegação"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>SidebarProvider</strong> — contexto raiz que gerencia estado open/collapsed, cookie de persistência e atalho Ctrl+B.",
+      "item2": "<strong>Sidebar</strong> — container principal com props <code>side</code>, <code>variant</code> e <code>collapsible</code>.",
+      "item3": "<strong>SidebarHeader</strong> — área superior da sidebar; altura deve coincidir com a navbar.",
+      "item4": "<strong>SidebarContent</strong> — área de rolagem central com os grupos de navegação.",
+      "item5": "<strong>SidebarFooter</strong> — área inferior fixa; perfil do usuário, configurações.",
+      "item6": "<strong>SidebarGroup</strong> — seção lógica dentro do content, com label e ação opcionais.",
+      "item7": "<strong>SidebarMenu / SidebarMenuItem</strong> — lista <code>&lt;ul&gt;</code> e item <code>&lt;li&gt;</code> do menu.",
+      "item8": "<strong>SidebarMenuButton</strong> — botão de navegação com variantes, tamanhos, estado ativo e tooltip no modo colapsado.",
+      "item9": "<strong>SidebarMenuSub</strong> — lista de subitens aninhados com linha de referência visual.",
+      "item10": "<strong>SidebarTrigger</strong> — botão ghost com ícone <code>PanelLeft</code> para alternar a sidebar.",
+      "item11": "<strong>SidebarRail</strong> — área clicável na borda da sidebar para alternar via arrasto.",
+      "item12": "<strong>SidebarInset</strong> — container <code>&lt;main&gt;</code> do conteúdo principal adjacente à sidebar.",
+      "item13": "<strong>SidebarInput</strong> — campo de busca estilizado para uso dentro da sidebar.",
+      "item14": "<strong>SidebarMenuBadge</strong> — badge numérico sobreposto ao item de menu.",
+      "item15": "<strong>SidebarMenuSkeleton</strong> — placeholder de carregamento para itens de menu.",
+      "item16": "<strong>useSidebar</strong> — hook que expõe <code>state</code>, <code>open</code>, <code>isMobile</code> e <code>toggleSidebar</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<SidebarProvider>\n  <nav aria-label=\"Navegação principal\">\n    <Sidebar side=\"left\" variant=\"sidebar\" collapsible=\"offcanvas\">\n      <SidebarHeader />\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel />\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton isActive>\n                  <Icon aria-hidden=\"true\" />\n                  <span>Item</span>\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter />\n    </Sidebar>\n  </nav>\n  <SidebarInset>\n    <SidebarTrigger />\n    <main id=\"main-content\" tabIndex={-1}>{children}</main>\n  </SidebarInset>\n</SidebarProvider>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Envolva sempre o layout inteiro no <code>SidebarProvider</code> — nunca replique o estado manualmente.",
+        "item2": "Use <code>&lt;nav aria-label=\"Navegação principal\"&gt;</code> envolvendo o <code>Sidebar</code> — obrigatório.",
+        "item3": "Defina <code>aria-current=\"page\"</code> no <code>SidebarMenuButton</code> do item ativo.",
+        "item4": "Inclua <code>SidebarTrigger</code> visível apenas em mobile (<code>lg:hidden</code>) dentro do <code>SidebarInset</code>.",
+        "item5": "Ícones no primeiro nível de menu devem ter <code>aria-hidden=\"true\"</code> — o texto do botão descreve o item."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar Sidebar?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "App com múltiplas seções", "u": "Sim, variant sidebar", "a": "-" },
+        "item2": { "s": "Navegação simples (3-5 itens)", "u": "Não", "a": "NavigationMenu ou Tabs" },
+        "item3": { "s": "Dashboard flutuante com conteúdo central", "u": "Sim, variant floating", "a": "-" },
+        "item4": { "s": "Layout encaixado com bordas arredondadas", "u": "Sim, variant inset", "a": "-" },
+        "item5": { "s": "Sidebar sempre visível, sem toggle", "u": "Sim, collapsible none", "a": "-" }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "A aplicação tem hierarquia de navegação com múltiplas seções",
+        "item2": "O usuário precisa acessar qualquer seção a partir de qualquer página",
+        "item3": "O layout requer navegação persistente em desktop",
+        "item4": "A navegação tem grupos ou categorias que se beneficiam de labels"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A navegação tem menos de 5 itens planos — use <code>NavigationMenu</code>",
+        "item2": "O conteúdo é organizado em abas paralelas — use <code>Tabs</code>",
+        "item3": "A sidebar é usada como painel de filtros — use <code>Sheet</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Use SidebarProvider na raiz do layout e nav com aria-label contextual.",
+        "dont": "Replicar o estado open/collapsed manualmente fora do SidebarProvider."
+      },
+      "pair2": {
+        "do": "aria-current=\"page\" no item ativo e tooltip no modo icon colapsado.",
+        "dont": "Ícone sem aria-label no modo colapsado — o nome da seção fica inacessível."
+      },
+      "pair3": {
+        "do": "SidebarTrigger visível apenas em mobile; em desktop usar SidebarRail.",
+        "dont": "Exibir SidebarTrigger em desktop sem necessidade — ocupa espaço do conteúdo."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withSubcomponents": "Com subcomponentes:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "variantProp": "Prop variant",
+      "collapsibleProp": "Prop collapsible",
+      "sideProp": "Prop side",
+      "sidebar": "Sidebar padrão colada na borda da viewport. Empurra o conteúdo ao expandir (push mode).",
+      "floating": "Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.",
+      "inset": "Sidebar integrada ao layout com o conteúdo em container arredondado adjacente.",
+      "offcanvas": "Sidebar desliza para fora da viewport ao recolher. Comportamento padrão e recomendado.",
+      "icon": "Sidebar reduz para largura de ícone (3rem). Labels ocultados; tooltips exibidos ao hover.",
+      "none": "Sidebar sempre visível, sem possibilidade de recolher. Use em dashboards fixos.",
+      "left": "Sidebar posicionada na esquerda (padrão). Compatível com LTR.",
+      "right": "Sidebar posicionada na direita. Use em painéis de detalhes ou contexto."
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "expanded": {
+        "label": "Expandido",
+        "trigger": "<code>open=true</code> ou estado padrão",
+        "behavior": "Sidebar visível em largura total (16rem). Labels e ícones exibidos. data-state=\"expanded\""
+      },
+      "collapsed": {
+        "label": "Recolhido (icon)",
+        "trigger": "<code>collapsible=\"icon\"</code> + toggle",
+        "behavior": "Sidebar reduzida a 3rem. Apenas ícones visíveis; tooltips ao hover. data-state=\"collapsed\""
+      },
+      "offcanvas": {
+        "label": "Offcanvas",
+        "trigger": "<code>collapsible=\"offcanvas\"</code> + toggle",
+        "behavior": "Sidebar desliza para fora da viewport. Largura retorna a 0. data-collapsible=\"offcanvas\""
+      },
+      "mobile": {
+        "label": "Mobile (overlay)",
+        "trigger": "Viewport mobile detectada pelo <code>useIsMobile()</code>",
+        "behavior": "Sidebar renderizada como Sheet overlay (18rem). Abre via SidebarTrigger ou toggleSidebar()."
+      },
+      "hidden": {
+        "label": "Fixo (none)",
+        "trigger": "<code>collapsible=\"none\"</code>",
+        "behavior": "Sidebar sempre visível. Sem toggle. Sem data-state de collapsed."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "providerTitle": "SidebarProvider",
+      "sidebarTitle": "Sidebar",
+      "menuButtonTitle": "SidebarMenuButton",
+      "menuSubButtonTitle": "SidebarMenuSubButton",
+      "menuSkeletonTitle": "SidebarMenuSkeleton",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição"
+      },
+      "provider": {
+        "defaultOpen": "Estado inicial da sidebar (não controlado).",
+        "open": "Estado controlado. Use com <code>onOpenChange</code>.",
+        "onOpenChange": "Callback chamado ao alternar estado. Habilita controle externo.",
+        "children": "Conteúdo do layout — deve incluir Sidebar e SidebarInset."
+      },
+      "sidebar": {
+        "side": "Posição: <code>\"left\"</code> (padrão) ou <code>\"right\"</code>.",
+        "variant": "Estilo visual: <code>\"sidebar\"</code>, <code>\"floating\"</code> ou <code>\"inset\"</code>.",
+        "collapsible": "Comportamento ao recolher: <code>\"offcanvas\"</code>, <code>\"icon\"</code> ou <code>\"none\"</code>."
+      },
+      "menuButton": {
+        "isActive": "Marca o item como ativo. Aplica estilos de destaque e define <code>data-active</code>.",
+        "variant": "Estilo do botão: <code>\"default\"</code> (sem borda) ou <code>\"outline\"</code> (com borda).",
+        "size": "Tamanho: <code>\"default\"</code> (h-8), <code>\"sm\"</code> (h-7) ou <code>\"lg\"</code> (h-12).",
+        "tooltip": "Tooltip exibido quando a sidebar está no modo icon colapsado. String ou objeto <code>TooltipContent</code>.",
+        "render": "Prop de render do Base UI — permite usar <code>&lt;a&gt;</code> ou outros elementos como root."
+      },
+      "menuSubButton": {
+        "isActive": "Marca o subitem como ativo.",
+        "size": "Tamanho do texto: <code>\"sm\"</code> (xs) ou <code>\"md\"</code> (sm, padrão).",
+        "render": "Prop de render do Base UI — padrão é <code>&lt;a&gt;</code>."
+      },
+      "menuSkeleton": {
+        "showIcon": "Exibe um skeleton circular de ícone (16x16px) à esquerda do texto."
+      },
+      "extensibilityTitle": "Hook useSidebar",
+      "extensibility": "O hook <code>useSidebar()</code> expõe: <code>state</code> (\"expanded\" | \"collapsed\"), <code>open</code> (boolean), <code>isMobile</code> (boolean) e <code>toggleSidebar()</code>. Deve ser usado dentro do <code>SidebarProvider</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente"
+      },
+      "sidebarBg": "Fundo da sidebar",
+      "sidebarFg": "Texto e ícones da sidebar",
+      "sidebarBorder": "Bordas e separadores internos",
+      "sidebarAccent": "Fundo do item de menu em hover/ativo",
+      "sidebarAccentFg": "Texto do item de menu em hover/ativo",
+      "sidebarRing": "Anel de foco nos itens interativos",
+      "sidebarWidth": "Largura em desktop expandido (16rem)",
+      "sidebarWidthIcon": "Largura no modo icon colapsado (3rem)",
+      "sidebarWidthMobile": "Largura do Sheet em mobile (18rem)",
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "A Sidebar usa <code>&lt;nav aria-label&gt;</code>, <code>aria-current=\"page\"</code> no item ativo e tooltips no modo colapsado. Cumpre WCAG 2.1 AA: 1.3.1 (informação e relações), 2.1.1 (teclado), 2.4.3 (ordem do foco) e 4.1.2 (nome, função, valor).",
+      "item1": "<strong>nav com aria-label</strong> — envolva o Sidebar com <code>&lt;nav aria-label=\"Navegação principal\"&gt;</code> para que leitores de tela identifiquem o landmark de navegação.",
+      "item2": "<strong>aria-current=\"page\"</strong> — aplique no <code>SidebarMenuButton</code> do item ativo. Anuncia ao leitor de tela qual seção está selecionada.",
+      "item3": "<strong>Tooltip no modo icon</strong> — defina <code>tooltip</code> em cada <code>SidebarMenuButton</code>. O tooltip só aparece quando <code>state === \"collapsed\"</code> e exibe o nome da seção.",
+      "item4": "<strong>SidebarTrigger acessível</strong> — o botão inclui <code>&lt;span className=\"sr-only\"&gt;Toggle Sidebar&lt;/span&gt;</code>. Substitua por aria-label contextual em produção.",
+      "item5": "<strong>SidebarRail</strong> — possui <code>aria-label=\"Toggle Sidebar\"</code> nativo. Elemento com <code>tabIndex={-1}</code>; não entra no fluxo de Tab.",
+      "item6": "<strong>Mobile Sheet</strong> — o SheetHeader possui título e descrição visíveis apenas para leitores de tela (<code>sr-only</code>).",
+      "item7": "<strong>Skip link</strong> — a aplicação deve ter skip link apontando para <code>#main-content</code>, pulando a sidebar.",
+      "keyboard": {
+        "tab": "Navega pelos itens interativos da sidebar na ordem do DOM.",
+        "shiftTab": "Navega na ordem reversa.",
+        "enter": "Ativa o item de menu ou toggle focado.",
+        "space": "Ativa botões focados, equivalente ao Enter.",
+        "escape": "Fecha a sidebar em mobile (Sheet). Ctrl+B fecha/abre em desktop.",
+        "ctrlB": "Atalho global para alternar a sidebar (Ctrl+B / Cmd+B).",
+        "arrowKeys": "Não implementado nativamente — use Accordion para subitens navegáveis por seta."
+      },
+      "aria": {
+        "navLabel": "<code>aria-label=\"Navegação principal\"</code> — obrigatório no elemento <code>&lt;nav&gt;</code> que envolve o Sidebar.",
+        "ariaCurrent": "<code>aria-current=\"page\"</code> — no <code>SidebarMenuButton</code> do item que representa a página atual.",
+        "ariaExpanded": "<code>aria-expanded</code> — no botão de toggle, refletindo o estado open/collapsed.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — em todos os ícones decorativos dentro dos botões.",
+        "dataState": "<code>data-state=\"expanded\" | \"collapsed\"</code> — atributo CSS usado para animações e estilos de estado."
+      },
+      "screenReader": {
+        "navLandmark": "O elemento nav com aria-label aparece como landmark de navegação na lista de regiões do leitor.",
+        "activeItem": "Item ativo anunciado como 'página atual' quando aria-current=\"page\" está presente.",
+        "collapsedTooltip": "No modo icon, o tooltip é anunciado ao focar o botão, comunicando o nome da seção.",
+        "mobileSheet": "O Sheet é anunciado com título e descrição sr-only ao abrir em mobile.",
+        "toggleButton": "O SidebarTrigger anuncia 'Toggle Sidebar' — personalize com aria-label descritivo em produção."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "navigationMenu": "Navegação horizontal para sites com poucos itens de nível superior.",
+      "tabs": "Organização de conteúdo em abas paralelas dentro de uma mesma página.",
+      "sheet": "Usado internamente pela Sidebar em mobile. Pode ser usado sozinho para painéis laterais pontuais.",
+      "accordion": "Recomendado para categorias com subitens dentro do SidebarContent.",
+      "tooltip": "Exibido automaticamente pelo SidebarMenuButton no modo icon colapsado.",
+      "separator": "SidebarSeparator é um Separator estilizado para uso dentro da sidebar.",
+      "skeleton": "SidebarMenuSkeleton usa o Skeleton para loading states dos itens de menu."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "O <code>SidebarProvider</code> persiste o estado em cookie (<code>sidebar_state</code>, TTL de 7 dias). Em SSR, leia o cookie no servidor e passe <code>defaultOpen</code> para evitar flash de conteúdo.",
+      "tip2": "O <code>SidebarMenuButton</code> usa <code>useRender</code> do Base UI — para links de roteador, passe <code>render={&lt;Link href=\"...\" /&gt;}</code> ou o equivalente do seu framework.",
+      "tip3": "No modo <code>collapsible=\"icon\"</code>, elementos com <code>group-data-[collapsible=icon]:hidden</code> são ocultados automaticamente — labels de grupo, subitens e badges desaparecem sem CSS extra.",
+      "tip4": "A largura da sidebar é definida pelas variáveis CSS <code>--sidebar-width</code> (16rem) e <code>--sidebar-width-icon</code> (3rem). Sobrescreva no <code>style</code> do <code>SidebarProvider</code> se necessário.",
+      "tip5": "Nunca aninhe <code>SidebarProvider</code> — ele fornece contexto global de layout. Use apenas uma instância por página."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastreie navegação e interações com o toggle. Não rastreie o container da sidebar em si.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "navClick": "navigation_click",
+        "navClickTrigger": "Clique em SidebarMenuButton para navegar",
+        "navClickPayload": "{ component: \"sidebar\", location: \"main_nav\", label: string, destination: string }",
+        "toggleOpen": "sidebar_toggle",
+        "toggleOpenTrigger": "SidebarTrigger, SidebarRail ou Ctrl+B acionados",
+        "togglePayload": "{ action: \"open\" | \"close\", trigger: \"button\" | \"rail\" | \"keyboard\" }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada configuração e interação da Sidebar.",
+        "item1": { "action": "Clicar em SidebarTrigger", "result": "toggleSidebar() chamado; data-state alterna entre expanded e collapsed", "priority": "high" },
+        "item2": { "action": "Pressionar Ctrl+B", "result": "toggleSidebar() chamado; estado da sidebar alterna", "priority": "high" },
+        "item3": { "action": "Redimensionar para viewport mobile", "result": "Sidebar renderiza como Sheet; SidebarTrigger abre o overlay", "priority": "high" },
+        "item4": { "action": "Renderizar collapsible=\"icon\"", "result": "Labels ocultados; sidebar reduz para --sidebar-width-icon (3rem)", "priority": "high" },
+        "item5": { "action": "Renderizar collapsible=\"none\"", "result": "Sidebar sempre visível; sem toggle; sem data-state de collapsed", "priority": "medium" },
+        "item6": { "action": "SidebarMenuButton com isActive=true", "result": "data-active presente; estilos de destaque aplicados; aria-current=\"page\" acessível", "priority": "high" },
+        "item7": { "action": "SidebarMenuButton com tooltip no modo icon", "result": "Tooltip exibido ao hover apenas quando state === \"collapsed\"", "priority": "medium" },
+        "item8": { "action": "Renderizar variant floating", "result": "Sidebar com border-radius, shadow e ring de sidebar-border aplicados", "priority": "medium" },
+        "item9": { "action": "SidebarMenuSkeleton com showIcon=true", "result": "Skeleton de ícone (size-4) exibido à esquerda do skeleton de texto", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "nav com aria-label presente no DOM", "level": "AA", "how": "getByRole('navigation', { name: /navegação principal/i })" },
+        "item2": { "criterion": "aria-current=\"page\" no item ativo", "level": "AA", "how": "getByRole('button', { current: 'page' }) no testing-library" },
+        "item3": { "criterion": "Ícones com aria-hidden=\"true\"", "level": "AA", "how": "Inspecionar atributos SVG no DOM" },
+        "item4": { "criterion": "SidebarTrigger com texto acessível", "level": "AA", "how": "getByRole('button', { name: /toggle sidebar/i })" },
+        "item5": { "criterion": "Sem violações axe-core no estado expanded", "level": "AA", "how": "axe-playwright no test-runner do Storybook" },
+        "item6": { "criterion": "Navegação completa por Tab nos itens de menu", "level": "AA", "how": "Teste manual com teclado" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Default — sidebar expandida, variant sidebar", "priority": "high" },
+        "item2": { "story": "Collapsed icon — modo icon com tooltips", "priority": "high" },
+        "item3": { "story": "Variant floating — borda arredondada e sombra", "priority": "high" },
+        "item4": { "story": "Variant inset — conteúdo com border-radius adjacente", "priority": "medium" },
+        "item5": { "story": "Mobile — Sheet overlay aberto", "priority": "high" },
+        "item6": { "story": "Side right — sidebar na direita", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Sidebar",
+    "category": "Layout",
+    "type": "Component",
+    "description": "Persistent primary navigation for applications with collapsible support, floating mode, and mobile overlay.",
+    "seo": {
+      "title": "Sidebar — Layout · Design System",
+      "description": "Sidebar documentation: sidebar, floating and inset variants, offcanvas and icon collapsible modes, WCAG accessibility and Ctrl+B shortcut.",
+      "aiSummary": "Sidebar component with 3 variants (sidebar, floating, inset), 3 collapsible modes (offcanvas, icon, none), mobile Sheet overlay, and Ctrl+B keyboard shortcut.",
+      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-current",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "dashboard": "Dashboard",
+        "components": "Components",
+        "tokens": "Tokens",
+        "settings": "Settings",
+        "profile": "Profile",
+        "search": "Search...",
+        "notifications": "Notifications",
+        "mainNav": "Main navigation",
+        "toggleOpen": "Expand navigation",
+        "toggleClose": "Collapse navigation"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>SidebarProvider</strong> — root context managing open/collapsed state, persistence cookie, and Ctrl+B shortcut.",
+      "item2": "<strong>Sidebar</strong> — main container with <code>side</code>, <code>variant</code>, and <code>collapsible</code> props.",
+      "item3": "<strong>SidebarHeader</strong> — top area of the sidebar; height should match the navbar.",
+      "item4": "<strong>SidebarContent</strong> — central scrollable area containing navigation groups.",
+      "item5": "<strong>SidebarFooter</strong> — fixed bottom area; user profile, settings.",
+      "item6": "<strong>SidebarGroup</strong> — logical section within content, with optional label and action.",
+      "item7": "<strong>SidebarMenu / SidebarMenuItem</strong> — <code>&lt;ul&gt;</code> list and <code>&lt;li&gt;</code> menu item.",
+      "item8": "<strong>SidebarMenuButton</strong> — navigation button with variants, sizes, active state, and tooltip in collapsed mode.",
+      "item9": "<strong>SidebarMenuSub</strong> — nested sub-item list with a visual reference line.",
+      "item10": "<strong>SidebarTrigger</strong> — ghost button with <code>PanelLeft</code> icon to toggle the sidebar.",
+      "item11": "<strong>SidebarRail</strong> — clickable edge area to toggle the sidebar via drag.",
+      "item12": "<strong>SidebarInset</strong> — <code>&lt;main&gt;</code> container for the primary content adjacent to the sidebar.",
+      "item13": "<strong>SidebarInput</strong> — styled search field for use inside the sidebar.",
+      "item14": "<strong>SidebarMenuBadge</strong> — numeric badge overlaid on a menu item.",
+      "item15": "<strong>SidebarMenuSkeleton</strong> — loading placeholder for menu items.",
+      "item16": "<strong>useSidebar</strong> — hook exposing <code>state</code>, <code>open</code>, <code>isMobile</code>, and <code>toggleSidebar</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<SidebarProvider>\n  <nav aria-label=\"Main navigation\">\n    <Sidebar side=\"left\" variant=\"sidebar\" collapsible=\"offcanvas\">\n      <SidebarHeader />\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel />\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton isActive>\n                  <Icon aria-hidden=\"true\" />\n                  <span>Item</span>\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter />\n    </Sidebar>\n  </nav>\n  <SidebarInset>\n    <SidebarTrigger />\n    <main id=\"main-content\" tabIndex={-1}>{children}</main>\n  </SidebarInset>\n</SidebarProvider>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Always wrap the entire layout in <code>SidebarProvider</code> — never replicate state manually.",
+        "item2": "Use <code>&lt;nav aria-label=\"Main navigation\"&gt;</code> wrapping the <code>Sidebar</code> — required.",
+        "item3": "Set <code>aria-current=\"page\"</code> on the active <code>SidebarMenuButton</code>.",
+        "item4": "Include <code>SidebarTrigger</code> visible only on mobile (<code>lg:hidden</code>) inside <code>SidebarInset</code>.",
+        "item5": "Icons at the first menu level must have <code>aria-hidden=\"true\"</code> — the button text describes the item."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use Sidebar?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "App with multiple sections", "u": "Yes, sidebar variant", "a": "-" },
+        "item2": { "s": "Simple navigation (3-5 items)", "u": "No", "a": "NavigationMenu or Tabs" },
+        "item3": { "s": "Floating dashboard with central content", "u": "Yes, floating variant", "a": "-" },
+        "item4": { "s": "Inset layout with rounded content", "u": "Yes, inset variant", "a": "-" },
+        "item5": { "s": "Always-visible sidebar without toggle", "u": "Yes, collapsible none", "a": "-" }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The application has navigation hierarchy with multiple sections",
+        "item2": "Users need access to any section from any page",
+        "item3": "The layout requires persistent navigation on desktop",
+        "item4": "Navigation has groups or categories that benefit from labels"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "Navigation has fewer than 5 flat items — use <code>NavigationMenu</code>",
+        "item2": "Content is organized in parallel tabs — use <code>Tabs</code>",
+        "item3": "The sidebar is used as a filter panel — use <code>Sheet</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Use SidebarProvider at layout root and nav with contextual aria-label.",
+        "dont": "Replicate the open/collapsed state manually outside SidebarProvider."
+      },
+      "pair2": {
+        "do": "aria-current=\"page\" on active item and tooltip in icon collapsed mode.",
+        "dont": "Icon without aria-label in collapsed mode — section name becomes inaccessible."
+      },
+      "pair3": {
+        "do": "SidebarTrigger visible only on mobile; use SidebarRail on desktop.",
+        "dont": "Show SidebarTrigger on desktop without need — wastes content space."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withSubcomponents": "With subcomponents:"
+    },
+    "variants": {
+      "title": "Variants",
+      "variantProp": "variant prop",
+      "collapsibleProp": "collapsible prop",
+      "sideProp": "side prop",
+      "sidebar": "Default sidebar attached to the viewport edge. Pushes content when expanded (push mode).",
+      "floating": "Sidebar with rounded border and shadow, floating over a small padding. Does not push content.",
+      "inset": "Sidebar integrated into the layout with the content in a rounded adjacent container.",
+      "offcanvas": "Sidebar slides out of the viewport when collapsed. Default and recommended behavior.",
+      "icon": "Sidebar reduces to icon width (3rem). Labels hidden; tooltips shown on hover.",
+      "none": "Sidebar always visible, cannot be collapsed. Use in fixed dashboards.",
+      "left": "Sidebar positioned on the left (default). Compatible with LTR.",
+      "right": "Sidebar positioned on the right. Use for detail or context panels."
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "expanded": {
+        "label": "Expanded",
+        "trigger": "<code>open=true</code> or default state",
+        "behavior": "Sidebar visible at full width (16rem). Labels and icons displayed. data-state=\"expanded\""
+      },
+      "collapsed": {
+        "label": "Collapsed (icon)",
+        "trigger": "<code>collapsible=\"icon\"</code> + toggle",
+        "behavior": "Sidebar reduced to 3rem. Only icons visible; tooltips on hover. data-state=\"collapsed\""
+      },
+      "offcanvas": {
+        "label": "Offcanvas",
+        "trigger": "<code>collapsible=\"offcanvas\"</code> + toggle",
+        "behavior": "Sidebar slides out of viewport. Width returns to 0. data-collapsible=\"offcanvas\""
+      },
+      "mobile": {
+        "label": "Mobile (overlay)",
+        "trigger": "Mobile viewport detected by <code>useIsMobile()</code>",
+        "behavior": "Sidebar rendered as Sheet overlay (18rem). Opens via SidebarTrigger or toggleSidebar()."
+      },
+      "hidden": {
+        "label": "Fixed (none)",
+        "trigger": "<code>collapsible=\"none\"</code>",
+        "behavior": "Sidebar always visible. No toggle. No collapsed data-state."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "providerTitle": "SidebarProvider",
+      "sidebarTitle": "Sidebar",
+      "menuButtonTitle": "SidebarMenuButton",
+      "menuSubButtonTitle": "SidebarMenuSubButton",
+      "menuSkeletonTitle": "SidebarMenuSkeleton",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description"
+      },
+      "provider": {
+        "defaultOpen": "Initial sidebar state (uncontrolled).",
+        "open": "Controlled state. Use with <code>onOpenChange</code>.",
+        "onOpenChange": "Callback fired on state toggle. Enables external control.",
+        "children": "Layout content — must include Sidebar and SidebarInset."
+      },
+      "sidebar": {
+        "side": "Position: <code>\"left\"</code> (default) or <code>\"right\"</code>.",
+        "variant": "Visual style: <code>\"sidebar\"</code>, <code>\"floating\"</code>, or <code>\"inset\"</code>.",
+        "collapsible": "Collapse behavior: <code>\"offcanvas\"</code>, <code>\"icon\"</code>, or <code>\"none\"</code>."
+      },
+      "menuButton": {
+        "isActive": "Marks the item as active. Applies highlight styles and sets <code>data-active</code>.",
+        "variant": "Button style: <code>\"default\"</code> (no border) or <code>\"outline\"</code> (with border).",
+        "size": "Size: <code>\"default\"</code> (h-8), <code>\"sm\"</code> (h-7), or <code>\"lg\"</code> (h-12).",
+        "tooltip": "Tooltip shown when sidebar is in icon collapsed mode. String or <code>TooltipContent</code> object.",
+        "render": "Base UI render prop — allows using <code>&lt;a&gt;</code> or other elements as root."
+      },
+      "menuSubButton": {
+        "isActive": "Marks the sub-item as active.",
+        "size": "Text size: <code>\"sm\"</code> (xs) or <code>\"md\"</code> (sm, default).",
+        "render": "Base UI render prop — defaults to <code>&lt;a&gt;</code>."
+      },
+      "menuSkeleton": {
+        "showIcon": "Displays a circular icon skeleton (16x16px) to the left of the text skeleton."
+      },
+      "extensibilityTitle": "useSidebar hook",
+      "extensibility": "The <code>useSidebar()</code> hook exposes: <code>state</code> (\"expanded\" | \"collapsed\"), <code>open</code> (boolean), <code>isMobile</code> (boolean), and <code>toggleSidebar()</code>. Must be used inside <code>SidebarProvider</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part"
+      },
+      "sidebarBg": "Sidebar background",
+      "sidebarFg": "Sidebar text and icons",
+      "sidebarBorder": "Internal borders and separators",
+      "sidebarAccent": "Menu item background on hover/active",
+      "sidebarAccentFg": "Menu item text on hover/active",
+      "sidebarRing": "Focus ring on interactive items",
+      "sidebarWidth": "Desktop expanded width (16rem)",
+      "sidebarWidthIcon": "Icon collapsed mode width (3rem)",
+      "sidebarWidthMobile": "Mobile Sheet width (18rem)",
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Sidebar uses <code>&lt;nav aria-label&gt;</code>, <code>aria-current=\"page\"</code> on the active item, and tooltips in collapsed mode. Meets WCAG 2.1 AA: 1.3.1 (info and relationships), 2.1.1 (keyboard), 2.4.3 (focus order), and 4.1.2 (name, role, value).",
+      "item1": "<strong>nav with aria-label</strong> — wrap Sidebar in <code>&lt;nav aria-label=\"Main navigation\"&gt;</code> so screen readers identify the navigation landmark.",
+      "item2": "<strong>aria-current=\"page\"</strong> — apply to the active <code>SidebarMenuButton</code>. Announces to screen readers which section is selected.",
+      "item3": "<strong>Tooltip in icon mode</strong> — set <code>tooltip</code> on each <code>SidebarMenuButton</code>. The tooltip only appears when <code>state === \"collapsed\"</code> and shows the section name.",
+      "item4": "<strong>Accessible SidebarTrigger</strong> — button includes <code>&lt;span className=\"sr-only\"&gt;Toggle Sidebar&lt;/span&gt;</code>. Replace with a contextual aria-label in production.",
+      "item5": "<strong>SidebarRail</strong> — has native <code>aria-label=\"Toggle Sidebar\"</code>. Element uses <code>tabIndex={-1}</code>; does not enter the Tab flow.",
+      "item6": "<strong>Mobile Sheet</strong> — SheetHeader has title and description visible only to screen readers (<code>sr-only</code>).",
+      "item7": "<strong>Skip link</strong> — the application must have a skip link pointing to <code>#main-content</code>, bypassing the sidebar.",
+      "keyboard": {
+        "tab": "Navigates through interactive sidebar items in DOM order.",
+        "shiftTab": "Navigates in reverse order.",
+        "enter": "Activates the focused menu item or toggle.",
+        "space": "Activates focused buttons, equivalent to Enter.",
+        "escape": "Closes the sidebar on mobile (Sheet). Ctrl+B closes/opens on desktop.",
+        "ctrlB": "Global shortcut to toggle the sidebar (Ctrl+B / Cmd+B).",
+        "arrowKeys": "Not natively implemented — use Accordion for sub-items navigable by arrow keys."
+      },
+      "aria": {
+        "navLabel": "<code>aria-label=\"Main navigation\"</code> — required on the <code>&lt;nav&gt;</code> element wrapping the Sidebar.",
+        "ariaCurrent": "<code>aria-current=\"page\"</code> — on the <code>SidebarMenuButton</code> representing the current page.",
+        "ariaExpanded": "<code>aria-expanded</code> — on the toggle button, reflecting the open/collapsed state.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — on all decorative icons inside buttons.",
+        "dataState": "<code>data-state=\"expanded\" | \"collapsed\"</code> — CSS attribute used for animations and state styles."
+      },
+      "screenReader": {
+        "navLandmark": "The nav element with aria-label appears as a navigation landmark in the reader's regions list.",
+        "activeItem": "Active item announced as 'current page' when aria-current=\"page\" is present.",
+        "collapsedTooltip": "In icon mode, the tooltip is announced on button focus, communicating the section name.",
+        "mobileSheet": "The Sheet is announced with sr-only title and description when opened on mobile.",
+        "toggleButton": "SidebarTrigger announces 'Toggle Sidebar' — customize with a descriptive aria-label in production."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "navigationMenu": "Horizontal navigation for sites with few top-level items.",
+      "tabs": "Tab-based content organization within a single page.",
+      "sheet": "Used internally by Sidebar on mobile. Can be used standalone for contextual side panels.",
+      "accordion": "Recommended for categories with sub-items inside SidebarContent.",
+      "tooltip": "Automatically displayed by SidebarMenuButton in icon collapsed mode.",
+      "separator": "SidebarSeparator is a Separator styled for use inside the sidebar.",
+      "skeleton": "SidebarMenuSkeleton uses Skeleton for menu item loading states."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "The <code>SidebarProvider</code> persists state in a cookie (<code>sidebar_state</code>, 7-day TTL). In SSR, read the cookie server-side and pass <code>defaultOpen</code> to avoid content flash.",
+      "tip2": "The <code>SidebarMenuButton</code> uses Base UI's <code>useRender</code> — for router links, pass <code>render={&lt;Link href=\"...\" /&gt;}</code> or the equivalent for your framework.",
+      "tip3": "In <code>collapsible=\"icon\"</code> mode, elements with <code>group-data-[collapsible=icon]:hidden</code> are hidden automatically — group labels, sub-items, and badges disappear without extra CSS.",
+      "tip4": "Sidebar width is set by CSS variables <code>--sidebar-width</code> (16rem) and <code>--sidebar-width-icon</code> (3rem). Override in the <code>SidebarProvider</code> <code>style</code> prop if needed.",
+      "tip5": "Never nest <code>SidebarProvider</code> — it provides global layout context. Use only one instance per page."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Track navigation and toggle interactions. Do not track the sidebar container itself.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "navClick": "navigation_click",
+        "navClickTrigger": "Click on SidebarMenuButton to navigate",
+        "navClickPayload": "{ component: \"sidebar\", location: \"main_nav\", label: string, destination: string }",
+        "toggleOpen": "sidebar_toggle",
+        "toggleOpenTrigger": "SidebarTrigger, SidebarRail, or Ctrl+B activated",
+        "togglePayload": "{ action: \"open\" | \"close\", trigger: \"button\" | \"rail\" | \"keyboard\" }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Sidebar configuration and interaction.",
+        "item1": { "action": "Click SidebarTrigger", "result": "toggleSidebar() called; data-state toggles between expanded and collapsed", "priority": "high" },
+        "item2": { "action": "Press Ctrl+B", "result": "toggleSidebar() called; sidebar state toggles", "priority": "high" },
+        "item3": { "action": "Resize to mobile viewport", "result": "Sidebar renders as Sheet; SidebarTrigger opens the overlay", "priority": "high" },
+        "item4": { "action": "Render collapsible=\"icon\"", "result": "Labels hidden; sidebar reduces to --sidebar-width-icon (3rem)", "priority": "high" },
+        "item5": { "action": "Render collapsible=\"none\"", "result": "Sidebar always visible; no toggle; no collapsed data-state", "priority": "medium" },
+        "item6": { "action": "SidebarMenuButton with isActive=true", "result": "data-active present; highlight styles applied; aria-current=\"page\" accessible", "priority": "high" },
+        "item7": { "action": "SidebarMenuButton with tooltip in icon mode", "result": "Tooltip shown on hover only when state === \"collapsed\"", "priority": "medium" },
+        "item8": { "action": "Render floating variant", "result": "Sidebar with border-radius, shadow, and sidebar-border ring applied", "priority": "medium" },
+        "item9": { "action": "SidebarMenuSkeleton with showIcon=true", "result": "Icon skeleton (size-4) displayed left of text skeleton", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "nav with aria-label present in DOM", "level": "AA", "how": "getByRole('navigation', { name: /main navigation/i })" },
+        "item2": { "criterion": "aria-current=\"page\" on active item", "level": "AA", "how": "getByRole('button', { current: 'page' }) in testing-library" },
+        "item3": { "criterion": "Icons with aria-hidden=\"true\"", "level": "AA", "how": "Inspect SVG attributes in DOM" },
+        "item4": { "criterion": "SidebarTrigger with accessible text", "level": "AA", "how": "getByRole('button', { name: /toggle sidebar/i })" },
+        "item5": { "criterion": "No axe-core violations in expanded state", "level": "AA", "how": "axe-playwright in Storybook test-runner" },
+        "item6": { "criterion": "Full Tab navigation through menu items", "level": "AA", "how": "Manual keyboard testing" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Default — sidebar expanded, sidebar variant", "priority": "high" },
+        "item2": { "story": "Collapsed icon — icon mode with tooltips", "priority": "high" },
+        "item3": { "story": "Floating variant — rounded border and shadow", "priority": "high" },
+        "item4": { "story": "Inset variant — content with adjacent border-radius", "priority": "medium" },
+        "item5": { "story": "Mobile — Sheet overlay open", "priority": "high" },
+        "item6": { "story": "Side right — sidebar on the right", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Sidebar",
+    "category": "Layout",
+    "type": "Componente",
+    "description": "Navegación principal persistente de la aplicación con soporte para colapso, modo flotante y overlay en mobile.",
+    "seo": {
+      "title": "Sidebar — Layout · Design System",
+      "description": "Documentación del Sidebar: variantes sidebar, floating e inset, collapsible offcanvas e icon, accesibilidad WCAG y atajo Ctrl+B.",
+      "aiSummary": "Componente Sidebar con 3 variantes (sidebar, floating, inset), 3 modos de colapso (offcanvas, icon, none), overlay mobile vía Sheet y atajo de teclado Ctrl+B.",
+      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-current",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "dashboard": "Dashboard",
+        "components": "Componentes",
+        "tokens": "Tokens",
+        "settings": "Configuración",
+        "profile": "Perfil",
+        "search": "Buscar...",
+        "notifications": "Notificaciones",
+        "mainNav": "Navegación principal",
+        "toggleOpen": "Expandir navegación",
+        "toggleClose": "Colapsar navegación"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>SidebarProvider</strong> — contexto raíz que gestiona el estado open/collapsed, cookie de persistencia y atajo Ctrl+B.",
+      "item2": "<strong>Sidebar</strong> — contenedor principal con props <code>side</code>, <code>variant</code> y <code>collapsible</code>.",
+      "item3": "<strong>SidebarHeader</strong> — área superior del sidebar; la altura debe coincidir con la navbar.",
+      "item4": "<strong>SidebarContent</strong> — área de desplazamiento central con los grupos de navegación.",
+      "item5": "<strong>SidebarFooter</strong> — área inferior fija; perfil del usuario, configuración.",
+      "item6": "<strong>SidebarGroup</strong> — sección lógica dentro del content, con label y acción opcionales.",
+      "item7": "<strong>SidebarMenu / SidebarMenuItem</strong> — lista <code>&lt;ul&gt;</code> e ítem <code>&lt;li&gt;</code> del menú.",
+      "item8": "<strong>SidebarMenuButton</strong> — botón de navegación con variantes, tamaños, estado activo y tooltip en modo colapsado.",
+      "item9": "<strong>SidebarMenuSub</strong> — lista de subítems anidados con línea de referencia visual.",
+      "item10": "<strong>SidebarTrigger</strong> — botón ghost con ícono <code>PanelLeft</code> para alternar el sidebar.",
+      "item11": "<strong>SidebarRail</strong> — área clicable en el borde del sidebar para alternar mediante arrastre.",
+      "item12": "<strong>SidebarInset</strong> — contenedor <code>&lt;main&gt;</code> del contenido principal adyacente al sidebar.",
+      "item13": "<strong>SidebarInput</strong> — campo de búsqueda estilizado para uso dentro del sidebar.",
+      "item14": "<strong>SidebarMenuBadge</strong> — badge numérico superpuesto al ítem de menú.",
+      "item15": "<strong>SidebarMenuSkeleton</strong> — placeholder de carga para ítems de menú.",
+      "item16": "<strong>useSidebar</strong> — hook que expone <code>state</code>, <code>open</code>, <code>isMobile</code> y <code>toggleSidebar</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<SidebarProvider>\n  <nav aria-label=\"Navegación principal\">\n    <Sidebar side=\"left\" variant=\"sidebar\" collapsible=\"offcanvas\">\n      <SidebarHeader />\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel />\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton isActive>\n                  <Icon aria-hidden=\"true\" />\n                  <span>Ítem</span>\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter />\n    </Sidebar>\n  </nav>\n  <SidebarInset>\n    <SidebarTrigger />\n    <main id=\"main-content\" tabIndex={-1}>{children}</main>\n  </SidebarInset>\n</SidebarProvider>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Envuelve siempre todo el layout en <code>SidebarProvider</code> — nunca repliques el estado manualmente.",
+        "item2": "Usa <code>&lt;nav aria-label=\"Navegación principal\"&gt;</code> envolviendo el <code>Sidebar</code> — obligatorio.",
+        "item3": "Define <code>aria-current=\"page\"</code> en el <code>SidebarMenuButton</code> del ítem activo.",
+        "item4": "Incluye <code>SidebarTrigger</code> visible solo en mobile (<code>lg:hidden</code>) dentro del <code>SidebarInset</code>.",
+        "item5": "Los íconos del primer nivel del menú deben tener <code>aria-hidden=\"true\"</code> — el texto del botón describe el ítem."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar Sidebar?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "App con múltiples secciones", "u": "Sí, variante sidebar", "a": "-" },
+        "item2": { "s": "Navegación simple (3-5 ítems)", "u": "No", "a": "NavigationMenu o Tabs" },
+        "item3": { "s": "Dashboard flotante con contenido central", "u": "Sí, variante floating", "a": "-" },
+        "item4": { "s": "Layout encajado con bordes redondeados", "u": "Sí, variante inset", "a": "-" },
+        "item5": { "s": "Sidebar siempre visible, sin toggle", "u": "Sí, collapsible none", "a": "-" }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "La aplicación tiene jerarquía de navegación con múltiples secciones",
+        "item2": "El usuario necesita acceder a cualquier sección desde cualquier página",
+        "item3": "El layout requiere navegación persistente en desktop",
+        "item4": "La navegación tiene grupos o categorías que se benefician de labels"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La navegación tiene menos de 5 ítems planos — usa <code>NavigationMenu</code>",
+        "item2": "El contenido está organizado en pestañas paralelas — usa <code>Tabs</code>",
+        "item3": "El sidebar se usa como panel de filtros — usa <code>Sheet</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Usa SidebarProvider en la raíz del layout y nav con aria-label contextual.",
+        "dont": "Replicar el estado open/collapsed manualmente fuera del SidebarProvider."
+      },
+      "pair2": {
+        "do": "aria-current=\"page\" en el ítem activo y tooltip en el modo icon colapsado.",
+        "dont": "Ícono sin aria-label en modo colapsado — el nombre de la sección queda inaccesible."
+      },
+      "pair3": {
+        "do": "SidebarTrigger visible solo en mobile; en desktop usar SidebarRail.",
+        "dont": "Mostrar SidebarTrigger en desktop sin necesidad — ocupa espacio del contenido."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withSubcomponents": "Con subcomponentes:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "variantProp": "Prop variant",
+      "collapsibleProp": "Prop collapsible",
+      "sideProp": "Prop side",
+      "sidebar": "Sidebar estándar pegada al borde del viewport. Empuja el contenido al expandir (push mode).",
+      "floating": "Sidebar con borde redondeado y sombra, flotando sobre un pequeño padding. No empuja el contenido.",
+      "inset": "Sidebar integrada al layout con el contenido en un contenedor redondeado adyacente.",
+      "offcanvas": "Sidebar desliza fuera del viewport al colapsar. Comportamiento predeterminado y recomendado.",
+      "icon": "Sidebar reduce a ancho de ícono (3rem). Labels ocultos; tooltips al hacer hover.",
+      "none": "Sidebar siempre visible, sin posibilidad de colapsar. Usar en dashboards fijos.",
+      "left": "Sidebar posicionada a la izquierda (predeterminado). Compatible con LTR.",
+      "right": "Sidebar posicionada a la derecha. Usar para paneles de detalle o contexto."
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "expanded": {
+        "label": "Expandido",
+        "trigger": "<code>open=true</code> o estado predeterminado",
+        "behavior": "Sidebar visible en ancho completo (16rem). Labels e íconos mostrados. data-state=\"expanded\""
+      },
+      "collapsed": {
+        "label": "Colapsado (icon)",
+        "trigger": "<code>collapsible=\"icon\"</code> + toggle",
+        "behavior": "Sidebar reducida a 3rem. Solo íconos visibles; tooltips al hover. data-state=\"collapsed\""
+      },
+      "offcanvas": {
+        "label": "Offcanvas",
+        "trigger": "<code>collapsible=\"offcanvas\"</code> + toggle",
+        "behavior": "Sidebar desliza fuera del viewport. Ancho retorna a 0. data-collapsible=\"offcanvas\""
+      },
+      "mobile": {
+        "label": "Mobile (overlay)",
+        "trigger": "Viewport mobile detectado por <code>useIsMobile()</code>",
+        "behavior": "Sidebar renderizada como Sheet overlay (18rem). Abre vía SidebarTrigger o toggleSidebar()."
+      },
+      "hidden": {
+        "label": "Fijo (none)",
+        "trigger": "<code>collapsible=\"none\"</code>",
+        "behavior": "Sidebar siempre visible. Sin toggle. Sin data-state de collapsed."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "providerTitle": "SidebarProvider",
+      "sidebarTitle": "Sidebar",
+      "menuButtonTitle": "SidebarMenuButton",
+      "menuSubButtonTitle": "SidebarMenuSubButton",
+      "menuSkeletonTitle": "SidebarMenuSkeleton",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción"
+      },
+      "provider": {
+        "defaultOpen": "Estado inicial del sidebar (no controlado).",
+        "open": "Estado controlado. Usar con <code>onOpenChange</code>.",
+        "onOpenChange": "Callback llamado al alternar estado. Habilita control externo.",
+        "children": "Contenido del layout — debe incluir Sidebar y SidebarInset."
+      },
+      "sidebar": {
+        "side": "Posición: <code>\"left\"</code> (predeterminado) o <code>\"right\"</code>.",
+        "variant": "Estilo visual: <code>\"sidebar\"</code>, <code>\"floating\"</code> o <code>\"inset\"</code>.",
+        "collapsible": "Comportamiento al colapsar: <code>\"offcanvas\"</code>, <code>\"icon\"</code> o <code>\"none\"</code>."
+      },
+      "menuButton": {
+        "isActive": "Marca el ítem como activo. Aplica estilos de destacado y define <code>data-active</code>.",
+        "variant": "Estilo del botón: <code>\"default\"</code> (sin borde) o <code>\"outline\"</code> (con borde).",
+        "size": "Tamaño: <code>\"default\"</code> (h-8), <code>\"sm\"</code> (h-7) o <code>\"lg\"</code> (h-12).",
+        "tooltip": "Tooltip mostrado cuando el sidebar está en modo icon colapsado. String u objeto <code>TooltipContent</code>.",
+        "render": "Prop render de Base UI — permite usar <code>&lt;a&gt;</code> u otros elementos como root."
+      },
+      "menuSubButton": {
+        "isActive": "Marca el subítem como activo.",
+        "size": "Tamaño del texto: <code>\"sm\"</code> (xs) o <code>\"md\"</code> (sm, predeterminado).",
+        "render": "Prop render de Base UI — predeterminado es <code>&lt;a&gt;</code>."
+      },
+      "menuSkeleton": {
+        "showIcon": "Muestra un skeleton circular de ícono (16x16px) a la izquierda del skeleton de texto."
+      },
+      "extensibilityTitle": "Hook useSidebar",
+      "extensibility": "El hook <code>useSidebar()</code> expone: <code>state</code> (\"expanded\" | \"collapsed\"), <code>open</code> (boolean), <code>isMobile</code> (boolean) y <code>toggleSidebar()</code>. Debe usarse dentro de <code>SidebarProvider</code>."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente"
+      },
+      "sidebarBg": "Fondo del sidebar",
+      "sidebarFg": "Texto e íconos del sidebar",
+      "sidebarBorder": "Bordes y separadores internos",
+      "sidebarAccent": "Fondo del ítem de menú en hover/activo",
+      "sidebarAccentFg": "Texto del ítem de menú en hover/activo",
+      "sidebarRing": "Anillo de foco en ítems interactivos",
+      "sidebarWidth": "Ancho en desktop expandido (16rem)",
+      "sidebarWidthIcon": "Ancho en modo icon colapsado (3rem)",
+      "sidebarWidthMobile": "Ancho del Sheet en mobile (18rem)",
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Sidebar usa <code>&lt;nav aria-label&gt;</code>, <code>aria-current=\"page\"</code> en el ítem activo y tooltips en modo colapsado. Cumple WCAG 2.1 AA: 1.3.1 (información y relaciones), 2.1.1 (teclado), 2.4.3 (orden de foco) y 4.1.2 (nombre, función, valor).",
+      "item1": "<strong>nav con aria-label</strong> — envuelve el Sidebar con <code>&lt;nav aria-label=\"Navegación principal\"&gt;</code> para que los lectores de pantalla identifiquen el landmark de navegación.",
+      "item2": "<strong>aria-current=\"page\"</strong> — aplica en el <code>SidebarMenuButton</code> del ítem activo. Anuncia al lector de pantalla qué sección está seleccionada.",
+      "item3": "<strong>Tooltip en modo icon</strong> — define <code>tooltip</code> en cada <code>SidebarMenuButton</code>. El tooltip aparece solo cuando <code>state === \"collapsed\"</code> y muestra el nombre de la sección.",
+      "item4": "<strong>SidebarTrigger accesible</strong> — el botón incluye <code>&lt;span className=\"sr-only\"&gt;Toggle Sidebar&lt;/span&gt;</code>. Reemplaza con aria-label contextual en producción.",
+      "item5": "<strong>SidebarRail</strong> — tiene <code>aria-label=\"Toggle Sidebar\"</code> nativo. Elemento con <code>tabIndex={-1}</code>; no entra en el flujo de Tab.",
+      "item6": "<strong>Mobile Sheet</strong> — el SheetHeader tiene título y descripción visibles solo para lectores de pantalla (<code>sr-only</code>).",
+      "item7": "<strong>Skip link</strong> — la aplicación debe tener un skip link apuntando a <code>#main-content</code>, saltando el sidebar.",
+      "keyboard": {
+        "tab": "Navega por los ítems interactivos del sidebar en el orden del DOM.",
+        "shiftTab": "Navega en orden inverso.",
+        "enter": "Activa el ítem de menú o toggle con foco.",
+        "space": "Activa botones con foco, equivalente a Enter.",
+        "escape": "Cierra el sidebar en mobile (Sheet). Ctrl+B cierra/abre en desktop.",
+        "ctrlB": "Atajo global para alternar el sidebar (Ctrl+B / Cmd+B).",
+        "arrowKeys": "No implementado de forma nativa — usa Accordion para subítems navegables con flechas."
+      },
+      "aria": {
+        "navLabel": "<code>aria-label=\"Navegación principal\"</code> — obligatorio en el elemento <code>&lt;nav&gt;</code> que envuelve el Sidebar.",
+        "ariaCurrent": "<code>aria-current=\"page\"</code> — en el <code>SidebarMenuButton</code> que representa la página actual.",
+        "ariaExpanded": "<code>aria-expanded</code> — en el botón de toggle, reflejando el estado open/collapsed.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — en todos los íconos decorativos dentro de los botones.",
+        "dataState": "<code>data-state=\"expanded\" | \"collapsed\"</code> — atributo CSS usado para animaciones y estilos de estado."
+      },
+      "screenReader": {
+        "navLandmark": "El elemento nav con aria-label aparece como landmark de navegación en la lista de regiones del lector.",
+        "activeItem": "Ítem activo anunciado como 'página actual' cuando aria-current=\"page\" está presente.",
+        "collapsedTooltip": "En modo icon, el tooltip se anuncia al hacer foco en el botón, comunicando el nombre de la sección.",
+        "mobileSheet": "El Sheet se anuncia con título y descripción sr-only al abrirse en mobile.",
+        "toggleButton": "SidebarTrigger anuncia 'Toggle Sidebar' — personaliza con aria-label descriptivo en producción."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "navigationMenu": "Navegación horizontal para sitios con pocos ítems de nivel superior.",
+      "tabs": "Organización de contenido en pestañas paralelas dentro de una misma página.",
+      "sheet": "Usado internamente por Sidebar en mobile. Puede usarse de forma independiente para paneles laterales puntuales.",
+      "accordion": "Recomendado para categorías con subítems dentro del SidebarContent.",
+      "tooltip": "Mostrado automáticamente por SidebarMenuButton en el modo icon colapsado.",
+      "separator": "SidebarSeparator es un Separator estilizado para uso dentro del sidebar.",
+      "skeleton": "SidebarMenuSkeleton usa el Skeleton para estados de carga de ítems de menú."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "El <code>SidebarProvider</code> persiste el estado en cookie (<code>sidebar_state</code>, TTL de 7 días). En SSR, lee el cookie en el servidor y pasa <code>defaultOpen</code> para evitar flash de contenido.",
+      "tip2": "El <code>SidebarMenuButton</code> usa <code>useRender</code> de Base UI — para links de enrutador, pasa <code>render={&lt;Link href=\"...\" /&gt;}</code> o el equivalente de tu framework.",
+      "tip3": "En modo <code>collapsible=\"icon\"</code>, los elementos con <code>group-data-[collapsible=icon]:hidden</code> se ocultan automáticamente — labels de grupo, subítems y badges desaparecen sin CSS extra.",
+      "tip4": "El ancho del sidebar se define por las variables CSS <code>--sidebar-width</code> (16rem) y <code>--sidebar-width-icon</code> (3rem). Sobrescribe en el prop <code>style</code> del <code>SidebarProvider</code> si es necesario.",
+      "tip5": "Nunca anides <code>SidebarProvider</code> — provee contexto global de layout. Usa solo una instancia por página."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastrea navegación e interacciones con el toggle. No rastrees el contenedor del sidebar en sí.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "navClick": "navigation_click",
+        "navClickTrigger": "Clic en SidebarMenuButton para navegar",
+        "navClickPayload": "{ component: \"sidebar\", location: \"main_nav\", label: string, destination: string }",
+        "toggleOpen": "sidebar_toggle",
+        "toggleOpenTrigger": "SidebarTrigger, SidebarRail o Ctrl+B accionados",
+        "togglePayload": "{ action: \"open\" | \"close\", trigger: \"button\" | \"rail\" | \"keyboard\" }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada configuración e interacción del Sidebar.",
+        "item1": { "action": "Hacer clic en SidebarTrigger", "result": "toggleSidebar() llamado; data-state alterna entre expanded y collapsed", "priority": "high" },
+        "item2": { "action": "Presionar Ctrl+B", "result": "toggleSidebar() llamado; estado del sidebar alterna", "priority": "high" },
+        "item3": { "action": "Redimensionar a viewport mobile", "result": "Sidebar se renderiza como Sheet; SidebarTrigger abre el overlay", "priority": "high" },
+        "item4": { "action": "Renderizar collapsible=\"icon\"", "result": "Labels ocultos; sidebar reduce a --sidebar-width-icon (3rem)", "priority": "high" },
+        "item5": { "action": "Renderizar collapsible=\"none\"", "result": "Sidebar siempre visible; sin toggle; sin data-state de collapsed", "priority": "medium" },
+        "item6": { "action": "SidebarMenuButton con isActive=true", "result": "data-active presente; estilos de destacado aplicados; aria-current=\"page\" accesible", "priority": "high" },
+        "item7": { "action": "SidebarMenuButton con tooltip en modo icon", "result": "Tooltip mostrado al hover solo cuando state === \"collapsed\"", "priority": "medium" },
+        "item8": { "action": "Renderizar variante floating", "result": "Sidebar con border-radius, sombra y ring de sidebar-border aplicados", "priority": "medium" },
+        "item9": { "action": "SidebarMenuSkeleton con showIcon=true", "result": "Skeleton de ícono (size-4) mostrado a la izquierda del skeleton de texto", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "nav con aria-label presente en el DOM", "level": "AA", "how": "getByRole('navigation', { name: /navegación principal/i })" },
+        "item2": { "criterion": "aria-current=\"page\" en el ítem activo", "level": "AA", "how": "getByRole('button', { current: 'page' }) en testing-library" },
+        "item3": { "criterion": "Íconos con aria-hidden=\"true\"", "level": "AA", "how": "Inspeccionar atributos SVG en el DOM" },
+        "item4": { "criterion": "SidebarTrigger con texto accesible", "level": "AA", "how": "getByRole('button', { name: /toggle sidebar/i })" },
+        "item5": { "criterion": "Sin violaciones axe-core en estado expandido", "level": "AA", "how": "axe-playwright en test-runner de Storybook" },
+        "item6": { "criterion": "Navegación completa por Tab en ítems de menú", "level": "AA", "how": "Prueba manual con teclado" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Default — sidebar expandido, variante sidebar", "priority": "high" },
+        "item2": { "story": "Collapsed icon — modo icon con tooltips", "priority": "high" },
+        "item3": { "story": "Variante floating — borde redondeado y sombra", "priority": "high" },
+        "item4": { "story": "Variante inset — contenido con border-radius adyacente", "priority": "medium" },
+        "item5": { "story": "Mobile — Sheet overlay abierto", "priority": "high" },
+        "item6": { "story": "Side right — sidebar a la derecha", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
