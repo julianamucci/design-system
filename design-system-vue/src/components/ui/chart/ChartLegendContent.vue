@@ -1,37 +1,48 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, inject } from 'vue'
 import { cn } from '@/lib/utils'
 import { useChart } from '.'
+import type { ChartConfig } from '.'
 
 const props = withDefaults(defineProps<{
   hideIcon?: boolean
   nameKey?: string
   verticalAlign?: 'bottom' | 'top'
-  // payload?: any[]
+  config?: ChartConfig
   class?: HTMLAttributes['class']
 }>(), {
   verticalAlign: 'bottom',
 })
 
-const { id, config } = useChart()
+// config pode vir via prop (uso standalone) ou via contexto ChartContainer
+const chartContext = (() => {
+  try { return useChart() } catch { return null }
+})()
 
-const payload = computed(() => Object.entries(config.value).map(([key, value]) => {
+const resolvedConfig = computed(() => props.config ?? chartContext?.config.value ?? {})
+const resolvedId = computed(() => chartContext?.id ?? '')
+
+const payload = computed(() => Object.entries(resolvedConfig.value).map(([key]) => {
   return {
     key: props.nameKey || key,
-    itemConfig: config.value[key],
+    itemConfig: resolvedConfig.value[key],
   }
 }))
 
 const containerSelector = ref('')
 onMounted(() => {
-  containerSelector.value = `[data-chart="chart-${id}"]>[data-vis-xy-container]`
+  if (resolvedId.value) {
+    containerSelector.value = `[data-chart="chart-${resolvedId.value}"]>[data-vis-xy-container]`
+  } else {
+    containerSelector.value = 'standalone'
+  }
 })
 </script>
 
 <template>
   <div
-    v-if="containerSelector"
+    v-if="containerSelector || payload.length"
     :class="cn(
       'flex items-center justify-center gap-4',
       verticalAlign === 'top' ? 'pb-3' : 'pt-3',
