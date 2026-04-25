@@ -163,6 +163,18 @@ interface AnalyticsEvents {
     value: 'open' | 'closed';
     location?: string;
   };
+
+  /** Disparado quando o usuário seleciona um item do Command. */
+  command_item_select: {
+    label: string;
+    group: string;
+    pattern: 'inline' | 'combobox' | 'palette';
+  };
+
+  /** Disparado quando o usuário abre o command palette (botão ou atalho Cmd+K). */
+  command_palette_open: {
+    trigger: 'keyboard' | 'button';
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
