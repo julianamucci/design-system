@@ -288,6 +288,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
     <DocsPageLayout
       navGroups={navGroups}
       activeSection={activeId}
+      componentSlug="input"
       header={
         <DocsHeader
           title={tContent("title")}
