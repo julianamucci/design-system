@@ -173,6 +173,28 @@ interface AnalyticsEvents {
     location?: string;
   };
 
+  /** Disparado quando o usuário foca um campo de input (apenas funis críticos). */
+  field_focus: {
+    component: string;
+    location?: string;
+    field_name?: string;
+  };
+
+  /** Disparado quando o usuário sai de um campo de input com valor preenchido. */
+  field_blur: {
+    component: string;
+    location?: string;
+    field_name?: string;
+  };
+
+  /** Disparado quando uma mensagem de erro é exibida em um campo de input. */
+  field_error: {
+    component: string;
+    location?: string;
+    field_name?: string;
+    error_message?: string;
+  };
+
   /** Disparado quando o usuário abre ou fecha um Collapsible rastreado. */
   collapsible_toggle: {
     label: string;
