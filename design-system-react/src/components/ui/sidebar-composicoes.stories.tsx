@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "storybook/test";
 import { useState } from "react";
 import {
   LayoutDashboard,
@@ -323,14 +324,44 @@ type Story = StoryObj<typeof meta>;
 export const ComGruposNavegacao: Story = {
   name: "Com grupos de navegação",
   render: () => <SidebarWithNavGroups />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+    await step("nav com aria-label está presente", async () => {
+      const nav = within(canvasElement).getByRole("navigation", { name: /navegação principal/i });
+      await expect(nav).toBeInTheDocument();
+    });
+  },
 };
 
 export const ComSubMenu: Story = {
   name: "Com submenu aninhado",
   render: () => <SidebarWithSubMenu />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+    await step("nav com aria-label está presente", async () => {
+      const nav = within(canvasElement).getByRole("navigation", { name: /navegação principal/i });
+      await expect(nav).toBeInTheDocument();
+    });
+  },
 };
 
 export const ComBusca: Story = {
   name: "Com SidebarInput (busca)",
   render: () => <SidebarWithSearch />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+    await step("nav com aria-label está presente", async () => {
+      const nav = within(canvasElement).getByRole("navigation", { name: /navegação principal/i });
+      await expect(nav).toBeInTheDocument();
+    });
+  },
 };

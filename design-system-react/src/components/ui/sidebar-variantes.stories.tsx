@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "storybook/test";
 import {
   LayoutDashboard,
   Blocks,
@@ -130,39 +131,99 @@ type Story = StoryObj<typeof meta>;
 export const VariantSidebar: Story = {
   name: "Variant: sidebar",
   render: () => <SidebarPreview variant="sidebar" />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+    await step("nav com aria-label está presente", async () => {
+      const nav = within(canvasElement).getByRole("navigation", { name: /navegação principal/i });
+      await expect(nav).toBeInTheDocument();
+    });
+  },
 };
 
 export const VariantFloating: Story = {
   name: "Variant: floating",
   render: () => <SidebarPreview variant="floating" />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar floating renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+    await step("nav com aria-label está presente", async () => {
+      const nav = within(canvasElement).getByRole("navigation", { name: /navegação principal/i });
+      await expect(nav).toBeInTheDocument();
+    });
+  },
 };
 
 export const VariantInset: Story = {
   name: "Variant: inset",
   render: () => <SidebarPreview variant="inset" />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar inset renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+    await step("nav com aria-label está presente", async () => {
+      const nav = within(canvasElement).getByRole("navigation", { name: /navegação principal/i });
+      await expect(nav).toBeInTheDocument();
+    });
+  },
 };
 
 export const CollapsibleOffcanvas: Story = {
   name: "Collapsible: offcanvas",
   render: () => <SidebarPreview variant="sidebar" collapsible="offcanvas" />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar offcanvas renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+  },
 };
 
 export const CollapsibleIcon: Story = {
   name: "Collapsible: icon",
   render: () => <SidebarPreview variant="sidebar" collapsible="icon" />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar icon renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+  },
 };
 
 export const CollapsibleNone: Story = {
   name: "Collapsible: none",
   render: () => <SidebarPreview variant="sidebar" collapsible="none" />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar none renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+  },
 };
 
 export const SideLeft: Story = {
   name: "Side: left",
   render: () => <SidebarPreview variant="sidebar" side="left" />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar left renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+  },
 };
 
 export const SideRight: Story = {
   name: "Side: right",
   render: () => <SidebarPreview variant="sidebar" side="right" />,
+  play: async ({ canvasElement, step }) => {
+    await step("Sidebar right renderiza com data-slot=sidebar", async () => {
+      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
+      await expect(sidebar).toBeInTheDocument();
+    });
+  },
 };
