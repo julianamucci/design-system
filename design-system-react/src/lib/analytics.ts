@@ -172,6 +172,13 @@ interface AnalyticsEvents {
     index: number;
     location?: string;
   };
+
+  /** Disparado quando o usuário abre ou fecha um Collapsible rastreado. */
+  collapsible_toggle: {
+    label: string;
+    value: 'open' | 'closed';
+    location?: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
