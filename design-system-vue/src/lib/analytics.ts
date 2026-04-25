@@ -217,6 +217,13 @@ interface AnalyticsEvents {
     error_message?: string;
     location?: string;
   };
+
+  /** Clique no botão de ação interno do toast (ex: Desfazer). */
+  toast_action_click: {
+    label: string;
+    component: 'toast';
+    location: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
