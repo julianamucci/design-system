@@ -79,12 +79,18 @@ interface AnalyticsEvents {
     location?: string;
   };
 
-  /** Disparado quando o usuário clica em um link de navegação (Breadcrumb, NavigationMenu). */
+  /** Disparado quando o usuário clica em um link de navegação (Breadcrumb, NavigationMenu, Sidebar). */
   navigation_click: {
-    component: 'breadcrumb' | 'navigation_menu';
+    component: 'breadcrumb' | 'navigation_menu' | 'sidebar';
     label: string;
     destination: string;
     location?: string;
+  };
+
+  /** Disparado quando o usuário abre ou fecha a Sidebar via trigger, rail ou atalho de teclado. */
+  sidebar_toggle: {
+    action: 'open' | 'close';
+    trigger: 'button' | 'rail' | 'keyboard';
   };
 
   /** Disparado quando o usuário abre o DropdownMenu do BreadcrumbEllipsis. */
