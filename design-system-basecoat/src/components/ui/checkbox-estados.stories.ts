@@ -177,3 +177,25 @@ export const Error: Story = {
     });
   },
 };
+
+// ─── FocoVisivel ──────────────────────────────────────────────────────────────
+
+export const FocoVisivel: Story = {
+  render: () => wrapWithLabel(
+    createCheckbox({}),
+    'Foco visível via teclado',
+    'cb-focus',
+  ),
+  parameters: {
+    docs: { description: { story: 'Estado de foco via teclado. Use Tab para navegar e verificar o ring de foco `--ring`.' } },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole('checkbox');
+
+    await step('Checkbox recebe foco via teclado', async () => {
+      (checkbox as HTMLElement).focus();
+      await expect(checkbox).toHaveFocus();
+    });
+  },
+};
