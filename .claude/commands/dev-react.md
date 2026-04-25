@@ -189,6 +189,44 @@ Toda docs page deve renderizar TODAS estas seções com conteúdo real de `trans
 
 ---
 
+## Controls da Story Playground
+
+A story `Playground` deve ter controls funcionais que o usuário consiga manipular no painel e ver o resultado no preview.
+
+**Regras obrigatórias:**
+
+- `meta` deve ter `argTypes` com ao menos 1 control por prop relevante do componente
+- `render` recebe `(args)` e passa `{...args}` para o componente raiz
+- Se o componente não expõe props visuais (ex: componentes puramente compostos), exponha props de comportamento como `loop`, `shouldFilter`, `filter`
+- Props de montagem — aquelas que só funcionam na inicialização e não reagem a mudanças posteriores (ex: `defaultOpen`, `initialValue`) — exigem `key` derivado do arg para forçar re-mount quando o control muda:
+
+```tsx
+// ✅ CORRETO — re-monta quando o control defaultOpen muda
+<Collapsible key={String(args.defaultOpen)} {...args}>
+
+// ❌ ERRADO — defaultOpen muda no painel mas o componente não reflete
+<Collapsible {...args}>
+```
+
+- `disabled` deve ser passado explicitamente ao elemento interativo filho (trigger, button, input) além do componente root — o root frequentemente não propaga o visual de disabled para filhos compostos:
+
+```tsx
+// ✅ CORRETO
+<CollapsibleTrigger asChild disabled={args.disabled}>
+  <Button disabled={args.disabled}>...</Button>
+</CollapsibleTrigger>
+
+// ❌ ERRADO — Button não recebe disabled, visual não muda
+<Collapsible disabled={args.disabled}>
+  <CollapsibleTrigger asChild>
+    <Button>...</Button>
+  </CollapsibleTrigger>
+```
+
+- Se o componente não tem nenhuma prop controlável no sentido estrito, documente isso explicitamente com `parameters.controls: { disable: true }` em vez de deixar o painel vazio sem explicação
+
+---
+
 ## Play Functions
 
 ```tsx

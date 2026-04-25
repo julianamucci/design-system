@@ -63,3 +63,15 @@
 **Total de violations abertas: 8** (0 críticos, 4 médios, 4 baixos)
 
 Aplicar: **[1] críticos** / **[2] críticos+médios** / **[3] todos** / **[4] nenhum**
+
+---
+
+# Fixes Pendentes — Pipeline new command — 2026-04-24
+
+**Total command: 0 violations** — scan limpo, todas as correções aplicadas inline pelos dev agents e cross-stack agent.
+
+Correções aplicadas:
+- **Security/high resolvido inline**: `design-system-basecoat/src/components/ui/command.ts:38` — `.innerHTML = searchIcon` substituído por `document.createElementNS()` (dev-basecoat, commit `5a9187c`)
+- **Analytics × 8 resolvidos inline**: `command_item_select` e `command_palette_open` adicionados ao `AnalyticsEvents` nas 4 stacks (commits Fase B)
+- **Vue locale merge bug corrigido**: `useTranslation({ ...uiTranslations, ...commandTranslations })` → `useTranslation(commandTranslations)` (cross-stack, commit `37b59f6`)
+- **Svelte variante combobox ausente**: adicionada à seção Variantes da CommandDocs.svelte (cross-stack, commit `37b59f6`)
