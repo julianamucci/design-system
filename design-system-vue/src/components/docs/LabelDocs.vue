@@ -165,6 +165,11 @@ const codeDisabled = `<!-- peer-disabled: Label e Input devem ser siblings no DO
 <Label for="cpf">CPF</Label>
 <input id="cpf" type="text" class="peer" disabled />`;
 
+const codeCustomization = `<!-- Personalização via class -->
+<Label for="field" class="text-muted-foreground">
+  Rótulo secundário
+</Label>`;
+
 const interfaceCode = `// Label (Vue)
 interface LabelProps {
   for?: string;       // htmlFor no HTML nativo — associa ao campo pelo id
@@ -443,6 +448,7 @@ const visualTestItems = computed(() => [
         { title: 'Label', cols: propCols, items: labelPropItems },
       ]"
       :interface-code="interfaceCode"
+      :extensibility-notes="tContent('props.note')"
     />
 
     <!-- ── Tokens ─────────────────────────────────────────────────── -->
@@ -454,6 +460,8 @@ const visualTestItems = computed(() => [
         description: tContent('tokens.table.part'),
       }"
       :items="tokenRows"
+      customization-title="Personalização"
+      :customization-code="codeCustomization"
     />
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte';
 import { within, expect } from 'storybook/test';
 import LabelWithInputStory from './LabelWithInputStory.svelte';
 import LabelWithCheckboxStory from './LabelWithCheckboxStory.svelte';
+import LabelCampoObrigatorioStory from './LabelCampoObrigatorioStory.svelte';
 
 /**
  * Composições do Label com outros componentes de formulário.
@@ -74,6 +75,32 @@ export const ComCheckbox: Story = {
     await step('Label texto está correto', async () => {
       const label = canvas.getByText('Aceito os termos de uso');
       await expect(label).toBeVisible();
+    });
+  },
+};
+
+export const CampoObrigatorio: Story = {
+  name: 'Com Input obrigatório',
+  render: () => ({
+    Component: LabelCampoObrigatorioStory,
+    props: {},
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Label com marcador required está visível', async () => {
+      await expect(canvas.getByText('Email profissional')).toBeInTheDocument();
+    });
+
+    await step('Asterisco tem aria-hidden="true"', async () => {
+      const asterisk = canvasElement.querySelector('span[aria-hidden="true"]');
+      await expect(asterisk).toBeInTheDocument();
+      await expect(asterisk?.textContent).toBe('*');
+    });
+
+    await step('Input tem aria-required="true"', async () => {
+      const input = canvas.getByRole('textbox');
+      await expect(input).toHaveAttribute('aria-required', 'true');
     });
   },
 };

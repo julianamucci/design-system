@@ -22,7 +22,7 @@ import {
   createDocsAccessibility,
   createDocsRelated,
   createDocsNotes,
-  createDocsAnalytics,
+  createDocsAnalytics,  // section container — não inline HTML
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
@@ -445,25 +445,27 @@ export function createLabelDocs(): HTMLElement {
           ],
         });
 
-      case 'analytics': {
-        const section = document.createElement('section');
-        section.id = 'analytics';
-
-        const h2 = document.createElement('h2');
-        h2.className = 'text-xl font-semibold mb-4';
-        h2.textContent = t('analytics.title');
-
-        const card = document.createElement('div');
-        card.className = 'rounded-lg border border-border p-4 shadow-sm';
-
-        const desc = document.createElement('p');
-        desc.className = 'text-sm text-muted-foreground';
-        desc.textContent = t('analytics.description');
-
-        card.appendChild(desc);
-        section.append(h2, card);
-        return section;
-      }
+      case 'analytics':
+        return createDocsAnalytics({
+          title: t('analytics.title'),
+          cols: {
+            event: tNav('analytics.table.event') || 'Evento',
+            trigger: tNav('analytics.table.trigger') || 'Gatilho',
+            payload: tNav('analytics.table.payload') || 'Payload',
+          },
+          items: [
+            {
+              event: 'docs_page_view',
+              trigger: t('analytics.description'),
+              payload: "{ component_name: 'label', locale }",
+            },
+            {
+              event: 'docs_section_viewed',
+              trigger: 'Seção entra no viewport (IntersectionObserver)',
+              payload: "{ section_id, component_name: 'label', locale }",
+            },
+          ],
+        });
 
       case 'testes': {
         return createDocsTestes({

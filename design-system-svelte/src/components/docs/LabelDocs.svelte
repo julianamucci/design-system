@@ -127,6 +127,11 @@
 <Input id="cpf" disabled class="peer" />
 <Label for="cpf">CPF</Label>`;
 
+  const codeCustomization = `<!-- Personalização via class -->
+<Label for="field" class="text-muted-foreground">
+  Rótulo secundário
+</Label>`;
+
   const interfaceCode = `// Label — Svelte 5
 interface LabelProps {
   for?: string;       // associa ao campo com id correspondente
@@ -372,6 +377,8 @@ interface LabelProps {
       { token: '--leading-none', value: 'leading-none',    description: $tStore('tokens.table.lineHeight')       },
       { token: '--destructive',  value: 'text-destructive', description: $tStore('tokens.table.destructive')     },
     ]}
+    customizationTitle="Personalização"
+    customizationCode={codeCustomization}
   />
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->

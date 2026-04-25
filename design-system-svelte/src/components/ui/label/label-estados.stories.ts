@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte';
 import { within, expect } from 'storybook/test';
 import LabelStory from './LabelStory.svelte';
 import LabelDisabledPeerStory from './LabelDisabledPeerStory.svelte';
+import LabelDisabledGroupStory from './LabelDisabledGroupStory.svelte';
 
 /**
  * Estados do Label:
@@ -77,6 +78,27 @@ export const Required: Story = {
       const asterisk = canvasElement.querySelector('[aria-hidden="true"]');
       await expect(asterisk).toBeInTheDocument();
       await expect(asterisk?.textContent).toBe('*');
+    });
+  },
+};
+
+export const DisabledViaGrupo: Story = {
+  name: 'Disabled (via group)',
+  render: () => ({
+    Component: LabelDisabledGroupStory,
+    props: {},
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Grupo pai tem data-disabled="true"', async () => {
+      const group = canvasElement.querySelector('[data-disabled="true"]');
+      await expect(group).toBeInTheDocument();
+    });
+
+    await step('Label está presente no grupo', async () => {
+      const label = canvas.getByText('Documento');
+      await expect(label).toBeInTheDocument();
     });
   },
 };
