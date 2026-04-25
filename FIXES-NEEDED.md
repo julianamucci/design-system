@@ -66,6 +66,40 @@ Aplicar: **[1] críticos** / **[2] críticos+médios** / **[3] todos** / **[4] n
 
 ---
 
+# Fixes Pendentes — Pipeline new context-menu — 2026-04-25
+
+## Críticos
+
+*(nenhum)*
+
+## Médios
+
+- [ ] **Vue: `accessibility.warning` ausente** — `design-system-vue/src/components/docs/ContextMenuDocs.vue:~393`
+  Nota crítica sobre right-click precisar de alternativa acessível está ausente na lista de itens do `DocsAccessibility`. React, Svelte e Basecoat incluem corretamente.
+  — skill: `/cross-stack context-menu`
+
+- [ ] **Svelte: 4 variantes ausentes na docs page** — `design-system-svelte/src/components/docs/ContextMenuDocs.svelte:~429`
+  Apenas `default` e `destructive` documentados. Faltam: `CheckboxItem`, `RadioItem`, `SubTrigger`, `Label+Inset`. As demais 3 stacks documentam todas as 6.
+  — skill: `/cross-stack context-menu`
+
+## Baixos
+
+- [ ] **Svelte: token `--border` com valor inconsistente** — `design-system-svelte/src/components/docs/ContextMenuDocs.svelte:~612`
+  Valor `'border'` em vez de `'bg-border'` (alinhado com React e Vue).
+  — skill: `/cross-stack context-menu`
+
+- [ ] **Basecoat: `sanitizeHtml` não importado** — `design-system-basecoat/src/components/docs/ContextMenuDocs.ts`
+  Importar de `@/lib/sanitize-html` se há HTML dinâmico de `translations.json`.
+  — skill: `/cross-stack context-menu`
+
+---
+
+**Total context-menu: 4 violations** (0 críticos, 2 médios, 2 baixos)
+
+Aplicar: **[1] críticos** / **[2] críticos+médios** / **[3] todos** / **[4] nenhum**
+
+---
+
 # Fixes Pendentes — Pipeline new command — 2026-04-24
 
 **Total command: 0 violations** — scan limpo, todas as correções aplicadas inline pelos dev agents e cross-stack agent.
