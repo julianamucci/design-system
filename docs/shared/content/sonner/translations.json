@@ -1,0 +1,944 @@
+{
+  "pt-BR": {
+    "title": "Sonner",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Notificação toast temporária e não bloqueante para confirmar ações do usuário, exibir avisos e acompanhar operações assíncronas.",
+    "seo": {
+      "title": "Sonner — Feedback · Design System",
+      "description": "Documentação do Sonner: tipos de toast, composições com promise e ação, posições e acessibilidade WCAG com aria-live.",
+      "aiSummary": "Componente Sonner com 6 tipos de toast (default, success, error, warning, info, loading), composições com descrição, ação, promise e persistente, e suporte a richColors e posição configurável.",
+      "aiEntities": "Sonner, toast, React, Vue, Svelte, Basecoat, Tailwind CSS, WCAG 2.1, aria-live",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "default": "Código copiado.",
+        "success": "Alterações salvas.",
+        "error": "Não foi possível salvar. Tente novamente.",
+        "warning": "Sua sessão expira em 5 minutos.",
+        "info": "Nova versão disponível.",
+        "loading": "Enviando arquivo...",
+        "withDescription": "Preferências atualizadas.",
+        "withDescriptionDesc": "Suas configurações foram salvas e entrarão em vigor na próxima sessão.",
+        "withAction": "Item excluído.",
+        "withActionLabel": "Desfazer",
+        "promise": "Arquivo enviado com sucesso.",
+        "promiseLoading": "Enviando arquivo...",
+        "promiseError": "Erro ao enviar. Tente novamente.",
+        "persistent": "Falha crítica no servidor.",
+        "triggerDefault": "Disparar default",
+        "triggerSuccess": "Disparar success",
+        "triggerError": "Disparar error",
+        "triggerWarning": "Disparar warning",
+        "triggerInfo": "Disparar info",
+        "triggerLoading": "Disparar loading",
+        "triggerWithDescription": "Com descrição",
+        "triggerWithAction": "Com ação",
+        "triggerPromise": "Com promise",
+        "triggerPersistent": "Persistente"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Toaster</strong> — componente de configuração global. Adicionado uma vez no root da aplicação.",
+      "item2": "<strong>Toast item</strong> — notificação individual renderizada pelo Sonner automaticamente.",
+      "item3": "<strong>Ícone</strong> — definido pelo projeto via prop <code>icons</code> do Toaster; <code>aria-hidden</code> implícito.",
+      "item4": "<strong>Título</strong> — primeira string passada para <code>toast()</code>. Máximo 1 frase.",
+      "item5": "<strong>Descrição</strong> — string passada via <code>{ description }</code>. Complemento opcional ao título.",
+      "item6": "<strong>Botão de ação</strong> — configurado via <code>{ action: { label, onClick } }</code>. Focável por teclado.",
+      "item7": "<strong>Botão de fechar</strong> — exibido automaticamente; remove o toast imediatamente ao clicar.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "// Setup no root (uma vez)\n<Toaster position=\"top-right\" richColors />\n\n// Disparo de toast (em qualquer lugar)\ntoast.success(\"Título\")\ntoast.success(\"Título\", { description: \"Detalhes\" })\ntoast(\"Título\", { action: { label: \"Desfazer\", onClick: fn } })\ntoast.promise(promessa, { loading: \"...\", success: \"...\", error: \"...\" })"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use apenas para confirmações temporárias — o toast desaparece automaticamente sem exigir ação.",
+        "item2": "Máximo 1 frase no título; sem pontuação de ênfase e sem exclamação.",
+        "item3": "Use <code>toast.promise()</code> para qualquer operação assíncrona — evita toasts manuais de loading.",
+        "item4": "Nunca use toast para erros de formulário — use <code>FormMessage</code> que gerencia <code>aria-invalid</code>.",
+        "item5": "Aplique <code>richColors</code> no <code>&lt;Toaster /&gt;</code> para usar as cores do tema automaticamente."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Confirmação de ação realizada", "u": "Sim, toast.success", "a": "-" },
+        "item2": { "s": "Erro crítico que bloqueia o fluxo", "u": "Não", "a": "Alert" },
+        "item3": { "s": "Erro de campo em formulário", "u": "Não", "a": "FormMessage" },
+        "item4": { "s": "Operação assíncrona com loading", "u": "Sim, toast.promise", "a": "-" },
+        "item5": { "s": "Aviso persistente de prazo", "u": "Não", "a": "Alert" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "Título",
+            "format": "Passado simples · sem exclamação · máx. 1 frase",
+            "good": "\"Alterações salvas.\", \"Item excluído.\"",
+            "bad": "\"Suas alterações foram salvas com sucesso!\", \"Tudo certo!\""
+          },
+          "description": {
+            "name": "Descrição",
+            "format": "Frase completa · complementa o título · ponto final",
+            "good": "\"Suas preferências entrarão em vigor na próxima sessão.\"",
+            "bad": "Texto longo com 3+ linhas que exige leitura demorada"
+          },
+          "action": {
+            "name": "Label de ação",
+            "format": "Verbo no infinitivo · máx. 2 palavras",
+            "good": "\"Desfazer\", \"Ver detalhes\"",
+            "bad": "\"Clique para desfazer\", \"OK\", \"Fechar\""
+          },
+          "error": {
+            "name": "toast.error",
+            "format": "Causa + orientação · sem culpar o usuário",
+            "good": "\"Não foi possível salvar. Tente novamente.\"",
+            "bad": "\"Você errou ao preencher o formulário.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Uma ação foi concluída e o usuário precisa de confirmação rápida",
+        "item2": "Uma operação assíncrona (upload, salvamento) está em progresso ou concluiu",
+        "item3": "O usuário precisa da opção de desfazer uma ação recente",
+        "item4": "Uma notificação de sistema não crítica precisa aparecer sem bloquear o fluxo"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A mensagem precisa permanecer visível enquanto o usuário age — use <code>Alert</code>",
+        "item2": "O erro é de campo de formulário — use <code>FormMessage</code>",
+        "item3": "A ação é destrutiva e exige confirmação explícita — use <code>AlertDialog</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "toast.success com título breve no passado. Confirma o que aconteceu sem excesso.",
+        "dont": "Toast para erro que bloqueia o fluxo. Use Alert para mensagens persistentes."
+      },
+      "pair2": {
+        "do": "toast.promise para operações assíncronas. Loading automático, sem toast manual.",
+        "dont": "Toast para erros de formulário. Use FormMessage para manter o contexto inline."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Tipos de Toast",
+      "items": {
+        "default": "Toast neutro sem tipo semântico. Usa as CSS variables <code>--normal-bg</code> e <code>--normal-text</code> do tema.",
+        "success": "Confirmação de ação bem-sucedida. Ícone e cor verde aplicados automaticamente com <code>richColors</code>.",
+        "error": "Falha em uma operação. Ícone e cor vermelha aplicados automaticamente com <code>richColors</code>.",
+        "warning": "Aviso não crítico que requer atenção. Ícone e cor amarela com <code>richColors</code>.",
+        "info": "Informação contextual ou novidade. Ícone e cor azul com <code>richColors</code>."
+      }
+    },
+    "states": {
+      "title": "Composições",
+      "items": {
+        "withDescription": {
+          "label": "Com descrição",
+          "description": "Título + descrição para contexto adicional. Use quando o título sozinho não é suficiente para orientar o usuário."
+        },
+        "withAction": {
+          "label": "Com ação",
+          "description": "Botão de ação inline para operações reversíveis. Label no infinitivo — ex: \"Desfazer\". Focável por <kbd>Tab</kbd>."
+        },
+        "promise": {
+          "label": "Promise (loading)",
+          "description": "Transição automática entre loading, success e error com base na resolução da promise. Prefira ao toast manual de loading."
+        },
+        "persistent": {
+          "label": "Persistente",
+          "description": "Toast que não fecha automaticamente. Use <code>duration: Infinity</code> apenas para erros críticos que exigem ação do usuário."
+        }
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "toasterTitle": "Toaster",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "position": "Posição dos toasts na tela. Padrão do projeto: <code>\"top-right\"</code>.",
+        "richColors": "Aplica cores semânticas do tema para cada tipo de toast. Recomendado.",
+        "expand": "Exibe todos os toasts empilhados ao invés de condensados em pilha.",
+        "duration": "Duração em ms antes do toast fechar automaticamente. Padrão: 4000ms.",
+        "theme": "Tema visual. O componente lê o tema do <code>next-themes</code> automaticamente.",
+        "icons": "Substitui os ícones padrão de cada tipo de toast por ícones customizados.",
+        "toastOptions": "Opções aplicadas a todos os toasts, como <code>classNames</code> para classes CSS."
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Variable",
+        "value": "Valor padrão do projeto",
+        "description": "Aplicação",
+        "normalBg": "Fundo do toast default",
+        "normalText": "Texto do toast default",
+        "normalBorder": "Borda do toast default",
+        "borderRadius": "Border radius do toast"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "O Sonner usa <code>aria-live=\"polite\"</code> internamente — os toasts são anunciados ao leitor de tela sem interromper o fluxo. Cumpre WCAG 2.1 AA: 4.1.3 (mensagens de status). Toasts com ação são focáveis por teclado.",
+      "item1": "<strong>aria-live polite</strong> — o Sonner gerencia <code>aria-live=\"polite\"</code> internamente. Toasts são anunciados sem interromper a leitura em curso.",
+      "item2": "<strong>Botão de ação focável</strong> — toasts com <code>action</code> expõem o botão na sequência de foco via <kbd>Tab</kbd>. O label deve ser descritivo — evite \"OK\" ou \"Fechar\".",
+      "item3": "<strong>Ícones decorativos</strong> — os ícones injetados via prop <code>icons</code> são decorativos. O tipo do toast e o texto descrevem completamente o estado.",
+      "item4": "<strong>Cor + texto</strong> — nunca dependa apenas da cor para comunicar o tipo do toast. O título sempre descreve o estado (WCAG 1.4.1).",
+      "item5": "<strong>Não use para erros de formulário</strong> — use <code>FormMessage</code> que gerencia <code>aria-invalid</code> e associa a mensagem ao campo via <code>aria-describedby</code>.",
+      "keyboard": {
+        "tab": "Move o foco para o botão de ação do toast visível, se houver.",
+        "enter": "Aciona o botão de ação em foco.",
+        "escape": "Fecha o toast com foco ativo (comportamento nativo do Sonner).",
+        "noKeyboard": "O toast em si não é interativo — apenas o botão de ação recebe foco."
+      },
+      "aria": {
+        "ariaLive": "<code>aria-live=\"polite\"</code> — gerenciado internamente pelo Sonner. Anuncia toasts sem interromper o leitor.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — ícones decorativos injetados via prop <code>icons</code> são ignorados pelo leitor.",
+        "ariaLabel": "<code>aria-label</code> — recomendado no botão de ação quando o label sozinho não é suficientemente descritivo."
+      },
+      "screenReader": {
+        "onShow": "Ao exibir o toast: leitor anuncia o título e, se houver, a descrição.",
+        "onAction": "Ao focar o botão de ação via Tab: leitor anuncia o label do botão.",
+        "onDismiss": "Ao fechar o toast: nenhum anúncio adicional — o evento foi confirmado anteriormente."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "alert": "Para mensagens persistentes que exigem atenção ou ação enquanto o usuário permanece na página.",
+      "alertDialog": "Para ações destrutivas ou irreversíveis que exigem confirmação explícita antes de executar.",
+      "badge": "Para indicadores de status compactos e inline em listas, tabelas ou cabeçalhos.",
+      "progress": "Para comunicar progresso mensurável de operações assíncronas em andamento."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "O <code>&lt;Toaster /&gt;</code> deve ser adicionado uma única vez no root da aplicação (ex: <code>App.tsx</code>). Sem ele, nenhum <code>toast()</code> será exibido.",
+      "item2": "Defina <code>position=\"top-right\"</code> explicitamente no <code>&lt;Toaster /&gt;</code> — o padrão do Sonner é <code>bottom-right</code>, diferente do padrão do projeto.",
+      "item3": "Use <code>toast.promise()</code> para operações assíncronas. Evita estados manuais de loading e garante transição automática entre os estados da promise.",
+      "item4": "Nunca use toast para erros de validação de formulário. O <code>FormMessage</code> do projeto já gerencia <code>aria-invalid</code> e <code>aria-describedby</code> corretamente.",
+      "item5": "<code>duration: Infinity</code> só deve ser usado para erros críticos que exigem ação explícita do usuário — sempre com <code>dismissible: true</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "O toast em si não dispara evento — o evento é da ação que o originou. Rastreie apenas o clique no botão de ação interno.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "actionClick": "toast_action_click",
+        "actionClickTrigger": "Clique no botão de ação do toast (ex: Desfazer)",
+        "actionClickPayload": "{ label: string, component: \"toast\", location: string }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada tipo e composição de toast.",
+        "item1": { "action": "Chamar toast.success com richColors ativo", "result": "Toast com ícone e cor verde exibido em top-right por 4000ms", "priority": "high" },
+        "item2": { "action": "Chamar toast.error com richColors ativo", "result": "Toast com ícone e cor vermelha; fecha após 4000ms ou ao clicar em X", "priority": "high" },
+        "item3": { "action": "Chamar toast.promise com promise resolvida", "result": "Toast loading transita automaticamente para success ao resolver", "priority": "high" },
+        "item4": { "action": "Chamar toast.promise com promise rejeitada", "result": "Toast loading transita automaticamente para error ao rejeitar", "priority": "high" },
+        "item5": { "action": "Toast com action.label — pressionar Tab", "result": "Foco move para o botão de ação; Enter dispara o callback onClick", "priority": "high" },
+        "item6": { "action": "Toast com duration: Infinity", "result": "Toast permanece visível até o usuário fechar manualmente", "priority": "medium" },
+        "item7": { "action": "Chamar toast sem Toaster no root", "result": "Nenhum toast exibido; nenhum erro em console", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais com leitor de tela.",
+        "item1": { "criterion": "Toast anunciado pelo leitor de tela ao aparecer", "level": "AA", "how": "Teste manual com NVDA/VoiceOver — verificar anúncio via aria-live" },
+        "item2": { "criterion": "Botão de ação acessível por teclado (Tab + Enter)", "level": "AA", "how": "Teste manual de teclado — Tab deve focar o botão de ação" },
+        "item3": { "criterion": "Ícones decorativos não anunciados pelo leitor", "level": "AA", "how": "Inspecionar atributos aria-hidden nos SVGs gerados" },
+        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Tipos — default, success, error, warning, info", "priority": "high" },
+        "item2": { "story": "Composicoes — com descrição, com ação, promise, persistente", "priority": "high" },
+        "item3": { "story": "Posicoes — top-right, bottom-center", "priority": "medium" },
+        "item4": { "story": "Dark mode — todos os tipos com richColors", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Tipos",
+      "states": "Composições",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Sonner",
+    "category": "Feedback",
+    "type": "Component",
+    "description": "Temporary, non-blocking toast notification to confirm user actions, display warnings, and track async operations.",
+    "seo": {
+      "title": "Sonner — Feedback · Design System",
+      "description": "Sonner documentation: toast types, promise and action compositions, positions, and WCAG accessibility with aria-live.",
+      "aiSummary": "Sonner component with 6 toast types (default, success, error, warning, info, loading), compositions with description, action, promise, and persistent, and support for richColors and configurable position.",
+      "aiEntities": "Sonner, toast, React, Vue, Svelte, Basecoat, Tailwind CSS, WCAG 2.1, aria-live",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "default": "Code copied.",
+        "success": "Changes saved.",
+        "error": "Unable to save. Please try again.",
+        "warning": "Your session expires in 5 minutes.",
+        "info": "New version available.",
+        "loading": "Uploading file...",
+        "withDescription": "Preferences updated.",
+        "withDescriptionDesc": "Your settings have been saved and will take effect in the next session.",
+        "withAction": "Item deleted.",
+        "withActionLabel": "Undo",
+        "promise": "File uploaded successfully.",
+        "promiseLoading": "Uploading file...",
+        "promiseError": "Upload failed. Please try again.",
+        "persistent": "Critical server failure.",
+        "triggerDefault": "Trigger default",
+        "triggerSuccess": "Trigger success",
+        "triggerError": "Trigger error",
+        "triggerWarning": "Trigger warning",
+        "triggerInfo": "Trigger info",
+        "triggerLoading": "Trigger loading",
+        "triggerWithDescription": "With description",
+        "triggerWithAction": "With action",
+        "triggerPromise": "With promise",
+        "triggerPersistent": "Persistent"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Toaster</strong> — global configuration component. Added once at the application root.",
+      "item2": "<strong>Toast item</strong> — individual notification rendered by Sonner automatically.",
+      "item3": "<strong>Icon</strong> — defined by the project via the Toaster's <code>icons</code> prop; implicitly <code>aria-hidden</code>.",
+      "item4": "<strong>Title</strong> — first string passed to <code>toast()</code>. Maximum 1 sentence.",
+      "item5": "<strong>Description</strong> — string passed via <code>{ description }</code>. Optional complement to the title.",
+      "item6": "<strong>Action button</strong> — configured via <code>{ action: { label, onClick } }</code>. Keyboard focusable.",
+      "item7": "<strong>Close button</strong> — shown automatically; removes the toast immediately on click.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "// Setup at root (once)\n<Toaster position=\"top-right\" richColors />\n\n// Toast dispatch (anywhere)\ntoast.success(\"Title\")\ntoast.success(\"Title\", { description: \"Details\" })\ntoast(\"Title\", { action: { label: \"Undo\", onClick: fn } })\ntoast.promise(promise, { loading: \"...\", success: \"...\", error: \"...\" })"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use only for temporary confirmations — the toast disappears automatically without requiring action.",
+        "item2": "Maximum 1 sentence in the title; no emphasis punctuation or exclamation marks.",
+        "item3": "Use <code>toast.promise()</code> for any async operation — avoids manual loading toasts.",
+        "item4": "Never use toast for form errors — use <code>FormMessage</code> which manages <code>aria-invalid</code>.",
+        "item5": "Apply <code>richColors</code> to <code>&lt;Toaster /&gt;</code> to automatically use theme colors."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Confirmation of completed action", "u": "Yes, toast.success", "a": "-" },
+        "item2": { "s": "Critical error blocking the flow", "u": "No", "a": "Alert" },
+        "item3": { "s": "Form field validation error", "u": "No", "a": "FormMessage" },
+        "item4": { "s": "Async operation with loading state", "u": "Yes, toast.promise", "a": "-" },
+        "item5": { "s": "Persistent deadline warning", "u": "No", "a": "Alert" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "title": {
+            "name": "Title",
+            "format": "Simple past · no exclamation · max. 1 sentence",
+            "good": "\"Changes saved.\", \"Item deleted.\"",
+            "bad": "\"Your changes were saved successfully!\", \"All done!\""
+          },
+          "description": {
+            "name": "Description",
+            "format": "Complete sentence · complements title · period",
+            "good": "\"Your preferences will take effect in the next session.\"",
+            "bad": "Long text with 3+ lines requiring extended reading"
+          },
+          "action": {
+            "name": "Action label",
+            "format": "Verb in base form · max. 2 words",
+            "good": "\"Undo\", \"View details\"",
+            "bad": "\"Click to undo\", \"OK\", \"Close\""
+          },
+          "error": {
+            "name": "toast.error",
+            "format": "Cause + guidance · don't blame the user",
+            "good": "\"Unable to save. Please try again.\"",
+            "bad": "\"You made an error filling out the form.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "An action was completed and the user needs quick confirmation",
+        "item2": "An async operation (upload, save) is in progress or has completed",
+        "item3": "The user needs the option to undo a recent action",
+        "item4": "A non-critical system notification needs to appear without blocking the flow"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The message must stay visible while the user acts — use <code>Alert</code>",
+        "item2": "The error is a form field error — use <code>FormMessage</code>",
+        "item3": "The action is destructive and requires explicit confirmation — use <code>AlertDialog</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "toast.success with a brief past-tense title. Confirms what happened without excess.",
+        "dont": "Toast for a flow-blocking error. Use Alert for persistent messages."
+      },
+      "pair2": {
+        "do": "toast.promise for async operations. Automatic loading, no manual toast needed.",
+        "dont": "Toast for form errors. Use FormMessage to keep context inline."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Toast Types",
+      "items": {
+        "default": "Neutral toast without semantic type. Uses <code>--normal-bg</code> and <code>--normal-text</code> CSS variables from the theme.",
+        "success": "Successful action confirmation. Green icon and color applied automatically with <code>richColors</code>.",
+        "error": "Operation failure. Red icon and color applied automatically with <code>richColors</code>.",
+        "warning": "Non-critical warning requiring attention. Yellow icon and color with <code>richColors</code>.",
+        "info": "Contextual information or update. Blue icon and color with <code>richColors</code>."
+      }
+    },
+    "states": {
+      "title": "Compositions",
+      "items": {
+        "withDescription": {
+          "label": "With description",
+          "description": "Title + description for additional context. Use when the title alone is not enough to guide the user."
+        },
+        "withAction": {
+          "label": "With action",
+          "description": "Inline action button for reversible operations. Label in base form — e.g., \"Undo\". Focusable via <kbd>Tab</kbd>."
+        },
+        "promise": {
+          "label": "Promise (loading)",
+          "description": "Automatic transition between loading, success, and error based on promise resolution. Prefer over manual loading toast."
+        },
+        "persistent": {
+          "label": "Persistent",
+          "description": "Toast that does not close automatically. Use <code>duration: Infinity</code> only for critical errors requiring user action."
+        }
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "toasterTitle": "Toaster",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "position": "Toast position on screen. Project default: <code>\"top-right\"</code>.",
+        "richColors": "Applies semantic theme colors to each toast type. Recommended.",
+        "expand": "Shows all toasts stacked instead of condensed in a stack.",
+        "duration": "Duration in ms before the toast closes automatically. Default: 4000ms.",
+        "theme": "Visual theme. The component reads the theme from <code>next-themes</code> automatically.",
+        "icons": "Replaces the default icons for each toast type with custom icons.",
+        "toastOptions": "Options applied to all toasts, such as <code>classNames</code> for CSS classes."
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Variable",
+        "value": "Project default value",
+        "description": "Usage",
+        "normalBg": "Default toast background",
+        "normalText": "Default toast text",
+        "normalBorder": "Default toast border",
+        "borderRadius": "Toast border radius"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "Sonner uses <code>aria-live=\"polite\"</code> internally — toasts are announced to screen readers without interrupting the flow. Meets WCAG 2.1 AA: 4.1.3 (status messages). Toasts with actions are keyboard focusable.",
+      "item1": "<strong>Polite aria-live</strong> — Sonner manages <code>aria-live=\"polite\"</code> internally. Toasts are announced without interrupting ongoing reading.",
+      "item2": "<strong>Focusable action button</strong> — toasts with <code>action</code> expose the button in the focus sequence via <kbd>Tab</kbd>. The label must be descriptive — avoid \"OK\" or \"Close\".",
+      "item3": "<strong>Decorative icons</strong> — icons injected via the <code>icons</code> prop are decorative. The toast type and text fully describe the state.",
+      "item4": "<strong>Color + text</strong> — never rely solely on color to communicate the toast type. The title always describes the state (WCAG 1.4.1).",
+      "item5": "<strong>Do not use for form errors</strong> — use <code>FormMessage</code> which manages <code>aria-invalid</code> and associates the message to the field via <code>aria-describedby</code>.",
+      "keyboard": {
+        "tab": "Moves focus to the action button of the visible toast, if any.",
+        "enter": "Activates the focused action button.",
+        "escape": "Closes the focused toast (native Sonner behavior).",
+        "noKeyboard": "The toast itself is not interactive — only the action button receives focus."
+      },
+      "aria": {
+        "ariaLive": "<code>aria-live=\"polite\"</code> — managed internally by Sonner. Announces toasts without interrupting the reader.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — decorative icons injected via the <code>icons</code> prop are ignored by the reader.",
+        "ariaLabel": "<code>aria-label</code> — recommended on the action button when the label alone is not sufficiently descriptive."
+      },
+      "screenReader": {
+        "onShow": "When the toast appears: reader announces the title and, if present, the description.",
+        "onAction": "When the action button is focused via Tab: reader announces the button label.",
+        "onDismiss": "When the toast closes: no additional announcement — the event was confirmed earlier."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "alert": "For persistent messages that require attention or action while the user remains on the page.",
+      "alertDialog": "For destructive or irreversible actions that require explicit confirmation before executing.",
+      "badge": "For compact inline status indicators in lists, tables, or headers.",
+      "progress": "For communicating measurable progress of ongoing async operations."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<code>&lt;Toaster /&gt;</code> must be added once at the application root (e.g., <code>App.tsx</code>). Without it, no <code>toast()</code> will be displayed.",
+      "item2": "Set <code>position=\"top-right\"</code> explicitly on <code>&lt;Toaster /&gt;</code> — Sonner's default is <code>bottom-right</code>, different from the project's default.",
+      "item3": "Use <code>toast.promise()</code> for async operations. Avoids manual loading state and guarantees automatic transitions based on promise resolution.",
+      "item4": "Never use toast for form validation errors. The project's <code>FormMessage</code> already manages <code>aria-invalid</code> and <code>aria-describedby</code> correctly.",
+      "item5": "<code>duration: Infinity</code> should only be used for critical errors requiring explicit user action — always with <code>dismissible: true</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The toast itself does not fire an event — the event belongs to the action that triggered it. Track only the click on the internal action button.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "actionClick": "toast_action_click",
+        "actionClickTrigger": "Click on the toast action button (e.g., Undo)",
+        "actionClickPayload": "{ label: string, component: \"toast\", location: string }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each toast type and composition.",
+        "item1": { "action": "Call toast.success with richColors active", "result": "Toast with green icon and color shown at top-right for 4000ms", "priority": "high" },
+        "item2": { "action": "Call toast.error with richColors active", "result": "Toast with red icon and color; closes after 4000ms or on X click", "priority": "high" },
+        "item3": { "action": "Call toast.promise with resolved promise", "result": "Loading toast automatically transitions to success on resolution", "priority": "high" },
+        "item4": { "action": "Call toast.promise with rejected promise", "result": "Loading toast automatically transitions to error on rejection", "priority": "high" },
+        "item5": { "action": "Toast with action.label — press Tab", "result": "Focus moves to action button; Enter fires the onClick callback", "priority": "high" },
+        "item6": { "action": "Toast with duration: Infinity", "result": "Toast stays visible until manually closed by the user", "priority": "medium" },
+        "item7": { "action": "Call toast without Toaster at root", "result": "No toast displayed; no console error", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual screen reader testing.",
+        "item1": { "criterion": "Toast announced by screen reader on appear", "level": "AA", "how": "Manual test with NVDA/VoiceOver — verify announcement via aria-live" },
+        "item2": { "criterion": "Action button accessible by keyboard (Tab + Enter)", "level": "AA", "how": "Manual keyboard test — Tab must focus the action button" },
+        "item3": { "criterion": "Decorative icons not announced by screen reader", "level": "AA", "how": "Inspect aria-hidden attributes on generated SVGs" },
+        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Types — default, success, error, warning, info", "priority": "high" },
+        "item2": { "story": "Compositions — with description, with action, promise, persistent", "priority": "high" },
+        "item3": { "story": "Positions — top-right, bottom-center", "priority": "medium" },
+        "item4": { "story": "Dark mode — all types with richColors", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Types",
+      "states": "Compositions",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Sonner",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Notificación toast temporal y no bloqueante para confirmar acciones del usuario, mostrar advertencias y seguir operaciones asíncronas.",
+    "seo": {
+      "title": "Sonner — Feedback · Design System",
+      "description": "Documentación del Sonner: tipos de toast, composiciones con promise y acción, posiciones y accesibilidad WCAG con aria-live.",
+      "aiSummary": "Componente Sonner con 6 tipos de toast (default, success, error, warning, info, loading), composiciones con descripción, acción, promise y persistente, y soporte a richColors y posición configurable.",
+      "aiEntities": "Sonner, toast, React, Vue, Svelte, Basecoat, Tailwind CSS, WCAG 2.1, aria-live",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "default": "Código copiado.",
+        "success": "Cambios guardados.",
+        "error": "No fue posible guardar. Intenta de nuevo.",
+        "warning": "Tu sesión vence en 5 minutos.",
+        "info": "Nueva versión disponible.",
+        "loading": "Enviando archivo...",
+        "withDescription": "Preferencias actualizadas.",
+        "withDescriptionDesc": "Tu configuración se guardó y entrará en vigor en la próxima sesión.",
+        "withAction": "Elemento eliminado.",
+        "withActionLabel": "Deshacer",
+        "promise": "Archivo enviado correctamente.",
+        "promiseLoading": "Enviando archivo...",
+        "promiseError": "Error al enviar. Intenta de nuevo.",
+        "persistent": "Fallo crítico en el servidor.",
+        "triggerDefault": "Disparar default",
+        "triggerSuccess": "Disparar success",
+        "triggerError": "Disparar error",
+        "triggerWarning": "Disparar warning",
+        "triggerInfo": "Disparar info",
+        "triggerLoading": "Disparar loading",
+        "triggerWithDescription": "Con descripción",
+        "triggerWithAction": "Con acción",
+        "triggerPromise": "Con promise",
+        "triggerPersistent": "Persistente"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Toaster</strong> — componente de configuración global. Se agrega una vez en el root de la aplicación.",
+      "item2": "<strong>Toast item</strong> — notificación individual renderizada automáticamente por Sonner.",
+      "item3": "<strong>Ícono</strong> — definido por el proyecto vía la prop <code>icons</code> del Toaster; implícitamente <code>aria-hidden</code>.",
+      "item4": "<strong>Título</strong> — primera string pasada a <code>toast()</code>. Máximo 1 frase.",
+      "item5": "<strong>Descripción</strong> — string pasada vía <code>{ description }</code>. Complemento opcional al título.",
+      "item6": "<strong>Botón de acción</strong> — configurado vía <code>{ action: { label, onClick } }</code>. Accesible por teclado.",
+      "item7": "<strong>Botón de cerrar</strong> — se muestra automáticamente; elimina el toast inmediatamente al hacer clic.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "// Setup en el root (una vez)\n<Toaster position=\"top-right\" richColors />\n\n// Disparo de toast (en cualquier lugar)\ntoast.success(\"Título\")\ntoast.success(\"Título\", { description: \"Detalles\" })\ntoast(\"Título\", { action: { label: \"Deshacer\", onClick: fn } })\ntoast.promise(promesa, { loading: \"...\", success: \"...\", error: \"...\" })"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Úsalo solo para confirmaciones temporales — el toast desaparece automáticamente sin exigir acción.",
+        "item2": "Máximo 1 frase en el título; sin signos de énfasis ni exclamación.",
+        "item3": "Usa <code>toast.promise()</code> para cualquier operación asíncrona — evita toasts manuales de loading.",
+        "item4": "Nunca uses toast para errores de formulario — usa <code>FormMessage</code> que gestiona <code>aria-invalid</code>.",
+        "item5": "Aplica <code>richColors</code> en <code>&lt;Toaster /&gt;</code> para usar los colores del tema automáticamente."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Confirmación de acción realizada", "u": "Sí, toast.success", "a": "-" },
+        "item2": { "s": "Error crítico que bloquea el flujo", "u": "No", "a": "Alert" },
+        "item3": { "s": "Error de campo en formulario", "u": "No", "a": "FormMessage" },
+        "item4": { "s": "Operación asíncrona con loading", "u": "Sí, toast.promise", "a": "-" },
+        "item5": { "s": "Aviso persistente de plazo", "u": "No", "a": "Alert" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "Título",
+            "format": "Pasado simple · sin exclamación · máx. 1 frase",
+            "good": "\"Cambios guardados.\", \"Elemento eliminado.\"",
+            "bad": "\"¡Tus cambios fueron guardados con éxito!\", \"¡Todo listo!\""
+          },
+          "description": {
+            "name": "Descripción",
+            "format": "Frase completa · complementa el título · punto final",
+            "good": "\"Tu configuración entrará en vigor en la próxima sesión.\"",
+            "bad": "Texto largo con 3+ líneas que requiere lectura prolongada"
+          },
+          "action": {
+            "name": "Label de acción",
+            "format": "Verbo en infinitivo · máx. 2 palabras",
+            "good": "\"Deshacer\", \"Ver detalles\"",
+            "bad": "\"Haz clic para deshacer\", \"OK\", \"Cerrar\""
+          },
+          "error": {
+            "name": "toast.error",
+            "format": "Causa + orientación · sin culpar al usuario",
+            "good": "\"No fue posible guardar. Intenta de nuevo.\"",
+            "bad": "\"Cometiste un error al completar el formulario.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "Una acción fue completada y el usuario necesita confirmación rápida",
+        "item2": "Una operación asíncrona (carga, guardado) está en progreso o se completó",
+        "item3": "El usuario necesita la opción de deshacer una acción reciente",
+        "item4": "Una notificación del sistema no crítica debe aparecer sin bloquear el flujo"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El mensaje debe permanecer visible mientras el usuario actúa — usa <code>Alert</code>",
+        "item2": "El error es de un campo de formulario — usa <code>FormMessage</code>",
+        "item3": "La acción es destructiva y requiere confirmación explícita — usa <code>AlertDialog</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "toast.success con título breve en pasado. Confirma lo que ocurrió sin exceso.",
+        "dont": "Toast para error que bloquea el flujo. Usa Alert para mensajes persistentes."
+      },
+      "pair2": {
+        "do": "toast.promise para operaciones asíncronas. Loading automático, sin toast manual.",
+        "dont": "Toast para errores de formulario. Usa FormMessage para mantener el contexto inline."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Tipos de Toast",
+      "items": {
+        "default": "Toast neutro sin tipo semántico. Usa las variables CSS <code>--normal-bg</code> y <code>--normal-text</code> del tema.",
+        "success": "Confirmación de acción exitosa. Ícono y color verde aplicados automáticamente con <code>richColors</code>.",
+        "error": "Fallo en una operación. Ícono y color rojo aplicados automáticamente con <code>richColors</code>.",
+        "warning": "Advertencia no crítica que requiere atención. Ícono y color amarillo con <code>richColors</code>.",
+        "info": "Información contextual o novedad. Ícono y color azul con <code>richColors</code>."
+      }
+    },
+    "states": {
+      "title": "Composiciones",
+      "items": {
+        "withDescription": {
+          "label": "Con descripción",
+          "description": "Título + descripción para contexto adicional. Úsalo cuando el título solo no es suficiente para orientar al usuario."
+        },
+        "withAction": {
+          "label": "Con acción",
+          "description": "Botón de acción inline para operaciones reversibles. Label en infinitivo — ej: \"Deshacer\". Accesible vía <kbd>Tab</kbd>."
+        },
+        "promise": {
+          "label": "Promise (loading)",
+          "description": "Transición automática entre loading, success y error según la resolución de la promise. Prefiere esto al toast manual de loading."
+        },
+        "persistent": {
+          "label": "Persistente",
+          "description": "Toast que no se cierra automáticamente. Usa <code>duration: Infinity</code> solo para errores críticos que requieren acción del usuario."
+        }
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "toasterTitle": "Toaster",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "position": "Posición de los toasts en pantalla. Padrón del proyecto: <code>\"top-right\"</code>.",
+        "richColors": "Aplica colores semánticos del tema para cada tipo de toast. Recomendado.",
+        "expand": "Muestra todos los toasts apilados en lugar de condensados.",
+        "duration": "Duración en ms antes de que el toast se cierre automáticamente. Por defecto: 4000ms.",
+        "theme": "Tema visual. El componente lee el tema de <code>next-themes</code> automáticamente.",
+        "icons": "Reemplaza los íconos predeterminados de cada tipo de toast por íconos personalizados.",
+        "toastOptions": "Opciones aplicadas a todos los toasts, como <code>classNames</code> para clases CSS."
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Variable CSS",
+        "value": "Valor por defecto del proyecto",
+        "description": "Aplicación",
+        "normalBg": "Fondo del toast default",
+        "normalText": "Texto del toast default",
+        "normalBorder": "Borde del toast default",
+        "borderRadius": "Border radius del toast"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "Sonner usa <code>aria-live=\"polite\"</code> internamente — los toasts son anunciados al lector de pantalla sin interrumpir el flujo. Cumple WCAG 2.1 AA: 4.1.3 (mensajes de estado). Los toasts con acciones son accesibles por teclado.",
+      "item1": "<strong>aria-live polite</strong> — Sonner gestiona <code>aria-live=\"polite\"</code> internamente. Los toasts se anuncian sin interrumpir la lectura en curso.",
+      "item2": "<strong>Botón de acción accesible</strong> — los toasts con <code>action</code> exponen el botón en la secuencia de foco vía <kbd>Tab</kbd>. El label debe ser descriptivo — evita \"OK\" o \"Cerrar\".",
+      "item3": "<strong>Íconos decorativos</strong> — los íconos inyectados vía la prop <code>icons</code> son decorativos. El tipo del toast y el texto describen completamente el estado.",
+      "item4": "<strong>Color + texto</strong> — nunca dependas solo del color para comunicar el tipo del toast. El título siempre describe el estado (WCAG 1.4.1).",
+      "item5": "<strong>No uses para errores de formulario</strong> — usa <code>FormMessage</code> que gestiona <code>aria-invalid</code> y asocia el mensaje al campo vía <code>aria-describedby</code>.",
+      "keyboard": {
+        "tab": "Mueve el foco al botón de acción del toast visible, si lo hay.",
+        "enter": "Activa el botón de acción en foco.",
+        "escape": "Cierra el toast con foco activo (comportamiento nativo de Sonner).",
+        "noKeyboard": "El toast en sí no es interactivo — solo el botón de acción recibe foco."
+      },
+      "aria": {
+        "ariaLive": "<code>aria-live=\"polite\"</code> — gestionado internamente por Sonner. Anuncia los toasts sin interrumpir al lector.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — los íconos decorativos inyectados vía la prop <code>icons</code> son ignorados por el lector.",
+        "ariaLabel": "<code>aria-label</code> — recomendado en el botón de acción cuando el label solo no es suficientemente descriptivo."
+      },
+      "screenReader": {
+        "onShow": "Al mostrar el toast: el lector anuncia el título y, si existe, la descripción.",
+        "onAction": "Al enfocar el botón de acción vía Tab: el lector anuncia el label del botón.",
+        "onDismiss": "Al cerrar el toast: sin anuncio adicional — el evento fue confirmado anteriormente."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "alert": "Para mensajes persistentes que requieren atención o acción mientras el usuario permanece en la página.",
+      "alertDialog": "Para acciones destructivas o irreversibles que requieren confirmación explícita antes de ejecutar.",
+      "badge": "Para indicadores de estado compactos e inline en listas, tablas o encabezados.",
+      "progress": "Para comunicar el progreso mensurable de operaciones asíncronas en curso."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<code>&lt;Toaster /&gt;</code> debe agregarse una sola vez en el root de la aplicación (ej: <code>App.tsx</code>). Sin él, ningún <code>toast()</code> se mostrará.",
+      "item2": "Define <code>position=\"top-right\"</code> explícitamente en <code>&lt;Toaster /&gt;</code> — el valor por defecto de Sonner es <code>bottom-right</code>, distinto al padrón del proyecto.",
+      "item3": "Usa <code>toast.promise()</code> para operaciones asíncronas. Evita estados manuales de loading y garantiza transiciones automáticas según la resolución de la promise.",
+      "item4": "Nunca uses toast para errores de validación de formulario. El <code>FormMessage</code> del proyecto ya gestiona <code>aria-invalid</code> y <code>aria-describedby</code> correctamente.",
+      "item5": "<code>duration: Infinity</code> solo debe usarse para errores críticos que requieren acción explícita del usuario — siempre con <code>dismissible: true</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "El toast en sí no dispara evento — el evento pertenece a la acción que lo originó. Rastrea solo el clic en el botón de acción interno.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "actionClick": "toast_action_click",
+        "actionClickTrigger": "Clic en el botón de acción del toast (ej: Deshacer)",
+        "actionClickPayload": "{ label: string, component: \"toast\", location: string }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada tipo y composición de toast.",
+        "item1": { "action": "Llamar toast.success con richColors activo", "result": "Toast con ícono y color verde en top-right por 4000ms", "priority": "high" },
+        "item2": { "action": "Llamar toast.error con richColors activo", "result": "Toast con ícono y color rojo; se cierra tras 4000ms o al hacer clic en X", "priority": "high" },
+        "item3": { "action": "Llamar toast.promise con promise resuelta", "result": "Toast loading transita automáticamente a success al resolverse", "priority": "high" },
+        "item4": { "action": "Llamar toast.promise con promise rechazada", "result": "Toast loading transita automáticamente a error al rechazarse", "priority": "high" },
+        "item5": { "action": "Toast con action.label — presionar Tab", "result": "El foco se mueve al botón de acción; Enter dispara el callback onClick", "priority": "high" },
+        "item6": { "action": "Toast con duration: Infinity", "result": "El toast permanece visible hasta que el usuario lo cierre manualmente", "priority": "medium" },
+        "item7": { "action": "Llamar toast sin Toaster en el root", "result": "Ningún toast mostrado; sin error en consola", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales con lector de pantalla.",
+        "item1": { "criterion": "Toast anunciado por el lector de pantalla al aparecer", "level": "AA", "how": "Prueba manual con NVDA/VoiceOver — verificar anuncio vía aria-live" },
+        "item2": { "criterion": "Botón de acción accesible por teclado (Tab + Enter)", "level": "AA", "how": "Prueba manual de teclado — Tab debe enfocar el botón de acción" },
+        "item3": { "criterion": "Íconos decorativos no anunciados por el lector", "level": "AA", "how": "Inspeccionar atributos aria-hidden en los SVGs generados" },
+        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Tipos — default, success, error, warning, info", "priority": "high" },
+        "item2": { "story": "Composiciones — con descripción, con acción, promise, persistente", "priority": "high" },
+        "item3": { "story": "Posiciones — top-right, bottom-center", "priority": "medium" },
+        "item4": { "story": "Dark mode — todos los tipos con richColors", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Tipos",
+      "states": "Composiciones",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
