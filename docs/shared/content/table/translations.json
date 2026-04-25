@@ -1,0 +1,1034 @@
+{
+  "pt-BR": {
+    "title": "Table",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Exibe dados tabulares estruturados com semântica HTML correta, scroll horizontal automático e suporte a estados vazios e ações por linha.",
+    "seo": {
+      "title": "Table — Display · Design System",
+      "description": "Documentação do Table: 8 subcomponentes semânticos, scroll horizontal, empty state, acessibilidade WCAG com scope e caption.",
+      "aiSummary": "Componente Table com 8 subcomponentes (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), scroll horizontal automático, empty state obrigatório e integração com TanStack Table para ordenação e filtros.",
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, TanStack Table",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "invoice": "Fatura",
+        "status": "Status",
+        "method": "Método",
+        "amount": "Valor",
+        "actions": "Ações",
+        "inv001": "#INV-001",
+        "inv002": "#INV-002",
+        "inv003": "#INV-003",
+        "inv004": "#INV-004",
+        "inv005": "#INV-005",
+        "paid": "Pago",
+        "pending": "Pendente",
+        "canceled": "Cancelado",
+        "creditCard": "Cartão de crédito",
+        "bankTransfer": "Transferência bancária",
+        "pix": "Pix",
+        "amount001": "R$ 250,00",
+        "amount002": "R$ 150,00",
+        "amount003": "R$ 350,00",
+        "amount004": "R$ 450,00",
+        "amount005": "R$ 50,00",
+        "total": "Total",
+        "totalAmount": "R$ 1.250,00",
+        "caption": "Lista de faturas recentes",
+        "emptyState": "Nenhuma fatura encontrada.",
+        "actionsLabel": "Ações para fatura"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Table</strong> — wrapper <code>&lt;table&gt;</code> com <code>overflow-x-auto</code> no container pai automático.",
+      "item2": "<strong>TableHeader</strong> — elemento <code>&lt;thead&gt;</code> com borda inferior aplicada via <code>[&_tr]:border-b</code>.",
+      "item3": "<strong>TableBody</strong> — elemento <code>&lt;tbody&gt;</code>; remove borda da última linha via <code>[&_tr:last-child]:border-0</code>.",
+      "item4": "<strong>TableFooter</strong> — elemento <code>&lt;tfoot&gt;</code> com <code>bg-muted/50</code>; use para totais e sumários.",
+      "item5": "<strong>TableRow</strong> — elemento <code>&lt;tr&gt;</code> com hover e estado <code>data-[state=selected]</code>.",
+      "item6": "<strong>TableHead</strong> — elemento <code>&lt;th&gt;</code> com <code>h-10</code>, <code>font-medium</code> e <code>scope=\"col\"</code> obrigatório.",
+      "item7": "<strong>TableCell</strong> — elemento <code>&lt;td&gt;</code> com <code>p-2</code> e <code>align-middle</code>.",
+      "item8": "<strong>TableCaption</strong> — elemento <code>&lt;caption&gt;</code> com <code>text-muted-foreground</code>; pode ser <code>sr-only</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Table>\n  <TableCaption>Descrição da tabela</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Coluna</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Dado</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use Table para exibir dados relacionais estruturados em linhas e colunas — nunca para layout de página.",
+        "item2": "<code>TableCaption</code> é obrigatório em toda tabela — use <code>sr-only</code> quando o contexto visual já é claro.",
+        "item3": "<code>scope=\"col\"</code> em todos os <code>TableHead</code> — associa cabeçalhos às células para leitores de tela.",
+        "item4": "Implemente sempre o empty state — nunca exiba tabela vazia sem mensagem explicativa.",
+        "item5": "Para ordenação, filtragem e paginação robustas, combine com <code>@tanstack/react-table</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Lista de registros com múltiplos atributos", "u": "Sim", "a": "-" },
+        "item2": { "s": "Relatório com totais e subtotais", "u": "Sim, com TableFooter", "a": "-" },
+        "item3": { "s": "Layout de colunas de página", "u": "Não", "a": "CSS Grid ou Flexbox" },
+        "item4": { "s": "Lista simples de itens", "u": "Não", "a": "ul/li ou Card" },
+        "item5": { "s": "Dados com ordenação e filtros", "u": "Sim, com TanStack Table", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "caption": {
+            "name": "TableCaption",
+            "format": "Frase nominal descritiva, sem ponto final",
+            "good": "\"Lista de faturas recentes\", \"Transações do mês\"",
+            "bad": "\"Tabela de dados.\", \"Dados\""
+          },
+          "head": {
+            "name": "TableHead",
+            "format": "Substantivo curto, primeira letra maiúscula, sem ponto final",
+            "good": "\"Fatura\", \"Status\", \"Valor\"",
+            "bad": "\"ID da fatura:\", \"Status atual\", \"Valor (R$):\""
+          },
+          "emptyState": {
+            "name": "Empty state",
+            "format": "\"Nenhum [item] encontrado.\" — tom encorajador com CTA se disponível",
+            "good": "\"Nenhuma fatura encontrada.\"",
+            "bad": "\"Lista vazia.\", \"Sem dados\""
+          },
+          "actionLabel": {
+            "name": "aria-label de ação",
+            "format": "Verbo + objeto + identificador da linha",
+            "good": "\"Editar fatura #INV-001\"",
+            "bad": "\"Editar\", \"Ações\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Dados possuem estrutura relacional com atributos comparáveis entre linhas",
+        "item2": "O usuário precisa escanear e comparar valores entre registros",
+        "item3": "Há necessidade de ações por linha (editar, excluir, visualizar)",
+        "item4": "Totais ou sumários precisam ser destacados no rodapé"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "O objetivo é organizar o layout da página — use Grid ou Flexbox",
+        "item2": "Os dados são uma lista simples sem atributos comparáveis — use lista ou Card",
+        "item3": "Há poucos itens sem relação entre colunas — use descrição ou parágrafos"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "TableCaption descritivo (pode ser sr-only) + scope=\"col\" em todos os cabeçalhos.",
+        "dont": "Tabela sem caption e sem scope — inacessível para leitores de tela."
+      },
+      "pair2": {
+        "do": "Empty state com mensagem clara quando não há dados.",
+        "dont": "Tabela vazia sem mensagem — o usuário não sabe se é erro ou ausência de dados."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Padrões de Uso",
+      "basic": {
+        "label": "Básica",
+        "description": "Tabela com caption, cabeçalho e corpo. Padrão mínimo funcional com scroll horizontal automático via container <code>overflow-x-auto</code> interno."
+      },
+      "withFooter": {
+        "label": "Com rodapé",
+        "description": "Adicione <code>TableFooter</code> para exibir totais, médias ou sumários. Recebe <code>bg-muted/50</code> automaticamente para diferenciação visual."
+      },
+      "withSrOnlyCaption": {
+        "label": "Caption sr-only",
+        "description": "Quando o título da tabela já está visível na página, use <code>TableCaption</code> com <code>className=\"sr-only\"</code> para manter acessibilidade sem duplicar visualmente."
+      },
+      "withInlineActions": {
+        "label": "Ações por linha",
+        "description": "Adicione uma coluna de ações com <code>Button variant=\"ghost\"</code> ou <code>DropdownMenu</code>. O <code>aria-label</code> deve incluir o identificador da linha: \"Ações para fatura #INV-001\"."
+      },
+      "withEmptyState": {
+        "label": "Estado vazio",
+        "description": "Quando não há dados, renderize uma <code>TableRow</code> com <code>TableCell colSpan</code> cobrindo todas as colunas e mensagem centralizada em <code>text-muted-foreground</code>."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "empty": {
+        "label": "Vazio",
+        "trigger": "Array de dados vazio",
+        "behavior": "<code>TableRow</code> com <code>TableCell colSpan</code> total, texto centralizado, <code>h-24</code> e <code>text-muted-foreground</code>"
+      },
+      "selected": {
+        "label": "Linha selecionada",
+        "trigger": "<code>data-[state=selected]</code> na <code>TableRow</code>",
+        "behavior": "Fundo <code>bg-muted</code> na linha. Use com checkbox ou seleção programática"
+      },
+      "loading": {
+        "label": "Carregando",
+        "trigger": "Renderizar <code>Skeleton</code> nas células durante fetch",
+        "behavior": "Substitua as células de dados por <code>Skeleton</code> com altura e largura aproximadas do conteúdo esperado"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "tableTitle": "Table",
+      "tableHeaderTitle": "TableHeader",
+      "tableBodyTitle": "TableBody",
+      "tableFooterTitle": "TableFooter",
+      "tableRowTitle": "TableRow",
+      "tableHeadTitle": "TableHead",
+      "tableCellTitle": "TableCell",
+      "tableCaptionTitle": "TableCaption",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição"
+      },
+      "items": {
+        "className": "Classes Tailwind adicionais aplicadas ao elemento HTML correspondente.",
+        "scope": "<code>\"col\"</code> obrigatório no <code>TableHead</code> — associa o cabeçalho à coluna para leitores de tela.",
+        "colSpan": "Número de colunas que a célula deve ocupar. Use no empty state para cobrir todas as colunas.",
+        "rowSpan": "Número de linhas que a célula deve ocupar. Use em células que agrupam dados de múltiplas linhas.",
+        "dataState": "<code>data-[state=selected]</code> no <code>TableRow</code> ativa o estilo de linha selecionada (<code>bg-muted</code>).",
+        "children": "Conteúdo do subcomponente — células, linhas ou subcomponentes filhos."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "Todos os subcomponentes aceitam <code>className</code> e repassam o restante dos props para o elemento HTML correspondente via spread (<code>...props</code>). Use tokens semânticos para customizações — nunca cores hardcoded."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token / Classe",
+        "part": "Parte do componente",
+        "description": "Descrição"
+      },
+      "items": {
+        "borderB": "<code>border-b</code> — borda inferior nas linhas do <code>TableHeader</code> e do <code>TableBody</code>.",
+        "bgMuted": "<code>bg-muted/50</code> — fundo do <code>TableFooter</code> e hover das <code>TableRow</code>.",
+        "bgMutedSelected": "<code>data-[state=selected]:bg-muted</code> — fundo da linha selecionada no <code>TableRow</code>.",
+        "textMuted": "<code>text-muted-foreground</code> — cor do <code>TableCaption</code> e do empty state.",
+        "fontMedium": "<code>font-medium</code> — peso dos cabeçalhos no <code>TableHead</code> e do <code>TableFooter</code>.",
+        "h10": "<code>h-10</code> — altura padrão das células de cabeçalho no <code>TableHead</code>.",
+        "p2": "<code>p-2</code> — padding padrão das células de dados no <code>TableCell</code>.",
+        "captionBottom": "<code>caption-bottom</code> — posiciona o <code>TableCaption</code> abaixo da tabela."
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Table usa semântica HTML nativa (<code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;caption&gt;</code>). Cumpre WCAG 2.1 AA: 1.3.1 (informação e relações), 4.1.2 (nome, função, valor). <code>scope=\"col\"</code> obrigatório em todos os <code>TableHead</code>. <code>TableCaption</code> obrigatório para leitores de tela.",
+      "keyboard": {
+        "tab": "Navega para elementos interativos dentro das células (botões, links, checkboxes).",
+        "enter": "Ativa o elemento interativo com foco dentro da célula.",
+        "space": "Ativa checkboxes de seleção de linha, se presentes.",
+        "noKeyboard": "Células de dados passivas não recebem foco por teclado — apenas o conteúdo interativo interno."
+      },
+      "aria": {
+        "scope": "<code>scope=\"col\"</code> — obrigatório em todos os <code>TableHead</code>; mapeia cabeçalhos às células da coluna.",
+        "caption": "<code>TableCaption</code> — lido pelos leitores de tela antes das células; descreve o propósito da tabela.",
+        "ariaLabel": "<code>aria-label</code> contextual nos botões de ação — inclua o identificador da linha (ex: \"Editar fatura #INV-001\").",
+        "ariaSort": "<code>aria-sort=\"ascending\"</code> / <code>\"descending\"</code> / <code>\"none\"</code> nos <code>TableHead</code> com ordenação ativa.",
+        "tabIndex": "<code>tabIndex={0}</code> no wrapper <code>overflow-x-auto</code> para permitir scroll horizontal por teclado."
+      },
+      "screenReader": {
+        "onRender": "Ao renderizar a tabela: o leitor anuncia o caption, depois lê cabeçalhos e células em ordem.",
+        "onEmpty": "No empty state: o leitor lê a mensagem da célula com colSpan como conteúdo da linha.",
+        "onAction": "Botões de ação: o leitor anuncia o aria-label completo (\"Ações para fatura #INV-001\").",
+        "onSort": "Em tabelas ordenáveis: o leitor anuncia \"Coluna, ascendente\" ou \"Coluna, descendente\" conforme aria-sort."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "dataTable": "Para tabelas com ordenação, filtros, seleção múltipla e paginação — usa Table internamente com TanStack Table.",
+      "avatar": "Frequentemente exibido em células de tabela para representar usuários ou entidades.",
+      "badge": "Indicador de status compacto em células — ex: Pago, Pendente, Cancelado.",
+      "pagination": "Para navegar entre páginas de uma tabela com muitos registros (acima de 20 linhas).",
+      "skeleton": "Para representar o estado de carregamento das linhas enquanto os dados são buscados.",
+      "dropdownMenu": "Para menus de ações por linha — acionado por botão ghost na última coluna."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "O componente <code>Table</code> já envolve o elemento <code>&lt;table&gt;</code> em um <code>&lt;div data-slot=\"table-container\"&gt;</code> com <code>overflow-x-auto</code> — não é necessário adicionar um wrapper externo.",
+      "tip2": "<code>scope=\"col\"</code> no <code>TableHead</code> não é adicionado automaticamente pelo componente — você deve incluir em cada <code>&lt;th&gt;</code> manualmente.",
+      "tip3": "O empty state é responsabilidade do consumidor — renderize uma <code>TableRow</code> com <code>TableCell colSpan</code> igual ao número de colunas quando o array de dados estiver vazio.",
+      "tip4": "<code>TableFooter</code> é para totais e sumários — nunca use uma linha de <code>TableBody</code> para esse fim; o <code>tfoot</code> semântico é lido diferentemente pelos leitores de tela.",
+      "tip5": "Para tabelas com scroll horizontal por teclado, adicione <code>tabIndex={0}</code> no wrapper externo ao container do <code>Table</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Table é um componente passivo — não dispara eventos por si. Rastreie as ações dentro da tabela pelos componentes responsáveis: <code>button_click</code> para botões de ação por linha, <code>navigation_click</code> para links em células.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada padrão de uso do Table.",
+        "item1": { "action": "Renderizar tabela básica com dados", "result": "Table, TableHeader, TableBody e TableCaption renderizados com HTML semântico correto", "priority": "high" },
+        "item2": { "action": "Renderizar tabela com array vazio", "result": "TableRow com TableCell colSpan e mensagem de empty state visível", "priority": "high" },
+        "item3": { "action": "Renderizar TableFooter com totais", "result": "tfoot com bg-muted/50 e border-t aplicados, abaixo do TableBody", "priority": "medium" },
+        "item4": { "action": "Aplicar data-[state=selected] em TableRow", "result": "Fundo bg-muted aplicado na linha selecionada", "priority": "medium" },
+        "item5": { "action": "Renderizar com conteúdo maior que o container", "result": "Scroll horizontal ativado via overflow-x-auto no container interno", "priority": "high" },
+        "item6": { "action": "Renderizar TableCaption com sr-only", "result": "Caption invisível visualmente, presente no DOM para leitores de tela", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "scope=\"col\" presente em todos os TableHead", "level": "AA", "how": "Inspecionar atributos th no DOM" },
+        "item2": { "criterion": "TableCaption presente e descritivo", "level": "AA", "how": "getByRole('table', { name: /caption/ }) ou querySelector('caption')" },
+        "item3": { "criterion": "Botões de ação com aria-label contextual", "level": "AA", "how": "getByRole('button', { name: /fatura/ }) no testing-library" },
+        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Básica — com dados completos", "priority": "high" },
+        "item2": { "story": "Estado vazio — mensagem centralizada", "priority": "high" },
+        "item3": { "story": "Com rodapé — totais e sumários", "priority": "medium" },
+        "item4": { "story": "Com ações por linha — botão ghost ou DropdownMenu", "priority": "medium" },
+        "item5": { "story": "Linha selecionada — data-[state=selected]", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Padrões de Uso",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Table",
+    "category": "Display",
+    "type": "Component",
+    "description": "Displays structured tabular data with correct HTML semantics, automatic horizontal scroll, and support for empty states and row actions.",
+    "seo": {
+      "title": "Table — Display · Design System",
+      "description": "Table documentation: 8 semantic subcomponents, horizontal scroll, empty state, WCAG accessibility with scope and caption.",
+      "aiSummary": "Table component with 8 subcomponents (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), automatic horizontal scroll, mandatory empty state, and TanStack Table integration for sorting and filters.",
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, TanStack Table",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "invoice": "Invoice",
+        "status": "Status",
+        "method": "Method",
+        "amount": "Amount",
+        "actions": "Actions",
+        "inv001": "#INV-001",
+        "inv002": "#INV-002",
+        "inv003": "#INV-003",
+        "inv004": "#INV-004",
+        "inv005": "#INV-005",
+        "paid": "Paid",
+        "pending": "Pending",
+        "canceled": "Canceled",
+        "creditCard": "Credit card",
+        "bankTransfer": "Bank transfer",
+        "pix": "Pix",
+        "amount001": "$250.00",
+        "amount002": "$150.00",
+        "amount003": "$350.00",
+        "amount004": "$450.00",
+        "amount005": "$50.00",
+        "total": "Total",
+        "totalAmount": "$1,250.00",
+        "caption": "Recent invoices list",
+        "emptyState": "No invoices found.",
+        "actionsLabel": "Actions for invoice"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Table</strong> — <code>&lt;table&gt;</code> wrapper with automatic <code>overflow-x-auto</code> in the internal container.",
+      "item2": "<strong>TableHeader</strong> — <code>&lt;thead&gt;</code> element with bottom border applied via <code>[&_tr]:border-b</code>.",
+      "item3": "<strong>TableBody</strong> — <code>&lt;tbody&gt;</code> element; removes border from last row via <code>[&_tr:last-child]:border-0</code>.",
+      "item4": "<strong>TableFooter</strong> — <code>&lt;tfoot&gt;</code> element with <code>bg-muted/50</code>; use for totals and summaries.",
+      "item5": "<strong>TableRow</strong> — <code>&lt;tr&gt;</code> element with hover and <code>data-[state=selected]</code> state.",
+      "item6": "<strong>TableHead</strong> — <code>&lt;th&gt;</code> element with <code>h-10</code>, <code>font-medium</code> and mandatory <code>scope=\"col\"</code>.",
+      "item7": "<strong>TableCell</strong> — <code>&lt;td&gt;</code> element with <code>p-2</code> and <code>align-middle</code>.",
+      "item8": "<strong>TableCaption</strong> — <code>&lt;caption&gt;</code> element with <code>text-muted-foreground</code>; can be <code>sr-only</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Table>\n  <TableCaption>Table description</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Column</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Data</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use Table to display structured relational data in rows and columns — never for page layout.",
+        "item2": "<code>TableCaption</code> is required in every table — use <code>sr-only</code> when the visual context is already clear.",
+        "item3": "<code>scope=\"col\"</code> on all <code>TableHead</code> elements — associates headers to cells for screen readers.",
+        "item4": "Always implement empty state — never display a table without an explanatory message when data is absent.",
+        "item5": "For sorting, filtering, and robust pagination, combine with <code>@tanstack/react-table</code>."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Record list with multiple attributes", "u": "Yes", "a": "-" },
+        "item2": { "s": "Report with totals and subtotals", "u": "Yes, with TableFooter", "a": "-" },
+        "item3": { "s": "Page column layout", "u": "No", "a": "CSS Grid or Flexbox" },
+        "item4": { "s": "Simple list without comparable attributes", "u": "No", "a": "ul/li or Card" },
+        "item5": { "s": "Data with sorting and filters", "u": "Yes, with TanStack Table", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "caption": {
+            "name": "TableCaption",
+            "format": "Descriptive noun phrase, no period",
+            "good": "\"Recent invoices list\", \"Monthly transactions\"",
+            "bad": "\"Data table.\", \"Data\""
+          },
+          "head": {
+            "name": "TableHead",
+            "format": "Short noun, first letter capitalized, no period",
+            "good": "\"Invoice\", \"Status\", \"Amount\"",
+            "bad": "\"Invoice ID:\", \"Current status\", \"Amount (USD):\""
+          },
+          "emptyState": {
+            "name": "Empty state",
+            "format": "\"No [items] found.\" — encouraging tone with CTA if available",
+            "good": "\"No invoices found.\"",
+            "bad": "\"Empty list.\", \"No data\""
+          },
+          "actionLabel": {
+            "name": "Action aria-label",
+            "format": "Verb + object + row identifier",
+            "good": "\"Edit invoice #INV-001\"",
+            "bad": "\"Edit\", \"Actions\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Data has relational structure with comparable attributes across rows",
+        "item2": "Users need to scan and compare values across records",
+        "item3": "Row-level actions are needed (edit, delete, view)",
+        "item4": "Totals or summaries must be highlighted in the footer"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The goal is to arrange the page layout — use Grid or Flexbox",
+        "item2": "Data is a simple list without comparable attributes — use list or Card",
+        "item3": "There are few items without column relationships — use descriptions or paragraphs"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Descriptive TableCaption (can be sr-only) + scope=\"col\" on all header cells.",
+        "dont": "Table without caption and scope — inaccessible to screen readers."
+      },
+      "pair2": {
+        "do": "Empty state with clear message when there is no data.",
+        "dont": "Empty table without a message — users can't tell if it's an error or just empty."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Usage Patterns",
+      "basic": {
+        "label": "Basic",
+        "description": "Table with caption, header, and body. Minimum functional pattern with automatic horizontal scroll via internal <code>overflow-x-auto</code> container."
+      },
+      "withFooter": {
+        "label": "With footer",
+        "description": "Add <code>TableFooter</code> to display totals, averages, or summaries. Automatically receives <code>bg-muted/50</code> for visual differentiation."
+      },
+      "withSrOnlyCaption": {
+        "label": "sr-only caption",
+        "description": "When the table title is already visible on the page, use <code>TableCaption</code> with <code>className=\"sr-only\"</code> to maintain accessibility without visual duplication."
+      },
+      "withInlineActions": {
+        "label": "Row actions",
+        "description": "Add an action column with <code>Button variant=\"ghost\"</code> or <code>DropdownMenu</code>. The <code>aria-label</code> must include the row identifier: \"Actions for invoice #INV-001\"."
+      },
+      "withEmptyState": {
+        "label": "Empty state",
+        "description": "When there is no data, render a <code>TableRow</code> with <code>TableCell colSpan</code> covering all columns and a centered message in <code>text-muted-foreground</code>."
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "empty": {
+        "label": "Empty",
+        "trigger": "Empty data array",
+        "behavior": "<code>TableRow</code> with full <code>TableCell colSpan</code>, centered text, <code>h-24</code> and <code>text-muted-foreground</code>"
+      },
+      "selected": {
+        "label": "Selected row",
+        "trigger": "<code>data-[state=selected]</code> on <code>TableRow</code>",
+        "behavior": "<code>bg-muted</code> background on the row. Use with checkbox or programmatic selection"
+      },
+      "loading": {
+        "label": "Loading",
+        "trigger": "Render <code>Skeleton</code> in cells during fetch",
+        "behavior": "Replace data cells with <code>Skeleton</code> with approximate height and width of expected content"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "tableTitle": "Table",
+      "tableHeaderTitle": "TableHeader",
+      "tableBodyTitle": "TableBody",
+      "tableFooterTitle": "TableFooter",
+      "tableRowTitle": "TableRow",
+      "tableHeadTitle": "TableHead",
+      "tableCellTitle": "TableCell",
+      "tableCaptionTitle": "TableCaption",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description"
+      },
+      "items": {
+        "className": "Additional Tailwind classes applied to the corresponding HTML element.",
+        "scope": "<code>\"col\"</code> required on <code>TableHead</code> — associates the header to the column for screen readers.",
+        "colSpan": "Number of columns the cell should span. Use in empty state to cover all columns.",
+        "rowSpan": "Number of rows the cell should span. Use in cells that group data across multiple rows.",
+        "dataState": "<code>data-[state=selected]</code> on <code>TableRow</code> activates the selected row style (<code>bg-muted</code>).",
+        "children": "Subcomponent content — cells, rows, or child subcomponents."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "All subcomponents accept <code>className</code> and forward remaining props to the corresponding HTML element via spread (<code>...props</code>). Use semantic tokens for customizations — never hardcoded colors."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token / Class",
+        "part": "Component part",
+        "description": "Description"
+      },
+      "items": {
+        "borderB": "<code>border-b</code> — bottom border on rows in <code>TableHeader</code> and <code>TableBody</code>.",
+        "bgMuted": "<code>bg-muted/50</code> — background for <code>TableFooter</code> and hover on <code>TableRow</code>.",
+        "bgMutedSelected": "<code>data-[state=selected]:bg-muted</code> — selected row background on <code>TableRow</code>.",
+        "textMuted": "<code>text-muted-foreground</code> — color for <code>TableCaption</code> and empty state.",
+        "fontMedium": "<code>font-medium</code> — header weight in <code>TableHead</code> and <code>TableFooter</code>.",
+        "h10": "<code>h-10</code> — default height for header cells in <code>TableHead</code>.",
+        "p2": "<code>p-2</code> — default padding for data cells in <code>TableCell</code>.",
+        "captionBottom": "<code>caption-bottom</code> — positions <code>TableCaption</code> below the table."
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Table uses native HTML semantics (<code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;caption&gt;</code>). Meets WCAG 2.1 AA: 1.3.1 (info and relationships), 4.1.2 (name, role, value). <code>scope=\"col\"</code> required on all <code>TableHead</code>. <code>TableCaption</code> required for screen readers.",
+      "keyboard": {
+        "tab": "Navigates to interactive elements inside cells (buttons, links, checkboxes).",
+        "enter": "Activates the focused interactive element inside the cell.",
+        "space": "Activates row selection checkboxes, if present.",
+        "noKeyboard": "Passive data cells do not receive keyboard focus — only interactive content inside them does."
+      },
+      "aria": {
+        "scope": "<code>scope=\"col\"</code> — required on all <code>TableHead</code>; maps headers to column cells.",
+        "caption": "<code>TableCaption</code> — read by screen readers before cells; describes the table's purpose.",
+        "ariaLabel": "Contextual <code>aria-label</code> on action buttons — include the row identifier (e.g., \"Edit invoice #INV-001\").",
+        "ariaSort": "<code>aria-sort=\"ascending\"</code> / <code>\"descending\"</code> / <code>\"none\"</code> on sortable <code>TableHead</code> elements.",
+        "tabIndex": "<code>tabIndex={0}</code> on the <code>overflow-x-auto</code> wrapper to enable keyboard horizontal scroll."
+      },
+      "screenReader": {
+        "onRender": "When the table renders: the reader announces the caption, then reads headers and cells in order.",
+        "onEmpty": "In empty state: the reader reads the colSpan cell message as the row content.",
+        "onAction": "Action buttons: the reader announces the full aria-label (\"Actions for invoice #INV-001\").",
+        "onSort": "In sortable tables: the reader announces \"Column, ascending\" or \"Column, descending\" based on aria-sort."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "dataTable": "For tables with sorting, filters, multi-selection, and pagination — uses Table internally with TanStack Table.",
+      "avatar": "Frequently displayed in table cells to represent users or entities.",
+      "badge": "Compact status indicator in cells — e.g., Paid, Pending, Canceled.",
+      "pagination": "For navigating between pages of a table with many records (above 20 rows).",
+      "skeleton": "To represent the loading state of rows while data is being fetched.",
+      "dropdownMenu": "For row action menus — triggered by a ghost button in the last column."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "The <code>Table</code> component already wraps the <code>&lt;table&gt;</code> element in a <code>&lt;div data-slot=\"table-container\"&gt;</code> with <code>overflow-x-auto</code> — no external wrapper is needed.",
+      "tip2": "<code>scope=\"col\"</code> on <code>TableHead</code> is not added automatically by the component — include it manually on each <code>&lt;th&gt;</code>.",
+      "tip3": "The empty state is the consumer's responsibility — render a <code>TableRow</code> with <code>TableCell colSpan</code> equal to the number of columns when the data array is empty.",
+      "tip4": "<code>TableFooter</code> is for totals and summaries — never use a <code>TableBody</code> row for this; the semantic <code>tfoot</code> is read differently by screen readers.",
+      "tip5": "For tables with keyboard horizontal scroll, add <code>tabIndex={0}</code> on the external wrapper around the <code>Table</code> container."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Table is a passive component — it does not fire events on its own. Track actions inside the table via the responsible components: <code>button_click</code> for row action buttons, <code>navigation_click</code> for cell links.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Table usage pattern.",
+        "item1": { "action": "Render basic table with data", "result": "Table, TableHeader, TableBody, and TableCaption rendered with correct semantic HTML", "priority": "high" },
+        "item2": { "action": "Render table with empty array", "result": "TableRow with TableCell colSpan and visible empty state message", "priority": "high" },
+        "item3": { "action": "Render TableFooter with totals", "result": "tfoot with bg-muted/50 and border-t applied, below TableBody", "priority": "medium" },
+        "item4": { "action": "Apply data-[state=selected] on TableRow", "result": "bg-muted background applied to selected row", "priority": "medium" },
+        "item5": { "action": "Render with content wider than container", "result": "Horizontal scroll activated via overflow-x-auto on internal container", "priority": "high" },
+        "item6": { "action": "Render TableCaption with sr-only", "result": "Caption visually hidden, present in DOM for screen readers", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "scope=\"col\" present on all TableHead elements", "level": "AA", "how": "Inspect th attributes in the DOM" },
+        "item2": { "criterion": "TableCaption present and descriptive", "level": "AA", "how": "getByRole('table', { name: /caption/ }) or querySelector('caption')" },
+        "item3": { "criterion": "Action buttons with contextual aria-label", "level": "AA", "how": "getByRole('button', { name: /invoice/ }) in testing-library" },
+        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Basic — with complete data", "priority": "high" },
+        "item2": { "story": "Empty state — centered message", "priority": "high" },
+        "item3": { "story": "With footer — totals and summaries", "priority": "medium" },
+        "item4": { "story": "With row actions — ghost button or DropdownMenu", "priority": "medium" },
+        "item5": { "story": "Selected row — data-[state=selected]", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Usage Patterns",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Table",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Muestra datos tabulares estructurados con semántica HTML correcta, scroll horizontal automático y soporte para estados vacíos y acciones por fila.",
+    "seo": {
+      "title": "Table — Display · Design System",
+      "description": "Documentación del Table: 8 subcomponentes semánticos, scroll horizontal, empty state, accesibilidad WCAG con scope y caption.",
+      "aiSummary": "Componente Table con 8 subcomponentes (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), scroll horizontal automático, empty state obligatorio e integración con TanStack Table para ordenación y filtros.",
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, TanStack Table",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "invoice": "Factura",
+        "status": "Estado",
+        "method": "Método",
+        "amount": "Importe",
+        "actions": "Acciones",
+        "inv001": "#INV-001",
+        "inv002": "#INV-002",
+        "inv003": "#INV-003",
+        "inv004": "#INV-004",
+        "inv005": "#INV-005",
+        "paid": "Pagado",
+        "pending": "Pendiente",
+        "canceled": "Cancelado",
+        "creditCard": "Tarjeta de crédito",
+        "bankTransfer": "Transferencia bancaria",
+        "pix": "Pix",
+        "amount001": "R$ 250,00",
+        "amount002": "R$ 150,00",
+        "amount003": "R$ 350,00",
+        "amount004": "R$ 450,00",
+        "amount005": "R$ 50,00",
+        "total": "Total",
+        "totalAmount": "R$ 1.250,00",
+        "caption": "Lista de facturas recientes",
+        "emptyState": "No se encontraron facturas.",
+        "actionsLabel": "Acciones para la factura"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Table</strong> — wrapper <code>&lt;table&gt;</code> con <code>overflow-x-auto</code> en el contenedor interno automático.",
+      "item2": "<strong>TableHeader</strong> — elemento <code>&lt;thead&gt;</code> con borde inferior aplicado via <code>[&_tr]:border-b</code>.",
+      "item3": "<strong>TableBody</strong> — elemento <code>&lt;tbody&gt;</code>; elimina el borde de la última fila via <code>[&_tr:last-child]:border-0</code>.",
+      "item4": "<strong>TableFooter</strong> — elemento <code>&lt;tfoot&gt;</code> con <code>bg-muted/50</code>; úsalo para totales y sumarios.",
+      "item5": "<strong>TableRow</strong> — elemento <code>&lt;tr&gt;</code> con hover y estado <code>data-[state=selected]</code>.",
+      "item6": "<strong>TableHead</strong> — elemento <code>&lt;th&gt;</code> con <code>h-10</code>, <code>font-medium</code> y <code>scope=\"col\"</code> obligatorio.",
+      "item7": "<strong>TableCell</strong> — elemento <code>&lt;td&gt;</code> con <code>p-2</code> y <code>align-middle</code>.",
+      "item8": "<strong>TableCaption</strong> — elemento <code>&lt;caption&gt;</code> con <code>text-muted-foreground</code>; puede ser <code>sr-only</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Table>\n  <TableCaption>Descripción de la tabla</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Columna</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Dato</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Usa Table para mostrar datos relacionales estructurados en filas y columnas — nunca para el layout de la página.",
+        "item2": "<code>TableCaption</code> es obligatorio en toda tabla — usa <code>sr-only</code> cuando el contexto visual ya es claro.",
+        "item3": "<code>scope=\"col\"</code> en todos los <code>TableHead</code> — asocia los encabezados a las celdas para lectores de pantalla.",
+        "item4": "Implementa siempre el empty state — nunca muestres una tabla sin mensaje explicativo cuando no hay datos.",
+        "item5": "Para ordenación, filtrado y paginación robustos, combina con <code>@tanstack/react-table</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Lista de registros con múltiples atributos", "u": "Sí", "a": "-" },
+        "item2": { "s": "Informe con totales y subtotales", "u": "Sí, con TableFooter", "a": "-" },
+        "item3": { "s": "Layout de columnas de página", "u": "No", "a": "CSS Grid o Flexbox" },
+        "item4": { "s": "Lista simple sin atributos comparables", "u": "No", "a": "ul/li o Card" },
+        "item5": { "s": "Datos con ordenación y filtros", "u": "Sí, con TanStack Table", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "caption": {
+            "name": "TableCaption",
+            "format": "Frase nominal descriptiva, sin punto final",
+            "good": "\"Lista de facturas recientes\", \"Transacciones del mes\"",
+            "bad": "\"Tabla de datos.\", \"Datos\""
+          },
+          "head": {
+            "name": "TableHead",
+            "format": "Sustantivo corto, primera letra mayúscula, sin punto final",
+            "good": "\"Factura\", \"Estado\", \"Importe\"",
+            "bad": "\"ID de factura:\", \"Estado actual\", \"Importe (USD):\""
+          },
+          "emptyState": {
+            "name": "Empty state",
+            "format": "\"No se encontraron [elementos].\" — tono alentador con CTA si está disponible",
+            "good": "\"No se encontraron facturas.\"",
+            "bad": "\"Lista vacía.\", \"Sin datos\""
+          },
+          "actionLabel": {
+            "name": "aria-label de acción",
+            "format": "Verbo + objeto + identificador de fila",
+            "good": "\"Editar factura #INV-001\"",
+            "bad": "\"Editar\", \"Acciones\""
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "Los datos tienen estructura relacional con atributos comparables entre filas",
+        "item2": "El usuario necesita explorar y comparar valores entre registros",
+        "item3": "Se necesitan acciones por fila (editar, eliminar, ver)",
+        "item4": "Totales o sumarios deben destacarse en el pie de tabla"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El objetivo es organizar el layout de la página — usa Grid o Flexbox",
+        "item2": "Los datos son una lista simple sin atributos comparables — usa lista o Card",
+        "item3": "Hay pocos elementos sin relación entre columnas — usa descripciones o párrafos"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "TableCaption descriptivo (puede ser sr-only) + scope=\"col\" en todos los encabezados.",
+        "dont": "Tabla sin caption ni scope — inaccesible para lectores de pantalla."
+      },
+      "pair2": {
+        "do": "Empty state con mensaje claro cuando no hay datos.",
+        "dont": "Tabla vacía sin mensaje — el usuario no sabe si es un error o ausencia de datos."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Patrones de Uso",
+      "basic": {
+        "label": "Básico",
+        "description": "Tabla con caption, encabezado y cuerpo. Patrón mínimo funcional con scroll horizontal automático via contenedor <code>overflow-x-auto</code> interno."
+      },
+      "withFooter": {
+        "label": "Con pie de tabla",
+        "description": "Agrega <code>TableFooter</code> para mostrar totales, promedios o sumarios. Recibe <code>bg-muted/50</code> automáticamente para diferenciación visual."
+      },
+      "withSrOnlyCaption": {
+        "label": "Caption sr-only",
+        "description": "Cuando el título de la tabla ya es visible en la página, usa <code>TableCaption</code> con <code>className=\"sr-only\"</code> para mantener accesibilidad sin duplicar visualmente."
+      },
+      "withInlineActions": {
+        "label": "Acciones por fila",
+        "description": "Agrega una columna de acciones con <code>Button variant=\"ghost\"</code> o <code>DropdownMenu</code>. El <code>aria-label</code> debe incluir el identificador de la fila: \"Acciones para la factura #INV-001\"."
+      },
+      "withEmptyState": {
+        "label": "Estado vacío",
+        "description": "Cuando no hay datos, renderiza una <code>TableRow</code> con <code>TableCell colSpan</code> cubriendo todas las columnas y un mensaje centrado en <code>text-muted-foreground</code>."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "empty": {
+        "label": "Vacío",
+        "trigger": "Array de datos vacío",
+        "behavior": "<code>TableRow</code> con <code>TableCell colSpan</code> total, texto centrado, <code>h-24</code> y <code>text-muted-foreground</code>"
+      },
+      "selected": {
+        "label": "Fila seleccionada",
+        "trigger": "<code>data-[state=selected]</code> en <code>TableRow</code>",
+        "behavior": "Fondo <code>bg-muted</code> en la fila. Usar con checkbox o selección programática"
+      },
+      "loading": {
+        "label": "Cargando",
+        "trigger": "Renderizar <code>Skeleton</code> en las celdas durante la carga",
+        "behavior": "Reemplaza las celdas de datos con <code>Skeleton</code> con altura y anchura aproximadas al contenido esperado"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "tableTitle": "Table",
+      "tableHeaderTitle": "TableHeader",
+      "tableBodyTitle": "TableBody",
+      "tableFooterTitle": "TableFooter",
+      "tableRowTitle": "TableRow",
+      "tableHeadTitle": "TableHead",
+      "tableCellTitle": "TableCell",
+      "tableCaptionTitle": "TableCaption",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción"
+      },
+      "items": {
+        "className": "Clases Tailwind adicionales aplicadas al elemento HTML correspondiente.",
+        "scope": "<code>\"col\"</code> obligatorio en <code>TableHead</code> — asocia el encabezado a la columna para lectores de pantalla.",
+        "colSpan": "Número de columnas que debe ocupar la celda. Usar en el empty state para cubrir todas las columnas.",
+        "rowSpan": "Número de filas que debe ocupar la celda. Usar en celdas que agrupan datos de múltiples filas.",
+        "dataState": "<code>data-[state=selected]</code> en <code>TableRow</code> activa el estilo de fila seleccionada (<code>bg-muted</code>).",
+        "children": "Contenido del subcomponente — celdas, filas o subcomponentes hijos."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "Todos los subcomponentes aceptan <code>className</code> y reenvían el resto de las props al elemento HTML correspondiente via spread (<code>...props</code>). Usa tokens semánticos para personalizaciones — nunca colores hardcoded."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token / Clase",
+        "part": "Parte del componente",
+        "description": "Descripción"
+      },
+      "items": {
+        "borderB": "<code>border-b</code> — borde inferior en las filas de <code>TableHeader</code> y <code>TableBody</code>.",
+        "bgMuted": "<code>bg-muted/50</code> — fondo del <code>TableFooter</code> y hover en <code>TableRow</code>.",
+        "bgMutedSelected": "<code>data-[state=selected]:bg-muted</code> — fondo de la fila seleccionada en <code>TableRow</code>.",
+        "textMuted": "<code>text-muted-foreground</code> — color del <code>TableCaption</code> y del empty state.",
+        "fontMedium": "<code>font-medium</code> — peso de los encabezados en <code>TableHead</code> y <code>TableFooter</code>.",
+        "h10": "<code>h-10</code> — altura predeterminada de las celdas de encabezado en <code>TableHead</code>.",
+        "p2": "<code>p-2</code> — padding predeterminado de las celdas de datos en <code>TableCell</code>.",
+        "captionBottom": "<code>caption-bottom</code> — posiciona el <code>TableCaption</code> debajo de la tabla."
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Table usa semántica HTML nativa (<code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;caption&gt;</code>). Cumple WCAG 2.1 AA: 1.3.1 (información y relaciones), 4.1.2 (nombre, función, valor). <code>scope=\"col\"</code> obligatorio en todos los <code>TableHead</code>. <code>TableCaption</code> obligatorio para lectores de pantalla.",
+      "keyboard": {
+        "tab": "Navega a los elementos interactivos dentro de las celdas (botones, links, checkboxes).",
+        "enter": "Activa el elemento interactivo con foco dentro de la celda.",
+        "space": "Activa los checkboxes de selección de fila, si los hay.",
+        "noKeyboard": "Las celdas de datos pasivas no reciben foco por teclado — solo el contenido interactivo interno."
+      },
+      "aria": {
+        "scope": "<code>scope=\"col\"</code> — obligatorio en todos los <code>TableHead</code>; mapea los encabezados a las celdas de la columna.",
+        "caption": "<code>TableCaption</code> — leído por los lectores de pantalla antes de las celdas; describe el propósito de la tabla.",
+        "ariaLabel": "<code>aria-label</code> contextual en los botones de acción — incluye el identificador de la fila (ej: \"Editar factura #INV-001\").",
+        "ariaSort": "<code>aria-sort=\"ascending\"</code> / <code>\"descending\"</code> / <code>\"none\"</code> en los <code>TableHead</code> con ordenación activa.",
+        "tabIndex": "<code>tabIndex={0}</code> en el wrapper <code>overflow-x-auto</code> para permitir scroll horizontal por teclado."
+      },
+      "screenReader": {
+        "onRender": "Al renderizar la tabla: el lector anuncia el caption, luego lee encabezados y celdas en orden.",
+        "onEmpty": "En el empty state: el lector lee el mensaje de la celda con colSpan como contenido de la fila.",
+        "onAction": "Botones de acción: el lector anuncia el aria-label completo (\"Acciones para la factura #INV-001\").",
+        "onSort": "En tablas ordenables: el lector anuncia \"Columna, ascendente\" o \"Columna, descendente\" según el aria-sort."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "dataTable": "Para tablas con ordenación, filtros, selección múltiple y paginación — usa Table internamente con TanStack Table.",
+      "avatar": "Con frecuencia se muestra en celdas de tabla para representar usuarios o entidades.",
+      "badge": "Indicador de estado compacto en celdas — ej: Pagado, Pendiente, Cancelado.",
+      "pagination": "Para navegar entre páginas de una tabla con muchos registros (más de 20 filas).",
+      "skeleton": "Para representar el estado de carga de las filas mientras se obtienen los datos.",
+      "dropdownMenu": "Para menús de acciones por fila — activado por un botón ghost en la última columna."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "El componente <code>Table</code> ya envuelve el elemento <code>&lt;table&gt;</code> en un <code>&lt;div data-slot=\"table-container\"&gt;</code> con <code>overflow-x-auto</code> — no es necesario agregar un wrapper externo.",
+      "tip2": "<code>scope=\"col\"</code> en <code>TableHead</code> no lo agrega el componente automáticamente — debes incluirlo manualmente en cada <code>&lt;th&gt;</code>.",
+      "tip3": "El empty state es responsabilidad del consumidor — renderiza una <code>TableRow</code> con <code>TableCell colSpan</code> igual al número de columnas cuando el array de datos esté vacío.",
+      "tip4": "<code>TableFooter</code> es para totales y sumarios — nunca uses una fila de <code>TableBody</code> para ese fin; el <code>tfoot</code> semántico es leído de forma diferente por los lectores de pantalla.",
+      "tip5": "Para tablas con scroll horizontal por teclado, agrega <code>tabIndex={0}</code> en el wrapper externo al contenedor del <code>Table</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Table es un componente pasivo — no emite eventos por sí solo. Rastrea las acciones dentro de la tabla a través de los componentes responsables: <code>button_click</code> para botones de acción por fila, <code>navigation_click</code> para links en celdas.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada patrón de uso del Table.",
+        "item1": { "action": "Renderizar tabla básica con datos", "result": "Table, TableHeader, TableBody y TableCaption renderizados con HTML semántico correcto", "priority": "high" },
+        "item2": { "action": "Renderizar tabla con array vacío", "result": "TableRow con TableCell colSpan y mensaje de empty state visible", "priority": "high" },
+        "item3": { "action": "Renderizar TableFooter con totales", "result": "tfoot con bg-muted/50 y border-t aplicados, debajo del TableBody", "priority": "medium" },
+        "item4": { "action": "Aplicar data-[state=selected] en TableRow", "result": "Fondo bg-muted aplicado en la fila seleccionada", "priority": "medium" },
+        "item5": { "action": "Renderizar con contenido más ancho que el contenedor", "result": "Scroll horizontal activado via overflow-x-auto en el contenedor interno", "priority": "high" },
+        "item6": { "action": "Renderizar TableCaption con sr-only", "result": "Caption invisible visualmente, presente en el DOM para lectores de pantalla", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "scope=\"col\" presente en todos los TableHead", "level": "AA", "how": "Inspeccionar atributos th en el DOM" },
+        "item2": { "criterion": "TableCaption presente y descriptivo", "level": "AA", "how": "getByRole('table', { name: /caption/ }) o querySelector('caption')" },
+        "item3": { "criterion": "Botones de acción con aria-label contextual", "level": "AA", "how": "getByRole('button', { name: /factura/ }) en testing-library" },
+        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Básico — con datos completos", "priority": "high" },
+        "item2": { "story": "Estado vacío — mensaje centrado", "priority": "high" },
+        "item3": { "story": "Con pie de tabla — totales y sumarios", "priority": "medium" },
+        "item4": { "story": "Con acciones por fila — botón ghost o DropdownMenu", "priority": "medium" },
+        "item5": { "story": "Fila seleccionada — data-[state=selected]", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Patrones de Uso",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
