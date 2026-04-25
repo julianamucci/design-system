@@ -197,13 +197,23 @@ Com os arquivos de stories já em contexto:
 - [ ] Cada estado (disabled, loading, error) tem story dedicada
 - [ ] Cada composição relevante tem story dedicada
 
-**2b. Play functions**
+**2b. Controls do Playground**
+- [ ] `meta` tem `argTypes` com ao menos 1 control por prop relevante — painel Controls do Storybook não está vazio
+- [ ] `render` consome `(args)` e passa as props para o componente root (não `render: () =>` sem args)
+- [ ] Props de montagem (ex: `defaultOpen`) têm mecanismo de re-mount ao mudar no control:
+  - React: `key={String(args.defaultOpen)}`
+  - Vue: `:key="String(args.defaultOpen)"` no elemento root do template
+  - Svelte: `{#key args.defaultOpen}` envolvendo o componente no wrapper `.svelte`
+  - Basecoat: re-execução natural do factory — verificar que `render: (args) =>` usa os args
+- [ ] `disabled` é passado explicitamente ao elemento interativo filho (trigger/button/input), não apenas ao root
+
+**2c. Play functions**
 - [ ] Story Playground tem testes completos: presença, clique, disabled, focus, Enter/Space
 - [ ] Story Disabled verifica `toBeDisabled()` e que o callback não dispara
 - [ ] Stories com `aria-label` verificam via `getByRole({ name: ... })`
 - [ ] Nenhuma sub-story sem play function (se a story testa um estado interativo)
 
-**2c. a11y.disable**
+**2d. a11y.disable**
 - [ ] Nenhuma story tem `a11y.disable: true` sem comentário de justificativa no mesmo bloco
 
 ---

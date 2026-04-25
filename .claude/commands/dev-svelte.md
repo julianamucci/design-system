@@ -141,6 +141,47 @@ A docs page pode reutilizar `ComponentStory.svelte` diretamente como preview qua
 
 ---
 
+## Controls da Story Playground
+
+A story `Playground` deve ter controls funcionais que o usuário consiga manipular no painel e ver o resultado no preview.
+
+**Regras obrigatórias:**
+
+- `meta` deve ter `argTypes` com ao menos 1 control por prop relevante do componente
+- O wrapper `.svelte` deve aceitar e repassar todos os props expostos via `argTypes`
+- Se o componente não expõe props visuais (ex: componentes puramente compostos), exponha props de comportamento como `loop`, `shouldFilter`
+- Props de montagem — aquelas que só funcionam na inicialização e não reagem a mudanças posteriores — exigem um bloco `{#key}` no wrapper para forçar re-mount quando o control muda. Verifique o tipo do componente antes: Bits UI usa `open` (bindável, não `defaultOpen`):
+
+```svelte
+<!-- ✅ CORRETO — re-monta quando o control open muda -->
+{#key open}
+  <Collapsible {open} {disabled}>
+    <CollapsibleTrigger disabled={disabled}>...</CollapsibleTrigger>
+  </Collapsible>
+{/key}
+
+<!-- ❌ ERRADO — open muda no painel mas o componente não reflete -->
+<Collapsible {open} {disabled}>...</Collapsible>
+```
+
+- `disabled` deve ser passado explicitamente ao elemento interativo filho (trigger, button, input) além do componente root — o root frequentemente não propaga o visual de disabled para filhos compostos:
+
+```svelte
+<!-- ✅ CORRETO -->
+<CollapsibleTrigger disabled={disabled}>
+  <Button disabled={disabled}>...</Button>
+</CollapsibleTrigger>
+
+<!-- ❌ ERRADO — Button não recebe disabled, visual não muda -->
+<CollapsibleTrigger>
+  <Button>...</Button>
+</CollapsibleTrigger>
+```
+
+- Se o componente não tem nenhuma prop controlável no sentido estrito, documente isso explicitamente com `parameters.controls: { disable: true }` em vez de deixar o painel vazio sem explicação
+
+---
+
 ## Play Functions
 
 ```ts

@@ -112,6 +112,34 @@ Se houver divergência, **a story é a fonte de verdade visual** — alinhe a do
 
 ---
 
+## Controls da Story Playground
+
+A story `Playground` deve ter controls funcionais que o usuário consiga manipular no painel e ver o resultado no preview.
+
+**Regras obrigatórias:**
+
+- `meta` deve ter `argTypes` com ao menos 1 control por prop relevante do componente
+- `render` deve ser uma função que recebe `(args)` e constrói o DOM com base nos valores de `args`
+- Props de montagem não são um problema nesta stack: `render` é chamado a cada mudança de control e o factory function re-executa do zero, então `defaultOpen` e similares funcionam naturalmente
+- `disabled` deve ser passado explicitamente ao elemento interativo filho (trigger, button, input) além do elemento root — o root frequentemente não propaga o visual de disabled para filhos compostos:
+
+```ts
+// ✅ CORRETO
+render: (args) => {
+  const root = createCollapsible(args);
+  const trigger = root.querySelector('[data-slot="collapsible-trigger"]');
+  if (trigger && args.disabled) trigger.setAttribute('disabled', '');
+  return root;
+},
+
+// ❌ ERRADO — trigger não recebe disabled, visual não muda
+render: (args) => createCollapsible(args),
+```
+
+- Se o componente não tem nenhuma prop controlável no sentido estrito, documente isso explicitamente com `parameters.controls: { disable: true }` em vez de deixar o painel vazio sem explicação
+
+---
+
 ## Play Functions
 
 ```ts

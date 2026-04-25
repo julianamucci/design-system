@@ -14,9 +14,9 @@ const meta = {
     docs: { page: withAutoDocsTab(CollapsibleDocs) },
   },
   argTypes: {
-    defaultOpen: {
+    open: {
       control: 'boolean',
-      description: 'Estado inicial aberto no modo não-controlado',
+      description: 'Estado aberto/fechado do painel',
     },
     disabled: {
       control: 'boolean',
@@ -24,7 +24,7 @@ const meta = {
     },
   },
   args: {
-    defaultOpen: false,
+    open: false,
     disabled: false,
   },
 } satisfies Meta<typeof Collapsible>;
@@ -36,7 +36,7 @@ export const Playground: Story = {
   render: (args) => ({
     Component: CollapsibleStory,
     props: {
-      defaultOpen: args.defaultOpen,
+      open: args.open,
       disabled: args.disabled,
       label: 'Exibir filtros avançados',
       contentText: 'Filtro avançado 1 · Filtro avançado 2',

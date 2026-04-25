@@ -39,8 +39,8 @@ export const Playground: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return { args }; },
     template: `
-      <Collapsible v-bind="args" class="w-80 space-y-2">
-        <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+      <Collapsible :key="String(args.defaultOpen)" v-bind="args" class="w-80 space-y-2">
+        <CollapsibleTrigger :disabled="args.disabled" class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
           Exibir filtros avançados
           <ChevronDown
             aria-hidden="true"

@@ -28,6 +28,20 @@ const meta = {
       },
     },
   },
+  argTypes: {
+    loop: {
+      control: 'boolean',
+      description: 'Navegação por teclado cicla do último para o primeiro item',
+    },
+    shouldFilter: {
+      control: 'boolean',
+      description: 'Habilita filtro interno por texto (desative para filtro externo)',
+    },
+  },
+  args: {
+    loop: false,
+    shouldFilter: true,
+  },
 } satisfies Meta<typeof Command>;
 
 export default meta;

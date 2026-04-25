@@ -145,6 +145,53 @@ Se houver divergência, **a story é a fonte de verdade visual** — alinhe a do
 
 ---
 
+## Controls da Story Playground
+
+A story `Playground` deve ter controls funcionais que o usuário consiga manipular no painel e ver o resultado no preview.
+
+**Regras obrigatórias:**
+
+- `meta` deve ter `argTypes` com ao menos 1 control por prop relevante do componente
+- `render` deve ser `render: (args) => ({...})` passando `args` para o componente via `v-bind="args"`
+- Se o componente não expõe props visuais (ex: componentes puramente compostos), exponha props de comportamento como `loop`, `shouldFilter`
+- Props de montagem — aquelas que só funcionam na inicialização e não reagem a mudanças posteriores (ex: `defaultOpen`) — exigem `:key="String(args.defaultOpen)"` no elemento raiz do template para forçar re-render quando o control muda:
+
+```ts
+// ✅ CORRETO — re-renderiza quando o control defaultOpen muda
+render: (args) => ({
+  components: { Collapsible, CollapsibleTrigger, CollapsibleContent, Button },
+  setup() { return { args }; },
+  template: `<Collapsible :key="String(args.defaultOpen)" v-bind="args">
+    <CollapsibleTrigger :disabled="args.disabled">...</CollapsibleTrigger>
+  </Collapsible>`,
+}),
+
+// ❌ ERRADO — defaultOpen muda no painel mas o componente não reflete
+render: (args) => ({
+  template: `<Collapsible v-bind="args">...</Collapsible>`,
+}),
+```
+
+- `disabled` deve ser passado explicitamente ao elemento interativo filho (trigger, button, input) além do componente root — o root frequentemente não propaga o visual de disabled para filhos compostos:
+
+```ts
+// ✅ CORRETO
+template: `<Collapsible v-bind="args">
+  <CollapsibleTrigger :disabled="args.disabled">
+    <Button :disabled="args.disabled">...</Button>
+  </CollapsibleTrigger>
+</Collapsible>`,
+
+// ❌ ERRADO — Button não recebe :disabled, visual não muda
+template: `<Collapsible v-bind="args">
+  <CollapsibleTrigger><Button>...</Button></CollapsibleTrigger>
+</Collapsible>`,
+```
+
+- Se o componente não tem nenhuma prop controlável no sentido estrito, documente isso explicitamente com `parameters.controls: { disable: true }` em vez de deixar o painel vazio sem explicação
+
+---
+
 ## Play Functions
 
 ```ts
