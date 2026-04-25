@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { ChartContainer, ChartLegendContent, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
-import { VisXYContainer, VisGroupedBar, VisLine, VisArea, VisAxis, VisCrosshair, VisTooltip } from '@unovis/vue';
+import { VisXYContainer, VisGroupedBar, VisLine, VisArea, VisAxis, VisCrosshair, VisTooltip, VisDonut } from '@unovis/vue';
 import { Card } from '@/components/ui/card';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
