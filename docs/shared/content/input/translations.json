@@ -1,0 +1,989 @@
+{
+  "pt-BR": {
+    "title": "Input",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Campo de texto de linha única para qualquer tipo de entrada do usuário — texto, email, senha, número, telefone, URL ou busca.",
+    "seo": {
+      "title": "Input — Formulário · Design System",
+      "description": "Documentação do Input: campo de texto linha única, tipos HTML nativos, estados disabled e error, acessibilidade WCAG, integração com Form.",
+      "aiSummary": "Componente Input de linha única com suporte a todos os tipos HTML nativos, estados disabled e aria-invalid, integração com FormField e InputGroup para composição avançada.",
+      "aiEntities": "Input, InputGroup, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-invalid, FormField",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "defaultLabel": "Nome completo",
+        "defaultPlaceholder": "ex: João da Silva",
+        "emailLabel": "Email",
+        "emailPlaceholder": "ex: joao@empresa.com",
+        "passwordLabel": "Senha",
+        "passwordPlaceholder": "Mínimo 8 caracteres",
+        "searchLabel": "Buscar",
+        "searchPlaceholder": "Buscar componentes...",
+        "disabledLabel": "Campo desabilitado",
+        "disabledPlaceholder": "Não disponível",
+        "errorLabel": "Email",
+        "errorPlaceholder": "ex: joao@empresa.com",
+        "errorMessage": "Email inválido. Use o formato nome@dominio.com",
+        "fileLabel": "Arquivo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Input</strong> — elemento <code>&lt;input&gt;</code> nativo com <code>data-slot=\"input\"</code>. Aceita todos os atributos HTML do input.",
+      "item2": "<strong>type</strong> — define o tipo de entrada: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>tel</code>, <code>url</code>, <code>search</code>, <code>date</code>, <code>file</code>.",
+      "item3": "<strong>placeholder</strong> — exemplo do formato esperado, nunca instrução. Nunca substitui o Label.",
+      "item4": "<strong>Label (externo)</strong> — rótulo associado via <code>htmlFor</code> ou via <code>FormLabel</code> dentro de <code>FormField</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obrigatório */}\n      <FormControl>\n        <Input type=\"email\"               {/* type adequado */}\n               placeholder=\"ex: joao@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoio.</FormDescription>\n      <FormMessage />                      {/* Erro do Zod */}\n    </FormItem>\n  )}\n</FormField>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use o <code>type</code> adequado ao dado: <code>email</code>, <code>password</code>, <code>tel</code>, <code>number</code>, <code>url</code>, <code>search</code>.",
+        "item2": "Placeholder deve ser um exemplo real do formato — nunca uma instrução como 'Digite seu email'.",
+        "item3": "Placeholder não substitui Label — ambos são obrigatórios em todo campo de formulário.",
+        "item4": "Dentro de formulários, sempre use <code>FormField &gt; FormItem &gt; FormLabel + FormControl + FormMessage</code>.",
+        "item5": "Use <code>autoComplete</code> adequado para melhorar a experiência em mobile e gestores de senhas."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Entrada de texto linha única", "u": "Sim", "a": "-" },
+        "item2": { "s": "Texto de múltiplas linhas", "u": "Não", "a": "Textarea" },
+        "item3": { "s": "Seleção em lista de opções", "u": "Não", "a": "Select ou Combobox" },
+        "item4": { "s": "Código OTP ou PIN", "u": "Não", "a": "InputOTP" },
+        "item5": { "s": "Busca com ação explícita", "u": "Sim, type search", "a": "-" },
+        "item6": { "s": "Input com prefixo ou sufixo", "u": "Sim, via InputGroup", "a": "-" }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O usuário precisa digitar texto livre de linha única",
+        "item2": "O campo tem um tipo semântico (email, senha, telefone, URL)",
+        "item3": "É parte de um formulário com validação e submit",
+        "item4": "Precisa de prefixo, sufixo ou botão interno (via InputGroup)"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "O texto tem múltiplas linhas — use <code>Textarea</code>",
+        "item2": "A seleção é de uma lista fixa — use <code>Select</code>",
+        "item3": "É entrada de código OTP ou PIN — use <code>InputOTP</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Placeholder com exemplo real: 'ex: joao@empresa.com'. Orienta sem instruir.",
+        "dont": "Placeholder como instrução: 'Digite seu email'. Redundante com o label."
+      },
+      "pair2": {
+        "do": "type='email' para emails — teclado mobile otimizado e validação nativa.",
+        "dont": "type='text' para todos os campos — perde semântica e recursos do browser."
+      },
+      "pair3": {
+        "do": "Label visível sempre presente, mesmo com placeholder definido.",
+        "dont": "Usar apenas placeholder como rótulo — desaparece ao digitar."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withGroup": "Com InputGroup:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "note": "O Input não tem variantes via prop. A aparência muda conforme o <code>type</code> e o estado (disabled, aria-invalid). O <code>InputGroup</code> é o padrão para inputs com addons.",
+      "types": {
+        "title": "Tipos disponíveis",
+        "text": "Texto livre. Default quando <code>type</code> não é especificado.",
+        "email": "Email. Teclado mobile com '@'. Validação de formato pelo browser.",
+        "password": "Senha. Caracteres mascarados. Botão nativo de exibir/ocultar em alguns browsers.",
+        "number": "Numérico. Aceita apenas dígitos, vírgula e ponto. Setas de incremento nativas.",
+        "tel": "Telefone. Teclado numérico em mobile. Sem validação de formato nativa.",
+        "url": "URL. Teclado mobile com '/' e '.com'. Validação de formato pelo browser.",
+        "search": "Busca. Botão de limpar nativo em alguns browsers. Use com botão de submit sr-only.",
+        "date": "Data. Seletor nativo do browser. Valor em formato ISO (YYYY-MM-DD).",
+        "file": "Arquivo. Abre seletor de arquivo nativo. Estilização limitada pela plataforma."
+      },
+      "inputGroup": {
+        "title": "InputGroup — Composição com addons",
+        "description": "O <code>InputGroup</code> é um componente separado que envolve o Input para adicionar prefixos, sufixos, ícones e botões internos.",
+        "subcomponents": {
+          "inputGroup": "<strong>InputGroup</strong> — container com <code>role=\"group\"</code>. Gerencia foco, borda e estados.",
+          "inputGroupAddon": "<strong>InputGroupAddon</strong> — container de addon. Prop <code>align</code>: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>.",
+          "inputGroupInput": "<strong>InputGroupInput</strong> — Input adaptado para uso dentro do InputGroup (sem borda própria).",
+          "inputGroupButton": "<strong>InputGroupButton</strong> — Button adaptado com tamanho reduzido para uso interno.",
+          "inputGroupText": "<strong>InputGroupText</strong> — Texto ou ícone decorativo dentro do addon.",
+          "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adaptada para uso dentro do InputGroup."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "default": {
+        "label": "Padrão",
+        "trigger": "Sem props adicionais",
+        "behavior": "Borda <code>border-input</code>, fundo transparente, texto <code>foreground</code>"
+      },
+      "focus": {
+        "label": "Foco",
+        "trigger": "Ao clicar ou navegar via Tab",
+        "behavior": "Borda <code>ring-ring</code> + ring de 3px com opacidade 50%"
+      },
+      "disabled": {
+        "label": "Desabilitado",
+        "trigger": "Prop <code>disabled</code>",
+        "behavior": "Cursor not-allowed, opacidade 50%, fundo <code>bg-input/50</code>, sem interação"
+      },
+      "error": {
+        "label": "Erro",
+        "trigger": "<code>aria-invalid=\"true\"</code> (aplicado pelo FormControl automaticamente)",
+        "behavior": "Borda <code>border-destructive</code> + ring vermelho. FormMessage exibe a mensagem."
+      },
+      "file": {
+        "label": "Arquivo",
+        "trigger": "Prop <code>type=\"file\"</code>",
+        "behavior": "Botão nativo de seleção de arquivo. Altura ajustada via token <code>--height-xs</code>."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "inputTitle": "Input",
+      "inputGroupTitle": "InputGroup e subcomponentes",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "type_prop": "Tipo HTML do input. Use sempre o tipo semântico correto.",
+        "className": "Classes Tailwind adicionais para customização pontual.",
+        "placeholder": "Texto de exemplo do formato esperado — nunca instrução.",
+        "disabled": "Desabilita o campo. Aplica estilos e remove interatividade.",
+        "ariaInvalid": "Estado de erro. Aplicado automaticamente pelo <code>FormControl</code> dentro de <code>FormField</code>.",
+        "autoComplete": "Valor para o atributo <code>autocomplete</code> do HTML. Melhora UX mobile e gestores de senhas.",
+        "align_addon": "Posição do addon: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "O Input estende <code>React.ComponentProps&lt;\"input\"&gt;</code> — aceita todos os atributos HTML nativos do input. Use <code>className</code> para customizações pontuais com tokens do projeto."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "height": "Altura do campo via token de densidade",
+        "radius": "Border radius via token de tema",
+        "border": "Borda padrão do input",
+        "borderFocus": "Borda no estado de foco",
+        "ring": "Ring de foco (3px, 50% opacidade)",
+        "borderError": "Borda no estado de erro",
+        "ringError": "Ring de erro",
+        "bgDisabled": "Fundo no estado disabled (light)",
+        "bgDisabledDark": "Fundo no estado disabled (dark)",
+        "placeholder": "Cor do texto placeholder",
+        "bgDark": "Fundo em dark mode"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O Input usa o elemento <code>&lt;input&gt;</code> nativo com semântica HTML completa. O <code>FormControl</code> aplica <code>aria-invalid</code> e <code>aria-describedby</code> automaticamente. Cumpre WCAG 2.1 AA: 1.3.5 (propósito de entrada), 1.4.3 (contraste), 3.3.1 (identificação de erro).",
+      "item1": "<strong>Label obrigatório</strong> — sempre associe via <code>htmlFor</code> (fora de FormField) ou <code>FormLabel</code> (dentro de FormField). Nunca use apenas placeholder.",
+      "item2": "<strong>aria-invalid automático</strong> — o <code>FormControl</code> aplica <code>aria-invalid=\"true\"</code> quando há erro no campo. Não adicione manualmente.",
+      "item3": "<strong>aria-describedby automático</strong> — o <code>FormControl</code> vincula <code>FormDescription</code> e <code>FormMessage</code> ao campo via <code>aria-describedby</code>.",
+      "item4": "<strong>aria-required</strong> — adicione <code>aria-required=\"true\"</code> em campos obrigatórios para anunciar ao leitor de tela.",
+      "item5": "<strong>autoComplete</strong> — use <code>autoComplete=\"email\"</code>, <code>\"tel\"</code>, <code>\"name\"</code>, etc. Cumpre WCAG 1.3.5.",
+      "keyboard": {
+        "tab": "Move o foco para o próximo campo do formulário.",
+        "shiftTab": "Move o foco para o campo anterior.",
+        "typing": "Inserção de texto no campo com foco.",
+        "escape": "Limpa a busca em alguns browsers quando type='search'."
+      },
+      "aria": {
+        "ariaInvalid": "<code>aria-invalid=\"true\"</code> — aplicado pelo FormControl ao detectar erro. Anuncia estado inválido ao leitor de tela.",
+        "ariaDescribedby": "<code>aria-describedby</code> — vincula FormDescription e FormMessage ao campo automaticamente.",
+        "ariaRequired": "<code>aria-required=\"true\"</code> — em campos obrigatórios. Adicionar manualmente quando necessário.",
+        "ariaLabel": "<code>aria-label</code> — usar quando não há Label visível (ex: campo de busca isolado)."
+      },
+      "screenReader": {
+        "onFocus": "Ao focar: leitor anuncia o label, tipo e valor atual do campo.",
+        "onError": "Com aria-invalid: leitor anuncia 'inválido' e lê a FormMessage via aria-describedby.",
+        "onDisabled": "Disabled: leitor anuncia o campo como 'desabilitado' e o ignora na navegação por Tab.",
+        "placeholder": "Placeholder é anunciado quando o campo está vazio — nunca deve ser o único rótulo."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "textarea": "Para entradas de texto com múltiplas linhas.",
+      "inputOTP": "Para entrada de códigos OTP, PIN e verificação de dois fatores.",
+      "select": "Para seleção de uma opção em lista fixa de 3+ itens.",
+      "form": "Wrapper de acessibilidade para formulários com React Hook Form e Zod.",
+      "label": "Rótulo acessível para campos de formulário.",
+      "inputGroup": "Composição do Input com prefixos, sufixos, ícones e botões internos."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "Use sempre o <code>type</code> semântico correto — <code>email</code>, <code>tel</code>, <code>url</code>, <code>password</code>. Além de melhorar a UX mobile, ativa validações nativas do browser.",
+      "tip2": "O <code>InputGroup</code> é um componente separado, não uma prop do Input. Use-o quando precisar de prefixo, sufixo, ícone interno ou botão dentro do campo.",
+      "tip3": "Dentro de <code>FormField</code>, o <code>FormControl</code> injeta <code>aria-invalid</code> e <code>aria-describedby</code> automaticamente — não adicione esses atributos manualmente.",
+      "tip4": "Para formulários de busca, sempre inclua um <code>Button type='submit'</code> com <code>className='sr-only'</code> — necessário para acessibilidade por teclado.",
+      "tip5": "Altura e border-radius são controlados por tokens de tema (<code>--height-default</code>, <code>--radius-input</code>) — não sobrescrever diretamente."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastreie o Input apenas em funis críticos. Nunca envie o valor de campos sensíveis (senha, CPF, cartão de crédito).",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "fieldFocus": "field_focus",
+        "fieldFocusTrigger": "Ao focar o campo (onFocus) — apenas funis críticos",
+        "fieldFocusPayload": "{ component: 'input', location, field_name }",
+        "fieldBlur": "field_blur",
+        "fieldBlurTrigger": "Ao sair do campo com valor preenchido (onBlur)",
+        "fieldBlurPayload": "{ component: 'input', location, field_name }",
+        "fieldError": "field_error",
+        "fieldErrorTrigger": "Ao exibir mensagem de erro (FormMessage visível)",
+        "fieldErrorPayload": "{ component: 'input', location, field_name, error_message }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada estado e configuração do Input.",
+        "item1": { "action": "Renderizar Input padrão", "result": "Elemento input com data-slot='input', borda border-input, fundo transparente", "priority": "high" },
+        "item2": { "action": "Focar via Tab", "result": "Borda muda para ring-ring, ring de 3px com opacidade 50% visível", "priority": "high" },
+        "item3": { "action": "Prop disabled=true", "result": "cursor-not-allowed, opacidade 50%, bg-input/50, campo não editável", "priority": "high" },
+        "item4": { "action": "aria-invalid='true' no campo", "result": "Borda border-destructive, ring vermelho (ring-destructive/20)", "priority": "high" },
+        "item5": { "action": "type='file' renderizado", "result": "Botão de seleção nativo, altura via token --height-xs, estilo file:*", "priority": "medium" },
+        "item6": { "action": "Digitar no campo", "result": "Valor atualizado, onChange chamado (React) ou v-model sincronizado (Vue)", "priority": "high" },
+        "item7": { "action": "InputGroup com addon inline-start", "result": "Addon posicionado à esquerda, input sem borda própria, foco no grupo", "priority": "medium" },
+        "item8": { "action": "Clicar no InputGroupAddon fora de botão", "result": "Foco transferido para o input interno", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "Campo associado a label via htmlFor ou FormLabel — getByLabelText retorna o input",
+        "item3": "aria-invalid presente quando FormMessage exibe erro",
+        "item4": "aria-describedby aponta para FormMessage e FormDescription quando presentes",
+        "item5": "Contraste mínimo 4.5:1 no texto e placeholder em todos os temas"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "required": "Obrigatório",
+        "item1": { "story": "Default — estado padrão", "priority": "high" },
+        "item2": { "story": "Estados — focus, disabled, error", "priority": "high" },
+        "item3": { "story": "Tipos — email, password, search, file", "priority": "medium" },
+        "item4": { "story": "InputGroup — inline-start, inline-end, block-start", "priority": "medium" },
+        "item5": { "story": "Dark mode — todos os estados", "priority": "high" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Input",
+    "category": "Form",
+    "type": "Component",
+    "description": "Single-line text field for any type of user input — text, email, password, number, phone, URL, or search.",
+    "seo": {
+      "title": "Input — Form · Design System",
+      "description": "Documentation for Input: single-line text field, native HTML types, disabled and error states, WCAG accessibility, Form integration.",
+      "aiSummary": "Single-line Input component supporting all native HTML types, disabled and aria-invalid states, FormField integration and InputGroup for advanced composition.",
+      "aiEntities": "Input, InputGroup, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-invalid, FormField",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "defaultLabel": "Full name",
+        "defaultPlaceholder": "e.g. John Smith",
+        "emailLabel": "Email",
+        "emailPlaceholder": "e.g. john@company.com",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Minimum 8 characters",
+        "searchLabel": "Search",
+        "searchPlaceholder": "Search components...",
+        "disabledLabel": "Disabled field",
+        "disabledPlaceholder": "Not available",
+        "errorLabel": "Email",
+        "errorPlaceholder": "e.g. john@company.com",
+        "errorMessage": "Invalid email. Use the format name@domain.com",
+        "fileLabel": "File"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Input</strong> — native <code>&lt;input&gt;</code> element with <code>data-slot=\"input\"</code>. Accepts all HTML input attributes.",
+      "item2": "<strong>type</strong> — defines the input type: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>tel</code>, <code>url</code>, <code>search</code>, <code>date</code>, <code>file</code>.",
+      "item3": "<strong>placeholder</strong> — example of the expected format, never an instruction. Never replaces Label.",
+      "item4": "<strong>Label (external)</strong> — associated via <code>htmlFor</code> or via <code>FormLabel</code> inside <code>FormField</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Required label */}\n      <FormControl>\n        <Input type=\"email\"               {/* Semantic type */}\n               placeholder=\"e.g. john@company.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Helper text.</FormDescription>\n      <FormMessage />                      {/* Zod error */}\n    </FormItem>\n  )}\n</FormField>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use the appropriate <code>type</code> for the data: <code>email</code>, <code>password</code>, <code>tel</code>, <code>number</code>, <code>url</code>, <code>search</code>.",
+        "item2": "Placeholder must be a real format example — never an instruction like 'Enter your email'.",
+        "item3": "Placeholder does not replace Label — both are required on every form field.",
+        "item4": "Inside forms, always use <code>FormField &gt; FormItem &gt; FormLabel + FormControl + FormMessage</code>.",
+        "item5": "Use appropriate <code>autoComplete</code> to improve UX on mobile and password managers."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Single-line text input", "u": "Yes", "a": "-" },
+        "item2": { "s": "Multi-line text", "u": "No", "a": "Textarea" },
+        "item3": { "s": "Selection from option list", "u": "No", "a": "Select or Combobox" },
+        "item4": { "s": "OTP or PIN code", "u": "No", "a": "InputOTP" },
+        "item5": { "s": "Search with explicit action", "u": "Yes, type search", "a": "-" },
+        "item6": { "s": "Input with prefix or suffix", "u": "Yes, via InputGroup", "a": "-" }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The user needs to type single-line free text",
+        "item2": "The field has a semantic type (email, password, phone, URL)",
+        "item3": "It is part of a form with validation and submit",
+        "item4": "A prefix, suffix, or internal button is needed (via InputGroup)"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "Text spans multiple lines — use <code>Textarea</code>",
+        "item2": "Selection is from a fixed list — use <code>Select</code>",
+        "item3": "It is an OTP or PIN entry — use <code>InputOTP</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Placeholder as a real example: 'e.g. john@company.com'. Guides without instructing.",
+        "dont": "Placeholder as an instruction: 'Enter your email'. Redundant with the label."
+      },
+      "pair2": {
+        "do": "type='email' for email fields — optimized mobile keyboard and native validation.",
+        "dont": "type='text' for all fields — loses semantics and browser features."
+      },
+      "pair3": {
+        "do": "Visible label always present, even when a placeholder is defined.",
+        "dont": "Using only placeholder as a label — it disappears when typing."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withGroup": "With InputGroup:"
+    },
+    "variants": {
+      "title": "Variants",
+      "note": "Input has no variants via prop. Appearance changes based on <code>type</code> and state (disabled, aria-invalid). <code>InputGroup</code> is the standard for inputs with addons.",
+      "types": {
+        "title": "Available types",
+        "text": "Free text. Default when <code>type</code> is not specified.",
+        "email": "Email. Mobile keyboard with '@'. Format validation by browser.",
+        "password": "Password. Masked characters. Native show/hide button in some browsers.",
+        "number": "Numeric. Accepts digits, comma and period only. Native increment arrows.",
+        "tel": "Phone. Numeric keyboard on mobile. No native format validation.",
+        "url": "URL. Mobile keyboard with '/' and '.com'. Format validation by browser.",
+        "search": "Search. Native clear button in some browsers. Use with sr-only submit button.",
+        "date": "Date. Native browser date picker. Value in ISO format (YYYY-MM-DD).",
+        "file": "File. Opens native file picker. Limited styling by platform."
+      },
+      "inputGroup": {
+        "title": "InputGroup — Composition with addons",
+        "description": "The <code>InputGroup</code> is a separate component that wraps Input to add prefixes, suffixes, icons and internal buttons.",
+        "subcomponents": {
+          "inputGroup": "<strong>InputGroup</strong> — container with <code>role=\"group\"</code>. Manages focus, border and states.",
+          "inputGroupAddon": "<strong>InputGroupAddon</strong> — addon container. Prop <code>align</code>: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>.",
+          "inputGroupInput": "<strong>InputGroupInput</strong> — Input adapted for use inside InputGroup (no own border).",
+          "inputGroupButton": "<strong>InputGroupButton</strong> — Button adapted with reduced size for internal use.",
+          "inputGroupText": "<strong>InputGroupText</strong> — Decorative text or icon inside the addon.",
+          "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adapted for use inside InputGroup."
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "No additional props",
+        "behavior": "Border <code>border-input</code>, transparent background, <code>foreground</code> text"
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Click or Tab navigation",
+        "behavior": "<code>ring-ring</code> border + 3px ring with 50% opacity"
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Prop <code>disabled</code>",
+        "behavior": "cursor not-allowed, 50% opacity, <code>bg-input/50</code> background, no interaction"
+      },
+      "error": {
+        "label": "Error",
+        "trigger": "<code>aria-invalid=\"true\"</code> (applied by FormControl automatically)",
+        "behavior": "<code>border-destructive</code> border + red ring. FormMessage displays the message."
+      },
+      "file": {
+        "label": "File",
+        "trigger": "Prop <code>type=\"file\"</code>",
+        "behavior": "Native file picker button. Height adjusted via <code>--height-xs</code> token."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "inputTitle": "Input",
+      "inputGroupTitle": "InputGroup and subcomponents",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "type_prop": "HTML input type. Always use the correct semantic type.",
+        "className": "Additional Tailwind classes for custom styling.",
+        "placeholder": "Example text showing the expected format — never an instruction.",
+        "disabled": "Disables the field. Applies styles and removes interactivity.",
+        "ariaInvalid": "Error state. Applied automatically by <code>FormControl</code> inside <code>FormField</code>.",
+        "autoComplete": "Value for HTML <code>autocomplete</code> attribute. Improves mobile UX and password managers.",
+        "align_addon": "Addon position: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "Input extends <code>React.ComponentProps&lt;\"input\"&gt;</code> — accepts all native HTML input attributes. Use <code>className</code> for custom styling with project tokens."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "height": "Field height via density token",
+        "radius": "Border radius via theme token",
+        "border": "Default input border",
+        "borderFocus": "Border in focus state",
+        "ring": "Focus ring (3px, 50% opacity)",
+        "borderError": "Border in error state",
+        "ringError": "Error ring",
+        "bgDisabled": "Background in disabled state (light)",
+        "bgDisabledDark": "Background in disabled state (dark)",
+        "placeholder": "Placeholder text color",
+        "bgDark": "Background in dark mode"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Input uses the native <code>&lt;input&gt;</code> element with full HTML semantics. <code>FormControl</code> applies <code>aria-invalid</code> and <code>aria-describedby</code> automatically. Meets WCAG 2.1 AA: 1.3.5 (input purpose), 1.4.3 (contrast), 3.3.1 (error identification).",
+      "item1": "<strong>Label required</strong> — always associate via <code>htmlFor</code> (outside FormField) or <code>FormLabel</code> (inside FormField). Never use placeholder alone.",
+      "item2": "<strong>Automatic aria-invalid</strong> — <code>FormControl</code> applies <code>aria-invalid=\"true\"</code> when the field has an error. Do not add manually.",
+      "item3": "<strong>Automatic aria-describedby</strong> — <code>FormControl</code> links <code>FormDescription</code> and <code>FormMessage</code> to the field via <code>aria-describedby</code>.",
+      "item4": "<strong>aria-required</strong> — add <code>aria-required=\"true\"</code> to required fields to announce to screen readers.",
+      "item5": "<strong>autoComplete</strong> — use <code>autoComplete=\"email\"</code>, <code>\"tel\"</code>, <code>\"name\"</code>, etc. Meets WCAG 1.3.5.",
+      "keyboard": {
+        "tab": "Moves focus to the next form field.",
+        "shiftTab": "Moves focus to the previous field.",
+        "typing": "Inserts text in the focused field.",
+        "escape": "Clears the search in some browsers when type='search'."
+      },
+      "aria": {
+        "ariaInvalid": "<code>aria-invalid=\"true\"</code> — applied by FormControl when an error is detected. Announces invalid state to screen readers.",
+        "ariaDescribedby": "<code>aria-describedby</code> — links FormDescription and FormMessage to the field automatically.",
+        "ariaRequired": "<code>aria-required=\"true\"</code> — for required fields. Add manually when needed.",
+        "ariaLabel": "<code>aria-label</code> — use when there is no visible Label (e.g., standalone search field)."
+      },
+      "screenReader": {
+        "onFocus": "On focus: reader announces the label, type and current value of the field.",
+        "onError": "With aria-invalid: reader announces 'invalid' and reads FormMessage via aria-describedby.",
+        "onDisabled": "Disabled: reader announces the field as 'dimmed' and skips it in Tab navigation.",
+        "placeholder": "Placeholder is announced when the field is empty — must never be the only label."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "textarea": "For multi-line text entries.",
+      "inputOTP": "For OTP, PIN and two-factor verification code entry.",
+      "select": "For selecting an option from a fixed list of 3+ items.",
+      "form": "Accessibility wrapper for forms with React Hook Form and Zod.",
+      "label": "Accessible label for form fields.",
+      "inputGroup": "Composes Input with prefixes, suffixes, icons and internal buttons."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "Always use the correct semantic <code>type</code> — <code>email</code>, <code>tel</code>, <code>url</code>, <code>password</code>. Beyond improving mobile UX, it enables native browser validations.",
+      "tip2": "<code>InputGroup</code> is a separate component, not a prop of Input. Use it when a prefix, suffix, internal icon or button inside the field is needed.",
+      "tip3": "Inside <code>FormField</code>, <code>FormControl</code> injects <code>aria-invalid</code> and <code>aria-describedby</code> automatically — do not add these attributes manually.",
+      "tip4": "For search forms, always include a <code>Button type='submit'</code> with <code>className='sr-only'</code> — required for keyboard accessibility.",
+      "tip5": "Height and border-radius are controlled by theme tokens (<code>--height-default</code>, <code>--radius-input</code>) — do not override directly."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Track Input only in critical funnels. Never send the value of sensitive fields (password, SSN, credit card).",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "fieldFocus": "field_focus",
+        "fieldFocusTrigger": "On field focus (onFocus) — critical funnels only",
+        "fieldFocusPayload": "{ component: 'input', location, field_name }",
+        "fieldBlur": "field_blur",
+        "fieldBlurTrigger": "On blur with a non-empty value (onBlur)",
+        "fieldBlurPayload": "{ component: 'input', location, field_name }",
+        "fieldError": "field_error",
+        "fieldErrorTrigger": "When an error message is displayed (FormMessage visible)",
+        "fieldErrorPayload": "{ component: 'input', location, field_name, error_message }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Input state and configuration.",
+        "item1": { "action": "Render default Input", "result": "Input element with data-slot='input', border-input border, transparent background", "priority": "high" },
+        "item2": { "action": "Focus via Tab", "result": "Border changes to ring-ring, 3px ring with 50% opacity visible", "priority": "high" },
+        "item3": { "action": "Prop disabled=true", "result": "cursor-not-allowed, 50% opacity, bg-input/50, field not editable", "priority": "high" },
+        "item4": { "action": "aria-invalid='true' on field", "result": "border-destructive border, red ring (ring-destructive/20)", "priority": "high" },
+        "item5": { "action": "type='file' rendered", "result": "Native file picker button, height via --height-xs token, file:* styles", "priority": "medium" },
+        "item6": { "action": "Typing in field", "result": "Value updated, onChange called (React) or v-model synced (Vue)", "priority": "high" },
+        "item7": { "action": "InputGroup with inline-start addon", "result": "Addon positioned left, input without own border, group focus state", "priority": "medium" },
+        "item8": { "action": "Click on InputGroupAddon outside button", "result": "Focus transferred to inner input", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": "No violations reported by axe-core in default state",
+        "item2": "Field associated with label via htmlFor or FormLabel — getByLabelText returns the input",
+        "item3": "aria-invalid present when FormMessage shows an error",
+        "item4": "aria-describedby points to FormMessage and FormDescription when present",
+        "item5": "Minimum contrast 4.5:1 for text and placeholder across all themes"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "Each story is automatically captured for visual regression.",
+        "required": "Required",
+        "item1": { "story": "Default — default state", "priority": "high" },
+        "item2": { "story": "States — focus, disabled, error", "priority": "high" },
+        "item3": { "story": "Types — email, password, search, file", "priority": "medium" },
+        "item4": { "story": "InputGroup — inline-start, inline-end, block-start", "priority": "medium" },
+        "item5": { "story": "Dark mode — all states", "priority": "high" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Input",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Campo de texto de una sola línea para cualquier tipo de entrada del usuario — texto, email, contraseña, número, teléfono, URL o búsqueda.",
+    "seo": {
+      "title": "Input — Formulario · Design System",
+      "description": "Documentación del Input: campo de texto línea única, tipos HTML nativos, estados disabled y error, accesibilidad WCAG, integración con Form.",
+      "aiSummary": "Componente Input de línea única con soporte a todos los tipos HTML nativos, estados disabled y aria-invalid, integración con FormField e InputGroup para composición avanzada.",
+      "aiEntities": "Input, InputGroup, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-invalid, FormField",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "defaultLabel": "Nombre completo",
+        "defaultPlaceholder": "ej: Juan García",
+        "emailLabel": "Email",
+        "emailPlaceholder": "ej: juan@empresa.com",
+        "passwordLabel": "Contraseña",
+        "passwordPlaceholder": "Mínimo 8 caracteres",
+        "searchLabel": "Buscar",
+        "searchPlaceholder": "Buscar componentes...",
+        "disabledLabel": "Campo deshabilitado",
+        "disabledPlaceholder": "No disponible",
+        "errorLabel": "Email",
+        "errorPlaceholder": "ej: juan@empresa.com",
+        "errorMessage": "Email inválido. Usa el formato nombre@dominio.com",
+        "fileLabel": "Archivo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Input</strong> — elemento <code>&lt;input&gt;</code> nativo con <code>data-slot=\"input\"</code>. Acepta todos los atributos HTML del input.",
+      "item2": "<strong>type</strong> — define el tipo de entrada: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>tel</code>, <code>url</code>, <code>search</code>, <code>date</code>, <code>file</code>.",
+      "item3": "<strong>placeholder</strong> — ejemplo del formato esperado, nunca una instrucción. Nunca reemplaza al Label.",
+      "item4": "<strong>Label (externo)</strong> — rótulo asociado vía <code>htmlFor</code> o vía <code>FormLabel</code> dentro de <code>FormField</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obligatorio */}\n      <FormControl>\n        <Input type=\"email\"               {/* type semántico */}\n               placeholder=\"ej: juan@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoyo.</FormDescription>\n      <FormMessage />                      {/* Error de Zod */}\n    </FormItem>\n  )}\n</FormField>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Usa el <code>type</code> adecuado al dato: <code>email</code>, <code>password</code>, <code>tel</code>, <code>number</code>, <code>url</code>, <code>search</code>.",
+        "item2": "El placeholder debe ser un ejemplo real del formato — nunca una instrucción como 'Ingresa tu email'.",
+        "item3": "El placeholder no reemplaza al Label — ambos son obligatorios en todo campo de formulario.",
+        "item4": "Dentro de formularios, usa siempre <code>FormField &gt; FormItem &gt; FormLabel + FormControl + FormMessage</code>.",
+        "item5": "Usa <code>autoComplete</code> adecuado para mejorar la experiencia en mobile y gestores de contraseñas."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Entrada de texto línea única", "u": "Sí", "a": "-" },
+        "item2": { "s": "Texto de múltiples líneas", "u": "No", "a": "Textarea" },
+        "item3": { "s": "Selección de lista de opciones", "u": "No", "a": "Select o Combobox" },
+        "item4": { "s": "Código OTP o PIN", "u": "No", "a": "InputOTP" },
+        "item5": { "s": "Búsqueda con acción explícita", "u": "Sí, type search", "a": "-" },
+        "item6": { "s": "Input con prefijo o sufijo", "u": "Sí, vía InputGroup", "a": "-" }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "El usuario necesita escribir texto libre de una sola línea",
+        "item2": "El campo tiene un tipo semántico (email, contraseña, teléfono, URL)",
+        "item3": "Es parte de un formulario con validación y submit",
+        "item4": "Se necesita prefijo, sufijo o botón interno (vía InputGroup)"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El texto ocupa múltiples líneas — usa <code>Textarea</code>",
+        "item2": "La selección es de una lista fija — usa <code>Select</code>",
+        "item3": "Es entrada de código OTP o PIN — usa <code>InputOTP</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Placeholder con ejemplo real: 'ej: juan@empresa.com'. Orienta sin instruir.",
+        "dont": "Placeholder como instrucción: 'Ingresa tu email'. Redundante con el label."
+      },
+      "pair2": {
+        "do": "type='email' para emails — teclado mobile optimizado y validación nativa.",
+        "dont": "type='text' para todos los campos — pierde semántica y recursos del browser."
+      },
+      "pair3": {
+        "do": "Label visible siempre presente, aunque el placeholder esté definido.",
+        "dont": "Usar solo el placeholder como rótulo — desaparece al escribir."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withGroup": "Con InputGroup:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "note": "El Input no tiene variantes vía prop. La apariencia cambia según el <code>type</code> y el estado (disabled, aria-invalid). El <code>InputGroup</code> es el estándar para inputs con addons.",
+      "types": {
+        "title": "Tipos disponibles",
+        "text": "Texto libre. Por defecto cuando <code>type</code> no se especifica.",
+        "email": "Email. Teclado mobile con '@'. Validación de formato por el browser.",
+        "password": "Contraseña. Caracteres enmascarados. Botón nativo de mostrar/ocultar en algunos browsers.",
+        "number": "Numérico. Acepta solo dígitos, coma y punto. Flechas de incremento nativas.",
+        "tel": "Teléfono. Teclado numérico en mobile. Sin validación de formato nativa.",
+        "url": "URL. Teclado mobile con '/' y '.com'. Validación de formato por el browser.",
+        "search": "Búsqueda. Botón de limpiar nativo en algunos browsers. Usar con botón submit sr-only.",
+        "date": "Fecha. Selector nativo del browser. Valor en formato ISO (YYYY-MM-DD).",
+        "file": "Archivo. Abre selector de archivo nativo. Estilización limitada por plataforma."
+      },
+      "inputGroup": {
+        "title": "InputGroup — Composición con addons",
+        "description": "El <code>InputGroup</code> es un componente separado que envuelve al Input para agregar prefijos, sufijos, íconos y botones internos.",
+        "subcomponents": {
+          "inputGroup": "<strong>InputGroup</strong> — contenedor con <code>role=\"group\"</code>. Gestiona foco, borde y estados.",
+          "inputGroupAddon": "<strong>InputGroupAddon</strong> — contenedor de addon. Prop <code>align</code>: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>.",
+          "inputGroupInput": "<strong>InputGroupInput</strong> — Input adaptado para uso dentro del InputGroup (sin borde propio).",
+          "inputGroupButton": "<strong>InputGroupButton</strong> — Button adaptado con tamaño reducido para uso interno.",
+          "inputGroupText": "<strong>InputGroupText</strong> — Texto o ícono decorativo dentro del addon.",
+          "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adaptada para uso dentro del InputGroup."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "default": {
+        "label": "Predeterminado",
+        "trigger": "Sin props adicionales",
+        "behavior": "Borde <code>border-input</code>, fondo transparente, texto <code>foreground</code>"
+      },
+      "focus": {
+        "label": "Foco",
+        "trigger": "Al hacer clic o navegar con Tab",
+        "behavior": "Borde <code>ring-ring</code> + ring de 3px con opacidad 50%"
+      },
+      "disabled": {
+        "label": "Deshabilitado",
+        "trigger": "Prop <code>disabled</code>",
+        "behavior": "Cursor not-allowed, opacidad 50%, fondo <code>bg-input/50</code>, sin interacción"
+      },
+      "error": {
+        "label": "Error",
+        "trigger": "<code>aria-invalid=\"true\"</code> (aplicado por FormControl automáticamente)",
+        "behavior": "Borde <code>border-destructive</code> + ring rojo. FormMessage muestra el mensaje."
+      },
+      "file": {
+        "label": "Archivo",
+        "trigger": "Prop <code>type=\"file\"</code>",
+        "behavior": "Botón nativo de selección de archivo. Altura ajustada vía token <code>--height-xs</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "inputTitle": "Input",
+      "inputGroupTitle": "InputGroup y subcomponentes",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "type_prop": "Tipo HTML del input. Usa siempre el tipo semántico correcto.",
+        "className": "Clases Tailwind adicionales para personalización puntual.",
+        "placeholder": "Texto de ejemplo del formato esperado — nunca una instrucción.",
+        "disabled": "Deshabilita el campo. Aplica estilos y elimina la interactividad.",
+        "ariaInvalid": "Estado de error. Aplicado automáticamente por <code>FormControl</code> dentro de <code>FormField</code>.",
+        "autoComplete": "Valor para el atributo <code>autocomplete</code> del HTML. Mejora la UX mobile y gestores de contraseñas.",
+        "align_addon": "Posición del addon: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "El Input extiende <code>React.ComponentProps&lt;\"input\"&gt;</code> — acepta todos los atributos HTML nativos del input. Usa <code>className</code> para personalizaciones con tokens del proyecto."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "height": "Altura del campo vía token de densidad",
+        "radius": "Border radius vía token de tema",
+        "border": "Borde predeterminado del input",
+        "borderFocus": "Borde en estado de foco",
+        "ring": "Ring de foco (3px, 50% opacidad)",
+        "borderError": "Borde en estado de error",
+        "ringError": "Ring de error",
+        "bgDisabled": "Fondo en estado disabled (light)",
+        "bgDisabledDark": "Fondo en estado disabled (dark)",
+        "placeholder": "Color del texto placeholder",
+        "bgDark": "Fondo en dark mode"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "El Input usa el elemento <code>&lt;input&gt;</code> nativo con semántica HTML completa. El <code>FormControl</code> aplica <code>aria-invalid</code> y <code>aria-describedby</code> automáticamente. Cumple WCAG 2.1 AA: 1.3.5 (propósito de entrada), 1.4.3 (contraste), 3.3.1 (identificación de error).",
+      "item1": "<strong>Label obligatorio</strong> — asocia siempre vía <code>htmlFor</code> (fuera de FormField) o <code>FormLabel</code> (dentro de FormField). Nunca uses solo el placeholder.",
+      "item2": "<strong>aria-invalid automático</strong> — el <code>FormControl</code> aplica <code>aria-invalid=\"true\"</code> cuando el campo tiene un error. No lo agregues manualmente.",
+      "item3": "<strong>aria-describedby automático</strong> — el <code>FormControl</code> vincula <code>FormDescription</code> y <code>FormMessage</code> al campo vía <code>aria-describedby</code>.",
+      "item4": "<strong>aria-required</strong> — agrega <code>aria-required=\"true\"</code> en campos obligatorios para anunciar al lector de pantalla.",
+      "item5": "<strong>autoComplete</strong> — usa <code>autoComplete=\"email\"</code>, <code>\"tel\"</code>, <code>\"name\"</code>, etc. Cumple WCAG 1.3.5.",
+      "keyboard": {
+        "tab": "Mueve el foco al siguiente campo del formulario.",
+        "shiftTab": "Mueve el foco al campo anterior.",
+        "typing": "Inserta texto en el campo con foco.",
+        "escape": "Limpia la búsqueda en algunos browsers cuando type='search'."
+      },
+      "aria": {
+        "ariaInvalid": "<code>aria-invalid=\"true\"</code> — aplicado por FormControl al detectar un error. Anuncia estado inválido al lector de pantalla.",
+        "ariaDescribedby": "<code>aria-describedby</code> — vincula FormDescription y FormMessage al campo automáticamente.",
+        "ariaRequired": "<code>aria-required=\"true\"</code> — en campos obligatorios. Agregar manualmente cuando sea necesario.",
+        "ariaLabel": "<code>aria-label</code> — usar cuando no hay Label visible (ej: campo de búsqueda aislado)."
+      },
+      "screenReader": {
+        "onFocus": "Al enfocar: el lector anuncia el label, tipo y valor actual del campo.",
+        "onError": "Con aria-invalid: el lector anuncia 'inválido' y lee el FormMessage vía aria-describedby.",
+        "onDisabled": "Disabled: el lector anuncia el campo como 'deshabilitado' y lo omite en la navegación por Tab.",
+        "placeholder": "El placeholder se anuncia cuando el campo está vacío — nunca debe ser el único rótulo."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "textarea": "Para entradas de texto con múltiples líneas.",
+      "inputOTP": "Para entrada de códigos OTP, PIN y verificación de dos factores.",
+      "select": "Para seleccionar una opción de una lista fija de 3+ elementos.",
+      "form": "Wrapper de accesibilidad para formularios con React Hook Form y Zod.",
+      "label": "Rótulo accesible para campos de formulario.",
+      "inputGroup": "Compone el Input con prefijos, sufijos, íconos y botones internos."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "Usa siempre el <code>type</code> semántico correcto — <code>email</code>, <code>tel</code>, <code>url</code>, <code>password</code>. Además de mejorar la UX mobile, activa validaciones nativas del browser.",
+      "tip2": "El <code>InputGroup</code> es un componente separado, no una prop del Input. Úsalo cuando necesites prefijo, sufijo, ícono interno o botón dentro del campo.",
+      "tip3": "Dentro de <code>FormField</code>, el <code>FormControl</code> inyecta <code>aria-invalid</code> y <code>aria-describedby</code> automáticamente — no agregues esos atributos manualmente.",
+      "tip4": "En formularios de búsqueda, incluye siempre un <code>Button type='submit'</code> con <code>className='sr-only'</code> — necesario para la accesibilidad por teclado.",
+      "tip5": "La altura y el border-radius son controlados por tokens de tema (<code>--height-default</code>, <code>--radius-input</code>) — no sobreescribir directamente."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastrea el Input solo en embudos críticos. Nunca envíes el valor de campos sensibles (contraseña, DNI, tarjeta de crédito).",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "fieldFocus": "field_focus",
+        "fieldFocusTrigger": "Al enfocar el campo (onFocus) — solo embudos críticos",
+        "fieldFocusPayload": "{ component: 'input', location, field_name }",
+        "fieldBlur": "field_blur",
+        "fieldBlurTrigger": "Al salir del campo con valor ingresado (onBlur)",
+        "fieldBlurPayload": "{ component: 'input', location, field_name }",
+        "fieldError": "field_error",
+        "fieldErrorTrigger": "Al mostrar mensaje de error (FormMessage visible)",
+        "fieldErrorPayload": "{ component: 'input', location, field_name, error_message }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada estado y configuración del Input.",
+        "item1": { "action": "Renderizar Input predeterminado", "result": "Elemento input con data-slot='input', borde border-input, fondo transparente", "priority": "high" },
+        "item2": { "action": "Enfocar vía Tab", "result": "Borde cambia a ring-ring, ring de 3px con opacidad 50% visible", "priority": "high" },
+        "item3": { "action": "Prop disabled=true", "result": "cursor-not-allowed, opacidad 50%, bg-input/50, campo no editable", "priority": "high" },
+        "item4": { "action": "aria-invalid='true' en el campo", "result": "Borde border-destructive, ring rojo (ring-destructive/20)", "priority": "high" },
+        "item5": { "action": "type='file' renderizado", "result": "Botón nativo de selección, altura vía token --height-xs, estilos file:*", "priority": "medium" },
+        "item6": { "action": "Escribir en el campo", "result": "Valor actualizado, onChange llamado (React) o v-model sincronizado (Vue)", "priority": "high" },
+        "item7": { "action": "InputGroup con addon inline-start", "result": "Addon posicionado a la izquierda, input sin borde propio, foco en el grupo", "priority": "medium" },
+        "item8": { "action": "Clic en InputGroupAddon fuera de botón", "result": "Foco transferido al input interno", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": "Sin violaciones reportadas por axe-core en el estado predeterminado",
+        "item2": "Campo asociado a label vía htmlFor o FormLabel — getByLabelText retorna el input",
+        "item3": "aria-invalid presente cuando FormMessage muestra un error",
+        "item4": "aria-describedby apunta a FormMessage y FormDescription cuando están presentes",
+        "item5": "Contraste mínimo 4.5:1 en texto y placeholder en todos los temas"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "required": "Obligatorio",
+        "item1": { "story": "Default — estado predeterminado", "priority": "high" },
+        "item2": { "story": "Estados — focus, disabled, error", "priority": "high" },
+        "item3": { "story": "Tipos — email, password, search, file", "priority": "medium" },
+        "item4": { "story": "InputGroup — inline-start, inline-end, block-start", "priority": "medium" },
+        "item5": { "story": "Dark mode — todos los estados", "priority": "high" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
