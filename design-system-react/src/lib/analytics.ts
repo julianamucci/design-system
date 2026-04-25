@@ -220,6 +220,13 @@ interface AnalyticsEvents {
     trigger: 'keyboard' | 'button';
   };
 
+  /** Disparado quando o usuário clica no botão de ação interno de um toast (ex: "Desfazer"). */
+  toast_action_click: {
+    label: string;
+    component: "toast";
+    location: string;
+  };
+
   /** Disparado quando o usuário abre um ContextMenu via right-click. */
   menu_open: {
     component: string;
