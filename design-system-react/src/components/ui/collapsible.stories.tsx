@@ -45,12 +45,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <Collapsible {...args} className="w-80 space-y-2">
-      <CollapsibleTrigger asChild>
+    // key força re-mount quando defaultOpen muda no control, pois é prop de montagem
+    <Collapsible key={String(args.defaultOpen)} {...args} className="w-80 space-y-2">
+      <CollapsibleTrigger asChild disabled={args.disabled}>
         <Button
           variant="ghost"
           className="flex w-full items-center justify-between px-4"
           aria-label="Exibir filtros avançados"
+          disabled={args.disabled}
         >
           <span>Filtros avançados</span>
           <ChevronDown

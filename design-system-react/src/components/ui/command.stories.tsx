@@ -25,6 +25,20 @@ const meta = {
     layout: "centered",
     docs: { page: withAutoDocsTab(CommandDocs) },
   },
+  argTypes: {
+    loop: {
+      control: "boolean",
+      description: "Navegação por teclado cicla do último para o primeiro item",
+    },
+    shouldFilter: {
+      control: "boolean",
+      description: "Habilita filtro interno por texto (desative para filtro externo)",
+    },
+  },
+  args: {
+    loop: false,
+    shouldFilter: true,
+  },
 } satisfies Meta<typeof Command>;
 
 export default meta;
@@ -33,9 +47,9 @@ type Story = StoryObj<typeof meta>;
 // ─── Playground ──────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
-  render: () => (
+  render: (args) => (
     <div className="w-72">
-      <Command>
+      <Command {...args}>
         <CommandInput placeholder="Buscar componente..." />
         <CommandList>
           <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
