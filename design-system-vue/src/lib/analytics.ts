@@ -189,6 +189,28 @@ interface AnalyticsEvents {
     menu: string;
     location?: string;
   };
+
+  /** Disparado quando um campo Input recebe foco (onFocus) — apenas funis críticos. */
+  field_focus: {
+    component: string;
+    field_name: string;
+    location?: string;
+  };
+
+  /** Disparado ao sair de um campo Input com valor preenchido (onBlur). */
+  field_blur: {
+    component: string;
+    field_name: string;
+    location?: string;
+  };
+
+  /** Disparado quando uma mensagem de erro é exibida em um campo Input (FormMessage visível). */
+  field_error: {
+    component: string;
+    field_name: string;
+    error_message?: string;
+    location?: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
