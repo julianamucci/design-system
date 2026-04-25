@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { within, expect } from 'storybook/test';
 import {
   Table,
   TableBody,
@@ -80,6 +81,11 @@ export const Basica: Story = {
       </Table>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole('table');
+    await expect(table).toBeInTheDocument();
+  },
 };
 
 export const ComRodape: Story = {
@@ -147,6 +153,11 @@ export const ComRodape: Story = {
       </Table>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole('table');
+    await expect(table).toBeInTheDocument();
+  },
 };
 
 export const CaptionSrOnly: Story = {
@@ -198,6 +209,11 @@ export const CaptionSrOnly: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole('table');
+    await expect(table).toBeInTheDocument();
+  },
 };
 
 export const ComAcoesPorLinha: Story = {
@@ -275,4 +291,9 @@ export const ComAcoesPorLinha: Story = {
       </Table>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole('table');
+    await expect(table).toBeInTheDocument();
+  },
 };
