@@ -68,10 +68,16 @@ interface AnalyticsEvents {
   };
 
   navigation_click: {
-    component: 'breadcrumb' | 'navigation_menu';
+    component: 'breadcrumb' | 'navigation_menu' | 'sidebar';
     label: string;
     destination: string;
     location?: string;
+  };
+
+  /** Disparado quando o usuário abre ou fecha a Sidebar (trigger, rail ou Ctrl+B). */
+  sidebar_toggle: {
+    action: 'open' | 'close';
+    trigger: 'button' | 'rail' | 'keyboard';
   };
 
   breadcrumb_ellipsis_open: {
