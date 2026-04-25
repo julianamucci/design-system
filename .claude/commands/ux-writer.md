@@ -19,11 +19,10 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## Fontes de Referência
 
-Antes de escrever qualquer texto, leia obrigatoriamente:
+Antes de escrever qualquer texto, leia obrigatoriamente em paralelo:
 
 1. **Componente fonte**: código do componente no React (`design-system-react/src/components/ui/<slug>/`) para entender variantes, props e estados
-2. **Acessibilidade**: `docs/shared/guidelines/01-acessibilidade.md`
-3. **Guideline de categoria** (obrigatório): leia o arquivo correspondente à categoria do componente antes de escrever qualquer conteúdo de variantes, estados, props ou UX Writing:
+2. **Guideline de categoria** (obrigatório): leia o arquivo correspondente à categoria do componente antes de escrever qualquer conteúdo de variantes, estados, props ou UX Writing:
 
 | Categoria | Arquivo | Componentes |
 |-----------|---------|-------------|
@@ -41,12 +40,15 @@ A guideline de categoria é a fonte de verdade para:
 - Quais **props** são obrigatórias vs opcionais e seus tipos corretos
 - **Regras de API** específicas do componente (props que não existem, padrões de composição)
 - **Comportamento esperado** em cada interação (teclado, foco, ARIA)
+- Critérios **WCAG** e padrões de acessibilidade específicos da categoria
+
+Se precisar de referência da estrutura completa do JSON, leia pontualmente `docs/shared/content/alert/translations.json`.
 
 ---
 
-## Artefatos que Você Gera
+## Artefato que Você Gera
 
-### 1. `translations.json` — Conteúdo principal trilíngue
+### `translations.json` — Conteúdo principal trilíngue
 
 Localização: `docs/shared/content/<component-slug>/translations.json`
 
@@ -59,6 +61,13 @@ Estrutura obrigatória (todas as chaves devem existir nos 3 idiomas):
     "category": "Categoria",
     "type": "Componente",
     "description": "Descrição concisa (≤155 chars) para SEO",
+    "seo": {
+      "title": "NomeDoComponente — Categoria · Design System",
+      "description": "Documentação do NomeDoComponente: variantes, estados, acessibilidade WCAG. (≤155 chars)",
+      "aiSummary": "Frase específica descrevendo o componente e seus recursos principais.",
+      "aiEntities": "ComponenteName, React, Vue, Svelte, Tailwind CSS, WCAG 2.1",
+      "aiIntent": "informational"
+    },
     "demonstration": {
       "title": "Demonstração Padrão",
       "labels": { /* labels dos exemplos interativos */ }
@@ -66,7 +75,9 @@ Estrutura obrigatória (todas as chaves devem existir nos 3 idiomas):
     "anatomy": {
       "title": "Anatomia",
       "item1": "<strong>Parte</strong> — descrição funcional",
-      "item2": "..."
+      "item2": "...",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "/* snippet de estrutura JSX/HTML */"
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -79,22 +90,45 @@ Estrutura obrigatória (todas as chaves devem existir nos 3 idiomas):
       "do": { "title": "Use quando", "item1": "...", "itemN": "..." },
       "dont": { "title": "Não use quando", "item1": "...", "itemN": "..." }
     },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": { "do": "Descrição do uso correto.", "dont": "Descrição do uso incorreto." },
+      "pair2": { "do": "...", "dont": "..." }
+    },
     "import": { "title": "Importação" },
-    "variants": { "title": "Variantes", /* descrição + code (opcional) de cada variant */ },
-    "states": { "title": "Estados", /* disabled, loading, etc */ },
+    "variants": { "title": "Variantes" /* descrição + code (opcional) de cada variante */ },
+    "states": { "title": "Estados" /* disabled, loading, error, etc. */ },
     "props": { "title": "Propriedades" },
     "tokens": { "title": "Design Tokens" },
     "accessibility": {
       "title": "Acessibilidade",
       "summary": "Resumo WCAG",
-      "keyboard": { /* navegação por teclado */ },
+      "keyboard": { /* navegação por teclado: tab, enter, space, escape, arrow keys */ },
       "aria": { /* atributos ARIA obrigatórios */ },
       "screenReader": { /* comportamento esperado */ }
     },
     "related": { "title": "Componentes Relacionados" },
     "notes": { "title": "Notas de Implementação" },
     "analytics": { "title": "Analytics" },
-    "tests": { "title": "Testes" },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "...",
+        "item1": { "action": "...", "result": "...", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "...",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "...",
+        "required": "Obrigatório",
+        "item1": { "story": "Default", "priority": "high" }
+      }
+    },
     "nav": {
       "overview": "Visão Geral",
       "demonstration": "Demonstração",
@@ -121,22 +155,11 @@ Estrutura obrigatória (todas as chaves devem existir nos 3 idiomas):
 }
 ```
 
-### 2. Textos de Acessibilidade
-
-Para cada componente, documente na seção `accessibility`:
-
-- **Resumo** — qual critério WCAG o componente atende
-- **Teclado** — todas as interações por teclado (Tab, Enter, Space, Escape, Arrow keys)
-- **ARIA** — atributos obrigatórios (`role`, `aria-label`, `aria-expanded`, etc.)
-- **Leitor de tela** — o que o usuário ouve em cada estado (foco, ativação, erro)
-- **Contraste** — razão mínima de contraste e tokens relevantes
-
-### 3. Descrições de Stories
-
-Gere parâmetro `description.story` (em pt-BR) para cada story do componente. Cada descrição deve:
-- Ter 1-2 frases
-- Explicar **quando** usar aquela variante/estado
-- Incluir dica de implementação quando relevante
+**Notas sobre a estrutura:**
+- `seo.title` formato: `"{Componente} — {Categoria} · Design System"` (≤60 chars)
+- `doDont` é seção de primeiro nível separada de `usage.do`/`usage.dont` — contém pares de previews visuais
+- `testes.functional.priority`: `"high"` ou `"medium"` — **nunca localizar, sempre string literal em inglês**
+- `anatomy.structureCode`: snippet multiline com `\n` mostrando a composição de subcomponentes
 
 ---
 
@@ -190,31 +213,28 @@ Gere parâmetro `description.story` (em pt-BR) para cada story do componente. Ca
 
 ## Processo
 
-1. **Identificar** a categoria do componente e ler o arquivo de guideline correspondente (04–10)
-2. **Ler** o código do componente (variantes, props, estados) — cruzar com as regras da guideline de categoria
-3. **Gerar** `translations.json` completo nos 3 idiomas, garantindo que:
-   - As variantes documentadas correspondem exatamente às variantes no código (sem inventar)
-   - Os estados documentados batem com os estados reais do componente
-   - As props documentadas usam os tipos e nomes corretos conforme a guideline de categoria
-   - O UX Writing segue os padrões da categoria (ex: labels de botão vs labels de overlay)
-4. **Gerar** descrições de stories
-5. **Validar** que todas as chaves existem nos 3 idiomas (sem chave faltante)
-6. **Validar** limites de caracteres
-7. **Entregar** os arquivos prontos para uso
+1. **Ler em paralelo**: componente React + guideline de categoria — identificar variantes, props, estados e regras de API
+2. **Gerar** `translations.json` completo nos 3 idiomas, garantindo que:
+   - Variantes documentadas correspondem exatamente às variantes no código (sem inventar)
+   - Estados documentados batem com os estados reais do componente
+   - Props usam tipos e nomes corretos conforme a guideline de categoria
+   - UX Writing segue os padrões da categoria
+3. **Validar** que todas as chaves existem nos 3 idiomas (sem chave faltante)
+4. **Validar** limites de caracteres (title ≤60, description ≤155, etc.)
 
 ---
 
 ## Checklist Final
 
-- [ ] Todas as chaves existem em pt-BR, en e es
-- [ ] `description` ≤155 chars em todos os idiomas
-- [ ] Seção `accessibility` completa (keyboard, aria, screenReader, contraste)
+- [ ] Todas as chaves existem em pt-BR, en e es (sem chave faltante em nenhum idioma)
+- [ ] `seo.title` ≤60 chars e `seo.description` ≤155 chars nos 3 idiomas
+- [ ] `testes.functional.priority` usa `"high"` / `"medium"` — nunca localizado
+- [ ] Seção `doDont` presente como seção de primeiro nível (separada de `usage.do`/`usage.dont`)
+- [ ] Seção `accessibility` completa (keyboard, aria, screenReader)
 - [ ] Seção `nav` com todas as labels de navegação
-- [ ] Nenhum texto hardcoded no componente docs — tudo via translations
-- [ ] HTML inline (`<code>`, `<strong>`) usado consistentemente
 - [ ] Sem traduções literais — cada idioma soa natural
 - [ ] Termos técnicos mantidos em inglês em todos os idiomas
-- [ ] **Nenhum emoji ou ícone decorativo (✅, ❌, ✓, ✗, ⚠️, 🎉, etc.) em qualquer string do JSON** — ícones são renderizados pelo código da docs page, nunca pelo conteúdo
+- [ ] Nenhum emoji ou ícone decorativo em qualquer string do JSON
 
 ---
 

@@ -1,5 +1,23 @@
 # Fixes Pendentes — Pipeline new chart — 2026-04-24
 
+---
+
+# Fixes Pendentes — Pipeline new collapsible — 2026-04-24
+
+## Baixos
+
+- [x] **Basecoat — keyboard items incompleto** — `design-system-basecoat/src/components/docs/CollapsibleDocs.ts:468`
+  Array `keyboardItems` tem 3 entradas (Tab, Enter, Space), falta a 4ª (`noArrow`). Adicionado `{ key: '—', description: t('accessibility.keyboard.noArrow') }`.
+  — fix: `f66c20f`
+
+- [x] **Svelte — story Controlado ausente** — `design-system-svelte/src/components/ui/collapsible/collapsible-estados.stories.ts`
+  Adicionado `CollapsibleControladoStory.svelte` + story `Controlado` com play function (botão externo, aria-expanded).
+  — fix: `f66c20f`
+
+**Total collapsible: 2 violations** (0 críticos, 0 médios, 2 baixos) — ✅ todos resolvidos
+
+---
+
 ## Críticos
 
 *(nenhum)*

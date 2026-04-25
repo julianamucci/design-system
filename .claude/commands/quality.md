@@ -17,13 +17,12 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ---
 
-## Fontes de Referência — Leia ANTES de qualquer ação
+## Fontes de Referência
 
 1. `docs/shared/guidelines/01-acessibilidade.md` — critérios WCAG obrigatórios
-2. `design-system-react/.storybook/test-runner.ts` — configuração axe-playwright
-3. `design-system-react/src/components/ui/alert.stories.tsx` — referência de play functions (React)
-4. Equivalentes em vue/svelte/basecoat para o mesmo componente
-5. `docs/shared/guidelines/08-docs-pages-foundations.md` — checklist de docs pages
+2. `docs/shared/guidelines/08-docs-pages-foundations.md` — checklist de docs pages (§12 props, §13 tokens)
+
+Não leia essas fontes antecipadamente. Consulte-as pontualmente se um check específico precisar de detalhe que não está nesta skill.
 
 ---
 
@@ -31,23 +30,33 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ### 1. Testes Funcionais (play functions)
 
-Cada story PODE ter uma `play` function que testa interações do componente via `@storybook/test`. Os testes rodam automaticamente no Storybook e são verificáveis na aba **Interactions**.
-
-**Biblioteca de testes**: `storybook/test` (re-exporta vitest + testing-library)
+Cada story PODE ter uma `play` function que testa interações do componente via `storybook/test`:
 
 ```tsx
 import { fn, userEvent, within, expect } from 'storybook/test';
+
+export const MeuCenario: Story = {
+  args: { onClick: fn() },
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const el = canvas.getByRole('button');
+    await step('clique dispara callback', async () => {
+      await userEvent.click(el);
+      await expect(args.onClick).toHaveBeenCalledTimes(1);
+    });
+  },
+};
 ```
+
+A API `within` + `userEvent` + `expect` é idêntica em React, Vue, Svelte e Basecoat.
 
 ### 2. Testes de Acessibilidade (axe-playwright)
 
-Configurados em `.storybook/test-runner.ts`. O axe-playwright roda automaticamente em TODAS as stories via `postVisit`. Stories podem desabilitar via `parameters.a11y.disable: true`.
-
-O parâmetro `a11y: { test: 'error' }` em `preview.ts` faz violations falharem o CI.
+Configurados em `.storybook/test-runner.ts`. Rodam automaticamente em todas as stories via `postVisit`. `a11y: { test: 'error' }` em `preview.ts` faz violations falharem o CI. Stories podem desabilitar via `parameters.a11y.disable: true` (exige justificativa documentada).
 
 ### 3. Testes Visuais (Chromatic)
 
-Configurados via `chromatic.config.json`. Cada story é automaticamente capturada para visual regression. Não requer implementação manual — basta a story existir.
+Cada story é capturada automaticamente. Não requer implementação — basta a story existir.
 
 ---
 
@@ -55,20 +64,20 @@ Configurados via `chromatic.config.json`. Cada story é automaticamente capturad
 
 ### Botões e Ações
 
-| Critério | Story | play function |
-|----------|-------|---------------|
-| Clique dispara callback | Playground | `userEvent.click` + `expect(onClick).toHaveBeenCalled()` |
-| Disabled previne clique | Estados/Disabled | `userEvent.click({pointerEventsCheck:0})` + `expect(onClick).not.toHaveBeenCalled()` |
-| Disabled tem atributo | Estados/Disabled | `expect(button).toBeDisabled()` |
-| Focus via Tab | Playground | `button.focus()` + `expect(button).toHaveFocus()` |
-| Enter aciona | Playground | `userEvent.keyboard('{Enter}')` + `expect(onClick)` |
-| Space aciona | Playground | `userEvent.keyboard(' ')` + `expect(onClick)` |
-| `aria-label` em icon-only | Tamanhos/IconOnly | `getByRole('button', {name: 'Label'})` |
+| Critério | play function |
+|----------|---------------|
+| Clique dispara callback | `userEvent.click` + `expect(onClick).toHaveBeenCalled()` |
+| Disabled previne clique | `userEvent.click({pointerEventsCheck:0})` + `expect(onClick).not.toHaveBeenCalled()` |
+| Disabled tem atributo | `expect(button).toBeDisabled()` |
+| Focus via Tab | `button.focus()` + `expect(button).toHaveFocus()` |
+| Enter aciona | `userEvent.keyboard('{Enter}')` + `expect(onClick)` |
+| Space aciona | `userEvent.keyboard(' ')` + `expect(onClick)` |
+| `aria-label` em icon-only | `getByRole('button', {name: 'Label'})` |
 
 ### Inputs e Formulários
 
-| Critério | Teste |
-|----------|-------|
+| Critério | play function |
+|----------|--------------|
 | Digitação atualiza valor | `userEvent.type` + `expect(input).toHaveValue()` |
 | Label associada | `getByLabelText('Label')` |
 | Required validation | `expect(input).toBeRequired()` |
@@ -77,106 +86,27 @@ Configurados via `chromatic.config.json`. Cada story é automaticamente capturad
 
 ### Dialogs e Overlays
 
-| Critério | Teste |
-|----------|-------|
+| Critério | play function |
+|----------|--------------|
 | Abre ao trigger | `userEvent.click(trigger)` + `expect(dialog).toBeVisible()` |
 | Fecha com Escape | `userEvent.keyboard('{Escape}')` + `expect(dialog).not.toBeVisible()` |
-| Focus trap | Após abrir, Tab navega apenas dentro do dialog |
+| Focus trap | Tab navega apenas dentro do dialog após abrir |
 | Retorna foco ao fechar | `expect(trigger).toHaveFocus()` após fechar |
-| `role="dialog"` ou `role="alertdialog"` | `getByRole('dialog')` |
-| `aria-modal="true"` | `expect(dialog).toHaveAttribute('aria-modal', 'true')` |
+| role + aria-modal | `getByRole('dialog')` + `toHaveAttribute('aria-modal', 'true')` |
 
 ### Seleção (Select, Toggle, Radio, Checkbox)
 
-| Critério | Teste |
-|----------|-------|
+| Critério | play function |
+|----------|--------------|
 | Arrow keys navegam opções | `userEvent.keyboard('{ArrowDown}')` |
 | Enter/Space seleciona | `userEvent.keyboard('{Enter}')` + verificar seleção |
-| `aria-selected` ou `aria-checked` | `expect(option).toHaveAttribute('aria-selected', 'true')` |
-| Valor atualizável via teclado | Sequência completa de interações |
-
----
-
-## Implementação por Stack
-
-### React
-
-```tsx
-export const MeuCenario: Story = {
-  args: { /* ... */ },
-  play: async ({ canvasElement, step, args }) => {
-    const canvas = within(canvasElement);
-    const element = canvas.getByRole('button');
-
-    await step('Descrição do passo', async () => {
-      await userEvent.click(element);
-      await expect(args.onClick).toHaveBeenCalledTimes(1);
-    });
-  },
-};
-```
-
-### Vue
-
-```ts
-export const MeuCenario: Story = {
-  args: { /* ... */ },
-  render: (args) => ({
-    components: { Button },
-    setup() { return { args }; },
-    template: '<Button v-bind="args" @click="args.onClick">Botão</Button>',
-  }),
-  play: async ({ canvasElement, step, args }) => {
-    const canvas = within(canvasElement);
-    const element = canvas.getByRole('button');
-    // mesma API de testes
-  },
-};
-```
-
-### Svelte
-
-```ts
-// Usar ButtonStory wrapper para garantir labels
-import ButtonStory from './ButtonStory.svelte';
-
-export const MeuCenario: Story = {
-  args: { label: 'Botão', /* ... */ },
-  // component: ButtonStory no meta
-  play: async ({ canvasElement, step, args }) => {
-    const canvas = within(canvasElement);
-    const element = canvas.getByRole('button');
-    // mesma API de testes
-  },
-};
-```
-
-### Basecoat (Vanilla TS)
-
-```ts
-export const MeuCenario: Story = {
-  render: () => {
-    const el = document.createElement('button');
-    el.type = 'button';
-    el.className = `${VARIANTS['default']} h-9 px-4 py-2`;
-    el.textContent = 'Botão';
-    return el;
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const element = canvas.getByRole('button');
-    // mesma API de testes
-  },
-};
-```
+| aria-selected / aria-checked | `expect(option).toHaveAttribute('aria-selected', 'true')` |
 
 ---
 
 ## Seção "Testes" na Docs Page
 
-A seção `testes` em `translations.json` deve ter **três sub-seções obrigatórias**: `functional`, `accessibility` e `visual`. A `AlertDocs` é a referência de implementação.
-
-### Estrutura obrigatória no `translations.json`
+A seção `testes` em `translations.json` deve ter **três sub-seções**:
 
 ```json
 "testes": {
@@ -192,22 +122,18 @@ A seção `testes` em `translations.json` deve ter **três sub-seções obrigat�
     "description": "Critérios que ferramentas automatizadas devem confirmar.",
     "item1": "Sem violações reportadas pelo axe-core no estado padrão",
     "item2": "Contraste mínimo 4.5:1 (WCAG 2.1 AA)",
-    "item3": "Focus ring visível em todos os elementos interativos",
-    "item4": "..."
+    "item3": "Focus ring visível em todos os elementos interativos"
   },
   "visual": {
     "title": "Regressão Visual",
     "description": "Estados que o Chromatic deve capturar. Mudança exige revisão.",
-    "required": "✓ Obrigatório",
-    "item1": { "story": "Default (variante default)", "priority": "high" },
-    "item2": { "story": "...", "priority": "medium" }
+    "required": "Obrigatório",
+    "item1": { "story": "Default (variante default)", "priority": "high" }
   }
 }
 ```
 
-**Valores de `priority`**: `"high"` (badge laranja) ou `"medium"` (badge azul). Não localizar — a lógica compara a string `"high"` e usa `tNav("common.high")` para exibição.
-
-### Mínimo de itens por componente
+**`priority`**: `"high"` (badge laranja) ou `"medium"` (badge azul) — não localizar, a lógica compara a string.
 
 | Sub-seção | Mínimo | O que cobrir |
 |-----------|--------|--------------|
@@ -215,215 +141,178 @@ A seção `testes` em `translations.json` deve ter **três sub-seções obrigat�
 | `accessibility` | 4 itens | axe-core, contraste, focus ring, aria-label quando aplicável |
 | `visual` | 4 itens | Default, todas as variantes, disabled, com ícone |
 
-### Renderização nas docs pages
-
-Cada stack itera sobre `item1`…`itemN` dinamicamente. Não hardcode os arrays — use o padrão da `AlertDocs` de referência. As chaves de UI (`storyState`, `themeLight`, `themeDark`) ficam em `src/i18n/ui.json` de cada stack.
-
 ---
 
 ## Processo de Auditoria
 
-### 1. Inventariar stories existentes
+### Passo 1 — Coletar todos os arquivos em paralelo
 
-Para o componente especificado, liste todas as stories em cada stack e verifique:
+**Dispare todas as leituras e buscas no mesmo turno.** Não leia um arquivo por vez.
 
+Execute em paralelo:
+
+**Glob — stories de cada stack** (4 chamadas simultâneas):
+- `design-system-react/src/components/ui/<slug>*.stories.*`
+- `design-system-vue/src/components/ui/<slug>/<slug>*.stories.*`
+- `design-system-svelte/src/components/ui/<slug>/<slug>*.stories.*`
+- `design-system-basecoat/src/components/ui/<slug>*.stories.*`
+
+**Read — docs pages de cada stack** (4 chamadas simultâneas):
+- `design-system-react/src/components/docs/<Slug>Docs.tsx`
+- `design-system-vue/src/components/docs/<Slug>Docs.vue`
+- `design-system-svelte/src/components/docs/<Slug>Docs.svelte`
+- `design-system-basecoat/src/components/docs/<Slug>Docs.ts`
+
+**Read — translations.json** (1 chamada):
+- `docs/shared/content/<slug>/translations.json`
+
+**Grep — dimensões hardcoded** (1 chamada, todos os paths de uma vez):
+- pattern: `\bh-(5|6|7|8|9|10|11|12)\b|\bsize-(5|6|7|8|9|10)\b`
+- paths: `design-system-react/src/components/ui/<slug>*`, `design-system-vue/src/components/ui/<slug>/`, `design-system-svelte/src/components/ui/<slug>/`
+- excluir: Basecoat (usa basecoat-css), arquivos `*.stories.*`
+
+**Grep — tipografia abaixo do mínimo** (1 chamada):
+- pattern: `text-\[9px\]|text-\[10px\]`
+- path: `design-system-*/src/components/docs/*Docs.*`
+
+**Grep — padrões de tabela incorretos** (1 chamada):
+- pattern: `overflow-hidden shadow-sm|ComponentDemo`
+- path: `design-system-*/src/components/docs/*Docs.*`
+
+**Grep — a11y.disable** (1 chamada):
+- pattern: `a11y.*disable|disable.*a11y`
+- path: `design-system-*/src/components/ui/<slug>*.stories.*`
+
+Depois que todos os resultados chegarem, prossiga para os checks. **Não releia nenhum arquivo nos passos seguintes** — todos já estão em contexto.
+
+---
+
+### Passo 2 — Verificar stories e play functions
+
+Com os arquivos de stories já em contexto:
+
+**2a. Cobertura de stories**
+- [ ] Arquivo principal (Playground) existe em cada stack
 - [ ] Cada variante tem story dedicada
 - [ ] Cada estado (disabled, loading, error) tem story dedicada
-- [ ] Cada composição (com ícone, como link) tem story dedicada
+- [ ] Cada composição relevante tem story dedicada
 
-### 2. Verificar play functions
+**2b. Play functions**
+- [ ] Story Playground tem testes completos: presença, clique, disabled, focus, Enter/Space
+- [ ] Story Disabled verifica `toBeDisabled()` e que o callback não dispara
+- [ ] Stories com `aria-label` verificam via `getByRole({ name: ... })`
+- [ ] Nenhuma sub-story sem play function (se a story testa um estado interativo)
 
-- [ ] Story Playground tem testes completos (clique, disabled, focus, Enter, Space)
-- [ ] Story Disabled testa `toBeDisabled()` e previne onClick
-- [ ] Stories com `aria-label` verificam via `getByRole({name: ...})`
+**2c. a11y.disable**
+- [ ] Nenhuma story tem `a11y.disable: true` sem comentário de justificativa no mesmo bloco
 
-### 3. Verificar acessibilidade
+---
 
-- [ ] `parameters.a11y.test: 'error'` está no preview.ts (já configurado globalmente)
-- [ ] Nenhuma story tem `a11y.disable: true` sem justificativa
-- [ ] Icon-only buttons têm `aria-label`
-- [ ] Componentes de formulário têm label associada
+### Passo 3 — Verificar docs pages
 
-### 4. Verificar docs page
+Com as docs pages e translations.json já em contexto, inspecione cada stack em uma única passagem por arquivo. Não releia.
 
-- [ ] Seção "Testes" existe com as 3 sub-seções: `functional`, `accessibility`, `visual`
-- [ ] `functional`: ≥4 linhas cobrindo clique, teclado, disabled, caso de borda
-- [ ] `accessibility`: ≥4 itens cobrindo axe-core, contraste, focus ring, aria
-- [ ] `visual`: ≥4 itens com stories do Chromatic
-- [ ] Prioridades usam `"high"` / `"medium"` (não localizado no JSON)
-- [ ] Seção "Acessibilidade" documenta keyboard, ARIA, screen reader
-- [ ] Seção "Acessibilidade" lista critérios WCAG atendidos
+**3a. Seção testes em translations.json**
+- [ ] Sub-seção `functional` presente com ≥4 itens
+- [ ] Sub-seção `accessibility` presente com ≥4 itens
+- [ ] Sub-seção `visual` presente com ≥4 itens
+- [ ] Prioridades são `"high"` ou `"medium"` (não strings localizadas)
 
-### 4b. Verificar tabelas Props e Tokens (ver `docs/shared/guidelines/08-docs-pages-foundations.md` §12 e §13)
+**3b. Seção acessibilidade na docs page**
+- [ ] Documenta navegação por teclado (Tab, Enter, Space, Escape, Arrow keys conforme aplicável)
+- [ ] Lista atributos ARIA obrigatórios (`role`, `aria-label`, `aria-expanded`, etc.)
+- [ ] Descreve comportamento esperado em leitor de tela
+- [ ] Lista critérios WCAG atendidos
 
-**Props table:**
-- [ ] 5 colunas: prop, type, default, required, description
-- [ ] Interface TypeScript explícita (tipos literais — não `VariantProps<...>`)
-- [ ] Todas as props do componente documentadas (variantes, sizes, disabled, onClick/onclick, type, className/class)
-- [ ] Bloco de extensibilidade com nota sobre `className`/`class` e `asChild` (quando suportado)
+**3c. Props table (5 colunas + extensibilidade)**
+- [ ] Referencia `props.table.required` (5ª coluna obrigatória)
+- [ ] Referencia `extensibilityTitle` (bloco de extensibilidade)
+- [ ] Tipos explícitos (não `VariantProps<...>`)
 
-**Tokens table:**
-- [ ] 3 colunas: token, class, part (valores HSL ficam na documentação de temas — não na docs page do componente)
-- [ ] Todos os tokens CSS usados pelo componente (ex: mínimo 6 para Alert: background, foreground, card, card-foreground, destructive, border)
-- [ ] Bloco de customização com exemplo de override CSS via `tokens.customizationTitle`
-- [ ] Wrapper: `space-y-6` com `style="margin:0"` na `<table>`
+**3d. Tokens table (completude + customização)**
+- [ ] Referencia `--ring` (proxy para tokens completos)
+- [ ] Referencia `customizationTitle` (bloco de override CSS)
 
-### 4c. Verificar tokenização de dimensões (ver `docs/shared/guidelines/12-tokenizacao-dimensoes.md`)
+**3e. Semântica HTML e links**
+- [ ] Headings seguem hierarquia: `<h2>` para seções principais, `<h3>` para sub-divisões, nunca `<h1>`, nunca pular nível
+- [ ] Tabelas usam `<thead>` + `<th scope>`
+- [ ] Listas usam `<ul>`/`<ol>` semânticos
+- [ ] Links para outros componentes usam `window.top.location.href`
+- [ ] Links externos têm `target="_blank" rel="noopener noreferrer"`
+- [ ] Toda âncora do `DocsNav` tem `<section id="...">` correspondente
 
-**Regra**: zero classes hardcoded de altura/size nos componentes UI, stories e docs pages (exceto Basecoat que usa classes do pacote basecoat-css).
+**3f. Tokenização de dimensões**
 
-```bash
-# Buscar dimensões hardcoded (altura/size 5-12) em React, Vue e Svelte
-grep -rEn "\bh-(5|6|7|8|9|10|11|12)\b|\bsize-(5|6|7|8|9|10)\b" \
-  design-system-react/src/components/ui/<slug>*.tsx \
-  design-system-vue/src/components/ui/<slug>/*.{ts,vue} \
-  design-system-svelte/src/components/ui/<slug>/*.svelte \
-  2>/dev/null
+Com o resultado do Grep de dimensões hardcoded (coletado no Passo 1):
+- [ ] Zero ocorrências de `h-5` a `h-12` / `size-5` a `size-10` nos arquivos de UI (React, Vue, Svelte)
+- Se encontrar: verificar se é em `cva()` de variants → migrar para token (`h-(--height-default)`). Ver tabela em `docs/shared/guidelines/12-tokenizacao-dimensoes.md`.
+- Exceções aceitas: `[&_svg]:size-4` (ícones decorativos), `min-h-16` (Textarea), `px-*`/`gap-*`/`py-*` (spacing interno).
 
-# Mesma busca nas docs pages e stories
-grep -rEn "\bh-(5|6|7|8|9|10)\b|\bsize-(5|6|7|8|9|10)\b" \
-  design-system-*/src/components/docs/<Slug>Docs.* \
-  design-system-*/src/components/ui/<slug>*.stories.* \
-  2>/dev/null
-```
+**3g. Tipografia e padrões de tabela**
 
-**Ações**:
-- Se o match é no `cva()` de variants (ex: `"h-8 px-2.5..."`), substitua por `"h-(--height-default) px-2.5..."`. Tabela de tokens em `12-tokenizacao-dimensoes.md`.
-- Se o match é em conteúdo ilustrativo (story de tamanho específico, screenshot mockado), avalie: se for para demonstrar densidade do componente, deve seguir o tema — tokenize. Se for placeholder visual estático, pode manter hardcoded.
-- Exceções aceitas: `[&_svg]:size-4` (ícones decorativos dentro de botões), `min-h-16` (Textarea), `px-*`/`gap-*`/`py-*` (spacing interno).
+Com os resultados dos Greps de tipografia e tabela (coletados no Passo 1):
+- [ ] Zero ocorrências de `text-[9px]` ou `text-[10px]` em corpo de texto ou células de tabela
+- [ ] Zero tabelas dentro de `<ComponentDemo>` (ComponentDemo é só para demos interativas)
+- [ ] Zero wrappers de tabela com `overflow-hidden` (padrão correto: `border rounded-xl overflow-x-auto p-4 shadow-sm`)
 
-**Se encontrar violação**, a docs page e stories do componente **não vão variar visualmente entre os 7 temas** (Nova, Vega, Maia, Lyra, Mira, Luma, Sera) — corrija antes de fechar o quality.
+---
 
-### 5. Auditar estrutura HTML das docs pages (nesting e espaçamento)
+### Passo 4 — Identificar gaps e propor correções
 
-Verifique cada `*Docs.tsx` (e equivalentes Vue/Svelte/Basecoat) em busca de aninhamento desnecessário que acumula espaçamento:
+Compare os critérios de teste acima com o que foi encontrado. Liste:
+- Cenários sem story
+- Stories sem play function
+- Critérios WCAG sem verificação automatizada
+- Violações de tokenização ou tipografia encontradas
 
-**5.1 Padrão de tabela — buscar violações:**
-
-```bash
-# Tabelas dentro de ComponentDemo (errado — ComponentDemo é só para demos interativas de UI)
-grep -n "ComponentDemo" design-system-*/src/components/docs/*Docs.* | grep -A2 "<table"
-
-# Tabelas com dois wrappers (errado — um wrapper é suficiente)
-# Padrão problemático: <ComponentDemo><div class="overflow-x-auto"><table>
-grep -n "overflow-x-auto" design-system-*/src/components/docs/*Docs.* | grep -v "border rounded"
-```
-
-**Regra obrigatória (ver guideline 08, seção 3.2)**: toda tabela de documentação deve estar em **uma única div** com as classes exatas:
-```
-border rounded-xl overflow-x-auto p-4 shadow-sm
-```
-
-Casos que violam a regra:
-- `<ComponentDemo>` envolvendo uma tabela → remover ComponentDemo, aplicar wrapper padrão
-- `<div class="overflow-x-auto border ... overflow-hidden">` sem `p-4` → adicionar `p-4`, remover `overflow-hidden`
-- Dois divs aninhados onde o outer tem padding e o inner tem overflow → fundir em um
-
-**5.2 Padding de cards — buscar violações:**
-
-```bash
-# Cards com p-3 (mínimo é p-4)
-grep -n "border.*rounded.*p-3\|p-3.*border.*rounded" design-system-*/src/components/docs/*Docs.*
-```
-
-Todo card de conteúdo (border + rounded + qualquer bg) deve ter `p-4` mínimo.
-
-### 6. Arquitetura de Informação
-
-Audite a docs page como um todo — semântica HTML, hierarquia visual, tipografia acessível, links e consistência.
-
-**6.1 Semântica HTML**
-
-```bash
-# Verificar hierarquia de headings — h2 para seções, h3 para sub-seções, nunca pular níveis
-grep -n "<h[1-6]\|<H[1-6]" design-system-react/src/components/docs/<slug>Docs.tsx
-```
-
-- [ ] `<h2>` para cada seção principal (deve corresponder às âncoras do `DocsNav`)
-- [ ] `<h3>` apenas dentro de seções que tenham sub-divisões
-- [ ] Nunca `<h1>` (o `DocsHeader` já renderiza o título principal)
-- [ ] Nunca pular nível (ex: `<h2>` seguido de `<h4>`)
-- [ ] Tabelas usam `<thead>` + `<th>` com `scope` quando aplicável
-- [ ] Listas usam `<ul>`/`<ol>` semânticos (não divs simulando lista)
-- [ ] Elementos clicáveis não-link usam `role="link"` + `tabindex="0"` + handler de teclado
-
-**6.2 Tipografia e tamanhos mínimos**
-
-```bash
-# Buscar fontes menores que 12px (potencial violação de legibilidade)
-grep -n "text-\[9px\]\|text-\[10px\]\|text-\[11px\]" design-system-*/src/components/docs/*Docs.*
-```
-
-Regras de tamanho mínimo para docs pages:
-
-| Contexto | Tamanho mínimo | Classes permitidas |
-|----------|---------------|-------------------|
-| Corpo de texto, descrições, células de tabela | 12px | `text-xs` (12px) ou maior |
-| Labels de badge/tag | 11px | `text-[11px]` (exceção permitida para badges compactos) |
-| Código inline (`<code>`) | 11px | `text-[11px]` dentro de `<code>` apenas |
-| Texto decorativo (ex: "axe" no ícone) | Sem mínimo | Texto que não carrega informação funcional |
-
-Violações comuns:
-- `text-[9px]` ou `text-[10px]` em corpo de texto ou células de tabela → substituir por `text-xs`
-- `text-[10px]` em `font-mono` dentro de tabelas → substituir por `text-xs font-mono`
-- Descrições de seção com `text-muted-foreground` abaixo de `text-xs` → corrigir
-
-**6.3 Hierarquia visual e espaçamento**
-
-- [ ] Seções principais separadas por espaçamento consistente (`space-y-8` ou `space-y-10` no container pai)
-- [ ] Sub-seções com espaçamento menor que seções (`space-y-6` ou `mb-6`)
-- [ ] Títulos de seção (`h2`) com estilo uniforme: `text-xl font-semibold mb-6`
-- [ ] Títulos de sub-seção (`h3`) com estilo uniforme: `font-semibold text-sm mb-1`
-- [ ] Descrições de seção: `text-xs text-muted-foreground mb-4`
-- [ ] Padding de tabela: `p-3` mínimo em `<td>`, `p-4` em `<th>`
-
-**6.4 Links e navegação**
-
-```bash
-# Links com href hardcoded (podem quebrar)
-grep -n 'href="http\|href="/' design-system-*/src/components/docs/*Docs.*
-
-# Links internos do Storybook (devem usar window.top pattern)
-grep -n 'href=.*storybook\|href=.*iframe' design-system-*/src/components/docs/*Docs.*
-
-# Âncoras do DocsNav que não têm section correspondente
-# (comparar array de nav items com ids de <section>)
-```
-
-- [ ] Toda âncora no `DocsNav` tem um `<section id="...">` correspondente na página
-- [ ] Links para outros componentes usam `window.top.location.href` (não `<a href>` direto)
-- [ ] Links externos têm `target="_blank"` e `rel="noopener noreferrer"`
-- [ ] Nenhum link aponta para URL inexistente ou placeholder
-
-**6.5 Consistência cross-section**
-
-- [ ] Todas as tabelas seguem o mesmo padrão visual (wrapper, cabeçalho, células)
-- [ ] Badges de prioridade/status usam o mesmo estilo em todas as tabelas
-- [ ] Ícones de seção: nenhum h2 deve ter emoji ou ícone decorativo (consistência com títulos limpos)
-- [ ] Cards de conteúdo (border + rounded) mantêm padding uniforme (`p-4` mínimo)
-- [ ] Código inline (`<code>`) tem estilo consistente em toda a página
-
-### 7. Identificar gaps
-
-Compare os critérios de teste da tabela acima com as play functions existentes. Liste cenários faltantes e proponha stories para cobri-los.
+Corrija tudo que for direto (adicionar play function, corrigir classe). Para gaps que exigem criar arquivos inteiros novos, descreva o que criar e crie se fizer parte do escopo do `stack` informado.
 
 ---
 
 ## Saída Esperada
 
-1. **Matriz de cobertura** atualizada para cada stack
-2. **Play functions** adicionadas/corrigidas nas stories
-3. **Seção "Testes"** adicionada/atualizada no `translations.json`
-4. **Relatório de arquitetura de informação**:
-   - Semântica HTML: ✅/❌ (heading hierarchy, landmarks, tabelas semânticas)
-   - Tipografia: ✅/❌ (fontes abaixo do mínimo listadas com arquivo:linha)
-   - Links: ✅/❌ (links quebrados, âncoras órfãs)
-   - Consistência visual: ✅/❌ (paddings, badges, ícones em títulos)
-5. **Relatório de gaps**:
-   - Cenários sem story: ❌
-   - Stories sem play function: ⚠️
-   - Critérios WCAG sem verificação: ❌
-   - Stories com `a11y.disable`: ⚠️ (com justificativa)
+Preencha cada célula com o status real encontrado: `✅` correto, `❌` ausente/bug, `⚠️` parcial. **Nunca deixe células vazias no relatório final.**
+
+```
+## Relatório de Qualidade — <component-slug>
+
+### Cobertura de Stories
+| Arquivo | React | Vue | Svelte | Basecoat |
+|---------|-------|-----|--------|----------|
+| <slug>.stories (Playground) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| <slug>-estados.stories | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| <slug>-composicoes.stories | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+
+### Play Functions
+| Story | React | Vue | Svelte | Basecoat |
+|-------|-------|-----|--------|----------|
+| Playground (completa) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Disabled (toBeDisabled + callback) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Sub-stories (play presente) | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ |
+
+### Docs Page — Checks
+| Check | React | Vue | Svelte | Basecoat |
+|-------|-------|-----|--------|----------|
+| testes: functional ≥4 itens | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| testes: accessibility ≥4 itens | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| testes: visual ≥4 itens | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Acessibilidade: teclado + ARIA + WCAG | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Props: 5 colunas + extensibilidade | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Tokens: --ring + customizationTitle | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Semântica HTML + links | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Tokenização de dimensões | ✅/❌ | ✅/❌ | ✅/❌ | N/A |
+| Tipografia + padrões de tabela | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+
+### Gaps Encontrados
+| Item | Stack | Problema | Ação |
+|------|-------|----------|------|
+
+### a11y.disable sem justificativa
+| Arquivo | Linha | Stack |
+|---------|-------|-------|
+
+### Score: X/10
+```
 
 ---
 
