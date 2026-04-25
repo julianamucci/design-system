@@ -19,6 +19,7 @@ export function createInput(options: InputOptions = {}): HTMLInputElement {
 
   const input = document.createElement('input');
   input.type = type;
+  input.dataset.slot = 'input';
   input.className = cn('input', options.class);
 
   if (placeholder !== undefined) input.placeholder = placeholder;

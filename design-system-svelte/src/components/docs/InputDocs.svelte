@@ -497,6 +497,7 @@ interface InputProps extends HTMLInputAttributes {
           { name: 'Textarea',  description: $tStore('related.textarea'),  path: '?path=/docs/ui-textarea--docs'  },
           { name: 'InputOTP',  description: $tStore('related.inputOTP'),  path: '?path=/docs/ui-inputotp--docs'  },
           { name: 'Select',    description: $tStore('related.select'),    path: '?path=/docs/ui-select--docs'    },
+          { name: 'Form',      description: $tStore('related.form'),      path: '?path=/docs/ui-form--docs'      },
           { name: 'Label',     description: $tStore('related.label'),     path: '?path=/docs/ui-label--docs'     },
         ]}
       />
@@ -548,6 +549,8 @@ interface InputProps extends HTMLInputAttributes {
             { action: $tStore('testes.functional.item4.action'), result: $tStore('testes.functional.item4.result'), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
             { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
             { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+            { action: $tStore('testes.functional.item7.action'), result: $tStore('testes.functional.item7.result'), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
+            { action: $tStore('testes.functional.item8.action'), result: $tStore('testes.functional.item8.result'), priority: localPriority($tStore('testes.functional.item8.priority'), $tNavStore) },
           ],
         }}
         accessibility={{

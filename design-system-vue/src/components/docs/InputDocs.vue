@@ -155,6 +155,8 @@ const codeEmail = `<Input type="email" placeholder="ex: joao@empresa.com" />`;
 
 const codePassword = `<Input type="password" placeholder="Mínimo 8 caracteres" />`;
 
+const codeNumber = `<Input type="number" placeholder="0" />`;
+
 const codeDisabled = `<Input type="text" placeholder="Não disponível" disabled />`;
 
 const codeError = `<Input type="email" aria-invalid="true" placeholder="ex: joao@empresa.com" />`;
@@ -190,6 +192,7 @@ const variantItems = computed(() => [
   { name: 'text',     description: tContent('variants.types.text'),     code: codeDefault   },
   { name: 'email',    description: tContent('variants.types.email'),    code: codeEmail     },
   { name: 'password', description: tContent('variants.types.password'), code: codePassword  },
+  { name: 'number',   description: tContent('variants.types.number'),   code: codeNumber    },
   { name: 'file',     description: tContent('variants.types.file'),     code: codeFile      },
 ]);
 
@@ -282,6 +285,8 @@ const functionalTestItems = computed(() => [
   { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
   { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
   { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
+  { action: tContent('testes.functional.item7.action'), result: tContent('testes.functional.item7.result'), priority: localPriority(tContent('testes.functional.item7.priority')) },
+  { action: tContent('testes.functional.item8.action'), result: tContent('testes.functional.item8.result'), priority: localPriority(tContent('testes.functional.item8.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
@@ -460,8 +465,14 @@ const visualTestItems = computed(() => [
           <Input type="password" placeholder="Mínimo 8 caracteres" />
         </div>
       </template>
-      <!-- file -->
+      <!-- number -->
       <template #variant-preview-3>
+        <div class="w-full max-w-xs">
+          <Input type="number" placeholder="0" />
+        </div>
+      </template>
+      <!-- file -->
+      <template #variant-preview-4>
         <div class="w-full max-w-xs">
           <Input type="file" />
         </div>
