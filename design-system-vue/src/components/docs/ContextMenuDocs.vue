@@ -391,6 +391,7 @@ const tokenRows = computed(() => [
 ]);
 
 const accessibilityItems = computed(() => [
+  tContent('accessibility.warning'),
   tContent('accessibility.aria.roleMenu'),
   tContent('accessibility.aria.roleMenuItem'),
   tContent('accessibility.aria.roleMenuitemCheckbox'),

@@ -74,29 +74,22 @@ Aplicar: **[1] críticos** / **[2] críticos+médios** / **[3] todos** / **[4] n
 
 ## Médios
 
-- [ ] **Vue: `accessibility.warning` ausente** — `design-system-vue/src/components/docs/ContextMenuDocs.vue:~393`
-  Nota crítica sobre right-click precisar de alternativa acessível está ausente na lista de itens do `DocsAccessibility`. React, Svelte e Basecoat incluem corretamente.
-  — skill: `/cross-stack context-menu`
+- [x] **Vue: `accessibility.warning` ausente** — `design-system-vue/src/components/docs/ContextMenuDocs.vue:393`
+  Adicionado `tContent('accessibility.warning')` como primeiro item de `accessibilityItems`.
 
-- [ ] **Svelte: 4 variantes ausentes na docs page** — `design-system-svelte/src/components/docs/ContextMenuDocs.svelte:~429`
-  Apenas `default` e `destructive` documentados. Faltam: `CheckboxItem`, `RadioItem`, `SubTrigger`, `Label+Inset`. As demais 3 stacks documentam todas as 6.
-  — skill: `/cross-stack context-menu`
+- [x] **Svelte: 4 variantes ausentes na docs page** — `design-system-svelte/src/components/docs/ContextMenuDocs.svelte`
+  Adicionados CheckboxItem, RadioItem, SubTrigger e Label+Inset com snippets de preview, code strings e variáveis de estado (`variantCheckboxChecked`, `variantRadioValue`).
 
 ## Baixos
 
-- [ ] **Svelte: token `--border` com valor inconsistente** — `design-system-svelte/src/components/docs/ContextMenuDocs.svelte:~612`
-  Valor `'border'` em vez de `'bg-border'` (alinhado com React e Vue).
-  — skill: `/cross-stack context-menu`
+- [x] **Svelte: token `--border` com valor inconsistente** — `design-system-svelte/src/components/docs/ContextMenuDocs.svelte`
+  Corrigido `'border'` → `'bg-border'`.
 
-- [ ] **Basecoat: `sanitizeHtml` não importado** — `design-system-basecoat/src/components/docs/ContextMenuDocs.ts`
-  Importar de `@/lib/sanitize-html` se há HTML dinâmico de `translations.json`.
-  — skill: `/cross-stack context-menu`
+- [~] **Basecoat: `sanitizeHtml` não importado** — N/A: os `innerHTML` são SVGs literais hardcoded, sem conteúdo de translations. Não há risco XSS.
 
 ---
 
-**Total context-menu: 4 violations** (0 críticos, 2 médios, 2 baixos)
-
-Aplicar: **[1] críticos** / **[2] críticos+médios** / **[3] todos** / **[4] nenhum**
+**Total context-menu: 4 violations — ✅ 3 resolvidos, 1 N/A**
 
 ---
 
