@@ -17,140 +17,78 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ---
 
-## Fontes de Referência — Leia ANTES de qualquer ação
-
-1. `docs/shared/guidelines/10-performance.md` — regras completas de performance
-2. Vite config de cada stack (`vite.config.ts`)
-3. `.storybook/main.ts` e `preview.ts` de cada stack
-
----
-
 ## Auditoria: O que Verificar
+
+Dispare todos os `Grep` do mesmo check em paralelo no mesmo turno.
 
 ### 1. Imports Pesados
 
-Busque imports que puxam módulos inteiros em vez de componentes individuais:
+Use `Grep` nativo em paralelo nas 4 stacks:
 
-```bash
-# Imports wildcard de ícones (cada ícone ~200B, lib inteira ~200KB)
-grep -rn "from 'lucide-" design-system-*/src/ | grep -v "import {" | grep "import \*"
-
-# Imports de barrels grandes
-grep -rn "from '@/components/ui'" design-system-*/src/ --include="*.tsx" --include="*.ts"
-
-# Re-exports que quebram tree-shaking
-grep -rn "export \*" design-system-*/src/components/ui/index.ts 2>/dev/null
-```
+- **Wildcard de ícones** (cada ícone ~200B, lib inteira ~200KB) — padrão `import \*.*from 'lucide-` em `design-system-<stack>/src/`
+- **Barrel imports** que puxam toda a lib UI — padrão `from '@/components/ui'` (sem subpath) em arquivos `.tsx`/`.ts`/`.vue`/`.svelte` dentro de `src/components/docs/`
+- **Re-exports wildcard** que quebram tree-shaking — padrão `export \*` em `design-system-<stack>/src/components/ui/index.ts`
 
 ### 2. Renderização Desnecessária
 
-**React — funções e objetos não memoizados:**
+**React — objetos inline em componentes UI** (não docs pages — lá são intencionais):
+- `Grep` padrão `style=\{\{` em `design-system-react/src/components/ui/`
 
-```bash
-# Funções inline em JSX (arrow functions em props)
-grep -rn "onClick={() =>" design-system-react/src/components/docs/
+**Vue — `cn()` chamado diretamente no template** (recalcula a cada render, deveria ser `computed`):
+- `Grep` padrão `:class="cn\(` em `design-system-vue/src/components/ui/`
 
-# Objetos inline em props
-grep -rn "style={{" design-system-react/src/components/docs/
-```
+### 3. Classes Tailwind Dinâmicas (quebram purge/tree-shaking CSS)
 
-**Vue — computeds ausentes:**
-
-```bash
-# Chamadas de função no template (recalculam a cada render)
-grep -rn ":class=\"cn(" design-system-vue/src/
-```
-
-### 3. Classes Tailwind Dinâmicas (quebram tree-shaking CSS)
-
-```bash
-# Template literals construindo classes
-grep -rn '`text-\${' design-system-*/src/
-grep -rn '`bg-\${' design-system-*/src/
-grep -rn '`border-\${' design-system-*/src/
-```
+Use `Grep` em paralelo nas 4 stacks para template literals construindo classes:
+- Padrão `` `text-\${ `` em `design-system-<stack>/src/`
+- Padrão `` `bg-\${ `` em `design-system-<stack>/src/`
+- Padrão `` `border-\${ `` em `design-system-<stack>/src/`
 
 Cada ocorrência deve usar um mapa de classes completas:
 ```tsx
-// ERRADO: `text-${color}-foreground`
-// CERTO: { default: 'text-primary-foreground', destructive: 'text-destructive-foreground' }
+// ERRADO — Tailwind não detecta a classe em build time
+<div className={`bg-${color}`}>
+
+// CERTO — detectável pelo scanner de Tailwind
+const bgColors = { primary: 'bg-primary', secondary: 'bg-secondary' } as const;
+<div className={bgColors[color]}>
 ```
 
 ### 4. IntersectionObserver
 
-```bash
-grep -rn "IntersectionObserver" design-system-*/src/
-```
+`Grep` padrão `IntersectionObserver` em `design-system-<stack>/src/` para cada stack no escopo.
 
-Para cada uso:
-- [ ] Instância única (não uma por elemento)?
-- [ ] `disconnect()` no cleanup?
-- [ ] `threshold` e `rootMargin` otimizados?
+Para cada uso encontrado:
+- [ ] `disconnect()` chamado no cleanup (React: retorno do `useEffect`; Svelte: retorno do `$effect`; Vue: `onUnmounted`)?
+- [ ] Instância única por página, não uma por elemento observado?
+- [ ] `threshold` e `rootMargin` definidos explicitamente?
 
-### 5. Lazy Loading
+### 5. @apply em CSS (duplica propriedades no output)
 
-```bash
-# Imagens sem loading="lazy"
-grep -rn "<img" design-system-*/src/ | grep -v "loading="
+`Grep` padrão `@apply` em `design-system-<stack>/src/` (arquivos `.css`).
 
-# Imagens sem dimensões explícitas (causam CLS)
-grep -rn "<img" design-system-*/src/ | grep -v "width="
-```
-
-### 6. @apply em CSS (duplica estilos)
-
-```bash
-grep -rn "@apply" design-system-*/src/styles/
-```
-
-Cada `@apply` duplica as propriedades CSS em vez de usar a classe utilitária. Preferir classes inline.
-
-### 7. Bundle Analysis
-
-```bash
-# Tamanho do build de cada stack
-for stack in react vue svelte basecoat; do
-  echo "=== $stack ==="
-  cd design-system-$stack
-  npm run build-storybook 2>/dev/null && du -sh storybook-static/ 2>/dev/null
-  cd ..
-done
-```
+Cada `@apply` copia as propriedades CSS no lugar de referenciar a classe utilitária — preferir classes inline no template.
 
 ---
 
 ## Métricas-Alvo
 
-| Métrica | Alvo | Como medir |
-|---------|------|------------|
-| Bundle por componente | ≤15KB gzip | `vite-bundle-visualizer` |
-| Storybook build | ≤10MB gzip | `du -sh storybook-static/` |
-| Story load time | ≤500ms | DevTools Performance tab |
-| LCP (docs page) | ≤2.5s | Lighthouse |
-| CLS | ≤0.1 | Lighthouse |
+| Métrica | Alvo |
+|---------|------|
+| Bundle por componente | ≤15KB gzip |
+| Storybook build total | ≤10MB gzip |
+| Story load time | ≤500ms |
+| LCP (docs page) | ≤2.5s |
+| CLS | ≤0.1 |
 
 ---
 
 ## Correções Comuns
 
-### Memoizar callbacks em docs pages (React)
-
-```tsx
-// ANTES
-const handleSectionChange = (id: string) => {
-  track('docs_section_viewed', { section_id: id, locale });
-};
-
-// DEPOIS
-const handleSectionChange = useCallback((id: string) => {
-  track('docs_section_viewed', { section_id: id, locale });
-}, [locale]);
-```
-
 ### Importar ícones individualmente
 
 ```tsx
-// ANTES (puxa lib inteira)
+// ANTES (puxa lib inteira ~200KB)
 import * as Icons from 'lucide-react';
 
 // DEPOIS (tree-shakeable)
@@ -160,7 +98,7 @@ import { Mail, X, ChevronRight } from 'lucide-react';
 ### Eliminar classes dinâmicas
 
 ```tsx
-// ANTES (Tailwind não detecta)
+// ANTES (Tailwind não detecta em build time)
 <div className={`bg-${color}`}>
 
 // DEPOIS (detectável)
@@ -169,6 +107,17 @@ const bgColors = {
   secondary: 'bg-secondary',
 } as const;
 <div className={bgColors[color]}>
+```
+
+### Corrigir IntersectionObserver sem cleanup
+
+```tsx
+// React
+useEffect(() => {
+  const observer = new IntersectionObserver(callback, { threshold: 0.5 });
+  elements.forEach(el => observer.observe(el));
+  return () => observer.disconnect(); // obrigatório
+}, []);
 ```
 
 ---
@@ -184,15 +133,11 @@ const bgColors = {
 
 ### Renderização
 | Arquivo | Problema | Ação |
+|---------|----------|------|
 
 ### CSS
 | Arquivo | Problema | Ação |
-
-### Lazy Loading
-| Arquivo | Problema | Ação |
-
-### Bundle Size
-| Stack | Tamanho atual | Alvo | Status |
+|---------|----------|------|
 
 ### Score: X/10
 ```
