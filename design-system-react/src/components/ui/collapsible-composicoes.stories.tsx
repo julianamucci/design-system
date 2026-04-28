@@ -6,7 +6,8 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "./collapsible";
-import { Button } from "./button";
+import { buttonVariants } from "./button";
+import { cn } from "@/lib/utils";
 
 const meta = {
   title: "UI/Collapsible/Composições",
@@ -31,18 +32,15 @@ export const ComButtonAsChild: Story = {
   name: "Com Button (asChild)",
   render: () => (
     <Collapsible className="w-80 space-y-2">
-      <CollapsibleTrigger asChild>
-        <Button
-          variant="outline"
-          className="flex w-full items-center justify-between px-4"
-          aria-label="Exibir filtros avançados"
-        >
-          <span>Exibir filtros avançados</span>
-          <ChevronDown
-            aria-hidden="true"
-            className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
-          />
-        </Button>
+      <CollapsibleTrigger
+        className={cn(buttonVariants({ variant: "outline" }), "flex w-full items-center justify-between px-4")}
+        aria-label="Exibir filtros avançados"
+      >
+        <span>Exibir filtros avançados</span>
+        <ChevronDown
+          aria-hidden="true"
+          className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+        />
       </CollapsibleTrigger>
       <CollapsibleContent className="rounded-md border border-border bg-card px-4 py-3 text-sm space-y-2">
         <div className="flex items-center justify-between">
@@ -78,20 +76,18 @@ export const ComIconeNoTrigger: Story = {
   name: "Com Ícone no Trigger",
   render: () => (
     <Collapsible className="w-80 space-y-2">
-      <CollapsibleTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex w-full items-center justify-between px-4"
-        >
-          <span className="flex items-center gap-2">
-            <SlidersHorizontal aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
-            Filtros avançados
-          </span>
-          <ChevronDown
-            aria-hidden="true"
-            className="h-4 w-4 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180"
-          />
-        </Button>
+      <CollapsibleTrigger
+        className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
+        aria-label="Filtros avançados"
+      >
+        <span className="flex items-center gap-2">
+          <SlidersHorizontal aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
+          Filtros avançados
+        </span>
+        <ChevronDown
+          aria-hidden="true"
+          className="h-4 w-4 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180"
+        />
       </CollapsibleTrigger>
       <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
         <p className="text-muted-foreground">Filtro avançado 1</p>
@@ -124,13 +120,14 @@ export const ComConteudoEstruturado: Story = {
     <Collapsible defaultOpen className="w-80 space-y-2">
       <div className="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-3">
         <span className="flex-1 text-sm font-medium">Filtro básico ativo</span>
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" className="px-2" aria-label="Exibir filtros avançados">
-            <ChevronDown
-              aria-hidden="true"
-              className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
-            />
-          </Button>
+        <CollapsibleTrigger
+          className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "px-2")}
+          aria-label="Exibir filtros avançados"
+        >
+          <ChevronDown
+            aria-hidden="true"
+            className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+          />
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">

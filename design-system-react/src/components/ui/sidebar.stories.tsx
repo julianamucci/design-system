@@ -107,7 +107,7 @@ function SidebarStory({ side, variant, collapsible, defaultOpen }: SidebarStoryP
       </nav>
       <SidebarInset>
         <header className="flex items-center gap-2 p-4 border-b border-border">
-          <SidebarTrigger className="lg:hidden" />
+          <SidebarTrigger />
           <span className="text-sm text-muted-foreground">Conteúdo principal</span>
         </header>
         <div className="p-6">

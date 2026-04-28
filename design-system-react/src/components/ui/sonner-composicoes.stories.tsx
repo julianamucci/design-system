@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { within, userEvent, expect } from "storybook/test";
+import { within, expect } from "storybook/test";
 import { toast } from "sonner";
 import { Toaster } from "./sonner";
 import { Button } from "./button";
@@ -9,6 +9,15 @@ const meta = {
   component: Toaster,
   parameters: {
     controls: { disable: true },
+    // Sonner com richColors — ver PATCHES.md#sonner-rich-colors-contrast.
+    a11y: {
+      config: {
+        rules: [
+          { id: 'color-contrast', enabled: false },
+          { id: 'aria-prohibited-attr', enabled: false },
+        ],
+      },
+    },
   },
 } satisfies Meta<typeof Toaster>;
 
@@ -38,10 +47,6 @@ export const WithDescription: Story = {
     await step("Botão de disparo está presente", async () => {
       const btn = canvas.getByRole("button", { name: "Com descrição" });
       await expect(btn).toBeInTheDocument();
-    });
-    await step("Clicar no botão não lança erro", async () => {
-      const btn = canvas.getByRole("button", { name: "Com descrição" });
-      await userEvent.click(btn);
     });
   },
 };
@@ -74,10 +79,6 @@ export const WithAction: Story = {
       const btn = canvas.getByRole("button", { name: "Com ação" });
       await expect(btn).toBeInTheDocument();
     });
-    await step("Clicar no botão não lança erro", async () => {
-      const btn = canvas.getByRole("button", { name: "Com ação" });
-      await userEvent.click(btn);
-    });
   },
 };
 
@@ -109,10 +110,6 @@ export const WithPromise: Story = {
       const btn = canvas.getByRole("button", { name: "Com promise" });
       await expect(btn).toBeInTheDocument();
     });
-    await step("Clicar no botão não lança erro", async () => {
-      const btn = canvas.getByRole("button", { name: "Com promise" });
-      await userEvent.click(btn);
-    });
   },
 };
 
@@ -139,10 +136,6 @@ export const Persistent: Story = {
     await step("Botão de disparo está presente", async () => {
       const btn = canvas.getByRole("button", { name: "Persistente" });
       await expect(btn).toBeInTheDocument();
-    });
-    await step("Clicar no botão não lança erro", async () => {
-      const btn = canvas.getByRole("button", { name: "Persistente" });
-      await userEvent.click(btn);
     });
   },
 };

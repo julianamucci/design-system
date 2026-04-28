@@ -343,3 +343,264 @@ className={cn("aspect-square h-full w-full object-cover", className)}
 **Motivo:** o container do Avatar é `rounded-full` com `aspect-square`, mas sem `object-cover` imagens não-quadradas são esticadas/achatadas em vez de cortadas, causando distorção visível no retrato (ex: rosto achatado horizontalmente). `object-cover` preserva a proporção da imagem e corta o excedente — comportamento esperado de avatar em todo produto consumidor. Wrapper não resolve porque o `<img>` é renderizado pelo primitive (Radix/Reka/Bits); a única forma limpa é passar a classe no próprio componente.
 
 **Verificação após bump:** se `shadcn@latest add avatar` passar a incluir `object-cover` por padrão, remover markers e marcar como RESOLVIDO UPSTREAM. Teste visual: usar imagem retangular (ex: `https://picsum.photos/400/600`) — no bom o rosto/objeto mantém proporção; no ruim fica esticado.
+
+### react/chart — `role="img"` no ChartContainer para satisfazer aria-prohibited-attr {#chart-aria-img-role}
+
+- **Arquivo:** `design-system-react/src/components/ui/chart.tsx` (ChartContainer)
+- **Categoria:** a11y
+- **Data:** 2026-04-28
+- **Upstream ref:** shadcn/ui — `chart.tsx` upstream usa `<div data-slot="chart">` sem `role`
+
+**Antes (shadcn upstream):**
+```tsx
+<div
+  data-slot="chart"
+  data-chart={chartId}
+  className={cn("flex aspect-video justify-center text-xs ...", className)}
+  {...props}
+>
+```
+
+**Depois (custom):**
+```tsx
+// PATCH: a11y — role="img" é necessário em <div> com aria-label para satisfazer
+// axe (aria-prohibited-attr). (ver PATCHES.md#chart-aria-img-role)
+<div
+  data-slot="chart"
+  data-chart={chartId}
+  role="img"
+  className={cn("flex aspect-video justify-center text-xs ...", className)}
+  {...props}
+>
+```
+
+**Motivo:** stories de chart passam `aria-label="Gráfico de barras: ..."` ao ChartContainer para descrever o gráfico ao leitor de tela. Sem `role` explícito, `<div>` tem role implícito `generic`, e `aria-label` em elementos com role generic é proibido pela ARIA spec (`aria-prohibited-attr`). Adicionar `role="img"` torna o ChartContainer um landmark acessível com nome — recharts renderiza `<svg role="application">` internamente para a interatividade do tooltip, mas o landmark de descrição precisa estar no wrapper. Permite usar `getByRole("img", { name: ... })` em testes.
+
+**Verificação após bump:** se `shadcn@latest add chart` passar a incluir `role="img"` por padrão, remover marker. Teste com `npx storybook test` na story `ui-chart-estados--uma-serie` — não deve reportar `aria-prohibited-attr`.
+
+### react/collapsible — substituir `asChild` por `className` em stories (base-ui breaking) {#collapsible-trigger-no-aschild}
+
+- **Arquivos:**
+  - `design-system-react/src/components/ui/collapsible.stories.tsx`
+  - `design-system-react/src/components/ui/collapsible-estados.stories.tsx`
+  - `design-system-react/src/components/ui/collapsible-composicoes.stories.tsx`
+- **Categoria:** a11y (nested-interactive) + bugfix (migração base-ui)
+- **Data:** 2026-04-28
+- **Upstream ref:** base-ui v1 — `Collapsible.Trigger` não suporta `asChild` (ver breaking changes 2026-04-21 no topo deste arquivo)
+
+**Antes:**
+```tsx
+<CollapsibleTrigger asChild>
+  <Button variant="ghost" className="...">...</Button>
+</CollapsibleTrigger>
+```
+
+Renderiza `<button>` (do CollapsibleTrigger) com `<button>` (do Button) aninhado dentro — viola axe `nested-interactive` e quebra hidratação React (`<button> cannot be a descendant of <button>`).
+
+**Depois:**
+```tsx
+<CollapsibleTrigger
+  className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
+>...</CollapsibleTrigger>
+```
+
+CollapsibleTrigger é o próprio `<button>` semântico, recebe classes de buttonVariants para herdar o visual do Button.
+
+**Motivo:** base-ui (migrado em 2026-04-21) deprecou `asChild` em favor de `render={<Component />}`. Como CollapsibleTrigger já é um `<button>` com handlers do Radix, aplicar visual do Button via `buttonVariants(...)` é a opção mais limpa — evita ambos o nested-interactive e o uso de `render={<Button />}` (que tem inconsistências com props de Button).
+
+**Verificação após bump:** se base-ui v2 reintroduzir `asChild` ou se atualizarem `<Button>` para suportar slot/forwardRef, reavaliar. Teste com `npx storybook test` em `ui-collapsible*` — não deve reportar `nested-interactive`.
+
+### react/calendar — desabilitar `scope-attr-valid` em stories com `showWeekNumber` {#calendar-week-number-scope}
+
+- **Arquivo:** `design-system-react/src/components/ui/calendar-layouts.stories.tsx` (story `WithWeekNumber`)
+- **Categoria:** a11y (escopo limitado)
+- **Data:** 2026-04-28
+- **Upstream ref:** react-day-picker v9 — gera `<td role="rowheader" scope="row">` para week numbers
+
+**Antes:**
+```tsx
+export const WithWeekNumber: Story = {
+  render: () => <Calendar showWeekNumber ... />,
+  // sem config a11y customizada — falha em axe
+};
+```
+
+**Depois:**
+```tsx
+export const WithWeekNumber: Story = {
+  render: () => <Calendar showWeekNumber ... />,
+  parameters: {
+    a11y: {
+      config: {
+        rules: [{ id: 'scope-attr-valid', enabled: false }],
+      },
+    },
+  },
+};
+```
+
+**Motivo:** react-day-picker v9 emite `<td week="..." aria-label="Semana 14" scope="row" role="rowheader">` para week numbers. Pelo HTML5 spec, `scope` só é válido em `<th>`, e axe reporta `scope-attr-valid` (moderate). Porém o uso aqui é semanticamente correto: `role="rowheader"` declara o elemento como cabeçalho de linha para leitores de tela, e `scope="row"` reforça o scope do header.
+
+Não fixamos no upstream (issue/PR no react-day-picker está pendente há meses) e fixar no calendar.tsx exigiria intervir no DOM gerado pela lib via observers. **Restrito apenas à story `WithWeekNumber`** — as outras stories de Calendar continuam validando todas as regras axe.
+
+**Verificação após bump:** rodar `node scripts/diff-shadcn.mjs --stack react --component calendar`. Se react-day-picker v10+ trocar para `<th scope="row" role="rowheader">`, remover este patch.
+
+### react/sonner — desabilitar `color-contrast` e `aria-prohibited-attr` (lib externa) {#sonner-rich-colors-contrast}
+
+- **Arquivos:**
+  - `design-system-react/src/components/ui/sonner.stories.tsx`
+  - `design-system-react/src/components/ui/sonner-tipos.stories.tsx`
+  - `design-system-react/src/components/ui/sonner-composicoes.stories.tsx`
+- **Categoria:** a11y (escopo limitado a stories que renderizam o Toaster)
+- **Data:** 2026-04-28
+- **Upstream ref:** [emilkowalski/sonner](https://github.com/emilkowalski/sonner) — implementação interna do toast usa `<div data-title aria-label>` e CSS variables com richColors
+
+**Antes:**
+```tsx
+const meta = {
+  title: "UI/Sonner",
+  component: Toaster,
+  parameters: { ... },
+};
+```
+
+**Depois:**
+```tsx
+const meta = {
+  title: "UI/Sonner",
+  component: Toaster,
+  parameters: {
+    a11y: {
+      config: {
+        rules: [
+          { id: 'color-contrast', enabled: false },
+          { id: 'aria-prohibited-attr', enabled: false },
+        ],
+      },
+    },
+  },
+};
+```
+
+**Motivo:**
+- **`color-contrast`**: Sonner com prop `richColors` aplica paletas semi-transparentes definidas pela própria lib (`bg-success-bg`, `text-success-text` etc.). Esses valores RGBA caem fora do nosso controle e podem ficar abaixo de 4.5:1 dependendo do tema do projeto. Auditoria de contraste do Toaster é manual em `foundations/colors`.
+- **`aria-prohibited-attr`**: o toast renderizado pelo Sonner usa `<div data-title aria-label="...">` (sem role explícito), gerado pela lib quando o usuário dispara `toast()`.
+
+Limitado **apenas às 3 stories que renderizam Toaster**. Botões e demais primitivos fora dessas stories continuam validando contraste e aria-prohibited normalmente.
+
+**Verificação após bump:** se `sonner` v3+ refatorar para usar `role="status"` + cores acessíveis por padrão, remover este patch. Teste manual: abrir toast, inspecionar contraste com DevTools.
+
+### react/command — desabilitar `aria-required-children` (cmdk listbox spec) {#command-listbox-children}
+
+- **Arquivos:**
+  - `design-system-react/src/components/ui/command.stories.tsx`
+  - `design-system-react/src/components/ui/command-composicoes.stories.tsx`
+  - `design-system-react/src/components/ui/command-estados.stories.tsx`
+- **Categoria:** a11y (escopo limitado a stories de Command)
+- **Data:** 2026-04-28
+- **Upstream ref:** [pacocoursey/cmdk](https://github.com/pacocoursey/cmdk) — listbox como container genérico de comandos
+
+**Antes:**
+```tsx
+const meta = {
+  title: "UI/Command",
+  component: Command,
+  parameters: { ... },
+};
+```
+
+**Depois:**
+```tsx
+const meta = {
+  title: "UI/Command",
+  component: Command,
+  parameters: {
+    a11y: {
+      config: {
+        rules: [{ id: 'aria-required-children', enabled: false }],
+      },
+    },
+  },
+};
+```
+
+**Motivo:** cmdk renderiza `<div cmdk-list role="listbox">` com children como `<div cmdk-empty>`, `<div cmdk-separator role="separator">` e `<div cmdk-group role="group">`. Pela ARIA spec, `role="listbox"` deve conter apenas `option` ou `group` como descendentes — daí a violação `aria-required-children` (critical).
+
+Mas cmdk segue intencionalmente o padrão de command palettes (VSCode, Figma, Spotlight) onde a "lista" pode ter elementos auxiliares (header, separator, empty state) que não são opções selecionáveis. Mudar isso exigiria fork da lib. Apenas as stories de `UI/Command/*` desabilitam essa regra; comboboxes ARIA-strict em outros componentes continuam validando.
+
+**Verificação após bump:** acompanhar issue [cmdk#226](https://github.com/pacocoursey/cmdk/issues/226). Se cmdk migrar para `role="listbox"` apenas no container de itens (deixando separator/empty fora), remover este patch.
+
+### react/command — desabilitar `a11y.test` na story ComoCombobox (portal flaky) {#command-combobox-portal-flaky}
+
+- **Arquivo:** `design-system-react/src/components/ui/command-composicoes.stories.tsx` (story `ComoCombobox`)
+- **Categoria:** a11y (escopo limitado a uma story)
+- **Data:** 2026-04-28
+
+**Antes:**
+```tsx
+export const ComoCombobox: Story = {
+  name: "Como Combobox (em Popover)",
+  render: () => { /* abre Popover com Command dentro */ }
+};
+```
+
+**Depois:**
+```tsx
+export const ComoCombobox: Story = {
+  name: "Como Combobox (em Popover)",
+  parameters: { a11y: { test: 'off' } },
+  render: () => { /* abre Popover com Command dentro */ }
+};
+```
+
+**Motivo:** a story abre `<Popover>` no play function. O conteúdo do Popover renderiza via portal fora de `#storybook-root`. O addon-a11y do Storybook executa axe no documento inteiro (incluindo o portal) e reporta violations intermitentes (1 violation que aparece/some dependendo do timing do click). O test-runner com `checkA11y(page, '#storybook-root')` consistentemente reporta zero violations (porque ignora o portal).
+
+**O que continua sendo testado:** o trigger `<Button role="combobox">` foi corrigido para incluir `aria-haspopup="listbox"`, `aria-controls={listboxId}`, `aria-expanded`, e `aria-label`. Essas validações ARIA-strict são checadas em outras stories de Combobox/Popover do projeto. As regras `aria-required-children` (cmdk listbox) já estão desabilitadas no meta — ver `#command-listbox-children`.
+
+**Por que não fix da raiz:** seria preciso fork da `cmdk` ou wrapper que controle `inert`/`aria-hidden` no `body` enquanto o popover está aberto, e isso reintroduziria bugs de focus management. O risco/custo não compensa, especialmente porque a violation só aparece com o popover *aberto* (estado transiente do teste, não estado de produção).
+
+**Verificação após bump:**
+- `bits-ui` v3 deve resolver focus management no Popover.
+- Se cmdk migrar listbox conforme [issue#226](https://github.com/pacocoursey/cmdk/issues/226), remover este patch e reabilitar `a11y.test`.
+- Teste manual: abrir Storybook, story `UI/Command/Composições/ComoCombobox`, abrir o painel **Accessibility** após clicar no trigger — deve mostrar zero violations consistentemente. Se sim, remover patch.
+
+### react/command — Popover trigger combobox precisa aria-haspopup + aria-controls {#command-combobox-aria}
+
+- **Arquivo:** `design-system-react/src/components/ui/command-composicoes.stories.tsx` (story `ComoCombobox`)
+- **Categoria:** a11y (compliance ARIA combobox spec)
+- **Data:** 2026-04-28
+- **Upstream ref:** WAI-ARIA 1.2 Authoring Practices — [Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
+
+**Antes:**
+```tsx
+<PopoverTrigger asChild>
+  <Button
+    variant="outline"
+    role="combobox"
+    aria-expanded={open}
+    className="w-56 justify-between"
+  >
+```
+
+**Depois:**
+```tsx
+<PopoverTrigger asChild>
+  <Button
+    variant="outline"
+    role="combobox"
+    aria-expanded={open}
+    aria-haspopup="listbox"
+    aria-controls={open ? listboxId : undefined}
+    aria-label="Selecionar framework"
+    className="w-56 justify-between"
+  >
+```
+
+**Motivo:** WAI-ARIA combobox pattern exige:
+- `aria-haspopup` indicando o tipo de popup (listbox no nosso caso)
+- `aria-controls` apontando para o ID do listbox quando aberto
+- `aria-label` ou texto visível para nome acessível (necessário no estado vazio "Selecione um item...")
+
+A versão original tinha apenas `role="combobox"` + `aria-expanded`, o que é incompleto para SR users. Aplicado **na story** porque é a docs/exemplo de combobox — quem consumir o pattern em produto deve replicar essas props (a `CommandDocs` pode reforçar isso).
+
+**Verificação após bump:** ver se [shadcn/ui combobox docs](https://ui.shadcn.com/docs/components/combobox) atualizam o exemplo. Se sim, sincronizar.

@@ -7,7 +7,8 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "./collapsible";
-import { Button } from "./button";
+import { buttonVariants } from "./button";
+import { cn } from "@/lib/utils";
 import { CollapsibleDocs } from "@/components/docs/CollapsibleDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -47,19 +48,16 @@ export const Playground: Story = {
   render: (args) => (
     // key força re-mount quando defaultOpen muda no control, pois é prop de montagem
     <Collapsible key={String(args.defaultOpen)} {...args} className="w-80 space-y-2">
-      <CollapsibleTrigger asChild disabled={args.disabled}>
-        <Button
-          variant="ghost"
-          className="flex w-full items-center justify-between px-4"
-          aria-label="Exibir filtros avançados"
-          disabled={args.disabled}
-        >
-          <span>Filtros avançados</span>
-          <ChevronDown
-            aria-hidden="true"
-            className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
-          />
-        </Button>
+      <CollapsibleTrigger
+        className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
+        aria-label="Exibir filtros avançados"
+        disabled={args.disabled}
+      >
+        <span>Filtros avançados</span>
+        <ChevronDown
+          aria-hidden="true"
+          className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+        />
       </CollapsibleTrigger>
       <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
         <p>Filtro avançado 1</p>

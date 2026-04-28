@@ -7,7 +7,8 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "./collapsible";
-import { Button } from "./button";
+import { Button, buttonVariants } from "./button";
+import { cn } from "@/lib/utils";
 
 const meta = {
   title: "UI/Collapsible/Estados",
@@ -32,17 +33,14 @@ export const NaoControlado: Story = {
   name: "Não Controlado",
   render: () => (
     <Collapsible defaultOpen={false} className="w-80 space-y-2">
-      <CollapsibleTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex w-full items-center justify-between px-4"
-        >
-          <span>Exibir filtros avançados</span>
-          <ChevronDown
-            aria-hidden="true"
-            className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
-          />
-        </Button>
+      <CollapsibleTrigger
+        className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
+      >
+        <span>Exibir filtros avançados</span>
+        <ChevronDown
+          aria-hidden="true"
+          className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+        />
       </CollapsibleTrigger>
       <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
         <p>Filtro avançado 1</p>
@@ -90,18 +88,15 @@ function ControlledExample() {
         </Button>
       </div>
       <Collapsible open={open} onOpenChange={setOpen} className="space-y-2">
-        <CollapsibleTrigger asChild>
-          <Button
-            variant="ghost"
-            className="flex w-full items-center justify-between px-4"
-            aria-label={open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}
-          >
-            <span>{open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}</span>
-            <ChevronDown
-              aria-hidden="true"
-              className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
-            />
-          </Button>
+        <CollapsibleTrigger
+          className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
+          aria-label={open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}
+        >
+          <span>{open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}</span>
+          <ChevronDown
+            aria-hidden="true"
+            className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+          />
         </CollapsibleTrigger>
         <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
           <p>Filtro avançado 1</p>
@@ -145,18 +140,15 @@ export const Desabilitado: Story = {
   name: "Desabilitado",
   render: () => (
     <Collapsible className="w-80 space-y-2">
-      <CollapsibleTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex w-full items-center justify-between px-4"
-          disabled
-        >
-          <span>Filtros avançados</span>
-          <ChevronDown
-            aria-hidden="true"
-            className="h-4 w-4"
-          />
-        </Button>
+      <CollapsibleTrigger
+        className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
+        disabled
+      >
+        <span>Filtros avançados</span>
+        <ChevronDown
+          aria-hidden="true"
+          className="h-4 w-4"
+        />
       </CollapsibleTrigger>
       <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
         <p>Filtro avançado 1</p>
@@ -169,7 +161,8 @@ export const Desabilitado: Story = {
 
     await step("trigger está desabilitado", async () => {
       const trigger = canvas.getByRole("button");
-      await expect(trigger).toBeDisabled();
+      // base-ui usa aria-disabled em vez de attribute disabled nativo
+      await expect(trigger).toHaveAttribute("aria-disabled", "true");
     });
 
     await step("clicar no trigger desabilitado não altera aria-expanded", async () => {

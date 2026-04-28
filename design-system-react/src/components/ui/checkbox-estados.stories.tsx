@@ -97,7 +97,7 @@ export const Desabilitado: Story = {
     const checkbox = canvas.getByRole("checkbox");
 
     await step("Checkbox está desabilitado", async () => {
-      await expect(checkbox).toBeDisabled();
+      await expect(checkbox).toHaveAttribute("aria-disabled", "true");
     });
 
     await step("Clique não altera estado quando disabled", async () => {
@@ -133,7 +133,7 @@ export const DesabilitadoMarcado: Story = {
     const checkbox = canvas.getByRole("checkbox");
 
     await step("Checkbox está desabilitado", async () => {
-      await expect(checkbox).toBeDisabled();
+      await expect(checkbox).toHaveAttribute("aria-disabled", "true");
     });
 
     await step("Checkbox está marcado mesmo disabled", async () => {

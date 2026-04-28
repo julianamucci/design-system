@@ -72,13 +72,19 @@ export const Playground: Story = {
     const trigger = canvas.getByText("Clique com o botão direito aqui");
 
     await step("right-click abre o menu e dispara onOpenChange", async () => {
-      await userEvent.pointer({ target: trigger, keys: "[MouseRight]" });
-      await expect(args.onOpenChange).toHaveBeenCalledWith(true);
+      // userEvent.pointer com [MouseRight] pode não disparar contextmenu nativo.
+      // Disparamos o evento contextmenu diretamente para confirmar o callback.
+      trigger.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
+      // base-ui passa (open, eventDetails) — usamos expect.objectContaining para ignorar o 2º arg
+      await expect(args.onOpenChange).toHaveBeenCalled();
+      const calls = (args.onOpenChange as ReturnType<typeof fn>).mock.calls;
+      await expect(calls.some((call) => call[0] === true)).toBe(true);
     });
 
     await step("Escape fecha o menu e dispara onOpenChange(false)", async () => {
       await userEvent.keyboard("{Escape}");
-      await expect(args.onOpenChange).toHaveBeenCalledWith(false);
+      const calls = (args.onOpenChange as ReturnType<typeof fn>).mock.calls;
+      await expect(calls.some((call) => call[0] === false)).toBe(true);
     });
   },
 };

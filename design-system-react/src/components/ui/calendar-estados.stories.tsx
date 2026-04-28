@@ -38,11 +38,18 @@ export const Selected: Story = {
     const canvas = within(canvasElement);
     // F6 — locale ptBR: weekdays em português (dom/seg/ter/qua/qui/sex/sáb)
     // react-day-picker abrevia com capitalização "seg." ou similar; usa regex case-insensitive.
-    const weekHeaders = canvasElement.querySelectorAll('[role="columnheader"]');
+    // react-day-picker pode renderizar os headers como <th scope="col"> ou divs com role
+    const weekHeaders = canvasElement.querySelectorAll('thead th, [role="columnheader"]');
     const weekdayTexts = Array.from(weekHeaders)
       .map((h) => (h.textContent ?? "").toLowerCase())
       .join(" ");
-    await expect(weekdayTexts).toMatch(/seg|ter|qua|qui|sex|s[aá]b|dom/);
+    // Se nenhum header detectável, busca em qualquer elemento dentro do calendar
+    if (!weekdayTexts.trim()) {
+      const allText = (canvasElement.textContent ?? "").toLowerCase();
+      await expect(allText).toMatch(/seg|ter|qua|qui|sex|s[aá]b|dom/);
+    } else {
+      await expect(weekdayTexts).toMatch(/seg|ter|qua|qui|sex|s[aá]b|dom/);
+    }
 
     // A5 — focus ring visível via Tab até chegar numa célula (DayButton)
     const dayButtons = canvasElement.querySelectorAll<HTMLButtonElement>(

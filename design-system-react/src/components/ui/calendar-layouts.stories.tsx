@@ -120,5 +120,14 @@ export const WithWeekNumber: Story = {
           "showWeekNumber — exibe coluna com o número da semana ISO à esquerda do grid.",
       },
     },
+    // react-day-picker v9 renderiza week numbers como <td role="rowheader" scope="row">.
+    // axe reporta scope-attr-valid (HTML5 só permite scope em <th>), mas é a estrutura
+    // que a lib usa para anunciar week number como cabeçalho de linha em leitores de tela.
+    // Ver PATCHES.md#calendar-week-number-scope.
+    a11y: {
+      config: {
+        rules: [{ id: 'scope-attr-valid', enabled: false }],
+      },
+    },
   },
 };

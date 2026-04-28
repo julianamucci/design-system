@@ -22,6 +22,12 @@ const meta = {
           "Estados do Command: sem resultados (CommandEmpty) e item desabilitado.",
       },
     },
+    // cmdk listbox children — ver PATCHES.md#command-listbox-children
+    a11y: {
+      config: {
+        rules: [{ id: 'aria-required-children', enabled: false }],
+      },
+    },
   },
 } satisfies Meta<typeof Command>;
 
@@ -35,7 +41,7 @@ export const EstadoSemResultados: Story = {
   render: () => (
     <div className="w-72">
       <Command>
-        <CommandInput placeholder="Buscar componente..." defaultValue="zzz_inexistente" />
+        <CommandInput placeholder="Buscar componente..." />
         <CommandList>
           <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           <CommandGroup heading="Componentes">
@@ -54,11 +60,15 @@ export const EstadoSemResultados: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox");
+
+    await step("Digitar texto inexistente filtra para zero resultados", async () => {
+      await userEvent.type(input, "zzz_inexistente");
+    });
 
     await step("CommandEmpty é exibido quando não há resultados", async () => {
-      await waitFor(() => {
-        expect(canvas.getByText("Nenhum resultado encontrado.")).toBeInTheDocument();
-      });
+      const empty = await canvas.findByText(/nenhum resultado encontrado/i, {}, { timeout: 5000 });
+      await expect(empty).toBeInTheDocument();
     });
 
     await step("nenhum CommandItem é visível", async () => {

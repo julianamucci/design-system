@@ -26,6 +26,21 @@ export default defineConfig({
     }
   },
   test: {
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['text', 'html', 'json'],
+      include: ['src/components/ui/**/*.{ts,tsx}'],
+      exclude: [
+        'src/components/ui/**/*.stories.{ts,tsx}',
+        'src/components/ui/**/index.ts',
+      ],
+      thresholds: {
+        statements: 90,
+        branches: 80,
+        functions: 90,
+        lines: 90,
+      },
+    },
     projects: [{
       extends: true,
       plugins: [
