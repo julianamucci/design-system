@@ -1,0 +1,1202 @@
+{
+  "pt-BR": {
+    "title": "HoverCard",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Cartão flutuante exibido ao passar o cursor sobre um elemento, ideal para previews de perfis, links ou conteúdo contextual.",
+    "seo": {
+      "title": "HoverCard — Overlay · Design System",
+      "description": "Documentação do HoverCard: cartão flutuante por hover via base-ui/reka-ui/bits-ui com delay, posicionamento e WCAG 2.1 AA.",
+      "aiSummary": "Componente HoverCard construído sobre base-ui/preview-card (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Basecoat) que exibe cartão flutuante em hover/focus com delay configurável, posicionamento side/align e fechamento automático ao sair do trigger ou content.",
+      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "userProfile": "Preview de perfil de usuário",
+        "linkPreview": "Preview de link externo",
+        "definitionTooltip": "Definição contextual de termo",
+        "metricExplainer": "Explicação de métrica em dashboard"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>HoverCard (Root)</strong> — provider de estado <code>open</code>/<code>onOpenChange</code> com delays configuráveis.",
+      "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara o hover (link, botão, texto). Usar <code>asChild</code> para herdar estilos.",
+      "item3": "<strong>HoverCardContent</strong> — cartão flutuante posicionado via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza em portal.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use HoverCard para conteúdo <strong>opcional</strong> que enriquece a experiência sem ser obrigatório para a tarefa.",
+        "item2": "O conteúdo deve ser acessível por outro caminho (clique, página dedicada) — usuários sem mouse não acessam hover.",
+        "item3": "Para tooltips curtos (1 frase, dicas), prefira <code>Tooltip</code>. HoverCard é para <strong>cartões com estrutura</strong> (avatar, métrica, ações).",
+        "item4": "Não coloque ações críticas (botões \"Salvar\", \"Excluir\") dentro de HoverCard — usuários touch não acessam.",
+        "item5": "Defina <code>openDelay</code> ≥300ms para evitar abrir acidentalmente ao mover o cursor."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Preview de perfil ao passar em @username",
+          "u": "HoverCard com Avatar + bio",
+          "a": "Página de perfil"
+        },
+        "item2": {
+          "s": "Tooltip curto explicando ícone",
+          "u": "Tooltip (1 frase)",
+          "a": "HoverCard (excessivo)"
+        },
+        "item3": {
+          "s": "Preview de link externo (URL + favicon)",
+          "u": "HoverCard com metadata",
+          "a": "Link com title"
+        },
+        "item4": {
+          "s": "Definição contextual de termo técnico",
+          "u": "HoverCard com texto explicativo",
+          "a": "Glossário separado"
+        },
+        "item5": {
+          "s": "Menu com ações críticas",
+          "u": "DropdownMenu",
+          "a": "HoverCard (errado)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regra",
+          "correct": "Use",
+          "avoid": "Evite",
+          "trigger": {
+            "name": "HoverCardTrigger",
+            "format": "Conteúdo natural (link, nome, texto)",
+            "good": "@joana",
+            "bad": "Passe o mouse aqui"
+          },
+          "content": {
+            "name": "HoverCardContent",
+            "format": "Conteúdo estruturado e curto",
+            "good": "Avatar + nome + métrica",
+            "bad": "Parágrafos longos de prosa"
+          },
+          "delay": {
+            "name": "openDelay",
+            "format": "≥300ms para evitar abertura acidental",
+            "good": "openDelay={500}",
+            "bad": "openDelay={0}"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Quer enriquecer o contexto de um link ou nome com preview visual.",
+        "item2": "O conteúdo é <strong>opcional</strong> e tem outro caminho de acesso.",
+        "item3": "Conteúdo cabe em ~250px de largura sem rolagem.",
+        "item4": "Existe versão mobile/touch do mesmo conteúdo (clique, página dedicada)."
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "É um tooltip de 1 frase — use Tooltip.",
+        "item2": "Contém ações críticas (botões de submit, exclusão).",
+        "item3": "É a única forma de acessar a informação — usuários touch perdem.",
+        "item4": "Tem mais de 5 itens ou requer scroll — use Dialog ou página."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "HoverCard com preview de perfil acessível também por clique no link.",
+        "dont": "HoverCard como única forma de acessar uma ação — quebra para usuários touch."
+      },
+      "pair2": {
+        "do": "openDelay ≥300ms para evitar abertura acidental ao mover cursor.",
+        "dont": "openDelay=0 — abre a cada hover, vira ruído visual."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withDelay": "Com delay customizado"
+      },
+      "styles": {
+        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, sombra <code>shadow-md</code>.",
+        "withDelay": "Customizar via <code>openDelay</code> e <code>closeDelay</code> em ms; usar 300-500ms para previews ricos, 700ms+ para conteúdo opcional."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Fechado",
+        "open": "Aberto",
+        "controlled": "Controlado"
+      },
+      "descriptions": {
+        "closed": "Estado padrão — apenas o trigger renderizado; portal vazio.",
+        "open": "Cartão visível após <code>openDelay</code>; permanece enquanto cursor estiver sobre trigger ou content.",
+        "controlled": "<code>open</code> + <code>onOpenChange</code> permitem gerenciar estado externamente."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "Não",
+          "description": "Estado controlado aberto/fechado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback ao abrir/fechar."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Estado inicial em modo não-controlado."
+        },
+        "openDelay": {
+          "type": "number",
+          "default": "700",
+          "required": "Não",
+          "description": "Delay em ms antes de abrir após hover."
+        },
+        "closeDelay": {
+          "type": "number",
+          "default": "300",
+          "required": "Não",
+          "description": "Delay em ms antes de fechar após cursor sair."
+        },
+        "side": {
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "Não",
+          "description": "Lado de abertura do Content (em HoverCardContent)."
+        },
+        "align": {
+          "type": "'start' | 'center' | 'end'",
+          "default": "'center'",
+          "required": "Não",
+          "description": "Alinhamento horizontal do Content (em HoverCardContent)."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// HoverCard com delay customizado e posicionamento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* conteúdo */}\n  </HoverCardContent>\n</HoverCard>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "background": {
+          "class": "bg-popover",
+          "part": "Fundo do Content"
+        },
+        "foreground": {
+          "class": "text-popover-foreground",
+          "part": "Cor do texto no Content"
+        },
+        "border": {
+          "class": "ring-foreground/10",
+          "part": "Borda sutil (ring 1px)"
+        },
+        "shadow": {
+          "class": "shadow-md",
+          "part": "Sombra do cartão"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Cantos arredondados"
+        },
+        "padding": {
+          "class": "p-2.5",
+          "part": "Padding interno do Content"
+        },
+        "width": {
+          "class": "w-64",
+          "part": "Largura padrão (256px)"
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Override de largura para previews maiores */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Animação custom */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA — critérios 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (operável por teclado: Tab abre por foco, ESC fecha), 4.1.2 (name/role/value).",
+      "items": {
+        "item1": "<code>HoverCardTrigger</code> abre o Content ao receber foco via Tab — não exige hover.",
+        "item2": "<code>HoverCardContent</code> permanece aberto enquanto cursor estiver sobre ele (hoverable) — usuário pode interagir.",
+        "item3": "ESC fecha o Content — atende WCAG 1.4.13 (dismissable).",
+        "item4": "O conteúdo do HoverCard <strong>não pode ser a única forma</strong> de acessar a informação — usuários touch e leitores de tela precisam de alternativa.",
+        "item5": "Inclua <code>aria-describedby</code> apontando para o Content quando o conteúdo for descritivo do trigger.",
+        "item6": "Não coloque ações destrutivas ou submits — não há jeito acessível de chegar lá em touch."
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Tab — move foco para o Trigger; HoverCard abre automaticamente após focus.",
+        "escape": "ESC — fecha o Content.",
+        "shiftTab": "Shift+Tab — sai do Trigger e fecha o Content.",
+        "enter": "Enter — ativa o trigger se for link/botão (comportamento padrão do elemento)."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "trigger": "Trigger: pode receber <code>aria-describedby</code> apontando para o Content.",
+        "content": "Content: <code>role=\"dialog\"</code> com <code>aria-modal=\"false\"</code> (não bloqueia interação).",
+        "expanded": "Trigger não recebe <code>aria-expanded</code> — diferente de DropdownMenu/Popover."
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "open": "Anuncia o conteúdo do Content quando ele aparece, sem interromper o fluxo do trigger.",
+        "context": "Usuários de SR podem não acessar o conteúdo via hover — sempre forneça alternativa textual ou link."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "tooltip": {
+          "name": "Tooltip",
+          "description": "Para dicas curtas de 1 frase (texto plano)."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "Conteúdo flutuante por click — mais persistente que HoverCard."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "Menu de ações por click; usar para conteúdo com ações críticas."
+        },
+        "card": {
+          "name": "Card",
+          "description": "Para preview persistente embutido na página."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: HoverCard usa <code>base-ui/preview-card</code> (React), <code>reka-ui/HoverCard</code> (Vue), <code>bits-ui/LinkPreview</code> (Svelte). <strong>Basecoat</strong> usa factory custom com mouseenter/mouseleave + delays.",
+      "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews, aplicar <code>contain: layout</code> no wrapper.",
+      "item3": "<strong>Touch devices</strong>: hover não funciona em touch. SEMPRE forneça alternativa (clique no link, página dedicada). HoverCard é enriquecimento, não único caminho.",
+      "item4": "<strong>Delays</strong>: openDelay padrão da lib é 700ms. Para previews ricos use 300-500ms; para tooltips comportamentais 700ms+.",
+      "item5": "<strong>asChild no Trigger</strong>: usar com link <code>&lt;a&gt;</code> ou Button para preservar semântica nativa do elemento."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes: <code>hover_card_open</code> e <code>hover_card_close</code>. Útil para medir engajamento com previews. Payload obrigatório: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (texto do trigger). Disparar via <code>onOpenChange</code> no consumidor — evite trackear em hover de baixa intenção (use openDelay como filtro natural)."
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada interação.",
+        "item1": {
+          "action": "Hover no HoverCardTrigger por openDelay ms",
+          "result": "HoverCardContent aparece com role=dialog",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Mover cursor para fora do Trigger e Content",
+          "result": "Content fecha após closeDelay ms",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Tab até o Trigger",
+          "result": "Content abre por foco (sem hover)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pressionar ESC com Content aberto",
+          "result": "Content fecha (dismissable)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Mover cursor para dentro do Content após abrir",
+          "result": "Content permanece aberto (hoverable)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Modo controlado (open + onOpenChange)",
+          "result": "Estado externo controla abertura/fechamento",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "Content tem role=dialog e aria-modal=false (WCAG 4.1.2)",
+        "item3": "Content abre por foco do teclado (WCAG 1.4.13 hoverable+focusable)",
+        "item4": "ESC fecha o Content (WCAG 1.4.13 dismissable)",
+        "item5": "Contraste mínimo 4.5:1 entre texto e bg-popover (WCAG 1.4.3)",
+        "item6": "Conteúdo do Content tem alternativa acessível por outro caminho"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": {
+          "story": "Aberto com Avatar + nome + métrica",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Aberto com preview de link (favicon + URL + título)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Aberto com definição de termo",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Side variations (top/bottom/left/right)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Width customizada (w-72)",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "HoverCard",
+    "category": "Overlay",
+    "type": "Component",
+    "description": "Floating card displayed when hovering over an element, ideal for profile previews, link previews, or contextual content.",
+    "seo": {
+      "title": "HoverCard — Overlay · Design System",
+      "description": "HoverCard documentation: floating card on hover via base-ui/reka-ui/bits-ui with delay, positioning, and WCAG 2.1 AA.",
+      "aiSummary": "HoverCard component built on base-ui/preview-card (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Basecoat) that displays a floating card on hover/focus with configurable delay, side/align positioning, and automatic close on leave.",
+      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "userProfile": "User profile preview",
+        "linkPreview": "External link preview",
+        "definitionTooltip": "Contextual term definition",
+        "metricExplainer": "Dashboard metric explainer"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>HoverCard (Root)</strong> — state provider with <code>open</code>/<code>onOpenChange</code> and configurable delays.",
+      "item2": "<strong>HoverCardTrigger</strong> — element triggering the hover (link, button, text). Use <code>asChild</code> to inherit styles.",
+      "item3": "<strong>HoverCardContent</strong> — floating card positioned via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renders in a portal.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Mandatory Guidelines",
+        "item1": "Use HoverCard for <strong>optional</strong> content that enriches the experience without being mandatory for the task.",
+        "item2": "The content must be accessible by another path (click, dedicated page) — users without a mouse can't access hover.",
+        "item3": "For short tooltips (1 sentence, hints), prefer <code>Tooltip</code>. HoverCard is for <strong>structured cards</strong> (avatar, metric, actions).",
+        "item4": "Do not put critical actions (Save/Delete buttons) inside HoverCard — touch users can't access.",
+        "item5": "Set <code>openDelay</code> ≥300ms to avoid accidental opens when moving cursor."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Profile preview on @username hover",
+          "u": "HoverCard with Avatar + bio",
+          "a": "Profile page"
+        },
+        "item2": {
+          "s": "Short tooltip explaining icon",
+          "u": "Tooltip (1 sentence)",
+          "a": "HoverCard (overkill)"
+        },
+        "item3": {
+          "s": "External link preview (URL + favicon)",
+          "u": "HoverCard with metadata",
+          "a": "Link with title"
+        },
+        "item4": {
+          "s": "Contextual definition of technical term",
+          "u": "HoverCard with explanatory text",
+          "a": "Separate glossary"
+        },
+        "item5": {
+          "s": "Menu with critical actions",
+          "u": "DropdownMenu",
+          "a": "HoverCard (wrong)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Rule",
+          "correct": "Use",
+          "avoid": "Avoid",
+          "trigger": {
+            "name": "HoverCardTrigger",
+            "format": "Natural content (link, name, text)",
+            "good": "@joana",
+            "bad": "Hover here"
+          },
+          "content": {
+            "name": "HoverCardContent",
+            "format": "Structured short content",
+            "good": "Avatar + name + metric",
+            "bad": "Long prose paragraphs"
+          },
+          "delay": {
+            "name": "openDelay",
+            "format": "≥300ms to avoid accidental opens",
+            "good": "openDelay={500}",
+            "bad": "openDelay={0}"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "You want to enrich a link or name's context with a visual preview.",
+        "item2": "Content is <strong>optional</strong> and has another access path.",
+        "item3": "Content fits in ~250px width without scrolling.",
+        "item4": "There is a mobile/touch version of the same content (click, dedicated page)."
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "It's a 1-sentence tooltip — use Tooltip.",
+        "item2": "Contains critical actions (submit, delete buttons).",
+        "item3": "It's the only way to access information — touch users miss out.",
+        "item4": "Has more than 5 items or requires scroll — use Dialog or page."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "HoverCard with profile preview also accessible via click on the link.",
+        "dont": "HoverCard as the only way to access an action — breaks for touch users."
+      },
+      "pair2": {
+        "do": "openDelay ≥300ms to avoid accidental opens when moving cursor.",
+        "dont": "openDelay=0 — opens on every hover, becomes visual noise."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "withDelay": "With custom delay"
+      },
+      "styles": {
+        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, <code>shadow-md</code>.",
+        "withDelay": "Customize via <code>openDelay</code> and <code>closeDelay</code> in ms; use 300-500ms for rich previews, 700ms+ for optional content."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "controlled": "Controlled"
+      },
+      "descriptions": {
+        "closed": "Default state — only the trigger renders; portal is empty.",
+        "open": "Card visible after <code>openDelay</code>; persists while cursor stays on trigger or content.",
+        "controlled": "<code>open</code> + <code>onOpenChange</code> manage state externally."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled open/closed state."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired on open/close."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Initial state in uncontrolled mode."
+        },
+        "openDelay": {
+          "type": "number",
+          "default": "700",
+          "required": "No",
+          "description": "Delay in ms before opening after hover."
+        },
+        "closeDelay": {
+          "type": "number",
+          "default": "300",
+          "required": "No",
+          "description": "Delay in ms before closing after cursor leaves."
+        },
+        "side": {
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "No",
+          "description": "Content opening side (on HoverCardContent)."
+        },
+        "align": {
+          "type": "'start' | 'center' | 'end'",
+          "default": "'center'",
+          "required": "No",
+          "description": "Horizontal alignment of Content (on HoverCardContent)."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// HoverCard with custom delay and positioning\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* content */}\n  </HoverCardContent>\n</HoverCard>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "background": {
+          "class": "bg-popover",
+          "part": "Content background"
+        },
+        "foreground": {
+          "class": "text-popover-foreground",
+          "part": "Text color in Content"
+        },
+        "border": {
+          "class": "ring-foreground/10",
+          "part": "Subtle border (1px ring)"
+        },
+        "shadow": {
+          "class": "shadow-md",
+          "part": "Card shadow"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Rounded corners"
+        },
+        "padding": {
+          "class": "p-2.5",
+          "part": "Content inner padding"
+        },
+        "width": {
+          "class": "w-64",
+          "part": "Default width (256px)"
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Width override for larger previews */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Custom animation */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA — criteria 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (keyboard operable: Tab opens by focus, ESC closes), 4.1.2 (name/role/value).",
+      "items": {
+        "item1": "<code>HoverCardTrigger</code> opens Content when receiving Tab focus — does not require hover.",
+        "item2": "<code>HoverCardContent</code> stays open while cursor is over it (hoverable) — user can interact.",
+        "item3": "ESC closes Content — meets WCAG 1.4.13 (dismissable).",
+        "item4": "HoverCard content <strong>cannot be the only way</strong> to access information — touch and screen reader users need an alternative.",
+        "item5": "Include <code>aria-describedby</code> pointing to Content when it describes the trigger.",
+        "item6": "Do not put destructive or submit actions — no accessible way to reach on touch."
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Tab — moves focus to Trigger; HoverCard opens automatically after focus.",
+        "escape": "ESC — closes Content.",
+        "shiftTab": "Shift+Tab — leaves Trigger and closes Content.",
+        "enter": "Enter — activates trigger if it's a link/button (default element behavior)."
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "trigger": "Trigger: may receive <code>aria-describedby</code> pointing to Content.",
+        "content": "Content: <code>role=\"dialog\"</code> with <code>aria-modal=\"false\"</code> (does not block interaction).",
+        "expanded": "Trigger does not receive <code>aria-expanded</code> — different from DropdownMenu/Popover."
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "open": "Announces Content content when it appears, without interrupting trigger flow.",
+        "context": "SR users may not access content via hover — always provide textual or link alternative."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "tooltip": {
+          "name": "Tooltip",
+          "description": "For 1-sentence short hints (plain text)."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "Floating content by click — more persistent than HoverCard."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "Menu by click; use for content with critical actions."
+        },
+        "card": {
+          "name": "Card",
+          "description": "For persistent preview embedded in the page."
+        }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: HoverCard uses <code>base-ui/preview-card</code> (React), <code>reka-ui/HoverCard</code> (Vue), <code>bits-ui/LinkPreview</code> (Svelte). <strong>Basecoat</strong> uses a custom factory with mouseenter/mouseleave + delays.",
+      "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In previews, apply <code>contain: layout</code> on the wrapper.",
+      "item3": "<strong>Touch devices</strong>: hover doesn't work on touch. ALWAYS provide alternative (link click, dedicated page). HoverCard is enrichment, not the only path.",
+      "item4": "<strong>Delays</strong>: lib default openDelay is 700ms. For rich previews use 300-500ms; for behavioral tooltips 700ms+.",
+      "item5": "<strong>asChild on Trigger</strong>: use with <code>&lt;a&gt;</code> link or Button to preserve native element semantics."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant events: <code>hover_card_open</code> and <code>hover_card_close</code>. Useful to measure preview engagement. Required payload: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (trigger text). Dispatch via <code>onOpenChange</code> in the consumer — avoid tracking low-intent hovers (use openDelay as natural filter)."
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen on each interaction.",
+        "item1": {
+          "action": "Hover HoverCardTrigger for openDelay ms",
+          "result": "HoverCardContent appears with role=dialog",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Move cursor outside Trigger and Content",
+          "result": "Content closes after closeDelay ms",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Tab to Trigger",
+          "result": "Content opens by focus (no hover)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Press ESC with Content open",
+          "result": "Content closes (dismissable)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Move cursor inside Content after opening",
+          "result": "Content stays open (hoverable)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Controlled mode (open + onOpenChange)",
+          "result": "External state controls opening/closing",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria automated tools should confirm.",
+        "item1": "No violations reported by axe-core in default state",
+        "item2": "Content has role=dialog and aria-modal=false (WCAG 4.1.2)",
+        "item3": "Content opens by keyboard focus (WCAG 1.4.13 hoverable+focusable)",
+        "item4": "ESC closes Content (WCAG 1.4.13 dismissable)",
+        "item5": "Minimum 4.5:1 contrast between text and bg-popover (WCAG 1.4.3)",
+        "item6": "Content has accessible alternative via another path"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States Chromatic should capture.",
+        "required": "Required",
+        "item1": {
+          "story": "Open with Avatar + name + metric",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Open with link preview (favicon + URL + title)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Open with term definition",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Side variations (top/bottom/left/right)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Custom width (w-72)",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "HoverCard",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Tarjeta flotante mostrada al pasar el cursor sobre un elemento, ideal para previews de perfiles, enlaces o contenido contextual.",
+    "seo": {
+      "title": "HoverCard — Overlay · Design System",
+      "description": "Documentación de HoverCard: tarjeta flotante por hover vía base-ui/reka-ui/bits-ui con delay, posicionamiento y WCAG 2.1 AA.",
+      "aiSummary": "Componente HoverCard construido sobre base-ui/preview-card (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Basecoat) que muestra tarjeta flotante en hover/focus con delay configurable, posicionamiento side/align y cierre automático al salir.",
+      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "userProfile": "Preview de perfil de usuario",
+        "linkPreview": "Preview de enlace externo",
+        "definitionTooltip": "Definición contextual de término",
+        "metricExplainer": "Explicación de métrica en dashboard"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>HoverCard (Root)</strong> — provider de estado <code>open</code>/<code>onOpenChange</code> con delays configurables.",
+      "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara el hover (link, botón, texto). Usa <code>asChild</code> para heredar estilos.",
+      "item3": "<strong>HoverCardContent</strong> — tarjeta flotante posicionada vía <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza en portal.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa HoverCard para contenido <strong>opcional</strong> que enriquece la experiencia sin ser obligatorio para la tarea.",
+        "item2": "El contenido debe ser accesible por otro camino (clic, página dedicada) — usuarios sin mouse no acceden al hover.",
+        "item3": "Para tooltips cortos (1 frase, hints), prefiere <code>Tooltip</code>. HoverCard es para <strong>tarjetas con estructura</strong> (avatar, métrica, acciones).",
+        "item4": "No coloques acciones críticas (botones Guardar/Eliminar) dentro de HoverCard — usuarios touch no acceden.",
+        "item5": "Define <code>openDelay</code> ≥300ms para evitar abrir accidentalmente al mover el cursor."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Preview de perfil al pasar en @username",
+          "u": "HoverCard con Avatar + bio",
+          "a": "Página de perfil"
+        },
+        "item2": {
+          "s": "Tooltip corto explicando icono",
+          "u": "Tooltip (1 frase)",
+          "a": "HoverCard (excesivo)"
+        },
+        "item3": {
+          "s": "Preview de enlace externo (URL + favicon)",
+          "u": "HoverCard con metadata",
+          "a": "Link con title"
+        },
+        "item4": {
+          "s": "Definición contextual de término técnico",
+          "u": "HoverCard con texto explicativo",
+          "a": "Glosario separado"
+        },
+        "item5": {
+          "s": "Menú con acciones críticas",
+          "u": "DropdownMenu",
+          "a": "HoverCard (incorrecto)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regla",
+          "correct": "Usa",
+          "avoid": "Evita",
+          "trigger": {
+            "name": "HoverCardTrigger",
+            "format": "Contenido natural (link, nombre, texto)",
+            "good": "@joana",
+            "bad": "Pasa el ratón aquí"
+          },
+          "content": {
+            "name": "HoverCardContent",
+            "format": "Contenido estructurado y corto",
+            "good": "Avatar + nombre + métrica",
+            "bad": "Párrafos largos de prosa"
+          },
+          "delay": {
+            "name": "openDelay",
+            "format": "≥300ms para evitar apertura accidental",
+            "good": "openDelay={500}",
+            "bad": "openDelay={0}"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Quieres enriquecer el contexto de un link o nombre con preview visual.",
+        "item2": "El contenido es <strong>opcional</strong> y tiene otro camino de acceso.",
+        "item3": "El contenido cabe en ~250px de ancho sin scroll.",
+        "item4": "Existe versión mobile/touch del mismo contenido (clic, página dedicada)."
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Es un tooltip de 1 frase — usa Tooltip.",
+        "item2": "Contiene acciones críticas (botones de submit, eliminación).",
+        "item3": "Es la única forma de acceder a la información — usuarios touch pierden.",
+        "item4": "Tiene más de 5 ítems o requiere scroll — usa Dialog o página."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "HoverCard con preview de perfil accesible también por clic en el link.",
+        "dont": "HoverCard como única forma de acceder a una acción — rompe para usuarios touch."
+      },
+      "pair2": {
+        "do": "openDelay ≥300ms para evitar apertura accidental al mover cursor.",
+        "dont": "openDelay=0 — abre en cada hover, se vuelve ruido visual."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withDelay": "Con delay personalizado"
+      },
+      "styles": {
+        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, sombra <code>shadow-md</code>.",
+        "withDelay": "Personaliza vía <code>openDelay</code> y <code>closeDelay</code> en ms; usa 300-500ms para previews ricos, 700ms+ para contenido opcional."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Cerrado",
+        "open": "Abierto",
+        "controlled": "Controlado"
+      },
+      "descriptions": {
+        "closed": "Estado predeterminado — solo el trigger renderizado; portal vacío.",
+        "open": "Tarjeta visible tras <code>openDelay</code>; persiste mientras el cursor esté sobre trigger o content.",
+        "controlled": "<code>open</code> + <code>onOpenChange</code> permiten gestionar estado externamente."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Estado controlado abierto/cerrado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback al abrir/cerrar."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Estado inicial en modo no-controlado."
+        },
+        "openDelay": {
+          "type": "number",
+          "default": "700",
+          "required": "No",
+          "description": "Delay en ms antes de abrir tras hover."
+        },
+        "closeDelay": {
+          "type": "number",
+          "default": "300",
+          "required": "No",
+          "description": "Delay en ms antes de cerrar tras salir el cursor."
+        },
+        "side": {
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "No",
+          "description": "Lado de apertura del Content (en HoverCardContent)."
+        },
+        "align": {
+          "type": "'start' | 'center' | 'end'",
+          "default": "'center'",
+          "required": "No",
+          "description": "Alineación horizontal del Content (en HoverCardContent)."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// HoverCard con delay personalizado y posicionamiento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* contenido */}\n  </HoverCardContent>\n</HoverCard>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "background": {
+          "class": "bg-popover",
+          "part": "Fondo del Content"
+        },
+        "foreground": {
+          "class": "text-popover-foreground",
+          "part": "Color del texto en Content"
+        },
+        "border": {
+          "class": "ring-foreground/10",
+          "part": "Borde sutil (ring 1px)"
+        },
+        "shadow": {
+          "class": "shadow-md",
+          "part": "Sombra de la tarjeta"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Esquinas redondeadas"
+        },
+        "padding": {
+          "class": "p-2.5",
+          "part": "Padding interno del Content"
+        },
+        "width": {
+          "class": "w-64",
+          "part": "Ancho predeterminado (256px)"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Override de ancho para previews mayores */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Animación custom */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA — criterios 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (operable por teclado: Tab abre por foco, ESC cierra), 4.1.2 (name/role/value).",
+      "items": {
+        "item1": "<code>HoverCardTrigger</code> abre el Content al recibir foco vía Tab — no requiere hover.",
+        "item2": "<code>HoverCardContent</code> permanece abierto mientras el cursor esté sobre él (hoverable) — usuario puede interactuar.",
+        "item3": "ESC cierra el Content — cumple WCAG 1.4.13 (dismissable).",
+        "item4": "El contenido del HoverCard <strong>no puede ser la única forma</strong> de acceder a la información — usuarios touch y lectores de pantalla necesitan alternativa.",
+        "item5": "Incluye <code>aria-describedby</code> apuntando al Content cuando el contenido sea descriptivo del trigger.",
+        "item6": "No coloques acciones destructivas o submits — no hay forma accesible de llegar en touch."
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Tab — mueve foco al Trigger; HoverCard abre automáticamente tras focus.",
+        "escape": "ESC — cierra el Content.",
+        "shiftTab": "Shift+Tab — sale del Trigger y cierra el Content.",
+        "enter": "Enter — activa el trigger si es link/botón (comportamiento predeterminado del elemento)."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "trigger": "Trigger: puede recibir <code>aria-describedby</code> apuntando al Content.",
+        "content": "Content: <code>role=\"dialog\"</code> con <code>aria-modal=\"false\"</code> (no bloquea interacción).",
+        "expanded": "Trigger no recibe <code>aria-expanded</code> — diferente de DropdownMenu/Popover."
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "open": "Anuncia el contenido del Content cuando aparece, sin interrumpir el flujo del trigger.",
+        "context": "Usuarios de SR pueden no acceder al contenido vía hover — siempre proporciona alternativa textual o link."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "tooltip": {
+          "name": "Tooltip",
+          "description": "Para hints cortos de 1 frase (texto plano)."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "Contenido flotante por click — más persistente que HoverCard."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "Menú de acciones por click; usar para contenido con acciones críticas."
+        },
+        "card": {
+          "name": "Card",
+          "description": "Para preview persistente embebido en la página."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: HoverCard usa <code>base-ui/preview-card</code> (React), <code>reka-ui/HoverCard</code> (Vue), <code>bits-ui/LinkPreview</code> (Svelte). <strong>Basecoat</strong> usa factory custom con mouseenter/mouseleave + delays.",
+      "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews, aplica <code>contain: layout</code> en el wrapper.",
+      "item3": "<strong>Touch devices</strong>: hover no funciona en touch. SIEMPRE proporciona alternativa (clic en el link, página dedicada). HoverCard es enriquecimiento, no único camino.",
+      "item4": "<strong>Delays</strong>: openDelay default de la lib es 700ms. Para previews ricos usa 300-500ms; para tooltips comportamentales 700ms+.",
+      "item5": "<strong>asChild en Trigger</strong>: usa con link <code>&lt;a&gt;</code> o Button para preservar semántica nativa del elemento."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes: <code>hover_card_open</code> y <code>hover_card_close</code>. Útil para medir engagement con previews. Payload obligatorio: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (texto del trigger). Dispara vía <code>onOpenChange</code> en el consumidor — evita trackear hover de baja intención (usa openDelay como filtro natural)."
+    },
+    "testes": {
+      "title": "Criterios de Test",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en cada interacción.",
+        "item1": {
+          "action": "Hover en HoverCardTrigger durante openDelay ms",
+          "result": "HoverCardContent aparece con role=dialog",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Mover cursor fuera de Trigger y Content",
+          "result": "Content cierra tras closeDelay ms",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Tab hasta el Trigger",
+          "result": "Content abre por foco (sin hover)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Presionar ESC con Content abierto",
+          "result": "Content cierra (dismissable)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Mover cursor dentro del Content tras abrir",
+          "result": "Content permanece abierto (hoverable)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Modo controlado (open + onOpenChange)",
+          "result": "Estado externo controla apertura/cierre",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
+        "item2": "Content tiene role=dialog y aria-modal=false (WCAG 4.1.2)",
+        "item3": "Content abre por foco de teclado (WCAG 1.4.13 hoverable+focusable)",
+        "item4": "ESC cierra el Content (WCAG 1.4.13 dismissable)",
+        "item5": "Contraste mínimo 4.5:1 entre texto y bg-popover (WCAG 1.4.3)",
+        "item6": "Contenido del Content tiene alternativa accesible por otro camino"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": {
+          "story": "Abierto con Avatar + nombre + métrica",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Abierto con preview de link (favicon + URL + título)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Abierto con definición de término",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Side variations (top/bottom/left/right)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Ancho personalizado (w-72)",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  }
+}
