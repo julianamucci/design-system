@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { within, expect } from "storybook/test";
+import { useState } from "react";
+import { userEvent, within, expect } from "storybook/test";
 import {
   Dialog,
   DialogClose,
@@ -24,7 +25,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Configurações canônicas do Dialog: Closed (estado inicial), Open (defaultOpen) e WithCloseButtonHidden (sem X no canto).",
+          "Configurações canônicas do Dialog: Closed (estado inicial), Open (defaultOpen), WithCloseButtonHidden (sem X no canto) e Controlled (controle externo via open + onOpenChange).",
       },
     },
   },
@@ -169,5 +170,64 @@ export const WithCloseButtonHidden: Story = {
     // Não há botão Close (X) com sr-only "Close"
     const closeBtn = body.queryByRole("button", { name: /^Close$/i });
     await expect(closeBtn).toBeNull();
+  },
+};
+
+export const Controlled: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          "Abertura controlada por estado externo via `open` + `onOpenChange`. Útil quando o pai precisa abrir o diálogo a partir de outro fluxo (ex.: confirmação assíncrona).",
+      },
+    },
+  },
+  render: () => {
+    const { t } = useTranslation(dialogTranslations);
+    const title = t("demonstration.labels.title");
+    const ControlledDemo = () => {
+      const [open, setOpen] = useState(false);
+      return (
+        <div className="flex flex-col gap-3">
+          <Button onClick={() => setOpen(true)}>Open programmatically</Button>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{title}</DialogTitle>
+                <DialogDescription>
+                  {t("demonstration.labels.description")}
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose render={<Button variant="outline" />}>
+                  {t("demonstration.labels.cancel")}
+                </DialogClose>
+                <Button onClick={() => setOpen(false)}>
+                  {t("demonstration.labels.action")}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      );
+    };
+    return <ControlledDemo />;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+
+    await step("Clique no trigger externo abre o diálogo", async () => {
+      const trigger = canvas.getByRole("button", { name: /Open programmatically/i });
+      await userEvent.click(trigger);
+      const dialog = await body.findByRole("dialog");
+      await expect(dialog).toBeVisible();
+    });
+
+    await step("Escape fecha o diálogo controlado", async () => {
+      await userEvent.keyboard("{Escape}");
+      await expect(body.queryByRole("dialog")).not.toBeInTheDocument();
+    });
   },
 };

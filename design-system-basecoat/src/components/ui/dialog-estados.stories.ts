@@ -12,7 +12,8 @@ const meta: Meta = {
     controls: { disable: true },
     docs: {
       description: {
-        component: 'Configurações canônicas do Dialog: closed, open e sem botão Close.',
+        component:
+          'Configurações canônicas do Dialog: closed, open, sem botão Close e controlled (abertura programática via referência ao trigger).',
       },
     },
   },
@@ -121,5 +122,77 @@ export const WithCloseButtonHidden: Story = {
     // Escape ainda fecha
     await userEvent.keyboard('{Escape}');
     await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+  },
+};
+
+export const Controlled: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          'Abertura controlada externamente. O trigger interno do dialog fica escondido (sr-only) e a abertura acontece via `trigger.click()` a partir de um botão externo. `onOpenChange` rastreia o estado para o pai.',
+      },
+    },
+  },
+  render: () => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex flex-col gap-3';
+
+    // Trigger interno do dialog (oculto): permite reuso da factory createDialog
+    // sem expor um método open() público — o pai controla via .click().
+    const hiddenTrigger = createButton({ variant: 'outline', label: 'internal-trigger' });
+    hiddenTrigger.classList.add('sr-only');
+    hiddenTrigger.setAttribute('tabindex', '-1');
+    hiddenTrigger.setAttribute('aria-hidden', 'true');
+
+    const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+    const action = createButton({ variant: 'default', label: 'Confirmar' });
+    const footer = document.createElement('div');
+    footer.className = 'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2';
+    footer.appendChild(cancel);
+    footer.appendChild(action);
+
+    const content = document.createElement('div');
+    content.className = 'text-sm text-muted-foreground';
+    content.textContent = 'Este diálogo é comandado por estado externo.';
+
+    let isOpen = false;
+    const dialog = createDialog({
+      trigger: hiddenTrigger,
+      title: 'Controlado pelo pai',
+      description: 'Abertura programática via referência ao trigger.',
+      content,
+      footer,
+      onOpenChange: (open) => {
+        isOpen = open;
+        externalBtn.dataset.open = String(open);
+      },
+    });
+
+    const externalBtn = createButton({ variant: 'default', label: 'Open programmatically' });
+    externalBtn.addEventListener('click', () => {
+      if (!isOpen) hiddenTrigger.click();
+    });
+
+    wrapper.appendChild(externalBtn);
+    wrapper.appendChild(dialog);
+    return wrapper;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+
+    await step('Clique no trigger externo abre o diálogo', async () => {
+      const trigger = canvas.getByRole('button', { name: /Open programmatically/i });
+      await userEvent.click(trigger);
+      const dialog = await body.findByRole('dialog');
+      await expect(dialog).toBeVisible();
+    });
+
+    await step('Escape fecha o diálogo controlado', async () => {
+      await userEvent.keyboard('{Escape}');
+      await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+    });
   },
 };
