@@ -1,0 +1,173 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "storybook/test";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./dialog";
+import { Button } from "./button";
+import { useTranslation } from "@/lib/i18n";
+import { track } from "@/lib/analytics";
+import dialogTranslations from "@shared/content/dialog/translations.json";
+
+const meta = {
+  title: "UI/Dialog/Estados",
+  component: Dialog,
+  parameters: {
+    layout: "centered",
+    controls: { disable: true },
+    docs: {
+      description: {
+        component:
+          "Configurações canônicas do Dialog: Closed (estado inicial), Open (defaultOpen) e WithCloseButtonHidden (sem X no canto).",
+      },
+    },
+  },
+} satisfies Meta<typeof Dialog>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+const trackOpen = (label: string) =>
+  track("dialog_open", {
+    component: "dialog",
+    label,
+    location: "storybook:estados",
+  });
+
+export const Closed: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Estado inicial — apenas o trigger visível. O Content não está renderizado no DOM (Portal vazio).",
+      },
+    },
+  },
+  render: () => {
+    const { t } = useTranslation(dialogTranslations);
+    const title = t("demonstration.labels.title");
+    return (
+      <Dialog onOpenChange={(o) => o && trackOpen(title)}>
+        <DialogTrigger render={<Button variant="outline" />}>
+          {t("demonstration.labels.triggerLabel")}
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>
+              {t("demonstration.labels.description")}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>
+              {t("demonstration.labels.cancel")}
+            </DialogClose>
+            <Button>{t("demonstration.labels.action")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    const trigger = canvas.getAllByRole("button")[0];
+    await expect(trigger).toBeVisible();
+    const dialog = body.queryByRole("dialog");
+    if (dialog) {
+      await expect(dialog).toHaveAttribute("data-state", "closed");
+    }
+  },
+};
+
+export const Open: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Diálogo aberto via `defaultOpen`. Overlay com blur, focus trap ativo, scroll-lock no body.",
+      },
+    },
+  },
+  render: () => {
+    const { t } = useTranslation(dialogTranslations);
+    const title = t("demonstration.labels.title");
+    return (
+      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title)}>
+        <DialogTrigger render={<Button variant="outline" />}>
+          {t("demonstration.labels.triggerLabel")}
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>
+              {t("demonstration.labels.description")}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>
+              {t("demonstration.labels.cancel")}
+            </DialogClose>
+            <Button>{t("demonstration.labels.action")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  },
+  play: async () => {
+    const body = within(document.body);
+    const dialog = await body.findByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveAccessibleName();
+  },
+};
+
+export const WithCloseButtonHidden: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`showCloseButton={false}` no Content. Sem X no canto — fechamento apenas por Escape, clique no overlay ou ação do Footer.",
+      },
+    },
+  },
+  render: () => {
+    const { t } = useTranslation(dialogTranslations);
+    const title = t("demonstration.labels.title");
+    return (
+      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title)}>
+        <DialogTrigger render={<Button variant="outline" />}>
+          {t("demonstration.labels.triggerLabel")}
+        </DialogTrigger>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>
+              {t("demonstration.labels.description")}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>
+              {t("demonstration.labels.cancel")}
+            </DialogClose>
+            <Button>{t("demonstration.labels.action")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  },
+  play: async () => {
+    const body = within(document.body);
+    const dialog = await body.findByRole("dialog");
+    await expect(dialog).toBeVisible();
+    // Não há botão Close (X) com sr-only "Close"
+    const closeBtn = body.queryByRole("button", { name: /^Close$/i });
+    await expect(closeBtn).toBeNull();
+  },
+};
