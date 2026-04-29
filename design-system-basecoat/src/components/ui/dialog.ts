@@ -82,7 +82,7 @@ export function createDialog(options: DialogOptions): HTMLElement {
     // PATCH: alinhamento cross-stack — overlay translucido + blur opcional, igual
     // React/Vue/Svelte. Antes era `bg-black/80` (Shadcn antigo).
     overlayEl.className =
-      'fixed inset-0 z-50 bg-black/10 supports-backdrop-filter:backdrop-blur-xs';
+      'fixed inset-0 z-50 isolate bg-black/10 supports-backdrop-filter:backdrop-blur-xs data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 duration-100';
     overlayEl.dataset.slot = 'dialog-overlay';
     overlayEl.dataset.state = 'open';
     overlayEl.addEventListener('click', () => closeWithReason('overlay'));
@@ -112,7 +112,7 @@ export function createDialog(options: DialogOptions): HTMLElement {
 
     const titleEl = document.createElement('h2');
     titleEl.id = titleId;
-    titleEl.className = 'text-lg font-semibold leading-none tracking-tight';
+    titleEl.className = 'text-base leading-none font-medium';
     titleEl.textContent = title;
     headerEl.appendChild(titleEl);
 
@@ -135,7 +135,7 @@ export function createDialog(options: DialogOptions): HTMLElement {
     if (footer) {
       const footerEl = document.createElement('div');
       footerEl.className =
-        'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2';
+        '-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end';
       footerEl.dataset.slot = 'dialog-footer';
       footerEl.appendChild(footer);
       panelEl.appendChild(footerEl);
@@ -168,6 +168,8 @@ export function createDialog(options: DialogOptions): HTMLElement {
   }
 
   function closeWithReason(reason: DialogCloseReason): void {
+    if (overlayEl) overlayEl.dataset.state = 'closed';
+    if (panelEl) panelEl.dataset.state = 'closed';
     overlayEl?.remove();
     panelEl?.remove();
     overlayEl = null;
