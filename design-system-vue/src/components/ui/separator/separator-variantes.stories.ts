@@ -31,6 +31,12 @@ export const Horizontal: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement, step }) => {
+    await step('Separator horizontal aplica data-orientation=horizontal', async () => {
+      const separator = canvasElement.querySelector('[data-slot="separator"]');
+      await expect(separator).toHaveAttribute('data-orientation', 'horizontal');
+    });
+  },
 };
 
 export const Vertical: Story = {
@@ -46,4 +52,11 @@ export const Vertical: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement, step }) => {
+    await step('Separator vertical aplica data-orientation=vertical', async () => {
+      const separators = canvasElement.querySelectorAll('[data-slot="separator"]');
+      await expect(separators.length).toBeGreaterThan(0);
+      await expect(separators[0]).toHaveAttribute('data-orientation', 'vertical');
+    });
+  },
 };

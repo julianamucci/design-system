@@ -29,15 +29,23 @@ export const Horizontal: Story = {
 
     const top = document.createElement('div');
     top.className = 'text-sm';
-    top.innerHTML =
-      '<p class="font-medium">Configurações da conta</p>' +
-      '<p class="text-muted-foreground">Gerencie seu nome e e-mail.</p>';
+    const topTitle = document.createElement('p');
+    topTitle.className = 'font-medium';
+    topTitle.textContent = 'Configurações da conta';
+    const topDesc = document.createElement('p');
+    topDesc.className = 'text-muted-foreground';
+    topDesc.textContent = 'Gerencie seu nome e e-mail.';
+    top.append(topTitle, topDesc);
 
     const bottom = document.createElement('div');
     bottom.className = 'text-sm';
-    bottom.innerHTML =
-      '<p class="font-medium">Preferências</p>' +
-      '<p class="text-muted-foreground">Tema, idioma e notificações.</p>';
+    const bottomTitle = document.createElement('p');
+    bottomTitle.className = 'font-medium';
+    bottomTitle.textContent = 'Preferências';
+    const bottomDesc = document.createElement('p');
+    bottomDesc.className = 'text-muted-foreground';
+    bottomDesc.textContent = 'Tema, idioma e notificações.';
+    bottom.append(bottomTitle, bottomDesc);
 
     wrap.append(top, createSeparator({ orientation: 'horizontal' }), bottom);
     return wrap;
