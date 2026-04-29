@@ -303,7 +303,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: Drawer usa <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — gestos de arrastar nativos.",
+      "item1": "<strong>Lib upstream</strong>: Drawer usa <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — gestos nativos. <strong>Basecoat</strong> usa factory custom (<code>createDrawer</code> sobre <code>createSheet</code>) sem suporte a gestos.",
       "item2": "<strong>Aninhamento</strong>: nunca aninhe Drawers — quebra focus trap e gestos. Para fluxos multi-step, use Stepper dentro do Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> é o padrão; outros valores funcionam mas são exceções para casos específicos.",
       "item4": "<strong>Portal</strong>: DrawerContent renderiza fora de #storybook-root — testes com axe podem precisar checar <code>document.body</code>.",
@@ -710,7 +710,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: Drawer uses <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — native drag gestures.",
+      "item1": "<strong>Upstream lib</strong>: Drawer uses <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — native drag gestures. <strong>Basecoat</strong> uses a custom factory (<code>createDrawer</code> on top of <code>createSheet</code>) without gesture support.",
       "item2": "<strong>Nesting</strong>: never nest Drawers — breaks focus trap and gestures. For multi-step flows, use Stepper inside Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> is the default; other values work but are exceptions for specific cases.",
       "item4": "<strong>Portal</strong>: DrawerContent renders outside #storybook-root — axe tests may need to check <code>document.body</code>.",
@@ -1117,7 +1117,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: Drawer usa <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — gestos de arrastrar nativos.",
+      "item1": "<strong>Lib upstream</strong>: Drawer usa <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — gestos nativos. <strong>Basecoat</strong> usa factory custom (<code>createDrawer</code> sobre <code>createSheet</code>) sin soporte de gestos.",
       "item2": "<strong>Anidamiento</strong>: nunca anides Drawers — rompe focus trap y gestos. Para flujos multi-step, usa Stepper dentro del Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> es el predeterminado; otros valores funcionan pero son excepciones para casos específicos.",
       "item4": "<strong>Portal</strong>: DrawerContent renderiza fuera de #storybook-root — los tests con axe pueden necesitar revisar <code>document.body</code>.",

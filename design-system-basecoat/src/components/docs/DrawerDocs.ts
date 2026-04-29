@@ -111,6 +111,14 @@ export function createDrawerDocs(): HTMLElement {
       description: t('seo.description'),
       locale,
       componentSlug: 'drawer',
+      aiSummary: t('seo.aiSummary'),
+      aiEntities: t('seo.aiEntities'),
+      aiIntent: t('seo.aiIntent'),
+      breadcrumb: [
+        { name: 'Components', item: '/components' },
+        { name: t('category'), item: '/components/disclosure' },
+        { name: t('title') },
+      ],
     });
     track('docs_page_view', {
       component_name: 'drawer',
