@@ -1,44 +1,42 @@
 # Fixes Pendentes — Pipeline full dialog — 2026-04-29
 
-## Críticos (P0)
+**Status: ✓ Todos os 11 fixes aplicados.**
 
-### Infraestrutura SEO+GEO (afeta TODAS as docs pages, não só dialog)
+## Críticos (P0) — aplicados
 
-- [ ] **`use-seo.ts` ignora `seo.aiSummary`, `seo.aiEntities`, `seo.aiIntent`** — `use-seo.ts:114-128` (todas as 4 stacks). O ux-writer escreve esse conteúdo no `translations.json`, mas o hook só lê `title` e `description` (e injeta `description` como `ai:summary`). Conteúdo GEO morto. **Fix**: estender `use-seo.ts` para injetar `<meta name="ai:summary">`, `<meta name="ai:entities">`, `<meta name="ai:intent">`. Skill: `/seo-geo` (ou ajuste de infra).
+- [x] **`use-seo.ts` injeta `ai:summary`, `ai:entities`, `ai:intent`** — `3b0404e` (4 stacks)
+- [x] **DialogDocs passam `breadcrumb` para JSON-LD** — `c2d5b6a` (4 stacks)
+- [x] **Sufixo duplicado removido de `seo.title`** — `b08f45e` (dialog/translations.json)
 
-- [ ] **JSON-LD ausente nas docs pages** — `use-seo.ts:150-173` só gera `BreadcrumbList` quando `breadcrumb` é passado, e nenhuma DialogDocs passa. Sem `TechArticle`/`SoftwareSourceCode`. **Fix**: passar `breadcrumb={[{name:'Components', item:...}, {name:'Overlay', item:...}, {name:'Dialog'}]}` em `DialogDocs.tsx:214` e equivalentes Vue/Svelte/Basecoat. Considerar JSON-LD `TechArticle` global. Skill: `/seo-geo`.
+## Médios (P1) — aplicados
 
-- [ ] **`seo.title` com sufixo duplicado** — `translations.json:8,355,702` traz `"Dialog — Overlay · Design System"` e o hook adiciona "· Design System" novamente → `<title>` final: `Dialog — Overlay · Design System · Design System`. **Fix**: remover sufixo dos 3 idiomas no translations.json (ou do hook). Skill: `/ux-writer` ou `/seo-geo`.
+- [x] **Basecoat overlay: `isolate` + animações `data-[state]`** — `1900a1b`
+- [x] **Basecoat DialogTitle: tipografia alinhada** — `1900a1b`
+- [x] **Basecoat DialogFooter: tokens de fundo/borda** — `1900a1b`
+- [x] **Svelte composições renomeadas** (`ConfirmEmail`, `ProfileEdit`, `MediaPreview`) — `0d37af2`
+- [x] **Estado `Controlled` adicionado em React + Basecoat** — `6c9d0d4`
 
-## Médios (P1)
+## Baixos (P2) — aplicados
 
-### Cross-stack — divergências de implementação
-
-- [ ] **Basecoat overlay sem `isolate` nem animação `data-[state]`** — `design-system-basecoat/src/components/ui/dialog.ts:84-85`. React/Vue/Svelte usam `fixed inset-0 isolate z-50 ... data-open:animate-in fade-in-0 data-closed:animate-out fade-out-0 duration-100`; Basecoat só aplica classes estáticas. **Fix**: adicionar `isolate` + classes de animação. Skill: `/cross-stack`.
-
-- [ ] **Basecoat DialogTitle com tipografia divergente** — `dialog.ts:115` usa `text-lg font-semibold leading-none tracking-tight`; outras stacks usam `text-base leading-none font-medium`. **Fix**: alinhar para `text-base leading-none font-medium`. Skill: `/cross-stack`.
-
-- [ ] **Basecoat DialogFooter sem tokens de fundo/borda** — `dialog.ts:138` usa `flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2`; React/Vue/Svelte usam `-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end`. **Fix**: alinhar classes do footer. Skill: `/cross-stack`.
-
-- [ ] **Svelte composições com naming divergente** — `design-system-svelte/src/components/ui/dialog/dialog-composicoes.stories.ts:23,49,74` exporta `ProfileEdit`, `LongContent`, `InfoOnly`. React/Vue/Basecoat exportam `ConfirmEmail`, `ProfileEdit`, `MediaPreview`. **Fix**: renomear/reescrever para paridade Chromatic. Skill: `/dev-svelte` ou `/cross-stack`.
-
-- [ ] **Estado `Controlled` só em Vue/Svelte** — `dialog-estados.stories.ts:157` (Vue) e `:92` (Svelte) têm 4 stories; React (`dialog-estados.stories.tsx`) e Basecoat (`dialog-estados.stories.ts`) têm 3 (faltam Controlled). **Fix**: decidir 3 ou 4 e alinhar. Skill: `/cross-stack`.
-
-## Baixos (P2)
-
-- [ ] **`seo.aiEntities` incompleta** — falta `lucide` e `tailwind-css` (citados no contexto). `translations.json:11,357,703`. Skill: `/ux-writer`.
-
-- [ ] **Svelte variantes possivelmente enxutas demais** — `design-system-svelte/src/components/ui/dialog/dialog-variantes.stories.ts` tem 138 linhas vs Vue 267 / React 298 / Basecoat 204. Auditar se as 6 stories cobrem os mesmos casos visuais. Skill: `/cross-stack`.
-
-- [ ] **Cobertura de play functions desigual** — todas as 4 stacks têm `play:`, mas tamanhos variam. Verificar paridade dos 7 casos funcionais (trigger open, Escape, overlay click, close-button, focus trap, focus return, controlled). Skill: `/quality`.
+- [x] **`seo.aiEntities` inclui `lucide` + `Tailwind CSS`** — `06379c1`
+- [x] **Svelte variantes: cobertura idiomática validada** — sem commit (paridade ok)
+- [x] **Play functions expandidas para 7 casos em todas as stacks** — `809ed6b`
 
 ---
 
-*11 violações em 1 componente (dialog).*
-*3 críticas são de infraestrutura compartilhada (afetam todas as docs pages, não só dialog).*
+## Pendências fora do escopo
 
-**Aplicar?**
-- [1] críticos (3)
-- [2] críticos+médios (8)
-- [3] todos (11)
-- [4] nenhum
+### Sufixo duplicado em outros componentes
+
+23 outros `translations.json` têm `seo.title` com `· Design System` duplicado:
+accordion, alert, alert-dialog, aspect-ratio, avatar, badge, breadcrumb, button, calendar, card, carousel, chart, checkbox, collapsible, command, context-menu, input, label, separator, sidebar, skeleton, sonner, table.
+
+**Recomendação:** próximo pipeline deve incluir um pass global de `/seo-geo --all --fix-titles`.
+
+### Divergências entre `use-seo.ts` (4 stacks)
+
+Identificadas mas não normalizadas no Batch 1:
+- Vue não emite `og:url` (única stack sem)
+- React/Vue/Svelte/Basecoat usam APIs diferentes (`useEffect`, `watchEffect`, `$effect`, `subscribe`)
+
+**Recomendação:** trabalho de cross-stack dedicado ao hook SEO.
