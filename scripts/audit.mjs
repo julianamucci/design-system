@@ -214,6 +214,7 @@ function auditAnalytics(slug) {
   for (const stack of STACKS) {
     const { ui } = filesForSlug(slug, stack);
     for (const file of ui) {
+      if (/\.stories\.[tj]sx?$/.test(file)) continue;
       const content = readFile(file);
       if (!content) continue;
       if (/from\s+['"]@\/lib\/analytics['"]/.test(content) || /from\s+['"]\.\.\/\.\.\/lib\/analytics['"]/.test(content)) {
