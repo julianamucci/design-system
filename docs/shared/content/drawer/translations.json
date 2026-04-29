@@ -1,0 +1,1223 @@
+{
+  "pt-BR": {
+    "title": "Drawer",
+    "category": "Disclosure",
+    "type": "Componente",
+    "description": "Painel deslizante mobile-first que entra por uma das bordas da tela com gestos de arrastar e fechamento por swipe.",
+    "seo": {
+      "title": "Drawer — Disclosure · Design System",
+      "description": "Documentação do Drawer: painel deslizante via vaul/vaul-vue/vaul-svelte com 4 direções, gestos de arrastar, focus trap e WCAG 2.1 AA.",
+      "aiSummary": "Componente Drawer mobile-first construído sobre vaul (React/Vue/Svelte) que renderiza painel deslizante com 4 direções (bottom/top/left/right), suporta swipe-to-close, focus trap e ESC.",
+      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Basecoat, Tailwind CSS, focus trap, swipe gesture, WCAG 2.1, role=dialog, aria-modal",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "bottom": "Bottom — drawer mobile padrão",
+        "right": "Right — painel lateral em desktop",
+        "left": "Left — menu lateral",
+        "top": "Top — notificação ou seletor"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Drawer (Root)</strong> — provider que controla estado aberto/fechado via <code>open</code> + <code>onOpenChange</code> ou <code>defaultOpen</code>.",
+      "item2": "<strong>DrawerTrigger</strong> — botão ou elemento que abre o painel; usar <code>asChild</code> para herdar estilos do filho.",
+      "item3": "<strong>DrawerContent</strong> — painel deslizante com gestos; renderiza em portal com overlay e focus trap.",
+      "item4": "<strong>DrawerHeader</strong> — agrupa <code>DrawerTitle</code> e <code>DrawerDescription</code> com layout responsivo.",
+      "item5": "<strong>DrawerTitle</strong> — título do drawer (obrigatório para <code>aria-labelledby</code> automático).",
+      "item6": "<strong>DrawerDescription</strong> — descrição complementar (opcional, usado para <code>aria-describedby</code>).",
+      "item7": "<strong>DrawerFooter</strong> — área de ações no rodapé (botões de confirmação/cancelamento).",
+      "item8": "<strong>DrawerClose</strong> — botão para fechar; usar <code>asChild</code> com Button.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descrição complementar.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* conteúdo */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use Drawer em mobile (direção bottom) para fluxos com gestos naturais de swipe.",
+        "item2": "Em desktop, prefira <code>Sheet</code> ou <code>Dialog</code>; Drawer com <code>direction=\"right\"</code> é alternativa válida para painéis editáveis.",
+        "item3": "Sempre inclua <code>DrawerTitle</code> mesmo que visualmente oculto (<code>sr-only</code>) — é referência do <code>aria-labelledby</code>.",
+        "item4": "Não aninhe Drawers dentro de Drawers — quebra o focus trap; use sub-rotas ou Steps.",
+        "item5": "Para conteúdo crítico que exige confirmação, prefira <code>AlertDialog</code> com role=alertdialog."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Formulário longo em mobile",
+          "u": "Drawer direction=bottom",
+          "a": "Sheet em desktop"
+        },
+        "item2": {
+          "s": "Painel de filtros lateral",
+          "u": "Drawer direction=right",
+          "a": "Sheet ou Sidebar"
+        },
+        "item3": {
+          "s": "Menu de navegação mobile",
+          "u": "Drawer direction=left",
+          "a": "Sidebar collapsible"
+        },
+        "item4": {
+          "s": "Notificação dispensável",
+          "u": "Drawer direction=top",
+          "a": "Sonner toast"
+        },
+        "item5": {
+          "s": "Confirmação destrutiva",
+          "u": "AlertDialog",
+          "a": "Drawer (errado)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regra",
+          "correct": "Use",
+          "avoid": "Evite",
+          "title": {
+            "name": "DrawerTitle",
+            "format": "Substantivo ou frase nominal curta",
+            "good": "Editar perfil",
+            "bad": "Clique aqui para editar"
+          },
+          "description": {
+            "name": "DrawerDescription",
+            "format": "Frase complementar com contexto",
+            "good": "Atualize seus dados pessoais e foto.",
+            "bad": "Descrição"
+          },
+          "trigger": {
+            "name": "DrawerTrigger label",
+            "format": "Verbo + objeto",
+            "good": "Abrir filtros",
+            "bad": "Clique"
+          },
+          "close": {
+            "name": "DrawerClose label",
+            "format": "Verbo de cancelamento",
+            "good": "Cancelar",
+            "bad": "X"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Fluxos mobile com gestos de swipe naturais.",
+        "item2": "Painéis laterais com formulários ou filtros.",
+        "item3": "Menu de navegação ou seletor sem hierarquia complexa.",
+        "item4": "Conteúdo dispensável que pode ser fechado por swipe-down."
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A confirmação é crítica e bloqueante — use AlertDialog.",
+        "item2": "O conteúdo precisa de hierarquia visual de página inteira.",
+        "item3": "Há outro Drawer aberto — não aninhe.",
+        "item4": "Em desktop com mais de 50% da largura — prefira Sheet."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Drawer com DrawerTitle visível ou sr-only para aria-labelledby.",
+        "dont": "Drawer sem DrawerTitle — leitor de tela não anuncia o painel."
+      },
+      "pair2": {
+        "do": "Drawer mobile direction=bottom com swipe-to-close natural.",
+        "dont": "Drawer aninhado dentro de outro Drawer — quebra focus trap."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "bottom": "Bottom",
+        "top": "Top",
+        "left": "Left",
+        "right": "Right"
+      },
+      "styles": {
+        "bottom": "Padrão mobile-first com handle de drag visível; entra por baixo, max-height 80vh, rounded-t-xl.",
+        "top": "Entra por cima; rounded-b-xl; útil para notificações ou seletores rápidos.",
+        "left": "Painel lateral à esquerda; w-3/4 mobile, max-w-sm desktop; rounded-r-xl.",
+        "right": "Painel lateral à direita (padrão para edição em desktop); rounded-l-xl."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Fechado",
+        "open": "Aberto",
+        "controlled": "Controlado"
+      },
+      "descriptions": {
+        "closed": "Estado padrão — apenas o trigger renderizado; portal vazio.",
+        "open": "Painel visível com overlay; focus trap ativo; ESC e swipe fecham.",
+        "controlled": "<code>open</code> + <code>onOpenChange</code> permitem gerenciar estado externamente (útil para abrir via lógica de negócio)."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "Não",
+          "description": "Estado controlado aberto/fechado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback chamado ao abrir ou fechar."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Estado inicial em modo não-controlado."
+        },
+        "direction": {
+          "type": "'bottom' | 'top' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "Não",
+          "description": "Direção de entrada do painel."
+        },
+        "modal": {
+          "type": "boolean",
+          "default": "true",
+          "required": "Não",
+          "description": "Quando true, bloqueia interação com o resto da página."
+        },
+        "dismissible": {
+          "type": "boolean",
+          "default": "true",
+          "required": "Não",
+          "description": "Permite fechar via swipe, ESC ou clique no overlay."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Drawer controlado com direção customizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* conteúdo */}\n  </DrawerContent>\n</Drawer>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "background": {
+          "class": "bg-popover",
+          "part": "Fundo do DrawerContent"
+        },
+        "foreground": {
+          "class": "text-popover-foreground",
+          "part": "Cor do texto no Content"
+        },
+        "border": {
+          "class": "border-border",
+          "part": "Borda da direção de entrada (border-t/b/l/r)"
+        },
+        "overlay": {
+          "class": "bg-black/10",
+          "part": "Overlay com backdrop-blur-xs"
+        },
+        "handle": {
+          "class": "bg-muted",
+          "part": "Handle de drag visível em direction=bottom"
+        },
+        "rounded": {
+          "class": "rounded-t-xl, rounded-b-xl, rounded-l-xl, rounded-r-xl",
+          "part": "Cantos arredondados oposto à borda de entrada"
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Override de overlay para tema custom */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA — critérios 1.3.1 (estrutura semântica via dialog/aria-modal), 2.1.1 (operável por teclado: ESC fecha, Tab focus trap), 2.4.3 (ordem de foco), 4.1.2 (name/role/value).",
+      "items": {
+        "item1": "<code>DrawerTitle</code> obrigatório — vincula <code>aria-labelledby</code> ao Content automaticamente.",
+        "item2": "<code>DrawerDescription</code> opcional — vincula <code>aria-describedby</code> quando presente.",
+        "item3": "Focus trap automático: Tab/Shift+Tab circula apenas dentro do Content quando aberto.",
+        "item4": "ESC fecha o drawer (quando <code>dismissible=true</code>).",
+        "item5": "Swipe gesture (bottom/top) tem fallback de teclado/clique para usuários sem touch.",
+        "item6": "Inclua <code>motion-reduce:animate-none</code> em animações customizadas se ultrapassar o padrão da lib."
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Tab/Shift+Tab — circula foco apenas dentro do DrawerContent (focus trap).",
+        "escape": "ESC — fecha o drawer (se dismissible).",
+        "enter": "Enter/Space — ativa botões e DrawerClose.",
+        "swipe": "Swipe gesture — alternativa em touch devices; sempre acompanhado de DrawerClose com botão visível."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"dialog\"</code> aplicado automaticamente em DrawerContent.",
+        "modal": "<code>aria-modal=\"true\"</code> ativo enquanto aberto.",
+        "labelledBy": "<code>aria-labelledby</code> aponta para DrawerTitle.",
+        "describedBy": "<code>aria-describedby</code> aponta para DrawerDescription quando presente."
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "open": "Anuncia: \"[Título do drawer], dialog\".",
+        "description": "Lê DrawerDescription após o título.",
+        "close": "Anuncia o botão Cancelar/Fechar e seu rótulo."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "sheet": {
+          "name": "Sheet",
+          "description": "Painel lateral desktop sem gestos — preferível para edição em desktop puro."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Modal centralizado para conteúdo focal sem direção."
+        },
+        "alertDialog": {
+          "name": "AlertDialog",
+          "description": "Confirmação destrutiva ou crítica que exige decisão."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Navegação lateral persistente em desktop."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: Drawer usa <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — gestos de arrastar nativos.",
+      "item2": "<strong>Aninhamento</strong>: nunca aninhe Drawers — quebra focus trap e gestos. Para fluxos multi-step, use Stepper dentro do Drawer.",
+      "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> é o padrão; outros valores funcionam mas são exceções para casos específicos.",
+      "item4": "<strong>Portal</strong>: DrawerContent renderiza fora de #storybook-root — testes com axe podem precisar checar <code>document.body</code>.",
+      "item5": "<strong>contain: layout</strong>: em previews de Storybook, aplicar <code>contain: layout</code> no wrapper para confinar o portal (ver PATCHES.md#sidebar)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do Drawer: <code>drawer_open</code> e <code>drawer_close</code>. Payload obrigatório: <code>component='drawer'</code>, <code>location</code> (contexto da página), <code>label</code> (título do drawer). Disparar via <code>onOpenChange</code> no componente consumidor."
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada interação.",
+        "item1": {
+          "action": "Clicar no DrawerTrigger",
+          "result": "Drawer abre com role=dialog e aria-modal=true",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar ESC com Drawer aberto",
+          "result": "Drawer fecha (se dismissible=true)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Tab dentro do Drawer aberto",
+          "result": "Foco circula apenas dentro do DrawerContent (focus trap)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Clicar no DrawerClose",
+          "result": "Drawer fecha e retorna foco ao DrawerTrigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Renderizar com direction=right",
+          "result": "Painel entra pela direita com data-vaul-drawer-direction=right",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Modo controlado (open + onOpenChange)",
+          "result": "Estado externo controla abertura/fechamento",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "DrawerContent tem role=dialog e aria-modal=true (WCAG 4.1.2)",
+        "item3": "DrawerTitle conectado via aria-labelledby ao Content",
+        "item4": "Focus trap funcional: Tab não escapa do DrawerContent",
+        "item5": "ESC fecha o drawer e retorna foco ao trigger (WCAG 2.1.1, 2.4.3)",
+        "item6": "Contraste mínimo 4.5:1 entre texto e bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": {
+          "story": "Bottom (padrão) com handle de drag",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Right (lateral desktop)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Left (menu mobile)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Top (notificação)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composição com formulário e DrawerFooter",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Drawer",
+    "category": "Disclosure",
+    "type": "Component",
+    "description": "Mobile-first sliding panel that enters from any screen edge with drag gestures and swipe-to-dismiss support.",
+    "seo": {
+      "title": "Drawer — Disclosure · Design System",
+      "description": "Drawer documentation: sliding panel via vaul/vaul-vue/vaul-svelte with 4 directions, drag gestures, focus trap, and WCAG 2.1 AA.",
+      "aiSummary": "Mobile-first Drawer component built on vaul (React/Vue/Svelte) renders a sliding panel with 4 directions (bottom/top/left/right), supports swipe-to-close, focus trap, and ESC.",
+      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Basecoat, Tailwind CSS, focus trap, swipe gesture, WCAG 2.1, role=dialog, aria-modal",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "bottom": "Bottom — default mobile drawer",
+        "right": "Right — desktop side panel",
+        "left": "Left — side menu",
+        "top": "Top — notification or selector"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Drawer (Root)</strong> — provider that controls open/closed state via <code>open</code> + <code>onOpenChange</code> or <code>defaultOpen</code>.",
+      "item2": "<strong>DrawerTrigger</strong> — button or element that opens the panel; use <code>asChild</code> to inherit child styles.",
+      "item3": "<strong>DrawerContent</strong> — sliding panel with gestures; renders in a portal with overlay and focus trap.",
+      "item4": "<strong>DrawerHeader</strong> — groups <code>DrawerTitle</code> and <code>DrawerDescription</code> with responsive layout.",
+      "item5": "<strong>DrawerTitle</strong> — drawer title (required for automatic <code>aria-labelledby</code>).",
+      "item6": "<strong>DrawerDescription</strong> — complementary description (optional, used for <code>aria-describedby</code>).",
+      "item7": "<strong>DrawerFooter</strong> — footer action area (confirm/cancel buttons).",
+      "item8": "<strong>DrawerClose</strong> — close button; use <code>asChild</code> with Button.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Complementary description.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* content */}</div>\n    <DrawerFooter>\n      <Button>Confirm</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Mandatory Guidelines",
+        "item1": "Use Drawer on mobile (bottom direction) for flows with natural swipe gestures.",
+        "item2": "On desktop, prefer <code>Sheet</code> or <code>Dialog</code>; Drawer with <code>direction=\"right\"</code> is a valid alternative for editable panels.",
+        "item3": "Always include <code>DrawerTitle</code> even if visually hidden (<code>sr-only</code>) — it is the <code>aria-labelledby</code> reference.",
+        "item4": "Do not nest Drawers inside Drawers — breaks focus trap; use sub-routes or Steps.",
+        "item5": "For critical content requiring confirmation, prefer <code>AlertDialog</code> with role=alertdialog."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Long form on mobile",
+          "u": "Drawer direction=bottom",
+          "a": "Sheet on desktop"
+        },
+        "item2": {
+          "s": "Side filter panel",
+          "u": "Drawer direction=right",
+          "a": "Sheet or Sidebar"
+        },
+        "item3": {
+          "s": "Mobile navigation menu",
+          "u": "Drawer direction=left",
+          "a": "Collapsible Sidebar"
+        },
+        "item4": {
+          "s": "Dismissible notification",
+          "u": "Drawer direction=top",
+          "a": "Sonner toast"
+        },
+        "item5": {
+          "s": "Destructive confirmation",
+          "u": "AlertDialog",
+          "a": "Drawer (wrong)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Rule",
+          "correct": "Use",
+          "avoid": "Avoid",
+          "title": {
+            "name": "DrawerTitle",
+            "format": "Noun or short noun phrase",
+            "good": "Edit profile",
+            "bad": "Click here to edit"
+          },
+          "description": {
+            "name": "DrawerDescription",
+            "format": "Complementary phrase with context",
+            "good": "Update your personal info and photo.",
+            "bad": "Description"
+          },
+          "trigger": {
+            "name": "DrawerTrigger label",
+            "format": "Verb + object",
+            "good": "Open filters",
+            "bad": "Click"
+          },
+          "close": {
+            "name": "DrawerClose label",
+            "format": "Cancellation verb",
+            "good": "Cancel",
+            "bad": "X"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Mobile flows with natural swipe gestures.",
+        "item2": "Side panels with forms or filters.",
+        "item3": "Navigation menu or selector without complex hierarchy.",
+        "item4": "Dismissible content that can be closed by swipe-down."
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "Confirmation is critical and blocking — use AlertDialog.",
+        "item2": "Content needs full-page visual hierarchy.",
+        "item3": "Another Drawer is open — do not nest.",
+        "item4": "On desktop with more than 50% width — prefer Sheet."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Drawer with visible or sr-only DrawerTitle for aria-labelledby.",
+        "dont": "Drawer without DrawerTitle — screen reader doesn't announce the panel."
+      },
+      "pair2": {
+        "do": "Mobile Drawer direction=bottom with natural swipe-to-close.",
+        "dont": "Drawer nested inside another Drawer — breaks focus trap."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "bottom": "Bottom",
+        "top": "Top",
+        "left": "Left",
+        "right": "Right"
+      },
+      "styles": {
+        "bottom": "Mobile-first default with visible drag handle; enters from below, max-height 80vh, rounded-t-xl.",
+        "top": "Enters from above; rounded-b-xl; useful for notifications or quick selectors.",
+        "left": "Left side panel; w-3/4 mobile, max-w-sm desktop; rounded-r-xl.",
+        "right": "Right side panel (default for desktop edit); rounded-l-xl."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "controlled": "Controlled"
+      },
+      "descriptions": {
+        "closed": "Default state — only the trigger is rendered; portal is empty.",
+        "open": "Visible panel with overlay; focus trap active; ESC and swipe close it.",
+        "controlled": "<code>open</code> + <code>onOpenChange</code> manage state externally (useful for opening via business logic)."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled open/closed state."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired when opening or closing."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Initial state in uncontrolled mode."
+        },
+        "direction": {
+          "type": "'bottom' | 'top' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "No",
+          "description": "Panel entry direction."
+        },
+        "modal": {
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "When true, blocks interaction with the rest of the page."
+        },
+        "dismissible": {
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "Allows closing via swipe, ESC, or overlay click."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Controlled Drawer with custom direction\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* content */}\n  </DrawerContent>\n</Drawer>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "background": {
+          "class": "bg-popover",
+          "part": "DrawerContent background"
+        },
+        "foreground": {
+          "class": "text-popover-foreground",
+          "part": "Text color in Content"
+        },
+        "border": {
+          "class": "border-border",
+          "part": "Entry edge border (border-t/b/l/r)"
+        },
+        "overlay": {
+          "class": "bg-black/10",
+          "part": "Overlay with backdrop-blur-xs"
+        },
+        "handle": {
+          "class": "bg-muted",
+          "part": "Drag handle visible in direction=bottom"
+        },
+        "rounded": {
+          "class": "rounded-t-xl, rounded-b-xl, rounded-l-xl, rounded-r-xl",
+          "part": "Rounded corners opposite the entry edge"
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Overlay override for custom theme */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA — criteria 1.3.1 (semantic structure via dialog/aria-modal), 2.1.1 (keyboard operable: ESC closes, Tab focus trap), 2.4.3 (focus order), 4.1.2 (name/role/value).",
+      "items": {
+        "item1": "<code>DrawerTitle</code> required — automatically links <code>aria-labelledby</code> to Content.",
+        "item2": "<code>DrawerDescription</code> optional — links <code>aria-describedby</code> when present.",
+        "item3": "Automatic focus trap: Tab/Shift+Tab cycles only within Content when open.",
+        "item4": "ESC closes the drawer (when <code>dismissible=true</code>).",
+        "item5": "Swipe gesture (bottom/top) has keyboard/click fallback for users without touch.",
+        "item6": "Include <code>motion-reduce:animate-none</code> in custom animations beyond library defaults."
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Tab/Shift+Tab — cycles focus only inside DrawerContent (focus trap).",
+        "escape": "ESC — closes the drawer (if dismissible).",
+        "enter": "Enter/Space — activates buttons and DrawerClose.",
+        "swipe": "Swipe gesture — alternative on touch devices; always paired with visible DrawerClose button."
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "role": "<code>role=\"dialog\"</code> applied automatically on DrawerContent.",
+        "modal": "<code>aria-modal=\"true\"</code> active while open.",
+        "labelledBy": "<code>aria-labelledby</code> points to DrawerTitle.",
+        "describedBy": "<code>aria-describedby</code> points to DrawerDescription when present."
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "open": "Announces: \"[Drawer title], dialog\".",
+        "description": "Reads DrawerDescription after the title.",
+        "close": "Announces the Cancel/Close button and its label."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "sheet": {
+          "name": "Sheet",
+          "description": "Desktop side panel without gestures — preferred for desktop-only edit."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Centered modal for focal content without direction."
+        },
+        "alertDialog": {
+          "name": "AlertDialog",
+          "description": "Destructive or critical confirmation requiring decision."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Persistent side navigation on desktop."
+        }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: Drawer uses <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — native drag gestures.",
+      "item2": "<strong>Nesting</strong>: never nest Drawers — breaks focus trap and gestures. For multi-step flows, use Stepper inside Drawer.",
+      "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> is the default; other values work but are exceptions for specific cases.",
+      "item4": "<strong>Portal</strong>: DrawerContent renders outside #storybook-root — axe tests may need to check <code>document.body</code>.",
+      "item5": "<strong>contain: layout</strong>: in Storybook previews, apply <code>contain: layout</code> on the wrapper to confine the portal (see PATCHES.md#sidebar)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant Drawer events: <code>drawer_open</code> and <code>drawer_close</code>. Required payload: <code>component='drawer'</code>, <code>location</code> (page context), <code>label</code> (drawer title). Dispatch via <code>onOpenChange</code> in the consumer component."
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen on each interaction.",
+        "item1": {
+          "action": "Click the DrawerTrigger",
+          "result": "Drawer opens with role=dialog and aria-modal=true",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press ESC with Drawer open",
+          "result": "Drawer closes (if dismissible=true)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Tab inside open Drawer",
+          "result": "Focus cycles only within DrawerContent (focus trap)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Click the DrawerClose",
+          "result": "Drawer closes and returns focus to DrawerTrigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Render with direction=right",
+          "result": "Panel enters from right with data-vaul-drawer-direction=right",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Controlled mode (open + onOpenChange)",
+          "result": "External state controls opening/closing",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria automated tools should confirm.",
+        "item1": "No violations reported by axe-core in default state",
+        "item2": "DrawerContent has role=dialog and aria-modal=true (WCAG 4.1.2)",
+        "item3": "DrawerTitle connected via aria-labelledby to Content",
+        "item4": "Working focus trap: Tab does not escape DrawerContent",
+        "item5": "ESC closes drawer and returns focus to trigger (WCAG 2.1.1, 2.4.3)",
+        "item6": "Minimum 4.5:1 contrast between text and bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States Chromatic should capture.",
+        "required": "Required",
+        "item1": {
+          "story": "Bottom (default) with drag handle",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Right (desktop side)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Left (mobile menu)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Top (notification)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composition with form and DrawerFooter",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Drawer",
+    "category": "Disclosure",
+    "type": "Componente",
+    "description": "Panel deslizante mobile-first que entra desde cualquier borde de pantalla con gestos de arrastrar y cierre por swipe.",
+    "seo": {
+      "title": "Drawer — Disclosure · Design System",
+      "description": "Documentación de Drawer: panel deslizante vía vaul/vaul-vue/vaul-svelte con 4 direcciones, gestos, focus trap y WCAG 2.1 AA.",
+      "aiSummary": "Componente Drawer mobile-first construido sobre vaul (React/Vue/Svelte) que renderiza panel deslizante con 4 direcciones (bottom/top/left/right), soporta swipe-to-close, focus trap y ESC.",
+      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Basecoat, Tailwind CSS, focus trap, swipe gesture, WCAG 2.1, role=dialog, aria-modal",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "bottom": "Bottom — drawer mobile predeterminado",
+        "right": "Right — panel lateral en desktop",
+        "left": "Left — menú lateral",
+        "top": "Top — notificación o selector"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Drawer (Root)</strong> — provider que controla el estado abierto/cerrado vía <code>open</code> + <code>onOpenChange</code> o <code>defaultOpen</code>.",
+      "item2": "<strong>DrawerTrigger</strong> — botón o elemento que abre el panel; usa <code>asChild</code> para heredar estilos del hijo.",
+      "item3": "<strong>DrawerContent</strong> — panel deslizante con gestos; renderiza en portal con overlay y focus trap.",
+      "item4": "<strong>DrawerHeader</strong> — agrupa <code>DrawerTitle</code> y <code>DrawerDescription</code> con layout responsive.",
+      "item5": "<strong>DrawerTitle</strong> — título del drawer (obligatorio para <code>aria-labelledby</code> automático).",
+      "item6": "<strong>DrawerDescription</strong> — descripción complementaria (opcional, usado para <code>aria-describedby</code>).",
+      "item7": "<strong>DrawerFooter</strong> — área de acciones del pie (botones de confirmación/cancelación).",
+      "item8": "<strong>DrawerClose</strong> — botón para cerrar; usa <code>asChild</code> con Button.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descripción complementaria.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* contenido */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa Drawer en mobile (dirección bottom) para flujos con gestos naturales de swipe.",
+        "item2": "En desktop, prefiere <code>Sheet</code> o <code>Dialog</code>; Drawer con <code>direction=\"right\"</code> es alternativa válida para paneles editables.",
+        "item3": "Incluye siempre <code>DrawerTitle</code> aunque sea visualmente oculto (<code>sr-only</code>) — es referencia del <code>aria-labelledby</code>.",
+        "item4": "No anides Drawers dentro de Drawers — rompe el focus trap; usa subrutas o Steps.",
+        "item5": "Para contenido crítico que exige confirmación, prefiere <code>AlertDialog</code> con role=alertdialog."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Formulario largo en mobile",
+          "u": "Drawer direction=bottom",
+          "a": "Sheet en desktop"
+        },
+        "item2": {
+          "s": "Panel de filtros lateral",
+          "u": "Drawer direction=right",
+          "a": "Sheet o Sidebar"
+        },
+        "item3": {
+          "s": "Menú de navegación mobile",
+          "u": "Drawer direction=left",
+          "a": "Sidebar collapsible"
+        },
+        "item4": {
+          "s": "Notificación dispensable",
+          "u": "Drawer direction=top",
+          "a": "Sonner toast"
+        },
+        "item5": {
+          "s": "Confirmación destructiva",
+          "u": "AlertDialog",
+          "a": "Drawer (incorrecto)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regla",
+          "correct": "Usa",
+          "avoid": "Evita",
+          "title": {
+            "name": "DrawerTitle",
+            "format": "Sustantivo o frase nominal corta",
+            "good": "Editar perfil",
+            "bad": "Haz clic aquí para editar"
+          },
+          "description": {
+            "name": "DrawerDescription",
+            "format": "Frase complementaria con contexto",
+            "good": "Actualiza tus datos personales y foto.",
+            "bad": "Descripción"
+          },
+          "trigger": {
+            "name": "DrawerTrigger label",
+            "format": "Verbo + objeto",
+            "good": "Abrir filtros",
+            "bad": "Haz clic"
+          },
+          "close": {
+            "name": "DrawerClose label",
+            "format": "Verbo de cancelación",
+            "good": "Cancelar",
+            "bad": "X"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Flujos mobile con gestos de swipe naturales.",
+        "item2": "Paneles laterales con formularios o filtros.",
+        "item3": "Menú de navegación o selector sin jerarquía compleja.",
+        "item4": "Contenido dispensable que se cierra con swipe-down."
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La confirmación es crítica y bloqueante — usa AlertDialog.",
+        "item2": "El contenido necesita jerarquía visual de página completa.",
+        "item3": "Hay otro Drawer abierto — no anides.",
+        "item4": "En desktop con más del 50% de ancho — prefiere Sheet."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Drawer con DrawerTitle visible o sr-only para aria-labelledby.",
+        "dont": "Drawer sin DrawerTitle — el lector de pantalla no anuncia el panel."
+      },
+      "pair2": {
+        "do": "Drawer mobile direction=bottom con swipe-to-close natural.",
+        "dont": "Drawer anidado dentro de otro Drawer — rompe el focus trap."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "bottom": "Bottom",
+        "top": "Top",
+        "left": "Left",
+        "right": "Right"
+      },
+      "styles": {
+        "bottom": "Predeterminado mobile-first con handle de drag visible; entra desde abajo, max-height 80vh, rounded-t-xl.",
+        "top": "Entra desde arriba; rounded-b-xl; útil para notificaciones o selectores rápidos.",
+        "left": "Panel lateral izquierdo; w-3/4 mobile, max-w-sm desktop; rounded-r-xl.",
+        "right": "Panel lateral derecho (predeterminado para edición en desktop); rounded-l-xl."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Cerrado",
+        "open": "Abierto",
+        "controlled": "Controlado"
+      },
+      "descriptions": {
+        "closed": "Estado predeterminado — solo el trigger renderizado; portal vacío.",
+        "open": "Panel visible con overlay; focus trap activo; ESC y swipe lo cierran.",
+        "controlled": "<code>open</code> + <code>onOpenChange</code> permiten gestionar estado externamente (útil para abrir vía lógica de negocio)."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Estado controlado abierto/cerrado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback llamado al abrir o cerrar."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Estado inicial en modo no-controlado."
+        },
+        "direction": {
+          "type": "'bottom' | 'top' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "No",
+          "description": "Dirección de entrada del panel."
+        },
+        "modal": {
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "Cuando es true, bloquea interacción con el resto de la página."
+        },
+        "dismissible": {
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "Permite cerrar vía swipe, ESC o clic en el overlay."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Drawer controlado con dirección personalizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* contenido */}\n  </DrawerContent>\n</Drawer>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "background": {
+          "class": "bg-popover",
+          "part": "Fondo del DrawerContent"
+        },
+        "foreground": {
+          "class": "text-popover-foreground",
+          "part": "Color del texto en el Content"
+        },
+        "border": {
+          "class": "border-border",
+          "part": "Borde del lado de entrada (border-t/b/l/r)"
+        },
+        "overlay": {
+          "class": "bg-black/10",
+          "part": "Overlay con backdrop-blur-xs"
+        },
+        "handle": {
+          "class": "bg-muted",
+          "part": "Handle de drag visible en direction=bottom"
+        },
+        "rounded": {
+          "class": "rounded-t-xl, rounded-b-xl, rounded-l-xl, rounded-r-xl",
+          "part": "Esquinas redondeadas opuestas al borde de entrada"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Override de overlay para tema custom */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA — criterios 1.3.1 (estructura semántica vía dialog/aria-modal), 2.1.1 (operable por teclado: ESC cierra, Tab focus trap), 2.4.3 (orden de foco), 4.1.2 (name/role/value).",
+      "items": {
+        "item1": "<code>DrawerTitle</code> obligatorio — vincula <code>aria-labelledby</code> al Content automáticamente.",
+        "item2": "<code>DrawerDescription</code> opcional — vincula <code>aria-describedby</code> cuando está presente.",
+        "item3": "Focus trap automático: Tab/Shift+Tab circula solo dentro del Content cuando está abierto.",
+        "item4": "ESC cierra el drawer (cuando <code>dismissible=true</code>).",
+        "item5": "Swipe gesture (bottom/top) tiene fallback de teclado/clic para usuarios sin touch.",
+        "item6": "Incluye <code>motion-reduce:animate-none</code> en animaciones personalizadas si superan el predeterminado de la lib."
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Tab/Shift+Tab — circula foco solo dentro de DrawerContent (focus trap).",
+        "escape": "ESC — cierra el drawer (si dismissible).",
+        "enter": "Enter/Space — activa botones y DrawerClose.",
+        "swipe": "Swipe gesture — alternativa en touch devices; siempre acompañado de DrawerClose con botón visible."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"dialog\"</code> aplicado automáticamente en DrawerContent.",
+        "modal": "<code>aria-modal=\"true\"</code> activo mientras está abierto.",
+        "labelledBy": "<code>aria-labelledby</code> apunta a DrawerTitle.",
+        "describedBy": "<code>aria-describedby</code> apunta a DrawerDescription cuando está presente."
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "open": "Anuncia: \"[Título del drawer], dialog\".",
+        "description": "Lee DrawerDescription tras el título.",
+        "close": "Anuncia el botón Cancelar/Cerrar y su rótulo."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "sheet": {
+          "name": "Sheet",
+          "description": "Panel lateral desktop sin gestos — preferible para edición en desktop puro."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Modal centrado para contenido focal sin dirección."
+        },
+        "alertDialog": {
+          "name": "AlertDialog",
+          "description": "Confirmación destructiva o crítica que exige decisión."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Navegación lateral persistente en desktop."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: Drawer usa <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — gestos de arrastrar nativos.",
+      "item2": "<strong>Anidamiento</strong>: nunca anides Drawers — rompe focus trap y gestos. Para flujos multi-step, usa Stepper dentro del Drawer.",
+      "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> es el predeterminado; otros valores funcionan pero son excepciones para casos específicos.",
+      "item4": "<strong>Portal</strong>: DrawerContent renderiza fuera de #storybook-root — los tests con axe pueden necesitar revisar <code>document.body</code>.",
+      "item5": "<strong>contain: layout</strong>: en previews de Storybook, aplica <code>contain: layout</code> en el wrapper para confinar el portal (ver PATCHES.md#sidebar)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del Drawer: <code>drawer_open</code> y <code>drawer_close</code>. Payload obligatorio: <code>component='drawer'</code>, <code>location</code> (contexto de página), <code>label</code> (título del drawer). Dispara vía <code>onOpenChange</code> en el componente consumidor."
+    },
+    "testes": {
+      "title": "Criterios de Test",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en cada interacción.",
+        "item1": {
+          "action": "Hacer clic en el DrawerTrigger",
+          "result": "Drawer abre con role=dialog y aria-modal=true",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Presionar ESC con Drawer abierto",
+          "result": "Drawer cierra (si dismissible=true)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Tab dentro del Drawer abierto",
+          "result": "Foco circula solo dentro de DrawerContent (focus trap)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Hacer clic en el DrawerClose",
+          "result": "Drawer cierra y devuelve foco al DrawerTrigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Renderizar con direction=right",
+          "result": "Panel entra desde la derecha con data-vaul-drawer-direction=right",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Modo controlado (open + onOpenChange)",
+          "result": "Estado externo controla apertura/cierre",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
+        "item2": "DrawerContent tiene role=dialog y aria-modal=true (WCAG 4.1.2)",
+        "item3": "DrawerTitle conectado vía aria-labelledby al Content",
+        "item4": "Focus trap funcional: Tab no escapa de DrawerContent",
+        "item5": "ESC cierra el drawer y devuelve foco al trigger (WCAG 2.1.1, 2.4.3)",
+        "item6": "Contraste mínimo 4.5:1 entre texto y bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": {
+          "story": "Bottom (predeterminado) con handle de drag",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Right (lateral desktop)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Left (menú mobile)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Top (notificación)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composición con formulario y DrawerFooter",
+          "priority": "high"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  }
+}
