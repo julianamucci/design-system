@@ -1,0 +1,1088 @@
+{
+  "pt-BR": {
+    "title": "Skeleton",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Placeholder visual com animação pulsante que replica a estrutura do conteúdo enquanto ele carrega.",
+    "seo": {
+      "title": "Skeleton — Feedback · Design System",
+      "description": "Documentação do Skeleton: placeholder de loading com animate-pulse, decorativo via aria-hidden, com motion-reduce para acessibilidade.",
+      "aiSummary": "Componente Skeleton renderiza placeholder retangular com animate-pulse e bg-muted; é puramente decorativo (aria-hidden), respeita motion-reduce e replica dimensões do conteúdo final.",
+      "aiEntities": "Skeleton, React, Vue, Svelte, Basecoat, Tailwind CSS, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "card": "Card de perfil — avatar + 2 linhas",
+        "list": "Lista — 5 ítens com avatar e texto",
+        "image": "Imagem — placeholder em AspectRatio 16/9",
+        "paragraph": "Parágrafo — 3 linhas de texto"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Root</strong> — <code>div</code> com <code>animate-pulse rounded-md bg-muted</code> que replica a forma do conteúdo final.",
+      "item2": "<strong>className</strong> — define largura, altura e arredondamento (<code>h-4 w-[200px]</code>, <code>rounded-full</code>).",
+      "item3": "<strong>Container</strong> — wrapper externo recebe <code>aria-busy</code> e <code>aria-label</code>; Skeleton recebe <code>aria-hidden</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<div aria-busy={isLoading} aria-label=\"Carregando lista\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use Skeleton quando o tempo de carregamento esperado é maior que 300ms e a estrutura final é conhecida.",
+        "item2": "Replique as dimensões do conteúdo final para evitar <code>layout shift</code> quando o conteúdo carregar.",
+        "item3": "Aplique <code>aria-hidden=\"true\"</code> no Skeleton e <code>aria-busy=\"true\"</code> no container pai.",
+        "item4": "Inclua <code>motion-reduce:animate-none</code> para respeitar usuários com distúrbios vestibulares.",
+        "item5": "Para operações com progresso mensurável (upload, download), prefira <code>Progress</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Loading de Card de perfil",
+          "u": "3 Skeletons (avatar + 2 linhas)",
+          "a": "Spinner centralizado"
+        },
+        "item2": {
+          "s": "Loading de imagem em AspectRatio",
+          "u": "Skeleton h-full w-full",
+          "a": "Background placeholder"
+        },
+        "item3": {
+          "s": "Lista com N itens",
+          "u": "Array.map com Skeletons",
+          "a": "Spinner único"
+        },
+        "item4": {
+          "s": "Operação com progresso",
+          "u": "Progress component",
+          "a": "Skeleton (errado)"
+        },
+        "item5": {
+          "s": "Loading muito curto (<300ms)",
+          "u": "Sem feedback visual",
+          "a": "Skeleton (poluição)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Decisão",
+          "rules": "Regra",
+          "correct": "Use",
+          "avoid": "Evite",
+          "ariaLabel": {
+            "name": "aria-label do container",
+            "format": "Descreva o conteúdo que está carregando",
+            "good": "Carregando lista de pedidos",
+            "bad": "Loading"
+          },
+          "dimensions": {
+            "name": "Dimensões do Skeleton",
+            "format": "Aproxime do conteúdo final",
+            "good": "h-4 w-[250px] (linha de texto)",
+            "bad": "h-20 w-full em texto"
+          },
+          "shape": {
+            "name": "Forma do Skeleton",
+            "format": "Espelhe a forma do alvo",
+            "good": "rounded-full em avatar",
+            "bad": "rounded-md em avatar"
+          },
+          "motionReduce": {
+            "name": "motion-reduce",
+            "format": "Sempre incluir",
+            "good": "motion-reduce:animate-none",
+            "bad": "Sem fallback de animação"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O tempo de carregamento ultrapassa 300ms.",
+        "item2": "A estrutura do conteúdo final é conhecida e estável.",
+        "item3": "Quer reduzir percepção de espera com placeholder visual.",
+        "item4": "Carrega múltiplos itens em lista, grid ou card."
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "O carregamento é muito rápido (<300ms) — vira poluição visual.",
+        "item2": "A estrutura do conteúdo final é desconhecida ou variável.",
+        "item3": "Há progresso mensurável — use Progress com valor numérico.",
+        "item4": "O conteúdo é apenas texto curto — uma frase de loading basta."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Skeleton com dimensões aproximadas do conteúdo final.",
+        "dont": "Skeleton genérico de tamanho fixo que causa layout shift."
+      },
+      "pair2": {
+        "do": "aria-busy no container e aria-hidden no Skeleton.",
+        "dont": "Skeleton sem aria-hidden — leitor de tela anuncia ruído."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "rectangle": "Retângulo",
+        "circle": "Círculo",
+        "line": "Linha de texto"
+      },
+      "styles": {
+        "rectangle": "Padrão com <code>rounded-md</code> — placeholder para imagens, cards e blocos.",
+        "circle": "Combinado com <code>rounded-full</code> — placeholder para avatares e ícones.",
+        "line": "Altura fixa (<code>h-3</code> a <code>h-5</code>) com largura variável — placeholder para linhas de texto."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Padrão",
+        "motionReduced": "Movimento Reduzido"
+      },
+      "descriptions": {
+        "default": "<code>animate-pulse</code> aplicado por padrão; cor pulsante via <code>bg-muted</code>.",
+        "motionReduced": "Com <code>motion-reduce:animate-none</code>, a animação para quando o usuário ativa <code>prefers-reduced-motion</code> no sistema."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Recomendado",
+          "description": "Classes Tailwind para definir dimensões e arredondamento do placeholder."
+        },
+        "ariaHidden": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Recomendado",
+          "description": "Marque como true para que leitores de tela ignorem o placeholder."
+        },
+        "rest": {
+          "type": "ComponentProps<'div'>",
+          "default": "—",
+          "required": "Não",
+          "description": "Aceita qualquer prop nativa de div (style, id, data-*)."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Customizar forma e dimensão via className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "background": {
+          "class": "bg-muted",
+          "part": "Cor pulsante (alterna com bg-muted/40)"
+        },
+        "rounded": {
+          "class": "rounded-md",
+          "part": "Cantos arredondados padrão"
+        },
+        "animation": {
+          "class": "animate-pulse",
+          "part": "Animação pulsante de 2s"
+        },
+        "motionReduce": {
+          "class": "motion-reduce:animate-none",
+          "part": "Para a animação se prefers-reduced-motion"
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Override de cor para tema custom */\n[data-slot='skeleton'] {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Reduz duração da animação */\n[data-slot='skeleton'] {\n  animation-duration: 1.5s;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA — critério 2.3.3 (Animation from Interactions) via motion-reduce, e 4.1.2 (Name, Role, Value) via aria-busy/aria-hidden combinados.",
+      "items": {
+        "item1": "Skeleton recebe <code>aria-hidden=\"true\"</code> — leitor de tela ignora o placeholder.",
+        "item2": "Container pai recebe <code>aria-busy=\"true\"</code> + <code>aria-label</code> descrevendo o que carrega.",
+        "item3": "Inclua <code>motion-reduce:animate-none</code> para respeitar <code>prefers-reduced-motion</code>.",
+        "item4": "Após carregar, remova <code>aria-busy</code> do container — leitor anuncia que o conteúdo está pronto.",
+        "item5": "Não use Skeleton como único indicador de loading se a operação dura mais de 10s — adicione texto."
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "description": "Skeleton é decorativo e não recebe foco. O foco permanece no último elemento interativo até o conteúdo real carregar.",
+        "noKeyboard": "Sem interação por teclado"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> obrigatório no Skeleton (ou no container que o envolve).",
+        "ariaBusy": "<code>aria-busy=\"true\"</code> no container pai indica estado de carregamento.",
+        "ariaLabel": "<code>aria-label</code> no container descreve o conteúdo que carrega (ex: \"Carregando lista de pedidos\")."
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "loading": "Anuncia o aria-label do container junto com \"busy\" ou \"loading\".",
+        "ignored": "Não anuncia os Skeletons individualmente — apenas o estado do container.",
+        "ready": "Quando aria-busy passa a false, anuncia o conteúdo real recém-carregado."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "progress": {
+          "name": "Progress",
+          "description": "Para operações com progresso mensurável (upload, download)."
+        },
+        "spinner": {
+          "name": "Spinner",
+          "description": "Para loading muito curto ou sem estrutura conhecida."
+        },
+        "aspectRatio": {
+          "name": "AspectRatio",
+          "description": "Wrap Skeleton em AspectRatio para placeholders de imagem com proporção."
+        },
+        "card": {
+          "name": "Card",
+          "description": "Padrão comum: Skeleton dentro de Card replica a estrutura final."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Tempo mínimo</strong>: não exiba Skeleton para loading inferior a 300ms — flash visual atrapalha. Use <code>setTimeout</code> antes de mostrar.",
+      "item2": "<strong>Layout shift</strong>: dimensões do Skeleton devem aproximar do conteúdo final. Erro comum é Skeleton menor que conteúdo, causando shift ao carregar.",
+      "item3": "<strong>Aninhamento</strong>: 2–3 elementos por bloco bastam. Evite reconstruir toda a estrutura final — gera ruído visual.",
+      "item4": "<strong>motion-reduce</strong>: sempre adicione <code>motion-reduce:animate-none</code> — não é opcional, é WCAG 2.3.3.",
+      "item5": "<strong>Container aria-busy</strong>: alternar para <code>false</code> ao terminar é o que dispara o anúncio de \"pronto\" pelo leitor de tela."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Skeleton é um componente passivo — não dispara eventos. Para rastrear tempo de carregamento, instrumente o callback que substitui o Skeleton pelo conteúdo real (ex: <code>track('list_loaded', { duration_ms })</code>)."
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada estado e variante.",
+        "item1": {
+          "action": "Renderizar com className padrão",
+          "result": "Aplica animate-pulse, rounded-md, bg-muted",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar com className custom (h-4 w-[200px] rounded-full)",
+          "result": "Mescla classes via cn() preservando base",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar com aria-hidden=true",
+          "result": "Atributo presente no DOM",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Container pai com aria-busy=true",
+          "result": "Container expõe estado busy ao leitor de tela",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Aplicar motion-reduce:animate-none",
+          "result": "Animação para com prefers-reduced-motion ativo",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "Skeleton com aria-hidden não aparece na árvore de acessibilidade",
+        "item3": "Container com aria-busy expõe role=region com nome acessível (WCAG 4.1.2)",
+        "item4": "motion-reduce:animate-none reduz animação ao ativar prefers-reduced-motion (WCAG 2.3.3)",
+        "item5": "Contraste mínimo 3:1 entre bg-muted e fundo do parent"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": {
+          "story": "Padrão (retângulo)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Avatar circular (rounded-full)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Card de perfil completo (avatar + linhas)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Lista de 5 itens com avatar",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Imagem em AspectRatio 16/9",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Skeleton",
+    "category": "Feedback",
+    "type": "Component",
+    "description": "Pulsating visual placeholder that mirrors the final content structure while it loads.",
+    "seo": {
+      "title": "Skeleton — Feedback · Design System",
+      "description": "Skeleton documentation: loading placeholder with animate-pulse, decorative via aria-hidden, and motion-reduce for accessibility.",
+      "aiSummary": "Skeleton component renders a rectangular placeholder with animate-pulse and bg-muted; purely decorative (aria-hidden), respects motion-reduce, and mirrors final content dimensions.",
+      "aiEntities": "Skeleton, React, Vue, Svelte, Basecoat, Tailwind CSS, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "card": "Profile card — avatar + 2 lines",
+        "list": "List — 5 items with avatar and text",
+        "image": "Image — placeholder in 16/9 AspectRatio",
+        "paragraph": "Paragraph — 3 lines of text"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Root</strong> — <code>div</code> with <code>animate-pulse rounded-md bg-muted</code> mirroring the final content shape.",
+      "item2": "<strong>className</strong> — defines width, height, and corner radius (<code>h-4 w-[200px]</code>, <code>rounded-full</code>).",
+      "item3": "<strong>Container</strong> — outer wrapper holds <code>aria-busy</code> and <code>aria-label</code>; Skeleton holds <code>aria-hidden</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<div aria-busy={isLoading} aria-label=\"Loading list\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Mandatory Guidelines",
+        "item1": "Use Skeleton when expected loading time exceeds 300ms and the final structure is known.",
+        "item2": "Mirror final content dimensions to avoid <code>layout shift</code> when content loads.",
+        "item3": "Apply <code>aria-hidden=\"true\"</code> on the Skeleton and <code>aria-busy=\"true\"</code> on the parent container.",
+        "item4": "Include <code>motion-reduce:animate-none</code> to honor users with vestibular disorders.",
+        "item5": "For operations with measurable progress (upload, download), prefer <code>Progress</code>."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Profile card loading",
+          "u": "3 Skeletons (avatar + 2 lines)",
+          "a": "Centered spinner"
+        },
+        "item2": {
+          "s": "Image loading in AspectRatio",
+          "u": "Skeleton h-full w-full",
+          "a": "Background placeholder"
+        },
+        "item3": {
+          "s": "List with N items",
+          "u": "Array.map with Skeletons",
+          "a": "Single spinner"
+        },
+        "item4": {
+          "s": "Operation with progress",
+          "u": "Progress component",
+          "a": "Skeleton (wrong)"
+        },
+        "item5": {
+          "s": "Very short loading (<300ms)",
+          "u": "No visual feedback",
+          "a": "Skeleton (noise)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Decision",
+          "rules": "Rule",
+          "correct": "Use",
+          "avoid": "Avoid",
+          "ariaLabel": {
+            "name": "Container aria-label",
+            "format": "Describe what is loading",
+            "good": "Loading order list",
+            "bad": "Loading"
+          },
+          "dimensions": {
+            "name": "Skeleton dimensions",
+            "format": "Approximate the final content",
+            "good": "h-4 w-[250px] (text line)",
+            "bad": "h-20 w-full for text"
+          },
+          "shape": {
+            "name": "Skeleton shape",
+            "format": "Mirror the target shape",
+            "good": "rounded-full for avatar",
+            "bad": "rounded-md for avatar"
+          },
+          "motionReduce": {
+            "name": "motion-reduce",
+            "format": "Always include",
+            "good": "motion-reduce:animate-none",
+            "bad": "No animation fallback"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Loading time exceeds 300ms.",
+        "item2": "Final content structure is known and stable.",
+        "item3": "You want to reduce wait perception with a visual placeholder.",
+        "item4": "Loading multiple items in a list, grid, or card."
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "Loading is very fast (<300ms) — turns into visual noise.",
+        "item2": "Final content structure is unknown or variable.",
+        "item3": "There is measurable progress — use Progress with numeric value.",
+        "item4": "Content is just a short text — a loading sentence is enough."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Skeleton with dimensions matching the final content.",
+        "dont": "Generic fixed-size Skeleton causing layout shift."
+      },
+      "pair2": {
+        "do": "aria-busy on the container and aria-hidden on the Skeleton.",
+        "dont": "Skeleton without aria-hidden — screen reader announces noise."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "rectangle": "Rectangle",
+        "circle": "Circle",
+        "line": "Text line"
+      },
+      "styles": {
+        "rectangle": "Default with <code>rounded-md</code> — placeholder for images, cards, and blocks.",
+        "circle": "Combined with <code>rounded-full</code> — placeholder for avatars and circular icons.",
+        "line": "Fixed height (<code>h-3</code> to <code>h-5</code>) with variable width — placeholder for text lines."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "default": "Default",
+        "motionReduced": "Reduced Motion"
+      },
+      "descriptions": {
+        "default": "<code>animate-pulse</code> applied by default; pulsating color via <code>bg-muted</code>.",
+        "motionReduced": "With <code>motion-reduce:animate-none</code>, animation stops when the user enables <code>prefers-reduced-motion</code>."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Recommended",
+          "description": "Tailwind classes to define placeholder dimensions and corner radius."
+        },
+        "ariaHidden": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Recommended",
+          "description": "Set to true so screen readers ignore the placeholder."
+        },
+        "rest": {
+          "type": "ComponentProps<'div'>",
+          "default": "—",
+          "required": "No",
+          "description": "Accepts any native div prop (style, id, data-*)."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Customize shape and dimension via className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "background": {
+          "class": "bg-muted",
+          "part": "Pulsating color (alternates with bg-muted/40)"
+        },
+        "rounded": {
+          "class": "rounded-md",
+          "part": "Default rounded corners"
+        },
+        "animation": {
+          "class": "animate-pulse",
+          "part": "2s pulsating animation"
+        },
+        "motionReduce": {
+          "class": "motion-reduce:animate-none",
+          "part": "Stops animation if prefers-reduced-motion"
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Color override for custom theme */\n[data-slot='skeleton'] {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Reduce animation duration */\n[data-slot='skeleton'] {\n  animation-duration: 1.5s;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA — criterion 2.3.3 (Animation from Interactions) via motion-reduce, and 4.1.2 (Name, Role, Value) via combined aria-busy/aria-hidden.",
+      "items": {
+        "item1": "Skeleton gets <code>aria-hidden=\"true\"</code> — screen reader ignores the placeholder.",
+        "item2": "Parent container gets <code>aria-busy=\"true\"</code> + <code>aria-label</code> describing what is loading.",
+        "item3": "Include <code>motion-reduce:animate-none</code> to honor <code>prefers-reduced-motion</code>.",
+        "item4": "After loading, remove <code>aria-busy</code> from the container — screen reader announces content is ready.",
+        "item5": "Do not use Skeleton as the sole loading indicator if the operation lasts longer than 10s — add text."
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "description": "Skeleton is decorative and does not receive focus. Focus stays on the last interactive element until real content loads.",
+        "noKeyboard": "No keyboard interaction"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> required on the Skeleton (or the wrapping container).",
+        "ariaBusy": "<code>aria-busy=\"true\"</code> on the parent container indicates loading state.",
+        "ariaLabel": "<code>aria-label</code> on the container describes loading content (e.g., \"Loading order list\")."
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "loading": "Announces the container's aria-label along with \"busy\" or \"loading\".",
+        "ignored": "Does not announce individual Skeletons — only the container state.",
+        "ready": "When aria-busy switches to false, announces the freshly loaded real content."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "progress": {
+          "name": "Progress",
+          "description": "For operations with measurable progress (upload, download)."
+        },
+        "spinner": {
+          "name": "Spinner",
+          "description": "For very short loading or unknown structure."
+        },
+        "aspectRatio": {
+          "name": "AspectRatio",
+          "description": "Wrap Skeleton in AspectRatio for proportional image placeholders."
+        },
+        "card": {
+          "name": "Card",
+          "description": "Common pattern: Skeleton inside Card mirrors the final structure."
+        }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Minimum time</strong>: do not show Skeleton for loading shorter than 300ms — visual flash hurts. Use <code>setTimeout</code> before showing.",
+      "item2": "<strong>Layout shift</strong>: Skeleton dimensions must approximate the final content. Common error is Skeleton smaller than content, shifting layout on load.",
+      "item3": "<strong>Nesting</strong>: 2–3 elements per block is enough. Avoid rebuilding the full final structure — visual noise.",
+      "item4": "<strong>motion-reduce</strong>: always add <code>motion-reduce:animate-none</code> — not optional, it is WCAG 2.3.3.",
+      "item5": "<strong>Container aria-busy</strong>: switching to <code>false</code> on completion is what triggers the \"ready\" announcement by the screen reader."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Skeleton is a passive component — does not dispatch events. To track loading time, instrument the callback that replaces the Skeleton with real content (e.g., <code>track('list_loaded', { duration_ms })</code>)."
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in each state and variant.",
+        "item1": {
+          "action": "Render with default className",
+          "result": "Applies animate-pulse, rounded-md, bg-muted",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render with custom className (h-4 w-[200px] rounded-full)",
+          "result": "Merges classes via cn() preserving base",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Render with aria-hidden=true",
+          "result": "Attribute present in DOM",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Parent container with aria-busy=true",
+          "result": "Container exposes busy state to screen reader",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Apply motion-reduce:animate-none",
+          "result": "Animation stops with prefers-reduced-motion active",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core in default state",
+        "item2": "Skeleton with aria-hidden does not appear in accessibility tree",
+        "item3": "Container with aria-busy exposes role=region with accessible name (WCAG 4.1.2)",
+        "item4": "motion-reduce:animate-none reduces animation when prefers-reduced-motion is active (WCAG 2.3.3)",
+        "item5": "Minimum 3:1 contrast between bg-muted and parent background"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States that Chromatic should capture.",
+        "required": "Required",
+        "item1": {
+          "story": "Default (rectangle)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Circular avatar (rounded-full)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Full profile card (avatar + lines)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "List of 5 items with avatar",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Image in 16/9 AspectRatio",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Skeleton",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Placeholder visual con animación pulsante que replica la estructura del contenido mientras se carga.",
+    "seo": {
+      "title": "Skeleton — Feedback · Design System",
+      "description": "Documentación de Skeleton: placeholder de loading con animate-pulse, decorativo vía aria-hidden y motion-reduce para accesibilidad.",
+      "aiSummary": "Componente Skeleton renderiza un placeholder rectangular con animate-pulse y bg-muted; es puramente decorativo (aria-hidden), respeta motion-reduce y replica las dimensiones del contenido final.",
+      "aiEntities": "Skeleton, React, Vue, Svelte, Basecoat, Tailwind CSS, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "card": "Card de perfil — avatar + 2 líneas",
+        "list": "Lista — 5 ítems con avatar y texto",
+        "image": "Imagen — placeholder en AspectRatio 16/9",
+        "paragraph": "Párrafo — 3 líneas de texto"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Root</strong> — <code>div</code> con <code>animate-pulse rounded-md bg-muted</code> que replica la forma del contenido final.",
+      "item2": "<strong>className</strong> — define ancho, alto y radio de borde (<code>h-4 w-[200px]</code>, <code>rounded-full</code>).",
+      "item3": "<strong>Container</strong> — wrapper externo recibe <code>aria-busy</code> y <code>aria-label</code>; Skeleton recibe <code>aria-hidden</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<div aria-busy={isLoading} aria-label=\"Cargando lista\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa Skeleton cuando el tiempo de carga supere 300ms y la estructura final sea conocida.",
+        "item2": "Replica las dimensiones del contenido final para evitar <code>layout shift</code> al cargar.",
+        "item3": "Aplica <code>aria-hidden=\"true\"</code> en el Skeleton y <code>aria-busy=\"true\"</code> en el container padre.",
+        "item4": "Incluye <code>motion-reduce:animate-none</code> para respetar usuarios con trastornos vestibulares.",
+        "item5": "Para operaciones con progreso medible (upload, download), prefiere <code>Progress</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Loading de Card de perfil",
+          "u": "3 Skeletons (avatar + 2 líneas)",
+          "a": "Spinner centrado"
+        },
+        "item2": {
+          "s": "Loading de imagen en AspectRatio",
+          "u": "Skeleton h-full w-full",
+          "a": "Background placeholder"
+        },
+        "item3": {
+          "s": "Lista con N ítems",
+          "u": "Array.map con Skeletons",
+          "a": "Spinner único"
+        },
+        "item4": {
+          "s": "Operación con progreso",
+          "u": "Progress component",
+          "a": "Skeleton (incorrecto)"
+        },
+        "item5": {
+          "s": "Loading muy corto (<300ms)",
+          "u": "Sin feedback visual",
+          "a": "Skeleton (ruido)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Decisión",
+          "rules": "Regla",
+          "correct": "Usa",
+          "avoid": "Evita",
+          "ariaLabel": {
+            "name": "aria-label del container",
+            "format": "Describe lo que está cargando",
+            "good": "Cargando lista de pedidos",
+            "bad": "Loading"
+          },
+          "dimensions": {
+            "name": "Dimensiones del Skeleton",
+            "format": "Aproxima al contenido final",
+            "good": "h-4 w-[250px] (línea de texto)",
+            "bad": "h-20 w-full para texto"
+          },
+          "shape": {
+            "name": "Forma del Skeleton",
+            "format": "Espeja la forma del objetivo",
+            "good": "rounded-full en avatar",
+            "bad": "rounded-md en avatar"
+          },
+          "motionReduce": {
+            "name": "motion-reduce",
+            "format": "Siempre incluir",
+            "good": "motion-reduce:animate-none",
+            "bad": "Sin fallback de animación"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "El tiempo de carga supera 300ms.",
+        "item2": "La estructura del contenido final es conocida y estable.",
+        "item3": "Quieres reducir percepción de espera con placeholder visual.",
+        "item4": "Cargas múltiples ítems en lista, grid o card."
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La carga es muy rápida (<300ms) — se vuelve ruido visual.",
+        "item2": "La estructura del contenido final es desconocida o variable.",
+        "item3": "Hay progreso medible — usa Progress con valor numérico.",
+        "item4": "El contenido es solo texto corto — una frase de loading basta."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Skeleton con dimensiones aproximadas del contenido final.",
+        "dont": "Skeleton genérico de tamaño fijo que causa layout shift."
+      },
+      "pair2": {
+        "do": "aria-busy en el container y aria-hidden en el Skeleton.",
+        "dont": "Skeleton sin aria-hidden — el lector de pantalla anuncia ruido."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "rectangle": "Rectángulo",
+        "circle": "Círculo",
+        "line": "Línea de texto"
+      },
+      "styles": {
+        "rectangle": "Predeterminado con <code>rounded-md</code> — placeholder para imágenes, cards y bloques.",
+        "circle": "Combinado con <code>rounded-full</code> — placeholder para avatares e iconos circulares.",
+        "line": "Altura fija (<code>h-3</code> a <code>h-5</code>) con ancho variable — placeholder para líneas de texto."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Predeterminado",
+        "motionReduced": "Movimiento Reducido"
+      },
+      "descriptions": {
+        "default": "<code>animate-pulse</code> aplicado por defecto; color pulsante vía <code>bg-muted</code>.",
+        "motionReduced": "Con <code>motion-reduce:animate-none</code>, la animación se detiene cuando el usuario activa <code>prefers-reduced-motion</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Recomendado",
+          "description": "Clases Tailwind para definir dimensiones y radio de borde del placeholder."
+        },
+        "ariaHidden": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Recomendado",
+          "description": "Marca como true para que los lectores de pantalla ignoren el placeholder."
+        },
+        "rest": {
+          "type": "ComponentProps<'div'>",
+          "default": "—",
+          "required": "No",
+          "description": "Acepta cualquier prop nativa de div (style, id, data-*)."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Personalizar forma y dimensión vía className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "background": {
+          "class": "bg-muted",
+          "part": "Color pulsante (alterna con bg-muted/40)"
+        },
+        "rounded": {
+          "class": "rounded-md",
+          "part": "Esquinas redondeadas predeterminadas"
+        },
+        "animation": {
+          "class": "animate-pulse",
+          "part": "Animación pulsante de 2s"
+        },
+        "motionReduce": {
+          "class": "motion-reduce:animate-none",
+          "part": "Detiene la animación si prefers-reduced-motion"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Override de color para tema custom */\n[data-slot='skeleton'] {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Reduce duración de la animación */\n[data-slot='skeleton'] {\n  animation-duration: 1.5s;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA — criterio 2.3.3 (Animation from Interactions) vía motion-reduce, y 4.1.2 (Name, Role, Value) vía aria-busy/aria-hidden combinados.",
+      "items": {
+        "item1": "Skeleton recibe <code>aria-hidden=\"true\"</code> — el lector de pantalla ignora el placeholder.",
+        "item2": "El container padre recibe <code>aria-busy=\"true\"</code> + <code>aria-label</code> describiendo lo que carga.",
+        "item3": "Incluye <code>motion-reduce:animate-none</code> para respetar <code>prefers-reduced-motion</code>.",
+        "item4": "Tras cargar, remueve <code>aria-busy</code> del container — el lector anuncia que el contenido está listo.",
+        "item5": "No uses Skeleton como único indicador de loading si la operación dura más de 10s — añade texto."
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "description": "Skeleton es decorativo y no recibe foco. El foco permanece en el último elemento interactivo hasta que el contenido real cargue.",
+        "noKeyboard": "Sin interacción por teclado"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> obligatorio en el Skeleton (o en el container que lo envuelve).",
+        "ariaBusy": "<code>aria-busy=\"true\"</code> en el container padre indica estado de carga.",
+        "ariaLabel": "<code>aria-label</code> en el container describe el contenido que carga (ej.: \"Cargando lista de pedidos\")."
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "loading": "Anuncia el aria-label del container junto con \"busy\" o \"loading\".",
+        "ignored": "No anuncia los Skeletons individualmente — solo el estado del container.",
+        "ready": "Cuando aria-busy pasa a false, anuncia el contenido real recién cargado."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "progress": {
+          "name": "Progress",
+          "description": "Para operaciones con progreso medible (upload, download)."
+        },
+        "spinner": {
+          "name": "Spinner",
+          "description": "Para loading muy corto o sin estructura conocida."
+        },
+        "aspectRatio": {
+          "name": "AspectRatio",
+          "description": "Wrap Skeleton en AspectRatio para placeholders de imagen con proporción."
+        },
+        "card": {
+          "name": "Card",
+          "description": "Patrón común: Skeleton dentro de Card replica la estructura final."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Tiempo mínimo</strong>: no muestres Skeleton para loading menor a 300ms — el flash visual incomoda. Usa <code>setTimeout</code> antes de mostrar.",
+      "item2": "<strong>Layout shift</strong>: las dimensiones del Skeleton deben aproximarse al contenido final. Error común es Skeleton menor que el contenido, causando shift al cargar.",
+      "item3": "<strong>Anidamiento</strong>: 2–3 elementos por bloque bastan. Evita reconstruir toda la estructura final — genera ruido visual.",
+      "item4": "<strong>motion-reduce</strong>: añade siempre <code>motion-reduce:animate-none</code> — no es opcional, es WCAG 2.3.3.",
+      "item5": "<strong>Container aria-busy</strong>: cambiarlo a <code>false</code> al terminar es lo que dispara el anuncio de \"listo\" del lector de pantalla."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Skeleton es un componente pasivo — no dispara eventos. Para rastrear tiempo de carga, instrumenta el callback que reemplaza el Skeleton por el contenido real (ej.: <code>track('list_loaded', { duration_ms })</code>)."
+    },
+    "testes": {
+      "title": "Criterios de Test",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en cada estado y variante.",
+        "item1": {
+          "action": "Renderizar con className predeterminado",
+          "result": "Aplica animate-pulse, rounded-md, bg-muted",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar con className custom (h-4 w-[200px] rounded-full)",
+          "result": "Mezcla clases vía cn() preservando base",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar con aria-hidden=true",
+          "result": "Atributo presente en el DOM",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Container padre con aria-busy=true",
+          "result": "Container expone estado busy al lector de pantalla",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Aplicar motion-reduce:animate-none",
+          "result": "Animación se detiene con prefers-reduced-motion activo",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
+        "item2": "Skeleton con aria-hidden no aparece en el árbol de accesibilidad",
+        "item3": "Container con aria-busy expone role=region con nombre accesible (WCAG 4.1.2)",
+        "item4": "motion-reduce:animate-none reduce animación al activar prefers-reduced-motion (WCAG 2.3.3)",
+        "item5": "Contraste mínimo 3:1 entre bg-muted y fondo del padre"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": {
+          "story": "Predeterminado (rectángulo)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Avatar circular (rounded-full)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Card de perfil completo (avatar + líneas)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Lista de 5 ítems con avatar",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Imagen en AspectRatio 16/9",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  }
+}
