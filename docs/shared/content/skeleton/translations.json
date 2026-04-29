@@ -195,7 +195,7 @@
         "part": "Aplicação",
         "background": {
           "class": "bg-muted",
-          "part": "Cor pulsante (alterna com bg-muted/40)"
+          "part": "Cor pulsante (React/Vue/Svelte). Basecoat usa bg-primary/10 — divergência idiomática"
         },
         "rounded": {
           "class": "rounded-md",
@@ -557,7 +557,7 @@
         "part": "Application",
         "background": {
           "class": "bg-muted",
-          "part": "Pulsating color (alternates with bg-muted/40)"
+          "part": "Pulsating color (React/Vue/Svelte). Basecoat uses bg-primary/10 — idiomatic divergence"
         },
         "rounded": {
           "class": "rounded-md",
@@ -919,7 +919,7 @@
         "part": "Aplicación",
         "background": {
           "class": "bg-muted",
-          "part": "Color pulsante (alterna con bg-muted/40)"
+          "part": "Color pulsante (React/Vue/Svelte). Basecoat usa bg-primary/10 — divergencia idiomática"
         },
         "rounded": {
           "class": "rounded-md",
