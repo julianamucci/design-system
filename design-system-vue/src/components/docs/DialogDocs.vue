@@ -65,6 +65,14 @@ useSeoEffect(computed(() => ({
   description: tContent('seo.description'),
   locale: locale.value as 'pt-BR' | 'en' | 'es',
   componentSlug: 'dialog',
+  aiSummary: tContent('seo.aiSummary'),
+  aiEntities: tContent('seo.aiEntities'),
+  aiIntent: tContent('seo.aiIntent'),
+  breadcrumb: [
+    { name: 'Components', item: '/components' },
+    { name: 'Overlay', item: '/components/overlay' },
+    { name: 'Dialog' },
+  ],
 })));
 
 // ─── Analytics — page view ────────────────────────────────────────────────────

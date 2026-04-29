@@ -216,6 +216,14 @@ export function DialogDocs() {
     description: tContent("seo.description"),
     locale,
     componentSlug: "dialog",
+    aiSummary: tContent("seo.aiSummary"),
+    aiEntities: tContent("seo.aiEntities"),
+    aiIntent: tContent("seo.aiIntent"),
+    breadcrumb: [
+      { name: "Components", item: "/components" },
+      { name: "Overlay", item: "/components/overlay" },
+      { name: "Dialog" },
+    ],
   });
 
   useEffect(() => {

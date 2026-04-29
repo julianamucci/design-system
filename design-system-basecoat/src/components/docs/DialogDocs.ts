@@ -99,6 +99,14 @@ export function createDialogDocs(): HTMLElement {
       description: t('seo.description'),
       locale,
       componentSlug: 'dialog',
+      aiSummary: t('seo.aiSummary'),
+      aiEntities: t('seo.aiEntities'),
+      aiIntent: t('seo.aiIntent'),
+      breadcrumb: [
+        { name: 'Components', item: '/components' },
+        { name: 'Overlay', item: '/components/overlay' },
+        { name: 'Dialog' },
+      ],
     });
     track('docs_page_view', {
       component_name: 'dialog',
