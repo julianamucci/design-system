@@ -2,13 +2,17 @@ import { cn } from '@/lib/utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+export type DialogCloseReason = 'escape' | 'overlay' | 'close-button' | 'action';
+
 export type DialogOptions = {
   trigger: HTMLElement;
   title: string;
   description?: string;
   content: HTMLElement;
   footer?: HTMLElement;
+  showCloseButton?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onClose?: (reason: DialogCloseReason) => void;
   class?: string;
 };
 
@@ -24,13 +28,40 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
   ).filter(el => !el.closest('[hidden]'));
 }
 
-const CLOSE_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// PATCH: bugfix — antes o close button era construído via assignment de string
+// SVG (atribuição direta a innerHTML), o que viola a regra de "nenhum innerHTML
+// com SVG hardcoded" do auditor de segurança. Construir nodes SVG via
+// createElementNS deixa o lint feliz e elimina qualquer rota futura de injeção
+// se o ícone passar a vir de translation.
+function createCloseIcon(): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('xmlns', SVG_NS);
+  svg.setAttribute('width', '16');
+  svg.setAttribute('height', '16');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+
+  const p1 = document.createElementNS(SVG_NS, 'path');
+  p1.setAttribute('d', 'M18 6 6 18');
+  const p2 = document.createElementNS(SVG_NS, 'path');
+  p2.setAttribute('d', 'm6 6 12 12');
+  svg.appendChild(p1);
+  svg.appendChild(p2);
+  return svg;
+}
 
 // ─── createDialog ─────────────────────────────────────────────────────────────
 
 export function createDialog(options: DialogOptions): HTMLElement {
-  const { trigger, title, description, content, footer, onOpenChange } = options;
+  const { trigger, title, description, content, footer, onOpenChange, onClose } = options;
+  const showCloseButton = options.showCloseButton !== false;
 
   const id = ++_dialogCounter;
   const titleId = `dialog-title-${id}`;
@@ -48,13 +79,23 @@ export function createDialog(options: DialogOptions): HTMLElement {
     previousFocus = document.activeElement as HTMLElement;
 
     overlayEl = document.createElement('div');
-    overlayEl.className = 'fixed inset-0 z-50 bg-black/80';
+    // PATCH: alinhamento cross-stack — overlay translucido + blur opcional, igual
+    // React/Vue/Svelte. Antes era `bg-black/80` (Shadcn antigo).
+    overlayEl.className =
+      'fixed inset-0 z-50 bg-black/10 supports-backdrop-filter:backdrop-blur-xs';
     overlayEl.dataset.slot = 'dialog-overlay';
-    overlayEl.addEventListener('click', close);
+    overlayEl.dataset.state = 'open';
+    overlayEl.addEventListener('click', () => closeWithReason('overlay'));
 
     panelEl = document.createElement('div');
+    // PATCH: alinhamento cross-stack — bg-popover + ring-foreground/10 + rounded-xl + p-4.
+    // Removido `shadow-lg` e a classe `dialog` do basecoat-css (aplicava opacity:0
+    // em <div>, mantinha o painel invisível em portal manual).
     panelEl.className = cn(
-      'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg dialog',
+      'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%]',
+      'gap-4 bg-popover text-popover-foreground ring-1 ring-foreground/10 p-4 sm:rounded-xl',
+      'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+      'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
       options.class
     );
     panelEl.setAttribute('role', 'dialog');
@@ -62,15 +103,7 @@ export function createDialog(options: DialogOptions): HTMLElement {
     panelEl.setAttribute('aria-labelledby', titleId);
     if (description) panelEl.setAttribute('aria-describedby', descId);
     panelEl.dataset.slot = 'dialog-content';
-
-    // Close button
-    const closeBtn = document.createElement('button');
-    closeBtn.type = 'button';
-    closeBtn.className =
-      'absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 focus:ring-2 focus:ring-ring';
-    closeBtn.setAttribute('aria-label', 'Close');
-    closeBtn.innerHTML = CLOSE_SVG;
-    closeBtn.addEventListener('click', close);
+    panelEl.dataset.state = 'open';
 
     // Header
     const headerEl = document.createElement('div');
@@ -96,7 +129,6 @@ export function createDialog(options: DialogOptions): HTMLElement {
     bodyEl.dataset.slot = 'dialog-body';
     bodyEl.appendChild(content);
 
-    panelEl.appendChild(closeBtn);
     panelEl.appendChild(headerEl);
     panelEl.appendChild(bodyEl);
 
@@ -109,6 +141,22 @@ export function createDialog(options: DialogOptions): HTMLElement {
       panelEl.appendChild(footerEl);
     }
 
+    if (showCloseButton) {
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.className =
+        'absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 focus:ring-2 focus:ring-ring';
+      closeBtn.dataset.slot = 'dialog-close';
+      closeBtn.setAttribute('aria-label', 'Close');
+      closeBtn.appendChild(createCloseIcon());
+      const srOnly = document.createElement('span');
+      srOnly.className = 'sr-only';
+      srOnly.textContent = 'Close';
+      closeBtn.appendChild(srOnly);
+      closeBtn.addEventListener('click', () => closeWithReason('close-button'));
+      panelEl.appendChild(closeBtn);
+    }
+
     document.body.appendChild(overlayEl);
     document.body.appendChild(panelEl);
 
@@ -119,20 +167,21 @@ export function createDialog(options: DialogOptions): HTMLElement {
     onOpenChange?.(true);
   }
 
-  function close(): void {
+  function closeWithReason(reason: DialogCloseReason): void {
     overlayEl?.remove();
     panelEl?.remove();
     overlayEl = null;
     panelEl = null;
     document.removeEventListener('keydown', handleKeydown);
     previousFocus?.focus();
+    onClose?.(reason);
     onOpenChange?.(false);
   }
 
   function handleKeydown(e: KeyboardEvent): void {
     if (e.key === 'Escape') {
       e.preventDefault();
-      close();
+      closeWithReason('escape');
       return;
     }
     if (e.key === 'Tab' && panelEl) {
@@ -149,6 +198,19 @@ export function createDialog(options: DialogOptions): HTMLElement {
   }
 
   trigger.addEventListener('click', open);
+
+  // PATCH: cleanup quando wrapper sai do DOM (Storybook remount).
+  if (typeof MutationObserver !== 'undefined') {
+    const observer = new MutationObserver(() => {
+      if (!wrapper.isConnected) {
+        if (panelEl) closeWithReason('action');
+        observer.disconnect();
+      }
+    });
+    const startObserve = () => observer.observe(document.body, { childList: true, subtree: true });
+    if (document.body) startObserve();
+    else queueMicrotask(startObserve);
+  }
 
   return wrapper;
 }

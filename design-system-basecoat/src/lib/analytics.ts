@@ -100,6 +100,21 @@ interface AnalyticsEvents {
     location?: string;
   };
 
+  /** Disparado ao fechar o Dialog por qualquer caminho. */
+  dialog_close: {
+    component: string;
+    label?: string;
+    reason: 'escape' | 'overlay' | 'close-button' | 'action';
+    location?: string;
+  };
+
+  /** Clique na ação primária do Footer do Dialog. */
+  dialog_action: {
+    component: string;
+    action_label: string;
+    location?: string;
+  };
+
   card_click: {
     component: "card";
     label: string;
