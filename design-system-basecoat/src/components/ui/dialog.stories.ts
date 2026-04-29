@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
-import { userEvent, within, expect, fn } from 'storybook/test';
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createDialog } from './dialog';
 import { createButton } from './button';
 import { createDialogDocs } from '@/components/docs/DialogDocs';
@@ -92,22 +92,67 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const body = within(document.body);
 
-    await step('Trigger renderiza', async () => {
-      const trigger = canvas.getByRole('button', { name: new RegExp(args.triggerLabel, 'i') });
-      await expect(trigger).toBeInTheDocument();
-    });
+    const triggerRe = new RegExp(args.triggerLabel, 'i');
+    const waitForClose = async () => {
+      await waitFor(() => {
+        if (body.queryByRole('dialog')) throw new Error('dialog still open');
+      }, { timeout: 800 });
+    };
 
-    await step('Abre ao clicar e expõe role=dialog + aria-modal', async () => {
-      const trigger = canvas.getByRole('button', { name: new RegExp(args.triggerLabel, 'i') });
+    await step('1. Abre ao clicar no trigger', async () => {
+      const trigger = canvas.getByRole('button', { name: triggerRe });
+      await expect(trigger).toBeInTheDocument();
       await userEvent.click(trigger);
       const dialog = await body.findByRole('dialog');
       await expect(dialog).toHaveAttribute('aria-modal', 'true');
       await expect(dialog).toHaveAccessibleName(new RegExp(args.title, 'i'));
     });
 
-    await step('Escape fecha o diálogo', async () => {
+    await step('5. Focus trap — foco move para dentro do dialog', async () => {
+      const dialog = await body.findByRole('dialog');
+      await waitFor(() => {
+        if (!dialog.contains(document.activeElement)) throw new Error('focus not trapped');
+      });
+    });
+
+    await step('2. Escape fecha o diálogo', async () => {
       await userEvent.keyboard('{Escape}');
-      await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+      await waitForClose();
+    });
+
+    await step('6. Retorno de foco ao trigger após Escape', async () => {
+      await waitFor(() => {
+        const trigger = canvas.getByRole('button', { name: triggerRe });
+        if (document.activeElement !== trigger) throw new Error('focus did not return');
+      });
+    });
+
+    await step('3. Reabrir e fechar via clique no overlay', async () => {
+      const trigger = canvas.getByRole('button', { name: triggerRe });
+      await userEvent.click(trigger);
+      await body.findByRole('dialog');
+      const overlay = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]');
+      await expect(overlay).not.toBeNull();
+      overlay?.click();
+      await waitForClose();
+    });
+
+    await step('4. Reabrir e fechar via botão Close (X)', async () => {
+      const trigger = canvas.getByRole('button', { name: triggerRe });
+      await userEvent.click(trigger);
+      const dialog = await body.findByRole('dialog');
+      const closeBtn = within(dialog).getByRole('button', { name: /close/i });
+      await userEvent.click(closeBtn);
+      await waitForClose();
+    });
+
+    await step('7. Uncontrolled — factory mantém estado interno (sem prop open)', async () => {
+      const trigger = canvas.getByRole('button', { name: triggerRe });
+      await userEvent.click(trigger);
+      await body.findByRole('dialog');
+      // Fecha via Escape para validar que o estado interno responde sem controle externo
+      await userEvent.keyboard('{Escape}');
+      await waitForClose();
     });
   },
 };

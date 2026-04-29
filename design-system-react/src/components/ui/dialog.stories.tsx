@@ -114,26 +114,7 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const body = within(document.body);
 
-    await step("Trigger está presente no DOM", async () => {
-      const trigger = canvas.getByRole("button", { name: /Editar perfil|Edit profile|Editar perfil/i });
-      await expect(trigger).toBeInTheDocument();
-    });
-
-    await step("Diálogo abre ao clicar no trigger", async () => {
-      const trigger = canvas.getAllByRole("button")[0];
-      await userEvent.click(trigger);
-      const dialog = await body.findByRole("dialog");
-      await expect(dialog).toBeVisible();
-    });
-
-    await step("Diálogo tem título e descrição acessíveis", async () => {
-      const dialog = await body.findByRole("dialog");
-      await expect(dialog).toHaveAccessibleName();
-      await expect(dialog).toHaveAccessibleDescription();
-    });
-
-    await step("Escape fecha o diálogo", async () => {
-      await userEvent.keyboard("{Escape}");
+    const waitForClose = async () => {
       await waitFor(
         () => {
           const dialog = body.queryByRole("dialog");
@@ -143,6 +124,68 @@ export const Playground: Story = {
         },
         { timeout: 800 }
       );
+    };
+
+    await step("1. Abre ao clicar no trigger", async () => {
+      const trigger = canvas.getByRole("button", { name: /Editar perfil/i });
+      await expect(trigger).toBeInTheDocument();
+      await userEvent.click(trigger);
+      const dialog = await body.findByRole("dialog");
+      await expect(dialog).toBeVisible();
+      await expect(dialog).toHaveAccessibleName();
+      await expect(dialog).toHaveAccessibleDescription();
+    });
+
+    await step("5. Focus trap — foco entra no dialog ao abrir", async () => {
+      const dialog = await body.findByRole("dialog");
+      await waitFor(() => {
+        if (!dialog.contains(document.activeElement)) {
+          throw new Error("focus did not move into dialog");
+        }
+      });
+    });
+
+    await step("2. Escape fecha o diálogo", async () => {
+      await userEvent.keyboard("{Escape}");
+      await waitForClose();
+    });
+
+    await step("6. Retorno de foco ao trigger após Escape", async () => {
+      await waitFor(() => {
+        const trigger = canvas.getByRole("button", { name: /Editar perfil/i });
+        if (document.activeElement !== trigger) {
+          throw new Error("focus did not return to trigger");
+        }
+      });
+    });
+
+    await step("3. Reabrir e fechar via clique no overlay", async () => {
+      const trigger = canvas.getByRole("button", { name: /Editar perfil/i });
+      await userEvent.click(trigger);
+      await body.findByRole("dialog");
+      const overlay = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]');
+      await expect(overlay).not.toBeNull();
+      overlay?.click();
+      await waitForClose();
+    });
+
+    await step("4. Reabrir e fechar via botão Close (X)", async () => {
+      const trigger = canvas.getByRole("button", { name: /Editar perfil/i });
+      await userEvent.click(trigger);
+      const dialog = await body.findByRole("dialog");
+      const closeBtn = within(dialog).getByRole("button", { name: /close/i });
+      await userEvent.click(closeBtn);
+      await waitForClose();
+    });
+
+    await step("7. Uncontrolled — defaultOpen reabre sem controle externo", async () => {
+      // Playground usa onOpenChange (uncontrolled): reabrir e fechar via Cancel
+      const trigger = canvas.getByRole("button", { name: /Editar perfil/i });
+      await userEvent.click(trigger);
+      const dialog = await body.findByRole("dialog");
+      const cancel = within(dialog).getByRole("button", { name: /Cancelar/i });
+      await userEvent.click(cancel);
+      await waitForClose();
     });
   },
 };
