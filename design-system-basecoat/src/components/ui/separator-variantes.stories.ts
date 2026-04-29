@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
+import { expect } from 'storybook/test';
 import { createSeparator } from './separator';
 
 const meta: Meta = {
@@ -50,6 +51,17 @@ export const Horizontal: Story = {
     wrap.append(top, createSeparator({ orientation: 'horizontal' }), bottom);
     return wrap;
   },
+  play: async ({ canvasElement, step }) => {
+    await step('Separator horizontal com bg-border presente', async () => {
+      const separator = canvasElement.querySelector<HTMLElement>('.bg-border');
+      await expect(separator).toBeTruthy();
+    });
+    await step('Classes de dimensão horizontal (h-[1px] + w-full)', async () => {
+      const separator = canvasElement.querySelector<HTMLElement>('.bg-border');
+      await expect(separator).toHaveClass('h-[1px]');
+      await expect(separator).toHaveClass('w-full');
+    });
+  },
 };
 
 export const Vertical: Story = {
@@ -78,5 +90,16 @@ export const Vertical: Story = {
       c,
     );
     return wrap;
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Separators verticais com bg-border presentes', async () => {
+      const separators = canvasElement.querySelectorAll<HTMLElement>('.bg-border');
+      await expect(separators.length).toBeGreaterThan(0);
+    });
+    await step('Classes de dimensão vertical (w-[1px] + h-full)', async () => {
+      const separator = canvasElement.querySelector<HTMLElement>('.bg-border');
+      await expect(separator).toHaveClass('w-[1px]');
+      await expect(separator).toHaveClass('h-full');
+    });
   },
 };

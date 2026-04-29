@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
+import { expect } from 'storybook/test';
 import { createSeparator } from './separator';
 
 const meta: Meta = {
@@ -52,6 +53,13 @@ export const Decorativo: Story = {
     );
     return wrap;
   },
+  play: async ({ canvasElement, step }) => {
+    await step('Modo decorativo: role=none + aria-hidden=true', async () => {
+      const separator = canvasElement.querySelector<HTMLElement>('[role="none"]');
+      await expect(separator).toBeTruthy();
+      await expect(separator).toHaveAttribute('aria-hidden', 'true');
+    });
+  },
 };
 
 export const Semantico: Story = {
@@ -84,5 +92,12 @@ export const Semantico: Story = {
       after,
     );
     return wrap;
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Modo semântico: role=separator + aria-orientation', async () => {
+      const separator = canvasElement.querySelector<HTMLElement>('[role="separator"]');
+      await expect(separator).toBeTruthy();
+      await expect(separator).toHaveAttribute('aria-orientation', 'horizontal');
+    });
   },
 };
