@@ -1,96 +1,122 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
 import { within, expect } from 'storybook/test';
-import DialogStory from './DialogStory.svelte';
+import DialogConfirmEmailStory from './DialogConfirmEmailStory.svelte';
+import DialogProfileEditStory from './DialogProfileEditStory.svelte';
+import DialogMediaPreviewStory from './DialogMediaPreviewStory.svelte';
+import { track } from '@/lib/analytics';
 
 const meta = {
   title: 'UI/Dialog/Composições',
-  component: DialogStory,
   parameters: {
     layout: 'centered',
     controls: { disable: true },
     docs: {
       description: {
         component:
-          'Composições reais de Dialog: edição de perfil, formulário inline e pré-visualização passiva.',
+          'Composições reais do Dialog em fluxos de produto: confirmar email, edição de perfil e pré-visualização de mídia.',
       },
     },
   },
-} satisfies Meta<typeof DialogStory>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const trackOpenChange = (label: string, location: string) => (open: boolean) => {
+  if (open) {
+    track('dialog_open', { component: 'dialog', label, location });
+  } else {
+    track('dialog_close', { component: 'dialog', label, reason: 'close-button', location });
+  }
+};
+
+export const ConfirmEmail: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          'Dialog usado para confirmar troca de email. Title nomeia a ação, Description orienta o usuário, Footer com Cancelar + Enviar confirmação.',
+      },
+    },
+  },
+  render: () => ({
+    Component: DialogConfirmEmailStory,
+    props: {
+      open: true,
+      onOpenChange: trackOpenChange('Confirmar novo email', 'storybook:composicoes:confirm-email'),
+      onAction: () =>
+        track('dialog_action', {
+          component: 'dialog',
+          action_label: 'Enviar confirmação',
+          location: 'storybook:composicoes:confirm-email',
+        }),
+    },
+  }),
+  play: async () => {
+    const body = within(document.body);
+    const dialog = await body.findByRole('dialog');
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveAccessibleName(/Confirmar novo email/i);
+    const action = await body.findByRole('button', { name: /Enviar confirmação/i });
+    await expect(action).toBeVisible();
+  },
+};
+
 export const ProfileEdit: Story = {
   parameters: {
-    docs: {
-      description: {
-        story: 'Edição de perfil com formulário inline. Submit dispara a ação primária do Footer.',
-      },
-    },
-  },
-  args: {
-    open: true,
-    variant: 'withForm',
-    triggerLabel: 'Editar perfil',
-    title: 'Editar perfil',
-    description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-    actionLabel: 'Salvar alterações',
-    cancelLabel: 'Cancelar',
-  },
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
-    await expect(dialog).toBeVisible();
-    const nameField = await body.findByDisplayValue(/Maria Silva/i);
-    await expect(nameField).toBeVisible();
-  },
-};
-
-export const LongContent: Story = {
-  parameters: {
+    controls: { disable: true },
     docs: {
       description: {
         story:
-          'Conteúdo longo com scroll interno. Header e ações continuam visíveis enquanto o body rola.',
+          'Edição de perfil em formulário modal. Submissão dispara `dialog_action` e fecha o Dialog ao concluir.',
       },
     },
   },
-  args: {
-    open: true,
-    variant: 'withScrollContent',
-    triggerLabel: 'Ler termos',
-    title: 'Termos de uso',
-    description: 'Leia atentamente antes de aceitar.',
-    actionLabel: 'Aceitar termos',
-    cancelLabel: 'Recusar',
-  },
+  render: () => ({
+    Component: DialogProfileEditStory,
+    props: {
+      open: true,
+      onOpenChange: trackOpenChange('Editar perfil', 'storybook:composicoes:profile-edit'),
+      onAction: () =>
+        track('dialog_action', {
+          component: 'dialog',
+          action_label: 'Salvar alterações',
+          location: 'storybook:composicoes:profile-edit',
+        }),
+    },
+  }),
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('dialog');
     await expect(dialog).toBeVisible();
+    const nameInput = await body.findByLabelText(/Nome completo/i);
+    await expect(nameInput).toBeVisible();
   },
 };
 
-export const InfoOnly: Story = {
+export const MediaPreview: Story = {
   parameters: {
+    controls: { disable: true },
     docs: {
       description: {
         story:
-          'Dialog informativo sem Footer. O fechamento ocorre apenas pelo botão X, Escape ou clique no overlay.',
+          'Pré-visualização de mídia (imagem) em destaque, sem Footer. Fechamento via X, Escape ou clique no overlay.',
       },
     },
   },
-  args: {
-    open: true,
-    variant: 'noFooter',
-    triggerLabel: 'Sobre',
-    title: 'Sobre este produto',
-    description:
-      'Plataforma de design system multi-stack mantida pela equipe de Engenharia. Atualizada continuamente.',
-  },
+  render: () => ({
+    Component: DialogMediaPreviewStory,
+    props: {
+      open: true,
+      onOpenChange: trackOpenChange('Pôr-do-sol na praia', 'storybook:composicoes:media-preview'),
+    },
+  }),
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('dialog');
     await expect(dialog).toBeVisible();
+    const image = await body.findByRole('img', { name: /pôr-do-sol/i });
+    await expect(image).toBeVisible();
   },
 };
