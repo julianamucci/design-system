@@ -1,0 +1,1043 @@
+{
+  "pt-BR": {
+    "title": "Dialog",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Diálogo modal genérico para formulários, edição e conteúdo informativo. Sobrepõe a interface sem interromper para uma decisão destrutiva.",
+    "seo": {
+      "title": "Dialog — Overlay · Design System",
+      "description": "Documentação do Dialog: modal versátil para formulários e conteúdo, com focus trap, Portal, Escape e fechamento por overlay.",
+      "aiSummary": "Componente Dialog modal genérico para formulários e conteúdo informativo, com focus trap, role=\"dialog\", aria-labelledby e aria-describedby automáticos via Base UI, Reka UI e Bits UI.",
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role dialog, focus trap, modal",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "triggerLabel": "Editar perfil",
+        "title": "Editar perfil",
+        "description": "Atualize suas informações pessoais. As mudanças são salvas ao confirmar.",
+        "action": "Salvar alterações",
+        "cancel": "Cancelar",
+        "footerNote": "Os dados são criptografados antes de serem armazenados."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Dialog</strong> — container raiz que gerencia o estado de abertura e o foco.",
+      "item2": "<strong>DialogTrigger</strong> — elemento que dispara a abertura. Compõe com <code>Button</code> via <code>asChild</code>.",
+      "item3": "<strong>DialogPortal</strong> — renderiza o conteúdo fora da árvore do pai, isolando de overflow e transform.",
+      "item4": "<strong>DialogOverlay</strong> — backdrop semi-transparente com blur. Captura clique fora para fechar.",
+      "item5": "<strong>DialogContent</strong> — painel modal com <code>role=\"dialog\"</code>, <code>aria-modal</code>, focus trap e botão Close opcional.",
+      "item6": "<strong>DialogHeader</strong> — agrupa título e descrição. Centralizado em mobile, alinhado à esquerda em desktop.",
+      "item7": "<strong>DialogTitle</strong> — título obrigatório. Fonte do <code>aria-labelledby</code>.",
+      "item8": "<strong>DialogDescription</strong> — descrição recomendada. Fonte do <code>aria-describedby</code> quando presente.",
+      "item9": "<strong>DialogFooter</strong> — agrupa ações. Empilhado em mobile, lado a lado em desktop.",
+      "item10": "<strong>DialogClose</strong> — botão de fechamento (X no canto ou botão no Footer via <code>showCloseButton</code>).",
+      "structureLabel": "Estrutura completa:",
+      "structureCode": "<Dialog>\n  <DialogTrigger asChild>\n    <Button>Editar perfil</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Editar perfil</DialogTitle>\n      <DialogDescription>\n        Atualize suas informações pessoais.\n      </DialogDescription>\n    </DialogHeader>\n    <form>{/* campos */}</form>\n    <DialogFooter>\n      <DialogClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DialogClose>\n      <Button type=\"submit\">Salvar alterações</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para formulários modais, edição de recursos ou conteúdo informativo que precisa de atenção temporária.",
+        "item2": "Sempre inclua <code>DialogTitle</code> — base para <code>aria-labelledby</code> e leitura por leitores de tela.",
+        "item3": "Inclua <code>DialogDescription</code> sempre que houver contexto adicional — alimenta <code>aria-describedby</code>.",
+        "item4": "Para conteúdo longo, use <code>DialogScrollContent</code> (Vue) ou aplique <code>max-h</code> + <code>overflow-y-auto</code> manualmente.",
+        "item5": "Para confirmação destrutiva (excluir, cancelar, encerrar), use <code>AlertDialog</code> — Dialog não é o componente certo.",
+        "item6": "Em mobile com formulários longos, considere <code>Sheet</code> ou <code>Drawer</code> em vez de Dialog."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Editar perfil ou recurso em formulário modal", "u": "Sim, com DialogFooter e ação primária", "a": "-" },
+        "item2": { "s": "Confirmar exclusão ou ação destrutiva", "u": "Não", "a": "AlertDialog" },
+        "item3": { "s": "Visualizar detalhes de um item (read-only)", "u": "Sim, sem Footer ou só com botão Fechar", "a": "-" },
+        "item4": { "s": "Mensagem informativa passiva", "u": "Não", "a": "Alert ou Sonner" },
+        "item5": { "s": "Formulário longo em mobile", "u": "Não", "a": "Sheet ou Drawer" },
+        "item6": { "s": "Pré-visualizar mídia (imagem, vídeo)", "u": "Sim, com botão Close visível", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "DialogTitle",
+            "format": "Substantivo + complemento · sem ponto final · máx. 5 palavras",
+            "good": "\"Editar perfil\", \"Detalhes do pedido\"",
+            "bad": "\"Olá!\", \"Atenção\", \"Editar perfil.\""
+          },
+          "description": {
+            "name": "DialogDescription",
+            "format": "Frase completa que orienta a ação · ponto final · máx. 2 frases",
+            "good": "\"Atualize suas informações pessoais. As mudanças são salvas ao confirmar.\"",
+            "bad": "\"Aqui você pode mexer em várias coisas, é só preencher e clicar.\""
+          },
+          "action": {
+            "name": "Botão de ação primária",
+            "format": "Verbo + objeto · infinitivo · máx. 3 palavras",
+            "good": "\"Salvar alterações\", \"Enviar convite\"",
+            "bad": "\"OK\", \"Confirmar\", \"Sim\""
+          },
+          "cancel": {
+            "name": "DialogClose (cancelar)",
+            "format": "Sempre \"Cancelar\" · sem variações",
+            "good": "\"Cancelar\"",
+            "bad": "\"Voltar\", \"Desistir\", \"Fechar agora\""
+          },
+          "srOnly": {
+            "name": "Botão Close (X) — texto sr-only",
+            "format": "Verbo no infinitivo · 1 palavra",
+            "good": "\"Fechar\"",
+            "bad": "\"X\", \"Sair daqui\", \"Cancelar\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Há um formulário curto que cabe sem rolar a página inteira",
+        "item2": "É preciso editar ou visualizar detalhes sem perder o contexto da tela atual",
+        "item3": "O conteúdo precisa de foco temporário sem ser uma decisão destrutiva",
+        "item4": "Há mídia (imagem, vídeo) para pré-visualizar em destaque"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A ação é destrutiva ou irreversível — use <code>AlertDialog</code>",
+        "item2": "A mensagem é informativa passiva — use <code>Alert</code> ou <code>Sonner</code>",
+        "item3": "O formulário é longo e quebra usabilidade em mobile — use <code>Sheet</code> ou <code>Drawer</code>",
+        "item4": "O conteúdo é apenas um menu de opções — use <code>DropdownMenu</code> ou <code>Popover</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Título nomeia o objeto, descrição orienta a ação, botão primário usa verbo específico (\"Salvar alterações\").",
+        "dont": "Título genérico (\"Atenção\"), descrição vazia e botão \"OK\" sem indicar o que será feito."
+      },
+      "pair2": {
+        "do": "Use Dialog para edição de perfil; use AlertDialog para excluir conta — separação clara por intenção.",
+        "dont": "Reaproveitar Dialog para confirmar ação destrutiva — perde o <code>role=\"alertdialog\"</code> e o foco em Cancel."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withScroll": "Com scroll interno (Vue):"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Composições Disponíveis",
+      "note": "Dialog não usa <code>cva()</code> nem expõe prop <code>variant</code> ou <code>size</code>. As \"variantes\" abaixo são composições estruturais recorrentes — escolha a que melhor descreve o caso de uso.",
+      "items": {
+        "default": "Title + Description + Footer com ação primária. Composição padrão para formulários e edições.",
+        "withForm": "Body com formulário inline (inputs, selects). Submissão dispara a ação primária do Footer.",
+        "withScrollContent": "Body com conteúdo longo e scroll interno. Header e Footer fixos. Em Vue, use <code>DialogScrollContent</code>.",
+        "noFooter": "Apenas Title + Description, sem Footer. Para uso informativo ou pré-visualização passiva.",
+        "withDestructiveAction": "Footer com ação primária <code>destructive</code>. Diferente de AlertDialog — use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista).",
+        "customCloseInFooter": "<code>showCloseButton={false}</code> no Content e <code>showCloseButton</code> no Footer — botão de fechar fica abaixo das ações."
+      }
+    },
+    "states": {
+      "title": "Configurações",
+      "cols": {
+        "state": "Configuração",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "closed": {
+        "label": "Fechado",
+        "trigger": "Estado inicial ou <code>open=false</code>",
+        "behavior": "Apenas o trigger visível. DOM do Content não renderizado (Portal vazio)"
+      },
+      "opening": {
+        "label": "Abrindo",
+        "trigger": "Transição de fechado para aberto",
+        "behavior": "<code>data-state=open</code>, animação <code>fade-in zoom-in-95</code> em 100ms"
+      },
+      "open": {
+        "label": "Aberto",
+        "trigger": "Clique no trigger ou <code>open={true}</code>",
+        "behavior": "Overlay com blur, focus trap ativo, scroll-lock no body, Escape e clique no overlay fecham"
+      },
+      "closing": {
+        "label": "Fechando",
+        "trigger": "Transição de aberto para fechado",
+        "behavior": "<code>data-state=closed</code>, animação <code>fade-out zoom-out-95</code>; foco retorna ao trigger"
+      },
+      "withCloseButtonHidden": {
+        "label": "Sem botão Close",
+        "trigger": "<code>showCloseButton={false}</code> no Content",
+        "behavior": "Sem X no canto. Fechamento apenas por Escape, clique no overlay ou ação do Footer"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "rootTitle": "Dialog (root)",
+      "contentTitle": "DialogContent",
+      "footerTitle": "DialogFooter",
+      "titleDescriptionTitle": "DialogTitle / DialogDescription",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "open": "Estado controlado de abertura. Use com <code>onOpenChange</code>.",
+        "defaultOpen": "Estado inicial em modo não controlado.",
+        "onOpenChange": "Callback disparado ao abrir ou fechar. Recebe o novo estado booleano.",
+        "showCloseButtonContent": "Exibe botão X no canto superior direito do Content.",
+        "showCloseButtonFooter": "Exibe botão de fechar dentro do Footer, abaixo das ações.",
+        "className": "Classes Tailwind adicionais para override de estilo.",
+        "children": "Conteúdo renderizado dentro do subcomponente. Em Title e Description, é o texto exibido."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "Todos os subcomponentes aceitam <code>className</code> e props HTML nativos. <code>DialogContent</code> repassa props do Popup da Base UI (ex: <code>onPointerDownOutside</code>, <code>onEscapeKeyDown</code>) para customizar o fechamento."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe Tailwind",
+        "part": "Parte do componente",
+        "popover": "Fundo do DialogContent",
+        "popoverForeground": "Texto principal do Content",
+        "foreground": "Texto base e ring com 10% de opacidade no Content",
+        "muted": "Fundo do DialogFooter (com /50 de opacidade)",
+        "border": "Separador superior do DialogFooter",
+        "radius": "Border radius do DialogContent",
+        "zIndex": "z-index 50 no Overlay e Content",
+        "duration": "Duração de 100ms na animação de entrada e saída"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> com focus trap automático e retorno de foco ao trigger. Cumpre WCAG 2.1 AA: 2.1.2 (sem armadilhas de teclado), 2.4.3 (ordem de foco), 4.1.2 (nome, função, valor).",
+      "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — sinaliza ao leitor que o conteúdo fora do diálogo está inativo.",
+      "item2": "<strong>aria-labelledby e aria-describedby</strong> — aplicados automaticamente a partir de <code>DialogTitle</code> e <code>DialogDescription</code>. Title é obrigatório; Description é altamente recomendado.",
+      "item3": "<strong>Focus trap</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. Foco inicial vai para o primeiro elemento focável.",
+      "item4": "<strong>Retorno de foco</strong> — ao fechar, o foco volta ao trigger que abriu o diálogo.",
+      "item5": "<strong>Escape e clique no overlay</strong> — fecham o diálogo sem disparar ações do Footer. Body scroll-lock é restaurado.",
+      "item6": "<strong>Botão Close</strong> — tem <code>&lt;span class=\"sr-only\"&gt;Close&lt;/span&gt;</code> para leitores de tela."
+    },
+    "keyboard": {
+      "escape": "Fecha o diálogo. Foco retorna ao trigger.",
+      "tab": "Navega entre elementos focáveis dentro do diálogo (focus trap).",
+      "shiftTab": "Navega no sentido reverso dentro do diálogo.",
+      "enter": "Em formulário, submete a ação primária do Footer."
+    },
+    "aria": {
+      "role": "<code>role=\"dialog\"</code> — aplicado automaticamente no DialogContent.",
+      "modal": "<code>aria-modal=\"true\"</code> — indica que o conteúdo fora está inerte.",
+      "labelledby": "<code>aria-labelledby</code> — referencia o ID do DialogTitle automaticamente.",
+      "describedby": "<code>aria-describedby</code> — referencia o ID do DialogDescription quando presente."
+    },
+    "screenReader": {
+      "onOpen": "Ao abrir: leitor anuncia \"diálogo\" seguido do título e da descrição.",
+      "onClose": "Ao fechar: leitor anuncia o retorno ao contexto anterior (trigger).",
+      "onFocus": "Ao mover foco entre campos: leitor anuncia o label e o tipo de cada controle."
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "alertDialog": "Para confirmação de ações destrutivas — usa <code>role=\"alertdialog\"</code>, foco inicial em Cancel e Cancel obrigatório.",
+      "sheet": "Painel lateral em mobile ou para formulários longos. Mantém contexto da tela.",
+      "popover": "Conteúdo flutuante não modal, para informações complementares ou menus contextuais.",
+      "form": "Combinação natural com Dialog — formulários modais usam Form como conteúdo do Body.",
+      "drawer": "Variante mobile-first que sobe da base da tela. Boa para edições rápidas em touch."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "Por padrão, <code>DialogContent</code> renderiza em Portal — isola de overflow e transform de pais, mas pode causar conflitos com z-index custom. Use <code>className=\"z-[60]\"</code> se precisar elevar.",
+      "tip2": "Para fechar Dialog após submit assíncrono, controle <code>open</code> via state e feche apenas em caso de sucesso. Em erro, mantenha aberto e exiba feedback inline.",
+      "tip3": "<code>DialogScrollContent</code> existe apenas em Vue (Reka UI). Em React/Svelte, aplique <code>max-h-[80vh] overflow-y-auto</code> manualmente no Body.",
+      "tip4": "Evite aninhar Dialog dentro de DropdownMenu ou Popover — o focus trap pode conflitar. Feche o menu antes de abrir o diálogo."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Dialog rastreia abertura, fechamento e ação primária para medir engajamento e taxa de conclusão de fluxos modais.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "open": "dialog_open",
+        "openTrigger": "Diálogo abre via trigger ou estado controlado",
+        "openPayload": "{ component: \"dialog\", label, location }",
+        "close": "dialog_close",
+        "closeTrigger": "Diálogo fecha por qualquer caminho",
+        "closePayload": "{ component: \"dialog\", label, reason: \"escape\" | \"overlay\" | \"close-button\" | \"action\", location }",
+        "action": "dialog_action",
+        "actionTrigger": "Clique na ação primária do Footer",
+        "actionPayload": "{ component: \"dialog\", action_label, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada interação com o Dialog.",
+        "item1": { "action": "Clique no trigger", "result": "DialogContent aparece com Overlay; foco vai ao primeiro elemento focável", "priority": "high" },
+        "item2": { "action": "Pressionar Escape", "result": "Diálogo fecha; foco retorna ao trigger", "priority": "high" },
+        "item3": { "action": "Clique fora do Content (overlay)", "result": "Diálogo fecha; foco retorna ao trigger", "priority": "high" },
+        "item4": { "action": "Clique no botão Close (X)", "result": "Diálogo fecha; foco retorna ao trigger", "priority": "high" },
+        "item5": { "action": "Pressionar Tab dentro do diálogo", "result": "Foco cicla entre elementos do Content sem sair (focus trap)", "priority": "high" },
+        "item6": { "action": "Fechar diálogo após interação", "result": "Foco retorna exatamente ao trigger original", "priority": "high" },
+        "item7": { "action": "Renderizar com open controlado", "result": "Estado de abertura é gerenciado externamente; onOpenChange dispara ao interagir", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "role=\"dialog\" presente no Content", "level": "AA", "how": "getByRole('dialog') no testing-library" },
+        "item2": { "criterion": "aria-modal=\"true\" no Content", "level": "AA", "how": "Inspecionar DOM após abrir" },
+        "item3": { "criterion": "aria-labelledby apontando para DialogTitle", "level": "AA", "how": "Inspecionar DOM após abrir" },
+        "item4": { "criterion": "aria-describedby apontando para DialogDescription quando presente", "level": "AA", "how": "Inspecionar DOM após abrir" },
+        "item5": { "criterion": "Focus trap ativo — Tab não sai do diálogo", "level": "AA", "how": "userEvent.tab() repetido — elementos fora não recebem foco" },
+        "item6": { "criterion": "Sem violações axe-core no estado aberto", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "required": "Obrigatório",
+        "item1": { "story": "Playground — estado aberto padrão", "priority": "high" },
+        "item2": { "story": "Variantes — Default, WithForm, NoFooter, WithDestructiveAction", "priority": "high" },
+        "item3": { "story": "Estados — Closed, Open, WithCloseButtonHidden", "priority": "high" },
+        "item4": { "story": "Composição WithForm — formulário inline", "priority": "medium" },
+        "item5": { "story": "Composição WithScrollContent — conteúdo longo com scroll interno", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Configurações",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Dialog",
+    "category": "Overlay",
+    "type": "Component",
+    "description": "Generic modal dialog for forms, editing, and informational content. Overlays the interface without interrupting for a destructive decision.",
+    "seo": {
+      "title": "Dialog — Overlay · Design System",
+      "description": "Documentation for Dialog: versatile modal for forms and content, with focus trap, Portal, Escape, and overlay-click dismiss.",
+      "aiSummary": "Generic Dialog modal component for forms and informational content, with focus trap, role=\"dialog\", and automatic aria-labelledby and aria-describedby via Base UI, Reka UI, and Bits UI.",
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role dialog, focus trap, modal",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "triggerLabel": "Edit profile",
+        "title": "Edit profile",
+        "description": "Update your personal information. Changes are saved on confirm.",
+        "action": "Save changes",
+        "cancel": "Cancel",
+        "footerNote": "Data is encrypted before being stored."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Dialog</strong> — root container managing open state and focus.",
+      "item2": "<strong>DialogTrigger</strong> — element that opens the dialog. Composes with <code>Button</code> via <code>asChild</code>.",
+      "item3": "<strong>DialogPortal</strong> — renders content outside the parent tree, isolating from overflow and transform.",
+      "item4": "<strong>DialogOverlay</strong> — semi-transparent backdrop with blur. Captures click-outside to close.",
+      "item5": "<strong>DialogContent</strong> — modal panel with <code>role=\"dialog\"</code>, <code>aria-modal</code>, focus trap, and optional Close button.",
+      "item6": "<strong>DialogHeader</strong> — groups title and description. Centered on mobile, left-aligned on desktop.",
+      "item7": "<strong>DialogTitle</strong> — required title. Source for <code>aria-labelledby</code>.",
+      "item8": "<strong>DialogDescription</strong> — recommended description. Source for <code>aria-describedby</code> when present.",
+      "item9": "<strong>DialogFooter</strong> — groups actions. Stacked on mobile, side-by-side on desktop.",
+      "item10": "<strong>DialogClose</strong> — close button (X in the corner or button in the Footer via <code>showCloseButton</code>).",
+      "structureLabel": "Full structure:",
+      "structureCode": "<Dialog>\n  <DialogTrigger asChild>\n    <Button>Edit profile</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Edit profile</DialogTitle>\n      <DialogDescription>\n        Update your personal information.\n      </DialogDescription>\n    </DialogHeader>\n    <form>{/* fields */}</form>\n    <DialogFooter>\n      <DialogClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DialogClose>\n      <Button type=\"submit\">Save changes</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for modal forms, resource editing, or informational content needing temporary attention.",
+        "item2": "Always include <code>DialogTitle</code> — it powers <code>aria-labelledby</code> and screen reader announcements.",
+        "item3": "Include <code>DialogDescription</code> whenever there is additional context — it powers <code>aria-describedby</code>.",
+        "item4": "For long content, use <code>DialogScrollContent</code> (Vue) or apply <code>max-h</code> + <code>overflow-y-auto</code> manually.",
+        "item5": "For destructive confirmation (delete, cancel, terminate), use <code>AlertDialog</code> — Dialog is not the right component.",
+        "item6": "On mobile with long forms, consider <code>Sheet</code> or <code>Drawer</code> instead of Dialog."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Edit profile or resource in a modal form", "u": "Yes, with DialogFooter and primary action", "a": "-" },
+        "item2": { "s": "Confirm deletion or destructive action", "u": "No", "a": "AlertDialog" },
+        "item3": { "s": "View item details (read-only)", "u": "Yes, no Footer or only with Close button", "a": "-" },
+        "item4": { "s": "Passive informational message", "u": "No", "a": "Alert or Sonner" },
+        "item5": { "s": "Long form on mobile", "u": "No", "a": "Sheet or Drawer" },
+        "item6": { "s": "Preview media (image, video)", "u": "Yes, with visible Close button", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "title": {
+            "name": "DialogTitle",
+            "format": "Noun + complement · no period · max. 5 words",
+            "good": "\"Edit profile\", \"Order details\"",
+            "bad": "\"Hello!\", \"Notice\", \"Edit profile.\""
+          },
+          "description": {
+            "name": "DialogDescription",
+            "format": "Complete sentence guiding the action · period · max. 2 sentences",
+            "good": "\"Update your personal information. Changes are saved on confirm.\"",
+            "bad": "\"Here you can mess with several things, just fill it in and click.\""
+          },
+          "action": {
+            "name": "Primary action button",
+            "format": "Verb + object · infinitive · max. 3 words",
+            "good": "\"Save changes\", \"Send invite\"",
+            "bad": "\"OK\", \"Confirm\", \"Yes\""
+          },
+          "cancel": {
+            "name": "DialogClose (cancel)",
+            "format": "Always \"Cancel\" · no variations",
+            "good": "\"Cancel\"",
+            "bad": "\"Back\", \"Abort\", \"Close now\""
+          },
+          "srOnly": {
+            "name": "Close button (X) — sr-only text",
+            "format": "Verb in infinitive · 1 word",
+            "good": "\"Close\"",
+            "bad": "\"X\", \"Get out of here\", \"Cancel\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "There is a short form that fits without scrolling the entire page",
+        "item2": "You need to edit or view details without losing context of the current screen",
+        "item3": "Content needs temporary focus without being a destructive decision",
+        "item4": "There is media (image, video) to preview prominently"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The action is destructive or irreversible — use <code>AlertDialog</code>",
+        "item2": "The message is passive informational — use <code>Alert</code> or <code>Sonner</code>",
+        "item3": "The form is long and breaks usability on mobile — use <code>Sheet</code> or <code>Drawer</code>",
+        "item4": "The content is just a menu of options — use <code>DropdownMenu</code> or <code>Popover</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Title names the object, description guides the action, primary button uses a specific verb (\"Save changes\").",
+        "dont": "Generic title (\"Notice\"), empty description, and \"OK\" button without indicating what will happen."
+      },
+      "pair2": {
+        "do": "Use Dialog for profile editing; use AlertDialog to delete account — clear separation by intent.",
+        "dont": "Reusing Dialog to confirm a destructive action — loses <code>role=\"alertdialog\"</code> and initial focus on Cancel."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withScroll": "With internal scroll (Vue):"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Available Compositions",
+      "note": "Dialog does not use <code>cva()</code> nor expose <code>variant</code> or <code>size</code> props. The \"variants\" below are recurring structural compositions — pick the one that best describes the use case.",
+      "items": {
+        "default": "Title + Description + Footer with primary action. Default composition for forms and editing.",
+        "withForm": "Body with inline form (inputs, selects). Submit fires the Footer's primary action.",
+        "withScrollContent": "Body with long content and internal scroll. Header and Footer fixed. In Vue, use <code>DialogScrollContent</code>.",
+        "noFooter": "Only Title + Description, no Footer. For informational use or passive preview.",
+        "withDestructiveAction": "Footer with <code>destructive</code> primary action. Different from AlertDialog — use only when destructiveness is secondary to the flow (e.g. remove item from list).",
+        "customCloseInFooter": "<code>showCloseButton={false}</code> on Content and <code>showCloseButton</code> on Footer — close button sits below the actions."
+      }
+    },
+    "states": {
+      "title": "Configurations",
+      "cols": {
+        "state": "Configuration",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "closed": {
+        "label": "Closed",
+        "trigger": "Initial state or <code>open=false</code>",
+        "behavior": "Only the trigger is visible. Content DOM not rendered (empty Portal)"
+      },
+      "opening": {
+        "label": "Opening",
+        "trigger": "Transition from closed to open",
+        "behavior": "<code>data-state=open</code>, <code>fade-in zoom-in-95</code> animation in 100ms"
+      },
+      "open": {
+        "label": "Open",
+        "trigger": "Click on trigger or <code>open={true}</code>",
+        "behavior": "Overlay with blur, active focus trap, body scroll-lock, Escape and overlay-click close"
+      },
+      "closing": {
+        "label": "Closing",
+        "trigger": "Transition from open to closed",
+        "behavior": "<code>data-state=closed</code>, <code>fade-out zoom-out-95</code> animation; focus returns to trigger"
+      },
+      "withCloseButtonHidden": {
+        "label": "Without Close button",
+        "trigger": "<code>showCloseButton={false}</code> on Content",
+        "behavior": "No X in the corner. Closing only via Escape, overlay click, or Footer action"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "rootTitle": "Dialog (root)",
+      "contentTitle": "DialogContent",
+      "footerTitle": "DialogFooter",
+      "titleDescriptionTitle": "DialogTitle / DialogDescription",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "open": "Controlled open state. Use with <code>onOpenChange</code>.",
+        "defaultOpen": "Initial state in uncontrolled mode.",
+        "onOpenChange": "Callback fired on open or close. Receives the new boolean state.",
+        "showCloseButtonContent": "Shows X button at the top-right corner of Content.",
+        "showCloseButtonFooter": "Shows close button inside the Footer, below actions.",
+        "className": "Additional Tailwind classes for style overrides.",
+        "children": "Content rendered inside the subcomponent. In Title and Description, it is the displayed text."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "All subcomponents accept <code>className</code> and native HTML props. <code>DialogContent</code> forwards Base UI Popup props (e.g. <code>onPointerDownOutside</code>, <code>onEscapeKeyDown</code>) to customize closing."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Tailwind Class",
+        "part": "Component Part",
+        "popover": "DialogContent background",
+        "popoverForeground": "Main Content text",
+        "foreground": "Base text and ring with 10% opacity on Content",
+        "muted": "DialogFooter background (with /50 opacity)",
+        "border": "DialogFooter top separator",
+        "radius": "DialogContent border radius",
+        "zIndex": "z-index 50 on Overlay and Content",
+        "duration": "100ms duration for enter and exit animations"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "Dialog uses <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> with automatic focus trap and focus return to trigger. Meets WCAG 2.1 AA: 2.1.2 (no keyboard trap), 2.4.3 (focus order), 4.1.2 (name, role, value).",
+      "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — signals to the reader that content outside the dialog is inert.",
+      "item2": "<strong>aria-labelledby and aria-describedby</strong> — applied automatically from <code>DialogTitle</code> and <code>DialogDescription</code>. Title is required; Description is highly recommended.",
+      "item3": "<strong>Focus trap</strong> — Tab and Shift+Tab navigate only within the dialog. Initial focus goes to the first focusable element.",
+      "item4": "<strong>Focus return</strong> — when closed, focus returns to the trigger that opened the dialog.",
+      "item5": "<strong>Escape and overlay click</strong> — close the dialog without firing Footer actions. Body scroll-lock is restored.",
+      "item6": "<strong>Close button</strong> — has <code>&lt;span class=\"sr-only\"&gt;Close&lt;/span&gt;</code> for screen readers."
+    },
+    "keyboard": {
+      "escape": "Closes the dialog. Focus returns to trigger.",
+      "tab": "Navigates between focusable elements inside the dialog (focus trap).",
+      "shiftTab": "Navigates in reverse order inside the dialog.",
+      "enter": "In a form, submits the Footer's primary action."
+    },
+    "aria": {
+      "role": "<code>role=\"dialog\"</code> — automatically applied to DialogContent.",
+      "modal": "<code>aria-modal=\"true\"</code> — indicates content outside is inert.",
+      "labelledby": "<code>aria-labelledby</code> — automatically references DialogTitle's ID.",
+      "describedby": "<code>aria-describedby</code> — automatically references DialogDescription's ID when present."
+    },
+    "screenReader": {
+      "onOpen": "On open: reader announces \"dialog\" followed by the title and description.",
+      "onClose": "On close: reader announces the return to the previous context (trigger).",
+      "onFocus": "On moving focus between fields: reader announces each control's label and type."
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "alertDialog": "For destructive action confirmation — uses <code>role=\"alertdialog\"</code>, initial focus on Cancel, and required Cancel.",
+      "sheet": "Side panel on mobile or for long forms. Keeps screen context.",
+      "popover": "Non-modal floating content for complementary info or context menus.",
+      "form": "Natural pairing with Dialog — modal forms use Form as Body content.",
+      "drawer": "Mobile-first variant that slides up from the bottom. Good for quick edits on touch."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "By default, <code>DialogContent</code> renders in a Portal — isolates from parent overflow and transform but may conflict with custom z-index. Use <code>className=\"z-[60]\"</code> if you need to raise it.",
+      "tip2": "To close Dialog after async submit, control <code>open</code> via state and close only on success. On error, keep open and show inline feedback.",
+      "tip3": "<code>DialogScrollContent</code> exists only in Vue (Reka UI). In React/Svelte, apply <code>max-h-[80vh] overflow-y-auto</code> manually on the Body.",
+      "tip4": "Avoid nesting Dialog inside DropdownMenu or Popover — focus trap may conflict. Close the menu before opening the dialog."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Dialog tracks open, close, and primary action to measure engagement and modal flow completion rate.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "open": "dialog_open",
+        "openTrigger": "Dialog opens via trigger or controlled state",
+        "openPayload": "{ component: \"dialog\", label, location }",
+        "close": "dialog_close",
+        "closeTrigger": "Dialog closes via any path",
+        "closePayload": "{ component: \"dialog\", label, reason: \"escape\" | \"overlay\" | \"close-button\" | \"action\", location }",
+        "action": "dialog_action",
+        "actionTrigger": "Click on Footer's primary action",
+        "actionPayload": "{ component: \"dialog\", action_label, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Dialog interaction.",
+        "item1": { "action": "Click on trigger", "result": "DialogContent appears with Overlay; focus moves to first focusable element", "priority": "high" },
+        "item2": { "action": "Press Escape", "result": "Dialog closes; focus returns to trigger", "priority": "high" },
+        "item3": { "action": "Click outside Content (overlay)", "result": "Dialog closes; focus returns to trigger", "priority": "high" },
+        "item4": { "action": "Click on Close (X) button", "result": "Dialog closes; focus returns to trigger", "priority": "high" },
+        "item5": { "action": "Press Tab inside the dialog", "result": "Focus cycles between Content elements without leaving (focus trap)", "priority": "high" },
+        "item6": { "action": "Close dialog after interaction", "result": "Focus returns exactly to the original trigger", "priority": "high" },
+        "item7": { "action": "Render with controlled open", "result": "Open state is managed externally; onOpenChange fires on interaction", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "role=\"dialog\" present on Content", "level": "AA", "how": "getByRole('dialog') in testing-library" },
+        "item2": { "criterion": "aria-modal=\"true\" on Content", "level": "AA", "how": "Inspect DOM after open" },
+        "item3": { "criterion": "aria-labelledby points to DialogTitle", "level": "AA", "how": "Inspect DOM after open" },
+        "item4": { "criterion": "aria-describedby points to DialogDescription when present", "level": "AA", "how": "Inspect DOM after open" },
+        "item5": { "criterion": "Active focus trap — Tab doesn't leave the dialog", "level": "AA", "how": "Repeated userEvent.tab() — elements outside don't receive focus" },
+        "item6": { "criterion": "No axe-core violations in open state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "required": "Required",
+        "item1": { "story": "Playground — default open state", "priority": "high" },
+        "item2": { "story": "Variants — Default, WithForm, NoFooter, WithDestructiveAction", "priority": "high" },
+        "item3": { "story": "States — Closed, Open, WithCloseButtonHidden", "priority": "high" },
+        "item4": { "story": "WithForm composition — inline form", "priority": "medium" },
+        "item5": { "story": "WithScrollContent composition — long content with internal scroll", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "Configurations",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Dialog",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Diálogo modal genérico para formularios, edición y contenido informativo. Sobrepone la interfaz sin interrumpir para una decisión destructiva.",
+    "seo": {
+      "title": "Dialog — Overlay · Design System",
+      "description": "Documentación del Dialog: modal versátil para formularios y contenido, con focus trap, Portal, Escape y cierre por overlay.",
+      "aiSummary": "Componente Dialog modal genérico para formularios y contenido informativo, con focus trap, role=\"dialog\", aria-labelledby y aria-describedby automáticos vía Base UI, Reka UI y Bits UI.",
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role dialog, focus trap, modal",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "triggerLabel": "Editar perfil",
+        "title": "Editar perfil",
+        "description": "Actualiza tu información personal. Los cambios se guardan al confirmar.",
+        "action": "Guardar cambios",
+        "cancel": "Cancelar",
+        "footerNote": "Los datos se cifran antes de almacenarse."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Dialog</strong> — contenedor raíz que gestiona el estado de apertura y el foco.",
+      "item2": "<strong>DialogTrigger</strong> — elemento que dispara la apertura. Compone con <code>Button</code> vía <code>asChild</code>.",
+      "item3": "<strong>DialogPortal</strong> — renderiza el contenido fuera del árbol del padre, aislando de overflow y transform.",
+      "item4": "<strong>DialogOverlay</strong> — backdrop semitransparente con blur. Captura clic fuera para cerrar.",
+      "item5": "<strong>DialogContent</strong> — panel modal con <code>role=\"dialog\"</code>, <code>aria-modal</code>, focus trap y botón Close opcional.",
+      "item6": "<strong>DialogHeader</strong> — agrupa título y descripción. Centrado en mobile, alineado a la izquierda en desktop.",
+      "item7": "<strong>DialogTitle</strong> — título obligatorio. Fuente de <code>aria-labelledby</code>.",
+      "item8": "<strong>DialogDescription</strong> — descripción recomendada. Fuente de <code>aria-describedby</code> cuando está presente.",
+      "item9": "<strong>DialogFooter</strong> — agrupa acciones. Apilado en mobile, lado a lado en desktop.",
+      "item10": "<strong>DialogClose</strong> — botón de cierre (X en la esquina o botón en el Footer vía <code>showCloseButton</code>).",
+      "structureLabel": "Estructura completa:",
+      "structureCode": "<Dialog>\n  <DialogTrigger asChild>\n    <Button>Editar perfil</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Editar perfil</DialogTitle>\n      <DialogDescription>\n        Actualiza tu información personal.\n      </DialogDescription>\n    </DialogHeader>\n    <form>{/* campos */}</form>\n    <DialogFooter>\n      <DialogClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DialogClose>\n      <Button type=\"submit\">Guardar cambios</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Úsalo para formularios modales, edición de recursos o contenido informativo que requiera atención temporal.",
+        "item2": "Siempre incluye <code>DialogTitle</code> — base para <code>aria-labelledby</code> y lectura por lectores de pantalla.",
+        "item3": "Incluye <code>DialogDescription</code> siempre que haya contexto adicional — alimenta <code>aria-describedby</code>.",
+        "item4": "Para contenido largo, usa <code>DialogScrollContent</code> (Vue) o aplica <code>max-h</code> + <code>overflow-y-auto</code> manualmente.",
+        "item5": "Para confirmación destructiva (eliminar, cancelar, finalizar), usa <code>AlertDialog</code> — Dialog no es el componente correcto.",
+        "item6": "En mobile con formularios largos, considera <code>Sheet</code> o <code>Drawer</code> en lugar de Dialog."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Editar perfil o recurso en formulario modal", "u": "Sí, con DialogFooter y acción primaria", "a": "-" },
+        "item2": { "s": "Confirmar eliminación o acción destructiva", "u": "No", "a": "AlertDialog" },
+        "item3": { "s": "Ver detalles de un ítem (read-only)", "u": "Sí, sin Footer o solo con botón Cerrar", "a": "-" },
+        "item4": { "s": "Mensaje informativo pasivo", "u": "No", "a": "Alert o Sonner" },
+        "item5": { "s": "Formulario largo en mobile", "u": "No", "a": "Sheet o Drawer" },
+        "item6": { "s": "Previsualizar media (imagen, video)", "u": "Sí, con botón Close visible", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "DialogTitle",
+            "format": "Sustantivo + complemento · sin punto final · máx. 5 palabras",
+            "good": "\"Editar perfil\", \"Detalles del pedido\"",
+            "bad": "\"¡Hola!\", \"Atención\", \"Editar perfil.\""
+          },
+          "description": {
+            "name": "DialogDescription",
+            "format": "Frase completa que orienta la acción · punto final · máx. 2 frases",
+            "good": "\"Actualiza tu información personal. Los cambios se guardan al confirmar.\"",
+            "bad": "\"Aquí puedes tocar varias cosas, solo rellena y haz clic.\""
+          },
+          "action": {
+            "name": "Botón de acción primaria",
+            "format": "Verbo + objeto · infinitivo · máx. 3 palabras",
+            "good": "\"Guardar cambios\", \"Enviar invitación\"",
+            "bad": "\"OK\", \"Confirmar\", \"Sí\""
+          },
+          "cancel": {
+            "name": "DialogClose (cancelar)",
+            "format": "Siempre \"Cancelar\" · sin variaciones",
+            "good": "\"Cancelar\"",
+            "bad": "\"Volver\", \"Abortar\", \"Cerrar ahora\""
+          },
+          "srOnly": {
+            "name": "Botón Close (X) — texto sr-only",
+            "format": "Verbo en infinitivo · 1 palabra",
+            "good": "\"Cerrar\"",
+            "bad": "\"X\", \"Salir de aquí\", \"Cancelar\""
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "Hay un formulario corto que cabe sin desplazar toda la página",
+        "item2": "Necesitas editar o ver detalles sin perder el contexto de la pantalla actual",
+        "item3": "El contenido necesita foco temporal sin ser una decisión destructiva",
+        "item4": "Hay media (imagen, video) para previsualizar de forma destacada"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La acción es destructiva o irreversible — usa <code>AlertDialog</code>",
+        "item2": "El mensaje es informativo pasivo — usa <code>Alert</code> o <code>Sonner</code>",
+        "item3": "El formulario es largo y rompe usabilidad en mobile — usa <code>Sheet</code> o <code>Drawer</code>",
+        "item4": "El contenido es solo un menú de opciones — usa <code>DropdownMenu</code> o <code>Popover</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "El título nombra el objeto, la descripción orienta la acción, el botón primario usa un verbo específico (\"Guardar cambios\").",
+        "dont": "Título genérico (\"Atención\"), descripción vacía y botón \"OK\" sin indicar lo que hará."
+      },
+      "pair2": {
+        "do": "Usa Dialog para editar perfil; usa AlertDialog para eliminar cuenta — separación clara por intención.",
+        "dont": "Reutilizar Dialog para confirmar acción destructiva — pierde el <code>role=\"alertdialog\"</code> y el foco en Cancel."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withScroll": "Con scroll interno (Vue):"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Composiciones Disponibles",
+      "note": "Dialog no usa <code>cva()</code> ni expone props <code>variant</code> o <code>size</code>. Las \"variantes\" abajo son composiciones estructurales recurrentes — elige la que mejor describa el caso de uso.",
+      "items": {
+        "default": "Title + Description + Footer con acción primaria. Composición estándar para formularios y ediciones.",
+        "withForm": "Body con formulario inline (inputs, selects). El submit dispara la acción primaria del Footer.",
+        "withScrollContent": "Body con contenido largo y scroll interno. Header y Footer fijos. En Vue, usa <code>DialogScrollContent</code>.",
+        "noFooter": "Solo Title + Description, sin Footer. Para uso informativo o previsualización pasiva.",
+        "withDestructiveAction": "Footer con acción primaria <code>destructive</code>. Distinto de AlertDialog — úsalo solo cuando lo destructivo es secundario al flujo (ej. quitar ítem de lista).",
+        "customCloseInFooter": "<code>showCloseButton={false}</code> en Content y <code>showCloseButton</code> en Footer — el botón de cerrar queda debajo de las acciones."
+      }
+    },
+    "states": {
+      "title": "Configuraciones",
+      "cols": {
+        "state": "Configuración",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "closed": {
+        "label": "Cerrado",
+        "trigger": "Estado inicial o <code>open=false</code>",
+        "behavior": "Solo el trigger visible. DOM del Content no renderizado (Portal vacío)"
+      },
+      "opening": {
+        "label": "Abriendo",
+        "trigger": "Transición de cerrado a abierto",
+        "behavior": "<code>data-state=open</code>, animación <code>fade-in zoom-in-95</code> en 100ms"
+      },
+      "open": {
+        "label": "Abierto",
+        "trigger": "Clic en el trigger o <code>open={true}</code>",
+        "behavior": "Overlay con blur, focus trap activo, scroll-lock en body, Escape y clic en overlay cierran"
+      },
+      "closing": {
+        "label": "Cerrando",
+        "trigger": "Transición de abierto a cerrado",
+        "behavior": "<code>data-state=closed</code>, animación <code>fade-out zoom-out-95</code>; el foco vuelve al trigger"
+      },
+      "withCloseButtonHidden": {
+        "label": "Sin botón Close",
+        "trigger": "<code>showCloseButton={false}</code> en Content",
+        "behavior": "Sin X en la esquina. Cierre solo por Escape, clic en overlay o acción del Footer"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "rootTitle": "Dialog (root)",
+      "contentTitle": "DialogContent",
+      "footerTitle": "DialogFooter",
+      "titleDescriptionTitle": "DialogTitle / DialogDescription",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "open": "Estado controlado de apertura. Úsalo con <code>onOpenChange</code>.",
+        "defaultOpen": "Estado inicial en modo no controlado.",
+        "onOpenChange": "Callback disparado al abrir o cerrar. Recibe el nuevo estado booleano.",
+        "showCloseButtonContent": "Muestra botón X en la esquina superior derecha del Content.",
+        "showCloseButtonFooter": "Muestra botón de cierre dentro del Footer, debajo de las acciones.",
+        "className": "Clases Tailwind adicionales para override de estilo.",
+        "children": "Contenido renderizado dentro del subcomponente. En Title y Description, es el texto mostrado."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "Todos los subcomponentes aceptan <code>className</code> y props HTML nativos. <code>DialogContent</code> reenvía props del Popup de Base UI (ej. <code>onPointerDownOutside</code>, <code>onEscapeKeyDown</code>) para personalizar el cierre."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase Tailwind",
+        "part": "Parte del componente",
+        "popover": "Fondo del DialogContent",
+        "popoverForeground": "Texto principal del Content",
+        "foreground": "Texto base y ring con 10% de opacidad en el Content",
+        "muted": "Fondo del DialogFooter (con /50 de opacidad)",
+        "border": "Separador superior del DialogFooter",
+        "radius": "Border radius del DialogContent",
+        "zIndex": "z-index 50 en Overlay y Content",
+        "duration": "Duración de 100ms en la animación de entrada y salida"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> con focus trap automático y retorno de foco al trigger. Cumple WCAG 2.1 AA: 2.1.2 (sin trampas de teclado), 2.4.3 (orden de foco), 4.1.2 (nombre, función, valor).",
+      "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — señala al lector que el contenido fuera del diálogo está inerte.",
+      "item2": "<strong>aria-labelledby y aria-describedby</strong> — aplicados automáticamente desde <code>DialogTitle</code> y <code>DialogDescription</code>. Title es obligatorio; Description es muy recomendado.",
+      "item3": "<strong>Focus trap</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. El foco inicial va al primer elemento focalizable.",
+      "item4": "<strong>Retorno de foco</strong> — al cerrar, el foco vuelve al trigger que abrió el diálogo.",
+      "item5": "<strong>Escape y clic en overlay</strong> — cierran el diálogo sin disparar acciones del Footer. El scroll-lock del body se restaura.",
+      "item6": "<strong>Botón Close</strong> — tiene <code>&lt;span class=\"sr-only\"&gt;Close&lt;/span&gt;</code> para lectores de pantalla."
+    },
+    "keyboard": {
+      "escape": "Cierra el diálogo. El foco vuelve al trigger.",
+      "tab": "Navega entre elementos focalizables dentro del diálogo (focus trap).",
+      "shiftTab": "Navega en orden inverso dentro del diálogo.",
+      "enter": "En un formulario, envía la acción primaria del Footer."
+    },
+    "aria": {
+      "role": "<code>role=\"dialog\"</code> — aplicado automáticamente al DialogContent.",
+      "modal": "<code>aria-modal=\"true\"</code> — indica que el contenido fuera está inerte.",
+      "labelledby": "<code>aria-labelledby</code> — referencia automáticamente el ID de DialogTitle.",
+      "describedby": "<code>aria-describedby</code> — referencia automáticamente el ID de DialogDescription cuando está presente."
+    },
+    "screenReader": {
+      "onOpen": "Al abrir: el lector anuncia \"diálogo\" seguido del título y la descripción.",
+      "onClose": "Al cerrar: el lector anuncia el retorno al contexto anterior (trigger).",
+      "onFocus": "Al mover el foco entre campos: el lector anuncia el label y el tipo de cada control."
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "alertDialog": "Para confirmar acciones destructivas — usa <code>role=\"alertdialog\"</code>, foco inicial en Cancel y Cancel obligatorio.",
+      "sheet": "Panel lateral en mobile o para formularios largos. Mantiene el contexto de la pantalla.",
+      "popover": "Contenido flotante no modal, para información complementaria o menús contextuales.",
+      "form": "Combinación natural con Dialog — los formularios modales usan Form como contenido del Body.",
+      "drawer": "Variante mobile-first que sube desde la base de la pantalla. Útil para ediciones rápidas en touch."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "Por defecto, <code>DialogContent</code> renderiza en Portal — aísla del overflow y transform de los padres, pero puede chocar con z-index custom. Usa <code>className=\"z-[60]\"</code> si necesitas elevarlo.",
+      "tip2": "Para cerrar Dialog tras submit asíncrono, controla <code>open</code> vía state y cierra solo en caso de éxito. En error, mantén abierto y muestra feedback inline.",
+      "tip3": "<code>DialogScrollContent</code> existe solo en Vue (Reka UI). En React/Svelte, aplica <code>max-h-[80vh] overflow-y-auto</code> manualmente en el Body.",
+      "tip4": "Evita anidar Dialog dentro de DropdownMenu o Popover — el focus trap puede chocar. Cierra el menú antes de abrir el diálogo."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Dialog rastrea apertura, cierre y acción primaria para medir engagement y tasa de finalización de flujos modales.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "open": "dialog_open",
+        "openTrigger": "El diálogo abre vía trigger o estado controlado",
+        "openPayload": "{ component: \"dialog\", label, location }",
+        "close": "dialog_close",
+        "closeTrigger": "El diálogo cierra por cualquier vía",
+        "closePayload": "{ component: \"dialog\", label, reason: \"escape\" | \"overlay\" | \"close-button\" | \"action\", location }",
+        "action": "dialog_action",
+        "actionTrigger": "Clic en la acción primaria del Footer",
+        "actionPayload": "{ component: \"dialog\", action_label, location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada interacción del Dialog.",
+        "item1": { "action": "Clic en el trigger", "result": "DialogContent aparece con Overlay; el foco va al primer elemento focalizable", "priority": "high" },
+        "item2": { "action": "Presionar Escape", "result": "Diálogo cierra; el foco vuelve al trigger", "priority": "high" },
+        "item3": { "action": "Clic fuera del Content (overlay)", "result": "Diálogo cierra; el foco vuelve al trigger", "priority": "high" },
+        "item4": { "action": "Clic en el botón Close (X)", "result": "Diálogo cierra; el foco vuelve al trigger", "priority": "high" },
+        "item5": { "action": "Presionar Tab dentro del diálogo", "result": "El foco cicla entre elementos del Content sin salir (focus trap)", "priority": "high" },
+        "item6": { "action": "Cerrar diálogo tras interacción", "result": "El foco vuelve exactamente al trigger original", "priority": "high" },
+        "item7": { "action": "Renderizar con open controlado", "result": "El estado de apertura se gestiona externamente; onOpenChange dispara al interactuar", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "role=\"dialog\" presente en el Content", "level": "AA", "how": "getByRole('dialog') en testing-library" },
+        "item2": { "criterion": "aria-modal=\"true\" en el Content", "level": "AA", "how": "Inspeccionar DOM tras abrir" },
+        "item3": { "criterion": "aria-labelledby apunta a DialogTitle", "level": "AA", "how": "Inspeccionar DOM tras abrir" },
+        "item4": { "criterion": "aria-describedby apunta a DialogDescription cuando está presente", "level": "AA", "how": "Inspeccionar DOM tras abrir" },
+        "item5": { "criterion": "Focus trap activo — Tab no sale del diálogo", "level": "AA", "how": "userEvent.tab() repetido — elementos fuera no reciben foco" },
+        "item6": { "criterion": "Sin violaciones axe-core en estado abierto", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "required": "Obligatorio",
+        "item1": { "story": "Playground — estado abierto predeterminado", "priority": "high" },
+        "item2": { "story": "Variantes — Default, WithForm, NoFooter, WithDestructiveAction", "priority": "high" },
+        "item3": { "story": "Estados — Closed, Open, WithCloseButtonHidden", "priority": "high" },
+        "item4": { "story": "Composición WithForm — formulario inline", "priority": "medium" },
+        "item5": { "story": "Composición WithScrollContent — contenido largo con scroll interno", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Configuraciones",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
