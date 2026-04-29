@@ -1,0 +1,1271 @@
+{
+  "pt-BR": {
+    "title": "DropdownMenu",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Menu suspenso acionado por botão que apresenta ações ou opções de seleção em um popup com navegação por teclado.",
+    "seo": {
+      "title": "DropdownMenu — Overlay · Design System",
+      "description": "Documentação do DropdownMenu: menu suspenso com itens, checkbox, radio, submenus, atalhos e WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
+      "aiSummary": "Componente DropdownMenu construído sobre base-ui (React), reka-ui (Vue), bits-ui (Svelte) e cmdk-style factory (Basecoat) que apresenta menu suspenso com items, checkbox-items, radio-items, submenus, separators e shortcuts em popup acessível.",
+      "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "basic": "Menu de ações",
+        "withCheckbox": "Com checkbox-items (toggles)",
+        "withRadio": "Com radio-group (seleção única)",
+        "withSubmenu": "Com submenu aninhado"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>DropdownMenu (Root)</strong> — provider de estado <code>open</code>/<code>onOpenChange</code> ou <code>defaultOpen</code>.",
+      "item2": "<strong>DropdownMenuTrigger</strong> — botão que abre o menu; usar <code>asChild</code> com <code>Button</code> para herdar estilos.",
+      "item3": "<strong>DropdownMenuContent</strong> — popup posicionado via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza em portal.",
+      "item4": "<strong>DropdownMenuItem</strong> — ação executável; aceita <code>variant=\"destructive\"</code> e prop <code>inset</code> para alinhamento com items que têm ícone.",
+      "item5": "<strong>DropdownMenuCheckboxItem</strong> — item com estado boolean (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item6": "<strong>DropdownMenuRadioGroup + DropdownMenuRadioItem</strong> — grupo de seleção única (similar ao <code>RadioGroup</code>).",
+      "item7": "<strong>DropdownMenuSub + SubTrigger + SubContent</strong> — submenu aninhado; <code>SubTrigger</code> mostra chevron à direita.",
+      "item8": "<strong>DropdownMenuLabel</strong> — cabeçalho de grupo (não interativo); <strong>DropdownMenuSeparator</strong> divide grupos.",
+      "item9": "<strong>DropdownMenuShortcut</strong> — exibe atalho de teclado (ex: \"⌘K\") alinhado à direita do item.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Conta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configurações</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sair</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use DropdownMenu para 3 ou mais ações relacionadas que não cabem visualmente como botões inline.",
+        "item2": "Para menu de seleção com filtragem e busca, prefira <code>Command</code> (CommandPalette) em vez de DropdownMenu.",
+        "item3": "Para menu de contexto via clique direito, use <code>ContextMenu</code> em vez de DropdownMenu.",
+        "item4": "Use <code>variant=\"destructive\"</code> apenas em ações irreversíveis (excluir, sair, cancelar assinatura).",
+        "item5": "Submenus apenas quando há hierarquia real — limite a 1 nível de aninhamento; mais profundo confunde."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "3+ ações em row de tabela",
+          "u": "DropdownMenu com Items",
+          "a": "Botões inline (1-2 ações)"
+        },
+        "item2": {
+          "s": "Filtros toggle (mostrar/ocultar colunas)",
+          "u": "CheckboxItems",
+          "a": "Switch + Label"
+        },
+        "item3": {
+          "s": "Seleção única de tema (light/dark/system)",
+          "u": "RadioGroup + RadioItems",
+          "a": "Tabs ou ToggleGroup"
+        },
+        "item4": {
+          "s": "Menu com busca dentro",
+          "u": "Command (palette)",
+          "a": "DropdownMenu (errado)"
+        },
+        "item5": {
+          "s": "Hierarquia de ações (Exportar > PDF/CSV)",
+          "u": "DropdownMenuSub",
+          "a": "Items planos"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regra",
+          "correct": "Use",
+          "avoid": "Evite",
+          "trigger": {
+            "name": "DropdownMenuTrigger label",
+            "format": "Verbo + objeto ou ícone com aria-label",
+            "good": "Mais ações",
+            "bad": "Menu"
+          },
+          "label": {
+            "name": "DropdownMenuLabel",
+            "format": "Substantivo curto, contexto do grupo",
+            "good": "Conta",
+            "bad": "Clique aqui"
+          },
+          "item": {
+            "name": "DropdownMenuItem",
+            "format": "Verbo no infinitivo",
+            "good": "Editar perfil",
+            "bad": "Edição"
+          },
+          "destructive": {
+            "name": "Item destructive",
+            "format": "Verbo + objeto, claro sobre irreversibilidade",
+            "good": "Excluir conta",
+            "bad": "Apagar"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Há 3 ou mais ações relacionadas que não cabem inline.",
+        "item2": "Você precisa agrupar opções em categorias (com Label e Separator).",
+        "item3": "O menu inclui toggles ou seleção única (CheckboxItem/RadioItem).",
+        "item4": "Existe hierarquia real entre opções (submenu)."
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "Há apenas 1-2 ações — use botões inline.",
+        "item2": "É menu de contexto (clique direito) — use ContextMenu.",
+        "item3": "É lista grande pesquisável — use Command palette.",
+        "item4": "Você precisa de submenus em mais de 1 nível — repense a hierarquia."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "DropdownMenu com Label, Items agrupados e Separator entre grupos.",
+        "dont": "DropdownMenu com 10+ items planos sem agrupamento — vira lista de scroll."
+      },
+      "pair2": {
+        "do": "Item destructive marcado com variant para ações irreversíveis.",
+        "dont": "Excluir conta como Item normal sem aviso visual."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "destructive": "Destructive"
+      },
+      "styles": {
+        "default": "Item neutro com hover <code>bg-accent</code> e foco visível.",
+        "destructive": "Item de ação irreversível com cor <code>text-destructive</code> e fundo <code>bg-destructive/10</code> no hover."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Fechado",
+        "open": "Aberto",
+        "disabled": "Desabilitado",
+        "checked": "Checked"
+      },
+      "descriptions": {
+        "closed": "Estado padrão — apenas o trigger renderizado; portal vazio.",
+        "open": "Popup visível com focus no primeiro item; setas navegam, ESC fecha.",
+        "disabled": "<code>disabled</code> em Item bloqueia interação; <code>aria-disabled=\"true\"</code> e cursor <code>not-allowed</code>.",
+        "checked": "CheckboxItem ou RadioItem com <code>data-state=\"checked\"</code>; ícone Check exibido."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "Não",
+          "description": "Estado controlado aberto/fechado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback ao abrir/fechar."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Estado inicial em modo não-controlado."
+        },
+        "modal": {
+          "type": "boolean",
+          "default": "true",
+          "required": "Não",
+          "description": "Quando true, bloqueia interação com o resto da página."
+        },
+        "side": {
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "Não",
+          "description": "Lado de abertura do Content (em DropdownMenuContent)."
+        },
+        "align": {
+          "type": "'start' | 'center' | 'end'",
+          "default": "'start'",
+          "required": "Não",
+          "description": "Alinhamento horizontal do Content (em DropdownMenuContent)."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Menu controlado com posicionamento custom\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "background": {
+          "class": "bg-popover",
+          "part": "Fundo do Content"
+        },
+        "foreground": {
+          "class": "text-popover-foreground",
+          "part": "Cor do texto no Content"
+        },
+        "border": {
+          "class": "ring-foreground/10",
+          "part": "Borda sutil do Content (ring 1px)"
+        },
+        "shadow": {
+          "class": "shadow-md",
+          "part": "Sombra do popup"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Cantos arredondados do Content"
+        },
+        "itemHover": {
+          "class": "bg-accent",
+          "part": "Hover/foco em Item default"
+        },
+        "destructive": {
+          "class": "text-destructive bg-destructive/10",
+          "part": "Item variant=destructive (texto + hover)"
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Override de offset do Content para tema custom */\n[data-slot='dropdown-menu-content'] {\n  --side-offset: 8px;\n}\n\n/* Item destrutivo com cor mais saturada */\n[data-slot='dropdown-menu-item'][data-variant='destructive'] {\n  color: hsl(var(--destructive));\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA — critérios 1.3.1 (estrutura semântica via role=menu/menuitem), 2.1.1 (operável por teclado: setas, Enter, ESC, Home/End), 2.4.3 (foco retorna ao trigger ao fechar), 4.1.2 (name/role/value via aria-checked/aria-haspopup).",
+      "items": {
+        "item1": "<code>DropdownMenuTrigger</code> recebe <code>aria-haspopup=\"menu\"</code> e <code>aria-expanded</code> automáticos.",
+        "item2": "<code>DropdownMenuContent</code> tem <code>role=\"menu\"</code> com focus trap e foco no primeiro item ao abrir.",
+        "item3": "<code>DropdownMenuItem</code> tem <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> tem <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> tem <code>role=\"menuitemradio\"</code>.",
+        "item4": "Setas (cima/baixo) navegam entre itens; Home/End vão ao primeiro/último; letras digitadas movem o foco para item correspondente (typeahead).",
+        "item5": "ESC fecha o menu e retorna foco ao trigger; clique fora também fecha.",
+        "item6": "<code>DropdownMenuShortcut</code> é apenas visual — atalho real precisa ser implementado no consumidor (ex: useHotkeys)."
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Tab — abre o menu (no trigger) ou move foco para o trigger (fora do menu).",
+        "arrows": "Setas Cima/Baixo — navega entre itens; Setas Direita/Esquerda — abre/fecha submenu.",
+        "enter": "Enter/Space — ativa Item (executa ação ou alterna checkbox/radio).",
+        "escape": "ESC — fecha menu (e submenu se aplicável); retorna foco ao trigger.",
+        "homeEnd": "Home/End — vai ao primeiro/último item.",
+        "typeahead": "Letras alfabéticas — typeahead move foco para item começando com a letra."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "trigger": "Trigger: <code>aria-haspopup=\"menu\"</code> + <code>aria-expanded</code>.",
+        "menu": "Content: <code>role=\"menu\"</code>.",
+        "item": "Item: <code>role=\"menuitem\"</code> ou <code>menuitemcheckbox</code>/<code>menuitemradio</code>.",
+        "checked": "<code>aria-checked</code> em CheckboxItem/RadioItem reflete o estado.",
+        "disabled": "<code>aria-disabled=\"true\"</code> em Item disabled."
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "open": "Anuncia: \"[label do trigger], menu pop-up, recolhido\". Ao abrir: \"expandido, menu, [N] itens\".",
+        "navigation": "A cada item lê: \"[texto], item de menu, [N] de [total]\".",
+        "checked": "CheckboxItem: \"[texto], caixa de seleção, marcada/desmarcada\".",
+        "shortcut": "Shortcut é lido como parte do label do item (ex: \"Salvar, Control K\")."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "contextMenu": {
+          "name": "ContextMenu",
+          "description": "Menu acionado por clique direito; mesma API de DropdownMenu."
+        },
+        "menubar": {
+          "name": "Menubar",
+          "description": "Barra de menus horizontais (estilo aplicação desktop)."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Menu de seleção com busca e filtragem."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "Conteúdo flutuante genérico (sem semântica de menu)."
+        },
+        "select": {
+          "name": "Select",
+          "description": "Combobox para seleção única em formulários."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: DropdownMenu usa <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom sem submenu nativo.",
+      "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews de Storybook, aplicar <code>contain: layout</code> no wrapper.",
+      "item3": "<strong>Submenus</strong>: limite a 1 nível de aninhamento. Submenu aninhado em submenu confunde e quebra navegação por teclado em mobile.",
+      "item4": "<strong>Atalhos</strong>: <code>DropdownMenuShortcut</code> é apenas visual; o atalho real precisa ser registrado no consumidor (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
+      "item5": "<strong>asChild no Trigger</strong>: usar <code>asChild</code> com <code>Button</code> evita <code>&lt;button&gt;&lt;button&gt;</code> aninhado (NestedInteractive ARIA violation)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obrigatório: <code>component='dropdown-menu'</code>, <code>location</code> (contexto da página), <code>label</code> (texto do trigger ou item). Disparar via <code>onOpenChange</code> e <code>onSelect</code> no consumidor."
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada interação.",
+        "item1": {
+          "action": "Clicar no DropdownMenuTrigger",
+          "result": "Menu abre com role=menu e foco no primeiro item",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar setas Cima/Baixo no menu aberto",
+          "result": "Foco move entre itens em roving tabindex",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar Enter em Item",
+          "result": "Item é ativado e menu fecha; foco retorna ao trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pressionar ESC com menu aberto",
+          "result": "Menu fecha e foco retorna ao trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Clicar em CheckboxItem",
+          "result": "data-state alterna entre checked/unchecked; aria-checked reflete",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Clicar em RadioItem dentro de RadioGroup",
+          "result": "Apenas o item clicado fica checked; outros desmarcam",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Hover/foco em SubTrigger",
+          "result": "SubContent abre à direita (ou esquerda em RTL)",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "Trigger tem aria-haspopup=menu e aria-expanded reflete o estado",
+        "item3": "Content tem role=menu (WCAG 4.1.2)",
+        "item4": "Items têm role=menuitem/menuitemcheckbox/menuitemradio corretos",
+        "item5": "Foco retorna ao trigger ao fechar via ESC ou seleção (WCAG 2.4.3)",
+        "item6": "Contraste mínimo 4.5:1 entre texto do item e bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": {
+          "story": "Aberto com Items + Label + Separator",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Aberto com CheckboxItems",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Aberto com RadioGroup",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Aberto com SubTrigger e SubContent",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Item destructive em hover",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "DropdownMenu",
+    "category": "Overlay",
+    "type": "Component",
+    "description": "Button-triggered dropdown menu that presents actions or selection options in a popup with full keyboard navigation.",
+    "seo": {
+      "title": "DropdownMenu — Overlay · Design System",
+      "description": "DropdownMenu documentation: dropdown menu with items, checkboxes, radios, submenus, shortcuts and WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
+      "aiSummary": "DropdownMenu component built on base-ui (React), reka-ui (Vue), bits-ui (Svelte) and a cmdk-style factory (Basecoat) presenting a dropdown menu with items, checkbox-items, radio-items, submenus, separators and shortcuts in an accessible popup.",
+      "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "basic": "Action menu",
+        "withCheckbox": "With checkbox-items (toggles)",
+        "withRadio": "With radio-group (single selection)",
+        "withSubmenu": "With nested submenu"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>DropdownMenu (Root)</strong> — state provider with <code>open</code>/<code>onOpenChange</code> or <code>defaultOpen</code>.",
+      "item2": "<strong>DropdownMenuTrigger</strong> — button that opens the menu; use <code>asChild</code> with <code>Button</code> to inherit styles.",
+      "item3": "<strong>DropdownMenuContent</strong> — popup positioned via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renders in a portal.",
+      "item4": "<strong>DropdownMenuItem</strong> — executable action; supports <code>variant=\"destructive\"</code> and <code>inset</code> for alignment with icon items.",
+      "item5": "<strong>DropdownMenuCheckboxItem</strong> — item with boolean state (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item6": "<strong>DropdownMenuRadioGroup + DropdownMenuRadioItem</strong> — single-selection group (similar to <code>RadioGroup</code>).",
+      "item7": "<strong>DropdownMenuSub + SubTrigger + SubContent</strong> — nested submenu; <code>SubTrigger</code> shows a chevron on the right.",
+      "item8": "<strong>DropdownMenuLabel</strong> — group heading (non-interactive); <strong>DropdownMenuSeparator</strong> divides groups.",
+      "item9": "<strong>DropdownMenuShortcut</strong> — displays keyboard shortcut (e.g., \"⌘K\") aligned to the right of the item.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sign out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Mandatory Guidelines",
+        "item1": "Use DropdownMenu for 3 or more related actions that don't fit visually as inline buttons.",
+        "item2": "For selection menus with filtering and search, prefer <code>Command</code> (CommandPalette) instead.",
+        "item3": "For right-click context menus, use <code>ContextMenu</code> instead.",
+        "item4": "Use <code>variant=\"destructive\"</code> only for irreversible actions (delete, sign out, cancel subscription).",
+        "item5": "Submenus only when there's real hierarchy — limit to 1 nesting level; deeper confuses users."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "3+ actions in a table row",
+          "u": "DropdownMenu with Items",
+          "a": "Inline buttons (1-2 actions)"
+        },
+        "item2": {
+          "s": "Toggle filters (show/hide columns)",
+          "u": "CheckboxItems",
+          "a": "Switch + Label"
+        },
+        "item3": {
+          "s": "Single theme select (light/dark/system)",
+          "u": "RadioGroup + RadioItems",
+          "a": "Tabs or ToggleGroup"
+        },
+        "item4": {
+          "s": "Searchable menu",
+          "u": "Command (palette)",
+          "a": "DropdownMenu (wrong)"
+        },
+        "item5": {
+          "s": "Action hierarchy (Export > PDF/CSV)",
+          "u": "DropdownMenuSub",
+          "a": "Flat items"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Rule",
+          "correct": "Use",
+          "avoid": "Avoid",
+          "trigger": {
+            "name": "DropdownMenuTrigger label",
+            "format": "Verb + object or icon with aria-label",
+            "good": "More actions",
+            "bad": "Menu"
+          },
+          "label": {
+            "name": "DropdownMenuLabel",
+            "format": "Short noun, group context",
+            "good": "Account",
+            "bad": "Click here"
+          },
+          "item": {
+            "name": "DropdownMenuItem",
+            "format": "Infinitive verb",
+            "good": "Edit profile",
+            "bad": "Editing"
+          },
+          "destructive": {
+            "name": "Destructive item",
+            "format": "Verb + object, clear about irreversibility",
+            "good": "Delete account",
+            "bad": "Remove"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "There are 3 or more related actions that don't fit inline.",
+        "item2": "You need to group options into categories (with Label and Separator).",
+        "item3": "The menu includes toggles or single selection (CheckboxItem/RadioItem).",
+        "item4": "Real hierarchy exists between options (submenu)."
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "There are only 1-2 actions — use inline buttons.",
+        "item2": "It's a context menu (right-click) — use ContextMenu.",
+        "item3": "It's a large searchable list — use Command palette.",
+        "item4": "You need submenus more than 1 level deep — rethink the hierarchy."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "DropdownMenu with Label, grouped Items, and Separator between groups.",
+        "dont": "DropdownMenu with 10+ flat items without grouping — becomes a scroll list."
+      },
+      "pair2": {
+        "do": "Destructive Item marked with variant for irreversible actions.",
+        "dont": "Delete account as a regular Item without visual warning."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "destructive": "Destructive"
+      },
+      "styles": {
+        "default": "Neutral item with <code>bg-accent</code> hover and visible focus.",
+        "destructive": "Irreversible action item with <code>text-destructive</code> color and <code>bg-destructive/10</code> background on hover."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "disabled": "Disabled",
+        "checked": "Checked"
+      },
+      "descriptions": {
+        "closed": "Default state — only the trigger renders; portal is empty.",
+        "open": "Visible popup with focus on first item; arrows navigate, ESC closes.",
+        "disabled": "<code>disabled</code> on Item blocks interaction; <code>aria-disabled=\"true\"</code> and <code>not-allowed</code> cursor.",
+        "checked": "CheckboxItem or RadioItem with <code>data-state=\"checked\"</code>; Check icon shown."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled open/closed state."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired on open/close."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Initial state in uncontrolled mode."
+        },
+        "modal": {
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "When true, blocks interaction with the rest of the page."
+        },
+        "side": {
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "No",
+          "description": "Content opening side (on DropdownMenuContent)."
+        },
+        "align": {
+          "type": "'start' | 'center' | 'end'",
+          "default": "'start'",
+          "required": "No",
+          "description": "Horizontal alignment of Content (on DropdownMenuContent)."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Controlled menu with custom positioning\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "background": {
+          "class": "bg-popover",
+          "part": "Content background"
+        },
+        "foreground": {
+          "class": "text-popover-foreground",
+          "part": "Text color in Content"
+        },
+        "border": {
+          "class": "ring-foreground/10",
+          "part": "Subtle Content border (1px ring)"
+        },
+        "shadow": {
+          "class": "shadow-md",
+          "part": "Popup shadow"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Content rounded corners"
+        },
+        "itemHover": {
+          "class": "bg-accent",
+          "part": "Hover/focus on default Item"
+        },
+        "destructive": {
+          "class": "text-destructive bg-destructive/10",
+          "part": "Item variant=destructive (text + hover)"
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Content offset override for custom theme */\n[data-slot='dropdown-menu-content'] {\n  --side-offset: 8px;\n}\n\n/* More saturated destructive item */\n[data-slot='dropdown-menu-item'][data-variant='destructive'] {\n  color: hsl(var(--destructive));\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA — criteria 1.3.1 (semantic structure via role=menu/menuitem), 2.1.1 (keyboard operable: arrows, Enter, ESC, Home/End), 2.4.3 (focus returns to trigger on close), 4.1.2 (name/role/value via aria-checked/aria-haspopup).",
+      "items": {
+        "item1": "<code>DropdownMenuTrigger</code> automatically gets <code>aria-haspopup=\"menu\"</code> and <code>aria-expanded</code>.",
+        "item2": "<code>DropdownMenuContent</code> has <code>role=\"menu\"</code> with focus trap and focus on first item when opened.",
+        "item3": "<code>DropdownMenuItem</code> has <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> has <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> has <code>role=\"menuitemradio\"</code>.",
+        "item4": "Up/Down arrows navigate between items; Home/End go to first/last; typed letters move focus to matching item (typeahead).",
+        "item5": "ESC closes the menu and returns focus to trigger; outside click also closes.",
+        "item6": "<code>DropdownMenuShortcut</code> is visual only — actual shortcut needs to be implemented by the consumer (e.g., useHotkeys)."
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Tab — opens the menu (on trigger) or moves focus to trigger (outside menu).",
+        "arrows": "Up/Down arrows — navigate between items; Right/Left arrows — open/close submenu.",
+        "enter": "Enter/Space — activates Item (executes action or toggles checkbox/radio).",
+        "escape": "ESC — closes menu (and submenu if applicable); returns focus to trigger.",
+        "homeEnd": "Home/End — go to first/last item.",
+        "typeahead": "Alphabetic letters — typeahead moves focus to item starting with the letter."
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "trigger": "Trigger: <code>aria-haspopup=\"menu\"</code> + <code>aria-expanded</code>.",
+        "menu": "Content: <code>role=\"menu\"</code>.",
+        "item": "Item: <code>role=\"menuitem\"</code> or <code>menuitemcheckbox</code>/<code>menuitemradio</code>.",
+        "checked": "<code>aria-checked</code> on CheckboxItem/RadioItem reflects state.",
+        "disabled": "<code>aria-disabled=\"true\"</code> on disabled Item."
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "open": "Announces: \"[trigger label], menu pop-up, collapsed\". On open: \"expanded, menu, [N] items\".",
+        "navigation": "On each item reads: \"[text], menu item, [N] of [total]\".",
+        "checked": "CheckboxItem: \"[text], checkbox, checked/unchecked\".",
+        "shortcut": "Shortcut is read as part of the item label (e.g., \"Save, Control K\")."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "contextMenu": {
+          "name": "ContextMenu",
+          "description": "Right-click triggered menu; same API as DropdownMenu."
+        },
+        "menubar": {
+          "name": "Menubar",
+          "description": "Horizontal menu bar (desktop application style)."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Selection menu with search and filtering."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "Generic floating content (no menu semantics)."
+        },
+        "select": {
+          "name": "Select",
+          "description": "Combobox for single selection in forms."
+        }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: DropdownMenu uses <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> uses a custom factory without native submenu.",
+      "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In Storybook previews, apply <code>contain: layout</code> on the wrapper.",
+      "item3": "<strong>Submenus</strong>: limit to 1 nesting level. Submenu within submenu confuses and breaks keyboard navigation on mobile.",
+      "item4": "<strong>Shortcuts</strong>: <code>DropdownMenuShortcut</code> is visual only; the actual shortcut needs to be registered by the consumer (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
+      "item5": "<strong>asChild on Trigger</strong>: using <code>asChild</code> with <code>Button</code> avoids nested <code>&lt;button&gt;&lt;button&gt;</code> (NestedInteractive ARIA violation)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant events: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Required payload: <code>component='dropdown-menu'</code>, <code>location</code> (page context), <code>label</code> (trigger or item text). Dispatch via <code>onOpenChange</code> and <code>onSelect</code> in the consumer."
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen on each interaction.",
+        "item1": {
+          "action": "Click DropdownMenuTrigger",
+          "result": "Menu opens with role=menu and focus on first item",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press Up/Down arrows in open menu",
+          "result": "Focus moves between items in roving tabindex",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press Enter on Item",
+          "result": "Item is activated and menu closes; focus returns to trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Press ESC with menu open",
+          "result": "Menu closes and focus returns to trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Click CheckboxItem",
+          "result": "data-state toggles between checked/unchecked; aria-checked reflects",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Click RadioItem within RadioGroup",
+          "result": "Only the clicked item is checked; others uncheck",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Hover/focus on SubTrigger",
+          "result": "SubContent opens to the right (or left in RTL)",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria automated tools should confirm.",
+        "item1": "No violations reported by axe-core in default state",
+        "item2": "Trigger has aria-haspopup=menu and aria-expanded reflects state",
+        "item3": "Content has role=menu (WCAG 4.1.2)",
+        "item4": "Items have correct role=menuitem/menuitemcheckbox/menuitemradio",
+        "item5": "Focus returns to trigger on close via ESC or selection (WCAG 2.4.3)",
+        "item6": "Minimum 4.5:1 contrast between item text and bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States Chromatic should capture.",
+        "required": "Required",
+        "item1": {
+          "story": "Open with Items + Label + Separator",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Open with CheckboxItems",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Open with RadioGroup",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Open with SubTrigger and SubContent",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Destructive item on hover",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "DropdownMenu",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Menú desplegable accionado por botón que presenta acciones u opciones de selección en un popup con navegación por teclado.",
+    "seo": {
+      "title": "DropdownMenu — Overlay · Design System",
+      "description": "Documentación de DropdownMenu: menú desplegable con items, checkbox, radio, submenús, atajos y WCAG 2.1 AA vía base-ui/reka-ui/bits-ui.",
+      "aiSummary": "Componente DropdownMenu construido sobre base-ui (React), reka-ui (Vue), bits-ui (Svelte) y factory cmdk-style (Basecoat) que presenta menú desplegable con items, checkbox-items, radio-items, submenús, separators y shortcuts en popup accesible.",
+      "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "basic": "Menú de acciones",
+        "withCheckbox": "Con checkbox-items (toggles)",
+        "withRadio": "Con radio-group (selección única)",
+        "withSubmenu": "Con submenú anidado"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>DropdownMenu (Root)</strong> — provider de estado <code>open</code>/<code>onOpenChange</code> o <code>defaultOpen</code>.",
+      "item2": "<strong>DropdownMenuTrigger</strong> — botón que abre el menú; usa <code>asChild</code> con <code>Button</code> para heredar estilos.",
+      "item3": "<strong>DropdownMenuContent</strong> — popup posicionado vía <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza en portal.",
+      "item4": "<strong>DropdownMenuItem</strong> — acción ejecutable; admite <code>variant=\"destructive\"</code> y <code>inset</code> para alineación con items con icono.",
+      "item5": "<strong>DropdownMenuCheckboxItem</strong> — item con estado boolean (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item6": "<strong>DropdownMenuRadioGroup + DropdownMenuRadioItem</strong> — grupo de selección única (similar a <code>RadioGroup</code>).",
+      "item7": "<strong>DropdownMenuSub + SubTrigger + SubContent</strong> — submenú anidado; <code>SubTrigger</code> muestra chevron a la derecha.",
+      "item8": "<strong>DropdownMenuLabel</strong> — encabezado de grupo (no interactivo); <strong>DropdownMenuSeparator</strong> divide grupos.",
+      "item9": "<strong>DropdownMenuShortcut</strong> — muestra atajo de teclado (ej: \"⌘K\") alineado a la derecha del item.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menú</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Cuenta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configuración</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Cerrar sesión</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa DropdownMenu para 3 o más acciones relacionadas que no caben visualmente como botones inline.",
+        "item2": "Para menú de selección con filtrado y búsqueda, prefiere <code>Command</code> (CommandPalette) en su lugar.",
+        "item3": "Para menú contextual vía clic derecho, usa <code>ContextMenu</code> en su lugar.",
+        "item4": "Usa <code>variant=\"destructive\"</code> solo en acciones irreversibles (eliminar, cerrar sesión, cancelar suscripción).",
+        "item5": "Submenús solo cuando hay jerarquía real — limita a 1 nivel de anidamiento; más profundo confunde."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "3+ acciones en row de tabla",
+          "u": "DropdownMenu con Items",
+          "a": "Botones inline (1-2 acciones)"
+        },
+        "item2": {
+          "s": "Filtros toggle (mostrar/ocultar columnas)",
+          "u": "CheckboxItems",
+          "a": "Switch + Label"
+        },
+        "item3": {
+          "s": "Selección única de tema (light/dark/system)",
+          "u": "RadioGroup + RadioItems",
+          "a": "Tabs o ToggleGroup"
+        },
+        "item4": {
+          "s": "Menú con búsqueda dentro",
+          "u": "Command (palette)",
+          "a": "DropdownMenu (incorrecto)"
+        },
+        "item5": {
+          "s": "Jerarquía de acciones (Exportar > PDF/CSV)",
+          "u": "DropdownMenuSub",
+          "a": "Items planos"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regla",
+          "correct": "Usa",
+          "avoid": "Evita",
+          "trigger": {
+            "name": "DropdownMenuTrigger label",
+            "format": "Verbo + objeto o icono con aria-label",
+            "good": "Más acciones",
+            "bad": "Menú"
+          },
+          "label": {
+            "name": "DropdownMenuLabel",
+            "format": "Sustantivo corto, contexto del grupo",
+            "good": "Cuenta",
+            "bad": "Haz clic aquí"
+          },
+          "item": {
+            "name": "DropdownMenuItem",
+            "format": "Verbo en infinitivo",
+            "good": "Editar perfil",
+            "bad": "Edición"
+          },
+          "destructive": {
+            "name": "Item destructive",
+            "format": "Verbo + objeto, claro sobre irreversibilidad",
+            "good": "Eliminar cuenta",
+            "bad": "Quitar"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Hay 3 o más acciones relacionadas que no caben inline.",
+        "item2": "Necesitas agrupar opciones en categorías (con Label y Separator).",
+        "item3": "El menú incluye toggles o selección única (CheckboxItem/RadioItem).",
+        "item4": "Existe jerarquía real entre opciones (submenú)."
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Solo hay 1-2 acciones — usa botones inline.",
+        "item2": "Es menú contextual (clic derecho) — usa ContextMenu.",
+        "item3": "Es lista grande con búsqueda — usa Command palette.",
+        "item4": "Necesitas submenús de más de 1 nivel — replantea la jerarquía."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "DropdownMenu con Label, Items agrupados y Separator entre grupos.",
+        "dont": "DropdownMenu con 10+ items planos sin agrupamiento — se vuelve lista de scroll."
+      },
+      "pair2": {
+        "do": "Item destructive marcado con variant para acciones irreversibles.",
+        "dont": "Eliminar cuenta como Item normal sin aviso visual."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "destructive": "Destructive"
+      },
+      "styles": {
+        "default": "Item neutro con hover <code>bg-accent</code> y foco visible.",
+        "destructive": "Item de acción irreversible con color <code>text-destructive</code> y fondo <code>bg-destructive/10</code> en hover."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Cerrado",
+        "open": "Abierto",
+        "disabled": "Deshabilitado",
+        "checked": "Checked"
+      },
+      "descriptions": {
+        "closed": "Estado predeterminado — solo el trigger renderizado; portal vacío.",
+        "open": "Popup visible con foco en el primer item; flechas navegan, ESC cierra.",
+        "disabled": "<code>disabled</code> en Item bloquea interacción; <code>aria-disabled=\"true\"</code> y cursor <code>not-allowed</code>.",
+        "checked": "CheckboxItem o RadioItem con <code>data-state=\"checked\"</code>; icono Check mostrado."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Estado controlado abierto/cerrado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback al abrir/cerrar."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Estado inicial en modo no-controlado."
+        },
+        "modal": {
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "Cuando es true, bloquea interacción con el resto de la página."
+        },
+        "side": {
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "No",
+          "description": "Lado de apertura del Content (en DropdownMenuContent)."
+        },
+        "align": {
+          "type": "'start' | 'center' | 'end'",
+          "default": "'start'",
+          "required": "No",
+          "description": "Alineación horizontal del Content (en DropdownMenuContent)."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Menú controlado con posicionamiento personalizado\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "background": {
+          "class": "bg-popover",
+          "part": "Fondo del Content"
+        },
+        "foreground": {
+          "class": "text-popover-foreground",
+          "part": "Color del texto en el Content"
+        },
+        "border": {
+          "class": "ring-foreground/10",
+          "part": "Borde sutil del Content (ring 1px)"
+        },
+        "shadow": {
+          "class": "shadow-md",
+          "part": "Sombra del popup"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Esquinas redondeadas del Content"
+        },
+        "itemHover": {
+          "class": "bg-accent",
+          "part": "Hover/foco en Item default"
+        },
+        "destructive": {
+          "class": "text-destructive bg-destructive/10",
+          "part": "Item variant=destructive (texto + hover)"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Override de offset del Content para tema custom */\n[data-slot='dropdown-menu-content'] {\n  --side-offset: 8px;\n}\n\n/* Item destructivo con color más saturado */\n[data-slot='dropdown-menu-item'][data-variant='destructive'] {\n  color: hsl(var(--destructive));\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA — criterios 1.3.1 (estructura semántica vía role=menu/menuitem), 2.1.1 (operable por teclado: flechas, Enter, ESC, Home/End), 2.4.3 (foco vuelve al trigger al cerrar), 4.1.2 (name/role/value vía aria-checked/aria-haspopup).",
+      "items": {
+        "item1": "<code>DropdownMenuTrigger</code> recibe <code>aria-haspopup=\"menu\"</code> y <code>aria-expanded</code> automáticos.",
+        "item2": "<code>DropdownMenuContent</code> tiene <code>role=\"menu\"</code> con focus trap y foco en el primer item al abrir.",
+        "item3": "<code>DropdownMenuItem</code> tiene <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> tiene <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> tiene <code>role=\"menuitemradio\"</code>.",
+        "item4": "Flechas Arriba/Abajo navegan entre items; Home/End van al primero/último; letras tipeadas mueven foco al item correspondiente (typeahead).",
+        "item5": "ESC cierra el menú y devuelve foco al trigger; clic fuera también cierra.",
+        "item6": "<code>DropdownMenuShortcut</code> es solo visual — atajo real debe ser implementado por el consumidor (ej: useHotkeys)."
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Tab — abre el menú (en el trigger) o mueve foco al trigger (fuera del menú).",
+        "arrows": "Flechas Arriba/Abajo — navega entre items; Flechas Derecha/Izquierda — abre/cierra submenú.",
+        "enter": "Enter/Space — activa Item (ejecuta acción o alterna checkbox/radio).",
+        "escape": "ESC — cierra menú (y submenú si aplica); devuelve foco al trigger.",
+        "homeEnd": "Home/End — van al primer/último item.",
+        "typeahead": "Letras alfabéticas — typeahead mueve foco al item que comienza con la letra."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "trigger": "Trigger: <code>aria-haspopup=\"menu\"</code> + <code>aria-expanded</code>.",
+        "menu": "Content: <code>role=\"menu\"</code>.",
+        "item": "Item: <code>role=\"menuitem\"</code> o <code>menuitemcheckbox</code>/<code>menuitemradio</code>.",
+        "checked": "<code>aria-checked</code> en CheckboxItem/RadioItem refleja el estado.",
+        "disabled": "<code>aria-disabled=\"true\"</code> en Item disabled."
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "open": "Anuncia: \"[label del trigger], menú emergente, contraído\". Al abrir: \"expandido, menú, [N] items\".",
+        "navigation": "En cada item lee: \"[texto], item de menú, [N] de [total]\".",
+        "checked": "CheckboxItem: \"[texto], casilla, marcada/desmarcada\".",
+        "shortcut": "Shortcut se lee como parte del label del item (ej: \"Guardar, Control K\")."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "contextMenu": {
+          "name": "ContextMenu",
+          "description": "Menú accionado por clic derecho; misma API que DropdownMenu."
+        },
+        "menubar": {
+          "name": "Menubar",
+          "description": "Barra de menús horizontales (estilo aplicación desktop)."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Menú de selección con búsqueda y filtrado."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "Contenido flotante genérico (sin semántica de menú)."
+        },
+        "select": {
+          "name": "Select",
+          "description": "Combobox para selección única en formularios."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: DropdownMenu usa <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom sin submenu nativo.",
+      "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews de Storybook, aplica <code>contain: layout</code> en el wrapper.",
+      "item3": "<strong>Submenús</strong>: limita a 1 nivel de anidamiento. Submenú dentro de submenú confunde y rompe la navegación por teclado en mobile.",
+      "item4": "<strong>Atajos</strong>: <code>DropdownMenuShortcut</code> es solo visual; el atajo real debe registrarse en el consumidor (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
+      "item5": "<strong>asChild en Trigger</strong>: usar <code>asChild</code> con <code>Button</code> evita <code>&lt;button&gt;&lt;button&gt;</code> anidado (NestedInteractive ARIA violation)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obligatorio: <code>component='dropdown-menu'</code>, <code>location</code> (contexto de página), <code>label</code> (texto del trigger o item). Dispara vía <code>onOpenChange</code> y <code>onSelect</code> en el consumidor."
+    },
+    "testes": {
+      "title": "Criterios de Test",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en cada interacción.",
+        "item1": {
+          "action": "Hacer clic en DropdownMenuTrigger",
+          "result": "Menú abre con role=menu y foco en el primer item",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Presionar flechas Arriba/Abajo en menú abierto",
+          "result": "Foco se mueve entre items en roving tabindex",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Presionar Enter en Item",
+          "result": "Item se activa y menú cierra; foco vuelve al trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Presionar ESC con menú abierto",
+          "result": "Menú cierra y foco vuelve al trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Hacer clic en CheckboxItem",
+          "result": "data-state alterna entre checked/unchecked; aria-checked refleja",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Hacer clic en RadioItem dentro de RadioGroup",
+          "result": "Solo el item clicado queda checked; otros desmarcan",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Hover/foco en SubTrigger",
+          "result": "SubContent abre a la derecha (o izquierda en RTL)",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
+        "item2": "Trigger tiene aria-haspopup=menu y aria-expanded refleja el estado",
+        "item3": "Content tiene role=menu (WCAG 4.1.2)",
+        "item4": "Items tienen role=menuitem/menuitemcheckbox/menuitemradio correctos",
+        "item5": "Foco vuelve al trigger al cerrar vía ESC o selección (WCAG 2.4.3)",
+        "item6": "Contraste mínimo 4.5:1 entre texto del item y bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": {
+          "story": "Abierto con Items + Label + Separator",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Abierto con CheckboxItems",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Abierto con RadioGroup",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Abierto con SubTrigger y SubContent",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Item destructive en hover",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  }
+}
