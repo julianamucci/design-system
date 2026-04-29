@@ -96,11 +96,6 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
-  // ─── Anatomy ─────────────────────────────────────────────────────────────────
-
-  const anatomyStructureCode = `<Separator orientation="horizontal" />
-<Separator orientation="vertical" decorative={false} />`;
-
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import { Separator } from "@/components/ui/separator";`;
@@ -205,7 +200,7 @@
       $tStore('anatomy.item2'),
       $tStore('anatomy.item3'),
     ]}
-    structureCode={anatomyStructureCode}
+    structureCode={$tStore('anatomy.structureCode')}
   />
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
@@ -489,7 +484,7 @@
         { criterion: stripHtml($tStore('testes.accessibility.item2')), level: '1.4.11', how: '—' },
         { criterion: stripHtml($tStore('testes.accessibility.item3')), level: 'AA', how: '—' },
         { criterion: stripHtml($tStore('testes.accessibility.item4')), level: '1.3.1', how: '—' },
-        { criterion: stripHtml($tStore('testes.accessibility.item5')), level: 'AA', how: '—' },
+        { criterion: stripHtml($tStore('testes.accessibility.item5')), level: '2.1.1', how: '—' },
       ],
     }}
     visual={{

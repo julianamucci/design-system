@@ -166,8 +166,7 @@ interface SeparatorProps {
   class?: string;
 }`;
 
-const anatomyStructure = `<Separator orientation="horizontal" />
-<Separator orientation="vertical" :decorative="false" />`;
+const anatomyStructure = computed(() => tContent('anatomy.structureCode'));
 
 // ─── Computed data ────────────────────────────────────────────────────────────
 
@@ -226,8 +225,8 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: '—', description: tContent('accessibility.keyboard.description') },
-  { key: '—', description: tContent('accessibility.keyboard.noKeyboard')  },
+  { key: '—',   description: tContent('accessibility.keyboard.noKeyboard')  },
+  { key: 'Tab', description: tContent('accessibility.keyboard.description') },
 ]);
 
 const relatedItems = computed(() => [

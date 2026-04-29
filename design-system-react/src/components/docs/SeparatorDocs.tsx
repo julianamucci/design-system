@@ -157,10 +157,7 @@ export function SeparatorDocs() {
   <span>Item 2</span>
 </div>`;
 
-  const structureCode = `Separator (orientation, decorative)
-└── div[data-slot="separator"]
-    ├── data-orientation="horizontal" → h-px w-full
-    └── data-orientation="vertical"   → w-px self-stretch`;
+  const structureCode = tContent('anatomy.structureCode');
 
   const interfaceCode = `// Separator (Base UI)
 interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
