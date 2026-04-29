@@ -146,9 +146,13 @@ function buildCardDemo(label: string): HTMLElement {
 
   const header = document.createElement('div');
   header.className = 'p-4';
-  header.innerHTML =
-    '<p class="text-sm font-semibold">Cabeçalho do Card</p>' +
-    '<p class="text-xs text-muted-foreground">Descrição curta da seção.</p>';
+  const headerTitle = document.createElement('p');
+  headerTitle.className = 'text-sm font-semibold';
+  headerTitle.textContent = 'Cabeçalho do Card';
+  const headerDesc = document.createElement('p');
+  headerDesc.className = 'text-xs text-muted-foreground';
+  headerDesc.textContent = 'Descrição curta da seção.';
+  header.append(headerTitle, headerDesc);
 
   const body = document.createElement('div');
   body.className = 'p-4 text-sm text-muted-foreground';
