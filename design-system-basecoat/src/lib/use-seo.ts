@@ -18,6 +18,9 @@ interface SeoProps {
   locale: Locale;
   componentSlug: string;
   breadcrumb?: BreadcrumbEntry[];
+  aiSummary?: string;
+  aiEntities?: string;
+  aiIntent?: string;
 }
 
 const SUPPORTED_LOCALES: Locale[] = ['pt-BR', 'en', 'es'];
@@ -59,7 +62,7 @@ function upsertMeta(
   return { el, prevContent, isNew };
 }
 
-export function applySeo({ title, description, locale, componentSlug, breadcrumb }: SeoProps): () => void {
+export function applySeo({ title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, aiIntent }: SeoProps): () => void {
   const isIframe = window.self !== window.top;
   const targetDoc = isIframe ? window.parent.document : document;
   const targetWin = isIframe ? window.parent : window;
@@ -73,7 +76,7 @@ export function applySeo({ title, description, locale, componentSlug, breadcrumb
 
   const managedMeta = [
     upsertMeta(targetDoc, { name: 'description' }, description),
-    upsertMeta(targetDoc, { name: 'ai:summary' }, description),
+    upsertMeta(targetDoc, { name: 'ai:summary' }, aiSummary ?? description),
     upsertMeta(targetDoc, { property: 'og:title' }, fullTitle),
     upsertMeta(targetDoc, { property: 'og:description' }, description),
     upsertMeta(targetDoc, { property: 'og:locale' }, locale.replace('-', '_')),
@@ -86,6 +89,13 @@ export function applySeo({ title, description, locale, componentSlug, breadcrumb
       ),
     ),
   ];
+
+  if (aiEntities) {
+    managedMeta.push(upsertMeta(targetDoc, { name: 'ai:entities' }, aiEntities));
+  }
+  if (aiIntent) {
+    managedMeta.push(upsertMeta(targetDoc, { name: 'ai:intent' }, aiIntent));
+  }
 
   targetDoc.querySelectorAll(`link[${HREFLANG_ATTR}]`).forEach((el) => el.remove());
   const hreflangLinks: HTMLLinkElement[] = [];

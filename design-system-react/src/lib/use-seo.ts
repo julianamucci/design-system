@@ -35,6 +35,12 @@ interface SeoProps {
   componentSlug: string;
   /** Caminho navegacional para JSON-LD BreadcrumbList (rich snippets). */
   breadcrumb?: BreadcrumbEntry[];
+  /** Resumo para LLMs (GEO). Se ausente, faz fallback para `description`. */
+  aiSummary?: string;
+  /** Entidades nomeadas (lista CSV) para LLMs (GEO). */
+  aiEntities?: string;
+  /** Intenção/uso primário para LLMs (GEO). */
+  aiIntent?: string;
 }
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -88,7 +94,7 @@ function upsertMeta(
 
 // ─── Hook principal ───────────────────────────────────────────────────────────
 
-export function useSeoEffect({ title, description, locale, componentSlug, breadcrumb }: SeoProps): void {
+export function useSeoEffect({ title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, aiIntent }: SeoProps): void {
   useEffect(() => {
     // Defensive: algumas docs pages importam objetos `locale` de libs externas
     // (ex: ptBR de react-day-picker). Normaliza para string BCP 47.
@@ -113,7 +119,7 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
     // ── Meta tags ─────────────────────────────────────────────────────────
     const managedMeta = [
       upsertMeta(targetDoc, { name: 'description' }, description),
-      upsertMeta(targetDoc, { name: 'ai:summary' }, description),
+      upsertMeta(targetDoc, { name: 'ai:summary' }, aiSummary ?? description),
       upsertMeta(targetDoc, { property: 'og:title' }, fullTitle),
       upsertMeta(targetDoc, { property: 'og:description' }, description),
       upsertMeta(targetDoc, { property: 'og:locale' }, localeStr.replace('-', '_')),
@@ -126,6 +132,13 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
         ),
       ),
     ];
+
+    if (aiEntities) {
+      managedMeta.push(upsertMeta(targetDoc, { name: 'ai:entities' }, aiEntities));
+    }
+    if (aiIntent) {
+      managedMeta.push(upsertMeta(targetDoc, { name: 'ai:intent' }, aiIntent));
+    }
 
     // ── Hreflang links ────────────────────────────────────────────────────
     // Remove links anteriores deste hook para evitar duplicatas entre idiomas.
@@ -196,5 +209,5 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
       hreflangLinks.forEach((el) => el.remove());
       if (breadcrumbScript) breadcrumbScript.remove();
     };
-  }, [title, description, locale, componentSlug, breadcrumb]);
+  }, [title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, aiIntent]);
 }

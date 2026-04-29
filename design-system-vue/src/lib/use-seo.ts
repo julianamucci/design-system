@@ -14,6 +14,9 @@ interface SeoProps {
   locale: Locale;
   componentSlug: string;
   breadcrumb?: BreadcrumbEntry[];
+  aiSummary?: string;
+  aiEntities?: string;
+  aiIntent?: string;
 }
 
 const SUPPORTED_LOCALES: Locale[] = ['pt-BR', 'en', 'es'];
@@ -38,7 +41,7 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
   watchEffect((onCleanup) => {
     // Unwrap reactive ref if needed
     const props = 'value' in propsOrRef ? propsOrRef.value : propsOrRef;
-    const { title, description, locale, componentSlug, breadcrumb } = props;
+    const { title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, aiIntent } = props;
 
     const isIframe = window.self !== window.top;
     const targetDoc = isIframe ? window.parent.document : document;
@@ -53,13 +56,15 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
     targetDoc.documentElement.lang = locale;
 
     // Meta tags
-    const metas = [
+    const metas: Array<{ name?: string; property?: string; content: string }> = [
       { name: 'description', content: description },
-      { name: 'ai:summary',  content: description },
+      { name: 'ai:summary',  content: aiSummary ?? description },
       { property: 'og:title',       content: fullTitle },
       { property: 'og:description', content: description },
       { property: 'og:locale',      content: locale.replace('-', '_') },
     ];
+    if (aiEntities) metas.push({ name: 'ai:entities', content: aiEntities });
+    if (aiIntent)   metas.push({ name: 'ai:intent',   content: aiIntent });
 
     const managed: Array<{ el: HTMLMetaElement; prev: string | null; isNew: boolean }> = [];
     for (const m of metas) {
