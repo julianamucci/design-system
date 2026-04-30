@@ -1,0 +1,1271 @@
+{
+  "pt-BR": {
+    "title": "InputOTP",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Campo de entrada para códigos de verificação (OTP/PIN) com slots individuais, autofill SMS e suporte a paste.",
+    "seo": {
+      "title": "InputOTP — Formulário · Design System",
+      "description": "Documentação do InputOTP: campo de código de verificação via input-otp, com slots individuais, autoFocus, paste e WCAG 2.1 AA.",
+      "aiSummary": "Componente InputOTP construído sobre a lib input-otp (React/Vue/Svelte) e factory custom (Basecoat) que apresenta slots individuais para códigos de verificação OTP/PIN, suporta paste, autoFocus, autocomplete one-time-code e formatos como 4-6 dígitos com separator opcional.",
+      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Basecoat, Tailwind CSS, autocomplete, paste, WCAG 2.1, aria-invalid",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "sixDigits": "Código de 6 dígitos (padrão)",
+        "fourDigits": "PIN de 4 dígitos",
+        "withSeparator": "Com Separator (3+3)",
+        "alphanumeric": "Alfanumérico (auth code)"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>InputOTP (Root)</strong> — wrapper que controla <code>maxLength</code>, <code>value</code>/<code>onChange</code> e padrão (<code>pattern</code>).",
+      "item2": "<strong>InputOTPGroup</strong> — agrupa slots visualmente; aceita múltiplos grupos quando há separator.",
+      "item3": "<strong>InputOTPSlot</strong> — renderiza um caractere por <code>index</code>; aplica estilos de foco e estado.",
+      "item4": "<strong>InputOTPSeparator</strong> — divisor visual entre grupos (ícone Minus por padrão); <code>role=\"separator\"</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use InputOTP <strong>somente</strong> para códigos de verificação curtos (4-8 caracteres) — para inputs livres, use <code>Input</code>.",
+        "item2": "Defina <code>autoComplete=\"one-time-code\"</code> e <code>inputMode=\"numeric\"</code> para acionar autofill de SMS no iOS/Android.",
+        "item3": "Padrão obrigatório: 6 dígitos para códigos de SMS/email; 4 dígitos para PINs locais.",
+        "item4": "Para códigos alfanuméricos, defina <code>pattern</code> (ex: <code>REGEXP_ONLY_DIGITS_AND_CHARS</code>) e <code>inputMode=\"text\"</code>.",
+        "item5": "Sempre inclua <code>aria-label</code> ou <code>label</code> visível descrevendo o que o código representa."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Código SMS de 6 dígitos",
+          "u": "InputOTP maxLength=6",
+          "a": "Input type=text"
+        },
+        "item2": {
+          "s": "PIN de 4 dígitos para abrir conta",
+          "u": "InputOTP maxLength=4",
+          "a": "Input password"
+        },
+        "item3": {
+          "s": "Código de backup (xxx-xxx)",
+          "u": "InputOTP + Separator",
+          "a": "Input com mask"
+        },
+        "item4": {
+          "s": "Código de email (alphanumérico)",
+          "u": "InputOTP pattern alphanumeric",
+          "a": "Input regular"
+        },
+        "item5": {
+          "s": "Senha do usuário",
+          "u": "Input type=password",
+          "a": "InputOTP (errado)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regra",
+          "correct": "Use",
+          "avoid": "Evite",
+          "label": {
+            "name": "Label do campo",
+            "format": "Substantivo + ação implícita",
+            "good": "Código de verificação",
+            "bad": "Digite aqui"
+          },
+          "helpText": {
+            "name": "Texto de ajuda",
+            "format": "Origem + tempo de validade",
+            "good": "Enviamos por SMS, expira em 5 min",
+            "bad": "Insira o código"
+          },
+          "errorText": {
+            "name": "Mensagem de erro",
+            "format": "Causa + ação corretiva",
+            "good": "Código incorreto. Verifique e tente novamente.",
+            "bad": "Erro"
+          },
+          "resend": {
+            "name": "Link reenviar",
+            "format": "Verbo no infinitivo + objeto",
+            "good": "Reenviar código",
+            "bad": "Clique aqui"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Coleta código de verificação curto (4-8 caracteres) enviado por SMS/email.",
+        "item2": "Solicita PIN local (carteira, conta bancária, app travado).",
+        "item3": "Confirma 2FA com app autenticador (TOTP).",
+        "item4": "Quer aproveitar autofill nativo iOS/Android via autocomplete=one-time-code."
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "É senha livre — use <code>Input type=\"password\"</code>.",
+        "item2": "Código tem mais de 8 caracteres — campo único é mais ergonômico.",
+        "item3": "Input livre sem padrão fixo — use <code>Input</code> regular.",
+        "item4": "Em layouts mobile com pouca largura — slots podem ficar muito apertados."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "InputOTP de 6 dígitos com autoComplete=one-time-code para autofill SMS.",
+        "dont": "InputOTP sem autoComplete — usuário digita manualmente."
+      },
+      "pair2": {
+        "do": "InputOTP com label visível (Código de verificação).",
+        "dont": "InputOTP sem label — leitor de tela não anuncia propósito."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "sixDigits": "6 dígitos (padrão SMS)",
+        "fourDigits": "4 dígitos (PIN)",
+        "withSeparator": "Com separator (3+3)",
+        "alphanumeric": "Alfanumérico"
+      },
+      "styles": {
+        "sixDigits": "<code>maxLength=6</code>; padrão para códigos OTP via SMS/email; <code>inputMode=\"numeric\"</code>.",
+        "fourDigits": "<code>maxLength=4</code>; PIN local (carteira, conta); <code>inputMode=\"numeric\"</code>.",
+        "withSeparator": "Dois <code>InputOTPGroup</code> separados por <code>InputOTPSeparator</code> — formato 3-3 ou 4-4.",
+        "alphanumeric": "<code>pattern={REGEXP_ONLY_DIGITS_AND_CHARS}</code> e <code>inputMode=\"text\"</code>; útil para auth codes do GitHub/Google."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "empty": "Vazio",
+        "filling": "Preenchendo",
+        "complete": "Completo",
+        "disabled": "Desabilitado",
+        "error": "Erro"
+      },
+      "descriptions": {
+        "empty": "Nenhum slot preenchido; primeiro slot tem foco se <code>autoFocus</code>.",
+        "filling": "Slots parcialmente preenchidos; foco move para o próximo slot automaticamente.",
+        "complete": "Todos os slots preenchidos; <code>onComplete</code> dispara automaticamente.",
+        "disabled": "<code>disabled</code> aplica <code>has-disabled:opacity-50</code> e bloqueia interação.",
+        "error": "<code>aria-invalid=\"true\"</code> aplica borda <code>border-destructive</code> e ring vermelho."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "maxLength": {
+          "type": "number",
+          "default": "—",
+          "required": "Sim",
+          "description": "Número total de slots/caracteres do código."
+        },
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor controlado do código."
+        },
+        "onChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback chamado a cada alteração do valor."
+        },
+        "onComplete": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback chamado quando todos os slots estão preenchidos."
+        },
+        "pattern": {
+          "type": "string | RegExp",
+          "default": "REGEXP_ONLY_DIGITS",
+          "required": "Não",
+          "description": "Padrão aceito (apenas dígitos, alfanumérico, etc.)."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Bloqueia interação e aplica opacity-50."
+        },
+        "autoFocus": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Foca o primeiro slot automaticamente ao montar."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// InputOTP com pattern alfanumérico e autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "slotSize": {
+          "class": "size-8",
+          "part": "Tamanho de cada slot (32px × 32px)"
+        },
+        "border": {
+          "class": "border-input",
+          "part": "Borda padrão dos slots"
+        },
+        "rounded": {
+          "class": "rounded-l-lg / rounded-r-lg",
+          "part": "Cantos arredondados nos slots de borda do grupo"
+        },
+        "active": {
+          "class": "border-ring ring-3 ring-ring/50",
+          "part": "Slot ativo (foco)"
+        },
+        "invalid": {
+          "class": "border-destructive ring-destructive/20",
+          "part": "Estado de erro (aria-invalid=true)"
+        },
+        "disabled": {
+          "class": "has-disabled:opacity-50",
+          "part": "Container quando algum slot está disabled"
+        },
+        "caret": {
+          "class": "animate-caret-blink",
+          "part": "Caret falso piscando no slot ativo"
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Slot maior para conteúdo touch-friendly */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA — critérios 1.3.1 (estrutura semântica via input + role=separator), 2.1.1 (operável por teclado: setas, backspace, paste), 3.3.2 (Labels and Instructions), 4.1.2 (name/role/value via aria-invalid).",
+      "items": {
+        "item1": "<code>InputOTP</code> renderiza um <code>&lt;input&gt;</code> real internamente — leitor de tela anuncia como input de texto.",
+        "item2": "Sempre forneça <code>aria-label</code> ou <code>label</code> visível descrevendo o que o código representa.",
+        "item3": "<code>autoComplete=\"one-time-code\"</code> aciona autofill de SMS no iOS Safari e Android Chrome.",
+        "item4": "Setas Esquerda/Direita movem entre slots; Backspace apaga e volta um slot; Paste cola o código completo distribuindo nos slots.",
+        "item5": "<code>aria-invalid=\"true\"</code> no input aplica visual de erro e é anunciado pelo leitor de tela.",
+        "item6": "Mensagem de erro deve ser conectada via <code>aria-describedby</code> apontando para o elemento de erro."
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Tab — entra/sai do componente como um único campo.",
+        "arrows": "Setas Esquerda/Direita — move o foco entre slots.",
+        "backspace": "Backspace — apaga o slot atual e volta para o anterior.",
+        "paste": "Ctrl+V / Cmd+V — cola código completo distribuindo automaticamente.",
+        "digit": "0-9 (ou caracteres válidos do pattern) — preenche o slot atual e avança."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "input": "Input interno: <code>autoComplete</code>, <code>inputMode</code>, <code>aria-label</code>.",
+        "separator": "Separator: <code>role=\"separator\"</code>.",
+        "invalid": "<code>aria-invalid</code> reflete estado de erro do código.",
+        "describedBy": "<code>aria-describedby</code> conecta texto de ajuda ou erro."
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "label": "Anuncia o aria-label/label como label do input.",
+        "value": "Lê o valor digitado conforme cada slot é preenchido.",
+        "error": "Quando aria-invalid=true, anuncia \"inválido\" junto com a mensagem de erro."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "input": {
+          "name": "Input",
+          "description": "Para textos livres sem padrão fixo."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Wrapper para validação com react-hook-form e zod."
+        },
+        "label": {
+          "name": "Label",
+          "description": "Label associada ao InputOTP via htmlFor."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Botão para reenviar código ou submeter."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: InputOTP usa <code>input-otp</code> (React) — compartilhado com Vue e Svelte via wrappers. <strong>Basecoat</strong> usa factory custom com inputs HTML nativos.",
+      "item2": "<strong>autoComplete one-time-code</strong>: essencial para autofill nativo. Sem isso, o usuário precisa digitar manualmente mesmo com SMS recebido.",
+      "item3": "<strong>Paste</strong>: a lib distribui automaticamente o código colado nos slots; testar em Safari iOS especialmente.",
+      "item4": "<strong>Patterns prontos</strong>: <code>REGEXP_ONLY_DIGITS</code> (padrão), <code>REGEXP_ONLY_CHARS</code>, <code>REGEXP_ONLY_DIGITS_AND_CHARS</code> exportados pela lib.",
+      "item5": "<strong>Mobile</strong>: slot de 32px é apertado em mobile — considere <code>size-10</code> ou <code>size-12</code> via className quando o componente é a ação principal."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes: <code>otp_complete</code> (todos slots preenchidos), <code>otp_paste</code> (código colado), <code>otp_resend</code> (botão reenviar). Payload obrigatório: <code>component='input-otp'</code>, <code>location</code>, <code>length</code>. Disparar via <code>onComplete</code> e <code>onPaste</code>."
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada interação.",
+        "item1": {
+          "action": "Digitar caractere válido em slot",
+          "result": "Slot preenche e foco move para próximo",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar Backspace em slot preenchido",
+          "result": "Slot apaga e foco volta para slot anterior",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Setas Esquerda/Direita",
+          "result": "Foco move entre slots sem alterar valor",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Colar (Ctrl+V) código completo",
+          "result": "Caracteres distribuídos automaticamente nos slots",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Preencher último slot",
+          "result": "onComplete dispara com o valor completo",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Renderizar com disabled=true",
+          "result": "Container tem opacity-50 e slots bloqueados",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Renderizar com aria-invalid=true",
+          "result": "Borda destructive e ring vermelho aplicados",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "Input interno tem autoComplete=one-time-code (WCAG 1.3.5)",
+        "item3": "aria-label ou label associado descreve o propósito (WCAG 3.3.2)",
+        "item4": "Separator tem role=separator (WCAG 4.1.2)",
+        "item5": "aria-invalid=true reflete estado de erro (WCAG 4.1.2)",
+        "item6": "Contraste mínimo 4.5:1 entre texto digitado e fundo do slot (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": {
+          "story": "Vazio (6 slots, primeiro com foco)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Preenchendo (3 de 6 slots)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Completo (todos os 6 slots)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Erro (aria-invalid=true)",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Com Separator (3+3)",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "InputOTP",
+    "category": "Form",
+    "type": "Component",
+    "description": "Input field for verification codes (OTP/PIN) with individual slots, SMS autofill, and paste support.",
+    "seo": {
+      "title": "InputOTP — Form · Design System",
+      "description": "InputOTP documentation: verification code field via input-otp, with individual slots, autoFocus, paste, and WCAG 2.1 AA.",
+      "aiSummary": "InputOTP component built on the input-otp lib (React/Vue/Svelte) and a custom factory (Basecoat) presenting individual slots for OTP/PIN verification codes, supporting paste, autoFocus, autocomplete one-time-code, and formats like 4-6 digits with optional separator.",
+      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Basecoat, Tailwind CSS, autocomplete, paste, WCAG 2.1, aria-invalid",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "sixDigits": "6-digit code (default)",
+        "fourDigits": "4-digit PIN",
+        "withSeparator": "With Separator (3+3)",
+        "alphanumeric": "Alphanumeric (auth code)"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>InputOTP (Root)</strong> — wrapper that controls <code>maxLength</code>, <code>value</code>/<code>onChange</code>, and <code>pattern</code>.",
+      "item2": "<strong>InputOTPGroup</strong> — visually groups slots; allows multiple groups when there's a separator.",
+      "item3": "<strong>InputOTPSlot</strong> — renders a single character per <code>index</code>; applies focus and state styles.",
+      "item4": "<strong>InputOTPSeparator</strong> — visual divider between groups (Minus icon by default); <code>role=\"separator\"</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Mandatory Guidelines",
+        "item1": "Use InputOTP <strong>only</strong> for short verification codes (4-8 chars) — for free input, use <code>Input</code>.",
+        "item2": "Set <code>autoComplete=\"one-time-code\"</code> and <code>inputMode=\"numeric\"</code> to trigger SMS autofill on iOS/Android.",
+        "item3": "Mandatory pattern: 6 digits for SMS/email codes; 4 digits for local PINs.",
+        "item4": "For alphanumeric codes, set <code>pattern</code> (e.g., <code>REGEXP_ONLY_DIGITS_AND_CHARS</code>) and <code>inputMode=\"text\"</code>.",
+        "item5": "Always include <code>aria-label</code> or visible <code>label</code> describing what the code represents."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "6-digit SMS code",
+          "u": "InputOTP maxLength=6",
+          "a": "Input type=text"
+        },
+        "item2": {
+          "s": "4-digit PIN to unlock account",
+          "u": "InputOTP maxLength=4",
+          "a": "Input password"
+        },
+        "item3": {
+          "s": "Backup code (xxx-xxx)",
+          "u": "InputOTP + Separator",
+          "a": "Input with mask"
+        },
+        "item4": {
+          "s": "Email code (alphanumeric)",
+          "u": "InputOTP pattern alphanumeric",
+          "a": "Regular Input"
+        },
+        "item5": {
+          "s": "User password",
+          "u": "Input type=password",
+          "a": "InputOTP (wrong)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Rule",
+          "correct": "Use",
+          "avoid": "Avoid",
+          "label": {
+            "name": "Field label",
+            "format": "Noun + implicit action",
+            "good": "Verification code",
+            "bad": "Type here"
+          },
+          "helpText": {
+            "name": "Help text",
+            "format": "Source + validity time",
+            "good": "Sent via SMS, expires in 5 min",
+            "bad": "Enter the code"
+          },
+          "errorText": {
+            "name": "Error message",
+            "format": "Cause + corrective action",
+            "good": "Incorrect code. Check and try again.",
+            "bad": "Error"
+          },
+          "resend": {
+            "name": "Resend link",
+            "format": "Infinitive verb + object",
+            "good": "Resend code",
+            "bad": "Click here"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Collecting a short verification code (4-8 chars) sent via SMS/email.",
+        "item2": "Requesting a local PIN (wallet, banking, locked app).",
+        "item3": "Confirming 2FA with an authenticator app (TOTP).",
+        "item4": "You want to leverage native iOS/Android autofill via autocomplete=one-time-code."
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "It's a free password — use <code>Input type=\"password\"</code>.",
+        "item2": "Code is longer than 8 chars — single field is more ergonomic.",
+        "item3": "Free input without a fixed pattern — use regular <code>Input</code>.",
+        "item4": "On narrow mobile layouts — slots may become too cramped."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "6-digit InputOTP with autoComplete=one-time-code for SMS autofill.",
+        "dont": "InputOTP without autoComplete — user types manually."
+      },
+      "pair2": {
+        "do": "InputOTP with visible label (Verification code).",
+        "dont": "InputOTP without label — screen reader can't announce purpose."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "sixDigits": "6 digits (default SMS)",
+        "fourDigits": "4 digits (PIN)",
+        "withSeparator": "With separator (3+3)",
+        "alphanumeric": "Alphanumeric"
+      },
+      "styles": {
+        "sixDigits": "<code>maxLength=6</code>; default for OTP codes via SMS/email; <code>inputMode=\"numeric\"</code>.",
+        "fourDigits": "<code>maxLength=4</code>; local PIN (wallet, account); <code>inputMode=\"numeric\"</code>.",
+        "withSeparator": "Two <code>InputOTPGroup</code> separated by <code>InputOTPSeparator</code> — 3-3 or 4-4 format.",
+        "alphanumeric": "<code>pattern={REGEXP_ONLY_DIGITS_AND_CHARS}</code> and <code>inputMode=\"text\"</code>; useful for GitHub/Google auth codes."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "empty": "Empty",
+        "filling": "Filling",
+        "complete": "Complete",
+        "disabled": "Disabled",
+        "error": "Error"
+      },
+      "descriptions": {
+        "empty": "No slots filled; first slot has focus if <code>autoFocus</code>.",
+        "filling": "Slots partially filled; focus moves to next slot automatically.",
+        "complete": "All slots filled; <code>onComplete</code> fires automatically.",
+        "disabled": "<code>disabled</code> applies <code>has-disabled:opacity-50</code> and blocks interaction.",
+        "error": "<code>aria-invalid=\"true\"</code> applies <code>border-destructive</code> and red ring."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "maxLength": {
+          "type": "number",
+          "default": "—",
+          "required": "Yes",
+          "description": "Total number of slots/characters in the code."
+        },
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled code value."
+        },
+        "onChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired on each value change."
+        },
+        "onComplete": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired when all slots are filled."
+        },
+        "pattern": {
+          "type": "string | RegExp",
+          "default": "REGEXP_ONLY_DIGITS",
+          "required": "No",
+          "description": "Accepted pattern (digits only, alphanumeric, etc.)."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Blocks interaction and applies opacity-50."
+        },
+        "autoFocus": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Auto-focuses the first slot on mount."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// InputOTP with alphanumeric pattern and autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "slotSize": {
+          "class": "size-8",
+          "part": "Each slot size (32px × 32px)"
+        },
+        "border": {
+          "class": "border-input",
+          "part": "Default slot border"
+        },
+        "rounded": {
+          "class": "rounded-l-lg / rounded-r-lg",
+          "part": "Rounded corners on group edge slots"
+        },
+        "active": {
+          "class": "border-ring ring-3 ring-ring/50",
+          "part": "Active slot (focus)"
+        },
+        "invalid": {
+          "class": "border-destructive ring-destructive/20",
+          "part": "Error state (aria-invalid=true)"
+        },
+        "disabled": {
+          "class": "has-disabled:opacity-50",
+          "part": "Container when any slot is disabled"
+        },
+        "caret": {
+          "class": "animate-caret-blink",
+          "part": "Fake blinking caret on active slot"
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Larger slot for touch-friendly content */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA — criteria 1.3.1 (semantic structure via input + role=separator), 2.1.1 (keyboard operable: arrows, backspace, paste), 3.3.2 (Labels and Instructions), 4.1.2 (name/role/value via aria-invalid).",
+      "items": {
+        "item1": "<code>InputOTP</code> renders a real <code>&lt;input&gt;</code> internally — screen reader announces it as a text input.",
+        "item2": "Always provide <code>aria-label</code> or visible <code>label</code> describing what the code represents.",
+        "item3": "<code>autoComplete=\"one-time-code\"</code> triggers SMS autofill on iOS Safari and Android Chrome.",
+        "item4": "Left/Right arrows move between slots; Backspace deletes and goes back; Paste fills the entire code distributing across slots.",
+        "item5": "<code>aria-invalid=\"true\"</code> on the input applies error visuals and is announced by screen readers.",
+        "item6": "Error message must be connected via <code>aria-describedby</code> pointing to the error element."
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Tab — enters/exits the component as a single field.",
+        "arrows": "Left/Right arrows — moves focus between slots.",
+        "backspace": "Backspace — clears current slot and moves back.",
+        "paste": "Ctrl+V / Cmd+V — pastes full code distributing automatically.",
+        "digit": "0-9 (or valid pattern characters) — fills current slot and advances."
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "input": "Internal input: <code>autoComplete</code>, <code>inputMode</code>, <code>aria-label</code>.",
+        "separator": "Separator: <code>role=\"separator\"</code>.",
+        "invalid": "<code>aria-invalid</code> reflects code error state.",
+        "describedBy": "<code>aria-describedby</code> connects help or error text."
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "label": "Announces aria-label/label as the input label.",
+        "value": "Reads typed value as each slot fills.",
+        "error": "When aria-invalid=true, announces \"invalid\" along with error message."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "input": {
+          "name": "Input",
+          "description": "For free text without fixed pattern."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Wrapper for validation with react-hook-form and zod."
+        },
+        "label": {
+          "name": "Label",
+          "description": "Label associated with InputOTP via htmlFor."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Button to resend code or submit."
+        }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: InputOTP uses <code>input-otp</code> (React) — shared with Vue and Svelte via wrappers. <strong>Basecoat</strong> uses a custom factory with native HTML inputs.",
+      "item2": "<strong>autoComplete one-time-code</strong>: essential for native autofill. Without it, the user must type manually even when SMS is received.",
+      "item3": "<strong>Paste</strong>: the lib automatically distributes pasted code across slots; test on iOS Safari especially.",
+      "item4": "<strong>Ready-made patterns</strong>: <code>REGEXP_ONLY_DIGITS</code> (default), <code>REGEXP_ONLY_CHARS</code>, <code>REGEXP_ONLY_DIGITS_AND_CHARS</code> exported by the lib.",
+      "item5": "<strong>Mobile</strong>: 32px slot is cramped on mobile — consider <code>size-10</code> or <code>size-12</code> via className when the component is the main action."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant events: <code>otp_complete</code> (all slots filled), <code>otp_paste</code> (code pasted), <code>otp_resend</code> (resend button). Required payload: <code>component='input-otp'</code>, <code>location</code>, <code>length</code>. Dispatch via <code>onComplete</code> and <code>onPaste</code>."
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen on each interaction.",
+        "item1": {
+          "action": "Type valid character in a slot",
+          "result": "Slot fills and focus moves to next",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press Backspace on filled slot",
+          "result": "Slot clears and focus goes back to previous",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Left/Right arrows",
+          "result": "Focus moves between slots without altering value",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Paste (Ctrl+V) full code",
+          "result": "Characters distributed automatically across slots",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Fill last slot",
+          "result": "onComplete fires with full value",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Render with disabled=true",
+          "result": "Container has opacity-50 and slots blocked",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Render with aria-invalid=true",
+          "result": "destructive border and red ring applied",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria automated tools should confirm.",
+        "item1": "No violations reported by axe-core in default state",
+        "item2": "Internal input has autoComplete=one-time-code (WCAG 1.3.5)",
+        "item3": "aria-label or associated label describes purpose (WCAG 3.3.2)",
+        "item4": "Separator has role=separator (WCAG 4.1.2)",
+        "item5": "aria-invalid=true reflects error state (WCAG 4.1.2)",
+        "item6": "Minimum 4.5:1 contrast between typed text and slot background (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States Chromatic should capture.",
+        "required": "Required",
+        "item1": {
+          "story": "Empty (6 slots, first focused)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Filling (3 of 6 slots)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Complete (all 6 slots)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Error (aria-invalid=true)",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "With Separator (3+3)",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "InputOTP",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Campo de entrada para códigos de verificación (OTP/PIN) con slots individuales, autofill SMS y soporte para paste.",
+    "seo": {
+      "title": "InputOTP — Formulario · Design System",
+      "description": "Documentación de InputOTP: campo de código de verificación vía input-otp, con slots individuales, autoFocus, paste y WCAG 2.1 AA.",
+      "aiSummary": "Componente InputOTP construido sobre la lib input-otp (React/Vue/Svelte) y factory custom (Basecoat) que presenta slots individuales para códigos de verificación OTP/PIN, soporta paste, autoFocus, autocomplete one-time-code y formatos como 4-6 dígitos con separator opcional.",
+      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Basecoat, Tailwind CSS, autocomplete, paste, WCAG 2.1, aria-invalid",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "sixDigits": "Código de 6 dígitos (predeterminado)",
+        "fourDigits": "PIN de 4 dígitos",
+        "withSeparator": "Con Separator (3+3)",
+        "alphanumeric": "Alfanumérico (auth code)"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>InputOTP (Root)</strong> — wrapper que controla <code>maxLength</code>, <code>value</code>/<code>onChange</code> y <code>pattern</code>.",
+      "item2": "<strong>InputOTPGroup</strong> — agrupa slots visualmente; admite múltiples grupos cuando hay separator.",
+      "item3": "<strong>InputOTPSlot</strong> — renderiza un carácter por <code>index</code>; aplica estilos de foco y estado.",
+      "item4": "<strong>InputOTPSeparator</strong> — divisor visual entre grupos (icono Minus por defecto); <code>role=\"separator\"</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa InputOTP <strong>solo</strong> para códigos de verificación cortos (4-8 caracteres) — para inputs libres, usa <code>Input</code>.",
+        "item2": "Define <code>autoComplete=\"one-time-code\"</code> y <code>inputMode=\"numeric\"</code> para activar autofill de SMS en iOS/Android.",
+        "item3": "Patrón obligatorio: 6 dígitos para códigos de SMS/email; 4 dígitos para PINs locales.",
+        "item4": "Para códigos alfanuméricos, define <code>pattern</code> (ej: <code>REGEXP_ONLY_DIGITS_AND_CHARS</code>) y <code>inputMode=\"text\"</code>.",
+        "item5": "Incluye siempre <code>aria-label</code> o <code>label</code> visible describiendo qué representa el código."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Código SMS de 6 dígitos",
+          "u": "InputOTP maxLength=6",
+          "a": "Input type=text"
+        },
+        "item2": {
+          "s": "PIN de 4 dígitos para abrir cuenta",
+          "u": "InputOTP maxLength=4",
+          "a": "Input password"
+        },
+        "item3": {
+          "s": "Código de respaldo (xxx-xxx)",
+          "u": "InputOTP + Separator",
+          "a": "Input con mask"
+        },
+        "item4": {
+          "s": "Código de email (alfanumérico)",
+          "u": "InputOTP pattern alphanumeric",
+          "a": "Input regular"
+        },
+        "item5": {
+          "s": "Contraseña del usuario",
+          "u": "Input type=password",
+          "a": "InputOTP (incorrecto)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regla",
+          "correct": "Usa",
+          "avoid": "Evita",
+          "label": {
+            "name": "Label del campo",
+            "format": "Sustantivo + acción implícita",
+            "good": "Código de verificación",
+            "bad": "Escribe aquí"
+          },
+          "helpText": {
+            "name": "Texto de ayuda",
+            "format": "Origen + tiempo de validez",
+            "good": "Enviado por SMS, expira en 5 min",
+            "bad": "Ingresa el código"
+          },
+          "errorText": {
+            "name": "Mensaje de error",
+            "format": "Causa + acción correctiva",
+            "good": "Código incorrecto. Verifica e intenta de nuevo.",
+            "bad": "Error"
+          },
+          "resend": {
+            "name": "Link reenviar",
+            "format": "Verbo en infinitivo + objeto",
+            "good": "Reenviar código",
+            "bad": "Haz clic aquí"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Recolectas código de verificación corto (4-8 caracteres) enviado por SMS/email.",
+        "item2": "Solicitas PIN local (cartera, cuenta bancaria, app bloqueada).",
+        "item3": "Confirmas 2FA con app autenticador (TOTP).",
+        "item4": "Quieres aprovechar autofill nativo iOS/Android vía autocomplete=one-time-code."
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Es contraseña libre — usa <code>Input type=\"password\"</code>.",
+        "item2": "Código tiene más de 8 caracteres — campo único es más ergonómico.",
+        "item3": "Input libre sin patrón fijo — usa <code>Input</code> regular.",
+        "item4": "En layouts mobile angostos — slots pueden quedar muy apretados."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "InputOTP de 6 dígitos con autoComplete=one-time-code para autofill SMS.",
+        "dont": "InputOTP sin autoComplete — usuario escribe manualmente."
+      },
+      "pair2": {
+        "do": "InputOTP con label visible (Código de verificación).",
+        "dont": "InputOTP sin label — el lector de pantalla no anuncia el propósito."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "sixDigits": "6 dígitos (predeterminado SMS)",
+        "fourDigits": "4 dígitos (PIN)",
+        "withSeparator": "Con separator (3+3)",
+        "alphanumeric": "Alfanumérico"
+      },
+      "styles": {
+        "sixDigits": "<code>maxLength=6</code>; predeterminado para códigos OTP por SMS/email; <code>inputMode=\"numeric\"</code>.",
+        "fourDigits": "<code>maxLength=4</code>; PIN local (cartera, cuenta); <code>inputMode=\"numeric\"</code>.",
+        "withSeparator": "Dos <code>InputOTPGroup</code> separados por <code>InputOTPSeparator</code> — formato 3-3 o 4-4.",
+        "alphanumeric": "<code>pattern={REGEXP_ONLY_DIGITS_AND_CHARS}</code> e <code>inputMode=\"text\"</code>; útil para auth codes de GitHub/Google."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "empty": "Vacío",
+        "filling": "Llenando",
+        "complete": "Completo",
+        "disabled": "Deshabilitado",
+        "error": "Error"
+      },
+      "descriptions": {
+        "empty": "Ningún slot lleno; primer slot tiene foco si <code>autoFocus</code>.",
+        "filling": "Slots parcialmente llenos; foco se mueve al siguiente slot automáticamente.",
+        "complete": "Todos los slots llenos; <code>onComplete</code> se dispara automáticamente.",
+        "disabled": "<code>disabled</code> aplica <code>has-disabled:opacity-50</code> y bloquea interacción.",
+        "error": "<code>aria-invalid=\"true\"</code> aplica <code>border-destructive</code> y ring rojo."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "maxLength": {
+          "type": "number",
+          "default": "—",
+          "required": "Sí",
+          "description": "Número total de slots/caracteres del código."
+        },
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Valor controlado del código."
+        },
+        "onChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback llamado en cada cambio de valor."
+        },
+        "onComplete": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback llamado cuando todos los slots están llenos."
+        },
+        "pattern": {
+          "type": "string | RegExp",
+          "default": "REGEXP_ONLY_DIGITS",
+          "required": "No",
+          "description": "Patrón aceptado (solo dígitos, alfanumérico, etc.)."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Bloquea interacción y aplica opacity-50."
+        },
+        "autoFocus": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Enfoca el primer slot automáticamente al montar."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// InputOTP con pattern alfanumérico y autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "slotSize": {
+          "class": "size-8",
+          "part": "Tamaño de cada slot (32px × 32px)"
+        },
+        "border": {
+          "class": "border-input",
+          "part": "Borde predeterminado de los slots"
+        },
+        "rounded": {
+          "class": "rounded-l-lg / rounded-r-lg",
+          "part": "Esquinas redondeadas en slots de borde del grupo"
+        },
+        "active": {
+          "class": "border-ring ring-3 ring-ring/50",
+          "part": "Slot activo (foco)"
+        },
+        "invalid": {
+          "class": "border-destructive ring-destructive/20",
+          "part": "Estado de error (aria-invalid=true)"
+        },
+        "disabled": {
+          "class": "has-disabled:opacity-50",
+          "part": "Container cuando algún slot está disabled"
+        },
+        "caret": {
+          "class": "animate-caret-blink",
+          "part": "Caret falso parpadeando en slot activo"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Slot mayor para contenido touch-friendly */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA — criterios 1.3.1 (estructura semántica vía input + role=separator), 2.1.1 (operable por teclado: flechas, backspace, paste), 3.3.2 (Labels and Instructions), 4.1.2 (name/role/value vía aria-invalid).",
+      "items": {
+        "item1": "<code>InputOTP</code> renderiza un <code>&lt;input&gt;</code> real internamente — el lector de pantalla lo anuncia como input de texto.",
+        "item2": "Proporciona siempre <code>aria-label</code> o <code>label</code> visible describiendo qué representa el código.",
+        "item3": "<code>autoComplete=\"one-time-code\"</code> activa autofill de SMS en iOS Safari y Android Chrome.",
+        "item4": "Flechas Izquierda/Derecha mueven entre slots; Backspace borra y vuelve un slot; Paste pega el código completo distribuyéndolo en los slots.",
+        "item5": "<code>aria-invalid=\"true\"</code> en el input aplica visual de error y es anunciado por el lector de pantalla.",
+        "item6": "El mensaje de error debe estar conectado vía <code>aria-describedby</code> apuntando al elemento de error."
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Tab — entra/sale del componente como un único campo.",
+        "arrows": "Flechas Izquierda/Derecha — mueve el foco entre slots.",
+        "backspace": "Backspace — borra el slot actual y vuelve al anterior.",
+        "paste": "Ctrl+V / Cmd+V — pega código completo distribuyendo automáticamente.",
+        "digit": "0-9 (o caracteres válidos del pattern) — llena el slot actual y avanza."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "input": "Input interno: <code>autoComplete</code>, <code>inputMode</code>, <code>aria-label</code>.",
+        "separator": "Separator: <code>role=\"separator\"</code>.",
+        "invalid": "<code>aria-invalid</code> refleja estado de error del código.",
+        "describedBy": "<code>aria-describedby</code> conecta texto de ayuda o error."
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "label": "Anuncia el aria-label/label como label del input.",
+        "value": "Lee el valor escrito a medida que cada slot se llena.",
+        "error": "Cuando aria-invalid=true, anuncia \"inválido\" junto con el mensaje de error."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "input": {
+          "name": "Input",
+          "description": "Para textos libres sin patrón fijo."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Wrapper para validación con react-hook-form y zod."
+        },
+        "label": {
+          "name": "Label",
+          "description": "Label asociada a InputOTP vía htmlFor."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Botón para reenviar código o submit."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: InputOTP usa <code>input-otp</code> (React) — compartido con Vue y Svelte vía wrappers. <strong>Basecoat</strong> usa factory custom con inputs HTML nativos.",
+      "item2": "<strong>autoComplete one-time-code</strong>: esencial para autofill nativo. Sin esto, el usuario debe escribir manualmente aún recibiendo SMS.",
+      "item3": "<strong>Paste</strong>: la lib distribuye automáticamente el código pegado en los slots; probar en Safari iOS especialmente.",
+      "item4": "<strong>Patterns listos</strong>: <code>REGEXP_ONLY_DIGITS</code> (predeterminado), <code>REGEXP_ONLY_CHARS</code>, <code>REGEXP_ONLY_DIGITS_AND_CHARS</code> exportados por la lib.",
+      "item5": "<strong>Mobile</strong>: slot de 32px es apretado en mobile — considera <code>size-10</code> o <code>size-12</code> vía className cuando el componente es la acción principal."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes: <code>otp_complete</code> (todos los slots llenos), <code>otp_paste</code> (código pegado), <code>otp_resend</code> (botón reenviar). Payload obligatorio: <code>component='input-otp'</code>, <code>location</code>, <code>length</code>. Dispara vía <code>onComplete</code> y <code>onPaste</code>."
+    },
+    "testes": {
+      "title": "Criterios de Test",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en cada interacción.",
+        "item1": {
+          "action": "Escribir carácter válido en slot",
+          "result": "Slot se llena y foco mueve al siguiente",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Presionar Backspace en slot lleno",
+          "result": "Slot se borra y foco vuelve al slot anterior",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Flechas Izquierda/Derecha",
+          "result": "Foco mueve entre slots sin alterar valor",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pegar (Ctrl+V) código completo",
+          "result": "Caracteres distribuidos automáticamente en los slots",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Llenar último slot",
+          "result": "onComplete dispara con el valor completo",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Renderizar con disabled=true",
+          "result": "Container tiene opacity-50 y slots bloqueados",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Renderizar con aria-invalid=true",
+          "result": "Borde destructive y ring rojo aplicados",
+          "priority": "high"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
+        "item2": "Input interno tiene autoComplete=one-time-code (WCAG 1.3.5)",
+        "item3": "aria-label o label asociada describe el propósito (WCAG 3.3.2)",
+        "item4": "Separator tiene role=separator (WCAG 4.1.2)",
+        "item5": "aria-invalid=true refleja estado de error (WCAG 4.1.2)",
+        "item6": "Contraste mínimo 4.5:1 entre texto escrito y fondo del slot (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": {
+          "story": "Vacío (6 slots, primero con foco)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Llenando (3 de 6 slots)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Completo (todos los 6 slots)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Error (aria-invalid=true)",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Con Separator (3+3)",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  }
+}
