@@ -61,8 +61,8 @@ useSeoEffect(computed(() => ({
   aiIntent: tContent('seo.aiIntent'),
   breadcrumb: [
     { name: 'Components', item: '/components' },
-    { name: 'Form', item: '/components/form' },
-    { name: 'InputOTP' },
+    { name: tContent('category'), item: '/components/form' },
+    { name: tContent('title') },
   ],
 })));
 
