@@ -6,55 +6,22 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent]
 
 # Dev Basecoat — Especialista em Desenvolvimento
 
-Você é um desenvolvedor especialista em Vanilla TypeScript para design systems. Seu trabalho é criar stories e docs pages para componentes HTML/CSS/TS puros (sem framework), seguindo rigorosamente os padrões do projeto.
+Você é um desenvolvedor especialista em Vanilla TypeScript + basecoat-css para design systems. Crie stories, docs pages e factories para componentes Basecoat.
 
 ## Argumentos
 
 O usuário invocou o comando com: **$ARGUMENTS**
 
-- **`component-slug`** (obrigatório) — slug do componente (ex: `button`, `alert-dialog`)
+- **`component-slug`** (obrigatório) — slug do componente
 
 ---
 
-## Leituras obrigatórias — leia em paralelo antes de criar qualquer arquivo
+## Leituras obrigatórias (antes de começar)
 
-Dispare estas 2 leituras no mesmo turno:
-
-1. `design-system-basecoat/src/components/ui/<slug>.ts` — o componente a documentar (factories, tipos, classes)
-2. `docs/shared/content/<slug>/translations.json` — todo o conteúdo vem daqui
-
-Se precisar de referência de padrão específico (layout de docs page, sintaxe de play function, padrão de seção), consulte `design-system-basecoat/src/components/docs/AlertDocs.ts` pontualmente — não leia upfront.
-
----
-
-## Regra Central — Sempre Use Factories
-
-**Stories e docs pages NUNCA recriam elementos com classes inline.** Importe e use as factories de `@/components/ui/<slug>`:
-
-```ts
-// ✅ CORRETO
-import { createAlert, createAlertTitle, createAlertDescription } from '@/components/ui/alert';
-
-export const Destructive: Story = {
-  render: () => {
-    const el = createAlert({ variant: 'destructive' });
-    el.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));
-    el.appendChild(createAlertDescription({ text: 'Verifique sua conexão.' }));
-    return el;
-  },
-};
-
-// ❌ ERRADO
-export const Destructive: Story = {
-  render: () => {
-    const el = document.createElement('div');
-    el.className = 'alert'; // nunca faça isso quando createAlert() existe
-    return el;
-  },
-};
-```
-
-Se o componente ainda não tiver factory implementada, leia o `cva()` do React equivalente e crie o arquivo `.ts` primeiro (ver "Implementando Componentes" abaixo).
+1. **`_dev-shared.md`** — padrões compartilhados das 4 stacks. **Esta skill complementa com o que é específico de Basecoat (vanilla TS).**
+2. UI primitive: `design-system-basecoat/src/components/ui/<slug>.ts`
+3. `docs/shared/content/<slug>/translations.json`
+4. `.pipeline-context/<slug>.md` (se existir)
 
 ---
 
@@ -62,115 +29,46 @@ Se o componente ainda não tiver factory implementada, leia o `cva()` do React e
 
 - **Vanilla TypeScript** (sem framework)
 - **Storybook 10** (`@storybook/html-vite`)
-- **Tailwind CSS 4** + **basecoat-css** (classes semânticas de componente)
+- **Tailwind CSS 4** + **basecoat-css** (classes semânticas)
 - **lucide** (ícones vanilla)
 - HTML nativo + `document.createElement`
 
 ---
 
-## Regras Anti-Boilerplate
-
-- Apenas `<slug>.stories.ts` (story principal) carrega `tags: ['autodocs']`. Sub-stories nunca.
-- Docs page injetada via `parameters: { docs: { page: withAutoDocsTab(<Slug>Docs) } }` apenas no arquivo principal.
-- Sub-stories têm apenas `title`, `parameters.layout`, `parameters.docs.description.component`.
-- Categorias de sub-story dependem da categoria do componente — overlays de confirmação não têm `-variantes` nem `-tamanhos`.
-
----
-
 ## Tokenização de Dimensões
 
-Basecoat usa **basecoat-css** para componentes primitivos — dimensões já estão tokenizadas via `basecoat-theme-overrides.css`. Nenhuma intervenção necessária nos componentes UI.
+Basecoat usa **basecoat-css** para componentes primitivos — dimensões já estão tokenizadas via `basecoat-theme-overrides.css`. Nenhuma intervenção nos UI primitives.
 
-Docs pages e stories usam **Tailwind para layout** (containers, grids, cards de demo). Nessas partes, siga `docs/shared/guidelines/12-tokenizacao-dimensoes.md` — evite `h-8`, use `h-(--height-default)`.
-
----
-
-## Artefatos a Criar
-
-| Arquivo | Conteúdo |
-|---------|----------|
-| `<slug>.stories.ts` | Playground + `tags: ['autodocs']` + `withAutoDocsTab` + play functions |
-| `<slug>-variantes.stories.ts` | Uma story por variante |
-| `<slug>-tamanhos.stories.ts` | Uma story por tamanho (se aplicável) |
-| `<slug>-estados.stories.ts` | Disabled, Loading, Error — com play functions |
-| `<slug>-composicoes.stories.ts` | Com ícone, como link, em formulário etc. |
-| `<Slug>Docs.ts` | Docs page completa com todas as 15 seções |
+Docs pages e stories usam **Tailwind para layout** (containers, grids, cards de demo). Nessas partes, evite `h-8`, use `h-(--height-default)`. Ver `docs/shared/guidelines/12-tokenizacao-dimensoes.md`.
 
 ---
 
-## Paridade Stories ↔ Docs Page
+## Padrões Basecoat-specific
 
-**O elemento renderizado em cada preview da docs page (Demonstração, Variantes, Do/Don't) deve usar as mesmas factory calls da story correspondente.** Use `translations.json` como fonte única:
+### Render de Story
+
+`render` recebe `(args)` e constrói o DOM com base nos valores de `args`. Props de montagem não são problema — `render` re-executa a cada mudança de control:
 
 ```ts
-// story e docs page consomem a mesma chave
-t('demonstration.examples.destructive.title')
-t('demonstration.examples.destructive.description')
-```
-
-Se houver divergência, **a story é a fonte de verdade visual** — alinhe a docs page à story.
-
----
-
-## Controls da Story Playground
-
-A story `Playground` deve ter controls funcionais que o usuário consiga manipular no painel e ver o resultado no preview.
-
-**Regras obrigatórias:**
-
-- `meta` deve ter `argTypes` com ao menos 1 control por prop relevante do componente
-- `render` deve ser uma função que recebe `(args)` e constrói o DOM com base nos valores de `args`
-- Props de montagem não são um problema nesta stack: `render` é chamado a cada mudança de control e o factory function re-executa do zero, então `defaultOpen` e similares funcionam naturalmente
-- `disabled` deve ser passado explicitamente ao elemento interativo filho (trigger, button, input) além do elemento root — o root frequentemente não propaga o visual de disabled para filhos compostos:
-
-```ts
-// ✅ CORRETO
 render: (args) => {
   const root = createCollapsible(args);
   const trigger = root.querySelector('[data-slot="collapsible-trigger"]');
   if (trigger && args.disabled) trigger.setAttribute('disabled', '');
   return root;
-},
-
-// ❌ ERRADO — trigger não recebe disabled, visual não muda
-render: (args) => createCollapsible(args),
+}
 ```
 
-- Se o componente não tem nenhuma prop controlável no sentido estrito, documente isso explicitamente com `parameters.controls: { disable: true }` em vez de deixar o painel vazio sem explicação
+`disabled` deve ser passado explicitamente ao filho interativo (trigger/button) — root frequentemente não propaga.
 
----
+### Implementando UI primitive
 
-## Play Functions
-
-```ts
-import { userEvent, within, expect } from 'storybook/test';
-
-export const Disabled: Story = {
-  render: () => { /* ... */ },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const button = canvas.getByRole('button');
-    await step('possui atributo disabled', async () => {
-      await expect(button).toBeDisabled();
-    });
-  },
-};
-```
-
----
-
-## Implementando Componentes (`.ts` files)
-
-Se a factory ainda não existir, crie `src/components/ui/<slug>.ts`:
+Se factory ainda não existe, criar `src/components/ui/<slug>.ts`:
 
 ```ts
-// ─── Classes (extraídas do cva() React ou de basecoat-css) ───────────────────
 const ROOT = 'rounded-xl border bg-card text-card-foreground shadow';
 
-// ─── Tipos ───────────────────────────────────────────────────────────────────
 export type CardOptions = { class?: string };
 
-// ─── Factories ───────────────────────────────────────────────────────────────
 export function createCard(options: CardOptions = {}): HTMLDivElement {
   const el = document.createElement('div');
   el.className = options.class ? `${ROOT} ${options.class}` : ROOT;
@@ -181,152 +79,123 @@ export function createCard(options: CardOptions = {}): HTMLDivElement {
 **Regras:**
 1. Prefira classe semântica basecoat-css (`.btn`, `.badge`, `.alert`, `.card`, `.input`) como base.
 2. Sem classe semântica → extraia do `cva()` React equivalente.
-3. ARIA explícito obrigatório — sem framework para ajudar, todo atributo ARIA deve ser setado manualmente.
-4. Componentes interativos → lógica de estado (open/close, checked) via `addEventListener` dentro da factory.
-5. Para padrão de componente interativo complexo, consulte `accordion.ts` como referência.
+3. ARIA explícito **obrigatório** — sem framework, todo atributo ARIA deve ser setado manualmente.
+4. Componentes interativos → lógica de estado via `addEventListener` dentro da factory.
+5. Para padrão complexo, consulte `accordion.ts` como referência.
+
+### `createElement` + `textContent` (NUNCA innerHTML com dinâmico)
+
+```ts
+// ✅ CORRETO — sem risco XSS
+const span = document.createElement('span');
+span.textContent = item.label;  // textContent escapa automaticamente
+trigger.appendChild(span);
+
+// ❌ ERRADO — XSS risk
+trigger.innerHTML = `<span>${item.label}</span>`;
+```
+
+**Exceção**: HTML literal interno (sem variáveis dinâmicas) pode usar innerHTML, mas marca de PATCH no código:
+
+```ts
+// PATCH: security — CHEVRON_SVG é string literal segura
+const chevronWrapper = document.createElement('span');
+chevronWrapper.innerHTML = CHEVRON_SVG;
+trigger.appendChild(chevronWrapper.firstElementChild!);
+```
+
+### sanitizeHtml para conteúdo de translations
+
+```ts
+anatomyContent.innerHTML = sanitizeHtml(`
+  <ol class="space-y-3 list-none p-0 m-0">
+    ${[1, 2, 3].map(i => `<li>${t(`anatomy.item${i}`)}</li>`).join('')}
+  </ol>
+`);
+```
 
 ---
 
-## Docs Page (`<Slug>Docs.ts`)
-
-### Section containers — use sempre, nunca monte HTML inline
-
-Verifique os containers disponíveis com `Glob` em `design-system-basecoat/src/components/docs/shared/sections/`. Se existirem, use-os. Se não existirem, rode `/docs-sections --stack basecoat` primeiro.
+## Imports da Docs Page
 
 ```ts
-import { createDocsHeader }        from '@/components/docs/shared/sections/DocsHeader';
+import { sanitizeHtml } from '@/lib/sanitize-html';
+import { t, getLocale, subscribe, onLocaleChange } from '@/lib/i18n';
+import { applySeo } from '@/lib/use-seo';
+import { track } from '@/lib/analytics';
+import componentTranslations from '@shared/content/<slug>/translations.json';
+
+// Section containers (15) — todos de @/components/docs/shared/sections/
+import { createDocsHeader } from '@/components/docs/shared/sections/DocsHeader';
+import { createDocsPageLayout } from '@/components/docs/shared/sections/DocsPageLayout';
 import { createDocsDemonstration } from '@/components/docs/shared/sections/DocsDemonstration';
-import { createDocsAnatomy }       from '@/components/docs/shared/sections/DocsAnatomy';
-import { createDocsWhenToUse }     from '@/components/docs/shared/sections/DocsWhenToUse';
-import { createDocsDoDont }        from '@/components/docs/shared/sections/DocsDoDont';
-import { createDocsImport }        from '@/components/docs/shared/sections/DocsImport';
-import { createDocsVariants }      from '@/components/docs/shared/sections/DocsVariants';
-import { createDocsStates }        from '@/components/docs/shared/sections/DocsStates';
-import { createDocsProps }         from '@/components/docs/shared/sections/DocsProps';
-import { createDocsTokens }        from '@/components/docs/shared/sections/DocsTokens';
-import { createDocsAccessibility } from '@/components/docs/shared/sections/DocsAccessibility';
-import { createDocsRelated }       from '@/components/docs/shared/sections/DocsRelated';
-import { createDocsNotes }         from '@/components/docs/shared/sections/DocsNotes';
-import { createDocsAnalytics }     from '@/components/docs/shared/sections/DocsAnalytics';
-import { createDocsTestes }        from '@/components/docs/shared/sections/DocsTestes';
-import { createDocsPageLayout }    from '@/components/docs/shared/sections/DocsPageLayout';
+// ... + 12 demais (createDocsAnatomy, createDocsWhenToUse, createDocsDoDont,
+//      createDocsImport, createDocsVariants, createDocsStates, createDocsProps,
+//      createDocsTokens, createDocsAccessibility, createDocsRelated, createDocsNotes,
+//      createDocsAnalytics, createDocsTestes)
 ```
 
-Previews visuais (DoDont, Variants, Demonstration) são passados como **factory functions** `() => HTMLElement`.
-
-### Layout e reatividade
-
-Use `createDocsPageLayout` — ele já encapsula o layout de duas colunas com sidebar sticky. A docs page exporta `create<Slug>Docs(): HTMLElement` que:
-
-1. Monta todas as seções via section containers
-2. Implementa `rerenderTexts()` que atualiza TODO o conteúdo ao trocar locale
-3. Usa `subscribe()` do i18n para reagir a mudanças de locale
-4. Usa `sanitizeHtml()` em todo `innerHTML` com conteúdo de translations
-5. Implementa IntersectionObserver para active section tracking + analytics
-6. Faz cleanup de todos os listeners em `cleanups[]`
-
-### Seções obrigatórias (15)
-
-Toda docs page deve renderizar TODAS estas seções com conteúdo real de `translations.json`:
-
-1. Header — badges, language switcher, h1, description
-2. Demonstração — demos interativos com factories reais
-3. Anatomia — lista numerada com `sanitizeHtml(t('anatomy.itemN'))`
-4. Quando Usar — 4 blocos: guidelines, cenários, UX Writing, Do/Don't cards
-5. Do & Don't — use `createDocsDoDont` com previews como `() => HTMLElement`
-6. Importação — blocos de código
-7. Variantes — cards com preview + toggle de código
-8. Estados — tabela de estados
-9. Propriedades — tabelas de props completas
-10. Tokens — tabela de tokens CSS + customização
-11. Acessibilidade — lista + cards de teclado
-12. Relacionados — cards com links
-13. Notas — callouts
-14. Analytics — tabela de eventos GA4
-15. Testes — 3 sub-seções: funcional, acessibilidade, visual
-
-**NUNCA** exiba "Documentação completa disponível na stack React" ou placeholders genéricos. Cada stack é usada de forma independente.
-
-### Do & Don't — bug comum
-
-`createDocsDoDont` recebe pares de previews. **Nunca** use `[1,2].map()` em um único grid — isso empilha DO+DON'T na mesma coluna (DO|DO em cima, DON'T|DON'T em baixo). O container já monta dois grids separados corretamente.
-
-### Padrão innerHTML com sanitizeHtml
+Skeleton da docs page:
 
 ```ts
-anatomiaContent.innerHTML = `
-  <ol class="space-y-3 text-sm list-none p-0 m-0">
-    ${[1, 2, 3].map(i => `
-      <li class="flex gap-3 list-none">
-        <span class="...">${i}</span>
-        <span>${sanitizeHtml(t(\`anatomy.item\${i}\`))}</span>
-      </li>`).join('')}
-  </ol>`;
+export function create<Slug>Docs(): HTMLElement {
+  const cleanups: Array<() => void> = [];
+  const container = document.createElement('div');
+
+  function rerenderTexts() {
+    const locale = getLocale();
+    const seo = applySeo({
+      title: t('seo.title'),
+      description: t('seo.description'),
+      locale,
+      componentSlug: '<slug>',
+      aiSummary: t('seo.aiSummary'),
+      aiEntities: t('seo.aiEntities'),
+      aiIntent: t('seo.aiIntent'),
+      breadcrumb: [
+        { name: 'Components', item: '/components' },
+        { name: t('category'), item: '/components/<categoria>' },
+        { name: t('title') },
+      ],
+    });
+    cleanups.push(seo);
+
+    track('docs_page_view', {
+      component_name: '<slug>',
+      locale,
+      page_title: `${t('title')} · Design System`,
+    });
+
+    // Monta todas as seções aqui ...
+  }
+
+  rerenderTexts();
+  cleanups.push(onLocaleChange(rerenderTexts));
+
+  // IntersectionObserver para active section + docs_section_viewed
+  // ...
+
+  return container;
+}
 ```
 
-### Blocos de código — nunca `<pre>`
-
-```ts
-// ✅ CORRETO
-`<div class="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">
-  <code class="whitespace-pre">import { createButton } from '@/components/ui/button';</code>
-</div>`
-
-// ❌ ERRADO
-`<pre class="..."><code>...</code></pre>`
-```
-
-Exceção: diagramas ASCII em `anatomy.structureCode` podem usar `<pre>` dentro de `<div class="... overflow-x-auto">`.
-
-### Tabelas — wrapper obrigatório
-
-```ts
-// ✅ card com p-4 e overflow-x-auto
-const card = document.createElement('div');
-card.className = 'rounded-lg border border-border p-4 shadow-sm overflow-x-auto';
-card.appendChild(buildTable(cols, rows));
-
-// ❌ overflow-hidden sem padding
-wrapper.className = 'rounded-lg border border-border overflow-hidden';
-```
-
-Primeira coluna da tabela de estados: texto puro com `font-medium`, nunca badge/pill.
-
-### CSS obrigatório
-
-Confirme que `src/styles/storybook-docs.css` contém:
-
-```css
-/* Remove margin-block que o Storybook injeta em <table>. */
-.ds-docs table { margin: 0; }
-```
+> **`structureCode` SEMPRE de `t('anatomy.structureCode')`** — não hardcode.
 
 ---
 
-## Checklist Final
+## Documentação de Divergências Idiomáticas
 
-Itens fáceis de esquecer:
+Basecoat factory custom frequentemente NÃO suporta features das libs upstream (submenu, CheckboxItem nativo, RadioItem nativo, props específicas de delays/portals).
 
-- [ ] `min-w-0` no container principal (`flex-1 min-w-0 space-y-12`) — sem ele tabelas transbordam
-- [ ] `sanitizeHtml` em todo `innerHTML` com conteúdo de translations
-- [ ] Blocos de código usam `<div><code>`, nunca `<pre><code>`
-- [ ] Language switcher manual com botões PT/EN/ES
-- [ ] `rerenderTexts()` chamado no subscribe do i18n
-- [ ] IntersectionObserver conectado ao active section + analytics (`track('docs_section_viewed', ...)`)
-- [ ] ARIA attributes setados manualmente em elementos não-nativos
-- [ ] Play functions nas stories de estados interativos
-- [ ] Todas as 15 seções com conteúdo real (sem placeholders)
-- [ ] `.ds-docs table { margin: 0 }` presente no CSS
+**3 camadas obrigatórias** (ver `_dev-shared.md`):
+1. `translations.notes.item1` — descrever divergência
+2. DocsProps notes inline — para cada prop não suportada
+3. Story afetada (se omitida): `parameters.docs.description.component` com nota explícita
+
+`navigation-menu` e `menubar` Basecoat são referências exemplares.
 
 ---
 
-## Commit de Rastreabilidade
+## Audit + Commit
 
-Ao finalizar todos os artefatos, execute:
-
-```bash
-git add -A
-git commit -m "skill(dev-basecoat): $ARGUMENTS"
-```
-
-Se nenhum arquivo foi criado ou modificado, não faça commit.
+Veja `_dev-shared.md` (Audit Inline + Commit). Mensagem: `skill(dev-basecoat): $ARGUMENTS`.
