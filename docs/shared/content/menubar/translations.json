@@ -1,0 +1,1295 @@
+{
+  "pt-BR": {
+    "title": "Menubar",
+    "category": "Navegação",
+    "type": "Componente",
+    "description": "Barra horizontal com múltiplos menus suspensos no estilo de aplicações desktop, com navegação por teclado entre menus.",
+    "seo": {
+      "title": "Menubar — Navegação · Design System",
+      "description": "Documentação do Menubar: barra de menus horizontal estilo desktop via base-ui/reka-ui/bits-ui, com setas, submenus e WCAG 2.1 AA.",
+      "aiSummary": "Componente Menubar construído sobre base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Basecoat) que apresenta barra horizontal de menus estilo desktop com triggers, items, checkbox-items, radio-items, submenus, separators, shortcuts e navegação por setas entre menus.",
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "fileMenu": "Menu Arquivo (com submenu)",
+        "editMenu": "Menu Editar (com shortcuts)",
+        "viewMenu": "Menu Exibir (com checkbox)",
+        "toolsMenu": "Menu Ferramentas (com radio)"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Menubar (Root)</strong> — barra horizontal com <code>role=\"menubar\"</code>; coordena navegação por setas entre menus.",
+      "item2": "<strong>MenubarMenu</strong> — wrapper de cada menu individual (Arquivo, Editar, etc.); contém Trigger + Content.",
+      "item3": "<strong>MenubarTrigger</strong> — botão visível na barra que abre o menu; foca via setas Esquerda/Direita.",
+      "item4": "<strong>MenubarContent</strong> — popup do menu, posicionado abaixo do Trigger; renderiza em portal.",
+      "item5": "<strong>MenubarItem</strong> — ação executável; aceita <code>variant=\"destructive\"</code> e <code>inset</code>.",
+      "item6": "<strong>MenubarCheckboxItem</strong> — item com estado boolean (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item7": "<strong>MenubarRadioGroup + MenubarRadioItem</strong> — grupo de seleção única.",
+      "item8": "<strong>MenubarSub + SubTrigger + SubContent</strong> — submenu aninhado dentro de um Content.",
+      "item9": "<strong>MenubarLabel</strong> — cabeçalho de grupo (não interativo); <strong>MenubarSeparator</strong> divide grupos; <strong>MenubarShortcut</strong> exibe atalho.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use Menubar para aplicações estilo desktop (editores, IDEs, design tools) — NÃO para sites/produtos web tradicionais.",
+        "item2": "Para web tradicional, prefira <code>NavigationMenu</code> (com hover/click) ou <code>Sidebar</code>.",
+        "item3": "Cada menu deve ter de 3 a 10 items — menos vira ruído, mais sugere refatoração da hierarquia.",
+        "item4": "Use <code>MenubarShortcut</code> para exibir atalhos visuais — registrar o atalho real é responsabilidade do consumidor.",
+        "item5": "Submenus apenas com hierarquia real; limite a 1 nível de aninhamento."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Editor de texto/imagem com File/Edit/View",
+          "u": "Menubar horizontal",
+          "a": "DropdownMenu único"
+        },
+        "item2": {
+          "s": "Site de e-commerce com categorias",
+          "u": "NavigationMenu",
+          "a": "Menubar (errado)"
+        },
+        "item3": {
+          "s": "Dashboard com seções principais",
+          "u": "Sidebar com Accordion",
+          "a": "Menubar (não-idiomático)"
+        },
+        "item4": {
+          "s": "Toggle de visualização (Lista/Grid)",
+          "u": "ToggleGroup",
+          "a": "Menubar (excessivo)"
+        },
+        "item5": {
+          "s": "Aplicação Figma/Sketch-like",
+          "u": "Menubar com submenus",
+          "a": "Toolbar ou DropdownMenus"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regra",
+          "correct": "Use",
+          "avoid": "Evite",
+          "trigger": {
+            "name": "MenubarTrigger label",
+            "format": "Substantivo curto (categoria de ação)",
+            "good": "Arquivo",
+            "bad": "Clique para abrir o menu de arquivo"
+          },
+          "item": {
+            "name": "MenubarItem",
+            "format": "Verbo no infinitivo",
+            "good": "Salvar como...",
+            "bad": "Salvamento"
+          },
+          "shortcut": {
+            "name": "MenubarShortcut",
+            "format": "Notação padrão de atalho do OS",
+            "good": "⌘S / Ctrl+S",
+            "bad": "Apertar Cmd e S"
+          },
+          "destructive": {
+            "name": "Item destructive",
+            "format": "Verbo + objeto, claro sobre irreversibilidade",
+            "good": "Excluir arquivo",
+            "bad": "Apagar"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Aplicação tem múltiplas categorias de ação (Arquivo, Editar, Exibir, etc.).",
+        "item2": "Usuários esperam padrão de aplicação desktop (editores, IDEs, ferramentas).",
+        "item3": "Há atalhos de teclado importantes que precisam ser visíveis.",
+        "item4": "Você quer aproveitar navegação por setas entre menus."
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "É um site/produto web tradicional — use NavigationMenu ou Sidebar.",
+        "item2": "Há apenas 1-2 menus — DropdownMenu único basta.",
+        "item3": "Os usuários são predominantemente mobile/touch.",
+        "item4": "Não há hierarquia clara entre as ações."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Menubar com 3-5 menus categorizados (Arquivo, Editar, Exibir).",
+        "dont": "Menubar com 1 menu único — use DropdownMenu."
+      },
+      "pair2": {
+        "do": "MenubarShortcut visível para atalhos importantes (⌘S, ⌘Z).",
+        "dont": "Submenus aninhados em mais de 1 nível — confunde navegação."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "destructive": "Destructive"
+      },
+      "styles": {
+        "default": "Item neutro com hover <code>bg-accent</code>; padrão para a maioria das ações.",
+        "destructive": "Item de ação irreversível com <code>text-destructive</code> e <code>bg-destructive/10</code> no hover."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Fechado",
+        "open": "Aberto",
+        "disabled": "Desabilitado",
+        "checked": "Checked"
+      },
+      "descriptions": {
+        "closed": "Estado padrão — apenas a barra com Triggers visíveis.",
+        "open": "Um menu aberto exibindo Content; setas Esquerda/Direita movem para outros menus.",
+        "disabled": "<code>disabled</code> em Item bloqueia interação; <code>aria-disabled=\"true\"</code>.",
+        "checked": "CheckboxItem ou RadioItem com <code>data-state=\"checked\"</code>; ícone Check exibido."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Menu ativo controlado (Menubar Root)."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback ao alternar menu ativo."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Menu ativo inicial em modo não-controlado."
+        },
+        "loop": {
+          "type": "boolean",
+          "default": "true",
+          "required": "Não",
+          "description": "Loop de navegação por setas (do último para o primeiro e vice-versa)."
+        },
+        "side": {
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "Não",
+          "description": "Lado de abertura do MenubarContent."
+        },
+        "align": {
+          "type": "'start' | 'center' | 'end'",
+          "default": "'start'",
+          "required": "Não",
+          "description": "Alinhamento horizontal do MenubarContent."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Menubar controlado com loop desabilitado\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "menubarBg": {
+          "class": "bg-background",
+          "part": "Fundo da barra horizontal"
+        },
+        "menubarBorder": {
+          "class": "border-border",
+          "part": "Borda da barra"
+        },
+        "triggerHover": {
+          "class": "data-[state=open]:bg-accent",
+          "part": "Trigger ativo (com menu aberto)"
+        },
+        "contentBg": {
+          "class": "bg-popover",
+          "part": "Fundo do MenubarContent"
+        },
+        "contentBorder": {
+          "class": "ring-foreground/10",
+          "part": "Borda sutil do Content (ring 1px)"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Cantos arredondados do Content"
+        },
+        "itemHover": {
+          "class": "bg-accent",
+          "part": "Hover/foco em Item default"
+        },
+        "destructive": {
+          "class": "text-destructive bg-destructive/10",
+          "part": "Item variant=destructive"
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Override de cor da barra */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA — critérios 1.3.1 (estrutura semântica via role=menubar/menu/menuitem), 2.1.1 (operável por teclado: setas, Enter, ESC, Home/End, typeahead), 2.4.3 (foco retorna ao trigger ao fechar), 4.1.2 (name/role/value).",
+      "items": {
+        "item1": "<code>Menubar</code> recebe <code>role=\"menubar\"</code>; coordena foco entre Triggers via setas Esquerda/Direita.",
+        "item2": "<code>MenubarTrigger</code> recebe <code>aria-haspopup=\"menu\"</code> e <code>aria-expanded</code>; é parte do menubar (não Tab estopa).",
+        "item3": "Setas Esquerda/Direita movem entre Triggers; Enter/Space/Seta-baixo abre o menu; ESC fecha.",
+        "item4": "Dentro do Content: setas Cima/Baixo navegam Items; Seta Direita abre submenu; Seta Esquerda fecha submenu ou volta para Trigger anterior.",
+        "item5": "Typeahead: digitar letra move foco para Item começando com essa letra.",
+        "item6": "Tab sai do Menubar inteiro (move para próximo elemento focável da página)."
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Tab — entra no Menubar (foca primeiro Trigger) ou sai dele.",
+        "arrowsHorizontal": "← / → — move entre Triggers; abre menu adjacente se um já estiver aberto.",
+        "arrowsVertical": "↑ / ↓ — abre menu (se Trigger focado) ou navega Items (se Content aberto).",
+        "enter": "Enter / Space — ativa Trigger ou Item.",
+        "escape": "ESC — fecha menu (e submenu); retorna foco ao Trigger.",
+        "homeEnd": "Home / End — primeiro/último Item dentro de Content.",
+        "typeahead": "Letras alfabéticas — typeahead em Items."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "menubar": "Menubar Root: <code>role=\"menubar\"</code>.",
+        "trigger": "Trigger: <code>aria-haspopup=\"menu\"</code>, <code>aria-expanded</code>.",
+        "menu": "Content: <code>role=\"menu\"</code>.",
+        "item": "Item: <code>role=\"menuitem\"</code>; CheckboxItem/RadioItem têm <code>menuitemcheckbox</code>/<code>menuitemradio</code>.",
+        "checked": "<code>aria-checked</code> em CheckboxItem/RadioItem reflete estado.",
+        "disabled": "<code>aria-disabled=\"true\"</code> em Item disabled."
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "open": "Anuncia: \"[label do Trigger], menubar, [N] de [total], menu pop-up\".",
+        "navigation": "Setas movem foco; SR lê \"[texto], item de menu, [N] de [total]\".",
+        "checked": "CheckboxItem: \"[texto], caixa de seleção, marcada/desmarcada\"."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "navigationMenu": {
+          "name": "NavigationMenu",
+          "description": "Para sites/produtos web — menu horizontal com hover."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "Menu único acionado por botão; mesma API de Items."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Navegação vertical persistente em apps."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Para acesso rápido a ações via busca (Cmd+K palette)."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: Menubar usa <code>base-ui/menu</code> coordenado (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom sem submenu nativo.",
+      "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews, aplicar <code>contain: layout</code> no wrapper.",
+      "item3": "<strong>Atalhos</strong>: <code>MenubarShortcut</code> é visual; o atalho real precisa ser registrado no consumidor (ex: <code>useHotkeys</code>).",
+      "item4": "<strong>Mobile</strong>: Menubar em telas pequenas vira sub-ótimo — considere alternar para Sidebar ou DropdownMenu acima de breakpoint.",
+      "item5": "<strong>Submenus</strong>: limite a 1 nível. Submenu aninhado em submenu confunde navegação por setas.",
+      "item6": "<strong>asChild no Trigger</strong>: usar com Button para herdar variantes; o Trigger já é <code>&lt;button&gt;</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (label do Trigger), <code>label</code> (texto do Item). Disparar via <code>onValueChange</code> e <code>onSelect</code>."
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada interação.",
+        "item1": {
+          "action": "Tab para entrar no Menubar",
+          "result": "Foco vai para o primeiro Trigger",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Setas Esquerda/Direita entre Triggers",
+          "result": "Foco move entre Triggers (com loop se loop=true)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Enter/Space ou Seta-baixo no Trigger",
+          "result": "Abre Content com role=menu e foco no primeiro Item",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Setas Cima/Baixo dentro de Content",
+          "result": "Foco move entre Items",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Seta Direita em SubTrigger",
+          "result": "Abre SubContent",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "ESC com menu aberto",
+          "result": "Fecha menu e retorna foco ao Trigger",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Click em CheckboxItem",
+          "result": "data-state alterna; aria-checked reflete",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Click em Trigger com menu aberto",
+          "result": "Fecha o menu (toggle)",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "Menubar Root tem role=menubar (WCAG 1.3.1)",
+        "item3": "Trigger tem aria-haspopup=menu e aria-expanded reflete estado",
+        "item4": "Content tem role=menu (WCAG 4.1.2)",
+        "item5": "Items têm role=menuitem/menuitemcheckbox/menuitemradio corretos",
+        "item6": "Foco retorna ao Trigger ao fechar (WCAG 2.4.3)",
+        "item7": "Contraste mínimo 4.5:1 entre texto e bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": {
+          "story": "Barra com 4 menus fechados",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Menu Arquivo aberto com Items + Shortcuts",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Menu Exibir aberto com CheckboxItems",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Menu com Submenu aberto",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Item destructive em hover",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Menubar",
+    "category": "Navigation",
+    "type": "Component",
+    "description": "Horizontal bar with multiple dropdown menus in desktop application style, with keyboard navigation between menus.",
+    "seo": {
+      "title": "Menubar — Navigation · Design System",
+      "description": "Menubar documentation: desktop-style menu bar via base-ui/reka-ui/bits-ui, with arrows, submenus, and WCAG 2.1 AA.",
+      "aiSummary": "Menubar component built on base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Basecoat) that presents a horizontal bar of desktop-style menus with triggers, items, checkbox-items, radio-items, submenus, separators, shortcuts, and arrow navigation between menus.",
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "fileMenu": "File menu (with submenu)",
+        "editMenu": "Edit menu (with shortcuts)",
+        "viewMenu": "View menu (with checkbox)",
+        "toolsMenu": "Tools menu (with radio)"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Menubar (Root)</strong> — horizontal bar with <code>role=\"menubar\"</code>; coordinates arrow-key navigation between menus.",
+      "item2": "<strong>MenubarMenu</strong> — wrapper for each individual menu (File, Edit, etc.); contains Trigger + Content.",
+      "item3": "<strong>MenubarTrigger</strong> — visible button on the bar that opens the menu; focused via Left/Right arrows.",
+      "item4": "<strong>MenubarContent</strong> — menu popup, positioned below Trigger; renders in a portal.",
+      "item5": "<strong>MenubarItem</strong> — executable action; supports <code>variant=\"destructive\"</code> and <code>inset</code>.",
+      "item6": "<strong>MenubarCheckboxItem</strong> — item with boolean state (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item7": "<strong>MenubarRadioGroup + MenubarRadioItem</strong> — single-selection group.",
+      "item8": "<strong>MenubarSub + SubTrigger + SubContent</strong> — nested submenu inside a Content.",
+      "item9": "<strong>MenubarLabel</strong> — group heading (non-interactive); <strong>MenubarSeparator</strong> divides groups; <strong>MenubarShortcut</strong> displays a shortcut.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Mandatory Guidelines",
+        "item1": "Use Menubar for desktop-style applications (editors, IDEs, design tools) — NOT for traditional web sites/products.",
+        "item2": "For traditional web, prefer <code>NavigationMenu</code> (with hover/click) or <code>Sidebar</code>.",
+        "item3": "Each menu should have 3 to 10 items — fewer is noise, more suggests refactoring the hierarchy.",
+        "item4": "Use <code>MenubarShortcut</code> to display visual shortcuts — registering the actual shortcut is the consumer's responsibility.",
+        "item5": "Submenus only with real hierarchy; limit to 1 nesting level."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Text/image editor with File/Edit/View",
+          "u": "Horizontal Menubar",
+          "a": "Single DropdownMenu"
+        },
+        "item2": {
+          "s": "E-commerce site with categories",
+          "u": "NavigationMenu",
+          "a": "Menubar (wrong)"
+        },
+        "item3": {
+          "s": "Dashboard with main sections",
+          "u": "Sidebar with Accordion",
+          "a": "Menubar (non-idiomatic)"
+        },
+        "item4": {
+          "s": "View toggle (List/Grid)",
+          "u": "ToggleGroup",
+          "a": "Menubar (overkill)"
+        },
+        "item5": {
+          "s": "Figma/Sketch-like application",
+          "u": "Menubar with submenus",
+          "a": "Toolbar or DropdownMenus"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Rule",
+          "correct": "Use",
+          "avoid": "Avoid",
+          "trigger": {
+            "name": "MenubarTrigger label",
+            "format": "Short noun (action category)",
+            "good": "File",
+            "bad": "Click to open file menu"
+          },
+          "item": {
+            "name": "MenubarItem",
+            "format": "Infinitive verb",
+            "good": "Save as...",
+            "bad": "Saving"
+          },
+          "shortcut": {
+            "name": "MenubarShortcut",
+            "format": "Standard OS shortcut notation",
+            "good": "⌘S / Ctrl+S",
+            "bad": "Press Cmd and S"
+          },
+          "destructive": {
+            "name": "Destructive item",
+            "format": "Verb + object, clear about irreversibility",
+            "good": "Delete file",
+            "bad": "Remove"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Application has multiple action categories (File, Edit, View, etc.).",
+        "item2": "Users expect a desktop application pattern (editors, IDEs, tools).",
+        "item3": "There are important keyboard shortcuts that need to be visible.",
+        "item4": "You want to leverage arrow-key navigation between menus."
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "It's a traditional web site/product — use NavigationMenu or Sidebar.",
+        "item2": "There are only 1-2 menus — a single DropdownMenu suffices.",
+        "item3": "Users are predominantly mobile/touch.",
+        "item4": "There's no clear hierarchy between actions."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Menubar with 3-5 categorized menus (File, Edit, View).",
+        "dont": "Menubar with a single menu — use DropdownMenu."
+      },
+      "pair2": {
+        "do": "Visible MenubarShortcut for important shortcuts (⌘S, ⌘Z).",
+        "dont": "Submenus nested more than 1 level — confuses navigation."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "destructive": "Destructive"
+      },
+      "styles": {
+        "default": "Neutral item with <code>bg-accent</code> hover; default for most actions.",
+        "destructive": "Irreversible action item with <code>text-destructive</code> and <code>bg-destructive/10</code> on hover."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "disabled": "Disabled",
+        "checked": "Checked"
+      },
+      "descriptions": {
+        "closed": "Default state — only the bar with visible Triggers.",
+        "open": "One menu open displaying Content; Left/Right arrows move to other menus.",
+        "disabled": "<code>disabled</code> on Item blocks interaction; <code>aria-disabled=\"true\"</code>.",
+        "checked": "CheckboxItem or RadioItem with <code>data-state=\"checked\"</code>; Check icon shown."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled active menu (Menubar Root)."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback when active menu changes."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Initial active menu in uncontrolled mode."
+        },
+        "loop": {
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "Arrow-key loop navigation (last to first and vice versa)."
+        },
+        "side": {
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "No",
+          "description": "MenubarContent opening side."
+        },
+        "align": {
+          "type": "'start' | 'center' | 'end'",
+          "default": "'start'",
+          "required": "No",
+          "description": "MenubarContent horizontal alignment."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Controlled Menubar with disabled loop\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "menubarBg": {
+          "class": "bg-background",
+          "part": "Horizontal bar background"
+        },
+        "menubarBorder": {
+          "class": "border-border",
+          "part": "Bar border"
+        },
+        "triggerHover": {
+          "class": "data-[state=open]:bg-accent",
+          "part": "Active Trigger (with menu open)"
+        },
+        "contentBg": {
+          "class": "bg-popover",
+          "part": "MenubarContent background"
+        },
+        "contentBorder": {
+          "class": "ring-foreground/10",
+          "part": "Content subtle border (1px ring)"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Content rounded corners"
+        },
+        "itemHover": {
+          "class": "bg-accent",
+          "part": "Hover/focus on default Item"
+        },
+        "destructive": {
+          "class": "text-destructive bg-destructive/10",
+          "part": "Item variant=destructive"
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Bar color override */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA — criteria 1.3.1 (semantic structure via role=menubar/menu/menuitem), 2.1.1 (keyboard operable: arrows, Enter, ESC, Home/End, typeahead), 2.4.3 (focus returns to trigger on close), 4.1.2 (name/role/value).",
+      "items": {
+        "item1": "<code>Menubar</code> gets <code>role=\"menubar\"</code>; coordinates focus between Triggers via Left/Right arrows.",
+        "item2": "<code>MenubarTrigger</code> gets <code>aria-haspopup=\"menu\"</code> and <code>aria-expanded</code>; is part of menubar (Tab doesn't stop on each).",
+        "item3": "Left/Right arrows move between Triggers; Enter/Space/Down arrow opens menu; ESC closes.",
+        "item4": "Inside Content: Up/Down arrows navigate Items; Right arrow opens submenu; Left arrow closes submenu or returns to previous Trigger.",
+        "item5": "Typeahead: typing a letter moves focus to Item starting with that letter.",
+        "item6": "Tab leaves the entire Menubar (moves to next focusable element on the page)."
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Tab — enters Menubar (focuses first Trigger) or leaves it.",
+        "arrowsHorizontal": "← / → — moves between Triggers; opens adjacent menu if one is already open.",
+        "arrowsVertical": "↑ / ↓ — opens menu (if Trigger focused) or navigates Items (if Content open).",
+        "enter": "Enter / Space — activates Trigger or Item.",
+        "escape": "ESC — closes menu (and submenu); returns focus to Trigger.",
+        "homeEnd": "Home / End — first/last Item inside Content.",
+        "typeahead": "Alphabetic letters — typeahead in Items."
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "menubar": "Menubar Root: <code>role=\"menubar\"</code>.",
+        "trigger": "Trigger: <code>aria-haspopup=\"menu\"</code>, <code>aria-expanded</code>.",
+        "menu": "Content: <code>role=\"menu\"</code>.",
+        "item": "Item: <code>role=\"menuitem\"</code>; CheckboxItem/RadioItem have <code>menuitemcheckbox</code>/<code>menuitemradio</code>.",
+        "checked": "<code>aria-checked</code> on CheckboxItem/RadioItem reflects state.",
+        "disabled": "<code>aria-disabled=\"true\"</code> on disabled Item."
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "open": "Announces: \"[Trigger label], menubar, [N] of [total], menu pop-up\".",
+        "navigation": "Arrows move focus; SR reads \"[text], menu item, [N] of [total]\".",
+        "checked": "CheckboxItem: \"[text], checkbox, checked/unchecked\"."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "navigationMenu": {
+          "name": "NavigationMenu",
+          "description": "For web sites/products — horizontal menu with hover."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "Single button-triggered menu; same Items API."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Persistent vertical navigation in apps."
+        },
+        "command": {
+          "name": "Command",
+          "description": "For quick action access via search (Cmd+K palette)."
+        }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: Menubar uses coordinated <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> uses a custom factory without native submenu.",
+      "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In previews, apply <code>contain: layout</code> on the wrapper.",
+      "item3": "<strong>Shortcuts</strong>: <code>MenubarShortcut</code> is visual; the actual shortcut needs to be registered by the consumer (e.g., <code>useHotkeys</code>).",
+      "item4": "<strong>Mobile</strong>: Menubar on small screens becomes sub-optimal — consider switching to Sidebar or DropdownMenu above breakpoint.",
+      "item5": "<strong>Submenus</strong>: limit to 1 level. Submenu nested in submenu confuses arrow-key navigation.",
+      "item6": "<strong>asChild on Trigger</strong>: use with Button to inherit variants; the Trigger is already a <code>&lt;button&gt;</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant events: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (Trigger label), <code>label</code> (Item text). Dispatch via <code>onValueChange</code> and <code>onSelect</code>."
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen on each interaction.",
+        "item1": {
+          "action": "Tab to enter Menubar",
+          "result": "Focus goes to first Trigger",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Left/Right arrows between Triggers",
+          "result": "Focus moves between Triggers (with loop if loop=true)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Enter/Space or Down arrow on Trigger",
+          "result": "Opens Content with role=menu and focus on first Item",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Up/Down arrows inside Content",
+          "result": "Focus moves between Items",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Right arrow on SubTrigger",
+          "result": "Opens SubContent",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "ESC with menu open",
+          "result": "Closes menu and returns focus to Trigger",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Click on CheckboxItem",
+          "result": "data-state toggles; aria-checked reflects",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Click on Trigger with menu open",
+          "result": "Closes the menu (toggle)",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria automated tools should confirm.",
+        "item1": "No violations reported by axe-core in default state",
+        "item2": "Menubar Root has role=menubar (WCAG 1.3.1)",
+        "item3": "Trigger has aria-haspopup=menu and aria-expanded reflects state",
+        "item4": "Content has role=menu (WCAG 4.1.2)",
+        "item5": "Items have correct role=menuitem/menuitemcheckbox/menuitemradio",
+        "item6": "Focus returns to Trigger on close (WCAG 2.4.3)",
+        "item7": "Minimum 4.5:1 contrast between text and bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States Chromatic should capture.",
+        "required": "Required",
+        "item1": {
+          "story": "Bar with 4 closed menus",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "File menu open with Items + Shortcuts",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "View menu open with CheckboxItems",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Menu with Submenu open",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Destructive item on hover",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Menubar",
+    "category": "Navegación",
+    "type": "Componente",
+    "description": "Barra horizontal con múltiples menús desplegables al estilo de aplicaciones desktop, con navegación por teclado entre menús.",
+    "seo": {
+      "title": "Menubar — Navegación · Design System",
+      "description": "Documentación de Menubar: barra de menús horizontal estilo desktop vía base-ui/reka-ui/bits-ui, con flechas, submenús y WCAG 2.1 AA.",
+      "aiSummary": "Componente Menubar construido sobre base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Basecoat) que presenta barra horizontal de menús estilo desktop con triggers, items, checkbox-items, radio-items, submenús, separators, shortcuts y navegación por flechas entre menús.",
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "fileMenu": "Menú Archivo (con submenú)",
+        "editMenu": "Menú Editar (con shortcuts)",
+        "viewMenu": "Menú Ver (con checkbox)",
+        "toolsMenu": "Menú Herramientas (con radio)"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Menubar (Root)</strong> — barra horizontal con <code>role=\"menubar\"</code>; coordina la navegación por flechas entre menús.",
+      "item2": "<strong>MenubarMenu</strong> — wrapper de cada menú individual (Archivo, Editar, etc.); contiene Trigger + Content.",
+      "item3": "<strong>MenubarTrigger</strong> — botón visible en la barra que abre el menú; foco vía flechas Izquierda/Derecha.",
+      "item4": "<strong>MenubarContent</strong> — popup del menú, posicionado debajo del Trigger; renderiza en portal.",
+      "item5": "<strong>MenubarItem</strong> — acción ejecutable; admite <code>variant=\"destructive\"</code> e <code>inset</code>.",
+      "item6": "<strong>MenubarCheckboxItem</strong> — item con estado boolean (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item7": "<strong>MenubarRadioGroup + MenubarRadioItem</strong> — grupo de selección única.",
+      "item8": "<strong>MenubarSub + SubTrigger + SubContent</strong> — submenú anidado dentro de un Content.",
+      "item9": "<strong>MenubarLabel</strong> — encabezado de grupo (no interactivo); <strong>MenubarSeparator</strong> divide grupos; <strong>MenubarShortcut</strong> muestra atajo.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa Menubar para aplicaciones estilo desktop (editores, IDEs, design tools) — NO para sitios/productos web tradicionales.",
+        "item2": "Para web tradicional, prefiere <code>NavigationMenu</code> (con hover/click) o <code>Sidebar</code>.",
+        "item3": "Cada menú debe tener de 3 a 10 items — menos es ruido, más sugiere refactorizar la jerarquía.",
+        "item4": "Usa <code>MenubarShortcut</code> para mostrar atajos visuales — registrar el atajo real es responsabilidad del consumidor.",
+        "item5": "Submenús solo con jerarquía real; limita a 1 nivel de anidamiento."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Editor de texto/imagen con Archivo/Editar/Ver",
+          "u": "Menubar horizontal",
+          "a": "DropdownMenu único"
+        },
+        "item2": {
+          "s": "Sitio de e-commerce con categorías",
+          "u": "NavigationMenu",
+          "a": "Menubar (incorrecto)"
+        },
+        "item3": {
+          "s": "Dashboard con secciones principales",
+          "u": "Sidebar con Accordion",
+          "a": "Menubar (no idiomático)"
+        },
+        "item4": {
+          "s": "Toggle de visualización (Lista/Grid)",
+          "u": "ToggleGroup",
+          "a": "Menubar (excesivo)"
+        },
+        "item5": {
+          "s": "Aplicación tipo Figma/Sketch",
+          "u": "Menubar con submenús",
+          "a": "Toolbar o DropdownMenus"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regla",
+          "correct": "Usa",
+          "avoid": "Evita",
+          "trigger": {
+            "name": "MenubarTrigger label",
+            "format": "Sustantivo corto (categoría de acción)",
+            "good": "Archivo",
+            "bad": "Haz clic para abrir el menú archivo"
+          },
+          "item": {
+            "name": "MenubarItem",
+            "format": "Verbo en infinitivo",
+            "good": "Guardar como...",
+            "bad": "Guardado"
+          },
+          "shortcut": {
+            "name": "MenubarShortcut",
+            "format": "Notación estándar de atajo del SO",
+            "good": "⌘S / Ctrl+S",
+            "bad": "Presiona Cmd y S"
+          },
+          "destructive": {
+            "name": "Item destructive",
+            "format": "Verbo + objeto, claro sobre irreversibilidad",
+            "good": "Eliminar archivo",
+            "bad": "Quitar"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "La aplicación tiene múltiples categorías de acción (Archivo, Editar, Ver, etc.).",
+        "item2": "Los usuarios esperan un patrón de aplicación desktop (editores, IDEs, herramientas).",
+        "item3": "Hay atajos de teclado importantes que deben ser visibles.",
+        "item4": "Quieres aprovechar la navegación por flechas entre menús."
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Es un sitio/producto web tradicional — usa NavigationMenu o Sidebar.",
+        "item2": "Solo hay 1-2 menús — basta un único DropdownMenu.",
+        "item3": "Los usuarios son predominantemente mobile/touch.",
+        "item4": "No hay jerarquía clara entre las acciones."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Menubar con 3-5 menús categorizados (Archivo, Editar, Ver).",
+        "dont": "Menubar con un único menú — usa DropdownMenu."
+      },
+      "pair2": {
+        "do": "MenubarShortcut visible para atajos importantes (⌘S, ⌘Z).",
+        "dont": "Submenús anidados en más de 1 nivel — confunde la navegación."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "destructive": "Destructive"
+      },
+      "styles": {
+        "default": "Item neutro con hover <code>bg-accent</code>; predeterminado para la mayoría de las acciones.",
+        "destructive": "Item de acción irreversible con <code>text-destructive</code> y <code>bg-destructive/10</code> en hover."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Cerrado",
+        "open": "Abierto",
+        "disabled": "Deshabilitado",
+        "checked": "Checked"
+      },
+      "descriptions": {
+        "closed": "Estado predeterminado — solo la barra con Triggers visibles.",
+        "open": "Un menú abierto mostrando Content; flechas Izquierda/Derecha mueven a otros menús.",
+        "disabled": "<code>disabled</code> en Item bloquea interacción; <code>aria-disabled=\"true\"</code>.",
+        "checked": "CheckboxItem o RadioItem con <code>data-state=\"checked\"</code>; icono Check mostrado."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Menú activo controlado (Menubar Root)."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback al cambiar menú activo."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Menú activo inicial en modo no-controlado."
+        },
+        "loop": {
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "Loop de navegación por flechas (del último al primero y viceversa)."
+        },
+        "side": {
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "default": "'bottom'",
+          "required": "No",
+          "description": "Lado de apertura del MenubarContent."
+        },
+        "align": {
+          "type": "'start' | 'center' | 'end'",
+          "default": "'start'",
+          "required": "No",
+          "description": "Alineación horizontal del MenubarContent."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Menubar controlado con loop deshabilitado\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "menubarBg": {
+          "class": "bg-background",
+          "part": "Fondo de la barra horizontal"
+        },
+        "menubarBorder": {
+          "class": "border-border",
+          "part": "Borde de la barra"
+        },
+        "triggerHover": {
+          "class": "data-[state=open]:bg-accent",
+          "part": "Trigger activo (con menú abierto)"
+        },
+        "contentBg": {
+          "class": "bg-popover",
+          "part": "Fondo del MenubarContent"
+        },
+        "contentBorder": {
+          "class": "ring-foreground/10",
+          "part": "Borde sutil del Content (ring 1px)"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Esquinas redondeadas del Content"
+        },
+        "itemHover": {
+          "class": "bg-accent",
+          "part": "Hover/foco en Item default"
+        },
+        "destructive": {
+          "class": "text-destructive bg-destructive/10",
+          "part": "Item variant=destructive"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Override de color de la barra */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA — criterios 1.3.1 (estructura semántica vía role=menubar/menu/menuitem), 2.1.1 (operable por teclado: flechas, Enter, ESC, Home/End, typeahead), 2.4.3 (foco vuelve al trigger al cerrar), 4.1.2 (name/role/value).",
+      "items": {
+        "item1": "<code>Menubar</code> recibe <code>role=\"menubar\"</code>; coordina foco entre Triggers vía flechas Izquierda/Derecha.",
+        "item2": "<code>MenubarTrigger</code> recibe <code>aria-haspopup=\"menu\"</code> y <code>aria-expanded</code>; es parte del menubar (Tab no se detiene en cada uno).",
+        "item3": "Flechas Izquierda/Derecha mueven entre Triggers; Enter/Space/Flecha-abajo abre el menú; ESC cierra.",
+        "item4": "Dentro del Content: flechas Arriba/Abajo navegan Items; Flecha Derecha abre submenú; Flecha Izquierda cierra submenú o vuelve al Trigger anterior.",
+        "item5": "Typeahead: escribir letra mueve foco al Item que comienza con esa letra.",
+        "item6": "Tab sale del Menubar entero (mueve al siguiente elemento focuseable de la página)."
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Tab — entra al Menubar (enfoca primer Trigger) o sale.",
+        "arrowsHorizontal": "← / → — mueve entre Triggers; abre menú adyacente si uno ya está abierto.",
+        "arrowsVertical": "↑ / ↓ — abre menú (si Trigger enfocado) o navega Items (si Content abierto).",
+        "enter": "Enter / Space — activa Trigger o Item.",
+        "escape": "ESC — cierra menú (y submenú); devuelve foco al Trigger.",
+        "homeEnd": "Home / End — primer/último Item dentro del Content.",
+        "typeahead": "Letras alfabéticas — typeahead en Items."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "menubar": "Menubar Root: <code>role=\"menubar\"</code>.",
+        "trigger": "Trigger: <code>aria-haspopup=\"menu\"</code>, <code>aria-expanded</code>.",
+        "menu": "Content: <code>role=\"menu\"</code>.",
+        "item": "Item: <code>role=\"menuitem\"</code>; CheckboxItem/RadioItem tienen <code>menuitemcheckbox</code>/<code>menuitemradio</code>.",
+        "checked": "<code>aria-checked</code> en CheckboxItem/RadioItem refleja estado.",
+        "disabled": "<code>aria-disabled=\"true\"</code> en Item disabled."
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "open": "Anuncia: \"[label del Trigger], menubar, [N] de [total], menú emergente\".",
+        "navigation": "Flechas mueven foco; SR lee \"[texto], item de menú, [N] de [total]\".",
+        "checked": "CheckboxItem: \"[texto], casilla, marcada/desmarcada\"."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "navigationMenu": {
+          "name": "NavigationMenu",
+          "description": "Para sitios/productos web — menú horizontal con hover."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "Menú único accionado por botón; misma API de Items."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Navegación vertical persistente en apps."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Para acceso rápido a acciones vía búsqueda (Cmd+K palette)."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: Menubar usa <code>base-ui/menu</code> coordinado (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom sin submenú nativo.",
+      "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews, aplica <code>contain: layout</code> en el wrapper.",
+      "item3": "<strong>Atajos</strong>: <code>MenubarShortcut</code> es visual; el atajo real debe registrarse en el consumidor (ej.: <code>useHotkeys</code>).",
+      "item4": "<strong>Mobile</strong>: Menubar en pantallas pequeñas se vuelve subóptimo — considera cambiar a Sidebar o DropdownMenu por encima de un breakpoint.",
+      "item5": "<strong>Submenús</strong>: limita a 1 nivel. Submenú anidado en submenú confunde navegación por flechas.",
+      "item6": "<strong>asChild en Trigger</strong>: usa con Button para heredar variantes; el Trigger ya es un <code>&lt;button&gt;</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (label del Trigger), <code>label</code> (texto del Item). Dispara vía <code>onValueChange</code> y <code>onSelect</code>."
+    },
+    "testes": {
+      "title": "Criterios de Test",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en cada interacción.",
+        "item1": {
+          "action": "Tab para entrar al Menubar",
+          "result": "Foco va al primer Trigger",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Flechas Izquierda/Derecha entre Triggers",
+          "result": "Foco mueve entre Triggers (con loop si loop=true)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Enter/Space o Flecha-abajo en Trigger",
+          "result": "Abre Content con role=menu y foco en el primer Item",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Flechas Arriba/Abajo dentro del Content",
+          "result": "Foco mueve entre Items",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Flecha Derecha en SubTrigger",
+          "result": "Abre SubContent",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "ESC con menú abierto",
+          "result": "Cierra menú y devuelve foco al Trigger",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Click en CheckboxItem",
+          "result": "data-state alterna; aria-checked refleja",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Click en Trigger con menú abierto",
+          "result": "Cierra el menú (toggle)",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
+        "item2": "Menubar Root tiene role=menubar (WCAG 1.3.1)",
+        "item3": "Trigger tiene aria-haspopup=menu y aria-expanded refleja estado",
+        "item4": "Content tiene role=menu (WCAG 4.1.2)",
+        "item5": "Items tienen role=menuitem/menuitemcheckbox/menuitemradio correctos",
+        "item6": "Foco vuelve al Trigger al cerrar (WCAG 2.4.3)",
+        "item7": "Contraste mínimo 4.5:1 entre texto y bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": {
+          "story": "Barra con 4 menús cerrados",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Menú Archivo abierto con Items + Shortcuts",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Menú Ver abierto con CheckboxItems",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Menú con Submenú abierto",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Item destructive en hover",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  }
+}
