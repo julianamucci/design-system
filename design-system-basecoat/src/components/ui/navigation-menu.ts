@@ -87,7 +87,14 @@ export function createNavigationMenu(
       trigger.setAttribute('aria-haspopup', 'true');
       trigger.setAttribute('role', 'menuitem');
       trigger.dataset.state = 'closed';
-      trigger.innerHTML = `<span>${item.label}</span>${CHEVRON_SVG}`;
+      // PATCH: security — substituído innerHTML por createElement + parseHtml para evitar XSS via item.label.
+      const labelSpan = document.createElement('span');
+      labelSpan.textContent = item.label;
+      trigger.appendChild(labelSpan);
+      const chevronWrapper = document.createElement('span');
+      chevronWrapper.innerHTML = CHEVRON_SVG; // CHEVRON_SVG é string literal interna (segura)
+      const chevronEl = chevronWrapper.firstElementChild;
+      if (chevronEl) trigger.appendChild(chevronEl);
 
       const content = document.createElement('div');
       content.id = contentId;
