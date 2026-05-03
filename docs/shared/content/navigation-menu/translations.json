@@ -1,0 +1,1256 @@
+{
+  "pt-BR": {
+    "title": "NavigationMenu",
+    "category": "Navegação",
+    "type": "Componente",
+    "description": "Menu de navegação principal para sites e produtos web, com sub-menus expansíveis em hover/focus e viewport animado.",
+    "seo": {
+      "title": "NavigationMenu — Navegação · Design System",
+      "description": "Documentação do NavigationMenu: menu horizontal para web com sub-menus, viewport animado, indicador e WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
+      "aiSummary": "Componente NavigationMenu construído sobre base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Basecoat) que apresenta menu de navegação web horizontal com triggers expansíveis em hover/focus, viewport compartilhado, indicador animado e suporte a links nativos com aria-current.",
+      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, navegação, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "simpleLink": "Link simples (sem submenu)",
+        "withDropdown": "Com dropdown de produtos",
+        "withGrid": "Com grid de soluções",
+        "withFeatured": "Com card destacado"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>NavigationMenu (Root)</strong> — wrapper com <code>role=\"navigation\"</code> e <code>aria-label</code> obrigatório.",
+      "item2": "<strong>NavigationMenuList</strong> — lista horizontal de items; aplica spacing entre Triggers.",
+      "item3": "<strong>NavigationMenuItem</strong> — wrapper de cada item da lista (com ou sem dropdown).",
+      "item4": "<strong>NavigationMenuTrigger</strong> — botão que expande o Content (com chevron rotativo).",
+      "item5": "<strong>NavigationMenuContent</strong> — painel expansível abaixo do Trigger; renderiza dentro do Viewport.",
+      "item6": "<strong>NavigationMenuLink</strong> — link de navegação direto (sem submenu); aplica <code>aria-current=\"page\"</code> quando ativo.",
+      "item7": "<strong>NavigationMenuViewport</strong> — container compartilhado que renderiza o Content ativo com transição de tamanho.",
+      "item8": "<strong>NavigationMenuIndicator</strong> — seta visual que aponta para o Trigger ativo (opcional).",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Início</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/produtos/a\">Produto A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/produtos/b\">Produto B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use NavigationMenu para navegação principal de sites e produtos web — posicionado no header ou topbar.",
+        "item2": "Para aplicações estilo desktop (editores, IDEs), prefira <code>Menubar</code>. Para apps com sidebar persistente, use <code>Sidebar</code>.",
+        "item3": "<code>role=\"navigation\"</code> é aplicado automaticamente; sempre forneça <code>aria-label</code> descrevendo o tipo de navegação (ex: \"Navegação principal\").",
+        "item4": "Items com dropdown devem ter de 3 a 8 sub-links — menos é ruído, mais sugere reorganização ou página dedicada.",
+        "item5": "Use <code>NavigationMenuLink</code> dentro do Content (não <code>&lt;a&gt;</code> direto) para herdar acessibilidade e tracking automático."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Use",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Header de site/produto web",
+          "u": "NavigationMenu horizontal",
+          "a": "Sidebar (não idiomático)"
+        },
+        "item2": {
+          "s": "Editor estilo desktop (IDE)",
+          "u": "Menubar",
+          "a": "NavigationMenu (errado)"
+        },
+        "item3": {
+          "s": "Mega-menu com seções e cards",
+          "u": "NavigationMenuContent com grid",
+          "a": "Sub-páginas separadas"
+        },
+        "item4": {
+          "s": "Mobile: navegação principal",
+          "u": "Drawer + Menu vertical",
+          "a": "NavigationMenu (overflow)"
+        },
+        "item5": {
+          "s": "Apenas 2-3 links sem submenu",
+          "u": "Lista de Links direta",
+          "a": "NavigationMenu (excesso)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regra",
+          "correct": "Use",
+          "avoid": "Evite",
+          "trigger": {
+            "name": "NavigationMenuTrigger",
+            "format": "Substantivo curto (categoria de páginas)",
+            "good": "Produtos",
+            "bad": "Clique para ver os produtos"
+          },
+          "link": {
+            "name": "NavigationMenuLink",
+            "format": "Substantivo ou frase nominal (destino)",
+            "good": "Plano Empresarial",
+            "bad": "Saiba mais"
+          },
+          "ariaLabel": {
+            "name": "aria-label do Root",
+            "format": "Tipo de navegação contextual",
+            "good": "Navegação principal",
+            "bad": "Menu"
+          },
+          "currentPage": {
+            "name": "aria-current",
+            "format": "Sempre marcar página atual",
+            "good": "aria-current=\"page\"",
+            "bad": "Sem indicação de página atual"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Site ou produto web com navegação principal horizontal no header.",
+        "item2": "Há 4 ou mais categorias de páginas que precisam ser acessíveis no topo.",
+        "item3": "Algumas categorias têm sub-páginas que justificam dropdown.",
+        "item4": "Quer mega-menu com cards visuais ou grids de links destacados."
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "É aplicação estilo desktop com File/Edit/View — use Menubar.",
+        "item2": "Layout requer sidebar persistente — use Sidebar.",
+        "item3": "Em mobile sem fallback — use Drawer com menu vertical.",
+        "item4": "Há apenas 2-3 links sem hierarquia — uma lista de Links basta."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "NavigationMenu com aria-label=\"Navegação principal\" e aria-current=\"page\" no link ativo.",
+        "dont": "NavigationMenu sem aria-label — leitor de tela anuncia apenas \"navigation\"."
+      },
+      "pair2": {
+        "do": "Mega-menu com 4-6 sub-links agrupados por categoria.",
+        "dont": "Mega-menu com 30+ links sem agrupamento — vira página inteira."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "horizontal": "Horizontal (padrão)",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "horizontal": "Lista horizontal de items; padrão para header de site. Triggers e Content posicionados acima/abaixo.",
+        "vertical": "Lista vertical (orientation=vertical); usado em sidebars ou mobile drawers. Content abre lateralmente."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Fechado",
+        "open": "Aberto",
+        "active": "Ativo (página atual)"
+      },
+      "descriptions": {
+        "closed": "Estado padrão — apenas Triggers e Links visíveis na barra.",
+        "open": "Trigger ativo com Content expandido no Viewport; data-state=\"open\".",
+        "active": "Link da página atual com <code>aria-current=\"page\"</code> e estilo destacado (<code>bg-accent</code>)."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Item ativo controlado (Root)."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback ao alternar item ativo."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Item ativo inicial em modo não-controlado."
+        },
+        "delayDuration": {
+          "type": "number",
+          "default": "200",
+          "required": "Não",
+          "description": "Delay em ms antes de abrir Content em hover."
+        },
+        "skipDelayDuration": {
+          "type": "number",
+          "default": "300",
+          "required": "Não",
+          "description": "Delay em ms para considerar hover consecutivo (sem reabrir delay)."
+        },
+        "orientation": {
+          "type": "'horizontal' | 'vertical'",
+          "default": "'horizontal'",
+          "required": "Não",
+          "description": "Orientação da lista de items."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// NavigationMenu controlado com delays customizados\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Navegação principal\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "rootBg": {
+          "class": "bg-background",
+          "part": "Fundo da barra de navegação"
+        },
+        "triggerHover": {
+          "class": "data-[state=open]:bg-accent",
+          "part": "Trigger ativo (Content aberto)"
+        },
+        "linkActive": {
+          "class": "aria-[current=page]:bg-accent",
+          "part": "Link da página atual"
+        },
+        "viewportBg": {
+          "class": "bg-popover",
+          "part": "Fundo do Viewport (Content)"
+        },
+        "viewportBorder": {
+          "class": "ring-foreground/10",
+          "part": "Borda sutil do Viewport (ring 1px)"
+        },
+        "viewportShadow": {
+          "class": "shadow-md",
+          "part": "Sombra do Viewport"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Cantos arredondados do Viewport"
+        },
+        "indicator": {
+          "class": "bg-popover ring-foreground/10",
+          "part": "Seta indicadora do Trigger ativo"
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Override de cor da barra para tema com header colorido */\n[data-slot='navigation-menu'] {\n  background-color: hsl(var(--card));\n}\n\n/* Trigger ativo com sublinhado em vez de bg */\n[data-slot='navigation-menu-trigger'][data-state='open'] {\n  background-color: transparent;\n  border-bottom: 2px solid hsl(var(--primary));\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA — critérios 1.3.1 (estrutura semântica via role=navigation/list/listitem), 2.1.1 (operável por teclado: setas, Tab, Enter, ESC), 2.4.4 (Link Purpose via texto descritivo), 4.1.2 (name/role/value via aria-current/aria-expanded).",
+      "items": {
+        "item1": "<code>NavigationMenu</code> recebe <code>role=\"navigation\"</code>; sempre forneça <code>aria-label</code> descrevendo o tipo (\"Navegação principal\", \"Navegação secundária\").",
+        "item2": "<code>NavigationMenuTrigger</code> recebe <code>aria-haspopup</code> e <code>aria-expanded</code> automáticos.",
+        "item3": "Setas Esquerda/Direita movem foco entre Triggers (orientation horizontal); Cima/Baixo em vertical.",
+        "item4": "Enter/Space abre Content; ESC fecha; Tab move o foco para fora do menu (não loop interno como Menubar).",
+        "item5": "<code>NavigationMenuLink</code> com <code>aria-current=\"page\"</code> indica a página atual ao leitor de tela.",
+        "item6": "Hover/focus abre Content após <code>delayDuration</code>; <code>skipDelayDuration</code> permite hover consecutivo entre Triggers sem reabrir delay."
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Tab — entra/sai do menu; foca o primeiro Trigger/Link.",
+        "arrows": "Setas Esquerda/Direita (horizontal) ou Cima/Baixo (vertical) movem foco entre Triggers.",
+        "enter": "Enter / Space — abre Content (no Trigger) ou navega (no Link).",
+        "escape": "ESC — fecha Content e retorna foco ao Trigger.",
+        "homeEnd": "Home / End — primeiro/último Trigger da lista."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "navigation": "Root: <code>role=\"navigation\"</code> + <code>aria-label</code> obrigatório.",
+        "trigger": "Trigger: <code>aria-haspopup</code>, <code>aria-expanded</code>.",
+        "current": "Link da página atual: <code>aria-current=\"page\"</code>.",
+        "controls": "Trigger pode ter <code>aria-controls</code> apontando para Content."
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "navigation": "Anuncia: \"Navegação principal\" (ou aria-label customizado).",
+        "trigger": "Trigger lê: \"[texto], menu pop-up, recolhido/expandido\".",
+        "current": "Link com aria-current=\"page\" anuncia: \"[texto], página atual\"."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "menubar": {
+          "name": "Menubar",
+          "description": "Para aplicações estilo desktop (File/Edit/View)."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Navegação vertical persistente em apps."
+        },
+        "breadcrumb": {
+          "name": "Breadcrumb",
+          "description": "Para hierarquia de navegação atual (onde estou)."
+        },
+        "tabs": {
+          "name": "Tabs",
+          "description": "Para alternar entre views paralelas dentro de uma página."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: NavigationMenu usa <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom com hover/focus events.",
+      "item2": "<strong>Viewport compartilhado</strong>: ao contrário do DropdownMenu (cada Content em portal próprio), o NavigationMenu usa um único Viewport que muda de tamanho com transição.",
+      "item3": "<strong>Mobile</strong>: NavigationMenu não funciona bem em telas pequenas — sempre tenha um <code>Drawer</code> com menu vertical como fallback responsive.",
+      "item4": "<strong>Mega-menu</strong>: para Content com grid + cards, use <code>className=\"grid w-[600px] grid-cols-2 gap-3 p-4\"</code> dentro do <code>&lt;ul&gt;</code>.",
+      "item5": "<strong>Indicador animado</strong>: <code>NavigationMenuIndicator</code> é opcional mas recomendado para feedback visual claro de qual Trigger está ativo.",
+      "item6": "<strong>aria-label obrigatório</strong>: sem ele, leitor de tela anuncia apenas \"navigation\" — não-descritivo. Use \"Navegação principal\", \"Navegação do footer\", etc."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (texto do Trigger/Link), <code>destination</code> (href). Disparar via <code>onValueChange</code> e <code>onClick</code> nos Links."
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em cada interação.",
+        "item1": {
+          "action": "Hover/foco em NavigationMenuTrigger",
+          "result": "Content abre no Viewport após delayDuration",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Setas Esquerda/Direita entre Triggers",
+          "result": "Foco move entre Triggers da lista",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Enter/Space em Trigger",
+          "result": "Content expande com role=menu",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "ESC com Content aberto",
+          "result": "Content fecha e foco retorna ao Trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Click em NavigationMenuLink",
+          "result": "Navega para href; menu fecha automaticamente",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Renderizar Link com aria-current=page",
+          "result": "Aplica bg-accent e leitor anuncia 'página atual'",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Hover entre Triggers consecutivamente",
+          "result": "Content alterna sem fechar (skipDelayDuration)",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "Root tem role=navigation e aria-label (WCAG 1.3.1)",
+        "item3": "Trigger tem aria-haspopup e aria-expanded reflete estado",
+        "item4": "Link da página atual tem aria-current=\"page\" (WCAG 4.1.2)",
+        "item5": "Foco retorna ao Trigger ao fechar via ESC (WCAG 2.4.3)",
+        "item6": "Contraste mínimo 4.5:1 entre texto do Link e bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": {
+          "story": "Barra horizontal com 4-5 items (alguns com dropdown)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Trigger 'Produtos' aberto com mega-menu grid",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Link 'Início' com aria-current=page",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Indicator visível abaixo do Trigger ativo",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Vertical (orientation=vertical) em sidebar",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "NavigationMenu",
+    "category": "Navigation",
+    "type": "Component",
+    "description": "Main navigation menu for websites and web products, with sub-menus expanding on hover/focus and animated viewport.",
+    "seo": {
+      "title": "NavigationMenu — Navigation · Design System",
+      "description": "NavigationMenu documentation: web horizontal menu with sub-menus, animated viewport, indicator, and WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
+      "aiSummary": "NavigationMenu component built on base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Basecoat) presenting a horizontal web navigation menu with hover/focus-expanding triggers, shared viewport, animated indicator, and native link support with aria-current.",
+      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, navigation, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "simpleLink": "Simple link (no submenu)",
+        "withDropdown": "With products dropdown",
+        "withGrid": "With solutions grid",
+        "withFeatured": "With featured card"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>NavigationMenu (Root)</strong> — wrapper with <code>role=\"navigation\"</code> and required <code>aria-label</code>.",
+      "item2": "<strong>NavigationMenuList</strong> — horizontal list of items; applies spacing between Triggers.",
+      "item3": "<strong>NavigationMenuItem</strong> — wrapper for each list item (with or without dropdown).",
+      "item4": "<strong>NavigationMenuTrigger</strong> — button that expands Content (with rotating chevron).",
+      "item5": "<strong>NavigationMenuContent</strong> — expandable panel below Trigger; renders inside Viewport.",
+      "item6": "<strong>NavigationMenuLink</strong> — direct navigation link (no submenu); applies <code>aria-current=\"page\"</code> when active.",
+      "item7": "<strong>NavigationMenuViewport</strong> — shared container that renders the active Content with size transition.",
+      "item8": "<strong>NavigationMenuIndicator</strong> — visual arrow pointing to active Trigger (optional).",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Home</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Products</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/products/a\">Product A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/products/b\">Product B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Mandatory Guidelines",
+        "item1": "Use NavigationMenu for main site/product navigation — placed in header or topbar.",
+        "item2": "For desktop-style applications (editors, IDEs), prefer <code>Menubar</code>. For apps with persistent sidebar, use <code>Sidebar</code>.",
+        "item3": "<code>role=\"navigation\"</code> is auto-applied; always provide <code>aria-label</code> describing the navigation type (e.g., \"Main navigation\").",
+        "item4": "Items with dropdown should have 3-8 sub-links — fewer is noise, more suggests reorganization or a dedicated page.",
+        "item5": "Use <code>NavigationMenuLink</code> inside Content (not raw <code>&lt;a&gt;</code>) to inherit accessibility and automatic tracking."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Site/product web header",
+          "u": "Horizontal NavigationMenu",
+          "a": "Sidebar (non-idiomatic)"
+        },
+        "item2": {
+          "s": "Desktop-style editor (IDE)",
+          "u": "Menubar",
+          "a": "NavigationMenu (wrong)"
+        },
+        "item3": {
+          "s": "Mega-menu with sections and cards",
+          "u": "NavigationMenuContent with grid",
+          "a": "Separate sub-pages"
+        },
+        "item4": {
+          "s": "Mobile main navigation",
+          "u": "Drawer + vertical menu",
+          "a": "NavigationMenu (overflow)"
+        },
+        "item5": {
+          "s": "Just 2-3 links without submenu",
+          "u": "Direct Links list",
+          "a": "NavigationMenu (overkill)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Rule",
+          "correct": "Use",
+          "avoid": "Avoid",
+          "trigger": {
+            "name": "NavigationMenuTrigger",
+            "format": "Short noun (page category)",
+            "good": "Products",
+            "bad": "Click to see products"
+          },
+          "link": {
+            "name": "NavigationMenuLink",
+            "format": "Noun or noun phrase (destination)",
+            "good": "Enterprise Plan",
+            "bad": "Learn more"
+          },
+          "ariaLabel": {
+            "name": "Root aria-label",
+            "format": "Contextual navigation type",
+            "good": "Main navigation",
+            "bad": "Menu"
+          },
+          "currentPage": {
+            "name": "aria-current",
+            "format": "Always mark current page",
+            "good": "aria-current=\"page\"",
+            "bad": "No current page indication"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Site or web product with horizontal main navigation in header.",
+        "item2": "There are 4+ page categories that need to be accessible at the top.",
+        "item3": "Some categories have sub-pages that justify a dropdown.",
+        "item4": "You want a mega-menu with visual cards or grids of featured links."
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "It's a desktop-style application with File/Edit/View — use Menubar.",
+        "item2": "Layout requires a persistent sidebar — use Sidebar.",
+        "item3": "On mobile without a fallback — use Drawer with vertical menu.",
+        "item4": "There are only 2-3 links without hierarchy — a list of Links suffices."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "NavigationMenu with aria-label=\"Main navigation\" and aria-current=\"page\" on active link.",
+        "dont": "NavigationMenu without aria-label — screen reader announces just \"navigation\"."
+      },
+      "pair2": {
+        "do": "Mega-menu with 4-6 sub-links grouped by category.",
+        "dont": "Mega-menu with 30+ links without grouping — becomes a full page."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "horizontal": "Horizontal (default)",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "horizontal": "Horizontal list of items; default for site headers. Triggers and Content positioned above/below.",
+        "vertical": "Vertical list (orientation=vertical); used in sidebars or mobile drawers. Content opens to the side."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "active": "Active (current page)"
+      },
+      "descriptions": {
+        "closed": "Default state — only Triggers and Links visible on the bar.",
+        "open": "Active Trigger with Content expanded in Viewport; data-state=\"open\".",
+        "active": "Current page Link with <code>aria-current=\"page\"</code> and highlighted style (<code>bg-accent</code>)."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled active item (Root)."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback when active item changes."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Initial active item in uncontrolled mode."
+        },
+        "delayDuration": {
+          "type": "number",
+          "default": "200",
+          "required": "No",
+          "description": "Delay in ms before opening Content on hover."
+        },
+        "skipDelayDuration": {
+          "type": "number",
+          "default": "300",
+          "required": "No",
+          "description": "Delay in ms to consider consecutive hover (no reopening delay)."
+        },
+        "orientation": {
+          "type": "'horizontal' | 'vertical'",
+          "default": "'horizontal'",
+          "required": "No",
+          "description": "List orientation."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Controlled NavigationMenu with custom delays\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Main navigation\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "rootBg": {
+          "class": "bg-background",
+          "part": "Navigation bar background"
+        },
+        "triggerHover": {
+          "class": "data-[state=open]:bg-accent",
+          "part": "Active Trigger (Content open)"
+        },
+        "linkActive": {
+          "class": "aria-[current=page]:bg-accent",
+          "part": "Current page Link"
+        },
+        "viewportBg": {
+          "class": "bg-popover",
+          "part": "Viewport (Content) background"
+        },
+        "viewportBorder": {
+          "class": "ring-foreground/10",
+          "part": "Viewport subtle border (1px ring)"
+        },
+        "viewportShadow": {
+          "class": "shadow-md",
+          "part": "Viewport shadow"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Viewport rounded corners"
+        },
+        "indicator": {
+          "class": "bg-popover ring-foreground/10",
+          "part": "Active Trigger indicator arrow"
+        }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Bar color override for colored-header theme */\n[data-slot='navigation-menu'] {\n  background-color: hsl(var(--card));\n}\n\n/* Active trigger with underline instead of bg */\n[data-slot='navigation-menu-trigger'][data-state='open'] {\n  background-color: transparent;\n  border-bottom: 2px solid hsl(var(--primary));\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA — criteria 1.3.1 (semantic structure via role=navigation/list/listitem), 2.1.1 (keyboard operable: arrows, Tab, Enter, ESC), 2.4.4 (Link Purpose via descriptive text), 4.1.2 (name/role/value via aria-current/aria-expanded).",
+      "items": {
+        "item1": "<code>NavigationMenu</code> gets <code>role=\"navigation\"</code>; always provide <code>aria-label</code> describing the type (\"Main navigation\", \"Footer navigation\").",
+        "item2": "<code>NavigationMenuTrigger</code> gets automatic <code>aria-haspopup</code> and <code>aria-expanded</code>.",
+        "item3": "Left/Right arrows move focus between Triggers (horizontal); Up/Down in vertical.",
+        "item4": "Enter/Space opens Content; ESC closes; Tab moves focus out of menu (no internal loop like Menubar).",
+        "item5": "<code>NavigationMenuLink</code> with <code>aria-current=\"page\"</code> indicates current page to screen reader.",
+        "item6": "Hover/focus opens Content after <code>delayDuration</code>; <code>skipDelayDuration</code> allows consecutive hover between Triggers without reopening delay."
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Tab — enters/leaves the menu; focuses first Trigger/Link.",
+        "arrows": "Left/Right (horizontal) or Up/Down (vertical) arrows move focus between Triggers.",
+        "enter": "Enter / Space — opens Content (on Trigger) or navigates (on Link).",
+        "escape": "ESC — closes Content and returns focus to Trigger.",
+        "homeEnd": "Home / End — first/last Trigger of the list."
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "navigation": "Root: <code>role=\"navigation\"</code> + required <code>aria-label</code>.",
+        "trigger": "Trigger: <code>aria-haspopup</code>, <code>aria-expanded</code>.",
+        "current": "Current page Link: <code>aria-current=\"page\"</code>.",
+        "controls": "Trigger may have <code>aria-controls</code> pointing to Content."
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "navigation": "Announces: \"Main navigation\" (or custom aria-label).",
+        "trigger": "Trigger reads: \"[text], menu pop-up, collapsed/expanded\".",
+        "current": "Link with aria-current=\"page\" announces: \"[text], current page\"."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "menubar": {
+          "name": "Menubar",
+          "description": "For desktop-style applications (File/Edit/View)."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Persistent vertical navigation in apps."
+        },
+        "breadcrumb": {
+          "name": "Breadcrumb",
+          "description": "For current navigation hierarchy (where I am)."
+        },
+        "tabs": {
+          "name": "Tabs",
+          "description": "To switch between parallel views within a page."
+        }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: NavigationMenu uses <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> uses a custom factory with hover/focus events.",
+      "item2": "<strong>Shared Viewport</strong>: unlike DropdownMenu (each Content in its own portal), NavigationMenu uses a single Viewport that resizes with transition.",
+      "item3": "<strong>Mobile</strong>: NavigationMenu doesn't work well on small screens — always have a <code>Drawer</code> with vertical menu as a responsive fallback.",
+      "item4": "<strong>Mega-menu</strong>: for Content with grid + cards, use <code>className=\"grid w-[600px] grid-cols-2 gap-3 p-4\"</code> inside <code>&lt;ul&gt;</code>.",
+      "item5": "<strong>Animated indicator</strong>: <code>NavigationMenuIndicator</code> is optional but recommended for clear visual feedback of which Trigger is active.",
+      "item6": "<strong>Required aria-label</strong>: without it, screen reader announces only \"navigation\" — non-descriptive. Use \"Main navigation\", \"Footer navigation\", etc."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant events: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (Trigger/Link text), <code>destination</code> (href). Dispatch via <code>onValueChange</code> and <code>onClick</code> on Links."
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen on each interaction.",
+        "item1": {
+          "action": "Hover/focus on NavigationMenuTrigger",
+          "result": "Content opens in Viewport after delayDuration",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Left/Right arrows between Triggers",
+          "result": "Focus moves between list Triggers",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Enter/Space on Trigger",
+          "result": "Content expands with role=menu",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "ESC with Content open",
+          "result": "Content closes and focus returns to Trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Click on NavigationMenuLink",
+          "result": "Navigates to href; menu closes automatically",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Render Link with aria-current=page",
+          "result": "Applies bg-accent and reader announces 'current page'",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Hover between Triggers consecutively",
+          "result": "Content alternates without closing (skipDelayDuration)",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria automated tools should confirm.",
+        "item1": "No violations reported by axe-core in default state",
+        "item2": "Root has role=navigation and aria-label (WCAG 1.3.1)",
+        "item3": "Trigger has aria-haspopup and aria-expanded reflects state",
+        "item4": "Current page Link has aria-current=\"page\" (WCAG 4.1.2)",
+        "item5": "Focus returns to Trigger on close via ESC (WCAG 2.4.3)",
+        "item6": "Minimum 4.5:1 contrast between Link text and bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States Chromatic should capture.",
+        "required": "Required",
+        "item1": {
+          "story": "Horizontal bar with 4-5 items (some with dropdown)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "'Products' Trigger open with mega-menu grid",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "'Home' Link with aria-current=page",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Indicator visible below active Trigger",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Vertical (orientation=vertical) in sidebar",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "NavigationMenu",
+    "category": "Navegación",
+    "type": "Componente",
+    "description": "Menú de navegación principal para sitios y productos web, con sub-menús expansibles en hover/focus y viewport animado.",
+    "seo": {
+      "title": "NavigationMenu — Navegación · Design System",
+      "description": "Documentación de NavigationMenu: menú horizontal para web con sub-menús, viewport animado, indicador y WCAG 2.1 AA vía base-ui/reka-ui/bits-ui.",
+      "aiSummary": "Componente NavigationMenu construido sobre base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Basecoat) que presenta menú de navegación web horizontal con triggers expansibles en hover/focus, viewport compartido, indicador animado y soporte a links nativos con aria-current.",
+      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, navegación, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "simpleLink": "Enlace simple (sin submenú)",
+        "withDropdown": "Con dropdown de productos",
+        "withGrid": "Con grid de soluciones",
+        "withFeatured": "Con tarjeta destacada"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>NavigationMenu (Root)</strong> — wrapper con <code>role=\"navigation\"</code> y <code>aria-label</code> obligatorio.",
+      "item2": "<strong>NavigationMenuList</strong> — lista horizontal de items; aplica spacing entre Triggers.",
+      "item3": "<strong>NavigationMenuItem</strong> — wrapper de cada item de la lista (con o sin dropdown).",
+      "item4": "<strong>NavigationMenuTrigger</strong> — botón que expande el Content (con chevron rotativo).",
+      "item5": "<strong>NavigationMenuContent</strong> — panel expansible debajo del Trigger; renderiza dentro del Viewport.",
+      "item6": "<strong>NavigationMenuLink</strong> — link de navegación directo (sin submenú); aplica <code>aria-current=\"page\"</code> cuando activo.",
+      "item7": "<strong>NavigationMenuViewport</strong> — container compartido que renderiza el Content activo con transición de tamaño.",
+      "item8": "<strong>NavigationMenuIndicator</strong> — flecha visual que apunta al Trigger activo (opcional).",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Inicio</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Productos</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/productos/a\">Producto A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/productos/b\">Producto B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa NavigationMenu para navegación principal de sitios y productos web — posicionado en el header o topbar.",
+        "item2": "Para aplicaciones estilo desktop (editores, IDEs), prefiere <code>Menubar</code>. Para apps con sidebar persistente, usa <code>Sidebar</code>.",
+        "item3": "<code>role=\"navigation\"</code> se aplica automáticamente; siempre proporciona <code>aria-label</code> describiendo el tipo de navegación (ej.: \"Navegación principal\").",
+        "item4": "Items con dropdown deben tener de 3 a 8 sub-links — menos es ruido, más sugiere reorganización o página dedicada.",
+        "item5": "Usa <code>NavigationMenuLink</code> dentro del Content (no <code>&lt;a&gt;</code> directo) para heredar accesibilidad y tracking automático."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "Usa",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Header de sitio/producto web",
+          "u": "NavigationMenu horizontal",
+          "a": "Sidebar (no idiomático)"
+        },
+        "item2": {
+          "s": "Editor estilo desktop (IDE)",
+          "u": "Menubar",
+          "a": "NavigationMenu (incorrecto)"
+        },
+        "item3": {
+          "s": "Mega-menú con secciones y tarjetas",
+          "u": "NavigationMenuContent con grid",
+          "a": "Sub-páginas separadas"
+        },
+        "item4": {
+          "s": "Mobile: navegación principal",
+          "u": "Drawer + menú vertical",
+          "a": "NavigationMenu (overflow)"
+        },
+        "item5": {
+          "s": "Solo 2-3 enlaces sin submenú",
+          "u": "Lista de Links directa",
+          "a": "NavigationMenu (excesivo)"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regla",
+          "correct": "Usa",
+          "avoid": "Evita",
+          "trigger": {
+            "name": "NavigationMenuTrigger",
+            "format": "Sustantivo corto (categoría de páginas)",
+            "good": "Productos",
+            "bad": "Haz clic para ver los productos"
+          },
+          "link": {
+            "name": "NavigationMenuLink",
+            "format": "Sustantivo o frase nominal (destino)",
+            "good": "Plan Empresarial",
+            "bad": "Saber más"
+          },
+          "ariaLabel": {
+            "name": "aria-label del Root",
+            "format": "Tipo de navegación contextual",
+            "good": "Navegación principal",
+            "bad": "Menú"
+          },
+          "currentPage": {
+            "name": "aria-current",
+            "format": "Marcar siempre página actual",
+            "good": "aria-current=\"page\"",
+            "bad": "Sin indicación de página actual"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Sitio o producto web con navegación principal horizontal en el header.",
+        "item2": "Hay 4 o más categorías de páginas que deben ser accesibles en la parte superior.",
+        "item3": "Algunas categorías tienen sub-páginas que justifican dropdown.",
+        "item4": "Quieres mega-menú con tarjetas visuales o grids de enlaces destacados."
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Es aplicación estilo desktop con Archivo/Editar/Ver — usa Menubar.",
+        "item2": "El layout requiere sidebar persistente — usa Sidebar.",
+        "item3": "En mobile sin fallback — usa Drawer con menú vertical.",
+        "item4": "Solo hay 2-3 enlaces sin jerarquía — basta una lista de Links."
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "NavigationMenu con aria-label=\"Navegación principal\" y aria-current=\"page\" en el link activo.",
+        "dont": "NavigationMenu sin aria-label — el lector de pantalla anuncia solo \"navigation\"."
+      },
+      "pair2": {
+        "do": "Mega-menú con 4-6 sub-links agrupados por categoría.",
+        "dont": "Mega-menú con 30+ links sin agrupamiento — se vuelve página entera."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "horizontal": "Horizontal (predeterminado)",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "horizontal": "Lista horizontal de items; predeterminado para header de sitio. Triggers y Content posicionados arriba/abajo.",
+        "vertical": "Lista vertical (orientation=vertical); usado en sidebars o mobile drawers. Content abre lateralmente."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Cerrado",
+        "open": "Abierto",
+        "active": "Activo (página actual)"
+      },
+      "descriptions": {
+        "closed": "Estado predeterminado — solo Triggers y Links visibles en la barra.",
+        "open": "Trigger activo con Content expandido en el Viewport; data-state=\"open\".",
+        "active": "Link de la página actual con <code>aria-current=\"page\"</code> y estilo destacado (<code>bg-accent</code>)."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Item activo controlado (Root)."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback al cambiar item activo."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Item activo inicial en modo no-controlado."
+        },
+        "delayDuration": {
+          "type": "number",
+          "default": "200",
+          "required": "No",
+          "description": "Delay en ms antes de abrir Content en hover."
+        },
+        "skipDelayDuration": {
+          "type": "number",
+          "default": "300",
+          "required": "No",
+          "description": "Delay en ms para considerar hover consecutivo (sin reabrir delay)."
+        },
+        "orientation": {
+          "type": "'horizontal' | 'vertical'",
+          "default": "'horizontal'",
+          "required": "No",
+          "description": "Orientación de la lista de items."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// NavigationMenu controlado con delays personalizados\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Navegación principal\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "rootBg": {
+          "class": "bg-background",
+          "part": "Fondo de la barra de navegación"
+        },
+        "triggerHover": {
+          "class": "data-[state=open]:bg-accent",
+          "part": "Trigger activo (Content abierto)"
+        },
+        "linkActive": {
+          "class": "aria-[current=page]:bg-accent",
+          "part": "Link de la página actual"
+        },
+        "viewportBg": {
+          "class": "bg-popover",
+          "part": "Fondo del Viewport (Content)"
+        },
+        "viewportBorder": {
+          "class": "ring-foreground/10",
+          "part": "Borde sutil del Viewport (ring 1px)"
+        },
+        "viewportShadow": {
+          "class": "shadow-md",
+          "part": "Sombra del Viewport"
+        },
+        "rounded": {
+          "class": "rounded-lg",
+          "part": "Esquinas redondeadas del Viewport"
+        },
+        "indicator": {
+          "class": "bg-popover ring-foreground/10",
+          "part": "Flecha indicadora del Trigger activo"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Override de color de la barra para tema con header coloreado */\n[data-slot='navigation-menu'] {\n  background-color: hsl(var(--card));\n}\n\n/* Trigger activo con subrayado en lugar de bg */\n[data-slot='navigation-menu-trigger'][data-state='open'] {\n  background-color: transparent;\n  border-bottom: 2px solid hsl(var(--primary));\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA — criterios 1.3.1 (estructura semántica vía role=navigation/list/listitem), 2.1.1 (operable por teclado: flechas, Tab, Enter, ESC), 2.4.4 (Link Purpose vía texto descriptivo), 4.1.2 (name/role/value vía aria-current/aria-expanded).",
+      "items": {
+        "item1": "<code>NavigationMenu</code> recibe <code>role=\"navigation\"</code>; proporciona siempre <code>aria-label</code> describiendo el tipo (\"Navegación principal\", \"Navegación secundaria\").",
+        "item2": "<code>NavigationMenuTrigger</code> recibe <code>aria-haspopup</code> y <code>aria-expanded</code> automáticos.",
+        "item3": "Flechas Izquierda/Derecha mueven foco entre Triggers (orientation horizontal); Arriba/Abajo en vertical.",
+        "item4": "Enter/Space abre Content; ESC cierra; Tab mueve el foco fuera del menú (no loop interno como Menubar).",
+        "item5": "<code>NavigationMenuLink</code> con <code>aria-current=\"page\"</code> indica la página actual al lector de pantalla.",
+        "item6": "Hover/focus abre Content tras <code>delayDuration</code>; <code>skipDelayDuration</code> permite hover consecutivo entre Triggers sin reabrir delay."
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Tab — entra/sale del menú; enfoca el primer Trigger/Link.",
+        "arrows": "Flechas Izquierda/Derecha (horizontal) o Arriba/Abajo (vertical) mueven foco entre Triggers.",
+        "enter": "Enter / Space — abre Content (en Trigger) o navega (en Link).",
+        "escape": "ESC — cierra Content y devuelve foco al Trigger.",
+        "homeEnd": "Home / End — primer/último Trigger de la lista."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "navigation": "Root: <code>role=\"navigation\"</code> + <code>aria-label</code> obligatorio.",
+        "trigger": "Trigger: <code>aria-haspopup</code>, <code>aria-expanded</code>.",
+        "current": "Link de página actual: <code>aria-current=\"page\"</code>.",
+        "controls": "Trigger puede tener <code>aria-controls</code> apuntando al Content."
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "navigation": "Anuncia: \"Navegación principal\" (o aria-label personalizado).",
+        "trigger": "Trigger lee: \"[texto], menú emergente, contraído/expandido\".",
+        "current": "Link con aria-current=\"page\" anuncia: \"[texto], página actual\"."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "menubar": {
+          "name": "Menubar",
+          "description": "Para aplicaciones estilo desktop (Archivo/Editar/Ver)."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Navegación vertical persistente en apps."
+        },
+        "breadcrumb": {
+          "name": "Breadcrumb",
+          "description": "Para jerarquía de navegación actual (dónde estoy)."
+        },
+        "tabs": {
+          "name": "Tabs",
+          "description": "Para alternar entre views paralelos dentro de una página."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: NavigationMenu usa <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom con eventos hover/focus.",
+      "item2": "<strong>Viewport compartido</strong>: a diferencia de DropdownMenu (cada Content en su propio portal), el NavigationMenu usa un único Viewport que cambia de tamaño con transición.",
+      "item3": "<strong>Mobile</strong>: NavigationMenu no funciona bien en pantallas pequeñas — siempre ten un <code>Drawer</code> con menú vertical como fallback responsive.",
+      "item4": "<strong>Mega-menú</strong>: para Content con grid + tarjetas, usa <code>className=\"grid w-[600px] grid-cols-2 gap-3 p-4\"</code> dentro del <code>&lt;ul&gt;</code>.",
+      "item5": "<strong>Indicador animado</strong>: <code>NavigationMenuIndicator</code> es opcional pero recomendado para feedback visual claro de qué Trigger está activo.",
+      "item6": "<strong>aria-label obligatorio</strong>: sin él, el lector de pantalla anuncia solo \"navigation\" — no descriptivo. Usa \"Navegación principal\", \"Navegación del footer\", etc."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (texto del Trigger/Link), <code>destination</code> (href). Dispara vía <code>onValueChange</code> y <code>onClick</code> en los Links."
+    },
+    "testes": {
+      "title": "Criterios de Test",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en cada interacción.",
+        "item1": {
+          "action": "Hover/foco en NavigationMenuTrigger",
+          "result": "Content abre en el Viewport tras delayDuration",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Flechas Izquierda/Derecha entre Triggers",
+          "result": "Foco mueve entre Triggers de la lista",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Enter/Space en Trigger",
+          "result": "Content expande con role=menu",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "ESC con Content abierto",
+          "result": "Content cierra y foco vuelve al Trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Click en NavigationMenuLink",
+          "result": "Navega a href; menú cierra automáticamente",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Renderizar Link con aria-current=page",
+          "result": "Aplica bg-accent y lector anuncia 'página actual'",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Hover entre Triggers consecutivamente",
+          "result": "Content alterna sin cerrar (skipDelayDuration)",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
+        "item2": "Root tiene role=navigation y aria-label (WCAG 1.3.1)",
+        "item3": "Trigger tiene aria-haspopup y aria-expanded refleja estado",
+        "item4": "Link de página actual tiene aria-current=\"page\" (WCAG 4.1.2)",
+        "item5": "Foco vuelve al Trigger al cerrar vía ESC (WCAG 2.4.3)",
+        "item6": "Contraste mínimo 4.5:1 entre texto del Link y bg-popover (WCAG 1.4.3)"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": {
+          "story": "Barra horizontal con 4-5 items (algunos con dropdown)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Trigger 'Productos' abierto con mega-menú grid",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Link 'Inicio' con aria-current=page",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Indicator visible bajo el Trigger activo",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Vertical (orientation=vertical) en sidebar",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  }
+}
