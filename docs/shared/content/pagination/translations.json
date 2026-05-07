@@ -1,0 +1,944 @@
+{
+  "pt-BR": {
+    "title": "Pagination",
+    "category": "Navegação",
+    "type": "Componente",
+    "description": "Navegação entre páginas de um conjunto de resultados ou conteúdo paginado, com controles para anterior, próxima e páginas numeradas.",
+    "seo": {
+      "title": "Pagination — Navegação · Design System",
+      "description": "Documentação do Pagination: subcomponentes Previous, Next, Link, Ellipsis, com aria-current e suporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Pagination com subcomponentes Previous, Next, Link, Ellipsis e Item, navegação acessível por teclado e aria-current na página ativa.",
+      "aiEntities": "Pagination, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, aria-label",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "previous": "Anterior",
+        "next": "Próxima",
+        "page": "Ir para página",
+        "current": "Página atual",
+        "more": "Mais páginas"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Pagination</strong> — container <code>&lt;nav&gt;</code> com <code>aria-label=\"pagination\"</code>.",
+      "item2": "<strong>PaginationContent</strong> — lista <code>&lt;ul&gt;</code> que agrupa os itens horizontalmente.",
+      "item3": "<strong>PaginationItem</strong> — wrapper <code>&lt;li&gt;</code> de cada controle.",
+      "item4": "<strong>PaginationLink</strong> — link numerado com <code>aria-current=\"page\"</code> quando ativo.",
+      "item5": "<strong>PaginationPrevious / PaginationNext</strong> — links de direção com ícone e label.",
+      "item6": "<strong>PaginationEllipsis</strong> — indicador decorativo (<code>aria-hidden</code>) de páginas omitidas.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Próxima */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use quando a lista tiver mais de 10 itens — abaixo disso, exiba tudo sem paginação.",
+        "item2": "Sempre marque a página ativa com <code>isActive</code> — o componente aplica <code>aria-current=\"page\"</code>.",
+        "item3": "Use <code>PaginationEllipsis</code> quando houver mais de 7 páginas — primeira, última e adjacentes à atual.",
+        "item4": "Desabilite <code>Previous</code> apenas na primeira página e <code>Next</code> apenas na última."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Lista com 50+ itens", "u": "Sim", "a": "-" },
+        "item2": { "s": "Lista com menos de 10 itens", "u": "Não", "a": "Listar tudo" },
+        "item3": { "s": "Feed infinito por scroll", "u": "Não", "a": "Infinite scroll" },
+        "item4": { "s": "Tabela de dados grande", "u": "Sim", "a": "DataTable com paginação" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "previous": {
+            "name": "PaginationPrevious",
+            "format": "Verbo curto · sem abreviação · sem ponto",
+            "good": "\"Anterior\"",
+            "bad": "\"Ant.\", \"<\", \"Voltar\""
+          },
+          "next": {
+            "name": "PaginationNext",
+            "format": "Verbo curto · sem abreviação · sem ponto",
+            "good": "\"Próxima\"",
+            "bad": "\"Próx.\", \">\", \"Avançar\""
+          },
+          "page": {
+            "name": "PaginationLink (número)",
+            "format": "Apenas o número · contexto via aria-label",
+            "good": "\"3\" + aria-label \"Ir para página 3\"",
+            "bad": "\"Pág 3\", \"Página 3\""
+          },
+          "ellipsis": {
+            "name": "PaginationEllipsis",
+            "format": "Reticências tipográficas · aria-hidden",
+            "good": "\"…\"",
+            "bad": "\"...\", \"etc\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "A lista tem mais de 10 itens e a navegação sequencial faz sentido",
+        "item2": "O usuário precisa pular para uma página específica",
+        "item3": "O total de páginas é conhecido e finito",
+        "item4": "A URL deve refletir a página atual para compartilhamento"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A lista tem menos de 10 itens — exiba tudo",
+        "item2": "O conteúdo é um feed contínuo — use <code>infinite scroll</code>",
+        "item3": "O total de páginas é desconhecido — use <code>Load more</code>",
+        "item4": "A página é uma demo curta sem necessidade de navegação"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Marque a página ativa com isActive e use ellipsis para listas longas.",
+        "dont": "Não exiba dezenas de números seguidos sem ellipsis."
+      },
+      "pair2": {
+        "do": "Use \"Anterior\" e \"Próxima\" por extenso, sem abreviar.",
+        "dont": "Não use apenas setas \"<\" e \">\" sem aria-label."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "active": "Active",
+        "directional": "Directional"
+      },
+      "styles": {
+        "default": "Link de página inativo — <code>variant=\"ghost\"</code>, fundo transparente.",
+        "active": "Página atual — <code>variant=\"outline\"</code>, borda e <code>aria-current=\"page\"</code>.",
+        "directional": "Previous e Next — link com ícone e label visíveis a partir de <code>sm</code>."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "hover": "Hover",
+        "active": "Active",
+        "disabled": "Disabled",
+        "focus": "Focus"
+      },
+      "descriptions": {
+        "default": "Estado padrão — sem fundo, texto em <code>foreground</code>.",
+        "hover": "Fundo <code>accent</code> e texto <code>accent-foreground</code>.",
+        "active": "Página atual — borda visível e <code>aria-current=\"page\"</code>.",
+        "disabled": "Previous na primeira página ou Next na última — <code>opacity-50</code> e <code>pointer-events-none</code>.",
+        "focus": "Anel de foco visível com <code>ring-2 ring-ring</code>."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "isActive": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Marca o link como página atual. Aplica <code>aria-current=\"page\"</code> e variante outline."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\" | \"lg\" | \"icon\"",
+          "default": "\"icon\"",
+          "required": "Não",
+          "description": "Tamanho do botão subjacente. Previous e Next usam <code>default</code>."
+        },
+        "text": {
+          "type": "string",
+          "default": "\"Previous\" / \"Next\"",
+          "required": "Não",
+          "description": "Texto exibido em Previous e Next. Permite traduzir o label."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes Tailwind adicionais para customização visual."
+        },
+        "children": {
+          "type": "ReactNode",
+          "default": "—",
+          "required": "Não",
+          "description": "Conteúdo do link — número da página em PaginationLink."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Use asChild para integrar com router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "background": { "class": "bg-background", "part": "Fundo neutro do container" },
+        "foreground": { "class": "text-foreground", "part": "Texto do número da página inativa" },
+        "accent": { "class": "bg-accent", "part": "Fundo no estado hover" },
+        "accentForeground": { "class": "text-accent-foreground", "part": "Texto no estado hover" },
+        "border": { "class": "border", "part": "Borda do link da página ativa" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco visível" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Override via CSS variables no escopo do componente */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 e 4.1.2.",
+      "items": {
+        "item1": "<code>nav</code> com <code>aria-label=\"pagination\"</code> diferencia de outros elementos de navegação",
+        "item2": "<code>aria-current=\"page\"</code> na página ativa anuncia ao leitor de tela",
+        "item3": "Cada link numerado tem <code>aria-label</code> com contexto (\"Ir para página N\")",
+        "item4": "Previous e Next têm <code>aria-label</code> descritivo",
+        "item5": "PaginationEllipsis com <code>aria-hidden=\"true\"</code> — decorativo",
+        "item6": "Foco visível em todos os elementos com <code>ring-2 ring-ring</code>"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Move o foco entre os links e botões",
+        "enter": "Ativa o link focado e navega para a página",
+        "space": "Ativa o link focado quando o trigger é botão",
+        "shiftTab": "Move o foco no sentido inverso"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "navLabel": "<code>aria-label=\"pagination\"</code> no <code>&lt;nav&gt;</code> raiz",
+        "current": "<code>aria-current=\"page\"</code> no link da página ativa",
+        "linkLabel": "<code>aria-label=\"Ir para página N\"</code> em cada link numerado",
+        "ellipsis": "<code>aria-hidden=\"true\"</code> no PaginationEllipsis"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "current": "Anuncia \"página atual\" ao focar no link ativo",
+        "navigation": "Anuncia \"navegação de paginação\" ao entrar na região",
+        "ellipsis": "Ignora o ellipsis (decorativo)"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "breadcrumb": { "name": "Breadcrumb", "description": "Indica a posição na hierarquia de navegação." },
+        "tabs": { "name": "Tabs", "description": "Alterna entre views paralelas sem ordem definida." },
+        "button": { "name": "Button", "description": "Base usada pelos links da paginação." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Renderiza <code>&lt;a&gt;</code> por padrão</strong> — em SPAs sem URLs reais, use <code>asChild</code> para renderizar <code>&lt;button&gt;</code>.",
+      "item2": "<strong>Estado disabled</strong> — para links <code>&lt;a&gt;</code>, use <code>aria-disabled</code> + <code>pointer-events-none</code>; <code>disabled</code> só vale em <code>&lt;button&gt;</code>.",
+      "item3": "<strong>Ellipsis tipográfico</strong> — use o caractere <code>…</code> (U+2026), não três pontos <code>...</code>.",
+      "item4": "<strong>Mobile</strong> — o texto de Previous e Next é oculto em telas menores que <code>sm</code>; o ícone permanece visível."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "page_change": {
+          "trigger": "Usuário clica em uma página, Previous ou Next",
+          "payload": "{ component: \"pagination\", page, total_pages, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Clicar em página numerada", "result": "Dispara onClick e atualiza página atual", "priority": "high" },
+        "item2": { "action": "Clicar em Previous na primeira página", "result": "Não navega; aria-disabled true", "priority": "high" },
+        "item3": { "action": "Clicar em Next na última página", "result": "Não navega; aria-disabled true", "priority": "high" },
+        "item4": { "action": "Pressionar Tab", "result": "Move foco entre os links em ordem visual", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "Contraste mínimo 4.5:1 entre texto e fundo (WCAG 2.1 AA)",
+        "item3": "Focus ring visível em todos os links e botões",
+        "item4": "aria-current=\"page\" presente na página ativa",
+        "item5": "aria-label descritivo em Previous, Next e links numerados"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Default (paginação simples)", "priority": "high" },
+        "item2": { "story": "Com ellipsis (lista longa)", "priority": "high" },
+        "item3": { "story": "Página ativa destacada", "priority": "high" },
+        "item4": { "story": "Previous desabilitado (primeira página)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Pagination",
+    "category": "Navigation",
+    "type": "Component",
+    "description": "Navigation between pages of a result set or paginated content, with controls for previous, next and numbered pages.",
+    "seo": {
+      "title": "Pagination — Navigation · Design System",
+      "description": "Pagination documentation: Previous, Next, Link, Ellipsis subcomponents with aria-current and WCAG 2.1 AA support.",
+      "aiSummary": "Pagination component with Previous, Next, Link, Ellipsis and Item subcomponents, accessible keyboard navigation and aria-current on active page.",
+      "aiEntities": "Pagination, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, aria-label",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "previous": "Previous",
+        "next": "Next",
+        "page": "Go to page",
+        "current": "Current page",
+        "more": "More pages"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Pagination</strong> — <code>&lt;nav&gt;</code> container with <code>aria-label=\"pagination\"</code>.",
+      "item2": "<strong>PaginationContent</strong> — <code>&lt;ul&gt;</code> list grouping items horizontally.",
+      "item3": "<strong>PaginationItem</strong> — <code>&lt;li&gt;</code> wrapper for each control.",
+      "item4": "<strong>PaginationLink</strong> — numbered link with <code>aria-current=\"page\"</code> when active.",
+      "item5": "<strong>PaginationPrevious / PaginationNext</strong> — directional links with icon and label.",
+      "item6": "<strong>PaginationEllipsis</strong> — decorative indicator (<code>aria-hidden</code>) of omitted pages.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Previous */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Next */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use when the list has more than 10 items — below that, show everything without pagination.",
+        "item2": "Always mark the active page with <code>isActive</code> — the component applies <code>aria-current=\"page\"</code>.",
+        "item3": "Use <code>PaginationEllipsis</code> when there are more than 7 pages — first, last and adjacent to current.",
+        "item4": "Disable <code>Previous</code> only on the first page and <code>Next</code> only on the last."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "List with 50+ items", "u": "Yes", "a": "-" },
+        "item2": { "s": "List with fewer than 10 items", "u": "No", "a": "List everything" },
+        "item3": { "s": "Infinite scroll feed", "u": "No", "a": "Infinite scroll" },
+        "item4": { "s": "Large data table", "u": "Yes", "a": "DataTable with pagination" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "previous": {
+            "name": "PaginationPrevious",
+            "format": "Short verb · no abbreviation · no period",
+            "good": "\"Previous\"",
+            "bad": "\"Prev.\", \"<\", \"Back\""
+          },
+          "next": {
+            "name": "PaginationNext",
+            "format": "Short verb · no abbreviation · no period",
+            "good": "\"Next\"",
+            "bad": "\"Nxt.\", \">\", \"Forward\""
+          },
+          "page": {
+            "name": "PaginationLink (number)",
+            "format": "Number only · context via aria-label",
+            "good": "\"3\" + aria-label \"Go to page 3\"",
+            "bad": "\"Pg 3\", \"Page 3\""
+          },
+          "ellipsis": {
+            "name": "PaginationEllipsis",
+            "format": "Typographic ellipsis · aria-hidden",
+            "good": "\"…\"",
+            "bad": "\"...\", \"etc\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The list has more than 10 items and sequential navigation makes sense",
+        "item2": "The user needs to jump to a specific page",
+        "item3": "Total page count is known and finite",
+        "item4": "The URL should reflect the current page for sharing"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "The list has fewer than 10 items — show everything",
+        "item2": "The content is a continuous feed — use <code>infinite scroll</code>",
+        "item3": "The total page count is unknown — use <code>Load more</code>",
+        "item4": "The page is a short demo with no need for navigation"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Mark the active page with isActive and use ellipsis for long lists.",
+        "dont": "Don't show dozens of consecutive numbers without ellipsis."
+      },
+      "pair2": {
+        "do": "Spell out \"Previous\" and \"Next\" — no abbreviations.",
+        "dont": "Don't use only \"<\" and \">\" arrows without aria-label."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "active": "Active",
+        "directional": "Directional"
+      },
+      "styles": {
+        "default": "Inactive page link — <code>variant=\"ghost\"</code>, transparent background.",
+        "active": "Current page — <code>variant=\"outline\"</code>, border and <code>aria-current=\"page\"</code>.",
+        "directional": "Previous and Next — link with icon and label visible from <code>sm</code>."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "default": "Default",
+        "hover": "Hover",
+        "active": "Active",
+        "disabled": "Disabled",
+        "focus": "Focus"
+      },
+      "descriptions": {
+        "default": "Default state — no background, text in <code>foreground</code>.",
+        "hover": "<code>accent</code> background and <code>accent-foreground</code> text.",
+        "active": "Current page — visible border and <code>aria-current=\"page\"</code>.",
+        "disabled": "Previous on the first page or Next on the last — <code>opacity-50</code> and <code>pointer-events-none</code>.",
+        "focus": "Visible focus ring with <code>ring-2 ring-ring</code>."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "isActive": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Marks the link as the current page. Applies <code>aria-current=\"page\"</code> and outline variant."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\" | \"lg\" | \"icon\"",
+          "default": "\"icon\"",
+          "required": "No",
+          "description": "Underlying button size. Previous and Next use <code>default</code>."
+        },
+        "text": {
+          "type": "string",
+          "default": "\"Previous\" / \"Next\"",
+          "required": "No",
+          "description": "Label text shown on Previous and Next. Allows translation."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Additional Tailwind classes for visual customization."
+        },
+        "children": {
+          "type": "ReactNode",
+          "default": "—",
+          "required": "No",
+          "description": "Link content — page number in PaginationLink."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Use asChild to integrate with router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "background": { "class": "bg-background", "part": "Neutral container background" },
+        "foreground": { "class": "text-foreground", "part": "Inactive page number text" },
+        "accent": { "class": "bg-accent", "part": "Hover state background" },
+        "accentForeground": { "class": "text-accent-foreground", "part": "Hover state text" },
+        "border": { "class": "border", "part": "Active page link border" },
+        "ring": { "class": "ring-ring", "part": "Visible focus ring" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Override via CSS variables in component scope */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 and 4.1.2.",
+      "items": {
+        "item1": "<code>nav</code> with <code>aria-label=\"pagination\"</code> distinguishes from other navigation elements",
+        "item2": "<code>aria-current=\"page\"</code> on the active page is announced to the screen reader",
+        "item3": "Each numbered link has an <code>aria-label</code> with context (\"Go to page N\")",
+        "item4": "Previous and Next have descriptive <code>aria-label</code>",
+        "item5": "PaginationEllipsis with <code>aria-hidden=\"true\"</code> — decorative",
+        "item6": "Visible focus on all elements with <code>ring-2 ring-ring</code>"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Moves focus between links and buttons",
+        "enter": "Activates the focused link and navigates to the page",
+        "space": "Activates the focused link when trigger is a button",
+        "shiftTab": "Moves focus in reverse"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "navLabel": "<code>aria-label=\"pagination\"</code> on the root <code>&lt;nav&gt;</code>",
+        "current": "<code>aria-current=\"page\"</code> on the active page link",
+        "linkLabel": "<code>aria-label=\"Go to page N\"</code> on each numbered link",
+        "ellipsis": "<code>aria-hidden=\"true\"</code> on PaginationEllipsis"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "current": "Announces \"current page\" when focusing the active link",
+        "navigation": "Announces \"pagination navigation\" when entering the region",
+        "ellipsis": "Ignores the ellipsis (decorative)"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "breadcrumb": { "name": "Breadcrumb", "description": "Indicates position in the navigation hierarchy." },
+        "tabs": { "name": "Tabs", "description": "Switches between parallel views without a defined order." },
+        "button": { "name": "Button", "description": "Base used by pagination links." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Renders <code>&lt;a&gt;</code> by default</strong> — in SPAs without real URLs, use <code>asChild</code> to render <code>&lt;button&gt;</code>.",
+      "item2": "<strong>Disabled state</strong> — for <code>&lt;a&gt;</code> links, use <code>aria-disabled</code> + <code>pointer-events-none</code>; <code>disabled</code> only works on <code>&lt;button&gt;</code>.",
+      "item3": "<strong>Typographic ellipsis</strong> — use the <code>…</code> character (U+2026), not three dots <code>...</code>.",
+      "item4": "<strong>Mobile</strong> — Previous and Next text is hidden below <code>sm</code> screens; the icon stays visible."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "page_change": {
+          "trigger": "User clicks a page, Previous or Next",
+          "payload": "{ component: \"pagination\", page, total_pages, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Click numbered page", "result": "Triggers onClick and updates current page", "priority": "high" },
+        "item2": { "action": "Click Previous on first page", "result": "Does not navigate; aria-disabled true", "priority": "high" },
+        "item3": { "action": "Click Next on last page", "result": "Does not navigate; aria-disabled true", "priority": "high" },
+        "item4": { "action": "Press Tab", "result": "Moves focus between links in visual order", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core in the default state",
+        "item2": "Minimum 4.5:1 contrast between text and background (WCAG 2.1 AA)",
+        "item3": "Visible focus ring on all links and buttons",
+        "item4": "aria-current=\"page\" present on the active page",
+        "item5": "Descriptive aria-label on Previous, Next and numbered links"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Default (simple pagination)", "priority": "high" },
+        "item2": { "story": "With ellipsis (long list)", "priority": "high" },
+        "item3": { "story": "Active page highlighted", "priority": "high" },
+        "item4": { "story": "Previous disabled (first page)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Pagination",
+    "category": "Navegación",
+    "type": "Componente",
+    "description": "Navegación entre páginas de un conjunto de resultados o contenido paginado, con controles para anterior, siguiente y páginas numeradas.",
+    "seo": {
+      "title": "Pagination — Navegación · Design System",
+      "description": "Documentación de Pagination: subcomponentes Previous, Next, Link, Ellipsis con aria-current y soporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Pagination con subcomponentes Previous, Next, Link, Ellipsis e Item, navegación accesible por teclado y aria-current en la página activa.",
+      "aiEntities": "Pagination, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, aria-label",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "page": "Ir a la página",
+        "current": "Página actual",
+        "more": "Más páginas"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Pagination</strong> — contenedor <code>&lt;nav&gt;</code> con <code>aria-label=\"pagination\"</code>.",
+      "item2": "<strong>PaginationContent</strong> — lista <code>&lt;ul&gt;</code> que agrupa los ítems horizontalmente.",
+      "item3": "<strong>PaginationItem</strong> — wrapper <code>&lt;li&gt;</code> de cada control.",
+      "item4": "<strong>PaginationLink</strong> — link numerado con <code>aria-current=\"page\"</code> cuando está activo.",
+      "item5": "<strong>PaginationPrevious / PaginationNext</strong> — links de dirección con icono y etiqueta.",
+      "item6": "<strong>PaginationEllipsis</strong> — indicador decorativo (<code>aria-hidden</code>) de páginas omitidas.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Siguiente */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa cuando la lista tenga más de 10 ítems — debajo de eso, muestra todo sin paginación.",
+        "item2": "Marca siempre la página activa con <code>isActive</code> — el componente aplica <code>aria-current=\"page\"</code>.",
+        "item3": "Usa <code>PaginationEllipsis</code> cuando haya más de 7 páginas — primera, última y adyacentes a la actual.",
+        "item4": "Deshabilita <code>Previous</code> solo en la primera página y <code>Next</code> solo en la última."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Lista con 50+ ítems", "u": "Sí", "a": "-" },
+        "item2": { "s": "Lista con menos de 10 ítems", "u": "No", "a": "Mostrar todo" },
+        "item3": { "s": "Feed con scroll infinito", "u": "No", "a": "Infinite scroll" },
+        "item4": { "s": "Tabla de datos grande", "u": "Sí", "a": "DataTable con paginación" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "previous": {
+            "name": "PaginationPrevious",
+            "format": "Verbo corto · sin abreviar · sin punto",
+            "good": "\"Anterior\"",
+            "bad": "\"Ant.\", \"<\", \"Volver\""
+          },
+          "next": {
+            "name": "PaginationNext",
+            "format": "Verbo corto · sin abreviar · sin punto",
+            "good": "\"Siguiente\"",
+            "bad": "\"Sig.\", \">\", \"Avanzar\""
+          },
+          "page": {
+            "name": "PaginationLink (número)",
+            "format": "Solo el número · contexto vía aria-label",
+            "good": "\"3\" + aria-label \"Ir a la página 3\"",
+            "bad": "\"Pág 3\", \"Página 3\""
+          },
+          "ellipsis": {
+            "name": "PaginationEllipsis",
+            "format": "Puntos suspensivos tipográficos · aria-hidden",
+            "good": "\"…\"",
+            "bad": "\"...\", \"etc\""
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "La lista tiene más de 10 ítems y la navegación secuencial tiene sentido",
+        "item2": "El usuario necesita saltar a una página específica",
+        "item3": "El total de páginas es conocido y finito",
+        "item4": "La URL debe reflejar la página actual para compartir"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La lista tiene menos de 10 ítems — muestra todo",
+        "item2": "El contenido es un feed continuo — usa <code>infinite scroll</code>",
+        "item3": "El total de páginas es desconocido — usa <code>Load more</code>",
+        "item4": "La página es una demo corta sin necesidad de navegación"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Marca la página activa con isActive y usa ellipsis para listas largas.",
+        "dont": "No muestres docenas de números seguidos sin ellipsis."
+      },
+      "pair2": {
+        "do": "Usa \"Anterior\" y \"Siguiente\" completos, sin abreviar.",
+        "dont": "No uses solo flechas \"<\" y \">\" sin aria-label."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "active": "Active",
+        "directional": "Directional"
+      },
+      "styles": {
+        "default": "Link de página inactivo — <code>variant=\"ghost\"</code>, fondo transparente.",
+        "active": "Página actual — <code>variant=\"outline\"</code>, borde y <code>aria-current=\"page\"</code>.",
+        "directional": "Previous y Next — link con icono y etiqueta visibles desde <code>sm</code>."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "hover": "Hover",
+        "active": "Active",
+        "disabled": "Disabled",
+        "focus": "Focus"
+      },
+      "descriptions": {
+        "default": "Estado por defecto — sin fondo, texto en <code>foreground</code>.",
+        "hover": "Fondo <code>accent</code> y texto <code>accent-foreground</code>.",
+        "active": "Página actual — borde visible y <code>aria-current=\"page\"</code>.",
+        "disabled": "Previous en la primera página o Next en la última — <code>opacity-50</code> y <code>pointer-events-none</code>.",
+        "focus": "Anillo de foco visible con <code>ring-2 ring-ring</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "isActive": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Marca el link como página actual. Aplica <code>aria-current=\"page\"</code> y variante outline."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\" | \"lg\" | \"icon\"",
+          "default": "\"icon\"",
+          "required": "No",
+          "description": "Tamaño del botón subyacente. Previous y Next usan <code>default</code>."
+        },
+        "text": {
+          "type": "string",
+          "default": "\"Previous\" / \"Next\"",
+          "required": "No",
+          "description": "Texto mostrado en Previous y Next. Permite traducir la etiqueta."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases Tailwind adicionales para personalización visual."
+        },
+        "children": {
+          "type": "ReactNode",
+          "default": "—",
+          "required": "No",
+          "description": "Contenido del link — número de página en PaginationLink."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Usa asChild para integrar con router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "background": { "class": "bg-background", "part": "Fondo neutral del contenedor" },
+        "foreground": { "class": "text-foreground", "part": "Texto del número de página inactiva" },
+        "accent": { "class": "bg-accent", "part": "Fondo en estado hover" },
+        "accentForeground": { "class": "text-accent-foreground", "part": "Texto en estado hover" },
+        "border": { "class": "border", "part": "Borde del link de la página activa" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco visible" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Sobreescribe vía CSS variables en el ámbito del componente */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 y 4.1.2.",
+      "items": {
+        "item1": "<code>nav</code> con <code>aria-label=\"pagination\"</code> diferencia de otros elementos de navegación",
+        "item2": "<code>aria-current=\"page\"</code> en la página activa se anuncia al lector de pantalla",
+        "item3": "Cada link numerado tiene <code>aria-label</code> con contexto (\"Ir a la página N\")",
+        "item4": "Previous y Next tienen <code>aria-label</code> descriptivo",
+        "item5": "PaginationEllipsis con <code>aria-hidden=\"true\"</code> — decorativo",
+        "item6": "Foco visible en todos los elementos con <code>ring-2 ring-ring</code>"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Mueve el foco entre los links y botones",
+        "enter": "Activa el link enfocado y navega a la página",
+        "space": "Activa el link enfocado cuando el trigger es un botón",
+        "shiftTab": "Mueve el foco en sentido inverso"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "navLabel": "<code>aria-label=\"pagination\"</code> en el <code>&lt;nav&gt;</code> raíz",
+        "current": "<code>aria-current=\"page\"</code> en el link de la página activa",
+        "linkLabel": "<code>aria-label=\"Ir a la página N\"</code> en cada link numerado",
+        "ellipsis": "<code>aria-hidden=\"true\"</code> en PaginationEllipsis"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "current": "Anuncia \"página actual\" al enfocar el link activo",
+        "navigation": "Anuncia \"navegación de paginación\" al entrar en la región",
+        "ellipsis": "Ignora el ellipsis (decorativo)"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "breadcrumb": { "name": "Breadcrumb", "description": "Indica la posición en la jerarquía de navegación." },
+        "tabs": { "name": "Tabs", "description": "Alterna entre vistas paralelas sin orden definido." },
+        "button": { "name": "Button", "description": "Base usada por los links de la paginación." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Renderiza <code>&lt;a&gt;</code> por defecto</strong> — en SPAs sin URLs reales, usa <code>asChild</code> para renderizar <code>&lt;button&gt;</code>.",
+      "item2": "<strong>Estado disabled</strong> — para links <code>&lt;a&gt;</code>, usa <code>aria-disabled</code> + <code>pointer-events-none</code>; <code>disabled</code> solo aplica a <code>&lt;button&gt;</code>.",
+      "item3": "<strong>Ellipsis tipográfico</strong> — usa el carácter <code>…</code> (U+2026), no tres puntos <code>...</code>.",
+      "item4": "<strong>Mobile</strong> — el texto de Previous y Next se oculta en pantallas menores que <code>sm</code>; el icono permanece visible."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "page_change": {
+          "trigger": "Usuario hace clic en una página, Previous o Next",
+          "payload": "{ component: \"pagination\", page, total_pages, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Hacer clic en página numerada", "result": "Dispara onClick y actualiza la página actual", "priority": "high" },
+        "item2": { "action": "Hacer clic en Previous en la primera página", "result": "No navega; aria-disabled true", "priority": "high" },
+        "item3": { "action": "Hacer clic en Next en la última página", "result": "No navega; aria-disabled true", "priority": "high" },
+        "item4": { "action": "Presionar Tab", "result": "Mueve el foco entre los links en orden visual", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core en el estado por defecto",
+        "item2": "Contraste mínimo 4.5:1 entre texto y fondo (WCAG 2.1 AA)",
+        "item3": "Anillo de foco visible en todos los links y botones",
+        "item4": "aria-current=\"page\" presente en la página activa",
+        "item5": "aria-label descriptivo en Previous, Next y links numerados"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Default (paginación simple)", "priority": "high" },
+        "item2": { "story": "Con ellipsis (lista larga)", "priority": "high" },
+        "item3": { "story": "Página activa destacada", "priority": "high" },
+        "item4": { "story": "Previous deshabilitado (primera página)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
