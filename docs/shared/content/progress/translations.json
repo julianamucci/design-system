@@ -1,0 +1,929 @@
+{
+  "pt-BR": {
+    "title": "Progress",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Indicador visual de progresso de operações com duração mensurável, com suporte a modos determinado e indeterminate.",
+    "seo": {
+      "title": "Progress — Feedback · Design System",
+      "description": "Documentação do Progress: track, indicator, label e value, com role=\"progressbar\" automático e suporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Progress com Track, Indicator, Label e Value, role=\"progressbar\" automático, suporte a modo determinado (0-100) e indeterminate.",
+      "aiEntities": "Progress, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role progressbar",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "upload": "Enviando arquivo",
+        "loading": "Carregando dados",
+        "complete": "Concluído",
+        "percent": "%",
+        "indeterminate": "Processando…"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Progress</strong> — root com <code>role=\"progressbar\"</code> que recebe o valor.",
+      "item2": "<strong>ProgressTrack</strong> — trilha de fundo onde o indicador se move.",
+      "item3": "<strong>ProgressIndicator</strong> — barra preenchida que reflete o valor atual.",
+      "item4": "<strong>ProgressLabel</strong> — rótulo textual opcional descrevendo a operação.",
+      "item5": "<strong>ProgressValue</strong> — valor numérico opcional (ex: 42%), alinhado à direita.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Progress value={42}>\n  <ProgressLabel>Enviando arquivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para operações com 3+ segundos onde o progresso é mensurável.",
+        "item2": "Para duração desconhecida, omita <code>value</code> ou passe <code>null</code> — modo indeterminate.",
+        "item3": "Sempre forneça <code>aria-label</code> descrevendo o que está sendo medido.",
+        "item4": "Anuncie a porcentagem via <code>aria-live=\"polite\"</code> no texto adjacente."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Upload de arquivo", "u": "Sim, value 0–100", "a": "-" },
+        "item2": { "s": "Loading de duração curta (<300ms)", "u": "Não", "a": "Sem indicador" },
+        "item3": { "s": "Loading de estrutura conhecida", "u": "Não", "a": "Skeleton" },
+        "item4": { "s": "Processamento sem progresso mensurável", "u": "Sim, indeterminate", "a": "Spinner" },
+        "item5": { "s": "Notificação de tarefa concluída", "u": "Não", "a": "Toast/Sonner" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "label": {
+            "name": "ProgressLabel",
+            "format": "Gerúndio + objeto · sem ponto · máx. 5 palavras",
+            "good": "\"Enviando arquivo\", \"Carregando dados\"",
+            "bad": "\"Aguarde…\", \"Carregando\""
+          },
+          "value": {
+            "name": "ProgressValue",
+            "format": "Número + unidade · sem espaço antes de %",
+            "good": "\"42%\", \"3/10\"",
+            "bad": "\"42 %\", \"quase lá\""
+          },
+          "ariaLabel": {
+            "name": "aria-label",
+            "format": "Substantivo + complemento · descreve a operação",
+            "good": "\"Progresso do upload\"",
+            "bad": "\"Progress\", \"Barra\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Há uma operação com duração mensurável de 3+ segundos",
+        "item2": "O usuário precisa saber quanto falta para concluir",
+        "item3": "Uma tarefa longa pode ser pausada ou cancelada",
+        "item4": "O progresso é determinístico (etapas previsíveis)"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "O loading é instantâneo (<300ms) — não exiba nada",
+        "item2": "A estrutura do conteúdo é conhecida — use <code>Skeleton</code>",
+        "item3": "Não é possível medir o progresso — use Spinner",
+        "item4": "É apenas uma notificação de fim — use <code>Sonner</code> ou <code>Alert</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Forneça aria-label descrevendo a operação medida.",
+        "dont": "Não use aria-label genérico como \"Barra\" ou \"Progress\"."
+      },
+      "pair2": {
+        "do": "Combine porcentagem visível com aria-live polite no texto.",
+        "dont": "Não anuncie cada incremento de 1% — atualize a cada 5 ou 10%."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "determinate": "Determinate",
+        "indeterminate": "Indeterminate",
+        "withLabel": "With label"
+      },
+      "styles": {
+        "determinate": "Valor numérico 0–100 — barra preenchida proporcionalmente.",
+        "indeterminate": "<code>value={null}</code> — barra animada sem fim definido, para duração desconhecida.",
+        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> acima da trilha."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "loading": "Loading",
+        "complete": "Complete",
+        "indeterminate": "Indeterminate"
+      },
+      "descriptions": {
+        "default": "Estado inicial — <code>value=0</code>, indicador em <code>0%</code>.",
+        "loading": "Em progresso — <code>0 < value < 100</code>, indicador preenchido proporcionalmente.",
+        "complete": "Finalizado — <code>value=100</code>, barra cheia. Considere remover ou trocar por mensagem de sucesso.",
+        "indeterminate": "Sem valor definido — animação infinita no indicador via CSS."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "value": {
+          "type": "number | null",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor atual de 0 a 100. <code>null</code> ativa modo indeterminate."
+        },
+        "max": {
+          "type": "number",
+          "default": "100",
+          "required": "Não",
+          "description": "Valor máximo da escala."
+        },
+        "min": {
+          "type": "number",
+          "default": "0",
+          "required": "Não",
+          "description": "Valor mínimo da escala."
+        },
+        "getAriaValueText": {
+          "type": "(value: number) => string",
+          "default": "—",
+          "required": "Não",
+          "description": "Função que retorna o texto anunciado pelo leitor de tela."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes Tailwind adicionais. Use <code>[&>div]:bg-*</code> para customizar a cor do indicador."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Cor customizada via Tailwind arbitrary variant\n<Progress\n  value={progress}\n  className=\"[&>div]:bg-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "muted": { "class": "bg-muted", "part": "Fundo da trilha (ProgressTrack)" },
+        "primary": { "class": "bg-primary", "part": "Cor padrão do indicador" },
+        "primaryForeground": { "class": "text-primary-foreground", "part": "Texto sobre o indicador (raro)" },
+        "foreground": { "class": "text-foreground", "part": "Texto do ProgressLabel" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto do ProgressValue" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco quando interativo" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Override de cor do indicador via Tailwind arbitrary variant */\n.upload-progress {\n  @apply [&>div]:bg-blue-500;\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 1.4.11, 4.1.2, 4.1.3.",
+      "items": {
+        "item1": "<code>role=\"progressbar\"</code> aplicado automaticamente",
+        "item2": "<code>aria-valuenow</code>, <code>aria-valuemin</code>, <code>aria-valuemax</code> derivados de <code>value</code>",
+        "item3": "<code>aria-label</code> obrigatório — descreve o que está sendo medido",
+        "item4": "<code>aria-live=\"polite\"</code> no texto adjacente anuncia mudanças sem interromper",
+        "item5": "<code>aria-busy=\"true\"</code> no container durante carregamento",
+        "item6": "Contraste mínimo 3:1 entre indicador e trilha"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "noInteraction": "Não é interativo — não recebe foco do Tab.",
+        "container": "Foco vai para o próximo elemento interativo após o container."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"progressbar\"</code> aplicado pelo primitivo",
+        "valuenow": "<code>aria-valuenow</code> espelha <code>value</code>",
+        "label": "<code>aria-label</code> obrigatório (passado pela aplicação)",
+        "busy": "<code>aria-busy=\"true\"</code> no container do conteúdo carregado"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "announce": "Anuncia \"X por cento, [aria-label]\" ao receber foco",
+        "update": "Atualizações via aria-live são lidas conforme o progresso",
+        "complete": "Anuncia \"100 por cento\" quando concluído"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "skeleton": { "name": "Skeleton", "description": "Placeholder para loading de estrutura conhecida." },
+        "spinner": { "name": "Spinner", "description": "Indicador circular para duração desconhecida e curta." },
+        "alert": { "name": "Alert", "description": "Notificação de conclusão ou erro de uma operação." },
+        "sonner": { "name": "Sonner", "description": "Toast temporário para feedback de tarefa concluída." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Indeterminate</strong> — sem prop nativa; passe <code>value={null}</code> e anime o indicador via CSS (<code>[&>div]:animate-indeterminate</code>).",
+      "item3": "<strong>Cor customizada</strong> — via <code>[&>div]:bg-*</code> ou classe utilitária no className do Progress.",
+      "item4": "<strong>Não interativo</strong> — Progress é passivo. Para rastrear conclusão, dispare evento no callback da operação, não no componente."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes (disparados pela aplicação, não pelo Progress).",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "task_progress": {
+          "trigger": "Operação rastreada atinge marcos (25%, 50%, 75%, 100%)",
+          "payload": "{ component: \"progress\", task, percent, location }"
+        },
+        "task_complete": {
+          "trigger": "Operação concluída (value=100 ou callback de fim)",
+          "payload": "{ component: \"progress\", task, duration_ms, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada mudança de valor.",
+        "item1": { "action": "Definir value=0", "result": "Indicador renderiza sem preenchimento", "priority": "high" },
+        "item2": { "action": "Definir value=50", "result": "Indicador preenche metade da trilha", "priority": "high" },
+        "item3": { "action": "Definir value=100", "result": "Indicador preenche trilha completa", "priority": "high" },
+        "item4": { "action": "Passar value=null", "result": "Modo indeterminate — animação infinita", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 3:1 entre indicador e trilha",
+        "item3": "role=\"progressbar\" presente",
+        "item4": "aria-valuenow, aria-valuemin, aria-valuemax presentes quando value é definido",
+        "item5": "aria-label presente em todos os exemplos"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Default (value=0)", "priority": "high" },
+        "item2": { "story": "Loading (value=50)", "priority": "high" },
+        "item3": { "story": "Complete (value=100)", "priority": "high" },
+        "item4": { "story": "Indeterminate (value=null)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Progress",
+    "category": "Feedback",
+    "type": "Component",
+    "description": "Visual indicator of progress for measurable operations, with support for determinate and indeterminate modes.",
+    "seo": {
+      "title": "Progress — Feedback · Design System",
+      "description": "Progress documentation: track, indicator, label and value, with automatic role=\"progressbar\" and WCAG 2.1 AA support.",
+      "aiSummary": "Progress component with Track, Indicator, Label and Value, automatic role=\"progressbar\", support for determinate (0-100) and indeterminate modes.",
+      "aiEntities": "Progress, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role progressbar",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "upload": "Uploading file",
+        "loading": "Loading data",
+        "complete": "Complete",
+        "percent": "%",
+        "indeterminate": "Processing…"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Progress</strong> — root with <code>role=\"progressbar\"</code> that receives the value.",
+      "item2": "<strong>ProgressTrack</strong> — background track where the indicator moves.",
+      "item3": "<strong>ProgressIndicator</strong> — filled bar reflecting the current value.",
+      "item4": "<strong>ProgressLabel</strong> — optional text label describing the operation.",
+      "item5": "<strong>ProgressValue</strong> — optional numeric value (e.g. 42%), aligned to the right.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Progress value={42}>\n  <ProgressLabel>Uploading file</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for operations of 3+ seconds where progress is measurable.",
+        "item2": "For unknown duration, omit <code>value</code> or pass <code>null</code> — indeterminate mode.",
+        "item3": "Always provide <code>aria-label</code> describing what is being measured.",
+        "item4": "Announce percentage via <code>aria-live=\"polite\"</code> on adjacent text."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "File upload", "u": "Yes, value 0–100", "a": "-" },
+        "item2": { "s": "Short loading (<300ms)", "u": "No", "a": "No indicator" },
+        "item3": { "s": "Loading of known structure", "u": "No", "a": "Skeleton" },
+        "item4": { "s": "Processing with no measurable progress", "u": "Yes, indeterminate", "a": "Spinner" },
+        "item5": { "s": "Notification of completed task", "u": "No", "a": "Toast/Sonner" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "label": {
+            "name": "ProgressLabel",
+            "format": "Gerund + object · no period · max 5 words",
+            "good": "\"Uploading file\", \"Loading data\"",
+            "bad": "\"Please wait…\", \"Loading\""
+          },
+          "value": {
+            "name": "ProgressValue",
+            "format": "Number + unit · no space before %",
+            "good": "\"42%\", \"3/10\"",
+            "bad": "\"42 %\", \"almost there\""
+          },
+          "ariaLabel": {
+            "name": "aria-label",
+            "format": "Noun + complement · describes the operation",
+            "good": "\"Upload progress\"",
+            "bad": "\"Progress\", \"Bar\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "There is a 3+ second operation with measurable duration",
+        "item2": "The user needs to know how much is left to finish",
+        "item3": "A long task can be paused or canceled",
+        "item4": "Progress is deterministic (predictable steps)"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "Loading is instant (<300ms) — show nothing",
+        "item2": "Content structure is known — use <code>Skeleton</code>",
+        "item3": "Progress can't be measured — use Spinner",
+        "item4": "It's just an end notification — use <code>Sonner</code> or <code>Alert</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Provide aria-label describing the measured operation.",
+        "dont": "Don't use generic aria-label like \"Bar\" or \"Progress\"."
+      },
+      "pair2": {
+        "do": "Combine visible percentage with aria-live polite on the text.",
+        "dont": "Don't announce every 1% increment — update every 5 or 10%."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "determinate": "Determinate",
+        "indeterminate": "Indeterminate",
+        "withLabel": "With label"
+      },
+      "styles": {
+        "determinate": "Numeric value 0–100 — bar filled proportionally.",
+        "indeterminate": "<code>value={null}</code> — animated bar without defined end, for unknown duration.",
+        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> above the track."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "default": "Default",
+        "loading": "Loading",
+        "complete": "Complete",
+        "indeterminate": "Indeterminate"
+      },
+      "descriptions": {
+        "default": "Initial state — <code>value=0</code>, indicator at <code>0%</code>.",
+        "loading": "In progress — <code>0 < value < 100</code>, indicator filled proportionally.",
+        "complete": "Finished — <code>value=100</code>, full bar. Consider removing or swapping for success message.",
+        "indeterminate": "No defined value — infinite indicator animation via CSS."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "value": {
+          "type": "number | null",
+          "default": "—",
+          "required": "No",
+          "description": "Current value 0 to 100. <code>null</code> activates indeterminate mode."
+        },
+        "max": {
+          "type": "number",
+          "default": "100",
+          "required": "No",
+          "description": "Maximum value of the scale."
+        },
+        "min": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Minimum value of the scale."
+        },
+        "getAriaValueText": {
+          "type": "(value: number) => string",
+          "default": "—",
+          "required": "No",
+          "description": "Function returning the text announced by the screen reader."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Additional Tailwind classes. Use <code>[&>div]:bg-*</code> to customize the indicator color."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Custom color via Tailwind arbitrary variant\n<Progress\n  value={progress}\n  className=\"[&>div]:bg-success\"\n  aria-label=\"Completion progress\"\n/>\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "muted": { "class": "bg-muted", "part": "Track background (ProgressTrack)" },
+        "primary": { "class": "bg-primary", "part": "Default indicator color" },
+        "primaryForeground": { "class": "text-primary-foreground", "part": "Text over the indicator (rare)" },
+        "foreground": { "class": "text-foreground", "part": "ProgressLabel text" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "ProgressValue text" },
+        "ring": { "class": "ring-ring", "part": "Focus ring when interactive" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Override indicator color via Tailwind arbitrary variant */\n.upload-progress {\n  @apply [&>div]:bg-blue-500;\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 1.4.11, 4.1.2, 4.1.3.",
+      "items": {
+        "item1": "<code>role=\"progressbar\"</code> applied automatically",
+        "item2": "<code>aria-valuenow</code>, <code>aria-valuemin</code>, <code>aria-valuemax</code> derived from <code>value</code>",
+        "item3": "<code>aria-label</code> required — describes what's being measured",
+        "item4": "<code>aria-live=\"polite\"</code> on adjacent text announces changes without interrupting",
+        "item5": "<code>aria-busy=\"true\"</code> on container during loading",
+        "item6": "Minimum 3:1 contrast between indicator and track"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "noInteraction": "Not interactive — does not receive Tab focus.",
+        "container": "Focus moves to the next interactive element after the container."
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "role": "<code>role=\"progressbar\"</code> applied by the primitive",
+        "valuenow": "<code>aria-valuenow</code> mirrors <code>value</code>",
+        "label": "<code>aria-label</code> required (passed by the application)",
+        "busy": "<code>aria-busy=\"true\"</code> on the loaded content container"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "announce": "Announces \"X percent, [aria-label]\" on focus",
+        "update": "aria-live updates are read as progress changes",
+        "complete": "Announces \"100 percent\" when complete"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "skeleton": { "name": "Skeleton", "description": "Placeholder for loading content with known structure." },
+        "spinner": { "name": "Spinner", "description": "Circular indicator for unknown short duration." },
+        "alert": { "name": "Alert", "description": "Notification of completion or error of an operation." },
+        "sonner": { "name": "Sonner", "description": "Temporary toast for completed task feedback." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>Indeterminate</strong> — no native prop; pass <code>value={null}</code> and animate the indicator via CSS (<code>[&>div]:animate-indeterminate</code>).",
+      "item3": "<strong>Custom color</strong> — via <code>[&>div]:bg-*</code> or utility class on the Progress className.",
+      "item4": "<strong>Non-interactive</strong> — Progress is passive. To track completion, fire the event on the operation callback, not on the component."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant events (fired by the application, not by Progress).",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "task_progress": {
+          "trigger": "Tracked operation hits milestones (25%, 50%, 75%, 100%)",
+          "payload": "{ component: \"progress\", task, percent, location }"
+        },
+        "task_complete": {
+          "trigger": "Operation completes (value=100 or end callback)",
+          "payload": "{ component: \"progress\", task, duration_ms, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each value change.",
+        "item1": { "action": "Set value=0", "result": "Indicator renders empty", "priority": "high" },
+        "item2": { "action": "Set value=50", "result": "Indicator fills half the track", "priority": "high" },
+        "item3": { "action": "Set value=100", "result": "Indicator fills the full track", "priority": "high" },
+        "item4": { "action": "Pass value=null", "result": "Indeterminate mode — infinite animation", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 3:1 contrast between indicator and track",
+        "item3": "role=\"progressbar\" present",
+        "item4": "aria-valuenow, aria-valuemin, aria-valuemax present when value is defined",
+        "item5": "aria-label present on all examples"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Default (value=0)", "priority": "high" },
+        "item2": { "story": "Loading (value=50)", "priority": "high" },
+        "item3": { "story": "Complete (value=100)", "priority": "high" },
+        "item4": { "story": "Indeterminate (value=null)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Progress",
+    "category": "Feedback",
+    "type": "Componente",
+    "description": "Indicador visual de progreso de operaciones con duración medible, con soporte para modos determinado e indeterminate.",
+    "seo": {
+      "title": "Progress — Feedback · Design System",
+      "description": "Documentación de Progress: track, indicator, label y value, con role=\"progressbar\" automático y soporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Progress con Track, Indicator, Label y Value, role=\"progressbar\" automático, soporte para modo determinado (0-100) e indeterminate.",
+      "aiEntities": "Progress, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role progressbar",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "upload": "Subiendo archivo",
+        "loading": "Cargando datos",
+        "complete": "Completo",
+        "percent": "%",
+        "indeterminate": "Procesando…"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Progress</strong> — root con <code>role=\"progressbar\"</code> que recibe el valor.",
+      "item2": "<strong>ProgressTrack</strong> — pista de fondo donde el indicador se mueve.",
+      "item3": "<strong>ProgressIndicator</strong> — barra llena que refleja el valor actual.",
+      "item4": "<strong>ProgressLabel</strong> — etiqueta de texto opcional describiendo la operación.",
+      "item5": "<strong>ProgressValue</strong> — valor numérico opcional (ej. 42%), alineado a la derecha.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Progress value={42}>\n  <ProgressLabel>Subiendo archivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa para operaciones de 3+ segundos donde el progreso es medible.",
+        "item2": "Para duración desconocida, omite <code>value</code> o pasa <code>null</code> — modo indeterminate.",
+        "item3": "Provee siempre <code>aria-label</code> describiendo lo que se mide.",
+        "item4": "Anuncia el porcentaje vía <code>aria-live=\"polite\"</code> en el texto adyacente."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Subida de archivo", "u": "Sí, value 0–100", "a": "-" },
+        "item2": { "s": "Carga corta (<300ms)", "u": "No", "a": "Sin indicador" },
+        "item3": { "s": "Carga de estructura conocida", "u": "No", "a": "Skeleton" },
+        "item4": { "s": "Procesamiento sin progreso medible", "u": "Sí, indeterminate", "a": "Spinner" },
+        "item5": { "s": "Notificación de tarea completada", "u": "No", "a": "Toast/Sonner" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "label": {
+            "name": "ProgressLabel",
+            "format": "Gerundio + objeto · sin punto · máx. 5 palabras",
+            "good": "\"Subiendo archivo\", \"Cargando datos\"",
+            "bad": "\"Espera…\", \"Cargando\""
+          },
+          "value": {
+            "name": "ProgressValue",
+            "format": "Número + unidad · sin espacio antes de %",
+            "good": "\"42%\", \"3/10\"",
+            "bad": "\"42 %\", \"casi listo\""
+          },
+          "ariaLabel": {
+            "name": "aria-label",
+            "format": "Sustantivo + complemento · describe la operación",
+            "good": "\"Progreso de subida\"",
+            "bad": "\"Progress\", \"Barra\""
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Hay una operación de 3+ segundos con duración medible",
+        "item2": "El usuario necesita saber cuánto falta para terminar",
+        "item3": "Una tarea larga puede pausarse o cancelarse",
+        "item4": "El progreso es determinístico (etapas predecibles)"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La carga es instantánea (<300ms) — no muestres nada",
+        "item2": "La estructura del contenido es conocida — usa <code>Skeleton</code>",
+        "item3": "No es posible medir el progreso — usa Spinner",
+        "item4": "Es solo una notificación de fin — usa <code>Sonner</code> o <code>Alert</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Provee aria-label describiendo la operación medida.",
+        "dont": "No uses aria-label genérico como \"Barra\" o \"Progress\"."
+      },
+      "pair2": {
+        "do": "Combina porcentaje visible con aria-live polite en el texto.",
+        "dont": "No anuncies cada incremento de 1% — actualiza cada 5 o 10%."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "determinate": "Determinate",
+        "indeterminate": "Indeterminate",
+        "withLabel": "With label"
+      },
+      "styles": {
+        "determinate": "Valor numérico 0–100 — barra llena proporcionalmente.",
+        "indeterminate": "<code>value={null}</code> — barra animada sin fin definido, para duración desconocida.",
+        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> sobre la pista."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "loading": "Loading",
+        "complete": "Complete",
+        "indeterminate": "Indeterminate"
+      },
+      "descriptions": {
+        "default": "Estado inicial — <code>value=0</code>, indicador en <code>0%</code>.",
+        "loading": "En progreso — <code>0 < value < 100</code>, indicador lleno proporcionalmente.",
+        "complete": "Finalizado — <code>value=100</code>, barra llena. Considera retirar o cambiar por mensaje de éxito.",
+        "indeterminate": "Sin valor definido — animación infinita del indicador vía CSS."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "value": {
+          "type": "number | null",
+          "default": "—",
+          "required": "No",
+          "description": "Valor actual de 0 a 100. <code>null</code> activa el modo indeterminate."
+        },
+        "max": {
+          "type": "number",
+          "default": "100",
+          "required": "No",
+          "description": "Valor máximo de la escala."
+        },
+        "min": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Valor mínimo de la escala."
+        },
+        "getAriaValueText": {
+          "type": "(value: number) => string",
+          "default": "—",
+          "required": "No",
+          "description": "Función que devuelve el texto anunciado por el lector de pantalla."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases Tailwind adicionales. Usa <code>[&>div]:bg-*</code> para personalizar el color del indicador."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Color personalizado vía Tailwind arbitrary variant\n<Progress\n  value={progress}\n  className=\"[&>div]:bg-success\"\n  aria-label=\"Progreso de finalización\"\n/>\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "muted": { "class": "bg-muted", "part": "Fondo de la pista (ProgressTrack)" },
+        "primary": { "class": "bg-primary", "part": "Color por defecto del indicador" },
+        "primaryForeground": { "class": "text-primary-foreground", "part": "Texto sobre el indicador (raro)" },
+        "foreground": { "class": "text-foreground", "part": "Texto del ProgressLabel" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto del ProgressValue" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco cuando interactivo" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Override del color del indicador vía Tailwind arbitrary variant */\n.upload-progress {\n  @apply [&>div]:bg-blue-500;\n}\n\n/* Animación indeterminate */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 1.4.11, 4.1.2, 4.1.3.",
+      "items": {
+        "item1": "<code>role=\"progressbar\"</code> aplicado automáticamente",
+        "item2": "<code>aria-valuenow</code>, <code>aria-valuemin</code>, <code>aria-valuemax</code> derivados de <code>value</code>",
+        "item3": "<code>aria-label</code> obligatorio — describe lo que se mide",
+        "item4": "<code>aria-live=\"polite\"</code> en el texto adyacente anuncia cambios sin interrumpir",
+        "item5": "<code>aria-busy=\"true\"</code> en el contenedor durante la carga",
+        "item6": "Contraste mínimo 3:1 entre indicador y pista"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "noInteraction": "No es interactivo — no recibe foco del Tab.",
+        "container": "El foco va al siguiente elemento interactivo después del contenedor."
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"progressbar\"</code> aplicado por el primitivo",
+        "valuenow": "<code>aria-valuenow</code> refleja <code>value</code>",
+        "label": "<code>aria-label</code> obligatorio (pasado por la aplicación)",
+        "busy": "<code>aria-busy=\"true\"</code> en el contenedor del contenido cargado"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "announce": "Anuncia \"X por ciento, [aria-label]\" al recibir foco",
+        "update": "Las actualizaciones vía aria-live se leen conforme el progreso",
+        "complete": "Anuncia \"100 por ciento\" al completar"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "skeleton": { "name": "Skeleton", "description": "Placeholder para carga de estructura conocida." },
+        "spinner": { "name": "Spinner", "description": "Indicador circular para duración desconocida y corta." },
+        "alert": { "name": "Alert", "description": "Notificación de finalización o error de una operación." },
+        "sonner": { "name": "Sonner", "description": "Toast temporal para feedback de tarea completada." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Indeterminate</strong> — sin prop nativa; pasa <code>value={null}</code> y anima el indicador vía CSS (<code>[&>div]:animate-indeterminate</code>).",
+      "item3": "<strong>Color personalizado</strong> — vía <code>[&>div]:bg-*</code> o clase utilitaria en el className del Progress.",
+      "item4": "<strong>No interactivo</strong> — Progress es pasivo. Para rastrear finalización, dispara el evento en el callback de la operación, no en el componente."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes (disparados por la aplicación, no por Progress).",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "task_progress": {
+          "trigger": "La operación rastreada alcanza hitos (25%, 50%, 75%, 100%)",
+          "payload": "{ component: \"progress\", task, percent, location }"
+        },
+        "task_complete": {
+          "trigger": "Operación completada (value=100 o callback final)",
+          "payload": "{ component: \"progress\", task, duration_ms, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada cambio de valor.",
+        "item1": { "action": "Definir value=0", "result": "El indicador se renderiza vacío", "priority": "high" },
+        "item2": { "action": "Definir value=50", "result": "El indicador llena la mitad de la pista", "priority": "high" },
+        "item3": { "action": "Definir value=100", "result": "El indicador llena la pista completa", "priority": "high" },
+        "item4": { "action": "Pasar value=null", "result": "Modo indeterminate — animación infinita", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 3:1 entre indicador y pista",
+        "item3": "role=\"progressbar\" presente",
+        "item4": "aria-valuenow, aria-valuemin, aria-valuemax presentes cuando value está definido",
+        "item5": "aria-label presente en todos los ejemplos"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Default (value=0)", "priority": "high" },
+        "item2": { "story": "Loading (value=50)", "priority": "high" },
+        "item3": { "story": "Complete (value=100)", "priority": "high" },
+        "item4": { "story": "Indeterminate (value=null)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
