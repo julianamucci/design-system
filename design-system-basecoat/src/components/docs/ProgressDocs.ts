@@ -121,6 +121,14 @@ export function createProgressDocs(): HTMLElement {
       description: t('seo.description'),
       locale,
       componentSlug: 'progress',
+      aiSummary: t('seo.aiSummary'),
+      aiEntities: t('seo.aiEntities'),
+      aiIntent: t('seo.aiIntent') as 'informational',
+      breadcrumb: [
+        { name: 'Components', item: '/components' },
+        { name: t('category'), item: '/components/feedback' },
+        { name: t('title') },
+      ],
     });
     track('docs_page_view', { component_name: 'progress', locale, page_title: `${t('title')} · Design System` });
     return cleanup;

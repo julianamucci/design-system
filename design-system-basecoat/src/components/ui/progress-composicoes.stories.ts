@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
+import { expect, within } from 'storybook/test';
 import { createProgress } from './progress';
 
 const meta: Meta = {
@@ -69,6 +70,12 @@ export const FileUpload: Story = {
       ariaLabel: 'Progresso do upload de documento-final.pdf',
     }));
     return card;
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const bar = await canvas.findByRole('progressbar');
+    await expect(bar).toHaveAttribute('aria-label', 'Progresso do upload de documento-final.pdf');
+    await expect(bar).toHaveAttribute('aria-valuenow', '48');
   },
 };
 

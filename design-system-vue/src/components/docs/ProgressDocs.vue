@@ -52,6 +52,14 @@ useSeoEffect(computed(() => ({
   description: tContent('seo.description'),
   locale: locale.value as 'pt-BR' | 'en' | 'es',
   componentSlug: 'progress',
+  aiSummary: tContent('seo.aiSummary'),
+  aiEntities: tContent('seo.aiEntities'),
+  aiIntent: tContent('seo.aiIntent') as 'informational',
+  breadcrumb: [
+    { name: 'Components', item: '/components' },
+    { name: tContent('category'), item: '/components/feedback' },
+    { name: tContent('title') },
+  ],
 })));
 
 // ─── Analytics — page view ────────────────────────────────────────────────────
