@@ -1,0 +1,995 @@
+{
+  "pt-BR": {
+    "title": "Popover",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Overlay flutuante com conteúdo rico, ativado por clique em um trigger. Ideal para formulários contextuais e conteúdo interativo curto.",
+    "seo": {
+      "title": "Popover — Overlay · Design System",
+      "description": "Documentação do Popover: trigger, content, title e description, com posicionamento auto-flip e acessibilidade WCAG 2.1 AA.",
+      "aiSummary": "Componente Popover com Trigger, Content, Title e Description, posicionamento auto-flip via base-ui, foco gerenciado e role dialog.",
+      "aiEntities": "Popover, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "trigger": "Abrir popover",
+        "title": "Configurações de exibição",
+        "description": "Ajuste a aparência do conteúdo da página.",
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "form": {
+          "trigger": "Editar perfil",
+          "name": "Nome",
+          "email": "Email",
+          "submit": "Atualizar"
+        }
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Popover</strong> — root que controla o estado open/closed.",
+      "item2": "<strong>PopoverTrigger</strong> — elemento que abre o popover ao ser clicado. Use <code>asChild</code> para envolver um Button.",
+      "item3": "<strong>PopoverContent</strong> — container do conteúdo, posicionado via <code>side</code> e <code>align</code> com auto-flip.",
+      "item4": "<strong>PopoverHeader</strong> — wrapper opcional para título e descrição.",
+      "item5": "<strong>PopoverTitle</strong> — título acessível, anunciado pelo leitor de tela ao abrir.",
+      "item6": "<strong>PopoverDescription</strong> — descrição opcional, vinculada via <code>aria-describedby</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* conteúdo interativo */}\n  </PopoverContent>\n</Popover>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para conteúdo contextual interativo — formulários curtos, filtros, seleção de cor.",
+        "item2": "Sempre forneça <code>PopoverTitle</code> — leitores de tela anunciam ao abrir o popover.",
+        "item3": "Não use para ações críticas ou destrutivas — use <code>AlertDialog</code>.",
+        "item4": "Ative com clique, nunca com hover — para hover use <code>HoverCard</code> ou <code>Tooltip</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Formulário curto contextual", "u": "Sim", "a": "-" },
+        "item2": { "s": "Texto explicativo curto", "u": "Não", "a": "Tooltip" },
+        "item3": { "s": "Lista de ações clicáveis", "u": "Não", "a": "DropdownMenu" },
+        "item4": { "s": "Confirmação destrutiva", "u": "Não", "a": "AlertDialog" },
+        "item5": { "s": "Preview ao hover", "u": "Não", "a": "HoverCard" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "PopoverTitle",
+            "format": "Frase nominal · sem ponto · máx. 5 palavras",
+            "good": "\"Configurações de exibição\"",
+            "bad": "\"Aqui você pode ajustar...\""
+          },
+          "description": {
+            "name": "PopoverDescription",
+            "format": "Frase completa · ponto final · máx. 2 linhas",
+            "good": "\"Ajuste a aparência do conteúdo.\"",
+            "bad": "Texto longo com várias frases"
+          },
+          "trigger": {
+            "name": "PopoverTrigger",
+            "format": "Verbo no infinitivo · ação clara",
+            "good": "\"Editar perfil\", \"Selecionar data\"",
+            "bad": "\"Clique aqui\", \"Mais\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Há conteúdo interativo contextual sem necessidade de modal",
+        "item2": "Um formulário curto pode ser preenchido inline",
+        "item3": "Filtros ou seleções precisam de espaço próprio sem trocar de tela",
+        "item4": "Configurações rápidas devem ficar próximas ao trigger"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A ação é crítica ou destrutiva — use <code>AlertDialog</code>",
+        "item2": "O conteúdo é apenas texto explicativo — use <code>Tooltip</code>",
+        "item3": "É uma lista de ações simples — use <code>DropdownMenu</code>",
+        "item4": "O conteúdo é longo e exige rolagem extensa — use <code>Dialog</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Sempre forneça PopoverTitle para acessibilidade.",
+        "dont": "Não omita o título — leitores de tela ficam sem contexto."
+      },
+      "pair2": {
+        "do": "Use trigger com verbo claro como \"Editar perfil\".",
+        "dont": "Não use \"Clique aqui\" ou ícone sem aria-label."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withTitle": "Com título",
+        "form": "Form"
+      },
+      "styles": {
+        "default": "Conteúdo livre — apenas <code>PopoverContent</code> com texto ou widgets.",
+        "withTitle": "<code>PopoverHeader</code> com <code>PopoverTitle</code> e <code>PopoverDescription</code>.",
+        "form": "Formulário inline — Inputs e botões dentro do <code>PopoverContent</code>."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "transitioning": "Transitioning",
+        "focused": "Focused"
+      },
+      "descriptions": {
+        "closed": "Estado inicial — <code>data-state=\"closed\"</code>, conteúdo desmontado.",
+        "open": "Aberto — <code>data-state=\"open\"</code>, foco no primeiro elemento focável.",
+        "transitioning": "Animação de entrada/saída — <code>data-open</code>/<code>data-closed</code> aplicam classes <code>animate-in</code>/<code>animate-out</code>.",
+        "focused": "Elemento interno focado — anel de foco visível com <code>ring-2 ring-ring</code>."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "Não",
+          "description": "Estado controlado de abertura. Use junto com <code>onOpenChange</code>."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Estado inicial não-controlado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback disparado ao abrir ou fechar."
+        },
+        "modal": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Quando true, foca trap e bloqueia scroll do body."
+        },
+        "side": {
+          "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+          "default": "\"bottom\"",
+          "required": "Não",
+          "description": "Lado preferido em relação ao trigger. Aplica auto-flip por colisão."
+        },
+        "align": {
+          "type": "\"start\" | \"center\" | \"end\"",
+          "default": "\"center\"",
+          "required": "Não",
+          "description": "Alinhamento ao longo do eixo do <code>side</code>."
+        },
+        "sideOffset": {
+          "type": "number",
+          "default": "4",
+          "required": "Não",
+          "description": "Distância em pixels entre trigger e content."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Controle externo do estado aberto/fechado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "popover": { "class": "bg-popover", "part": "Fundo do PopoverContent" },
+        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto principal do PopoverContent" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto da PopoverDescription" },
+        "border": { "class": "ring-foreground/10", "part": "Borda sutil do PopoverContent" },
+        "shadow": { "class": "shadow-md", "part": "Sombra do PopoverContent" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco em elementos internos" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Override de tokens no escopo do componente */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"dialog\"</code> aplicado automaticamente ao <code>PopoverContent</code>",
+        "item2": "<code>aria-labelledby</code> vinculado ao <code>PopoverTitle</code> quando presente",
+        "item3": "<code>aria-describedby</code> vinculado à <code>PopoverDescription</code> quando presente",
+        "item4": "Foco move para o primeiro elemento focável ao abrir",
+        "item5": "<code>Escape</code> fecha o popover e retorna foco ao trigger",
+        "item6": "Clique fora fecha o popover (comportamento nativo)"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Move foco entre elementos focáveis dentro do popover",
+        "shiftTab": "Move foco em sentido inverso",
+        "escape": "Fecha o popover e retorna foco ao trigger",
+        "enter": "Ativa o trigger ou elemento focado",
+        "space": "Ativa o trigger quando é botão"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"dialog\"</code> no <code>PopoverContent</code>",
+        "labelledBy": "<code>aria-labelledby</code> aponta para o <code>PopoverTitle</code>",
+        "describedBy": "<code>aria-describedby</code> aponta para a <code>PopoverDescription</code>",
+        "expanded": "<code>aria-expanded</code> no trigger reflete o estado open/closed"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "open": "Anuncia o título e o tipo \"diálogo\" ao abrir",
+        "describe": "Lê a descrição em sequência ao título",
+        "close": "Anuncia o retorno ao trigger ao fechar com Escape"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "tooltip": { "name": "Tooltip", "description": "Texto explicativo curto ao hover ou foco." },
+        "dropdownMenu": { "name": "DropdownMenu", "description": "Lista de ações clicáveis a partir de um trigger." },
+        "dialog": { "name": "Dialog", "description": "Modal completo para fluxos longos." },
+        "hoverCard": { "name": "HoverCard", "description": "Preview informativo ao hover." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Auto-flip</strong> — quando não há espaço no <code>side</code> preferido, o popover automaticamente reposiciona em outro lado para evitar overflow.",
+      "item3": "<strong>Portal</strong> — o <code>PopoverContent</code> é renderizado em portal no <code>document.body</code> para evitar problemas de <code>z-index</code> e <code>overflow</code>.",
+      "item4": "<strong>Não-modal por padrão</strong> — o usuário pode interagir com o resto da página. Use <code>modal</code> para trap de foco e bloqueio de scroll."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "popover_open": {
+          "trigger": "Usuário clica no trigger e abre o popover",
+          "payload": "{ component: \"popover\", trigger_label, location }"
+        },
+        "popover_close": {
+          "trigger": "Popover fecha (Escape, clique fora ou ação)",
+          "payload": "{ component: \"popover\", reason, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Clicar no trigger", "result": "Abre o popover; foco vai ao primeiro elemento focável", "priority": "high" },
+        "item2": { "action": "Pressionar Escape com popover aberto", "result": "Fecha e retorna foco ao trigger", "priority": "high" },
+        "item3": { "action": "Clicar fora do popover", "result": "Fecha o popover (comportamento nativo)", "priority": "high" },
+        "item4": { "action": "Tab dentro do popover", "result": "Move foco entre elementos focáveis internos", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core no estado aberto",
+        "item2": "Contraste mínimo 4.5:1 entre texto e fundo (WCAG 2.1 AA)",
+        "item3": "Focus ring visível em todos os elementos focáveis",
+        "item4": "role=\"dialog\" presente no PopoverContent",
+        "item5": "aria-labelledby aponta para PopoverTitle quando presente"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Default (apenas conteúdo)", "priority": "high" },
+        "item2": { "story": "Com título e descrição", "priority": "high" },
+        "item3": { "story": "Com formulário inline", "priority": "high" },
+        "item4": { "story": "Side top (auto-flip)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Popover",
+    "category": "Overlay",
+    "type": "Component",
+    "description": "Floating overlay with rich content, activated by clicking a trigger. Ideal for contextual forms and short interactive content.",
+    "seo": {
+      "title": "Popover — Overlay · Design System",
+      "description": "Popover documentation: trigger, content, title and description with auto-flip positioning and WCAG 2.1 AA accessibility.",
+      "aiSummary": "Popover component with Trigger, Content, Title and Description, auto-flip positioning via base-ui, managed focus and dialog role.",
+      "aiEntities": "Popover, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "trigger": "Open popover",
+        "title": "Display settings",
+        "description": "Adjust the appearance of the page content.",
+        "save": "Save",
+        "cancel": "Cancel",
+        "form": {
+          "trigger": "Edit profile",
+          "name": "Name",
+          "email": "Email",
+          "submit": "Update"
+        }
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Popover</strong> — root that controls the open/closed state.",
+      "item2": "<strong>PopoverTrigger</strong> — element that opens the popover when clicked. Use <code>asChild</code> to wrap a Button.",
+      "item3": "<strong>PopoverContent</strong> — content container, positioned via <code>side</code> and <code>align</code> with auto-flip.",
+      "item4": "<strong>PopoverHeader</strong> — optional wrapper for title and description.",
+      "item5": "<strong>PopoverTitle</strong> — accessible title, announced by the screen reader on open.",
+      "item6": "<strong>PopoverDescription</strong> — optional description, linked via <code>aria-describedby</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    {/* interactive content */}\n  </PopoverContent>\n</Popover>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for contextual interactive content — short forms, filters, color picker.",
+        "item2": "Always provide <code>PopoverTitle</code> — screen readers announce it on open.",
+        "item3": "Don't use for critical or destructive actions — use <code>AlertDialog</code>.",
+        "item4": "Activate with click, never with hover — for hover use <code>HoverCard</code> or <code>Tooltip</code>."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Short contextual form", "u": "Yes", "a": "-" },
+        "item2": { "s": "Short explanatory text", "u": "No", "a": "Tooltip" },
+        "item3": { "s": "List of clickable actions", "u": "No", "a": "DropdownMenu" },
+        "item4": { "s": "Destructive confirmation", "u": "No", "a": "AlertDialog" },
+        "item5": { "s": "Hover preview", "u": "No", "a": "HoverCard" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "title": {
+            "name": "PopoverTitle",
+            "format": "Noun phrase · no period · max 5 words",
+            "good": "\"Display settings\"",
+            "bad": "\"Here you can adjust...\""
+          },
+          "description": {
+            "name": "PopoverDescription",
+            "format": "Complete sentence · period · max 2 lines",
+            "good": "\"Adjust the page content appearance.\"",
+            "bad": "Long text with several sentences"
+          },
+          "trigger": {
+            "name": "PopoverTrigger",
+            "format": "Imperative verb · clear action",
+            "good": "\"Edit profile\", \"Pick date\"",
+            "bad": "\"Click here\", \"More\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "There is contextual interactive content without need for a modal",
+        "item2": "A short form can be filled inline",
+        "item3": "Filters or selections need their own space without changing screens",
+        "item4": "Quick settings should stay close to the trigger"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "The action is critical or destructive — use <code>AlertDialog</code>",
+        "item2": "The content is just explanatory text — use <code>Tooltip</code>",
+        "item3": "It's a simple list of actions — use <code>DropdownMenu</code>",
+        "item4": "Content is long and requires extensive scrolling — use <code>Dialog</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Always provide PopoverTitle for accessibility.",
+        "dont": "Don't omit the title — screen readers lose context."
+      },
+      "pair2": {
+        "do": "Use a trigger with a clear verb like \"Edit profile\".",
+        "dont": "Don't use \"Click here\" or icon-only without aria-label."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "withTitle": "With title",
+        "form": "Form"
+      },
+      "styles": {
+        "default": "Free content — just <code>PopoverContent</code> with text or widgets.",
+        "withTitle": "<code>PopoverHeader</code> with <code>PopoverTitle</code> and <code>PopoverDescription</code>.",
+        "form": "Inline form — Inputs and buttons inside <code>PopoverContent</code>."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "transitioning": "Transitioning",
+        "focused": "Focused"
+      },
+      "descriptions": {
+        "closed": "Initial state — <code>data-state=\"closed\"</code>, content unmounted.",
+        "open": "Open — <code>data-state=\"open\"</code>, focus on the first focusable element.",
+        "transitioning": "Enter/exit animation — <code>data-open</code>/<code>data-closed</code> apply <code>animate-in</code>/<code>animate-out</code> classes.",
+        "focused": "Internal element focused — visible focus ring with <code>ring-2 ring-ring</code>."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled open state. Use with <code>onOpenChange</code>."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Initial uncontrolled state."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired on open or close."
+        },
+        "modal": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "When true, traps focus and blocks body scroll."
+        },
+        "side": {
+          "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+          "default": "\"bottom\"",
+          "required": "No",
+          "description": "Preferred side relative to trigger. Auto-flips on collision."
+        },
+        "align": {
+          "type": "\"start\" | \"center\" | \"end\"",
+          "default": "\"center\"",
+          "required": "No",
+          "description": "Alignment along the <code>side</code> axis."
+        },
+        "sideOffset": {
+          "type": "number",
+          "default": "4",
+          "required": "No",
+          "description": "Pixel distance between trigger and content."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// External control of open state\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Edit</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "popover": { "class": "bg-popover", "part": "PopoverContent background" },
+        "popoverForeground": { "class": "text-popover-foreground", "part": "PopoverContent main text" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "PopoverDescription text" },
+        "border": { "class": "ring-foreground/10", "part": "Subtle PopoverContent border" },
+        "shadow": { "class": "shadow-md", "part": "PopoverContent shadow" },
+        "ring": { "class": "ring-ring", "part": "Focus ring on internal elements" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Override tokens in component scope */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"dialog\"</code> applied automatically to the <code>PopoverContent</code>",
+        "item2": "<code>aria-labelledby</code> linked to <code>PopoverTitle</code> when present",
+        "item3": "<code>aria-describedby</code> linked to <code>PopoverDescription</code> when present",
+        "item4": "Focus moves to the first focusable element on open",
+        "item5": "<code>Escape</code> closes the popover and returns focus to trigger",
+        "item6": "Click outside closes the popover (native behavior)"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Moves focus between focusable elements inside the popover",
+        "shiftTab": "Moves focus in reverse",
+        "escape": "Closes the popover and returns focus to trigger",
+        "enter": "Activates trigger or focused element",
+        "space": "Activates trigger when it's a button"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "role": "<code>role=\"dialog\"</code> on the <code>PopoverContent</code>",
+        "labelledBy": "<code>aria-labelledby</code> points to <code>PopoverTitle</code>",
+        "describedBy": "<code>aria-describedby</code> points to <code>PopoverDescription</code>",
+        "expanded": "<code>aria-expanded</code> on trigger reflects open/closed state"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "open": "Announces the title and \"dialog\" role on open",
+        "describe": "Reads the description after the title",
+        "close": "Announces return to trigger when closed with Escape"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "tooltip": { "name": "Tooltip", "description": "Short explanatory text on hover or focus." },
+        "dropdownMenu": { "name": "DropdownMenu", "description": "List of clickable actions from a trigger." },
+        "dialog": { "name": "Dialog", "description": "Full modal for longer flows." },
+        "hoverCard": { "name": "HoverCard", "description": "Informative preview on hover." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>Auto-flip</strong> — when there isn't enough space on the preferred <code>side</code>, the popover automatically repositions to avoid overflow.",
+      "item3": "<strong>Portal</strong> — <code>PopoverContent</code> renders in a portal on <code>document.body</code> to avoid <code>z-index</code> and <code>overflow</code> issues.",
+      "item4": "<strong>Non-modal by default</strong> — the user can interact with the rest of the page. Use <code>modal</code> for focus trap and scroll block."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "popover_open": {
+          "trigger": "User clicks the trigger and opens the popover",
+          "payload": "{ component: \"popover\", trigger_label, location }"
+        },
+        "popover_close": {
+          "trigger": "Popover closes (Escape, click outside or action)",
+          "payload": "{ component: \"popover\", reason, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Click the trigger", "result": "Opens the popover; focus goes to the first focusable element", "priority": "high" },
+        "item2": { "action": "Press Escape with popover open", "result": "Closes and returns focus to trigger", "priority": "high" },
+        "item3": { "action": "Click outside the popover", "result": "Closes the popover (native behavior)", "priority": "high" },
+        "item4": { "action": "Tab inside the popover", "result": "Moves focus between internal focusable elements", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core in the open state",
+        "item2": "Minimum 4.5:1 contrast between text and background (WCAG 2.1 AA)",
+        "item3": "Visible focus ring on all focusable elements",
+        "item4": "role=\"dialog\" present on PopoverContent",
+        "item5": "aria-labelledby points to PopoverTitle when present"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Default (content only)", "priority": "high" },
+        "item2": { "story": "With title and description", "priority": "high" },
+        "item3": { "story": "With inline form", "priority": "high" },
+        "item4": { "story": "Side top (auto-flip)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Popover",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Overlay flotante con contenido rico, activado al hacer clic en un trigger. Ideal para formularios contextuales y contenido interactivo corto.",
+    "seo": {
+      "title": "Popover — Overlay · Design System",
+      "description": "Documentación de Popover: trigger, content, title y description con posicionamiento auto-flip y accesibilidad WCAG 2.1 AA.",
+      "aiSummary": "Componente Popover con Trigger, Content, Title y Description, posicionamiento auto-flip vía base-ui, foco gestionado y role dialog.",
+      "aiEntities": "Popover, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "trigger": "Abrir popover",
+        "title": "Configuración de visualización",
+        "description": "Ajusta la apariencia del contenido de la página.",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "form": {
+          "trigger": "Editar perfil",
+          "name": "Nombre",
+          "email": "Email",
+          "submit": "Actualizar"
+        }
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Popover</strong> — root que controla el estado open/closed.",
+      "item2": "<strong>PopoverTrigger</strong> — elemento que abre el popover al hacer clic. Usa <code>asChild</code> para envolver un Button.",
+      "item3": "<strong>PopoverContent</strong> — contenedor del contenido, posicionado vía <code>side</code> y <code>align</code> con auto-flip.",
+      "item4": "<strong>PopoverHeader</strong> — wrapper opcional para título y descripción.",
+      "item5": "<strong>PopoverTitle</strong> — título accesible, anunciado por el lector de pantalla al abrir.",
+      "item6": "<strong>PopoverDescription</strong> — descripción opcional, vinculada vía <code>aria-describedby</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* contenido interactivo */}\n  </PopoverContent>\n</Popover>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa para contenido contextual interactivo — formularios cortos, filtros, selector de color.",
+        "item2": "Provee siempre <code>PopoverTitle</code> — los lectores de pantalla lo anuncian al abrir.",
+        "item3": "No uses para acciones críticas o destructivas — usa <code>AlertDialog</code>.",
+        "item4": "Activa con clic, nunca con hover — para hover usa <code>HoverCard</code> o <code>Tooltip</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Formulario contextual corto", "u": "Sí", "a": "-" },
+        "item2": { "s": "Texto explicativo corto", "u": "No", "a": "Tooltip" },
+        "item3": { "s": "Lista de acciones clicables", "u": "No", "a": "DropdownMenu" },
+        "item4": { "s": "Confirmación destructiva", "u": "No", "a": "AlertDialog" },
+        "item5": { "s": "Vista previa al hover", "u": "No", "a": "HoverCard" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "PopoverTitle",
+            "format": "Frase nominal · sin punto · máx. 5 palabras",
+            "good": "\"Configuración de visualización\"",
+            "bad": "\"Aquí puedes ajustar...\""
+          },
+          "description": {
+            "name": "PopoverDescription",
+            "format": "Frase completa · punto final · máx. 2 líneas",
+            "good": "\"Ajusta la apariencia del contenido.\"",
+            "bad": "Texto largo con varias frases"
+          },
+          "trigger": {
+            "name": "PopoverTrigger",
+            "format": "Verbo en infinitivo · acción clara",
+            "good": "\"Editar perfil\", \"Seleccionar fecha\"",
+            "bad": "\"Haz clic aquí\", \"Más\""
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Hay contenido interactivo contextual sin necesidad de modal",
+        "item2": "Un formulario corto puede llenarse inline",
+        "item3": "Filtros o selecciones necesitan su propio espacio sin cambiar de pantalla",
+        "item4": "Configuraciones rápidas deben quedar cerca del trigger"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La acción es crítica o destructiva — usa <code>AlertDialog</code>",
+        "item2": "El contenido es solo texto explicativo — usa <code>Tooltip</code>",
+        "item3": "Es una lista simple de acciones — usa <code>DropdownMenu</code>",
+        "item4": "El contenido es largo y requiere mucho scroll — usa <code>Dialog</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Provee siempre PopoverTitle para accesibilidad.",
+        "dont": "No omitas el título — los lectores de pantalla pierden contexto."
+      },
+      "pair2": {
+        "do": "Usa un trigger con verbo claro como \"Editar perfil\".",
+        "dont": "No uses \"Haz clic aquí\" o icono solo sin aria-label."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withTitle": "Con título",
+        "form": "Form"
+      },
+      "styles": {
+        "default": "Contenido libre — solo <code>PopoverContent</code> con texto o widgets.",
+        "withTitle": "<code>PopoverHeader</code> con <code>PopoverTitle</code> y <code>PopoverDescription</code>.",
+        "form": "Formulario inline — Inputs y botones dentro de <code>PopoverContent</code>."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "transitioning": "Transitioning",
+        "focused": "Focused"
+      },
+      "descriptions": {
+        "closed": "Estado inicial — <code>data-state=\"closed\"</code>, contenido desmontado.",
+        "open": "Abierto — <code>data-state=\"open\"</code>, foco en el primer elemento focalizable.",
+        "transitioning": "Animación de entrada/salida — <code>data-open</code>/<code>data-closed</code> aplican <code>animate-in</code>/<code>animate-out</code>.",
+        "focused": "Elemento interno enfocado — anillo de foco visible con <code>ring-2 ring-ring</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Estado controlado de apertura. Usa con <code>onOpenChange</code>."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Estado inicial no controlado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback disparado al abrir o cerrar."
+        },
+        "modal": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Si es true, hace trap del foco y bloquea scroll del body."
+        },
+        "side": {
+          "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+          "default": "\"bottom\"",
+          "required": "No",
+          "description": "Lado preferido respecto al trigger. Auto-flip por colisión."
+        },
+        "align": {
+          "type": "\"start\" | \"center\" | \"end\"",
+          "default": "\"center\"",
+          "required": "No",
+          "description": "Alineación a lo largo del eje del <code>side</code>."
+        },
+        "sideOffset": {
+          "type": "number",
+          "default": "4",
+          "required": "No",
+          "description": "Distancia en píxeles entre trigger y content."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Control externo del estado abierto/cerrado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "popover": { "class": "bg-popover", "part": "Fondo del PopoverContent" },
+        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto principal del PopoverContent" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto de PopoverDescription" },
+        "border": { "class": "ring-foreground/10", "part": "Borde sutil del PopoverContent" },
+        "shadow": { "class": "shadow-md", "part": "Sombra del PopoverContent" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco en elementos internos" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Override de tokens en el ámbito del componente */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"dialog\"</code> aplicado automáticamente al <code>PopoverContent</code>",
+        "item2": "<code>aria-labelledby</code> vinculado al <code>PopoverTitle</code> cuando está presente",
+        "item3": "<code>aria-describedby</code> vinculado a <code>PopoverDescription</code> cuando está presente",
+        "item4": "El foco se mueve al primer elemento focalizable al abrir",
+        "item5": "<code>Escape</code> cierra el popover y devuelve el foco al trigger",
+        "item6": "Clic fuera cierra el popover (comportamiento nativo)"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Mueve el foco entre elementos focalizables dentro del popover",
+        "shiftTab": "Mueve el foco en sentido inverso",
+        "escape": "Cierra el popover y devuelve el foco al trigger",
+        "enter": "Activa el trigger o elemento focalizado",
+        "space": "Activa el trigger cuando es botón"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"dialog\"</code> en el <code>PopoverContent</code>",
+        "labelledBy": "<code>aria-labelledby</code> apunta a <code>PopoverTitle</code>",
+        "describedBy": "<code>aria-describedby</code> apunta a <code>PopoverDescription</code>",
+        "expanded": "<code>aria-expanded</code> en el trigger refleja el estado open/closed"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "open": "Anuncia el título y el rol \"diálogo\" al abrir",
+        "describe": "Lee la descripción en secuencia tras el título",
+        "close": "Anuncia el regreso al trigger al cerrar con Escape"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "tooltip": { "name": "Tooltip", "description": "Texto explicativo corto al hover o foco." },
+        "dropdownMenu": { "name": "DropdownMenu", "description": "Lista de acciones clicables desde un trigger." },
+        "dialog": { "name": "Dialog", "description": "Modal completo para flujos largos." },
+        "hoverCard": { "name": "HoverCard", "description": "Vista previa informativa al hover." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Auto-flip</strong> — cuando no hay espacio en el <code>side</code> preferido, el popover se reposiciona automáticamente para evitar overflow.",
+      "item3": "<strong>Portal</strong> — el <code>PopoverContent</code> se renderiza en portal en <code>document.body</code> para evitar problemas de <code>z-index</code> y <code>overflow</code>.",
+      "item4": "<strong>No-modal por defecto</strong> — el usuario puede interactuar con el resto de la página. Usa <code>modal</code> para trap de foco y bloqueo de scroll."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "popover_open": {
+          "trigger": "El usuario hace clic en el trigger y abre el popover",
+          "payload": "{ component: \"popover\", trigger_label, location }"
+        },
+        "popover_close": {
+          "trigger": "El popover se cierra (Escape, clic fuera o acción)",
+          "payload": "{ component: \"popover\", reason, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Hacer clic en el trigger", "result": "Abre el popover; el foco va al primer elemento focalizable", "priority": "high" },
+        "item2": { "action": "Pulsar Escape con popover abierto", "result": "Cierra y devuelve el foco al trigger", "priority": "high" },
+        "item3": { "action": "Hacer clic fuera del popover", "result": "Cierra el popover (comportamiento nativo)", "priority": "high" },
+        "item4": { "action": "Tab dentro del popover", "result": "Mueve el foco entre elementos focalizables internos", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core en el estado abierto",
+        "item2": "Contraste mínimo 4.5:1 entre texto y fondo (WCAG 2.1 AA)",
+        "item3": "Anillo de foco visible en todos los elementos focalizables",
+        "item4": "role=\"dialog\" presente en el PopoverContent",
+        "item5": "aria-labelledby apunta a PopoverTitle cuando está presente"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Default (solo contenido)", "priority": "high" },
+        "item2": { "story": "Con título y descripción", "priority": "high" },
+        "item3": { "story": "Con formulario inline", "priority": "high" },
+        "item4": { "story": "Side top (auto-flip)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
