@@ -105,7 +105,7 @@ export function createRadioGroupDocs(): HTMLElement {
       aiIntent: t('seo.aiIntent'),
       breadcrumb: [
         { name: 'Components', item: '/components' },
-        { name: t('category'), item: '/components/formulario' },
+        { name: t('category'), item: '/components/form' },
         { name: t('title') },
       ],
     });
