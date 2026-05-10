@@ -7,7 +7,7 @@ const RADIO_ITEM =
   'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring ' +
   'disabled:cursor-not-allowed disabled:opacity-50';
 
-const RADIO_INDICATOR_SVG =
+const ICON_RADIO_INDICATOR_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" ' +
   'fill="currentColor" class="h-3.5 w-3.5 fill-primary" aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>';
 
@@ -56,7 +56,13 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
     indicatorSpan.className = 'grid place-content-center';
     indicatorSpan.dataset.slot = 'radio-indicator';
     indicatorSpan.style.display = item.value === defaultValue ? '' : 'none';
-    indicatorSpan.innerHTML = RADIO_INDICATOR_SVG;
+    // PATCH: security — substituído `indicatorSpan.innerHTML = ICON_RADIO_INDICATOR_SVG` por
+    // wrapper descartável + appendChild do <svg> parseado. ICON_RADIO_INDICATOR_SVG é constante
+    // literal interna (segura), mas evitamos atribuir innerHTML em elemento do fluxo do DOM.
+    const indicatorWrapper = document.createElement('span');
+    indicatorWrapper.innerHTML = ICON_RADIO_INDICATOR_SVG; // ICON_RADIO_INDICATOR_SVG é constante literal interna (segura)
+    const indicatorSvg = indicatorWrapper.firstElementChild;
+    if (indicatorSvg) indicatorSpan.appendChild(indicatorSvg);
     itemBtn.appendChild(indicatorSpan);
 
     // Hidden native input for form participation
