@@ -96,6 +96,7 @@ export function createPopover(options: PopoverOptions): HTMLElement {
       options.class
     );
     panelEl.dataset.slot = 'popover-content';
+    panelEl.setAttribute('role', 'dialog');
     panelEl.style.position = 'absolute';
 
     if (typeof content === 'string') {

@@ -40,8 +40,8 @@
       aiIntent: t('seo.aiIntent'),
       breadcrumb: [
         { name: 'Components', item: '/components' },
-        { name: 'Overlay', item: '/components/overlay' },
-        { name: 'Popover' },
+        { name: t('category'), item: '/components/overlay' },
+        { name: t('title') },
       ],
     });
     track('docs_page_view', {

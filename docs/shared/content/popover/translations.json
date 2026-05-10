@@ -261,7 +261,8 @@
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
       "item2": "<strong>Auto-flip</strong> — quando não há espaço no <code>side</code> preferido, o popover automaticamente reposiciona em outro lado para evitar overflow.",
       "item3": "<strong>Portal</strong> — o <code>PopoverContent</code> é renderizado em portal no <code>document.body</code> para evitar problemas de <code>z-index</code> e <code>overflow</code>.",
-      "item4": "<strong>Não-modal por padrão</strong> — o usuário pode interagir com o resto da página. Use <code>modal</code> para trap de foco e bloqueio de scroll."
+      "item4": "<strong>Não-modal por padrão</strong> — o usuário pode interagir com o resto da página. Use <code>modal</code> para trap de foco e bloqueio de scroll.",
+      "item5": "<strong>Basecoat</strong> — a factory <code>createPopover()</code> não suporta <code>open</code>/<code>defaultOpen</code> controlados, focus trap, scroll lock nem auto-flip por colisão. Aplica <code>role=\"dialog\"</code> e <code>aria-expanded</code>; para overlays modais use Dialog."
     },
     "analytics": {
       "title": "Analytics",
@@ -592,7 +593,8 @@
       "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
       "item2": "<strong>Auto-flip</strong> — when there isn't enough space on the preferred <code>side</code>, the popover automatically repositions to avoid overflow.",
       "item3": "<strong>Portal</strong> — <code>PopoverContent</code> renders in a portal on <code>document.body</code> to avoid <code>z-index</code> and <code>overflow</code> issues.",
-      "item4": "<strong>Non-modal by default</strong> — the user can interact with the rest of the page. Use <code>modal</code> for focus trap and scroll block."
+      "item4": "<strong>Non-modal by default</strong> — the user can interact with the rest of the page. Use <code>modal</code> for focus trap and scroll block.",
+      "item5": "<strong>Basecoat</strong> — the <code>createPopover()</code> factory does not support controlled <code>open</code>/<code>defaultOpen</code>, focus trap, scroll lock or collision auto-flip. It applies <code>role=\"dialog\"</code> and <code>aria-expanded</code>; for modal overlays use Dialog."
     },
     "analytics": {
       "title": "Analytics",
@@ -923,7 +925,8 @@
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
       "item2": "<strong>Auto-flip</strong> — cuando no hay espacio en el <code>side</code> preferido, el popover se reposiciona automáticamente para evitar overflow.",
       "item3": "<strong>Portal</strong> — el <code>PopoverContent</code> se renderiza en portal en <code>document.body</code> para evitar problemas de <code>z-index</code> y <code>overflow</code>.",
-      "item4": "<strong>No-modal por defecto</strong> — el usuario puede interactuar con el resto de la página. Usa <code>modal</code> para trap de foco y bloqueo de scroll."
+      "item4": "<strong>No-modal por defecto</strong> — el usuario puede interactuar con el resto de la página. Usa <code>modal</code> para trap de foco y bloqueo de scroll.",
+      "item5": "<strong>Basecoat</strong> — la factory <code>createPopover()</code> no soporta <code>open</code>/<code>defaultOpen</code> controlados, focus trap, scroll lock ni auto-flip por colisión. Aplica <code>role=\"dialog\"</code> y <code>aria-expanded</code>; para overlays modales usa Dialog."
     },
     "analytics": {
       "title": "Analytics",

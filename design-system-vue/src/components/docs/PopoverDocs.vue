@@ -359,7 +359,7 @@ const a11yCritCols = computed(() => ({
         <!-- Default -->
         <div class="space-y-2 flex flex-col items-start" style="contain: layout; min-height: 220px; position: relative;">
           <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('variants.items.default'))" />
-          <Popover :default-open="true">
+          <Popover>
             <PopoverTrigger as-child>
               <Button variant="outline">{{ tContent('demonstration.labels.trigger') }}</Button>
             </PopoverTrigger>
@@ -373,7 +373,7 @@ const a11yCritCols = computed(() => ({
         <!-- With title and actions -->
         <div class="space-y-2 flex flex-col items-start" style="contain: layout; min-height: 220px; position: relative;">
           <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('variants.items.withTitle'))" />
-          <Popover :default-open="true">
+          <Popover>
             <PopoverTrigger as-child>
               <Button variant="outline">{{ tContent('demonstration.labels.title') }}</Button>
             </PopoverTrigger>
@@ -395,7 +395,7 @@ const a11yCritCols = computed(() => ({
         <!-- Form -->
         <div class="space-y-2 flex flex-col items-start" style="contain: layout; min-height: 260px; position: relative;">
           <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('variants.items.form'))" />
-          <Popover :default-open="true">
+          <Popover>
             <PopoverTrigger as-child>
               <Button variant="outline">{{ tContent('demonstration.labels.form.trigger') }}</Button>
             </PopoverTrigger>
