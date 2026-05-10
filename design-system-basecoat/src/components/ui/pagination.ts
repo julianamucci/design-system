@@ -53,7 +53,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
   nav.className = cn('mx-auto flex w-full justify-center', options.class);
 
   const ul = document.createElement('ul');
-  ul.className = 'flex flex-row items-center gap-1';
+  ul.className = 'flex flex-row items-center gap-1 list-none p-0 m-0';
 
   function addItem(child: HTMLElement): void {
     const li = document.createElement('li');
