@@ -1,0 +1,983 @@
+{
+  "pt-BR": {
+    "title": "Resizable",
+    "category": "Layout",
+    "type": "Componente",
+    "description": "Painéis redimensionáveis pelo usuário via arrasto ou teclado, com suporte a layouts horizontais, verticais e aninhados.",
+    "seo": {
+      "title": "Resizable — Layout · Design System",
+      "description": "Documentação do Resizable: PanelGroup, Panel e Handle com redimensionamento por arrasto, teclado e suporte WCAG 2.2.",
+      "aiSummary": "Componente Resizable com ResizablePanelGroup, ResizablePanel e ResizableHandle, redimensionamento via arrasto e teclado, suporte a layouts horizontal/vertical e aninhados.",
+      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.2",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "horizontal": "Layout horizontal",
+        "vertical": "Layout vertical",
+        "nested": "Layout aninhado",
+        "sidebar": "Sidebar",
+        "content": "Conteúdo principal",
+        "top": "Topo",
+        "bottom": "Rodapé",
+        "left": "Esquerda",
+        "right": "Direita"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>ResizablePanelGroup</strong> — container que define a direção (<code>horizontal</code> ou <code>vertical</code>) e agrupa os painéis.",
+      "item2": "<strong>ResizablePanel</strong> — área redimensionável com <code>defaultSize</code>, <code>minSize</code> e <code>maxSize</code> em porcentagem.",
+      "item3": "<strong>ResizableHandle</strong> — divisor focável entre painéis; aceita <code>withHandle</code> para mostrar pegador visual.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Painel esquerdo */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar painéis\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Painel direito */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Sempre defina <code>defaultSize</code>, <code>minSize</code> e <code>maxSize</code> em cada painel.",
+        "item2": "Forneça <code>aria-label</code> descritivo no <code>ResizableHandle</code> incluindo o atalho de teclado.",
+        "item3": "Use <code>direction=\"horizontal\"</code> para split lateral e <code>direction=\"vertical\"</code> para split vertical.",
+        "item4": "Mantenha o handle <code>withHandle</code> visível em desktop — aumenta a descoberta visual."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Editor com preview lado a lado", "u": "Sim", "a": "-" },
+        "item2": { "s": "Sidebar com conteúdo principal", "u": "Sim", "a": "-" },
+        "item3": { "s": "Layout fixo sem ajuste", "u": "Não", "a": "Grid CSS" },
+        "item4": { "s": "Painel deslizante de fora", "u": "Não", "a": "Sheet ou Drawer" },
+        "item5": { "s": "Múltiplas seções rolaveis", "u": "Não", "a": "ScrollArea" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "ariaLabel": {
+            "name": "aria-label do Handle",
+            "format": "Verbo + complemento · inclui atalho",
+            "good": "\"Redimensionar painéis — use setas para ajustar\"",
+            "bad": "\"Handle\", \"Separador\""
+          },
+          "panelLabel": {
+            "name": "ID do painel",
+            "format": "kebab-case · contexto + ordem",
+            "good": "\"sidebar\", \"main-content\", \"preview-pane\"",
+            "bad": "\"panel-1\", \"a\""
+          },
+          "size": {
+            "name": "defaultSize / minSize / maxSize",
+            "format": "Porcentagem 0–100 · sempre as 3 props",
+            "good": "<code>defaultSize={30} minSize={20} maxSize={50}</code>",
+            "bad": "Omitir minSize/maxSize"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O usuário precisa ajustar proporções de áreas de conteúdo",
+        "item2": "Há um editor + preview lado a lado",
+        "item3": "Uma sidebar opcional pode ser expandida/contraída",
+        "item4": "Layouts complexos com múltiplos painéis ajustáveis"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "O layout é fixo e não precisa de ajuste — use Grid",
+        "item2": "É um painel que abre/fecha — use <code>Sheet</code> ou <code>Drawer</code>",
+        "item3": "Em telas pequenas (mobile) — prefira layout empilhado",
+        "item4": "O conteúdo precisa apenas rolar — use <code>ScrollArea</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Sempre defina minSize/maxSize para evitar colapso acidental.",
+        "dont": "Não omita os limites — painéis podem ficar invisíveis."
+      },
+      "pair2": {
+        "do": "Use aria-label descritivo no handle incluindo o atalho.",
+        "dont": "Não use \"Handle\" ou texto genérico no aria-label."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "horizontal": "Horizontal",
+        "vertical": "Vertical",
+        "nested": "Nested"
+      },
+      "styles": {
+        "horizontal": "Split lateral — <code>direction=\"horizontal\"</code>, handle vertical.",
+        "vertical": "Split vertical — <code>direction=\"vertical\"</code>, handle horizontal.",
+        "nested": "PanelGroup dentro de Panel — combinar direções para layouts complexos."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "idle": "Idle",
+        "hover": "Hover",
+        "dragging": "Dragging",
+        "focus": "Focus",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "idle": "Estado padrão — handle visível com cor <code>border</code>.",
+        "hover": "Mouse sobre o handle — sem mudança visual obrigatória; aplique <code>hover:</code> se necessário.",
+        "dragging": "Arrasto ativo — cursor <code>col-resize</code>/<code>row-resize</code>, painéis se ajustam em tempo real.",
+        "focus": "Handle focado via teclado — <code>ring-1 ring-ring</code>, setas ajustam tamanho.",
+        "disabled": "Handle desabilitado — <code>data-disabled</code>, sem cursor de resize."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "direction": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "—",
+          "required": "Sim",
+          "description": "Direção do <code>PanelGroup</code>. Define se o split é lateral ou vertical."
+        },
+        "defaultSize": {
+          "type": "number",
+          "default": "—",
+          "required": "Recomendado",
+          "description": "Tamanho inicial do painel em porcentagem (0–100)."
+        },
+        "minSize": {
+          "type": "number",
+          "default": "10",
+          "required": "Recomendado",
+          "description": "Tamanho mínimo em porcentagem. Evita colapso do painel."
+        },
+        "maxSize": {
+          "type": "number",
+          "default": "100",
+          "required": "Recomendado",
+          "description": "Tamanho máximo em porcentagem."
+        },
+        "id": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "ID único do painel — usado pelo Storage para persistir tamanho."
+        },
+        "withHandle": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Exibe pegador visual centralizado no <code>ResizableHandle</code>."
+        },
+        "onLayout": {
+          "type": "(sizes: number[]) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback no <code>PanelGroup</code> com os tamanhos finais após arrasto."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Persistir tamanhos via autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar painéis — use setas\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "border": { "class": "bg-border", "part": "Cor do handle e do pegador visual" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco no handle" },
+        "background": { "class": "bg-background", "part": "Fundo dos painéis (consumidor define)" },
+        "foreground": { "class": "text-foreground", "part": "Texto dentro dos painéis" },
+        "muted": { "class": "bg-muted", "part": "Fundo de painéis secundários (sidebar)" },
+        "ringOffset": { "class": "ring-offset-background", "part": "Offset do anel de foco" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Handle mais espesso para mobile */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
+      "items": {
+        "item1": "<code>aria-orientation</code> aplicado automaticamente conforme <code>direction</code>",
+        "item2": "<code>ResizableHandle</code> é focável e operável por teclado (setas)",
+        "item3": "<code>aria-label</code> obrigatório no handle descrevendo a ação",
+        "item4": "WCAG 2.5.7 atendido — toda ação de arrasto tem equivalente por teclado",
+        "item5": "Anel de foco visível com <code>ring-1 ring-ring</code>",
+        "item6": "<code>aria-valuenow</code> e <code>aria-valuemin/max</code> derivados do tamanho atual"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Move o foco para o próximo handle",
+        "arrowLeft": "Diminui o painel à esquerda (horizontal)",
+        "arrowRight": "Aumenta o painel à esquerda (horizontal)",
+        "arrowUp": "Diminui o painel acima (vertical)",
+        "arrowDown": "Aumenta o painel acima (vertical)",
+        "home": "Define o painel ao tamanho mínimo",
+        "end": "Define o painel ao tamanho máximo",
+        "enter": "Reseta para defaultSize (quando suportado)"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"separator\"</code> no handle",
+        "orientation": "<code>aria-orientation</code> reflete a <code>direction</code> do grupo",
+        "valuenow": "<code>aria-valuenow</code> espelha o tamanho atual em porcentagem",
+        "label": "<code>aria-label</code> obrigatório descrevendo a função"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "handle": "Anuncia \"separador, [aria-label]\" ao focar",
+        "navigation": "Anuncia o novo tamanho ao usar setas",
+        "limits": "Anuncia quando atinge minSize ou maxSize"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "scrollArea": { "name": "ScrollArea", "description": "Scroll interno para conteúdo dentro de painéis." },
+        "sheet": { "name": "Sheet", "description": "Painel lateral que abre/fecha completamente." },
+        "separator": { "name": "Separator", "description": "Divisor visual fixo sem redimensionamento." },
+        "aspectRatio": { "name": "AspectRatio", "description": "Mantém proporção fixa de uma área." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Tamanhos em porcentagem</strong> — <code>defaultSize</code>, <code>minSize</code> e <code>maxSize</code> são percentuais do grupo (0–100), não pixels.",
+      "item3": "<strong>autoSaveId</strong> (React) — persiste tamanhos no <code>localStorage</code> automaticamente quando definido no <code>PanelGroup</code>.",
+      "item4": "<strong>Mobile</strong> — considere ocultar o componente em telas pequenas e usar layout empilhado ou <code>Sheet</code> em vez."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "panel_resize": {
+          "trigger": "Usuário finaliza o redimensionamento (drag end ou keyup)",
+          "payload": "{ component: \"resizable\", group_id, sizes, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Arrastar o handle", "result": "Painéis ajustam tamanho em tempo real", "priority": "high" },
+        "item2": { "action": "Pressionar ArrowLeft/Right com handle focado", "result": "Painel à esquerda diminui/aumenta em incrementos", "priority": "high" },
+        "item3": { "action": "Atingir minSize/maxSize", "result": "Painel para no limite; aria-valuenow reflete", "priority": "high" },
+        "item4": { "action": "Tab para o handle", "result": "Handle recebe foco; anel visível", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 3:1 entre handle e fundo",
+        "item3": "Focus ring visível no handle",
+        "item4": "role=\"separator\" no handle",
+        "item5": "aria-label descritivo no handle"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Horizontal (split lateral)", "priority": "high" },
+        "item2": { "story": "Vertical (split vertical)", "priority": "high" },
+        "item3": { "story": "Aninhado (combinação)", "priority": "high" },
+        "item4": { "story": "Com handle visível", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Resizable",
+    "category": "Layout",
+    "type": "Component",
+    "description": "User-resizable panels via drag or keyboard, with support for horizontal, vertical and nested layouts.",
+    "seo": {
+      "title": "Resizable — Layout · Design System",
+      "description": "Resizable documentation: PanelGroup, Panel and Handle with drag and keyboard resizing, WCAG 2.2 support.",
+      "aiSummary": "Resizable component with ResizablePanelGroup, ResizablePanel and ResizableHandle, drag and keyboard resizing, horizontal/vertical and nested layouts.",
+      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.2",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "horizontal": "Horizontal layout",
+        "vertical": "Vertical layout",
+        "nested": "Nested layout",
+        "sidebar": "Sidebar",
+        "content": "Main content",
+        "top": "Top",
+        "bottom": "Bottom",
+        "left": "Left",
+        "right": "Right"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>ResizablePanelGroup</strong> — container that defines direction (<code>horizontal</code> or <code>vertical</code>) and groups panels.",
+      "item2": "<strong>ResizablePanel</strong> — resizable area with <code>defaultSize</code>, <code>minSize</code> and <code>maxSize</code> in percentage.",
+      "item3": "<strong>ResizableHandle</strong> — focusable divider between panels; accepts <code>withHandle</code> to show visual grabber.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Left panel */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Resize panels\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Right panel */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Always define <code>defaultSize</code>, <code>minSize</code> and <code>maxSize</code> on each panel.",
+        "item2": "Provide descriptive <code>aria-label</code> on <code>ResizableHandle</code> including keyboard shortcut.",
+        "item3": "Use <code>direction=\"horizontal\"</code> for side split and <code>direction=\"vertical\"</code> for vertical split.",
+        "item4": "Keep <code>withHandle</code> visible on desktop — improves visual discoverability."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Editor with side-by-side preview", "u": "Yes", "a": "-" },
+        "item2": { "s": "Sidebar with main content", "u": "Yes", "a": "-" },
+        "item3": { "s": "Fixed layout without adjustment", "u": "No", "a": "CSS Grid" },
+        "item4": { "s": "Sliding panel from outside", "u": "No", "a": "Sheet or Drawer" },
+        "item5": { "s": "Multiple scrollable sections", "u": "No", "a": "ScrollArea" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "ariaLabel": {
+            "name": "Handle aria-label",
+            "format": "Verb + complement · includes shortcut",
+            "good": "\"Resize panels — use arrow keys to adjust\"",
+            "bad": "\"Handle\", \"Separator\""
+          },
+          "panelLabel": {
+            "name": "Panel ID",
+            "format": "kebab-case · context + order",
+            "good": "\"sidebar\", \"main-content\", \"preview-pane\"",
+            "bad": "\"panel-1\", \"a\""
+          },
+          "size": {
+            "name": "defaultSize / minSize / maxSize",
+            "format": "Percentage 0–100 · always all 3 props",
+            "good": "<code>defaultSize={30} minSize={20} maxSize={50}</code>",
+            "bad": "Omit minSize/maxSize"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The user needs to adjust content area proportions",
+        "item2": "There is an editor + preview side by side",
+        "item3": "An optional sidebar can be expanded/collapsed",
+        "item4": "Complex layouts with multiple adjustable panels"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "Layout is fixed and doesn't need adjustment — use Grid",
+        "item2": "It's an opening/closing panel — use <code>Sheet</code> or <code>Drawer</code>",
+        "item3": "On small screens (mobile) — prefer stacked layout",
+        "item4": "Content only needs to scroll — use <code>ScrollArea</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Always define minSize/maxSize to prevent accidental collapse.",
+        "dont": "Don't omit limits — panels may become invisible."
+      },
+      "pair2": {
+        "do": "Use descriptive aria-label on the handle including shortcut.",
+        "dont": "Don't use \"Handle\" or generic text in aria-label."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "horizontal": "Horizontal",
+        "vertical": "Vertical",
+        "nested": "Nested"
+      },
+      "styles": {
+        "horizontal": "Side split — <code>direction=\"horizontal\"</code>, vertical handle.",
+        "vertical": "Vertical split — <code>direction=\"vertical\"</code>, horizontal handle.",
+        "nested": "PanelGroup inside Panel — combine directions for complex layouts."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "idle": "Idle",
+        "hover": "Hover",
+        "dragging": "Dragging",
+        "focus": "Focus",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "idle": "Default state — handle visible with <code>border</code> color.",
+        "hover": "Mouse over handle — no required visual change; apply <code>hover:</code> as needed.",
+        "dragging": "Active drag — <code>col-resize</code>/<code>row-resize</code> cursor, panels adjust in real time.",
+        "focus": "Keyboard-focused handle — <code>ring-1 ring-ring</code>, arrows adjust size.",
+        "disabled": "Disabled handle — <code>data-disabled</code>, no resize cursor."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "direction": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "—",
+          "required": "Yes",
+          "description": "<code>PanelGroup</code> direction. Defines side or vertical split."
+        },
+        "defaultSize": {
+          "type": "number",
+          "default": "—",
+          "required": "Recommended",
+          "description": "Initial panel size in percentage (0–100)."
+        },
+        "minSize": {
+          "type": "number",
+          "default": "10",
+          "required": "Recommended",
+          "description": "Minimum size in percentage. Prevents panel collapse."
+        },
+        "maxSize": {
+          "type": "number",
+          "default": "100",
+          "required": "Recommended",
+          "description": "Maximum size in percentage."
+        },
+        "id": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Unique panel ID — used by Storage to persist size."
+        },
+        "withHandle": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Shows centered visual grabber on <code>ResizableHandle</code>."
+        },
+        "onLayout": {
+          "type": "(sizes: number[]) => void",
+          "default": "—",
+          "required": "No",
+          "description": "<code>PanelGroup</code> callback with final sizes after drag."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Persist sizes via autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Resize panels — use arrow keys\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "border": { "class": "bg-border", "part": "Handle and visual grabber color" },
+        "ring": { "class": "ring-ring", "part": "Handle focus ring" },
+        "background": { "class": "bg-background", "part": "Panel background (consumer defines)" },
+        "foreground": { "class": "text-foreground", "part": "Text inside panels" },
+        "muted": { "class": "bg-muted", "part": "Secondary panel background (sidebar)" },
+        "ringOffset": { "class": "ring-offset-background", "part": "Focus ring offset" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Thicker handle for mobile */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
+      "items": {
+        "item1": "<code>aria-orientation</code> applied automatically based on <code>direction</code>",
+        "item2": "<code>ResizableHandle</code> is focusable and keyboard-operable (arrows)",
+        "item3": "<code>aria-label</code> required on handle describing the action",
+        "item4": "WCAG 2.5.7 met — every drag action has keyboard equivalent",
+        "item5": "Visible focus ring with <code>ring-1 ring-ring</code>",
+        "item6": "<code>aria-valuenow</code> and <code>aria-valuemin/max</code> derived from current size"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Moves focus to the next handle",
+        "arrowLeft": "Decreases left panel (horizontal)",
+        "arrowRight": "Increases left panel (horizontal)",
+        "arrowUp": "Decreases top panel (vertical)",
+        "arrowDown": "Increases top panel (vertical)",
+        "home": "Sets panel to minimum size",
+        "end": "Sets panel to maximum size",
+        "enter": "Resets to defaultSize (when supported)"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "role": "<code>role=\"separator\"</code> on the handle",
+        "orientation": "<code>aria-orientation</code> reflects group <code>direction</code>",
+        "valuenow": "<code>aria-valuenow</code> mirrors current size in percentage",
+        "label": "<code>aria-label</code> required describing the function"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "handle": "Announces \"separator, [aria-label]\" on focus",
+        "navigation": "Announces new size when using arrows",
+        "limits": "Announces when minSize or maxSize is reached"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "scrollArea": { "name": "ScrollArea", "description": "Internal scroll for content inside panels." },
+        "sheet": { "name": "Sheet", "description": "Side panel that opens/closes completely." },
+        "separator": { "name": "Separator", "description": "Fixed visual divider without resizing." },
+        "aspectRatio": { "name": "AspectRatio", "description": "Maintains fixed proportion of an area." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>Sizes in percentage</strong> — <code>defaultSize</code>, <code>minSize</code> and <code>maxSize</code> are group percentages (0–100), not pixels.",
+      "item3": "<strong>autoSaveId</strong> (React) — persists sizes in <code>localStorage</code> automatically when defined on <code>PanelGroup</code>.",
+      "item4": "<strong>Mobile</strong> — consider hiding the component on small screens and using stacked layout or <code>Sheet</code> instead."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "panel_resize": {
+          "trigger": "User finishes resizing (drag end or keyup)",
+          "payload": "{ component: \"resizable\", group_id, sizes, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Drag the handle", "result": "Panels adjust size in real time", "priority": "high" },
+        "item2": { "action": "Press ArrowLeft/Right with handle focused", "result": "Left panel shrinks/grows in increments", "priority": "high" },
+        "item3": { "action": "Reach minSize/maxSize", "result": "Panel stops at limit; aria-valuenow reflects", "priority": "high" },
+        "item4": { "action": "Tab to the handle", "result": "Handle receives focus; visible ring", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 3:1 contrast between handle and background",
+        "item3": "Visible focus ring on handle",
+        "item4": "role=\"separator\" on handle",
+        "item5": "Descriptive aria-label on handle"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Horizontal (side split)", "priority": "high" },
+        "item2": { "story": "Vertical (vertical split)", "priority": "high" },
+        "item3": { "story": "Nested (combination)", "priority": "high" },
+        "item4": { "story": "With visible handle", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Resizable",
+    "category": "Layout",
+    "type": "Componente",
+    "description": "Paneles redimensionables por el usuario mediante arrastre o teclado, con soporte para layouts horizontales, verticales y anidados.",
+    "seo": {
+      "title": "Resizable — Layout · Design System",
+      "description": "Documentación de Resizable: PanelGroup, Panel y Handle con redimensionamiento por arrastre y teclado, soporte WCAG 2.2.",
+      "aiSummary": "Componente Resizable con ResizablePanelGroup, ResizablePanel y ResizableHandle, redimensionamiento por arrastre y teclado, layouts horizontal/vertical y anidados.",
+      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.2",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "horizontal": "Layout horizontal",
+        "vertical": "Layout vertical",
+        "nested": "Layout anidado",
+        "sidebar": "Sidebar",
+        "content": "Contenido principal",
+        "top": "Arriba",
+        "bottom": "Abajo",
+        "left": "Izquierda",
+        "right": "Derecha"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>ResizablePanelGroup</strong> — contenedor que define la dirección (<code>horizontal</code> o <code>vertical</code>) y agrupa los paneles.",
+      "item2": "<strong>ResizablePanel</strong> — área redimensionable con <code>defaultSize</code>, <code>minSize</code> y <code>maxSize</code> en porcentaje.",
+      "item3": "<strong>ResizableHandle</strong> — divisor focalizable entre paneles; acepta <code>withHandle</code> para mostrar agarre visual.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Panel izquierdo */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar paneles\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Panel derecho */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Define siempre <code>defaultSize</code>, <code>minSize</code> y <code>maxSize</code> en cada panel.",
+        "item2": "Provee <code>aria-label</code> descriptivo en <code>ResizableHandle</code> incluyendo el atajo de teclado.",
+        "item3": "Usa <code>direction=\"horizontal\"</code> para split lateral y <code>direction=\"vertical\"</code> para split vertical.",
+        "item4": "Mantén el <code>withHandle</code> visible en desktop — mejora la descubribilidad visual."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Editor con vista previa lado a lado", "u": "Sí", "a": "-" },
+        "item2": { "s": "Sidebar con contenido principal", "u": "Sí", "a": "-" },
+        "item3": { "s": "Layout fijo sin ajuste", "u": "No", "a": "CSS Grid" },
+        "item4": { "s": "Panel deslizante desde fuera", "u": "No", "a": "Sheet o Drawer" },
+        "item5": { "s": "Múltiples secciones con scroll", "u": "No", "a": "ScrollArea" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "ariaLabel": {
+            "name": "aria-label del Handle",
+            "format": "Verbo + complemento · incluye atajo",
+            "good": "\"Redimensionar paneles — usa flechas para ajustar\"",
+            "bad": "\"Handle\", \"Separador\""
+          },
+          "panelLabel": {
+            "name": "ID del panel",
+            "format": "kebab-case · contexto + orden",
+            "good": "\"sidebar\", \"main-content\", \"preview-pane\"",
+            "bad": "\"panel-1\", \"a\""
+          },
+          "size": {
+            "name": "defaultSize / minSize / maxSize",
+            "format": "Porcentaje 0–100 · siempre las 3 props",
+            "good": "<code>defaultSize={30} minSize={20} maxSize={50}</code>",
+            "bad": "Omitir minSize/maxSize"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "El usuario necesita ajustar proporciones de áreas de contenido",
+        "item2": "Hay un editor + vista previa lado a lado",
+        "item3": "Una sidebar opcional puede expandirse/contraerse",
+        "item4": "Layouts complejos con múltiples paneles ajustables"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El layout es fijo y no necesita ajuste — usa Grid",
+        "item2": "Es un panel que abre/cierra — usa <code>Sheet</code> o <code>Drawer</code>",
+        "item3": "En pantallas pequeñas (móvil) — prefiere layout apilado",
+        "item4": "El contenido solo necesita hacer scroll — usa <code>ScrollArea</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Define siempre minSize/maxSize para evitar colapso accidental.",
+        "dont": "No omitas los límites — los paneles pueden volverse invisibles."
+      },
+      "pair2": {
+        "do": "Usa aria-label descriptivo en el handle incluyendo el atajo.",
+        "dont": "No uses \"Handle\" o texto genérico en aria-label."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "horizontal": "Horizontal",
+        "vertical": "Vertical",
+        "nested": "Nested"
+      },
+      "styles": {
+        "horizontal": "Split lateral — <code>direction=\"horizontal\"</code>, handle vertical.",
+        "vertical": "Split vertical — <code>direction=\"vertical\"</code>, handle horizontal.",
+        "nested": "PanelGroup dentro de Panel — combina direcciones para layouts complejos."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "idle": "Idle",
+        "hover": "Hover",
+        "dragging": "Dragging",
+        "focus": "Focus",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "idle": "Estado por defecto — handle visible con color <code>border</code>.",
+        "hover": "Mouse sobre el handle — sin cambio visual obligatorio; aplica <code>hover:</code> si es necesario.",
+        "dragging": "Arrastre activo — cursor <code>col-resize</code>/<code>row-resize</code>, paneles se ajustan en tiempo real.",
+        "focus": "Handle enfocado por teclado — <code>ring-1 ring-ring</code>, flechas ajustan tamaño.",
+        "disabled": "Handle deshabilitado — <code>data-disabled</code>, sin cursor de resize."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "direction": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "—",
+          "required": "Sí",
+          "description": "Dirección del <code>PanelGroup</code>. Define si el split es lateral o vertical."
+        },
+        "defaultSize": {
+          "type": "number",
+          "default": "—",
+          "required": "Recomendado",
+          "description": "Tamaño inicial del panel en porcentaje (0–100)."
+        },
+        "minSize": {
+          "type": "number",
+          "default": "10",
+          "required": "Recomendado",
+          "description": "Tamaño mínimo en porcentaje. Evita el colapso del panel."
+        },
+        "maxSize": {
+          "type": "number",
+          "default": "100",
+          "required": "Recomendado",
+          "description": "Tamaño máximo en porcentaje."
+        },
+        "id": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "ID único del panel — usado por Storage para persistir tamaño."
+        },
+        "withHandle": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Muestra agarre visual centrado en el <code>ResizableHandle</code>."
+        },
+        "onLayout": {
+          "type": "(sizes: number[]) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback en el <code>PanelGroup</code> con los tamaños finales tras arrastre."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Persistir tamaños vía autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar paneles — usa flechas\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "border": { "class": "bg-border", "part": "Color del handle y agarre visual" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco del handle" },
+        "background": { "class": "bg-background", "part": "Fondo de los paneles (el consumidor define)" },
+        "foreground": { "class": "text-foreground", "part": "Texto dentro de los paneles" },
+        "muted": { "class": "bg-muted", "part": "Fondo de paneles secundarios (sidebar)" },
+        "ringOffset": { "class": "ring-offset-background", "part": "Offset del anillo de foco" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Handle más grueso para móvil */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
+      "items": {
+        "item1": "<code>aria-orientation</code> aplicado automáticamente según <code>direction</code>",
+        "item2": "<code>ResizableHandle</code> es focalizable y operable por teclado (flechas)",
+        "item3": "<code>aria-label</code> obligatorio en el handle describiendo la acción",
+        "item4": "WCAG 2.5.7 cumplido — toda acción de arrastre tiene equivalente por teclado",
+        "item5": "Anillo de foco visible con <code>ring-1 ring-ring</code>",
+        "item6": "<code>aria-valuenow</code> y <code>aria-valuemin/max</code> derivados del tamaño actual"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Mueve el foco al siguiente handle",
+        "arrowLeft": "Reduce el panel izquierdo (horizontal)",
+        "arrowRight": "Aumenta el panel izquierdo (horizontal)",
+        "arrowUp": "Reduce el panel superior (vertical)",
+        "arrowDown": "Aumenta el panel superior (vertical)",
+        "home": "Establece el panel al tamaño mínimo",
+        "end": "Establece el panel al tamaño máximo",
+        "enter": "Restablece a defaultSize (cuando se soporta)"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"separator\"</code> en el handle",
+        "orientation": "<code>aria-orientation</code> refleja la <code>direction</code> del grupo",
+        "valuenow": "<code>aria-valuenow</code> refleja el tamaño actual en porcentaje",
+        "label": "<code>aria-label</code> obligatorio describiendo la función"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "handle": "Anuncia \"separador, [aria-label]\" al enfocar",
+        "navigation": "Anuncia el nuevo tamaño al usar flechas",
+        "limits": "Anuncia cuando alcanza minSize o maxSize"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "scrollArea": { "name": "ScrollArea", "description": "Scroll interno para contenido dentro de paneles." },
+        "sheet": { "name": "Sheet", "description": "Panel lateral que abre/cierra completamente." },
+        "separator": { "name": "Separator", "description": "Divisor visual fijo sin redimensionamiento." },
+        "aspectRatio": { "name": "AspectRatio", "description": "Mantiene proporción fija de un área." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Tamaños en porcentaje</strong> — <code>defaultSize</code>, <code>minSize</code> y <code>maxSize</code> son porcentajes del grupo (0–100), no píxeles.",
+      "item3": "<strong>autoSaveId</strong> (React) — persiste tamaños en <code>localStorage</code> automáticamente cuando se define en el <code>PanelGroup</code>.",
+      "item4": "<strong>Móvil</strong> — considera ocultar el componente en pantallas pequeñas y usar layout apilado o <code>Sheet</code> en su lugar."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "panel_resize": {
+          "trigger": "El usuario finaliza el redimensionamiento (drag end o keyup)",
+          "payload": "{ component: \"resizable\", group_id, sizes, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Arrastrar el handle", "result": "Los paneles ajustan tamaño en tiempo real", "priority": "high" },
+        "item2": { "action": "Pulsar ArrowLeft/Right con handle enfocado", "result": "El panel izquierdo disminuye/aumenta en incrementos", "priority": "high" },
+        "item3": { "action": "Alcanzar minSize/maxSize", "result": "El panel se detiene en el límite; aria-valuenow refleja", "priority": "high" },
+        "item4": { "action": "Tab al handle", "result": "El handle recibe foco; anillo visible", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 3:1 entre el handle y el fondo",
+        "item3": "Anillo de foco visible en el handle",
+        "item4": "role=\"separator\" en el handle",
+        "item5": "aria-label descriptivo en el handle"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Horizontal (split lateral)", "priority": "high" },
+        "item2": { "story": "Vertical (split vertical)", "priority": "high" },
+        "item3": { "story": "Anidado (combinación)", "priority": "high" },
+        "item4": { "story": "Con handle visible", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
