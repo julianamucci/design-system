@@ -62,7 +62,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     ul.appendChild(li);
   }
 
-  function makeLink(label: string | null, html: string | null, page: number, isCurrent = false): HTMLAnchorElement {
+  function makeLink(label: string | null, page: number, isCurrent = false): HTMLAnchorElement {
     const a = document.createElement('a');
     a.href = '#';
 
@@ -73,12 +73,10 @@ export function createPagination(options: PaginationOptions): HTMLElement {
       a.className = LINK_BASE;
     }
 
-    if (html) {
-      a.innerHTML = html;
-    } else if (label) {
+    if (label) {
       a.textContent = label;
+      if (!isCurrent) a.setAttribute('aria-label', `Page ${page}`);
     }
-    if (label && !isCurrent) a.setAttribute('aria-label', `Page ${page}`);
 
     a.addEventListener('click', (e) => {
       e.preventDefault();
@@ -93,7 +91,13 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     prevA.href = '#';
     prevA.setAttribute('aria-label', 'Go to previous page');
     prevA.className = current <= 1 ? cn(ICON_LINK_BASE, 'pointer-events-none opacity-50') : ICON_LINK_BASE;
-    prevA.innerHTML = CHEVRON_LEFT_SVG;
+    // PATCH: security — substituído `prevA.innerHTML = CHEVRON_LEFT_SVG` por
+    // wrapper descartável + appendChild do <svg> parseado. Mantém comportamento
+    // visual e evita atribuir innerHTML em elemento de fluxo (link clicável).
+    const prevWrapper = document.createElement('span');
+    prevWrapper.innerHTML = CHEVRON_LEFT_SVG; // CHEVRON_LEFT_SVG é constante literal interna (segura)
+    const prevSvg = prevWrapper.firstElementChild;
+    if (prevSvg) prevA.appendChild(prevSvg);
     prevA.addEventListener('click', (e) => {
       e.preventDefault();
       if (current > 1) onPageChange(current - 1);
@@ -117,7 +121,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
       li.appendChild(span);
       ul.appendChild(li);
     } else {
-      addItem(makeLink(String(page), null, page, page === current));
+      addItem(makeLink(String(page), page, page === current));
     }
   }
 
@@ -127,7 +131,12 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     nextA.href = '#';
     nextA.setAttribute('aria-label', 'Go to next page');
     nextA.className = current >= total ? cn(ICON_LINK_BASE, 'pointer-events-none opacity-50') : ICON_LINK_BASE;
-    nextA.innerHTML = CHEVRON_RIGHT_SVG;
+    // PATCH: security — substituído `nextA.innerHTML = CHEVRON_RIGHT_SVG` por
+    // wrapper descartável + appendChild do <svg> parseado. Mesmo motivo de prevA.
+    const nextWrapper = document.createElement('span');
+    nextWrapper.innerHTML = CHEVRON_RIGHT_SVG; // CHEVRON_RIGHT_SVG é constante literal interna (segura)
+    const nextSvg = nextWrapper.firstElementChild;
+    if (nextSvg) nextA.appendChild(nextSvg);
     nextA.addEventListener('click', (e) => {
       e.preventDefault();
       if (current < total) onPageChange(current + 1);
