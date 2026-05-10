@@ -483,7 +483,7 @@ export function createResizablePanel(
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes:
             t('props.extensibilityCode') +
-            '\n\n// NOTA Basecoat: a factory custom NÃO suporta autoSaveId, id por painel,\n// onLayout, maxSize, nem ResizableHandle.withHandle=false. Para persistência\n// de tamanhos ou callbacks, envolva manualmente em listeners de MutationObserver\n// sobre style.width/height ou use as stacks React (react-resizable-panels),\n// Vue (splitpanes) ou Svelte (paneforge).',
+            '\n\n// NOTA Basecoat: a factory custom NÃO suporta autoSaveId, id por painel,\n// onLayout, maxSize, nem ResizableHandle.withHandle=false. Para persistência\n// de tamanhos ou callbacks, envolva manualmente em listeners de MutationObserver\n// sobre style.width/height ou use as stacks React (react-resizable-panels),\n// Vue (reka-ui Splitter) ou Svelte (paneforge).',
         });
       }
 

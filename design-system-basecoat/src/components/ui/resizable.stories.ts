@@ -47,7 +47,7 @@ const meta: Meta<ResizableArgs> = {
     withHandle: {
       control: 'boolean',
       description:
-        'Pegador visual no Handle. NOTA: factory Basecoat SEMPRE exibe o grip visual — argType para paridade conceitual com react-resizable-panels/splitpanes/paneforge.',
+        'Pegador visual no Handle. NOTA: factory Basecoat SEMPRE exibe o grip visual — argType para paridade conceitual com react-resizable-panels/reka-ui Splitter/paneforge.',
     },
   },
   args: {

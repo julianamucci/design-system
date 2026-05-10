@@ -374,34 +374,61 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div class="w-full h-[220px] min-h-[200px] rounded-md border overflow-hidden">
+      <div class="w-full space-y-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="w-full h-[220px] min-h-[200px] rounded-md border overflow-hidden">
+            <ResizablePanelGroup direction="horizontal">
+              <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
+                <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
+                  {{ tContent('demonstration.labels.sidebar') }}
+                </div>
+              </ResizablePanel>
+              <ResizableHandle with-handle :aria-label="`${tContent('demonstration.labels.horizontal')} — use setas`" />
+              <ResizablePanel :default-size="70" :min-size="50">
+                <div class="flex h-full items-center justify-center p-4 text-sm">
+                  {{ tContent('demonstration.labels.content') }}
+                </div>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </div>
+          <div class="w-full h-[220px] min-h-[200px] rounded-md border overflow-hidden">
+            <ResizablePanelGroup direction="vertical">
+              <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
+                <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
+                  {{ tContent('demonstration.labels.top') }}
+                </div>
+              </ResizablePanel>
+              <ResizableHandle with-handle :aria-label="`${tContent('demonstration.labels.vertical')} — use setas`" />
+              <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
+                <div class="flex h-full items-center justify-center p-4 text-sm">
+                  {{ tContent('demonstration.labels.bottom') }}
+                </div>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </div>
+        </div>
+        <div class="w-full h-[280px] min-h-[240px] rounded-md border overflow-hidden">
           <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
+            <ResizablePanel :default-size="25" :min-size="15" :max-size="40">
               <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
                 {{ tContent('demonstration.labels.sidebar') }}
               </div>
             </ResizablePanel>
-            <ResizableHandle with-handle :aria-label="`${tContent('demonstration.labels.horizontal')} — use setas`" />
-            <ResizablePanel :default-size="70" :min-size="50">
-              <div class="flex h-full items-center justify-center p-4 text-sm">
-                {{ tContent('demonstration.labels.content') }}
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </div>
-        <div class="w-full h-[220px] min-h-[200px] rounded-md border overflow-hidden">
-          <ResizablePanelGroup direction="vertical">
-            <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-              <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
-                {{ tContent('demonstration.labels.top') }}
-              </div>
-            </ResizablePanel>
-            <ResizableHandle with-handle :aria-label="`${tContent('demonstration.labels.vertical')} — use setas`" />
-            <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-              <div class="flex h-full items-center justify-center p-4 text-sm">
-                {{ tContent('demonstration.labels.bottom') }}
-              </div>
+            <ResizableHandle with-handle :aria-label="`${tContent('demonstration.labels.nested')} — sidebar/conteúdo — use setas`" />
+            <ResizablePanel :default-size="75" :min-size="50">
+              <ResizablePanelGroup direction="vertical">
+                <ResizablePanel :default-size="65" :min-size="30">
+                  <div class="flex h-full items-center justify-center p-4 text-sm">
+                    {{ tContent('demonstration.labels.content') }}
+                  </div>
+                </ResizablePanel>
+                <ResizableHandle with-handle :aria-label="`${tContent('demonstration.labels.nested')} — conteúdo/rodapé — use setas`" />
+                <ResizablePanel :default-size="35" :min-size="20">
+                  <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
+                    {{ tContent('demonstration.labels.bottom') }}
+                  </div>
+                </ResizablePanel>
+              </ResizablePanelGroup>
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
