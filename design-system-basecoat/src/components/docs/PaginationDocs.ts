@@ -435,19 +435,12 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
                 { name: 'onPageChange',  type: '(page: number) => void',  defaultValue: '—',     required: 'Sim', description: 'Callback disparado ao clicar em página, Previous ou Next.' },
                 { name: 'showPrevNext',  type: 'boolean',                 defaultValue: 'true',  required: 'Não', description: 'Exibe controles Previous/Next nas extremidades.' },
                 { name: 'class',         type: 'string',                  defaultValue: '—',     required: 'Não', description: 'Classes Tailwind extras no <nav>.' },
-                { name: 'isActive',      type: 'boolean',                 defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.isActive.description'))   + ' NOTA: factory Basecoat marca ativo internamente via current — sem prop por item.' },
-                { name: 'size',          type: '"default" | "sm" | "lg" | "icon"', defaultValue: '"icon"', required: 'Não', description: stripHtml(t('props.table.size.description'))       + ' NOTA: factory Basecoat fixa altura h-9 (icon).' },
-                { name: 'text',          type: 'string',                  defaultValue: '"Previous"/"Next"', required: 'Não', description: stripHtml(t('props.table.text.description')) + ' NOTA: factory Basecoat usa apenas ícone — para texto, customize via class ou compose manualmente.' },
               ],
             },
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes:
-            t('props.extensibilityCode') +
-            '\n\n// NOTA Basecoat: o factory custom não expõe asChild/PaginationLink individuais.\n' +
-            '// Para integrar com router (history.pushState ou similar), use onPageChange\n' +
-            '// e atualize a URL manualmente — o componente sempre renderiza <a href="#">.',
+          extensibilityNotes: t('props.extensibilityCode'),
         });
       }
 

@@ -35,6 +35,18 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
 
+// ─── Locale-aware column labels ───────────────────────────────────────────────
+const stateCols = computed(() => ({
+  state: locale.value === 'en' ? 'State' : 'Estado',
+  trigger: locale.value === 'en' ? 'Trigger' : locale.value === 'es' ? 'Disparador' : 'Disparo',
+  behavior:
+    locale.value === 'en'
+      ? 'Behavior'
+      : locale.value === 'es'
+      ? 'Comportamiento'
+      : 'Comportamento',
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function stripHtml(html: string): string {
@@ -591,11 +603,7 @@ const a11yCritCols = computed(() => ({
     <!-- ── Estados ──────────────────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{
-        state: tContent('props.table.prop'),
-        trigger: tContent('usage.scenarios.cols.scenario'),
-        behavior: tContent('usage.scenarios.cols.use'),
-      }"
+      :cols="stateCols"
       :items="stateItems"
     />
 

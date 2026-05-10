@@ -552,7 +552,7 @@ interface PaginationDirectionalProps {
       { token: '--background', value: $tStore('tokens.table.background.class'),        description: $tStore('tokens.table.background.part')        },
       { token: '--foreground', value: $tStore('tokens.table.foreground.class'),        description: $tStore('tokens.table.foreground.part')        },
       { token: '--accent',     value: $tStore('tokens.table.accent.class'),            description: $tStore('tokens.table.accent.part')            },
-      { token: '--accent',     value: $tStore('tokens.table.accentForeground.class'),  description: $tStore('tokens.table.accentForeground.part')  },
+      { token: '--accent-foreground', value: $tStore('tokens.table.accentForeground.class'),  description: $tStore('tokens.table.accentForeground.part')  },
       { token: '--border',     value: $tStore('tokens.table.border.class'),            description: $tStore('tokens.table.border.part')            },
       { token: '--ring',       value: $tStore('tokens.table.ring.class'),              description: $tStore('tokens.table.ring.part')              },
     ]}
