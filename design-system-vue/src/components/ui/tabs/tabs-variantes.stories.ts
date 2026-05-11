@@ -1,0 +1,115 @@
+import type { Meta, StoryObj } from '@storybook/vue3';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
+
+const meta = {
+  title: 'UI/Tabs/Variantes',
+  component: Tabs,
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+    docs: {
+      description: {
+        component:
+          'Variantes visuais do Tabs: Default (fundo muted + sombra), Line (linha inferior minimalista) e Vertical (orientação vertical com lista lateral).',
+      },
+    },
+  },
+} satisfies Meta<typeof Tabs>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+const sharedComponents = { Tabs, TabsList, TabsTrigger, TabsContent };
+
+export const Default: Story = {
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <Tabs default-value="overview" class="w-full max-w-md">
+        <TabsList aria-label="Seções do componente">
+          <TabsTrigger value="overview">Visão geral</TabsTrigger>
+          <TabsTrigger value="properties">Propriedades</TabsTrigger>
+          <TabsTrigger value="examples">Exemplos</TabsTrigger>
+        </TabsList>
+        <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">
+          Conteúdo da visão geral.
+        </TabsContent>
+        <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">
+          Lista de propriedades.
+        </TabsContent>
+        <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">
+          Exemplos de uso.
+        </TabsContent>
+      </Tabs>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Variante default — fundo muted arredondado e sombra suave na tab ativa. Indicada para a maioria dos contextos.',
+      },
+    },
+  },
+};
+
+export const Line: Story = {
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <Tabs default-value="overview" class="w-full max-w-md">
+        <TabsList variant="line" aria-label="Seções do componente">
+          <TabsTrigger value="overview">Visão geral</TabsTrigger>
+          <TabsTrigger value="properties">Propriedades</TabsTrigger>
+          <TabsTrigger value="examples">Exemplos</TabsTrigger>
+        </TabsList>
+        <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">
+          Conteúdo da visão geral.
+        </TabsContent>
+        <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">
+          Lista de propriedades.
+        </TabsContent>
+        <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">
+          Exemplos de uso.
+        </TabsContent>
+      </Tabs>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Variante line — visual minimalista com linha inferior na tab ativa. Útil para sub-navegação dentro de páginas.',
+      },
+    },
+  },
+};
+
+export const Vertical: Story = {
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <Tabs default-value="profile" orientation="vertical" class="w-full max-w-xl">
+        <TabsList aria-label="Configurações da conta">
+          <TabsTrigger value="profile">Perfil</TabsTrigger>
+          <TabsTrigger value="account">Conta</TabsTrigger>
+          <TabsTrigger value="security">Segurança</TabsTrigger>
+        </TabsList>
+        <TabsContent value="profile" class="pl-4 text-sm text-muted-foreground">
+          Configurações do perfil — nome, foto e bio.
+        </TabsContent>
+        <TabsContent value="account" class="pl-4 text-sm text-muted-foreground">
+          Configurações da conta — e-mail, idioma e fuso.
+        </TabsContent>
+        <TabsContent value="security" class="pl-4 text-sm text-muted-foreground">
+          Configurações de segurança — senha e 2FA.
+        </TabsContent>
+      </Tabs>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Variante vertical — orientation="vertical" empilha as tabs em coluna à esquerda e exibe o conteúdo à direita. Setas ↑↓ navegam entre tabs.',
+      },
+    },
+  },
+};
