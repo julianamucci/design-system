@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect, within } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 
 const meta = {
@@ -49,6 +50,13 @@ export const Default: Story = {
         story: 'Variante default — fundo muted arredondado e sombra suave na tab ativa. Indicada para a maioria dos contextos.',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const tablist = await canvas.findByRole('tablist');
+    await expect(tablist).toHaveAttribute('aria-label', 'Seções do componente');
+    const active = await canvas.findByRole('tab', { selected: true });
+    await expect(active).toHaveTextContent('Visão geral');
   },
 };
 

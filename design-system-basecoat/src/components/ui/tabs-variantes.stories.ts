@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
+import { expect, within } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
 
 const meta: Meta = {
@@ -49,6 +50,13 @@ export const Default: Story = {
   },
   parameters: {
     docs: { description: { story: 'Padrão: fundo `muted` arredondado e sombra na tab ativa.' } },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const tablist = await canvas.findByRole('tablist');
+    await expect(tablist).toHaveAttribute('aria-label', 'Seções do componente');
+    const active = await canvas.findByRole('tab', { selected: true });
+    await expect(active).toHaveTextContent('Visão geral');
   },
 };
 

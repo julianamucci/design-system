@@ -237,6 +237,17 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: codeVertical },
 ]);
 
+const stateCols = computed(() => ({
+  state: locale.value === 'en' ? 'State' : 'Estado',
+  trigger: locale.value === 'en' ? 'Trigger' : locale.value === 'es' ? 'Disparador' : 'Disparo',
+  behavior:
+    locale.value === 'en'
+      ? 'Behavior'
+      : locale.value === 'es'
+      ? 'Comportamiento'
+      : 'Comportamento',
+}));
+
 const stateItems = computed(() => [
   { label: tContent('states.items.default'),  trigger: '—',                       behavior: stripHtml(tContent('states.descriptions.default'))  },
   { label: tContent('states.items.active'),   trigger: 'Click / Arrow / Home/End', behavior: stripHtml(tContent('states.descriptions.active'))   },
@@ -563,11 +574,7 @@ function handleTabChange(value: string) {
     <!-- ── Estados ───────────────────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{
-        state: tContent('props.table.prop'),
-        trigger: tContent('demonstration.title'),
-        behavior: tContent('props.table.description'),
-      }"
+      :cols="stateCols"
       :items="stateItems"
     />
 

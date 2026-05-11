@@ -485,7 +485,7 @@ interface TabsContentProps {
       { token: '--background',       value: $tStore('tokens.table.background.class'),       description: $tStore('tokens.table.background.part')       },
       { token: '--foreground',       value: $tStore('tokens.table.foreground.class'),       description: $tStore('tokens.table.foreground.part')       },
       { token: '--ring',             value: $tStore('tokens.table.ring.class'),             description: $tStore('tokens.table.ring.part')             },
-      { token: 'border-ring',        value: $tStore('tokens.table.border.class'),           description: $tStore('tokens.table.border.part')           },
+      { token: '--border',           value: $tStore('tokens.table.border.class'),           description: $tStore('tokens.table.border.part')           },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

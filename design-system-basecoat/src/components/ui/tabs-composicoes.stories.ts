@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
+import { expect, within } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
 import { createBadge } from './badge';
 import { User, Settings, Shield } from 'lucide';
@@ -108,6 +109,13 @@ export const ComIconesNoTrigger: Story = {
           'Ícones no TabsTrigger. Sempre `aria-hidden="true"` no ícone — o label textual já descreve a tab para leitores de tela.',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const tablist = await canvas.findByRole('tablist');
+    await expect(tablist).toHaveAttribute('aria-label', 'Configurações');
+    const tabs = await canvas.findAllByRole('tab');
+    await expect(tabs).toHaveLength(3);
   },
 };
 
