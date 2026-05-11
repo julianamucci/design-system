@@ -1,0 +1,968 @@
+{
+  "pt-BR": {
+    "title": "Switch",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Toggle on/off para configurações com efeito imediato, sem necessidade de submissão de formulário.",
+    "seo": {
+      "title": "Switch — Formulário · Design System",
+      "description": "Documentação do Switch: Root, Thumb e tamanhos com role=\"switch\", aria-checked automático e suporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Switch toggle on/off com Root e Thumb, role=\"switch\" automático, tamanhos default/sm, efeito imediato sem submissão.",
+      "aiEntities": "Switch, Toggle, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role switch",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "notifications": "Receber notificações por email",
+        "marketing": "Emails de marketing",
+        "marketingDesc": "Receba novidades e promoções da plataforma.",
+        "darkMode": "Modo escuro",
+        "darkModeDesc": "Alterne para tema escuro automaticamente.",
+        "sm": "Tamanho compacto"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Switch</strong> — root com <code>role=\"switch\"</code> que alterna entre <code>data-checked</code> e <code>data-unchecked</code>.",
+      "item2": "<strong>Thumb</strong> (interno) — bola que desliza entre as duas posições; <code>translate-x</code> animado.",
+      "item3": "<strong>Label</strong> — externo, OBRIGATÓRIO, vinculado via <code>htmlFor</code> ao <code>id</code> do Switch.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Receber notificações</Label>\n</div>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para configurações com efeito imediato (sem submit). Para checkbox em form com submit, use <code>Checkbox</code>.",
+        "item2": "Label descreve o estado <strong>ativo</strong> da função: \"Receber notificações\" (não \"Notificações\").",
+        "item3": "Sempre forneça Label associado via <code>htmlFor</code> + <code>id</code>.",
+        "item4": "Não use dentro de formulários com submit — efeito imediato evita confusão de estado."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Dark mode toggle", "u": "Sim", "a": "-" },
+        "item2": { "s": "Notificações on/off", "u": "Sim", "a": "-" },
+        "item3": { "s": "Aceitar termos (form com submit)", "u": "Não", "a": "Checkbox" },
+        "item4": { "s": "Seleção entre 2 opções textuais", "u": "Não", "a": "RadioGroup" },
+        "item5": { "s": "Formatação visual (negrito/itálico)", "u": "Não", "a": "Toggle" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "label": {
+            "name": "Label",
+            "format": "Verbo no infinitivo ou frase que descreve o estado ativo · sem ponto",
+            "good": "\"Receber notificações\", \"Modo escuro\"",
+            "bad": "\"Notificações\" (ambíguo), \"Receber notificações?\""
+          },
+          "description": {
+            "name": "Descrição opcional",
+            "format": "Frase completa explicando o efeito · ponto final",
+            "good": "\"Receba novidades e promoções da plataforma.\"",
+            "bad": "\"Marketing\" (redundante)"
+          },
+          "panel": {
+            "name": "Painel de configurações",
+            "format": "Label + descrição à esquerda · Switch à direita",
+            "good": "Layout flex justify-between",
+            "bad": "Switch acima e label sem associação"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "A ação tem efeito imediato sem precisar de confirmação",
+        "item2": "É uma configuração de sistema (notificações, tema, visibilidade)",
+        "item3": "O usuário pode alternar várias vezes sem custo",
+        "item4": "O estado deve persistir entre sessões"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "Está dentro de form com submit — use <code>Checkbox</code>",
+        "item2": "São 2 opções textuais como \"Sim/Não\" — use <code>RadioGroup</code>",
+        "item3": "É formatação visual (B/I/U) — use <code>Toggle</code>",
+        "item4": "Múltipla seleção em grupo — use grupo de <code>Checkbox</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Label descreve a ação ativa: \"Receber notificações\".",
+        "dont": "Não use label ambíguo como \"Notificações\"."
+      },
+      "pair2": {
+        "do": "Vincule Switch ao Label via htmlFor + id.",
+        "dont": "Não use texto solto sem associação — leitores de tela perdem contexto."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withDescription": "Com descrição",
+        "sm": "Small"
+      },
+      "styles": {
+        "default": "Switch padrão — <code>32×18.4px</code>, Label à direita.",
+        "withDescription": "Switch com Label + descrição auxiliar — layout <code>flex justify-between</code> em painel.",
+        "sm": "Tamanho compacto — <code>size=\"sm\"</code>, <code>24×14px</code>."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "unchecked": "Unchecked",
+        "checked": "Checked",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled",
+        "invalid": "Invalid"
+      },
+      "descriptions": {
+        "unchecked": "Desativado — <code>data-unchecked</code>, fundo <code>input</code>, thumb à esquerda.",
+        "checked": "Ativado — <code>data-checked</code>, fundo <code>primary</code>, thumb à direita.",
+        "hover": "Mouse sobre — sem mudança visual obrigatória; aplique <code>hover:</code> se necessário.",
+        "focus": "Focado via teclado — anel <code>ring-3 ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code> e <code>cursor-not-allowed</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "checked": {
+          "type": "boolean",
+          "default": "—",
+          "required": "Não",
+          "description": "Estado controlado. Use junto com <code>onCheckedChange</code>."
+        },
+        "defaultChecked": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Estado inicial não-controlado."
+        },
+        "onCheckedChange": {
+          "type": "(checked: boolean) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback disparado ao alternar."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Desabilita o Switch."
+        },
+        "name": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Nome do campo no formulário HTML."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\"",
+          "default": "\"default\"",
+          "required": "Não",
+          "description": "Tamanho do Switch. <code>default</code> = 32×18.4px, <code>sm</code> = 24×14px."
+        },
+        "id": {
+          "type": "string",
+          "default": "—",
+          "required": "Recomendado",
+          "description": "Identificador para vinculação com Label via <code>htmlFor</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Switch com descrição em painel de configurações\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Emails de marketing</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "input": { "class": "bg-input", "part": "Fundo no estado unchecked" },
+        "primary": { "class": "bg-primary", "part": "Fundo no estado checked" },
+        "background": { "class": "bg-background", "part": "Cor do Thumb (light)" },
+        "primaryForeground": { "class": "bg-primary-foreground", "part": "Cor do Thumb (dark + checked)" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco" },
+        "destructive": { "class": "border-destructive", "part": "Borda no estado inválido" },
+        "foreground": { "class": "text-foreground", "part": "Texto do Label associado" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Cor customizada do checked */\n.switch-success[data-checked] {\n  @apply bg-green-500;\n}\n\n/* Tamanho customizado */\n[data-slot=\"switch\"][data-size=\"default\"] {\n  width: 40px;\n  height: 24px;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"switch\"</code> aplicado automaticamente",
+        "item2": "<code>aria-checked</code> reflete o estado true/false",
+        "item3": "Label OBRIGATÓRIO via <code>htmlFor</code> + <code>id</code>",
+        "item4": "Anel de foco visível com <code>ring-3 ring-ring/50</code>",
+        "item5": "<code>aria-invalid=\"true\"</code> quando há erro de validação",
+        "item6": "Contraste mínimo 3:1 entre fundo checked/unchecked e ambiente"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Foca o Switch",
+        "space": "Alterna o estado",
+        "enter": "Alterna o estado (idêntico a Space)"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"switch\"</code> no root",
+        "checked": "<code>aria-checked=\"true|false\"</code> reflete o estado",
+        "label": "Label externo via <code>htmlFor</code> (não usar <code>aria-label</code>)",
+        "invalid": "<code>aria-invalid=\"true\"</code> em validação falha"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "default": "Anuncia o Label + \"switch, desativado\" ao focar",
+        "checked": "Anuncia \"switch, ativado\" ao confirmar",
+        "change": "Anuncia mudança de estado ao alternar"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "checkbox": { "name": "Checkbox", "description": "Seleção em form com submit ou múltipla independente." },
+        "toggle": { "name": "Toggle", "description": "Botão de formatação visual (negrito, itálico)." },
+        "radioGroup": { "name": "RadioGroup", "description": "Seleção entre 2-7 opções textuais." },
+        "form": { "name": "Form", "description": "Integração com validação via React Hook Form." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Efeito imediato</strong> — o Switch dispara <code>onCheckedChange</code> a cada toggle. Não usar dentro de form que exige submit.",
+      "item3": "<strong>Label descritivo</strong> — sempre descreva o estado ativo (\"Receber notificações\", não \"Notificações\").",
+      "item4": "<strong>Tamanhos</strong> — apenas <code>default</code> e <code>sm</code>. Para tamanho customizado, use CSS via <code>[data-slot=\"switch\"]</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_change": {
+          "trigger": "Usuário alterna o estado (on/off)",
+          "payload": "{ component: \"switch\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Clicar no Switch", "result": "Alterna entre checked/unchecked e dispara onCheckedChange", "priority": "high" },
+        "item2": { "action": "Pressionar Space com Switch focado", "result": "Alterna o estado", "priority": "high" },
+        "item3": { "action": "Clicar no Label", "result": "Alterna o estado (via htmlFor)", "priority": "high" },
+        "item4": { "action": "Clicar com disabled=true", "result": "Não muda estado; aria-disabled true", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 3:1 entre fundo e ambiente",
+        "item3": "Focus ring visível com ring-3 ring-ring/50",
+        "item4": "role=\"switch\" presente",
+        "item5": "aria-checked reflete o estado"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Unchecked (default)", "priority": "high" },
+        "item2": { "story": "Checked (default)", "priority": "high" },
+        "item3": { "story": "Disabled", "priority": "high" },
+        "item4": { "story": "Size sm", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Switch",
+    "category": "Form",
+    "type": "Component",
+    "description": "On/off toggle for immediate-effect settings, without form submission.",
+    "seo": {
+      "title": "Switch — Form · Design System",
+      "description": "Switch documentation: Root, Thumb and sizes with role=\"switch\", automatic aria-checked and WCAG 2.1 AA support.",
+      "aiSummary": "Switch on/off toggle component with Root and Thumb, automatic role=\"switch\", default/sm sizes, immediate effect without submission.",
+      "aiEntities": "Switch, Toggle, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role switch",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "notifications": "Receive email notifications",
+        "marketing": "Marketing emails",
+        "marketingDesc": "Receive news and promotions from the platform.",
+        "darkMode": "Dark mode",
+        "darkModeDesc": "Switch to dark theme automatically.",
+        "sm": "Compact size"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Switch</strong> — root with <code>role=\"switch\"</code> that toggles between <code>data-checked</code> and <code>data-unchecked</code>.",
+      "item2": "<strong>Thumb</strong> (internal) — ball that slides between the two positions; animated <code>translate-x</code>.",
+      "item3": "<strong>Label</strong> — external, REQUIRED, linked via <code>htmlFor</code> to the Switch <code>id</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Receive notifications</Label>\n</div>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for settings with immediate effect (no submit). For checkbox in form with submit, use <code>Checkbox</code>.",
+        "item2": "Label describes the <strong>active</strong> state of the function: \"Receive notifications\" (not \"Notifications\").",
+        "item3": "Always provide an associated Label via <code>htmlFor</code> + <code>id</code>.",
+        "item4": "Don't use inside forms with submit — immediate effect avoids state confusion."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Dark mode toggle", "u": "Yes", "a": "-" },
+        "item2": { "s": "Notifications on/off", "u": "Yes", "a": "-" },
+        "item3": { "s": "Accept terms (form with submit)", "u": "No", "a": "Checkbox" },
+        "item4": { "s": "Choice between 2 text options", "u": "No", "a": "RadioGroup" },
+        "item5": { "s": "Visual formatting (bold/italic)", "u": "No", "a": "Toggle" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "label": {
+            "name": "Label",
+            "format": "Imperative verb or phrase describing active state · no period",
+            "good": "\"Receive notifications\", \"Dark mode\"",
+            "bad": "\"Notifications\" (ambiguous), \"Receive notifications?\""
+          },
+          "description": {
+            "name": "Optional description",
+            "format": "Complete sentence explaining the effect · period",
+            "good": "\"Receive news and promotions from the platform.\"",
+            "bad": "\"Marketing\" (redundant)"
+          },
+          "panel": {
+            "name": "Settings panel",
+            "format": "Label + description on the left · Switch on the right",
+            "good": "Flex justify-between layout",
+            "bad": "Switch above and label without association"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Action has immediate effect without needing confirmation",
+        "item2": "It's a system setting (notifications, theme, visibility)",
+        "item3": "User can toggle multiple times with no cost",
+        "item4": "State should persist across sessions"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "Inside a form with submit — use <code>Checkbox</code>",
+        "item2": "There are 2 text options like \"Yes/No\" — use <code>RadioGroup</code>",
+        "item3": "It's visual formatting (B/I/U) — use <code>Toggle</code>",
+        "item4": "Multiple selection in a group — use <code>Checkbox</code> group"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Label describes the active action: \"Receive notifications\".",
+        "dont": "Don't use ambiguous label like \"Notifications\"."
+      },
+      "pair2": {
+        "do": "Link Switch to Label via htmlFor + id.",
+        "dont": "Don't use loose text without association — screen readers lose context."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "withDescription": "With description",
+        "sm": "Small"
+      },
+      "styles": {
+        "default": "Default switch — <code>32×18.4px</code>, Label on the right.",
+        "withDescription": "Switch with Label + helper description — <code>flex justify-between</code> layout in panel.",
+        "sm": "Compact size — <code>size=\"sm\"</code>, <code>24×14px</code>."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "unchecked": "Unchecked",
+        "checked": "Checked",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled",
+        "invalid": "Invalid"
+      },
+      "descriptions": {
+        "unchecked": "Off — <code>data-unchecked</code>, <code>input</code> background, thumb on the left.",
+        "checked": "On — <code>data-checked</code>, <code>primary</code> background, thumb on the right.",
+        "hover": "Mouse over — no required visual change; apply <code>hover:</code> as needed.",
+        "focus": "Keyboard focused — <code>ring-3 ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code> and <code>cursor-not-allowed</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "checked": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled state. Use with <code>onCheckedChange</code>."
+        },
+        "defaultChecked": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Initial uncontrolled state."
+        },
+        "onCheckedChange": {
+          "type": "(checked: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired on toggle."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Disables the Switch."
+        },
+        "name": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Field name in the HTML form."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Switch size. <code>default</code> = 32×18.4px, <code>sm</code> = 24×14px."
+        },
+        "id": {
+          "type": "string",
+          "default": "—",
+          "required": "Recommended",
+          "description": "Identifier for Label binding via <code>htmlFor</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Switch with description in settings panel\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Marketing emails</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Receive news and promotions from the platform.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "input": { "class": "bg-input", "part": "Background in unchecked state" },
+        "primary": { "class": "bg-primary", "part": "Background in checked state" },
+        "background": { "class": "bg-background", "part": "Thumb color (light)" },
+        "primaryForeground": { "class": "bg-primary-foreground", "part": "Thumb color (dark + checked)" },
+        "ring": { "class": "ring-ring", "part": "Focus ring" },
+        "destructive": { "class": "border-destructive", "part": "Border in invalid state" },
+        "foreground": { "class": "text-foreground", "part": "Associated Label text" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Custom checked color */\n.switch-success[data-checked] {\n  @apply bg-green-500;\n}\n\n/* Custom size */\n[data-slot=\"switch\"][data-size=\"default\"] {\n  width: 40px;\n  height: 24px;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"switch\"</code> applied automatically",
+        "item2": "<code>aria-checked</code> reflects true/false state",
+        "item3": "Label REQUIRED via <code>htmlFor</code> + <code>id</code>",
+        "item4": "Visible focus ring with <code>ring-3 ring-ring/50</code>",
+        "item5": "<code>aria-invalid=\"true\"</code> when validation fails",
+        "item6": "Minimum 3:1 contrast between checked/unchecked background and surroundings"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Focuses the Switch",
+        "space": "Toggles the state",
+        "enter": "Toggles the state (same as Space)"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "role": "<code>role=\"switch\"</code> on root",
+        "checked": "<code>aria-checked=\"true|false\"</code> reflects state",
+        "label": "External Label via <code>htmlFor</code> (don't use <code>aria-label</code>)",
+        "invalid": "<code>aria-invalid=\"true\"</code> on failed validation"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "default": "Announces Label + \"switch, off\" on focus",
+        "checked": "Announces \"switch, on\" on confirmation",
+        "change": "Announces state change on toggle"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "checkbox": { "name": "Checkbox", "description": "Selection in form with submit or independent multiple." },
+        "toggle": { "name": "Toggle", "description": "Visual formatting button (bold, italic)." },
+        "radioGroup": { "name": "RadioGroup", "description": "Selection between 2-7 text options." },
+        "form": { "name": "Form", "description": "Validation integration via React Hook Form." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>Immediate effect</strong> — Switch fires <code>onCheckedChange</code> on every toggle. Don't use inside form that requires submit.",
+      "item3": "<strong>Descriptive Label</strong> — always describe the active state (\"Receive notifications\", not \"Notifications\").",
+      "item4": "<strong>Sizes</strong> — only <code>default</code> and <code>sm</code>. For custom size, use CSS via <code>[data-slot=\"switch\"]</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_change": {
+          "trigger": "User toggles state (on/off)",
+          "payload": "{ component: \"switch\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Click the Switch", "result": "Toggles between checked/unchecked and fires onCheckedChange", "priority": "high" },
+        "item2": { "action": "Press Space with Switch focused", "result": "Toggles the state", "priority": "high" },
+        "item3": { "action": "Click the Label", "result": "Toggles the state (via htmlFor)", "priority": "high" },
+        "item4": { "action": "Click with disabled=true", "result": "Doesn't change state; aria-disabled true", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 3:1 contrast between background and surroundings",
+        "item3": "Visible focus ring with ring-3 ring-ring/50",
+        "item4": "role=\"switch\" present",
+        "item5": "aria-checked reflects state"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Unchecked (default)", "priority": "high" },
+        "item2": { "story": "Checked (default)", "priority": "high" },
+        "item3": { "story": "Disabled", "priority": "high" },
+        "item4": { "story": "Size sm", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Switch",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Toggle on/off para configuraciones con efecto inmediato, sin necesidad de envío de formulario.",
+    "seo": {
+      "title": "Switch — Formulario · Design System",
+      "description": "Documentación de Switch: Root, Thumb y tamaños con role=\"switch\", aria-checked automático y soporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Switch toggle on/off con Root y Thumb, role=\"switch\" automático, tamaños default/sm, efecto inmediato sin envío.",
+      "aiEntities": "Switch, Toggle, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role switch",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "notifications": "Recibir notificaciones por email",
+        "marketing": "Emails de marketing",
+        "marketingDesc": "Recibe novedades y promociones de la plataforma.",
+        "darkMode": "Modo oscuro",
+        "darkModeDesc": "Cambia al tema oscuro automáticamente.",
+        "sm": "Tamaño compacto"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Switch</strong> — root con <code>role=\"switch\"</code> que alterna entre <code>data-checked</code> y <code>data-unchecked</code>.",
+      "item2": "<strong>Thumb</strong> (interno) — bola que se desliza entre las dos posiciones; <code>translate-x</code> animado.",
+      "item3": "<strong>Label</strong> — externo, OBLIGATORIO, vinculado vía <code>htmlFor</code> al <code>id</code> del Switch.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Recibir notificaciones</Label>\n</div>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa para configuraciones con efecto inmediato (sin submit). Para checkbox en form con submit, usa <code>Checkbox</code>.",
+        "item2": "Label describe el estado <strong>activo</strong> de la función: \"Recibir notificaciones\" (no \"Notificaciones\").",
+        "item3": "Provee siempre Label asociado vía <code>htmlFor</code> + <code>id</code>.",
+        "item4": "No uses dentro de formularios con submit — el efecto inmediato evita confusión de estado."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Toggle de modo oscuro", "u": "Sí", "a": "-" },
+        "item2": { "s": "Notificaciones on/off", "u": "Sí", "a": "-" },
+        "item3": { "s": "Aceptar términos (form con submit)", "u": "No", "a": "Checkbox" },
+        "item4": { "s": "Selección entre 2 opciones textuales", "u": "No", "a": "RadioGroup" },
+        "item5": { "s": "Formato visual (negrita/itálica)", "u": "No", "a": "Toggle" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "label": {
+            "name": "Label",
+            "format": "Verbo en infinitivo o frase que describe el estado activo · sin punto",
+            "good": "\"Recibir notificaciones\", \"Modo oscuro\"",
+            "bad": "\"Notificaciones\" (ambiguo), \"¿Recibir notificaciones?\""
+          },
+          "description": {
+            "name": "Descripción opcional",
+            "format": "Frase completa explicando el efecto · punto final",
+            "good": "\"Recibe novedades y promociones de la plataforma.\"",
+            "bad": "\"Marketing\" (redundante)"
+          },
+          "panel": {
+            "name": "Panel de configuración",
+            "format": "Label + descripción a la izquierda · Switch a la derecha",
+            "good": "Layout flex justify-between",
+            "bad": "Switch arriba y label sin asociación"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "La acción tiene efecto inmediato sin necesidad de confirmación",
+        "item2": "Es una configuración de sistema (notificaciones, tema, visibilidad)",
+        "item3": "El usuario puede alternar varias veces sin coste",
+        "item4": "El estado debe persistir entre sesiones"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Está dentro de form con submit — usa <code>Checkbox</code>",
+        "item2": "Son 2 opciones textuales como \"Sí/No\" — usa <code>RadioGroup</code>",
+        "item3": "Es formato visual (B/I/U) — usa <code>Toggle</code>",
+        "item4": "Selección múltiple en grupo — usa grupo de <code>Checkbox</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Label describe la acción activa: \"Recibir notificaciones\".",
+        "dont": "No uses label ambiguo como \"Notificaciones\"."
+      },
+      "pair2": {
+        "do": "Vincula Switch al Label vía htmlFor + id.",
+        "dont": "No uses texto suelto sin asociación — los lectores de pantalla pierden contexto."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withDescription": "Con descripción",
+        "sm": "Small"
+      },
+      "styles": {
+        "default": "Switch por defecto — <code>32×18.4px</code>, Label a la derecha.",
+        "withDescription": "Switch con Label + descripción auxiliar — layout <code>flex justify-between</code> en panel.",
+        "sm": "Tamaño compacto — <code>size=\"sm\"</code>, <code>24×14px</code>."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "unchecked": "Unchecked",
+        "checked": "Checked",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled",
+        "invalid": "Invalid"
+      },
+      "descriptions": {
+        "unchecked": "Apagado — <code>data-unchecked</code>, fondo <code>input</code>, thumb a la izquierda.",
+        "checked": "Encendido — <code>data-checked</code>, fondo <code>primary</code>, thumb a la derecha.",
+        "hover": "Mouse encima — sin cambio visual obligatorio; aplica <code>hover:</code> si es necesario.",
+        "focus": "Enfocado por teclado — <code>ring-3 ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code> y <code>cursor-not-allowed</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "checked": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Estado controlado. Usa con <code>onCheckedChange</code>."
+        },
+        "defaultChecked": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Estado inicial no controlado."
+        },
+        "onCheckedChange": {
+          "type": "(checked: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback disparado al alternar."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Deshabilita el Switch."
+        },
+        "name": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Nombre del campo en el formulario HTML."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Tamaño del Switch. <code>default</code> = 32×18.4px, <code>sm</code> = 24×14px."
+        },
+        "id": {
+          "type": "string",
+          "default": "—",
+          "required": "Recomendado",
+          "description": "Identificador para vinculación con Label vía <code>htmlFor</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Switch con descripción en panel de configuración\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Emails de marketing</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Recibe novedades y promociones de la plataforma.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "input": { "class": "bg-input", "part": "Fondo en estado unchecked" },
+        "primary": { "class": "bg-primary", "part": "Fondo en estado checked" },
+        "background": { "class": "bg-background", "part": "Color del Thumb (light)" },
+        "primaryForeground": { "class": "bg-primary-foreground", "part": "Color del Thumb (dark + checked)" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco" },
+        "destructive": { "class": "border-destructive", "part": "Borde en estado inválido" },
+        "foreground": { "class": "text-foreground", "part": "Texto del Label asociado" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Color personalizado del checked */\n.switch-success[data-checked] {\n  @apply bg-green-500;\n}\n\n/* Tamaño personalizado */\n[data-slot=\"switch\"][data-size=\"default\"] {\n  width: 40px;\n  height: 24px;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"switch\"</code> aplicado automáticamente",
+        "item2": "<code>aria-checked</code> refleja el estado true/false",
+        "item3": "Label OBLIGATORIO vía <code>htmlFor</code> + <code>id</code>",
+        "item4": "Anillo de foco visible con <code>ring-3 ring-ring/50</code>",
+        "item5": "<code>aria-invalid=\"true\"</code> cuando hay error de validación",
+        "item6": "Contraste mínimo 3:1 entre fondo checked/unchecked y ambiente"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Enfoca el Switch",
+        "space": "Alterna el estado",
+        "enter": "Alterna el estado (igual a Space)"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"switch\"</code> en el root",
+        "checked": "<code>aria-checked=\"true|false\"</code> refleja el estado",
+        "label": "Label externo vía <code>htmlFor</code> (no uses <code>aria-label</code>)",
+        "invalid": "<code>aria-invalid=\"true\"</code> en validación fallida"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "default": "Anuncia el Label + \"switch, apagado\" al enfocar",
+        "checked": "Anuncia \"switch, encendido\" al confirmar",
+        "change": "Anuncia cambio de estado al alternar"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "checkbox": { "name": "Checkbox", "description": "Selección en form con submit o múltiple independiente." },
+        "toggle": { "name": "Toggle", "description": "Botón de formato visual (negrita, itálica)." },
+        "radioGroup": { "name": "RadioGroup", "description": "Selección entre 2-7 opciones textuales." },
+        "form": { "name": "Form", "description": "Integración de validación vía React Hook Form." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Efecto inmediato</strong> — el Switch dispara <code>onCheckedChange</code> en cada toggle. No usar dentro de form que requiere submit.",
+      "item3": "<strong>Label descriptivo</strong> — describe siempre el estado activo (\"Recibir notificaciones\", no \"Notificaciones\").",
+      "item4": "<strong>Tamaños</strong> — solo <code>default</code> y <code>sm</code>. Para tamaño personalizado, usa CSS vía <code>[data-slot=\"switch\"]</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_change": {
+          "trigger": "El usuario alterna el estado (on/off)",
+          "payload": "{ component: \"switch\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Hacer clic en el Switch", "result": "Alterna entre checked/unchecked y dispara onCheckedChange", "priority": "high" },
+        "item2": { "action": "Pulsar Space con Switch enfocado", "result": "Alterna el estado", "priority": "high" },
+        "item3": { "action": "Hacer clic en el Label", "result": "Alterna el estado (vía htmlFor)", "priority": "high" },
+        "item4": { "action": "Clic con disabled=true", "result": "No cambia el estado; aria-disabled true", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 3:1 entre fondo y ambiente",
+        "item3": "Anillo de foco visible con ring-3 ring-ring/50",
+        "item4": "role=\"switch\" presente",
+        "item5": "aria-checked refleja el estado"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Unchecked (default)", "priority": "high" },
+        "item2": { "story": "Checked (default)", "priority": "high" },
+        "item3": { "story": "Disabled", "priority": "high" },
+        "item4": { "story": "Size sm", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
