@@ -1,0 +1,998 @@
+{
+  "pt-BR": {
+    "title": "Tabs",
+    "category": "Navegação",
+    "type": "Componente",
+    "description": "Alterna entre views paralelas do mesmo nível hierárquico, com suporte a orientação horizontal/vertical e variantes default/line.",
+    "seo": {
+      "title": "Tabs — Navegação · Design System",
+      "description": "Documentação do Tabs: Root, List, Trigger e Content com role=\"tablist\", navegação por setas e suporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Tabs com Root, List, Trigger e Content, role=\"tablist\" automático, navegação por setas/Home/End e variantes default/line.",
+      "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tablist",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "overview": "Visão geral",
+        "properties": "Propriedades",
+        "examples": "Exemplos",
+        "code": "Código",
+        "preview": "Preview",
+        "settings": "Configurações",
+        "profile": "Perfil",
+        "account": "Conta",
+        "security": "Segurança",
+        "overviewContent": "Conteúdo da visão geral",
+        "propertiesContent": "Lista de propriedades",
+        "examplesContent": "Exemplos de uso"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Tabs</strong> — root que controla a tab ativa e a orientação.",
+      "item2": "<strong>TabsList</strong> — container <code>role=\"tablist\"</code> que agrupa os triggers; aceita variante <code>default</code> ou <code>line</code>.",
+      "item3": "<strong>TabsTrigger</strong> — botão <code>role=\"tab\"</code> que ativa o painel correspondente via <code>value</code>.",
+      "item4": "<strong>TabsContent</strong> — painel <code>role=\"tabpanel\"</code> vinculado ao trigger via <code>value</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Tabs defaultValue=\"overview\">\n  <TabsList aria-label=\"Seções\">\n    <TabsTrigger value=\"overview\">Visão geral</TabsTrigger>\n    <TabsTrigger value=\"properties\">Propriedades</TabsTrigger>\n    <TabsTrigger value=\"examples\">Exemplos</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"overview\">Conteúdo da visão geral</TabsContent>\n  <TabsContent value=\"properties\">Lista de propriedades</TabsContent>\n  <TabsContent value=\"examples\">Exemplos de uso</TabsContent>\n</Tabs>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para até 6 views paralelas do mesmo nível — para mais, considere <code>Accordion</code> ou sidebar.",
+        "item2": "Forneça <code>aria-label</code> no <code>TabsList</code> descrevendo o que as tabs representam.",
+        "item3": "Tab ativa deve ter estado visual claramente distinguível — não apenas por cor.",
+        "item4": "Para etapas sequenciais obrigatórias, use <code>Stepper</code> em vez de Tabs."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Visão geral / Propriedades / Exemplos", "u": "Sim", "a": "-" },
+        "item2": { "s": "Etapas sequenciais obrigatórias", "u": "Não", "a": "Stepper" },
+        "item3": { "s": "Conteúdo expansível independente", "u": "Não", "a": "Accordion" },
+        "item4": { "s": "8+ seções com profundidade", "u": "Não", "a": "Sidebar" },
+        "item5": { "s": "Filtros de listagem", "u": "Não", "a": "Filter chips" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "trigger": {
+            "name": "TabsTrigger",
+            "format": "Substantivo curto · máx. 2 palavras · sem ponto",
+            "good": "\"Visão geral\", \"Propriedades\", \"Exemplos\"",
+            "bad": "\"Aba 1\", \"Clique para ver exemplos\""
+          },
+          "ariaLabel": {
+            "name": "TabsList aria-label",
+            "format": "Substantivo que descreve o agrupamento",
+            "good": "\"Seções do componente\", \"Configurações\"",
+            "bad": "\"Tabs\", \"Navegação\""
+          },
+          "order": {
+            "name": "Ordem dos triggers",
+            "format": "Mais usado primeiro · ordem lógica",
+            "good": "Visão geral → Propriedades → Exemplos",
+            "bad": "Ordem aleatória ou alfabética em conteúdo técnico"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Há 2 a 6 views paralelas sem ordem obrigatória",
+        "item2": "O usuário pode alternar livremente entre as seções",
+        "item3": "O conteúdo de cada aba cabe em uma tela sem rolagem extensa",
+        "item4": "As seções têm peso visual e contextual similar"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "São etapas sequenciais obrigatórias — use <code>Stepper</code>",
+        "item2": "Há 8+ seções — use <code>Sidebar</code> ou <code>Accordion</code>",
+        "item3": "O conteúdo deve ser expansível independentemente — use <code>Accordion</code>",
+        "item4": "São filtros de uma lista — use chips ou <code>SegmentedControl</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Use labels curtos e descritivos: \"Visão geral\", \"Propriedades\".",
+        "dont": "Não use \"Aba 1\", \"Aba 2\" — labels genéricos perdem contexto."
+      },
+      "pair2": {
+        "do": "Forneça aria-label no TabsList descrevendo o agrupamento.",
+        "dont": "Não omita o aria-label — leitores de tela ficam sem contexto."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "line": "Line",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "default": "Padrão com fundo <code>muted</code> arredondado e sombra na aba ativa.",
+        "line": "Visual minimalista — <code>variant=\"line\"</code>, sem fundo, linha inferior na aba ativa.",
+        "vertical": "Orientação vertical — <code>orientation=\"vertical\"</code>, lista lateral e conteúdo à direita."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "active": "Active",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "default": "Tab não ativa — texto <code>foreground/60</code>, sem fundo.",
+        "active": "Tab ativa — <code>data-active</code>, fundo <code>background</code>, texto <code>foreground</code>, sombra suave (variant default) ou linha inferior (variant line).",
+        "hover": "Mouse sobre tab inativa — texto <code>foreground</code>.",
+        "focus": "Focada via teclado — anel <code>ring-[3px] ring-ring/50</code>, borda <code>ring</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code> e <code>pointer-events-none</code>."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor da tab ativa (controlado). Use junto com <code>onValueChange</code>."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor inicial não-controlado."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback disparado ao trocar a tab ativa."
+        },
+        "orientation": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "\"horizontal\"",
+          "required": "Não",
+          "description": "Direção da navegação por setas e layout."
+        },
+        "activationMode": {
+          "type": "\"automatic\" | \"manual\"",
+          "default": "\"automatic\"",
+          "required": "Não",
+          "description": "<code>automatic</code>: setas ativam tab imediatamente. <code>manual</code>: setas movem foco, Enter/Space ativa."
+        },
+        "variant": {
+          "type": "\"default\" | \"line\"",
+          "default": "\"default\"",
+          "required": "Não",
+          "description": "Estilo visual do <code>TabsList</code>."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes Tailwind adicionais."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Tabs controladas com analytics\nconst [value, setValue] = useState('overview');\n\n<Tabs\n  value={value}\n  onValueChange={(next) => {\n    track('tab_change', {\n      component: 'tabs',\n      label: tabs.find((t) => t.value === next)?.label,\n      index: tabs.findIndex((t) => t.value === next),\n      total: tabs.length,\n    });\n    setValue(next);\n  }}\n>\n  <TabsList aria-label=\"Seções do componente\">\n    {tabs.map((t) => (\n      <TabsTrigger key={t.value} value={t.value}>{t.label}</TabsTrigger>\n    ))}\n  </TabsList>\n  {tabs.map((t) => (\n    <TabsContent key={t.value} value={t.value}>{t.content}</TabsContent>\n  ))}\n</Tabs>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "muted": { "class": "bg-muted", "part": "Fundo do TabsList (variant default)" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto das tabs inativas (variant default)" },
+        "background": { "class": "bg-background", "part": "Fundo da tab ativa (variant default)" },
+        "foreground": { "class": "text-foreground", "part": "Texto da tab ativa e linha inferior (variant line)" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco no trigger" },
+        "border": { "class": "border-ring", "part": "Borda no estado de foco" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Altura customizada do TabsList */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Cor customizada da linha (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"tablist\"</code> no <code>TabsList</code>",
+        "item2": "<code>role=\"tab\"</code> + <code>aria-selected</code> em cada <code>TabsTrigger</code>",
+        "item3": "<code>role=\"tabpanel\"</code> + <code>aria-controls</code> + <code>aria-labelledby</code> automáticos",
+        "item4": "<code>aria-label</code> no <code>TabsList</code> obrigatório",
+        "item5": "Navegação por setas com roving tabindex — só a tab ativa é focável via Tab",
+        "item6": "Anel de foco visível com <code>ring-[3px] ring-ring/50</code>"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Move foco para a tab ativa ou para o conteúdo",
+        "arrowRight": "Move para a próxima tab (horizontal)",
+        "arrowLeft": "Move para a tab anterior (horizontal)",
+        "arrowDown": "Move para a próxima tab (vertical)",
+        "arrowUp": "Move para a tab anterior (vertical)",
+        "home": "Vai para a primeira tab",
+        "end": "Vai para a última tab",
+        "enter": "Ativa a tab focada (quando <code>activationMode=\"manual\"</code>)",
+        "space": "Ativa a tab focada (quando <code>activationMode=\"manual\"</code>)"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "tablist": "<code>role=\"tablist\"</code> + <code>aria-orientation</code>",
+        "tab": "<code>role=\"tab\"</code> + <code>aria-selected</code> + <code>aria-controls</code>",
+        "tabpanel": "<code>role=\"tabpanel\"</code> + <code>aria-labelledby</code>",
+        "label": "<code>aria-label</code> no <code>TabsList</code> obrigatório"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "list": "Anuncia \"lista de tabs, [aria-label]\" ao entrar",
+        "tab": "Anuncia o label + \"selecionado\" ou \"não selecionado\"",
+        "navigation": "Anuncia tab e posição (\"1 de 3\") ao navegar pelas setas"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "stepper": { "name": "Stepper", "description": "Etapas sequenciais obrigatórias em ordem." },
+        "accordion": { "name": "Accordion", "description": "Conteúdo expansível independente." },
+        "sidebar": { "name": "Sidebar", "description": "Navegação para muitas seções (8+)." },
+        "toggleGroup": { "name": "ToggleGroup", "description": "Filtros visuais segmentados." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>activationMode</strong> — <code>automatic</code> (padrão) ativa ao mover setas; <code>manual</code> exige Enter/Space para ativar.",
+      "item3": "<strong>Roving tabindex</strong> — só a tab ativa é focável via Tab; setas movem entre tabs do grupo.",
+      "item4": "<strong>Variant line</strong> — visual minimalista com linha inferior; útil para sub-navegação dentro de páginas."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "tab_change": {
+          "trigger": "Usuário troca para uma tab diferente",
+          "payload": "{ component: \"tabs\", label, index, total, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Clicar em uma tab", "result": "Ativa a tab e mostra o painel correspondente", "priority": "high" },
+        "item2": { "action": "Pressionar ArrowRight com tab focada", "result": "Move para a próxima tab e ativa (mode automatic)", "priority": "high" },
+        "item3": { "action": "Pressionar Home/End", "result": "Vai para primeira/última tab respectivamente", "priority": "high" },
+        "item4": { "action": "Tab focal vai ao painel", "result": "Próximo Tab move foco para o conteúdo do painel ativo", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto e fundo",
+        "item3": "Focus ring visível com ring-[3px] ring-ring/50",
+        "item4": "role=\"tablist\"/\"tab\"/\"tabpanel\" presentes",
+        "item5": "aria-selected reflete a tab ativa"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Default (3 tabs, primeira ativa)", "priority": "high" },
+        "item2": { "story": "Variant line", "priority": "high" },
+        "item3": { "story": "Vertical (orientation)", "priority": "high" },
+        "item4": { "story": "Com tab disabled", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Tabs",
+    "category": "Navigation",
+    "type": "Component",
+    "description": "Switches between parallel views of the same hierarchy level, with horizontal/vertical orientation and default/line variants.",
+    "seo": {
+      "title": "Tabs — Navigation · Design System",
+      "description": "Tabs documentation: Root, List, Trigger and Content with role=\"tablist\", arrow navigation and WCAG 2.1 AA support.",
+      "aiSummary": "Tabs component with Root, List, Trigger and Content, automatic role=\"tablist\", arrow/Home/End navigation and default/line variants.",
+      "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tablist",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "overview": "Overview",
+        "properties": "Properties",
+        "examples": "Examples",
+        "code": "Code",
+        "preview": "Preview",
+        "settings": "Settings",
+        "profile": "Profile",
+        "account": "Account",
+        "security": "Security",
+        "overviewContent": "Overview content",
+        "propertiesContent": "Property list",
+        "examplesContent": "Usage examples"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Tabs</strong> — root that controls the active tab and orientation.",
+      "item2": "<strong>TabsList</strong> — <code>role=\"tablist\"</code> container grouping triggers; accepts <code>default</code> or <code>line</code> variant.",
+      "item3": "<strong>TabsTrigger</strong> — <code>role=\"tab\"</code> button that activates the corresponding panel via <code>value</code>.",
+      "item4": "<strong>TabsContent</strong> — <code>role=\"tabpanel\"</code> panel linked to trigger via <code>value</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Tabs defaultValue=\"overview\">\n  <TabsList aria-label=\"Sections\">\n    <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n    <TabsTrigger value=\"properties\">Properties</TabsTrigger>\n    <TabsTrigger value=\"examples\">Examples</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"overview\">Overview content</TabsContent>\n  <TabsContent value=\"properties\">Property list</TabsContent>\n  <TabsContent value=\"examples\">Usage examples</TabsContent>\n</Tabs>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for up to 6 parallel views at the same level — for more, consider <code>Accordion</code> or sidebar.",
+        "item2": "Provide <code>aria-label</code> on <code>TabsList</code> describing what the tabs represent.",
+        "item3": "Active tab must have clearly distinguishable visual state — not by color alone.",
+        "item4": "For mandatory sequential steps, use <code>Stepper</code> instead of Tabs."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Overview / Properties / Examples", "u": "Yes", "a": "-" },
+        "item2": { "s": "Mandatory sequential steps", "u": "No", "a": "Stepper" },
+        "item3": { "s": "Independent expandable content", "u": "No", "a": "Accordion" },
+        "item4": { "s": "8+ sections with depth", "u": "No", "a": "Sidebar" },
+        "item5": { "s": "List filters", "u": "No", "a": "Filter chips" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "trigger": {
+            "name": "TabsTrigger",
+            "format": "Short noun · max 2 words · no period",
+            "good": "\"Overview\", \"Properties\", \"Examples\"",
+            "bad": "\"Tab 1\", \"Click to see examples\""
+          },
+          "ariaLabel": {
+            "name": "TabsList aria-label",
+            "format": "Noun describing the grouping",
+            "good": "\"Component sections\", \"Settings\"",
+            "bad": "\"Tabs\", \"Navigation\""
+          },
+          "order": {
+            "name": "Trigger order",
+            "format": "Most used first · logical order",
+            "good": "Overview → Properties → Examples",
+            "bad": "Random or alphabetical order in technical content"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "There are 2 to 6 parallel views without mandatory order",
+        "item2": "User can switch freely between sections",
+        "item3": "Each tab's content fits on screen without extensive scrolling",
+        "item4": "Sections have similar visual and contextual weight"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "They are mandatory sequential steps — use <code>Stepper</code>",
+        "item2": "There are 8+ sections — use <code>Sidebar</code> or <code>Accordion</code>",
+        "item3": "Content should be expandable independently — use <code>Accordion</code>",
+        "item4": "They are list filters — use chips or <code>SegmentedControl</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Use short descriptive labels: \"Overview\", \"Properties\".",
+        "dont": "Don't use \"Tab 1\", \"Tab 2\" — generic labels lose context."
+      },
+      "pair2": {
+        "do": "Provide aria-label on TabsList describing the grouping.",
+        "dont": "Don't omit aria-label — screen readers lose context."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "line": "Line",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "default": "Default with rounded <code>muted</code> background and shadow on active tab.",
+        "line": "Minimalist look — <code>variant=\"line\"</code>, no background, bottom line on active tab.",
+        "vertical": "Vertical orientation — <code>orientation=\"vertical\"</code>, side list and content on right."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "default": "Default",
+        "active": "Active",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "default": "Inactive tab — <code>foreground/60</code> text, no background.",
+        "active": "Active tab — <code>data-active</code>, <code>background</code> fill, <code>foreground</code> text, soft shadow (default variant) or bottom line (line variant).",
+        "hover": "Mouse over inactive tab — <code>foreground</code> text.",
+        "focus": "Keyboard focused — <code>ring-[3px] ring-ring/50</code>, <code>ring</code> border.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code> and <code>pointer-events-none</code>."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Active tab value (controlled). Use with <code>onValueChange</code>."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Initial uncontrolled value."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired when active tab changes."
+        },
+        "orientation": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "\"horizontal\"",
+          "required": "No",
+          "description": "Arrow navigation direction and layout."
+        },
+        "activationMode": {
+          "type": "\"automatic\" | \"manual\"",
+          "default": "\"automatic\"",
+          "required": "No",
+          "description": "<code>automatic</code>: arrows activate tab immediately. <code>manual</code>: arrows move focus, Enter/Space activates."
+        },
+        "variant": {
+          "type": "\"default\" | \"line\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Visual style of <code>TabsList</code>."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Additional Tailwind classes."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Controlled tabs with analytics\nconst [value, setValue] = useState('overview');\n\n<Tabs\n  value={value}\n  onValueChange={(next) => {\n    track('tab_change', {\n      component: 'tabs',\n      label: tabs.find((t) => t.value === next)?.label,\n      index: tabs.findIndex((t) => t.value === next),\n      total: tabs.length,\n    });\n    setValue(next);\n  }}\n>\n  <TabsList aria-label=\"Component sections\">\n    {tabs.map((t) => (\n      <TabsTrigger key={t.value} value={t.value}>{t.label}</TabsTrigger>\n    ))}\n  </TabsList>\n  {tabs.map((t) => (\n    <TabsContent key={t.value} value={t.value}>{t.content}</TabsContent>\n  ))}\n</Tabs>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "muted": { "class": "bg-muted", "part": "TabsList background (default variant)" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Inactive tab text (default variant)" },
+        "background": { "class": "bg-background", "part": "Active tab background (default variant)" },
+        "foreground": { "class": "text-foreground", "part": "Active tab text and bottom line (line variant)" },
+        "ring": { "class": "ring-ring", "part": "Trigger focus ring" },
+        "border": { "class": "border-ring", "part": "Focus state border" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Custom TabsList height */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Custom line color (line variant) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"tablist\"</code> on <code>TabsList</code>",
+        "item2": "<code>role=\"tab\"</code> + <code>aria-selected</code> on each <code>TabsTrigger</code>",
+        "item3": "<code>role=\"tabpanel\"</code> + <code>aria-controls</code> + <code>aria-labelledby</code> automatic",
+        "item4": "<code>aria-label</code> on <code>TabsList</code> required",
+        "item5": "Arrow navigation with roving tabindex — only the active tab is Tab-focusable",
+        "item6": "Visible focus ring with <code>ring-[3px] ring-ring/50</code>"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Moves focus to active tab or to content",
+        "arrowRight": "Moves to next tab (horizontal)",
+        "arrowLeft": "Moves to previous tab (horizontal)",
+        "arrowDown": "Moves to next tab (vertical)",
+        "arrowUp": "Moves to previous tab (vertical)",
+        "home": "Goes to the first tab",
+        "end": "Goes to the last tab",
+        "enter": "Activates focused tab (when <code>activationMode=\"manual\"</code>)",
+        "space": "Activates focused tab (when <code>activationMode=\"manual\"</code>)"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "tablist": "<code>role=\"tablist\"</code> + <code>aria-orientation</code>",
+        "tab": "<code>role=\"tab\"</code> + <code>aria-selected</code> + <code>aria-controls</code>",
+        "tabpanel": "<code>role=\"tabpanel\"</code> + <code>aria-labelledby</code>",
+        "label": "<code>aria-label</code> on <code>TabsList</code> required"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "list": "Announces \"tab list, [aria-label]\" on entry",
+        "tab": "Announces label + \"selected\" or \"not selected\"",
+        "navigation": "Announces tab and position (\"1 of 3\") when navigating with arrows"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "stepper": { "name": "Stepper", "description": "Mandatory sequential ordered steps." },
+        "accordion": { "name": "Accordion", "description": "Independent expandable content." },
+        "sidebar": { "name": "Sidebar", "description": "Navigation for many sections (8+)." },
+        "toggleGroup": { "name": "ToggleGroup", "description": "Segmented visual filters." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>activationMode</strong> — <code>automatic</code> (default) activates on arrow move; <code>manual</code> requires Enter/Space.",
+      "item3": "<strong>Roving tabindex</strong> — only the active tab is Tab-focusable; arrows move between tabs.",
+      "item4": "<strong>Line variant</strong> — minimalist look with bottom line; useful for sub-navigation within pages."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "tab_change": {
+          "trigger": "User switches to a different tab",
+          "payload": "{ component: \"tabs\", label, index, total, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Click a tab", "result": "Activates the tab and shows the corresponding panel", "priority": "high" },
+        "item2": { "action": "Press ArrowRight with tab focused", "result": "Moves to next tab and activates (automatic mode)", "priority": "high" },
+        "item3": { "action": "Press Home/End", "result": "Goes to first/last tab respectively", "priority": "high" },
+        "item4": { "action": "Tab focus to panel", "result": "Next Tab moves focus to active panel content", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 4.5:1 contrast between text and background",
+        "item3": "Visible focus ring with ring-[3px] ring-ring/50",
+        "item4": "role=\"tablist\"/\"tab\"/\"tabpanel\" present",
+        "item5": "aria-selected reflects active tab"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Default (3 tabs, first active)", "priority": "high" },
+        "item2": { "story": "Variant line", "priority": "high" },
+        "item3": { "story": "Vertical (orientation)", "priority": "high" },
+        "item4": { "story": "With disabled tab", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Tabs",
+    "category": "Navegación",
+    "type": "Componente",
+    "description": "Alterna entre vistas paralelas del mismo nivel jerárquico, con orientación horizontal/vertical y variantes default/line.",
+    "seo": {
+      "title": "Tabs — Navegación · Design System",
+      "description": "Documentación de Tabs: Root, List, Trigger y Content con role=\"tablist\", navegación por flechas y soporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Tabs con Root, List, Trigger y Content, role=\"tablist\" automático, navegación por flechas/Home/End y variantes default/line.",
+      "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tablist",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "overview": "Visión general",
+        "properties": "Propiedades",
+        "examples": "Ejemplos",
+        "code": "Código",
+        "preview": "Vista previa",
+        "settings": "Configuración",
+        "profile": "Perfil",
+        "account": "Cuenta",
+        "security": "Seguridad",
+        "overviewContent": "Contenido de la visión general",
+        "propertiesContent": "Lista de propiedades",
+        "examplesContent": "Ejemplos de uso"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Tabs</strong> — root que controla la tab activa y la orientación.",
+      "item2": "<strong>TabsList</strong> — contenedor <code>role=\"tablist\"</code> que agrupa los triggers; acepta variante <code>default</code> o <code>line</code>.",
+      "item3": "<strong>TabsTrigger</strong> — botón <code>role=\"tab\"</code> que activa el panel correspondiente vía <code>value</code>.",
+      "item4": "<strong>TabsContent</strong> — panel <code>role=\"tabpanel\"</code> vinculado al trigger vía <code>value</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Tabs defaultValue=\"overview\">\n  <TabsList aria-label=\"Secciones\">\n    <TabsTrigger value=\"overview\">Visión general</TabsTrigger>\n    <TabsTrigger value=\"properties\">Propiedades</TabsTrigger>\n    <TabsTrigger value=\"examples\">Ejemplos</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"overview\">Contenido de la visión general</TabsContent>\n  <TabsContent value=\"properties\">Lista de propiedades</TabsContent>\n  <TabsContent value=\"examples\">Ejemplos de uso</TabsContent>\n</Tabs>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa para hasta 6 vistas paralelas en el mismo nivel — para más, considera <code>Accordion</code> o sidebar.",
+        "item2": "Provee <code>aria-label</code> en <code>TabsList</code> describiendo lo que las tabs representan.",
+        "item3": "La tab activa debe tener estado visual claramente distinguible — no solo por color.",
+        "item4": "Para etapas secuenciales obligatorias, usa <code>Stepper</code> en vez de Tabs."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Visión general / Propiedades / Ejemplos", "u": "Sí", "a": "-" },
+        "item2": { "s": "Etapas secuenciales obligatorias", "u": "No", "a": "Stepper" },
+        "item3": { "s": "Contenido expandible independiente", "u": "No", "a": "Accordion" },
+        "item4": { "s": "8+ secciones con profundidad", "u": "No", "a": "Sidebar" },
+        "item5": { "s": "Filtros de listado", "u": "No", "a": "Filter chips" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "trigger": {
+            "name": "TabsTrigger",
+            "format": "Sustantivo corto · máx. 2 palabras · sin punto",
+            "good": "\"Visión general\", \"Propiedades\", \"Ejemplos\"",
+            "bad": "\"Pestaña 1\", \"Haz clic para ver ejemplos\""
+          },
+          "ariaLabel": {
+            "name": "TabsList aria-label",
+            "format": "Sustantivo que describe la agrupación",
+            "good": "\"Secciones del componente\", \"Configuración\"",
+            "bad": "\"Tabs\", \"Navegación\""
+          },
+          "order": {
+            "name": "Orden de los triggers",
+            "format": "Más usado primero · orden lógico",
+            "good": "Visión general → Propiedades → Ejemplos",
+            "bad": "Orden aleatorio o alfabético en contenido técnico"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Hay 2 a 6 vistas paralelas sin orden obligatorio",
+        "item2": "El usuario puede alternar libremente entre secciones",
+        "item3": "El contenido de cada tab cabe en una pantalla sin scroll extenso",
+        "item4": "Las secciones tienen peso visual y contextual similar"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Son etapas secuenciales obligatorias — usa <code>Stepper</code>",
+        "item2": "Hay 8+ secciones — usa <code>Sidebar</code> o <code>Accordion</code>",
+        "item3": "El contenido debe ser expandible independientemente — usa <code>Accordion</code>",
+        "item4": "Son filtros de una lista — usa chips o <code>SegmentedControl</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Usa labels cortos y descriptivos: \"Visión general\", \"Propiedades\".",
+        "dont": "No uses \"Pestaña 1\", \"Pestaña 2\" — labels genéricos pierden contexto."
+      },
+      "pair2": {
+        "do": "Provee aria-label en TabsList describiendo la agrupación.",
+        "dont": "No omitas el aria-label — los lectores de pantalla pierden contexto."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "line": "Line",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "default": "Por defecto con fondo <code>muted</code> redondeado y sombra en la tab activa.",
+        "line": "Estilo minimalista — <code>variant=\"line\"</code>, sin fondo, línea inferior en la tab activa.",
+        "vertical": "Orientación vertical — <code>orientation=\"vertical\"</code>, lista lateral y contenido a la derecha."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "active": "Active",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "default": "Tab no activa — texto <code>foreground/60</code>, sin fondo.",
+        "active": "Tab activa — <code>data-active</code>, fondo <code>background</code>, texto <code>foreground</code>, sombra suave (variant default) o línea inferior (variant line).",
+        "hover": "Mouse sobre tab inactiva — texto <code>foreground</code>.",
+        "focus": "Enfocada por teclado — <code>ring-[3px] ring-ring/50</code>, borde <code>ring</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code> y <code>pointer-events-none</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Valor de la tab activa (controlado). Usa con <code>onValueChange</code>."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Valor inicial no controlado."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback disparado al cambiar la tab activa."
+        },
+        "orientation": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "\"horizontal\"",
+          "required": "No",
+          "description": "Dirección de la navegación por flechas y layout."
+        },
+        "activationMode": {
+          "type": "\"automatic\" | \"manual\"",
+          "default": "\"automatic\"",
+          "required": "No",
+          "description": "<code>automatic</code>: las flechas activan la tab inmediatamente. <code>manual</code>: las flechas mueven foco, Enter/Space activa."
+        },
+        "variant": {
+          "type": "\"default\" | \"line\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Estilo visual del <code>TabsList</code>."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases Tailwind adicionales."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Tabs controladas con analytics\nconst [value, setValue] = useState('overview');\n\n<Tabs\n  value={value}\n  onValueChange={(next) => {\n    track('tab_change', {\n      component: 'tabs',\n      label: tabs.find((t) => t.value === next)?.label,\n      index: tabs.findIndex((t) => t.value === next),\n      total: tabs.length,\n    });\n    setValue(next);\n  }}\n>\n  <TabsList aria-label=\"Secciones del componente\">\n    {tabs.map((t) => (\n      <TabsTrigger key={t.value} value={t.value}>{t.label}</TabsTrigger>\n    ))}\n  </TabsList>\n  {tabs.map((t) => (\n    <TabsContent key={t.value} value={t.value}>{t.content}</TabsContent>\n  ))}\n</Tabs>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "muted": { "class": "bg-muted", "part": "Fondo del TabsList (variant default)" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto de las tabs inactivas (variant default)" },
+        "background": { "class": "bg-background", "part": "Fondo de la tab activa (variant default)" },
+        "foreground": { "class": "text-foreground", "part": "Texto de la tab activa y línea inferior (variant line)" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco en el trigger" },
+        "border": { "class": "border-ring", "part": "Borde en el estado de foco" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Altura personalizada del TabsList */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Color personalizado de la línea (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"tablist\"</code> en <code>TabsList</code>",
+        "item2": "<code>role=\"tab\"</code> + <code>aria-selected</code> en cada <code>TabsTrigger</code>",
+        "item3": "<code>role=\"tabpanel\"</code> + <code>aria-controls</code> + <code>aria-labelledby</code> automáticos",
+        "item4": "<code>aria-label</code> en <code>TabsList</code> obligatorio",
+        "item5": "Navegación por flechas con roving tabindex — solo la tab activa es focalizable vía Tab",
+        "item6": "Anillo de foco visible con <code>ring-[3px] ring-ring/50</code>"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Mueve el foco a la tab activa o al contenido",
+        "arrowRight": "Mueve a la siguiente tab (horizontal)",
+        "arrowLeft": "Mueve a la tab anterior (horizontal)",
+        "arrowDown": "Mueve a la siguiente tab (vertical)",
+        "arrowUp": "Mueve a la tab anterior (vertical)",
+        "home": "Va a la primera tab",
+        "end": "Va a la última tab",
+        "enter": "Activa la tab enfocada (cuando <code>activationMode=\"manual\"</code>)",
+        "space": "Activa la tab enfocada (cuando <code>activationMode=\"manual\"</code>)"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "tablist": "<code>role=\"tablist\"</code> + <code>aria-orientation</code>",
+        "tab": "<code>role=\"tab\"</code> + <code>aria-selected</code> + <code>aria-controls</code>",
+        "tabpanel": "<code>role=\"tabpanel\"</code> + <code>aria-labelledby</code>",
+        "label": "<code>aria-label</code> en <code>TabsList</code> obligatorio"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "list": "Anuncia \"lista de tabs, [aria-label]\" al entrar",
+        "tab": "Anuncia el label + \"seleccionado\" o \"no seleccionado\"",
+        "navigation": "Anuncia tab y posición (\"1 de 3\") al navegar con flechas"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "stepper": { "name": "Stepper", "description": "Etapas secuenciales obligatorias en orden." },
+        "accordion": { "name": "Accordion", "description": "Contenido expandible independiente." },
+        "sidebar": { "name": "Sidebar", "description": "Navegación para muchas secciones (8+)." },
+        "toggleGroup": { "name": "ToggleGroup", "description": "Filtros visuales segmentados." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>activationMode</strong> — <code>automatic</code> (por defecto) activa al mover flechas; <code>manual</code> requiere Enter/Space para activar.",
+      "item3": "<strong>Roving tabindex</strong> — solo la tab activa es focalizable vía Tab; las flechas mueven entre tabs del grupo.",
+      "item4": "<strong>Variant line</strong> — estilo minimalista con línea inferior; útil para sub-navegación dentro de páginas."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "tab_change": {
+          "trigger": "El usuario cambia a una tab diferente",
+          "payload": "{ component: \"tabs\", label, index, total, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Hacer clic en una tab", "result": "Activa la tab y muestra el panel correspondiente", "priority": "high" },
+        "item2": { "action": "Pulsar ArrowRight con tab enfocada", "result": "Mueve a la siguiente tab y la activa (modo automatic)", "priority": "high" },
+        "item3": { "action": "Pulsar Home/End", "result": "Va a la primera/última tab respectivamente", "priority": "high" },
+        "item4": { "action": "Tab desde el foco va al panel", "result": "El siguiente Tab mueve el foco al contenido del panel activo", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto y fondo",
+        "item3": "Anillo de foco visible con ring-[3px] ring-ring/50",
+        "item4": "role=\"tablist\"/\"tab\"/\"tabpanel\" presentes",
+        "item5": "aria-selected refleja la tab activa"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Default (3 tabs, primera activa)", "priority": "high" },
+        "item2": { "story": "Variant line", "priority": "high" },
+        "item3": { "story": "Vertical (orientation)", "priority": "high" },
+        "item4": { "story": "Con tab disabled", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
