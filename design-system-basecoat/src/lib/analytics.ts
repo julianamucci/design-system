@@ -56,6 +56,14 @@ interface AnalyticsEvents {
     label?: string;
     location?: string;
   };
+  /** Disparado ao trocar a tab ativa do componente Tabs. */
+  tab_change: {
+    component: 'tabs';
+    label?: string;
+    index?: number;
+    total?: number;
+    location?: string;
+  };
   accordion_collapse: {
     component: string;
     label?: string;
