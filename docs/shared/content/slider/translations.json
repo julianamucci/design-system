@@ -1,0 +1,1025 @@
+{
+  "pt-BR": {
+    "title": "Slider",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Seleção de valor numérico em uma faixa contínua via arrasto ou teclado, com suporte a range (dois thumbs) e orientação horizontal/vertical.",
+    "seo": {
+      "title": "Slider — Formulário · Design System",
+      "description": "Documentação do Slider: Root, Track, Range e Thumb com role=\"slider\", navegação por teclado e suporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Slider com Root, Track, Range e Thumb, role=\"slider\" automático, navegação por teclado (setas, Home, End, PgUp, PgDn) e suporte a single/range.",
+      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role slider",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "volume": "Volume",
+        "brightness": "Brilho",
+        "priceRange": "Faixa de preço",
+        "single": "Único valor",
+        "range": "Intervalo",
+        "vertical": "Vertical"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Slider</strong> — root com <code>role=\"group\"</code> que controla valores e orientação.",
+      "item2": "<strong>SliderControl</strong> — wrapper de interação que captura arrasto e teclado.",
+      "item3": "<strong>SliderTrack</strong> — trilha de fundo sobre a qual o range se preenche.",
+      "item4": "<strong>SliderRange</strong> (Indicator) — segmento preenchido entre os thumbs.",
+      "item5": "<strong>SliderThumb</strong> — pegador individual com <code>role=\"slider\"</code> e <code>aria-valuenow</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Slider\n  value={[50]}\n  onValueChange={setValue}\n  min={0}\n  max={100}\n  step={1}\n  aria-label=\"Volume\"\n/>\n\n{/* Range (dois thumbs) */}\n<Slider\n  value={[20, 80]}\n  onValueChange={setRange}\n  min={0}\n  max={100}\n/>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para valores numéricos contínuos onde a granularidade exata não importa.",
+        "item2": "Forneça <code>aria-label</code> ou <code>aria-labelledby</code> descrevendo o valor controlado.",
+        "item3": "Mostre o valor atual textualmente próximo ao slider — usuários precisam confirmar.",
+        "item4": "Para input exato de número, use <code>Input type=\"number\"</code> em vez de Slider."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Volume, brilho, opacidade", "u": "Sim", "a": "-" },
+        "item2": { "s": "Faixa de preço (min/max)", "u": "Sim, range", "a": "-" },
+        "item3": { "s": "Valor exato (ex: idade)", "u": "Não", "a": "Input type=\"number\"" },
+        "item4": { "s": "Seleção de 2-3 opções discretas", "u": "Não", "a": "RadioGroup ou ToggleGroup" },
+        "item5": { "s": "Boolean (ligado/desligado)", "u": "Não", "a": "Switch" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "ariaLabel": {
+            "name": "aria-label",
+            "format": "Substantivo que descreve o valor · sem unidade",
+            "good": "\"Volume\", \"Brilho\", \"Faixa de preço\"",
+            "bad": "\"Slider\", \"Controle\""
+          },
+          "valueDisplay": {
+            "name": "Texto adjacente do valor",
+            "format": "Número + unidade · próximo ao slider",
+            "good": "\"75%\", \"R$ 100\"",
+            "bad": "\"valor atual\" sem o número"
+          },
+          "range": {
+            "name": "Range (dois thumbs)",
+            "format": "Min e Max separados por travessão",
+            "good": "\"R$ 50 — R$ 200\"",
+            "bad": "\"de 50 até 200\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O valor é contínuo e a granularidade exata é secundária",
+        "item2": "Visualizar a posição na faixa é importante para o usuário",
+        "item3": "O usuário precisa selecionar uma faixa (min/max)",
+        "item4": "A interação tátil/visual é mais intuitiva que digitar"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "O usuário precisa inserir valor exato — use <code>Input type=\"number\"</code>",
+        "item2": "São 2-3 opções discretas — use <code>RadioGroup</code> ou <code>ToggleGroup</code>",
+        "item3": "É boolean (on/off) — use <code>Switch</code>",
+        "item4": "A faixa é muito ampla (1-10000) e exige precisão — combine Input + Slider"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Exiba o valor numérico ao lado do slider.",
+        "dont": "Não deixe o valor invisível — usuário não sabe onde está."
+      },
+      "pair2": {
+        "do": "Forneça aria-label descritivo.",
+        "dont": "Não use aria-label genérico como \"Slider\"."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "single": "Single",
+        "range": "Range",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "single": "Um único thumb — <code>value={[50]}</code>, controla um valor.",
+        "range": "Dois thumbs — <code>value={[20, 80]}</code>, controla min e max.",
+        "vertical": "Orientação vertical — <code>orientation=\"vertical\"</code> + altura definida no pai."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "hover": "Hover",
+        "focus": "Focus",
+        "active": "Active",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "default": "Estado padrão — thumb branco com borda <code>ring</code>, track <code>muted</code>, range <code>primary</code>.",
+        "hover": "Mouse sobre o thumb — anel <code>ring-3 ring-ring/50</code>.",
+        "focus": "Focado via teclado — mesmo anel hover; setas/Home/End/PgUp/PgDn alteram valor.",
+        "active": "Em arrasto — anel <code>ring-3</code> permanece; cursor segue o thumb.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code>, sem pointer events."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "value": {
+          "type": "number[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor(es) controlado(s). Array com 1 item para single, 2 para range."
+        },
+        "defaultValue": {
+          "type": "number[]",
+          "default": "[min, max]",
+          "required": "Não",
+          "description": "Valor(es) inicial(is) não-controlado(s)."
+        },
+        "onValueChange": {
+          "type": "(value: number[]) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback disparado durante o arrasto."
+        },
+        "onValueCommitted": {
+          "type": "(value: number[]) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback disparado ao soltar (drag end ou keyup). Use para analytics/submit."
+        },
+        "min": {
+          "type": "number",
+          "default": "0",
+          "required": "Não",
+          "description": "Valor mínimo da faixa."
+        },
+        "max": {
+          "type": "number",
+          "default": "100",
+          "required": "Não",
+          "description": "Valor máximo da faixa."
+        },
+        "step": {
+          "type": "number",
+          "default": "1",
+          "required": "Não",
+          "description": "Incremento por seta de teclado e granularidade do arrasto."
+        },
+        "orientation": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "\"horizontal\"",
+          "required": "Não",
+          "description": "Direção do slider. Vertical exige altura definida no container."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Desabilita todos os thumbs."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Slider controlado com formatador de valor\nconst [value, setValue] = useState([50]);\n\n<div className=\"space-y-3\">\n  <div className=\"flex items-center justify-between\">\n    <Label>Volume</Label>\n    <span aria-live=\"polite\" className=\"text-sm tabular-nums\">{value[0]}%</span>\n  </div>\n  <Slider\n    value={value}\n    onValueChange={setValue}\n    min={0}\n    max={100}\n    step={1}\n    aria-label=\"Volume\"\n  />\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "muted": { "class": "bg-muted", "part": "Fundo do SliderTrack" },
+        "primary": { "class": "bg-primary", "part": "Cor do SliderRange (segmento preenchido)" },
+        "ring": { "class": "border-ring / ring-ring", "part": "Borda do Thumb e anel de foco" },
+        "background": { "class": "bg-white", "part": "Fundo do Thumb" },
+        "foreground": { "class": "text-foreground", "part": "Texto do valor adjacente" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto do Label opcional" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Tamanho customizado do Thumb */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Cor customizada do Range */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"slider\"</code> em cada Thumb",
+        "item2": "<code>aria-valuenow</code>, <code>aria-valuemin</code>, <code>aria-valuemax</code> derivados",
+        "item3": "<code>aria-label</code> ou <code>aria-labelledby</code> obrigatório",
+        "item4": "WCAG 2.5.7 atendido — todo arrasto tem equivalente por teclado",
+        "item5": "Anel de foco visível com <code>ring-3 ring-ring/50</code>",
+        "item6": "<code>aria-live=\"polite\"</code> no texto do valor anuncia mudanças"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Move foco entre thumbs (range) ou para o próximo elemento",
+        "arrowRight": "Incrementa em <code>step</code> (horizontal)",
+        "arrowLeft": "Decrementa em <code>step</code> (horizontal)",
+        "arrowUp": "Incrementa em <code>step</code> (vertical) ou +step",
+        "arrowDown": "Decrementa em <code>step</code> (vertical) ou -step",
+        "home": "Vai para o <code>min</code>",
+        "end": "Vai para o <code>max</code>",
+        "pageUp": "Incrementa em 10× step",
+        "pageDown": "Decrementa em 10× step"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"slider\"</code> em cada Thumb; <code>role=\"group\"</code> no Root",
+        "valuenow": "<code>aria-valuenow</code> reflete o valor atual",
+        "valuemin": "<code>aria-valuemin</code> reflete o <code>min</code>",
+        "valuemax": "<code>aria-valuemax</code> reflete o <code>max</code>",
+        "orientation": "<code>aria-orientation</code> reflete a <code>orientation</code>",
+        "label": "<code>aria-label</code> descritivo obrigatório"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "thumb": "Anuncia \"slider, [aria-label], [valor]\" ao focar",
+        "change": "Anuncia o novo valor ao mover com setas",
+        "limits": "Anuncia \"valor mínimo\" ou \"valor máximo\" ao atingir limites"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "input": { "name": "Input", "description": "Use para valor numérico exato." },
+        "switch": { "name": "Switch", "description": "Toggle on/off de configuração." },
+        "progress": { "name": "Progress", "description": "Indicador passivo de progresso (não interativo)." },
+        "radioGroup": { "name": "RadioGroup", "description": "Seleção de opções discretas (2-7)." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Array de valores</strong> — <code>value</code> e <code>defaultValue</code> são sempre arrays, mesmo para single (<code>[50]</code>).",
+      "item3": "<strong>onValueChange vs onValueCommitted</strong> — o primeiro dispara durante arrasto; use o segundo para analytics e submit para evitar spam.",
+      "item4": "<strong>Vertical</strong> — precisa de altura definida no container (<code>h-40</code> ou similar)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "slider_change": {
+          "trigger": "Valor commitado (drag end ou keyup) — use <code>onValueCommitted</code>",
+          "payload": "{ component: \"slider\", field_name, value, min, max, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Clicar e arrastar o Thumb", "result": "Valor atualiza em tempo real (onValueChange)", "priority": "high" },
+        "item2": { "action": "Soltar o Thumb", "result": "Dispara onValueCommitted com o valor final", "priority": "high" },
+        "item3": { "action": "Pressionar ArrowRight com Thumb focado", "result": "Incrementa em step", "priority": "high" },
+        "item4": { "action": "Pressionar Home/End", "result": "Vai para min/max respectivamente", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 3:1 entre Thumb e fundo",
+        "item3": "Focus ring visível no Thumb",
+        "item4": "role=\"slider\" em cada Thumb",
+        "item5": "aria-label descritivo presente"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Single (value=50)", "priority": "high" },
+        "item2": { "story": "Range (value=[20, 80])", "priority": "high" },
+        "item3": { "story": "Vertical", "priority": "high" },
+        "item4": { "story": "Disabled", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Slider",
+    "category": "Form",
+    "type": "Component",
+    "description": "Numeric value selection on a continuous range via drag or keyboard, with range (two thumbs) and horizontal/vertical orientation support.",
+    "seo": {
+      "title": "Slider — Form · Design System",
+      "description": "Slider documentation: Root, Track, Range and Thumb with role=\"slider\", keyboard navigation and WCAG 2.1 AA support.",
+      "aiSummary": "Slider component with Root, Track, Range and Thumb, automatic role=\"slider\", keyboard navigation (arrows, Home, End, PgUp, PgDn) and single/range support.",
+      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role slider",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "volume": "Volume",
+        "brightness": "Brightness",
+        "priceRange": "Price range",
+        "single": "Single value",
+        "range": "Range",
+        "vertical": "Vertical"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Slider</strong> — root with <code>role=\"group\"</code> controlling values and orientation.",
+      "item2": "<strong>SliderControl</strong> — interaction wrapper capturing drag and keyboard.",
+      "item3": "<strong>SliderTrack</strong> — background track over which the range fills.",
+      "item4": "<strong>SliderRange</strong> (Indicator) — filled segment between thumbs.",
+      "item5": "<strong>SliderThumb</strong> — individual grabber with <code>role=\"slider\"</code> and <code>aria-valuenow</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Slider\n  value={[50]}\n  onValueChange={setValue}\n  min={0}\n  max={100}\n  step={1}\n  aria-label=\"Volume\"\n/>\n\n{/* Range (two thumbs) */}\n<Slider\n  value={[20, 80]}\n  onValueChange={setRange}\n  min={0}\n  max={100}\n/>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for continuous numeric values where exact granularity doesn't matter.",
+        "item2": "Provide <code>aria-label</code> or <code>aria-labelledby</code> describing the controlled value.",
+        "item3": "Display the current value textually near the slider — users need to confirm.",
+        "item4": "For exact number input, use <code>Input type=\"number\"</code> instead of Slider."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Volume, brightness, opacity", "u": "Yes", "a": "-" },
+        "item2": { "s": "Price range (min/max)", "u": "Yes, range", "a": "-" },
+        "item3": { "s": "Exact value (e.g. age)", "u": "No", "a": "Input type=\"number\"" },
+        "item4": { "s": "Selection of 2-3 discrete options", "u": "No", "a": "RadioGroup or ToggleGroup" },
+        "item5": { "s": "Boolean (on/off)", "u": "No", "a": "Switch" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "ariaLabel": {
+            "name": "aria-label",
+            "format": "Noun describing the value · no unit",
+            "good": "\"Volume\", \"Brightness\", \"Price range\"",
+            "bad": "\"Slider\", \"Control\""
+          },
+          "valueDisplay": {
+            "name": "Adjacent value text",
+            "format": "Number + unit · near the slider",
+            "good": "\"75%\", \"$100\"",
+            "bad": "\"current value\" without the number"
+          },
+          "range": {
+            "name": "Range (two thumbs)",
+            "format": "Min and Max separated by em-dash",
+            "good": "\"$50 — $200\"",
+            "bad": "\"from 50 to 200\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The value is continuous and exact granularity is secondary",
+        "item2": "Visualizing position on the range matters to the user",
+        "item3": "The user needs to select a range (min/max)",
+        "item4": "Tactile/visual interaction is more intuitive than typing"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "User needs to input an exact value — use <code>Input type=\"number\"</code>",
+        "item2": "There are 2-3 discrete options — use <code>RadioGroup</code> or <code>ToggleGroup</code>",
+        "item3": "It's boolean (on/off) — use <code>Switch</code>",
+        "item4": "Range is very wide (1-10000) and requires precision — combine Input + Slider"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Display the numeric value next to the slider.",
+        "dont": "Don't leave the value invisible — user doesn't know where they are."
+      },
+      "pair2": {
+        "do": "Provide descriptive aria-label.",
+        "dont": "Don't use generic aria-label like \"Slider\"."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "single": "Single",
+        "range": "Range",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "single": "Single thumb — <code>value={[50]}</code>, controls one value.",
+        "range": "Two thumbs — <code>value={[20, 80]}</code>, controls min and max.",
+        "vertical": "Vertical orientation — <code>orientation=\"vertical\"</code> + height defined on parent."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "default": "Default",
+        "hover": "Hover",
+        "focus": "Focus",
+        "active": "Active",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "default": "Default state — white thumb with <code>ring</code> border, <code>muted</code> track, <code>primary</code> range.",
+        "hover": "Mouse over thumb — <code>ring-3 ring-ring/50</code>.",
+        "focus": "Keyboard focused — same hover ring; arrows/Home/End/PgUp/PgDn change value.",
+        "active": "While dragging — <code>ring-3</code> remains; cursor follows thumb.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code>, no pointer events."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "value": {
+          "type": "number[]",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled value(s). Array with 1 item for single, 2 for range."
+        },
+        "defaultValue": {
+          "type": "number[]",
+          "default": "[min, max]",
+          "required": "No",
+          "description": "Initial uncontrolled value(s)."
+        },
+        "onValueChange": {
+          "type": "(value: number[]) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired during drag."
+        },
+        "onValueCommitted": {
+          "type": "(value: number[]) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired on release (drag end or keyup). Use for analytics/submit."
+        },
+        "min": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Minimum value of the range."
+        },
+        "max": {
+          "type": "number",
+          "default": "100",
+          "required": "No",
+          "description": "Maximum value of the range."
+        },
+        "step": {
+          "type": "number",
+          "default": "1",
+          "required": "No",
+          "description": "Increment per arrow key and drag granularity."
+        },
+        "orientation": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "\"horizontal\"",
+          "required": "No",
+          "description": "Slider direction. Vertical requires defined height on container."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Disables all thumbs."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Controlled Slider with value formatter\nconst [value, setValue] = useState([50]);\n\n<div className=\"space-y-3\">\n  <div className=\"flex items-center justify-between\">\n    <Label>Volume</Label>\n    <span aria-live=\"polite\" className=\"text-sm tabular-nums\">{value[0]}%</span>\n  </div>\n  <Slider\n    value={value}\n    onValueChange={setValue}\n    min={0}\n    max={100}\n    step={1}\n    aria-label=\"Volume\"\n  />\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "muted": { "class": "bg-muted", "part": "SliderTrack background" },
+        "primary": { "class": "bg-primary", "part": "SliderRange color (filled segment)" },
+        "ring": { "class": "border-ring / ring-ring", "part": "Thumb border and focus ring" },
+        "background": { "class": "bg-white", "part": "Thumb background" },
+        "foreground": { "class": "text-foreground", "part": "Adjacent value text" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Optional Label text" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Custom Thumb size */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Custom Range color */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"slider\"</code> on each Thumb",
+        "item2": "<code>aria-valuenow</code>, <code>aria-valuemin</code>, <code>aria-valuemax</code> derived",
+        "item3": "<code>aria-label</code> or <code>aria-labelledby</code> required",
+        "item4": "WCAG 2.5.7 met — every drag has keyboard equivalent",
+        "item5": "Visible focus ring with <code>ring-3 ring-ring/50</code>",
+        "item6": "<code>aria-live=\"polite\"</code> on value text announces changes"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Moves focus between thumbs (range) or to next element",
+        "arrowRight": "Increments by <code>step</code> (horizontal)",
+        "arrowLeft": "Decrements by <code>step</code> (horizontal)",
+        "arrowUp": "Increments by <code>step</code> (vertical) or +step",
+        "arrowDown": "Decrements by <code>step</code> (vertical) or -step",
+        "home": "Goes to <code>min</code>",
+        "end": "Goes to <code>max</code>",
+        "pageUp": "Increments by 10× step",
+        "pageDown": "Decrements by 10× step"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "role": "<code>role=\"slider\"</code> on each Thumb; <code>role=\"group\"</code> on Root",
+        "valuenow": "<code>aria-valuenow</code> reflects current value",
+        "valuemin": "<code>aria-valuemin</code> reflects <code>min</code>",
+        "valuemax": "<code>aria-valuemax</code> reflects <code>max</code>",
+        "orientation": "<code>aria-orientation</code> reflects <code>orientation</code>",
+        "label": "Descriptive <code>aria-label</code> required"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "thumb": "Announces \"slider, [aria-label], [value]\" on focus",
+        "change": "Announces new value when moving with arrows",
+        "limits": "Announces \"minimum value\" or \"maximum value\" at limits"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "input": { "name": "Input", "description": "Use for exact numeric value." },
+        "switch": { "name": "Switch", "description": "On/off toggle setting." },
+        "progress": { "name": "Progress", "description": "Passive progress indicator (non-interactive)." },
+        "radioGroup": { "name": "RadioGroup", "description": "Selection of discrete options (2-7)." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>Value array</strong> — <code>value</code> and <code>defaultValue</code> are always arrays, even for single (<code>[50]</code>).",
+      "item3": "<strong>onValueChange vs onValueCommitted</strong> — first fires during drag; use the second for analytics and submit to avoid spam.",
+      "item4": "<strong>Vertical</strong> — requires defined height on container (<code>h-40</code> or similar)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "slider_change": {
+          "trigger": "Value committed (drag end or keyup) — use <code>onValueCommitted</code>",
+          "payload": "{ component: \"slider\", field_name, value, min, max, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Click and drag the Thumb", "result": "Value updates in real time (onValueChange)", "priority": "high" },
+        "item2": { "action": "Release the Thumb", "result": "Fires onValueCommitted with final value", "priority": "high" },
+        "item3": { "action": "Press ArrowRight with Thumb focused", "result": "Increments by step", "priority": "high" },
+        "item4": { "action": "Press Home/End", "result": "Goes to min/max respectively", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 3:1 contrast between Thumb and background",
+        "item3": "Visible focus ring on Thumb",
+        "item4": "role=\"slider\" on each Thumb",
+        "item5": "Descriptive aria-label present"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Single (value=50)", "priority": "high" },
+        "item2": { "story": "Range (value=[20, 80])", "priority": "high" },
+        "item3": { "story": "Vertical", "priority": "high" },
+        "item4": { "story": "Disabled", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Slider",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Selección de valor numérico en un rango continuo vía arrastre o teclado, con soporte para range (dos thumbs) y orientación horizontal/vertical.",
+    "seo": {
+      "title": "Slider — Formulario · Design System",
+      "description": "Documentación de Slider: Root, Track, Range y Thumb con role=\"slider\", navegación por teclado y soporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Slider con Root, Track, Range y Thumb, role=\"slider\" automático, navegación por teclado (flechas, Home, End, PgUp, PgDn) y soporte single/range.",
+      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role slider",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "volume": "Volumen",
+        "brightness": "Brillo",
+        "priceRange": "Rango de precio",
+        "single": "Valor único",
+        "range": "Intervalo",
+        "vertical": "Vertical"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Slider</strong> — root con <code>role=\"group\"</code> que controla valores y orientación.",
+      "item2": "<strong>SliderControl</strong> — wrapper de interacción que captura arrastre y teclado.",
+      "item3": "<strong>SliderTrack</strong> — pista de fondo sobre la que se llena el range.",
+      "item4": "<strong>SliderRange</strong> (Indicator) — segmento lleno entre los thumbs.",
+      "item5": "<strong>SliderThumb</strong> — agarre individual con <code>role=\"slider\"</code> y <code>aria-valuenow</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Slider\n  value={[50]}\n  onValueChange={setValue}\n  min={0}\n  max={100}\n  step={1}\n  aria-label=\"Volumen\"\n/>\n\n{/* Range (dos thumbs) */}\n<Slider\n  value={[20, 80]}\n  onValueChange={setRange}\n  min={0}\n  max={100}\n/>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa para valores numéricos continuos donde la granularidad exacta no importa.",
+        "item2": "Provee <code>aria-label</code> o <code>aria-labelledby</code> describiendo el valor controlado.",
+        "item3": "Muestra el valor actual textualmente cerca del slider — los usuarios necesitan confirmar.",
+        "item4": "Para input exacto de número, usa <code>Input type=\"number\"</code> en vez de Slider."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Volumen, brillo, opacidad", "u": "Sí", "a": "-" },
+        "item2": { "s": "Rango de precio (min/max)", "u": "Sí, range", "a": "-" },
+        "item3": { "s": "Valor exacto (ej. edad)", "u": "No", "a": "Input type=\"number\"" },
+        "item4": { "s": "Selección de 2-3 opciones discretas", "u": "No", "a": "RadioGroup o ToggleGroup" },
+        "item5": { "s": "Boolean (encendido/apagado)", "u": "No", "a": "Switch" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "ariaLabel": {
+            "name": "aria-label",
+            "format": "Sustantivo que describe el valor · sin unidad",
+            "good": "\"Volumen\", \"Brillo\", \"Rango de precio\"",
+            "bad": "\"Slider\", \"Control\""
+          },
+          "valueDisplay": {
+            "name": "Texto adyacente del valor",
+            "format": "Número + unidad · cerca del slider",
+            "good": "\"75%\", \"$100\"",
+            "bad": "\"valor actual\" sin el número"
+          },
+          "range": {
+            "name": "Range (dos thumbs)",
+            "format": "Min y Max separados por raya",
+            "good": "\"$50 — $200\"",
+            "bad": "\"de 50 a 200\""
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "El valor es continuo y la granularidad exacta es secundaria",
+        "item2": "Visualizar la posición en el rango es importante para el usuario",
+        "item3": "El usuario necesita seleccionar un rango (min/max)",
+        "item4": "La interacción táctil/visual es más intuitiva que escribir"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El usuario necesita ingresar valor exacto — usa <code>Input type=\"number\"</code>",
+        "item2": "Son 2-3 opciones discretas — usa <code>RadioGroup</code> o <code>ToggleGroup</code>",
+        "item3": "Es boolean (on/off) — usa <code>Switch</code>",
+        "item4": "El rango es muy amplio (1-10000) y exige precisión — combina Input + Slider"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Muestra el valor numérico al lado del slider.",
+        "dont": "No dejes el valor invisible — el usuario no sabe dónde está."
+      },
+      "pair2": {
+        "do": "Provee aria-label descriptivo.",
+        "dont": "No uses aria-label genérico como \"Slider\"."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "single": "Single",
+        "range": "Range",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "single": "Un único thumb — <code>value={[50]}</code>, controla un valor.",
+        "range": "Dos thumbs — <code>value={[20, 80]}</code>, controla min y max.",
+        "vertical": "Orientación vertical — <code>orientation=\"vertical\"</code> + altura definida en el padre."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "hover": "Hover",
+        "focus": "Focus",
+        "active": "Active",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "default": "Estado por defecto — thumb blanco con borde <code>ring</code>, track <code>muted</code>, range <code>primary</code>.",
+        "hover": "Mouse sobre el thumb — <code>ring-3 ring-ring/50</code>.",
+        "focus": "Enfocado por teclado — mismo anillo de hover; flechas/Home/End/PgUp/PgDn cambian el valor.",
+        "active": "Durante arrastre — <code>ring-3</code> se mantiene; cursor sigue al thumb.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code>, sin pointer events."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "value": {
+          "type": "number[]",
+          "default": "—",
+          "required": "No",
+          "description": "Valor(es) controlado(s). Array con 1 ítem para single, 2 para range."
+        },
+        "defaultValue": {
+          "type": "number[]",
+          "default": "[min, max]",
+          "required": "No",
+          "description": "Valor(es) inicial(es) no controlado(s)."
+        },
+        "onValueChange": {
+          "type": "(value: number[]) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback disparado durante el arrastre."
+        },
+        "onValueCommitted": {
+          "type": "(value: number[]) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback disparado al soltar (drag end o keyup). Usa para analytics/submit."
+        },
+        "min": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Valor mínimo del rango."
+        },
+        "max": {
+          "type": "number",
+          "default": "100",
+          "required": "No",
+          "description": "Valor máximo del rango."
+        },
+        "step": {
+          "type": "number",
+          "default": "1",
+          "required": "No",
+          "description": "Incremento por flecha de teclado y granularidad del arrastre."
+        },
+        "orientation": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "\"horizontal\"",
+          "required": "No",
+          "description": "Dirección del slider. Vertical exige altura definida en el contenedor."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Deshabilita todos los thumbs."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Slider controlado con formateador de valor\nconst [value, setValue] = useState([50]);\n\n<div className=\"space-y-3\">\n  <div className=\"flex items-center justify-between\">\n    <Label>Volumen</Label>\n    <span aria-live=\"polite\" className=\"text-sm tabular-nums\">{value[0]}%</span>\n  </div>\n  <Slider\n    value={value}\n    onValueChange={setValue}\n    min={0}\n    max={100}\n    step={1}\n    aria-label=\"Volumen\"\n  />\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "muted": { "class": "bg-muted", "part": "Fondo del SliderTrack" },
+        "primary": { "class": "bg-primary", "part": "Color del SliderRange (segmento lleno)" },
+        "ring": { "class": "border-ring / ring-ring", "part": "Borde del Thumb y anillo de foco" },
+        "background": { "class": "bg-white", "part": "Fondo del Thumb" },
+        "foreground": { "class": "text-foreground", "part": "Texto del valor adyacente" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto del Label opcional" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Tamaño personalizado del Thumb */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Color personalizado del Range */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"slider\"</code> en cada Thumb",
+        "item2": "<code>aria-valuenow</code>, <code>aria-valuemin</code>, <code>aria-valuemax</code> derivados",
+        "item3": "<code>aria-label</code> o <code>aria-labelledby</code> obligatorio",
+        "item4": "WCAG 2.5.7 cumplido — todo arrastre tiene equivalente por teclado",
+        "item5": "Anillo de foco visible con <code>ring-3 ring-ring/50</code>",
+        "item6": "<code>aria-live=\"polite\"</code> en el texto del valor anuncia cambios"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Mueve el foco entre thumbs (range) o al siguiente elemento",
+        "arrowRight": "Incrementa en <code>step</code> (horizontal)",
+        "arrowLeft": "Decrementa en <code>step</code> (horizontal)",
+        "arrowUp": "Incrementa en <code>step</code> (vertical) o +step",
+        "arrowDown": "Decrementa en <code>step</code> (vertical) o -step",
+        "home": "Va al <code>min</code>",
+        "end": "Va al <code>max</code>",
+        "pageUp": "Incrementa en 10× step",
+        "pageDown": "Decrementa en 10× step"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"slider\"</code> en cada Thumb; <code>role=\"group\"</code> en el Root",
+        "valuenow": "<code>aria-valuenow</code> refleja el valor actual",
+        "valuemin": "<code>aria-valuemin</code> refleja el <code>min</code>",
+        "valuemax": "<code>aria-valuemax</code> refleja el <code>max</code>",
+        "orientation": "<code>aria-orientation</code> refleja la <code>orientation</code>",
+        "label": "<code>aria-label</code> descriptivo obligatorio"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "thumb": "Anuncia \"slider, [aria-label], [valor]\" al enfocar",
+        "change": "Anuncia el nuevo valor al moverse con flechas",
+        "limits": "Anuncia \"valor mínimo\" o \"valor máximo\" al alcanzar los límites"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "input": { "name": "Input", "description": "Usa para valor numérico exacto." },
+        "switch": { "name": "Switch", "description": "Toggle on/off de configuración." },
+        "progress": { "name": "Progress", "description": "Indicador pasivo de progreso (no interactivo)." },
+        "radioGroup": { "name": "RadioGroup", "description": "Selección de opciones discretas (2-7)." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Array de valores</strong> — <code>value</code> y <code>defaultValue</code> son siempre arrays, incluso para single (<code>[50]</code>).",
+      "item3": "<strong>onValueChange vs onValueCommitted</strong> — el primero dispara durante arrastre; usa el segundo para analytics y submit para evitar spam.",
+      "item4": "<strong>Vertical</strong> — requiere altura definida en el contenedor (<code>h-40</code> o similar)."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "slider_change": {
+          "trigger": "Valor confirmado (drag end o keyup) — usa <code>onValueCommitted</code>",
+          "payload": "{ component: \"slider\", field_name, value, min, max, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Hacer clic y arrastrar el Thumb", "result": "El valor se actualiza en tiempo real (onValueChange)", "priority": "high" },
+        "item2": { "action": "Soltar el Thumb", "result": "Dispara onValueCommitted con el valor final", "priority": "high" },
+        "item3": { "action": "Pulsar ArrowRight con Thumb enfocado", "result": "Incrementa en step", "priority": "high" },
+        "item4": { "action": "Pulsar Home/End", "result": "Va a min/max respectivamente", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 3:1 entre Thumb y fondo",
+        "item3": "Anillo de foco visible en el Thumb",
+        "item4": "role=\"slider\" en cada Thumb",
+        "item5": "aria-label descriptivo presente"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Single (value=50)", "priority": "high" },
+        "item2": { "story": "Range (value=[20, 80])", "priority": "high" },
+        "item3": { "story": "Vertical", "priority": "high" },
+        "item4": { "story": "Disabled", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
