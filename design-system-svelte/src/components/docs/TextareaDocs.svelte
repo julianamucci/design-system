@@ -505,6 +505,8 @@ interface TextareaProps extends HTMLTextareaAttributes {
     }}
     items={[
       { event: 'field_blur', trigger: $tStore('analytics.table.field_blur.trigger'), payload: $tStore('analytics.table.field_blur.payload') },
+      { event: 'docs_page_view', trigger: $locale === 'en' ? 'Page mount per locale' : $locale === 'es' ? 'Montaje de página por locale' : 'Mount da página por locale', payload: '{ component_name: "textarea", locale, page_title }' },
+      { event: 'docs_section_viewed', trigger: $locale === 'en' ? 'Section enters viewport' : $locale === 'es' ? 'La sección entra al viewport' : 'Seção entra no viewport', payload: '{ component_name: "textarea", section_id, locale }' },
     ]}
   />
 

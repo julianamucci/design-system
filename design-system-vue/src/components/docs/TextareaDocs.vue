@@ -239,6 +239,17 @@ const variantItems = computed(() => [
   { name: stripHtml(tContent('variants.items.noResize')),    description: stripHtml(tContent('variants.styles.noResize')),    code: codeNoResize    },
 ]);
 
+const stateCols = computed(() => ({
+  state: locale.value === 'en' ? 'State' : 'Estado',
+  trigger: locale.value === 'en' ? 'Trigger' : locale.value === 'es' ? 'Disparador' : 'Disparo',
+  behavior:
+    locale.value === 'en'
+      ? 'Behavior'
+      : locale.value === 'es'
+      ? 'Comportamiento'
+      : 'Comportamento',
+}));
+
 const stateItems = computed(() => [
   { label: tContent('states.items.default'),  trigger: '—', behavior: tContent('states.descriptions.default')  },
   { label: tContent('states.items.focus'),    trigger: '—', behavior: tContent('states.descriptions.focus')    },
@@ -309,6 +320,8 @@ const noteItems = computed(() => [
 
 const analyticsItems = computed(() => [
   { event: 'field_blur', trigger: tContent('analytics.table.field_blur.trigger'), payload: tContent('analytics.table.field_blur.payload') },
+  { event: 'docs_page_view', trigger: locale.value === 'en' ? 'Page mount per locale' : locale.value === 'es' ? 'Montaje de página por locale' : 'Mount da página por locale', payload: '{ component_name: "textarea", locale, page_title }' },
+  { event: 'docs_section_viewed', trigger: locale.value === 'en' ? 'Section enters viewport' : locale.value === 'es' ? 'La sección entra al viewport' : 'Seção entra no viewport', payload: '{ component_name: "textarea", section_id, locale }' },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -573,11 +586,7 @@ const visualTestItems = computed(() => [
     <!-- ── Estados ──────────────────────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{
-        state: 'Estado',
-        trigger: 'Trigger',
-        behavior: 'Comportamento',
-      }"
+      :cols="stateCols"
       :items="stateItems"
     />
 
