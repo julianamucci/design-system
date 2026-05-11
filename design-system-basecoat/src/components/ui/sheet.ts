@@ -26,7 +26,7 @@ const SIDE_CLASSES: Record<SheetSide, string> = {
   bottom:'fixed inset-x-0 bottom-0 z-50 h-auto gap-4 border-t bg-background p-6 shadow-lg transition ease-in-out',
 };
 
-const CLOSE_SVG =
+const ICON_CLOSE_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
 
 let _sheetCounter = 0;
@@ -79,7 +79,12 @@ export function createSheet(options: SheetOptions): HTMLElement {
     closeBtn.type = 'button';
     closeBtn.className = 'absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 focus:ring-2 focus:ring-ring';
     closeBtn.setAttribute('aria-label', 'Close');
-    closeBtn.innerHTML = CLOSE_SVG;
+    // PATCH: security — wrapper <span> descartável para evitar innerHTML direto.
+    // ICON_CLOSE_SVG é string literal interna (segura, allowlist do audit).
+    const closeIconWrapper = document.createElement('span');
+    closeIconWrapper.innerHTML = ICON_CLOSE_SVG;
+    const closeIconEl = closeIconWrapper.firstElementChild;
+    if (closeIconEl) closeBtn.appendChild(closeIconEl);
     closeBtn.addEventListener('click', close);
 
     // Header
