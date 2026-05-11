@@ -1,0 +1,130 @@
+import type { Meta, StoryObj } from '@storybook/html';
+import { userEvent, within, expect } from 'storybook/test';
+import { createSlider } from './slider';
+import { createSliderDocs } from '@/components/docs/SliderDocs';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+// ─── Meta ─────────────────────────────────────────────────────────────────────
+
+type SliderArgs = {
+  min: number;
+  max: number;
+  step: number;
+  value: number;
+  disabled: boolean;
+  ariaLabel: string;
+  unit: string;
+};
+
+const meta: Meta<SliderArgs> = {
+  title: 'UI/Slider',
+  tags: ['autodocs'],
+  parameters: {
+    docs: { page: withAutoDocsTab(createSliderDocs) },
+  },
+  argTypes: {
+    min: { control: { type: 'number' }, description: 'Valor mínimo.' },
+    max: { control: { type: 'number' }, description: 'Valor máximo.' },
+    step: { control: { type: 'number' }, description: 'Incremento por seta/arrasto.' },
+    value: { control: { type: 'number' }, description: 'Valor inicial (number — não array no Basecoat).' },
+    disabled: { control: 'boolean', description: 'Desabilita o slider.' },
+    ariaLabel: { control: 'text', description: 'aria-label OBRIGATÓRIO para o <input type="range"> interno.' },
+    unit: { control: 'text', description: 'Unidade exibida ao lado do valor (ex.: "%", "px"). Apenas visual.' },
+  },
+  args: {
+    min: 0,
+    max: 100,
+    step: 1,
+    value: 50,
+    disabled: false,
+    ariaLabel: 'Volume',
+    unit: '%',
+  },
+};
+
+export default meta;
+type Story = StoryObj<SliderArgs>;
+
+// ─── Playground ───────────────────────────────────────────────────────────────
+
+export const Playground: Story = {
+  render: (args) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'flex flex-col gap-2 w-72';
+
+    const row = document.createElement('div');
+    row.className = 'flex items-center justify-between';
+
+    const label = document.createElement('label');
+    label.id = 'pg-slider-label';
+    label.className = 'text-sm font-medium';
+    label.textContent = args.ariaLabel;
+
+    const valueText = document.createElement('span');
+    valueText.id = 'pg-slider-value';
+    valueText.className = 'text-sm tabular-nums text-muted-foreground';
+    valueText.setAttribute('aria-live', 'polite');
+    valueText.textContent = `${args.value}${args.unit}`;
+
+    row.append(label, valueText);
+
+    const slider = createSlider({
+      min: args.min,
+      max: args.max,
+      step: args.step,
+      value: args.value,
+      disabled: args.disabled,
+      onValueChange: (v) => {
+        valueText.textContent = `${v}${args.unit}`;
+      },
+    });
+
+    const input = slider.querySelector('input[type="range"]') as HTMLInputElement | null;
+    if (input) {
+      input.setAttribute('aria-label', args.ariaLabel);
+      input.setAttribute('aria-labelledby', 'pg-slider-label');
+      input.setAttribute('aria-describedby', 'pg-slider-value');
+      input.id = 'pg-slider-input';
+    }
+
+    wrap.append(row, slider);
+    return wrap;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Slider possui input type="range" com aria-label', async () => {
+      const input = canvasElement.querySelector('input[type="range"]') as HTMLInputElement;
+      await expect(input).toBeTruthy();
+      await expect(input).toHaveAttribute('aria-label', 'Volume');
+    });
+
+    await step('Valor inicial exibido textualmente', async () => {
+      await expect(canvas.getByText('50%')).toBeVisible();
+    });
+
+    await step('ArrowRight incrementa o valor (step=1)', async () => {
+      const input = canvasElement.querySelector('input[type="range"]') as HTMLInputElement;
+      input.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await expect(input.value).toBe('51');
+      await expect(canvas.getByText('51%')).toBeVisible();
+    });
+
+    await step('Home leva ao mínimo', async () => {
+      const input = canvasElement.querySelector('input[type="range"]') as HTMLInputElement;
+      input.focus();
+      await userEvent.keyboard('{Home}');
+      await expect(input.value).toBe('0');
+      await expect(canvas.getByText('0%')).toBeVisible();
+    });
+
+    await step('End leva ao máximo', async () => {
+      const input = canvasElement.querySelector('input[type="range"]') as HTMLInputElement;
+      input.focus();
+      await userEvent.keyboard('{End}');
+      await expect(input.value).toBe('100');
+      await expect(canvas.getByText('100%')).toBeVisible();
+    });
+  },
+};
