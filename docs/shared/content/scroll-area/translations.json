@@ -1,0 +1,929 @@
+{
+  "pt-BR": {
+    "title": "ScrollArea",
+    "category": "Layout",
+    "type": "Componente",
+    "description": "Scroll interno customizado dentro de container com altura fixa, com scrollbar estilizada e suporte a scroll vertical, horizontal ou ambos.",
+    "seo": {
+      "title": "ScrollArea — Layout · Design System",
+      "description": "Documentação do ScrollArea: viewport com scroll customizado, ScrollBar estilizada e acessibilidade por teclado.",
+      "aiSummary": "Componente ScrollArea com viewport, ScrollBar e Thumb estilizados, suporte a scroll vertical/horizontal/both e fallback para scroll nativo em mobile.",
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "verticalTitle": "Lista vertical",
+        "horizontalTitle": "Cards horizontais",
+        "bothTitle": "Scroll bidirecional",
+        "tag": "Tag"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>ScrollArea</strong> — root <code>relative</code> que contém viewport, scrollbars e corner.",
+      "item2": "<strong>Viewport</strong> — área visível com <code>size-full</code> que rola o conteúdo interno.",
+      "item3": "<strong>ScrollBar</strong> — barra estilizada (<code>orientation=\"vertical\"</code> ou <code>\"horizontal\"</code>).",
+      "item4": "<strong>Thumb</strong> — pegador interno da scrollbar, indica a posição atual.",
+      "item5": "<strong>Corner</strong> — quadrado no canto quando há ambas as scrollbars visíveis.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Conteúdo longo */}\n  </ScrollArea>\n</div>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Sempre defina altura específica no container pai — sem isso o ScrollArea não funciona.",
+        "item2": "Use <code>h-full w-full</code> no <code>ScrollArea</code> e <code>overflow-hidden</code> no container pai.",
+        "item3": "Não aninhe ScrollAreas — causa scroll duplo e desorientação.",
+        "item4": "Para tabelas dentro de ScrollArea, use <code>overflow-x-auto</code> no wrapper, não outro ScrollArea."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Lista longa em sidebar fixa", "u": "Sim", "a": "-" },
+        "item2": { "s": "Conteúdo em overlay/popover", "u": "Sim", "a": "-" },
+        "item3": { "s": "Página principal com scroll vertical", "u": "Não", "a": "Scroll nativo da página" },
+        "item4": { "s": "Mobile com gestos de swipe", "u": "Não", "a": "Overflow nativo + touch" },
+        "item5": { "s": "Tabela ampla dentro de scroll vertical", "u": "Sim (com overflow-x-auto interno)", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "container": {
+            "name": "Container pai",
+            "format": "Altura explícita · <code>h-*</code> ou inline style",
+            "good": "<code>className=\"h-[400px]\"</code>",
+            "bad": "Sem altura · <code>h-auto</code>"
+          },
+          "scrollArea": {
+            "name": "ScrollArea",
+            "format": "<code>h-full w-full</code> · evitar tamanhos próprios",
+            "good": "<code>className=\"h-full w-full\"</code>",
+            "bad": "<code>className=\"h-screen\"</code>"
+          },
+          "orientation": {
+            "name": "ScrollBar orientation",
+            "format": "Apenas o necessário · não duplicar barras",
+            "good": "Vertical OU horizontal OU both",
+            "bad": "Duas barras verticais empilhadas"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Há conteúdo longo dentro de container com altura fixa",
+        "item2": "Lista em sidebar precisa rolar sem mover a página",
+        "item3": "Conteúdo em popover/dialog excede o tamanho do overlay",
+        "item4": "Tabela larga precisa de scroll horizontal interno"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "O scroll natural da página é suficiente",
+        "item2": "Em mobile com gestos de swipe — pode quebrar UX nativa",
+        "item3": "Para conteúdo curto que cabe sem scroll",
+        "item4": "Aninhado em outro ScrollArea — usar overflow-auto"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Defina altura explícita no container pai antes de usar ScrollArea.",
+        "dont": "Não envolva conteúdo de altura indefinida — ScrollArea fica invisível."
+      },
+      "pair2": {
+        "do": "Use uma única ScrollArea por região de conteúdo.",
+        "dont": "Não aninhe ScrollAreas — causa scroll duplo e desorientação."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "vertical": "Vertical",
+        "horizontal": "Horizontal",
+        "both": "Both"
+      },
+      "styles": {
+        "vertical": "Scroll vertical apenas — barra na lateral direita.",
+        "horizontal": "Scroll horizontal apenas — barra no rodapé.",
+        "both": "Scroll bidirecional — barras vertical e horizontal com canto."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "idle": "Idle",
+        "scrolling": "Scrolling",
+        "hover": "Hover",
+        "focus": "Focus"
+      },
+      "descriptions": {
+        "idle": "Estado padrão — scrollbar visível com cor <code>border</code> no thumb.",
+        "scrolling": "Durante rolagem — thumb pode aumentar opacidade conforme a lib.",
+        "hover": "Cursor sobre a scrollbar — thumb fica mais visível.",
+        "focus": "Viewport focado via Tab — anel <code>ring-[3px] ring-ring/50</code>."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "type_prop": {
+          "type": "\"auto\" | \"always\" | \"scroll\" | \"hover\"",
+          "default": "\"hover\"",
+          "required": "Não",
+          "description": "Quando exibir as scrollbars. <code>always</code> mostra sempre; <code>hover</code> só ao passar o mouse."
+        },
+        "scrollHideDelay": {
+          "type": "number",
+          "default": "600",
+          "required": "Não",
+          "description": "Tempo em ms para esconder a scrollbar quando inativa (<code>type</code> = <code>scroll</code>/<code>hover</code>)."
+        },
+        "orientation": {
+          "type": "\"vertical\" | \"horizontal\"",
+          "default": "\"vertical\"",
+          "required": "Não",
+          "description": "Direção da <code>ScrollBar</code>. O viewport sempre suporta ambas."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes Tailwind adicionais. Aplicadas ao root <code>relative</code>."
+        },
+        "children": {
+          "type": "ReactNode",
+          "default": "—",
+          "required": "Sim",
+          "description": "Conteúdo renderizado dentro do Viewport."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Scroll horizontal — adicionar ScrollBar horizontal explícita\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "border": { "class": "bg-border", "part": "Cor do thumb da scrollbar" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco no viewport" },
+        "background": { "class": "bg-background", "part": "Fundo do viewport (consumidor define)" },
+        "foreground": { "class": "text-foreground", "part": "Texto dentro do viewport" },
+        "muted": { "class": "bg-muted", "part": "Fundo da trilha da scrollbar (raro)" },
+        "ringOffset": { "class": "ring-offset-background", "part": "Offset do anel de foco" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Espessura customizada da scrollbar */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
+      "items": {
+        "item1": "Viewport recebe foco via Tab quando contém conteúdo focável",
+        "item2": "Setas (↑/↓/←/→) e PageUp/PageDown rolam o conteúdo quando o viewport tem foco",
+        "item3": "<code>tabIndex={0}</code> no viewport para scroll horizontal navegável por teclado",
+        "item4": "Não esconde conteúdo de tecnologias assistivas — apenas estiliza a scrollbar",
+        "item5": "Anel de foco visível no viewport com <code>ring-[3px] ring-ring/50</code>",
+        "item6": "Mobile: scroll nativo preservado, gestos de swipe funcionam"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Foca o viewport (quando contém elementos focáveis)",
+        "arrowDown": "Rola para baixo em incrementos",
+        "arrowUp": "Rola para cima em incrementos",
+        "arrowRight": "Rola para a direita (horizontal)",
+        "arrowLeft": "Rola para a esquerda (horizontal)",
+        "pageDown": "Rola uma página para baixo",
+        "pageUp": "Rola uma página para cima",
+        "home": "Vai ao topo do conteúdo",
+        "end": "Vai ao final do conteúdo"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "viewport": "Viewport é <code>div</code> rolável — atributos derivados do navegador",
+        "scrollbar": "Scrollbar é decorativa; o scroll nativo do navegador é exposto a TAs",
+        "label": "Use <code>aria-label</code> no container pai quando o ScrollArea define uma região"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "content": "Anuncia o conteúdo interno normalmente — scrollbar é decorativa",
+        "boundary": "Lê o conteúdo conforme rolagem; não anuncia a barra em si"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "resizable": { "name": "Resizable", "description": "Painéis redimensionáveis que podem conter ScrollArea internamente." },
+        "sheet": { "name": "Sheet", "description": "Painel lateral que frequentemente usa ScrollArea no conteúdo." },
+        "dialog": { "name": "Dialog", "description": "Modal cujo conteúdo longo pode rolar via ScrollArea." },
+        "command": { "name": "Command", "description": "Paleta de comandos com lista rolavel via ScrollArea." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Altura obrigatória</strong> — o ScrollArea só rola quando o container pai tem altura definida; sem isso o conteúdo simplesmente expande.",
+      "item3": "<strong>Mobile</strong> — em telas pequenas prefira <code>overflow-auto</code> nativo; ScrollArea pode quebrar gestos de swipe e inércia.",
+      "item4": "<strong>Não aninhar</strong> — múltiplas ScrollAreas dentro umas das outras causam scroll duplo confuso."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "ScrollArea é passivo — não dispara eventos.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "content_scroll": {
+          "trigger": "Conteúdo interno entra no viewport (via IntersectionObserver)",
+          "payload": "{ component: \"scroll_area\", target_id, percent_visible, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Rolar com a roda do mouse", "result": "Conteúdo rola sem mover a página", "priority": "high" },
+        "item2": { "action": "Arrastar o thumb da scrollbar", "result": "Viewport rola proporcionalmente", "priority": "high" },
+        "item3": { "action": "Pressionar ArrowDown/Up com viewport focado", "result": "Rola em incrementos", "priority": "high" },
+        "item4": { "action": "Container pai sem altura definida", "result": "ScrollArea não funciona — conteúdo expande", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 3:1 entre thumb e fundo",
+        "item3": "Focus ring visível no viewport",
+        "item4": "Conteúdo navegável por Tab sem quebrar fluxo visual",
+        "item5": "Scroll nativo preservado em mobile"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Vertical (lista longa)", "priority": "high" },
+        "item2": { "story": "Horizontal (cards inline)", "priority": "high" },
+        "item3": { "story": "Bidirecional (matrix/tabela ampla)", "priority": "high" },
+        "item4": { "story": "Foco no viewport", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "ScrollArea",
+    "category": "Layout",
+    "type": "Component",
+    "description": "Custom internal scroll inside a fixed-height container, with styled scrollbar and vertical, horizontal or both directions.",
+    "seo": {
+      "title": "ScrollArea — Layout · Design System",
+      "description": "ScrollArea documentation: viewport with custom scroll, styled ScrollBar and keyboard accessibility.",
+      "aiSummary": "ScrollArea component with viewport, styled ScrollBar and Thumb, vertical/horizontal/both support and native scroll fallback on mobile.",
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "verticalTitle": "Vertical list",
+        "horizontalTitle": "Horizontal cards",
+        "bothTitle": "Two-way scroll",
+        "tag": "Tag"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>ScrollArea</strong> — <code>relative</code> root containing viewport, scrollbars and corner.",
+      "item2": "<strong>Viewport</strong> — visible area with <code>size-full</code> that scrolls internal content.",
+      "item3": "<strong>ScrollBar</strong> — styled bar (<code>orientation=\"vertical\"</code> or <code>\"horizontal\"</code>).",
+      "item4": "<strong>Thumb</strong> — internal scrollbar grabber, shows current position.",
+      "item5": "<strong>Corner</strong> — corner square when both scrollbars are visible.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Long content */}\n  </ScrollArea>\n</div>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Always define explicit height on the parent container — without it the ScrollArea won't work.",
+        "item2": "Use <code>h-full w-full</code> on <code>ScrollArea</code> and <code>overflow-hidden</code> on the parent.",
+        "item3": "Don't nest ScrollAreas — causes double scroll and disorientation.",
+        "item4": "For tables inside ScrollArea, use <code>overflow-x-auto</code> on the wrapper, not another ScrollArea."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Long list in fixed sidebar", "u": "Yes", "a": "-" },
+        "item2": { "s": "Content in overlay/popover", "u": "Yes", "a": "-" },
+        "item3": { "s": "Main page with vertical scroll", "u": "No", "a": "Native page scroll" },
+        "item4": { "s": "Mobile with swipe gestures", "u": "No", "a": "Native overflow + touch" },
+        "item5": { "s": "Wide table inside vertical scroll", "u": "Yes (with internal overflow-x-auto)", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "container": {
+            "name": "Parent container",
+            "format": "Explicit height · <code>h-*</code> or inline style",
+            "good": "<code>className=\"h-[400px]\"</code>",
+            "bad": "No height · <code>h-auto</code>"
+          },
+          "scrollArea": {
+            "name": "ScrollArea",
+            "format": "<code>h-full w-full</code> · avoid own sizes",
+            "good": "<code>className=\"h-full w-full\"</code>",
+            "bad": "<code>className=\"h-screen\"</code>"
+          },
+          "orientation": {
+            "name": "ScrollBar orientation",
+            "format": "Only what's needed · don't duplicate bars",
+            "good": "Vertical OR horizontal OR both",
+            "bad": "Two stacked vertical bars"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Long content inside a fixed-height container",
+        "item2": "Sidebar list needs to scroll without moving the page",
+        "item3": "Content in popover/dialog exceeds overlay size",
+        "item4": "Wide table needs internal horizontal scroll"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "Native page scroll is enough",
+        "item2": "On mobile with swipe gestures — may break native UX",
+        "item3": "For short content that fits without scroll",
+        "item4": "Nested in another ScrollArea — use overflow-auto"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Set explicit height on the parent before using ScrollArea.",
+        "dont": "Don't wrap undefined-height content — ScrollArea becomes invisible."
+      },
+      "pair2": {
+        "do": "Use a single ScrollArea per content region.",
+        "dont": "Don't nest ScrollAreas — causes double scroll and disorientation."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "vertical": "Vertical",
+        "horizontal": "Horizontal",
+        "both": "Both"
+      },
+      "styles": {
+        "vertical": "Vertical scroll only — bar on the right side.",
+        "horizontal": "Horizontal scroll only — bar at the bottom.",
+        "both": "Two-way scroll — vertical and horizontal bars with corner."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "idle": "Idle",
+        "scrolling": "Scrolling",
+        "hover": "Hover",
+        "focus": "Focus"
+      },
+      "descriptions": {
+        "idle": "Default state — scrollbar visible with <code>border</code> color on thumb.",
+        "scrolling": "While scrolling — thumb may increase opacity depending on lib.",
+        "hover": "Cursor over scrollbar — thumb becomes more visible.",
+        "focus": "Viewport focused via Tab — <code>ring-[3px] ring-ring/50</code>."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "type_prop": {
+          "type": "\"auto\" | \"always\" | \"scroll\" | \"hover\"",
+          "default": "\"hover\"",
+          "required": "No",
+          "description": "When to show scrollbars. <code>always</code> shows always; <code>hover</code> only on hover."
+        },
+        "scrollHideDelay": {
+          "type": "number",
+          "default": "600",
+          "required": "No",
+          "description": "Time in ms to hide scrollbar when inactive (<code>type</code> = <code>scroll</code>/<code>hover</code>)."
+        },
+        "orientation": {
+          "type": "\"vertical\" | \"horizontal\"",
+          "default": "\"vertical\"",
+          "required": "No",
+          "description": "<code>ScrollBar</code> direction. Viewport always supports both."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Additional Tailwind classes. Applied to <code>relative</code> root."
+        },
+        "children": {
+          "type": "ReactNode",
+          "default": "—",
+          "required": "Yes",
+          "description": "Content rendered inside the Viewport."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Horizontal scroll — add explicit horizontal ScrollBar\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "border": { "class": "bg-border", "part": "Scrollbar thumb color" },
+        "ring": { "class": "ring-ring", "part": "Viewport focus ring" },
+        "background": { "class": "bg-background", "part": "Viewport background (consumer defines)" },
+        "foreground": { "class": "text-foreground", "part": "Text inside viewport" },
+        "muted": { "class": "bg-muted", "part": "Scrollbar track background (rare)" },
+        "ringOffset": { "class": "ring-offset-background", "part": "Focus ring offset" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Custom scrollbar thickness */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
+      "items": {
+        "item1": "Viewport receives focus via Tab when it contains focusable content",
+        "item2": "Arrow keys (↑/↓/←/→) and PageUp/PageDown scroll content when viewport is focused",
+        "item3": "<code>tabIndex={0}</code> on viewport for keyboard-navigable horizontal scroll",
+        "item4": "Doesn't hide content from assistive technologies — only styles the scrollbar",
+        "item5": "Visible focus ring on viewport with <code>ring-[3px] ring-ring/50</code>",
+        "item6": "Mobile: native scroll preserved, swipe gestures work"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Focuses viewport (when it contains focusable elements)",
+        "arrowDown": "Scrolls down in increments",
+        "arrowUp": "Scrolls up in increments",
+        "arrowRight": "Scrolls right (horizontal)",
+        "arrowLeft": "Scrolls left (horizontal)",
+        "pageDown": "Scrolls one page down",
+        "pageUp": "Scrolls one page up",
+        "home": "Goes to content top",
+        "end": "Goes to content bottom"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "viewport": "Viewport is a scrollable <code>div</code> — attributes derived by the browser",
+        "scrollbar": "Scrollbar is decorative; the browser's native scroll is exposed to ATs",
+        "label": "Use <code>aria-label</code> on parent container when ScrollArea defines a region"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "content": "Announces internal content normally — scrollbar is decorative",
+        "boundary": "Reads content as it scrolls; doesn't announce the bar itself"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "resizable": { "name": "Resizable", "description": "Resizable panels that may contain ScrollArea internally." },
+        "sheet": { "name": "Sheet", "description": "Side panel that often uses ScrollArea on content." },
+        "dialog": { "name": "Dialog", "description": "Modal whose long content can scroll via ScrollArea." },
+        "command": { "name": "Command", "description": "Command palette with scrollable list via ScrollArea." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>Required height</strong> — ScrollArea only scrolls when parent container has explicit height; without it, content simply expands.",
+      "item3": "<strong>Mobile</strong> — on small screens prefer native <code>overflow-auto</code>; ScrollArea can break swipe gestures and inertia.",
+      "item4": "<strong>Don't nest</strong> — multiple ScrollAreas nested cause confusing double scroll."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "ScrollArea is passive — does not fire events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "content_scroll": {
+          "trigger": "Internal content enters viewport (via IntersectionObserver)",
+          "payload": "{ component: \"scroll_area\", target_id, percent_visible, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Scroll with mouse wheel", "result": "Content scrolls without moving the page", "priority": "high" },
+        "item2": { "action": "Drag the scrollbar thumb", "result": "Viewport scrolls proportionally", "priority": "high" },
+        "item3": { "action": "Press ArrowDown/Up with viewport focused", "result": "Scrolls in increments", "priority": "high" },
+        "item4": { "action": "Parent container without defined height", "result": "ScrollArea doesn't work — content expands", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 3:1 contrast between thumb and background",
+        "item3": "Visible focus ring on viewport",
+        "item4": "Content navigable by Tab without breaking visual flow",
+        "item5": "Native scroll preserved on mobile"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Vertical (long list)", "priority": "high" },
+        "item2": { "story": "Horizontal (inline cards)", "priority": "high" },
+        "item3": { "story": "Bidirectional (matrix/wide table)", "priority": "high" },
+        "item4": { "story": "Focused viewport", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "ScrollArea",
+    "category": "Layout",
+    "type": "Componente",
+    "description": "Scroll interno personalizado dentro de un contenedor con altura fija, con scrollbar estilizada y soporte vertical, horizontal o ambos.",
+    "seo": {
+      "title": "ScrollArea — Layout · Design System",
+      "description": "Documentación de ScrollArea: viewport con scroll personalizado, ScrollBar estilizada y accesibilidad por teclado.",
+      "aiSummary": "Componente ScrollArea con viewport, ScrollBar y Thumb estilizados, soporte vertical/horizontal/ambos y fallback a scroll nativo en móvil.",
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "verticalTitle": "Lista vertical",
+        "horizontalTitle": "Cards horizontales",
+        "bothTitle": "Scroll bidireccional",
+        "tag": "Tag"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>ScrollArea</strong> — root <code>relative</code> que contiene viewport, scrollbars y corner.",
+      "item2": "<strong>Viewport</strong> — área visible con <code>size-full</code> que desplaza el contenido interno.",
+      "item3": "<strong>ScrollBar</strong> — barra estilizada (<code>orientation=\"vertical\"</code> u <code>\"horizontal\"</code>).",
+      "item4": "<strong>Thumb</strong> — agarre interno de la scrollbar, indica la posición actual.",
+      "item5": "<strong>Corner</strong> — cuadrado en la esquina cuando ambas scrollbars están visibles.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Contenido largo */}\n  </ScrollArea>\n</div>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Define siempre altura específica en el contenedor padre — sin eso el ScrollArea no funciona.",
+        "item2": "Usa <code>h-full w-full</code> en el <code>ScrollArea</code> y <code>overflow-hidden</code> en el padre.",
+        "item3": "No anides ScrollAreas — causa scroll doble y desorientación.",
+        "item4": "Para tablas dentro de ScrollArea, usa <code>overflow-x-auto</code> en el wrapper, no otro ScrollArea."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Lista larga en sidebar fija", "u": "Sí", "a": "-" },
+        "item2": { "s": "Contenido en overlay/popover", "u": "Sí", "a": "-" },
+        "item3": { "s": "Página principal con scroll vertical", "u": "No", "a": "Scroll nativo de página" },
+        "item4": { "s": "Móvil con gestos de swipe", "u": "No", "a": "Overflow nativo + touch" },
+        "item5": { "s": "Tabla ancha dentro de scroll vertical", "u": "Sí (con overflow-x-auto interno)", "a": "-" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "container": {
+            "name": "Contenedor padre",
+            "format": "Altura explícita · <code>h-*</code> o inline style",
+            "good": "<code>className=\"h-[400px]\"</code>",
+            "bad": "Sin altura · <code>h-auto</code>"
+          },
+          "scrollArea": {
+            "name": "ScrollArea",
+            "format": "<code>h-full w-full</code> · evita tamaños propios",
+            "good": "<code>className=\"h-full w-full\"</code>",
+            "bad": "<code>className=\"h-screen\"</code>"
+          },
+          "orientation": {
+            "name": "ScrollBar orientation",
+            "format": "Solo lo necesario · no duplicar barras",
+            "good": "Vertical O horizontal O ambos",
+            "bad": "Dos barras verticales apiladas"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Hay contenido largo dentro de un contenedor con altura fija",
+        "item2": "Lista en sidebar necesita desplazarse sin mover la página",
+        "item3": "Contenido en popover/dialog excede el tamaño del overlay",
+        "item4": "Tabla ancha necesita scroll horizontal interno"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El scroll nativo de la página es suficiente",
+        "item2": "En móvil con gestos de swipe — puede romper la UX nativa",
+        "item3": "Para contenido corto que cabe sin scroll",
+        "item4": "Anidado en otro ScrollArea — usa overflow-auto"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Define altura explícita en el contenedor padre antes de usar ScrollArea.",
+        "dont": "No envuelvas contenido de altura indefinida — ScrollArea queda invisible."
+      },
+      "pair2": {
+        "do": "Usa un único ScrollArea por región de contenido.",
+        "dont": "No anides ScrollAreas — causa scroll doble y desorientación."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "vertical": "Vertical",
+        "horizontal": "Horizontal",
+        "both": "Both"
+      },
+      "styles": {
+        "vertical": "Scroll vertical solo — barra en el lateral derecho.",
+        "horizontal": "Scroll horizontal solo — barra en el pie.",
+        "both": "Scroll bidireccional — barras vertical y horizontal con esquina."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "idle": "Idle",
+        "scrolling": "Scrolling",
+        "hover": "Hover",
+        "focus": "Focus"
+      },
+      "descriptions": {
+        "idle": "Estado por defecto — scrollbar visible con color <code>border</code> en el thumb.",
+        "scrolling": "Durante el desplazamiento — el thumb puede aumentar opacidad según la lib.",
+        "hover": "Cursor sobre la scrollbar — el thumb se vuelve más visible.",
+        "focus": "Viewport enfocado vía Tab — <code>ring-[3px] ring-ring/50</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "type_prop": {
+          "type": "\"auto\" | \"always\" | \"scroll\" | \"hover\"",
+          "default": "\"hover\"",
+          "required": "No",
+          "description": "Cuándo mostrar las scrollbars. <code>always</code> siempre; <code>hover</code> solo al pasar el mouse."
+        },
+        "scrollHideDelay": {
+          "type": "number",
+          "default": "600",
+          "required": "No",
+          "description": "Tiempo en ms para ocultar la scrollbar cuando está inactiva (<code>type</code> = <code>scroll</code>/<code>hover</code>)."
+        },
+        "orientation": {
+          "type": "\"vertical\" | \"horizontal\"",
+          "default": "\"vertical\"",
+          "required": "No",
+          "description": "Dirección del <code>ScrollBar</code>. El viewport siempre soporta ambos."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases Tailwind adicionales. Se aplican al root <code>relative</code>."
+        },
+        "children": {
+          "type": "ReactNode",
+          "default": "—",
+          "required": "Sí",
+          "description": "Contenido renderizado dentro del Viewport."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Scroll horizontal — añadir ScrollBar horizontal explícita\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "border": { "class": "bg-border", "part": "Color del thumb de la scrollbar" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco en el viewport" },
+        "background": { "class": "bg-background", "part": "Fondo del viewport (el consumidor define)" },
+        "foreground": { "class": "text-foreground", "part": "Texto dentro del viewport" },
+        "muted": { "class": "bg-muted", "part": "Fondo de la pista de la scrollbar (raro)" },
+        "ringOffset": { "class": "ring-offset-background", "part": "Offset del anillo de foco" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Grosor personalizado de la scrollbar */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
+      "items": {
+        "item1": "El viewport recibe foco vía Tab cuando contiene contenido focalizable",
+        "item2": "Flechas (↑/↓/←/→) y PageUp/PageDown desplazan el contenido cuando el viewport tiene foco",
+        "item3": "<code>tabIndex={0}</code> en el viewport para scroll horizontal navegable por teclado",
+        "item4": "No oculta contenido de tecnologías asistivas — solo estiliza la scrollbar",
+        "item5": "Anillo de foco visible en el viewport con <code>ring-[3px] ring-ring/50</code>",
+        "item6": "Móvil: scroll nativo preservado, gestos de swipe funcionan"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Enfoca el viewport (cuando contiene elementos focalizables)",
+        "arrowDown": "Desplaza hacia abajo en incrementos",
+        "arrowUp": "Desplaza hacia arriba en incrementos",
+        "arrowRight": "Desplaza a la derecha (horizontal)",
+        "arrowLeft": "Desplaza a la izquierda (horizontal)",
+        "pageDown": "Desplaza una página hacia abajo",
+        "pageUp": "Desplaza una página hacia arriba",
+        "home": "Va al inicio del contenido",
+        "end": "Va al final del contenido"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "viewport": "El viewport es un <code>div</code> desplazable — atributos derivados del navegador",
+        "scrollbar": "La scrollbar es decorativa; el scroll nativo del navegador se expone a TAs",
+        "label": "Usa <code>aria-label</code> en el contenedor padre cuando ScrollArea define una región"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "content": "Anuncia el contenido interno normalmente — la scrollbar es decorativa",
+        "boundary": "Lee el contenido conforme se desplaza; no anuncia la barra en sí"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "resizable": { "name": "Resizable", "description": "Paneles redimensionables que pueden contener ScrollArea internamente." },
+        "sheet": { "name": "Sheet", "description": "Panel lateral que suele usar ScrollArea en el contenido." },
+        "dialog": { "name": "Dialog", "description": "Modal cuyo contenido largo puede desplazarse vía ScrollArea." },
+        "command": { "name": "Command", "description": "Paleta de comandos con lista desplazable vía ScrollArea." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Altura obligatoria</strong> — el ScrollArea solo desplaza cuando el contenedor padre tiene altura definida; sin eso el contenido simplemente se expande.",
+      "item3": "<strong>Móvil</strong> — en pantallas pequeñas prefiere <code>overflow-auto</code> nativo; ScrollArea puede romper gestos de swipe e inercia.",
+      "item4": "<strong>No anidar</strong> — múltiples ScrollAreas anidados causan scroll doble confuso."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "ScrollArea es pasivo — no dispara eventos.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "content_scroll": {
+          "trigger": "El contenido interno entra en el viewport (vía IntersectionObserver)",
+          "payload": "{ component: \"scroll_area\", target_id, percent_visible, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Desplazar con la rueda del mouse", "result": "El contenido se desplaza sin mover la página", "priority": "high" },
+        "item2": { "action": "Arrastrar el thumb de la scrollbar", "result": "El viewport se desplaza proporcionalmente", "priority": "high" },
+        "item3": { "action": "Pulsar ArrowDown/Up con viewport enfocado", "result": "Desplaza en incrementos", "priority": "high" },
+        "item4": { "action": "Contenedor padre sin altura definida", "result": "ScrollArea no funciona — contenido se expande", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 3:1 entre el thumb y el fondo",
+        "item3": "Anillo de foco visible en el viewport",
+        "item4": "Contenido navegable por Tab sin romper el flujo visual",
+        "item5": "Scroll nativo preservado en móvil"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Vertical (lista larga)", "priority": "high" },
+        "item2": { "story": "Horizontal (cards inline)", "priority": "high" },
+        "item3": { "story": "Bidireccional (matriz/tabla ancha)", "priority": "high" },
+        "item4": { "story": "Viewport enfocado", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
