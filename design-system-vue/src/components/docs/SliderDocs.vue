@@ -258,9 +258,9 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: 'single',   description: stripHtml(tContent('variants.styles.single')),   code: codeSingle   },
-  { name: 'range',    description: stripHtml(tContent('variants.styles.range')),    code: codeRange    },
-  { name: 'vertical', description: stripHtml(tContent('variants.styles.vertical')), code: codeVertical },
+  { name: tContent('variants.items.single'),   description: stripHtml(tContent('variants.styles.single')),   code: codeSingle   },
+  { name: tContent('variants.items.range'),    description: stripHtml(tContent('variants.styles.range')),    code: codeRange    },
+  { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: codeVertical },
 ]);
 
 const stateItems = computed(() => [
@@ -295,7 +295,7 @@ const tokenRows = computed(() => [
   { token: '--muted',            value: tContent('tokens.table.muted.class'),           description: tContent('tokens.table.muted.part')           },
   { token: '--primary',          value: tContent('tokens.table.primary.class'),         description: tContent('tokens.table.primary.part')         },
   { token: '--ring',             value: tContent('tokens.table.ring.class'),            description: tContent('tokens.table.ring.part')            },
-  { token: 'bg-white',           value: tContent('tokens.table.background.class'),      description: tContent('tokens.table.background.part')      },
+  { token: '--background',       value: tContent('tokens.table.background.class'),      description: tContent('tokens.table.background.part')      },
   { token: '--foreground',       value: tContent('tokens.table.foreground.class'),      description: tContent('tokens.table.foreground.part')      },
   { token: '--muted-foreground', value: tContent('tokens.table.mutedForeground.class'), description: tContent('tokens.table.mutedForeground.part') },
 ]);

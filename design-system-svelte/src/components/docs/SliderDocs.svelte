@@ -31,7 +31,7 @@
       aiIntent: (t('seo.aiIntent') as 'informational' | 'navigational') ?? 'informational',
       breadcrumb: [
         { name: 'Components', item: '/components' },
-        { name: t('category'), item: '/components/formulario' },
+        { name: t('category'), item: '/components/form' },
         { name: t('title') },
       ],
     });
