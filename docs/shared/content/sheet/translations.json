@@ -1,0 +1,1022 @@
+{
+  "pt-BR": {
+    "title": "Sheet",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Painel lateral deslizante baseado em Dialog, ideal para configurações, filtros avançados e navegação secundária em desktop.",
+    "seo": {
+      "title": "Sheet — Overlay · Design System",
+      "description": "Documentação do Sheet: Trigger, Content, Header, Title, Description, Footer e Close com posicionamento por side e WCAG 2.1 AA.",
+      "aiSummary": "Componente Sheet com Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer e Close, baseado em Dialog com foco gerenciado.",
+      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Shadcn/UI, base-ui Dialog, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "trigger": "Abrir filtros",
+        "title": "Filtros avançados",
+        "description": "Configure os filtros para refinar os resultados.",
+        "cancel": "Cancelar",
+        "apply": "Aplicar filtros",
+        "section": "Categoria",
+        "rightLabel": "Painel direito",
+        "leftLabel": "Painel esquerdo",
+        "topLabel": "Painel superior",
+        "bottomLabel": "Painel inferior"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Sheet</strong> — root que controla o estado open/closed.",
+      "item2": "<strong>SheetTrigger</strong> — botão que abre o painel; use <code>asChild</code> para envolver um Button.",
+      "item3": "<strong>SheetContent</strong> — painel deslizante com prop <code>side</code> (right/left/top/bottom).",
+      "item4": "<strong>SheetHeader</strong> — wrapper para título e descrição no topo.",
+      "item5": "<strong>SheetTitle</strong> — título acessível, obrigatório para leitores de tela.",
+      "item6": "<strong>SheetDescription</strong> — descrição obrigatória, vinculada via <code>aria-describedby</code>.",
+      "item7": "<strong>SheetFooter</strong> — wrapper para ações no rodapé (Cancelar + ação primária).",
+      "item8": "<strong>SheetClose</strong> — botão de fechar; um já vem embutido no canto superior direito.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Sheet>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\">\n    <SheetHeader>\n      <SheetTitle>Título</SheetTitle>\n      <SheetDescription>Descrição obrigatória.</SheetDescription>\n    </SheetHeader>\n    {/* conteúdo principal */}\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para painéis laterais em desktop — filtros avançados, configurações, navegação secundária.",
+        "item2": "Forneça sempre <code>SheetTitle</code> e <code>SheetDescription</code> — obrigatórios para acessibilidade.",
+        "item3": "Para mobile com gesto de arrastar, use <code>Drawer</code> em vez de Sheet.",
+        "item4": "Botões do footer alinhados à direita: Cancelar (outline) + ação primária."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Filtros avançados (desktop)", "u": "Sim", "a": "-" },
+        "item2": { "s": "Configurações secundárias", "u": "Sim", "a": "-" },
+        "item3": { "s": "Painel mobile com swipe", "u": "Não", "a": "Drawer" },
+        "item4": { "s": "Modal centralizado", "u": "Não", "a": "Dialog" },
+        "item5": { "s": "Confirmação destrutiva", "u": "Não", "a": "AlertDialog" },
+        "item6": { "s": "Formulário curto inline", "u": "Não", "a": "Popover" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "SheetTitle",
+            "format": "Frase nominal · sem ponto · máx. 6 palavras",
+            "good": "\"Filtros avançados\", \"Editar perfil\"",
+            "bad": "\"Aqui você pode configurar tudo...\""
+          },
+          "description": {
+            "name": "SheetDescription",
+            "format": "Frase completa · ponto final · contextualiza a ação",
+            "good": "\"Configure os filtros para refinar os resultados.\"",
+            "bad": "Texto curto sem contexto"
+          },
+          "trigger": {
+            "name": "SheetTrigger",
+            "format": "Verbo no infinitivo · ação clara",
+            "good": "\"Abrir filtros\", \"Editar perfil\"",
+            "bad": "\"Mais\", \"Aqui\""
+          },
+          "primary": {
+            "name": "Botão primário (footer)",
+            "format": "Verbo + objeto · ação concreta",
+            "good": "\"Aplicar filtros\", \"Salvar alterações\"",
+            "bad": "\"OK\", \"Confirmar\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Há configurações secundárias que não precisam interromper o fluxo",
+        "item2": "Filtros avançados precisam de espaço próprio sem trocar de página",
+        "item3": "Em desktop, o painel lateral organiza melhor que um modal centralizado",
+        "item4": "Conteúdo é longo e pode rolar sem desorientar o usuário"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "É uma confirmação crítica — use <code>AlertDialog</code>",
+        "item2": "Em mobile com necessidade de swipe — use <code>Drawer</code>",
+        "item3": "Conteúdo é curto e inline — use <code>Popover</code>",
+        "item4": "Texto informativo simples — use <code>Tooltip</code> ou <code>HoverCard</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Sempre forneça SheetTitle e SheetDescription para acessibilidade.",
+        "dont": "Não omita Title/Description — leitores de tela ficam sem contexto."
+      },
+      "pair2": {
+        "do": "Use side adequado ao contexto: right para filtros, bottom para mobile.",
+        "dont": "Não force side fixo em todos os contextos — pense no fluxo do usuário."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "right": "Right",
+        "left": "Left",
+        "top": "Top",
+        "bottom": "Bottom"
+      },
+      "styles": {
+        "right": "Desliza da direita — <code>side=\"right\"</code>, padrão para desktop com largura sm:max-w-sm.",
+        "left": "Desliza da esquerda — <code>side=\"left\"</code>, ideal para navegação secundária.",
+        "top": "Desliza do topo — <code>side=\"top\"</code>, ocupa altura automática.",
+        "bottom": "Desliza de baixo — <code>side=\"bottom\"</code>, equivalente ao Drawer mas sem gesture."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "transitioning": "Transitioning",
+        "focused": "Focused"
+      },
+      "descriptions": {
+        "closed": "Estado inicial — <code>data-state=\"closed\"</code>, conteúdo desmontado.",
+        "open": "Aberto — <code>data-state=\"open\"</code>, foco move ao primeiro elemento focável.",
+        "transitioning": "Animação de entrada/saída — <code>translate-x/y</code> conforme <code>side</code>.",
+        "focused": "Elemento interno focado — anel <code>ring-2 ring-ring</code>."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "Não",
+          "description": "Estado controlado de abertura. Use junto com <code>onOpenChange</code>."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Estado inicial não-controlado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback disparado ao abrir ou fechar."
+        },
+        "side": {
+          "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+          "default": "\"right\"",
+          "required": "Não",
+          "description": "Lado de onde o painel desliza. Prop do <code>SheetContent</code>, não do <code>Sheet</code> root."
+        },
+        "showCloseButton": {
+          "type": "boolean",
+          "default": "true",
+          "required": "Não",
+          "description": "Exibe botão X no canto superior direito do <code>SheetContent</code>."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes Tailwind adicionais. Útil para customizar largura: <code>w-[400px] sm:w-[540px]</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Sheet controlado com onOpenChange\n<Sheet open={open} onOpenChange={setOpen}>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Filtros</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\" className=\"w-[400px] sm:w-[540px]\">\n    <SheetHeader>\n      <SheetTitle>Filtros avançados</SheetTitle>\n      <SheetDescription>Refine os resultados.</SheetDescription>\n    </SheetHeader>\n    <FiltersForm onApply={() => setOpen(false)} />\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button onClick={handleApply}>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "popover": { "class": "bg-popover", "part": "Fundo do SheetContent" },
+        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto do SheetContent" },
+        "foreground": { "class": "text-foreground", "part": "Texto do SheetTitle" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto da SheetDescription" },
+        "border": { "class": "border", "part": "Borda do SheetContent por side" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco em elementos internos" },
+        "overlay": { "class": "bg-black/10", "part": "Backdrop sobre a página (SheetOverlay)" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Largura customizada por side */\n[data-slot=\"sheet-content\"][data-side=\"right\"],\n[data-slot=\"sheet-content\"][data-side=\"left\"] {\n  width: 400px;\n}\n@media (min-width: 640px) {\n  [data-slot=\"sheet-content\"][data-side=\"right\"],\n  [data-slot=\"sheet-content\"][data-side=\"left\"] {\n    max-width: 540px;\n  }\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 2.1.1, 2.1.2, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"dialog\"</code> aplicado automaticamente ao SheetContent",
+        "item2": "<code>aria-labelledby</code> vinculado ao SheetTitle (obrigatório)",
+        "item3": "<code>aria-describedby</code> vinculado à SheetDescription (obrigatório)",
+        "item4": "Focus trap dentro do painel enquanto aberto",
+        "item5": "<code>Escape</code> fecha o painel e retorna foco ao trigger",
+        "item6": "Clique no overlay fecha o painel (comportamento nativo)",
+        "item7": "Scroll do body é bloqueado enquanto o Sheet está aberto"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Move foco entre elementos dentro do Sheet",
+        "shiftTab": "Move foco em sentido inverso",
+        "escape": "Fecha o Sheet e retorna foco ao trigger",
+        "enter": "Ativa o elemento focado"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"dialog\"</code> no SheetContent",
+        "labelledBy": "<code>aria-labelledby</code> aponta para SheetTitle",
+        "describedBy": "<code>aria-describedby</code> aponta para SheetDescription",
+        "modal": "<code>aria-modal=\"true\"</code> bloqueia interação com a página"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "open": "Anuncia o título e o tipo \"diálogo\" ao abrir",
+        "describe": "Lê a descrição em sequência ao título",
+        "close": "Anuncia retorno ao trigger ao fechar com Escape"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "drawer": { "name": "Drawer", "description": "Painel deslizante mobile com gesture de arrastar." },
+        "dialog": { "name": "Dialog", "description": "Modal centralizado para fluxos longos." },
+        "alertDialog": { "name": "AlertDialog", "description": "Confirmação destrutiva crítica." },
+        "popover": { "name": "Popover", "description": "Conteúdo contextual curto sem modal." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> Dialog (React), <code>reka-ui</code> Dialog (Vue), <code>bits-ui</code> Dialog (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Sheet usa Dialog</strong> — internamente é uma Dialog com estilo de painel lateral; daí a obrigatoriedade de Title/Description.",
+      "item3": "<strong>side no Content</strong> — a prop <code>side</code> fica no <code>SheetContent</code>, não no <code>Sheet</code> root.",
+      "item4": "<strong>Largura padrão</strong> — em <code>side=\"right\"</code>/<code>\"left\"</code>: <code>w-3/4 sm:max-w-sm</code>. Para painéis maiores, sobrescreva via <code>className</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "dialog_open": {
+          "trigger": "Sheet abre (trigger ou controle externo)",
+          "payload": "{ component: \"sheet\", trigger_label, location }"
+        },
+        "dialog_close": {
+          "trigger": "Sheet fecha (Escape, overlay ou ação)",
+          "payload": "{ component: \"sheet\", reason, location }"
+        },
+        "dialog_confirm": {
+          "trigger": "Ação primária do footer é executada",
+          "payload": "{ component: \"sheet\", action, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Clicar no trigger", "result": "Sheet abre e foco vai ao primeiro elemento focável", "priority": "high" },
+        "item2": { "action": "Pressionar Escape com Sheet aberto", "result": "Fecha e retorna foco ao trigger", "priority": "high" },
+        "item3": { "action": "Clicar no overlay", "result": "Fecha o Sheet (comportamento nativo)", "priority": "high" },
+        "item4": { "action": "Tab dentro do Sheet aberto", "result": "Focus trap mantém foco interno", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core no estado aberto",
+        "item2": "Contraste mínimo 4.5:1 entre texto e fundo (WCAG 2.1 AA)",
+        "item3": "role=\"dialog\" presente no SheetContent",
+        "item4": "aria-labelledby aponta para SheetTitle",
+        "item5": "aria-describedby aponta para SheetDescription"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Right (padrão)", "priority": "high" },
+        "item2": { "story": "Left", "priority": "high" },
+        "item3": { "story": "Bottom", "priority": "high" },
+        "item4": { "story": "Com formulário longo (scroll interno)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Sheet",
+    "category": "Overlay",
+    "type": "Component",
+    "description": "Sliding side panel based on Dialog, ideal for settings, advanced filters and secondary navigation on desktop.",
+    "seo": {
+      "title": "Sheet — Overlay · Design System",
+      "description": "Sheet documentation: Trigger, Content, Header, Title, Description, Footer and Close with side positioning and WCAG 2.1 AA.",
+      "aiSummary": "Sheet component with Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer and Close, based on Dialog with managed focus.",
+      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Shadcn/UI, base-ui Dialog, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "trigger": "Open filters",
+        "title": "Advanced filters",
+        "description": "Configure the filters to refine results.",
+        "cancel": "Cancel",
+        "apply": "Apply filters",
+        "section": "Category",
+        "rightLabel": "Right panel",
+        "leftLabel": "Left panel",
+        "topLabel": "Top panel",
+        "bottomLabel": "Bottom panel"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Sheet</strong> — root that controls open/closed state.",
+      "item2": "<strong>SheetTrigger</strong> — button that opens the panel; use <code>asChild</code> to wrap a Button.",
+      "item3": "<strong>SheetContent</strong> — sliding panel with <code>side</code> prop (right/left/top/bottom).",
+      "item4": "<strong>SheetHeader</strong> — wrapper for title and description at the top.",
+      "item5": "<strong>SheetTitle</strong> — accessible title, required for screen readers.",
+      "item6": "<strong>SheetDescription</strong> — required description, linked via <code>aria-describedby</code>.",
+      "item7": "<strong>SheetFooter</strong> — wrapper for footer actions (Cancel + primary).",
+      "item8": "<strong>SheetClose</strong> — close button; one already comes embedded in the top right corner.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Sheet>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\">\n    <SheetHeader>\n      <SheetTitle>Title</SheetTitle>\n      <SheetDescription>Required description.</SheetDescription>\n    </SheetHeader>\n    {/* main content */}\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </SheetClose>\n      <Button>Apply</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for side panels on desktop — advanced filters, settings, secondary navigation.",
+        "item2": "Always provide <code>SheetTitle</code> and <code>SheetDescription</code> — required for accessibility.",
+        "item3": "For mobile with drag gesture, use <code>Drawer</code> instead of Sheet.",
+        "item4": "Footer buttons aligned right: Cancel (outline) + primary action."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Advanced filters (desktop)", "u": "Yes", "a": "-" },
+        "item2": { "s": "Secondary settings", "u": "Yes", "a": "-" },
+        "item3": { "s": "Mobile panel with swipe", "u": "No", "a": "Drawer" },
+        "item4": { "s": "Centered modal", "u": "No", "a": "Dialog" },
+        "item5": { "s": "Destructive confirmation", "u": "No", "a": "AlertDialog" },
+        "item6": { "s": "Short inline form", "u": "No", "a": "Popover" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "title": {
+            "name": "SheetTitle",
+            "format": "Noun phrase · no period · max 6 words",
+            "good": "\"Advanced filters\", \"Edit profile\"",
+            "bad": "\"Here you can configure everything...\""
+          },
+          "description": {
+            "name": "SheetDescription",
+            "format": "Complete sentence · period · contextualizes the action",
+            "good": "\"Configure the filters to refine the results.\"",
+            "bad": "Short text without context"
+          },
+          "trigger": {
+            "name": "SheetTrigger",
+            "format": "Imperative verb · clear action",
+            "good": "\"Open filters\", \"Edit profile\"",
+            "bad": "\"More\", \"Here\""
+          },
+          "primary": {
+            "name": "Primary button (footer)",
+            "format": "Verb + object · concrete action",
+            "good": "\"Apply filters\", \"Save changes\"",
+            "bad": "\"OK\", \"Confirm\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "There are secondary settings that don't need to interrupt the flow",
+        "item2": "Advanced filters need their own space without changing pages",
+        "item3": "On desktop, the side panel organizes better than a centered modal",
+        "item4": "Content is long and can scroll without disorienting the user"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "It's a critical confirmation — use <code>AlertDialog</code>",
+        "item2": "On mobile needing swipe — use <code>Drawer</code>",
+        "item3": "Content is short and inline — use <code>Popover</code>",
+        "item4": "Simple informational text — use <code>Tooltip</code> or <code>HoverCard</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Always provide SheetTitle and SheetDescription for accessibility.",
+        "dont": "Don't omit Title/Description — screen readers lose context."
+      },
+      "pair2": {
+        "do": "Use side appropriate to context: right for filters, bottom for mobile.",
+        "dont": "Don't force a fixed side across all contexts — think about user flow."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "right": "Right",
+        "left": "Left",
+        "top": "Top",
+        "bottom": "Bottom"
+      },
+      "styles": {
+        "right": "Slides from right — <code>side=\"right\"</code>, default for desktop with sm:max-w-sm.",
+        "left": "Slides from left — <code>side=\"left\"</code>, ideal for secondary navigation.",
+        "top": "Slides from top — <code>side=\"top\"</code>, takes automatic height.",
+        "bottom": "Slides from bottom — <code>side=\"bottom\"</code>, equivalent to Drawer but without gesture."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "transitioning": "Transitioning",
+        "focused": "Focused"
+      },
+      "descriptions": {
+        "closed": "Initial state — <code>data-state=\"closed\"</code>, content unmounted.",
+        "open": "Open — <code>data-state=\"open\"</code>, focus moves to first focusable element.",
+        "transitioning": "Enter/exit animation — <code>translate-x/y</code> based on <code>side</code>.",
+        "focused": "Internal element focused — <code>ring-2 ring-ring</code>."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled open state. Use with <code>onOpenChange</code>."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Initial uncontrolled state."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired on open or close."
+        },
+        "side": {
+          "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+          "default": "\"right\"",
+          "required": "No",
+          "description": "Side from which the panel slides. Prop on <code>SheetContent</code>, not <code>Sheet</code> root."
+        },
+        "showCloseButton": {
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "Shows X button in top right corner of <code>SheetContent</code>."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Additional Tailwind classes. Useful to customize width: <code>w-[400px] sm:w-[540px]</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Controlled Sheet with onOpenChange\n<Sheet open={open} onOpenChange={setOpen}>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Filters</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\" className=\"w-[400px] sm:w-[540px]\">\n    <SheetHeader>\n      <SheetTitle>Advanced filters</SheetTitle>\n      <SheetDescription>Refine the results.</SheetDescription>\n    </SheetHeader>\n    <FiltersForm onApply={() => setOpen(false)} />\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </SheetClose>\n      <Button onClick={handleApply}>Apply</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "popover": { "class": "bg-popover", "part": "SheetContent background" },
+        "popoverForeground": { "class": "text-popover-foreground", "part": "SheetContent text" },
+        "foreground": { "class": "text-foreground", "part": "SheetTitle text" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "SheetDescription text" },
+        "border": { "class": "border", "part": "SheetContent border by side" },
+        "ring": { "class": "ring-ring", "part": "Focus ring on internal elements" },
+        "overlay": { "class": "bg-black/10", "part": "Backdrop over the page (SheetOverlay)" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Custom width per side */\n[data-slot=\"sheet-content\"][data-side=\"right\"],\n[data-slot=\"sheet-content\"][data-side=\"left\"] {\n  width: 400px;\n}\n@media (min-width: 640px) {\n  [data-slot=\"sheet-content\"][data-side=\"right\"],\n  [data-slot=\"sheet-content\"][data-side=\"left\"] {\n    max-width: 540px;\n  }\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 2.1.1, 2.1.2, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"dialog\"</code> applied automatically to SheetContent",
+        "item2": "<code>aria-labelledby</code> linked to SheetTitle (required)",
+        "item3": "<code>aria-describedby</code> linked to SheetDescription (required)",
+        "item4": "Focus trap inside the panel while open",
+        "item5": "<code>Escape</code> closes the panel and returns focus to trigger",
+        "item6": "Overlay click closes the panel (native behavior)",
+        "item7": "Body scroll is blocked while Sheet is open"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Moves focus between elements inside the Sheet",
+        "shiftTab": "Moves focus in reverse",
+        "escape": "Closes the Sheet and returns focus to trigger",
+        "enter": "Activates the focused element"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "role": "<code>role=\"dialog\"</code> on SheetContent",
+        "labelledBy": "<code>aria-labelledby</code> points to SheetTitle",
+        "describedBy": "<code>aria-describedby</code> points to SheetDescription",
+        "modal": "<code>aria-modal=\"true\"</code> blocks interaction with the page"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "open": "Announces title and \"dialog\" type on open",
+        "describe": "Reads description after title",
+        "close": "Announces return to trigger on Escape close"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "drawer": { "name": "Drawer", "description": "Mobile sliding panel with drag gesture." },
+        "dialog": { "name": "Dialog", "description": "Centered modal for longer flows." },
+        "alertDialog": { "name": "AlertDialog", "description": "Critical destructive confirmation." },
+        "popover": { "name": "Popover", "description": "Short contextual content without modal." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> Dialog (React), <code>reka-ui</code> Dialog (Vue), <code>bits-ui</code> Dialog (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>Sheet uses Dialog</strong> — internally it's a Dialog with side-panel styling; hence the mandatory Title/Description.",
+      "item3": "<strong>side on Content</strong> — the <code>side</code> prop is on <code>SheetContent</code>, not <code>Sheet</code> root.",
+      "item4": "<strong>Default width</strong> — on <code>side=\"right\"</code>/<code>\"left\"</code>: <code>w-3/4 sm:max-w-sm</code>. For larger panels, override via <code>className</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "dialog_open": {
+          "trigger": "Sheet opens (trigger or external control)",
+          "payload": "{ component: \"sheet\", trigger_label, location }"
+        },
+        "dialog_close": {
+          "trigger": "Sheet closes (Escape, overlay or action)",
+          "payload": "{ component: \"sheet\", reason, location }"
+        },
+        "dialog_confirm": {
+          "trigger": "Footer primary action is executed",
+          "payload": "{ component: \"sheet\", action, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Click the trigger", "result": "Sheet opens and focus goes to first focusable element", "priority": "high" },
+        "item2": { "action": "Press Escape with Sheet open", "result": "Closes and returns focus to trigger", "priority": "high" },
+        "item3": { "action": "Click the overlay", "result": "Closes the Sheet (native behavior)", "priority": "high" },
+        "item4": { "action": "Tab inside open Sheet", "result": "Focus trap keeps focus inside", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core in the open state",
+        "item2": "Minimum 4.5:1 contrast between text and background (WCAG 2.1 AA)",
+        "item3": "role=\"dialog\" present on SheetContent",
+        "item4": "aria-labelledby points to SheetTitle",
+        "item5": "aria-describedby points to SheetDescription"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Right (default)", "priority": "high" },
+        "item2": { "story": "Left", "priority": "high" },
+        "item3": { "story": "Bottom", "priority": "high" },
+        "item4": { "story": "With long form (internal scroll)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Sheet",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Panel lateral deslizante basado en Dialog, ideal para configuración, filtros avanzados y navegación secundaria en desktop.",
+    "seo": {
+      "title": "Sheet — Overlay · Design System",
+      "description": "Documentación de Sheet: Trigger, Content, Header, Title, Description, Footer y Close con posicionamiento por side y WCAG 2.1 AA.",
+      "aiSummary": "Componente Sheet con Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer y Close, basado en Dialog con foco gestionado.",
+      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Shadcn/UI, base-ui Dialog, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "trigger": "Abrir filtros",
+        "title": "Filtros avanzados",
+        "description": "Configura los filtros para refinar los resultados.",
+        "cancel": "Cancelar",
+        "apply": "Aplicar filtros",
+        "section": "Categoría",
+        "rightLabel": "Panel derecho",
+        "leftLabel": "Panel izquierdo",
+        "topLabel": "Panel superior",
+        "bottomLabel": "Panel inferior"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Sheet</strong> — root que controla el estado open/closed.",
+      "item2": "<strong>SheetTrigger</strong> — botón que abre el panel; usa <code>asChild</code> para envolver un Button.",
+      "item3": "<strong>SheetContent</strong> — panel deslizante con prop <code>side</code> (right/left/top/bottom).",
+      "item4": "<strong>SheetHeader</strong> — wrapper para título y descripción en la parte superior.",
+      "item5": "<strong>SheetTitle</strong> — título accesible, obligatorio para lectores de pantalla.",
+      "item6": "<strong>SheetDescription</strong> — descripción obligatoria, vinculada vía <code>aria-describedby</code>.",
+      "item7": "<strong>SheetFooter</strong> — wrapper para acciones en el pie (Cancelar + acción primaria).",
+      "item8": "<strong>SheetClose</strong> — botón de cerrar; uno ya viene embebido en la esquina superior derecha.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Sheet>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\">\n    <SheetHeader>\n      <SheetTitle>Título</SheetTitle>\n      <SheetDescription>Descripción obligatoria.</SheetDescription>\n    </SheetHeader>\n    {/* contenido principal */}\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa para paneles laterales en desktop — filtros avanzados, configuración, navegación secundaria.",
+        "item2": "Provee siempre <code>SheetTitle</code> y <code>SheetDescription</code> — obligatorios para accesibilidad.",
+        "item3": "Para móvil con gesto de arrastre, usa <code>Drawer</code> en vez de Sheet.",
+        "item4": "Botones del pie alineados a la derecha: Cancelar (outline) + acción primaria."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Filtros avanzados (desktop)", "u": "Sí", "a": "-" },
+        "item2": { "s": "Configuración secundaria", "u": "Sí", "a": "-" },
+        "item3": { "s": "Panel móvil con swipe", "u": "No", "a": "Drawer" },
+        "item4": { "s": "Modal centrado", "u": "No", "a": "Dialog" },
+        "item5": { "s": "Confirmación destructiva", "u": "No", "a": "AlertDialog" },
+        "item6": { "s": "Formulario corto inline", "u": "No", "a": "Popover" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "title": {
+            "name": "SheetTitle",
+            "format": "Frase nominal · sin punto · máx. 6 palabras",
+            "good": "\"Filtros avanzados\", \"Editar perfil\"",
+            "bad": "\"Aquí puedes configurar todo...\""
+          },
+          "description": {
+            "name": "SheetDescription",
+            "format": "Frase completa · punto final · contextualiza la acción",
+            "good": "\"Configura los filtros para refinar los resultados.\"",
+            "bad": "Texto corto sin contexto"
+          },
+          "trigger": {
+            "name": "SheetTrigger",
+            "format": "Verbo en infinitivo · acción clara",
+            "good": "\"Abrir filtros\", \"Editar perfil\"",
+            "bad": "\"Más\", \"Aquí\""
+          },
+          "primary": {
+            "name": "Botón primario (pie)",
+            "format": "Verbo + objeto · acción concreta",
+            "good": "\"Aplicar filtros\", \"Guardar cambios\"",
+            "bad": "\"OK\", \"Confirmar\""
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Hay configuración secundaria que no necesita interrumpir el flujo",
+        "item2": "Los filtros avanzados necesitan su propio espacio sin cambiar de página",
+        "item3": "En desktop, el panel lateral organiza mejor que un modal centrado",
+        "item4": "El contenido es largo y puede hacer scroll sin desorientar al usuario"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Es una confirmación crítica — usa <code>AlertDialog</code>",
+        "item2": "En móvil con necesidad de swipe — usa <code>Drawer</code>",
+        "item3": "Contenido es corto e inline — usa <code>Popover</code>",
+        "item4": "Texto informativo simple — usa <code>Tooltip</code> o <code>HoverCard</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Provee siempre SheetTitle y SheetDescription para accesibilidad.",
+        "dont": "No omitas Title/Description — los lectores de pantalla pierden contexto."
+      },
+      "pair2": {
+        "do": "Usa el side adecuado al contexto: right para filtros, bottom para móvil.",
+        "dont": "No fuerces un side fijo en todos los contextos — piensa en el flujo del usuario."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "right": "Right",
+        "left": "Left",
+        "top": "Top",
+        "bottom": "Bottom"
+      },
+      "styles": {
+        "right": "Desliza desde la derecha — <code>side=\"right\"</code>, por defecto en desktop con sm:max-w-sm.",
+        "left": "Desliza desde la izquierda — <code>side=\"left\"</code>, ideal para navegación secundaria.",
+        "top": "Desliza desde arriba — <code>side=\"top\"</code>, ocupa altura automática.",
+        "bottom": "Desliza desde abajo — <code>side=\"bottom\"</code>, equivalente al Drawer pero sin gesto."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "transitioning": "Transitioning",
+        "focused": "Focused"
+      },
+      "descriptions": {
+        "closed": "Estado inicial — <code>data-state=\"closed\"</code>, contenido desmontado.",
+        "open": "Abierto — <code>data-state=\"open\"</code>, el foco va al primer elemento focalizable.",
+        "transitioning": "Animación de entrada/salida — <code>translate-x/y</code> según <code>side</code>.",
+        "focused": "Elemento interno enfocado — <code>ring-2 ring-ring</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Estado controlado de apertura. Usa con <code>onOpenChange</code>."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Estado inicial no controlado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback disparado al abrir o cerrar."
+        },
+        "side": {
+          "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+          "default": "\"right\"",
+          "required": "No",
+          "description": "Lado desde el que el panel desliza. Prop del <code>SheetContent</code>, no del <code>Sheet</code> root."
+        },
+        "showCloseButton": {
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "Muestra botón X en la esquina superior derecha del <code>SheetContent</code>."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases Tailwind adicionales. Útil para personalizar el ancho: <code>w-[400px] sm:w-[540px]</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Sheet controlado con onOpenChange\n<Sheet open={open} onOpenChange={setOpen}>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Filtros</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\" className=\"w-[400px] sm:w-[540px]\">\n    <SheetHeader>\n      <SheetTitle>Filtros avanzados</SheetTitle>\n      <SheetDescription>Refina los resultados.</SheetDescription>\n    </SheetHeader>\n    <FiltersForm onApply={() => setOpen(false)} />\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button onClick={handleApply}>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "popover": { "class": "bg-popover", "part": "Fondo del SheetContent" },
+        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto del SheetContent" },
+        "foreground": { "class": "text-foreground", "part": "Texto del SheetTitle" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto de SheetDescription" },
+        "border": { "class": "border", "part": "Borde del SheetContent por side" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco en elementos internos" },
+        "overlay": { "class": "bg-black/10", "part": "Backdrop sobre la página (SheetOverlay)" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Ancho personalizado por side */\n[data-slot=\"sheet-content\"][data-side=\"right\"],\n[data-slot=\"sheet-content\"][data-side=\"left\"] {\n  width: 400px;\n}\n@media (min-width: 640px) {\n  [data-slot=\"sheet-content\"][data-side=\"right\"],\n  [data-slot=\"sheet-content\"][data-side=\"left\"] {\n    max-width: 540px;\n  }\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 2.1.1, 2.1.2, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"dialog\"</code> aplicado automáticamente al SheetContent",
+        "item2": "<code>aria-labelledby</code> vinculado al SheetTitle (obligatorio)",
+        "item3": "<code>aria-describedby</code> vinculado a SheetDescription (obligatorio)",
+        "item4": "Focus trap dentro del panel mientras está abierto",
+        "item5": "<code>Escape</code> cierra el panel y devuelve el foco al trigger",
+        "item6": "Clic en el overlay cierra el panel (comportamiento nativo)",
+        "item7": "El scroll del body se bloquea mientras el Sheet está abierto"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Mueve el foco entre elementos dentro del Sheet",
+        "shiftTab": "Mueve el foco en sentido inverso",
+        "escape": "Cierra el Sheet y devuelve el foco al trigger",
+        "enter": "Activa el elemento enfocado"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"dialog\"</code> en SheetContent",
+        "labelledBy": "<code>aria-labelledby</code> apunta a SheetTitle",
+        "describedBy": "<code>aria-describedby</code> apunta a SheetDescription",
+        "modal": "<code>aria-modal=\"true\"</code> bloquea la interacción con la página"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "open": "Anuncia el título y el tipo \"diálogo\" al abrir",
+        "describe": "Lee la descripción tras el título",
+        "close": "Anuncia el regreso al trigger al cerrar con Escape"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "drawer": { "name": "Drawer", "description": "Panel deslizante móvil con gesto de arrastre." },
+        "dialog": { "name": "Dialog", "description": "Modal centrado para flujos largos." },
+        "alertDialog": { "name": "AlertDialog", "description": "Confirmación destructiva crítica." },
+        "popover": { "name": "Popover", "description": "Contenido contextual corto sin modal." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> Dialog (React), <code>reka-ui</code> Dialog (Vue), <code>bits-ui</code> Dialog (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Sheet usa Dialog</strong> — internamente es un Dialog con estilo de panel lateral; de ahí la obligatoriedad de Title/Description.",
+      "item3": "<strong>side en Content</strong> — la prop <code>side</code> va en <code>SheetContent</code>, no en <code>Sheet</code> root.",
+      "item4": "<strong>Ancho por defecto</strong> — en <code>side=\"right\"</code>/<code>\"left\"</code>: <code>w-3/4 sm:max-w-sm</code>. Para paneles más grandes, sobrescribe vía <code>className</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "dialog_open": {
+          "trigger": "Sheet se abre (trigger o control externo)",
+          "payload": "{ component: \"sheet\", trigger_label, location }"
+        },
+        "dialog_close": {
+          "trigger": "Sheet se cierra (Escape, overlay o acción)",
+          "payload": "{ component: \"sheet\", reason, location }"
+        },
+        "dialog_confirm": {
+          "trigger": "La acción primaria del pie se ejecuta",
+          "payload": "{ component: \"sheet\", action, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Hacer clic en el trigger", "result": "Sheet se abre y el foco va al primer elemento focalizable", "priority": "high" },
+        "item2": { "action": "Pulsar Escape con Sheet abierto", "result": "Cierra y devuelve el foco al trigger", "priority": "high" },
+        "item3": { "action": "Hacer clic en el overlay", "result": "Cierra el Sheet (comportamiento nativo)", "priority": "high" },
+        "item4": { "action": "Tab dentro del Sheet abierto", "result": "Focus trap mantiene el foco interno", "priority": "high" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core en estado abierto",
+        "item2": "Contraste mínimo 4.5:1 entre texto y fondo (WCAG 2.1 AA)",
+        "item3": "role=\"dialog\" presente en SheetContent",
+        "item4": "aria-labelledby apunta a SheetTitle",
+        "item5": "aria-describedby apunta a SheetDescription"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Right (por defecto)", "priority": "high" },
+        "item2": { "story": "Left", "priority": "high" },
+        "item3": { "story": "Bottom", "priority": "high" },
+        "item4": { "story": "Con formulario largo (scroll interno)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
