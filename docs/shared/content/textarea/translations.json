@@ -1,0 +1,1028 @@
+{
+  "pt-BR": {
+    "title": "Textarea",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Entrada de texto de múltiplas linhas para descrições, mensagens e observações com 3+ linhas.",
+    "seo": {
+      "title": "Textarea — Formulário · Design System",
+      "description": "Documentação do Textarea: redimensionamento, contador de caracteres, integração com FormField e suporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Textarea para entrada de múltiplas linhas, com field-sizing-content, classes Tailwind resize-y/none/full, contador de caracteres com aria-live e integração com FormField.",
+      "aiEntities": "Textarea, Input, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, resize-y, aria-invalid, maxLength",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "descriptionLabel": "Descrição",
+        "descriptionPlaceholder": "ex: Descreva o produto em até 500 caracteres...",
+        "descriptionHelp": "Descreva o produto com clareza.",
+        "bioLabel": "Biografia",
+        "bioPlaceholder": "Conte um pouco sobre você...",
+        "feedbackLabel": "Feedback",
+        "feedbackPlaceholder": "O que poderíamos melhorar?",
+        "charactersCounter": "{count}/{max}",
+        "noResize": "Sem redimensionamento",
+        "resizeY": "Vertical apenas",
+        "resizeFree": "Livre (evitar)"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Textarea</strong> — elemento <code>&lt;textarea&gt;</code> nativo com classes Tailwind e <code>data-slot=\"textarea\"</code>.",
+      "item2": "<strong>Label</strong> — externo, OBRIGATÓRIO, vinculado via <code>htmlFor</code> ao <code>id</code> do textarea.",
+      "item3": "<strong>FormDescription</strong> — texto auxiliar opcional descrevendo o conteúdo esperado.",
+      "item4": "<strong>Contador de caracteres</strong> — texto adjacente com <code>aria-live=\"polite\"</code> + <code>aria-label</code> descritivo, vinculado a <code>maxLength</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Descreva...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para textos com 3+ linhas. Para linha única, use <code>Input</code>.",
+        "item2": "Sempre forneça <code>Label</code> associado via <code>htmlFor</code> + <code>id</code>.",
+        "item3": "Combine <code>maxLength</code> + contador de caracteres com <code>aria-live=\"polite\"</code>.",
+        "item4": "Padrão: <code>resize-y min-h-[120px]</code> — vertical apenas, mínimo 3 linhas."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Descrição de produto (até 500 chars)", "u": "Sim", "a": "-" },
+        "item2": { "s": "Biografia de usuário", "u": "Sim", "a": "-" },
+        "item3": { "s": "Comentário curto (1 linha)", "u": "Não", "a": "Input" },
+        "item4": { "s": "Email, telefone, CPF", "u": "Não", "a": "Input type específico" },
+        "item5": { "s": "Editor rico (markdown, links)", "u": "Não", "a": "Editor WYSIWYG" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "label": {
+            "name": "Label",
+            "format": "Substantivo curto · sem dois-pontos · sem ponto",
+            "good": "\"Descrição\", \"Biografia\", \"Feedback\"",
+            "bad": "\"Descrição:\", \"Digite a descrição aqui\""
+          },
+          "placeholder": {
+            "name": "Placeholder",
+            "format": "Exemplo concreto · prefixo \"ex:\" opcional · sem instrução genérica",
+            "good": "\"ex: Camiseta de algodão, gola redonda...\"",
+            "bad": "\"Digite aqui\", \"Insira o texto\""
+          },
+          "counter": {
+            "name": "Contador",
+            "format": "Formato \"X/Y\" · aria-label descritivo",
+            "good": "\"125/500\" + aria-label \"125 de 500 caracteres\"",
+            "bad": "\"500 chars max\" sem contagem atual"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O texto esperado tem 3 ou mais linhas",
+        "item2": "Há limite de caracteres relevante (até 500-2000)",
+        "item3": "O usuário precisa redimensionar o campo (resize-y)",
+        "item4": "É descrição, biografia, observação ou mensagem"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "É campo de linha única — use <code>Input</code>",
+        "item2": "Há formatação rica (negrito, links) — use Editor WYSIWYG",
+        "item3": "É código — use editor com syntax highlighting (Monaco, CodeMirror)",
+        "item4": "É busca ou comando — use <code>Input</code> ou <code>Command</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Combine maxLength + contador com aria-live polite.",
+        "dont": "Não use maxLength sem mostrar o contador ao usuário."
+      },
+      "pair2": {
+        "do": "Use resize-y para redimensionamento vertical apenas.",
+        "dont": "Não use resize livre — usuários quebram o layout."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withCounter": "Com contador",
+        "noResize": "Sem resize"
+      },
+      "styles": {
+        "default": "Padrão — <code>resize-y min-h-[120px]</code>, vertical apenas.",
+        "withCounter": "Com contador de caracteres — <code>maxLength</code> + span com <code>aria-live=\"polite\"</code>.",
+        "noResize": "<code>resize-none</code> — útil em modais ou layouts onde o redimensionamento quebra a UI."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "focus": "Focus",
+        "filled": "Filled",
+        "disabled": "Disabled",
+        "invalid": "Invalid",
+        "readonly": "Read-only"
+      },
+      "descriptions": {
+        "default": "Estado padrão — borda <code>input</code>, placeholder <code>muted-foreground</code>.",
+        "focus": "Focado — borda <code>ring</code> + anel <code>ring-3 ring-ring/50</code>.",
+        "filled": "Com conteúdo — texto <code>foreground</code>, placeholder some.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, fundo <code>input/50</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code>, anel <code>destructive/20</code>.",
+        "readonly": "<code>readOnly</code> — texto selecionável mas não editável; sem mudança de fundo."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor controlado. Use junto com <code>onChange</code>."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor inicial não-controlado."
+        },
+        "onChange": {
+          "type": "(e: ChangeEvent&lt;HTMLTextAreaElement&gt;) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback disparado a cada caractere digitado."
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Texto exibido quando vazio. Use prefixo \"ex:\" + exemplo concreto."
+        },
+        "maxLength": {
+          "type": "number",
+          "default": "—",
+          "required": "Não",
+          "description": "Limite de caracteres. Combine com contador visível."
+        },
+        "rows": {
+          "type": "number",
+          "default": "—",
+          "required": "Não",
+          "description": "Altura inicial em linhas. Prefira <code>min-h-[…]</code> via Tailwind."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Desabilita o textarea."
+        },
+        "readOnly": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Apenas leitura — selecionável mas não editável."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes Tailwind. Use <code>resize-y</code>, <code>resize-none</code> ou <code>resize</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Textarea com contador de caracteres acessível\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"ex: Descreva o produto...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Descreva com clareza.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} de ${max} caracteres usados`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "input": { "class": "border-input", "part": "Borda do Textarea no estado padrão" },
+        "background": { "class": "bg-transparent", "part": "Fundo transparente (herda do container)" },
+        "foreground": { "class": "text-foreground", "part": "Cor do texto digitado" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Cor do placeholder e contador" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco" },
+        "destructive": { "class": "border-destructive", "part": "Borda no estado inválido" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Altura mínima customizada */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Borda colorida quando inválido + foco */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 1.4.4, 2.1.1, 2.4.7, 3.3.1, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "Elemento <code>&lt;textarea&gt;</code> nativo — semântica e role implícita",
+        "item2": "Label OBRIGATÓRIO via <code>htmlFor</code> + <code>id</code>",
+        "item3": "<code>aria-invalid=\"true\"</code> quando há erro de validação",
+        "item4": "Contador de caracteres com <code>aria-live=\"polite\"</code> + <code>aria-label</code> descritivo",
+        "item5": "<code>aria-describedby</code> vinculando descrição/erro ao textarea",
+        "item6": "Anel de foco visível com <code>ring-3 ring-ring/50</code>"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Foca o Textarea",
+        "shiftTab": "Move foco em sentido inverso",
+        "enter": "Insere nova linha (comportamento nativo)",
+        "shiftEnter": "Insere nova linha (idêntico a Enter)",
+        "esc": "Não tem efeito padrão"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "label": "Label externo via <code>htmlFor</code> + <code>id</code>",
+        "invalid": "<code>aria-invalid=\"true\"</code> em validação falha",
+        "describedBy": "<code>aria-describedby</code> aponta para FormDescription/FormMessage",
+        "live": "<code>aria-live=\"polite\"</code> no contador adjacente"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "focus": "Anuncia o Label + \"caixa de texto, múltiplas linhas\"",
+        "counter": "Anuncia atualização do contador via aria-live (a cada caractere)",
+        "error": "Anuncia a mensagem de erro vinculada via aria-describedby"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "input": { "name": "Input", "description": "Entrada de linha única." },
+        "label": { "name": "Label", "description": "Rótulo obrigatório vinculado via htmlFor." },
+        "form": { "name": "Form", "description": "Integração com validação via React Hook Form." },
+        "inputOTP": { "name": "InputOTP", "description": "Entrada segmentada para códigos de verificação." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Elemento nativo</strong> — usa <code>&lt;textarea&gt;</code> HTML5 sem lib upstream. Estilizado via Tailwind.",
+      "item2": "<strong>field-sizing-content</strong> — propriedade CSS moderna que ajusta a altura automaticamente ao conteúdo. Combinada com <code>min-h-[…]</code> para garantir altura mínima.",
+      "item3": "<strong>Resize</strong> — controlado via classe Tailwind (<code>resize-y</code>, <code>resize-none</code>, <code>resize</code>), não prop CSS direta.",
+      "item4": "<strong>Contador acessível</strong> — sempre <code>aria-live=\"polite\"</code> + <code>aria-label</code> com \"X de Y caracteres usados\" para leitores de tela."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_blur": {
+          "trigger": "Usuário sai do campo (onBlur) com conteúdo não-vazio",
+          "payload": "{ component: \"textarea\", field_name, length, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Digitar texto", "result": "Atualiza o value e dispara onChange a cada caractere", "priority": "high" },
+        "item2": { "action": "Clicar no Label", "result": "Foca o Textarea (via htmlFor)", "priority": "high" },
+        "item3": { "action": "Atingir maxLength", "result": "Bloqueia novos caracteres; contador permanece no máximo", "priority": "high" },
+        "item4": { "action": "Pressionar Enter", "result": "Insere nova linha (comportamento nativo)", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto digitado e fundo",
+        "item3": "Focus ring visível com ring-3 ring-ring/50",
+        "item4": "Label associado via htmlFor + id em todos os exemplos",
+        "item5": "aria-invalid reflete o estado de validação"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Default (vazio com placeholder)", "priority": "high" },
+        "item2": { "story": "Filled (com conteúdo)", "priority": "high" },
+        "item3": { "story": "Invalid (aria-invalid)", "priority": "high" },
+        "item4": { "story": "Com contador (maxLength + aria-live)", "priority": "medium" },
+        "item5": { "story": "Disabled / Read-only", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Textarea",
+    "category": "Form",
+    "type": "Component",
+    "description": "Multi-line text input for descriptions, messages and observations with 3+ lines.",
+    "seo": {
+      "title": "Textarea — Form · Design System",
+      "description": "Textarea documentation: resize, character counter, FormField integration and WCAG 2.1 AA support.",
+      "aiSummary": "Textarea component for multi-line input, with field-sizing-content, Tailwind resize-y/none/full classes, character counter with aria-live and FormField integration.",
+      "aiEntities": "Textarea, Input, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, resize-y, aria-invalid, maxLength",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "e.g.: Describe the product in up to 500 characters...",
+        "descriptionHelp": "Describe the product clearly.",
+        "bioLabel": "Bio",
+        "bioPlaceholder": "Tell us a bit about yourself...",
+        "feedbackLabel": "Feedback",
+        "feedbackPlaceholder": "What could we improve?",
+        "charactersCounter": "{count}/{max}",
+        "noResize": "No resize",
+        "resizeY": "Vertical only",
+        "resizeFree": "Free (avoid)"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Textarea</strong> — native <code>&lt;textarea&gt;</code> element with Tailwind classes and <code>data-slot=\"textarea\"</code>.",
+      "item2": "<strong>Label</strong> — external, REQUIRED, linked via <code>htmlFor</code> to the textarea <code>id</code>.",
+      "item3": "<strong>FormDescription</strong> — optional helper text describing the expected content.",
+      "item4": "<strong>Character counter</strong> — adjacent text with <code>aria-live=\"polite\"</code> + descriptive <code>aria-label</code>, linked to <code>maxLength</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Describe...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for text with 3+ lines. For single line, use <code>Input</code>.",
+        "item2": "Always provide associated <code>Label</code> via <code>htmlFor</code> + <code>id</code>.",
+        "item3": "Combine <code>maxLength</code> + character counter with <code>aria-live=\"polite\"</code>.",
+        "item4": "Default: <code>resize-y min-h-[120px]</code> — vertical only, minimum 3 lines."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Product description (up to 500 chars)", "u": "Yes", "a": "-" },
+        "item2": { "s": "User bio", "u": "Yes", "a": "-" },
+        "item3": { "s": "Short comment (1 line)", "u": "No", "a": "Input" },
+        "item4": { "s": "Email, phone, SSN", "u": "No", "a": "Input with specific type" },
+        "item5": { "s": "Rich editor (markdown, links)", "u": "No", "a": "WYSIWYG Editor" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "label": {
+            "name": "Label",
+            "format": "Short noun · no colon · no period",
+            "good": "\"Description\", \"Bio\", \"Feedback\"",
+            "bad": "\"Description:\", \"Type the description here\""
+          },
+          "placeholder": {
+            "name": "Placeholder",
+            "format": "Concrete example · optional \"e.g.:\" prefix · no generic instruction",
+            "good": "\"e.g.: Cotton t-shirt, crew neck...\"",
+            "bad": "\"Type here\", \"Insert text\""
+          },
+          "counter": {
+            "name": "Counter",
+            "format": "Format \"X/Y\" · descriptive aria-label",
+            "good": "\"125/500\" + aria-label \"125 of 500 characters\"",
+            "bad": "\"500 chars max\" without current count"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The expected text has 3 or more lines",
+        "item2": "There is a relevant character limit (up to 500-2000)",
+        "item3": "The user needs to resize the field (resize-y)",
+        "item4": "It's description, bio, observation or message"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "It's a single-line field — use <code>Input</code>",
+        "item2": "There is rich formatting (bold, links) — use WYSIWYG Editor",
+        "item3": "It's code — use editor with syntax highlighting (Monaco, CodeMirror)",
+        "item4": "It's search or command — use <code>Input</code> or <code>Command</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Combine maxLength + counter with aria-live polite.",
+        "dont": "Don't use maxLength without showing the counter to the user."
+      },
+      "pair2": {
+        "do": "Use resize-y for vertical-only resize.",
+        "dont": "Don't use free resize — users break the layout."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "withCounter": "With counter",
+        "noResize": "No resize"
+      },
+      "styles": {
+        "default": "Default — <code>resize-y min-h-[120px]</code>, vertical only.",
+        "withCounter": "With character counter — <code>maxLength</code> + span with <code>aria-live=\"polite\"</code>.",
+        "noResize": "<code>resize-none</code> — useful in modals or layouts where resizing breaks the UI."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "default": "Default",
+        "focus": "Focus",
+        "filled": "Filled",
+        "disabled": "Disabled",
+        "invalid": "Invalid",
+        "readonly": "Read-only"
+      },
+      "descriptions": {
+        "default": "Default state — <code>input</code> border, <code>muted-foreground</code> placeholder.",
+        "focus": "Focused — <code>ring</code> border + <code>ring-3 ring-ring/50</code> ring.",
+        "filled": "With content — <code>foreground</code> text, placeholder disappears.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, <code>input/50</code> background.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border, <code>destructive/20</code> ring.",
+        "readonly": "<code>readOnly</code> — selectable but not editable; no background change."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled value. Use with <code>onChange</code>."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Initial uncontrolled value."
+        },
+        "onChange": {
+          "type": "(e: ChangeEvent&lt;HTMLTextAreaElement&gt;) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired on every character typed."
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Text displayed when empty. Use \"e.g.:\" prefix + concrete example."
+        },
+        "maxLength": {
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "Character limit. Combine with visible counter."
+        },
+        "rows": {
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "Initial height in lines. Prefer <code>min-h-[…]</code> via Tailwind."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Disables the textarea."
+        },
+        "readOnly": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Read-only — selectable but not editable."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Tailwind classes. Use <code>resize-y</code>, <code>resize-none</code> or <code>resize</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Textarea with accessible character counter\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"e.g.: Describe the product...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe clearly.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} of ${max} characters used`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "input": { "class": "border-input", "part": "Textarea border in default state" },
+        "background": { "class": "bg-transparent", "part": "Transparent background (inherits from container)" },
+        "foreground": { "class": "text-foreground", "part": "Typed text color" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Placeholder and counter color" },
+        "ring": { "class": "ring-ring", "part": "Focus ring" },
+        "destructive": { "class": "border-destructive", "part": "Border in invalid state" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Custom minimum height */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Colored border when invalid + focus */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 1.4.4, 2.1.1, 2.4.7, 3.3.1, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "Native <code>&lt;textarea&gt;</code> element — implicit semantics and role",
+        "item2": "Label REQUIRED via <code>htmlFor</code> + <code>id</code>",
+        "item3": "<code>aria-invalid=\"true\"</code> when validation fails",
+        "item4": "Character counter with <code>aria-live=\"polite\"</code> + descriptive <code>aria-label</code>",
+        "item5": "<code>aria-describedby</code> linking description/error to the textarea",
+        "item6": "Visible focus ring with <code>ring-3 ring-ring/50</code>"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Focuses the Textarea",
+        "shiftTab": "Moves focus in reverse",
+        "enter": "Inserts new line (native behavior)",
+        "shiftEnter": "Inserts new line (same as Enter)",
+        "esc": "No default effect"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "label": "External Label via <code>htmlFor</code> + <code>id</code>",
+        "invalid": "<code>aria-invalid=\"true\"</code> on failed validation",
+        "describedBy": "<code>aria-describedby</code> points to FormDescription/FormMessage",
+        "live": "<code>aria-live=\"polite\"</code> on adjacent counter"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "focus": "Announces Label + \"text box, multi-line\"",
+        "counter": "Announces counter update via aria-live (each character)",
+        "error": "Announces the error message linked via aria-describedby"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "input": { "name": "Input", "description": "Single-line input." },
+        "label": { "name": "Label", "description": "Required label linked via htmlFor." },
+        "form": { "name": "Form", "description": "Validation integration via React Hook Form." },
+        "inputOTP": { "name": "InputOTP", "description": "Segmented input for verification codes." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Native element</strong> — uses HTML5 <code>&lt;textarea&gt;</code> with no upstream lib. Styled via Tailwind.",
+      "item2": "<strong>field-sizing-content</strong> — modern CSS property that auto-adjusts height to content. Combined with <code>min-h-[…]</code> to guarantee minimum height.",
+      "item3": "<strong>Resize</strong> — controlled via Tailwind class (<code>resize-y</code>, <code>resize-none</code>, <code>resize</code>), not direct CSS prop.",
+      "item4": "<strong>Accessible counter</strong> — always <code>aria-live=\"polite\"</code> + <code>aria-label</code> with \"X of Y characters used\" for screen readers."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_blur": {
+          "trigger": "User leaves the field (onBlur) with non-empty content",
+          "payload": "{ component: \"textarea\", field_name, length, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Type text", "result": "Updates value and fires onChange on every character", "priority": "high" },
+        "item2": { "action": "Click Label", "result": "Focuses the Textarea (via htmlFor)", "priority": "high" },
+        "item3": { "action": "Reach maxLength", "result": "Blocks new characters; counter stays at maximum", "priority": "high" },
+        "item4": { "action": "Press Enter", "result": "Inserts new line (native behavior)", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 4.5:1 contrast between typed text and background",
+        "item3": "Visible focus ring with ring-3 ring-ring/50",
+        "item4": "Label associated via htmlFor + id in all examples",
+        "item5": "aria-invalid reflects the validation state"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Default (empty with placeholder)", "priority": "high" },
+        "item2": { "story": "Filled (with content)", "priority": "high" },
+        "item3": { "story": "Invalid (aria-invalid)", "priority": "high" },
+        "item4": { "story": "With counter (maxLength + aria-live)", "priority": "medium" },
+        "item5": { "story": "Disabled / Read-only", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Textarea",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Entrada de texto multilínea para descripciones, mensajes y observaciones con 3+ líneas.",
+    "seo": {
+      "title": "Textarea — Formulario · Design System",
+      "description": "Documentación de Textarea: redimensionamiento, contador de caracteres, integración con FormField y soporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Textarea para entrada multilínea, con field-sizing-content, clases Tailwind resize-y/none/full, contador de caracteres con aria-live e integración con FormField.",
+      "aiEntities": "Textarea, Input, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, resize-y, aria-invalid, maxLength",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "descriptionLabel": "Descripción",
+        "descriptionPlaceholder": "ej: Describe el producto en hasta 500 caracteres...",
+        "descriptionHelp": "Describe el producto con claridad.",
+        "bioLabel": "Biografía",
+        "bioPlaceholder": "Cuéntanos un poco sobre ti...",
+        "feedbackLabel": "Feedback",
+        "feedbackPlaceholder": "¿Qué podríamos mejorar?",
+        "charactersCounter": "{count}/{max}",
+        "noResize": "Sin redimensionamiento",
+        "resizeY": "Solo vertical",
+        "resizeFree": "Libre (evitar)"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Textarea</strong> — elemento <code>&lt;textarea&gt;</code> nativo con clases Tailwind y <code>data-slot=\"textarea\"</code>.",
+      "item2": "<strong>Label</strong> — externo, OBLIGATORIO, vinculado vía <code>htmlFor</code> al <code>id</code> del textarea.",
+      "item3": "<strong>FormDescription</strong> — texto auxiliar opcional que describe el contenido esperado.",
+      "item4": "<strong>Contador de caracteres</strong> — texto adyacente con <code>aria-live=\"polite\"</code> + <code>aria-label</code> descriptivo, vinculado a <code>maxLength</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Describe...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa para textos con 3+ líneas. Para una sola línea, usa <code>Input</code>.",
+        "item2": "Provee siempre <code>Label</code> asociado vía <code>htmlFor</code> + <code>id</code>.",
+        "item3": "Combina <code>maxLength</code> + contador de caracteres con <code>aria-live=\"polite\"</code>.",
+        "item4": "Por defecto: <code>resize-y min-h-[120px]</code> — solo vertical, mínimo 3 líneas."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Descripción de producto (hasta 500 chars)", "u": "Sí", "a": "-" },
+        "item2": { "s": "Biografía de usuario", "u": "Sí", "a": "-" },
+        "item3": { "s": "Comentario corto (1 línea)", "u": "No", "a": "Input" },
+        "item4": { "s": "Email, teléfono, DNI", "u": "No", "a": "Input con tipo específico" },
+        "item5": { "s": "Editor rico (markdown, links)", "u": "No", "a": "Editor WYSIWYG" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "label": {
+            "name": "Label",
+            "format": "Sustantivo corto · sin dos puntos · sin punto",
+            "good": "\"Descripción\", \"Biografía\", \"Feedback\"",
+            "bad": "\"Descripción:\", \"Escribe la descripción aquí\""
+          },
+          "placeholder": {
+            "name": "Placeholder",
+            "format": "Ejemplo concreto · prefijo \"ej:\" opcional · sin instrucción genérica",
+            "good": "\"ej: Camiseta de algodón, cuello redondo...\"",
+            "bad": "\"Escribe aquí\", \"Inserta el texto\""
+          },
+          "counter": {
+            "name": "Contador",
+            "format": "Formato \"X/Y\" · aria-label descriptivo",
+            "good": "\"125/500\" + aria-label \"125 de 500 caracteres\"",
+            "bad": "\"500 chars max\" sin recuento actual"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "El texto esperado tiene 3 o más líneas",
+        "item2": "Hay límite de caracteres relevante (hasta 500-2000)",
+        "item3": "El usuario necesita redimensionar el campo (resize-y)",
+        "item4": "Es descripción, biografía, observación o mensaje"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Es un campo de una sola línea — usa <code>Input</code>",
+        "item2": "Hay formato rico (negrita, links) — usa Editor WYSIWYG",
+        "item3": "Es código — usa editor con syntax highlighting (Monaco, CodeMirror)",
+        "item4": "Es búsqueda o comando — usa <code>Input</code> o <code>Command</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Combina maxLength + contador con aria-live polite.",
+        "dont": "No uses maxLength sin mostrar el contador al usuario."
+      },
+      "pair2": {
+        "do": "Usa resize-y para redimensionamiento solo vertical.",
+        "dont": "No uses resize libre — los usuarios rompen el layout."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withCounter": "Con contador",
+        "noResize": "Sin resize"
+      },
+      "styles": {
+        "default": "Por defecto — <code>resize-y min-h-[120px]</code>, solo vertical.",
+        "withCounter": "Con contador de caracteres — <code>maxLength</code> + span con <code>aria-live=\"polite\"</code>.",
+        "noResize": "<code>resize-none</code> — útil en modales o layouts donde el redimensionamiento rompe la UI."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "focus": "Focus",
+        "filled": "Filled",
+        "disabled": "Disabled",
+        "invalid": "Invalid",
+        "readonly": "Read-only"
+      },
+      "descriptions": {
+        "default": "Estado por defecto — borde <code>input</code>, placeholder <code>muted-foreground</code>.",
+        "focus": "Enfocado — borde <code>ring</code> + anillo <code>ring-3 ring-ring/50</code>.",
+        "filled": "Con contenido — texto <code>foreground</code>, el placeholder desaparece.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, fondo <code>input/50</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code>, anillo <code>destructive/20</code>.",
+        "readonly": "<code>readOnly</code> — texto seleccionable pero no editable; sin cambio de fondo."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Valor controlado. Usa con <code>onChange</code>."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Valor inicial no controlado."
+        },
+        "onChange": {
+          "type": "(e: ChangeEvent&lt;HTMLTextAreaElement&gt;) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback disparado a cada carácter escrito."
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Texto mostrado cuando está vacío. Usa prefijo \"ej:\" + ejemplo concreto."
+        },
+        "maxLength": {
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "Límite de caracteres. Combina con contador visible."
+        },
+        "rows": {
+          "type": "number",
+          "default": "—",
+          "required": "No",
+          "description": "Altura inicial en líneas. Prefiere <code>min-h-[…]</code> vía Tailwind."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Deshabilita el textarea."
+        },
+        "readOnly": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Solo lectura — seleccionable pero no editable."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases Tailwind. Usa <code>resize-y</code>, <code>resize-none</code> o <code>resize</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Textarea con contador de caracteres accesible\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"ej: Describe el producto...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe con claridad.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} de ${max} caracteres usados`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "input": { "class": "border-input", "part": "Borde del Textarea en estado por defecto" },
+        "background": { "class": "bg-transparent", "part": "Fondo transparente (hereda del contenedor)" },
+        "foreground": { "class": "text-foreground", "part": "Color del texto escrito" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Color del placeholder y contador" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco" },
+        "destructive": { "class": "border-destructive", "part": "Borde en estado inválido" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Altura mínima personalizada */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Borde coloreado cuando inválido + foco */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 1.4.4, 2.1.1, 2.4.7, 3.3.1, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "Elemento <code>&lt;textarea&gt;</code> nativo — semántica y role implícita",
+        "item2": "Label OBLIGATORIO vía <code>htmlFor</code> + <code>id</code>",
+        "item3": "<code>aria-invalid=\"true\"</code> cuando hay error de validación",
+        "item4": "Contador de caracteres con <code>aria-live=\"polite\"</code> + <code>aria-label</code> descriptivo",
+        "item5": "<code>aria-describedby</code> vinculando descripción/error al textarea",
+        "item6": "Anillo de foco visible con <code>ring-3 ring-ring/50</code>"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Enfoca el Textarea",
+        "shiftTab": "Mueve el foco en sentido inverso",
+        "enter": "Inserta nueva línea (comportamiento nativo)",
+        "shiftEnter": "Inserta nueva línea (igual a Enter)",
+        "esc": "Sin efecto por defecto"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "label": "Label externo vía <code>htmlFor</code> + <code>id</code>",
+        "invalid": "<code>aria-invalid=\"true\"</code> en validación fallida",
+        "describedBy": "<code>aria-describedby</code> apunta a FormDescription/FormMessage",
+        "live": "<code>aria-live=\"polite\"</code> en el contador adyacente"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "focus": "Anuncia el Label + \"cuadro de texto, multilínea\"",
+        "counter": "Anuncia la actualización del contador vía aria-live (a cada carácter)",
+        "error": "Anuncia el mensaje de error vinculado vía aria-describedby"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "input": { "name": "Input", "description": "Entrada de una sola línea." },
+        "label": { "name": "Label", "description": "Etiqueta obligatoria vinculada vía htmlFor." },
+        "form": { "name": "Form", "description": "Integración de validación vía React Hook Form." },
+        "inputOTP": { "name": "InputOTP", "description": "Entrada segmentada para códigos de verificación." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Elemento nativo</strong> — usa <code>&lt;textarea&gt;</code> HTML5 sin lib upstream. Estilizado vía Tailwind.",
+      "item2": "<strong>field-sizing-content</strong> — propiedad CSS moderna que ajusta la altura automáticamente al contenido. Combinada con <code>min-h-[…]</code> para garantizar altura mínima.",
+      "item3": "<strong>Resize</strong> — controlado vía clase Tailwind (<code>resize-y</code>, <code>resize-none</code>, <code>resize</code>), no prop CSS directa.",
+      "item4": "<strong>Contador accesible</strong> — siempre <code>aria-live=\"polite\"</code> + <code>aria-label</code> con \"X de Y caracteres usados\" para lectores de pantalla."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_blur": {
+          "trigger": "El usuario sale del campo (onBlur) con contenido no vacío",
+          "payload": "{ component: \"textarea\", field_name, length, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Escribir texto", "result": "Actualiza el value y dispara onChange a cada carácter", "priority": "high" },
+        "item2": { "action": "Hacer clic en el Label", "result": "Enfoca el Textarea (vía htmlFor)", "priority": "high" },
+        "item3": { "action": "Alcanzar maxLength", "result": "Bloquea nuevos caracteres; el contador permanece en el máximo", "priority": "high" },
+        "item4": { "action": "Pulsar Enter", "result": "Inserta nueva línea (comportamiento nativo)", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto escrito y fondo",
+        "item3": "Anillo de foco visible con ring-3 ring-ring/50",
+        "item4": "Label asociado vía htmlFor + id en todos los ejemplos",
+        "item5": "aria-invalid refleja el estado de validación"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Default (vacío con placeholder)", "priority": "high" },
+        "item2": { "story": "Filled (con contenido)", "priority": "high" },
+        "item3": { "story": "Invalid (aria-invalid)", "priority": "high" },
+        "item4": { "story": "Con contador (maxLength + aria-live)", "priority": "medium" },
+        "item5": { "story": "Disabled / Read-only", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
