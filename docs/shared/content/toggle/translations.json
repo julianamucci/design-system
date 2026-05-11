@@ -1,0 +1,965 @@
+{
+  "pt-BR": {
+    "title": "Toggle",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Botão de dois estados (ativo/inativo) para formatação visual, modos de exibição e filtros — não para configurações de sistema.",
+    "seo": {
+      "title": "Toggle — Formulário · Design System",
+      "description": "Documentação do Toggle: variantes default/outline, tamanhos sm/default/lg, aria-pressed e suporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Toggle de dois estados com aria-pressed automático, variantes default/outline, tamanhos sm/default/lg para formatação visual e filtros.",
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "bold": "Negrito",
+        "italic": "Itálico",
+        "underline": "Sublinhado",
+        "list": "Lista",
+        "showHidden": "Mostrar ocultos",
+        "compactView": "Visão compacta"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Toggle</strong> — botão único com <code>aria-pressed=\"true|false\"</code> e <code>data-state=\"on|off\"</code>.",
+      "item2": "<strong>Ícone interno</strong> (opcional) — <code>&lt;svg&gt;</code> com <code>aria-hidden=\"true\"</code> e tamanho <code>size-4</code>.",
+      "item3": "<strong>aria-label</strong> — OBRIGATÓRIO em toggles icon-only.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "{/* Toggle simples icon-only */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Negrito\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle com label visível */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Mostrar ocultos\n</Toggle>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para formatação visual (negrito, itálico), filtros e modos de exibição.",
+        "item2": "Toggle icon-only OBRIGA <code>aria-label</code> descritivo.",
+        "item3": "Para configurações de sistema com efeito imediato, use <code>Switch</code>.",
+        "item4": "Para múltiplos toggles relacionados, use <code>ToggleGroup</code> (não múltiplos Toggles soltos)."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Botão de negrito num editor", "u": "Sim", "a": "-" },
+        "item2": { "s": "Mostrar/ocultar itens arquivados", "u": "Sim", "a": "-" },
+        "item3": { "s": "Dark mode (efeito imediato)", "u": "Não", "a": "Switch" },
+        "item4": { "s": "Aceitar termos (form com submit)", "u": "Não", "a": "Checkbox" },
+        "item5": { "s": "Alinhamento de texto (3 opções)", "u": "Não", "a": "ToggleGroup type=single" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "ariaLabel": {
+            "name": "aria-label (icon-only)",
+            "format": "Substantivo curto · descreve a função, não o ícone",
+            "good": "\"Negrito\", \"Itálico\", \"Mostrar ocultos\"",
+            "bad": "\"Botão B\", \"Letra B\""
+          },
+          "label": {
+            "name": "Label visível",
+            "format": "Verbo ou substantivo · descreve estado ATIVO",
+            "good": "\"Mostrar ocultos\", \"Visão compacta\"",
+            "bad": "\"Ocultos?\", \"Comprimir\""
+          },
+          "icon": {
+            "name": "Ícone interno",
+            "format": "Sempre <code>aria-hidden=\"true\"</code> · ícone reforça, não substitui",
+            "good": "<code>&lt;Bold aria-hidden=\"true\" /&gt;</code>",
+            "bad": "Ícone sem aria-hidden, ou trocar texto por emoji"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "É um botão de formatação visual (negrito, itálico, sublinhado)",
+        "item2": "É um filtro de visualização (mostrar/ocultar arquivados)",
+        "item3": "É um modo de exibição (compacto/expandido)",
+        "item4": "O estado é local à interface (não persiste como configuração)"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "É configuração de sistema — use <code>Switch</code>",
+        "item2": "Está em form com submit — use <code>Checkbox</code>",
+        "item3": "São 2-7 opções textuais — use <code>RadioGroup</code> ou <code>ToggleGroup</code>",
+        "item4": "É ação que dispara comando único — use <code>Button</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Toggle icon-only com aria-label descritivo da função.",
+        "dont": "Não use aria-label genérico como \"Botão\" ou nome da letra."
+      },
+      "pair2": {
+        "do": "Use ToggleGroup para conjunto relacionado (alinhamento, formatação).",
+        "dont": "Não use vários Toggle soltos quando representam uma escolha conjunta."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "outline": "Outline",
+        "withLabel": "With label"
+      },
+      "styles": {
+        "default": "Sem borda — fundo transparente, hover <code>muted</code>. Aria-pressed aplica <code>bg-muted</code>.",
+        "outline": "<code>variant=\"outline\"</code> — borda <code>input</code>, mesma lógica de pressed.",
+        "withLabel": "Ícone + texto visível — útil para filtros (\"Mostrar ocultos\")."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "off": "Off",
+        "on": "On",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled",
+        "invalid": "Invalid"
+      },
+      "descriptions": {
+        "off": "Inativo — <code>aria-pressed=\"false\"</code>, fundo transparente.",
+        "on": "Ativo — <code>aria-pressed=\"true\"</code>, fundo <code>muted</code> (<code>data-state=on</code>).",
+        "hover": "Mouse sobre — fundo <code>muted</code>, texto <code>foreground</code>.",
+        "focus": "Focado via teclado — anel <code>ring-[3px] ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "pressed": {
+          "type": "boolean",
+          "default": "—",
+          "required": "Não",
+          "description": "Estado controlado. Use junto com <code>onPressedChange</code>."
+        },
+        "defaultPressed": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Estado inicial não-controlado."
+        },
+        "onPressedChange": {
+          "type": "(pressed: boolean) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback disparado ao alternar."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Desabilita o Toggle."
+        },
+        "variant": {
+          "type": "\"default\" | \"outline\"",
+          "default": "\"default\"",
+          "required": "Não",
+          "description": "Estilo visual. <code>outline</code> adiciona borda <code>input</code>."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\" | \"lg\"",
+          "default": "\"default\"",
+          "required": "Não",
+          "description": "Altura via tokens <code>--height-*</code>."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes Tailwind adicionais."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Toggle de formatação com tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Negrito\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "muted": { "class": "bg-muted", "part": "Fundo no estado ativo (aria-pressed=true) e hover" },
+        "foreground": { "class": "text-foreground", "part": "Cor do texto/ícone no hover/ativo" },
+        "input": { "class": "border-input", "part": "Borda na variante outline" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco" },
+        "destructive": { "class": "border-destructive", "part": "Borda no estado inválido" },
+        "radius": { "class": "rounded-(--radius-button)", "part": "Raio respeita multiplicador do tema" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Cor customizada do estado ativo */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override do tamanho via tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>aria-pressed</code> reflete o estado on/off automaticamente",
+        "item2": "<code>aria-label</code> OBRIGATÓRIO em toggles icon-only",
+        "item3": "Ícone interno com <code>aria-hidden=\"true\"</code> — não é lido pelo leitor de tela",
+        "item4": "Anel de foco visível com <code>ring-[3px] ring-ring/50</code>",
+        "item5": "<code>aria-invalid=\"true\"</code> em validação falha",
+        "item6": "Contraste mínimo 4.5:1 entre texto/ícone e fundo ativo"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Foca o Toggle",
+        "space": "Alterna o estado",
+        "enter": "Alterna o estado (idêntico a Space)"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "pressed": "<code>aria-pressed=\"true|false\"</code> automático",
+        "label": "<code>aria-label</code> obrigatório em icon-only",
+        "hidden": "<code>aria-hidden=\"true\"</code> no ícone interno",
+        "invalid": "<code>aria-invalid=\"true\"</code> em validação falha"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "default": "Anuncia o Label + \"botão de alternância, não pressionado\"",
+        "pressed": "Anuncia \"pressionado\" ao ativar",
+        "change": "Anuncia mudança de estado ao alternar"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "toggleGroup": { "name": "ToggleGroup", "description": "Conjunto relacionado de toggles (single ou multiple)." },
+        "switch": { "name": "Switch", "description": "Configuração de sistema com efeito imediato." },
+        "checkbox": { "name": "Checkbox", "description": "Seleção em form com submit." },
+        "button": { "name": "Button", "description": "Ação única (não-alternante)." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle usa <code>aria-pressed</code> (toggle button); Switch usa <code>role=\"switch\"</code> + <code>aria-checked</code>.",
+      "item3": "<strong>Token de raio</strong> — <code>rounded-(--radius-button)</code> respeita multiplicador do tema (ver PATCHES.md).",
+      "item4": "<strong>Para conjunto</strong> — use <code>ToggleGroup</code> em vez de múltiplos Toggle soltos quando representam escolha conjunta."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_change": {
+          "trigger": "Usuário alterna o estado (pressed → unpressed ou vice-versa)",
+          "payload": "{ component: \"toggle\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Clicar no Toggle", "result": "Alterna pressed e dispara onPressedChange", "priority": "high" },
+        "item2": { "action": "Pressionar Space com Toggle focado", "result": "Alterna o estado", "priority": "high" },
+        "item3": { "action": "Pressionar Enter com Toggle focado", "result": "Alterna o estado (idêntico a Space)", "priority": "medium" },
+        "item4": { "action": "Clicar com disabled=true", "result": "Não muda estado; aria-disabled true", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto/ícone e fundo ativo",
+        "item3": "Focus ring visível com ring-[3px] ring-ring/50",
+        "item4": "aria-pressed reflete o estado",
+        "item5": "aria-label presente em toggles icon-only"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Off (default)", "priority": "high" },
+        "item2": { "story": "On (pressed)", "priority": "high" },
+        "item3": { "story": "Outline variant", "priority": "high" },
+        "item4": { "story": "Disabled", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Toggle",
+    "category": "Form",
+    "type": "Component",
+    "description": "Two-state button (on/off) for visual formatting, view modes and filters — not for system settings.",
+    "seo": {
+      "title": "Toggle — Form · Design System",
+      "description": "Toggle documentation: default/outline variants, sm/default/lg sizes, aria-pressed and WCAG 2.1 AA support.",
+      "aiSummary": "Toggle two-state component with automatic aria-pressed, default/outline variants, sm/default/lg sizes for visual formatting and filters.",
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "list": "List",
+        "showHidden": "Show hidden",
+        "compactView": "Compact view"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Toggle</strong> — single button with <code>aria-pressed=\"true|false\"</code> and <code>data-state=\"on|off\"</code>.",
+      "item2": "<strong>Internal icon</strong> (optional) — <code>&lt;svg&gt;</code> with <code>aria-hidden=\"true\"</code> and <code>size-4</code>.",
+      "item3": "<strong>aria-label</strong> — REQUIRED on icon-only toggles.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "{/* Simple icon-only Toggle */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Bold\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle with visible label */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Show hidden\n</Toggle>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for visual formatting (bold, italic), filters and view modes.",
+        "item2": "Icon-only Toggle REQUIRES descriptive <code>aria-label</code>.",
+        "item3": "For system settings with immediate effect, use <code>Switch</code>.",
+        "item4": "For multiple related toggles, use <code>ToggleGroup</code> (not multiple loose Toggles)."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Bold button in an editor", "u": "Yes", "a": "-" },
+        "item2": { "s": "Show/hide archived items", "u": "Yes", "a": "-" },
+        "item3": { "s": "Dark mode (immediate effect)", "u": "No", "a": "Switch" },
+        "item4": { "s": "Accept terms (form with submit)", "u": "No", "a": "Checkbox" },
+        "item5": { "s": "Text alignment (3 options)", "u": "No", "a": "ToggleGroup type=single" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "ariaLabel": {
+            "name": "aria-label (icon-only)",
+            "format": "Short noun · describes function, not icon",
+            "good": "\"Bold\", \"Italic\", \"Show hidden\"",
+            "bad": "\"B button\", \"Letter B\""
+          },
+          "label": {
+            "name": "Visible label",
+            "format": "Verb or noun · describes ACTIVE state",
+            "good": "\"Show hidden\", \"Compact view\"",
+            "bad": "\"Hidden?\", \"Compress\""
+          },
+          "icon": {
+            "name": "Internal icon",
+            "format": "Always <code>aria-hidden=\"true\"</code> · icon reinforces, doesn't replace",
+            "good": "<code>&lt;Bold aria-hidden=\"true\" /&gt;</code>",
+            "bad": "Icon without aria-hidden, or replacing text with emoji"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "It's a visual formatting button (bold, italic, underline)",
+        "item2": "It's a view filter (show/hide archived)",
+        "item3": "It's a view mode (compact/expanded)",
+        "item4": "State is local to the interface (not persisted as setting)"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "It's a system setting — use <code>Switch</code>",
+        "item2": "It's in a form with submit — use <code>Checkbox</code>",
+        "item3": "There are 2-7 text options — use <code>RadioGroup</code> or <code>ToggleGroup</code>",
+        "item4": "It's an action triggering a single command — use <code>Button</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Icon-only Toggle with descriptive aria-label for the function.",
+        "dont": "Don't use generic aria-label like \"Button\" or the letter name."
+      },
+      "pair2": {
+        "do": "Use ToggleGroup for related sets (alignment, formatting).",
+        "dont": "Don't use multiple loose Toggles when they represent a joint choice."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "outline": "Outline",
+        "withLabel": "With label"
+      },
+      "styles": {
+        "default": "No border — transparent background, <code>muted</code> hover. Aria-pressed applies <code>bg-muted</code>.",
+        "outline": "<code>variant=\"outline\"</code> — <code>input</code> border, same pressed logic.",
+        "withLabel": "Icon + visible text — useful for filters (\"Show hidden\")."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "off": "Off",
+        "on": "On",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled",
+        "invalid": "Invalid"
+      },
+      "descriptions": {
+        "off": "Inactive — <code>aria-pressed=\"false\"</code>, transparent background.",
+        "on": "Active — <code>aria-pressed=\"true\"</code>, <code>muted</code> background (<code>data-state=on</code>).",
+        "hover": "Mouse over — <code>muted</code> background, <code>foreground</code> text.",
+        "focus": "Keyboard focused — <code>ring-[3px] ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "pressed": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled state. Use with <code>onPressedChange</code>."
+        },
+        "defaultPressed": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Initial uncontrolled state."
+        },
+        "onPressedChange": {
+          "type": "(pressed: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired on toggle."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Disables the Toggle."
+        },
+        "variant": {
+          "type": "\"default\" | \"outline\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Visual style. <code>outline</code> adds <code>input</code> border."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\" | \"lg\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Height via <code>--height-*</code> tokens."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Additional Tailwind classes."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// Formatting Toggle with tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Bold\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "muted": { "class": "bg-muted", "part": "Background in active state (aria-pressed=true) and hover" },
+        "foreground": { "class": "text-foreground", "part": "Text/icon color on hover/active" },
+        "input": { "class": "border-input", "part": "Border on outline variant" },
+        "ring": { "class": "ring-ring", "part": "Focus ring" },
+        "destructive": { "class": "border-destructive", "part": "Border in invalid state" },
+        "radius": { "class": "rounded-(--radius-button)", "part": "Radius respects theme multiplier" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Custom active state color */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override size via tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>aria-pressed</code> reflects on/off state automatically",
+        "item2": "<code>aria-label</code> REQUIRED on icon-only toggles",
+        "item3": "Internal icon with <code>aria-hidden=\"true\"</code> — not read by screen reader",
+        "item4": "Visible focus ring with <code>ring-[3px] ring-ring/50</code>",
+        "item5": "<code>aria-invalid=\"true\"</code> on failed validation",
+        "item6": "Minimum 4.5:1 contrast between text/icon and active background"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Focuses the Toggle",
+        "space": "Toggles the state",
+        "enter": "Toggles the state (same as Space)"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "pressed": "<code>aria-pressed=\"true|false\"</code> automatic",
+        "label": "<code>aria-label</code> required on icon-only",
+        "hidden": "<code>aria-hidden=\"true\"</code> on internal icon",
+        "invalid": "<code>aria-invalid=\"true\"</code> on failed validation"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "default": "Announces Label + \"toggle button, not pressed\"",
+        "pressed": "Announces \"pressed\" on activation",
+        "change": "Announces state change on toggle"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "toggleGroup": { "name": "ToggleGroup", "description": "Related set of toggles (single or multiple)." },
+        "switch": { "name": "Switch", "description": "System setting with immediate effect." },
+        "checkbox": { "name": "Checkbox", "description": "Selection in form with submit." },
+        "button": { "name": "Button", "description": "Single (non-toggling) action." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle uses <code>aria-pressed</code> (toggle button); Switch uses <code>role=\"switch\"</code> + <code>aria-checked</code>.",
+      "item3": "<strong>Radius token</strong> — <code>rounded-(--radius-button)</code> respects theme multiplier (see PATCHES.md).",
+      "item4": "<strong>For sets</strong> — use <code>ToggleGroup</code> instead of multiple loose Toggles when they represent a joint choice."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_change": {
+          "trigger": "User toggles state (pressed → unpressed or vice versa)",
+          "payload": "{ component: \"toggle\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Click the Toggle", "result": "Toggles pressed and fires onPressedChange", "priority": "high" },
+        "item2": { "action": "Press Space with Toggle focused", "result": "Toggles the state", "priority": "high" },
+        "item3": { "action": "Press Enter with Toggle focused", "result": "Toggles the state (same as Space)", "priority": "medium" },
+        "item4": { "action": "Click with disabled=true", "result": "Doesn't change state; aria-disabled true", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 4.5:1 contrast between text/icon and active background",
+        "item3": "Visible focus ring with ring-[3px] ring-ring/50",
+        "item4": "aria-pressed reflects state",
+        "item5": "aria-label present on icon-only toggles"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Off (default)", "priority": "high" },
+        "item2": { "story": "On (pressed)", "priority": "high" },
+        "item3": { "story": "Outline variant", "priority": "high" },
+        "item4": { "story": "Disabled", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Toggle",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Botón de dos estados (activo/inactivo) para formato visual, modos de vista y filtros — no para configuraciones de sistema.",
+    "seo": {
+      "title": "Toggle — Formulario · Design System",
+      "description": "Documentación de Toggle: variantes default/outline, tamaños sm/default/lg, aria-pressed y soporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Toggle de dos estados con aria-pressed automático, variantes default/outline, tamaños sm/default/lg para formato visual y filtros.",
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "bold": "Negrita",
+        "italic": "Itálica",
+        "underline": "Subrayado",
+        "list": "Lista",
+        "showHidden": "Mostrar ocultos",
+        "compactView": "Vista compacta"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Toggle</strong> — botón único con <code>aria-pressed=\"true|false\"</code> y <code>data-state=\"on|off\"</code>.",
+      "item2": "<strong>Icono interno</strong> (opcional) — <code>&lt;svg&gt;</code> con <code>aria-hidden=\"true\"</code> y <code>size-4</code>.",
+      "item3": "<strong>aria-label</strong> — OBLIGATORIO en toggles icon-only.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "{/* Toggle simple icon-only */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Negrita\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle con label visible */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Mostrar ocultos\n</Toggle>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa para formato visual (negrita, itálica), filtros y modos de vista.",
+        "item2": "Toggle icon-only EXIGE <code>aria-label</code> descriptivo.",
+        "item3": "Para configuraciones de sistema con efecto inmediato, usa <code>Switch</code>.",
+        "item4": "Para múltiples toggles relacionados, usa <code>ToggleGroup</code> (no múltiples Toggles sueltos)."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Botón de negrita en un editor", "u": "Sí", "a": "-" },
+        "item2": { "s": "Mostrar/ocultar ítems archivados", "u": "Sí", "a": "-" },
+        "item3": { "s": "Modo oscuro (efecto inmediato)", "u": "No", "a": "Switch" },
+        "item4": { "s": "Aceptar términos (form con submit)", "u": "No", "a": "Checkbox" },
+        "item5": { "s": "Alineación de texto (3 opciones)", "u": "No", "a": "ToggleGroup type=single" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "ariaLabel": {
+            "name": "aria-label (icon-only)",
+            "format": "Sustantivo corto · describe la función, no el icono",
+            "good": "\"Negrita\", \"Itálica\", \"Mostrar ocultos\"",
+            "bad": "\"Botón B\", \"Letra B\""
+          },
+          "label": {
+            "name": "Label visible",
+            "format": "Verbo o sustantivo · describe el estado ACTIVO",
+            "good": "\"Mostrar ocultos\", \"Vista compacta\"",
+            "bad": "\"¿Ocultos?\", \"Comprimir\""
+          },
+          "icon": {
+            "name": "Icono interno",
+            "format": "Siempre <code>aria-hidden=\"true\"</code> · el icono refuerza, no sustituye",
+            "good": "<code>&lt;Bold aria-hidden=\"true\" /&gt;</code>",
+            "bad": "Icono sin aria-hidden, o cambiar texto por emoji"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Es un botón de formato visual (negrita, itálica, subrayado)",
+        "item2": "Es un filtro de vista (mostrar/ocultar archivados)",
+        "item3": "Es un modo de vista (compacto/expandido)",
+        "item4": "El estado es local a la interfaz (no persiste como configuración)"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Es configuración de sistema — usa <code>Switch</code>",
+        "item2": "Está en form con submit — usa <code>Checkbox</code>",
+        "item3": "Son 2-7 opciones textuales — usa <code>RadioGroup</code> o <code>ToggleGroup</code>",
+        "item4": "Es una acción que dispara un comando único — usa <code>Button</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Toggle icon-only con aria-label descriptivo de la función.",
+        "dont": "No uses aria-label genérico como \"Botón\" o el nombre de la letra."
+      },
+      "pair2": {
+        "do": "Usa ToggleGroup para conjunto relacionado (alineación, formato).",
+        "dont": "No uses varios Toggle sueltos cuando representan una elección conjunta."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "outline": "Outline",
+        "withLabel": "With label"
+      },
+      "styles": {
+        "default": "Sin borde — fondo transparente, hover <code>muted</code>. Aria-pressed aplica <code>bg-muted</code>.",
+        "outline": "<code>variant=\"outline\"</code> — borde <code>input</code>, misma lógica de pressed.",
+        "withLabel": "Icono + texto visible — útil para filtros (\"Mostrar ocultos\")."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "off": "Off",
+        "on": "On",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled",
+        "invalid": "Invalid"
+      },
+      "descriptions": {
+        "off": "Inactivo — <code>aria-pressed=\"false\"</code>, fondo transparente.",
+        "on": "Activo — <code>aria-pressed=\"true\"</code>, fondo <code>muted</code> (<code>data-state=on</code>).",
+        "hover": "Mouse encima — fondo <code>muted</code>, texto <code>foreground</code>.",
+        "focus": "Enfocado por teclado — <code>ring-[3px] ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "pressed": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Estado controlado. Usa con <code>onPressedChange</code>."
+        },
+        "defaultPressed": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Estado inicial no controlado."
+        },
+        "onPressedChange": {
+          "type": "(pressed: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback disparado al alternar."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Deshabilita el Toggle."
+        },
+        "variant": {
+          "type": "\"default\" | \"outline\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Estilo visual. <code>outline</code> añade borde <code>input</code>."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\" | \"lg\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Altura vía tokens <code>--height-*</code>."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases Tailwind adicionales."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Toggle de formato con tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Negrita\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "muted": { "class": "bg-muted", "part": "Fondo en estado activo (aria-pressed=true) y hover" },
+        "foreground": { "class": "text-foreground", "part": "Color del texto/icono en hover/activo" },
+        "input": { "class": "border-input", "part": "Borde en variante outline" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco" },
+        "destructive": { "class": "border-destructive", "part": "Borde en estado inválido" },
+        "radius": { "class": "rounded-(--radius-button)", "part": "Radio respeta el multiplicador del tema" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Color personalizado del estado activo */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override del tamaño vía tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>aria-pressed</code> refleja el estado on/off automáticamente",
+        "item2": "<code>aria-label</code> OBLIGATORIO en toggles icon-only",
+        "item3": "Icono interno con <code>aria-hidden=\"true\"</code> — no es leído por el lector de pantalla",
+        "item4": "Anillo de foco visible con <code>ring-[3px] ring-ring/50</code>",
+        "item5": "<code>aria-invalid=\"true\"</code> en validación fallida",
+        "item6": "Contraste mínimo 4.5:1 entre texto/icono y fondo activo"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Enfoca el Toggle",
+        "space": "Alterna el estado",
+        "enter": "Alterna el estado (igual a Space)"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "pressed": "<code>aria-pressed=\"true|false\"</code> automático",
+        "label": "<code>aria-label</code> obligatorio en icon-only",
+        "hidden": "<code>aria-hidden=\"true\"</code> en el icono interno",
+        "invalid": "<code>aria-invalid=\"true\"</code> en validación fallida"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "default": "Anuncia el Label + \"botón de alternancia, no pulsado\"",
+        "pressed": "Anuncia \"pulsado\" al activar",
+        "change": "Anuncia el cambio de estado al alternar"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "toggleGroup": { "name": "ToggleGroup", "description": "Conjunto relacionado de toggles (single o multiple)." },
+        "switch": { "name": "Switch", "description": "Configuración de sistema con efecto inmediato." },
+        "checkbox": { "name": "Checkbox", "description": "Selección en form con submit." },
+        "button": { "name": "Button", "description": "Acción única (no alternante)." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle usa <code>aria-pressed</code> (toggle button); Switch usa <code>role=\"switch\"</code> + <code>aria-checked</code>.",
+      "item3": "<strong>Token de radio</strong> — <code>rounded-(--radius-button)</code> respeta el multiplicador del tema (ver PATCHES.md).",
+      "item4": "<strong>Para conjunto</strong> — usa <code>ToggleGroup</code> en vez de múltiples Toggle sueltos cuando representan una elección conjunta."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_change": {
+          "trigger": "El usuario alterna el estado (pressed → unpressed o viceversa)",
+          "payload": "{ component: \"toggle\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Hacer clic en el Toggle", "result": "Alterna pressed y dispara onPressedChange", "priority": "high" },
+        "item2": { "action": "Pulsar Space con Toggle enfocado", "result": "Alterna el estado", "priority": "high" },
+        "item3": { "action": "Pulsar Enter con Toggle enfocado", "result": "Alterna el estado (igual a Space)", "priority": "medium" },
+        "item4": { "action": "Clic con disabled=true", "result": "No cambia el estado; aria-disabled true", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto/icono y fondo activo",
+        "item3": "Anillo de foco visible con ring-[3px] ring-ring/50",
+        "item4": "aria-pressed refleja el estado",
+        "item5": "aria-label presente en toggles icon-only"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Off (default)", "priority": "high" },
+        "item2": { "story": "On (pressed)", "priority": "high" },
+        "item3": { "story": "Variante outline", "priority": "high" },
+        "item4": { "story": "Disabled", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
