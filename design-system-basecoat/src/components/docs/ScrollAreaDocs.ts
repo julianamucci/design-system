@@ -206,6 +206,9 @@ export function createScrollAreaDocs(): HTMLElement {
         return createDocsDemonstration({
           title: t('demonstration.title'),
           demoFactory: () => {
+            const container = document.createElement('div');
+            container.className = 'w-full space-y-6';
+
             const grid = document.createElement('div');
             grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 w-full';
 
@@ -236,7 +239,23 @@ export function createScrollAreaDocs(): HTMLElement {
             horizontalWrap.append(horizontalTitle, horizontalArea);
 
             grid.append(verticalWrap, horizontalWrap);
-            return grid;
+
+            // Both (bidirecional) — full width abaixo
+            const bothWrap = document.createElement('div');
+            bothWrap.className = 'space-y-2';
+            const bothTitle = document.createElement('div');
+            bothTitle.className = 'text-xs text-muted-foreground';
+            bothTitle.textContent = stripHtml(t('demonstration.labels.bothTitle'));
+            const bothArea = createScrollArea({
+              height: '240px',
+              width: '100%',
+              class: 'rounded-md border whitespace-nowrap',
+              children: buildMatrix(12, 15),
+            });
+            bothWrap.append(bothTitle, bothArea);
+
+            container.append(grid, bothWrap);
+            return container;
           },
         });
 
@@ -438,7 +457,7 @@ export function createScrollAreaDocs(): HTMLElement {
               previewFactory: () => createScrollArea({
                 height: '200px',
                 width: '100%',
-                class: 'rounded-md border',
+                class: 'rounded-md border whitespace-nowrap',
                 children: buildMatrix(10, 10),
               }),
             },
