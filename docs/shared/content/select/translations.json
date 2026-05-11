@@ -1,0 +1,1028 @@
+{
+  "pt-BR": {
+    "title": "Select",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Seleção de uma opção em lista compacta com trigger, dropdown e suporte completo a teclado e leitores de tela.",
+    "seo": {
+      "title": "Select — Formulário · Design System",
+      "description": "Documentação do Select: Trigger, Content, Item, Group e Label, com role=\"combobox\", navegação por teclado e WCAG 2.1 AA.",
+      "aiSummary": "Componente Select com Trigger, Content, Item, Group e Label, role=\"combobox\" automático, navegação por teclado e suporte a opções agrupadas.",
+      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role combobox",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "placeholder": "Selecione...",
+        "stateLabel": "Estado",
+        "regionLabel": "Selecione a região",
+        "groupSoutheast": "Sudeste",
+        "groupSouth": "Sul",
+        "sp": "São Paulo",
+        "rj": "Rio de Janeiro",
+        "mg": "Minas Gerais",
+        "es": "Espírito Santo",
+        "rs": "Rio Grande do Sul",
+        "sc": "Santa Catarina",
+        "pr": "Paraná"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Select</strong> — root que controla o estado open/closed e o valor selecionado.",
+      "item2": "<strong>SelectTrigger</strong> — botão que abre o dropdown; recebe <code>role=\"combobox\"</code>.",
+      "item3": "<strong>SelectValue</strong> — exibe o valor selecionado ou o <code>placeholder</code>.",
+      "item4": "<strong>SelectContent</strong> — popover em portal com a lista de opções.",
+      "item5": "<strong>SelectGroup</strong> + <strong>SelectLabel</strong> — agrupamento opcional com cabeçalho.",
+      "item6": "<strong>SelectItem</strong> — opção individual com <code>role=\"option\"</code> e <code>aria-selected</code>.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Selecionar estado\">\n    <SelectValue placeholder=\"Selecione...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use para 3+ opções fixas. Para 2 opções, use <code>RadioGroup</code>.",
+        "item2": "Para 10+ opções ou busca textual, use <code>Combobox</code> (Command + Popover) — Select não tem busca nativa.",
+        "item3": "Placeholder padrão: <code>\"Selecione...\"</code> — nunca <code>\"-- Escolha --\"</code> ou vazio.",
+        "item4": "Opções consistentes — não misture siglas com nomes completos no mesmo Select."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Estado civil (3-5 opções)", "u": "Sim", "a": "-" },
+        "item2": { "s": "Sim/Não (2 opções)", "u": "Não", "a": "RadioGroup" },
+        "item3": { "s": "País (200+ opções)", "u": "Não", "a": "Combobox" },
+        "item4": { "s": "Múltipla seleção", "u": "Não", "a": "Checkbox group" },
+        "item5": { "s": "Opções dinâmicas com filtro", "u": "Não", "a": "Combobox" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "placeholder": {
+            "name": "SelectValue placeholder",
+            "format": "Verbo + reticências · sem prefixo",
+            "good": "\"Selecione...\"",
+            "bad": "\"-- Escolha --\", \"Escolha uma opção...\""
+          },
+          "itemLabel": {
+            "name": "SelectItem",
+            "format": "Frase nominal · sem ponto · estilo consistente",
+            "good": "\"São Paulo\", \"Rio de Janeiro\"",
+            "bad": "Misturar \"SP\" com \"Rio de Janeiro\""
+          },
+          "groupLabel": {
+            "name": "SelectLabel",
+            "format": "Substantivo curto · maiúscula inicial",
+            "good": "\"Sudeste\", \"Recentes\"",
+            "bad": "\"Aqui estão os do sudeste\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Há de 3 a 9 opções fixas e mutuamente exclusivas",
+        "item2": "O usuário precisa escolher 1 valor de uma lista conhecida",
+        "item3": "As opções podem ser agrupadas por categoria",
+        "item4": "Espaço vertical é limitado e a lista não cabe inline"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "Há apenas 2 opções — use <code>RadioGroup</code> ou <code>Switch</code>",
+        "item2": "Há 10+ opções com necessidade de busca — use <code>Combobox</code>",
+        "item3": "Múltipla seleção é permitida — use grupo de <code>Checkbox</code>",
+        "item4": "O usuário pode digitar valor novo — use <code>Combobox</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Use placeholder \"Selecione...\" e mantenha estilo consistente entre opções.",
+        "dont": "Não misture siglas com nomes completos no mesmo Select."
+      },
+      "pair2": {
+        "do": "Use SelectGroup + SelectLabel quando houver categorias claras.",
+        "dont": "Não crie grupos com apenas 1 item — usa só lista plana."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withGroups": "Com grupos",
+        "withIcon": "Com ícone"
+      },
+      "styles": {
+        "default": "Lista simples — apenas <code>SelectItem</code> dentro do <code>SelectContent</code>.",
+        "withGroups": "<code>SelectGroup</code> + <code>SelectLabel</code> agrupam opções por categoria.",
+        "withIcon": "<code>SelectItem</code> com ícone inline antes do texto via filho direto."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "open": "Open",
+        "selected": "Selected",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled",
+        "invalid": "Invalid"
+      },
+      "descriptions": {
+        "default": "Estado inicial — trigger com placeholder e indicador <code>ChevronDown</code>.",
+        "open": "Dropdown aberto — <code>data-state=\"open\"</code>, lista renderizada em portal.",
+        "selected": "Item selecionado — <code>data-checked</code>, ícone <code>Check</code> à direita.",
+        "hover": "Cursor sobre item — fundo <code>accent</code>, texto <code>accent-foreground</code>.",
+        "focus": "Trigger focado via teclado — <code>ring-3 ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code> e <code>cursor-not-allowed</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor selecionado (controlado). Use junto com <code>onValueChange</code>."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor inicial não-controlado."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback disparado ao trocar a seleção."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Desabilita o trigger e impede abertura."
+        },
+        "name": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Nome do campo no formulário HTML."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\"",
+          "default": "\"default\"",
+          "required": "Não",
+          "description": "Altura do trigger via tokens <code>--height-default</code>/<code>--height-sm</code>."
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Texto exibido pelo <code>SelectValue</code> quando nenhuma opção está selecionada."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecione...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "input": { "class": "border-input", "part": "Borda do SelectTrigger" },
+        "popover": { "class": "bg-popover", "part": "Fundo do SelectContent" },
+        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto dentro do SelectContent" },
+        "accent": { "class": "bg-accent", "part": "Fundo do item em hover/focus" },
+        "accentForeground": { "class": "text-accent-foreground", "part": "Texto do item em hover/focus" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco no trigger" },
+        "destructive": { "class": "border-destructive", "part": "Borda no estado inválido" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto do placeholder e SelectLabel" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Largura mínima do dropdown */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Altura customizada do trigger */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"combobox\"</code> no trigger e <code>role=\"listbox\"</code> no content",
+        "item2": "<code>role=\"option\"</code> + <code>aria-selected</code> em cada item",
+        "item3": "<code>aria-label</code> ou <code>aria-labelledby</code> obrigatório no trigger",
+        "item4": "<code>aria-expanded</code> reflete o estado open/closed",
+        "item5": "Navegação por setas, Home, End, busca por digitação",
+        "item6": "Anel de foco visível com contraste mínimo 3:1"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Foca o trigger",
+        "enter": "Abre o dropdown ou seleciona o item focado",
+        "space": "Abre o dropdown",
+        "arrowDown": "Abre dropdown ou move para próximo item",
+        "arrowUp": "Move para item anterior",
+        "home": "Vai para o primeiro item",
+        "end": "Vai para o último item",
+        "escape": "Fecha o dropdown sem alterar seleção",
+        "typeAhead": "Digitar caractere busca o item correspondente"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"combobox\"</code> no trigger; <code>role=\"listbox\"</code> + <code>role=\"option\"</code> no content",
+        "expanded": "<code>aria-expanded</code> no trigger reflete open/closed",
+        "selected": "<code>aria-selected=\"true\"</code> no item ativo",
+        "label": "<code>aria-label</code> obrigatório no trigger quando não há Label externo",
+        "invalid": "<code>aria-invalid=\"true\"</code> quando há erro de validação"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "trigger": "Anuncia o label, valor atual e \"combobox, expandido/recolhido\"",
+        "navigation": "Anuncia o item ao navegar pelas setas",
+        "selection": "Anuncia \"selecionado\" ao confirmar com Enter"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "combobox": { "name": "Combobox", "description": "Seleção com busca textual para listas longas." },
+        "radioGroup": { "name": "RadioGroup", "description": "Seleção única quando todas as opções devem estar visíveis." },
+        "dropdownMenu": { "name": "DropdownMenu", "description": "Lista de ações (não de valores) a partir de um trigger." },
+        "form": { "name": "Form", "description": "Integração com validação via React Hook Form." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Portal</strong> — o <code>SelectContent</code> é renderizado em portal para evitar problemas de <code>z-index</code> e <code>overflow</code>.",
+      "item3": "<strong>Type-ahead</strong> — digitar caractere com o trigger focado pula para o item correspondente, sem precisar abrir o dropdown.",
+      "item4": "<strong>Sem busca</strong> — para filtrar por texto, use <code>Combobox</code> (Command + Popover) em vez de Select."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "option_select": {
+          "trigger": "Usuário seleciona uma opção diferente",
+          "payload": "{ component: \"select\", field_name, value, label, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Clicar no trigger", "result": "Abre o dropdown; foco vai ao item selecionado ou ao primeiro", "priority": "high" },
+        "item2": { "action": "Selecionar item com Enter", "result": "Fecha dropdown e atualiza SelectValue", "priority": "high" },
+        "item3": { "action": "Pressionar Escape com dropdown aberto", "result": "Fecha sem alterar seleção; retorna foco ao trigger", "priority": "high" },
+        "item4": { "action": "Digitar caractere com trigger focado", "result": "Type-ahead seleciona item correspondente", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto e fundo",
+        "item3": "Focus ring visível no trigger",
+        "item4": "role=\"combobox\" no trigger e role=\"listbox\" no content",
+        "item5": "aria-expanded reflete o estado open/closed"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Default (placeholder visível)", "priority": "high" },
+        "item2": { "story": "Com valor selecionado", "priority": "high" },
+        "item3": { "story": "Dropdown aberto", "priority": "high" },
+        "item4": { "story": "Disabled", "priority": "medium" },
+        "item5": { "story": "Invalid (aria-invalid)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Select",
+    "category": "Form",
+    "type": "Component",
+    "description": "Single-choice selection from a compact list with trigger, dropdown and full keyboard and screen reader support.",
+    "seo": {
+      "title": "Select — Form · Design System",
+      "description": "Select documentation: Trigger, Content, Item, Group and Label, with role=\"combobox\", keyboard navigation and WCAG 2.1 AA.",
+      "aiSummary": "Select component with Trigger, Content, Item, Group and Label, automatic role=\"combobox\", keyboard navigation and grouped options support.",
+      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role combobox",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "placeholder": "Select...",
+        "stateLabel": "State",
+        "regionLabel": "Select region",
+        "groupSoutheast": "Southeast",
+        "groupSouth": "South",
+        "sp": "São Paulo",
+        "rj": "Rio de Janeiro",
+        "mg": "Minas Gerais",
+        "es": "Espírito Santo",
+        "rs": "Rio Grande do Sul",
+        "sc": "Santa Catarina",
+        "pr": "Paraná"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Select</strong> — root that controls open/closed state and selected value.",
+      "item2": "<strong>SelectTrigger</strong> — button that opens the dropdown; receives <code>role=\"combobox\"</code>.",
+      "item3": "<strong>SelectValue</strong> — displays selected value or <code>placeholder</code>.",
+      "item4": "<strong>SelectContent</strong> — popover rendered in portal with the option list.",
+      "item5": "<strong>SelectGroup</strong> + <strong>SelectLabel</strong> — optional grouping with header.",
+      "item6": "<strong>SelectItem</strong> — individual option with <code>role=\"option\"</code> and <code>aria-selected</code>.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Select state\">\n    <SelectValue placeholder=\"Select...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Southeast</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use for 3+ fixed options. For 2 options, use <code>RadioGroup</code>.",
+        "item2": "For 10+ options or text search, use <code>Combobox</code> (Command + Popover) — Select has no native search.",
+        "item3": "Default placeholder: <code>\"Select...\"</code> — never <code>\"-- Choose --\"</code> or empty.",
+        "item4": "Consistent options — don't mix abbreviations with full names in the same Select."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Marital status (3-5 options)", "u": "Yes", "a": "-" },
+        "item2": { "s": "Yes/No (2 options)", "u": "No", "a": "RadioGroup" },
+        "item3": { "s": "Country (200+ options)", "u": "No", "a": "Combobox" },
+        "item4": { "s": "Multiple selection", "u": "No", "a": "Checkbox group" },
+        "item5": { "s": "Dynamic options with filter", "u": "No", "a": "Combobox" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "placeholder": {
+            "name": "SelectValue placeholder",
+            "format": "Verb + ellipsis · no prefix",
+            "good": "\"Select...\"",
+            "bad": "\"-- Choose --\", \"Choose an option...\""
+          },
+          "itemLabel": {
+            "name": "SelectItem",
+            "format": "Noun phrase · no period · consistent style",
+            "good": "\"São Paulo\", \"Rio de Janeiro\"",
+            "bad": "Mixing \"SP\" with \"Rio de Janeiro\""
+          },
+          "groupLabel": {
+            "name": "SelectLabel",
+            "format": "Short noun · initial uppercase",
+            "good": "\"Southeast\", \"Recent\"",
+            "bad": "\"Here are the southeast ones\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "There are 3 to 9 fixed mutually exclusive options",
+        "item2": "User needs to pick 1 value from a known list",
+        "item3": "Options can be grouped by category",
+        "item4": "Vertical space is limited and the list doesn't fit inline"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "Only 2 options — use <code>RadioGroup</code> or <code>Switch</code>",
+        "item2": "10+ options with search needed — use <code>Combobox</code>",
+        "item3": "Multiple selection is allowed — use <code>Checkbox</code> group",
+        "item4": "User can type a new value — use <code>Combobox</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Use \"Select...\" placeholder and keep style consistent across options.",
+        "dont": "Don't mix abbreviations with full names in the same Select."
+      },
+      "pair2": {
+        "do": "Use SelectGroup + SelectLabel when there are clear categories.",
+        "dont": "Don't create groups with only 1 item — use a flat list."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "withGroups": "With groups",
+        "withIcon": "With icon"
+      },
+      "styles": {
+        "default": "Simple list — just <code>SelectItem</code> inside <code>SelectContent</code>.",
+        "withGroups": "<code>SelectGroup</code> + <code>SelectLabel</code> group options by category.",
+        "withIcon": "<code>SelectItem</code> with inline icon before the text via direct child."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "default": "Default",
+        "open": "Open",
+        "selected": "Selected",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled",
+        "invalid": "Invalid"
+      },
+      "descriptions": {
+        "default": "Initial state — trigger with placeholder and <code>ChevronDown</code> indicator.",
+        "open": "Dropdown open — <code>data-state=\"open\"</code>, list rendered in portal.",
+        "selected": "Selected item — <code>data-checked</code>, <code>Check</code> icon on the right.",
+        "hover": "Cursor over item — <code>accent</code> background, <code>accent-foreground</code> text.",
+        "focus": "Trigger focused via keyboard — <code>ring-3 ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code> and <code>cursor-not-allowed</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Selected value (controlled). Use with <code>onValueChange</code>."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Initial uncontrolled value."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired when selection changes."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Disables the trigger and prevents opening."
+        },
+        "name": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Field name in the HTML form."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Trigger height via tokens <code>--height-default</code>/<code>--height-sm</code>."
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Text displayed by <code>SelectValue</code> when no option is selected."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"state\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>State</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Select...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "input": { "class": "border-input", "part": "SelectTrigger border" },
+        "popover": { "class": "bg-popover", "part": "SelectContent background" },
+        "popoverForeground": { "class": "text-popover-foreground", "part": "Text inside SelectContent" },
+        "accent": { "class": "bg-accent", "part": "Hover/focus item background" },
+        "accentForeground": { "class": "text-accent-foreground", "part": "Hover/focus item text" },
+        "ring": { "class": "ring-ring", "part": "Focus ring on trigger" },
+        "destructive": { "class": "border-destructive", "part": "Invalid state border" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Placeholder and SelectLabel text" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Minimum dropdown width */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Custom trigger height */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"combobox\"</code> on trigger and <code>role=\"listbox\"</code> on content",
+        "item2": "<code>role=\"option\"</code> + <code>aria-selected</code> on each item",
+        "item3": "<code>aria-label</code> or <code>aria-labelledby</code> required on trigger",
+        "item4": "<code>aria-expanded</code> reflects open/closed state",
+        "item5": "Arrow navigation, Home, End, type-ahead search",
+        "item6": "Visible focus ring with minimum 3:1 contrast"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Focuses the trigger",
+        "enter": "Opens dropdown or selects focused item",
+        "space": "Opens the dropdown",
+        "arrowDown": "Opens dropdown or moves to next item",
+        "arrowUp": "Moves to previous item",
+        "home": "Goes to the first item",
+        "end": "Goes to the last item",
+        "escape": "Closes dropdown without changing selection",
+        "typeAhead": "Typing a character searches the matching item"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "role": "<code>role=\"combobox\"</code> on trigger; <code>role=\"listbox\"</code> + <code>role=\"option\"</code> on content",
+        "expanded": "<code>aria-expanded</code> on trigger reflects open/closed",
+        "selected": "<code>aria-selected=\"true\"</code> on active item",
+        "label": "<code>aria-label</code> required on trigger when there's no external Label",
+        "invalid": "<code>aria-invalid=\"true\"</code> when there's a validation error"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "trigger": "Announces label, current value and \"combobox, expanded/collapsed\"",
+        "navigation": "Announces item when navigating with arrows",
+        "selection": "Announces \"selected\" when confirming with Enter"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "combobox": { "name": "Combobox", "description": "Selection with text search for long lists." },
+        "radioGroup": { "name": "RadioGroup", "description": "Single selection when all options must be visible." },
+        "dropdownMenu": { "name": "DropdownMenu", "description": "List of actions (not values) from a trigger." },
+        "form": { "name": "Form", "description": "Validation integration via React Hook Form." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>Portal</strong> — <code>SelectContent</code> renders in a portal to avoid <code>z-index</code> and <code>overflow</code> issues.",
+      "item3": "<strong>Type-ahead</strong> — typing a character with the trigger focused jumps to the matching item without opening the dropdown.",
+      "item4": "<strong>No search</strong> — to filter by text, use <code>Combobox</code> (Command + Popover) instead of Select."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "option_select": {
+          "trigger": "User selects a different option",
+          "payload": "{ component: \"select\", field_name, value, label, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Click the trigger", "result": "Opens dropdown; focus goes to selected item or first", "priority": "high" },
+        "item2": { "action": "Select item with Enter", "result": "Closes dropdown and updates SelectValue", "priority": "high" },
+        "item3": { "action": "Press Escape with dropdown open", "result": "Closes without changing selection; returns focus to trigger", "priority": "high" },
+        "item4": { "action": "Type a character with trigger focused", "result": "Type-ahead selects matching item", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 4.5:1 contrast between text and background",
+        "item3": "Visible focus ring on trigger",
+        "item4": "role=\"combobox\" on trigger and role=\"listbox\" on content",
+        "item5": "aria-expanded reflects open/closed state"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Default (placeholder visible)", "priority": "high" },
+        "item2": { "story": "With selected value", "priority": "high" },
+        "item3": { "story": "Dropdown open", "priority": "high" },
+        "item4": { "story": "Disabled", "priority": "medium" },
+        "item5": { "story": "Invalid (aria-invalid)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Select",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Selección de una opción en lista compacta con trigger, dropdown y soporte completo de teclado y lectores de pantalla.",
+    "seo": {
+      "title": "Select — Formulario · Design System",
+      "description": "Documentación de Select: Trigger, Content, Item, Group y Label, con role=\"combobox\", navegación por teclado y WCAG 2.1 AA.",
+      "aiSummary": "Componente Select con Trigger, Content, Item, Group y Label, role=\"combobox\" automático, navegación por teclado y opciones agrupadas.",
+      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role combobox",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "placeholder": "Selecciona...",
+        "stateLabel": "Estado",
+        "regionLabel": "Selecciona región",
+        "groupSoutheast": "Sudeste",
+        "groupSouth": "Sur",
+        "sp": "São Paulo",
+        "rj": "Rio de Janeiro",
+        "mg": "Minas Gerais",
+        "es": "Espírito Santo",
+        "rs": "Rio Grande do Sul",
+        "sc": "Santa Catarina",
+        "pr": "Paraná"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Select</strong> — root que controla el estado open/closed y el valor seleccionado.",
+      "item2": "<strong>SelectTrigger</strong> — botón que abre el dropdown; recibe <code>role=\"combobox\"</code>.",
+      "item3": "<strong>SelectValue</strong> — muestra el valor seleccionado o el <code>placeholder</code>.",
+      "item4": "<strong>SelectContent</strong> — popover en portal con la lista de opciones.",
+      "item5": "<strong>SelectGroup</strong> + <strong>SelectLabel</strong> — agrupación opcional con encabezado.",
+      "item6": "<strong>SelectItem</strong> — opción individual con <code>role=\"option\"</code> y <code>aria-selected</code>.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Seleccionar estado\">\n    <SelectValue placeholder=\"Selecciona...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa para 3+ opciones fijas. Para 2 opciones, usa <code>RadioGroup</code>.",
+        "item2": "Para 10+ opciones o búsqueda textual, usa <code>Combobox</code> (Command + Popover) — Select no tiene búsqueda nativa.",
+        "item3": "Placeholder por defecto: <code>\"Selecciona...\"</code> — nunca <code>\"-- Elige --\"</code> ni vacío.",
+        "item4": "Opciones consistentes — no mezcles siglas con nombres completos en el mismo Select."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Estado civil (3-5 opciones)", "u": "Sí", "a": "-" },
+        "item2": { "s": "Sí/No (2 opciones)", "u": "No", "a": "RadioGroup" },
+        "item3": { "s": "País (200+ opciones)", "u": "No", "a": "Combobox" },
+        "item4": { "s": "Selección múltiple", "u": "No", "a": "Checkbox group" },
+        "item5": { "s": "Opciones dinámicas con filtro", "u": "No", "a": "Combobox" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "placeholder": {
+            "name": "SelectValue placeholder",
+            "format": "Verbo + puntos suspensivos · sin prefijo",
+            "good": "\"Selecciona...\"",
+            "bad": "\"-- Elige --\", \"Elige una opción...\""
+          },
+          "itemLabel": {
+            "name": "SelectItem",
+            "format": "Frase nominal · sin punto · estilo consistente",
+            "good": "\"São Paulo\", \"Rio de Janeiro\"",
+            "bad": "Mezclar \"SP\" con \"Rio de Janeiro\""
+          },
+          "groupLabel": {
+            "name": "SelectLabel",
+            "format": "Sustantivo corto · mayúscula inicial",
+            "good": "\"Sudeste\", \"Recientes\"",
+            "bad": "\"Aquí están los del sudeste\""
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Hay de 3 a 9 opciones fijas y mutuamente excluyentes",
+        "item2": "El usuario necesita elegir 1 valor de una lista conocida",
+        "item3": "Las opciones pueden agruparse por categoría",
+        "item4": "El espacio vertical es limitado y la lista no cabe inline"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Solo hay 2 opciones — usa <code>RadioGroup</code> o <code>Switch</code>",
+        "item2": "Hay 10+ opciones con búsqueda necesaria — usa <code>Combobox</code>",
+        "item3": "Se permite selección múltiple — usa grupo de <code>Checkbox</code>",
+        "item4": "El usuario puede escribir un valor nuevo — usa <code>Combobox</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Usa el placeholder \"Selecciona...\" y mantén el estilo consistente entre opciones.",
+        "dont": "No mezcles siglas con nombres completos en el mismo Select."
+      },
+      "pair2": {
+        "do": "Usa SelectGroup + SelectLabel cuando haya categorías claras.",
+        "dont": "No crees grupos con un solo ítem — usa una lista plana."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withGroups": "Con grupos",
+        "withIcon": "Con icono"
+      },
+      "styles": {
+        "default": "Lista simple — solo <code>SelectItem</code> dentro de <code>SelectContent</code>.",
+        "withGroups": "<code>SelectGroup</code> + <code>SelectLabel</code> agrupan opciones por categoría.",
+        "withIcon": "<code>SelectItem</code> con icono inline antes del texto vía hijo directo."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "open": "Open",
+        "selected": "Selected",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled",
+        "invalid": "Invalid"
+      },
+      "descriptions": {
+        "default": "Estado inicial — trigger con placeholder e indicador <code>ChevronDown</code>.",
+        "open": "Dropdown abierto — <code>data-state=\"open\"</code>, lista en portal.",
+        "selected": "Ítem seleccionado — <code>data-checked</code>, icono <code>Check</code> a la derecha.",
+        "hover": "Cursor sobre ítem — fondo <code>accent</code>, texto <code>accent-foreground</code>.",
+        "focus": "Trigger enfocado por teclado — <code>ring-3 ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> — <code>opacity-50</code> y <code>cursor-not-allowed</code>.",
+        "invalid": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "value": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Valor seleccionado (controlado). Usa con <code>onValueChange</code>."
+        },
+        "defaultValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Valor inicial no controlado."
+        },
+        "onValueChange": {
+          "type": "(value: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback disparado al cambiar la selección."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Deshabilita el trigger y previene apertura."
+        },
+        "name": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Nombre del campo en el formulario HTML."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Altura del trigger vía tokens <code>--height-default</code>/<code>--height-sm</code>."
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Texto mostrado por <code>SelectValue</code> cuando no hay opción seleccionada."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecciona...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "input": { "class": "border-input", "part": "Borde del SelectTrigger" },
+        "popover": { "class": "bg-popover", "part": "Fondo del SelectContent" },
+        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto dentro del SelectContent" },
+        "accent": { "class": "bg-accent", "part": "Fondo del ítem en hover/focus" },
+        "accentForeground": { "class": "text-accent-foreground", "part": "Texto del ítem en hover/focus" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco en el trigger" },
+        "destructive": { "class": "border-destructive", "part": "Borde en estado inválido" },
+        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto del placeholder y SelectLabel" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Ancho mínimo del dropdown */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Altura personalizada del trigger */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"combobox\"</code> en el trigger y <code>role=\"listbox\"</code> en el content",
+        "item2": "<code>role=\"option\"</code> + <code>aria-selected</code> en cada ítem",
+        "item3": "<code>aria-label</code> o <code>aria-labelledby</code> obligatorio en el trigger",
+        "item4": "<code>aria-expanded</code> refleja el estado open/closed",
+        "item5": "Navegación por flechas, Home, End, búsqueda por digitación",
+        "item6": "Anillo de foco visible con contraste mínimo 3:1"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Enfoca el trigger",
+        "enter": "Abre dropdown o selecciona el ítem enfocado",
+        "space": "Abre el dropdown",
+        "arrowDown": "Abre dropdown o mueve al siguiente ítem",
+        "arrowUp": "Mueve al ítem anterior",
+        "home": "Va al primer ítem",
+        "end": "Va al último ítem",
+        "escape": "Cierra el dropdown sin cambiar la selección",
+        "typeAhead": "Escribir un carácter busca el ítem correspondiente"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"combobox\"</code> en el trigger; <code>role=\"listbox\"</code> + <code>role=\"option\"</code> en el content",
+        "expanded": "<code>aria-expanded</code> en el trigger refleja open/closed",
+        "selected": "<code>aria-selected=\"true\"</code> en el ítem activo",
+        "label": "<code>aria-label</code> obligatorio en el trigger cuando no hay Label externo",
+        "invalid": "<code>aria-invalid=\"true\"</code> cuando hay error de validación"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "trigger": "Anuncia label, valor actual y \"combobox, expandido/recogido\"",
+        "navigation": "Anuncia el ítem al navegar con flechas",
+        "selection": "Anuncia \"seleccionado\" al confirmar con Enter"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "combobox": { "name": "Combobox", "description": "Selección con búsqueda textual para listas largas." },
+        "radioGroup": { "name": "RadioGroup", "description": "Selección única cuando todas las opciones deben estar visibles." },
+        "dropdownMenu": { "name": "DropdownMenu", "description": "Lista de acciones (no de valores) desde un trigger." },
+        "form": { "name": "Form", "description": "Integración de validación vía React Hook Form." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Portal</strong> — el <code>SelectContent</code> se renderiza en portal para evitar problemas de <code>z-index</code> y <code>overflow</code>.",
+      "item3": "<strong>Type-ahead</strong> — escribir un carácter con el trigger enfocado salta al ítem correspondiente, sin abrir el dropdown.",
+      "item4": "<strong>Sin búsqueda</strong> — para filtrar por texto, usa <code>Combobox</code> (Command + Popover) en vez de Select."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "option_select": {
+          "trigger": "El usuario selecciona una opción diferente",
+          "payload": "{ component: \"select\", field_name, value, label, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Hacer clic en el trigger", "result": "Abre el dropdown; el foco va al ítem seleccionado o al primero", "priority": "high" },
+        "item2": { "action": "Seleccionar ítem con Enter", "result": "Cierra el dropdown y actualiza SelectValue", "priority": "high" },
+        "item3": { "action": "Pulsar Escape con dropdown abierto", "result": "Cierra sin cambiar selección; devuelve el foco al trigger", "priority": "high" },
+        "item4": { "action": "Escribir un carácter con trigger enfocado", "result": "Type-ahead selecciona ítem correspondiente", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto y fondo",
+        "item3": "Anillo de foco visible en el trigger",
+        "item4": "role=\"combobox\" en el trigger y role=\"listbox\" en el content",
+        "item5": "aria-expanded refleja el estado open/closed"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Default (placeholder visible)", "priority": "high" },
+        "item2": { "story": "Con valor seleccionado", "priority": "high" },
+        "item3": { "story": "Dropdown abierto", "priority": "high" },
+        "item4": { "story": "Disabled", "priority": "medium" },
+        "item5": { "story": "Invalid (aria-invalid)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
