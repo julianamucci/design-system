@@ -442,6 +442,35 @@ const visualTestItems = computed(() => [
           tContent('usage.dont.item4'),
         ],
       }"
+      :ux-writing="{
+        title: tContent('usage.uxWriting.title'),
+        cols: {
+          element: tContent('usage.uxWriting.table.element'),
+          rules: tContent('usage.uxWriting.table.rules'),
+          do: tContent('usage.uxWriting.table.correct'),
+          dont: tContent('usage.uxWriting.table.avoid'),
+        },
+        items: [
+          {
+            element: tContent('usage.uxWriting.table.label.name'),
+            rules: tContent('usage.uxWriting.table.label.format'),
+            do: tContent('usage.uxWriting.table.label.good'),
+            dont: tContent('usage.uxWriting.table.label.bad'),
+          },
+          {
+            element: tContent('usage.uxWriting.table.description.name'),
+            rules: tContent('usage.uxWriting.table.description.format'),
+            do: tContent('usage.uxWriting.table.description.good'),
+            dont: tContent('usage.uxWriting.table.description.bad'),
+          },
+          {
+            element: tContent('usage.uxWriting.table.panel.name'),
+            rules: tContent('usage.uxWriting.table.panel.format'),
+            do: tContent('usage.uxWriting.table.panel.good'),
+            dont: tContent('usage.uxWriting.table.panel.bad'),
+          },
+        ],
+      }"
     />
 
     <!-- ── Do & Don't ───────────────────────────────────────────────── -->
