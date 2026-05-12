@@ -64,8 +64,8 @@ useSeoEffect(computed(() => ({
   aiIntent: tContent('seo.aiIntent') as 'informational' | 'navigational',
   breadcrumb: [
     { name: 'Components', item: '/components' },
-    { name: 'Overlay', item: '/components/overlay' },
-    { name: 'Tooltip' },
+    { name: tContent('category'), item: '/components/overlay' },
+    { name: tContent('title') },
   ],
 })));
 
@@ -345,7 +345,7 @@ const a11yCritCols = computed(() => ({
       <!-- ── Demonstração ─────────────────────────────────────────── -->
       <DocsDemonstration :title="tContent('demonstration.title')">
         <div class="flex flex-wrap items-center justify-center gap-6 w-full" style="contain: layout; min-height: 120px;">
-          <Tooltip :default-open="true">
+          <Tooltip>
             <TooltipTrigger as-child>
               <Button variant="outline" size="icon" :aria-label="tContent('demonstration.labels.saveButton')">
                 <Save aria-hidden="true" class="size-4" />
@@ -459,7 +459,7 @@ const a11yCritCols = computed(() => ({
       >
         <template #do-preview-0>
           <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
-            <Tooltip :default-open="true">
+            <Tooltip>
               <TooltipTrigger as-child>
                 <Button variant="outline" size="icon" aria-label="Salvar">
                   <Save aria-hidden="true" class="size-4" />
@@ -471,7 +471,7 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #dont-preview-0>
           <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
-            <Tooltip :default-open="true">
+            <Tooltip>
               <TooltipTrigger as-child>
                 <Button variant="outline" size="icon">
                   <Save aria-hidden="true" class="size-4" />
@@ -483,7 +483,7 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #do-preview-1>
           <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
-            <Tooltip :default-open="true">
+            <Tooltip>
               <TooltipTrigger as-child>
                 <Button variant="outline" size="icon" aria-label="Salvar">
                   <Save aria-hidden="true" class="size-4" />
@@ -516,7 +516,7 @@ const a11yCritCols = computed(() => ({
       <DocsVariants :title="tContent('variants.title')" :items="variantItems">
         <template #variant-preview-0>
           <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
-            <Tooltip :default-open="true">
+            <Tooltip>
               <TooltipTrigger as-child>
                 <Button variant="outline" size="icon" aria-label="Salvar">
                   <Save aria-hidden="true" class="size-4" />
@@ -528,7 +528,7 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #variant-preview-1>
           <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
-            <Tooltip :default-open="true">
+            <Tooltip>
               <TooltipTrigger as-child>
                 <Button variant="outline" size="icon" aria-label="Salvar">
                   <Save aria-hidden="true" class="size-4" />
@@ -544,7 +544,7 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #variant-preview-2>
           <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
-            <Tooltip :default-open="true">
+            <Tooltip>
               <TooltipTrigger as-child>
                 <Button variant="outline" size="icon" aria-label="Info">
                   <Save aria-hidden="true" class="size-4" />
