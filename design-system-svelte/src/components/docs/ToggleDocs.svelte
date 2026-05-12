@@ -513,7 +513,7 @@ interface ToggleProps {
       { token: '--input',       value: $tStore('tokens.table.input.class'),       description: $tStore('tokens.table.input.part') },
       { token: '--ring',        value: $tStore('tokens.table.ring.class'),        description: $tStore('tokens.table.ring.part') },
       { token: '--destructive', value: $tStore('tokens.table.destructive.class'), description: $tStore('tokens.table.destructive.part') },
-      { token: '--radius',      value: $tStore('tokens.table.radius.class'),      description: $tStore('tokens.table.radius.part') },
+      { token: '--radius-button', value: $tStore('tokens.table.radius.class'),      description: $tStore('tokens.table.radius.part') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={customizationCode}

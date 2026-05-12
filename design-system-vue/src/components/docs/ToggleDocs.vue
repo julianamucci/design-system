@@ -505,7 +505,7 @@ const visualTestItems = computed(() => [
         <div class="flex items-center gap-3">
           <Toggle aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
           <Toggle aria-label="Itálico"><Italic aria-hidden="true" /></Toggle>
-          <Toggle aria-label="Lista"><List aria-hidden="true" /></Toggle>
+          <Toggle aria-label="Sublinhado"><Underline aria-hidden="true" /></Toggle>
         </div>
       </template>
     </DocsDoDont>
