@@ -284,6 +284,19 @@ export function createToggleGroupDocs(): HTMLElement {
               ],
             }));
 
+            // 3) Vertical — modo de visualização
+            wrap.appendChild(buildToggleGroupDemo({
+              type: 'single',
+              orientation: 'vertical',
+              ariaLabel: stripHtml(t('demonstration.labels.viewLabel')),
+              fieldName: 'view_mode',
+              defaultValue: 'grid',
+              items: [
+                { value: 'grid', icon: LayoutGrid, ariaLabel: stripHtml(t('demonstration.labels.grid')) },
+                { value: 'list', icon: List,       ariaLabel: stripHtml(t('demonstration.labels.list')) },
+              ],
+            }));
+
             return wrap;
           },
         });

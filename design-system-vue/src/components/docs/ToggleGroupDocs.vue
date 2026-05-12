@@ -350,6 +350,8 @@ const noteItems = computed(() => [
 
 const analyticsItems = computed(() => [
   { event: 'field_change', trigger: tContent('analytics.table.field_change.trigger'), payload: tContent('analytics.table.field_change.payload') },
+  { event: 'docs_page_view', trigger: locale.value === 'en' ? 'Page mount per locale' : locale.value === 'es' ? 'Montaje de página por locale' : 'Mount da página por locale', payload: '{ component_name: "toggle-group", locale, page_title }' },
+  { event: 'docs_section_viewed', trigger: locale.value === 'en' ? 'Section enters viewport' : locale.value === 'es' ? 'La sección entra al viewport' : 'Seção entra no viewport', payload: '{ component_name: "toggle-group", section_id, locale }' },
 ]);
 
 const a11yCritCols = computed(() => ({

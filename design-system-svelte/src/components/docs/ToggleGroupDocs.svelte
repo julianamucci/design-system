@@ -537,9 +537,9 @@ interface ToggleGroupItemProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: 'Estado',
-      trigger: 'Disparo',
-      behavior: 'Comportamento',
+      state: $locale === 'en' ? 'State' : 'Estado',
+      trigger: $locale === 'en' ? 'Trigger' : $locale === 'es' ? 'Disparador' : 'Disparo',
+      behavior: $locale === 'en' ? 'Behavior' : $locale === 'es' ? 'Comportamiento' : 'Comportamento',
     }}
     items={[
       { label: $tStore('states.items.default'),  trigger: 'aria-pressed="false"', behavior: stripHtml($tStore('states.descriptions.default')) },
@@ -659,6 +659,16 @@ interface ToggleGroupItemProps {
         event: 'field_change',
         trigger: $tStore('analytics.table.field_change.trigger'),
         payload: $tStore('analytics.table.field_change.payload'),
+      },
+      {
+        event: 'docs_page_view',
+        trigger: $locale === 'en' ? 'Page mount per locale' : $locale === 'es' ? 'Montaje de página por locale' : 'Mount da página por locale',
+        payload: '{ component_name: "toggle-group", locale, page_title }',
+      },
+      {
+        event: 'docs_section_viewed',
+        trigger: $locale === 'en' ? 'Section enters viewport' : $locale === 'es' ? 'La sección entra al viewport' : 'Seção entra no viewport',
+        payload: '{ component_name: "toggle-group", section_id, locale }',
       },
     ]}
   />
