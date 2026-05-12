@@ -1,0 +1,1037 @@
+{
+  "pt-BR": {
+    "title": "ToggleGroup",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Conjunto relacionado de Toggle buttons com seleção única ou múltipla, ideal para barras de formatação e filtros segmentados.",
+    "seo": {
+      "title": "ToggleGroup — Formulário · Design System",
+      "description": "Documentação do ToggleGroup: single/multiple, orientação horizontal/vertical, ARIA com roving tabindex e WCAG 2.1 AA.",
+      "aiSummary": "Componente ToggleGroup com Items, seleção single ou multiple, orientação horizontal/vertical, spacing configurável e ARIA com roving tabindex.",
+      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "alignmentLabel": "Alinhamento do texto",
+        "left": "Alinhar à esquerda",
+        "center": "Centralizar",
+        "right": "Alinhar à direita",
+        "justify": "Justificar",
+        "formattingLabel": "Formatação",
+        "bold": "Negrito",
+        "italic": "Itálico",
+        "underline": "Sublinhado",
+        "viewLabel": "Modo de visualização",
+        "grid": "Grade",
+        "list": "Lista"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>ToggleGroup</strong> — container com <code>type=\"single\"</code> ou <code>type=\"multiple\"</code>, controla seleção compartilhada e orientação.",
+      "item2": "<strong>ToggleGroupItem</strong> — Toggle individual com <code>value</code> único; ARIA controlado pelo grupo.",
+      "item3": "<strong>aria-label</strong> no ToggleGroup — OBRIGATÓRIO para descrever o agrupamento.",
+      "item4": "<strong>spacing</strong> — distância entre itens; <code>0</code> conecta as bordas (estilo segmented).",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "{/* Seleção única (single) */}\n<ToggleGroup\n  type=\"single\"\n  value={alignment}\n  onValueChange={setAlignment}\n  aria-label=\"Alinhamento do texto\"\n>\n  <ToggleGroupItem value=\"left\" aria-label=\"Alinhar à esquerda\">\n    <AlignLeft aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"center\" aria-label=\"Centralizar\">\n    <AlignCenter aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"right\" aria-label=\"Alinhar à direita\">\n    <AlignRight aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use <code>type=\"single\"</code> para escolha exclusiva (ex: alinhamento) e <code>type=\"multiple\"</code> para combinação (ex: negrito + itálico).",
+        "item2": "Forneça <code>aria-label</code> no <code>ToggleGroup</code> e em cada <code>ToggleGroupItem</code> icon-only.",
+        "item3": "Use ToggleGroup em vez de múltiplos Toggle soltos quando representam uma escolha conjunta.",
+        "item4": "Para configurações de sistema, use <code>Switch</code>; para form com submit, <code>Checkbox</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Alinhamento de texto (3-4 opções)", "u": "Sim, type=single", "a": "-" },
+        "item2": { "s": "Formatação Bold/Italic/Underline", "u": "Sim, type=multiple", "a": "-" },
+        "item3": { "s": "Modo Grid/Lista", "u": "Sim, type=single", "a": "-" },
+        "item4": { "s": "Configuração com efeito imediato", "u": "Não", "a": "Switch" },
+        "item5": { "s": "Seleção em form com submit", "u": "Não", "a": "Checkbox / RadioGroup" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "groupLabel": {
+            "name": "ToggleGroup aria-label",
+            "format": "Substantivo descritivo · descreve a categoria",
+            "good": "\"Alinhamento do texto\", \"Formatação\"",
+            "bad": "\"Grupo\", \"Toggles\""
+          },
+          "itemLabel": {
+            "name": "ToggleGroupItem aria-label",
+            "format": "Função específica · não nome do ícone",
+            "good": "\"Alinhar à esquerda\", \"Negrito\"",
+            "bad": "\"AlignLeft\", \"Botão B\""
+          },
+          "order": {
+            "name": "Ordem dos itens",
+            "format": "Lógica do domínio · não alfabética",
+            "good": "Esquerda → Centro → Direita; Bold → Italic → Underline",
+            "bad": "Ordem aleatória"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Há 2-5 opções relacionadas que formam uma escolha conjunta",
+        "item2": "Type single: opções mutuamente exclusivas (alinhamento)",
+        "item3": "Type multiple: combinações independentes (formatação)",
+        "item4": "Visual segmentado/agrupado comunica o relacionamento"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "É um único toggle isolado — use <code>Toggle</code>",
+        "item2": "São 6+ opções — use <code>Select</code> ou <code>Sidebar</code>",
+        "item3": "É configuração de sistema — use <code>Switch</code>",
+        "item4": "Está em form com submit — use <code>RadioGroup</code> ou <code>Checkbox</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Use type=single para alinhamento e type=multiple para formatação.",
+        "dont": "Não use múltiplos Toggle soltos quando representam escolha conjunta."
+      },
+      "pair2": {
+        "do": "aria-label no grupo descreve a categoria; nos items, a ação.",
+        "dont": "Não omita aria-label no grupo — leitores de tela perdem contexto."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "single": "Single",
+        "multiple": "Multiple",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "single": "<code>type=\"single\"</code> — seleção exclusiva; <code>value</code> é string.",
+        "multiple": "<code>type=\"multiple\"</code> — seleção combinada; <code>value</code> é array de strings.",
+        "vertical": "<code>orientation=\"vertical\"</code> — items empilhados; navegação por setas verticais."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "selected": "Selected",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "default": "Item não selecionado — <code>aria-pressed=\"false\"</code>, fundo transparente.",
+        "selected": "Item ativo — <code>aria-pressed=\"true\"</code>, fundo <code>muted</code>.",
+        "hover": "Mouse sobre item inativo — fundo <code>muted</code>, texto <code>foreground</code>.",
+        "focus": "Item focado via teclado (roving tabindex) — anel <code>ring-[3px] ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> no grupo ou item — <code>opacity-50</code>, <code>pointer-events-none</code>."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "type_prop": {
+          "type": "\"single\" | \"multiple\"",
+          "default": "—",
+          "required": "Sim",
+          "description": "Modo de seleção. Define se <code>value</code> é string ou array."
+        },
+        "value": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor(es) selecionado(s) controlado(s). String para single, array para multiple."
+        },
+        "defaultValue": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor(es) inicial(is) não-controlado(s)."
+        },
+        "onValueChange": {
+          "type": "(value: string | string[]) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback ao trocar a seleção."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Desabilita todos os itens do grupo."
+        },
+        "orientation": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "\"horizontal\"",
+          "required": "Não",
+          "description": "Direção da navegação por setas."
+        },
+        "variant": {
+          "type": "\"default\" | \"outline\"",
+          "default": "\"default\"",
+          "required": "Não",
+          "description": "Estilo visual herdado pelos itens."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\" | \"lg\"",
+          "default": "\"default\"",
+          "required": "Não",
+          "description": "Altura herdada pelos itens via tokens <code>--height-*</code>."
+        },
+        "spacing": {
+          "type": "number",
+          "default": "0",
+          "required": "Não",
+          "description": "Distância em unidades entre itens. <code>0</code> conecta bordas (segmented)."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// ToggleGroup type=multiple com analytics\nconst [formats, setFormats] = useState<string[]>([]);\n\n<ToggleGroup\n  type=\"multiple\"\n  value={formats}\n  onValueChange={(next) => {\n    track('field_change', {\n      component: 'toggle_group',\n      field_name: 'text_formatting',\n      value: next.join(','),\n    });\n    setFormats(next);\n  }}\n  aria-label=\"Formatação\"\n>\n  <ToggleGroupItem value=\"bold\" aria-label=\"Negrito\">\n    <Bold aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"italic\" aria-label=\"Itálico\">\n    <Italic aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"underline\" aria-label=\"Sublinhado\">\n    <Underline aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "muted": { "class": "bg-muted", "part": "Fundo no estado selecionado e hover" },
+        "foreground": { "class": "text-foreground", "part": "Texto/ícone em hover/selected" },
+        "input": { "class": "border-input", "part": "Borda na variante outline" },
+        "ring": { "class": "ring-ring", "part": "Anel de foco" },
+        "destructive": { "class": "border-destructive", "part": "Borda em validação falha" },
+        "radius": { "class": "rounded-(--radius-button)", "part": "Raio do grupo e dos cantos extremos" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Spacing customizado entre itens */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Cor customizada do estado selecionado */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>aria-label</code> obrigatório no <code>ToggleGroup</code> descrevendo a categoria",
+        "item2": "Cada <code>ToggleGroupItem</code> icon-only precisa de <code>aria-label</code> próprio",
+        "item3": "<code>aria-pressed</code> aplicado automaticamente em cada item",
+        "item4": "Roving tabindex — apenas um item focável via Tab; setas navegam dentro do grupo",
+        "item5": "Anel de foco visível com <code>ring-[3px] ring-ring/50</code>",
+        "item6": "Ícone interno com <code>aria-hidden=\"true\"</code>"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Foca o grupo (entra no item ativo ou no primeiro)",
+        "arrowRight": "Move para o próximo item (horizontal)",
+        "arrowLeft": "Move para o item anterior (horizontal)",
+        "arrowDown": "Move para o próximo item (vertical)",
+        "arrowUp": "Move para o item anterior (vertical)",
+        "home": "Vai para o primeiro item",
+        "end": "Vai para o último item",
+        "space": "Alterna o item focado",
+        "enter": "Alterna o item focado (idêntico a Space)"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "label": "<code>aria-label</code> obrigatório no grupo e em items icon-only",
+        "pressed": "<code>aria-pressed=\"true|false\"</code> automático nos items",
+        "orientation": "<code>aria-orientation</code> reflete a <code>orientation</code>",
+        "hidden": "<code>aria-hidden=\"true\"</code> no ícone interno"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "group": "Anuncia o agrupamento + número de itens",
+        "current": "Anuncia o label do item + \"pressionado\" ou \"não pressionado\"",
+        "navigation": "Anuncia o label ao navegar pelas setas"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "toggle": { "name": "Toggle", "description": "Toggle único isolado." },
+        "tabs": { "name": "Tabs", "description": "Alterna entre views (não combina formatação)." },
+        "radioGroup": { "name": "RadioGroup", "description": "Seleção única textual em form com submit." },
+        "checkbox": { "name": "Checkbox", "description": "Seleção independente em form com submit." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Type define o value</strong> — <code>type=\"single\"</code> usa string; <code>type=\"multiple\"</code> usa array de strings.",
+      "item3": "<strong>spacing=0</strong> — visual segmented (bordas conectadas); spacing maior cria botões separados.",
+      "item4": "<strong>Variants herdadas</strong> — <code>variant</code> e <code>size</code> do grupo se aplicam a todos os items via Context."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_change": {
+          "trigger": "Usuário troca a seleção (single) ou alterna item (multiple)",
+          "payload": "{ component: \"toggle_group\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Clicar em item (single)", "result": "Ativa o item, desativa o anterior", "priority": "high" },
+        "item2": { "action": "Clicar em item (multiple)", "result": "Adiciona ou remove do array", "priority": "high" },
+        "item3": { "action": "ArrowRight com item focado", "result": "Move para o próximo item (sem ativar em single)", "priority": "high" },
+        "item4": { "action": "Space/Enter com item focado", "result": "Alterna o item focado", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto/ícone e fundo selecionado",
+        "item3": "Focus ring visível com ring-[3px] ring-ring/50",
+        "item4": "aria-pressed reflete o estado de cada item",
+        "item5": "aria-label presente no grupo e em items icon-only"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Single (alinhamento, 3 itens)", "priority": "high" },
+        "item2": { "story": "Multiple (formatação, 3 itens)", "priority": "high" },
+        "item3": { "story": "Vertical", "priority": "high" },
+        "item4": { "story": "Outline variant", "priority": "medium" },
+        "item5": { "story": "Spacing > 0 (separado)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "ToggleGroup",
+    "category": "Form",
+    "type": "Component",
+    "description": "Related set of Toggle buttons with single or multiple selection, ideal for formatting bars and segmented filters.",
+    "seo": {
+      "title": "ToggleGroup — Form · Design System",
+      "description": "ToggleGroup documentation: single/multiple, horizontal/vertical orientation, ARIA with roving tabindex and WCAG 2.1 AA.",
+      "aiSummary": "ToggleGroup component with Items, single or multiple selection, horizontal/vertical orientation, configurable spacing and ARIA with roving tabindex.",
+      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "alignmentLabel": "Text alignment",
+        "left": "Align left",
+        "center": "Align center",
+        "right": "Align right",
+        "justify": "Justify",
+        "formattingLabel": "Formatting",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "viewLabel": "View mode",
+        "grid": "Grid",
+        "list": "List"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>ToggleGroup</strong> — container with <code>type=\"single\"</code> or <code>type=\"multiple\"</code>, controls shared selection and orientation.",
+      "item2": "<strong>ToggleGroupItem</strong> — individual Toggle with unique <code>value</code>; ARIA managed by group.",
+      "item3": "<strong>aria-label</strong> on ToggleGroup — REQUIRED to describe the grouping.",
+      "item4": "<strong>spacing</strong> — distance between items; <code>0</code> connects borders (segmented style).",
+      "structureLabel": "Basic structure:",
+      "structureCode": "{/* Single selection */}\n<ToggleGroup\n  type=\"single\"\n  value={alignment}\n  onValueChange={setAlignment}\n  aria-label=\"Text alignment\"\n>\n  <ToggleGroupItem value=\"left\" aria-label=\"Align left\">\n    <AlignLeft aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"center\" aria-label=\"Align center\">\n    <AlignCenter aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"right\" aria-label=\"Align right\">\n    <AlignRight aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use <code>type=\"single\"</code> for exclusive choice (e.g. alignment) and <code>type=\"multiple\"</code> for combination (e.g. bold + italic).",
+        "item2": "Provide <code>aria-label</code> on <code>ToggleGroup</code> and each icon-only <code>ToggleGroupItem</code>.",
+        "item3": "Use ToggleGroup instead of multiple loose Toggles when representing a joint choice.",
+        "item4": "For system settings, use <code>Switch</code>; for form with submit, <code>Checkbox</code>."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Text alignment (3-4 options)", "u": "Yes, type=single", "a": "-" },
+        "item2": { "s": "Bold/Italic/Underline formatting", "u": "Yes, type=multiple", "a": "-" },
+        "item3": { "s": "Grid/List mode", "u": "Yes, type=single", "a": "-" },
+        "item4": { "s": "System setting with immediate effect", "u": "No", "a": "Switch" },
+        "item5": { "s": "Selection in form with submit", "u": "No", "a": "Checkbox / RadioGroup" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "groupLabel": {
+            "name": "ToggleGroup aria-label",
+            "format": "Descriptive noun · describes the category",
+            "good": "\"Text alignment\", \"Formatting\"",
+            "bad": "\"Group\", \"Toggles\""
+          },
+          "itemLabel": {
+            "name": "ToggleGroupItem aria-label",
+            "format": "Specific function · not icon name",
+            "good": "\"Align left\", \"Bold\"",
+            "bad": "\"AlignLeft\", \"B button\""
+          },
+          "order": {
+            "name": "Item order",
+            "format": "Domain logic · not alphabetical",
+            "good": "Left → Center → Right; Bold → Italic → Underline",
+            "bad": "Random order"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "There are 2-5 related options that form a joint choice",
+        "item2": "Type single: mutually exclusive options (alignment)",
+        "item3": "Type multiple: independent combinations (formatting)",
+        "item4": "Segmented/grouped visual communicates the relationship"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "It's a single isolated toggle — use <code>Toggle</code>",
+        "item2": "There are 6+ options — use <code>Select</code> or <code>Sidebar</code>",
+        "item3": "It's a system setting — use <code>Switch</code>",
+        "item4": "It's in a form with submit — use <code>RadioGroup</code> or <code>Checkbox</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Use type=single for alignment and type=multiple for formatting.",
+        "dont": "Don't use multiple loose Toggles when representing a joint choice."
+      },
+      "pair2": {
+        "do": "aria-label on group describes the category; on items, the action.",
+        "dont": "Don't omit aria-label on group — screen readers lose context."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "single": "Single",
+        "multiple": "Multiple",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "single": "<code>type=\"single\"</code> — exclusive selection; <code>value</code> is a string.",
+        "multiple": "<code>type=\"multiple\"</code> — combined selection; <code>value</code> is array of strings.",
+        "vertical": "<code>orientation=\"vertical\"</code> — stacked items; vertical arrow navigation."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "default": "Default",
+        "selected": "Selected",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "default": "Unselected item — <code>aria-pressed=\"false\"</code>, transparent background.",
+        "selected": "Active item — <code>aria-pressed=\"true\"</code>, <code>muted</code> background.",
+        "hover": "Mouse over inactive item — <code>muted</code> background, <code>foreground</code> text.",
+        "focus": "Keyboard focused item (roving tabindex) — <code>ring-[3px] ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> on group or item — <code>opacity-50</code>, <code>pointer-events-none</code>."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "type_prop": {
+          "type": "\"single\" | \"multiple\"",
+          "default": "—",
+          "required": "Yes",
+          "description": "Selection mode. Defines whether <code>value</code> is string or array."
+        },
+        "value": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled selected value(s). String for single, array for multiple."
+        },
+        "defaultValue": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "No",
+          "description": "Initial uncontrolled value(s)."
+        },
+        "onValueChange": {
+          "type": "(value: string | string[]) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired when selection changes."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Disables all items in the group."
+        },
+        "orientation": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "\"horizontal\"",
+          "required": "No",
+          "description": "Arrow navigation direction."
+        },
+        "variant": {
+          "type": "\"default\" | \"outline\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Visual style inherited by items."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\" | \"lg\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Height inherited by items via <code>--height-*</code> tokens."
+        },
+        "spacing": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Distance in units between items. <code>0</code> connects borders (segmented)."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// ToggleGroup type=multiple with analytics\nconst [formats, setFormats] = useState<string[]>([]);\n\n<ToggleGroup\n  type=\"multiple\"\n  value={formats}\n  onValueChange={(next) => {\n    track('field_change', {\n      component: 'toggle_group',\n      field_name: 'text_formatting',\n      value: next.join(','),\n    });\n    setFormats(next);\n  }}\n  aria-label=\"Formatting\"\n>\n  <ToggleGroupItem value=\"bold\" aria-label=\"Bold\">\n    <Bold aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"italic\" aria-label=\"Italic\">\n    <Italic aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"underline\" aria-label=\"Underline\">\n    <Underline aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "muted": { "class": "bg-muted", "part": "Background in selected and hover states" },
+        "foreground": { "class": "text-foreground", "part": "Text/icon on hover/selected" },
+        "input": { "class": "border-input", "part": "Border on outline variant" },
+        "ring": { "class": "ring-ring", "part": "Focus ring" },
+        "destructive": { "class": "border-destructive", "part": "Border on failed validation" },
+        "radius": { "class": "rounded-(--radius-button)", "part": "Group radius and outermost corners" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Custom item spacing */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Custom selected state color */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>aria-label</code> required on <code>ToggleGroup</code> describing the category",
+        "item2": "Each icon-only <code>ToggleGroupItem</code> needs its own <code>aria-label</code>",
+        "item3": "<code>aria-pressed</code> applied automatically on each item",
+        "item4": "Roving tabindex — only one item Tab-focusable; arrows navigate within group",
+        "item5": "Visible focus ring with <code>ring-[3px] ring-ring/50</code>",
+        "item6": "Internal icon with <code>aria-hidden=\"true\"</code>"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Focuses the group (enters active or first item)",
+        "arrowRight": "Moves to next item (horizontal)",
+        "arrowLeft": "Moves to previous item (horizontal)",
+        "arrowDown": "Moves to next item (vertical)",
+        "arrowUp": "Moves to previous item (vertical)",
+        "home": "Goes to first item",
+        "end": "Goes to last item",
+        "space": "Toggles focused item",
+        "enter": "Toggles focused item (same as Space)"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "label": "<code>aria-label</code> required on group and icon-only items",
+        "pressed": "<code>aria-pressed=\"true|false\"</code> automatic on items",
+        "orientation": "<code>aria-orientation</code> reflects <code>orientation</code>",
+        "hidden": "<code>aria-hidden=\"true\"</code> on internal icon"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "group": "Announces grouping + item count",
+        "current": "Announces item label + \"pressed\" or \"not pressed\"",
+        "navigation": "Announces label when navigating with arrows"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "toggle": { "name": "Toggle", "description": "Single isolated toggle." },
+        "tabs": { "name": "Tabs", "description": "Switches between views (doesn't combine formatting)." },
+        "radioGroup": { "name": "RadioGroup", "description": "Single text selection in form with submit." },
+        "checkbox": { "name": "Checkbox", "description": "Independent selection in form with submit." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>Type defines value</strong> — <code>type=\"single\"</code> uses string; <code>type=\"multiple\"</code> uses array of strings.",
+      "item3": "<strong>spacing=0</strong> — segmented visual (connected borders); higher spacing creates separate buttons.",
+      "item4": "<strong>Inherited variants</strong> — <code>variant</code> and <code>size</code> from group apply to all items via Context."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant component events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_change": {
+          "trigger": "User changes selection (single) or toggles item (multiple)",
+          "payload": "{ component: \"toggle_group\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Click item (single)", "result": "Activates item, deactivates previous", "priority": "high" },
+        "item2": { "action": "Click item (multiple)", "result": "Adds or removes from array", "priority": "high" },
+        "item3": { "action": "ArrowRight with item focused", "result": "Moves to next item (no activation in single)", "priority": "high" },
+        "item4": { "action": "Space/Enter with item focused", "result": "Toggles focused item", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 4.5:1 contrast between text/icon and selected background",
+        "item3": "Visible focus ring with ring-[3px] ring-ring/50",
+        "item4": "aria-pressed reflects each item state",
+        "item5": "aria-label present on group and icon-only items"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Single (alignment, 3 items)", "priority": "high" },
+        "item2": { "story": "Multiple (formatting, 3 items)", "priority": "high" },
+        "item3": { "story": "Vertical", "priority": "high" },
+        "item4": { "story": "Outline variant", "priority": "medium" },
+        "item5": { "story": "Spacing > 0 (separated)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "ToggleGroup",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Conjunto relacionado de botones Toggle con selección única o múltiple, ideal para barras de formato y filtros segmentados.",
+    "seo": {
+      "title": "ToggleGroup — Formulario · Design System",
+      "description": "Documentación de ToggleGroup: single/multiple, orientación horizontal/vertical, ARIA con roving tabindex y WCAG 2.1 AA.",
+      "aiSummary": "Componente ToggleGroup con Items, selección single o multiple, orientación horizontal/vertical, spacing configurable y ARIA con roving tabindex.",
+      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "alignmentLabel": "Alineación del texto",
+        "left": "Alinear a la izquierda",
+        "center": "Centrar",
+        "right": "Alinear a la derecha",
+        "justify": "Justificar",
+        "formattingLabel": "Formato",
+        "bold": "Negrita",
+        "italic": "Itálica",
+        "underline": "Subrayado",
+        "viewLabel": "Modo de vista",
+        "grid": "Grilla",
+        "list": "Lista"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>ToggleGroup</strong> — contenedor con <code>type=\"single\"</code> o <code>type=\"multiple\"</code>, controla selección compartida y orientación.",
+      "item2": "<strong>ToggleGroupItem</strong> — Toggle individual con <code>value</code> único; ARIA gestionado por el grupo.",
+      "item3": "<strong>aria-label</strong> en ToggleGroup — OBLIGATORIO para describir la agrupación.",
+      "item4": "<strong>spacing</strong> — distancia entre ítems; <code>0</code> conecta los bordes (estilo segmented).",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "{/* Selección única */}\n<ToggleGroup\n  type=\"single\"\n  value={alignment}\n  onValueChange={setAlignment}\n  aria-label=\"Alineación del texto\"\n>\n  <ToggleGroupItem value=\"left\" aria-label=\"Alinear a la izquierda\">\n    <AlignLeft aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"center\" aria-label=\"Centrar\">\n    <AlignCenter aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"right\" aria-label=\"Alinear a la derecha\">\n    <AlignRight aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa <code>type=\"single\"</code> para elección exclusiva (ej. alineación) y <code>type=\"multiple\"</code> para combinación (ej. negrita + itálica).",
+        "item2": "Provee <code>aria-label</code> en <code>ToggleGroup</code> y en cada <code>ToggleGroupItem</code> icon-only.",
+        "item3": "Usa ToggleGroup en vez de múltiples Toggle sueltos cuando representan una elección conjunta.",
+        "item4": "Para configuraciones de sistema, usa <code>Switch</code>; para form con submit, <code>Checkbox</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Alineación de texto (3-4 opciones)", "u": "Sí, type=single", "a": "-" },
+        "item2": { "s": "Formato Bold/Italic/Underline", "u": "Sí, type=multiple", "a": "-" },
+        "item3": { "s": "Modo Grid/Lista", "u": "Sí, type=single", "a": "-" },
+        "item4": { "s": "Configuración con efecto inmediato", "u": "No", "a": "Switch" },
+        "item5": { "s": "Selección en form con submit", "u": "No", "a": "Checkbox / RadioGroup" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "groupLabel": {
+            "name": "ToggleGroup aria-label",
+            "format": "Sustantivo descriptivo · describe la categoría",
+            "good": "\"Alineación del texto\", \"Formato\"",
+            "bad": "\"Grupo\", \"Toggles\""
+          },
+          "itemLabel": {
+            "name": "ToggleGroupItem aria-label",
+            "format": "Función específica · no el nombre del ícono",
+            "good": "\"Alinear a la izquierda\", \"Negrita\"",
+            "bad": "\"AlignLeft\", \"Botón B\""
+          },
+          "order": {
+            "name": "Orden de ítems",
+            "format": "Lógica del dominio · no alfabética",
+            "good": "Izquierda → Centro → Derecha; Bold → Italic → Underline",
+            "bad": "Orden aleatorio"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Hay 2-5 opciones relacionadas que forman una elección conjunta",
+        "item2": "Type single: opciones mutuamente excluyentes (alineación)",
+        "item3": "Type multiple: combinaciones independientes (formato)",
+        "item4": "El visual segmentado/agrupado comunica la relación"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Es un único toggle aislado — usa <code>Toggle</code>",
+        "item2": "Son 6+ opciones — usa <code>Select</code> o <code>Sidebar</code>",
+        "item3": "Es configuración de sistema — usa <code>Switch</code>",
+        "item4": "Está en form con submit — usa <code>RadioGroup</code> o <code>Checkbox</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Usa type=single para alineación y type=multiple para formato.",
+        "dont": "No uses múltiples Toggle sueltos cuando representan elección conjunta."
+      },
+      "pair2": {
+        "do": "aria-label en el grupo describe la categoría; en ítems, la acción.",
+        "dont": "No omitas aria-label en el grupo — los lectores de pantalla pierden contexto."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "single": "Single",
+        "multiple": "Multiple",
+        "vertical": "Vertical"
+      },
+      "styles": {
+        "single": "<code>type=\"single\"</code> — selección exclusiva; <code>value</code> es string.",
+        "multiple": "<code>type=\"multiple\"</code> — selección combinada; <code>value</code> es array de strings.",
+        "vertical": "<code>orientation=\"vertical\"</code> — ítems apilados; navegación por flechas verticales."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "default": "Default",
+        "selected": "Selected",
+        "hover": "Hover",
+        "focus": "Focus",
+        "disabled": "Disabled"
+      },
+      "descriptions": {
+        "default": "Ítem no seleccionado — <code>aria-pressed=\"false\"</code>, fondo transparente.",
+        "selected": "Ítem activo — <code>aria-pressed=\"true\"</code>, fondo <code>muted</code>.",
+        "hover": "Mouse sobre ítem inactivo — fondo <code>muted</code>, texto <code>foreground</code>.",
+        "focus": "Ítem enfocado por teclado (roving tabindex) — <code>ring-[3px] ring-ring/50</code>.",
+        "disabled": "<code>disabled</code> en grupo o ítem — <code>opacity-50</code>, <code>pointer-events-none</code>."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "type_prop": {
+          "type": "\"single\" | \"multiple\"",
+          "default": "—",
+          "required": "Sí",
+          "description": "Modo de selección. Define si <code>value</code> es string o array."
+        },
+        "value": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "No",
+          "description": "Valor(es) seleccionado(s) controlado(s). String para single, array para multiple."
+        },
+        "defaultValue": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "No",
+          "description": "Valor(es) inicial(es) no controlado(s)."
+        },
+        "onValueChange": {
+          "type": "(value: string | string[]) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback al cambiar la selección."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Deshabilita todos los ítems del grupo."
+        },
+        "orientation": {
+          "type": "\"horizontal\" | \"vertical\"",
+          "default": "\"horizontal\"",
+          "required": "No",
+          "description": "Dirección de la navegación por flechas."
+        },
+        "variant": {
+          "type": "\"default\" | \"outline\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Estilo visual heredado por los ítems."
+        },
+        "size": {
+          "type": "\"default\" | \"sm\" | \"lg\"",
+          "default": "\"default\"",
+          "required": "No",
+          "description": "Altura heredada por los ítems vía tokens <code>--height-*</code>."
+        },
+        "spacing": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Distancia en unidades entre ítems. <code>0</code> conecta bordes (segmented)."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// ToggleGroup type=multiple con analytics\nconst [formats, setFormats] = useState<string[]>([]);\n\n<ToggleGroup\n  type=\"multiple\"\n  value={formats}\n  onValueChange={(next) => {\n    track('field_change', {\n      component: 'toggle_group',\n      field_name: 'text_formatting',\n      value: next.join(','),\n    });\n    setFormats(next);\n  }}\n  aria-label=\"Formato\"\n>\n  <ToggleGroupItem value=\"bold\" aria-label=\"Negrita\">\n    <Bold aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"italic\" aria-label=\"Itálica\">\n    <Italic aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"underline\" aria-label=\"Subrayado\">\n    <Underline aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "muted": { "class": "bg-muted", "part": "Fondo en estados seleccionado y hover" },
+        "foreground": { "class": "text-foreground", "part": "Texto/icono en hover/seleccionado" },
+        "input": { "class": "border-input", "part": "Borde en variante outline" },
+        "ring": { "class": "ring-ring", "part": "Anillo de foco" },
+        "destructive": { "class": "border-destructive", "part": "Borde en validación fallida" },
+        "radius": { "class": "rounded-(--radius-button)", "part": "Radio del grupo y esquinas extremas" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Spacing personalizado entre ítems */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Color personalizado del estado seleccionado */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
+      "items": {
+        "item1": "<code>aria-label</code> obligatorio en <code>ToggleGroup</code> describiendo la categoría",
+        "item2": "Cada <code>ToggleGroupItem</code> icon-only necesita su propio <code>aria-label</code>",
+        "item3": "<code>aria-pressed</code> aplicado automáticamente en cada ítem",
+        "item4": "Roving tabindex — solo un ítem focalizable vía Tab; las flechas navegan dentro del grupo",
+        "item5": "Anillo de foco visible con <code>ring-[3px] ring-ring/50</code>",
+        "item6": "Icono interno con <code>aria-hidden=\"true\"</code>"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Enfoca el grupo (entra en el ítem activo o el primero)",
+        "arrowRight": "Mueve al siguiente ítem (horizontal)",
+        "arrowLeft": "Mueve al ítem anterior (horizontal)",
+        "arrowDown": "Mueve al siguiente ítem (vertical)",
+        "arrowUp": "Mueve al ítem anterior (vertical)",
+        "home": "Va al primer ítem",
+        "end": "Va al último ítem",
+        "space": "Alterna el ítem enfocado",
+        "enter": "Alterna el ítem enfocado (igual a Space)"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "label": "<code>aria-label</code> obligatorio en grupo e ítems icon-only",
+        "pressed": "<code>aria-pressed=\"true|false\"</code> automático en ítems",
+        "orientation": "<code>aria-orientation</code> refleja la <code>orientation</code>",
+        "hidden": "<code>aria-hidden=\"true\"</code> en el icono interno"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "group": "Anuncia la agrupación + cantidad de ítems",
+        "current": "Anuncia el label del ítem + \"pulsado\" o \"no pulsado\"",
+        "navigation": "Anuncia el label al navegar con flechas"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "toggle": { "name": "Toggle", "description": "Toggle único aislado." },
+        "tabs": { "name": "Tabs", "description": "Alterna entre vistas (no combina formato)." },
+        "radioGroup": { "name": "RadioGroup", "description": "Selección única textual en form con submit." },
+        "checkbox": { "name": "Checkbox", "description": "Selección independiente en form con submit." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>Type define el value</strong> — <code>type=\"single\"</code> usa string; <code>type=\"multiple\"</code> usa array de strings.",
+      "item3": "<strong>spacing=0</strong> — visual segmented (bordes conectados); spacing mayor crea botones separados.",
+      "item4": "<strong>Variants heredados</strong> — <code>variant</code> y <code>size</code> del grupo se aplican a todos los ítems vía Context."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "field_change": {
+          "trigger": "El usuario cambia la selección (single) o alterna ítem (multiple)",
+          "payload": "{ component: \"toggle_group\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Hacer clic en ítem (single)", "result": "Activa el ítem, desactiva el anterior", "priority": "high" },
+        "item2": { "action": "Hacer clic en ítem (multiple)", "result": "Añade o quita del array", "priority": "high" },
+        "item3": { "action": "ArrowRight con ítem enfocado", "result": "Mueve al siguiente ítem (sin activar en single)", "priority": "high" },
+        "item4": { "action": "Space/Enter con ítem enfocado", "result": "Alterna el ítem enfocado", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto/icono y fondo seleccionado",
+        "item3": "Anillo de foco visible con ring-[3px] ring-ring/50",
+        "item4": "aria-pressed refleja el estado de cada ítem",
+        "item5": "aria-label presente en grupo e ítems icon-only"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Single (alineación, 3 ítems)", "priority": "high" },
+        "item2": { "story": "Multiple (formato, 3 ítems)", "priority": "high" },
+        "item3": { "story": "Vertical", "priority": "high" },
+        "item4": { "story": "Variante outline", "priority": "medium" },
+        "item5": { "story": "Spacing > 0 (separado)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
