@@ -1,0 +1,971 @@
+{
+  "pt-BR": {
+    "title": "Tooltip",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Texto explicativo curto que aparece ao passar o mouse ou focar em um elemento — para explicar ícones, atalhos ou contexto não-crítico.",
+    "seo": {
+      "title": "Tooltip — Overlay · Design System",
+      "description": "Documentação do Tooltip: Provider, Trigger, Content e Arrow com posicionamento, delay e suporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Tooltip com Provider, Trigger e Content, posicionamento automático com Arrow, delay configurável e suporte a teclado via foco.",
+      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tooltip",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "save": "Salvar (Ctrl+S)",
+        "delete": "Excluir item",
+        "share": "Compartilhar link",
+        "saveButton": "Salvar",
+        "deleteButton": "Excluir",
+        "shareButton": "Compartilhar"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>TooltipProvider</strong> — wrapper global no root da app que configura <code>delay</code> compartilhado entre todos os tooltips.",
+      "item2": "<strong>Tooltip</strong> — root individual que controla open/closed por instância.",
+      "item3": "<strong>TooltipTrigger</strong> — elemento que ativa o tooltip ao hover ou foco. Use <code>asChild</code> para envolver um Button.",
+      "item4": "<strong>TooltipContent</strong> — popover em portal com o texto explicativo; renderiza Arrow automaticamente.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "{/* No root da app — uma vez */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Onde precisar */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Salvar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Use APENAS para informação complementar — nunca para conteúdo obrigatório.",
+        "item2": "<code>TooltipProvider</code> é obrigatório no root da app — sem ele, tooltips não aparecem.",
+        "item3": "Para conteúdo interativo, use <code>Popover</code>; para preview rico, use <code>HoverCard</code>.",
+        "item4": "Em botões icon-only, o <code>aria-label</code> no botão é obrigatório — o Tooltip é complementar, não substitui."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Atalho de teclado em botão icon-only", "u": "Sim", "a": "-" },
+        "item2": { "s": "Descrição curta de ação", "u": "Sim", "a": "-" },
+        "item3": { "s": "Conteúdo interativo (form, links)", "u": "Não", "a": "Popover" },
+        "item4": { "s": "Preview rico (avatar, link)", "u": "Não", "a": "HoverCard" },
+        "item5": { "s": "Mensagem de erro de validação", "u": "Não", "a": "Texto inline + aria-describedby" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "content": {
+            "name": "TooltipContent",
+            "format": "Texto curto · máx. 60 chars · sem ponto final",
+            "good": "\"Salvar (Ctrl+S)\", \"Compartilhar link\"",
+            "bad": "\"Clique aqui para salvar.\", parágrafo longo"
+          },
+          "shortcut": {
+            "name": "Atalho de teclado",
+            "format": "Símbolos do SO · separados por +",
+            "good": "\"Ctrl+S\", \"⌘+K\"",
+            "bad": "\"Pressione Control e S\", \"Cmd K\""
+          },
+          "icon": {
+            "name": "Trigger icon-only",
+            "format": "Sempre com <code>aria-label</code> no botão · Tooltip é complementar",
+            "good": "Button aria-label=\"Salvar\" + Tooltip \"Salvar (Ctrl+S)\"",
+            "bad": "Botão só com Tooltip (mobile não tem hover)"
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "É informação complementar a um ícone ou botão",
+        "item2": "É um atalho de teclado documentado no botão",
+        "item3": "O texto cabe em uma linha curta (máx. 60 chars)",
+        "item4": "O elemento já tem outro identificador acessível"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "É a única forma do usuário entender o elemento — falha em mobile",
+        "item2": "Conteúdo é interativo (link, botão, form) — use <code>Popover</code>",
+        "item3": "É um preview rico com imagem — use <code>HoverCard</code>",
+        "item4": "É mensagem de erro — use texto inline com <code>aria-describedby</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Tooltip como complemento ao aria-label do botão.",
+        "dont": "Não substitua o aria-label pelo Tooltip — mobile sem hover quebra."
+      },
+      "pair2": {
+        "do": "Texto curto explicando função + atalho.",
+        "dont": "Não use Tooltip para conteúdo longo ou interativo."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withShortcut": "Com atalho",
+        "longText": "Texto longo"
+      },
+      "styles": {
+        "default": "Texto explicativo curto — fundo <code>foreground</code>, texto <code>background</code>.",
+        "withShortcut": "Texto + atalho (ex: \"Salvar (Ctrl+S)\") — útil para botões com hotkeys.",
+        "longText": "Texto que ocupa até <code>max-w-xs</code> — quebra natural sem ser parágrafo."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "hover": "Hover",
+        "focus": "Focus",
+        "delayed": "Delayed"
+      },
+      "descriptions": {
+        "closed": "Estado inicial — conteúdo desmontado, <code>data-state=\"closed\"</code>.",
+        "open": "Visível — <code>data-state=\"open\"</code> ou <code>delayed-open</code>, posicionado por <code>side</code>.",
+        "hover": "Mouse sobre o trigger — abre após <code>delay</code> do Provider.",
+        "focus": "Trigger focado via teclado — abre imediatamente (sem delay).",
+        "delayed": "Em delay — <code>data-state=\"delayed-open\"</code> antes da animação completar."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "delay": {
+          "type": "number",
+          "default": "0",
+          "required": "Não",
+          "description": "Delay em ms antes do tooltip abrir no hover. Aplica-se no <code>TooltipProvider</code>."
+        },
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "Não",
+          "description": "Estado controlado de abertura no <code>Tooltip</code>. Use com <code>onOpenChange</code>."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Estado inicial não-controlado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback disparado ao abrir ou fechar."
+        },
+        "side": {
+          "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+          "default": "\"top\"",
+          "required": "Não",
+          "description": "Lado preferido em relação ao trigger. Auto-flip por colisão."
+        },
+        "align": {
+          "type": "\"start\" | \"center\" | \"end\"",
+          "default": "\"center\"",
+          "required": "Não",
+          "description": "Alinhamento ao longo do eixo do <code>side</code>."
+        },
+        "sideOffset": {
+          "type": "number",
+          "default": "4",
+          "required": "Não",
+          "description": "Distância em pixels entre trigger e content."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes Tailwind adicionais no <code>TooltipContent</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": "// TooltipProvider no root da app (uma vez)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip com atalho de teclado em botão icon-only\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Salvar <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "foreground": { "class": "bg-foreground", "part": "Fundo do TooltipContent (escuro)" },
+        "background": { "class": "text-background", "part": "Cor do texto (contraste com foreground)" },
+        "fill": { "class": "fill-foreground", "part": "Cor do Arrow (mesma do fundo)" },
+        "radius": { "class": "rounded-md", "part": "Raio do TooltipContent" },
+        "zIndex": { "class": "z-50", "part": "Camada do portal (acima de overlays)" }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": "/* Tooltip claro em tema dark (override de variante) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  @apply bg-popover text-popover-foreground ring-1 ring-foreground/10;\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  @apply fill-popover;\n}\n\n/* Delay customizado via Provider (props.delay) */\n<TooltipProvider delay={600}>"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.1 AA: 1.4.13 (Content on Hover or Focus), 2.1.1, 2.4.7, 4.1.2, 4.1.3.",
+      "items": {
+        "item1": "Abre por hover OU foco (WCAG 1.4.13) — não apenas hover",
+        "item2": "<code>aria-describedby</code> vinculando o trigger ao conteúdo automaticamente",
+        "item3": "<code>Escape</code> fecha o tooltip sem perder o foco do trigger",
+        "item4": "Tooltip não é interativo — não use links ou botões internos",
+        "item5": "Em botões icon-only, o <code>aria-label</code> no botão é obrigatório; Tooltip é complementar",
+        "item6": "Persistência — usuário pode mover mouse para o tooltip sem fechar (WCAG 1.4.13)"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "tab": "Foca o trigger — abre o tooltip imediatamente (sem delay)",
+        "escape": "Fecha o tooltip; foco permanece no trigger",
+        "shiftTab": "Sai do trigger — fecha o tooltip"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "describedBy": "<code>aria-describedby</code> automático ligando trigger ao TooltipContent",
+        "role": "<code>role=\"tooltip\"</code> no TooltipContent",
+        "label": "<code>aria-label</code> separado no Trigger quando icon-only (Tooltip não substitui)"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "trigger": "Anuncia o Label + descrição do tooltip ao focar",
+        "noNavigation": "Não navega para dentro do tooltip — é texto descritivo, não interativo"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "popover": { "name": "Popover", "description": "Conteúdo interativo (form, links) ativado por clique." },
+        "hoverCard": { "name": "HoverCard", "description": "Preview rico (avatar, link) com imagem e texto." },
+        "button": { "name": "Button", "description": "Trigger comum de tooltips (especialmente icon-only)." },
+        "kbd": { "name": "Kbd", "description": "Indicador de tecla para atalhos dentro do tooltip." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>TooltipProvider obrigatório</strong> — colocar no root da app uma única vez. Sem ele, tooltips simplesmente não aparecem.",
+      "item3": "<strong>Não-interativo</strong> — Tooltip é texto descritivo apenas. Para conteúdo clicável use Popover ou HoverCard.",
+      "item4": "<strong>Mobile</strong> — sem hover, o tooltip não aparece em touch. Botão icon-only deve ter <code>aria-label</code> próprio."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Tooltip é passivo — geralmente não dispara eventos.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "tooltip_view": {
+          "trigger": "Disparar apenas se a abertura indica intenção do usuário (raro)",
+          "payload": "{ component: \"tooltip\", trigger_id, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": { "action": "Hover no trigger", "result": "Tooltip abre após delay do Provider", "priority": "high" },
+        "item2": { "action": "Focar trigger via Tab", "result": "Tooltip abre imediatamente (sem delay)", "priority": "high" },
+        "item3": { "action": "Pressionar Escape com tooltip aberto", "result": "Fecha tooltip; foco permanece no trigger", "priority": "high" },
+        "item4": { "action": "Mover mouse para o tooltip", "result": "Tooltip permanece aberto (WCAG 1.4.13)", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto e fundo do tooltip",
+        "item3": "role=\"tooltip\" presente no TooltipContent",
+        "item4": "aria-describedby liga trigger ao content",
+        "item5": "aria-label próprio em triggers icon-only"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": { "story": "Default (open, side top)", "priority": "high" },
+        "item2": { "story": "Com atalho de teclado (kbd)", "priority": "high" },
+        "item3": { "story": "Side bottom/left/right", "priority": "medium" },
+        "item4": { "story": "Texto longo (max-w-xs)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Tooltip",
+    "category": "Overlay",
+    "type": "Component",
+    "description": "Short explanatory text that appears on hover or focus — to explain icons, shortcuts or non-critical context.",
+    "seo": {
+      "title": "Tooltip — Overlay · Design System",
+      "description": "Tooltip documentation: Provider, Trigger, Content and Arrow with positioning, delay and WCAG 2.1 AA support.",
+      "aiSummary": "Tooltip component with Provider, Trigger and Content, automatic positioning with Arrow, configurable delay and keyboard support via focus.",
+      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tooltip",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "save": "Save (Ctrl+S)",
+        "delete": "Delete item",
+        "share": "Share link",
+        "saveButton": "Save",
+        "deleteButton": "Delete",
+        "shareButton": "Share"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>TooltipProvider</strong> — global wrapper at app root configuring shared <code>delay</code> across all tooltips.",
+      "item2": "<strong>Tooltip</strong> — individual root controlling open/closed per instance.",
+      "item3": "<strong>TooltipTrigger</strong> — element that activates the tooltip on hover or focus. Use <code>asChild</code> to wrap a Button.",
+      "item4": "<strong>TooltipContent</strong> — portal popover with explanatory text; renders Arrow automatically.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "{/* At app root — once */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Where needed */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Save (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Use ONLY for supplementary information — never for required content.",
+        "item2": "<code>TooltipProvider</code> is required at app root — without it, tooltips don't appear.",
+        "item3": "For interactive content, use <code>Popover</code>; for rich preview, use <code>HoverCard</code>.",
+        "item4": "On icon-only buttons, the button's <code>aria-label</code> is required — Tooltip is supplementary, doesn't replace it."
+      },
+      "scenarios": {
+        "title": "Scenarios Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Keyboard shortcut on icon-only button", "u": "Yes", "a": "-" },
+        "item2": { "s": "Short action description", "u": "Yes", "a": "-" },
+        "item3": { "s": "Interactive content (form, links)", "u": "No", "a": "Popover" },
+        "item4": { "s": "Rich preview (avatar, link)", "u": "No", "a": "HoverCard" },
+        "item5": { "s": "Validation error message", "u": "No", "a": "Inline text + aria-describedby" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "content": {
+            "name": "TooltipContent",
+            "format": "Short text · max 60 chars · no period",
+            "good": "\"Save (Ctrl+S)\", \"Share link\"",
+            "bad": "\"Click here to save.\", long paragraph"
+          },
+          "shortcut": {
+            "name": "Keyboard shortcut",
+            "format": "OS symbols · separated by +",
+            "good": "\"Ctrl+S\", \"⌘+K\"",
+            "bad": "\"Press Control and S\", \"Cmd K\""
+          },
+          "icon": {
+            "name": "Icon-only trigger",
+            "format": "Always with <code>aria-label</code> on button · Tooltip is supplementary",
+            "good": "Button aria-label=\"Save\" + Tooltip \"Save (Ctrl+S)\"",
+            "bad": "Button with only Tooltip (mobile has no hover)"
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "It's supplementary information for an icon or button",
+        "item2": "It's a keyboard shortcut documented on the button",
+        "item3": "Text fits in a short line (max 60 chars)",
+        "item4": "The element already has another accessible identifier"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "It's the only way the user understands the element — fails on mobile",
+        "item2": "Content is interactive (link, button, form) — use <code>Popover</code>",
+        "item3": "It's a rich preview with image — use <code>HoverCard</code>",
+        "item4": "It's an error message — use inline text with <code>aria-describedby</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Tooltip as supplement to the button's aria-label.",
+        "dont": "Don't replace the aria-label with the Tooltip — mobile without hover breaks."
+      },
+      "pair2": {
+        "do": "Short text explaining function + shortcut.",
+        "dont": "Don't use Tooltip for long or interactive content."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "default": "Default",
+        "withShortcut": "With shortcut",
+        "longText": "Long text"
+      },
+      "styles": {
+        "default": "Short explanatory text — <code>foreground</code> background, <code>background</code> text.",
+        "withShortcut": "Text + shortcut (e.g. \"Save (Ctrl+S)\") — useful for buttons with hotkeys.",
+        "longText": "Text up to <code>max-w-xs</code> — natural wrap without being a paragraph."
+      }
+    },
+    "states": {
+      "title": "States",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "hover": "Hover",
+        "focus": "Focus",
+        "delayed": "Delayed"
+      },
+      "descriptions": {
+        "closed": "Initial state — content unmounted, <code>data-state=\"closed\"</code>.",
+        "open": "Visible — <code>data-state=\"open\"</code> or <code>delayed-open</code>, positioned by <code>side</code>.",
+        "hover": "Mouse over trigger — opens after Provider <code>delay</code>.",
+        "focus": "Keyboard-focused trigger — opens immediately (no delay).",
+        "delayed": "In delay — <code>data-state=\"delayed-open\"</code> before animation completes."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "delay": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Delay in ms before tooltip opens on hover. Applied at <code>TooltipProvider</code>."
+        },
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Controlled open state on <code>Tooltip</code>. Use with <code>onOpenChange</code>."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Initial uncontrolled state."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback fired on open or close."
+        },
+        "side": {
+          "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+          "default": "\"top\"",
+          "required": "No",
+          "description": "Preferred side relative to trigger. Auto-flips on collision."
+        },
+        "align": {
+          "type": "\"start\" | \"center\" | \"end\"",
+          "default": "\"center\"",
+          "required": "No",
+          "description": "Alignment along <code>side</code> axis."
+        },
+        "sideOffset": {
+          "type": "number",
+          "default": "4",
+          "required": "No",
+          "description": "Pixel distance between trigger and content."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Additional Tailwind classes on <code>TooltipContent</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": "// TooltipProvider at app root (once)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip with keyboard shortcut on icon-only button\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Save <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Application",
+        "foreground": { "class": "bg-foreground", "part": "TooltipContent background (dark)" },
+        "background": { "class": "text-background", "part": "Text color (contrast with foreground)" },
+        "fill": { "class": "fill-foreground", "part": "Arrow color (matches background)" },
+        "radius": { "class": "rounded-md", "part": "TooltipContent radius" },
+        "zIndex": { "class": "z-50", "part": "Portal layer (above overlays)" }
+      },
+      "customizationTitle": "Customization",
+      "customizationCode": "/* Light tooltip in dark theme (variant override) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  @apply bg-popover text-popover-foreground ring-1 ring-foreground/10;\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  @apply fill-popover;\n}\n\n/* Custom delay via Provider (props.delay) */\n<TooltipProvider delay={600}>"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.1 AA: 1.4.13 (Content on Hover or Focus), 2.1.1, 2.4.7, 4.1.2, 4.1.3.",
+      "items": {
+        "item1": "Opens on hover OR focus (WCAG 1.4.13) — not only hover",
+        "item2": "<code>aria-describedby</code> automatically links trigger to content",
+        "item3": "<code>Escape</code> closes tooltip without losing trigger focus",
+        "item4": "Tooltip is not interactive — don't use links or buttons inside",
+        "item5": "On icon-only buttons, button's <code>aria-label</code> is required; Tooltip is supplementary",
+        "item6": "Persistence — user can move mouse into tooltip without closing (WCAG 1.4.13)"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "tab": "Focuses trigger — opens tooltip immediately (no delay)",
+        "escape": "Closes tooltip; focus stays on trigger",
+        "shiftTab": "Leaves trigger — closes tooltip"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "describedBy": "<code>aria-describedby</code> automatic linking trigger to TooltipContent",
+        "role": "<code>role=\"tooltip\"</code> on TooltipContent",
+        "label": "Separate <code>aria-label</code> on Trigger when icon-only (Tooltip doesn't replace)"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "trigger": "Announces Label + tooltip description on focus",
+        "noNavigation": "Doesn't navigate into tooltip — it's descriptive text, not interactive"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "popover": { "name": "Popover", "description": "Interactive content (form, links) activated by click." },
+        "hoverCard": { "name": "HoverCard", "description": "Rich preview (avatar, link) with image and text." },
+        "button": { "name": "Button", "description": "Common tooltip trigger (especially icon-only)." },
+        "kbd": { "name": "Kbd", "description": "Key indicator for shortcuts inside the tooltip." }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item2": "<strong>TooltipProvider required</strong> — place at app root once. Without it, tooltips simply don't appear.",
+      "item3": "<strong>Non-interactive</strong> — Tooltip is descriptive text only. For clickable content use Popover or HoverCard.",
+      "item4": "<strong>Mobile</strong> — without hover, tooltip doesn't appear on touch. Icon-only button must have its own <code>aria-label</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Tooltip is passive — usually doesn't fire events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "tooltip_view": {
+          "trigger": "Fire only if opening indicates user intent (rare)",
+          "payload": "{ component: \"tooltip\", trigger_id, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Testing Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen in response to each interaction.",
+        "item1": { "action": "Hover trigger", "result": "Tooltip opens after Provider delay", "priority": "high" },
+        "item2": { "action": "Focus trigger via Tab", "result": "Tooltip opens immediately (no delay)", "priority": "high" },
+        "item3": { "action": "Press Escape with tooltip open", "result": "Closes tooltip; focus stays on trigger", "priority": "high" },
+        "item4": { "action": "Move mouse into tooltip", "result": "Tooltip stays open (WCAG 1.4.13)", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria that automated tools should confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "Minimum 4.5:1 contrast between tooltip text and background",
+        "item3": "role=\"tooltip\" present on TooltipContent",
+        "item4": "aria-describedby links trigger to content",
+        "item5": "Own aria-label on icon-only triggers"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States the Chromatic should capture.",
+        "required": "Required",
+        "item1": { "story": "Default (open, side top)", "priority": "high" },
+        "item2": { "story": "With keyboard shortcut (kbd)", "priority": "high" },
+        "item3": { "story": "Side bottom/left/right", "priority": "medium" },
+        "item4": { "story": "Long text (max-w-xs)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Tooltip",
+    "category": "Overlay",
+    "type": "Componente",
+    "description": "Texto explicativo corto que aparece al pasar el mouse o enfocar un elemento — para explicar iconos, atajos o contexto no crítico.",
+    "seo": {
+      "title": "Tooltip — Overlay · Design System",
+      "description": "Documentación de Tooltip: Provider, Trigger, Content y Arrow con posicionamiento, delay y soporte WCAG 2.1 AA.",
+      "aiSummary": "Componente Tooltip con Provider, Trigger y Content, posicionamiento automático con Arrow, delay configurable y soporte de teclado vía foco.",
+      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tooltip",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "save": "Guardar (Ctrl+S)",
+        "delete": "Eliminar ítem",
+        "share": "Compartir enlace",
+        "saveButton": "Guardar",
+        "deleteButton": "Eliminar",
+        "shareButton": "Compartir"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>TooltipProvider</strong> — wrapper global en el root de la app que configura <code>delay</code> compartido entre todos los tooltips.",
+      "item2": "<strong>Tooltip</strong> — root individual que controla open/closed por instancia.",
+      "item3": "<strong>TooltipTrigger</strong> — elemento que activa el tooltip al hover o foco. Usa <code>asChild</code> para envolver un Button.",
+      "item4": "<strong>TooltipContent</strong> — popover en portal con el texto explicativo; renderiza Arrow automáticamente.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "{/* En el root de la app — una vez */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Donde necesario */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Guardar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Usa SOLO para información complementaria — nunca para contenido obligatorio.",
+        "item2": "<code>TooltipProvider</code> es obligatorio en el root de la app — sin él, los tooltips no aparecen.",
+        "item3": "Para contenido interactivo, usa <code>Popover</code>; para vista previa rica, usa <code>HoverCard</code>.",
+        "item4": "En botones icon-only, el <code>aria-label</code> del botón es obligatorio — el Tooltip es complementario, no sustituye."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Atajo de teclado en botón icon-only", "u": "Sí", "a": "-" },
+        "item2": { "s": "Descripción corta de acción", "u": "Sí", "a": "-" },
+        "item3": { "s": "Contenido interactivo (form, links)", "u": "No", "a": "Popover" },
+        "item4": { "s": "Vista previa rica (avatar, link)", "u": "No", "a": "HoverCard" },
+        "item5": { "s": "Mensaje de error de validación", "u": "No", "a": "Texto inline + aria-describedby" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "content": {
+            "name": "TooltipContent",
+            "format": "Texto corto · máx. 60 chars · sin punto final",
+            "good": "\"Guardar (Ctrl+S)\", \"Compartir enlace\"",
+            "bad": "\"Haz clic aquí para guardar.\", párrafo largo"
+          },
+          "shortcut": {
+            "name": "Atajo de teclado",
+            "format": "Símbolos del SO · separados por +",
+            "good": "\"Ctrl+S\", \"⌘+K\"",
+            "bad": "\"Presiona Control y S\", \"Cmd K\""
+          },
+          "icon": {
+            "name": "Trigger icon-only",
+            "format": "Siempre con <code>aria-label</code> en el botón · Tooltip es complementario",
+            "good": "Button aria-label=\"Guardar\" + Tooltip \"Guardar (Ctrl+S)\"",
+            "bad": "Botón solo con Tooltip (móvil no tiene hover)"
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Es información complementaria a un icono o botón",
+        "item2": "Es un atajo de teclado documentado en el botón",
+        "item3": "El texto cabe en una línea corta (máx. 60 chars)",
+        "item4": "El elemento ya tiene otro identificador accesible"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Es la única forma que tiene el usuario de entender el elemento — falla en móvil",
+        "item2": "El contenido es interactivo (link, botón, form) — usa <code>Popover</code>",
+        "item3": "Es una vista previa rica con imagen — usa <code>HoverCard</code>",
+        "item4": "Es un mensaje de error — usa texto inline con <code>aria-describedby</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Tooltip como complemento al aria-label del botón.",
+        "dont": "No sustituyas el aria-label por el Tooltip — móvil sin hover rompe."
+      },
+      "pair2": {
+        "do": "Texto corto explicando función + atajo.",
+        "dont": "No uses Tooltip para contenido largo o interactivo."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "default": "Default",
+        "withShortcut": "Con atajo",
+        "longText": "Texto largo"
+      },
+      "styles": {
+        "default": "Texto explicativo corto — fondo <code>foreground</code>, texto <code>background</code>.",
+        "withShortcut": "Texto + atajo (ej. \"Guardar (Ctrl+S)\") — útil para botones con hotkeys.",
+        "longText": "Texto que ocupa hasta <code>max-w-xs</code> — quiebre natural sin ser párrafo."
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "items": {
+        "closed": "Closed",
+        "open": "Open",
+        "hover": "Hover",
+        "focus": "Focus",
+        "delayed": "Delayed"
+      },
+      "descriptions": {
+        "closed": "Estado inicial — contenido desmontado, <code>data-state=\"closed\"</code>.",
+        "open": "Visible — <code>data-state=\"open\"</code> o <code>delayed-open</code>, posicionado por <code>side</code>.",
+        "hover": "Mouse sobre el trigger — abre tras el <code>delay</code> del Provider.",
+        "focus": "Trigger enfocado por teclado — abre inmediatamente (sin delay).",
+        "delayed": "En delay — <code>data-state=\"delayed-open\"</code> antes de completar la animación."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "delay": {
+          "type": "number",
+          "default": "0",
+          "required": "No",
+          "description": "Delay en ms antes de que el tooltip abra al hover. Se aplica en el <code>TooltipProvider</code>."
+        },
+        "open": {
+          "type": "boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Estado controlado de apertura en el <code>Tooltip</code>. Usa con <code>onOpenChange</code>."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Estado inicial no controlado."
+        },
+        "onOpenChange": {
+          "type": "(open: boolean) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback disparado al abrir o cerrar."
+        },
+        "side": {
+          "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+          "default": "\"top\"",
+          "required": "No",
+          "description": "Lado preferido respecto al trigger. Auto-flip por colisión."
+        },
+        "align": {
+          "type": "\"start\" | \"center\" | \"end\"",
+          "default": "\"center\"",
+          "required": "No",
+          "description": "Alineación a lo largo del eje del <code>side</code>."
+        },
+        "sideOffset": {
+          "type": "number",
+          "default": "4",
+          "required": "No",
+          "description": "Distancia en píxeles entre trigger y content."
+        },
+        "className": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases Tailwind adicionales en el <code>TooltipContent</code>."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": "// TooltipProvider en el root de la app (una vez)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip con atajo de teclado en botón icon-only\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Guardar <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "foreground": { "class": "bg-foreground", "part": "Fondo del TooltipContent (oscuro)" },
+        "background": { "class": "text-background", "part": "Color del texto (contraste con foreground)" },
+        "fill": { "class": "fill-foreground", "part": "Color del Arrow (igual al fondo)" },
+        "radius": { "class": "rounded-md", "part": "Radio del TooltipContent" },
+        "zIndex": { "class": "z-50", "part": "Capa del portal (por encima de overlays)" }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": "/* Tooltip claro en tema oscuro (override de variante) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  @apply bg-popover text-popover-foreground ring-1 ring-foreground/10;\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  @apply fill-popover;\n}\n\n/* Delay personalizado vía Provider (props.delay) */\n<TooltipProvider delay={600}>"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.1 AA: 1.4.13 (Content on Hover or Focus), 2.1.1, 2.4.7, 4.1.2, 4.1.3.",
+      "items": {
+        "item1": "Abre al hover O al foco (WCAG 1.4.13) — no solo al hover",
+        "item2": "<code>aria-describedby</code> vincula el trigger al contenido automáticamente",
+        "item3": "<code>Escape</code> cierra el tooltip sin perder el foco del trigger",
+        "item4": "El Tooltip no es interactivo — no uses links o botones dentro",
+        "item5": "En botones icon-only, el <code>aria-label</code> del botón es obligatorio; el Tooltip es complementario",
+        "item6": "Persistencia — el usuario puede mover el mouse hacia el tooltip sin cerrarlo (WCAG 1.4.13)"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "tab": "Enfoca el trigger — abre el tooltip inmediatamente (sin delay)",
+        "escape": "Cierra el tooltip; el foco permanece en el trigger",
+        "shiftTab": "Sale del trigger — cierra el tooltip"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "describedBy": "<code>aria-describedby</code> automático vinculando trigger al TooltipContent",
+        "role": "<code>role=\"tooltip\"</code> en el TooltipContent",
+        "label": "<code>aria-label</code> separado en el Trigger cuando icon-only (el Tooltip no sustituye)"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "trigger": "Anuncia el Label + descripción del tooltip al enfocar",
+        "noNavigation": "No navega dentro del tooltip — es texto descriptivo, no interactivo"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "popover": { "name": "Popover", "description": "Contenido interactivo (form, links) activado por clic." },
+        "hoverCard": { "name": "HoverCard", "description": "Vista previa rica (avatar, link) con imagen y texto." },
+        "button": { "name": "Button", "description": "Trigger común de tooltips (especialmente icon-only)." },
+        "kbd": { "name": "Kbd", "description": "Indicador de tecla para atajos dentro del tooltip." }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item2": "<strong>TooltipProvider obligatorio</strong> — colocar en el root de la app una sola vez. Sin él, los tooltips simplemente no aparecen.",
+      "item3": "<strong>No interactivo</strong> — el Tooltip es solo texto descriptivo. Para contenido clicable usa Popover o HoverCard.",
+      "item4": "<strong>Móvil</strong> — sin hover, el tooltip no aparece en touch. El botón icon-only debe tener su propio <code>aria-label</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "El Tooltip es pasivo — normalmente no dispara eventos.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "tooltip_view": {
+          "trigger": "Disparar solo si la apertura indica intención del usuario (raro)",
+          "payload": "{ component: \"tooltip\", trigger_id, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir en respuesta a cada interacción.",
+        "item1": { "action": "Hover en el trigger", "result": "El tooltip abre tras el delay del Provider", "priority": "high" },
+        "item2": { "action": "Enfocar trigger vía Tab", "result": "El tooltip abre inmediatamente (sin delay)", "priority": "high" },
+        "item3": { "action": "Pulsar Escape con tooltip abierto", "result": "Cierra el tooltip; el foco permanece en el trigger", "priority": "high" },
+        "item4": { "action": "Mover mouse al tooltip", "result": "El tooltip permanece abierto (WCAG 1.4.13)", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "Contraste mínimo 4.5:1 entre texto del tooltip y fondo",
+        "item3": "role=\"tooltip\" presente en el TooltipContent",
+        "item4": "aria-describedby vincula trigger al content",
+        "item5": "aria-label propio en triggers icon-only"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": { "story": "Default (open, side top)", "priority": "high" },
+        "item2": { "story": "Con atajo de teclado (kbd)", "priority": "high" },
+        "item3": { "story": "Side bottom/left/right", "priority": "medium" },
+        "item4": { "story": "Texto largo (max-w-xs)", "priority": "medium" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
