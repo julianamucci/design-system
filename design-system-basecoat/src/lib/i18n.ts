@@ -67,11 +67,22 @@ function flattenDict(obj: Record<string, unknown>, prefix = ''): Record<string, 
  *   const { t, subscribe } = createTranslation({ ...uiTranslations, ...buttonTranslations });
  *   const cleanup = subscribe(() => render());
  */
-export function createTranslation(translations: Record<string, unknown>) {
+export type TranslationOverrides = Partial<Record<'pt-BR' | 'en' | 'es' | '*', Record<string, string>>>;
+
+export function createTranslation(
+  translations: Record<string, unknown>,
+  overrides?: TranslationOverrides,
+) {
   function getDict(): Record<string, string> {
     const locale = getLocale();
     const rawDict = (translations[locale] ?? translations['pt-BR'] ?? {}) as Record<string, unknown>;
-    return flattenDict(rawDict);
+    const dict = flattenDict(rawDict);
+    if (overrides) {
+      if (overrides['*']) Object.assign(dict, overrides['*']);
+      const lo = overrides[locale as 'pt-BR' | 'en' | 'es'];
+      if (lo) Object.assign(dict, lo);
+    }
+    return dict;
   }
 
   function t(key: string, defaultValue?: string): string {

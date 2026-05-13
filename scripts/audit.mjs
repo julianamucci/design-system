@@ -325,6 +325,50 @@ function auditQuality(slug) {
     }
   }
 
+  // 4. translations.json — textos descritivos com props literais (vide guideline 11)
+  const translationFile = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  if (existsSync(translationFile)) {
+    const json = JSON.parse(readFile(translationFile) || '{}');
+    const CODE_KEY_RX = /(Code|^code[A-Z]|^structure[A-Z]|^extensibility|^customization|^interface[A-Z]|href)/;
+    const TYPE_PATH_RX = /\.table\.[^.]+\.type$/;
+    const PROP_NAME_PATH_RX = /\.(items|table)\.[^.]+\.name$/;
+    const LITERAL_RX = [
+      { rx: /type=\\?"(single|multiple)\\?"/, label: 'type="single|multiple"' },
+      { rx: /\bcollapsible\b/, label: 'collapsible' },
+      { rx: /\b(asChild|as-child)\b/, label: 'asChild/as-child' },
+      { rx: /\b(modelValue|@update:)/, label: 'modelValue/@update:' },
+      { rx: /bind:(value|checked|open|pressed)/, label: 'bind:value/checked' },
+      { rx: /\bon(Value|Checked|Open|Pressed|ValueCommit)/, label: 'onValueChange/onCheckedChange' },
+      { rx: /defaultValue=\\?"[^"]+\\?"/, label: 'defaultValue="..." (não array)' },
+    ];
+
+    function visit(node, keyPath) {
+      if (node == null) return;
+      if (typeof node === 'string') {
+        const last = keyPath[keyPath.length - 1] || '';
+        const full = keyPath.join('.');
+        if (CODE_KEY_RX.test(last) || TYPE_PATH_RX.test(full) || PROP_NAME_PATH_RX.test(full)) return;
+        for (const { rx, label } of LITERAL_RX) {
+          if (rx.test(node)) {
+            violations.push({
+              category: 'quality', severity: 'low', slug,
+              stack: 'shared', file: relative(ROOT, translationFile),
+              rule: 'translation_literal_prop',
+              message: `[${keyPath[0]}] ${full} usa literal "${label}" em texto — preferir conceito (vide guideline 11)`,
+            });
+            break; // 1 violação por chave/locale
+          }
+        }
+        return;
+      }
+      if (typeof node === 'object') {
+        for (const [k, v] of Object.entries(node)) visit(v, [...keyPath, k]);
+      }
+    }
+
+    visit(json, []);
+  }
+
   return violations;
 }
 

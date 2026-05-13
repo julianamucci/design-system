@@ -191,6 +191,62 @@ Violations em uma stack que não existem em outra = implementação inconsistent
 
 ---
 
+## Textos de instrução API-neutros (translations.json)
+
+O `translations.json` é **compartilhado entre as 4 stacks**. Cada stack pode usar uma lib diferente (base-ui, reka-ui, bits-ui, factory custom) com APIs divergentes para o mesmo conceito. Por isso, **textos descritivos não devem referenciar props literais** de uma lib específica.
+
+### Regras
+
+1. **Texto descritivo = conceito.** Nunca prop literal.
+   - Não: `"Use type=\"multiple\" quando..."`
+   - Sim: `"Use o modo múltiplo quando..."`
+   - Não: `"Combine maxLength com onCheckedChange"`
+   - Sim: `"Combine o limite de caracteres com o callback de mudança"`
+
+2. **Sintaxe específica vai em snippets de código.** Chaves como `structureCode`, `codeSingle`, `codeMultiple`, `extensibilityCode`, `interfaceCode`, `customizationCode` podem (e devem) conter a API real. Uma docs page pode definir sua versão local quando o JSON compartilhado diverge muito.
+
+3. **Tabelas de props** (`props.table.<prop>.name|type|description`):
+   - `name` e `type` ficam com a sintaxe da lib documentada na docs page — em geral segue React (fonte de verdade conceitual)
+   - `description` pode mencionar a prop entre `<code>...</code>`, mas a explicação deve ser conceitual
+
+4. **Para divergências relevantes entre stacks**, use `notes.itemN`:
+   - "No React (base-ui), a API expõe `multiple` (boolean). Em Vue/Svelte, use `type=\"multiple\"`."
+   - Inclua uma nota dedicada por divergência significativa.
+
+5. **Overrides locais** (quando texto neutro fica forçado): cada stack pode passar `overrides` ao `useTranslation`:
+
+   ```tsx
+   // React: docs page sobrescreve chaves específicas só nessa stack
+   const { t } = useTranslation(accordionTranslations, {
+     'pt-BR': {
+       'usage.guidelines.item1': 'No React, use a prop multiple={true} para...',
+     },
+     en: {
+       'usage.guidelines.item1': 'In React, use the multiple={true} prop to...',
+     },
+   });
+   ```
+
+   Suportado em React (`useTranslation`), Vue (`useTranslation`), Svelte (`useTranslation`) e Basecoat (`createTranslation`). Use com moderação — preferir reescrever em conceito quando possível.
+
+### Padrões problemáticos comuns
+
+| Padrão literal | Substituir por |
+|---|---|
+| `type="single"` / `type="multiple"` | "modo único" / "modo múltiplo" |
+| `collapsible` (Vue-only) | "permite fechar o item ativo" |
+| `asChild` / `as-child` | "compor com elemento filho" / "render slot" |
+| `onValueChange` / `onCheckedChange` etc. | "callback de mudança de valor" |
+| `defaultValue="item-1"` | "valor inicial padrão" |
+| `modelValue` / `@update:` (Vue) | "estado controlado" |
+| `bind:value` (Svelte) | "estado controlado" |
+
+### Auditoria automática
+
+Rode `node scripts/audit-translation-literals.mjs` para listar violações pendentes. O script ignora `structureCode`, `*Code`, `props.table.*.type` e nomes de prop (`*.name`).
+
+---
+
 ## Checklist Cross-Stack
 
 - [ ] Classes `cva()` idênticas em todas as stacks (diff = 0)

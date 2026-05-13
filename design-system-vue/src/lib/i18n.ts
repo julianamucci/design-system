@@ -40,12 +40,24 @@ function flattenDict(obj: Record<string, unknown>, prefix = ''): Record<string, 
   return result;
 }
 
-export function useTranslation(translations: Record<string, unknown>) {
+export type TranslationOverrides = Partial<Record<'pt-BR' | 'en' | 'es' | '*', Record<string, string>>>;
+
+export function useTranslation(
+  translations: Record<string, unknown>,
+  overrides?: TranslationOverrides,
+) {
   const store = useI18nStore();
 
   const flatDict: ComputedRef<Record<string, unknown>> = computed(() => {
     const rawDict = (translations[store.locale] ?? translations['pt-BR'] ?? {}) as Record<string, unknown>;
-    return flattenDict(rawDict);
+    const dict = flattenDict(rawDict);
+    if (overrides) {
+      if (overrides['*']) Object.assign(dict, overrides['*']);
+      if (overrides[store.locale as 'pt-BR' | 'en' | 'es']) {
+        Object.assign(dict, overrides[store.locale as 'pt-BR' | 'en' | 'es']);
+      }
+    }
+    return dict;
   });
 
   const t = (key: string, defaultValue?: string): string => {

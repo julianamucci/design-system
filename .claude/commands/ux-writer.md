@@ -57,6 +57,27 @@ Gerar `docs/shared/content/<slug>/translations.json` com a estrutura completa no
 
 **HTML permitido**: `<strong>`, `<code>`, `<em>`, `<kbd>` — semânticas, não decoração.
 
+### Texto descritivo API-neutro (cross-stack)
+
+O `translations.json` é compartilhado entre React, Vue, Svelte e Basecoat. Cada stack pode usar lib diferente (base-ui, reka-ui, bits-ui, factory custom) com APIs divergentes. **Textos descritivos não devem mencionar props literais** — apenas conceitos.
+
+| Não escreva (literal) | Escreva (conceito) |
+|---|---|
+| `type="single"` / `type="multiple"` | "modo único" / "modo múltiplo" |
+| `collapsible` como prop | "permite fechar o item ativo" |
+| `asChild` / `as-child` | "compor com elemento filho" / "render slot" |
+| `onValueChange` / `onCheckedChange` | "callback de mudança" |
+| `defaultValue="item-1"` | "valor inicial padrão" |
+| `modelValue` / `bind:value` | "estado controlado" |
+
+**Onde menções literais são OK**:
+- Snippets de código (`structureCode`, `codeSingle`, `codeMultiple`, `extensibilityCode`, `interfaceCode`, `customizationCode`) — sintaxe real, geralmente shadcn-like (Vue/Svelte coincidem)
+- `props.table.<prop>.name` — nomeia a prop documentada
+- `props.table.<prop>.type` — literal TypeScript
+- `notes.itemN` quando explicita divergência: "No React (base-ui), a API expõe `multiple` (boolean). Em Vue/Svelte, use `type=\"multiple\"`."
+
+**Auditoria**: `node scripts/audit.mjs <slug> --category quality --json` reporta violações com rule `translation_literal_prop`. Ver guideline `docs/shared/guidelines/11-consistencia-cross-stack.md` §"Textos de instrução API-neutros".
+
 ### Tom de voz
 
 - **Técnico mas acessível** — evite jargão sem explicar

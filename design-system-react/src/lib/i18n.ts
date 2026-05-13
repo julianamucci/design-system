@@ -48,11 +48,33 @@ export const useI18nStore = create<I18nStore>((set) => ({
 // ─── Hook de tradução ─────────────────────────────────────────────────────────
 
 /**
+ * Overrides opcionais por chave dot-notation — aplicados sobre o dicionário
+ * achatado. Use para sobrescrever textos específicos da stack atual sem
+ * mexer no translations.json compartilhado.
+ *
+ * Estrutura: `{ "<locale>": { "<dot.key>": "texto novo" } }`.
+ * Locale `*` aplica a todos.
+ *
+ * Ex:
+ *   useTranslation(componentTranslations, {
+ *     'pt-BR': { 'usage.guidelines.item1': 'Texto React-specific...' },
+ *     en:      { 'usage.guidelines.item1': 'React-specific text...' },
+ *   })
+ */
+export type TranslationOverrides = Partial<Record<Locale | '*', Record<string, string>>>;
+
+/**
  * Hook para tradução baseado em chave-valor.
  * Suporta dot notation (ex: "nav.overview") com lookup O(1) via dicionário
  * pré-achatado em `useMemo`, evitando split+reduce em cada chamada.
+ *
+ * Aceita `overrides` opcional para customizar chaves específicas por stack
+ * sem editar o JSON compartilhado.
  */
-export function useTranslation(translations: Record<string, unknown>) {
+export function useTranslation(
+  translations: Record<string, unknown>,
+  overrides?: TranslationOverrides,
+) {
   const locale = useI18nStore((state) => state.locale);
   const rawDict = (translations[locale] ?? translations['pt-BR'] ?? {}) as Record<string, unknown>;
 
@@ -76,8 +98,17 @@ export function useTranslation(translations: Record<string, unknown>) {
     }
 
     flatten(rawDict, '');
+
+    // Aplica overrides após o flatten — locale específico sobrepõe `*`.
+    if (overrides) {
+      const wildcard = overrides['*'];
+      if (wildcard) Object.assign(result, wildcard);
+      const localeOverrides = overrides[locale];
+      if (localeOverrides) Object.assign(result, localeOverrides);
+    }
+
     return result;
-  }, [rawDict]);
+  }, [rawDict, overrides, locale]);
 
   const t = useCallback(
     (key: string, defaultValue?: string): string => {
