@@ -214,7 +214,7 @@
           <Button
             variant="ghost"
             size="sm"
-            aria-label={\`Ações para fatura \${invoice.id}\`}
+            aria-label="Ações para fatura {invoice.id}"
           >
             &hellip;
           </Button>

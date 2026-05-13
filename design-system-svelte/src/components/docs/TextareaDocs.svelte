@@ -121,28 +121,30 @@ import { Label } from "@/components/ui/label";`;
   />
 </div>`;
 
-  const codeWithCounter = `<script lang="ts">
-  let value = $state('');
-  const max = 500;
-</script>
-
-<div class="flex flex-col gap-1.5">
-  <Label for="descricao">Descrição</Label>
-  <Textarea
-    id="descricao"
-    bind:value
-    maxlength={max}
-    placeholder="ex: Descreva o produto..."
-    class="resize-y min-h-[120px]"
-  />
-  <div class="flex justify-between text-xs text-muted-foreground">
-    <span>Descreva com clareza.</span>
-    <span
-      aria-live="polite"
-      aria-label={\`\${value.length} de \${max} caracteres usados\`}
-    >{value.length}/{max}</span>
-  </div>
-</div>`;
+  const codeWithCounter = [
+    '<' + 'script lang="ts">',
+    "  let value = $state('');",
+    '  const max = 500;',
+    '<' + '/script>',
+    '',
+    '<div class="flex flex-col gap-1.5">',
+    '  <Label for="descricao">Descrição</Label>',
+    '  <Textarea',
+    '    id="descricao"',
+    '    bind:value',
+    '    maxlength={max}',
+    '    placeholder="ex: Descreva o produto..."',
+    '    class="resize-y min-h-[120px]"',
+    '  />',
+    '  <div class="flex justify-between text-xs text-muted-foreground">',
+    '    <span>Descreva com clareza.</span>',
+    '    <span',
+    '      aria-live="polite"',
+    '      aria-label="{value.length} de {max} caracteres usados"',
+    '    >{value.length}/{max}</span>',
+    '  </div>',
+    '</div>',
+  ].join('\n');
 
   const codeNoResize = `<div class="flex flex-col gap-1.5">
   <Label for="obs">Observações</Label>
