@@ -18,7 +18,7 @@ type Story = StoryObj;
 
 export const ComIconeNoTrigger: Story = {
   render: () => (
-    <Accordion type="single" collapsible className="w-full max-w-lg">
+    <Accordion className="w-full max-w-lg">
       <AccordionItem value="info">
         <AccordionTrigger>
           <span className="flex items-center gap-2">
@@ -66,7 +66,7 @@ export const ComIconeNoTrigger: Story = {
 
 export const ComBadgeNoTrigger: Story = {
   render: () => (
-    <Accordion type="single" collapsible className="w-full max-w-lg">
+    <Accordion className="w-full max-w-lg">
       <AccordionItem value="novo">
         <AccordionTrigger>
           <span className="flex items-center gap-2">
@@ -103,7 +103,7 @@ export const ComBadgeNoTrigger: Story = {
 
 export const ConteudoRico: Story = {
   render: () => (
-    <Accordion type="multiple" className="w-full max-w-lg">
+    <Accordion multiple className="w-full max-w-lg">
       <AccordionItem value="especificacoes">
         <AccordionTrigger>Especificações técnicas</AccordionTrigger>
         <AccordionContent>
@@ -152,7 +152,7 @@ export const FAQ: Story = {
   render: () => (
     <div className="w-full max-w-lg space-y-2">
       <h2 className="text-base font-semibold">Perguntas frequentes</h2>
-      <Accordion type="single" collapsible>
+      <Accordion>
         {[
           {
             value: "senha",

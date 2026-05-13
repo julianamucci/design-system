@@ -16,7 +16,7 @@ type Story = StoryObj;
 
 export const Fechado: Story = {
   render: () => (
-    <Accordion type="single" collapsible className="w-full max-w-lg">
+    <Accordion className="w-full max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Item fechado (estado padrão)</AccordionTrigger>
         <AccordionContent>Conteúdo oculto.</AccordionContent>
@@ -43,7 +43,7 @@ export const Fechado: Story = {
 
 export const Aberto: Story = {
   render: () => (
-    <Accordion type="single" collapsible defaultValue={["item-1"]} className="w-full max-w-lg">
+    <Accordion defaultValue={["item-1"]} className="w-full max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Item aberto</AccordionTrigger>
         <AccordionContent>
@@ -75,7 +75,7 @@ export const Aberto: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <Accordion type="single" collapsible className="w-full max-w-lg">
+    <Accordion className="w-full max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Item habilitado</AccordionTrigger>
         <AccordionContent>Este item funciona normalmente.</AccordionContent>
@@ -111,7 +111,7 @@ export const Disabled: Story = {
 
 export const FocusVisible: Story = {
   render: () => (
-    <Accordion type="single" collapsible defaultValue={["item-1"]} className="w-full max-w-lg">
+    <Accordion defaultValue={["item-1"]} className="w-full max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Navegar com Tab para ver focus ring</AccordionTrigger>
         <AccordionContent>Focus ring visível ao navegar por teclado.</AccordionContent>

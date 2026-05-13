@@ -16,7 +16,7 @@ type Story = StoryObj;
 
 export const Single: Story = {
   render: () => (
-    <Accordion type="single" collapsible defaultValue="item-1" className="w-full max-w-lg">
+    <Accordion defaultValue={["item-1"]} className="w-full max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
         <AccordionContent>
@@ -42,7 +42,7 @@ export const Single: Story = {
     docs: {
       description: {
         story:
-          "Modo single com collapsible. Apenas um item aberto por vez. Clicar no item ativo o fecha. Use para FAQ.",
+          "Modo single (default — sem prop multiple). Apenas um item aberto por vez. Clicar no item ativo o fecha. Use para FAQ.",
       },
     },
   },
@@ -50,7 +50,7 @@ export const Single: Story = {
 
 export const Multiple: Story = {
   render: () => (
-    <Accordion type="multiple" className="w-full max-w-lg">
+    <Accordion multiple className="w-full max-w-lg">
       <AccordionItem value="especificacoes">
         <AccordionTrigger>Especificações técnicas</AccordionTrigger>
         <AccordionContent>
@@ -82,15 +82,13 @@ export const Multiple: Story = {
 };
 
 function ControlledAccordion() {
-  const [value, setValue] = useState<string>("item-1");
+  const [value, setValue] = useState<string[]>(["item-1"]);
   return (
     <div className="space-y-2 w-full max-w-lg">
       <p className="text-xs text-muted-foreground">
-        Item aberto: <code>{value || "nenhum"}</code>
+        Item aberto: <code>{value[0] || "nenhum"}</code>
       </p>
       <Accordion
-        type="single"
-        collapsible
         value={value}
         onValueChange={setValue}
         className="w-full"
@@ -122,7 +120,7 @@ export const Controlled: Story = {
 
 export const DefaultOpen: Story = {
   render: () => (
-    <Accordion type="single" collapsible defaultValue="item-1" className="w-full max-w-lg">
+    <Accordion defaultValue={["item-1"]} className="w-full max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
         <AccordionContent>

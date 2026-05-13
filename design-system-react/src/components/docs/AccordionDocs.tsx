@@ -155,7 +155,7 @@ export function AccordionDocs() {
 
   const codeImport = `import {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from "@/components/ui/accordion"`;
 
-  const codeSingle = `<Accordion type="single" collapsible defaultValue="item-1">
+  const codeSingle = `<Accordion defaultValue={["item-1"]}>
   <AccordionItem value="item-1">
     <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
     <AccordionContent>
@@ -170,7 +170,7 @@ export function AccordionDocs() {
   </AccordionItem>
 </Accordion>`;
 
-  const codeMultiple = `<Accordion type="multiple">
+  const codeMultiple = `<Accordion multiple>
   <AccordionItem value="especificacoes">
     <AccordionTrigger>Especificações técnicas</AccordionTrigger>
     <AccordionContent>Conteúdo das especificações.</AccordionContent>
@@ -181,16 +181,16 @@ export function AccordionDocs() {
   </AccordionItem>
 </Accordion>`;
 
-  const codeControlled = `const [value, setValue] = useState<string>("item-1")
+  const codeControlled = `const [value, setValue] = useState<string[]>(["item-1"])
 
-<Accordion type="single" collapsible value={value} onValueChange={setValue}>
+<Accordion value={value} onValueChange={setValue}>
   <AccordionItem value="item-1">
     <AccordionTrigger>Item controlado</AccordionTrigger>
     <AccordionContent>Conteúdo controlado externamente.</AccordionContent>
   </AccordionItem>
 </Accordion>`;
 
-  const codeDefaultOpen = `<Accordion type="single" collapsible defaultValue="item-1">
+  const codeDefaultOpen = `<Accordion defaultValue={["item-1"]}>
   <AccordionItem value="item-1">
     <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
     <AccordionContent>Este item inicia expandido.</AccordionContent>
@@ -204,21 +204,13 @@ export function AccordionDocs() {
   --animate-accordion-up: accordion-up 0.2s ease-out;
 }`;
 
-  const interfaceCode = `// Accordion (root)
-interface AccordionSingleProps {
-  type: "single";
-  collapsible?: boolean;
-  defaultValue?: string;
-  value?: string;
-  onValueChange?: (value: string) => void;
-  className?: string;
-}
-
-interface AccordionMultipleProps {
-  type: "multiple";
-  defaultValue?: string[];
-  value?: string[];
-  onValueChange?: (value: string[]) => void;
+  const interfaceCode = `// Accordion (root) — base-ui
+interface AccordionRootProps {
+  multiple?: boolean;                              // default: false (single)
+  defaultValue?: (string | number)[];              // sempre array
+  value?: (string | number)[];                     // sempre array (controlado)
+  onValueChange?: (value: (string | number)[]) => void;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -244,7 +236,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
-            <Accordion type="single" collapsible defaultValue="item-1" className="w-full">
+            <Accordion defaultValue={["item-1"]} className="w-full">
               {([1, 2, 3, 4] as const).map((i) => {
                 const label = tContent(`demonstration.labels.q${i}`);
                 return (
@@ -343,7 +335,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <Accordion type="single" collapsible className="w-full">
+                  <Accordion className="w-full">
                     <AccordionItem value="do-1">
                       <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
                       <AccordionContent>Clique em "Esqueci minha senha" na tela de login.</AccordionContent>
@@ -351,7 +343,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   </Accordion>
                 ),
                 dontPreview: (
-                  <Accordion type="single" collapsible className="w-full">
+                  <Accordion className="w-full">
                     <AccordionItem value="dont-1">
                       <AccordionTrigger>Senha</AccordionTrigger>
                       <AccordionContent>Ver mais informações.</AccordionContent>
@@ -365,7 +357,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <Accordion type="multiple" className="w-full">
+                  <Accordion multiple className="w-full">
                     <AccordionItem value="spec">
                       <AccordionTrigger>Especificações técnicas</AccordionTrigger>
                       <AccordionContent>CPU: Intel i7, RAM: 16GB</AccordionContent>
@@ -377,7 +369,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   </Accordion>
                 ),
                 dontPreview: (
-                  <Accordion type="single" collapsible className="w-full">
+                  <Accordion className="w-full">
                     <AccordionItem value="single-only">
                       <AccordionTrigger>Mostrar informações</AccordionTrigger>
                       <AccordionContent>Use Collapsible para uma única seção.</AccordionContent>
@@ -407,7 +399,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.single.description")),
                 code: codeSingle,
                 preview: (
-                  <Accordion type="single" collapsible defaultValue="item-1" className="w-full">
+                  <Accordion defaultValue={["item-1"]} className="w-full">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>{tContent("demonstration.labels.q1")}</AccordionTrigger>
                       <AccordionContent>{tContent("demonstration.labels.a1")}</AccordionContent>
@@ -424,7 +416,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.multiple.description")),
                 code: codeMultiple,
                 preview: (
-                  <Accordion type="multiple" className="w-full">
+                  <Accordion multiple className="w-full">
                     <AccordionItem value="spec">
                       <AccordionTrigger>Especificações técnicas</AccordionTrigger>
                       <AccordionContent>CPU: Intel i7, RAM: 16GB, SSD: 512GB</AccordionContent>
@@ -441,7 +433,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.controlled.description")),
                 code: codeControlled,
                 preview: (
-                  <Accordion type="single" collapsible defaultValue="item-1" className="w-full">
+                  <Accordion defaultValue={["item-1"]} className="w-full">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>Item controlado</AccordionTrigger>
                       <AccordionContent>Estado gerenciado via value + onValueChange.</AccordionContent>
@@ -454,7 +446,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.defaultOpen.description")),
                 code: codeDefaultOpen,
                 preview: (
-                  <Accordion type="single" collapsible defaultValue="item-1" className="w-full">
+                  <Accordion defaultValue={["item-1"]} className="w-full">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
                       <AccordionContent>Este item inicia expandido via defaultValue.</AccordionContent>

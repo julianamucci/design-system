@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -18,19 +17,13 @@ const meta = {
     docs: { page: withAutoDocsTab(AccordionDocs) },
   },
   argTypes: {
-    type: {
-      control: "select",
-      options: ["single", "multiple"],
-      description: "Define se um ou múltiplos itens podem estar abertos.",
-    },
-    collapsible: {
+    multiple: {
       control: "boolean",
-      description: "Permite fechar o item ativo (apenas com type=single).",
+      description: "Permite múltiplos itens abertos ao mesmo tempo (base-ui).",
     },
   },
   args: {
-    type: "single",
-    collapsible: true,
+    multiple: false,
   },
 } satisfies Meta<typeof Accordion>;
 
