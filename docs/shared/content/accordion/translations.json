@@ -26,7 +26,7 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>Accordion</strong> — container raiz. Define <code>type</code> (<code>single</code> ou <code>multiple</code>) e <code>collapsible</code>.",
+      "item1": "<strong>Accordion</strong> — container raiz. Suporta modo único (apenas um item aberto) ou múltiplo (vários simultaneamente).",
       "item2": "<strong>AccordionItem</strong> — representa um item com <code>value</code> único obrigatório. Renderiza <code>&lt;div&gt;</code> com <code>border-b</code>.",
       "item3": "<strong>AccordionTrigger</strong> — botão de ação. Inclui <code>aria-expanded</code> automático e chevron rotativo.",
       "item4": "<strong>AccordionContent</strong> — área de conteúdo com animação de abertura/fechamento via CSS. Respeita <code>prefers-reduced-motion</code>.",
@@ -37,8 +37,8 @@
       "title": "Quando e Como Usar",
       "guidelines": {
         "title": "📋 Guidelines Obrigatórias",
-        "item1": "Use <code>type=\"single\"</code> com <code>collapsible</code> para FAQ — permite fechar o item ativo clicando nele novamente.",
-        "item2": "Use <code>type=\"multiple\"</code> para especificações ou configurações onde o usuário compara seções simultâneas.",
+        "item1": "Use o modo único para FAQ — apenas um item aberto por vez e permite fechar o item ativo clicando nele novamente.",
+        "item2": "Use o modo múltiplo para especificações ou configurações onde o usuário compara seções simultâneas.",
         "item3": "Cada <code>AccordionItem</code> exige prop <code>value</code> única — é o identificador interno para estado controlado.",
         "item4": "Máximo de 8–10 itens por Accordion. Acima disso, organize por categorias ou adicione busca.",
         "item5": "Use <code>defaultValue</code> para abrir um item por padrão sem tornar o componente controlado."
@@ -52,7 +52,7 @@
         },
         "item1": {
           "s": "FAQ com múltiplas perguntas",
-          "u": "Sim, type=\"single\" + collapsible",
+          "u": "Sim, modo único",
           "a": "—"
         },
         "item2": {
@@ -67,7 +67,7 @@
         },
         "item4": {
           "s": "Especificações comparáveis",
-          "u": "Sim, type=\"multiple\"",
+          "u": "Sim, modo múltiplo",
           "a": "—"
         },
         "item5": {
@@ -127,7 +127,7 @@
       "title": "Modos de Operação",
       "single": {
         "label": "Single (padrão)",
-        "description": "Apenas um item aberto por vez. Com <code>collapsible</code>, permite fechar o item ativo. Ideal para FAQ."
+        "description": "Apenas um item aberto por vez; permite fechar o item ativo clicando nele. Ideal para FAQ."
       },
       "multiple": {
         "label": "Multiple",
@@ -188,7 +188,7 @@
             "type": "boolean",
             "default": "false",
             "required": "Não",
-            "description": "Permite fechar o item ativo (só para type=\"single\")."
+            "description": "Permite fechar o item ativo clicando nele novamente."
           },
           "defaultValue": {
             "name": "defaultValue",
@@ -347,7 +347,7 @@
         "dont": "Não use frases nominais ambíguas ou sem contexto."
       },
       "pair2": {
-        "do": "Use type=\"multiple\" quando o usuário precisa comparar seções abertas.",
+        "do": "Use o modo múltiplo quando o usuário precisa comparar seções abertas simultaneamente.",
         "dont": "Não use Accordion para uma única seção expansível — use Collapsible."
       },
       "title": "Do & Don't"
@@ -399,9 +399,9 @@
       "title": "Notas de Implementação",
       "item1": "O chevron rotativo (<code>rotate-180</code>) é aplicado via <code>[&[data-state=open]>svg]:rotate-180</code> no AccordionTrigger — não adicionar manualmente.",
       "item2": "Animações de abertura/fechamento usam CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas em <code>tailwind.config.ts</code>.",
-      "item3": "Para modo controlado, use <code>value</code> + <code>onValueChange</code>. O estado deve ser <code>string</code> para <code>type=\"single\"</code> e <code>string[]</code> para <code>type=\"multiple\"</code>.",
+      "item3": "Para modo controlado, use <code>value</code> + <code>onValueChange</code>. No React, <code>value</code> é sempre um array. Em Vue/Svelte, é string no modo único e array no múltiplo.",
       "item4": "Não aninhe Accordions sem propósito claro — prefira Sidebar com Accordion para hierarquia de navegação.",
-      "item5": "<code>collapsible</code> só tem efeito com <code>type=\"single\"</code>. Em <code>type=\"multiple\"</code> todos os itens já são individualmente fecháveis."
+      "item5": "No modo múltiplo todos os itens são individualmente fecháveis. No modo único, é possível permitir fechar o item ativo (via <code>collapsible</code> em Vue ou comportamento padrão em React/Svelte)."
     },
     "analytics": {
       "title": "Analytics",
@@ -436,17 +436,17 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Clicar em AccordionTrigger aberto (collapsible=true)",
+          "action": "Clicar em AccordionTrigger aberto (modo único permite fechar)",
           "result": "Item colapsa; AccordionContent some da tela",
           "priority": "high"
         },
         "item3": {
-          "action": "Clicar em segundo item com type=\"single\"",
+          "action": "Clicar em segundo item (modo único)",
           "result": "Primeiro item fecha automaticamente; segundo abre",
           "priority": "high"
         },
         "item4": {
-          "action": "Clicar em segundo item com type=\"multiple\"",
+          "action": "Clicar em segundo item (modo múltiplo)",
           "result": "Ambos os itens ficam abertos simultaneamente",
           "priority": "high"
         },
@@ -564,7 +564,7 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>Accordion</strong> — root container. Defines <code>type</code> (<code>single</code> or <code>multiple</code>) and <code>collapsible</code>.",
+      "item1": "<strong>Accordion</strong> — root container. Supports single mode (only one item open) or multiple (several simultaneously).",
       "item2": "<strong>AccordionItem</strong> — represents an item with a required unique <code>value</code>. Renders <code>&lt;div&gt;</code> with <code>border-b</code>.",
       "item3": "<strong>AccordionTrigger</strong> — action button. Includes automatic <code>aria-expanded</code> and rotating chevron.",
       "item4": "<strong>AccordionContent</strong> — content area with open/close animation via CSS. Respects <code>prefers-reduced-motion</code>.",
@@ -575,8 +575,8 @@
       "title": "When and How to Use",
       "guidelines": {
         "title": "📋 Required Guidelines",
-        "item1": "Use <code>type=\"single\"</code> with <code>collapsible</code> for FAQ — allows closing the active item by clicking it again.",
-        "item2": "Use <code>type=\"multiple\"</code> for specs or settings where users compare simultaneous sections.",
+        "item1": "Use single mode for FAQ — only one item open at a time and allows closing the active item by clicking it again.",
+        "item2": "Use multiple mode for specs or settings where users compare simultaneous sections.",
         "item3": "Each <code>AccordionItem</code> requires a unique <code>value</code> prop — it's the internal identifier for controlled state.",
         "item4": "Maximum 8–10 items per Accordion. Beyond that, organize by category or add search.",
         "item5": "Use <code>defaultValue</code> to open an item by default without making the component controlled."
@@ -590,7 +590,7 @@
         },
         "item1": {
           "s": "FAQ with multiple questions",
-          "u": "Yes, type=\"single\" + collapsible",
+          "u": "Yes, single mode",
           "a": "—"
         },
         "item2": {
@@ -605,7 +605,7 @@
         },
         "item4": {
           "s": "Comparable specifications",
-          "u": "Yes, type=\"multiple\"",
+          "u": "Yes, multiple mode",
           "a": "—"
         },
         "item5": {
@@ -665,7 +665,7 @@
       "title": "Operation Modes",
       "single": {
         "label": "Single (default)",
-        "description": "Only one item open at a time. With <code>collapsible</code>, allows closing the active item. Ideal for FAQ."
+        "description": "Only one item open at a time; allows closing the active item by clicking it. Ideal for FAQ."
       },
       "multiple": {
         "label": "Multiple",
@@ -726,7 +726,7 @@
             "type": "boolean",
             "default": "false",
             "required": "No",
-            "description": "Allows closing the active item (only for type=\"single\")."
+            "description": "Allows closing the active item by clicking it again."
           },
           "defaultValue": {
             "name": "defaultValue",
@@ -885,7 +885,7 @@
         "dont": "Don't use ambiguous nominal phrases without context."
       },
       "pair2": {
-        "do": "Use type=\"multiple\" when users need to compare open sections.",
+        "do": "Use the multiple mode when users need to compare open sections simultaneously.",
         "dont": "Don't use Accordion for a single expandable section — use Collapsible."
       },
       "title": "Do & Don't"
@@ -937,9 +937,9 @@
       "title": "Implementation Notes",
       "item1": "The rotating chevron (<code>rotate-180</code>) is applied via <code>[&[data-state=open]>svg]:rotate-180</code> in AccordionTrigger — don't add manually.",
       "item2": "Open/close animations use CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) defined in <code>tailwind.config.ts</code>.",
-      "item3": "For controlled mode, use <code>value</code> + <code>onValueChange</code>. State should be <code>string</code> for <code>type=\"single\"</code> and <code>string[]</code> for <code>type=\"multiple\"</code>.",
+      "item3": "For controlled mode, use <code>value</code> + <code>onValueChange</code>. In React, <code>value</code> is always an array. In Vue/Svelte, it's a string in single mode and an array in multiple.",
       "item4": "Don't nest Accordions without a clear purpose — prefer Sidebar with Accordion for navigation hierarchy.",
-      "item5": "<code>collapsible</code> only takes effect with <code>type=\"single\"</code>. In <code>type=\"multiple\"</code> all items are individually closable already."
+      "item5": "In multiple mode all items are individually closable. In single mode, you can allow closing the active item (via <code>collapsible</code> in Vue or default behavior in React/Svelte)."
     },
     "analytics": {
       "title": "Analytics",
@@ -974,17 +974,17 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Click open AccordionTrigger (collapsible=true)",
+          "action": "Click open AccordionTrigger (single mode allows closing)",
           "result": "Item collapses; AccordionContent hidden",
           "priority": "high"
         },
         "item3": {
-          "action": "Click second item with type=\"single\"",
+          "action": "Click second item (single mode)",
           "result": "First item closes automatically; second opens",
           "priority": "high"
         },
         "item4": {
-          "action": "Click second item with type=\"multiple\"",
+          "action": "Click second item (multiple mode)",
           "result": "Both items remain open simultaneously",
           "priority": "high"
         },
@@ -1102,7 +1102,7 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>Accordion</strong> — contenedor raíz. Define <code>type</code> (<code>single</code> o <code>multiple</code>) y <code>collapsible</code>.",
+      "item1": "<strong>Accordion</strong> — contenedor raíz. Soporta modo único (solo un ítem abierto) o múltiple (varios simultáneamente).",
       "item2": "<strong>AccordionItem</strong> — representa un ítem con <code>value</code> único obligatorio. Renderiza <code>&lt;div&gt;</code> con <code>border-b</code>.",
       "item3": "<strong>AccordionTrigger</strong> — botón de acción. Incluye <code>aria-expanded</code> automático y chevron rotativo.",
       "item4": "<strong>AccordionContent</strong> — área de contenido con animación de apertura/cierre via CSS. Respeta <code>prefers-reduced-motion</code>.",
@@ -1113,8 +1113,8 @@
       "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "📋 Guías Obligatorias",
-        "item1": "Usa <code>type=\"single\"</code> con <code>collapsible</code> para FAQ — permite cerrar el ítem activo haciendo clic en él nuevamente.",
-        "item2": "Usa <code>type=\"multiple\"</code> para especificaciones o configuraciones donde el usuario compara secciones simultáneas.",
+        "item1": "Usa el modo único para FAQ — solo un ítem abierto a la vez y permite cerrar el ítem activo haciendo clic en él nuevamente.",
+        "item2": "Usa el modo múltiple para especificaciones o configuraciones donde el usuario compara secciones simultáneas.",
         "item3": "Cada <code>AccordionItem</code> requiere prop <code>value</code> única — es el identificador interno para el estado controlado.",
         "item4": "Máximo 8–10 ítems por Accordion. Más de eso, organiza por categorías o agrega búsqueda.",
         "item5": "Usa <code>defaultValue</code> para abrir un ítem por defecto sin convertir el componente en controlado."
@@ -1128,7 +1128,7 @@
         },
         "item1": {
           "s": "FAQ con múltiples preguntas",
-          "u": "Sí, type=\"single\" + collapsible",
+          "u": "Sí, modo único",
           "a": "—"
         },
         "item2": {
@@ -1143,7 +1143,7 @@
         },
         "item4": {
           "s": "Especificaciones comparables",
-          "u": "Sí, type=\"multiple\"",
+          "u": "Sí, modo múltiple",
           "a": "—"
         },
         "item5": {
@@ -1203,7 +1203,7 @@
       "title": "Modos de Operación",
       "single": {
         "label": "Single (predeterminado)",
-        "description": "Solo un ítem abierto a la vez. Con <code>collapsible</code>, permite cerrar el ítem activo. Ideal para FAQ."
+        "description": "Solo un ítem abierto a la vez; permite cerrar el ítem activo haciendo clic en él. Ideal para FAQ."
       },
       "multiple": {
         "label": "Multiple",
@@ -1264,7 +1264,7 @@
             "type": "boolean",
             "default": "false",
             "required": "No",
-            "description": "Permite cerrar el ítem activo (solo para type=\"single\")."
+            "description": "Permite cerrar el ítem activo haciendo clic en él nuevamente."
           },
           "defaultValue": {
             "name": "defaultValue",
@@ -1423,7 +1423,7 @@
         "dont": "No uses frases nominales ambiguas sin contexto."
       },
       "pair2": {
-        "do": "Usa type=\"multiple\" cuando el usuario necesita comparar secciones abiertas.",
+        "do": "Usa el modo múltiple cuando el usuario necesita comparar secciones abiertas simultáneamente.",
         "dont": "No uses Accordion para una única sección expandible — usa Collapsible."
       },
       "title": "Do & Don't"
@@ -1475,9 +1475,9 @@
       "title": "Notas de Implementación",
       "item1": "El chevron rotativo (<code>rotate-180</code>) se aplica via <code>[&[data-state=open]>svg]:rotate-180</code> en AccordionTrigger — no agregar manualmente.",
       "item2": "Las animaciones de apertura/cierre usan CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas en <code>tailwind.config.ts</code>.",
-      "item3": "Para modo controlado, usa <code>value</code> + <code>onValueChange</code>. El estado debe ser <code>string</code> para <code>type=\"single\"</code> y <code>string[]</code> para <code>type=\"multiple\"</code>.",
+      "item3": "Para modo controlado, usa <code>value</code> + <code>onValueChange</code>. En React, <code>value</code> es siempre un array. En Vue/Svelte, es string en modo único y array en modo múltiple.",
       "item4": "No anides Accordions sin un propósito claro — prefiere Sidebar con Accordion para jerarquía de navegación.",
-      "item5": "<code>collapsible</code> solo tiene efecto con <code>type=\"single\"</code>. En <code>type=\"multiple\"</code> todos los ítems ya son individualmente cerrables."
+      "item5": "En modo múltiple todos los ítems son individualmente cerrables. En modo único, es posible permitir cerrar el ítem activo (vía <code>collapsible</code> en Vue o comportamiento predeterminado en React/Svelte)."
     },
     "analytics": {
       "title": "Analytics",
@@ -1512,17 +1512,17 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Hacer clic en AccordionTrigger abierto (collapsible=true)",
+          "action": "Hacer clic en AccordionTrigger abierto (modo único permite cerrar)",
           "result": "Ítem colapsa; AccordionContent desaparece",
           "priority": "high"
         },
         "item3": {
-          "action": "Hacer clic en segundo ítem con type=\"single\"",
+          "action": "Hacer clic en segundo ítem (modo único)",
           "result": "Primer ítem cierra automáticamente; segundo abre",
           "priority": "high"
         },
         "item4": {
-          "action": "Hacer clic en segundo ítem con type=\"multiple\"",
+          "action": "Hacer clic en segundo ítem (modo múltiple)",
           "result": "Ambos ítems permanecen abiertos simultáneamente",
           "priority": "high"
         },
