@@ -28,7 +28,7 @@
     "anatomy": {
       "title": "Anatomia",
       "item1": "<strong>AlertDialog</strong> — container raiz que gerencia o estado de abertura e o foco.",
-      "item2": "<strong>AlertDialogTrigger</strong> — elemento que dispara a abertura. Usa <code>asChild</code> para compor com <code>Button</code>.",
+      "item2": "<strong>AlertDialogTrigger</strong> — elemento que dispara a abertura. Compõe com <code>Button</code> via composição, delegando a renderização ao filho.",
       "item3": "<strong>AlertDialogContent</strong> — painel modal com <code>role=\"alertdialog\"</code>, focus trap e Portal automáticos.",
       "item4": "<strong>AlertDialogHeader</strong> — agrupa título e descrição. Centralizado em mobile, alinhado à esquerda em desktop.",
       "item5": "<strong>AlertDialogTitle</strong> — título obrigatório. Fonte do <code>aria-labelledby</code>.",
@@ -164,7 +164,7 @@
       },
       "controlled": {
         "label": "Controlado",
-        "trigger": "<code>open</code> e <code>onOpenChange</code> como props",
+        "trigger": "Estado <code>open</code> com callback de mudança como props",
         "behavior": "Estado gerenciado externamente — útil para abrir via confirmação assíncrona ou rota"
       }
     },
@@ -182,7 +182,7 @@
         "default": "Padrão",
         "required": "Obrigatório",
         "description": "Descrição",
-        "open": "Estado controlado de abertura. Use com <code>onOpenChange</code>.",
+        "open": "Estado controlado de abertura. Use com o callback de mudança correspondente.",
         "defaultOpen": "Estado inicial em modo não controlado.",
         "onOpenChange": "Callback disparado ao abrir ou fechar. Recebe o novo estado booleano.",
         "asChild": "Permite compor com um elemento filho (ex: <code>Button</code>) sem renderizar wrapper.",
@@ -251,7 +251,7 @@
     "notes": {
       "title": "Notas de Implementação",
       "tip1": "O foco inicial vai para o <code>AlertDialogCancel</code> — comportamento intencional para prevenir confirmação acidental em ações destrutivas.",
-      "tip2": "Não use <code>AlertDialogAction</code> como <code>asChild</code> — ele já aplica <code>buttonVariants()</code>. Para mudar estilo, use <code>className</code> diretamente.",
+      "tip2": "Não use <code>AlertDialogAction</code> via composição (delegando ao filho) — ele já aplica <code>buttonVariants()</code>. Para mudar estilo, use <code>className</code> diretamente.",
       "tip3": "Para estado controlado, lembre de fechar no <code>onClick</code> do Action antes de executar ação assíncrona — ou aguarde o resultado e mantenha aberto em caso de erro.",
       "tip4": "Evite aninhar AlertDialog dentro de DropdownMenu ou outro Portal — pode causar focus trap conflitante. Prefira fechar o menu antes de abrir o diálogo."
     },
@@ -293,7 +293,7 @@
         "item4": { "action": "Pressionar Escape com diálogo aberto", "result": "Diálogo fecha (equivalente a cancelamento); foco retorna ao trigger", "priority": "high" },
         "item5": { "action": "Pressionar Tab dentro do diálogo", "result": "Foco alterna entre Cancel e Action sem sair do diálogo (focus trap)", "priority": "high" },
         "item6": { "action": "Clique fora do AlertDialogContent (overlay)", "result": "Diálogo fecha sem disparar ação", "priority": "medium" },
-        "item7": { "action": "Renderizar com open controlado", "result": "Estado de abertura é totalmente gerenciado pela prop open; onOpenChange dispara ao interagir", "priority": "medium" }
+        "item7": { "action": "Renderizar com open controlado", "result": "Estado de abertura é totalmente gerenciado pela prop open; o callback de mudança dispara ao interagir", "priority": "medium" }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -367,7 +367,7 @@
     "anatomy": {
       "title": "Anatomy",
       "item1": "<strong>AlertDialog</strong> — root container managing open state and focus.",
-      "item2": "<strong>AlertDialogTrigger</strong> — element that opens the dialog. Uses <code>asChild</code> to compose with <code>Button</code>.",
+      "item2": "<strong>AlertDialogTrigger</strong> — element that opens the dialog. Composes with <code>Button</code> by delegating rendering to the child element.",
       "item3": "<strong>AlertDialogContent</strong> — modal panel with automatic <code>role=\"alertdialog\"</code>, focus trap, and Portal.",
       "item4": "<strong>AlertDialogHeader</strong> — groups title and description. Centered on mobile, left-aligned on desktop.",
       "item5": "<strong>AlertDialogTitle</strong> — required title. Source for <code>aria-labelledby</code>.",
@@ -503,7 +503,7 @@
       },
       "controlled": {
         "label": "Controlled",
-        "trigger": "<code>open</code> and <code>onOpenChange</code> as props",
+        "trigger": "<code>open</code> state with change callback as props",
         "behavior": "State managed externally — useful for opening via async confirmation or route"
       }
     },
@@ -521,7 +521,7 @@
         "default": "Default",
         "required": "Required",
         "description": "Description",
-        "open": "Controlled open state. Use with <code>onOpenChange</code>.",
+        "open": "Controlled open state. Use with the corresponding change callback.",
         "defaultOpen": "Initial state in uncontrolled mode.",
         "onOpenChange": "Callback fired when opening or closing. Receives the new boolean state.",
         "asChild": "Lets you compose with a child element (e.g. <code>Button</code>) without rendering a wrapper.",
@@ -590,7 +590,7 @@
     "notes": {
       "title": "Implementation Notes",
       "tip1": "Initial focus goes to <code>AlertDialogCancel</code> — intentional behavior to prevent accidental confirmation of destructive actions.",
-      "tip2": "Don't use <code>AlertDialogAction</code> as <code>asChild</code> — it already applies <code>buttonVariants()</code>. To change styling, use <code>className</code> directly.",
+      "tip2": "Don't use <code>AlertDialogAction</code> via composition (delegating to a child) — it already applies <code>buttonVariants()</code>. To change styling, use <code>className</code> directly.",
       "tip3": "In controlled mode, close in the Action's <code>onClick</code> before running an async action — or await the result and keep open on error.",
       "tip4": "Avoid nesting AlertDialog inside DropdownMenu or another Portal — it may cause focus trap conflicts. Close the menu before opening the dialog."
     },
@@ -632,7 +632,7 @@
         "item4": { "action": "Press Escape with dialog open", "result": "Dialog closes (equivalent to cancel); focus returns to trigger", "priority": "high" },
         "item5": { "action": "Press Tab inside the dialog", "result": "Focus alternates between Cancel and Action without leaving the dialog (focus trap)", "priority": "high" },
         "item6": { "action": "Click outside AlertDialogContent (overlay)", "result": "Dialog closes without firing action", "priority": "medium" },
-        "item7": { "action": "Render with controlled open", "result": "Open state is fully managed by the open prop; onOpenChange fires on interaction", "priority": "medium" }
+        "item7": { "action": "Render with controlled open", "result": "Open state is fully managed by the open prop; the change callback fires on interaction", "priority": "medium" }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -706,7 +706,7 @@
     "anatomy": {
       "title": "Anatomía",
       "item1": "<strong>AlertDialog</strong> — contenedor raíz que gestiona el estado de apertura y el foco.",
-      "item2": "<strong>AlertDialogTrigger</strong> — elemento que dispara la apertura. Usa <code>asChild</code> para componer con <code>Button</code>.",
+      "item2": "<strong>AlertDialogTrigger</strong> — elemento que dispara la apertura. Compone con <code>Button</code> delegando la renderización al hijo.",
       "item3": "<strong>AlertDialogContent</strong> — panel modal con <code>role=\"alertdialog\"</code>, focus trap y Portal automáticos.",
       "item4": "<strong>AlertDialogHeader</strong> — agrupa título y descripción. Centrado en mobile, alineado a la izquierda en desktop.",
       "item5": "<strong>AlertDialogTitle</strong> — título obligatorio. Fuente de <code>aria-labelledby</code>.",
@@ -842,7 +842,7 @@
       },
       "controlled": {
         "label": "Controlado",
-        "trigger": "<code>open</code> y <code>onOpenChange</code> como props",
+        "trigger": "Estado <code>open</code> con callback de cambio como props",
         "behavior": "Estado gestionado externamente — útil para abrir vía confirmación asíncrona o ruta"
       }
     },
@@ -860,7 +860,7 @@
         "default": "Por defecto",
         "required": "Obligatorio",
         "description": "Descripción",
-        "open": "Estado controlado de apertura. Úsalo con <code>onOpenChange</code>.",
+        "open": "Estado controlado de apertura. Úsalo con el callback de cambio correspondiente.",
         "defaultOpen": "Estado inicial en modo no controlado.",
         "onOpenChange": "Callback disparado al abrir o cerrar. Recibe el nuevo estado booleano.",
         "asChild": "Permite componer con un elemento hijo (ej. <code>Button</code>) sin renderizar wrapper.",
@@ -929,7 +929,7 @@
     "notes": {
       "title": "Notas de Implementación",
       "tip1": "El foco inicial va al <code>AlertDialogCancel</code> — comportamiento intencional para prevenir confirmación accidental de acciones destructivas.",
-      "tip2": "No uses <code>AlertDialogAction</code> como <code>asChild</code> — ya aplica <code>buttonVariants()</code>. Para cambiar el estilo, usa <code>className</code> directamente.",
+      "tip2": "No uses <code>AlertDialogAction</code> vía composición (delegando al hijo) — ya aplica <code>buttonVariants()</code>. Para cambiar el estilo, usa <code>className</code> directamente.",
       "tip3": "En modo controlado, cierra en el <code>onClick</code> del Action antes de ejecutar una acción asíncrona — o espera el resultado y mantén abierto en caso de error.",
       "tip4": "Evita anidar AlertDialog dentro de DropdownMenu u otro Portal — puede causar conflicto de focus trap. Cierra el menú antes de abrir el diálogo."
     },
@@ -971,7 +971,7 @@
         "item4": { "action": "Presionar Escape con diálogo abierto", "result": "Diálogo cierra (equivalente a cancelar); foco vuelve al trigger", "priority": "high" },
         "item5": { "action": "Presionar Tab dentro del diálogo", "result": "Foco alterna entre Cancel y Action sin salir del diálogo (focus trap)", "priority": "high" },
         "item6": { "action": "Clic fuera de AlertDialogContent (overlay)", "result": "Diálogo cierra sin disparar acción", "priority": "medium" },
-        "item7": { "action": "Renderizar con open controlado", "result": "El estado de apertura se gestiona totalmente por la prop open; onOpenChange dispara al interactuar", "priority": "medium" }
+        "item7": { "action": "Renderizar con open controlado", "result": "El estado de apertura se gestiona totalmente por la prop open; el callback de cambio dispara al interactuar", "priority": "medium" }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",

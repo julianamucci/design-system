@@ -29,7 +29,7 @@
     "anatomy": {
       "title": "Anatomia",
       "item1": "<strong>Sheet</strong> — root que controla o estado open/closed.",
-      "item2": "<strong>SheetTrigger</strong> — botão que abre o painel; use <code>asChild</code> para envolver um Button.",
+      "item2": "<strong>SheetTrigger</strong> — botão que abre o painel; permite compor com elemento filho para envolver um Button.",
       "item3": "<strong>SheetContent</strong> — painel deslizante com prop <code>side</code> (right/left/top/bottom).",
       "item4": "<strong>SheetHeader</strong> — wrapper para título e descrição no topo.",
       "item5": "<strong>SheetTitle</strong> — título acessível, obrigatório para leitores de tela.",
@@ -166,7 +166,7 @@
           "type": "boolean",
           "default": "—",
           "required": "Não",
-          "description": "Estado controlado de abertura. Use junto com <code>onOpenChange</code>."
+          "description": "Estado controlado de abertura. Use junto com o callback de mudança correspondente."
         },
         "defaultOpen": {
           "type": "boolean",
@@ -369,7 +369,7 @@
     "anatomy": {
       "title": "Anatomy",
       "item1": "<strong>Sheet</strong> — root that controls open/closed state.",
-      "item2": "<strong>SheetTrigger</strong> — button that opens the panel; use <code>asChild</code> to wrap a Button.",
+      "item2": "<strong>SheetTrigger</strong> — button that opens the panel; compose with a child element to wrap a Button.",
       "item3": "<strong>SheetContent</strong> — sliding panel with <code>side</code> prop (right/left/top/bottom).",
       "item4": "<strong>SheetHeader</strong> — wrapper for title and description at the top.",
       "item5": "<strong>SheetTitle</strong> — accessible title, required for screen readers.",
@@ -506,7 +506,7 @@
           "type": "boolean",
           "default": "—",
           "required": "No",
-          "description": "Controlled open state. Use with <code>onOpenChange</code>."
+          "description": "Controlled open state. Use with the corresponding change callback."
         },
         "defaultOpen": {
           "type": "boolean",
@@ -709,7 +709,7 @@
     "anatomy": {
       "title": "Anatomía",
       "item1": "<strong>Sheet</strong> — root que controla el estado open/closed.",
-      "item2": "<strong>SheetTrigger</strong> — botón que abre el panel; usa <code>asChild</code> para envolver un Button.",
+      "item2": "<strong>SheetTrigger</strong> — botón que abre el panel; compón con elemento hijo para envolver un Button.",
       "item3": "<strong>SheetContent</strong> — panel deslizante con prop <code>side</code> (right/left/top/bottom).",
       "item4": "<strong>SheetHeader</strong> — wrapper para título y descripción en la parte superior.",
       "item5": "<strong>SheetTitle</strong> — título accesible, obligatorio para lectores de pantalla.",
@@ -846,7 +846,7 @@
           "type": "boolean",
           "default": "—",
           "required": "No",
-          "description": "Estado controlado de apertura. Usa con <code>onOpenChange</code>."
+          "description": "Estado controlado de apertura. Úsalo con el callback de cambio correspondiente."
         },
         "defaultOpen": {
           "type": "boolean",

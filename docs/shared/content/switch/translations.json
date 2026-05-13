@@ -152,7 +152,7 @@
           "type": "boolean",
           "default": "—",
           "required": "Não",
-          "description": "Estado controlado. Use junto com <code>onCheckedChange</code>."
+          "description": "Estado controlado. Use junto com o callback de mudança correspondente."
         },
         "defaultChecked": {
           "type": "boolean",
@@ -254,10 +254,10 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
-      "item2": "<strong>Efeito imediato</strong> — o Switch dispara <code>onCheckedChange</code> a cada toggle. Não usar dentro de form que exige submit.",
+      "item2": "<strong>Efeito imediato</strong> — o Switch dispara o callback de mudança a cada toggle. Não usar dentro de form que exige submit.",
       "item3": "<strong>Label descritivo</strong> — sempre descreva o estado ativo (\"Receber notificações\", não \"Notificações\").",
       "item4": "<strong>Tamanhos</strong> — apenas <code>default</code> e <code>sm</code>. Para tamanho customizado, use CSS via <code>[data-slot=\"switch\"]</code>.",
-      "item5": "<strong>Basecoat</strong> — a factory <code>createSwitch()</code> não suporta <code>size</code>, <code>defaultChecked</code> nem <code>name</code> nativos. Use a prop <code>checked</code> como valor inicial e sincronize com <code>&lt;input type=\"hidden\"&gt;</code> via <code>onCheckedChange</code> para formulários."
+      "item5": "<strong>Basecoat</strong> — a factory <code>createSwitch()</code> não suporta <code>size</code>, <code>defaultChecked</code> nem <code>name</code> nativos. Use a prop <code>checked</code> como valor inicial e sincronize com <code>&lt;input type=\"hidden\"&gt;</code> via o callback de mudança para formulários."
     },
     "analytics": {
       "title": "Analytics",
@@ -277,7 +277,7 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar no Switch", "result": "Alterna entre checked/unchecked e dispara onCheckedChange", "priority": "high" },
+        "item1": { "action": "Clicar no Switch", "result": "Alterna entre checked/unchecked e dispara o callback de mudança", "priority": "high" },
         "item2": { "action": "Pressionar Space com Switch focado", "result": "Alterna o estado", "priority": "high" },
         "item3": { "action": "Clicar no Label", "result": "Alterna o estado (via htmlFor)", "priority": "high" },
         "item4": { "action": "Clicar com disabled=true", "result": "Não muda estado; aria-disabled true", "priority": "medium" }
@@ -475,7 +475,7 @@
           "type": "boolean",
           "default": "—",
           "required": "No",
-          "description": "Controlled state. Use with <code>onCheckedChange</code>."
+          "description": "Controlled state. Use with the corresponding change callback."
         },
         "defaultChecked": {
           "type": "boolean",
@@ -577,10 +577,10 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
-      "item2": "<strong>Immediate effect</strong> — Switch fires <code>onCheckedChange</code> on every toggle. Don't use inside form that requires submit.",
+      "item2": "<strong>Immediate effect</strong> — Switch fires the change callback on every toggle. Don't use inside form that requires submit.",
       "item3": "<strong>Descriptive Label</strong> — always describe the active state (\"Receive notifications\", not \"Notifications\").",
       "item4": "<strong>Sizes</strong> — only <code>default</code> and <code>sm</code>. For custom size, use CSS via <code>[data-slot=\"switch\"]</code>.",
-      "item5": "<strong>Basecoat</strong> — the <code>createSwitch()</code> factory does not natively support <code>size</code>, <code>defaultChecked</code> or <code>name</code>. Use the <code>checked</code> prop as initial value and sync with <code>&lt;input type=\"hidden\"&gt;</code> via <code>onCheckedChange</code> for forms."
+      "item5": "<strong>Basecoat</strong> — the <code>createSwitch()</code> factory does not natively support <code>size</code>, <code>defaultChecked</code> or <code>name</code>. Use the <code>checked</code> prop as initial value and sync with <code>&lt;input type=\"hidden\"&gt;</code> via the change callback for forms."
     },
     "analytics": {
       "title": "Analytics",
@@ -600,7 +600,7 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click the Switch", "result": "Toggles between checked/unchecked and fires onCheckedChange", "priority": "high" },
+        "item1": { "action": "Click the Switch", "result": "Toggles between checked/unchecked and fires the change callback", "priority": "high" },
         "item2": { "action": "Press Space with Switch focused", "result": "Toggles the state", "priority": "high" },
         "item3": { "action": "Click the Label", "result": "Toggles the state (via htmlFor)", "priority": "high" },
         "item4": { "action": "Click with disabled=true", "result": "Doesn't change state; aria-disabled true", "priority": "medium" }
@@ -798,7 +798,7 @@
           "type": "boolean",
           "default": "—",
           "required": "No",
-          "description": "Estado controlado. Usa con <code>onCheckedChange</code>."
+          "description": "Estado controlado. Úsalo con el callback de cambio correspondiente."
         },
         "defaultChecked": {
           "type": "boolean",
@@ -900,10 +900,10 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
-      "item2": "<strong>Efecto inmediato</strong> — el Switch dispara <code>onCheckedChange</code> en cada toggle. No usar dentro de form que requiere submit.",
+      "item2": "<strong>Efecto inmediato</strong> — el Switch dispara el callback de cambio en cada toggle. No usar dentro de form que requiere submit.",
       "item3": "<strong>Label descriptivo</strong> — describe siempre el estado activo (\"Recibir notificaciones\", no \"Notificaciones\").",
       "item4": "<strong>Tamaños</strong> — solo <code>default</code> y <code>sm</code>. Para tamaño personalizado, usa CSS vía <code>[data-slot=\"switch\"]</code>.",
-      "item5": "<strong>Basecoat</strong> — la factory <code>createSwitch()</code> no soporta <code>size</code>, <code>defaultChecked</code> ni <code>name</code> nativamente. Usa la prop <code>checked</code> como valor inicial y sincroniza con <code>&lt;input type=\"hidden\"&gt;</code> vía <code>onCheckedChange</code> para formularios."
+      "item5": "<strong>Basecoat</strong> — la factory <code>createSwitch()</code> no soporta <code>size</code>, <code>defaultChecked</code> ni <code>name</code> nativamente. Usa la prop <code>checked</code> como valor inicial y sincroniza con <code>&lt;input type=\"hidden\"&gt;</code> vía el callback de cambio para formularios."
     },
     "analytics": {
       "title": "Analytics",
@@ -923,7 +923,7 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en el Switch", "result": "Alterna entre checked/unchecked y dispara onCheckedChange", "priority": "high" },
+        "item1": { "action": "Hacer clic en el Switch", "result": "Alterna entre checked/unchecked y dispara el callback de cambio", "priority": "high" },
         "item2": { "action": "Pulsar Space con Switch enfocado", "result": "Alterna el estado", "priority": "high" },
         "item3": { "action": "Hacer clic en el Label", "result": "Alterna el estado (vía htmlFor)", "priority": "high" },
         "item4": { "action": "Clic con disabled=true", "result": "No cambia el estado; aria-disabled true", "priority": "medium" }

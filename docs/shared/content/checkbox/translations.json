@@ -7,7 +7,7 @@
     "seo": {
       "title": "Checkbox — Formulário · Design System",
       "description": "Documentação do Checkbox: estados checked, indeterminate e disabled, integração com Form, acessibilidade WCAG e suporte a React, Vue, Svelte e Basecoat.",
-      "aiSummary": "Componente Checkbox com estados checked, unchecked, indeterminate (Svelte), disabled e aria-invalid. Integra com FormField via onCheckedChange. Tokens: --primary, --input, --ring, --destructive.",
+      "aiSummary": "Componente Checkbox com estados checked, unchecked, indeterminate (Svelte), disabled e aria-invalid. Integra com FormField via callback de mudança. Tokens: --primary, --input, --ring, --destructive.",
       "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, Tailwind CSS, WCAG 2.2, FormField",
       "aiIntent": "informational"
     },
@@ -145,7 +145,7 @@
       "items": {
         "checked": "<code>checked</code> — estado controlado. Aceita <code>boolean</code> ou <code>\"indeterminate\"</code>.",
         "defaultChecked": "<code>defaultChecked</code> — estado inicial não controlado. Aceita <code>boolean</code>.",
-        "onCheckedChange": "<code>onCheckedChange</code> (React/Basecoat) / <code>@update:checked</code> (Vue) — callback ao alternar. Recebe <code>boolean | \"indeterminate\"</code>.",
+        "onCheckedChange": "Callback de mudança disparado ao alternar o estado. Recebe <code>boolean | \"indeterminate\"</code>. O nome da prop varia por stack (ver tabela de divergências).",
         "disabled": "<code>disabled</code> — desabilita o componente. Aplica <code>opacity-50</code> e bloqueia interações.",
         "required": "<code>required</code> — marca o campo como obrigatório. Propaga <code>aria-required</code>.",
         "name": "<code>name</code> — nome do campo para participação em formulários HTML nativos.",
@@ -210,7 +210,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "Dentro de <code>FormField</code>, use <code>checked={field.value}</code> e <code>onCheckedChange={field.onChange}</code>. O <code>FormControl</code> injeta <code>aria-invalid</code> e <code>aria-describedby</code> automaticamente.",
+      "tip1": "Dentro de <code>FormField</code>, conecte o estado controlado e o callback de mudança ao <code>field</code>. O <code>FormControl</code> injeta <code>aria-invalid</code> e <code>aria-describedby</code> automaticamente.",
       "tip2": "O estado <code>indeterminate</code> está disponível apenas no Svelte (prop <code>indeterminate</code> bindable). No React e Vue, use <code>checked=\"indeterminate\"</code> conforme a API do Radix.",
       "tip3": "No Basecoat, <code>createCheckbox()</code> retorna um elemento DOM com <code>role=\"checkbox\"</code> e um input nativo oculto. Use <code>aria-label</code> quando não houver label visível associado via <code>id</code>.",
       "tip4": "Label do peer: a classe <code>peer-disabled:cursor-not-allowed peer-disabled:opacity-70</code> no <code>&lt;Label&gt;</code> garante que o cursor e opacidade do label acompanhem o estado do checkbox."
@@ -235,17 +235,17 @@
         "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
         "langSwitchPayload": "{ previous_language, new_language }"
       },
-      "note": "Não rastrear valor de checkboxes que representam consentimentos legais isolados fora de contexto de funil. Usar <code>onCheckedChange</code> (não <code>onClick</code>) para capturar ativações por teclado."
+      "note": "Não rastrear valor de checkboxes que representam consentimentos legais isolados fora de contexto de funil. Use o callback de mudança (não o de clique) para capturar ativações por teclado."
     },
     "testes": {
       "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Checkbox.",
-        "item1": { "action": "Clicar em Checkbox desmarcado", "result": "Estado muda para marcado; <code>onCheckedChange</code> dispara com <code>true</code>", "priority": "high" },
-        "item2": { "action": "Clicar em Checkbox marcado", "result": "Estado muda para desmarcado; <code>onCheckedChange</code> dispara com <code>false</code>", "priority": "high" },
-        "item3": { "action": "Pressionar <kbd>Space</kbd> com foco no Checkbox", "result": "Estado alterna; <code>onCheckedChange</code> dispara", "priority": "high" },
-        "item4": { "action": "Clicar em Checkbox com <code>disabled</code>", "result": "Estado não muda; <code>onCheckedChange</code> não dispara", "priority": "high" },
+        "item1": { "action": "Clicar em Checkbox desmarcado", "result": "Estado muda para marcado; callback de mudança dispara com <code>true</code>", "priority": "high" },
+        "item2": { "action": "Clicar em Checkbox marcado", "result": "Estado muda para desmarcado; callback de mudança dispara com <code>false</code>", "priority": "high" },
+        "item3": { "action": "Pressionar <kbd>Space</kbd> com foco no Checkbox", "result": "Estado alterna; callback de mudança dispara", "priority": "high" },
+        "item4": { "action": "Clicar em Checkbox com <code>disabled</code>", "result": "Estado não muda; callback de mudança não dispara", "priority": "high" },
         "item5": { "action": "Submeter formulário com Checkbox marcado", "result": "Campo <code>name</code> presente no payload com valor <code>value</code>", "priority": "medium" },
         "item6": { "action": "Renderizar com <code>defaultChecked={true}</code>", "result": "Estado inicial marcado sem controle externo", "priority": "medium" }
       },
@@ -297,7 +297,7 @@
     "seo": {
       "title": "Checkbox — Form · Design System",
       "description": "Checkbox documentation: checked, indeterminate and disabled states, Form integration, WCAG accessibility, React, Vue, Svelte and Basecoat support.",
-      "aiSummary": "Checkbox component with checked, unchecked, indeterminate (Svelte), disabled and aria-invalid states. Integrates with FormField via onCheckedChange. Tokens: --primary, --input, --ring, --destructive.",
+      "aiSummary": "Checkbox component with checked, unchecked, indeterminate (Svelte), disabled and aria-invalid states. Integrates with FormField via change callback. Tokens: --primary, --input, --ring, --destructive.",
       "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, Tailwind CSS, WCAG 2.2, FormField",
       "aiIntent": "informational"
     },
@@ -435,7 +435,7 @@
       "items": {
         "checked": "<code>checked</code> — controlled state. Accepts <code>boolean</code> or <code>\"indeterminate\"</code>.",
         "defaultChecked": "<code>defaultChecked</code> — uncontrolled initial state. Accepts <code>boolean</code>.",
-        "onCheckedChange": "<code>onCheckedChange</code> (React/Basecoat) / <code>@update:checked</code> (Vue) — callback on toggle. Receives <code>boolean | \"indeterminate\"</code>.",
+        "onCheckedChange": "Change callback fired on toggle. Receives <code>boolean | \"indeterminate\"</code>. Prop name varies per stack (see divergence table).",
         "disabled": "<code>disabled</code> — disables the component. Applies <code>opacity-50</code> and blocks interactions.",
         "required": "<code>required</code> — marks the field as required. Propagates <code>aria-required</code>.",
         "name": "<code>name</code> — field name for native HTML form participation.",
@@ -500,7 +500,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "Inside <code>FormField</code>, use <code>checked={field.value}</code> and <code>onCheckedChange={field.onChange}</code>. <code>FormControl</code> injects <code>aria-invalid</code> and <code>aria-describedby</code> automatically.",
+      "tip1": "Inside <code>FormField</code>, wire the controlled state and the change callback to <code>field</code>. <code>FormControl</code> injects <code>aria-invalid</code> and <code>aria-describedby</code> automatically.",
       "tip2": "The <code>indeterminate</code> state is only available in Svelte (bindable <code>indeterminate</code> prop). In React and Vue, use <code>checked=\"indeterminate\"</code> per the Radix API.",
       "tip3": "In Basecoat, <code>createCheckbox()</code> returns a DOM element with <code>role=\"checkbox\"</code> and a hidden native input. Use <code>aria-label</code> when no visible label is associated via <code>id</code>.",
       "tip4": "Peer label: the class <code>peer-disabled:cursor-not-allowed peer-disabled:opacity-70</code> on <code>&lt;Label&gt;</code> ensures the label cursor and opacity follow the checkbox disabled state."
@@ -525,17 +525,17 @@
         "langSwitchTrigger": "On language switch in LanguageSwitcher",
         "langSwitchPayload": "{ previous_language, new_language }"
       },
-      "note": "Do not track the value of checkboxes that represent standalone legal consents outside a funnel context. Use <code>onCheckedChange</code> (not <code>onClick</code>) to capture keyboard activations."
+      "note": "Do not track the value of checkboxes that represent standalone legal consents outside a funnel context. Use the change callback (not click) to capture keyboard activations."
     },
     "testes": {
       "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each Checkbox interaction.",
-        "item1": { "action": "Click unchecked Checkbox", "result": "State changes to checked; <code>onCheckedChange</code> fires with <code>true</code>", "priority": "high" },
-        "item2": { "action": "Click checked Checkbox", "result": "State changes to unchecked; <code>onCheckedChange</code> fires with <code>false</code>", "priority": "high" },
-        "item3": { "action": "Press <kbd>Space</kbd> with focus on Checkbox", "result": "State toggles; <code>onCheckedChange</code> fires", "priority": "high" },
-        "item4": { "action": "Click Checkbox with <code>disabled</code>", "result": "State does not change; <code>onCheckedChange</code> does not fire", "priority": "high" },
+        "item1": { "action": "Click unchecked Checkbox", "result": "State changes to checked; change callback fires with <code>true</code>", "priority": "high" },
+        "item2": { "action": "Click checked Checkbox", "result": "State changes to unchecked; change callback fires with <code>false</code>", "priority": "high" },
+        "item3": { "action": "Press <kbd>Space</kbd> with focus on Checkbox", "result": "State toggles; change callback fires", "priority": "high" },
+        "item4": { "action": "Click Checkbox with <code>disabled</code>", "result": "State does not change; change callback does not fire", "priority": "high" },
         "item5": { "action": "Submit form with Checkbox checked", "result": "<code>name</code> field present in payload with <code>value</code>", "priority": "medium" },
         "item6": { "action": "Render with <code>defaultChecked={true}</code>", "result": "Initial state is checked without external control", "priority": "medium" }
       },
@@ -587,7 +587,7 @@
     "seo": {
       "title": "Checkbox — Formulario · Design System",
       "description": "Documentación del Checkbox: estados checked, indeterminate y disabled, integración con Form, accesibilidad WCAG, soporte React, Vue, Svelte y Basecoat.",
-      "aiSummary": "Componente Checkbox con estados checked, unchecked, indeterminate (Svelte), disabled y aria-invalid. Integra con FormField vía onCheckedChange. Tokens: --primary, --input, --ring, --destructive.",
+      "aiSummary": "Componente Checkbox con estados checked, unchecked, indeterminate (Svelte), disabled y aria-invalid. Integra con FormField vía callback de cambio. Tokens: --primary, --input, --ring, --destructive.",
       "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, Tailwind CSS, WCAG 2.2, FormField",
       "aiIntent": "informational"
     },
@@ -725,7 +725,7 @@
       "items": {
         "checked": "<code>checked</code> — estado controlado. Acepta <code>boolean</code> o <code>\"indeterminate\"</code>.",
         "defaultChecked": "<code>defaultChecked</code> — estado inicial no controlado. Acepta <code>boolean</code>.",
-        "onCheckedChange": "<code>onCheckedChange</code> (React/Basecoat) / <code>@update:checked</code> (Vue) — callback al alternar. Recibe <code>boolean | \"indeterminate\"</code>.",
+        "onCheckedChange": "Callback de cambio que se dispara al alternar el estado. Recibe <code>boolean | \"indeterminate\"</code>. El nombre de la prop varía por stack (ver tabla de divergencias).",
         "disabled": "<code>disabled</code> — deshabilita el componente. Aplica <code>opacity-50</code> y bloquea interacciones.",
         "required": "<code>required</code> — marca el campo como obligatorio. Propaga <code>aria-required</code>.",
         "name": "<code>name</code> — nombre del campo para participación en formularios HTML nativos.",
@@ -790,7 +790,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "Dentro de <code>FormField</code>, usa <code>checked={field.value}</code> y <code>onCheckedChange={field.onChange}</code>. <code>FormControl</code> inyecta <code>aria-invalid</code> y <code>aria-describedby</code> automáticamente.",
+      "tip1": "Dentro de <code>FormField</code>, conecta el estado controlado y el callback de cambio al <code>field</code>. <code>FormControl</code> inyecta <code>aria-invalid</code> y <code>aria-describedby</code> automáticamente.",
       "tip2": "El estado <code>indeterminate</code> solo está disponible en Svelte (prop bindable <code>indeterminate</code>). En React y Vue, usa <code>checked=\"indeterminate\"</code> según la API de Radix.",
       "tip3": "En Basecoat, <code>createCheckbox()</code> devuelve un elemento DOM con <code>role=\"checkbox\"</code> y un input nativo oculto. Usa <code>aria-label</code> cuando no haya label visible asociado vía <code>id</code>.",
       "tip4": "Peer label: la clase <code>peer-disabled:cursor-not-allowed peer-disabled:opacity-70</code> en <code>&lt;Label&gt;</code> asegura que el cursor y opacidad del label acompañen el estado disabled del checkbox."
@@ -815,17 +815,17 @@
         "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
         "langSwitchPayload": "{ previous_language, new_language }"
       },
-      "note": "No rastrear el valor de checkboxes que representen consentimientos legales aislados fuera del contexto de un funnel. Usar <code>onCheckedChange</code> (no <code>onClick</code>) para capturar activaciones por teclado."
+      "note": "No rastrear el valor de checkboxes que representen consentimientos legales aislados fuera del contexto de un funnel. Usa el callback de cambio (no el de clic) para capturar activaciones por teclado."
     },
     "testes": {
       "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción con el Checkbox.",
-        "item1": { "action": "Hacer clic en Checkbox desmarcado", "result": "Estado cambia a marcado; <code>onCheckedChange</code> se dispara con <code>true</code>", "priority": "high" },
-        "item2": { "action": "Hacer clic en Checkbox marcado", "result": "Estado cambia a desmarcado; <code>onCheckedChange</code> se dispara con <code>false</code>", "priority": "high" },
-        "item3": { "action": "Presionar <kbd>Space</kbd> con foco en el Checkbox", "result": "Estado alterna; <code>onCheckedChange</code> se dispara", "priority": "high" },
-        "item4": { "action": "Hacer clic en Checkbox con <code>disabled</code>", "result": "Estado no cambia; <code>onCheckedChange</code> no se dispara", "priority": "high" },
+        "item1": { "action": "Hacer clic en Checkbox desmarcado", "result": "Estado cambia a marcado; callback de cambio se dispara con <code>true</code>", "priority": "high" },
+        "item2": { "action": "Hacer clic en Checkbox marcado", "result": "Estado cambia a desmarcado; callback de cambio se dispara con <code>false</code>", "priority": "high" },
+        "item3": { "action": "Presionar <kbd>Space</kbd> con foco en el Checkbox", "result": "Estado alterna; callback de cambio se dispara", "priority": "high" },
+        "item4": { "action": "Hacer clic en Checkbox con <code>disabled</code>", "result": "Estado no cambia; callback de cambio no se dispara", "priority": "high" },
         "item5": { "action": "Enviar formulario con Checkbox marcado", "result": "Campo <code>name</code> presente en el payload con el <code>value</code>", "priority": "medium" },
         "item6": { "action": "Renderizar con <code>defaultChecked={true}</code>", "result": "Estado inicial marcado sin control externo", "priority": "medium" }
       },

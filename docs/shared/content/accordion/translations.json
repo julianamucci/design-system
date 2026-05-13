@@ -135,7 +135,7 @@
       },
       "controlled": {
         "label": "Controlado",
-        "description": "Estado gerenciado externamente via <code>value</code> e <code>onValueChange</code>. Útil para sincronizar com URL ou outro estado."
+        "description": "Estado gerenciado externamente via <code>value</code> e callback de mudança. Útil para sincronizar com URL ou outro estado."
       },
       "defaultOpen": {
         "label": "Com item padrão aberto",
@@ -202,7 +202,7 @@
             "type": "string | string[]",
             "default": "—",
             "required": "Não",
-            "description": "Valor(es) controlado(s). Use com onValueChange."
+            "description": "Valor(es) controlado(s). Use junto com o callback de mudança."
           },
           "onValueChange": {
             "name": "onValueChange",
@@ -254,7 +254,7 @@
             "type": "boolean",
             "default": "false",
             "required": "Não",
-            "description": "Renderiza o trigger como filho (asChild pattern)."
+            "description": "Compõe o trigger com o elemento filho, herdando seus estilos e semântica."
           },
           "onClick": {
             "name": "onClick",
@@ -456,7 +456,7 @@
           "priority": "medium"
         },
         "item6": {
-          "action": "Renderizar com defaultValue=\"item-1\"",
+          "action": "Renderizar com valor inicial definido",
           "result": "Item 1 começa aberto sem modo controlado",
           "priority": "medium"
         }
@@ -673,7 +673,7 @@
       },
       "controlled": {
         "label": "Controlled",
-        "description": "State managed externally via <code>value</code> and <code>onValueChange</code>. Useful for syncing with URL or other state."
+        "description": "State managed externally via <code>value</code> and a change callback. Useful for syncing with URL or other state."
       },
       "defaultOpen": {
         "label": "With default open item",
@@ -740,7 +740,7 @@
             "type": "string | string[]",
             "default": "—",
             "required": "No",
-            "description": "Controlled value(s). Use with onValueChange."
+            "description": "Controlled value(s). Use together with the change callback."
           },
           "onValueChange": {
             "name": "onValueChange",
@@ -792,7 +792,7 @@
             "type": "boolean",
             "default": "false",
             "required": "No",
-            "description": "Renders trigger as child (asChild pattern)."
+            "description": "Composes the trigger with the child element, inheriting its styles and semantics."
           },
           "onClick": {
             "name": "onClick",
@@ -994,7 +994,7 @@
           "priority": "medium"
         },
         "item6": {
-          "action": "Render with defaultValue=\"item-1\"",
+          "action": "Render with an initial value set",
           "result": "Item 1 starts open without controlled mode",
           "priority": "medium"
         }
@@ -1211,7 +1211,7 @@
       },
       "controlled": {
         "label": "Controlado",
-        "description": "Estado gestionado externamente via <code>value</code> y <code>onValueChange</code>. Útil para sincronizar con URL u otro estado."
+        "description": "Estado gestionado externamente vía <code>value</code> y callback de cambio. Útil para sincronizar con URL u otro estado."
       },
       "defaultOpen": {
         "label": "Con ítem abierto por defecto",
@@ -1278,7 +1278,7 @@
             "type": "string | string[]",
             "default": "—",
             "required": "No",
-            "description": "Valor(es) controlado(s). Usa con onValueChange."
+            "description": "Valor(es) controlado(s). Úsalo junto con el callback de cambio."
           },
           "onValueChange": {
             "name": "onValueChange",
@@ -1330,7 +1330,7 @@
             "type": "boolean",
             "default": "false",
             "required": "No",
-            "description": "Renderiza el trigger como hijo (patrón asChild)."
+            "description": "Compone el trigger con el elemento hijo, heredando sus estilos y semántica."
           },
           "onClick": {
             "name": "onClick",
@@ -1532,7 +1532,7 @@
           "priority": "medium"
         },
         "item6": {
-          "action": "Renderizar con defaultValue=\"item-1\"",
+          "action": "Renderizar con un valor inicial definido",
           "result": "Ítem 1 comienza abierto sin modo controlado",
           "priority": "medium"
         }

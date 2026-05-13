@@ -22,11 +22,11 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>DropdownMenu (Root)</strong> — provider de estado <code>open</code>/<code>onOpenChange</code> ou <code>defaultOpen</code>.",
-      "item2": "<strong>DropdownMenuTrigger</strong> — botão que abre o menu; usar <code>asChild</code> com <code>Button</code> para herdar estilos.",
+      "item1": "<strong>DropdownMenu (Root)</strong> — provider de estado de abertura controlado (com callback de mudança) ou estado inicial não controlado.",
+      "item2": "<strong>DropdownMenuTrigger</strong> — botão que abre o menu; use composição (delegando a renderização ao filho) com <code>Button</code> para herdar estilos.",
       "item3": "<strong>DropdownMenuContent</strong> — popup posicionado via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza em portal.",
       "item4": "<strong>DropdownMenuItem</strong> — ação executável; aceita <code>variant=\"destructive\"</code> e prop <code>inset</code> para alinhamento com items que têm ícone.",
-      "item5": "<strong>DropdownMenuCheckboxItem</strong> — item com estado boolean (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item5": "<strong>DropdownMenuCheckboxItem</strong> — item com estado boolean (valor controlado <code>checked</code> com callback de mudança).",
       "item6": "<strong>DropdownMenuRadioGroup + DropdownMenuRadioItem</strong> — grupo de seleção única (similar ao <code>RadioGroup</code>).",
       "item7": "<strong>DropdownMenuSub + SubTrigger + SubContent</strong> — submenu aninhado; <code>SubTrigger</code> mostra chevron à direita.",
       "item8": "<strong>DropdownMenuLabel</strong> — cabeçalho de grupo (não interativo); <strong>DropdownMenuSeparator</strong> divide grupos.",
@@ -318,11 +318,11 @@
       "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews de Storybook, aplicar <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Submenus</strong>: limite a 1 nível de aninhamento. Submenu aninhado em submenu confunde e quebra navegação por teclado em mobile.",
       "item4": "<strong>Atalhos</strong>: <code>DropdownMenuShortcut</code> é apenas visual; o atalho real precisa ser registrado no consumidor (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
-      "item5": "<strong>asChild no Trigger</strong>: usar <code>asChild</code> com <code>Button</code> evita <code>&lt;button&gt;&lt;button&gt;</code> aninhado (NestedInteractive ARIA violation)."
+      "item5": "<strong>Trigger via composição</strong>: delegar a renderização ao <code>Button</code> filho evita <code>&lt;button&gt;&lt;button&gt;</code> aninhado (NestedInteractive ARIA violation)."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obrigatório: <code>component='dropdown-menu'</code>, <code>location</code> (contexto da página), <code>label</code> (texto do trigger ou item). Disparar via <code>onOpenChange</code> e <code>onSelect</code> no consumidor."
+      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obrigatório: <code>component='dropdown-menu'</code>, <code>location</code> (contexto da página), <code>label</code> (texto do trigger ou item). Disparar via callbacks de mudança de abertura e de seleção no consumidor."
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -445,11 +445,11 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>DropdownMenu (Root)</strong> — state provider with <code>open</code>/<code>onOpenChange</code> or <code>defaultOpen</code>.",
-      "item2": "<strong>DropdownMenuTrigger</strong> — button that opens the menu; use <code>asChild</code> with <code>Button</code> to inherit styles.",
+      "item1": "<strong>DropdownMenu (Root)</strong> — state provider for controlled open state (with change callback) or uncontrolled initial state.",
+      "item2": "<strong>DropdownMenuTrigger</strong> — button that opens the menu; use composition (delegating rendering to the child) with <code>Button</code> to inherit styles.",
       "item3": "<strong>DropdownMenuContent</strong> — popup positioned via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renders in a portal.",
       "item4": "<strong>DropdownMenuItem</strong> — executable action; supports <code>variant=\"destructive\"</code> and <code>inset</code> for alignment with icon items.",
-      "item5": "<strong>DropdownMenuCheckboxItem</strong> — item with boolean state (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item5": "<strong>DropdownMenuCheckboxItem</strong> — item with boolean state (controlled <code>checked</code> value with change callback).",
       "item6": "<strong>DropdownMenuRadioGroup + DropdownMenuRadioItem</strong> — single-selection group (similar to <code>RadioGroup</code>).",
       "item7": "<strong>DropdownMenuSub + SubTrigger + SubContent</strong> — nested submenu; <code>SubTrigger</code> shows a chevron on the right.",
       "item8": "<strong>DropdownMenuLabel</strong> — group heading (non-interactive); <strong>DropdownMenuSeparator</strong> divides groups.",
@@ -741,11 +741,11 @@
       "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In Storybook previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Submenus</strong>: limit to 1 nesting level. Submenu within submenu confuses and breaks keyboard navigation on mobile.",
       "item4": "<strong>Shortcuts</strong>: <code>DropdownMenuShortcut</code> is visual only; the actual shortcut needs to be registered by the consumer (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
-      "item5": "<strong>asChild on Trigger</strong>: using <code>asChild</code> with <code>Button</code> avoids nested <code>&lt;button&gt;&lt;button&gt;</code> (NestedInteractive ARIA violation)."
+      "item5": "<strong>Trigger via composition</strong>: delegating rendering to a <code>Button</code> child avoids nested <code>&lt;button&gt;&lt;button&gt;</code> (NestedInteractive ARIA violation)."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant events: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Required payload: <code>component='dropdown-menu'</code>, <code>location</code> (page context), <code>label</code> (trigger or item text). Dispatch via <code>onOpenChange</code> and <code>onSelect</code> in the consumer."
+      "description": "Relevant events: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Required payload: <code>component='dropdown-menu'</code>, <code>location</code> (page context), <code>label</code> (trigger or item text). Dispatch via the open-change and select callbacks in the consumer."
     },
     "testes": {
       "title": "Test Criteria",
@@ -868,11 +868,11 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>DropdownMenu (Root)</strong> — provider de estado <code>open</code>/<code>onOpenChange</code> o <code>defaultOpen</code>.",
-      "item2": "<strong>DropdownMenuTrigger</strong> — botón que abre el menú; usa <code>asChild</code> con <code>Button</code> para heredar estilos.",
+      "item1": "<strong>DropdownMenu (Root)</strong> — provider de estado de apertura controlado (con callback de cambio) o estado inicial no controlado.",
+      "item2": "<strong>DropdownMenuTrigger</strong> — botón que abre el menú; usa composición (delegando la renderización al hijo) con <code>Button</code> para heredar estilos.",
       "item3": "<strong>DropdownMenuContent</strong> — popup posicionado vía <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza en portal.",
       "item4": "<strong>DropdownMenuItem</strong> — acción ejecutable; admite <code>variant=\"destructive\"</code> y <code>inset</code> para alineación con items con icono.",
-      "item5": "<strong>DropdownMenuCheckboxItem</strong> — item con estado boolean (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item5": "<strong>DropdownMenuCheckboxItem</strong> — item con estado boolean (valor controlado <code>checked</code> con callback de cambio).",
       "item6": "<strong>DropdownMenuRadioGroup + DropdownMenuRadioItem</strong> — grupo de selección única (similar a <code>RadioGroup</code>).",
       "item7": "<strong>DropdownMenuSub + SubTrigger + SubContent</strong> — submenú anidado; <code>SubTrigger</code> muestra chevron a la derecha.",
       "item8": "<strong>DropdownMenuLabel</strong> — encabezado de grupo (no interactivo); <strong>DropdownMenuSeparator</strong> divide grupos.",
@@ -1164,11 +1164,11 @@
       "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews de Storybook, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Submenús</strong>: limita a 1 nivel de anidamiento. Submenú dentro de submenú confunde y rompe la navegación por teclado en mobile.",
       "item4": "<strong>Atajos</strong>: <code>DropdownMenuShortcut</code> es solo visual; el atajo real debe registrarse en el consumidor (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
-      "item5": "<strong>asChild en Trigger</strong>: usar <code>asChild</code> con <code>Button</code> evita <code>&lt;button&gt;&lt;button&gt;</code> anidado (NestedInteractive ARIA violation)."
+      "item5": "<strong>Trigger vía composición</strong>: delegar la renderización a un <code>Button</code> hijo evita <code>&lt;button&gt;&lt;button&gt;</code> anidado (NestedInteractive ARIA violation)."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obligatorio: <code>component='dropdown-menu'</code>, <code>location</code> (contexto de página), <code>label</code> (texto del trigger o item). Dispara vía <code>onOpenChange</code> y <code>onSelect</code> en el consumidor."
+      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obligatorio: <code>component='dropdown-menu'</code>, <code>location</code> (contexto de página), <code>label</code> (texto del trigger o item). Dispara vía los callbacks de cambio de apertura y de selección en el consumidor."
     },
     "testes": {
       "title": "Criterios de Test",

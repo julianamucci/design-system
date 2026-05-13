@@ -6,8 +6,8 @@
     "description": "Botão de ação para disparar interações do usuário em formulários, diálogos e fluxos de navegação.",
     "seo": {
       "title": "Button — Formulário · Design System",
-      "description": "Documentação do Button: 6 variantes, 6 tamanhos, asChild para composição com links, acessibilidade WCAG e suporte a ícones.",
-      "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamanhos, prop asChild via Radix Slot, foco visível e suporte a ícones decorativos.",
+      "description": "Documentação do Button: 6 variantes, 6 tamanhos, composição com elemento filho para links, acessibilidade WCAG e suporte a ícones.",
+      "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamanhos, composição com elemento filho via Radix Slot, foco visível e suporte a ícones decorativos.",
       "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, Tailwind CSS, WCAG 2.1, class-variance-authority",
       "aiIntent": "informational"
     },
@@ -29,7 +29,7 @@
       "item1": "<strong>Button</strong> — elemento <code>&lt;button&gt;</code> nativo. Aceita todos os atributos HTML de botão (<code>type</code>, <code>disabled</code>, <code>onClick</code>).",
       "item2": "<strong>Ícone (opcional)</strong> — filho do Button com <code>aria-hidden=\"true\"</code>. Posicionado automaticamente via gap interno.",
       "item3": "<strong>Label</strong> — texto visível do botão. Verbo no infinitivo, máximo 3 palavras, sem pontuação.",
-      "item4": "<strong>Slot (asChild)</strong> — via Radix Slot. Permite renderizar como <code>&lt;a&gt;</code> ou componente de link mantendo os estilos.",
+      "item4": "<strong>Slot de composição</strong> — via Radix Slot. Permite renderizar como <code>&lt;a&gt;</code> ou componente de link mantendo os estilos.",
       "structureLabel": "Estrutura básica:",
       "structureCode": "<Button>                    {/* Elemento <button> */}\n  <Icon aria-hidden />      {/* Ícone (opcional) */}\n  Label                     {/* Texto da ação */}\n</Button>"
     },
@@ -39,7 +39,7 @@
         "title": "📋 Guidelines Obrigatórias",
         "item1": "Use <code>variant=\"default\"</code> apenas uma vez por seção — a ação primária deve ser única.",
         "item2": "Ações destrutivas (excluir, remover) sempre usam <code>variant=\"destructive\"</code> e exigem confirmação via AlertDialog.",
-        "item3": "Para navegação (links), use <code>asChild</code> com o componente de link do framework (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
+        "item3": "Para navegação (links), componha o Button com o elemento filho de link do framework (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
         "item4": "Botões icon-only exigem <code>aria-label</code> descritivo com verbo + objeto."
       },
       "scenarios": {
@@ -53,7 +53,7 @@
         "item2": { "s": "Ação secundária ou cancelar", "u": "outline ou secondary", "a": "Nunca outro default" },
         "item3": { "s": "Ação destrutiva (excluir)", "u": "destructive", "a": "Confirmar via AlertDialog" },
         "item4": { "s": "Ação discreta em toolbar", "u": "ghost", "a": "Sem borda, hover sutil" },
-        "item5": { "s": "Navegação inline no texto", "u": "link", "a": "Prefira <code>asChild</code> + <code>&lt;a&gt;</code>" }
+        "item5": { "s": "Navegação inline no texto", "u": "link", "a": "Prefira compor com elemento filho <code>&lt;a&gt;</code>" }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -92,7 +92,7 @@
         "title": "Use quando",
         "item1": "Uma ação do usuário precisa ser disparada (salvar, enviar, confirmar)",
         "item2": "A ação primária de um formulário ou diálogo precisa destaque visual",
-        "item3": "Uma navegação precisa do estilo visual de botão (<code>asChild</code>)",
+        "item3": "Uma navegação precisa do estilo visual de botão (compor com link como elemento filho)",
         "item4": "Uma ação destrutiva precisa sinalizar severidade via <code>destructive</code>"
       },
       "dont": {
@@ -129,7 +129,7 @@
         "outline": "Ação secundária com destaque. Borda visível, fundo transparente, hover com <code>accent</code>.",
         "secondary": "Ação secundária neutra. Fundo <code>secondary</code>, menos proeminente que <code>outline</code>.",
         "ghost": "Ação discreta em toolbars e menus. Sem borda, hover com <code>accent</code>.",
-        "link": "Ação com aparência de link textual. Usado raramente — prefira <code>asChild</code> + <code>&lt;a&gt;</code>."
+        "link": "Ação com aparência de link textual. Usado raramente — prefira compor com elemento filho <code>&lt;a&gt;</code>."
       },
       "sizesTitle": "Tamanhos",
       "sizes": {
@@ -257,7 +257,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "Use <code>asChild</code> para integrar com Link do Next.js ou React Router mantendo a semântica de navegação (<code>&lt;a href&gt;</code>) e os estilos do botão.",
+      "tip1": "Para integrar com Link do Next.js ou React Router, componha o Button com o componente de link como elemento filho — mantém a semântica de navegação (<code>&lt;a href&gt;</code>) e os estilos do botão.",
       "tip2": "Em formulários com submit assíncrono, bloqueie o botão com <code>disabled={form.formState.isSubmitting}</code> e troque o label para gerúndio (\"Salvando...\"). Evita duplo envio.",
       "tip3": "Ícones devem ter <code>aria-hidden=\"true\"</code> e tamanho padrão <code>size-4</code> — o CSS do Button já aplica <code>[&amp;_svg]:size-4</code> quando não há override."
     },
@@ -291,7 +291,7 @@
         "item2": { "action": "Clicar em Button com <code>disabled</code>", "result": "<code>onClick</code> não é disparado; atributo <code>disabled</code> presente", "priority": "high" },
         "item3": { "action": "Focar via Tab e pressionar Enter", "result": "<code>onClick</code> é disparado (comportamento nativo)", "priority": "high" },
         "item4": { "action": "Focar via Tab e pressionar Space", "result": "<code>onClick</code> é disparado (comportamento nativo)", "priority": "high" },
-        "item5": { "action": "Renderizar com <code>asChild</code> + <code>&lt;a&gt;</code>", "result": "Elemento <code>&lt;a&gt;</code> renderizado com classes do Button", "priority": "medium" },
+        "item5": { "action": "Renderizar composto com elemento filho <code>&lt;a&gt;</code>", "result": "Elemento <code>&lt;a&gt;</code> renderizado com classes do Button", "priority": "medium" },
         "item6": { "action": "Renderizar botão icon-only com <code>aria-label</code>", "result": "Acessível via <code>getByRole('button', { name })</code>", "priority": "high" }
       },
       "accessibility": {
@@ -310,7 +310,7 @@
         "item2": { "story": "Variantes — default, destructive, outline, secondary, ghost, link", "priority": "high" },
         "item3": { "story": "Tamanhos — default, sm, lg, icon, icon-sm, icon-lg", "priority": "high" },
         "item4": { "story": "Estados — disabled, loading, focus-visible", "priority": "medium" },
-        "item5": { "story": "Composições — com ícone à esquerda, icon-only, asChild link", "priority": "medium" }
+        "item5": { "story": "Composições — com ícone à esquerda, icon-only, link composto", "priority": "medium" }
       }
     },
     "nav": {
@@ -341,8 +341,8 @@
     "description": "Action button for triggering user interactions in forms, dialogs, and navigation flows.",
     "seo": {
       "title": "Button — Form · Design System",
-      "description": "Documentation for Button: 6 variants, 6 sizes, asChild for link composition, WCAG accessibility and icon support.",
-      "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 6 sizes, asChild prop via Radix Slot, visible focus ring, and support for decorative icons.",
+      "description": "Documentation for Button: 6 variants, 6 sizes, child element composition for links, WCAG accessibility and icon support.",
+      "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 6 sizes, child element composition via Radix Slot, visible focus ring, and support for decorative icons.",
       "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, Tailwind CSS, WCAG 2.1, class-variance-authority",
       "aiIntent": "informational"
     },
@@ -364,7 +364,7 @@
       "item1": "<strong>Button</strong> — native <code>&lt;button&gt;</code> element. Accepts all HTML button attributes (<code>type</code>, <code>disabled</code>, <code>onClick</code>).",
       "item2": "<strong>Icon (optional)</strong> — Button child with <code>aria-hidden=\"true\"</code>. Positioned automatically via internal gap.",
       "item3": "<strong>Label</strong> — visible button text. Infinitive verb, max 3 words, no punctuation.",
-      "item4": "<strong>Slot (asChild)</strong> — via Radix Slot. Allows rendering as <code>&lt;a&gt;</code> or link component while keeping styles.",
+      "item4": "<strong>Composition slot</strong> — via Radix Slot. Allows rendering as <code>&lt;a&gt;</code> or link component while keeping styles.",
       "structureLabel": "Basic structure:",
       "structureCode": "<Button>                    {/* <button> element */}\n  <Icon aria-hidden />      {/* Icon (optional) */}\n  Label                     {/* Action text */}\n</Button>"
     },
@@ -374,7 +374,7 @@
         "title": "📋 Required Guidelines",
         "item1": "Use <code>variant=\"default\"</code> only once per section — the primary action must be unique.",
         "item2": "Destructive actions (delete, remove) always use <code>variant=\"destructive\"</code> and require AlertDialog confirmation.",
-        "item3": "For navigation (links), use <code>asChild</code> with your framework's link component (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
+        "item3": "For navigation (links), compose the Button with your framework's link element as a child (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
         "item4": "Icon-only buttons require a descriptive <code>aria-label</code> with verb + object."
       },
       "scenarios": {
@@ -388,7 +388,7 @@
         "item2": { "s": "Secondary action or cancel", "u": "outline or secondary", "a": "Never another default" },
         "item3": { "s": "Destructive action (delete)", "u": "destructive", "a": "Confirm via AlertDialog" },
         "item4": { "s": "Discreet action in toolbar", "u": "ghost", "a": "No border, subtle hover" },
-        "item5": { "s": "Inline navigation in text", "u": "link", "a": "Prefer <code>asChild</code> + <code>&lt;a&gt;</code>" }
+        "item5": { "s": "Inline navigation in text", "u": "link", "a": "Prefer composing with child <code>&lt;a&gt;</code>" }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -427,7 +427,7 @@
         "title": "Use when",
         "item1": "A user action needs to be triggered (save, send, confirm)",
         "item2": "The primary action of a form or dialog needs visual emphasis",
-        "item3": "A navigation needs button visual style (<code>asChild</code>)",
+        "item3": "A navigation needs button visual style (compose with link as child)",
         "item4": "A destructive action needs severity signaling via <code>destructive</code>"
       },
       "dont": {
@@ -464,7 +464,7 @@
         "outline": "Secondary action with emphasis. Visible border, transparent background, hover with <code>accent</code>.",
         "secondary": "Neutral secondary action. <code>secondary</code> background, less prominent than <code>outline</code>.",
         "ghost": "Discreet action in toolbars and menus. No border, hover with <code>accent</code>.",
-        "link": "Action with text link appearance. Used rarely — prefer <code>asChild</code> + <code>&lt;a&gt;</code>."
+        "link": "Action with text link appearance. Used rarely — prefer composing with child <code>&lt;a&gt;</code>."
       },
       "sizesTitle": "Sizes",
       "sizes": {
@@ -592,7 +592,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "Use <code>asChild</code> to integrate with Next.js or React Router Link while keeping navigation semantics (<code>&lt;a href&gt;</code>) and button styles.",
+      "tip1": "To integrate with Next.js or React Router Link, compose the Button with the link component as a child — keeps navigation semantics (<code>&lt;a href&gt;</code>) and button styles.",
       "tip2": "In forms with async submit, block the button with <code>disabled={form.formState.isSubmitting}</code> and change the label to gerund (\"Saving...\"). Prevents double submission.",
       "tip3": "Icons must have <code>aria-hidden=\"true\"</code> and default <code>size-4</code> — the Button CSS already applies <code>[&amp;_svg]:size-4</code> when no override is present."
     },
@@ -626,7 +626,7 @@
         "item2": { "action": "Click Button with <code>disabled</code>", "result": "<code>onClick</code> doesn't fire; <code>disabled</code> attribute present", "priority": "high" },
         "item3": { "action": "Focus via Tab and press Enter", "result": "<code>onClick</code> fires (native behavior)", "priority": "high" },
         "item4": { "action": "Focus via Tab and press Space", "result": "<code>onClick</code> fires (native behavior)", "priority": "high" },
-        "item5": { "action": "Render with <code>asChild</code> + <code>&lt;a&gt;</code>", "result": "<code>&lt;a&gt;</code> element rendered with Button classes", "priority": "medium" },
+        "item5": { "action": "Render composed with child <code>&lt;a&gt;</code>", "result": "<code>&lt;a&gt;</code> element rendered with Button classes", "priority": "medium" },
         "item6": { "action": "Render icon-only button with <code>aria-label</code>", "result": "Accessible via <code>getByRole('button', { name })</code>", "priority": "high" }
       },
       "accessibility": {
@@ -645,7 +645,7 @@
         "item2": { "story": "Variants — default, destructive, outline, secondary, ghost, link", "priority": "high" },
         "item3": { "story": "Sizes — default, sm, lg, icon, icon-sm, icon-lg", "priority": "high" },
         "item4": { "story": "States — disabled, loading, focus-visible", "priority": "medium" },
-        "item5": { "story": "Compositions — with left icon, icon-only, asChild link", "priority": "medium" }
+        "item5": { "story": "Compositions — with left icon, icon-only, composed link", "priority": "medium" }
       }
     },
     "nav": {
@@ -676,8 +676,8 @@
     "description": "Botón de acción para disparar interacciones del usuario en formularios, diálogos y flujos de navegación.",
     "seo": {
       "title": "Button — Formulario · Design System",
-      "description": "Documentación del Button: 6 variantes, 6 tamaños, asChild para composición con enlaces, accesibilidad WCAG y soporte para íconos.",
-      "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamaños, prop asChild vía Radix Slot, foco visible y soporte para íconos decorativos.",
+      "description": "Documentación del Button: 6 variantes, 6 tamaños, composición con elemento hijo para enlaces, accesibilidad WCAG y soporte para íconos.",
+      "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamaños, composición con elemento hijo vía Radix Slot, foco visible y soporte para íconos decorativos.",
       "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, Tailwind CSS, WCAG 2.1, class-variance-authority",
       "aiIntent": "informational"
     },
@@ -699,7 +699,7 @@
       "item1": "<strong>Button</strong> — elemento <code>&lt;button&gt;</code> nativo. Acepta todos los atributos HTML de botón (<code>type</code>, <code>disabled</code>, <code>onClick</code>).",
       "item2": "<strong>Ícono (opcional)</strong> — hijo del Button con <code>aria-hidden=\"true\"</code>. Posicionado automáticamente vía gap interno.",
       "item3": "<strong>Label</strong> — texto visible del botón. Verbo en infinitivo, máximo 3 palabras, sin puntuación.",
-      "item4": "<strong>Slot (asChild)</strong> — vía Radix Slot. Permite renderizar como <code>&lt;a&gt;</code> o componente de enlace manteniendo los estilos.",
+      "item4": "<strong>Slot de composición</strong> — vía Radix Slot. Permite renderizar como <code>&lt;a&gt;</code> o componente de enlace manteniendo los estilos.",
       "structureLabel": "Estructura básica:",
       "structureCode": "<Button>                    {/* Elemento <button> */}\n  <Icon aria-hidden />      {/* Ícono (opcional) */}\n  Label                     {/* Texto de la acción */}\n</Button>"
     },
@@ -709,7 +709,7 @@
         "title": "📋 Guías Obligatorias",
         "item1": "Usa <code>variant=\"default\"</code> solo una vez por sección — la acción primaria debe ser única.",
         "item2": "Acciones destructivas (eliminar, remover) siempre usan <code>variant=\"destructive\"</code> y requieren confirmación vía AlertDialog.",
-        "item3": "Para navegación (enlaces), usa <code>asChild</code> con el componente de enlace del framework (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
+        "item3": "Para navegación (enlaces), compón el Button con el elemento de enlace del framework como hijo (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
         "item4": "Botones icon-only requieren <code>aria-label</code> descriptivo con verbo + objeto."
       },
       "scenarios": {
@@ -723,7 +723,7 @@
         "item2": { "s": "Acción secundaria o cancelar", "u": "outline o secondary", "a": "Nunca otro default" },
         "item3": { "s": "Acción destructiva (eliminar)", "u": "destructive", "a": "Confirmar vía AlertDialog" },
         "item4": { "s": "Acción discreta en toolbar", "u": "ghost", "a": "Sin borde, hover sutil" },
-        "item5": { "s": "Navegación inline en el texto", "u": "link", "a": "Prefiere <code>asChild</code> + <code>&lt;a&gt;</code>" }
+        "item5": { "s": "Navegación inline en el texto", "u": "link", "a": "Prefiere componer con hijo <code>&lt;a&gt;</code>" }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -762,7 +762,7 @@
         "title": "Úsalo cuando",
         "item1": "Una acción del usuario necesita ser disparada (guardar, enviar, confirmar)",
         "item2": "La acción primaria de un formulario o diálogo necesita énfasis visual",
-        "item3": "Una navegación necesita el estilo visual de botón (<code>asChild</code>)",
+        "item3": "Una navegación necesita el estilo visual de botón (componer con enlace como hijo)",
         "item4": "Una acción destructiva necesita señalizar severidad vía <code>destructive</code>"
       },
       "dont": {
@@ -799,7 +799,7 @@
         "outline": "Acción secundaria con énfasis. Borde visible, fondo transparente, hover con <code>accent</code>.",
         "secondary": "Acción secundaria neutra. Fondo <code>secondary</code>, menos prominente que <code>outline</code>.",
         "ghost": "Acción discreta en toolbars y menús. Sin borde, hover con <code>accent</code>.",
-        "link": "Acción con apariencia de enlace textual. Se usa poco — prefiere <code>asChild</code> + <code>&lt;a&gt;</code>."
+        "link": "Acción con apariencia de enlace textual. Se usa poco — prefiere componer con hijo <code>&lt;a&gt;</code>."
       },
       "sizesTitle": "Tamaños",
       "sizes": {
@@ -927,7 +927,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "Usa <code>asChild</code> para integrar con Link de Next.js o React Router manteniendo la semántica de navegación (<code>&lt;a href&gt;</code>) y los estilos del botón.",
+      "tip1": "Para integrar con Link de Next.js o React Router, compón el Button con el componente de enlace como hijo — mantiene la semántica de navegación (<code>&lt;a href&gt;</code>) y los estilos del botón.",
       "tip2": "En formularios con submit asíncrono, bloquea el botón con <code>disabled={form.formState.isSubmitting}</code> y cambia el label a gerundio (\"Guardando...\"). Evita doble envío.",
       "tip3": "Los íconos deben tener <code>aria-hidden=\"true\"</code> y tamaño estándar <code>size-4</code> — el CSS del Button ya aplica <code>[&amp;_svg]:size-4</code> cuando no hay override."
     },
@@ -961,7 +961,7 @@
         "item2": { "action": "Hacer clic en Button con <code>disabled</code>", "result": "<code>onClick</code> no se dispara; atributo <code>disabled</code> presente", "priority": "high" },
         "item3": { "action": "Enfocar vía Tab y presionar Enter", "result": "<code>onClick</code> se dispara (comportamiento nativo)", "priority": "high" },
         "item4": { "action": "Enfocar vía Tab y presionar Space", "result": "<code>onClick</code> se dispara (comportamiento nativo)", "priority": "high" },
-        "item5": { "action": "Renderizar con <code>asChild</code> + <code>&lt;a&gt;</code>", "result": "Elemento <code>&lt;a&gt;</code> renderizado con clases del Button", "priority": "medium" },
+        "item5": { "action": "Renderizar compuesto con hijo <code>&lt;a&gt;</code>", "result": "Elemento <code>&lt;a&gt;</code> renderizado con clases del Button", "priority": "medium" },
         "item6": { "action": "Renderizar botón icon-only con <code>aria-label</code>", "result": "Accesible vía <code>getByRole('button', { name })</code>", "priority": "high" }
       },
       "accessibility": {
@@ -980,7 +980,7 @@
         "item2": { "story": "Variantes — default, destructive, outline, secondary, ghost, link", "priority": "high" },
         "item3": { "story": "Tamaños — default, sm, lg, icon, icon-sm, icon-lg", "priority": "high" },
         "item4": { "story": "Estados — disabled, loading, focus-visible", "priority": "medium" },
-        "item5": { "story": "Composiciones — con ícono a la izquierda, icon-only, asChild link", "priority": "medium" }
+        "item5": { "story": "Composiciones — con ícono a la izquierda, icon-only, enlace compuesto", "priority": "medium" }
       }
     },
     "nav": {

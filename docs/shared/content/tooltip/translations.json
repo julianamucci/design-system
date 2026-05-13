@@ -26,7 +26,7 @@
       "title": "Anatomia",
       "item1": "<strong>TooltipProvider</strong> — wrapper global no root da app que configura <code>delay</code> compartilhado entre todos os tooltips.",
       "item2": "<strong>Tooltip</strong> — root individual que controla open/closed por instância.",
-      "item3": "<strong>TooltipTrigger</strong> — elemento que ativa o tooltip ao hover ou foco. Use <code>asChild</code> para envolver um Button.",
+      "item3": "<strong>TooltipTrigger</strong> — elemento que ativa o tooltip ao hover ou foco. Permite compor com elemento filho para envolver um Button.",
       "item4": "<strong>TooltipContent</strong> — popover em portal com o texto explicativo; renderiza Arrow automaticamente.",
       "structureLabel": "Estrutura básica:",
       "structureCode": "{/* No root da app — uma vez */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Onde precisar */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Salvar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
@@ -157,7 +157,7 @@
           "type": "boolean",
           "default": "—",
           "required": "Não",
-          "description": "Estado controlado de abertura no <code>Tooltip</code>. Use com <code>onOpenChange</code>."
+          "description": "Estado controlado de abertura no <code>Tooltip</code>. Use com o callback de mudança correspondente."
         },
         "defaultOpen": {
           "type": "boolean",
@@ -349,7 +349,7 @@
       "title": "Anatomy",
       "item1": "<strong>TooltipProvider</strong> — global wrapper at app root configuring shared <code>delay</code> across all tooltips.",
       "item2": "<strong>Tooltip</strong> — individual root controlling open/closed per instance.",
-      "item3": "<strong>TooltipTrigger</strong> — element that activates the tooltip on hover or focus. Use <code>asChild</code> to wrap a Button.",
+      "item3": "<strong>TooltipTrigger</strong> — element that activates the tooltip on hover or focus. Compose with a child element to wrap a Button.",
       "item4": "<strong>TooltipContent</strong> — portal popover with explanatory text; renders Arrow automatically.",
       "structureLabel": "Basic structure:",
       "structureCode": "{/* At app root — once */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Where needed */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Save (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
@@ -480,7 +480,7 @@
           "type": "boolean",
           "default": "—",
           "required": "No",
-          "description": "Controlled open state on <code>Tooltip</code>. Use with <code>onOpenChange</code>."
+          "description": "Controlled open state on <code>Tooltip</code>. Use with the corresponding change callback."
         },
         "defaultOpen": {
           "type": "boolean",
@@ -672,7 +672,7 @@
       "title": "Anatomía",
       "item1": "<strong>TooltipProvider</strong> — wrapper global en el root de la app que configura <code>delay</code> compartido entre todos los tooltips.",
       "item2": "<strong>Tooltip</strong> — root individual que controla open/closed por instancia.",
-      "item3": "<strong>TooltipTrigger</strong> — elemento que activa el tooltip al hover o foco. Usa <code>asChild</code> para envolver un Button.",
+      "item3": "<strong>TooltipTrigger</strong> — elemento que activa el tooltip al hover o foco. Compón con elemento hijo para envolver un Button.",
       "item4": "<strong>TooltipContent</strong> — popover en portal con el texto explicativo; renderiza Arrow automáticamente.",
       "structureLabel": "Estructura básica:",
       "structureCode": "{/* En el root de la app — una vez */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Donde necesario */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Guardar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
@@ -803,7 +803,7 @@
           "type": "boolean",
           "default": "—",
           "required": "No",
-          "description": "Estado controlado de apertura en el <code>Tooltip</code>. Usa con <code>onOpenChange</code>."
+          "description": "Estado controlado de apertura en el <code>Tooltip</code>. Úsalo con el callback de cambio correspondiente."
         },
         "defaultOpen": {
           "type": "boolean",

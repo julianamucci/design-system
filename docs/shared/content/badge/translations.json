@@ -147,7 +147,7 @@
       },
       "asLink": {
         "label": "Como link",
-        "trigger": "Envolver em <code>&lt;a&gt;</code> ou renderizar com <code>asChild</code>",
+        "trigger": "Envolver em <code>&lt;a&gt;</code> ou compor com elemento filho",
         "behavior": "Herda foco e hover do elemento pai. Inclua <code>aria-label</code> descritivo no link"
       },
       "asTrigger": {
@@ -452,7 +452,7 @@
       },
       "asLink": {
         "label": "As link",
-        "trigger": "Wrap in <code>&lt;a&gt;</code> or render with <code>asChild</code>",
+        "trigger": "Wrap in <code>&lt;a&gt;</code> or compose with child element",
         "behavior": "Inherits focus and hover from the parent element. Add a descriptive <code>aria-label</code> to the link"
       },
       "asTrigger": {
@@ -757,7 +757,7 @@
       },
       "asLink": {
         "label": "Como link",
-        "trigger": "Envolver en <code>&lt;a&gt;</code> o renderizar con <code>asChild</code>",
+        "trigger": "Envolver en <code>&lt;a&gt;</code> o componer con elemento hijo",
         "behavior": "Hereda foco y hover del elemento padre. Incluye <code>aria-label</code> descriptivo en el link"
       },
       "asTrigger": {

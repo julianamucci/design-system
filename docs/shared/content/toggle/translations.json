@@ -152,7 +152,7 @@
           "type": "boolean",
           "default": "—",
           "required": "Não",
-          "description": "Estado controlado. Use junto com <code>onPressedChange</code>."
+          "description": "Estado controlado. Use junto com o callback de mudança correspondente."
         },
         "defaultPressed": {
           "type": "boolean",
@@ -275,7 +275,7 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar no Toggle", "result": "Alterna pressed e dispara onPressedChange", "priority": "high" },
+        "item1": { "action": "Clicar no Toggle", "result": "Alterna o estado pressionado e dispara o callback de mudança", "priority": "high" },
         "item2": { "action": "Pressionar Space com Toggle focado", "result": "Alterna o estado", "priority": "high" },
         "item3": { "action": "Pressionar Enter com Toggle focado", "result": "Alterna o estado (idêntico a Space)", "priority": "medium" },
         "item4": { "action": "Clicar com disabled=true", "result": "Não muda estado; aria-disabled true", "priority": "medium" }
@@ -473,7 +473,7 @@
           "type": "boolean",
           "default": "—",
           "required": "No",
-          "description": "Controlled state. Use with <code>onPressedChange</code>."
+          "description": "Controlled state. Use with the corresponding change callback."
         },
         "defaultPressed": {
           "type": "boolean",
@@ -596,7 +596,7 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click the Toggle", "result": "Toggles pressed and fires onPressedChange", "priority": "high" },
+        "item1": { "action": "Click the Toggle", "result": "Toggles the pressed state and fires the change callback", "priority": "high" },
         "item2": { "action": "Press Space with Toggle focused", "result": "Toggles the state", "priority": "high" },
         "item3": { "action": "Press Enter with Toggle focused", "result": "Toggles the state (same as Space)", "priority": "medium" },
         "item4": { "action": "Click with disabled=true", "result": "Doesn't change state; aria-disabled true", "priority": "medium" }
@@ -794,7 +794,7 @@
           "type": "boolean",
           "default": "—",
           "required": "No",
-          "description": "Estado controlado. Usa con <code>onPressedChange</code>."
+          "description": "Estado controlado. Úsalo con el callback de cambio correspondiente."
         },
         "defaultPressed": {
           "type": "boolean",
@@ -917,7 +917,7 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en el Toggle", "result": "Alterna pressed y dispara onPressedChange", "priority": "high" },
+        "item1": { "action": "Hacer clic en el Toggle", "result": "Alterna el estado presionado y dispara el callback de cambio", "priority": "high" },
         "item2": { "action": "Pulsar Space con Toggle enfocado", "result": "Alterna el estado", "priority": "high" },
         "item3": { "action": "Pulsar Enter con Toggle enfocado", "result": "Alterna el estado (igual a Space)", "priority": "medium" },
         "item4": { "action": "Clic con disabled=true", "result": "No cambia el estado; aria-disabled true", "priority": "medium" }

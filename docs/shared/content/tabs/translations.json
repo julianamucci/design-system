@@ -157,7 +157,7 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Valor da tab ativa (controlado). Use junto com <code>onValueChange</code>."
+          "description": "Valor da tab ativa (controlado). Use junto com o callback de mudança."
         },
         "defaultValue": {
           "type": "string",
@@ -489,7 +489,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Active tab value (controlled). Use with <code>onValueChange</code>."
+          "description": "Active tab value (controlled). Use with the change callback."
         },
         "defaultValue": {
           "type": "string",
@@ -821,7 +821,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Valor de la tab activa (controlado). Usa con <code>onValueChange</code>."
+          "description": "Valor de la tab activa (controlado). Usa con el callback de cambio."
         },
         "defaultValue": {
           "type": "string",

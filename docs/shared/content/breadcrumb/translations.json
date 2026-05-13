@@ -151,7 +151,7 @@
       },
       "asChildLink": {
         "label": "Link customizado",
-        "trigger": "Usar <code>render</code> (React) ou <code>asChild</code> (Vue/Svelte) em <code>BreadcrumbLink</code>",
+        "trigger": "Compor com elemento filho em <code>BreadcrumbLink</code> (via prop apropriada de cada stack)",
         "behavior": "Renderiza um componente de roteamento (Link do router) em vez de <code>&lt;a&gt;</code> nativo"
       }
     },
@@ -236,7 +236,7 @@
       "title": "Notas de Implementação",
       "tip1": "O Breadcrumb gera automaticamente o JSON-LD <code>BreadcrumbList</code> quando passado ao hook <code>useSeoEffect</code> — não injete <code>&lt;script type=\"application/ld+json\"&gt;</code> manualmente.",
       "tip2": "No mobile, envolva o <code>BreadcrumbEllipsis</code> em um <code>DropdownMenu</code> para expor os níveis ocultos via clique; nunca os esconda permanentemente.",
-      "tip3": "Para integração com routers, use <code>render</code> (React) ou <code>asChild</code> (Vue/Svelte) — isso preserva o comportamento de pré-carregamento do router.",
+      "tip3": "Para integração com routers, componha com elemento filho no <code>BreadcrumbLink</code> — isso preserva o comportamento de pré-carregamento do router.",
       "tip4": "O label do <code>BreadcrumbPage</code> deve espelhar o <code>&lt;h1&gt;</code> da página — evita inconsistência entre navegação e conteúdo."
     },
     "analytics": {
@@ -467,7 +467,7 @@
       },
       "asChildLink": {
         "label": "Custom link",
-        "trigger": "Use <code>render</code> (React) or <code>asChild</code> (Vue/Svelte) on <code>BreadcrumbLink</code>",
+        "trigger": "Compose with child element on <code>BreadcrumbLink</code> (via each stack's appropriate prop)",
         "behavior": "Renders a routing component (router Link) instead of the native <code>&lt;a&gt;</code>"
       }
     },
@@ -552,7 +552,7 @@
       "title": "Implementation Notes",
       "tip1": "Breadcrumb automatically generates the <code>BreadcrumbList</code> JSON-LD when passed to the <code>useSeoEffect</code> hook — don't inject <code>&lt;script type=\"application/ld+json\"&gt;</code> manually.",
       "tip2": "On mobile, wrap <code>BreadcrumbEllipsis</code> in a <code>DropdownMenu</code> to expose the hidden levels on click; never hide them permanently.",
-      "tip3": "For router integration, use <code>render</code> (React) or <code>asChild</code> (Vue/Svelte) — this preserves the router's prefetch behavior.",
+      "tip3": "For router integration, compose with a child element on <code>BreadcrumbLink</code> — this preserves the router's prefetch behavior.",
       "tip4": "The <code>BreadcrumbPage</code> label must mirror the page's <code>&lt;h1&gt;</code> — prevents inconsistency between navigation and content."
     },
     "analytics": {
@@ -783,7 +783,7 @@
       },
       "asChildLink": {
         "label": "Enlace personalizado",
-        "trigger": "Usar <code>render</code> (React) o <code>asChild</code> (Vue/Svelte) en <code>BreadcrumbLink</code>",
+        "trigger": "Componer con elemento hijo en <code>BreadcrumbLink</code> (vía la prop apropiada de cada stack)",
         "behavior": "Renderiza un componente de routing (Link del router) en lugar del <code>&lt;a&gt;</code> nativo"
       }
     },
@@ -868,7 +868,7 @@
       "title": "Notas de Implementación",
       "tip1": "El Breadcrumb genera automáticamente el JSON-LD <code>BreadcrumbList</code> cuando se pasa al hook <code>useSeoEffect</code> — no inyectes <code>&lt;script type=\"application/ld+json\"&gt;</code> manualmente.",
       "tip2": "En mobile, envuelve el <code>BreadcrumbEllipsis</code> en un <code>DropdownMenu</code> para exponer los niveles ocultos al hacer clic; nunca los ocultes permanentemente.",
-      "tip3": "Para integración con routers, usa <code>render</code> (React) o <code>asChild</code> (Vue/Svelte) — esto preserva el comportamiento de prefetch del router.",
+      "tip3": "Para integración con routers, compón con elemento hijo en <code>BreadcrumbLink</code> — esto preserva el comportamiento de prefetch del router.",
       "tip4": "El label del <code>BreadcrumbPage</code> debe reflejar el <code>&lt;h1&gt;</code> de la página — evita inconsistencia entre navegación y contenido."
     },
     "analytics": {

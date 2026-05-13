@@ -155,7 +155,7 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Valor selecionado (controlado). Use junto com <code>onValueChange</code>."
+          "description": "Valor selecionado (controlado). Use junto com o callback de mudança."
         },
         "defaultValue": {
           "type": "string",
@@ -482,7 +482,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Selected value (controlled). Use with <code>onValueChange</code>."
+          "description": "Selected value (controlled). Use with the change callback."
         },
         "defaultValue": {
           "type": "string",
@@ -809,7 +809,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Valor seleccionado (controlado). Usa con <code>onValueChange</code>."
+          "description": "Valor seleccionado (controlado). Usa con el callback de cambio."
         },
         "defaultValue": {
           "type": "string",

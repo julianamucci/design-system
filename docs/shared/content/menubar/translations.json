@@ -27,7 +27,7 @@
       "item3": "<strong>MenubarTrigger</strong> — botão visível na barra que abre o menu; foca via setas Esquerda/Direita.",
       "item4": "<strong>MenubarContent</strong> — popup do menu, posicionado abaixo do Trigger; renderiza em portal.",
       "item5": "<strong>MenubarItem</strong> — ação executável; aceita <code>variant=\"destructive\"</code> e <code>inset</code>.",
-      "item6": "<strong>MenubarCheckboxItem</strong> — item com estado boolean (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item6": "<strong>MenubarCheckboxItem</strong> — item com estado boolean (valor controlado <code>checked</code> com callback de mudança).",
       "item7": "<strong>MenubarRadioGroup + MenubarRadioItem</strong> — grupo de seleção única.",
       "item8": "<strong>MenubarSub + SubTrigger + SubContent</strong> — submenu aninhado dentro de um Content.",
       "item9": "<strong>MenubarLabel</strong> — cabeçalho de grupo (não interativo); <strong>MenubarSeparator</strong> divide grupos; <strong>MenubarShortcut</strong> exibe atalho.",
@@ -320,11 +320,11 @@
       "item3": "<strong>Atalhos</strong>: <code>MenubarShortcut</code> é visual; o atalho real precisa ser registrado no consumidor (ex: <code>useHotkeys</code>).",
       "item4": "<strong>Mobile</strong>: Menubar em telas pequenas vira sub-ótimo — considere alternar para Sidebar ou DropdownMenu acima de breakpoint.",
       "item5": "<strong>Submenus</strong>: limite a 1 nível. Submenu aninhado em submenu confunde navegação por setas.",
-      "item6": "<strong>asChild no Trigger</strong>: usar com Button para herdar variantes; o Trigger já é <code>&lt;button&gt;</code>."
+      "item6": "<strong>Trigger via composição</strong>: delegar a renderização a um Button filho para herdar variantes; o Trigger já é <code>&lt;button&gt;</code>."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (label do Trigger), <code>label</code> (texto do Item). Disparar via <code>onValueChange</code> e <code>onSelect</code>."
+      "description": "Eventos relevantes: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (label do Trigger), <code>label</code> (texto do Item). Disparar via callbacks de mudança de valor e de seleção."
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -458,7 +458,7 @@
       "item3": "<strong>MenubarTrigger</strong> — visible button on the bar that opens the menu; focused via Left/Right arrows.",
       "item4": "<strong>MenubarContent</strong> — menu popup, positioned below Trigger; renders in a portal.",
       "item5": "<strong>MenubarItem</strong> — executable action; supports <code>variant=\"destructive\"</code> and <code>inset</code>.",
-      "item6": "<strong>MenubarCheckboxItem</strong> — item with boolean state (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item6": "<strong>MenubarCheckboxItem</strong> — item with boolean state (controlled <code>checked</code> value with change callback).",
       "item7": "<strong>MenubarRadioGroup + MenubarRadioItem</strong> — single-selection group.",
       "item8": "<strong>MenubarSub + SubTrigger + SubContent</strong> — nested submenu inside a Content.",
       "item9": "<strong>MenubarLabel</strong> — group heading (non-interactive); <strong>MenubarSeparator</strong> divides groups; <strong>MenubarShortcut</strong> displays a shortcut.",
@@ -751,11 +751,11 @@
       "item3": "<strong>Shortcuts</strong>: <code>MenubarShortcut</code> is visual; the actual shortcut needs to be registered by the consumer (e.g., <code>useHotkeys</code>).",
       "item4": "<strong>Mobile</strong>: Menubar on small screens becomes sub-optimal — consider switching to Sidebar or DropdownMenu above breakpoint.",
       "item5": "<strong>Submenus</strong>: limit to 1 level. Submenu nested in submenu confuses arrow-key navigation.",
-      "item6": "<strong>asChild on Trigger</strong>: use with Button to inherit variants; the Trigger is already a <code>&lt;button&gt;</code>."
+      "item6": "<strong>Trigger via composition</strong>: delegate rendering to a Button child to inherit variants; the Trigger is already a <code>&lt;button&gt;</code>."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant events: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (Trigger label), <code>label</code> (Item text). Dispatch via <code>onValueChange</code> and <code>onSelect</code>."
+      "description": "Relevant events: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (Trigger label), <code>label</code> (Item text). Dispatch via the value-change and select callbacks."
     },
     "testes": {
       "title": "Test Criteria",
@@ -889,7 +889,7 @@
       "item3": "<strong>MenubarTrigger</strong> — botón visible en la barra que abre el menú; foco vía flechas Izquierda/Derecha.",
       "item4": "<strong>MenubarContent</strong> — popup del menú, posicionado debajo del Trigger; renderiza en portal.",
       "item5": "<strong>MenubarItem</strong> — acción ejecutable; admite <code>variant=\"destructive\"</code> e <code>inset</code>.",
-      "item6": "<strong>MenubarCheckboxItem</strong> — item con estado boolean (<code>checked</code> + <code>onCheckedChange</code>).",
+      "item6": "<strong>MenubarCheckboxItem</strong> — item con estado boolean (valor controlado <code>checked</code> con callback de cambio).",
       "item7": "<strong>MenubarRadioGroup + MenubarRadioItem</strong> — grupo de selección única.",
       "item8": "<strong>MenubarSub + SubTrigger + SubContent</strong> — submenú anidado dentro de un Content.",
       "item9": "<strong>MenubarLabel</strong> — encabezado de grupo (no interactivo); <strong>MenubarSeparator</strong> divide grupos; <strong>MenubarShortcut</strong> muestra atajo.",
@@ -1182,11 +1182,11 @@
       "item3": "<strong>Atajos</strong>: <code>MenubarShortcut</code> es visual; el atajo real debe registrarse en el consumidor (ej.: <code>useHotkeys</code>).",
       "item4": "<strong>Mobile</strong>: Menubar en pantallas pequeñas se vuelve subóptimo — considera cambiar a Sidebar o DropdownMenu por encima de un breakpoint.",
       "item5": "<strong>Submenús</strong>: limita a 1 nivel. Submenú anidado en submenú confunde navegación por flechas.",
-      "item6": "<strong>asChild en Trigger</strong>: usa con Button para heredar variantes; el Trigger ya es un <code>&lt;button&gt;</code>."
+      "item6": "<strong>Trigger vía composición</strong>: delegar la renderización a un Button hijo para heredar variantes; el Trigger ya es un <code>&lt;button&gt;</code>."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (label del Trigger), <code>label</code> (texto del Item). Dispara vía <code>onValueChange</code> y <code>onSelect</code>."
+      "description": "Eventos relevantes: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (label del Trigger), <code>label</code> (texto del Item). Dispara vía los callbacks de cambio de valor y de selección."
     },
     "testes": {
       "title": "Criterios de Test",

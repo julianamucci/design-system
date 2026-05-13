@@ -30,7 +30,7 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>ToggleGroup</strong> — container com <code>type=\"single\"</code> ou <code>type=\"multiple\"</code>, controla seleção compartilhada e orientação.",
+      "item1": "<strong>ToggleGroup</strong> — container configurado em modo de seleção única ou múltipla; controla seleção compartilhada e orientação.",
       "item2": "<strong>ToggleGroupItem</strong> — Toggle individual com <code>value</code> único; ARIA controlado pelo grupo.",
       "item3": "<strong>aria-label</strong> no ToggleGroup — OBRIGATÓRIO para descrever o agrupamento.",
       "item4": "<strong>spacing</strong> — distância entre itens; <code>0</code> conecta as bordas (estilo segmented).",
@@ -41,7 +41,7 @@
       "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
-        "item1": "Use <code>type=\"single\"</code> para escolha exclusiva (ex: alinhamento) e <code>type=\"multiple\"</code> para combinação (ex: negrito + itálico).",
+        "item1": "Use o modo de seleção única para escolha exclusiva (ex: alinhamento) e o modo de seleção múltipla para combinação (ex: negrito + itálico).",
         "item2": "Forneça <code>aria-label</code> no <code>ToggleGroup</code> e em cada <code>ToggleGroupItem</code> icon-only.",
         "item3": "Use ToggleGroup em vez de múltiplos Toggle soltos quando representam uma escolha conjunta.",
         "item4": "Para configurações de sistema, use <code>Switch</code>; para form com submit, <code>Checkbox</code>."
@@ -123,8 +123,8 @@
         "vertical": "Vertical"
       },
       "styles": {
-        "single": "<code>type=\"single\"</code> — seleção exclusiva; <code>value</code> é string.",
-        "multiple": "<code>type=\"multiple\"</code> — seleção combinada; <code>value</code> é array de strings.",
+        "single": "Modo de seleção única — seleção exclusiva; <code>value</code> é string.",
+        "multiple": "Modo de seleção múltipla — seleção combinada; <code>value</code> é array de strings.",
         "vertical": "<code>orientation=\"vertical\"</code> — items empilhados; navegação por setas verticais."
       }
     },
@@ -276,7 +276,7 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
-      "item2": "<strong>Type define o value</strong> — <code>type=\"single\"</code> usa string; <code>type=\"multiple\"</code> usa array de strings.",
+      "item2": "<strong>Modo define o value</strong> — seleção única usa string; seleção múltipla usa array de strings.",
       "item3": "<strong>spacing=0</strong> — visual segmented (bordas conectadas); spacing maior cria botões separados.",
       "item4": "<strong>Variants herdadas</strong> — <code>variant</code> e <code>size</code> do grupo se aplicam a todos os items via Context."
     },
@@ -375,7 +375,7 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>ToggleGroup</strong> — container with <code>type=\"single\"</code> or <code>type=\"multiple\"</code>, controls shared selection and orientation.",
+      "item1": "<strong>ToggleGroup</strong> — container configured in single or multiple selection mode; controls shared selection and orientation.",
       "item2": "<strong>ToggleGroupItem</strong> — individual Toggle with unique <code>value</code>; ARIA managed by group.",
       "item3": "<strong>aria-label</strong> on ToggleGroup — REQUIRED to describe the grouping.",
       "item4": "<strong>spacing</strong> — distance between items; <code>0</code> connects borders (segmented style).",
@@ -386,7 +386,7 @@
       "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
-        "item1": "Use <code>type=\"single\"</code> for exclusive choice (e.g. alignment) and <code>type=\"multiple\"</code> for combination (e.g. bold + italic).",
+        "item1": "Use single selection mode for exclusive choice (e.g. alignment) and multiple selection mode for combination (e.g. bold + italic).",
         "item2": "Provide <code>aria-label</code> on <code>ToggleGroup</code> and each icon-only <code>ToggleGroupItem</code>.",
         "item3": "Use ToggleGroup instead of multiple loose Toggles when representing a joint choice.",
         "item4": "For system settings, use <code>Switch</code>; for form with submit, <code>Checkbox</code>."
@@ -468,8 +468,8 @@
         "vertical": "Vertical"
       },
       "styles": {
-        "single": "<code>type=\"single\"</code> — exclusive selection; <code>value</code> is a string.",
-        "multiple": "<code>type=\"multiple\"</code> — combined selection; <code>value</code> is array of strings.",
+        "single": "Single selection mode — exclusive selection; <code>value</code> is a string.",
+        "multiple": "Multiple selection mode — combined selection; <code>value</code> is array of strings.",
         "vertical": "<code>orientation=\"vertical\"</code> — stacked items; vertical arrow navigation."
       }
     },
@@ -621,7 +621,7 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
-      "item2": "<strong>Type defines value</strong> — <code>type=\"single\"</code> uses string; <code>type=\"multiple\"</code> uses array of strings.",
+      "item2": "<strong>Mode defines value</strong> — single selection uses string; multiple selection uses array of strings.",
       "item3": "<strong>spacing=0</strong> — segmented visual (connected borders); higher spacing creates separate buttons.",
       "item4": "<strong>Inherited variants</strong> — <code>variant</code> and <code>size</code> from group apply to all items via Context."
     },
@@ -720,7 +720,7 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>ToggleGroup</strong> — contenedor con <code>type=\"single\"</code> o <code>type=\"multiple\"</code>, controla selección compartida y orientación.",
+      "item1": "<strong>ToggleGroup</strong> — contenedor configurado en modo de selección única o múltiple; controla selección compartida y orientación.",
       "item2": "<strong>ToggleGroupItem</strong> — Toggle individual con <code>value</code> único; ARIA gestionado por el grupo.",
       "item3": "<strong>aria-label</strong> en ToggleGroup — OBLIGATORIO para describir la agrupación.",
       "item4": "<strong>spacing</strong> — distancia entre ítems; <code>0</code> conecta los bordes (estilo segmented).",
@@ -731,7 +731,7 @@
       "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
-        "item1": "Usa <code>type=\"single\"</code> para elección exclusiva (ej. alineación) y <code>type=\"multiple\"</code> para combinación (ej. negrita + itálica).",
+        "item1": "Usa el modo de selección única para elección exclusiva (ej. alineación) y el modo de selección múltiple para combinación (ej. negrita + itálica).",
         "item2": "Provee <code>aria-label</code> en <code>ToggleGroup</code> y en cada <code>ToggleGroupItem</code> icon-only.",
         "item3": "Usa ToggleGroup en vez de múltiples Toggle sueltos cuando representan una elección conjunta.",
         "item4": "Para configuraciones de sistema, usa <code>Switch</code>; para form con submit, <code>Checkbox</code>."
@@ -813,8 +813,8 @@
         "vertical": "Vertical"
       },
       "styles": {
-        "single": "<code>type=\"single\"</code> — selección exclusiva; <code>value</code> es string.",
-        "multiple": "<code>type=\"multiple\"</code> — selección combinada; <code>value</code> es array de strings.",
+        "single": "Modo de selección única — selección exclusiva; <code>value</code> es string.",
+        "multiple": "Modo de selección múltiple — selección combinada; <code>value</code> es array de strings.",
         "vertical": "<code>orientation=\"vertical\"</code> — ítems apilados; navegación por flechas verticales."
       }
     },
@@ -966,7 +966,7 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
-      "item2": "<strong>Type define el value</strong> — <code>type=\"single\"</code> usa string; <code>type=\"multiple\"</code> usa array de strings.",
+      "item2": "<strong>Modo define el value</strong> — selección única usa string; selección múltiple usa array de strings.",
       "item3": "<strong>spacing=0</strong> — visual segmented (bordes conectados); spacing mayor crea botones separados.",
       "item4": "<strong>Variants heredados</strong> — <code>variant</code> y <code>size</code> del grupo se aplican a todos los ítems vía Context."
     },

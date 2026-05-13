@@ -6,7 +6,7 @@
     "description": "Navegação principal persistente da aplicação com suporte a recolhimento, modo flutuante e overlay em mobile.",
     "seo": {
       "title": "Sidebar — Layout · Design System",
-      "description": "Documentação da Sidebar: variantes sidebar, floating e inset, collapsible offcanvas e icon, acessibilidade WCAG e atalho Ctrl+B.",
+      "description": "Documentação da Sidebar: variantes sidebar, floating e inset, modos de recolhimento offcanvas e icon, acessibilidade WCAG e atalho Ctrl+B.",
       "aiSummary": "Componente Sidebar com 3 variantes (sidebar, floating, inset), 3 modos de recolhimento (offcanvas, icon, none), overlay mobile via Sheet e atalho de teclado Ctrl+B.",
       "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-current",
       "aiIntent": "informational"
@@ -29,7 +29,7 @@
     "anatomy": {
       "title": "Anatomia",
       "item1": "<strong>SidebarProvider</strong> — contexto raiz que gerencia estado open/collapsed, cookie de persistência e atalho Ctrl+B.",
-      "item2": "<strong>Sidebar</strong> — container principal com props <code>side</code>, <code>variant</code> e <code>collapsible</code>.",
+      "item2": "<strong>Sidebar</strong> — container principal com props para lado, variante visual e modo de recolhimento.",
       "item3": "<strong>SidebarHeader</strong> — área superior da sidebar; altura deve coincidir com a navbar.",
       "item4": "<strong>SidebarContent</strong> — área de rolagem central com os grupos de navegação.",
       "item5": "<strong>SidebarFooter</strong> — área inferior fixa; perfil do usuário, configurações.",
@@ -68,7 +68,7 @@
         "item2": { "s": "Navegação simples (3-5 itens)", "u": "Não", "a": "NavigationMenu ou Tabs" },
         "item3": { "s": "Dashboard flutuante com conteúdo central", "u": "Sim, variant floating", "a": "-" },
         "item4": { "s": "Layout encaixado com bordas arredondadas", "u": "Sim, variant inset", "a": "-" },
-        "item5": { "s": "Sidebar sempre visível, sem toggle", "u": "Sim, collapsible none", "a": "-" }
+        "item5": { "s": "Sidebar sempre visível, sem toggle", "u": "Sim, modo fixo", "a": "-" }
       },
       "do": {
         "title": "Use quando",
@@ -107,7 +107,7 @@
     "variants": {
       "title": "Variantes",
       "variantProp": "Prop variant",
-      "collapsibleProp": "Prop collapsible",
+      "collapsibleProp": "Modo de recolhimento",
       "sideProp": "Prop side",
       "sidebar": "Sidebar padrão colada na borda da viewport. Empurra o conteúdo ao expandir (push mode).",
       "floating": "Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.",
@@ -132,13 +132,13 @@
       },
       "collapsed": {
         "label": "Recolhido (icon)",
-        "trigger": "<code>collapsible=\"icon\"</code> + toggle",
+        "trigger": "Modo de recolhimento <strong>icon</strong> + toggle",
         "behavior": "Sidebar reduzida a 3rem. Apenas ícones visíveis; tooltips ao hover. data-state=\"collapsed\""
       },
       "offcanvas": {
         "label": "Offcanvas",
-        "trigger": "<code>collapsible=\"offcanvas\"</code> + toggle",
-        "behavior": "Sidebar desliza para fora da viewport. Largura retorna a 0. data-collapsible=\"offcanvas\""
+        "trigger": "Modo de recolhimento <strong>offcanvas</strong> + toggle",
+        "behavior": "Sidebar desliza para fora da viewport. Largura retorna a 0. (atributo de dados offcanvas)"
       },
       "mobile": {
         "label": "Mobile (overlay)",
@@ -147,7 +147,7 @@
       },
       "hidden": {
         "label": "Fixo (none)",
-        "trigger": "<code>collapsible=\"none\"</code>",
+        "trigger": "Modo de recolhimento <strong>none</strong>",
         "behavior": "Sidebar sempre visível. Sem toggle. Sem data-state de collapsed."
       }
     },
@@ -167,7 +167,7 @@
       },
       "provider": {
         "defaultOpen": "Estado inicial da sidebar (não controlado).",
-        "open": "Estado controlado. Use com <code>onOpenChange</code>.",
+        "open": "Estado controlado. Use junto com o callback de mudança.",
         "onOpenChange": "Callback chamado ao alternar estado. Habilita controle externo.",
         "children": "Conteúdo do layout — deve incluir Sidebar e SidebarInset."
       },
@@ -262,7 +262,7 @@
       "title": "Notas de Implementação",
       "tip1": "O <code>SidebarProvider</code> persiste o estado em cookie (<code>sidebar_state</code>, TTL de 7 dias). Em SSR, leia o cookie no servidor e passe <code>defaultOpen</code> para evitar flash de conteúdo.",
       "tip2": "O <code>SidebarMenuButton</code> usa <code>useRender</code> do Base UI — para links de roteador, passe <code>render={&lt;Link href=\"...\" /&gt;}</code> ou o equivalente do seu framework.",
-      "tip3": "No modo <code>collapsible=\"icon\"</code>, elementos com <code>group-data-[collapsible=icon]:hidden</code> são ocultados automaticamente — labels de grupo, subitens e badges desaparecem sem CSS extra.",
+      "tip3": "No modo de recolhimento <strong>icon</strong>, elementos marcados com a classe utilitária correspondente ao estado recolhido são ocultados automaticamente — labels de grupo, subitens e badges desaparecem sem CSS extra.",
       "tip4": "A largura da sidebar é definida pelas variáveis CSS <code>--sidebar-width</code> (16rem) e <code>--sidebar-width-icon</code> (3rem). Sobrescreva no <code>style</code> do <code>SidebarProvider</code> se necessário.",
       "tip5": "Nunca aninhe <code>SidebarProvider</code> — ele fornece contexto global de layout. Use apenas uma instância por página."
     },
@@ -298,8 +298,8 @@
         "item1": { "action": "Clicar em SidebarTrigger", "result": "toggleSidebar() chamado; data-state alterna entre expanded e collapsed", "priority": "high" },
         "item2": { "action": "Pressionar Ctrl+B", "result": "toggleSidebar() chamado; estado da sidebar alterna", "priority": "high" },
         "item3": { "action": "Redimensionar para viewport mobile", "result": "Sidebar renderiza como Sheet; SidebarTrigger abre o overlay", "priority": "high" },
-        "item4": { "action": "Renderizar collapsible=\"icon\"", "result": "Labels ocultados; sidebar reduz para --sidebar-width-icon (3rem)", "priority": "high" },
-        "item5": { "action": "Renderizar collapsible=\"none\"", "result": "Sidebar sempre visível; sem toggle; sem data-state de collapsed", "priority": "medium" },
+        "item4": { "action": "Renderizar com modo de recolhimento icon", "result": "Labels ocultados; sidebar reduz para --sidebar-width-icon (3rem)", "priority": "high" },
+        "item5": { "action": "Renderizar com modo de recolhimento none", "result": "Sidebar sempre visível; sem toggle; sem data-state de collapsed", "priority": "medium" },
         "item6": { "action": "SidebarMenuButton com isActive=true", "result": "data-active presente; estilos de destaque aplicados; aria-current=\"page\" acessível", "priority": "high" },
         "item7": { "action": "SidebarMenuButton com tooltip no modo icon", "result": "Tooltip exibido ao hover apenas quando state === \"collapsed\"", "priority": "medium" },
         "item8": { "action": "Renderizar variant floating", "result": "Sidebar com border-radius, shadow e ring de sidebar-border aplicados", "priority": "medium" },
@@ -351,11 +351,11 @@
     "title": "Sidebar",
     "category": "Layout",
     "type": "Component",
-    "description": "Persistent primary navigation for applications with collapsible support, floating mode, and mobile overlay.",
+    "description": "Persistent primary navigation for applications with collapse modes, floating mode, and mobile overlay.",
     "seo": {
       "title": "Sidebar — Layout · Design System",
-      "description": "Sidebar documentation: sidebar, floating and inset variants, offcanvas and icon collapsible modes, WCAG accessibility and Ctrl+B shortcut.",
-      "aiSummary": "Sidebar component with 3 variants (sidebar, floating, inset), 3 collapsible modes (offcanvas, icon, none), mobile Sheet overlay, and Ctrl+B keyboard shortcut.",
+      "description": "Sidebar documentation: sidebar, floating and inset variants, offcanvas and icon collapse modes, WCAG accessibility and Ctrl+B shortcut.",
+      "aiSummary": "Sidebar component with 3 variants (sidebar, floating, inset), 3 collapse modes (offcanvas, icon, none), mobile Sheet overlay, and Ctrl+B keyboard shortcut.",
       "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-current",
       "aiIntent": "informational"
     },
@@ -377,7 +377,7 @@
     "anatomy": {
       "title": "Anatomy",
       "item1": "<strong>SidebarProvider</strong> — root context managing open/collapsed state, persistence cookie, and Ctrl+B shortcut.",
-      "item2": "<strong>Sidebar</strong> — main container with <code>side</code>, <code>variant</code>, and <code>collapsible</code> props.",
+      "item2": "<strong>Sidebar</strong> — main container with props for side, visual variant, and collapse mode.",
       "item3": "<strong>SidebarHeader</strong> — top area of the sidebar; height should match the navbar.",
       "item4": "<strong>SidebarContent</strong> — central scrollable area containing navigation groups.",
       "item5": "<strong>SidebarFooter</strong> — fixed bottom area; user profile, settings.",
@@ -416,7 +416,7 @@
         "item2": { "s": "Simple navigation (3-5 items)", "u": "No", "a": "NavigationMenu or Tabs" },
         "item3": { "s": "Floating dashboard with central content", "u": "Yes, floating variant", "a": "-" },
         "item4": { "s": "Inset layout with rounded content", "u": "Yes, inset variant", "a": "-" },
-        "item5": { "s": "Always-visible sidebar without toggle", "u": "Yes, collapsible none", "a": "-" }
+        "item5": { "s": "Always-visible sidebar without toggle", "u": "Yes, fixed mode", "a": "-" }
       },
       "do": {
         "title": "Use when",
@@ -455,7 +455,7 @@
     "variants": {
       "title": "Variants",
       "variantProp": "variant prop",
-      "collapsibleProp": "collapsible prop",
+      "collapsibleProp": "Collapse mode",
       "sideProp": "side prop",
       "sidebar": "Default sidebar attached to the viewport edge. Pushes content when expanded (push mode).",
       "floating": "Sidebar with rounded border and shadow, floating over a small padding. Does not push content.",
@@ -480,13 +480,13 @@
       },
       "collapsed": {
         "label": "Collapsed (icon)",
-        "trigger": "<code>collapsible=\"icon\"</code> + toggle",
+        "trigger": "Collapse mode <strong>icon</strong> + toggle",
         "behavior": "Sidebar reduced to 3rem. Only icons visible; tooltips on hover. data-state=\"collapsed\""
       },
       "offcanvas": {
         "label": "Offcanvas",
-        "trigger": "<code>collapsible=\"offcanvas\"</code> + toggle",
-        "behavior": "Sidebar slides out of viewport. Width returns to 0. data-collapsible=\"offcanvas\""
+        "trigger": "Collapse mode <strong>offcanvas</strong> + toggle",
+        "behavior": "Sidebar slides out of viewport. Width returns to 0. (offcanvas data attribute)"
       },
       "mobile": {
         "label": "Mobile (overlay)",
@@ -495,7 +495,7 @@
       },
       "hidden": {
         "label": "Fixed (none)",
-        "trigger": "<code>collapsible=\"none\"</code>",
+        "trigger": "Collapse mode <strong>none</strong>",
         "behavior": "Sidebar always visible. No toggle. No collapsed data-state."
       }
     },
@@ -515,7 +515,7 @@
       },
       "provider": {
         "defaultOpen": "Initial sidebar state (uncontrolled).",
-        "open": "Controlled state. Use with <code>onOpenChange</code>.",
+        "open": "Controlled state. Use together with the change callback.",
         "onOpenChange": "Callback fired on state toggle. Enables external control.",
         "children": "Layout content — must include Sidebar and SidebarInset."
       },
@@ -610,7 +610,7 @@
       "title": "Implementation Notes",
       "tip1": "The <code>SidebarProvider</code> persists state in a cookie (<code>sidebar_state</code>, 7-day TTL). In SSR, read the cookie server-side and pass <code>defaultOpen</code> to avoid content flash.",
       "tip2": "The <code>SidebarMenuButton</code> uses Base UI's <code>useRender</code> — for router links, pass <code>render={&lt;Link href=\"...\" /&gt;}</code> or the equivalent for your framework.",
-      "tip3": "In <code>collapsible=\"icon\"</code> mode, elements with <code>group-data-[collapsible=icon]:hidden</code> are hidden automatically — group labels, sub-items, and badges disappear without extra CSS.",
+      "tip3": "In the <strong>icon</strong> collapse mode, elements marked with the utility class that targets the collapsed state are hidden automatically — group labels, sub-items, and badges disappear without extra CSS.",
       "tip4": "Sidebar width is set by CSS variables <code>--sidebar-width</code> (16rem) and <code>--sidebar-width-icon</code> (3rem). Override in the <code>SidebarProvider</code> <code>style</code> prop if needed.",
       "tip5": "Never nest <code>SidebarProvider</code> — it provides global layout context. Use only one instance per page."
     },
@@ -646,8 +646,8 @@
         "item1": { "action": "Click SidebarTrigger", "result": "toggleSidebar() called; data-state toggles between expanded and collapsed", "priority": "high" },
         "item2": { "action": "Press Ctrl+B", "result": "toggleSidebar() called; sidebar state toggles", "priority": "high" },
         "item3": { "action": "Resize to mobile viewport", "result": "Sidebar renders as Sheet; SidebarTrigger opens the overlay", "priority": "high" },
-        "item4": { "action": "Render collapsible=\"icon\"", "result": "Labels hidden; sidebar reduces to --sidebar-width-icon (3rem)", "priority": "high" },
-        "item5": { "action": "Render collapsible=\"none\"", "result": "Sidebar always visible; no toggle; no collapsed data-state", "priority": "medium" },
+        "item4": { "action": "Render with collapse mode icon", "result": "Labels hidden; sidebar reduces to --sidebar-width-icon (3rem)", "priority": "high" },
+        "item5": { "action": "Render with collapse mode none", "result": "Sidebar always visible; no toggle; no collapsed data-state", "priority": "medium" },
         "item6": { "action": "SidebarMenuButton with isActive=true", "result": "data-active present; highlight styles applied; aria-current=\"page\" accessible", "priority": "high" },
         "item7": { "action": "SidebarMenuButton with tooltip in icon mode", "result": "Tooltip shown on hover only when state === \"collapsed\"", "priority": "medium" },
         "item8": { "action": "Render floating variant", "result": "Sidebar with border-radius, shadow, and sidebar-border ring applied", "priority": "medium" },
@@ -702,7 +702,7 @@
     "description": "Navegación principal persistente de la aplicación con soporte para colapso, modo flotante y overlay en mobile.",
     "seo": {
       "title": "Sidebar — Layout · Design System",
-      "description": "Documentación del Sidebar: variantes sidebar, floating e inset, collapsible offcanvas e icon, accesibilidad WCAG y atajo Ctrl+B.",
+      "description": "Documentación del Sidebar: variantes sidebar, floating e inset, modos de colapso offcanvas e icon, accesibilidad WCAG y atajo Ctrl+B.",
       "aiSummary": "Componente Sidebar con 3 variantes (sidebar, floating, inset), 3 modos de colapso (offcanvas, icon, none), overlay mobile vía Sheet y atajo de teclado Ctrl+B.",
       "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-current",
       "aiIntent": "informational"
@@ -725,7 +725,7 @@
     "anatomy": {
       "title": "Anatomía",
       "item1": "<strong>SidebarProvider</strong> — contexto raíz que gestiona el estado open/collapsed, cookie de persistencia y atajo Ctrl+B.",
-      "item2": "<strong>Sidebar</strong> — contenedor principal con props <code>side</code>, <code>variant</code> y <code>collapsible</code>.",
+      "item2": "<strong>Sidebar</strong> — contenedor principal con props para lado, variante visual y modo de colapso.",
       "item3": "<strong>SidebarHeader</strong> — área superior del sidebar; la altura debe coincidir con la navbar.",
       "item4": "<strong>SidebarContent</strong> — área de desplazamiento central con los grupos de navegación.",
       "item5": "<strong>SidebarFooter</strong> — área inferior fija; perfil del usuario, configuración.",
@@ -764,7 +764,7 @@
         "item2": { "s": "Navegación simple (3-5 ítems)", "u": "No", "a": "NavigationMenu o Tabs" },
         "item3": { "s": "Dashboard flotante con contenido central", "u": "Sí, variante floating", "a": "-" },
         "item4": { "s": "Layout encajado con bordes redondeados", "u": "Sí, variante inset", "a": "-" },
-        "item5": { "s": "Sidebar siempre visible, sin toggle", "u": "Sí, collapsible none", "a": "-" }
+        "item5": { "s": "Sidebar siempre visible, sin toggle", "u": "Sí, modo fijo", "a": "-" }
       },
       "do": {
         "title": "Úsalo cuando",
@@ -803,7 +803,7 @@
     "variants": {
       "title": "Variantes",
       "variantProp": "Prop variant",
-      "collapsibleProp": "Prop collapsible",
+      "collapsibleProp": "Modo de colapso",
       "sideProp": "Prop side",
       "sidebar": "Sidebar estándar pegada al borde del viewport. Empuja el contenido al expandir (push mode).",
       "floating": "Sidebar con borde redondeado y sombra, flotando sobre un pequeño padding. No empuja el contenido.",
@@ -828,13 +828,13 @@
       },
       "collapsed": {
         "label": "Colapsado (icon)",
-        "trigger": "<code>collapsible=\"icon\"</code> + toggle",
+        "trigger": "Modo de colapso <strong>icon</strong> + toggle",
         "behavior": "Sidebar reducida a 3rem. Solo íconos visibles; tooltips al hover. data-state=\"collapsed\""
       },
       "offcanvas": {
         "label": "Offcanvas",
-        "trigger": "<code>collapsible=\"offcanvas\"</code> + toggle",
-        "behavior": "Sidebar desliza fuera del viewport. Ancho retorna a 0. data-collapsible=\"offcanvas\""
+        "trigger": "Modo de colapso <strong>offcanvas</strong> + toggle",
+        "behavior": "Sidebar desliza fuera del viewport. Ancho retorna a 0. (atributo de datos offcanvas)"
       },
       "mobile": {
         "label": "Mobile (overlay)",
@@ -843,7 +843,7 @@
       },
       "hidden": {
         "label": "Fijo (none)",
-        "trigger": "<code>collapsible=\"none\"</code>",
+        "trigger": "Modo de colapso <strong>none</strong>",
         "behavior": "Sidebar siempre visible. Sin toggle. Sin data-state de collapsed."
       }
     },
@@ -863,7 +863,7 @@
       },
       "provider": {
         "defaultOpen": "Estado inicial del sidebar (no controlado).",
-        "open": "Estado controlado. Usar con <code>onOpenChange</code>.",
+        "open": "Estado controlado. Úsalo junto con el callback de cambio.",
         "onOpenChange": "Callback llamado al alternar estado. Habilita control externo.",
         "children": "Contenido del layout — debe incluir Sidebar y SidebarInset."
       },
@@ -958,7 +958,7 @@
       "title": "Notas de Implementación",
       "tip1": "El <code>SidebarProvider</code> persiste el estado en cookie (<code>sidebar_state</code>, TTL de 7 días). En SSR, lee el cookie en el servidor y pasa <code>defaultOpen</code> para evitar flash de contenido.",
       "tip2": "El <code>SidebarMenuButton</code> usa <code>useRender</code> de Base UI — para links de enrutador, pasa <code>render={&lt;Link href=\"...\" /&gt;}</code> o el equivalente de tu framework.",
-      "tip3": "En modo <code>collapsible=\"icon\"</code>, los elementos con <code>group-data-[collapsible=icon]:hidden</code> se ocultan automáticamente — labels de grupo, subítems y badges desaparecen sin CSS extra.",
+      "tip3": "En el modo de colapso <strong>icon</strong>, los elementos marcados con la clase utilitaria que apunta al estado colapsado se ocultan automáticamente — labels de grupo, subítems y badges desaparecen sin CSS extra.",
       "tip4": "El ancho del sidebar se define por las variables CSS <code>--sidebar-width</code> (16rem) y <code>--sidebar-width-icon</code> (3rem). Sobrescribe en el prop <code>style</code> del <code>SidebarProvider</code> si es necesario.",
       "tip5": "Nunca anides <code>SidebarProvider</code> — provee contexto global de layout. Usa solo una instancia por página."
     },
@@ -994,8 +994,8 @@
         "item1": { "action": "Hacer clic en SidebarTrigger", "result": "toggleSidebar() llamado; data-state alterna entre expanded y collapsed", "priority": "high" },
         "item2": { "action": "Presionar Ctrl+B", "result": "toggleSidebar() llamado; estado del sidebar alterna", "priority": "high" },
         "item3": { "action": "Redimensionar a viewport mobile", "result": "Sidebar se renderiza como Sheet; SidebarTrigger abre el overlay", "priority": "high" },
-        "item4": { "action": "Renderizar collapsible=\"icon\"", "result": "Labels ocultos; sidebar reduce a --sidebar-width-icon (3rem)", "priority": "high" },
-        "item5": { "action": "Renderizar collapsible=\"none\"", "result": "Sidebar siempre visible; sin toggle; sin data-state de collapsed", "priority": "medium" },
+        "item4": { "action": "Renderizar con modo de colapso icon", "result": "Labels ocultos; sidebar reduce a --sidebar-width-icon (3rem)", "priority": "high" },
+        "item5": { "action": "Renderizar con modo de colapso none", "result": "Sidebar siempre visible; sin toggle; sin data-state de collapsed", "priority": "medium" },
         "item6": { "action": "SidebarMenuButton con isActive=true", "result": "data-active presente; estilos de destacado aplicados; aria-current=\"page\" accesible", "priority": "high" },
         "item7": { "action": "SidebarMenuButton con tooltip en modo icon", "result": "Tooltip mostrado al hover solo cuando state === \"collapsed\"", "priority": "medium" },
         "item8": { "action": "Renderizar variante floating", "result": "Sidebar con border-radius, sombra y ring de sidebar-border aplicados", "priority": "medium" },

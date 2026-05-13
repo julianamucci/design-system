@@ -22,14 +22,14 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>Drawer (Root)</strong> — provider que controla estado aberto/fechado via <code>open</code> + <code>onOpenChange</code> ou <code>defaultOpen</code>.",
-      "item2": "<strong>DrawerTrigger</strong> — botão ou elemento que abre o painel; usar <code>asChild</code> para herdar estilos do filho.",
+      "item1": "<strong>Drawer (Root)</strong> — provider que controla estado aberto/fechado via estado controlado + callback de mudança ou valor inicial.",
+      "item2": "<strong>DrawerTrigger</strong> — botão ou elemento que abre o painel; componha com elemento filho para herdar seus estilos.",
       "item3": "<strong>DrawerContent</strong> — painel deslizante com gestos; renderiza em portal com overlay e focus trap.",
       "item4": "<strong>DrawerHeader</strong> — agrupa <code>DrawerTitle</code> e <code>DrawerDescription</code> com layout responsivo.",
       "item5": "<strong>DrawerTitle</strong> — título do drawer (obrigatório para <code>aria-labelledby</code> automático).",
       "item6": "<strong>DrawerDescription</strong> — descrição complementar (opcional, usado para <code>aria-describedby</code>).",
       "item7": "<strong>DrawerFooter</strong> — área de ações no rodapé (botões de confirmação/cancelamento).",
-      "item8": "<strong>DrawerClose</strong> — botão para fechar; usar <code>asChild</code> com Button.",
+      "item8": "<strong>DrawerClose</strong> — botão para fechar; componha com Button como elemento filho.",
       "structureLabel": "Estrutura básica:",
       "structureCode": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descrição complementar.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* conteúdo */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
     },
@@ -63,7 +63,7 @@
         "item3": {
           "s": "Menu de navegação mobile",
           "u": "Drawer direction=left",
-          "a": "Sidebar collapsible"
+          "a": "Sidebar com modo recolhido"
         },
         "item4": {
           "s": "Notificação dispensável",
@@ -163,7 +163,7 @@
       "descriptions": {
         "closed": "Estado padrão — apenas o trigger renderizado; portal vazio.",
         "open": "Painel visível com overlay; focus trap ativo; ESC e swipe fecham.",
-        "controlled": "<code>open</code> + <code>onOpenChange</code> permitem gerenciar estado externamente (útil para abrir via lógica de negócio)."
+        "controlled": "Estado controlado + callback de mudança permitem gerenciar o estado externamente (útil para abrir via lógica de negócio)."
       }
     },
     "props": {
@@ -311,7 +311,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes do Drawer: <code>drawer_open</code> e <code>drawer_close</code>. Payload obrigatório: <code>component='drawer'</code>, <code>location</code> (contexto da página), <code>label</code> (título do drawer). Disparar via <code>onOpenChange</code> no componente consumidor."
+      "description": "Eventos relevantes do Drawer: <code>drawer_open</code> e <code>drawer_close</code>. Payload obrigatório: <code>component='drawer'</code>, <code>location</code> (contexto da página), <code>label</code> (título do drawer). Disparar via callback de mudança no componente consumidor."
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -344,7 +344,7 @@
           "priority": "high"
         },
         "item6": {
-          "action": "Modo controlado (open + onOpenChange)",
+          "action": "Modo controlado (estado externo + callback de mudança)",
           "result": "Estado externo controla abertura/fechamento",
           "priority": "medium"
         }
@@ -429,14 +429,14 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>Drawer (Root)</strong> — provider that controls open/closed state via <code>open</code> + <code>onOpenChange</code> or <code>defaultOpen</code>.",
-      "item2": "<strong>DrawerTrigger</strong> — button or element that opens the panel; use <code>asChild</code> to inherit child styles.",
+      "item1": "<strong>Drawer (Root)</strong> — provider that controls open/closed state via a controlled state + change callback or initial value.",
+      "item2": "<strong>DrawerTrigger</strong> — button or element that opens the panel; compose with a child element to inherit its styles.",
       "item3": "<strong>DrawerContent</strong> — sliding panel with gestures; renders in a portal with overlay and focus trap.",
       "item4": "<strong>DrawerHeader</strong> — groups <code>DrawerTitle</code> and <code>DrawerDescription</code> with responsive layout.",
       "item5": "<strong>DrawerTitle</strong> — drawer title (required for automatic <code>aria-labelledby</code>).",
       "item6": "<strong>DrawerDescription</strong> — complementary description (optional, used for <code>aria-describedby</code>).",
       "item7": "<strong>DrawerFooter</strong> — footer action area (confirm/cancel buttons).",
-      "item8": "<strong>DrawerClose</strong> — close button; use <code>asChild</code> with Button.",
+      "item8": "<strong>DrawerClose</strong> — close button; compose with Button as a child element.",
       "structureLabel": "Basic structure:",
       "structureCode": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Complementary description.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* content */}</div>\n    <DrawerFooter>\n      <Button>Confirm</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
     },
@@ -570,7 +570,7 @@
       "descriptions": {
         "closed": "Default state — only the trigger is rendered; portal is empty.",
         "open": "Visible panel with overlay; focus trap active; ESC and swipe close it.",
-        "controlled": "<code>open</code> + <code>onOpenChange</code> manage state externally (useful for opening via business logic)."
+        "controlled": "A controlled state + change callback manage state externally (useful for opening via business logic)."
       }
     },
     "props": {
@@ -718,7 +718,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant Drawer events: <code>drawer_open</code> and <code>drawer_close</code>. Required payload: <code>component='drawer'</code>, <code>location</code> (page context), <code>label</code> (drawer title). Dispatch via <code>onOpenChange</code> in the consumer component."
+      "description": "Relevant Drawer events: <code>drawer_open</code> and <code>drawer_close</code>. Required payload: <code>component='drawer'</code>, <code>location</code> (page context), <code>label</code> (drawer title). Dispatch via the change callback in the consumer component."
     },
     "testes": {
       "title": "Test Criteria",
@@ -751,7 +751,7 @@
           "priority": "high"
         },
         "item6": {
-          "action": "Controlled mode (open + onOpenChange)",
+          "action": "Controlled mode (external state + change callback)",
           "result": "External state controls opening/closing",
           "priority": "medium"
         }
@@ -836,14 +836,14 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>Drawer (Root)</strong> — provider que controla el estado abierto/cerrado vía <code>open</code> + <code>onOpenChange</code> o <code>defaultOpen</code>.",
-      "item2": "<strong>DrawerTrigger</strong> — botón o elemento que abre el panel; usa <code>asChild</code> para heredar estilos del hijo.",
+      "item1": "<strong>Drawer (Root)</strong> — provider que controla el estado abierto/cerrado vía estado controlado + callback de cambio o valor inicial.",
+      "item2": "<strong>DrawerTrigger</strong> — botón o elemento que abre el panel; compón con un elemento hijo para heredar sus estilos.",
       "item3": "<strong>DrawerContent</strong> — panel deslizante con gestos; renderiza en portal con overlay y focus trap.",
       "item4": "<strong>DrawerHeader</strong> — agrupa <code>DrawerTitle</code> y <code>DrawerDescription</code> con layout responsive.",
       "item5": "<strong>DrawerTitle</strong> — título del drawer (obligatorio para <code>aria-labelledby</code> automático).",
       "item6": "<strong>DrawerDescription</strong> — descripción complementaria (opcional, usado para <code>aria-describedby</code>).",
       "item7": "<strong>DrawerFooter</strong> — área de acciones del pie (botones de confirmación/cancelación).",
-      "item8": "<strong>DrawerClose</strong> — botón para cerrar; usa <code>asChild</code> con Button.",
+      "item8": "<strong>DrawerClose</strong> — botón para cerrar; compón con Button como elemento hijo.",
       "structureLabel": "Estructura básica:",
       "structureCode": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descripción complementaria.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* contenido */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
     },
@@ -877,7 +877,7 @@
         "item3": {
           "s": "Menú de navegación mobile",
           "u": "Drawer direction=left",
-          "a": "Sidebar collapsible"
+          "a": "Sidebar con modo recogido"
         },
         "item4": {
           "s": "Notificación dispensable",
@@ -977,7 +977,7 @@
       "descriptions": {
         "closed": "Estado predeterminado — solo el trigger renderizado; portal vacío.",
         "open": "Panel visible con overlay; focus trap activo; ESC y swipe lo cierran.",
-        "controlled": "<code>open</code> + <code>onOpenChange</code> permiten gestionar estado externamente (útil para abrir vía lógica de negocio)."
+        "controlled": "Estado controlado + callback de cambio permiten gestionar el estado externamente (útil para abrir vía lógica de negocio)."
       }
     },
     "props": {
@@ -1125,7 +1125,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes del Drawer: <code>drawer_open</code> y <code>drawer_close</code>. Payload obligatorio: <code>component='drawer'</code>, <code>location</code> (contexto de página), <code>label</code> (título del drawer). Dispara vía <code>onOpenChange</code> en el componente consumidor."
+      "description": "Eventos relevantes del Drawer: <code>drawer_open</code> y <code>drawer_close</code>. Payload obligatorio: <code>component='drawer'</code>, <code>location</code> (contexto de página), <code>label</code> (título del drawer). Dispara vía el callback de cambio en el componente consumidor."
     },
     "testes": {
       "title": "Criterios de Test",
@@ -1158,7 +1158,7 @@
           "priority": "high"
         },
         "item6": {
-          "action": "Modo controlado (open + onOpenChange)",
+          "action": "Modo controlado (estado externo + callback de cambio)",
           "result": "Estado externo controla apertura/cierre",
           "priority": "medium"
         }

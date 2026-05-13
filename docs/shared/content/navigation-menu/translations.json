@@ -317,7 +317,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (texto do Trigger/Link), <code>destination</code> (href). Disparar via <code>onValueChange</code> e <code>onClick</code> nos Links."
+      "description": "Eventos relevantes: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (texto do Trigger/Link), <code>destination</code> (href). Disparar via callback de mudança e <code>onClick</code> nos Links."
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -735,7 +735,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant events: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (Trigger/Link text), <code>destination</code> (href). Dispatch via <code>onValueChange</code> and <code>onClick</code> on Links."
+      "description": "Relevant events: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (Trigger/Link text), <code>destination</code> (href). Dispatch via the change callback and <code>onClick</code> on Links."
     },
     "testes": {
       "title": "Test Criteria",
@@ -1153,7 +1153,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (texto del Trigger/Link), <code>destination</code> (href). Dispara vía <code>onValueChange</code> y <code>onClick</code> en los Links."
+      "description": "Eventos relevantes: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (texto del Trigger/Link), <code>destination</code> (href). Dispara vía callback de cambio y <code>onClick</code> en los Links."
     },
     "testes": {
       "title": "Criterios de Test",

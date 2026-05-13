@@ -25,7 +25,7 @@
     "anatomy": {
       "title": "Anatomia",
       "item1": "<strong>Dialog</strong> — container raiz que gerencia o estado de abertura e o foco.",
-      "item2": "<strong>DialogTrigger</strong> — elemento que dispara a abertura. Compõe com <code>Button</code> via <code>asChild</code>.",
+      "item2": "<strong>DialogTrigger</strong> — elemento que dispara a abertura. Compõe com <code>Button</code> via composição, delegando a renderização ao filho.",
       "item3": "<strong>DialogPortal</strong> — renderiza o conteúdo fora da árvore do pai, isolando de overflow e transform.",
       "item4": "<strong>DialogOverlay</strong> — backdrop semi-transparente com blur. Captura clique fora para fechar.",
       "item5": "<strong>DialogContent</strong> — painel modal com <code>role=\"dialog\"</code>, <code>aria-modal</code>, focus trap e botão Close opcional.",
@@ -191,7 +191,7 @@
         "default": "Padrão",
         "required": "Obrigatório",
         "description": "Descrição",
-        "open": "Estado controlado de abertura. Use com <code>onOpenChange</code>.",
+        "open": "Estado controlado de abertura. Use com o callback de mudança correspondente.",
         "defaultOpen": "Estado inicial em modo não controlado.",
         "onOpenChange": "Callback disparado ao abrir ou fechar. Recebe o novo estado booleano.",
         "showCloseButtonContent": "Exibe botão X no canto superior direito do Content.",
@@ -302,7 +302,7 @@
         "item4": { "action": "Clique no botão Close (X)", "result": "Diálogo fecha; foco retorna ao trigger", "priority": "high" },
         "item5": { "action": "Pressionar Tab dentro do diálogo", "result": "Foco cicla entre elementos do Content sem sair (focus trap)", "priority": "high" },
         "item6": { "action": "Fechar diálogo após interação", "result": "Foco retorna exatamente ao trigger original", "priority": "high" },
-        "item7": { "action": "Renderizar com open controlado", "result": "Estado de abertura é gerenciado externamente; onOpenChange dispara ao interagir", "priority": "medium" }
+        "item7": { "action": "Renderizar com open controlado", "result": "Estado de abertura é gerenciado externamente; o callback de mudança dispara ao interagir", "priority": "medium" }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -372,7 +372,7 @@
     "anatomy": {
       "title": "Anatomy",
       "item1": "<strong>Dialog</strong> — root container managing open state and focus.",
-      "item2": "<strong>DialogTrigger</strong> — element that opens the dialog. Composes with <code>Button</code> via <code>asChild</code>.",
+      "item2": "<strong>DialogTrigger</strong> — element that opens the dialog. Composes with <code>Button</code> by delegating rendering to the child element.",
       "item3": "<strong>DialogPortal</strong> — renders content outside the parent tree, isolating from overflow and transform.",
       "item4": "<strong>DialogOverlay</strong> — semi-transparent backdrop with blur. Captures click-outside to close.",
       "item5": "<strong>DialogContent</strong> — modal panel with <code>role=\"dialog\"</code>, <code>aria-modal</code>, focus trap, and optional Close button.",
@@ -538,7 +538,7 @@
         "default": "Default",
         "required": "Required",
         "description": "Description",
-        "open": "Controlled open state. Use with <code>onOpenChange</code>.",
+        "open": "Controlled open state. Use with the corresponding change callback.",
         "defaultOpen": "Initial state in uncontrolled mode.",
         "onOpenChange": "Callback fired on open or close. Receives the new boolean state.",
         "showCloseButtonContent": "Shows X button at the top-right corner of Content.",
@@ -649,7 +649,7 @@
         "item4": { "action": "Click on Close (X) button", "result": "Dialog closes; focus returns to trigger", "priority": "high" },
         "item5": { "action": "Press Tab inside the dialog", "result": "Focus cycles between Content elements without leaving (focus trap)", "priority": "high" },
         "item6": { "action": "Close dialog after interaction", "result": "Focus returns exactly to the original trigger", "priority": "high" },
-        "item7": { "action": "Render with controlled open", "result": "Open state is managed externally; onOpenChange fires on interaction", "priority": "medium" }
+        "item7": { "action": "Render with controlled open", "result": "Open state is managed externally; the change callback fires on interaction", "priority": "medium" }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -719,7 +719,7 @@
     "anatomy": {
       "title": "Anatomía",
       "item1": "<strong>Dialog</strong> — contenedor raíz que gestiona el estado de apertura y el foco.",
-      "item2": "<strong>DialogTrigger</strong> — elemento que dispara la apertura. Compone con <code>Button</code> vía <code>asChild</code>.",
+      "item2": "<strong>DialogTrigger</strong> — elemento que dispara la apertura. Compone con <code>Button</code> delegando la renderización al hijo.",
       "item3": "<strong>DialogPortal</strong> — renderiza el contenido fuera del árbol del padre, aislando de overflow y transform.",
       "item4": "<strong>DialogOverlay</strong> — backdrop semitransparente con blur. Captura clic fuera para cerrar.",
       "item5": "<strong>DialogContent</strong> — panel modal con <code>role=\"dialog\"</code>, <code>aria-modal</code>, focus trap y botón Close opcional.",
@@ -885,7 +885,7 @@
         "default": "Por defecto",
         "required": "Obligatorio",
         "description": "Descripción",
-        "open": "Estado controlado de apertura. Úsalo con <code>onOpenChange</code>.",
+        "open": "Estado controlado de apertura. Úsalo con el callback de cambio correspondiente.",
         "defaultOpen": "Estado inicial en modo no controlado.",
         "onOpenChange": "Callback disparado al abrir o cerrar. Recibe el nuevo estado booleano.",
         "showCloseButtonContent": "Muestra botón X en la esquina superior derecha del Content.",
@@ -996,7 +996,7 @@
         "item4": { "action": "Clic en el botón Close (X)", "result": "Diálogo cierra; el foco vuelve al trigger", "priority": "high" },
         "item5": { "action": "Presionar Tab dentro del diálogo", "result": "El foco cicla entre elementos del Content sin salir (focus trap)", "priority": "high" },
         "item6": { "action": "Cerrar diálogo tras interacción", "result": "El foco vuelve exactamente al trigger original", "priority": "high" },
-        "item7": { "action": "Renderizar con open controlado", "result": "El estado de apertura se gestiona externamente; onOpenChange dispara al interactuar", "priority": "medium" }
+        "item7": { "action": "Renderizar con open controlado", "result": "El estado de apertura se gestiona externamente; el callback de cambio dispara al interactuar", "priority": "medium" }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",

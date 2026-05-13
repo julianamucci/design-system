@@ -30,7 +30,7 @@
     "anatomy": {
       "title": "Anatomia",
       "item1": "<strong>Popover</strong> — root que controla o estado open/closed.",
-      "item2": "<strong>PopoverTrigger</strong> — elemento que abre o popover ao ser clicado. Use <code>asChild</code> para envolver um Button.",
+      "item2": "<strong>PopoverTrigger</strong> — elemento que abre o popover ao ser clicado. Permite compor com elemento filho para envolver um Button.",
       "item3": "<strong>PopoverContent</strong> — container do conteúdo, posicionado via <code>side</code> e <code>align</code> com auto-flip.",
       "item4": "<strong>PopoverHeader</strong> — wrapper opcional para título e descrição.",
       "item5": "<strong>PopoverTitle</strong> — título acessível, anunciado pelo leitor de tela ao abrir.",
@@ -156,7 +156,7 @@
           "type": "boolean",
           "default": "—",
           "required": "Não",
-          "description": "Estado controlado de abertura. Use junto com <code>onOpenChange</code>."
+          "description": "Estado controlado de abertura. Use junto com o callback de mudança correspondente."
         },
         "defaultOpen": {
           "type": "boolean",
@@ -362,7 +362,7 @@
     "anatomy": {
       "title": "Anatomy",
       "item1": "<strong>Popover</strong> — root that controls the open/closed state.",
-      "item2": "<strong>PopoverTrigger</strong> — element that opens the popover when clicked. Use <code>asChild</code> to wrap a Button.",
+      "item2": "<strong>PopoverTrigger</strong> — element that opens the popover when clicked. Compose with a child element to wrap a Button.",
       "item3": "<strong>PopoverContent</strong> — content container, positioned via <code>side</code> and <code>align</code> with auto-flip.",
       "item4": "<strong>PopoverHeader</strong> — optional wrapper for title and description.",
       "item5": "<strong>PopoverTitle</strong> — accessible title, announced by the screen reader on open.",
@@ -488,7 +488,7 @@
           "type": "boolean",
           "default": "—",
           "required": "No",
-          "description": "Controlled open state. Use with <code>onOpenChange</code>."
+          "description": "Controlled open state. Use with the corresponding change callback."
         },
         "defaultOpen": {
           "type": "boolean",
@@ -694,7 +694,7 @@
     "anatomy": {
       "title": "Anatomía",
       "item1": "<strong>Popover</strong> — root que controla el estado open/closed.",
-      "item2": "<strong>PopoverTrigger</strong> — elemento que abre el popover al hacer clic. Usa <code>asChild</code> para envolver un Button.",
+      "item2": "<strong>PopoverTrigger</strong> — elemento que abre el popover al hacer clic. Compón con elemento hijo para envolver un Button.",
       "item3": "<strong>PopoverContent</strong> — contenedor del contenido, posicionado vía <code>side</code> y <code>align</code> con auto-flip.",
       "item4": "<strong>PopoverHeader</strong> — wrapper opcional para título y descripción.",
       "item5": "<strong>PopoverTitle</strong> — título accesible, anunciado por el lector de pantalla al abrir.",
@@ -820,7 +820,7 @@
           "type": "boolean",
           "default": "—",
           "required": "No",
-          "description": "Estado controlado de apertura. Usa con <code>onOpenChange</code>."
+          "description": "Estado controlado de apertura. Úsalo con el callback de cambio correspondiente."
         },
         "defaultOpen": {
           "type": "boolean",

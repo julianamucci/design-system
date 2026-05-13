@@ -255,7 +255,7 @@
       "tip1": "O Card detecta <code>CardFooter</code> via <code>has-data-[slot=card-footer]:pb-0</code> — ao adicionar o footer, o padding do fundo é removido automaticamente para alinhar a borda.",
       "tip2": "Imagens como primeiro/último filho recebem <code>rounded-t/b-(--radius-card)</code> por CSS; não precisa passar classe manualmente.",
       "tip3": "A prop <code>size</code> propaga via <code>data-size</code> e <code>group-data-[size=sm]/card</code> — os subcomponentes ajustam padding e fonte sem passar a prop explícita.",
-      "tip4": "Para Card clicável, prefira <code>asChild</code> pattern (envolver em <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) em vez de <code>onClick</code> no container — garante semântica e navegação por teclado."
+      "tip4": "Para Card clicável, prefira compor com elemento filho (envolver em <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) em vez de <code>onClick</code> no container — garante semântica e navegação por teclado."
     },
     "analytics": {
       "title": "Analytics",
@@ -590,7 +590,7 @@
       "tip1": "Card detects <code>CardFooter</code> via <code>has-data-[slot=card-footer]:pb-0</code> — adding the footer removes bottom padding automatically to align the border.",
       "tip2": "Images as first/last child get <code>rounded-t/b-(--radius-card)</code> via CSS; you don't need to pass a class manually.",
       "tip3": "The <code>size</code> prop propagates via <code>data-size</code> and <code>group-data-[size=sm]/card</code> — subcomponents adjust padding and font without receiving the prop explicitly.",
-      "tip4": "For a clickable Card, prefer the <code>asChild</code> pattern (wrap in <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) instead of <code>onClick</code> on the container — ensures semantics and keyboard navigation."
+      "tip4": "For a clickable Card, prefer composing with a child element (wrap in <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) instead of <code>onClick</code> on the container — ensures semantics and keyboard navigation."
     },
     "analytics": {
       "title": "Analytics",
@@ -925,7 +925,7 @@
       "tip1": "El Card detecta <code>CardFooter</code> vía <code>has-data-[slot=card-footer]:pb-0</code> — al agregar el footer, se elimina el padding inferior automáticamente para alinear el borde.",
       "tip2": "Las imágenes como primer/último hijo reciben <code>rounded-t/b-(--radius-card)</code> vía CSS; no necesitas pasar una clase manualmente.",
       "tip3": "La prop <code>size</code> se propaga vía <code>data-size</code> y <code>group-data-[size=sm]/card</code> — los subcomponentes ajustan padding y fuente sin recibir la prop explícita.",
-      "tip4": "Para Card clicable, prefiere el patrón <code>asChild</code> (envolver en <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) en lugar de <code>onClick</code> en el contenedor — asegura semántica y navegación por teclado."
+      "tip4": "Para Card clicable, prefiere componer con elemento hijo (envolver en <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) en lugar de <code>onClick</code> en el contenedor — asegura semántica y navegación por teclado."
     },
     "analytics": {
       "title": "Analytics",

@@ -274,7 +274,7 @@
       "title": "Notas de Implementação",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
       "item2": "<strong>Array de valores</strong> — <code>value</code> e <code>defaultValue</code> são sempre arrays, mesmo para single (<code>[50]</code>).",
-      "item3": "<strong>onValueChange vs onValueCommitted</strong> — o primeiro dispara durante arrasto; use o segundo para analytics e submit para evitar spam.",
+      "item3": "<strong>Mudança contínua vs valor confirmado</strong> — o callback de mudança dispara durante arrasto; use o callback de commit (ao soltar) para analytics e submit, evitando spam.",
       "item4": "<strong>Vertical</strong> — precisa de altura definida no container (<code>h-40</code> ou similar)."
     },
     "analytics": {
@@ -285,7 +285,7 @@
         "trigger": "Trigger",
         "payload": "Payload",
         "slider_change": {
-          "trigger": "Valor commitado (drag end ou keyup) — use <code>onValueCommitted</code>",
+          "trigger": "Valor commitado (drag end ou keyup) — use o callback de commit, não o callback contínuo",
           "payload": "{ component: \"slider\", field_name, value, min, max, location }"
         }
       }
@@ -295,8 +295,8 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar e arrastar o Thumb", "result": "Valor atualiza em tempo real (onValueChange)", "priority": "high" },
-        "item2": { "action": "Soltar o Thumb", "result": "Dispara onValueCommitted com o valor final", "priority": "high" },
+        "item1": { "action": "Clicar e arrastar o Thumb", "result": "Valor atualiza em tempo real via callback de mudança contínua", "priority": "high" },
+        "item2": { "action": "Soltar o Thumb", "result": "Dispara o callback de commit com o valor final", "priority": "high" },
         "item3": { "action": "Pressionar ArrowRight com Thumb focado", "result": "Incrementa em step", "priority": "high" },
         "item4": { "action": "Pressionar Home/End", "result": "Vai para min/max respectivamente", "priority": "medium" }
       },
@@ -615,7 +615,7 @@
       "title": "Implementation Notes",
       "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
       "item2": "<strong>Value array</strong> — <code>value</code> and <code>defaultValue</code> are always arrays, even for single (<code>[50]</code>).",
-      "item3": "<strong>onValueChange vs onValueCommitted</strong> — first fires during drag; use the second for analytics and submit to avoid spam.",
+      "item3": "<strong>Continuous change vs committed value</strong> — the change callback fires during drag; use the commit callback (on release) for analytics and submit to avoid spam.",
       "item4": "<strong>Vertical</strong> — requires defined height on container (<code>h-40</code> or similar)."
     },
     "analytics": {
@@ -626,7 +626,7 @@
         "trigger": "Trigger",
         "payload": "Payload",
         "slider_change": {
-          "trigger": "Value committed (drag end or keyup) — use <code>onValueCommitted</code>",
+          "trigger": "Value committed (drag end or keyup) — use the commit callback, not the continuous one",
           "payload": "{ component: \"slider\", field_name, value, min, max, location }"
         }
       }
@@ -636,8 +636,8 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click and drag the Thumb", "result": "Value updates in real time (onValueChange)", "priority": "high" },
-        "item2": { "action": "Release the Thumb", "result": "Fires onValueCommitted with final value", "priority": "high" },
+        "item1": { "action": "Click and drag the Thumb", "result": "Value updates in real time via the continuous change callback", "priority": "high" },
+        "item2": { "action": "Release the Thumb", "result": "Fires the commit callback with the final value", "priority": "high" },
         "item3": { "action": "Press ArrowRight with Thumb focused", "result": "Increments by step", "priority": "high" },
         "item4": { "action": "Press Home/End", "result": "Goes to min/max respectively", "priority": "medium" }
       },
@@ -956,7 +956,7 @@
       "title": "Notas de Implementación",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
       "item2": "<strong>Array de valores</strong> — <code>value</code> y <code>defaultValue</code> son siempre arrays, incluso para single (<code>[50]</code>).",
-      "item3": "<strong>onValueChange vs onValueCommitted</strong> — el primero dispara durante arrastre; usa el segundo para analytics y submit para evitar spam.",
+      "item3": "<strong>Cambio continuo vs valor confirmado</strong> — el callback de cambio dispara durante el arrastre; usa el callback de commit (al soltar) para analytics y submit, evitando spam.",
       "item4": "<strong>Vertical</strong> — requiere altura definida en el contenedor (<code>h-40</code> o similar)."
     },
     "analytics": {
@@ -967,7 +967,7 @@
         "trigger": "Trigger",
         "payload": "Payload",
         "slider_change": {
-          "trigger": "Valor confirmado (drag end o keyup) — usa <code>onValueCommitted</code>",
+          "trigger": "Valor confirmado (drag end o keyup) — usa el callback de commit, no el continuo",
           "payload": "{ component: \"slider\", field_name, value, min, max, location }"
         }
       }
@@ -977,8 +977,8 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic y arrastrar el Thumb", "result": "El valor se actualiza en tiempo real (onValueChange)", "priority": "high" },
-        "item2": { "action": "Soltar el Thumb", "result": "Dispara onValueCommitted con el valor final", "priority": "high" },
+        "item1": { "action": "Hacer clic y arrastrar el Thumb", "result": "El valor se actualiza en tiempo real vía el callback de cambio continuo", "priority": "high" },
+        "item2": { "action": "Soltar el Thumb", "result": "Dispara el callback de commit con el valor final", "priority": "high" },
         "item3": { "action": "Pulsar ArrowRight con Thumb enfocado", "result": "Incrementa en step", "priority": "high" },
         "item4": { "action": "Pulsar Home/End", "result": "Va a min/max respectivamente", "priority": "medium" }
       },

@@ -22,8 +22,8 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>HoverCard (Root)</strong> — provider de estado <code>open</code>/<code>onOpenChange</code> com delays configuráveis.",
-      "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara o hover (link, botão, texto). Usar <code>asChild</code> para herdar estilos.",
+      "item1": "<strong>HoverCard (Root)</strong> — provider de estado controlado com callback de mudança e delays configuráveis.",
+      "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara o hover (link, botão, texto). Componha com elemento filho para herdar seus estilos.",
       "item3": "<strong>HoverCardContent</strong> — cartão flutuante posicionado via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza em portal.",
       "structureLabel": "Estrutura básica:",
       "structureCode": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
@@ -148,7 +148,7 @@
       "descriptions": {
         "closed": "Estado padrão — apenas o trigger renderizado; portal vazio.",
         "open": "Cartão visível após <code>openDelay</code>; permanece enquanto cursor estiver sobre trigger ou content.",
-        "controlled": "<code>open</code> + <code>onOpenChange</code> permitem gerenciar estado externamente."
+        "controlled": "Estado controlado + callback de mudança permitem gerenciar o estado externamente."
       }
     },
     "props": {
@@ -300,11 +300,11 @@
       "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews, aplicar <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Touch devices</strong>: hover não funciona em touch. SEMPRE forneça alternativa (clique no link, página dedicada). HoverCard é enriquecimento, não único caminho.",
       "item4": "<strong>Delays</strong>: openDelay padrão da lib é 700ms. Para previews ricos use 300-500ms; para tooltips comportamentais 700ms+.",
-      "item5": "<strong>asChild no Trigger</strong>: usar com link <code>&lt;a&gt;</code> ou Button para preservar semântica nativa do elemento."
+      "item5": "<strong>Composição no Trigger</strong>: componha com link <code>&lt;a&gt;</code> ou Button como elemento filho para preservar semântica nativa do elemento."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>hover_card_open</code> e <code>hover_card_close</code>. Útil para medir engajamento com previews. Payload obrigatório: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (texto do trigger). Disparar via <code>onOpenChange</code> no consumidor — evite trackear em hover de baixa intenção (use openDelay como filtro natural)."
+      "description": "Eventos relevantes: <code>hover_card_open</code> e <code>hover_card_close</code>. Útil para medir engajamento com previews. Payload obrigatório: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (texto do trigger). Disparar via callback de mudança no consumidor — evite trackear em hover de baixa intenção (use openDelay como filtro natural)."
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -337,7 +337,7 @@
           "priority": "high"
         },
         "item6": {
-          "action": "Modo controlado (open + onOpenChange)",
+          "action": "Modo controlado (estado externo + callback de mudança)",
           "result": "Estado externo controla abertura/fechamento",
           "priority": "medium"
         }
@@ -422,8 +422,8 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>HoverCard (Root)</strong> — state provider with <code>open</code>/<code>onOpenChange</code> and configurable delays.",
-      "item2": "<strong>HoverCardTrigger</strong> — element triggering the hover (link, button, text). Use <code>asChild</code> to inherit styles.",
+      "item1": "<strong>HoverCard (Root)</strong> — controlled state provider with change callback and configurable delays.",
+      "item2": "<strong>HoverCardTrigger</strong> — element triggering the hover (link, button, text). Compose with a child element to inherit its styles.",
       "item3": "<strong>HoverCardContent</strong> — floating card positioned via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renders in a portal.",
       "structureLabel": "Basic structure:",
       "structureCode": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
@@ -548,7 +548,7 @@
       "descriptions": {
         "closed": "Default state — only the trigger renders; portal is empty.",
         "open": "Card visible after <code>openDelay</code>; persists while cursor stays on trigger or content.",
-        "controlled": "<code>open</code> + <code>onOpenChange</code> manage state externally."
+        "controlled": "Controlled state + change callback manage state externally."
       }
     },
     "props": {
@@ -700,11 +700,11 @@
       "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Touch devices</strong>: hover doesn't work on touch. ALWAYS provide alternative (link click, dedicated page). HoverCard is enrichment, not the only path.",
       "item4": "<strong>Delays</strong>: lib default openDelay is 700ms. For rich previews use 300-500ms; for behavioral tooltips 700ms+.",
-      "item5": "<strong>asChild on Trigger</strong>: use with <code>&lt;a&gt;</code> link or Button to preserve native element semantics."
+      "item5": "<strong>Composition on Trigger</strong>: compose with a <code>&lt;a&gt;</code> link or Button as the child to preserve native element semantics."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant events: <code>hover_card_open</code> and <code>hover_card_close</code>. Useful to measure preview engagement. Required payload: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (trigger text). Dispatch via <code>onOpenChange</code> in the consumer — avoid tracking low-intent hovers (use openDelay as natural filter)."
+      "description": "Relevant events: <code>hover_card_open</code> and <code>hover_card_close</code>. Useful to measure preview engagement. Required payload: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (trigger text). Dispatch via the change callback in the consumer — avoid tracking low-intent hovers (use openDelay as natural filter)."
     },
     "testes": {
       "title": "Test Criteria",
@@ -737,7 +737,7 @@
           "priority": "high"
         },
         "item6": {
-          "action": "Controlled mode (open + onOpenChange)",
+          "action": "Controlled mode (external state + change callback)",
           "result": "External state controls opening/closing",
           "priority": "medium"
         }
@@ -822,8 +822,8 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>HoverCard (Root)</strong> — provider de estado <code>open</code>/<code>onOpenChange</code> con delays configurables.",
-      "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara el hover (link, botón, texto). Usa <code>asChild</code> para heredar estilos.",
+      "item1": "<strong>HoverCard (Root)</strong> — provider de estado controlado con callback de cambio y delays configurables.",
+      "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara el hover (link, botón, texto). Compón con un elemento hijo para heredar sus estilos.",
       "item3": "<strong>HoverCardContent</strong> — tarjeta flotante posicionada vía <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza en portal.",
       "structureLabel": "Estructura básica:",
       "structureCode": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
@@ -948,7 +948,7 @@
       "descriptions": {
         "closed": "Estado predeterminado — solo el trigger renderizado; portal vacío.",
         "open": "Tarjeta visible tras <code>openDelay</code>; persiste mientras el cursor esté sobre trigger o content.",
-        "controlled": "<code>open</code> + <code>onOpenChange</code> permiten gestionar estado externamente."
+        "controlled": "Estado controlado + callback de cambio permiten gestionar el estado externamente."
       }
     },
     "props": {
@@ -1100,11 +1100,11 @@
       "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Touch devices</strong>: hover no funciona en touch. SIEMPRE proporciona alternativa (clic en el link, página dedicada). HoverCard es enriquecimiento, no único camino.",
       "item4": "<strong>Delays</strong>: openDelay default de la lib es 700ms. Para previews ricos usa 300-500ms; para tooltips comportamentales 700ms+.",
-      "item5": "<strong>asChild en Trigger</strong>: usa con link <code>&lt;a&gt;</code> o Button para preservar semántica nativa del elemento."
+      "item5": "<strong>Composición en Trigger</strong>: compón con link <code>&lt;a&gt;</code> o Button como elemento hijo para preservar la semántica nativa del elemento."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>hover_card_open</code> y <code>hover_card_close</code>. Útil para medir engagement con previews. Payload obligatorio: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (texto del trigger). Dispara vía <code>onOpenChange</code> en el consumidor — evita trackear hover de baja intención (usa openDelay como filtro natural)."
+      "description": "Eventos relevantes: <code>hover_card_open</code> y <code>hover_card_close</code>. Útil para medir engagement con previews. Payload obligatorio: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (texto del trigger). Dispara vía el callback de cambio en el consumidor — evita trackear hover de baja intención (usa openDelay como filtro natural)."
     },
     "testes": {
       "title": "Criterios de Test",
@@ -1137,7 +1137,7 @@
           "priority": "high"
         },
         "item6": {
-          "action": "Modo controlado (open + onOpenChange)",
+          "action": "Modo controlado (estado externo + callback de cambio)",
           "result": "Estado externo controla apertura/cierre",
           "priority": "medium"
         }
