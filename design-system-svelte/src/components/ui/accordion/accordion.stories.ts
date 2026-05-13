@@ -18,14 +18,9 @@ const meta = {
       options: ['single', 'multiple'],
       description: 'Define se um ou múltiplos itens podem estar abertos.',
     },
-    collapsible: {
-      control: 'boolean',
-      description: 'Permite fechar o item ativo (apenas com type=single).',
-    },
   },
   args: {
     type: 'single',
-    collapsible: true,
   },
 } satisfies Meta<typeof Accordion>;
 
@@ -37,7 +32,6 @@ export const Playground: Story = {
     Component: AccordionStory,
     props: {
       type: args.type,
-      collapsible: args.collapsible,
       defaultValue: 'item-1',
     },
   }),
@@ -72,7 +66,7 @@ export const Playground: Story = {
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'true');
     });
 
-    await step('Space colapsa item aberto (collapsible=true)', async () => {
+    await step('Space colapsa item aberto (type=single é sempre collapsible)', async () => {
       const triggers = canvas.getAllByRole('button');
       triggers[2].focus();
       await userEvent.keyboard(' ');

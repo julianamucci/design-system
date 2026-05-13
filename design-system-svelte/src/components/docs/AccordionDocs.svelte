@@ -123,7 +123,7 @@
   AccordionTrigger,
 } from "@/components/ui/accordion";`;
 
-  const codeSingle = `<Accordion type="single" collapsible defaultValue="item-1" class="w-full">
+  const codeSingle = `<Accordion type="single" defaultValue="item-1" class="w-full">
   <AccordionItem value="item-1">
     <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
     <AccordionContent>
@@ -148,7 +148,7 @@
   let value = $state('item-1');
 <\/script>
 
-<Accordion type="single" collapsible bind:value>
+<Accordion type="single" bind:value>
   <AccordionItem value="item-1">
     <AccordionTrigger>Item 1 — controlado</AccordionTrigger>
     <AccordionContent>Estado gerenciado externamente.</AccordionContent>
@@ -162,9 +162,10 @@
 }`;
 
   const interfaceCode = `// Accordion (Svelte 5 + Bits UI)
+// Divergência: bits-ui não expõe \`collapsible\` como prop separada.
+// type="single" é sempre collapsible por design.
 type AccordionProps = Accordion.RootProps & {
   type: 'single' | 'multiple';
-  collapsible?: boolean;
   defaultValue?: string | string[];
   value?: string | string[];
   class?: string;
@@ -192,7 +193,7 @@ type AccordionProps = Accordion.RootProps & {
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
         {#snippet children()}
-          <Accordion type="single" collapsible class="w-full max-w-lg">
+          <Accordion type="single" class="w-full max-w-lg">
             {#each demoItems as item (item.value)}
               <AccordionItem value={item.value}>
                 <AccordionTrigger onclick={(e) => handleDemoTriggerClick(e, item.q)}>
@@ -304,7 +305,7 @@ type AccordionProps = Accordion.RootProps & {
       />
 
       {#snippet doPair1()}
-        <Accordion type="single" collapsible class="w-full max-w-xs text-sm">
+        <Accordion type="single" class="w-full max-w-xs text-sm">
           <AccordionItem value="faq">
             <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
             <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>
@@ -312,7 +313,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet dontPair1()}
-        <Accordion type="single" collapsible class="w-full max-w-xs text-sm">
+        <Accordion type="single" class="w-full max-w-xs text-sm">
           <AccordionItem value="faq">
             <AccordionTrigger>Senha</AccordionTrigger>
             <AccordionContent>Informações sobre redefinição.</AccordionContent>
@@ -332,7 +333,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet dontPair2()}
-        <Accordion type="single" collapsible class="w-full max-w-xs text-sm">
+        <Accordion type="single" class="w-full max-w-xs text-sm">
           <AccordionItem value="s1">
             <AccordionTrigger>Expandir</AccordionTrigger>
             <AccordionContent>Conteúdo único.</AccordionContent>
@@ -360,7 +361,7 @@ type AccordionProps = Accordion.RootProps & {
       />
 
       {#snippet modeSingle()}
-        <Accordion type="single" collapsible defaultValue="item-1" class="w-full max-w-sm text-sm">
+        <Accordion type="single" defaultValue="item-1" class="w-full max-w-sm text-sm">
           <AccordionItem value="item-1">
             <AccordionTrigger>Pergunta 1</AccordionTrigger>
             <AccordionContent>Resposta objetiva em 1–2 linhas.</AccordionContent>
@@ -384,7 +385,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet modeControlled()}
-        <Accordion type="single" collapsible defaultValue="item-1" class="w-full max-w-sm text-sm">
+        <Accordion type="single" defaultValue="item-1" class="w-full max-w-sm text-sm">
           <AccordionItem value="item-1">
             <AccordionTrigger>Item 1 — controlado</AccordionTrigger>
             <AccordionContent>Estado gerenciado externamente via bind:value.</AccordionContent>
@@ -396,7 +397,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet modeDefaultOpen()}
-        <Accordion type="single" collapsible defaultValue="item-1" class="w-full max-w-sm text-sm">
+        <Accordion type="single" defaultValue="item-1" class="w-full max-w-sm text-sm">
           <AccordionItem value="item-1">
             <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
             <AccordionContent>Este item inicia expandido via defaultValue.</AccordionContent>

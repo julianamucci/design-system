@@ -32,7 +32,7 @@ const FOCUS_ITEMS = [
 export const Fechado: Story = {
   render: () => ({
     Component: AccordionStory,
-    props: { type: 'single', collapsible: true, items: SINGLE_ITEM },
+    props: { type: 'single', items: SINGLE_ITEM },
   }),
   parameters: {
     docs: {
@@ -54,7 +54,7 @@ export const Fechado: Story = {
 export const Aberto: Story = {
   render: () => ({
     Component: AccordionStory,
-    props: { type: 'single', collapsible: true, defaultValue: 'item-1', items: OPEN_ITEM },
+    props: { type: 'single', defaultValue: 'item-1', items: OPEN_ITEM },
   }),
   parameters: {
     docs: {
@@ -79,7 +79,7 @@ export const Aberto: Story = {
 export const Disabled: Story = {
   render: () => ({
     Component: AccordionStory,
-    props: { type: 'single', collapsible: true, items: DISABLED_ITEMS, disabledItem: 'item-2' },
+    props: { type: 'single', items: DISABLED_ITEMS, disabledItem: 'item-2' },
   }),
   parameters: {
     docs: {
@@ -106,7 +106,7 @@ export const Disabled: Story = {
 export const FocusVisible: Story = {
   render: () => ({
     Component: AccordionStory,
-    props: { type: 'single', collapsible: true, defaultValue: 'item-1', items: FOCUS_ITEMS },
+    props: { type: 'single', defaultValue: 'item-1', items: FOCUS_ITEMS },
   }),
   parameters: {
     docs: {

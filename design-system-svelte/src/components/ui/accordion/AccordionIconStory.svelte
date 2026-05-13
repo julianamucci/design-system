@@ -8,7 +8,7 @@
   import { Info, AlertTriangle, CheckCircle } from 'lucide-svelte';
 </script>
 
-<Accordion type="single" collapsible class="w-full max-w-lg">
+<Accordion type="single" class="w-full max-w-lg">
   <AccordionItem value="info">
     <AccordionTrigger>
       <span class="flex items-center gap-2">

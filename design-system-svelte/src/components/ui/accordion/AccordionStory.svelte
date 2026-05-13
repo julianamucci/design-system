@@ -14,7 +14,6 @@
 
   interface Props {
     type?: 'single' | 'multiple';
-    collapsible?: boolean;
     defaultValue?: string;
     items?: FAQItem[];
     disabledItem?: string;
@@ -23,7 +22,6 @@
 
   let {
     type = 'single',
-    collapsible = true,
     defaultValue,
     items = [
       { value: 'item-1', q: 'Como faço para redefinir minha senha?', a: 'Acesse a tela de login e clique em "Esqueci minha senha". Você receberá um link de redefinição no email cadastrado, válido por 24 horas.' },
@@ -44,7 +42,7 @@
 </script>
 
 {#if type === 'single'}
-  <Accordion type="single" {collapsible} bind:value={singleValue} class={className}>
+  <Accordion type="single" bind:value={singleValue} class={className}>
     {#each items as item (item.value)}
       <AccordionItem value={item.value} disabled={disabledItem === item.value}>
         <AccordionTrigger>{item.q}</AccordionTrigger>

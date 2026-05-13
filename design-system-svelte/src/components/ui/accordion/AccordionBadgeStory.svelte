@@ -14,7 +14,7 @@
 </script>
 
 <div class="w-full max-w-lg">
-  <Accordion type="single" collapsible>
+  <Accordion type="single">
     {#each items as item (item.value)}
       <AccordionItem value={item.value}>
         <AccordionTrigger>

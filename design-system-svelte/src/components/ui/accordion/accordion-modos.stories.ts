@@ -26,12 +26,12 @@ const SPEC_ITEMS = [
 export const Single: Story = {
   render: () => ({
     Component: AccordionStory,
-    props: { type: 'single', collapsible: true, defaultValue: 'item-1', items: FAQ_ITEMS },
+    props: { type: 'single', defaultValue: 'item-1', items: FAQ_ITEMS },
   }),
   parameters: {
     docs: {
       description: {
-        story: 'Modo single com collapsible. Apenas um item aberto por vez. Clicar no item ativo o fecha. Use para FAQ.',
+        story: 'Modo single (bits-ui: sempre collapsible). Apenas um item aberto por vez. Clicar no item ativo o fecha. Use para FAQ.',
       },
     },
   },
@@ -65,7 +65,7 @@ export const Controlled: Story = {
 export const DefaultOpen: Story = {
   render: () => ({
     Component: AccordionStory,
-    props: { type: 'single', collapsible: true, defaultValue: 'item-1', items: FAQ_ITEMS.slice(0, 2) },
+    props: { type: 'single', defaultValue: 'item-1', items: FAQ_ITEMS.slice(0, 2) },
   }),
   parameters: {
     docs: {

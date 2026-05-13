@@ -16,7 +16,7 @@
 
 <div class="w-full max-w-lg space-y-2">
   <h2 class="text-base font-semibold">Perguntas frequentes</h2>
-  <Accordion type="single" collapsible>
+  <Accordion type="single">
     {#each items as item (item.value)}
       <AccordionItem value={item.value}>
         <AccordionTrigger>{item.q}</AccordionTrigger>

@@ -19,7 +19,7 @@
   <p class="text-xs text-muted-foreground">
     Item ativo: <code class="font-mono">{activeItem || '(nenhum)'}</code>
   </p>
-  <Accordion type="single" collapsible value={activeItem} onValueChange={(v) => (activeItem = v as string)}>
+  <Accordion type="single" value={activeItem} onValueChange={(v) => (activeItem = v as string)}>
     {#each items as item (item.value)}
       <AccordionItem value={item.value}>
         <AccordionTrigger>{item.trigger}</AccordionTrigger>
