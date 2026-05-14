@@ -66,13 +66,62 @@ Após coletar, **não releia** nada nos passos seguintes.
 
 **2b. Controls do Playground**:
 - `meta` tem `argTypes` (painel não vazio)
-- `render` consome `(args)` (não `render: () => ` sem args)
+- `meta.args` declara valores iniciais para TODAS as props listadas em `argTypes` (sem isso, controls aparecem vazios)
+- `render` consome `(args)` e espalha via `{...args}` ou `v-bind="args"` (não `render: () => ` sem args)
 - Props de montagem têm re-mount: React `key={String(args.x)}`, Vue `:key="String(args.x)"`, Svelte `{#key args.x}`, Basecoat re-execução natural
 - `disabled` propagado ao filho interativo (não só root)
 
-**2c. Play functions**: Playground completo (presença, clique, disabled, focus, Enter/Space). Disabled verifica `toBeDisabled()` (ou `aria-disabled` em base-ui). Sub-stories sem play = violação.
+**2c. Actions do Playground**: componentes interativos DEVEM ter handlers populando a aba Actions. Verifique:
+- Todo callback documentado nos props (onValueChange, onCheckedChange, onOpenChange, onPressedChange, onChange, onClick, onSelect, etc.) está em `meta.args` com `fn()` de `storybook/test`
+- Componentes não-interativos puros (Skeleton, AspectRatio, Separator, Progress sem callback) são exceção legítima — registre como N/A
+- Sem `fn()` em args, a aba Actions fica vazia e violenta a convenção do projeto
 
-**2d. a11y.disable**: nenhuma story sem comentário de justificativa.
+**2d. Stories de variação — `controls.disable` + `actions.disable`**:
+- Stories sem `args` próprios (Composições, Modos, Estados não-interativos) devem ter `parameters.controls.disable: true` E `parameters.actions.disable: true` no `meta` do arquivo
+- Aplicado no `meta` herda para todas as stories do arquivo
+- Stories de variação com play function ainda funcionam — só a aba some
+
+**2e. Play functions — cobertura por story**:
+- **Toda story exportada deve ter `play`**. Sem play: a aba Interactions fica vazia E o test-runner pula a story
+- Verifique para CADA arquivo: `grep -c "^export const " <story>` deve igualar `grep -c "  play:" <story>`
+- Playground: presença, clique, disabled, focus, Enter/Space. Disabled verifica `toBeDisabled()` (ou `aria-disabled` em base-ui)
+- Sub-stories (estados, modos, composições): no mínimo um teste de "renderiza e responde a interação básica"
+- Composições com ícones/badges: testar acessibilidade via `getByRole("button", { name: /text/ })` (validando que o texto, não o ícone, é a label acessível)
+
+**2f. a11y.disable**: nenhuma story sem comentário de justificativa.
+
+---
+
+### Passo 2.5 — Casos de teste documentados vs implementados (cruzamento)
+
+**Crítico**. Compare o que está documentado em `translations.json` com o que está implementado nas play functions:
+
+**2.5a. Funcionais — `testes.functional.item*`**:
+Cada `action` listada na tabela funcional da docs page DEVE ter um `step()` correspondente em ALGUMA story do componente (Playground ou sub-story). Mapeamento típico:
+
+| Tipo de ação documentada | Story onde implementar |
+|---|---|
+| "Clicar em X fechado/aberto" | Playground |
+| "Modo X (default)" — comportamento padrão | Sub-story do modo (ex: `<slug>-modos`) |
+| "Estado disabled/loading" — não responde | Sub-story de estado (ex: `<slug>-estados`) |
+| "Modo controlado" — atualiza estado externo | Sub-story Controlled |
+| "Valor inicial via defaultValue/defaultOpen" | Playground ou DefaultOpen |
+| "Composição com ícone/badge" | Sub-story de composição |
+
+Para CADA item documentado em `testes.functional`, procure (`grep -l "trecho da action"` ou semântica equivalente) nas play functions. Ausente = bug.
+
+**2.5b. A11y — `testes.accessibility.item*`**:
+Cada item DEVE ser verificável. Categorias:
+- "Sem violações axe-core" → coberto automaticamente pelo test-runner se a story existe (verifique que existe, não que está testado manualmente)
+- "Contraste mínimo 4.5:1" → coberto pelo axe-core
+- "Focus ring visível" → coberto pelo axe-core + visual (Chromatic)
+- "ARIA correto" (aria-expanded, aria-checked, aria-selected, etc.) → DEVE ter `expect(el).toHaveAttribute("aria-...", "...")` em ao menos uma play function
+- "Navegação por teclado" → DEVE ter `userEvent.keyboard("{Enter}" / "{Space}" / "{ArrowDown}" / "{Escape}")` em play function
+
+Ausência de ARIA/teclado verificável em play = bug (mesmo que axe-core cubra parcialmente).
+
+**2.5c. Visuais — `testes.visual.item*`**:
+Cada item DEVE ter uma story correspondente no Storybook (o Chromatic captura automaticamente). Mapeamento `story` da chave → nome de story exportada.
 
 ---
 
@@ -133,7 +182,24 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 |---|---|---|---|---|
 | Playground completa | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Disabled (toBeDisabled + callback) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
-| Sub-stories com play | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ |
+| Sub-stories com play (100%) | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ |
+
+### Controls + Actions
+| Check | React | Vue | Svelte | Basecoat |
+|---|---|---|---|---|
+| Playground tem args completos | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Playground tem callbacks com fn() | ✅/❌/N/A | ✅/❌/N/A | ✅/❌/N/A | ✅/❌/N/A |
+| Variações com controls.disable | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Variações com actions.disable | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+
+### Cobertura Documentada vs Implementada
+| Categoria | React | Vue | Svelte | Basecoat |
+|---|---|---|---|---|
+| testes.functional.item* → play steps | ✅ N/N | ⚠️ X/N | ✅ N/N | ✅ N/N |
+| testes.accessibility (ARIA/teclado) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| testes.visual.item* → story existe | ✅ N/N | ✅ N/N | ✅ N/N | ✅ N/N |
+
+> Use ratio `cobertos/total documentados` para mostrar progresso.
 
 ### Docs Page
 | Check | React | Vue | Svelte | Basecoat |
