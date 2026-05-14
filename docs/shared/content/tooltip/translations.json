@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Texto explicativo curto que aparece ao passar o mouse ou focar em um elemento — para explicar ícones, atalhos ou contexto não-crítico.",
     "seo": {
-      "title": "Tooltip — Overlay · Design System",
+      "title": "Tooltip — Overlay",
       "description": "Documentação do Tooltip: Provider, Trigger, Content e Arrow com posicionamento, delay e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Tooltip com Provider, Trigger e Content, posicionamento automático com Arrow, delay configurável e suporte a teclado via foco.",
       "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tooltip",
@@ -328,7 +328,7 @@
     "type": "Component",
     "description": "Short explanatory text that appears on hover or focus — to explain icons, shortcuts or non-critical context.",
     "seo": {
-      "title": "Tooltip — Overlay · Design System",
+      "title": "Tooltip — Overlay",
       "description": "Tooltip documentation: Provider, Trigger, Content and Arrow with positioning, delay and WCAG 2.1 AA support.",
       "aiSummary": "Tooltip component with Provider, Trigger and Content, automatic positioning with Arrow, configurable delay and keyboard support via focus.",
       "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tooltip",
@@ -651,7 +651,7 @@
     "type": "Componente",
     "description": "Texto explicativo corto que aparece al pasar el mouse o enfocar un elemento — para explicar iconos, atajos o contexto no crítico.",
     "seo": {
-      "title": "Tooltip — Overlay · Design System",
+      "title": "Tooltip — Overlay",
       "description": "Documentación de Tooltip: Provider, Trigger, Content y Arrow con posicionamiento, delay y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Tooltip con Provider, Trigger y Content, posicionamiento automático con Arrow, delay configurable y soporte de teclado vía foco.",
       "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tooltip",

@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Toggle on/off para configurações com efeito imediato, sem necessidade de submissão de formulário.",
     "seo": {
-      "title": "Switch — Formulário · Design System",
+      "title": "Switch — Formulário",
       "description": "Documentação do Switch: Root, Thumb e tamanhos com role=\"switch\", aria-checked automático e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Switch toggle on/off com Root e Thumb, role=\"switch\" automático, tamanhos default/sm, efeito imediato sem submissão.",
       "aiEntities": "Switch, Toggle, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role switch",
@@ -328,7 +328,7 @@
     "type": "Component",
     "description": "On/off toggle for immediate-effect settings, without form submission.",
     "seo": {
-      "title": "Switch — Form · Design System",
+      "title": "Switch — Form",
       "description": "Switch documentation: Root, Thumb and sizes with role=\"switch\", automatic aria-checked and WCAG 2.1 AA support.",
       "aiSummary": "Switch on/off toggle component with Root and Thumb, automatic role=\"switch\", default/sm sizes, immediate effect without submission.",
       "aiEntities": "Switch, Toggle, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role switch",
@@ -651,7 +651,7 @@
     "type": "Componente",
     "description": "Toggle on/off para configuraciones con efecto inmediato, sin necesidad de envío de formulario.",
     "seo": {
-      "title": "Switch — Formulario · Design System",
+      "title": "Switch — Formulario",
       "description": "Documentación de Switch: Root, Thumb y tamaños con role=\"switch\", aria-checked automático y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Switch toggle on/off con Root y Thumb, role=\"switch\" automático, tamaños default/sm, efecto inmediato sin envío.",
       "aiEntities": "Switch, Toggle, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role switch",

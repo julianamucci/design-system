@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Mensagem estática e persistente para comunicar erros, avisos, sucesso ou informações importantes no fluxo da página.",
     "seo": {
-      "title": "Alert — Feedback · Design System",
+      "title": "Alert — Feedback",
       "description": "Documentação do Alert: 2 variantes nativas, success e warning via className, acessibilidade WCAG com role=\"alert\" automático.",
       "aiSummary": "Componente Alert com 2 variantes nativas (default, destructive), variantes success e warning via className, role=\"alert\" automático e suporte a ícone, título e descrição.",
       "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role alert, aria-live",
@@ -310,7 +310,7 @@
     "type": "Component",
     "description": "Static, persistent message for communicating errors, warnings, success, or important information within the page flow.",
     "seo": {
-      "title": "Alert — Feedback · Design System",
+      "title": "Alert — Feedback",
       "description": "Documentation for Alert: 2 native variants, success and warning via className, WCAG accessibility with automatic role=\"alert\".",
       "aiSummary": "Alert component with 2 native variants (default, destructive), success and warning via className, automatic role=\"alert\", and support for icon, title, and description.",
       "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role alert, aria-live",
@@ -615,7 +615,7 @@
     "type": "Componente",
     "description": "Mensaje estático y persistente para comunicar errores, advertencias, éxito o información importante en el flujo de la página.",
     "seo": {
-      "title": "Alert — Feedback · Design System",
+      "title": "Alert — Feedback",
       "description": "Documentación del Alert: 2 variantes nativas, success y warning vía className, accesibilidad WCAG con role=\"alert\" automático.",
       "aiSummary": "Componente Alert con 2 variantes nativas (default, destructive), success y warning vía className, role=\"alert\" automático y soporte para ícono, título y descripción.",
       "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role alert, aria-live",

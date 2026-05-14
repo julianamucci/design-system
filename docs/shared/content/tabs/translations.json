@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Alterna entre views paralelas do mesmo nível hierárquico, com suporte a orientação horizontal/vertical e variantes default/line.",
     "seo": {
-      "title": "Tabs — Navegação · Design System",
+      "title": "Tabs — Navegação",
       "description": "Documentação do Tabs: Root, List, Trigger e Content com role=\"tablist\", navegação por setas e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Tabs com Root, List, Trigger e Content, role=\"tablist\" automático, navegação por setas/Home/End e variantes default/line.",
       "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tablist",
@@ -337,7 +337,7 @@
     "type": "Component",
     "description": "Switches between parallel views of the same hierarchy level, with horizontal/vertical orientation and default/line variants.",
     "seo": {
-      "title": "Tabs — Navigation · Design System",
+      "title": "Tabs — Navigation",
       "description": "Tabs documentation: Root, List, Trigger and Content with role=\"tablist\", arrow navigation and WCAG 2.1 AA support.",
       "aiSummary": "Tabs component with Root, List, Trigger and Content, automatic role=\"tablist\", arrow/Home/End navigation and default/line variants.",
       "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tablist",
@@ -669,7 +669,7 @@
     "type": "Componente",
     "description": "Alterna entre vistas paralelas del mismo nivel jerárquico, con orientación horizontal/vertical y variantes default/line.",
     "seo": {
-      "title": "Tabs — Navegación · Design System",
+      "title": "Tabs — Navegación",
       "description": "Documentación de Tabs: Root, List, Trigger y Content con role=\"tablist\", navegación por flechas y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Tabs con Root, List, Trigger y Content, role=\"tablist\" automático, navegación por flechas/Home/End y variantes default/line.",
       "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role tablist",

@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
 import { sanitizeHtml } from "@/lib/sanitize-html";
+import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import skeletonTranslations from "@shared/content/skeleton/translations.json";
 
@@ -76,32 +77,6 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-function useActiveSection(ids: string[], onSectionChange?: (id: string) => void) {
-  const [activeId, setActiveId] = useState<string>(ids[0]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const id = entry.target.id;
-            setActiveId(id);
-            onSectionChange?.(id);
-            break;
-          }
-        }
-      },
-      { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, [ids, onSectionChange]);
-
-  return activeId;
-}
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 

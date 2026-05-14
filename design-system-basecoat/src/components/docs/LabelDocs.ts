@@ -2,6 +2,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createLabel } from '@/components/ui/label';
 import { createInput } from '@/components/ui/input';
 import { createCheckbox } from '@/components/ui/checkbox';
@@ -528,27 +529,22 @@ export function createLabelDocs(): HTMLElement {
 
   // ── IntersectionObserver ─────────────────────────────────────────────────
 
-  let observer: IntersectionObserver | null = null;
+  let activeSectionObserver: { disconnect: () => void } | null = null;
 
   function attachObserver() {
-    observer?.disconnect();
-    observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          const sectionId = entry.target.id;
-          updateActiveNav(sectionId);
-          track('docs_section_viewed', { section_id: sectionId, component_name: 'label', locale: getLocale() });
-          break;
-        }
-      }
-    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
-
-    for (const id of sectionOrder) {
-      const el = sectionEls[id];
-      if (el) observer.observe(el);
-    }
+    activeSectionObserver?.disconnect();
+    activeSectionObserver = createActiveSectionObserver(
+      sectionOrder as unknown as string[],
+      (id) => sectionEls[id as keyof typeof sectionEls] ?? null,
+      (id) => updateActiveNav(id),
+      (id) => track('docs_section_viewed', {
+        section_id: id,
+        component_name: 'label',
+        locale: getLocale(),
+      }),
+    );
   }
-  cleanups.push(() => observer?.disconnect());
+  cleanups.push(() => activeSectionObserver?.disconnect());
 
   // ── Initial render ────────────────────────────────────────────────────────
 

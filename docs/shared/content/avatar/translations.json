@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Representação visual de um usuário via foto, iniciais ou ícone genérico. Suporta agrupamento, tamanhos e indicador de status.",
     "seo": {
-      "title": "Avatar — Display · Design System",
+      "title": "Avatar — Display",
       "description": "Documentação do Avatar: composição com imagem e fallback, tamanhos via className, agrupamento e indicador de status.",
       "aiSummary": "Componente Avatar baseado em Radix com Avatar, AvatarImage e AvatarFallback; tamanhos via className (h-6, h-8, h-10, h-12), suporte a agrupamento e status.",
       "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, Tailwind CSS, WCAG 2.1",
@@ -297,7 +297,7 @@
     "type": "Component",
     "description": "Visual representation of a user via photo, initials, or generic icon. Supports grouping, sizes, and status indicator.",
     "seo": {
-      "title": "Avatar — Display · Design System",
+      "title": "Avatar — Display",
       "description": "Documentation for Avatar: image and fallback composition, sizes via className, grouping, and status indicator.",
       "aiSummary": "Radix-based Avatar component with Avatar, AvatarImage, and AvatarFallback; sizes via className (h-6, h-8, h-10, h-12), with grouping and status support.",
       "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, Tailwind CSS, WCAG 2.1",
@@ -589,7 +589,7 @@
     "type": "Componente",
     "description": "Representación visual de un usuario vía foto, iniciales o ícono genérico. Admite agrupación, tamaños e indicador de estado.",
     "seo": {
-      "title": "Avatar — Display · Design System",
+      "title": "Avatar — Display",
       "description": "Documentación del Avatar: composición con imagen y fallback, tamaños vía className, agrupación e indicador de estado.",
       "aiSummary": "Componente Avatar basado en Radix con Avatar, AvatarImage y AvatarFallback; tamaños vía className (h-6, h-8, h-10, h-12), soporte para agrupación y estado.",
       "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, Tailwind CSS, WCAG 2.1",

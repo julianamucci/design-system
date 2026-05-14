@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Painel lateral deslizante baseado em Dialog, ideal para configurações, filtros avançados e navegação secundária em desktop.",
     "seo": {
-      "title": "Sheet — Overlay · Design System",
+      "title": "Sheet — Overlay",
       "description": "Documentação do Sheet: Trigger, Content, Header, Title, Description, Footer e Close com posicionamento por side e WCAG 2.1 AA.",
       "aiSummary": "Componente Sheet com Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer e Close, baseado em Dialog com foco gerenciado.",
       "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Shadcn/UI, base-ui Dialog, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",
@@ -345,7 +345,7 @@
     "type": "Component",
     "description": "Sliding side panel based on Dialog, ideal for settings, advanced filters and secondary navigation on desktop.",
     "seo": {
-      "title": "Sheet — Overlay · Design System",
+      "title": "Sheet — Overlay",
       "description": "Sheet documentation: Trigger, Content, Header, Title, Description, Footer and Close with side positioning and WCAG 2.1 AA.",
       "aiSummary": "Sheet component with Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer and Close, based on Dialog with managed focus.",
       "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Shadcn/UI, base-ui Dialog, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",
@@ -685,7 +685,7 @@
     "type": "Componente",
     "description": "Panel lateral deslizante basado en Dialog, ideal para configuración, filtros avanzados y navegación secundaria en desktop.",
     "seo": {
-      "title": "Sheet — Overlay · Design System",
+      "title": "Sheet — Overlay",
       "description": "Documentación de Sheet: Trigger, Content, Header, Title, Description, Footer y Close con posicionamiento por side y WCAG 2.1 AA.",
       "aiSummary": "Componente Sheet con Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer y Close, basado en Dialog con foco gestionado.",
       "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Shadcn/UI, base-ui Dialog, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",

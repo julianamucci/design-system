@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Campo de texto de linha única para qualquer tipo de entrada do usuário — texto, email, senha, número, telefone, URL ou busca.",
     "seo": {
-      "title": "Input — Formulário · Design System",
+      "title": "Input — Formulário",
       "description": "Documentação do Input: campo de texto linha única, tipos HTML nativos, estados disabled e error, acessibilidade WCAG, integração com Form.",
       "aiSummary": "Componente Input de linha única com suporte a todos os tipos HTML nativos, estados disabled e aria-invalid, integração com FormField e InputGroup para composição avançada.",
       "aiEntities": "Input, InputGroup, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-invalid, FormField",
@@ -334,7 +334,7 @@
     "type": "Component",
     "description": "Single-line text field for any type of user input — text, email, password, number, phone, URL, or search.",
     "seo": {
-      "title": "Input — Form · Design System",
+      "title": "Input — Form",
       "description": "Documentation for Input: single-line text field, native HTML types, disabled and error states, WCAG accessibility, Form integration.",
       "aiSummary": "Single-line Input component supporting all native HTML types, disabled and aria-invalid states, FormField integration and InputGroup for advanced composition.",
       "aiEntities": "Input, InputGroup, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-invalid, FormField",
@@ -663,7 +663,7 @@
     "type": "Componente",
     "description": "Campo de texto de una sola línea para cualquier tipo de entrada del usuario — texto, email, contraseña, número, teléfono, URL o búsqueda.",
     "seo": {
-      "title": "Input — Formulario · Design System",
+      "title": "Input — Formulario",
       "description": "Documentación del Input: campo de texto línea única, tipos HTML nativos, estados disabled y error, accesibilidad WCAG, integración con Form.",
       "aiSummary": "Componente Input de línea única con soporte a todos los tipos HTML nativos, estados disabled y aria-invalid, integración con FormField e InputGroup para composición avanzada.",
       "aiEntities": "Input, InputGroup, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-invalid, FormField",

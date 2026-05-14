@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Placeholder visual com animação pulsante que replica a estrutura do conteúdo enquanto ele carrega.",
     "seo": {
-      "title": "Skeleton — Feedback · Design System",
+      "title": "Skeleton — Feedback",
       "description": "Documentação do Skeleton: placeholder de loading com animate-pulse, decorativo via aria-hidden, com motion-reduce para acessibilidade.",
       "aiSummary": "Componente Skeleton renderiza placeholder retangular com animate-pulse e bg-muted; é puramente decorativo (aria-hidden), respeita motion-reduce e replica dimensões do conteúdo final.",
       "aiEntities": "Skeleton, React, Vue, Svelte, Basecoat, Tailwind CSS, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
@@ -367,7 +367,7 @@
     "type": "Component",
     "description": "Pulsating visual placeholder that mirrors the final content structure while it loads.",
     "seo": {
-      "title": "Skeleton — Feedback · Design System",
+      "title": "Skeleton — Feedback",
       "description": "Skeleton documentation: loading placeholder with animate-pulse, decorative via aria-hidden, and motion-reduce for accessibility.",
       "aiSummary": "Skeleton component renders a rectangular placeholder with animate-pulse and bg-muted; purely decorative (aria-hidden), respects motion-reduce, and mirrors final content dimensions.",
       "aiEntities": "Skeleton, React, Vue, Svelte, Basecoat, Tailwind CSS, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
@@ -729,7 +729,7 @@
     "type": "Componente",
     "description": "Placeholder visual con animación pulsante que replica la estructura del contenido mientras se carga.",
     "seo": {
-      "title": "Skeleton — Feedback · Design System",
+      "title": "Skeleton — Feedback",
       "description": "Documentación de Skeleton: placeholder de loading con animate-pulse, decorativo vía aria-hidden y motion-reduce para accesibilidad.",
       "aiSummary": "Componente Skeleton renderiza un placeholder rectangular con animate-pulse y bg-muted; es puramente decorativo (aria-hidden), respeta motion-reduce y replica las dimensiones del contenido final.",
       "aiEntities": "Skeleton, React, Vue, Svelte, Basecoat, Tailwind CSS, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",

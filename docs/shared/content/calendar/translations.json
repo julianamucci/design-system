@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Seletor visual de datas com navegação por mês, suporte a single, multiple e range, locale e datas desabilitadas.",
     "seo": {
-      "title": "Calendar — Formulário · Design System",
+      "title": "Calendar — Formulário",
       "description": "Documentação do Calendar: wrapper de react-day-picker v9 com modos single/multiple/range, captionLayout, locale e acessibilidade WCAG.",
       "aiSummary": "Componente Calendar baseado em react-day-picker v9 com modos single/multiple/range, captionLayout label/dropdown, suporte a locale pt-BR/en/es e datas desabilitadas.",
       "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, Shadcn/UI, WCAG 2.1, Tailwind CSS, date-fns",
@@ -343,7 +343,7 @@
     "type": "Component",
     "description": "Visual date picker with month navigation, support for single, multiple and range modes, locale and disabled dates.",
     "seo": {
-      "title": "Calendar — Form · Design System",
+      "title": "Calendar — Form",
       "description": "Documentation for Calendar: react-day-picker v9 wrapper with single/multiple/range modes, captionLayout, locale and WCAG accessibility.",
       "aiSummary": "Calendar component built on react-day-picker v9 with single/multiple/range modes, label/dropdown captionLayout, pt-BR/en/es locale support and disabled dates.",
       "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, Shadcn/UI, WCAG 2.1, Tailwind CSS, date-fns",
@@ -681,7 +681,7 @@
     "type": "Componente",
     "description": "Selector visual de fechas con navegación por mes, soporte para single, multiple y range, locale y fechas deshabilitadas.",
     "seo": {
-      "title": "Calendar — Formulario · Design System",
+      "title": "Calendar — Formulario",
       "description": "Documentación del Calendar: wrapper de react-day-picker v9 con modos single/multiple/range, captionLayout, locale y accesibilidad WCAG.",
       "aiSummary": "Componente Calendar basado en react-day-picker v9 con modos single/multiple/range, captionLayout label/dropdown, soporte de locale pt-BR/en/es y fechas deshabilitadas.",
       "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, Shadcn/UI, WCAG 2.1, Tailwind CSS, date-fns",

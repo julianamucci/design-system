@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Seção única expansível controlada por trigger explícito. Ideal para filtros avançados, detalhes secundários e conteúdo raramente acessado.",
     "seo": {
-      "title": "Collapsible — Disclosure · Design System",
+      "title": "Collapsible — Disclosure",
       "description": "Documentação do Collapsible: seção expansível com trigger explícito, modos controlado e não-controlado, acessibilidade WCAG e aria-expanded automático.",
       "aiSummary": "Componente Collapsible para expandir e ocultar uma única seção de conteúdo. Suporta modo controlado (estado externo + callback de mudança) e não-controlado (estado inicial), com aria-expanded e aria-controls aplicados automaticamente.",
       "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, Tailwind CSS, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
@@ -281,7 +281,7 @@
     "type": "Component",
     "description": "Single expandable section controlled by an explicit trigger. Ideal for advanced filters, secondary details, and rarely accessed content.",
     "seo": {
-      "title": "Collapsible — Disclosure · Design System",
+      "title": "Collapsible — Disclosure",
       "description": "Collapsible documentation: expandable section with explicit trigger, controlled and uncontrolled modes, WCAG accessibility with automatic aria-expanded.",
       "aiSummary": "Collapsible component to expand and hide a single content section. Supports controlled (external state + change callback) and uncontrolled (initial state) modes, with aria-expanded and aria-controls applied automatically.",
       "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, Tailwind CSS, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
@@ -557,7 +557,7 @@
     "type": "Componente",
     "description": "Sección única expandible controlada por un trigger explícito. Ideal para filtros avanzados, detalles secundarios y contenido al que se accede raramente.",
     "seo": {
-      "title": "Collapsible — Disclosure · Design System",
+      "title": "Collapsible — Disclosure",
       "description": "Documentación del Collapsible: sección expandible con trigger explícito, modos controlado y no controlado, accesibilidad WCAG con aria-expanded automático.",
       "aiSummary": "Componente Collapsible para expandir y ocultar una única sección de contenido. Soporta modo controlado (estado externo + callback de cambio) y no controlado (estado inicial), con aria-expanded y aria-controls aplicados automáticamente.",
       "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, Tailwind CSS, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",

@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Indicador visual de progresso de operações com duração mensurável, com suporte a modos determinado e indeterminate.",
     "seo": {
-      "title": "Progress — Feedback · Design System",
+      "title": "Progress — Feedback",
       "description": "Documentação do Progress: track, indicator, label e value, com role=\"progressbar\" automático e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Progress com Track, Indicator, Label e Value, role=\"progressbar\" automático, suporte a modo determinado (0-100) e indeterminate.",
       "aiEntities": "Progress, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role progressbar",
@@ -314,7 +314,7 @@
     "type": "Component",
     "description": "Visual indicator of progress for measurable operations, with support for determinate and indeterminate modes.",
     "seo": {
-      "title": "Progress — Feedback · Design System",
+      "title": "Progress — Feedback",
       "description": "Progress documentation: track, indicator, label and value, with automatic role=\"progressbar\" and WCAG 2.1 AA support.",
       "aiSummary": "Progress component with Track, Indicator, Label and Value, automatic role=\"progressbar\", support for determinate (0-100) and indeterminate modes.",
       "aiEntities": "Progress, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role progressbar",
@@ -623,7 +623,7 @@
     "type": "Componente",
     "description": "Indicador visual de progreso de operaciones con duración medible, con soporte para modos determinado e indeterminate.",
     "seo": {
-      "title": "Progress — Feedback · Design System",
+      "title": "Progress — Feedback",
       "description": "Documentación de Progress: track, indicator, label y value, con role=\"progressbar\" automático y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Progress con Track, Indicator, Label y Value, role=\"progressbar\" automático, soporte para modo determinado (0-100) e indeterminate.",
       "aiEntities": "Progress, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role progressbar",

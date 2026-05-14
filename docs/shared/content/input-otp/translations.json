@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Campo de entrada para códigos de verificação (OTP/PIN) com slots individuais, autofill SMS e suporte a paste.",
     "seo": {
-      "title": "InputOTP — Formulário · Design System",
+      "title": "InputOTP — Formulário",
       "description": "Documentação do InputOTP: campo de código de verificação via input-otp, com slots individuais, autoFocus, paste e WCAG 2.1 AA.",
       "aiSummary": "Componente InputOTP construído sobre a lib input-otp (React/Vue/Svelte) e factory custom (Basecoat) que apresenta slots individuais para códigos de verificação OTP/PIN, suporta paste, autoFocus, autocomplete one-time-code e formatos como 4-6 dígitos com separator opcional.",
       "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Basecoat, Tailwind CSS, autocomplete, paste, WCAG 2.1, aria-invalid",
@@ -428,7 +428,7 @@
     "type": "Component",
     "description": "Input field for verification codes (OTP/PIN) with individual slots, SMS autofill, and paste support.",
     "seo": {
-      "title": "InputOTP — Form · Design System",
+      "title": "InputOTP — Form",
       "description": "InputOTP documentation: verification code field via input-otp, with individual slots, autoFocus, paste, and WCAG 2.1 AA.",
       "aiSummary": "InputOTP component built on the input-otp lib (React/Vue/Svelte) and a custom factory (Basecoat) presenting individual slots for OTP/PIN verification codes, supporting paste, autoFocus, autocomplete one-time-code, and formats like 4-6 digits with optional separator.",
       "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Basecoat, Tailwind CSS, autocomplete, paste, WCAG 2.1, aria-invalid",
@@ -851,7 +851,7 @@
     "type": "Componente",
     "description": "Campo de entrada para códigos de verificación (OTP/PIN) con slots individuales, autofill SMS y soporte para paste.",
     "seo": {
-      "title": "InputOTP — Formulario · Design System",
+      "title": "InputOTP — Formulario",
       "description": "Documentación de InputOTP: campo de código de verificación vía input-otp, con slots individuales, autoFocus, paste y WCAG 2.1 AA.",
       "aiSummary": "Componente InputOTP construido sobre la lib input-otp (React/Vue/Svelte) y factory custom (Basecoat) que presenta slots individuales para códigos de verificación OTP/PIN, soporta paste, autoFocus, autocomplete one-time-code y formatos como 4-6 dígitos con separator opcional.",
       "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Basecoat, Tailwind CSS, autocomplete, paste, WCAG 2.1, aria-invalid",

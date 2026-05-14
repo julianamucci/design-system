@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
+import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import accordionTranslations from "@shared/content/accordion/translations.json";
 
@@ -76,36 +77,39 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-function useActiveSection(ids: string[], onSectionChange?: (id: string) => void) {
-  const [activeId, setActiveId] = useState<string>(ids[0]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const id = entry.target.id;
-            setActiveId(id);
-            onSectionChange?.(id);
-            break;
-          }
-        }
-      },
-      { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, [ids, onSectionChange]);
-
-  return activeId;
-}
 
 export function AccordionDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(accordionTranslations);
+
+  // Override stack-específico: @base-ui usa `multiple` (boolean), não `type` ("single"|"multiple").
+  const rootItemsOverride = useMemo(() => {
+    const desc = {
+      "pt-BR": "Permite múltiplos itens abertos simultaneamente.",
+      en: "Allows multiple items to be open simultaneously.",
+      es: "Permite múltiples ítems abiertos simultáneamente.",
+    } as const;
+    const requiredLabel = locale === "pt-BR" ? "Não" : "No";
+    const original = (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>>)[locale]?.props?.accordion?.items ?? {};
+    return Object.entries(original).map(([key, v]) => {
+      if (key === "type") {
+        return {
+          name: "multiple",
+          type: "boolean",
+          defaultValue: "false",
+          required: requiredLabel,
+          description: desc[locale as keyof typeof desc] ?? desc["pt-BR"],
+        };
+      }
+      return {
+        name: v.name,
+        type: v.type,
+        defaultValue: v.default,
+        required: v.required,
+        description: stripHtml(v.description),
+      };
+    }).filter((row) => row.name !== "collapsible");
+  }, [locale]);
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -506,15 +510,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   required: tContent("props.accordion.required"),
                   description: tContent("props.accordion.description"),
                 },
-                items: Object.entries(
-                  (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[locale]?.props?.accordion?.items ?? {}
-                ).map(([, v]) => ({
-                  name: v.name,
-                  type: v.type,
-                  defaultValue: v.default,
-                  required: v.required,
-                  description: stripHtml(v.description),
-                })),
+                items: rootItemsOverride,
               },
               {
                 title: tContent("props.item.title"),
@@ -671,16 +667,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 event: tContent("analytics.events.collapse.event"),
                 trigger: tContent("analytics.events.collapse.trigger"),
                 payload: tContent("analytics.events.collapse.payload"),
-              },
-              {
-                event: "docs_page_view",
-                trigger: "Mount do componente (1x por locale)",
-                payload: `{ component_name: "accordion", locale, page_title }`,
-              },
-              {
-                event: "docs_section_viewed",
-                trigger: "Seção entra no viewport",
-                payload: `{ component_name: "accordion", section_id, locale }`,
               },
             ]}
           />

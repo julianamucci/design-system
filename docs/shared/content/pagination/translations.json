@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Navegação entre páginas de um conjunto de resultados ou conteúdo paginado, com controles para anterior, próxima e páginas numeradas.",
     "seo": {
-      "title": "Pagination — Navegação · Design System",
+      "title": "Pagination — Navegação",
       "description": "Documentação do Pagination: subcomponentes Previous, Next, Link, Ellipsis, com aria-current e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Pagination com subcomponentes Previous, Next, Link, Ellipsis e Item, navegação acessível por teclado e aria-current na página ativa.",
       "aiEntities": "Pagination, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, aria-label",
@@ -320,7 +320,7 @@
     "type": "Component",
     "description": "Navigation between pages of a result set or paginated content, with controls for previous, next and numbered pages.",
     "seo": {
-      "title": "Pagination — Navigation · Design System",
+      "title": "Pagination — Navigation",
       "description": "Pagination documentation: Previous, Next, Link, Ellipsis subcomponents with aria-current and WCAG 2.1 AA support.",
       "aiSummary": "Pagination component with Previous, Next, Link, Ellipsis and Item subcomponents, accessible keyboard navigation and aria-current on active page.",
       "aiEntities": "Pagination, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, aria-label",
@@ -635,7 +635,7 @@
     "type": "Componente",
     "description": "Navegación entre páginas de un conjunto de resultados o contenido paginado, con controles para anterior, siguiente y páginas numeradas.",
     "seo": {
-      "title": "Pagination — Navegación · Design System",
+      "title": "Pagination — Navegación",
       "description": "Documentación de Pagination: subcomponentes Previous, Next, Link, Ellipsis con aria-current y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Pagination con subcomponentes Previous, Next, Link, Ellipsis e Item, navegación accesible por teclado y aria-current en la página activa.",
       "aiEntities": "Pagination, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, aria-label",

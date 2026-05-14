@@ -9,6 +9,10 @@ import {
 
 const meta: Meta = {
   title: "UI/Accordion/Estados",
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 };
 
 export default meta;

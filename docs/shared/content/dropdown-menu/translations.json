@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Menu suspenso acionado por botão que apresenta ações ou opções de seleção em um popup com navegação por teclado.",
     "seo": {
-      "title": "DropdownMenu — Overlay · Design System",
+      "title": "DropdownMenu — Overlay",
       "description": "Documentação do DropdownMenu: menu suspenso com itens, checkbox, radio, submenus, atalhos e WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
       "aiSummary": "Componente DropdownMenu construído sobre base-ui (React), reka-ui (Vue), bits-ui (Svelte) e cmdk-style factory (Basecoat) que apresenta menu suspenso com items, checkbox-items, radio-items, submenus, separators e shortcuts em popup acessível.",
       "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
@@ -428,7 +428,7 @@
     "type": "Component",
     "description": "Button-triggered dropdown menu that presents actions or selection options in a popup with full keyboard navigation.",
     "seo": {
-      "title": "DropdownMenu — Overlay · Design System",
+      "title": "DropdownMenu — Overlay",
       "description": "DropdownMenu documentation: dropdown menu with items, checkboxes, radios, submenus, shortcuts and WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
       "aiSummary": "DropdownMenu component built on base-ui (React), reka-ui (Vue), bits-ui (Svelte) and a cmdk-style factory (Basecoat) presenting a dropdown menu with items, checkbox-items, radio-items, submenus, separators and shortcuts in an accessible popup.",
       "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
@@ -851,7 +851,7 @@
     "type": "Componente",
     "description": "Menú desplegable accionado por botón que presenta acciones u opciones de selección en un popup con navegación por teclado.",
     "seo": {
-      "title": "DropdownMenu — Overlay · Design System",
+      "title": "DropdownMenu — Overlay",
       "description": "Documentación de DropdownMenu: menú desplegable con items, checkbox, radio, submenús, atajos y WCAG 2.1 AA vía base-ui/reka-ui/bits-ui.",
       "aiSummary": "Componente DropdownMenu construido sobre base-ui (React), reka-ui (Vue), bits-ui (Svelte) y factory cmdk-style (Basecoat) que presenta menú desplegable con items, checkbox-items, radio-items, submenús, separators y shortcuts en popup accesible.",
       "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",

@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Overlay flutuante com conteúdo rico, ativado por clique em um trigger. Ideal para formulários contextuais e conteúdo interativo curto.",
     "seo": {
-      "title": "Popover — Overlay · Design System",
+      "title": "Popover — Overlay",
       "description": "Documentação do Popover: trigger, content, title e description, com posicionamento auto-flip e acessibilidade WCAG 2.1 AA.",
       "aiSummary": "Componente Popover com Trigger, Content, Title e Description, posicionamento auto-flip via base-ui, foco gerenciado e role dialog.",
       "aiEntities": "Popover, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",
@@ -337,7 +337,7 @@
     "type": "Component",
     "description": "Floating overlay with rich content, activated by clicking a trigger. Ideal for contextual forms and short interactive content.",
     "seo": {
-      "title": "Popover — Overlay · Design System",
+      "title": "Popover — Overlay",
       "description": "Popover documentation: trigger, content, title and description with auto-flip positioning and WCAG 2.1 AA accessibility.",
       "aiSummary": "Popover component with Trigger, Content, Title and Description, auto-flip positioning via base-ui, managed focus and dialog role.",
       "aiEntities": "Popover, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",
@@ -669,7 +669,7 @@
     "type": "Componente",
     "description": "Overlay flotante con contenido rico, activado al hacer clic en un trigger. Ideal para formularios contextuales y contenido interactivo corto.",
     "seo": {
-      "title": "Popover — Overlay · Design System",
+      "title": "Popover — Overlay",
       "description": "Documentación de Popover: trigger, content, title y description con posicionamiento auto-flip y accesibilidad WCAG 2.1 AA.",
       "aiSummary": "Componente Popover con Trigger, Content, Title y Description, posicionamiento auto-flip vía base-ui, foco gestionado y role dialog.",
       "aiEntities": "Popover, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role dialog",

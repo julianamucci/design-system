@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import { userEvent, within, expect, waitFor } from "storybook/test";
 import {
   Accordion,
   AccordionContent,
@@ -9,6 +10,10 @@ import {
 
 const meta: Meta = {
   title: "UI/Accordion/Modos",
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 };
 
 export default meta;
@@ -46,6 +51,27 @@ export const Single: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Item 1 começa aberto via defaultValue", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await waitFor(
+        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+    });
+
+    await step("Abrir item 2 fecha automaticamente o item 1", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await userEvent.click(triggers[1]);
+      await waitFor(
+        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+      await expect(triggers[0]).toHaveAttribute("aria-expanded", "false");
+    });
+  },
 };
 
 export const Multiple: Story = {
@@ -78,6 +104,24 @@ export const Multiple: Story = {
           "Modo multiple. Múltiplos itens podem estar abertos ao mesmo tempo. Use para especificações técnicas comparáveis.",
       },
     },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Abrir dois itens — ambos permanecem expandidos (modo múltiplo)", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await userEvent.click(triggers[0]);
+      await waitFor(
+        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+      await userEvent.click(triggers[1]);
+      await waitFor(
+        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+      await expect(triggers[0]).toHaveAttribute("aria-expanded", "true");
+    });
   },
 };
 
@@ -116,6 +160,27 @@ export const Controlled: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Item 1 começa aberto (value inicial controlado)", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await waitFor(
+        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+    });
+
+    await step("Clicar em item 2 atualiza o estado externo", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await userEvent.click(triggers[1]);
+      await waitFor(
+        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+      await expect(canvasElement.textContent).toContain("item-2");
+    });
+  },
 };
 
 export const DefaultOpen: Story = {
@@ -141,5 +206,17 @@ export const DefaultOpen: Story = {
           "Prop defaultValue abre um item na montagem sem modo controlado. Use em documentação e onboarding.",
       },
     },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Item 1 inicia expandido via defaultValue", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await waitFor(
+        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+      await expect(triggers[1]).toHaveAttribute("aria-expanded", "false");
+    });
   },
 };

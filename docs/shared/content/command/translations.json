@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Interface de busca e seleção rápida de comandos, ações ou itens com filtro fuzzy integrado. Suporta uso inline, combobox e command palette.",
     "seo": {
-      "title": "Command — Overlay · Design System",
+      "title": "Command — Overlay",
       "description": "Documentação do Command: busca fuzzy integrada, padrões inline, combobox e command palette (Cmd+K), acessibilidade WCAG com navegação por teclado.",
       "aiSummary": "Componente Command com filtro fuzzy nativo, 3 padrões de uso (inline, combobox, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut e CommandEmpty.",
       "aiEntities": "Command, cmdk, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, Combobox, Command Palette",
@@ -315,7 +315,7 @@
     "type": "Component",
     "description": "Fast search and selection interface for commands, actions, or items with built-in fuzzy filtering. Supports inline, combobox, and command palette patterns.",
     "seo": {
-      "title": "Command — Overlay · Design System",
+      "title": "Command — Overlay",
       "description": "Documentation for Command: built-in fuzzy search, inline, combobox, and command palette (Cmd+K) patterns, WCAG accessibility with keyboard navigation.",
       "aiSummary": "Command component with native fuzzy filtering, 3 usage patterns (inline, combobox, command palette), subcomponents CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut, and CommandEmpty.",
       "aiEntities": "Command, cmdk, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, Combobox, Command Palette",
@@ -625,7 +625,7 @@
     "type": "Componente",
     "description": "Interfaz de búsqueda y selección rápida de comandos, acciones o ítems con filtro fuzzy integrado. Soporta los patrones inline, combobox y command palette.",
     "seo": {
-      "title": "Command — Overlay · Design System",
+      "title": "Command — Overlay",
       "description": "Documentación del Command: búsqueda fuzzy integrada, patrones inline, combobox y command palette (Cmd+K), accesibilidad WCAG con navegación por teclado.",
       "aiSummary": "Componente Command con filtro fuzzy nativo, 3 patrones de uso (inline, combobox, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut y CommandEmpty.",
       "aiEntities": "Command, cmdk, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, Combobox, Command Palette",

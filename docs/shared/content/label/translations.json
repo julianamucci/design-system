@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Rótulo textual acessível associado a um campo de formulário via htmlFor ou envolvendo o controle.",
     "seo": {
-      "title": "Label — Formulário · Design System",
+      "title": "Label — Formulário",
       "description": "Documentação do Label: associação com campos via htmlFor, estados disabled e required, acessibilidade WCAG para formulários.",
       "aiSummary": "Componente Label para formulários: associação obrigatória via htmlFor/id, suporte a required com asterisco, opacity reduzida quando o campo associado está disabled.",
       "aiEntities": "Label, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, htmlFor, aria-required",
@@ -233,7 +233,7 @@
     "type": "Component",
     "description": "Accessible text label associated with a form control via htmlFor or by wrapping the control.",
     "seo": {
-      "title": "Label — Form · Design System",
+      "title": "Label — Form",
       "description": "Documentation for Label: field association via htmlFor, disabled and required states, WCAG accessibility for forms.",
       "aiSummary": "Label component for forms: mandatory association via htmlFor/id, required support with asterisk marker, reduced opacity when the associated field is disabled.",
       "aiEntities": "Label, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, htmlFor, aria-required",
@@ -461,7 +461,7 @@
     "type": "Componente",
     "description": "Etiqueta textual accesible asociada a un campo de formulario mediante for/htmlFor o envolviendo el control.",
     "seo": {
-      "title": "Label — Formulario · Design System",
+      "title": "Label — Formulario",
       "description": "Documentación del Label: asociación con campos via htmlFor, estados disabled y required, accesibilidad WCAG para formularios.",
       "aiSummary": "Componente Label para formularios: asociación obligatoria via htmlFor/id, soporte required con asterisco, opacidad reducida cuando el campo asociado está disabled.",
       "aiEntities": "Label, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, htmlFor, aria-required",

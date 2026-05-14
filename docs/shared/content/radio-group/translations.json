@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Seleção de uma única opção em conjunto mutuamente exclusivo, com navegação por setas e suporte completo a teclado.",
     "seo": {
-      "title": "RadioGroup — Formulário · Design System",
+      "title": "RadioGroup — Formulário",
       "description": "Documentação do RadioGroup: seleção única exclusiva, navegação por setas, integração com Label e Form, acessibilidade WCAG 2.1 AA.",
       "aiSummary": "Componente RadioGroup com seleção única mutuamente exclusiva, navegação por setas, Label associado e role=\"radiogroup\" automático.",
       "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role radiogroup",
@@ -332,7 +332,7 @@
     "type": "Component",
     "description": "Single-choice selection in a mutually exclusive set, with arrow key navigation and full keyboard support.",
     "seo": {
-      "title": "RadioGroup — Form · Design System",
+      "title": "RadioGroup — Form",
       "description": "RadioGroup documentation: exclusive single selection, arrow navigation, Label and Form integration, WCAG 2.1 AA accessibility.",
       "aiSummary": "RadioGroup component with single mutually exclusive selection, arrow navigation, associated Label and automatic role=\"radiogroup\".",
       "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role radiogroup",
@@ -659,7 +659,7 @@
     "type": "Componente",
     "description": "Selección de una única opción en un conjunto mutuamente excluyente, con navegación por flechas y soporte completo de teclado.",
     "seo": {
-      "title": "RadioGroup — Formulario · Design System",
+      "title": "RadioGroup — Formulario",
       "description": "Documentación de RadioGroup: selección única excluyente, navegación por flechas, integración con Label y Form, accesibilidad WCAG 2.1 AA.",
       "aiSummary": "Componente RadioGroup con selección única mutuamente excluyente, navegación por flechas, Label asociado y role=\"radiogroup\" automático.",
       "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role radiogroup",

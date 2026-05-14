@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Navegação hierárquica que mostra a localização do usuário na estrutura do site e permite voltar a níveis anteriores.",
     "seo": {
-      "title": "Breadcrumb — Navegação · Design System",
+      "title": "Breadcrumb — Navegação",
       "description": "Documentação do Breadcrumb: navegação hierárquica acessível com separadores customizáveis, ellipsis para níveis longos e suporte a JSON-LD.",
       "aiSummary": "Componente Breadcrumb composto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator e BreadcrumbEllipsis — navegação hierárquica com aria-current automático.",
       "aiEntities": "Breadcrumb, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
@@ -321,7 +321,7 @@
     "type": "Component",
     "description": "Hierarchical navigation that shows the user's location in the site structure and allows returning to previous levels.",
     "seo": {
-      "title": "Breadcrumb — Navigation · Design System",
+      "title": "Breadcrumb — Navigation",
       "description": "Documentation for Breadcrumb: accessible hierarchical navigation with customizable separators, ellipsis for long paths, and JSON-LD support.",
       "aiSummary": "Breadcrumb component composed of BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, and BreadcrumbEllipsis — hierarchical navigation with automatic aria-current.",
       "aiEntities": "Breadcrumb, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
@@ -637,7 +637,7 @@
     "type": "Componente",
     "description": "Navegación jerárquica que muestra la ubicación del usuario en la estructura del sitio y permite volver a niveles anteriores.",
     "seo": {
-      "title": "Breadcrumb — Navegación · Design System",
+      "title": "Breadcrumb — Navegación",
       "description": "Documentación del Breadcrumb: navegación jerárquica accesible con separadores personalizables, ellipsis para rutas largas y soporte a JSON-LD.",
       "aiSummary": "Componente Breadcrumb compuesto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator y BreadcrumbEllipsis — navegación jerárquica con aria-current automático.",
       "aiEntities": "Breadcrumb, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",

@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Exibição sequencial de itens em um container com navegação por botões, teclado e gesto de arrastar, construída sobre Embla Carousel.",
     "seo": {
-      "title": "Carousel — Display · Design System",
+      "title": "Carousel — Display",
       "description": "Documentação do Carousel: orientação horizontal e vertical, plugin de autoplay, dots via API, acessibilidade WCAG com role region.",
       "aiSummary": "Componente Carousel baseado em Embla com orientação horizontal/vertical, navegação por teclado, suporte a autoplay via plugin, dots customizados via CarouselApi e role=\"region\" com aria-roledescription=\"carousel\".",
       "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-roledescription, motion-reduce",
@@ -328,7 +328,7 @@
     "type": "Component",
     "description": "Sequential display of items in a container with button, keyboard, and drag navigation, built on top of Embla Carousel.",
     "seo": {
-      "title": "Carousel — Display · Design System",
+      "title": "Carousel — Display",
       "description": "Documentation for Carousel: horizontal and vertical orientation, autoplay plugin, API-based dots, WCAG accessibility with region role.",
       "aiSummary": "Embla-based Carousel component with horizontal/vertical orientation, keyboard navigation, autoplay via plugin, custom dots via CarouselApi, and role=\"region\" with aria-roledescription=\"carousel\".",
       "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-roledescription, motion-reduce",
@@ -651,7 +651,7 @@
     "type": "Componente",
     "description": "Exhibición secuencial de ítems en un contenedor con navegación por botones, teclado y gesto de arrastrar, construido sobre Embla Carousel.",
     "seo": {
-      "title": "Carousel — Display · Design System",
+      "title": "Carousel — Display",
       "description": "Documentación del Carousel: orientación horizontal y vertical, plugin de autoplay, dots vía API, accesibilidad WCAG con role region.",
       "aiSummary": "Componente Carousel basado en Embla con orientación horizontal/vertical, navegación por teclado, soporte a autoplay vía plugin, dots customizados vía CarouselApi y role=\"region\" con aria-roledescription=\"carousel\".",
       "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-roledescription, motion-reduce",

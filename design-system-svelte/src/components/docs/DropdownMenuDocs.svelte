@@ -19,6 +19,7 @@
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
+  import { createActiveSection } from '@/lib/use-active-section.svelte';
   import { sanitizeHtml } from '@/lib/sanitize-html';
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
@@ -61,7 +62,6 @@
 
   // ─── Active section ──────────────────────────────────────────────────────────
 
-  let activeSection = $state('demonstracao');
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -92,30 +92,11 @@
     ];
   });
 
-  $effect(() => {
-    const ids = NAV_GROUPS.flatMap((g) => g.sections.map((s) => s.id));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            activeSection = entry.target.id;
-            track('docs_section_viewed', {
-              section_id: entry.target.id,
-              component_name: 'dropdown-menu',
-              locale: $locale,
-            });
-            break;
-          }
-        }
-      },
-      { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
-    );
-    for (const id of ids) {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    }
-    return () => observer.disconnect();
+  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const section = createActiveSection(sectionIds, (id) => {
+    track('docs_section_viewed', { section_id: id, component_name: 'dropdown-menu', locale: $locale });
   });
+  $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -218,7 +199,7 @@ interface DropdownMenuRadioGroupProps {
   });
 </script>
 
-<DocsPageLayout navGroups={NAV_GROUPS} {activeSection} componentSlug="dropdown-menu">
+<DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="dropdown-menu">
   {#snippet header()}
     <DocsHeader
       title={$tStore('title')}

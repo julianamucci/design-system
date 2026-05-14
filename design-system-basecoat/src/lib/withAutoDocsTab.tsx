@@ -5,7 +5,6 @@ import {
   Description,
   Primary,
   Controls,
-  ArgTypes,
   Stories,
 } from '@storybook/addon-docs/blocks';
 
@@ -50,7 +49,6 @@ function ApiReferencePage() {
       <Description />
       <Primary />
       <Controls />
-      <ArgTypes />
       <Stories includePrimary={false} />
     </div>
   );

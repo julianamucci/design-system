@@ -2,6 +2,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createSkeleton } from '@/components/ui/skeleton';
 import uiTranslations from '@/i18n/ui.json';
 import skeletonTranslations from '@shared/content/skeleton/translations.json';
@@ -626,27 +627,22 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
 
   // ── IntersectionObserver ─────────────────────────────────────────────────
 
-  let observer: IntersectionObserver | null = null;
+  let activeSectionObserver: { disconnect: () => void } | null = null;
 
   function attachObserver() {
-    observer?.disconnect();
-    observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          const sectionId = entry.target.id;
-          updateActiveNav(sectionId);
-          track('docs_section_viewed', { section_id: sectionId, component_name: 'skeleton', locale: getLocale() });
-          break;
-        }
-      }
-    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
-
-    for (const id of sectionOrder) {
-      const el = sectionEls[id];
-      if (el) observer.observe(el);
-    }
+    activeSectionObserver?.disconnect();
+    activeSectionObserver = createActiveSectionObserver(
+      sectionOrder as unknown as string[],
+      (id) => sectionEls[id as keyof typeof sectionEls] ?? null,
+      (id) => updateActiveNav(id),
+      (id) => track('docs_section_viewed', {
+        section_id: id,
+        component_name: 'skeleton',
+        locale: getLocale(),
+      }),
+    );
   }
-  cleanups.push(() => observer?.disconnect());
+  cleanups.push(() => activeSectionObserver?.disconnect());
 
   // ── Initial render ────────────────────────────────────────────────────────
 

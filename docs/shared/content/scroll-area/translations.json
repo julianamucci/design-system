@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Scroll interno customizado dentro de container com altura fixa, com scrollbar estilizada e suporte a scroll vertical, horizontal ou ambos.",
     "seo": {
-      "title": "ScrollArea — Layout · Design System",
+      "title": "ScrollArea — Layout",
       "description": "Documentação do ScrollArea: viewport com scroll customizado, ScrollBar estilizada e acessibilidade por teclado.",
       "aiSummary": "Componente ScrollArea com viewport, ScrollBar e Thumb estilizados, suporte a scroll vertical/horizontal/both e fallback para scroll nativo em mobile.",
       "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1",
@@ -314,7 +314,7 @@
     "type": "Component",
     "description": "Custom internal scroll inside a fixed-height container, with styled scrollbar and vertical, horizontal or both directions.",
     "seo": {
-      "title": "ScrollArea — Layout · Design System",
+      "title": "ScrollArea — Layout",
       "description": "ScrollArea documentation: viewport with custom scroll, styled ScrollBar and keyboard accessibility.",
       "aiSummary": "ScrollArea component with viewport, styled ScrollBar and Thumb, vertical/horizontal/both support and native scroll fallback on mobile.",
       "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1",
@@ -623,7 +623,7 @@
     "type": "Componente",
     "description": "Scroll interno personalizado dentro de un contenedor con altura fija, con scrollbar estilizada y soporte vertical, horizontal o ambos.",
     "seo": {
-      "title": "ScrollArea — Layout · Design System",
+      "title": "ScrollArea — Layout",
       "description": "Documentación de ScrollArea: viewport con scroll personalizado, ScrollBar estilizada y accesibilidad por teclado.",
       "aiSummary": "Componente ScrollArea con viewport, ScrollBar y Thumb estilizados, soporte vertical/horizontal/ambos y fallback a scroll nativo en móvil.",
       "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1",

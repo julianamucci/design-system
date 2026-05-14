@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, watch, ref } from 'vue';
+import { computed, watch, ref } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
+import { useActiveSection } from '@/lib/use-active-section';
 import {
   Card,
   CardHeader,
@@ -81,17 +82,6 @@ watch(locale, (newLocale) => {
 
 // ─── Analytics — section view ─────────────────────────────────────────────────
 
-const activeSection = ref('demonstracao');
-
-function handleSectionChange(id: string) {
-  activeSection.value = id;
-  track('docs_section_viewed', {
-    section_id: id,
-    component_name: 'card',
-    locale: locale.value,
-  });
-}
-
 // ─── Navigation groups ────────────────────────────────────────────────────────
 
 const navGroups = computed(() => [
@@ -133,30 +123,15 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-// ─── IntersectionObserver ─────────────────────────────────────────────────────
 
-let observer: IntersectionObserver | null = null;
 
-onMounted(() => {
-  observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) { handleSectionChange(entry.target.id); break; }
-      }
-    },
-    { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
-  );
-  allSectionIds.value.forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) observer!.observe(el);
+const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
+  track('docs_section_viewed', {
+    section_id: id,
+    component_name: 'card',
+    locale: locale.value,
   });
 });
-
-onUnmounted(() => {
-  observer?.disconnect();
-  observer = null;
-});
-
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {

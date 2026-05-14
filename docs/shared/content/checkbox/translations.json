@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Caixa de seleção para escolhas independentes em formulários. Suporta estados marcado, desmarcado, indeterminado e desabilitado.",
     "seo": {
-      "title": "Checkbox — Formulário · Design System",
+      "title": "Checkbox — Formulário",
       "description": "Documentação do Checkbox: estados checked, indeterminate e disabled, integração com Form, acessibilidade WCAG e suporte a React, Vue, Svelte e Basecoat.",
       "aiSummary": "Componente Checkbox com estados checked, unchecked, indeterminate (Svelte), disabled e aria-invalid. Integra com FormField via callback de mudança. Tokens: --primary, --input, --ring, --destructive.",
       "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, Tailwind CSS, WCAG 2.2, FormField",
@@ -295,7 +295,7 @@
     "type": "Component",
     "description": "Selection control for independent choices in forms. Supports checked, unchecked, indeterminate, and disabled states.",
     "seo": {
-      "title": "Checkbox — Form · Design System",
+      "title": "Checkbox — Form",
       "description": "Checkbox documentation: checked, indeterminate and disabled states, Form integration, WCAG accessibility, React, Vue, Svelte and Basecoat support.",
       "aiSummary": "Checkbox component with checked, unchecked, indeterminate (Svelte), disabled and aria-invalid states. Integrates with FormField via change callback. Tokens: --primary, --input, --ring, --destructive.",
       "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, Tailwind CSS, WCAG 2.2, FormField",
@@ -585,7 +585,7 @@
     "type": "Componente",
     "description": "Control de selección para opciones independientes en formularios. Soporta estados marcado, desmarcado, indeterminado y deshabilitado.",
     "seo": {
-      "title": "Checkbox — Formulario · Design System",
+      "title": "Checkbox — Formulario",
       "description": "Documentación del Checkbox: estados checked, indeterminate y disabled, integración con Form, accesibilidad WCAG, soporte React, Vue, Svelte y Basecoat.",
       "aiSummary": "Componente Checkbox con estados checked, unchecked, indeterminate (Svelte), disabled y aria-invalid. Integra con FormField vía callback de cambio. Tokens: --primary, --input, --ring, --destructive.",
       "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, Tailwind CSS, WCAG 2.2, FormField",

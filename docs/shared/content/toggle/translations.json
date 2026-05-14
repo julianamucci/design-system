@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Botão de dois estados (ativo/inativo) para formatação visual, modos de exibição e filtros — não para configurações de sistema.",
     "seo": {
-      "title": "Toggle — Formulário · Design System",
+      "title": "Toggle — Formulário",
       "description": "Documentação do Toggle: variantes default/outline, tamanhos sm/default/lg, aria-pressed e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Toggle de dois estados com aria-pressed automático, variantes default/outline, tamanhos sm/default/lg para formatação visual e filtros.",
       "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
@@ -326,7 +326,7 @@
     "type": "Component",
     "description": "Two-state button (on/off) for visual formatting, view modes and filters — not for system settings.",
     "seo": {
-      "title": "Toggle — Form · Design System",
+      "title": "Toggle — Form",
       "description": "Toggle documentation: default/outline variants, sm/default/lg sizes, aria-pressed and WCAG 2.1 AA support.",
       "aiSummary": "Toggle two-state component with automatic aria-pressed, default/outline variants, sm/default/lg sizes for visual formatting and filters.",
       "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
@@ -647,7 +647,7 @@
     "type": "Componente",
     "description": "Botón de dos estados (activo/inactivo) para formato visual, modos de vista y filtros — no para configuraciones de sistema.",
     "seo": {
-      "title": "Toggle — Formulario · Design System",
+      "title": "Toggle — Formulario",
       "description": "Documentación de Toggle: variantes default/outline, tamaños sm/default/lg, aria-pressed y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Toggle de dos estados con aria-pressed automático, variantes default/outline, tamaños sm/default/lg para formato visual y filtros.",
       "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",

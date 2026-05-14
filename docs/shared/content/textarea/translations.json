@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Entrada de texto de múltiplas linhas para descrições, mensagens e observações com 3+ linhas.",
     "seo": {
-      "title": "Textarea — Formulário · Design System",
+      "title": "Textarea — Formulário",
       "description": "Documentação do Textarea: redimensionamento, contador de caracteres, integração com FormField e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Textarea para entrada de múltiplas linhas, com field-sizing-content, classes Tailwind resize-y/none/full, contador de caracteres com aria-live e integração com FormField.",
       "aiEntities": "Textarea, Input, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, resize-y, aria-invalid, maxLength",
@@ -347,7 +347,7 @@
     "type": "Component",
     "description": "Multi-line text input for descriptions, messages and observations with 3+ lines.",
     "seo": {
-      "title": "Textarea — Form · Design System",
+      "title": "Textarea — Form",
       "description": "Textarea documentation: resize, character counter, FormField integration and WCAG 2.1 AA support.",
       "aiSummary": "Textarea component for multi-line input, with field-sizing-content, Tailwind resize-y/none/full classes, character counter with aria-live and FormField integration.",
       "aiEntities": "Textarea, Input, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, resize-y, aria-invalid, maxLength",
@@ -689,7 +689,7 @@
     "type": "Componente",
     "description": "Entrada de texto multilínea para descripciones, mensajes y observaciones con 3+ líneas.",
     "seo": {
-      "title": "Textarea — Formulario · Design System",
+      "title": "Textarea — Formulario",
       "description": "Documentación de Textarea: redimensionamiento, contador de caracteres, integración con FormField y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Textarea para entrada multilínea, con field-sizing-content, clases Tailwind resize-y/none/full, contador de caracteres con aria-live e integración con FormField.",
       "aiEntities": "Textarea, Input, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, resize-y, aria-invalid, maxLength",

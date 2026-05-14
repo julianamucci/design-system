@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { userEvent, within, expect } from "storybook/test";
+import { userEvent, within, expect, waitFor } from "storybook/test";
 import { Info, AlertTriangle, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -11,6 +11,10 @@ import {
 
 const meta: Meta = {
   title: "UI/Accordion/Composições",
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 };
 
 export default meta;
@@ -62,6 +66,23 @@ export const ComIconeNoTrigger: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Trigger é acessível pelo texto (não pelo ícone)", async () => {
+      const trigger = canvas.getByRole("button", { name: /informações gerais/i });
+      await expect(trigger).toBeInTheDocument();
+    });
+
+    await step("Clicar no trigger abre o item correspondente", async () => {
+      const trigger = canvas.getByRole("button", { name: /informações gerais/i });
+      await userEvent.click(trigger);
+      await waitFor(
+        () => expect(trigger).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+    });
+  },
 };
 
 export const ComBadgeNoTrigger: Story = {
@@ -98,6 +119,24 @@ export const ComBadgeNoTrigger: Story = {
           "Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.",
       },
     },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Trigger contém label e badge visíveis", async () => {
+      const trigger = canvas.getByRole("button", { name: /novidades da versão 3.0/i });
+      await expect(trigger).toBeInTheDocument();
+      await expect(trigger.textContent).toContain("Novo");
+    });
+
+    await step("Clicar abre o item correspondente", async () => {
+      const trigger = canvas.getByRole("button", { name: /novidades da versão 3.0/i });
+      await userEvent.click(trigger);
+      await waitFor(
+        () => expect(trigger).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+    });
   },
 };
 
@@ -145,6 +184,29 @@ export const ConteudoRico: Story = {
           "AccordionContent aceita qualquer conteúdo React. Use para tabelas de dados, parágrafos ou listas estruturadas.",
       },
     },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Abrir o item renderiza o conteúdo rico (especificações)", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await userEvent.click(triggers[0]);
+      await waitFor(
+        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+      await expect(canvasElement.textContent).toContain("Intel Core i7-12700");
+    });
+
+    await step("Modo múltiplo: segundo item abre sem fechar o primeiro", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await userEvent.click(triggers[1]);
+      await waitFor(
+        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+      await expect(triggers[0]).toHaveAttribute("aria-expanded", "true");
+    });
   },
 };
 

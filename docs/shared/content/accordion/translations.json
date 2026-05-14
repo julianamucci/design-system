@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Seções colapsáveis para organizar conteúdo relacionado. Use para FAQ, documentação e configurações agrupadas.",
     "seo": {
-      "title": "Accordion — Disclosure · Design System",
+      "title": "Accordion — Disclosure",
       "description": "Documentação do Accordion: tipos single e multiple, modo controlado, acessibilidade WCAG com ARIA automático e animação.",
       "aiSummary": "Componente Accordion com tipos single e multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI e suporte a keyboard navigation.",
       "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-expanded, disclosure pattern",
@@ -399,9 +399,9 @@
       "title": "Notas de Implementação",
       "item1": "O chevron rotativo (<code>rotate-180</code>) é aplicado via <code>[&[data-state=open]>svg]:rotate-180</code> no AccordionTrigger — não adicionar manualmente.",
       "item2": "Animações de abertura/fechamento usam CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas em <code>tailwind.config.ts</code>.",
-      "item3": "Para modo controlado, use <code>value</code> + <code>onValueChange</code>. No React, <code>value</code> é sempre um array. Em Vue/Svelte, é string no modo único e array no múltiplo.",
+      "item3": "Para modo controlado, use <code>value</code> + callback de mudança. O formato do valor pode variar conforme o modo (único = string; múltiplo = array) — consulte a tabela de propriedades.",
       "item4": "Não aninhe Accordions sem propósito claro — prefira Sidebar com Accordion para hierarquia de navegação.",
-      "item5": "No modo múltiplo todos os itens são individualmente fecháveis. No modo único, é possível permitir fechar o item ativo (via <code>collapsible</code> em Vue ou comportamento padrão em React/Svelte)."
+      "item5": "No modo múltiplo todos os itens são individualmente fecháveis. No modo único, fechar o item ativo depende da configuração do componente — consulte a tabela de propriedades."
     },
     "analytics": {
       "title": "Analytics",
@@ -543,7 +543,7 @@
     "type": "Component",
     "description": "Collapsible sections for organizing related content. Use for FAQ, documentation, and grouped settings.",
     "seo": {
-      "title": "Accordion — Disclosure · Design System",
+      "title": "Accordion — Disclosure",
       "description": "Documentation for Accordion: single and multiple types, controlled mode, WCAG accessibility with automatic ARIA and animation.",
       "aiSummary": "Accordion component with single and multiple types, controlled mode, animated chevron, automatic ARIA via Radix/Reka/Bits UI and keyboard navigation support.",
       "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-expanded, disclosure pattern",
@@ -937,9 +937,9 @@
       "title": "Implementation Notes",
       "item1": "The rotating chevron (<code>rotate-180</code>) is applied via <code>[&[data-state=open]>svg]:rotate-180</code> in AccordionTrigger — don't add manually.",
       "item2": "Open/close animations use CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) defined in <code>tailwind.config.ts</code>.",
-      "item3": "For controlled mode, use <code>value</code> + <code>onValueChange</code>. In React, <code>value</code> is always an array. In Vue/Svelte, it's a string in single mode and an array in multiple.",
+      "item3": "For controlled mode, use <code>value</code> + change callback. The value format may vary with the mode (single = string; multiple = array) — see the properties table.",
       "item4": "Don't nest Accordions without a clear purpose — prefer Sidebar with Accordion for navigation hierarchy.",
-      "item5": "In multiple mode all items are individually closable. In single mode, you can allow closing the active item (via <code>collapsible</code> in Vue or default behavior in React/Svelte)."
+      "item5": "In multiple mode all items are individually closable. In single mode, closing the active item depends on the component configuration — see the properties table."
     },
     "analytics": {
       "title": "Analytics",
@@ -1081,7 +1081,7 @@
     "type": "Componente",
     "description": "Secciones colapsables para organizar contenido relacionado. Usa para FAQ, documentación y configuraciones agrupadas.",
     "seo": {
-      "title": "Accordion — Disclosure · Design System",
+      "title": "Accordion — Disclosure",
       "description": "Documentación del Accordion: tipos single y multiple, modo controlado, accesibilidad WCAG con ARIA automático y animación.",
       "aiSummary": "Componente Accordion con tipos single y multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI y soporte de navegación por teclado.",
       "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-expanded, disclosure pattern",
@@ -1475,9 +1475,9 @@
       "title": "Notas de Implementación",
       "item1": "El chevron rotativo (<code>rotate-180</code>) se aplica via <code>[&[data-state=open]>svg]:rotate-180</code> en AccordionTrigger — no agregar manualmente.",
       "item2": "Las animaciones de apertura/cierre usan CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas en <code>tailwind.config.ts</code>.",
-      "item3": "Para modo controlado, usa <code>value</code> + <code>onValueChange</code>. En React, <code>value</code> es siempre un array. En Vue/Svelte, es string en modo único y array en modo múltiple.",
+      "item3": "Para modo controlado, usa <code>value</code> + callback de cambio. El formato del valor puede variar según el modo (único = string; múltiple = array) — consulta la tabla de propiedades.",
       "item4": "No anides Accordions sin un propósito claro — prefiere Sidebar con Accordion para jerarquía de navegación.",
-      "item5": "En modo múltiple todos los ítems son individualmente cerrables. En modo único, es posible permitir cerrar el ítem activo (vía <code>collapsible</code> en Vue o comportamiento predeterminado en React/Svelte)."
+      "item5": "En modo múltiple todos los ítems son individualmente cerrables. En modo único, cerrar el ítem activo depende de la configuración del componente — consulta la tabla de propiedades."
     },
     "analytics": {
       "title": "Analytics",

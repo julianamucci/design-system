@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Container que agrupa conteúdo relacionado em uma unidade visualmente delimitada, com header, content e footer opcionais.",
     "seo": {
-      "title": "Card — Layout · Design System",
+      "title": "Card — Layout",
       "description": "Documentação do Card: 2 tamanhos (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens de tema.",
       "aiSummary": "Componente Card estrutural com 2 sizes (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens --radius-card/bg-card.",
       "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container, Composition, Slot",
@@ -340,7 +340,7 @@
     "type": "Component",
     "description": "Container that groups related content into a visually delimited unit, with optional header, content and footer slots.",
     "seo": {
-      "title": "Card — Layout · Design System",
+      "title": "Card — Layout",
       "description": "Documentation for Card: 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and theme tokens.",
       "aiSummary": "Structural Card component with 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and --radius-card/bg-card tokens.",
       "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container, Composition, Slot",
@@ -675,7 +675,7 @@
     "type": "Componente",
     "description": "Contenedor que agrupa contenido relacionado en una unidad visualmente delimitada, con header, content y footer opcionales.",
     "seo": {
-      "title": "Card — Layout · Design System",
+      "title": "Card — Layout",
       "description": "Documentación del Card: 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens de tema.",
       "aiSummary": "Componente Card estructural con 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens --radius-card/bg-card.",
       "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container, Composition, Slot",

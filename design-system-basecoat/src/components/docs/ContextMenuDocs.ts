@@ -1,6 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
+import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createContextMenu } from '@/components/ui/context-menu';
 import uiTranslations from '@/i18n/ui.json';
 import contextMenuTranslations from '@shared/content/context-menu/translations.json';
@@ -751,31 +752,22 @@ export type ContextMenuOptions = {
 
   // ── IntersectionObserver ──────────────────────────────────────────────────
 
-  let observer: IntersectionObserver | null = null;
+  let activeSectionObserver: { disconnect: () => void } | null = null;
 
   function attachObserver() {
-    observer?.disconnect();
-    observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          updateActiveNav(id);
-          track('docs_section_viewed', {
-            section_id:     id,
-            component_name: 'context_menu',
-            locale:         getLocale(),
-          });
-          break;
-        }
-      }
-    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
-
-    for (const id of sectionOrder) {
-      const el = sectionEls[id];
-      if (el) observer.observe(el);
-    }
+    activeSectionObserver?.disconnect();
+    activeSectionObserver = createActiveSectionObserver(
+      sectionOrder as unknown as string[],
+      (id) => sectionEls[id as keyof typeof sectionEls] ?? null,
+      (id) => updateActiveNav(id),
+      (id) => track('docs_section_viewed', {
+        section_id: id,
+        component_name: 'context_menu',
+        locale: getLocale(),
+      }),
+    );
   }
-  cleanups.push(() => observer?.disconnect());
+  cleanups.push(() => activeSectionObserver?.disconnect());
 
   // ── Initial render ─────────────────────────────────────────────────────────
 

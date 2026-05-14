@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Diálogo modal de confirmação para ações destrutivas ou irreversíveis. Interrompe o fluxo para exigir decisão explícita.",
     "seo": {
-      "title": "AlertDialog — Overlay · Design System",
+      "title": "AlertDialog — Overlay",
       "description": "Documentação do AlertDialog: modal de confirmação crítica, focus trap, ARIA automático e composição com Cancel e Action.",
       "aiSummary": "Componente AlertDialog modal de confirmação para ações destrutivas, com focus trap, role=\"alertdialog\", aria-labelledby e aria-describedby automáticos via Radix UI.",
       "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role alertdialog, focus trap",
@@ -344,7 +344,7 @@
     "type": "Component",
     "description": "Modal confirmation dialog for destructive or irreversible actions. Interrupts the flow to require an explicit decision.",
     "seo": {
-      "title": "AlertDialog — Overlay · Design System",
+      "title": "AlertDialog — Overlay",
       "description": "Documentation for AlertDialog: critical confirmation modal, focus trap, automatic ARIA, and composition with Cancel and Action.",
       "aiSummary": "AlertDialog modal confirmation component for destructive actions, with focus trap, role=\"alertdialog\", and automatic aria-labelledby and aria-describedby via Radix UI.",
       "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role alertdialog, focus trap",
@@ -683,7 +683,7 @@
     "type": "Componente",
     "description": "Diálogo modal de confirmación para acciones destructivas o irreversibles. Interrumpe el flujo para exigir una decisión explícita.",
     "seo": {
-      "title": "AlertDialog — Overlay · Design System",
+      "title": "AlertDialog — Overlay",
       "description": "Documentación del AlertDialog: modal de confirmación crítica, focus trap, ARIA automático y composición con Cancel y Action.",
       "aiSummary": "Componente AlertDialog modal de confirmación para acciones destructivas, con focus trap, role=\"alertdialog\", aria-labelledby y aria-describedby automáticos vía Radix UI.",
       "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role alertdialog, focus trap",

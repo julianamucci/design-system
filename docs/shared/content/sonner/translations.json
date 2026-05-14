@@ -5,7 +5,7 @@
     "type": "Componente",
     "description": "Notificação toast temporária e não bloqueante para confirmar ações do usuário, exibir avisos e acompanhar operações assíncronas.",
     "seo": {
-      "title": "Sonner — Feedback · Design System",
+      "title": "Sonner — Feedback",
       "description": "Documentação do Sonner: tipos de toast, composições com promise e ação, posições e acessibilidade WCAG com aria-live.",
       "aiSummary": "Componente Sonner com 6 tipos de toast (default, success, error, warning, info, loading), composições com descrição, ação, promise e persistente, e suporte a richColors e posição configurável.",
       "aiEntities": "Sonner, toast, React, Vue, Svelte, Basecoat, Tailwind CSS, WCAG 2.1, aria-live",
@@ -319,7 +319,7 @@
     "type": "Component",
     "description": "Temporary, non-blocking toast notification to confirm user actions, display warnings, and track async operations.",
     "seo": {
-      "title": "Sonner — Feedback · Design System",
+      "title": "Sonner — Feedback",
       "description": "Sonner documentation: toast types, promise and action compositions, positions, and WCAG accessibility with aria-live.",
       "aiSummary": "Sonner component with 6 toast types (default, success, error, warning, info, loading), compositions with description, action, promise, and persistent, and support for richColors and configurable position.",
       "aiEntities": "Sonner, toast, React, Vue, Svelte, Basecoat, Tailwind CSS, WCAG 2.1, aria-live",
@@ -633,7 +633,7 @@
     "type": "Componente",
     "description": "Notificación toast temporal y no bloqueante para confirmar acciones del usuario, mostrar advertencias y seguir operaciones asíncronas.",
     "seo": {
-      "title": "Sonner — Feedback · Design System",
+      "title": "Sonner — Feedback",
       "description": "Documentación del Sonner: tipos de toast, composiciones con promise y acción, posiciones y accesibilidad WCAG con aria-live.",
       "aiSummary": "Componente Sonner con 6 tipos de toast (default, success, error, warning, info, loading), composiciones con descripción, acción, promise y persistente, y soporte a richColors y posición configurable.",
       "aiEntities": "Sonner, toast, React, Vue, Svelte, Basecoat, Tailwind CSS, WCAG 2.1, aria-live",

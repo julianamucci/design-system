@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { userEvent, within, expect, waitFor } from "storybook/test";
+import { userEvent, within, expect, waitFor, fn } from "storybook/test";
 import {
   Accordion,
   AccordionContent,
@@ -24,6 +24,7 @@ const meta = {
   },
   args: {
     multiple: false,
+    onValueChange: fn(),
   },
 } satisfies Meta<typeof Accordion>;
 
@@ -88,6 +89,30 @@ export const Playground: Story = {
         () => expect(triggers[2]).toHaveAttribute("aria-expanded", "true"),
         { timeout: 500 }
       );
+    });
+
+    await step("Clicar em trigger aberto fecha o item (modo único)", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await userEvent.click(triggers[2]);
+      await waitFor(
+        () => expect(triggers[2]).toHaveAttribute("aria-expanded", "false"),
+        { timeout: 500 }
+      );
+    });
+
+    await step("Abrir segundo item fecha o primeiro (modo único)", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await userEvent.click(triggers[0]);
+      await waitFor(
+        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+      await userEvent.click(triggers[1]);
+      await waitFor(
+        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
+        { timeout: 500 }
+      );
+      await expect(triggers[0]).toHaveAttribute("aria-expanded", "false");
     });
   },
 };

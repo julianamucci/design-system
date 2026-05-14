@@ -2,6 +2,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createPopover } from '@/components/ui/popover';
 import { createButton } from '@/components/ui/button';
 import { createInput } from '@/components/ui/input';
@@ -609,30 +610,22 @@ export function createPopover(options: PopoverOptions): HTMLElement;`;
   }
 
   // ── IntersectionObserver ─────────────────────────────────────────────────
-  let observer: IntersectionObserver | null = null;
-  function attachObserver() {
-    observer?.disconnect();
-    observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          const sectionId = entry.target.id;
-          updateActiveNav(sectionId);
-          track('docs_section_viewed', {
-            section_id: sectionId,
-            component_name: 'popover',
-            locale: getLocale(),
-          });
-          break;
-        }
-      }
-    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  let activeSectionObserver: { disconnect: () => void } | null = null;
 
-    for (const id of sectionOrder) {
-      const el = sectionEls[id];
-      if (el) observer.observe(el);
-    }
+  function attachObserver() {
+    activeSectionObserver?.disconnect();
+    activeSectionObserver = createActiveSectionObserver(
+      sectionOrder as unknown as string[],
+      (id) => sectionEls[id as keyof typeof sectionEls] ?? null,
+      (id) => updateActiveNav(id),
+      (id) => track('docs_section_viewed', {
+        section_id: id,
+        component_name: 'popover',
+        locale: getLocale(),
+      }),
+    );
   }
-  cleanups.push(() => observer?.disconnect());
+  cleanups.push(() => activeSectionObserver?.disconnect());
 
   // ── Initial render ────────────────────────────────────────────────────────
   renderHeader();
