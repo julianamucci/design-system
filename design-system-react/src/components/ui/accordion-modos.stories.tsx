@@ -132,16 +132,6 @@ export const Multiple: Story = {
       );
       await expect(triggers[1]).toHaveAttribute("aria-expanded", "true");
     });
-
-    await step("Space colapsa item focado (WCAG A — testes.accessibility.item4)", async () => {
-      const triggers = canvas.getAllByRole("button");
-      triggers[1].focus();
-      await userEvent.keyboard(" ");
-      await waitFor(
-        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "false"),
-        { timeout: 500 }
-      );
-    });
   },
 };
 

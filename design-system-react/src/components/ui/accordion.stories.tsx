@@ -59,7 +59,7 @@ export const Playground: Story = {
       </AccordionItem>
     </Accordion>
   ),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
 
     await step("Item 1 começa aberto (defaultValue)", async () => {
@@ -91,14 +91,29 @@ export const Playground: Story = {
       );
     });
 
-    await step("Abrir segundo item fecha o primeiro (modo único)", async () => {
+    await step("Space colapsa item focado (WCAG A — testes.accessibility.item4)", async () => {
       const triggers = canvas.getAllByRole("button");
-      await userEvent.click(triggers[0]);
+      triggers[2].focus();
+      await userEvent.keyboard(" ");
       await waitFor(
-        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "true"),
+        () => expect(triggers[2]).toHaveAttribute("aria-expanded", "false"),
         { timeout: 500 }
       );
-      await expect(triggers[2]).toHaveAttribute("aria-expanded", "false");
     });
+
+    // Teste condicional: trocar item ativo fecha o anterior só vale em modo único.
+    if (args.multiple === false) {
+      await step("Abrir item fecha o anteriormente aberto (modo único)", async () => {
+        const triggers = canvas.getAllByRole("button");
+        // Item 1 segue aberto neste ponto (defaultValue), e item 2 foi aberto no step 2 mas fechou.
+        // Re-abrindo item 2 deve fechar item 1.
+        await userEvent.click(triggers[1]);
+        await waitFor(
+          () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
+          { timeout: 500 }
+        );
+        await expect(triggers[0]).toHaveAttribute("aria-expanded", "false");
+      });
+    }
   },
 };
