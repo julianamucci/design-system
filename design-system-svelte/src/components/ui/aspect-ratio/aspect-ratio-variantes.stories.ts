@@ -1,10 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import AspectRatioStory from './AspectRatioStory.svelte';
 
 const meta = {
   title: 'UI/AspectRatio/Variantes',
   component: AspectRatioStory,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -26,6 +30,10 @@ export const SixteenNine: Story = {
     alt: 'Paisagem 16:9',
     width: 'max-w-lg',
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const FourThree: Story = {
@@ -35,6 +43,10 @@ export const FourThree: Story = {
     src: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&auto=format&fit=crop&q=60',
     alt: 'Imagem de produto 4:3',
     width: 'max-w-md',
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };
 
@@ -46,6 +58,10 @@ export const Square: Story = {
     alt: 'Avatar quadrado 1:1',
     width: 'max-w-[12rem]',
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const ThreeFour: Story = {
@@ -56,6 +72,10 @@ export const ThreeFour: Story = {
     alt: 'Retrato 3:4',
     width: 'max-w-[14rem]',
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const UltraWide: Story = {
@@ -65,5 +85,9 @@ export const UltraWide: Story = {
     src: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&auto=format&fit=crop&q=60',
     alt: 'Hero panorâmico 21:9',
     width: 'max-w-2xl',
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };

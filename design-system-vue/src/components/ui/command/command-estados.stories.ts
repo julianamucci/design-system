@@ -13,6 +13,8 @@ const meta = {
   title: 'UI/Command/Estados',
   component: Command,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

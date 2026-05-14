@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "storybook/test";
 import { AlertCircle, CheckCircle2, Info, TriangleAlert, X } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 import { Button } from "./button";
@@ -6,6 +7,10 @@ import { Button } from "./button";
 const meta = {
   title: "UI/Alert/Composições",
   component: Alert,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Alert>;
 
 export default meta;
@@ -22,6 +27,10 @@ export const ComIconeLucide: Story = {
       </AlertDescription>
     </Alert>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("Informação")).toBeInTheDocument();
+  },
 };
 
 export const ComAcao: Story = {
@@ -37,6 +46,10 @@ export const ComAcao: Story = {
       </AlertDescription>
     </Alert>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /salvar agora/i })).toBeInTheDocument();
+  },
 };
 
 export const MultiplosTipos: Story = {
@@ -64,6 +77,10 @@ export const MultiplosTipos: Story = {
       </Alert>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getAllByRole("alert").length).toBeGreaterThanOrEqual(4);
+  },
 };
 
 export const SemTituloCompacto: Story = {
@@ -75,4 +92,8 @@ export const SemTituloCompacto: Story = {
       </AlertDescription>
     </Alert>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("alert")).toBeInTheDocument();
+  },
 };

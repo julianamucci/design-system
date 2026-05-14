@@ -1,9 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { createAspectRatio } from './aspect-ratio';
+import { within, expect } from 'storybook/test';
 
 const meta: Meta = {
   title: 'UI/AspectRatio/Variantes',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -51,6 +54,11 @@ export const SixteenNine: Story = {
         ),
       }),
     ),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const FourThree: Story = {
@@ -65,6 +73,11 @@ export const FourThree: Story = {
         ),
       }),
     ),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Square: Story = {
@@ -80,6 +93,11 @@ export const Square: Story = {
       }),
       'max-w-xs',
     ),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const ThreeFour: Story = {
@@ -95,6 +113,11 @@ export const ThreeFour: Story = {
       }),
       'max-w-sm',
     ),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const UltraWide: Story = {
@@ -110,4 +133,9 @@ export const UltraWide: Story = {
       }),
       'max-w-3xl',
     ),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };

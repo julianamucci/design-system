@@ -3,6 +3,10 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
 
 const meta: Meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Accordion/Estados',
 };
 

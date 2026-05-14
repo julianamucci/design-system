@@ -5,6 +5,7 @@ import { createPagination } from './pagination';
 const meta: Meta = {
   title: 'UI/Pagination/Estados',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

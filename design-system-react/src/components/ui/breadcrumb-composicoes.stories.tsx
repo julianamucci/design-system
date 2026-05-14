@@ -22,6 +22,8 @@ const meta = {
   component: Breadcrumb,
   parameters: {
     layout: "padded",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -143,6 +145,11 @@ export const WithEllipsis: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+    await expect(canvas.getAllByRole("link").length).toBeGreaterThanOrEqual(2);
+  },
 };
 
 export const CustomSeparator: Story = {
@@ -174,6 +181,10 @@ export const CustomSeparator: Story = {
           "Composição com separador customizado via children de BreadcrumbSeparator — substitui o ChevronRight padrão.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
   },
 };
 
@@ -214,5 +225,10 @@ export const Responsive: Story = {
           "Composição responsiva: BreadcrumbEllipsis envolvido em DropdownMenu para expor níveis ocultos em mobile.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: /expandir níveis ocultos/i })).toBeInTheDocument();
   },
 };

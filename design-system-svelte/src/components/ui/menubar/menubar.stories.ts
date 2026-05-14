@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import MenubarStory from './MenubarStory.svelte';
 import MenubarDocs from '@/components/docs/MenubarDocs.svelte';

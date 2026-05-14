@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect } from 'storybook/test';
+
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TabsStory from './TabsStory.svelte';
 
 const meta = {
@@ -73,6 +74,10 @@ export const CodePreviewLine: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const VerticalNavigation: Story = {
@@ -131,5 +136,9 @@ export const ManualActivation: Story = {
         story: 'Modo manual: setas movem o foco sem ativar; Enter/Space ativam. Útil quando trocar de tab tem custo (fetch pesado).',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };

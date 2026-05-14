@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect } from 'storybook/test';
+
+import { within, expect, waitFor } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 import ButtonPairStory from './ButtonPairStory.svelte';
 
 const meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Button/Composições',
   component: Button,
 } satisfies Meta<typeof Button>;
@@ -18,6 +23,10 @@ export const ComIconeAEsquerda: Story = {
     props: { variant: 'default', label: 'Adicionar item', iconStart: 'plus' },
   }),
   parameters: { docs: { description: { story: 'Ícone à esquerda do label. O SVG deve ter aria-hidden="true" para não poluir leitores de tela.' } } },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const ComIconeADireita: Story = {
@@ -26,6 +35,10 @@ export const ComIconeADireita: Story = {
     props: { variant: 'outline', label: 'Próximo', iconEnd: 'chevron-right' },
   }),
   parameters: { docs: { description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' } } },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const IconeDestrutivo: Story = {
@@ -34,6 +47,10 @@ export const IconeDestrutivo: Story = {
     props: { variant: 'destructive', label: 'Excluir', iconStart: 'trash' },
   }),
   parameters: { docs: { description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' } } },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const IconOnly: Story = {
@@ -58,6 +75,10 @@ export const ParDeAcoes: Story = {
     props: { primaryLabel: 'Confirmar', secondaryLabel: 'Cancelar' },
   }),
   parameters: { docs: { description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' } } },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const AsLink: Story = {

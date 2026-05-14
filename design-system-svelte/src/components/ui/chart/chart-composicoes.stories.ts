@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect } from 'storybook/test';
+
+import { expect } from 'storybook/test';
 import { ChartContainer } from '@/components/ui/chart';
 import ChartComCardStory from './ChartComCardStory.svelte';
 
@@ -7,6 +8,8 @@ const meta = {
   title: 'UI/Chart/Composições',
   component: ChartContainer,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
   },
 } satisfies Meta<typeof ChartContainer>;

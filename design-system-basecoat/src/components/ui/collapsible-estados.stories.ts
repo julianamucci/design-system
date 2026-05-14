@@ -3,6 +3,10 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createCollapsible } from './collapsible';
 
 const meta: Meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Collapsible/Estados',
 };
 

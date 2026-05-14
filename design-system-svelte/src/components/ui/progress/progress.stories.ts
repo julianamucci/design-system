@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { within, expect } from 'storybook/test';
 import { Progress } from './index';
 import ProgressStory from './ProgressStory.svelte';

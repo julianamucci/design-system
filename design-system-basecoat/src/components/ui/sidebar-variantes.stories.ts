@@ -16,6 +16,7 @@ import {
 const meta: Meta = {
   title: 'UI/Sidebar/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'fullscreen',
     controls: { disable: true },
     docs: {

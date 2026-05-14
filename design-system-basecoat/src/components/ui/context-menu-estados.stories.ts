@@ -7,6 +7,8 @@ import { createContextMenu } from './context-menu';
 const meta: Meta = {
   title: 'UI/ContextMenu/Estados',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

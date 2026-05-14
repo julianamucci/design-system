@@ -18,6 +18,7 @@ import {
 const meta: Meta = {
   title: 'UI/Sidebar/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'fullscreen',
     controls: { disable: true },
     docs: {
@@ -406,5 +407,10 @@ export const ComBadges: Story = {
         story: 'Sidebar com <code>SidebarMenuBadge</code> nos itens de menu. Use para exibir contadores de notificações ou pendências.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

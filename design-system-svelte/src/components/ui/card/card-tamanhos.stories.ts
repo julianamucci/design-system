@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { within, expect } from 'storybook/test';
 import { Card } from './index';
 import CardStory from './CardStory.svelte';
@@ -7,6 +8,8 @@ const meta = {
   title: 'UI/Card/Tamanhos',
   component: Card,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {

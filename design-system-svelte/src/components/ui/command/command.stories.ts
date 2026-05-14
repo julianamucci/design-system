@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect, userEvent } from 'storybook/test';
+
+import { userEvent, within, expect } from 'storybook/test';
 import { withAutoDocsTab } from '@/lib/storybook-utils';
 import CommandDocs from '@/components/docs/CommandDocs.svelte';
 import { Root as Command } from '@/components/ui/command';

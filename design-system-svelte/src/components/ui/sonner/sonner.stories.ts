@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import SonnerStory from './SonnerStory.svelte';
 import SonnerPlaygroundStory from './SonnerPlaygroundStory.svelte';
 import SonnerDocs from '@/components/docs/SonnerDocs.svelte';
@@ -47,4 +49,8 @@ export const Playground: Story = {
     Component: SonnerPlaygroundStory,
     props: args,
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

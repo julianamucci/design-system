@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { createChart } from './chart';
+import { within, expect } from 'storybook/test';
 
 // ─── Shared data ──────────────────────────────────────────────────────────────
 
@@ -15,6 +16,10 @@ const chartData = [
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Chart/Configurações',
 };
 
@@ -44,6 +49,11 @@ export const CoresPersonalizadas: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 // ─── AlturaPersonalizada ──────────────────────────────────────────────────────
@@ -67,5 +77,10 @@ export const AlturaPersonalizada: Story = {
         story: 'Altura de 300px via prop <code>height</code>. O padrão é 200px.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { within, expect } from 'storybook/test';
 import { AspectRatio } from './index';
 import AspectRatioStory from './AspectRatioStory.svelte';

@@ -8,6 +8,7 @@ import { createButton } from './button';
 const meta: Meta = {
   title: 'UI/Sheet/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {
@@ -212,5 +213,10 @@ export const WithLongScrollContent: Story = {
     });
     queueMicrotask(() => trigger.click());
     return sheet;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

@@ -6,6 +6,7 @@ import { createToggle, type ToggleOptions, type ToggleVariant } from './toggle';
 const meta: Meta = {
   title: 'UI/Toggle/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {

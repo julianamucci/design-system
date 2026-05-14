@@ -15,6 +15,8 @@ const meta = {
   title: 'UI/Breadcrumb/Estados',
   component: Breadcrumb,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {

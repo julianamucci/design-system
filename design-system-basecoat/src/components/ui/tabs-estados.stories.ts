@@ -5,6 +5,7 @@ import { createTabs, type TabsItemDef } from './tabs';
 const meta: Meta = {
   title: 'UI/Tabs/Estados',
   parameters: {
+    actions: { disable: true },
     controls: { disable: true },
   },
 };

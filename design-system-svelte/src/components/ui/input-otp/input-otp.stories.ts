@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 import InputOTPDocs from '@/components/docs/InputOTPDocs.svelte';

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { userEvent, within, expect } from 'storybook/test';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
@@ -7,6 +8,8 @@ const meta = {
   title: 'UI/Checkbox/Composições',
   component: Checkbox,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

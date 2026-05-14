@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "storybook/test";
 import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
@@ -14,6 +15,8 @@ const meta = {
   component: Carousel,
   parameters: {
     layout: "centered",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -50,6 +53,11 @@ export const Single: Story = {
       <CarouselNext aria-label="Próximo item" />
     </Carousel>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /item anterior/i })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: /próximo item/i })).toBeInTheDocument();
+  },
 };
 
 export const MultiResponsive: Story = {
@@ -66,6 +74,10 @@ export const MultiResponsive: Story = {
       <CarouselNext aria-label="Próximo item" />
     </Carousel>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getAllByRole("group").length).toBeGreaterThan(0);
+  },
 };
 
 export const Autoplay_: Story = {
@@ -88,4 +100,8 @@ export const Autoplay_: Story = {
       <CarouselNext aria-label="Próximo item" />
     </Carousel>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /próximo item/i })).toBeInTheDocument();
+  },
 };

@@ -1,9 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { within, expect } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 
 const meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Alert/Estados',
   component: Alert,
 } satisfies Meta<typeof Alert>;

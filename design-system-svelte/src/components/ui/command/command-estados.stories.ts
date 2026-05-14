@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect, userEvent } from 'storybook/test';
+
+import { userEvent, within, expect } from 'storybook/test';
 import * as Command from '@/components/ui/command';
 import CommandEstadoEmptyStory from './CommandEstadoEmptyStory.svelte';
 import CommandEstadoLoadingStory from './CommandEstadoLoadingStory.svelte';
@@ -9,6 +10,8 @@ const meta = {
   title: 'UI/Command/Estados',
   component: Command.Root,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

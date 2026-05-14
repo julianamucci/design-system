@@ -8,6 +8,7 @@ const meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -89,6 +90,9 @@ export const Line: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Vertical: Story = {
@@ -119,5 +123,8 @@ export const Vertical: Story = {
         story: 'Variante vertical — orientation="vertical" empilha as tabs em coluna à esquerda e exibe o conteúdo à direita. Setas ↑↓ navegam entre tabs.',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
   },
 };

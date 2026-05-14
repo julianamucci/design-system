@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { Badge } from './index';
 import { Check, Bell } from 'lucide-vue-next';
 
@@ -6,6 +7,8 @@ const meta = {
   title: 'UI/Badge/Composições',
   component: Badge,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -29,6 +32,9 @@ export const WithIcon: Story = {
       </Badge>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const AsLink: Story = {
@@ -45,6 +51,9 @@ export const AsLink: Story = {
       </a>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const AsButton: Story = {
@@ -61,6 +70,9 @@ export const AsButton: Story = {
       </button>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const CountBadge: Story = {
@@ -83,4 +95,7 @@ export const CountBadge: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

@@ -15,6 +15,8 @@ const meta = {
   title: 'UI/ContextMenu/Estados',
   component: ContextMenu,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -115,6 +117,9 @@ export const ItemInset: Story = {
       </ContextMenu>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ItemDestructiveIsolado: Story = {

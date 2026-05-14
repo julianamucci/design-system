@@ -6,6 +6,8 @@ import { createBadge, type BadgeVariant } from './badge';
 const meta: Meta = {
   title: 'UI/Badge/Composições',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

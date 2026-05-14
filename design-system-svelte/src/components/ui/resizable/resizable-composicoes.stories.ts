@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect } from 'storybook/test';
+
+import { within, expect, waitFor } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
 
 const meta = {
@@ -78,6 +79,10 @@ export const VerticalSplit: Story = {
       height: '360px',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const IDELayout: Story = {

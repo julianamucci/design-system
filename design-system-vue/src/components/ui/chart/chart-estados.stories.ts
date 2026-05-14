@@ -25,6 +25,8 @@ const meta = {
   title: 'UI/Chart/Estados',
   component: ChartContainer,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
   },
 } satisfies Meta<typeof ChartContainer>;

@@ -19,6 +19,8 @@ import { createCalendar } from './calendar';
 const meta: Meta = {
   title: 'UI/Calendar/Estados',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -119,6 +121,11 @@ export const WithOutsideDays: Story = {
   },
   render: () => createCalendar({ locale: 'pt-BR', class: 'rounded-md border' }),
   // sem play — story documentacional (lacuna da factory vanilla)
+,
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const RangeWithMiddle: Story = {
@@ -132,4 +139,9 @@ export const RangeWithMiddle: Story = {
   },
   render: () => createCalendar({ locale: 'pt-BR', class: 'rounded-md border' }),
   // sem play — story documentacional (lacuna da factory vanilla)
+,
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };

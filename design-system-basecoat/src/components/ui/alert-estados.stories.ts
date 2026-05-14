@@ -3,6 +3,10 @@ import { within, expect } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
 
 const meta: Meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Alert/Estados',
 };
 

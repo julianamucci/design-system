@@ -15,6 +15,8 @@ const meta = {
   component: AspectRatio,
   parameters: {
     layout: "centered",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -49,6 +51,11 @@ export const ComImagem: Story = {
       </AspectRatio>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const img = canvasElement.querySelector("img");
+    await expect(img).toBeInTheDocument();
+    await expect(img).toHaveAttribute("alt", "Paisagem ao entardecer");
+  },
 };
 
 export const ComIframe: Story = {
@@ -108,6 +115,11 @@ export const ComVideo: Story = {
       </AspectRatio>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const video = canvasElement.querySelector("video");
+    await expect(video).toBeInTheDocument();
+    await expect(video).toHaveAttribute("aria-label", "Vídeo demonstrativo");
+  },
 };
 
 export const GridConsistente: Story = {
@@ -141,6 +153,10 @@ export const GridConsistente: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const imgs = canvasElement.querySelectorAll("img");
+    await expect(imgs.length).toBe(3);
+  },
 };
 
 export const ComImagemDecorativa: Story = {
@@ -165,4 +181,9 @@ export const ComImagemDecorativa: Story = {
       </AspectRatio>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const img = canvasElement.querySelector("img");
+    await expect(img).toBeInTheDocument();
+    await expect(img).toHaveAttribute("alt", "");
+  },
 };

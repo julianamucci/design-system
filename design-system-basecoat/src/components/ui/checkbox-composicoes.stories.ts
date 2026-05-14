@@ -5,6 +5,8 @@ import { createCheckbox } from './checkbox';
 const meta: Meta = {
   title: 'UI/Checkbox/Composições',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

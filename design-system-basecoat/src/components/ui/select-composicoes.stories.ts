@@ -5,6 +5,7 @@ import { createSelect } from './select';
 const meta: Meta = {
   title: 'UI/Select/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {

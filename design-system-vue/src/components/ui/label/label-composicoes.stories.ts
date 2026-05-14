@@ -9,6 +9,7 @@ const meta = {
   component: Label,
   parameters: {
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component: 'Composições do Label com outros componentes de formulário: Input, Checkbox e campo obrigatório.',

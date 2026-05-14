@@ -6,6 +6,10 @@ import { Button } from "./button";
 const meta = {
   title: "UI/Button/Composições",
   component: Button,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -25,6 +29,10 @@ export const ComIconeAEsquerda: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /adicionar item/i })).toBeInTheDocument();
+  },
 };
 
 export const ComIconeADireita: Story = {
@@ -41,6 +49,10 @@ export const ComIconeADireita: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /próximo/i })).toBeInTheDocument();
+  },
 };
 
 export const IconeDestrutivo: Story = {
@@ -56,6 +68,10 @@ export const IconeDestrutivo: Story = {
         story: "Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /excluir/i })).toBeInTheDocument();
   },
 };
 
@@ -95,6 +111,11 @@ export const ParDeAcoes: Story = {
         story: "Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /cancelar/i })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: /confirmar/i })).toBeInTheDocument();
   },
 };
 

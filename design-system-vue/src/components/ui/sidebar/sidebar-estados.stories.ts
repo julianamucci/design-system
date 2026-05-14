@@ -25,6 +25,7 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -183,6 +184,9 @@ export const CollapsedIcon: Story = {
       </SidebarProvider>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 // ─── Fixo (none) ──────────────────────────────────────────────────────────────
@@ -242,6 +246,9 @@ export const CollapsibleNone: Story = {
       </SidebarProvider>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 // ─── Loading Skeleton ─────────────────────────────────────────────────────────
@@ -289,6 +296,9 @@ export const LoadingSkeleton: Story = {
       </SidebarProvider>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 // ─── Mobile (viewport simulada) ───────────────────────────────────────────────
@@ -350,4 +360,7 @@ export const MobileOverlay: Story = {
       </SidebarProvider>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

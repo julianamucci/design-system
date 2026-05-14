@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Tabs } from './index';
 import TabsStory from './TabsStory.svelte';

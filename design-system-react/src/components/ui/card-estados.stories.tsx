@@ -15,6 +15,8 @@ const meta = {
   component: Card,
   parameters: {
     layout: "centered",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:

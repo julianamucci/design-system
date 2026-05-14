@@ -6,6 +6,10 @@ import { Button } from './index';
 const meta = {
   title: 'UI/Button/Tamanhos',
   component: Button,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -17,6 +21,9 @@ export const Default: Story = {
     template: '<Button>Padrão (h-9)</Button>',
   }),
   parameters: { docs: { description: { story: 'Tamanho padrão (36px). Use em formulários e diálogos como default.' } } },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Small: Story = {
@@ -25,6 +32,9 @@ export const Small: Story = {
     template: '<Button size="sm">Pequeno (h-8)</Button>',
   }),
   parameters: { docs: { description: { story: 'Tamanho pequeno (32px). Use em toolbars e áreas densas.' } } },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Large: Story = {
@@ -33,6 +43,9 @@ export const Large: Story = {
     template: '<Button size="lg">Grande (h-10)</Button>',
   }),
   parameters: { docs: { description: { story: 'Tamanho grande (40px). Use em CTAs de destaque e hero sections.' } } },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 const iconAriaLabelPlay: Story['play'] = async ({ canvasElement, step }) => {

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
+
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 import DrawerDocs from '@/components/docs/DrawerDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';

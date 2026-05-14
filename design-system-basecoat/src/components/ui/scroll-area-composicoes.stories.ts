@@ -7,6 +7,7 @@ import { createBadge } from './badge';
 const meta: Meta = {
   title: 'UI/ScrollArea/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {
@@ -109,6 +110,11 @@ export const HorizontalCards: Story = {
     }));
     return outer;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const WideTable: Story = {
@@ -157,6 +163,11 @@ export const WideTable: Story = {
     }));
     return outer;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const InsideCard: Story = {
@@ -203,6 +214,11 @@ export const InsideCard: Story = {
     wrap.appendChild(card);
     return wrap;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Sidebar: Story = {
@@ -248,5 +264,10 @@ export const Sidebar: Story = {
 
     outer.append(sidebar, content);
     return outer;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TabsStory from './TabsStory.svelte';
 
@@ -65,6 +66,10 @@ export const Line: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Vertical: Story = {
@@ -85,5 +90,9 @@ export const Vertical: Story = {
         story: 'Orientação vertical: lista lateral à esquerda e conteúdo à direita. Setas Up/Down navegam entre tabs.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };

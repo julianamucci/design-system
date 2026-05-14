@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { userEvent, within, expect } from 'storybook/test';
 import { Textarea } from './index';
 import TextareaStory from './TextareaStory.svelte';

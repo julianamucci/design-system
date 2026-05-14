@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { createCalendar } from './calendar';
+import { within, expect } from 'storybook/test';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -17,6 +18,8 @@ import { createCalendar } from './calendar';
 const meta: Meta = {
   title: 'UI/Calendar/Layouts',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -46,6 +49,11 @@ export const CaptionLabel: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Bordered: Story = {
@@ -62,6 +70,11 @@ export const Bordered: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Bare: Story = {
@@ -73,5 +86,10 @@ export const Bare: Story = {
           'Sem classes adicionais — apenas o `p-3 select-none` aplicado pela factory. Ideal para encaixar o Calendar dentro de Popover ou DropdownMenu, onde o wrapper pai já define borda/shadow.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

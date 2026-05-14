@@ -6,6 +6,10 @@ import { Button } from './index';
 const meta = {
   title: 'UI/Button/Composições',
   component: Button,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -22,6 +26,9 @@ export const ComIconeAEsquerda: Story = {
     `,
   }),
   parameters: { docs: { description: { story: 'Ícone à esquerda do label. O SVG deve ter aria-hidden="true" para não poluir leitores de tela.' } } },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ComIconeADireita: Story = {
@@ -35,6 +42,9 @@ export const ComIconeADireita: Story = {
     `,
   }),
   parameters: { docs: { description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' } } },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const IconeDestrutivo: Story = {
@@ -48,6 +58,9 @@ export const IconeDestrutivo: Story = {
     `,
   }),
   parameters: { docs: { description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' } } },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const IconOnly: Story = {
@@ -81,6 +94,9 @@ export const ParDeAcoes: Story = {
     `,
   }),
   parameters: { docs: { description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' } } },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const AsChildAsLink: Story = {

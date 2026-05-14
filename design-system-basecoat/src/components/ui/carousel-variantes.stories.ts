@@ -25,6 +25,8 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 const meta: Meta = {
   title: 'UI/Carousel/Variantes',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

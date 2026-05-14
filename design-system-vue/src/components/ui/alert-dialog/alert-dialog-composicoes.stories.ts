@@ -17,6 +17,8 @@ const meta = {
   title: 'UI/AlertDialog/Composições',
   component: AlertDialog,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "storybook/test";
 import { CheckCircle2, Bell } from "lucide-react";
 import { Badge } from "./badge";
 
@@ -7,6 +8,8 @@ const meta = {
   component: Badge,
   parameters: {
     layout: "centered",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -26,6 +29,10 @@ export const WithIcon: Story = {
       Ativo
     </Badge>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("Ativo")).toBeInTheDocument();
+  },
 };
 
 export const CountBadge: Story = {
@@ -44,6 +51,11 @@ export const CountBadge: Story = {
       </Badge>
     </span>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("status", { name: /12 notificações não lidas/i })).toBeInTheDocument();
+    await expect(canvas.getByText("12")).toBeInTheDocument();
+  },
 };
 
 export const AsLink: Story = {
@@ -56,6 +68,10 @@ export const AsLink: Story = {
       <Badge variant="outline">Design</Badge>
     </a>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("link", { name: /design/i })).toBeInTheDocument();
+  },
 };
 
 export const AsButton: Story = {
@@ -68,4 +84,8 @@ export const AsButton: Story = {
       <Badge variant="secondary">React</Badge>
     </button>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /filtrar por react/i })).toBeInTheDocument();
+  },
 };

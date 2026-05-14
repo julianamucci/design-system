@@ -9,6 +9,8 @@ const meta = {
   component: Calendar,
   parameters: {
     layout: "padded",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -41,6 +43,10 @@ export const CaptionLabel: Story = {
           "captionLayout=\"label\" — legenda em texto simples. Padrão do componente.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("grid")).toBeInTheDocument();
   },
 };
 
@@ -98,6 +104,10 @@ export const TwoMonths: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getAllByRole("grid").length).toBeGreaterThanOrEqual(1);
+  },
 };
 
 export const WithWeekNumber: Story = {
@@ -129,5 +139,9 @@ export const WithWeekNumber: Story = {
         rules: [{ id: 'scope-attr-valid', enabled: false }],
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("grid")).toBeInTheDocument();
   },
 };

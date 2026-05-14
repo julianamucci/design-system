@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
 
@@ -6,6 +8,8 @@ const meta = {
   title: 'UI/Badge/Composições',
   component: Badge,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -24,6 +28,10 @@ export const WithIcon: Story = {
     Component: BadgeStory,
     props: { variant: 'default', label: 'Ativo', icon: 'check' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const AsLink: Story = {
@@ -36,6 +44,10 @@ export const AsLink: Story = {
       ariaLabel: 'Filtrar por categoria Design',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const AsButton: Story = {
@@ -49,6 +61,10 @@ export const AsButton: Story = {
       ariaLabel: 'Filtrar por tag React',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const CountBadge: Story = {
@@ -60,4 +76,8 @@ export const CountBadge: Story = {
       ariaLabel: '99 ou mais notificações não lidas',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

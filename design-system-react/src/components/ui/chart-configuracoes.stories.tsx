@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect } from "storybook/test";
 import {
   BarChart,
   Bar,
@@ -34,6 +35,8 @@ const meta = {
   component: ChartContainer,
   parameters: {
     layout: "centered",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -65,6 +68,9 @@ export const ComTooltip: Story = {
       </BarChart>
     </ChartContainer>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  },
 };
 
 export const ComLegenda: Story = {
@@ -85,6 +91,9 @@ export const ComLegenda: Story = {
       </BarChart>
     </ChartContainer>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  },
 };
 
 export const MultiSeries: Story = {
@@ -105,4 +114,7 @@ export const MultiSeries: Story = {
       </BarChart>
     </ChartContainer>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  },
 };

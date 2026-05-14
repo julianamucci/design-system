@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { ChartContainer, ChartLegendContent, ChartTooltipContent, type ChartConfig } from './index';
 import { VisXYContainer, VisGroupedBar, VisAxis, VisCrosshair } from '@unovis/vue';
 import { Card } from '@/components/ui/card';
@@ -21,6 +22,8 @@ const meta = {
   title: 'UI/Chart/Composicoes',
   component: ChartContainer,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
   },
 } satisfies Meta<typeof ChartContainer>;
@@ -64,6 +67,9 @@ export const ComCard: Story = {
       </Card>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const TooltipCustom: Story = {
@@ -117,4 +123,7 @@ export const TooltipCustom: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

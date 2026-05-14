@@ -1,9 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { Button } from './index';
 
 const meta = {
   title: 'UI/Button/Variantes',
   component: Button,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -17,6 +22,9 @@ export const Default: Story = {
   parameters: {
     docs: { description: { story: 'Variante primária. Use para a ação principal de uma seção.' } },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Destructive: Story = {
@@ -26,6 +34,9 @@ export const Destructive: Story = {
   }),
   parameters: {
     docs: { description: { story: 'Variante destrutiva. Use para ações irreversíveis como excluir ou remover.' } },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
   },
 };
 
@@ -37,6 +48,9 @@ export const Outline: Story = {
   parameters: {
     docs: { description: { story: 'Variante secundária com borda. Use ao lado da ação primária em pares de ações.' } },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Secondary: Story = {
@@ -46,6 +60,9 @@ export const Secondary: Story = {
   }),
   parameters: {
     docs: { description: { story: 'Variante secundária sólida. Use para ações complementares de menor ênfase.' } },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
   },
 };
 
@@ -57,6 +74,9 @@ export const Ghost: Story = {
   parameters: {
     docs: { description: { story: 'Variante sem borda ou fundo. Use em toolbars e menus para reduzir ruído visual.' } },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Link: Story = {
@@ -66,5 +86,8 @@ export const Link: Story = {
   }),
   parameters: {
     docs: { description: { story: 'Variante com aparência de link. Use quando a ação for navegacional em contexto textual.' } },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
   },
 };

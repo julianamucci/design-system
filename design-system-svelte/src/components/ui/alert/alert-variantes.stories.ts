@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 
 const meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Alert/Variantes',
   component: Alert,
 } satisfies Meta<typeof Alert>;
@@ -21,6 +27,10 @@ export const Default: Story = {
       icon: 'info',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Destructive: Story = {
@@ -34,6 +44,10 @@ export const Destructive: Story = {
       icon: 'error',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Success: Story = {
@@ -48,6 +62,10 @@ export const Success: Story = {
       class: 'bg-success/10 text-success border-success/30',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Warning: Story = {
@@ -62,4 +80,8 @@ export const Warning: Story = {
       class: 'bg-warning/10 text-warning border-warning/30',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

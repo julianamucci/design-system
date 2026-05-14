@@ -6,6 +6,8 @@ const meta = {
   title: 'UI/Avatar/Estados',
   component: Avatar,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

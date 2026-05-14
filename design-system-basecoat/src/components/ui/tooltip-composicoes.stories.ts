@@ -6,6 +6,7 @@ import { createButton, createButtonIcon } from './button';
 const meta: Meta = {
   title: 'UI/Tooltip/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

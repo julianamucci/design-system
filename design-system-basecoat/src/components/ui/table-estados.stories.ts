@@ -13,6 +13,7 @@ import {
 const meta: Meta = {
   title: 'UI/Table/Estados',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
   },

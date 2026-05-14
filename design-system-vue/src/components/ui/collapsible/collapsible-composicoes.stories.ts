@@ -7,6 +7,8 @@ const meta = {
   title: 'UI/Collapsible/Composições',
   component: Collapsible,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

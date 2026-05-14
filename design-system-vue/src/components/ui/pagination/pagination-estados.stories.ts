@@ -15,6 +15,7 @@ const meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -72,6 +73,9 @@ export const Hover: Story = {
       </Pagination>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Active: Story = {
@@ -142,4 +146,7 @@ export const Focus: Story = {
       </Pagination>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

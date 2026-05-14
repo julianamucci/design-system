@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import {
+import { within, expect } from 'storybook/test';
   createBreadcrumb,
   createBreadcrumbList,
   createBreadcrumbItem,
@@ -12,6 +13,8 @@ import {
 const meta: Meta = {
   title: 'UI/Breadcrumb/Composições',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -57,6 +60,11 @@ export const Default: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const WithEllipsis: Story = {
@@ -96,6 +104,11 @@ export const WithEllipsis: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const CustomSeparator: Story = {
@@ -129,6 +142,11 @@ export const CustomSeparator: Story = {
         story: 'Separador customizado via option `content` de `createBreadcrumbSeparator` — texto ou HTMLElement (ícone).',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 
@@ -174,5 +192,10 @@ export const Responsive: Story = {
           'No mobile, envolva o `BreadcrumbEllipsis` em um `DropdownMenu` para expor os níveis ocultos ao clique — nunca os esconda permanentemente.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

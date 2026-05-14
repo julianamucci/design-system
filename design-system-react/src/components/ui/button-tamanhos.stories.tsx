@@ -6,6 +6,10 @@ import { Button } from "./button";
 const meta = {
   title: "UI/Button/Tamanhos",
   component: Button,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -20,6 +24,10 @@ export const Default: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /padrão/i })).toBeInTheDocument();
+  },
 };
 
 export const Small: Story = {
@@ -31,6 +39,10 @@ export const Small: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /pequeno/i })).toBeInTheDocument();
+  },
 };
 
 export const Large: Story = {
@@ -41,6 +53,10 @@ export const Large: Story = {
         story: "Tamanho grande (40px). Use em CTAs de destaque e hero sections.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /grande/i })).toBeInTheDocument();
   },
 };
 

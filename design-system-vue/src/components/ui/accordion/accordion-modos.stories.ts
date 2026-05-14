@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { ref } from 'vue';
 import {
   Accordion,
@@ -9,6 +10,10 @@ import {
 
 const meta = {
   title: 'UI/Accordion/Modos',
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta;
 
 export default meta;
@@ -48,6 +53,9 @@ export const Single: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Multiple: Story = {
@@ -82,6 +90,9 @@ export const Multiple: Story = {
         story: 'Modo multiple. Múltiplos itens podem estar abertos ao mesmo tempo. Use para especificações técnicas comparáveis.',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
   },
 };
 
@@ -123,6 +134,9 @@ export const Controlled: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const DefaultOpen: Story = {
@@ -150,5 +164,8 @@ export const DefaultOpen: Story = {
         story: 'Prop default-value abre um item na montagem sem modo controlado. Use em documentação e onboarding.',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
   },
 };

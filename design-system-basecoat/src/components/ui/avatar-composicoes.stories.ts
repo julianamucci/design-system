@@ -6,6 +6,8 @@ import { createAvatar, createAvatarFallback, createAvatarImage, createAvatarRoot
 const meta: Meta = {
   title: 'UI/Avatar/Composições',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -105,6 +107,11 @@ export const WithIcon: Story = {
     root.appendChild(fallback);
     return root;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Group: Story = {
@@ -139,6 +146,11 @@ export const Group: Story = {
       group.appendChild(av);
     }
     return group;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 

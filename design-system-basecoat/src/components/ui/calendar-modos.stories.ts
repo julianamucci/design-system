@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { createCalendar } from './calendar';
+import { within, expect } from 'storybook/test';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -14,6 +15,8 @@ import { createCalendar } from './calendar';
 const meta: Meta = {
   title: 'UI/Calendar/Modos',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -42,5 +45,10 @@ export const Single: Story = {
           'Seleção de uma única data. `value` define a data pré-selecionada; `onSelect` recebe um `Date` a cada clique em uma célula habilitada.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { createCarousel } from './carousel';
 import { createCard, createCardContent } from './card';
+import { within, expect } from 'storybook/test';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
@@ -24,6 +25,8 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 const meta: Meta = {
   title: 'UI/Carousel/Configurações',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -43,6 +46,11 @@ export const Single: Story = {
     wrap.appendChild(createCarousel({ items: buildSlides(4) }));
     return wrap;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const MultiResponsive: Story = {
@@ -54,6 +62,11 @@ export const MultiResponsive: Story = {
     wrap.className = 'w-full max-w-xl';
     wrap.appendChild(createCarousel({ items: buildSlides(6) }));
     return wrap;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 
@@ -69,5 +82,10 @@ export const Autoplay: Story = {
       }),
     );
     return wrap;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

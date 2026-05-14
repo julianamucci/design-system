@@ -1,9 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 
 const meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Accordion/Estados',
   component: Accordion,
 } satisfies Meta<typeof Accordion>;

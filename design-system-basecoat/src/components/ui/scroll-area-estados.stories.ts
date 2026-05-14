@@ -5,6 +5,7 @@ import { createScrollArea } from './scroll-area';
 const meta: Meta = {
   title: 'UI/ScrollArea/Estados',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {
@@ -51,6 +52,11 @@ export const Idle: Story = {
     }));
     return outer;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Scrolling: Story = {
@@ -93,6 +99,11 @@ export const Hover: Story = {
       children: buildList(25),
     }));
     return outer;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 

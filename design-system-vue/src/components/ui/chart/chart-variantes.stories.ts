@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { ChartContainer, ChartLegendContent, type ChartConfig } from './index';
 import { VisXYContainer, VisGroupedBar, VisLine, VisArea, VisAxis } from '@unovis/vue';
 
@@ -24,6 +25,8 @@ const meta = {
   title: 'UI/Chart/Variantes',
   component: ChartContainer,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
   },
 } satisfies Meta<typeof ChartContainer>;
@@ -65,6 +68,9 @@ export const Bar: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Linha: Story = {
@@ -99,6 +105,9 @@ export const Linha: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Area: Story = {
@@ -133,4 +142,7 @@ export const Area: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

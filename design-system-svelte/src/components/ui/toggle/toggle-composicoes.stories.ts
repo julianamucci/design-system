@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { userEvent, within, expect } from 'storybook/test';
 import ToggleStory from './ToggleStory.svelte';
 

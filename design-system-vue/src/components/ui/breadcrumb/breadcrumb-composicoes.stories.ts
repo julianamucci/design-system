@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -20,6 +21,8 @@ const meta = {
   title: 'UI/Breadcrumb/Composições',
   component: Breadcrumb,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -61,6 +64,9 @@ export const Default: Story = {
       </Breadcrumb>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const WithEllipsis: Story = {
@@ -96,6 +102,9 @@ export const WithEllipsis: Story = {
       </Breadcrumb>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const CustomSeparator: Story = {
@@ -131,6 +140,9 @@ export const CustomSeparator: Story = {
       </Breadcrumb>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Responsive: Story = {
@@ -179,4 +191,7 @@ export const Responsive: Story = {
       </Breadcrumb>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

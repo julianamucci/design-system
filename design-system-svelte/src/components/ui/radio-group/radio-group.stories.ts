@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { fn, userEvent, within, expect } from 'storybook/test';
+
+import { userEvent, within, expect, fn } from 'storybook/test';
 import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
 import RadioGroupDocs from '@/components/docs/RadioGroupDocs.svelte';

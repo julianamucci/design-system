@@ -5,6 +5,7 @@ import { createSkeleton } from './skeleton';
 const meta: Meta = {
   title: 'UI/Skeleton/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

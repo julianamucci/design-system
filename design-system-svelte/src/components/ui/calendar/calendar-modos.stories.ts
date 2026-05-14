@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
 
@@ -6,6 +8,8 @@ const meta = {
   title: 'UI/Calendar/Modos',
   component: Calendar,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -24,6 +28,10 @@ export const Single: Story = {
     Component: CalendarStory,
     props: { variant: 'single', locale: 'pt-BR' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Multiple: Story = {
@@ -31,6 +39,10 @@ export const Multiple: Story = {
     Component: CalendarStory,
     props: { variant: 'multiple', locale: 'pt-BR' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const RangeFallback: Story = {
@@ -47,4 +59,8 @@ export const RangeFallback: Story = {
     props: { variant: 'multiple', locale: 'pt-BR' },
   }),
   // sem play function — é uma story documentacional
+,
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

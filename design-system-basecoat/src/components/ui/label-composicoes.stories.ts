@@ -9,6 +9,7 @@ import { createCheckbox } from './checkbox';
 const meta: Meta = {
   title: 'UI/Label/Composições',
   parameters: {
+    actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {

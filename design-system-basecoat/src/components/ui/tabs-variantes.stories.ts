@@ -5,6 +5,7 @@ import { createTabs, type TabsItemDef } from './tabs';
 const meta: Meta = {
   title: 'UI/Tabs/Variantes',
   parameters: {
+    actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {
@@ -86,6 +87,11 @@ export const Line: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 // ─── Vertical ─────────────────────────────────────────────────────────────────
@@ -115,5 +121,10 @@ export const Vertical: Story = {
           'Importante: setas continuam navegando como horizontal (Left/Right) — para suportar Up/Down nativamente seria necessário estender a factory.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

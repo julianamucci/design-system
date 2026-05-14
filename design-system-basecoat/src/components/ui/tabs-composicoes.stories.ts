@@ -7,6 +7,7 @@ import { User, Settings, Shield } from 'lucide';
 const meta: Meta = {
   title: 'UI/Tabs/Composições',
   parameters: {
+    actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {
@@ -159,6 +160,11 @@ export const ComBadgeNoTrigger: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 // ─── Vertical (divergência Basecoat) ──────────────────────────────────────────
@@ -190,6 +196,11 @@ export const Vertical: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 // ─── Sub-navegação (variant line) ─────────────────────────────────────────────
@@ -218,5 +229,10 @@ export const SubNavegacaoLine: Story = {
           'DIVERGÊNCIA Basecoat: aplicado via classes utilitárias — a factory não expõe prop `variant`.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

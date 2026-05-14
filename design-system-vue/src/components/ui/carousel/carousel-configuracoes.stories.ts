@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import Autoplay from 'embla-carousel-autoplay';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
 import { Card } from '@/components/ui/card';
@@ -7,6 +8,8 @@ const meta = {
   title: 'UI/Carousel/Configurações',
   component: Carousel,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -37,6 +40,9 @@ export const Single: Story = {
       </Carousel>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const MultiResponsive: Story = {
@@ -57,6 +63,9 @@ export const MultiResponsive: Story = {
       </Carousel>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const AutoplayStory: Story = {
@@ -81,4 +90,7 @@ export const AutoplayStory: Story = {
       </Carousel>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

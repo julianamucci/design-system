@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
+
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 
@@ -7,6 +8,8 @@ const meta = {
   title: 'UI/AlertDialog/Estados',
   component: AlertDialog,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

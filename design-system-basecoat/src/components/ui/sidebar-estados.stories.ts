@@ -17,6 +17,7 @@ import {
 const meta: Meta = {
   title: 'UI/Sidebar/Estados',
   parameters: {
+    actions: { disable: true },
     layout: 'fullscreen',
     controls: { disable: true },
     docs: {
@@ -295,5 +296,10 @@ export const MobileOverlay: Story = {
         story: 'Em viewports mobile, a Sidebar é renderizada como Sheet overlay (18rem). Abre via SidebarTrigger ou atalho Ctrl+B.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

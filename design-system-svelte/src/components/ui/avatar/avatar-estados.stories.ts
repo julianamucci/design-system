@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
 
@@ -6,6 +8,8 @@ const meta = {
   title: 'UI/Avatar/Estados',
   component: Avatar,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -29,6 +33,10 @@ export const Loaded: Story = {
       initials: 'MR',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Loading: Story = {
@@ -42,6 +50,10 @@ export const Loading: Story = {
       delayMs: 600,
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Failed: Story = {
@@ -54,6 +66,10 @@ export const Failed: Story = {
       initials: 'MR',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const NoImage: Story = {
@@ -64,4 +80,8 @@ export const NoImage: Story = {
       initials: 'JP',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

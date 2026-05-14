@@ -5,6 +5,7 @@ import { createSeparator } from './separator';
 const meta: Meta = {
   title: 'UI/Separator/Estados',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

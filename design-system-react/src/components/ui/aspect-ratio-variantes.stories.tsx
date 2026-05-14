@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect } from "storybook/test";
 import { AspectRatio } from "./aspect-ratio";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
@@ -16,6 +17,8 @@ const meta = {
   component: AspectRatio,
   parameters: {
     layout: "centered",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -42,6 +45,10 @@ export const SixteenNine: Story = {
       </AspectRatio>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const img = canvasElement.querySelector("img");
+    await expect(img).toBeInTheDocument();
+  },
 };
 
 export const FourThree: Story = {
@@ -58,6 +65,10 @@ export const FourThree: Story = {
       </AspectRatio>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const img = canvasElement.querySelector("img");
+    await expect(img).toBeInTheDocument();
+  },
 };
 
 export const Square: Story = {
@@ -74,6 +85,10 @@ export const Square: Story = {
       </AspectRatio>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const img = canvasElement.querySelector("img");
+    await expect(img).toBeInTheDocument();
+  },
 };
 
 export const ThreeFour: Story = {
@@ -90,6 +105,10 @@ export const ThreeFour: Story = {
       </AspectRatio>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const img = canvasElement.querySelector("img");
+    await expect(img).toBeInTheDocument();
+  },
 };
 
 export const UltraWide: Story = {
@@ -106,4 +125,8 @@ export const UltraWide: Story = {
       </AspectRatio>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const img = canvasElement.querySelector("img");
+    await expect(img).toBeInTheDocument();
+  },
 };

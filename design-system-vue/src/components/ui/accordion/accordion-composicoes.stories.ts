@@ -11,6 +11,10 @@ import { Info, AlertTriangle, CheckCircle } from 'lucide-vue-next';
 
 const meta = {
   title: 'UI/Accordion/Composições',
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta;
 
 export default meta;
@@ -64,6 +68,9 @@ export const ComIconeNoTrigger: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ComBadgeNoTrigger: Story = {
@@ -102,6 +109,9 @@ export const ComBadgeNoTrigger: Story = {
         story: 'Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
   },
 };
 
@@ -151,6 +161,9 @@ export const ConteudoRico: Story = {
         story: 'AccordionContent aceita qualquer conteúdo Vue. Use para tabelas de dados, parágrafos ou listas estruturadas.',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
   },
 };
 

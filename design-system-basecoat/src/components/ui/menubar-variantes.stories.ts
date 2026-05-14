@@ -5,6 +5,7 @@ import { createMenubar } from './menubar';
 const meta: Meta = {
   title: 'UI/Menubar/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

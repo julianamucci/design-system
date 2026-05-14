@@ -5,6 +5,7 @@ import { createHoverCard } from './hover-card';
 const meta: Meta = {
   title: 'UI/HoverCard/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

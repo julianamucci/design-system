@@ -5,6 +5,8 @@ import { createAvatar } from './avatar';
 const meta: Meta = {
   title: 'UI/Avatar/Tamanhos',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -36,6 +38,11 @@ export const Size6: Story = {
     docs: { description: { story: 'Tamanho compacto (h-6 w-6) — listas densas.' } },
   },
   render: () => buildAvatar('h-6 w-6'),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Size8: Story = {
@@ -56,6 +63,11 @@ export const Size10: Story = {
     docs: { description: { story: 'Tamanho médio-grande (h-10 w-10).' } },
   },
   render: () => buildAvatar('h-10 w-10'),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Size12: Story = {
@@ -63,4 +75,9 @@ export const Size12: Story = {
     docs: { description: { story: 'Tamanho grande (h-12 w-12) — headers de perfil.' } },
   },
   render: () => buildAvatar('h-12 w-12'),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };

@@ -10,6 +10,8 @@ const meta = {
   title: 'UI/Carousel/Composições',
   component: Carousel,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -142,4 +144,7 @@ export const Galeria: Story = {
       </Carousel>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

@@ -7,6 +7,8 @@ import { createContextMenu } from './context-menu';
 const meta: Meta = {
   title: 'UI/ContextMenu/Composicoes',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

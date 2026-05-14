@@ -22,6 +22,8 @@ const meta = {
   title: 'UI/ContextMenu/Composições',
   component: ContextMenu,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

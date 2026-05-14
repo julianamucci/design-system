@@ -18,6 +18,8 @@ const meta = {
   title: 'UI/AlertDialog/Estados',
   component: AlertDialog,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

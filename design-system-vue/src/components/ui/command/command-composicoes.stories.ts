@@ -19,6 +19,8 @@ const meta = {
   title: 'UI/Command/Composições',
   component: Command,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -69,6 +71,9 @@ export const ComGrupos: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ComShortcuts: Story = {
@@ -123,6 +128,9 @@ export const ComShortcuts: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ComoCombobox: Story = {

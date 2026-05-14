@@ -6,6 +6,10 @@ import { Info } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Alert/Estados',
   component: Alert,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Alert>;
 
 export default meta;

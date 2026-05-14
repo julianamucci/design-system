@@ -7,6 +7,8 @@ const meta = {
   title: 'UI/Carousel/Variantes',
   component: Carousel,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

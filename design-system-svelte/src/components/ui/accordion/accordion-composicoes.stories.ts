@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect } from 'storybook/test';
+
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Accordion } from './index';
 import AccordionIconStory from './AccordionIconStory.svelte';
 import AccordionBadgeStory from './AccordionBadgeStory.svelte';
@@ -7,6 +8,10 @@ import AccordionRichStory from './AccordionRichStory.svelte';
 import AccordionFAQStory from './AccordionFAQStory.svelte';
 
 const meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Accordion/Composições',
   component: Accordion,
 } satisfies Meta<typeof Accordion>;
@@ -23,6 +28,10 @@ export const ComIconeNoTrigger: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const ComBadgeNoTrigger: Story = {
@@ -34,6 +43,10 @@ export const ComBadgeNoTrigger: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const ConteudoRico: Story = {
@@ -44,6 +57,10 @@ export const ConteudoRico: Story = {
         story: 'AccordionContent aceita qualquer conteúdo Svelte. Use para tabelas de dados, parágrafos ou listas estruturadas.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };
 

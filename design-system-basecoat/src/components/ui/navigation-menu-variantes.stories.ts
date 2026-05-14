@@ -5,6 +5,7 @@ import { createNavigationMenu } from './navigation-menu';
 const meta: Meta = {
   title: 'UI/NavigationMenu/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

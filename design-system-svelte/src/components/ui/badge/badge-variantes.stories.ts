@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
 
@@ -6,6 +8,8 @@ const meta = {
   title: 'UI/Badge/Variantes',
   component: Badge,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -24,6 +28,10 @@ export const Default: Story = {
     Component: BadgeStory,
     props: { variant: 'default', label: 'Novo' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Secondary: Story = {
@@ -31,6 +39,10 @@ export const Secondary: Story = {
     Component: BadgeStory,
     props: { variant: 'secondary', label: 'Beta' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Destructive: Story = {
@@ -38,6 +50,10 @@ export const Destructive: Story = {
     Component: BadgeStory,
     props: { variant: 'destructive', label: 'Urgente' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Outline: Story = {
@@ -45,4 +61,8 @@ export const Outline: Story = {
     Component: BadgeStory,
     props: { variant: 'outline', label: 'Rascunho' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

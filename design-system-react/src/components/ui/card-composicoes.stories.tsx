@@ -25,6 +25,8 @@ const meta = {
   component: Card,
   parameters: {
     layout: "centered",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -191,6 +193,12 @@ export const ProductCard: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.querySelector('[data-slot="card"]');
+    await expect(root).toBeInTheDocument();
+    await expect(canvasElement.querySelector('[data-slot="card-action"]')).toBeInTheDocument();
+    await expect(canvasElement.querySelector('[data-slot="card-footer"]')).toBeInTheDocument();
+  },
 };
 
 export const MetricCard: Story = {
@@ -249,5 +257,10 @@ export const ProfileCard: Story = {
           "Card de perfil: Avatar à esquerda do CardHeader, título (nome) + descrição (papel/localização). Sem footer — unidade semântica mínima.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.querySelector('[data-slot="card"]');
+    await expect(root).toBeInTheDocument();
+    await expect(canvasElement.querySelector('[data-slot="card-title"]')).toBeInTheDocument();
   },
 };

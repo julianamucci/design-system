@@ -5,6 +5,7 @@ import { createInputOTP } from './input-otp';
 const meta: Meta = {
   title: 'UI/InputOTP/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

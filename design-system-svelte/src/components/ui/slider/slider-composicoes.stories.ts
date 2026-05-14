@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
 import SliderFormStory from './SliderFormStory.svelte';

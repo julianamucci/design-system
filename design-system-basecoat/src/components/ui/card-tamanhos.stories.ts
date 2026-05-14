@@ -11,6 +11,8 @@ import {
 const meta: Meta = {
   title: 'UI/Card/Tamanhos',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {

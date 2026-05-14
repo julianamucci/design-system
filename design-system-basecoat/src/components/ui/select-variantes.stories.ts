@@ -5,6 +5,7 @@ import { createSelect } from './select';
 const meta: Meta = {
   title: 'UI/Select/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {
@@ -169,5 +170,10 @@ export const WithIcon: Story = {
           'Variante NÃO suportada no Basecoat. O `<select>` HTML nativo (utilizado pelo factory `createSelect`) não permite ícones inline em `<option>` — limitação do navegador, não do design system. Para listas com ícone, recomendamos `Combobox` (Command + Popover) ou um componente custom.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

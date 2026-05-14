@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import AspectRatioStory from './AspectRatioStory.svelte';
 import AspectRatioGridStory from './AspectRatioGridStory.svelte';
 
@@ -6,6 +8,8 @@ const meta = {
   title: 'UI/AspectRatio/Composições',
   component: AspectRatioStory,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -27,6 +31,10 @@ export const ComImagem: Story = {
     alt: 'Paisagem com object-cover',
     width: 'max-w-lg',
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const ComIframe: Story = {
@@ -36,6 +44,10 @@ export const ComIframe: Story = {
     src: 'https://www.openstreetmap.org/export/embed.html?bbox=-46.66%2C-23.56%2C-46.62%2C-23.54&layer=mapnik',
     title: 'Mapa do escritório em São Paulo',
     width: 'max-w-lg',
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };
 
@@ -47,6 +59,10 @@ export const ComVideo: Story = {
     poster: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&auto=format&fit=crop&q=60',
     width: 'max-w-lg',
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const EmGrid: Story = {
@@ -55,5 +71,9 @@ export const EmGrid: Story = {
   }),
   parameters: {
     layout: 'padded',
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { ChartContainer, ChartLegendContent, ChartTooltipContent, type ChartConfig } from './index';
 import { VisXYContainer, VisGroupedBar, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/vue';
 
@@ -24,6 +25,8 @@ const meta = {
   title: 'UI/Chart/Configuracoes',
   component: ChartContainer,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
   },
 } satisfies Meta<typeof ChartContainer>;
@@ -65,6 +68,9 @@ export const ComTooltip: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ComLegenda: Story = {
@@ -101,6 +107,9 @@ export const ComLegenda: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const MultiSeries: Story = {
@@ -134,4 +143,7 @@ export const MultiSeries: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

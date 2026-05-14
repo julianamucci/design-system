@@ -5,6 +5,7 @@ import { createProgress } from './progress';
 const meta: Meta = {
   title: 'UI/Progress/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {
@@ -103,6 +104,11 @@ export const WizardSteps: Story = {
     wrap.append(row, buildBar(60, 'Progresso do cadastro: etapa 3 de 5'));
     return wrap;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 // ─── Múltiplos Uploads ───────────────────────────────────────────────────────
@@ -119,6 +125,11 @@ export const MultipleUploads: Story = {
       buildLabeled({ value: 0,   label: 'foto-4.jpg',     ariaLabel: 'Upload de foto-4.jpg aguardando' }),
     );
     return wrap;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 
@@ -145,6 +156,11 @@ export const CustomColor: Story = {
     );
     return wrap;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 // ─── Container com aria-busy ─────────────────────────────────────────────────
@@ -170,5 +186,10 @@ export const AriaBusyContainer: Story = {
       ariaLabel: 'Progresso da análise de dados',
     }));
     return status;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

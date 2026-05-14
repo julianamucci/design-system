@@ -7,6 +7,8 @@ import { createCommand } from './command';
 const meta: Meta = {
   title: 'UI/Command/Composições',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

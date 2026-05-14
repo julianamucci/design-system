@@ -7,6 +7,7 @@ const meta = {
   component: Label,
   parameters: {
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component: 'Estados do Label: padrão, disabled (via peer-disabled ou group-data-[disabled=true]) e required (via span com aria-hidden).',

@@ -12,6 +12,8 @@ const meta = {
   title: 'UI/Card/Tamanhos',
   component: Card,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {

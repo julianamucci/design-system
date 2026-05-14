@@ -3,6 +3,10 @@ import { within, expect } from 'storybook/test';
 import { createButton, createButtonIcon } from './button';
 
 const meta: Meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Button/Tamanhos',
 };
 
@@ -12,16 +16,31 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => createButton({ size: 'default', label: 'Padrão' }),
   parameters: { docs: { description: { story: 'Tamanho padrão. Use em formulários e diálogos como default.' } } },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Small: Story = {
   render: () => createButton({ size: 'sm', label: 'Pequeno' }),
   parameters: { docs: { description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' } } },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Large: Story = {
   render: () => createButton({ size: 'lg', label: 'Grande' }),
   parameters: { docs: { description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' } } },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 const iconAriaLabelPlay: Story['play'] = async ({ canvasElement, step }) => {

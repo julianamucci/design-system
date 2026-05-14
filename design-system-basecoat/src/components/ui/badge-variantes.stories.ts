@@ -5,6 +5,8 @@ import { createBadge } from './badge';
 const meta: Meta = {
   title: 'UI/Badge/Variantes',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

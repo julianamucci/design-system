@@ -14,6 +14,8 @@ const meta = {
   title: 'UI/Card/Estados',
   component: Card,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -42,6 +44,9 @@ export const Default: Story = {
       </Card>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Clickable: Story = {

@@ -5,6 +5,7 @@ import { createResizablePanel } from './resizable';
 const meta: Meta = {
   title: 'UI/Resizable/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

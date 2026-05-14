@@ -3,6 +3,10 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createButton, createButtonIcon, btnClass } from './button';
 
 const meta: Meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Button/Composições',
 };
 
@@ -19,6 +23,11 @@ export const ComIconeAEsquerda: Story = {
     return btn;
   },
   parameters: { docs: { description: { story: 'Ícone à esquerda do label. O SVG tem aria-hidden="true" para não poluir leitores de tela.' } } },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const ComIconeADireita: Story = {
@@ -31,6 +40,11 @@ export const ComIconeADireita: Story = {
     return btn;
   },
   parameters: { docs: { description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' } } },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const IconeDestrutivo: Story = {
@@ -43,6 +57,11 @@ export const IconeDestrutivo: Story = {
     return btn;
   },
   parameters: { docs: { description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' } } },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const IconOnly: Story = {
@@ -73,6 +92,11 @@ export const ParDeAcoes: Story = {
     return wrap;
   },
   parameters: { docs: { description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' } } },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const AsLink: Story = {

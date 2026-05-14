@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { expect } from 'storybook/test';
 import SkeletonStory from './SkeletonStory.svelte';
 import SkeletonDocs from '@/components/docs/SkeletonDocs.svelte';

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect } from 'storybook/test';
+
+import { within, expect, waitFor } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
 
 const meta = {
@@ -58,6 +59,10 @@ export const WithForm: Story = {
     actionLabel: 'Salvar',
     cancelLabel: 'Cancelar',
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const WithScrollContent: Story = {
@@ -78,6 +83,10 @@ export const WithScrollContent: Story = {
     actionLabel: 'Aceitar',
     cancelLabel: 'Recusar',
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const NoFooter: Story = {
@@ -93,6 +102,10 @@ export const NoFooter: Story = {
     title: 'Sobre este produto',
     description:
       'Plataforma de design system multi-stack mantida pela equipe de Engenharia. Atualizada continuamente.',
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };
 
@@ -114,6 +127,10 @@ export const WithDestructiveAction: Story = {
     actionLabel: 'Remover item',
     cancelLabel: 'Cancelar',
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const CustomCloseInFooter: Story = {
@@ -134,5 +151,9 @@ export const CustomCloseInFooter: Story = {
     description: 'Envie um convite por e-mail. O destinatário poderá aceitar ou recusar.',
     actionLabel: 'Enviar convite',
     cancelLabel: 'Cancelar',
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
 import { User } from 'lucide-vue-next';
 
@@ -6,6 +7,8 @@ const meta = {
   title: 'UI/Avatar/Composições',
   component: Avatar,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -32,6 +35,9 @@ export const WithImage: Story = {
       </Avatar>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const WithInitials: Story = {
@@ -43,6 +49,9 @@ export const WithInitials: Story = {
       </Avatar>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const WithIcon: Story = {
@@ -56,6 +65,9 @@ export const WithIcon: Story = {
       </Avatar>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Group: Story = {
@@ -90,6 +102,9 @@ export const Group: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const WithStatus: Story = {
@@ -112,4 +127,7 @@ export const WithStatus: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

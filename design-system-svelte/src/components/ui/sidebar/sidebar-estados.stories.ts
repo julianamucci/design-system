@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect } from 'storybook/test';
+
+import { within, expect, waitFor } from 'storybook/test';
 import { Root as Sidebar } from './index';
 import SidebarStory from './SidebarStory.svelte';
 import SidebarIconStory from './SidebarIconStory.svelte';
@@ -125,5 +126,9 @@ export const Mobile: Story = {
   }),
   parameters: {
     viewport: { defaultViewport: 'mobile1' },
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };

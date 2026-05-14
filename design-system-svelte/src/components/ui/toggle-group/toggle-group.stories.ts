@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { fn, userEvent, within, expect } from 'storybook/test';
+
+import { userEvent, within, expect, fn } from 'storybook/test';
 import { ToggleGroup } from './index';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
 import ToggleGroupDocs from '@/components/docs/ToggleGroupDocs.svelte';

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect, userEvent } from 'storybook/test';
+
+import { userEvent, within, expect } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
 
 const meta = {

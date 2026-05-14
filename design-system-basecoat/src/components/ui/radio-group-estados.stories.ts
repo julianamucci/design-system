@@ -5,6 +5,7 @@ import { createRadioGroup } from './radio-group';
 const meta: Meta = {
   title: 'UI/RadioGroup/Estados',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {

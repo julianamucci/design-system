@@ -5,6 +5,7 @@ import { createInput } from './input';
 const meta: Meta = {
   title: 'UI/Input/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

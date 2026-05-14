@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { fn, userEvent, within, expect } from 'storybook/test';
+
+import { userEvent, within, expect, fn } from 'storybook/test';
 import { Collapsible } from './index';
 import CollapsibleStory from './CollapsibleStory.svelte';
 import CollapsibleControladoStory from './CollapsibleControladoStory.svelte';
@@ -8,6 +9,8 @@ const meta = {
   title: 'UI/Collapsible/Estados',
   component: Collapsible,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

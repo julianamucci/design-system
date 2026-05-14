@@ -5,6 +5,7 @@ import { createTextarea } from './textarea';
 const meta: Meta = {
   title: 'UI/Textarea/Estados',
   parameters: {
+    actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {

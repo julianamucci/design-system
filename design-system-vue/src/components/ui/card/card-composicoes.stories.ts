@@ -17,6 +17,8 @@ const meta = {
   title: 'UI/Card/Composições',
   component: Card,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -47,6 +49,9 @@ export const WithFooter: Story = {
       </Card>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const WithAction: Story = {
@@ -65,6 +70,9 @@ export const WithAction: Story = {
       </Card>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const WithImage: Story = {
@@ -81,6 +89,9 @@ export const WithImage: Story = {
       </Card>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ProductCard: Story = {
@@ -138,6 +149,9 @@ export const MetricCard: Story = {
       </Card>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ProfileCard: Story = {
@@ -164,4 +178,7 @@ export const ProfileCard: Story = {
       </Card>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

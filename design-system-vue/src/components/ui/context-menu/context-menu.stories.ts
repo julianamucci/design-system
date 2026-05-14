@@ -122,6 +122,9 @@ export const ItemDefault: Story = {
       </ContextMenu>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ItemDestructive: Story = {

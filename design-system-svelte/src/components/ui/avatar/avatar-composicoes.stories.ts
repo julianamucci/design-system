@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
 
@@ -6,6 +8,8 @@ const meta = {
   title: 'UI/Avatar/Composições',
   component: Avatar,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -29,6 +33,10 @@ export const WithImage: Story = {
       initials: 'MR',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const WithInitials: Story = {
@@ -39,6 +47,10 @@ export const WithInitials: Story = {
       initials: 'JP',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const WithIcon: Story = {
@@ -48,6 +60,10 @@ export const WithIcon: Story = {
       variant: 'icon',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Group: Story = {
@@ -57,6 +73,10 @@ export const Group: Story = {
       variant: 'group',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const WithStatus: Story = {
@@ -70,4 +90,8 @@ export const WithStatus: Story = {
       statusLabel: 'online',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

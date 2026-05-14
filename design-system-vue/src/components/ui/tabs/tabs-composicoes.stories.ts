@@ -10,6 +10,7 @@ const meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -116,6 +117,9 @@ export const ComIcones: Story = {
         story: 'Tabs com ícone à esquerda do label. Ícones têm aria-hidden="true" — o texto do trigger já descreve a tab para leitores de tela.',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
   },
 };
 

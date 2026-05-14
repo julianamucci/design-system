@@ -13,6 +13,8 @@ import {
 const meta: Meta = {
   title: 'UI/Breadcrumb/Estados',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {

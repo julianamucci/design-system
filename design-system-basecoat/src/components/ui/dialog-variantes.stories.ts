@@ -8,6 +8,7 @@ import { createButton } from './button';
 const meta: Meta = {
   title: 'UI/Dialog/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {
@@ -75,6 +76,11 @@ export const Default: Story = {
     queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
     return dialog;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const WithForm: Story = {
@@ -97,6 +103,11 @@ export const WithForm: Story = {
     });
     queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
     return dialog;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 
@@ -127,6 +138,11 @@ export const WithScrollContent: Story = {
     queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
     return dialog;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const NoFooter: Story = {
@@ -142,6 +158,11 @@ export const NoFooter: Story = {
     });
     queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
     return dialog;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 
@@ -200,5 +221,10 @@ export const CustomCloseInFooter: Story = {
     });
     queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
     return dialog;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

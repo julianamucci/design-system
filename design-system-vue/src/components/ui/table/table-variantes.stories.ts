@@ -17,6 +17,7 @@ const meta = {
   component: Table,
   parameters: {
     controls: { disable: true },
+    actions: { disable: true },
   },
 } satisfies Meta<typeof Table>;
 

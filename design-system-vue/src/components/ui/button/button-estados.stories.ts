@@ -9,6 +9,10 @@ const meta = {
   args: {
     onClick: fn(),
   } as never,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;

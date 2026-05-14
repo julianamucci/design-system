@@ -23,6 +23,7 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -85,6 +86,10 @@ export const Default: Story = {
       </Dialog>
     );
   },
+  play: async () => {
+    const body = within(document.body);
+    await expect(await body.findByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const WithForm: Story = {
@@ -137,6 +142,11 @@ export const WithForm: Story = {
       </Dialog>
     );
   },
+  play: async () => {
+    const body = within(document.body);
+    await expect(await body.findByLabelText(/nome/i)).toBeInTheDocument();
+    await expect(await body.findByLabelText(/e-mail/i)).toBeInTheDocument();
+  },
 };
 
 export const WithScrollContent: Story = {
@@ -183,6 +193,10 @@ export const WithScrollContent: Story = {
       </Dialog>
     );
   },
+  play: async () => {
+    const body = within(document.body);
+    await expect(await body.findByText(/termos de uso/i)).toBeInTheDocument();
+  },
 };
 
 export const NoFooter: Story = {
@@ -212,6 +226,10 @@ export const NoFooter: Story = {
         </DialogContent>
       </Dialog>
     );
+  },
+  play: async () => {
+    const body = within(document.body);
+    await expect(await body.findByText(/sobre este recurso/i)).toBeInTheDocument();
   },
 };
 
@@ -294,5 +312,9 @@ export const CustomCloseInFooter: Story = {
         </DialogContent>
       </Dialog>
     );
+  },
+  play: async () => {
+    const body = within(document.body);
+    await expect(await body.findByRole("dialog")).toBeInTheDocument();
   },
 };

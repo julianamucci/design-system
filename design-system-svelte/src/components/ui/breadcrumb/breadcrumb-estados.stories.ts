@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect, fn, userEvent } from 'storybook/test';
+
+import { userEvent, within, expect, fn } from 'storybook/test';
 import { Breadcrumb } from './index';
 import BreadcrumbStory from './BreadcrumbStory.svelte';
 
@@ -7,6 +8,8 @@ const meta = {
   title: 'UI/Breadcrumb/Estados',
   component: Breadcrumb,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {

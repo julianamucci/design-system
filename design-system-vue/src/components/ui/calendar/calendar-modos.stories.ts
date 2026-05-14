@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { ref } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
@@ -8,6 +9,8 @@ const meta = {
   title: 'UI/Calendar/Modos',
   component: Calendar,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -41,6 +44,9 @@ export const Single: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Multiple: Story = {
@@ -65,6 +71,9 @@ export const Multiple: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Range: Story = {
@@ -87,4 +96,7 @@ export const Range: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

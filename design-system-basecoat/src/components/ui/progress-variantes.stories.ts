@@ -5,6 +5,7 @@ import { createProgress } from './progress';
 const meta: Meta = {
   title: 'UI/Progress/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

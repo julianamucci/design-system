@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
 
@@ -6,6 +8,8 @@ const meta = {
   title: 'UI/Avatar/Tamanhos',
   component: Avatar,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -32,6 +36,10 @@ export const Size6: Story = {
     Component: AvatarStory,
     props: { ...baseProps, sizeClass: 'h-6 w-6' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Size8: Story = {
@@ -40,6 +48,10 @@ export const Size8: Story = {
     Component: AvatarStory,
     props: { ...baseProps, sizeClass: 'h-8 w-8' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Size10: Story = {
@@ -48,6 +60,10 @@ export const Size10: Story = {
     Component: AvatarStory,
     props: { ...baseProps, sizeClass: 'h-10 w-10' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Size12: Story = {
@@ -56,4 +72,8 @@ export const Size12: Story = {
     Component: AvatarStory,
     props: { ...baseProps, sizeClass: 'h-12 w-12' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

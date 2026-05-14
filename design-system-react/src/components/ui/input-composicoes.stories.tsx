@@ -110,6 +110,10 @@ export const AddonTextoEsquerda: Story = {
       </InputGroup>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByLabelText(/usuário/i)).toBeInTheDocument();
+  },
 };
 
 export const AddonTextoDireita: Story = {
@@ -135,6 +139,11 @@ export const AddonTextoDireita: Story = {
       </InputGroup>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByLabelText(/preço/i)).toBeInTheDocument();
+    await expect(canvas.getByText("BRL")).toBeInTheDocument();
+  },
 };
 
 export const BotaoInterno: Story = {

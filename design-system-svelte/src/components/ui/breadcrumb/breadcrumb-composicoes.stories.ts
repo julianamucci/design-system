@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import { Breadcrumb } from './index';
 import BreadcrumbStory from './BreadcrumbStory.svelte';
 
@@ -6,6 +8,8 @@ const meta = {
   title: 'UI/Breadcrumb/Composições',
   component: Breadcrumb,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -24,6 +28,10 @@ export const Default: Story = {
     Component: BreadcrumbStory,
     props: { variant: 'default' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const WithEllipsis: Story = {
@@ -31,6 +39,10 @@ export const WithEllipsis: Story = {
     Component: BreadcrumbStory,
     props: { variant: 'withEllipsis' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const CustomSeparator: Story = {
@@ -38,6 +50,10 @@ export const CustomSeparator: Story = {
     Component: BreadcrumbStory,
     props: { variant: 'customSeparator' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Responsive: Story = {
@@ -45,4 +61,8 @@ export const Responsive: Story = {
     Component: BreadcrumbStory,
     props: { variant: 'responsive' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

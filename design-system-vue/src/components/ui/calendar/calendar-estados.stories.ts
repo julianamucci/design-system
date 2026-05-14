@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { ref } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
@@ -8,6 +9,8 @@ const meta = {
   title: 'UI/Calendar/Estados',
   component: Calendar,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -42,6 +45,9 @@ export const Selected: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 // Disabled — datas antes de 10/04/2026 bloqueadas via isDateDisabled.
@@ -65,6 +71,9 @@ export const Disabled: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 // Today — sem v-model; o placeholder navega até o mês do dia atual e o reka-ui
@@ -81,6 +90,9 @@ export const Today: Story = {
       <Calendar locale="pt-BR" :placeholder="placeholder" class="rounded-md border" />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 // WithOutsideDays — padrão do reka-ui (disableDaysOutsideCurrentView=false).
@@ -102,6 +114,9 @@ export const WithOutsideDays: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 // RangeWithMiddle — início/fim com bg-primary; dias do meio com bg-accent (data-selected).
@@ -125,4 +140,7 @@ export const RangeWithMiddle: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

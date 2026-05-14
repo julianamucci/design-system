@@ -9,6 +9,8 @@ const meta = {
   component: Calendar,
   parameters: {
     layout: "padded",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -90,6 +92,10 @@ export const Multiple: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("grid")).toBeInTheDocument();
+  },
 };
 
 export const Range: Story = {
@@ -116,5 +122,9 @@ export const Range: Story = {
           "mode=\"range\" — intervalo contínuo com `from` e `to`. Ideal para reservas e relatórios com janela de datas.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getAllByRole("grid").length).toBeGreaterThanOrEqual(1);
   },
 };

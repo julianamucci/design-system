@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { within, expect } from 'storybook/test';
 import { ChartContainer } from '@/components/ui/chart';
 import ChartStory from './ChartStory.svelte';

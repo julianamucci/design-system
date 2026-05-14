@@ -8,6 +8,8 @@ import { createButton } from './button';
 const meta: Meta = {
   title: 'UI/AlertDialog/Composições',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

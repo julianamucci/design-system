@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
@@ -6,6 +7,10 @@ import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next'
 const meta = {
   title: 'UI/Alert/Composições',
   component: Alert,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Alert>;
 
 export default meta;
@@ -23,6 +28,9 @@ export const ComIcone: Story = {
       </Alert>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ComAcao: Story = {
@@ -40,6 +48,9 @@ export const ComAcao: Story = {
       </Alert>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const MultiplosTipos: Story = {
@@ -71,6 +82,9 @@ export const MultiplosTipos: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const SemTituloCompacto: Story = {
@@ -84,4 +98,7 @@ export const SemTituloCompacto: Story = {
       </Alert>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

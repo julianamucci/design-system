@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { within, expect } from 'storybook/test';
 import { Collapsible } from './index';
 import CollapsibleComButtonStory from './CollapsibleComButtonStory.svelte';
@@ -8,6 +9,8 @@ const meta = {
   title: 'UI/Collapsible/Composições',
   component: Collapsible,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

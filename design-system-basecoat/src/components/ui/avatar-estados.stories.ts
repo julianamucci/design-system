@@ -5,6 +5,8 @@ import { createAvatar, createAvatarFallback, createAvatarImage, createAvatarRoot
 const meta: Meta = {
   title: 'UI/Avatar/Estados',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

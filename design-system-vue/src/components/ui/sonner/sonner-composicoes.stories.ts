@@ -9,6 +9,7 @@ const meta = {
   component: Toaster,
   parameters: {
     controls: { disable: true },
+    actions: { disable: true },
   },
 } satisfies Meta<typeof Toaster>;
 

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { userEvent, within, expect } from 'storybook/test';
 import PaginationStory from './PaginationStory.svelte';
 import PaginationDocs from '@/components/docs/PaginationDocs.svelte';

@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
 
@@ -6,6 +8,8 @@ const meta = {
   title: 'UI/Carousel/Configurações',
   component: Carousel,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -30,6 +34,10 @@ export const Single: Story = {
       nextLabel: 'Próximo item',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const MultiResponsive: Story = {
@@ -44,6 +52,10 @@ export const MultiResponsive: Story = {
       nextLabel: 'Próximo item',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Autoplay: Story = {
@@ -57,4 +69,8 @@ export const Autoplay: Story = {
       nextLabel: 'Próximo item',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

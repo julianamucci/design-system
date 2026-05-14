@@ -8,6 +8,7 @@ import { sanitizeHtml } from '@/lib/sanitize-html';
 const meta: Meta = {
   title: 'UI/Sonner/Composições',
   parameters: {
+    actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {

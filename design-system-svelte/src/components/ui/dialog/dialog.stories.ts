@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
+
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { Dialog } from './index';
 import DialogStory from './DialogStory.svelte';
 import DialogDocs from '@/components/docs/DialogDocs.svelte';

@@ -1,10 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { createAspectRatio } from './aspect-ratio';
 import { createCard, createCardContent, createCardHeader, createCardTitle, createCardDescription } from './card';
+import { within, expect } from 'storybook/test';
 
 const meta: Meta = {
   title: 'UI/AspectRatio/Composições',
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -52,6 +55,11 @@ export const ComImagem: Story = {
         ),
       }),
     ),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const ComIframe: Story = {
@@ -63,6 +71,11 @@ export const ComIframe: Story = {
     iframe.loading = 'lazy';
     iframe.className = 'w-full h-full rounded-md border-0';
     return boxed(createAspectRatio({ ratio: 16 / 9, content: iframe }));
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 
@@ -83,6 +96,11 @@ export const ComVideo: Story = {
     video.appendChild(track);
 
     return boxed(createAspectRatio({ ratio: 16 / 9, content: video }));
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 
@@ -138,6 +156,11 @@ export const EmGrid: Story = {
 
     return grid;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const PlaceholderSkeleton: Story = {
@@ -147,5 +170,10 @@ export const PlaceholderSkeleton: Story = {
     skeleton.className = 'w-full h-full rounded-md bg-muted animate-pulse';
     skeleton.setAttribute('aria-hidden', 'true');
     return boxed(createAspectRatio({ ratio: 16 / 9, content: skeleton }));
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

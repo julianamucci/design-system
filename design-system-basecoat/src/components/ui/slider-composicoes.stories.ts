@@ -5,6 +5,7 @@ import { createSlider } from './slider';
 const meta: Meta = {
   title: 'UI/Slider/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {

@@ -5,6 +5,10 @@ import { Checkbox } from "./checkbox";
 const meta = {
   title: "UI/Checkbox/Composições",
   component: Checkbox,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Checkbox>;
 
 export default meta;

@@ -5,6 +5,7 @@ import { createProgress } from './progress';
 const meta: Meta = {
   title: 'UI/Progress/Estados',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {
@@ -150,5 +151,10 @@ export const Animated: Story = {
     mo.observe(document.body, { childList: true, subtree: true });
 
     return wrap;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

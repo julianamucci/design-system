@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
 import { within, expect } from 'storybook/test';
 import { Root as ContextMenu } from './index';
 import ContextMenuComposicaoStory from './ContextMenuComposicaoStory.svelte';
@@ -7,6 +8,8 @@ const meta = {
   title: 'UI/ContextMenu/Composições',
   component: ContextMenu,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

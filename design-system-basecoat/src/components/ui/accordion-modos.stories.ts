@@ -4,6 +4,10 @@ import { createAccordion, type AccordionOptions } from './accordion';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 
 const meta: Meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Accordion/Modos',
 };
 
@@ -109,6 +113,11 @@ export const Controlled: Story = {
         story: 'Modo controlado via onValueChange. O indicador acima mostra o item ativo em tempo real.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 

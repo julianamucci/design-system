@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { fn, userEvent, within, expect } from 'storybook/test';
+
+import { userEvent, within, expect, fn } from 'storybook/test';
 import { Slider } from './index';
 import SliderStory from './SliderStory.svelte';
 import SliderDocs from '@/components/docs/SliderDocs.svelte';

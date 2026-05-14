@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect } from 'storybook/test';
+
+import { within, expect, waitFor } from 'storybook/test';
 import { Card } from './index';
 import CardStory from './CardStory.svelte';
 
@@ -7,6 +8,8 @@ const meta = {
   title: 'UI/Card/Composições',
   component: Card,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -83,6 +86,10 @@ export const WithImage: Story = {
       productStock: 'Em estoque',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const ProductCard: Story = {
@@ -98,6 +105,10 @@ export const ProductCard: Story = {
       actionDelete: 'Excluir',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const MetricCard: Story = {
@@ -110,6 +121,10 @@ export const MetricCard: Story = {
       metricTrend: '+12% no mês',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const ProfileCard: Story = {
@@ -122,4 +137,8 @@ export const ProfileCard: Story = {
       actionEdit: 'Editar',
     },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

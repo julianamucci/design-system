@@ -5,6 +5,10 @@ import { createChart } from './chart';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Chart/Estados',
 };
 

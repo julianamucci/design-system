@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
 
 const meta = {
   title: 'UI/Alert/Variantes',
   component: Alert,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Alert>;
 
 export default meta;
@@ -22,6 +27,9 @@ export const Default: Story = {
       </Alert>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Destructive: Story = {
@@ -36,6 +44,9 @@ export const Destructive: Story = {
       </Alert>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Success: Story = {
@@ -50,6 +61,9 @@ export const Success: Story = {
       </Alert>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Warning: Story = {
@@ -64,4 +78,7 @@ export const Warning: Story = {
       </Alert>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

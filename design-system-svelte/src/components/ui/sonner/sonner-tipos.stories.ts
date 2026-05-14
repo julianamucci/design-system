@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import SonnerToastStory from './SonnerToastStory.svelte';
 
 const meta = {
@@ -23,6 +25,10 @@ export const Default: Story = {
     Component: SonnerToastStory,
     props: { type: 'default', message: 'Código copiado.' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Success: Story = {
@@ -30,6 +36,10 @@ export const Success: Story = {
     Component: SonnerToastStory,
     props: { type: 'success', message: 'Alterações salvas.' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Error: Story = {
@@ -37,6 +47,10 @@ export const Error: Story = {
     Component: SonnerToastStory,
     props: { type: 'error', message: 'Não foi possível salvar. Tente novamente.' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Warning: Story = {
@@ -44,6 +58,10 @@ export const Warning: Story = {
     Component: SonnerToastStory,
     props: { type: 'warning', message: 'Sua sessão expira em 5 minutos.' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Info: Story = {
@@ -51,6 +69,10 @@ export const Info: Story = {
     Component: SonnerToastStory,
     props: { type: 'info', message: 'Nova versão disponível.' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Loading: Story = {
@@ -58,4 +80,8 @@ export const Loading: Story = {
     Component: SonnerToastStory,
     props: { type: 'loading', message: 'Enviando arquivo...' },
   }),
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };

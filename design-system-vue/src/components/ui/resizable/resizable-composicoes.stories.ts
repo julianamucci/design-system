@@ -12,6 +12,7 @@ const meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -76,6 +77,9 @@ export const VerticalCabecalhoConteudoRodape: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const SidebarComConsole: Story = {

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect } from 'storybook/test';
+
+import { within, expect, waitFor } from 'storybook/test';
 import PaginationStory from './PaginationStory.svelte';
 
 const meta = {
@@ -53,6 +54,10 @@ export const Hover: Story = {
         story: 'Estado hover — bg-accent + text-accent-foreground (simulado via parameters.pseudo).',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };
 
@@ -108,5 +113,9 @@ export const Focus: Story = {
   parameters: {
     pseudo: { focusVisible: true },
     docs: { description: { story: 'Foco visível — ring-2 ring-ring (simulado via parameters.pseudo).' } },
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };

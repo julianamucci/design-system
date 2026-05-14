@@ -1,9 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+
+import { expect, waitFor } from 'storybook/test';
 import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 import AccordionControlledStory from './AccordionControlledStory.svelte';
 
 const meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Accordion/Modos',
   component: Accordion,
 } satisfies Meta<typeof Accordion>;
@@ -35,6 +41,10 @@ export const Single: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Multiple: Story = {
@@ -49,6 +59,10 @@ export const Multiple: Story = {
       },
     },
   },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  },
 };
 
 export const Controlled: Story = {
@@ -59,6 +73,10 @@ export const Controlled: Story = {
         story: 'Modo controlado. value e onValueChange gerenciam o estado externamente. O indicador acima mostra o item ativo.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };
 
@@ -73,5 +91,9 @@ export const DefaultOpen: Story = {
         story: 'Prop defaultValue abre um item na montagem sem modo controlado. Use em documentação e onboarding.',
       },
     },
+  },
+
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },
 };

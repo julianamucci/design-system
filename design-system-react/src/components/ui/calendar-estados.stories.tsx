@@ -9,6 +9,8 @@ const meta = {
   component: Calendar,
   parameters: {
     layout: "padded",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -104,6 +106,10 @@ export const Disabled: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("grid")).toBeInTheDocument();
+  },
 };
 
 export const Today: Story = {
@@ -117,6 +123,10 @@ export const Today: Story = {
           "Sem data selecionada — apenas o dia de hoje ganha destaque com `bg-muted`.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("grid")).toBeInTheDocument();
   },
 };
 
@@ -140,6 +150,10 @@ export const WithOutsideDays: Story = {
           "showOutsideDays (padrão) — dias do mês anterior/próximo aparecem apagados (`text-muted-foreground`) nas bordas do grid.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("grid")).toBeInTheDocument();
   },
 };
 
@@ -166,5 +180,9 @@ export const RangeWithMiddle: Story = {
           "mode=\"range\" com `from` e `to` — dias no meio recebem `bg-muted`; extremos mantêm `bg-primary`.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("grid")).toBeInTheDocument();
   },
 };

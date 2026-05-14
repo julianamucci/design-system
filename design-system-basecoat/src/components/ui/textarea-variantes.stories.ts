@@ -5,6 +5,7 @@ import { createTextarea } from './textarea';
 const meta: Meta = {
   title: 'UI/Textarea/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

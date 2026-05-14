@@ -1,9 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "storybook/test";
 import { Button } from "./button";
 
 const meta = {
   title: "UI/Button/Variantes",
   component: Button,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -18,6 +23,10 @@ export const Default: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /salvar/i })).toBeInTheDocument();
+  },
 };
 
 export const Destructive: Story = {
@@ -28,6 +37,10 @@ export const Destructive: Story = {
         story: "Variante destrutiva. Use para ações irreversíveis como excluir ou remover.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /excluir conta/i })).toBeInTheDocument();
   },
 };
 
@@ -40,6 +53,10 @@ export const Outline: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /cancelar/i })).toBeInTheDocument();
+  },
 };
 
 export const Secondary: Story = {
@@ -50,6 +67,10 @@ export const Secondary: Story = {
         story: "Variante secundária sólida. Use para ações complementares de menor ênfase.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /ver detalhes/i })).toBeInTheDocument();
   },
 };
 
@@ -62,6 +83,10 @@ export const Ghost: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /fechar/i })).toBeInTheDocument();
+  },
 };
 
 export const Link: Story = {
@@ -72,5 +97,9 @@ export const Link: Story = {
         story: "Variante com aparência de link. Use quando a ação for navegacional em contexto textual.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: /saiba mais/i })).toBeInTheDocument();
   },
 };

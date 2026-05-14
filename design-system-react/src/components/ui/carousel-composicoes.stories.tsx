@@ -18,6 +18,8 @@ const meta = {
   component: Carousel,
   parameters: {
     layout: "centered",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:

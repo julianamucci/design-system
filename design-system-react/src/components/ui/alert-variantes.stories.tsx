@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "storybook/test";
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 
 const meta = {
   title: "UI/Alert/Variantes",
   component: Alert,
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 } satisfies Meta<typeof Alert>;
 
 export default meta;
@@ -20,6 +25,11 @@ export const Default: Story = {
       </AlertDescription>
     </Alert>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("alert")).toBeInTheDocument();
+    await expect(canvas.getByText("Atenção")).toBeInTheDocument();
+  },
 };
 
 export const Destructive: Story = {
@@ -32,6 +42,11 @@ export const Destructive: Story = {
       </AlertDescription>
     </Alert>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("alert")).toBeInTheDocument();
+    await expect(canvas.getByText("Erro ao salvar")).toBeInTheDocument();
+  },
 };
 
 export const Success: Story = {
@@ -44,6 +59,10 @@ export const Success: Story = {
       </AlertDescription>
     </Alert>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("Perfil atualizado")).toBeInTheDocument();
+  },
 };
 
 export const Warning: Story = {
@@ -56,4 +75,8 @@ export const Warning: Story = {
       </AlertDescription>
     </Alert>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("Assinatura expirando")).toBeInTheDocument();
+  },
 };

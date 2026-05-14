@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { fn, userEvent, within, expect, waitFor } from 'storybook/test';
+
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
 import SelectDocs from '@/components/docs/SelectDocs.svelte';

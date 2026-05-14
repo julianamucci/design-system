@@ -1,10 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { AspectRatio } from './index';
 
 const meta = {
   title: 'UI/AspectRatio/Composições',
   component: AspectRatio,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -35,6 +38,9 @@ export const ComImagem: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ComIframe: Story = {
@@ -53,6 +59,9 @@ export const ComIframe: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const ComVideo: Story = {
@@ -76,6 +85,9 @@ export const ComVideo: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const EmGrid: Story = {
@@ -140,6 +152,9 @@ export const EmGrid: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const PlaceholderVazio: Story = {
@@ -159,4 +174,7 @@ export const PlaceholderVazio: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

@@ -6,6 +6,8 @@ const meta = {
   title: 'UI/Checkbox/Composições',
   component: Checkbox,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

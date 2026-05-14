@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { toast } from 'vue-sonner';
 import { Toaster } from './index';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ const meta = {
   component: Toaster,
   parameters: {
     controls: { disable: true },
+    actions: { disable: true },
   },
 } satisfies Meta<typeof Toaster>;
 
@@ -28,6 +30,9 @@ export const Default: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Success: Story = {
@@ -44,6 +49,9 @@ export const Success: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Error: Story = {
@@ -60,6 +68,9 @@ export const Error: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Warning: Story = {
@@ -76,6 +87,9 @@ export const Warning: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Info: Story = {
@@ -92,6 +106,9 @@ export const Info: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Loading: Story = {
@@ -108,4 +125,7 @@ export const Loading: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

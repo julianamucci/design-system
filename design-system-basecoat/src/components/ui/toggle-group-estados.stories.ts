@@ -6,6 +6,7 @@ import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
 const meta: Meta = {
   title: 'UI/ToggleGroup/Estados',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {

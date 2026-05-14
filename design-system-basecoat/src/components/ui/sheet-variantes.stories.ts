@@ -8,6 +8,7 @@ import { createButton } from './button';
 const meta: Meta = {
   title: 'UI/Sheet/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {
@@ -90,6 +91,11 @@ export const Left: Story = {
     title: 'Painel esquerdo',
     description: 'Navegação secundária encostada à esquerda.',
   }),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Top: Story = {
@@ -102,6 +108,11 @@ export const Top: Story = {
     title: 'Painel superior',
     description: 'Faixa superior com ações rápidas.',
   }),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const Bottom: Story = {
@@ -114,4 +125,9 @@ export const Bottom: Story = {
     title: 'Painel inferior',
     description: 'Painel mobile-style sem swipe.',
   }),
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };

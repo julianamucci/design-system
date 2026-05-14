@@ -8,6 +8,7 @@ import { createButton } from './button';
 const meta: Meta = {
   title: 'UI/Dialog/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {

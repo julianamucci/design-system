@@ -1,10 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { Badge } from './index';
 
 const meta = {
   title: 'UI/Badge/Variantes',
   component: Badge,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -23,6 +26,9 @@ export const Default: Story = {
     setup() { return {}; },
     template: `<Badge>Novo</Badge>`,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Secondary: Story = {
@@ -31,6 +37,9 @@ export const Secondary: Story = {
     setup() { return {}; },
     template: `<Badge variant="secondary">Beta</Badge>`,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Destructive: Story = {
@@ -39,6 +48,9 @@ export const Destructive: Story = {
     setup() { return {}; },
     template: `<Badge variant="destructive">Urgente</Badge>`,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Outline: Story = {
@@ -47,4 +59,7 @@ export const Outline: Story = {
     setup() { return {}; },
     template: `<Badge variant="outline">Rascunho</Badge>`,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

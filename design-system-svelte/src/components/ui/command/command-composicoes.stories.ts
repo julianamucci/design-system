@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import { within, expect, userEvent } from 'storybook/test';
+
+import { userEvent, within, expect } from 'storybook/test';
 import { Root as Command } from '@/components/ui/command';
 import CommandComposicaoGruposStory from './CommandComposicaoGruposStory.svelte';
 import CommandComposicaoShortcutsStory from './CommandComposicaoShortcutsStory.svelte';
@@ -10,6 +11,8 @@ const meta = {
   title: 'UI/Command/Composições',
   component: Command,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {

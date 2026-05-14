@@ -16,6 +16,8 @@ const meta = {
   component: Breadcrumb,
   parameters: {
     layout: "padded",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -119,6 +121,10 @@ export const WithEllipsis: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 export const CustomSeparator: Story = {
@@ -150,6 +156,10 @@ export const CustomSeparator: Story = {
           "Separador customizado via children de BreadcrumbSeparator — mantém aria-hidden automaticamente.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
   },
 };
 
@@ -198,5 +208,10 @@ export const AsChildLink: Story = {
           "Link customizado via prop render (useRender do base-ui) — permite integração com routers como Next.js Link ou React Router Link.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+    await expect(canvas.getAllByRole("link").length).toBeGreaterThanOrEqual(2);
   },
 };

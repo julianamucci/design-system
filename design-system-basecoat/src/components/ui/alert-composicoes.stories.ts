@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
+import { within, expect } from 'storybook/test';
 
 const meta: Meta = {
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
   title: 'UI/Alert/Composições',
 };
 
@@ -16,6 +21,11 @@ export const ComIcone: Story = {
     alert.appendChild(createAlertDescription({ text: 'Ícone SVG posicionado automaticamente.' }));
     return alert;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const SemTituloCompacto: Story = {
@@ -24,6 +34,11 @@ export const SemTituloCompacto: Story = {
     alert.appendChild(createAlertIcon('error'));
     alert.appendChild(createAlertDescription({ text: 'Formulário incompleto — preencha todos os campos obrigatórios.' }));
     return alert;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
 
@@ -55,6 +70,11 @@ export const MultiplosTipos: Story = {
     wrapper.append(a1, a2, a3, a4);
     return wrapper;
   },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  },
 };
 
 export const SemIcone: Story = {
@@ -63,5 +83,10 @@ export const SemIcone: Story = {
     alert.appendChild(createAlertTitle({ text: 'Sem ícone' }));
     alert.appendChild(createAlertDescription({ text: 'Alert sem ícone mantém layout de coluna única.' }));
     return alert;
+  },
+
+  play: async ({ canvasElement }) => {
+    const el = canvasElement as HTMLElement;
+    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };

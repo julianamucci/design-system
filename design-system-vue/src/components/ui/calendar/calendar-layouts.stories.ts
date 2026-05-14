@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { ref } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
@@ -7,6 +8,8 @@ const meta = {
   title: 'UI/Calendar/Layouts',
   component: Calendar,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'padded',
     docs: {
       description: {
@@ -41,6 +44,9 @@ export const CaptionLabel: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 // Dropdowns de mês e ano (equivale a captionLayout="dropdown" do React).
@@ -62,6 +68,9 @@ export const CaptionDropdown: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 // Dois meses lado a lado (útil para range ou visão ampliada).
@@ -83,6 +92,9 @@ export const TwoMonths: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 // OBS: O reka-ui Calendar não expõe `showWeekNumber` nem slot oficial para coluna ISO-week.
@@ -114,4 +126,7 @@ export const WithFixedWeeks: Story = {
       />
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

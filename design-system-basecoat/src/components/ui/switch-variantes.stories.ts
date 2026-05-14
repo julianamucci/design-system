@@ -5,6 +5,7 @@ import { createSwitch } from './switch';
 const meta: Meta = {
   title: 'UI/Switch/Variantes',
   parameters: {
+    actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },
     docs: {

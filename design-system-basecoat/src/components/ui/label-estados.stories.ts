@@ -7,6 +7,7 @@ import { createLabel } from './label';
 const meta: Meta = {
   title: 'UI/Label/Estados',
   parameters: {
+    actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {

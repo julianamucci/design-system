@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect } from "storybook/test";
 import {
   BarChart,
   Bar as RechartsBar,
@@ -53,6 +54,8 @@ const meta = {
   component: ChartContainer,
   parameters: {
     layout: "centered",
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -84,6 +87,9 @@ export const BarVariante: Story = {
       </BarChart>
     </ChartContainer>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  },
 };
 
 export const Linha: Story = {
@@ -114,6 +120,9 @@ export const Linha: Story = {
       </LineChart>
     </ChartContainer>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  },
 };
 
 export const AreaVariante: Story = {
@@ -147,6 +156,9 @@ export const AreaVariante: Story = {
       </AreaChart>
     </ChartContainer>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  },
 };
 
 export const PieVariante: Story = {
@@ -178,4 +190,7 @@ export const PieVariante: Story = {
       </PieChart>
     </ChartContainer>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  },
 };

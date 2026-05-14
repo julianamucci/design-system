@@ -5,6 +5,7 @@ import { createInput } from './input';
 const meta: Meta = {
   title: 'UI/Input/Estados',
   parameters: {
+    actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {

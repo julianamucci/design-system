@@ -5,6 +5,7 @@ import { createSkeleton } from './skeleton';
 const meta: Meta = {
   title: 'UI/Skeleton/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {

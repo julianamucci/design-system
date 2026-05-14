@@ -1,10 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+import { expect } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
 
 const meta = {
   title: 'UI/Avatar/Tamanhos',
   component: Avatar,
   parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
@@ -33,6 +36,9 @@ export const Size6: Story = {
       </Avatar>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Size8: Story = {
@@ -47,6 +53,9 @@ export const Size8: Story = {
       </Avatar>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Size10: Story = {
@@ -60,6 +69,9 @@ export const Size10: Story = {
       </Avatar>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };
 
 export const Size12: Story = {
@@ -73,4 +85,7 @@ export const Size12: Story = {
       </Avatar>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.firstElementChild).toBeTruthy();
+  },
 };

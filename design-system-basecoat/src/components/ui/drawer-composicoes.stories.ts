@@ -6,6 +6,7 @@ import { createButton } from './button';
 const meta: Meta = {
   title: 'UI/Drawer/Composições',
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
     docs: {
