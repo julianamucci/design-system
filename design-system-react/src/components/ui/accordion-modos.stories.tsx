@@ -122,6 +122,26 @@ export const Multiple: Story = {
       );
       await expect(triggers[0]).toHaveAttribute("aria-expanded", "true");
     });
+
+    await step("Clicar em trigger aberto fecha o item individualmente (modo múltiplo)", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await userEvent.click(triggers[0]);
+      await waitFor(
+        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "false"),
+        { timeout: 500 }
+      );
+      await expect(triggers[1]).toHaveAttribute("aria-expanded", "true");
+    });
+
+    await step("Space colapsa item focado (WCAG A — testes.accessibility.item4)", async () => {
+      const triggers = canvas.getAllByRole("button");
+      triggers[1].focus();
+      await userEvent.keyboard(" ");
+      await waitFor(
+        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "false"),
+        { timeout: 500 }
+      );
+    });
   },
 };
 
