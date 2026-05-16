@@ -1,0 +1,53 @@
+/*
+ * ─── Densidades ───────────────────────────────────────────────────────────────
+ * Ajusta o tamanho base de spacing do projeto, afetando proporcionalmente
+ * TODAS as classes Tailwind p-*, m-*, gap-*, space-* (via @theme --spacing).
+ *
+ * Também ajusta as alturas tokenizadas (--height-*, --size-*) para que
+ * botões/inputs/selects acompanhem a densidade.
+ *
+ * Aplicado via classe no <html>:
+ *   default (sem classe)          — --spacing-base = 4px
+ *   .densidade-condensado          — --spacing-base ≈ 3.2px (~80%)
+ *   .densidade-confortavel         — --spacing-base ≈ 5px   (~125%)
+ *
+ * Pode combinar com qualquer tema de cor (.tema-warm, .tema-cold) e com .dark.
+ */
+
+/* ── Condensado — interfaces densas, mais informação na tela ──────────────── */
+.densidade-condensado {
+  --spacing-base: 0.20rem;        /* 3.2px (80% do padrão) */
+
+  /* Heights/sizes escalonados proporcionalmente */
+  --height-badge: 1rem;            /* 16px */
+  --height-xs: 1.25rem;            /* 20px */
+  --height-sm: 1.5rem;             /* 24px */
+  --height-default: 1.75rem;       /* 28px */
+  --height-lg: 2rem;               /* 32px */
+  --height-xl: 2.25rem;            /* 36px */
+
+  --size-xs: 1.25rem;
+  --size-sm: 1.5rem;
+  --size-default: 1.75rem;
+  --size-lg: 2rem;
+  --size-xl: 2.25rem;
+}
+
+/* ── Confortável — interfaces folgadas, mais respiro ──────────────────────── */
+.densidade-confortavel {
+  --spacing-base: 0.3125rem;      /* 5px (125% do padrão) */
+
+  /* Heights/sizes escalonados proporcionalmente */
+  --height-badge: 1.5rem;          /* 24px */
+  --height-xs: 1.75rem;            /* 28px */
+  --height-sm: 2rem;               /* 32px */
+  --height-default: 2.5rem;        /* 40px */
+  --height-lg: 2.75rem;            /* 44px */
+  --height-xl: 3rem;               /* 48px */
+
+  --size-xs: 1.75rem;
+  --size-sm: 2rem;
+  --size-default: 2.5rem;
+  --size-lg: 2.75rem;
+  --size-xl: 3rem;
+}

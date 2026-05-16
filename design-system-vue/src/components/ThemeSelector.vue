@@ -13,13 +13,9 @@ const emit = defineEmits<{
 const open = ref(false)
 
 const themes = [
-  { id: 'nova', name: 'Nova' },
-  { id: 'vega', name: 'Vega' },
-  { id: 'maia', name: 'Maia' },
-  { id: 'lyra', name: 'Lyra' },
-  { id: 'mira', name: 'Mira' },
-  { id: 'luma', name: 'Luma' },
-  { id: 'sera', name: 'Sera' },
+  { id: 'default', name: 'Default' },
+  { id: 'warm', name: 'Warm' },
+  { id: 'cold', name: 'Cold' },
 ]
 
 function select(id: string) {

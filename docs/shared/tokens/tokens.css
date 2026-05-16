@@ -6,7 +6,7 @@
  */
 
 /* ── Google Fonts ─────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700;800&family=PT+Serif:wght@400;700&family=LXGW+WenKai+TC:wght@400;700&display=swap');
 
 /* ── Light mode (default) ─────────────────────────────────────────────────── */
 :root {
@@ -20,8 +20,12 @@
   --text-p: 14px;
   --text-label: 12px;
 
-  /* Typography — font family */
-  --font-family: 'Inter', sans-serif;
+  /* Typography — font family
+     --font-family-active é trocado pelas classes .fonte-* no <html>.
+     --font-family aponta sempre para o active para que consumidores existentes
+     (componentes que usam var(--font-family)) acompanhem a troca. */
+  --font-family-active: 'Inter', sans-serif;
+  --font-family: var(--font-family-active);
 
   /* Typography — font weights */
   --font-weight-extra-bold: 800;
@@ -99,16 +103,16 @@
   /* Radius — arquitetura fiel ao shadcn (base-nova/reka-nova/etc.):
      --radius é o tamanho base global. Cada componente consome um token
      específico (--radius-button, --radius-card, etc.) que no tema padrão
-     Nova é igual ao --radius, mas nos outros temas aplica multiplicadores
-     diferentes (ver docs/shared/themes/<tema>.css).
+     (Default) é igual ao --radius, mas em outros temas pode aplicar
+     multiplicadores diferentes (ver docs/shared/themes/<tema>.css).
 
      Valor base = 0.625rem (10px) bate exatamente com shadcn default. */
   --radius: 0.625rem;              /* 10px — base global */
-  --radius-button: var(--radius);  /* Nova: 1× */
-  --radius-card: calc(var(--radius) * 1.4);   /* Nova: 14px */
-  --radius-badge: calc(var(--radius) * 2.6);  /* Nova: 26px */
-  --radius-input: var(--radius);   /* Nova: 1× */
-  --radius-alert: var(--radius);   /* Nova: 1× */
+  --radius-button: var(--radius);  /* Default: 1× */
+  --radius-card: calc(var(--radius) * 1.4);   /* Default: 14px */
+  --radius-badge: calc(var(--radius) * 2.6);  /* Default: 26px */
+  --radius-input: var(--radius);   /* Default: 1× */
+  --radius-alert: var(--radius);   /* Default: 1× */
 
   /* Dimension tokens — altura default de interativos (Button, Input, Select, Toggle, Badge...) */
   /* Nota: Tailwind v4 consome via h-(--height-*) / size-(--size-*) / px-(--spacing-*) */

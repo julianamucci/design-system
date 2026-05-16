@@ -71,6 +71,15 @@ export const Single: Story = {
       );
       await expect(triggers[0]).toHaveAttribute("aria-expanded", "false");
     });
+
+    await step("Clicar no item ativo fecha-o (modo single permite collapse)", async () => {
+      const triggers = canvas.getAllByRole("button");
+      await userEvent.click(triggers[1]);
+      await waitFor(
+        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "false"),
+        { timeout: 500 }
+      );
+    });
   },
 };
 

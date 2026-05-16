@@ -511,7 +511,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Interativo — animação de abertura capturada",
+          "story": "Estados — item disabled com aparência reduzida (aria-disabled, opacity)",
           "priority": "medium"
         }
       }
@@ -1049,7 +1049,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Interactive — open animation captured",
+          "story": "States — disabled item with reduced appearance (aria-disabled, opacity)",
           "priority": "medium"
         }
       }
@@ -1587,7 +1587,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Interactivo — animación de apertura capturada",
+          "story": "Estados — ítem disabled con apariencia reducida (aria-disabled, opacity)",
           "priority": "medium"
         }
       }

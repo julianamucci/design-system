@@ -3,8 +3,8 @@
  *
  * Dois propósitos combinados:
  *   1. Tokenização de dimensões — altura/size dos componentes basecoat usam
- *      os tokens compartilhados (--height-*, --size-*) para que os 7 temas
- *      (Nova, Vega, Maia, Lyra, Mira, Luma, Sera) variem a densidade.
+ *      os tokens compartilhados (--height-*, --size-*) para que diferentes
+ *      temas variem a densidade (atualmente só Default está ativo).
  *   2. Paridade visual com o estilo "nova" — basecoat-css v0.3.11 ainda usa
  *      o estilo "new-york" (destructive sólido, sem sizes xs/icon-xs).
  *      Alinhamos com os ports do shadcn (base-nova/reka-nova/shadcn-svelte-nova)

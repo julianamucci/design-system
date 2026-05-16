@@ -1,0 +1,25 @@
+/*
+ * ─── Fontes ───────────────────────────────────────────────────────────────────
+ * Sobrescreve --font-family-active, que é consumido por --font-family.
+ * Os @import das fontes ficam em tokens.css (carregados uma vez).
+ *
+ * Aplicado via classe no <html>:
+ *   default (sem classe)  — Inter (padrão)
+ *   .fonte-lexend          — Lexend (humanista, ampla, alta legibilidade)
+ *   .fonte-pt-serif        — PT Serif (serifada clássica)
+ *   .fonte-lxgw-wenkai     — LXGW WenKai TC (manuscrita tradicional chinesa/latina)
+ *
+ * Combina com qualquer tema de cor, densidade e light/dark.
+ */
+
+.fonte-lexend {
+  --font-family-active: 'Lexend', sans-serif;
+}
+
+.fonte-pt-serif {
+  --font-family-active: 'PT Serif', Georgia, serif;
+}
+
+.fonte-lxgw-wenkai {
+  --font-family-active: 'LXGW WenKai TC', 'Kaiti', cursive;
+}

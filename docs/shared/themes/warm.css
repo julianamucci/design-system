@@ -1,0 +1,108 @@
+/*
+ * ─── Tema: Warm ───────────────────────────────────────────────────────────────
+ * Variante de cores quentes do tema Default.
+ *
+ * Estratégia:
+ *   - Neutros (background, foreground, primary, secondary, muted, accent, border)
+ *     ganham tint âmbar/marrom sutil (matiz ~30°, saturação 8–15%) — continuam
+ *     "quase cinzas", mas a tela tem temperatura quente.
+ *   - Feedback colors (destructive/success/warning/info) deslocam suavemente
+ *     para o lado quente do espectro mantendo contraste WCAG AA.
+ *   - Charts trocam paleta azul por paleta âmbar/laranja.
+ *   - Radius, dimensões e shadows herdam de tokens.css (Default).
+ *
+ * Aplicado via classe `.tema-warm` no <html>. Dark mode combina com `.dark`.
+ */
+
+.tema-warm {
+  /* Surfaces — tint âmbar muito sutil */
+  --background: 30 25% 99%;
+  --foreground: 25 20% 8%;
+  --card: 30 25% 99%;
+  --card-foreground: 25 20% 8%;
+  --popover: 30 25% 99%;
+  --popover-foreground: 25 20% 8%;
+
+  /* Brand / Interactive — primary terracota saturado; secondary/accent creme âmbar */
+  --primary: 18 75% 35%;            /* terracota / laranja queimado */
+  --primary-foreground: 30 30% 98%;
+  --secondary: 35 55% 92%;          /* creme âmbar claro */
+  --secondary-foreground: 18 60% 22%;
+  --muted: 30 20% 95%;
+  --muted-foreground: 25 12% 42%;
+  --accent: 35 55% 92%;             /* espelha secondary */
+  --accent-foreground: 18 60% 22%;
+
+  /* Feedback — paleta quente */
+  --destructive: 0 74% 42%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 130 60% 28%;
+  --success-foreground: 0 0% 100%;
+  --warning: 28 95% 38%;
+  --warning-foreground: 0 0% 100%;
+  --info: 24 85% 45%;
+  --info-foreground: 0 0% 100%;
+
+  /* Structure */
+  --border: 30 15% 88%;
+  --input: 30 15% 88%;
+  --input-background: 30 25% 99%;
+  --ring: 18 75% 45%;               /* alinhado com primary */
+  --ring-offset-color: 30 25% 99%;
+
+  /* Charts — paleta âmbar/laranja */
+  --chart-1: 32 95% 60%;
+  --chart-2: 24 90% 50%;
+  --chart-3: 18 85% 45%;
+  --chart-4: 36 75% 55%;
+  --chart-5: 14 70% 40%;
+
+  /* Sidebar — tint quente */
+  --sidebar: 30 25% 98%;
+  --sidebar-foreground: 25 20% 8%;
+  --sidebar-primary: 18 75% 35%;
+  --sidebar-primary-foreground: 30 30% 98%;
+  --sidebar-accent: 35 55% 92%;
+  --sidebar-accent-foreground: 18 60% 22%;
+  --sidebar-border: 30 15% 85%;
+  --sidebar-ring: 18 75% 45%;
+}
+
+/* Dark mode — combina `.dark.tema-warm` */
+.dark.tema-warm {
+  --background: 25 15% 9%;
+  --foreground: 30 20% 96%;
+  --card: 25 15% 9%;
+  --card-foreground: 30 20% 96%;
+  --popover: 25 15% 9%;
+  --popover-foreground: 30 20% 96%;
+  --primary: 22 85% 60%;            /* laranja vibrante no dark */
+  --primary-foreground: 25 30% 10%;
+  --secondary: 25 20% 18%;          /* marrom escuro saturado */
+  --secondary-foreground: 35 55% 90%;
+  --muted: 25 10% 16%;
+  --muted-foreground: 30 12% 70%;
+  --accent: 25 20% 18%;
+  --accent-foreground: 35 55% 90%;
+  --destructive: 0 80% 65%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 130 60% 55%;
+  --success-foreground: 0 0% 0%;
+  --warning: 35 92% 55%;
+  --warning-foreground: 0 0% 0%;
+  --info: 24 85% 58%;
+  --info-foreground: 0 0% 100%;
+  --border: 25 10% 16%;
+  --input: 25 10% 16%;
+  --input-background: 25 15% 9%;
+  --ring: 22 85% 55%;
+  --ring-offset-color: 25 15% 9%;
+  --sidebar: 25 15% 9%;
+  --sidebar-foreground: 30 20% 96%;
+  --sidebar-primary: 22 85% 60%;
+  --sidebar-primary-foreground: 25 30% 10%;
+  --sidebar-accent: 25 20% 18%;
+  --sidebar-accent-foreground: 35 55% 90%;
+  --sidebar-border: 25 10% 16%;
+  --sidebar-ring: 22 85% 55%;
+}

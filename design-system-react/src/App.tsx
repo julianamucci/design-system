@@ -45,7 +45,7 @@ export default function App() {
 
   const [currentPage, setCurrentPage] = useState('home');
   const [isDark, setIsDark] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState('nova');
+  const [currentTheme, setCurrentTheme] = useState('default');
 
   // Inicialização do tema por subdomínio
   useEffect(() => {
@@ -60,12 +60,12 @@ export default function App() {
   useEffect(() => {
     // Remove todas as possíveis classes de tema
     const themeClassNames = Object.keys(themeDisplayNames)
-      .filter((id) => id !== 'nova')
+      .filter((id) => id !== 'default')
       .map((id) => `tema-${id}`);
     document.documentElement.classList.remove('dark', ...themeClassNames);
 
-    // Aplica o tema atual (Nova é o padrão e não tem classe)
-    if (currentTheme !== 'nova') {
+    // Aplica o tema atual (Default é o padrão e não tem classe)
+    if (currentTheme !== 'default') {
       document.documentElement.classList.add(`tema-${currentTheme}`);
     }
 

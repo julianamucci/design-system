@@ -82,7 +82,9 @@ npm run patches:diff -- --stack react --component alert
 
 ### Dimensões tokenizadas em componentes interativos — multi-tema (React/Vue/Svelte)
 
-Patches múltiplos agrupados por propósito. Todos substituem classes Tailwind hardcoded (`h-8`, `size-9`, etc.) por custom properties (`h-(--height-default)`, `size-(--size-default)`, etc.), permitindo que os 7 temas (Nova, Vega, Maia, Lyra, Mira, Luma, Sera) apliquem densidades distintas sem forking de componentes.
+Patches múltiplos agrupados por propósito. Todos substituem classes Tailwind hardcoded (`h-8`, `size-9`, etc.) por custom properties (`h-(--height-default)`, `size-(--size-default)`, etc.), permitindo que diferentes temas apliquem densidades distintas sem forking de componentes.
+
+> **Nota (2026-05-15):** os temas alternativos (Vega/Maia/Lyra/Mira/Luma/Sera) foram removidos. O projeto está apenas com **Default** até a nova estratégia de temas ser definida. Os tokens `--height-*`/`--size-*` permanecem porque a estrutura está pronta para receber overrides futuros.
 
 **Tokens definidos em `docs/shared/tokens/tokens.css`:**
 - `--height-badge` (20px), `--height-xs` (24px), `--height-sm` (28px), `--height-default` (32px), `--height-lg` (36px), `--height-xl` (40px)
@@ -134,7 +136,7 @@ Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, 
 
 **Duas responsabilidades combinadas:**
 
-1. **Tokenização de dimensões** (`#basecoat-theme-overrides`): redeclara alturas usando `--height-*`/`--size-*` para que os 7 temas variem densidade no Basecoat.
+1. **Tokenização de dimensões** (`#basecoat-theme-overrides`): redeclara alturas usando `--height-*`/`--size-*` para preparar variação de densidade entre temas (atualmente só Default ativo).
 2. **Paridade visual com o estilo nova** (`#basecoat-nova-parity`): o pacote `basecoat-css` v0.3.11 ainda usa o estilo "new-york" (destructive sólido, sem sizes `xs`/`icon-xs`, sem `aria-expanded` states). Fazemos o Basecoat parecer com os outros ports do shadcn (base-nova/reka-nova/shadcn-svelte-nova).
 
 **Estratégia** (sem forkar o pacote): adicionamos CSS override dentro do mesmo `@layer components` do basecoat, importado **depois** no `globals.css`:
@@ -164,7 +166,7 @@ Usamos **CSS puro com `hsl(var(--token) / 0.10)`** em vez de `@apply bg-destruct
 - Testar se `.btn-destructive` ainda é override com success (upstream pode eventualmente migrar pro soft).
 - Se `basecoat-css` passar a suportar sizes `xs` nativamente, remover as regras do bloco `btn-xs` para não duplicar.
 
-**Motivo coletivo:** o design system suporta 7 temas inspirados nos styles do shadcn (Vega clássico h-10, Lyra brutalista h-7, Maia friendly pill-shaped h-10, etc.). Sem tokenização, cada tema exigiria fork dos componentes — inviável para manter 7×N cópias. A abordagem `h-(--height-default)` usa o shortcut de Tailwind v4.1+ que compila para `height: var(--height-default)` — zero runtime cost, zero dependência JS.
+**Motivo coletivo:** preparar o design system para receber múltiplos temas sem fork de componentes. A abordagem `h-(--height-default)` usa o shortcut de Tailwind v4.1+ que compila para `height: var(--height-default)` — zero runtime cost, zero dependência JS. Atualmente só Default está ativo; outros temas serão definidos em nova estratégia.
 
 **Categoria:** theme
 **Data:** 2026-04-21

@@ -2,14 +2,12 @@
  * theme-config.ts — Configuração de temas compartilhada entre todos os stacks.
  * Importar via: import { ... } from '@shared/themes/theme-config'
  *
- * Temas espelham os 7 styles do shadcn (Nova, Vega, Maia, Lyra, Mira, Luma, Sera).
- * Todos usam Base Color: Neutral, Theme Color: Neutral, Chart Color: Neutral.
- * O que varia entre temas: radius, dimensões (--height-*, --size-*) e shadows.
+ * Default é o tema padrão (cinza neutro). Warm e Cold são variantes de cor.
  */
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export type ThemeId = 'nova' | 'vega' | 'maia' | 'lyra' | 'mira' | 'luma' | 'sera';
+export type ThemeId = 'default' | 'warm' | 'cold';
 
 export interface ThemeDefinition {
   id: ThemeId;
@@ -22,46 +20,22 @@ export interface ThemeDefinition {
 
 export const themes: ThemeDefinition[] = [
   {
-    id: 'nova',
-    label: 'Nova',
-    description: 'Moderno, compacto, cantos suaves — tema padrão',
+    id: 'default',
+    label: 'Default',
+    description: 'Cinza neutro — tema padrão',
     cssClass: '',
   },
   {
-    id: 'vega',
-    label: 'Vega',
-    description: 'Clássico, rounded-md, densidade folgada, shadows pronunciados',
-    cssClass: 'tema-vega',
+    id: 'warm',
+    label: 'Warm',
+    description: 'Cores quentes — tint âmbar nos neutros, paleta laranja/marrom',
+    cssClass: 'tema-warm',
   },
   {
-    id: 'maia',
-    label: 'Maia',
-    description: 'Pill-shaped, friendly, shadows soft e difusas',
-    cssClass: 'tema-maia',
-  },
-  {
-    id: 'lyra',
-    label: 'Lyra',
-    description: 'Brutalista, cantos retos, hard-offset shadows',
-    cssClass: 'tema-lyra',
-  },
-  {
-    id: 'mira',
-    label: 'Mira',
-    description: 'Minimalista, ultra-compacto, shadows sutis',
-    cssClass: 'tema-mira',
-  },
-  {
-    id: 'luma',
-    label: 'Luma',
-    description: 'Elegante, rounded-xl, shadows frias e soft',
-    cssClass: 'tema-luma',
-  },
-  {
-    id: 'sera',
-    label: 'Sera',
-    description: 'Editorial, cantos retos, shadows warm-toned',
-    cssClass: 'tema-sera',
+    id: 'cold',
+    label: 'Cold',
+    description: 'Cores frias — tint azul nos neutros, paleta cyan/teal',
+    cssClass: 'tema-cold',
   },
 ];
 
@@ -78,9 +52,9 @@ export const themeCssClasses: Record<ThemeId, string> = Object.fromEntries(
 // ─── Subdomínio → tema ────────────────────────────────────────────────────────
 
 export const subdomainThemeMap: Record<string, ThemeId> = {
-  localhost: 'nova',
-  nortear:   'nova',
-  admin:     'lyra',
+  localhost: 'default',
+  nortear:   'default',
+  admin:     'default',
 };
 
 // ─── Domínios de produção ─────────────────────────────────────────────────────
@@ -99,7 +73,7 @@ export function getCurrentSubdomain(): string {
 
 export function getThemeFromSubdomain(): ThemeId {
   const sub = getCurrentSubdomain();
-  return subdomainThemeMap[sub] ?? 'nova';
+  return subdomainThemeMap[sub] ?? 'default';
 }
 
 export function isDevMode(): boolean {

@@ -58,8 +58,6 @@ export const RangeFallback: Story = {
     Component: CalendarStory,
     props: { variant: 'multiple', locale: 'pt-BR' },
   }),
-  // sem play function — é uma story documentacional
-,
   play: async ({ canvasElement }) => {
     await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
   },

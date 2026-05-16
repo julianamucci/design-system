@@ -1,0 +1,108 @@
+/*
+ * ─── Tema: Cold ───────────────────────────────────────────────────────────────
+ * Variante de cores frias do tema Default.
+ *
+ * Estratégia:
+ *   - Neutros (background, foreground, primary, secondary, muted, accent, border)
+ *     ganham tint azul/cyan sutil (matiz ~210°, saturação 8–15%) — continuam
+ *     "quase cinzas", mas a tela tem temperatura fria.
+ *   - Feedback colors (destructive/success/warning/info) deslocam suavemente
+ *     para o lado frio do espectro mantendo contraste WCAG AA.
+ *   - Charts trocam paleta padrão por azul/cyan/teal.
+ *   - Radius, dimensões e shadows herdam de tokens.css (Default).
+ *
+ * Aplicado via classe `.tema-cold` no <html>. Dark mode combina com `.dark`.
+ */
+
+.tema-cold {
+  /* Surfaces — tint azul muito sutil */
+  --background: 210 30% 99%;
+  --foreground: 215 25% 8%;
+  --card: 210 30% 99%;
+  --card-foreground: 215 25% 8%;
+  --popover: 210 30% 99%;
+  --popover-foreground: 215 25% 8%;
+
+  /* Brand / Interactive — primary azul royal saturado; secondary/accent azul-gelo */
+  --primary: 215 80% 38%;           /* azul royal */
+  --primary-foreground: 210 30% 98%;
+  --secondary: 205 55% 92%;         /* azul-gelo claro */
+  --secondary-foreground: 215 70% 25%;
+  --muted: 210 20% 95%;
+  --muted-foreground: 215 12% 42%;
+  --accent: 205 55% 92%;            /* espelha secondary */
+  --accent-foreground: 215 70% 25%;
+
+  /* Feedback — paleta fria */
+  --destructive: 350 75% 42%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 165 75% 26%;
+  --success-foreground: 0 0% 100%;
+  --warning: 200 95% 35%;
+  --warning-foreground: 0 0% 100%;
+  --info: 215 85% 45%;
+  --info-foreground: 0 0% 100%;
+
+  /* Structure */
+  --border: 210 18% 88%;
+  --input: 210 18% 88%;
+  --input-background: 210 30% 99%;
+  --ring: 215 80% 48%;              /* alinhado com primary */
+  --ring-offset-color: 210 30% 99%;
+
+  /* Charts — paleta azul/cyan/teal */
+  --chart-1: 210 90% 60%;
+  --chart-2: 195 85% 50%;
+  --chart-3: 180 75% 40%;
+  --chart-4: 225 80% 55%;
+  --chart-5: 240 70% 45%;
+
+  /* Sidebar — tint frio */
+  --sidebar: 210 30% 98%;
+  --sidebar-foreground: 215 25% 8%;
+  --sidebar-primary: 215 80% 38%;
+  --sidebar-primary-foreground: 210 30% 98%;
+  --sidebar-accent: 205 55% 92%;
+  --sidebar-accent-foreground: 215 70% 25%;
+  --sidebar-border: 210 18% 85%;
+  --sidebar-ring: 215 80% 48%;
+}
+
+/* Dark mode — combina `.dark.tema-cold` */
+.dark.tema-cold {
+  --background: 215 25% 9%;
+  --foreground: 210 25% 96%;
+  --card: 215 25% 9%;
+  --card-foreground: 210 25% 96%;
+  --popover: 215 25% 9%;
+  --popover-foreground: 210 25% 96%;
+  --primary: 210 90% 62%;           /* azul vibrante no dark */
+  --primary-foreground: 215 30% 10%;
+  --secondary: 215 25% 18%;         /* azul-marinho escuro */
+  --secondary-foreground: 205 55% 90%;
+  --muted: 215 15% 16%;
+  --muted-foreground: 210 12% 70%;
+  --accent: 215 25% 18%;
+  --accent-foreground: 205 55% 90%;
+  --destructive: 350 80% 65%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 165 70% 50%;
+  --success-foreground: 0 0% 0%;
+  --warning: 200 92% 55%;
+  --warning-foreground: 0 0% 0%;
+  --info: 215 85% 60%;
+  --info-foreground: 0 0% 100%;
+  --border: 215 15% 16%;
+  --input: 215 15% 16%;
+  --input-background: 215 25% 9%;
+  --ring: 210 90% 58%;
+  --ring-offset-color: 215 25% 9%;
+  --sidebar: 215 25% 9%;
+  --sidebar-foreground: 210 25% 96%;
+  --sidebar-primary: 210 90% 62%;
+  --sidebar-primary-foreground: 215 30% 10%;
+  --sidebar-accent: 215 25% 18%;
+  --sidebar-accent-foreground: 205 55% 90%;
+  --sidebar-border: 215 15% 16%;
+  --sidebar-ring: 210 90% 58%;
+}

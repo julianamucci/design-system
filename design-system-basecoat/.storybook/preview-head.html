@@ -8,9 +8,6 @@
 <!-- Sincronização de Tema para Docs -->
 <script>
   (function() {
-    // Temas do shadcn (Nova é o default e não tem classe; outros aplicam .tema-<id>)
-    const BRAND_CLASSES = ['tema-vega', 'tema-maia', 'tema-lyra', 'tema-mira', 'tema-luma', 'tema-sera'];
-
     const parseGlobals = (raw) => {
       const result = {};
       if (!raw) return result;
@@ -20,6 +17,10 @@
       });
       return result;
     };
+
+    const BRAND_CLASSES = ['tema-warm', 'tema-cold'];
+    const DENSITY_CLASSES = ['densidade-condensado', 'densidade-confortavel'];
+    const FONT_CLASSES = ['fonte-lexend', 'fonte-pt-serif', 'fonte-lxgw-wenkai'];
 
     const syncTheme = () => {
       const globals = parseGlobals(new URLSearchParams(window.location.search).get('globals'));
@@ -34,8 +35,18 @@
       }
 
       html.classList.remove(...BRAND_CLASSES);
-      if (globals.brand && globals.brand !== 'nova') {
+      if (globals.brand && globals.brand !== 'default') {
         html.classList.add('tema-' + globals.brand);
+      }
+
+      html.classList.remove(...DENSITY_CLASSES);
+      if (globals.density && globals.density !== 'default') {
+        html.classList.add('densidade-' + globals.density);
+      }
+
+      html.classList.remove(...FONT_CLASSES);
+      if (globals.font && globals.font !== 'default') {
+        html.classList.add('fonte-' + globals.font);
       }
     };
 

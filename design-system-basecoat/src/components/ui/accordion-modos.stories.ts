@@ -53,6 +53,11 @@ export const Single: Story = {
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
     });
+
+    await step('Clicar no item ativo fecha-o (modo single permite collapse)', async () => {
+      await userEvent.click(triggers[1]);
+      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
+    });
   },
 };
 
@@ -73,6 +78,12 @@ export const Multiple: Story = {
       await userEvent.click(triggers[0]);
       await userEvent.click(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    await step('Clicar em trigger aberto fecha individualmente (modo múltiplo)', async () => {
+      await userEvent.click(triggers[0]);
+      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
     });
   },

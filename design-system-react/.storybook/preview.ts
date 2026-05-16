@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/react-vite'
-import { withThemeByClassName } from '@storybook/addon-themes';
 import { useEffect } from 'react';
+import { withThemeByClassName } from '@storybook/addon-themes';
 import '../src/styles/globals.css'
 import '../src/styles/storybook-docs.css'
 
@@ -37,19 +37,44 @@ const preview: Preview = {
   // Definição do seletor de Marca na barra de ferramentas
   globalTypes: {
     brand: {
-      description: 'Style do shadcn (cada tema aplica radius, dimensões e shadows distintos)',
-      defaultValue: 'nova',
+      description: 'Tema de cor (Default / Warm / Cold)',
+      defaultValue: 'default',
       toolbar: {
-        title: 'Style',
+        title: 'Theme',
         icon: 'paintbrush',
         items: [
-          { value: 'nova', title: 'Nova (padrão)' },
-          { value: 'vega', title: 'Vega (clássico)' },
-          { value: 'maia', title: 'Maia (friendly)' },
-          { value: 'lyra', title: 'Lyra (brutalista)' },
-          { value: 'mira', title: 'Mira (minimalista)' },
-          { value: 'luma', title: 'Luma (elegante)' },
-          { value: 'sera', title: 'Sera (orgânico)' },
+          { value: 'default', title: 'Default' },
+          { value: 'warm', title: 'Warm' },
+          { value: 'cold', title: 'Cold' },
+        ],
+        showName: true,
+      },
+    },
+    density: {
+      description: 'Densidade (afeta padding, gap, margin e alturas)',
+      defaultValue: 'default',
+      toolbar: {
+        title: 'Density',
+        icon: 'grow',
+        items: [
+          { value: 'condensado', title: 'Condensado' },
+          { value: 'default', title: 'Default' },
+          { value: 'confortavel', title: 'Confortável' },
+        ],
+        showName: true,
+      },
+    },
+    font: {
+      description: 'Fonte da interface',
+      defaultValue: 'default',
+      toolbar: {
+        title: 'Font',
+        icon: 'type',
+        items: [
+          { value: 'default', title: 'Inter (padrão)' },
+          { value: 'lexend', title: 'Lexend' },
+          { value: 'pt-serif', title: 'PT Serif' },
+          { value: 'lxgw-wenkai', title: 'LXGW WenKai TC' },
         ],
         showName: true,
       },
@@ -67,22 +92,47 @@ const preview: Preview = {
       parentSelector: 'html',
     }),
 
-    // 2. Gerencia o Style (tema) via classe manual na tag html
+    // 2. Gerencia o tema de cor (Default / Warm / Cold) via classe no <html>
     (Story, context) => {
-      const brand = context.globals.brand || 'nova';
+      const brand = context.globals.brand || 'default';
 
       useEffect(() => {
-        const themeClasses = ['tema-vega', 'tema-maia', 'tema-lyra', 'tema-mira', 'tema-luma', 'tema-sera'];
         const html = document.documentElement;
-
-        // Remove classes de outros temas
-        html.classList.remove(...themeClasses);
-
-        // Nova é o default (sem classe); outros aplicam via .tema-<id>
-        if (brand !== 'nova') {
+        html.classList.remove('tema-warm', 'tema-cold');
+        if (brand !== 'default') {
           html.classList.add(`tema-${brand}`);
         }
       }, [brand]);
+
+      return Story();
+    },
+
+    // 3. Gerencia a densidade (condensado / default / confortável) via classe
+    (Story, context) => {
+      const density = context.globals.density || 'default';
+
+      useEffect(() => {
+        const html = document.documentElement;
+        html.classList.remove('densidade-condensado', 'densidade-confortavel');
+        if (density !== 'default') {
+          html.classList.add(`densidade-${density}`);
+        }
+      }, [density]);
+
+      return Story();
+    },
+
+    // 4. Gerencia a fonte (Inter padrão / Lexend / PT Serif / LXGW WenKai) via classe
+    (Story, context) => {
+      const font = context.globals.font || 'default';
+
+      useEffect(() => {
+        const html = document.documentElement;
+        html.classList.remove('fonte-lexend', 'fonte-pt-serif', 'fonte-lxgw-wenkai');
+        if (font !== 'default') {
+          html.classList.add(`fonte-${font}`);
+        }
+      }, [font]);
 
       return Story();
     },

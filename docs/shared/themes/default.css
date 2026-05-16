@@ -1,0 +1,14 @@
+/*
+ * ─── Tema: Default ────────────────────────────────────────────────────────────
+ * Referência shadcn: style base. Vibe: moderno, compacto, cantos suaves, densidade média-alta.
+ *
+ * Radius: base 10px; componentes seguem multiplicadores shadcn:
+ *   button: 1×, card: 1.4×, badge: 2.6×, input: 1×, alert: 1×
+ *
+ * Valores de :root em tokens.css já refletem Default — este arquivo é só marker.
+ *
+ * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
+ */
+.tema-default {
+  /* Default é o padrão — herda todos os valores de :root em tokens.css */
+}

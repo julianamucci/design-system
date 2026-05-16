@@ -4,6 +4,8 @@
 
 ## Accordion
 
+> **Use, não recrie.** O componente está implementado em [`src/components/ui/accordion.tsx`](../src/components/ui/accordion.tsx). API canônica vem do código; stories em [`accordion.stories.tsx`](../src/components/ui/accordion.stories.tsx) e variantes em `accordion-modos`, `accordion-estados`, `accordion-composicoes` são a referência de uso. Em caso de divergência entre esta guideline e o código, **o código vence**.
+
 **Propósito**: exibição de múltiplas seções de conteúdo colapsáveis e relacionadas entre si, onde o usuário expande apenas o que precisa.
 
 **Quando usar**: FAQ, documentação com seções, especificações de produto, configurações agrupadas. Para uma única seção isolada, usar `Collapsible`. Para alternância entre views paralelas, usar `Tabs`.
@@ -21,90 +23,44 @@
 
 **Estrutura de subcomponentes**:
 ```
-Accordion (type, collapsible, defaultValue)
-└── AccordionItem (value — obrigatório)
-    ├── AccordionTrigger  (título da seção — chevron aplicado automaticamente)
+Accordion (multiple?, defaultValue?, value?, onValueChange?)
+└── AccordionItem (value — obrigatório, único)
+    ├── AccordionTrigger  (título — chevron aplicado automaticamente)
     └── AccordionContent  (conteúdo expansível)
 ```
 
-**Implementação — tipo single (padrão para FAQ)**:
+**Import**:
 ```tsx
 import {
-  Accordion, AccordionContent,
-  AccordionItem, AccordionTrigger,
+  Accordion, AccordionItem, AccordionTrigger, AccordionContent,
 } from "@/components/ui/accordion"
-
-{/* type="single" + collapsible: permite fechar o item aberto clicando nele novamente */}
-<Accordion type="single" collapsible defaultValue="item-1" className="w-full">
-  <AccordionItem value="item-1">
-    <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
-    <AccordionContent>
-      Acesse a tela de login e clique em "Esqueci minha senha". Você receberá
-      um link de redefinição no email cadastrado, válido por 24 horas.
-    </AccordionContent>
-  </AccordionItem>
-
-  <AccordionItem value="item-2">
-    <AccordionTrigger>Quais formas de pagamento são aceitas?</AccordionTrigger>
-    <AccordionContent>
-      Aceitamos cartão de crédito, Pix e boleto bancário. Parcelamento
-      disponível em até 12 vezes sem juros no cartão.
-    </AccordionContent>
-  </AccordionItem>
-
-  <AccordionItem value="item-3">
-    <AccordionTrigger>Como cancelo minha assinatura?</AccordionTrigger>
-    <AccordionContent>
-      Você pode cancelar a qualquer momento em Configurações → Assinatura.
-      O acesso permanece ativo até o fim do período já pago.
-    </AccordionContent>
-  </AccordionItem>
-</Accordion>
 ```
 
-**Implementação — tipo multiple**:
-```tsx
-{/* type="multiple": permite abrir vários itens simultaneamente */}
-<Accordion type="multiple" className="w-full">
-  <AccordionItem value="especificacoes">
-    <AccordionTrigger>Especificações técnicas</AccordionTrigger>
-    <AccordionContent>
-      {/* conteúdo */}
-    </AccordionContent>
-  </AccordionItem>
-  <AccordionItem value="compatibilidade">
-    <AccordionTrigger>Compatibilidade</AccordionTrigger>
-    <AccordionContent>
-      {/* conteúdo */}
-    </AccordionContent>
-  </AccordionItem>
-</Accordion>
-```
+**Props essenciais** (decisões de design — para a tabela completa veja `AccordionDocs.tsx`):
 
-**Implementação — controlado**:
-```tsx
-{/* Modo controlado: útil quando o estado precisa ser gerenciado externamente */}
-const [value, setValue] = useState<string>("item-1")
+| Prop | Default | Quando usar |
+|------|---------|-------------|
+| `multiple` | `false` | Habilita abrir vários itens simultaneamente (especificações, comparação). Omitido = modo single, padrão para FAQ. |
+| `defaultValue` | — | Array de `value`s iniciais (`["item-1"]`). Para abrir um item na montagem sem virar controlado. |
+| `value` + `onValueChange` | — | Modo controlado. Estado externo (URL, store). Sempre array, mesmo no modo single. |
+| `disabled` (em `AccordionItem`) | `false` | Bloqueia interação no item — emite `aria-disabled`. |
 
-<Accordion type="single" collapsible value={value} onValueChange={setValue}>
-  ...
-</Accordion>
-```
+> **API base-ui**: o componente usa `@base-ui/react/accordion`. Não existem props `type="single|multiple"` nem `collapsible` (esses eram do `@radix-ui` legado). O modo single é o default; `multiple` é boolean. No modo single, fechar o item ativo é sempre permitido (não há flag `collapsible`).
 
-**Regras**:
-- `AccordionItem` requer prop `value` obrigatória e única — é o identificador interno de cada item
-- `type="single"` com `collapsible` para FAQ e documentação — permite fechar o item ativo
-- `type="single"` **sem** `collapsible` apenas quando é obrigatório ter sempre um item aberto
-- `type="multiple"` para especificações ou configurações onde o usuário compara seções
-- `defaultValue` para abrir um item por padrão sem tornar o componente controlado
-- O chevron rotativo no `AccordionTrigger` é aplicado automaticamente pelo Shadcn — não adicionar manualmente
-- Máximo de 8–10 itens por Accordion — acima disso, considerar organização por categorias ou busca
+**Regras de uso**:
+- `AccordionItem` exige `value` único — é o identificador interno
+- Modo single (padrão) para FAQ e documentação onde uma seção por vez é a leitura natural
+- `multiple` para especificações ou configurações onde o usuário compara seções
+- `defaultValue={["item-1"]}` para abrir um item por padrão sem tornar o componente controlado
+- O chevron no `AccordionTrigger` é aplicado pelo próprio componente — não adicionar manualmente
+- Máximo de 8–10 itens — acima disso, considere categorizar ou adicionar busca
+- Não aninhar Accordions
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
-- O Radix aplica automaticamente: `role="button"`, `aria-expanded`, `aria-controls` no trigger e `role="region"` no content — não reimplementar
-- `AccordionTrigger` renderiza um `<button>` — mantém acessibilidade por teclado nativa
-- Navegação por teclado nativa: `Tab` move entre triggers, `Enter`/`Space` expande/colapsa, `Arrow Down`/`Up` move entre triggers (quando foco está no accordion)
-- Animação de abertura: o Shadcn aplica via CSS — respeita `prefers-reduced-motion` automaticamente
+- O base-ui aplica automaticamente `role="button"`, `aria-expanded`, `aria-controls` no trigger e `role="region"` no content — não reimplementar
+- `AccordionTrigger` renderiza um `<button>` nativo — teclado funciona out of the box
+- Navegação por teclado: `Tab` move entre triggers, `Enter`/`Space` expande/colapsa, `↓`/`↑` movem entre triggers quando o foco está dentro do accordion
+- Animação respeita `prefers-reduced-motion` automaticamente (via CSS)
 
 **UX Writing** (ver `19-tom-de-voz.md`):
 - `AccordionTrigger`: pergunta direta (FAQ) ou frase nominal (documentação)
@@ -114,37 +70,36 @@ const [value, setValue] = useState<string>("item-1")
 - `AccordionContent`: resposta objetiva, máximo 3–4 linhas — conteúdo longo sugere que o item deveria ser uma página própria
 
 **Analytics** (ver `21-analytics.md`):
+
+Dispare eventos no consumidor via `onValueChange` — não monkey-patch `onClick` no trigger:
+
 ```tsx
-<AccordionItem value="faq-senha">
-  <AccordionTrigger
-    onClick={(e) => {
-      const isOpening = e.currentTarget.getAttribute("data-state") === "closed"
-      if (isOpening) {
-        track("accordion_expand", {
-          component: "accordion",
-          location: "faq_page",
-          label: "Como faço para redefinir minha senha?"
-        })
-      } else {
-        track("accordion_collapse", {
-          component: "accordion",
-          location: "faq_page",
-          label: "Como faço para redefinir minha senha?"
-        })
-      }
-    }}
-  >
-    Como faço para redefinir minha senha?
-  </AccordionTrigger>
-  <AccordionContent>...</AccordionContent>
-</AccordionItem>
+<Accordion
+  onValueChange={(open) => {
+    track(open.length > prevOpen.length ? "accordion_expand" : "accordion_collapse", {
+      component: "accordion",
+      location: "faq_page",
+      value: open[open.length - 1] ?? prev,
+    })
+  }}
+>
+  {/* items */}
+</Accordion>
 ```
 
-> Usar `data-state="closed"` para detectar se o clique vai abrir ou fechar — o Radix atualiza o estado após o clique, então verificar o estado anterior ao evento.
+> No modo single o array tem 0 ou 1 elemento; no modo multiple pode ter N. Compare o tamanho antes/depois para detectar expand vs collapse.
+
+**Testes**:
+- **Especificação**: [`docs/shared/content/accordion/translations.json`](../../docs/shared/content/accordion/translations.json) → `testes.{functional,accessibility,visual}` (cada item tem `priority` e a `story` que cobre)
+- **Implementação**: play functions em [`accordion*.stories.tsx`](../src/components/ui/) (Playground + modos + estados + composições)
+- **Validação de cobertura**: `/quality accordion` (Fase 2.5 cruza spec ↔ play steps; ausência de step para item documentado = bug)
+- **Mínimo obrigatório de categoria Disclosure**: aria-expanded sincronizado, navegação por teclado (Tab/Enter/Space/↑↓), zero violations axe-core em estado fechado E aberto
 
 ---
 
 ## Collapsible
+
+> **Use, não recrie.** O componente está implementado em [`src/components/ui/collapsible.tsx`](../src/components/ui/collapsible.tsx). API canônica vem do código; stories em [`collapsible.stories.tsx`](../src/components/ui/collapsible.stories.tsx) e variantes em `collapsible-estados`, `collapsible-composicoes` são a referência de uso. Em caso de divergência entre esta guideline e o código, **o código vence**.
 
 **Propósito**: mostrar ou ocultar uma única seção de conteúdo de forma independente, controlada por um trigger explícito.
 
@@ -161,137 +116,75 @@ const [value, setValue] = useState<string>("item-1")
 
 **Estrutura de subcomponentes**:
 ```
-Collapsible (open, onOpenChange, defaultOpen)
-├── CollapsibleTrigger (asChild + Button — padrão recomendado)
+Collapsible (open?, onOpenChange?, defaultOpen?)
+├── CollapsibleTrigger (renderiza <button>; usar render={<Button />} para reuso do Button)
 └── CollapsibleContent (conteúdo expansível)
 ```
 
-**Implementação — modo controlado** (padrão recomendado):
+**Import**:
 ```tsx
 import {
-  Collapsible, CollapsibleContent, CollapsibleTrigger,
+  Collapsible, CollapsibleTrigger, CollapsibleContent,
 } from "@/components/ui/collapsible"
-import { Button } from "@/components/ui/button"
-import { ChevronDown } from "lucide-react"
-
-const [isOpen, setIsOpen] = useState(false)
-
-<Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-2">
-  {/* Header sempre visível */}
-  <div className="flex items-center justify-between">
-    <h4 className="text-sm font-medium">Filtros avançados</h4>
-    <CollapsibleTrigger asChild>
-      <Button variant="ghost" size="sm" aria-label={isOpen ? "Ocultar filtros avançados" : "Exibir filtros avançados"}>
-        <ChevronDown
-          className="h-4 w-4 transition-transform duration-200"
-          style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
-          aria-hidden="true"
-        />
-      </Button>
-    </CollapsibleTrigger>
-  </div>
-
-  {/* Conteúdo sempre visível (parte fixa) */}
-  <div className="rounded-md border border-border px-4 py-3 text-sm">
-    Filtro básico ativo
-  </div>
-
-  {/* Conteúdo colapsável */}
-  <CollapsibleContent className="space-y-2">
-    <div className="rounded-md border border-border px-4 py-3 text-sm">
-      Filtro avançado 1
-    </div>
-    <div className="rounded-md border border-border px-4 py-3 text-sm">
-      Filtro avançado 2
-    </div>
-  </CollapsibleContent>
-</Collapsible>
 ```
 
-**Implementação — modo não-controlado** (quando não é necessário gerenciar o estado):
-```tsx
-{/* defaultOpen: define o estado inicial sem controle externo */}
-<Collapsible defaultOpen={false} className="space-y-2">
-  <div className="flex items-center justify-between">
-    <span className="text-sm font-medium">Detalhes técnicos</span>
-    <CollapsibleTrigger asChild>
-      <Button variant="ghost" size="sm">
-        <ChevronsUpDown className="h-4 w-4" aria-hidden="true" />
-        <span className="sr-only">Expandir detalhes técnicos</span>
-      </Button>
-    </CollapsibleTrigger>
-  </div>
-  <CollapsibleContent>
-    {/* conteúdo */}
-  </CollapsibleContent>
-</Collapsible>
-```
+**Props essenciais**:
 
-**Implementação — ícone giratório via `data-state`** (alternativa CSS pura):
-```tsx
-{/* O Radix aplica data-state="open"|"closed" no CollapsibleTrigger */}
-<CollapsibleTrigger asChild>
-  <Button variant="ghost" size="sm">
-    <ChevronDown
-      className="h-4 w-4 transition-transform duration-200 [[data-state=open]_&]:rotate-180"
-      aria-hidden="true"
-    />
-    <span className="sr-only">
-      {isOpen ? "Ocultar" : "Exibir"} filtros avançados
-    </span>
-  </Button>
-</CollapsibleTrigger>
-```
+| Prop | Default | Quando usar |
+|------|---------|-------------|
+| `open` + `onOpenChange` | — | Modo controlado. Use quando o estado influencia outros elementos (URL, store, UI vizinha). |
+| `defaultOpen` | `false` | Modo não-controlado. Use quando a seção é autossuficiente e o consumidor não precisa do estado. |
+| `disabled` | `false` | Bloqueia interação. |
 
-**Regras**:
-- `CollapsibleTrigger asChild` com `<Button>` — aproveita estilos, estados de foco e acessibilidade do Button
-- Modo controlado (`open + onOpenChange`) quando o estado influencia outros elementos da UI
-- Modo não-controlado (`defaultOpen`) quando a seção é independente e o estado não precisa ser compartilhado
-- Sempre incluir um elemento com texto ou `sr-only` no trigger — nunca trigger apenas com ícone sem label
-- Ícone deve indicar visualmente o estado atual: chevron para baixo (fechado) / para cima (aberto)
+> **API base-ui**: o componente usa `@base-ui/react/collapsible`. A prop `asChild` foi removida na migração base-nova — para usar um Button como trigger, use `render={<Button />}`. O trigger emite `data-state="open"|"closed"` (CSS pode usar `[data-state=open]:rotate-180`).
+
+**Regras de uso**:
+- `CollapsibleTrigger` deve ter label acessível — texto visível ou `<span className="sr-only">` quando for só ícone
+- Ícone do trigger deve indicar o estado: chevron para baixo (fechado) / para cima (aberto) — via classe condicional ou seletor `[data-state=open]`
+- Modo controlado quando o estado precisa ser sincronizado com outro elemento da UI
+- Modo não-controlado para seções independentes (filtros, detalhes opcionais)
+- Não usar para múltiplas seções relacionadas — esse é o caso do Accordion
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
-- O Radix aplica `aria-expanded` e `aria-controls` automaticamente no `CollapsibleTrigger` — não reimplementar
-- Trigger com apenas ícone: `<span className="sr-only">` descrevendo a ação e o objeto — "Exibir filtros avançados"
-- `aria-label` no Button quando o estado muda o label: `isOpen ? "Ocultar..." : "Exibir..."`
-- Animação de abertura: aplicar `motion-reduce:animate-none` se adicionar animações customizadas além do padrão do Shadcn
-
-```tsx
-{/* Animação customizada com motion-reduce */}
-<CollapsibleContent className="overflow-hidden transition-all motion-reduce:transition-none">
-  {/* conteúdo */}
-</CollapsibleContent>
-```
+- O base-ui aplica `aria-expanded` e `aria-controls` automaticamente — não reimplementar
+- Trigger apenas com ícone: incluir `<span className="sr-only">` descrevendo a ação completa ("Exibir filtros avançados", não apenas "Expandir")
+- Alterar o label conforme o estado: "Exibir" quando fechado, "Ocultar" quando aberto
+- Animações customizadas no `CollapsibleContent` precisam de `motion-reduce:animate-none` ou `motion-reduce:transition-none`
 
 **UX Writing** (ver `19-tom-de-voz.md`):
 - Label do trigger: verbo no infinitivo + objeto — "Exibir filtros avançados", "Ocultar detalhes"
 - Alternar o label com o estado: "Exibir" quando fechado, "Ocultar" quando aberto
 - Evitar labels genéricos: "Ver mais", "Toggle", "Expandir" sem contexto
-- Header da seção: substantivo ou frase nominal que descreve o conteúdo — "Filtros avançados", "Informações técnicas"
+- Header da seção (texto irmão do trigger): substantivo ou frase nominal — "Filtros avançados", "Informações técnicas"
 
 **Analytics** (ver `21-analytics.md`):
+
 ```tsx
 <Collapsible
-  open={isOpen}
   onOpenChange={(open) => {
-    setIsOpen(open)
     track("collapsible_toggle", {
       component: "collapsible",
       location: "search_page",
       label: "Filtros avançados",
-      value: open ? "open" : "closed"
+      value: open ? "open" : "closed",
     })
   }}
->
-  ...
-</Collapsible>
+/>
 ```
 
-> Rastrear `collapsible_toggle` apenas quando a seção tem importância na jornada do usuário — não rastrear colapsáveis decorativos ou de baixo valor de negócio.
+> Rastreie `collapsible_toggle` apenas quando a seção tem importância na jornada — não rastreie colapsáveis decorativos ou de baixo valor de negócio.
+
+**Testes**:
+- **Especificação**: [`docs/shared/content/collapsible/translations.json`](../../docs/shared/content/collapsible/translations.json) → `testes.{functional,accessibility,visual}`
+- **Implementação**: play functions em [`collapsible*.stories.tsx`](../src/components/ui/)
+- **Validação de cobertura**: `/quality collapsible` (Fase 2.5 cruza spec ↔ play steps)
+- **Mínimo obrigatório de categoria Disclosure**: aria-expanded sincronizado, trigger acessível por teclado (Enter/Space), zero violations axe-core em estado fechado E aberto
 
 ---
 
 ## Regras transversais de Disclosure Components
+
+**Use, não recrie**: ambos os componentes estão implementados em `src/components/ui/`. Importe — não copie HTML/JSX equivalente. Se algum padrão visual usado num lugar não existir no componente, abra um patch (ver `PATCHES.md`) em vez de divergir.
 
 **Critério de decisão consolidado**:
 
@@ -303,11 +196,11 @@ const [isOpen, setIsOpen] = useState(false)
 | Etapas sequenciais obrigatórias | Stepper |
 
 **Acessibilidade transversal** (ver `11-acessibilidade.md`):
-- `aria-expanded` e `aria-controls` aplicados automaticamente pelo Radix em ambos — nunca adicionar manualmente
+- `aria-expanded` e `aria-controls` aplicados automaticamente pelo base-ui em ambos — nunca adicionar manualmente
 - Triggers sempre são `<button>` — navegação por teclado nativa garantida
 - Ícones de estado (`ChevronDown`) sempre com `aria-hidden="true"` — o estado é comunicado via `aria-expanded`
 - Labels de trigger devem descrever o conteúdo, não a ação mecânica: "Detalhes do pedido" em vez de "Clique para expandir"
-- Animações respeitam `prefers-reduced-motion` via Shadcn — animações customizadas adicionadas precisam de `motion-reduce:animate-none`
+- Animações respeitam `prefers-reduced-motion` por default — animações customizadas adicionadas precisam de `motion-reduce:animate-none`
 
 **Analytics transversal** (ver `21-analytics.md`):
 
@@ -321,3 +214,8 @@ const [isOpen, setIsOpen] = useState(false)
 - Triggers de Accordion: frase interrogativa (FAQ) ou frase nominal (documentação)
 - Triggers de Collapsible: verbo + objeto alternado com o estado ("Exibir" / "Ocultar")
 - Conteúdo expansível: objetivo e conciso — conteúdo longo sugere que o item merece página própria
+
+**Testes transversais**:
+- Cada componente tem sua especificação em [`docs/shared/content/<slug>/translations.json`](../../docs/shared/content/) → `testes.{functional,accessibility,visual}` e implementação em `<slug>*.stories.tsx`
+- Cobertura validada por `/quality <slug>` (cruza spec ↔ play steps automaticamente)
+- Para a categoria Disclosure, qualquer story Playground deve testar pelo menos: presença do trigger, click expande, click fecha (single ou multi conforme o componente), aria-expanded sincronizado, teclado Enter/Space funcional
