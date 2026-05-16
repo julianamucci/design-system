@@ -11,7 +11,7 @@
     "storybook": "storybook dev -p 6008",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook --url http://127.0.0.1:6008",
-    "test-storybook:component": "test-storybook --url http://127.0.0.1:6008 -t",
+    "test-storybook:component": "test-storybook --url http://127.0.0.1:6008",
     "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npx http-server storybook-static --port 6008 --silent\" \"npx wait-on tcp:6008 && npm run test-storybook\"",
     "chromatic": "npx chromatic"
   },
