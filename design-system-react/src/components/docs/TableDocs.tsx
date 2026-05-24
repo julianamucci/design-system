@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, ArrowUpDown, Search } from "lucide-react";
 import {
   Table,
   TableHeader,
@@ -11,7 +11,16 @@ import {
   TableCaption,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -27,6 +36,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -75,6 +85,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -276,21 +287,6 @@ export function TableDocs() {
     </TableRow>
   </TableBody>
 </Table>`;
-
-  const codeSelected = `<TableRow data-state="selected">
-  <TableCell>...</TableCell>
-</TableRow>`;
-
-  const codeLoading = `<TableBody>
-  {Array.from({ length: 3 }).map((_, i) => (
-    <TableRow key={i}>
-      <TableCell><Skeleton className="h-4 w-full" /></TableCell>
-      <TableCell><Skeleton className="h-4 w-full" /></TableCell>
-      <TableCell><Skeleton className="h-4 w-full" /></TableCell>
-      <TableCell><Skeleton className="h-4 w-full" /></TableCell>
-    </TableRow>
-  ))}
-</TableBody>`;
 
   const interfaceCode = `// Table — wrapper div + table
 interface TableProps extends React.ComponentProps<"table"> {}
@@ -744,6 +740,278 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                     </TableRow>
                   </TableBody>
                 </Table>
+              </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ──────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="table"
+        items={[
+          {
+            name: tContent("variants.compositions.filterableToolbar.name"),
+            description: tContent("variants.compositions.filterableToolbar.description"),
+            useWhen: tContent("variants.compositions.filterableToolbar.use"),
+            code: `<div className="flex flex-col gap-3">
+  <div className="flex items-center gap-2">
+    <div className="relative w-full max-w-sm">
+      <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+      <Input placeholder="Filtrar faturas..." className="pl-8" />
+    </div>
+    <Button variant="outline">Status</Button>
+  </div>
+  <Table>
+    <TableCaption className="sr-only">Lista de faturas filtráveis</TableCaption>
+    <TableHeader>
+      <TableRow>
+        <TableHead scope="col">Fatura</TableHead>
+        <TableHead scope="col">Status</TableHead>
+        <TableHead scope="col" className="text-right">Valor</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {filteredInvoices.map((invoice) => (
+        <TableRow key={invoice.id}>
+          <TableCell>{invoice.id}</TableCell>
+          <TableCell>{invoice.status}</TableCell>
+          <TableCell className="text-right">{invoice.amount}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+</div>`,
+            preview: (
+              <div className="w-full flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="relative w-full max-w-sm">
+                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <Input placeholder="Filtrar faturas..." className="pl-8" />
+                  </div>
+                  <Button variant="outline">Status</Button>
+                </div>
+                <div className="w-full overflow-x-auto">
+                  <Table>
+                    <TableCaption className="sr-only">Lista de faturas filtráveis</TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead scope="col">Fatura</TableHead>
+                        <TableHead scope="col">Status</TableHead>
+                        <TableHead scope="col" className="text-right">Valor</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {invoices.slice(0, 3).map((invoice) => (
+                        <TableRow key={invoice.id}>
+                          <TableCell className="font-medium">{invoice.id}</TableCell>
+                          <TableCell>{invoice.status}</TableCell>
+                          <TableCell className="text-right">{invoice.amount}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.sortableHeaders.name"),
+            description: tContent("variants.compositions.sortableHeaders.description"),
+            useWhen: tContent("variants.compositions.sortableHeaders.use"),
+            code: `<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead scope="col" aria-sort="ascending">
+        <Button variant="ghost" size="sm" className="-ml-2">
+          Fatura
+          <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+        </Button>
+      </TableHead>
+      <TableHead scope="col" aria-sort="none">
+        <Button variant="ghost" size="sm" className="-ml-2">
+          Valor
+          <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+        </Button>
+      </TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>{/* rows */}</TableBody>
+</Table>`,
+            preview: (
+              <div className="w-full overflow-x-auto">
+                <Table>
+                  <TableCaption className="sr-only">Faturas ordenáveis</TableCaption>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead scope="col" aria-sort="ascending">
+                        <Button variant="ghost" size="sm" className="-ml-2 h-8">
+                          Fatura
+                          <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+                        </Button>
+                      </TableHead>
+                      <TableHead scope="col" aria-sort="none">
+                        <Button variant="ghost" size="sm" className="-ml-2 h-8">
+                          Status
+                          <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+                        </Button>
+                      </TableHead>
+                      <TableHead scope="col" aria-sort="none" className="text-right">
+                        <Button variant="ghost" size="sm" className="-ml-2 h-8">
+                          Valor
+                          <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+                        </Button>
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {invoices.slice(0, 3).map((invoice) => (
+                      <TableRow key={invoice.id}>
+                        <TableCell className="font-medium">{invoice.id}</TableCell>
+                        <TableCell>{invoice.status}</TableCell>
+                        <TableCell className="text-right">{invoice.amount}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.selectableRows.name"),
+            description: tContent("variants.compositions.selectableRows.description"),
+            useWhen: tContent("variants.compositions.selectableRows.use"),
+            code: `<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead scope="col" className="w-10">
+        <Checkbox aria-label="Selecionar todas as linhas" />
+      </TableHead>
+      <TableHead scope="col">Fatura</TableHead>
+      <TableHead scope="col">Status</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {invoices.map((invoice) => (
+      <TableRow key={invoice.id} data-state={selected.has(invoice.id) ? "selected" : undefined}>
+        <TableCell>
+          <Checkbox
+            checked={selected.has(invoice.id)}
+            onCheckedChange={(c) => toggle(invoice.id, c)}
+            aria-label={\`Selecionar fatura \${invoice.id}\`}
+          />
+        </TableCell>
+        <TableCell>{invoice.id}</TableCell>
+        <TableCell>{invoice.status}</TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>`,
+            preview: (
+              <div className="w-full overflow-x-auto">
+                <Table>
+                  <TableCaption className="sr-only">Faturas com seleção</TableCaption>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead scope="col" className="w-10">
+                        <Checkbox aria-label="Selecionar todas as linhas" />
+                      </TableHead>
+                      <TableHead scope="col">Fatura</TableHead>
+                      <TableHead scope="col">Status</TableHead>
+                      <TableHead scope="col" className="text-right">Valor</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow data-state="selected">
+                      <TableCell>
+                        <Checkbox defaultChecked aria-label="Selecionar fatura #INV-001" />
+                      </TableCell>
+                      <TableCell className="font-medium">#INV-001</TableCell>
+                      <TableCell>Pago</TableCell>
+                      <TableCell className="text-right">R$ 250,00</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        <Checkbox aria-label="Selecionar fatura #INV-002" />
+                      </TableCell>
+                      <TableCell className="font-medium">#INV-002</TableCell>
+                      <TableCell>Pendente</TableCell>
+                      <TableCell className="text-right">R$ 150,00</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        <Checkbox aria-label="Selecionar fatura #INV-003" />
+                      </TableCell>
+                      <TableCell className="font-medium">#INV-003</TableCell>
+                      <TableCell>Cancelado</TableCell>
+                      <TableCell className="text-right">R$ 350,00</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withPagination.name"),
+            description: tContent("variants.compositions.withPagination.description"),
+            useWhen: tContent("variants.compositions.withPagination.use"),
+            code: `<div className="flex flex-col gap-3">
+  <Table>{/* ... */}</Table>
+  <Pagination>
+    <PaginationContent>
+      <PaginationItem>
+        <PaginationPrevious href="#" />
+      </PaginationItem>
+      <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
+      <PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem>
+      <PaginationItem><PaginationLink href="#">3</PaginationLink></PaginationItem>
+      <PaginationItem>
+        <PaginationNext href="#" />
+      </PaginationItem>
+    </PaginationContent>
+  </Pagination>
+</div>`,
+            preview: (
+              <div className="w-full flex flex-col gap-3">
+                <div className="w-full overflow-x-auto">
+                  <Table>
+                    <TableCaption className="sr-only">Faturas paginadas</TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead scope="col">Fatura</TableHead>
+                        <TableHead scope="col">Status</TableHead>
+                        <TableHead scope="col" className="text-right">Valor</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {invoices.slice(0, 3).map((invoice) => (
+                        <TableRow key={invoice.id}>
+                          <TableCell className="font-medium">{invoice.id}</TableCell>
+                          <TableCell>{invoice.status}</TableCell>
+                          <TableCell className="text-right">{invoice.amount}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious href="#" />
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink href="#" isActive>1</PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink href="#">2</PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationNext href="#" />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
               </div>
             ),
           },

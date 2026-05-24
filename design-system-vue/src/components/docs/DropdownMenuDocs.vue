@@ -31,6 +31,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -106,6 +107,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
+      { id: 'composicoes',  label: tContent('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -220,6 +222,102 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault },
   { name: tContent('variants.items.destructive'), description: stripHtml(tContent('variants.styles.destructive')), code: codeDestructive },
+]);
+
+// ─── Compositions ─────────────────────────────────────────────────────────────
+
+const codeCompWithLabel = `<DropdownMenu>
+  <DropdownMenuTrigger as-child>
+    <Button variant="outline">Conta</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Conta</DropdownMenuLabel>
+    <DropdownMenuItem>Perfil</DropdownMenuItem>
+    <DropdownMenuItem>Configurações</DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuLabel>Suporte</DropdownMenuLabel>
+    <DropdownMenuItem>Documentação</DropdownMenuItem>
+    <DropdownMenuItem>Sair</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>`;
+
+const codeCompCheckbox = `<DropdownMenu>
+  <DropdownMenuTrigger as-child>
+    <Button variant="outline">Colunas</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+    <DropdownMenuCheckboxItem v-model:checked="showName">Nome</DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem v-model:checked="showEmail">E-mail</DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem v-model:checked="showRole">Cargo</DropdownMenuCheckboxItem>
+  </DropdownMenuContent>
+</DropdownMenu>`;
+
+const codeCompRadio = `<DropdownMenu>
+  <DropdownMenuTrigger as-child>
+    <Button variant="outline">Tema</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+    <DropdownMenuRadioGroup v-model="theme">
+      <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
+    </DropdownMenuRadioGroup>
+  </DropdownMenuContent>
+</DropdownMenu>`;
+
+const codeCompShortcuts = `<DropdownMenu>
+  <DropdownMenuTrigger as-child>
+    <Button variant="outline">Editar</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem>
+      Desfazer <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuItem>
+      Refazer <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>
+      Copiar <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuItem>
+      Colar <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>`;
+
+const compShowName = ref(true);
+const compShowEmail = ref(true);
+const compShowRole = ref(false);
+const compTheme = ref('system');
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withLabel.name'),
+    description: tContent('variants.compositions.withLabel.description'),
+    useWhen: tContent('variants.compositions.withLabel.use'),
+    code: codeCompWithLabel,
+  },
+  {
+    name: tContent('variants.compositions.withCheckboxItems.name'),
+    description: tContent('variants.compositions.withCheckboxItems.description'),
+    useWhen: tContent('variants.compositions.withCheckboxItems.use'),
+    code: codeCompCheckbox,
+  },
+  {
+    name: tContent('variants.compositions.withRadioGroup.name'),
+    description: tContent('variants.compositions.withRadioGroup.description'),
+    useWhen: tContent('variants.compositions.withRadioGroup.use'),
+    code: codeCompRadio,
+  },
+  {
+    name: tContent('variants.compositions.withShortcuts.name'),
+    description: tContent('variants.compositions.withShortcuts.description'),
+    useWhen: tContent('variants.compositions.withShortcuts.use'),
+    code: codeCompShortcuts,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -512,6 +610,93 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      use-when-label="Quando usar"
+      component-slug="dropdown-menu"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div style="contain: layout; min-height: 240px;" class="w-full">
+          <DropdownMenu :default-open="true" :modal="false">
+            <DropdownMenuTrigger as-child>
+              <Button variant="outline" size="sm">Conta</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="bottom" align="start">
+              <DropdownMenuLabel>Conta</DropdownMenuLabel>
+              <DropdownMenuItem>Perfil</DropdownMenuItem>
+              <DropdownMenuItem>Configurações</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel>Suporte</DropdownMenuLabel>
+              <DropdownMenuItem>Documentação</DropdownMenuItem>
+              <DropdownMenuItem>Sair</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </template>
+      <template #variant-preview-1>
+        <div style="contain: layout; min-height: 200px;" class="w-full">
+          <DropdownMenu :default-open="true" :modal="false">
+            <DropdownMenuTrigger as-child>
+              <Button variant="outline" size="sm">Colunas</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="bottom" align="start">
+              <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+              <DropdownMenuCheckboxItem v-model:checked="compShowName">Nome</DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem v-model:checked="compShowEmail">E-mail</DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem v-model:checked="compShowRole">Cargo</DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div style="contain: layout; min-height: 200px;" class="w-full">
+          <DropdownMenu :default-open="true" :modal="false">
+            <DropdownMenuTrigger as-child>
+              <Button variant="outline" size="sm">Tema</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="bottom" align="start">
+              <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+              <DropdownMenuRadioGroup v-model="compTheme">
+                <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div style="contain: layout; min-height: 220px;" class="w-full">
+          <DropdownMenu :default-open="true" :modal="false">
+            <DropdownMenuTrigger as-child>
+              <Button variant="outline" size="sm">Editar</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="bottom" align="start">
+              <DropdownMenuItem>
+                Desfazer
+                <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Refazer
+                <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                Copiar
+                <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Colar
+                <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────── -->
     <DocsStates

@@ -116,7 +116,30 @@
       "icon": "Sidebar reduz para largura de ícone (3rem). Labels ocultados; tooltips exibidos ao hover.",
       "none": "Sidebar sempre visível, sem possibilidade de recolher. Use em dashboards fixos.",
       "left": "Sidebar posicionada na esquerda (padrão). Compatível com LTR.",
-      "right": "Sidebar posicionada na direita. Use em painéis de detalhes ou contexto."
+      "right": "Sidebar posicionada na direita. Use em painéis de detalhes ou contexto.",
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withGroups": {
+          "name": "Com grupos de navegação",
+          "description": "Múltiplos <code>SidebarGroup</code> separados por <code>SidebarSeparator</code>, cada um com seu <code>SidebarGroupLabel</code>. Itens combinam ícone, label e badge opcional.",
+          "use": "Apps com áreas distintas (ex.: \"Principal\" vs. \"Conta\") onde a separação visual facilita a varredura. Mantenha grupos enxutos (3-5 itens) para evitar fadiga."
+        },
+        "withSubMenu": {
+          "name": "Com sub-menu",
+          "description": "Item expansível que revela <code>SidebarMenuSub</code> com subitens aninhados e linha de referência visual. O botão pai expõe <code>aria-expanded</code> e gira a chevron ao alternar.",
+          "use": "Categorias com múltiplas páginas filhas (ex.: \"Componentes\" → Alert, Button, Card). Evite mais de um nível de aninhamento — para hierarquias profundas, use roteamento dedicado."
+        },
+        "withSearch": {
+          "name": "Com busca no header",
+          "description": "Campo <code>SidebarInput</code> dentro do <code>SidebarHeader</code> para filtrar itens da navegação. Use <code>type=\"search\"</code> e ícone decorativo com <code>aria-hidden=\"true\"</code>.",
+          "use": "Sidebars longas (>15 itens) ou navegação dinâmica onde o usuário precisa localizar uma seção rapidamente. Não substitui a busca global do app."
+        },
+        "withBadges": {
+          "name": "Com badges de contagem",
+          "description": "<code>SidebarMenuBadge</code> sobreposto ao item para indicar contadores (notificações, pendências). O badge é decorativo — o número não deve ser a única forma de comunicar o estado.",
+          "use": "Notificações em \"Caixa de entrada\", pendências em \"Tarefas\". Para informações críticas, complemente com <code>aria-label</code> contextual no botão."
+        }
+      }
     },
     "states": {
       "title": "Estados",
@@ -335,6 +358,7 @@
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
+      "compositions": "Composições",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -464,7 +488,30 @@
       "icon": "Sidebar reduces to icon width (3rem). Labels hidden; tooltips shown on hover.",
       "none": "Sidebar always visible, cannot be collapsed. Use in fixed dashboards.",
       "left": "Sidebar positioned on the left (default). Compatible with LTR.",
-      "right": "Sidebar positioned on the right. Use for detail or context panels."
+      "right": "Sidebar positioned on the right. Use for detail or context panels.",
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withGroups": {
+          "name": "With navigation groups",
+          "description": "Multiple <code>SidebarGroup</code>s separated by <code>SidebarSeparator</code>, each with its own <code>SidebarGroupLabel</code>. Items combine icon, label, and optional badge.",
+          "use": "Apps with distinct areas (e.g. \"Main\" vs. \"Account\") where visual separation aids scanning. Keep groups small (3-5 items) to avoid fatigue."
+        },
+        "withSubMenu": {
+          "name": "With sub-menu",
+          "description": "Expandable menu item that reveals <code>SidebarMenuSub</code> with nested sub-items and a visual reference line. The parent button exposes <code>aria-expanded</code> and rotates the chevron on toggle.",
+          "use": "Categories with multiple child pages (e.g. \"Components\" → Alert, Button, Card). Avoid more than one nesting level — for deep hierarchies, use dedicated routing."
+        },
+        "withSearch": {
+          "name": "With header search",
+          "description": "<code>SidebarInput</code> field inside the <code>SidebarHeader</code> to filter navigation items. Use <code>type=\"search\"</code> and a decorative icon with <code>aria-hidden=\"true\"</code>.",
+          "use": "Long sidebars (>15 items) or dynamic navigation where the user needs to locate a section quickly. Does not replace the app's global search."
+        },
+        "withBadges": {
+          "name": "With count badges",
+          "description": "<code>SidebarMenuBadge</code> overlaid on the item to indicate counters (notifications, pending items). The badge is decorative — the number must not be the only way to convey state.",
+          "use": "Notifications in \"Inbox\", pending tasks. For critical info, complement with a contextual <code>aria-label</code> on the button."
+        }
+      }
     },
     "states": {
       "title": "States",
@@ -683,6 +730,7 @@
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
+      "compositions": "Compositions",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -812,7 +860,30 @@
       "icon": "Sidebar reduce a ancho de ícono (3rem). Labels ocultos; tooltips al hacer hover.",
       "none": "Sidebar siempre visible, sin posibilidad de colapsar. Usar en dashboards fijos.",
       "left": "Sidebar posicionada a la izquierda (predeterminado). Compatible con LTR.",
-      "right": "Sidebar posicionada a la derecha. Usar para paneles de detalle o contexto."
+      "right": "Sidebar posicionada a la derecha. Usar para paneles de detalle o contexto.",
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withGroups": {
+          "name": "Con grupos de navegación",
+          "description": "Múltiples <code>SidebarGroup</code> separados por <code>SidebarSeparator</code>, cada uno con su <code>SidebarGroupLabel</code>. Los ítems combinan ícono, label y badge opcional.",
+          "use": "Apps con áreas distintas (ej.: \"Principal\" vs. \"Cuenta\") donde la separación visual facilita el escaneo. Mantén los grupos pequeños (3-5 ítems) para evitar fatiga."
+        },
+        "withSubMenu": {
+          "name": "Con sub-menú",
+          "description": "Ítem expandible que revela <code>SidebarMenuSub</code> con subítems anidados y línea de referencia visual. El botón padre expone <code>aria-expanded</code> y gira el chevron al alternar.",
+          "use": "Categorías con múltiples páginas hijas (ej.: \"Componentes\" → Alert, Button, Card). Evita más de un nivel de anidamiento — para jerarquías profundas, usa enrutamiento dedicado."
+        },
+        "withSearch": {
+          "name": "Con búsqueda en el header",
+          "description": "Campo <code>SidebarInput</code> dentro del <code>SidebarHeader</code> para filtrar ítems de navegación. Usa <code>type=\"search\"</code> y un ícono decorativo con <code>aria-hidden=\"true\"</code>.",
+          "use": "Sidebars largos (>15 ítems) o navegación dinámica donde el usuario necesita ubicar una sección rápidamente. No reemplaza la búsqueda global de la app."
+        },
+        "withBadges": {
+          "name": "Con badges de conteo",
+          "description": "<code>SidebarMenuBadge</code> superpuesto al ítem para indicar contadores (notificaciones, pendientes). El badge es decorativo — el número no debe ser la única forma de comunicar el estado.",
+          "use": "Notificaciones en \"Bandeja de entrada\", pendientes en \"Tareas\". Para información crítica, complementa con <code>aria-label</code> contextual en el botón."
+        }
+      }
     },
     "states": {
       "title": "Estados",
@@ -1031,6 +1102,7 @@
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",
+      "compositions": "Composiciones",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",

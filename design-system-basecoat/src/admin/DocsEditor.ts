@@ -7,6 +7,7 @@ import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import { createDocsStore } from './useDocs';
 import type { Locale } from '@/lib/i18n';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 const LOCALES: Locale[] = ['pt-BR', 'en', 'es'];
 const LOCALE_LABELS: Record<Locale, string> = { 'pt-BR': '🇧🇷 PT', en: '🇺🇸 EN', es: '🇪🇸 ES' };
@@ -62,9 +63,9 @@ function renderField(
       theme: 'snow',
       modules: { toolbar: [['bold', 'italic', 'code'], ['link', 'clean']] },
     });
-    quill.root.innerHTML = (value as string) ?? '';
+    quill.root.innerHTML = sanitizeHtml((value as string) ?? '');
 
-    const handler = () => onchange(fieldKey, quill.root.innerHTML);
+    const handler = () => onchange(fieldKey, sanitizeHtml(quill.root.innerHTML));
     quill.on('text-change', handler);
 
     cleanups.push(() => quill.off('text-change', handler));

@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -69,12 +70,14 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
     label: opts.actionLabel,
   });
   const footer = document.createElement('div');
-  footer.className = 'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2';
+  footer.className = 'nds-cluster';
+  footer.dataset.justify = 'end';
+  footer.dataset.spacing = 'xs';
   footer.appendChild(cancel);
   footer.appendChild(action);
 
   const body = document.createElement('div');
-  body.className = 'text-sm text-muted-foreground';
+  body.className = 'nds-text-body nds-text-muted-foreground';
   body.textContent = opts.bodyText ?? '';
 
   return createDialog({
@@ -131,6 +134,7 @@ export function createDialogDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -174,7 +178,7 @@ export function createDialogDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -187,7 +191,10 @@ export function createDialogDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-wrap items-center justify-center gap-4';
+            wrap.className = 'nds-cluster';
+            wrap.dataset.justify = 'center';
+            wrap.dataset.spacing = 'md';
+            wrap.style.flexWrap = 'wrap';
             wrap.append(
               buildDialogDemo({
                 triggerLabel: t('demonstration.labels.triggerLabel'),
@@ -317,7 +324,7 @@ import { createButton } from '@/components/ui/button';`,
           secondaryDescription: t('import.withScroll'),
           secondaryCode: `// Para body com scroll interno, basta aplicar max-h + overflow-y-auto:
 const body = document.createElement('div');
-body.className = 'max-h-[60vh] overflow-y-auto';
+body.className = 'max-h-[60vh] nds-overflow-y';
 
 const dialog = createDialog({
   trigger,
@@ -334,13 +341,16 @@ const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
 const action = createButton({ variant: 'default', label: 'Salvar alterações' });
 
 const footer = document.createElement('div');
-footer.className = 'flex sm:justify-end sm:space-x-2';
+footer.className = 'nds-cluster';
+footer.dataset.justify = 'end';
+footer.dataset.spacing = 'xs';
 footer.append(cancel, action);
 
 createDialog({ trigger, title: 'Editar perfil', description: '...', content, footer });`;
 
         const codeWithForm = `const form = document.createElement('form');
-form.className = 'grid gap-3';
+form.className = 'nds-stack';
+form.dataset.spacing = 'sm';
 // inputs...
 
 createDialog({ trigger, title: 'Editar perfil', description: '...', content: form, footer });`;
@@ -400,7 +410,7 @@ createDialog({ trigger, title: 'Editar perfil', description: '...', content: for
               previewFactory: () => {
                 const trigger = createButton({ variant: 'outline', label: 'Sobre este recurso' });
                 const body = document.createElement('div');
-                body.className = 'text-sm text-muted-foreground';
+                body.className = 'nds-text-body nds-text-muted-foreground';
                 body.textContent = 'Sem ações — apenas informação.';
                 return createDialog({
                   trigger,
@@ -439,6 +449,149 @@ createDialog({ trigger, title: 'Editar perfil', description: '...', content: for
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'dialog',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.confirmEmail.name')),
+              description: stripHtml(t('variants.compositions.confirmEmail.description')),
+              useWhen: stripHtml(t('variants.compositions.confirmEmail.use')),
+              code: `const body = document.createElement('div');
+body.className = 'nds-text-body nds-text-muted-foreground';
+body.textContent = 'Vamos enviar um link para maria@exemplo.com.';
+
+const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+const action = createButton({ variant: 'default', label: 'Enviar link' });
+const footer = document.createElement('div');
+footer.className = 'nds-cluster';
+footer.dataset.justify = 'end';
+footer.dataset.spacing = 'xs';
+footer.append(cancel, action);
+
+createDialog({
+  trigger: createButton({ variant: 'default', label: 'Enviar link' }),
+  title: 'Confirmar e-mail',
+  description: 'Verifique o endereço antes de enviar o link de acesso.',
+  content: body,
+  footer,
+});`,
+              previewFactory: () => buildDialogDemo({
+                triggerLabel: 'Enviar link',
+                triggerVariant: 'default',
+                title: 'Confirmar e-mail',
+                description: 'Verifique o endereço antes de enviar o link de acesso.',
+                cancelLabel: 'Cancelar',
+                actionLabel: 'Enviar link',
+                bodyText: 'Vamos enviar um link para maria@exemplo.com.',
+              }),
+            },
+            {
+              name: stripHtml(t('variants.compositions.profileEdit.name')),
+              description: stripHtml(t('variants.compositions.profileEdit.description')),
+              useWhen: stripHtml(t('variants.compositions.profileEdit.use')),
+              code: `const form = document.createElement('form');
+form.className = 'nds-stack';
+form.dataset.spacing = 'sm';
+// campos: Nome de exibição, Função, Bio...
+
+const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+const action = createButton({ variant: 'default', label: 'Salvar alterações' });
+const footer = document.createElement('div');
+footer.className = 'nds-cluster';
+footer.dataset.justify = 'end';
+footer.dataset.spacing = 'xs';
+footer.append(cancel, action);
+
+createDialog({
+  trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
+  title: 'Editar perfil',
+  description: 'Atualize suas informações pessoais.',
+  content: form,
+  footer,
+});`,
+              previewFactory: () => {
+                const form = document.createElement('form');
+                form.className = 'nds-stack';
+form.dataset.spacing = 'sm';
+
+                const buildField = (labelText: string, value: string) => {
+                  const label = document.createElement('label');
+                  label.className = 'nds-stack nds-text-body';
+                  label.dataset.spacing = 'xs';
+                  const span = document.createElement('span');
+                  span.className = 'nds-font-medium';
+                  span.textContent = labelText;
+                  const input = document.createElement('input');
+                  input.className = 'nds-border-default nds-rounded-md';
+                  input.style.padding = '0.5rem 0.75rem';
+                  input.type = 'text';
+                  input.value = value;
+                  label.append(span, input);
+                  return label;
+                };
+
+                form.append(
+                  buildField('Nome de exibição', 'Maria Souza'),
+                  buildField('Função', 'Designer'),
+                );
+
+                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                const action = createButton({ variant: 'default', label: 'Salvar alterações' });
+                const footer = document.createElement('div');
+                footer.className = 'nds-cluster';
+  footer.dataset.justify = 'end';
+  footer.dataset.spacing = 'xs';
+                footer.append(cancel, action);
+
+                return createDialog({
+                  trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
+                  title: 'Editar perfil',
+                  description: 'Atualize suas informações pessoais.',
+                  content: form,
+                  footer,
+                });
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.mediaPreview.name')),
+              description: stripHtml(t('variants.compositions.mediaPreview.description')),
+              useWhen: stripHtml(t('variants.compositions.mediaPreview.use')),
+              code: `const media = document.createElement('div');
+media.className = 'nds-w-full nds-bg-muted nds-rounded-md nds-text-caption nds-text-muted-foreground';
+media.style.aspectRatio = '16/9';
+media.style.display = 'grid';
+media.style.placeItems = 'center';
+media.textContent = 'Pré-visualização da mídia';
+
+createDialog({
+  trigger: createButton({ variant: 'outline', label: 'Pré-visualizar' }),
+  title: 'Capa do post',
+  description: 'Pré-visualização em tamanho real.',
+  content: media,
+  // sem footer — apenas "ver"
+});`,
+              previewFactory: () => {
+                const media = document.createElement('div');
+                media.className = 'nds-w-full nds-bg-muted nds-rounded-md nds-text-caption nds-text-muted-foreground';
+media.style.aspectRatio = '16/9';
+media.style.display = 'grid';
+media.style.placeItems = 'center';
+                media.textContent = 'Pré-visualização da mídia';
+
+                return createDialog({
+                  trigger: createButton({ variant: 'outline', label: 'Pré-visualizar' }),
+                  title: 'Capa do post',
+                  description: 'Pré-visualização em tamanho real.',
+                  content: media,
+                });
+              },
+            },
+          ],
+        });
 
       case 'estados':
         return createDocsStates({

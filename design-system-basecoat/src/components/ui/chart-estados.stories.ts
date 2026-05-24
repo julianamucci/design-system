@@ -20,7 +20,7 @@ type Story = StoryObj;
 export const Vazio: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
       createChart({
         data: [],
@@ -62,7 +62,7 @@ export const Vazio: Story = {
 export const UmPonto: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
       createChart({
         data: [{ label: 'Jan', value: 186 }],

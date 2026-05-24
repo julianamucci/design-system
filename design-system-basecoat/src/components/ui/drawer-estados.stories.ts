@@ -40,7 +40,7 @@ function buildBase(opts: {
   footer.append(cancel, action);
 
   const content = document.createElement('div');
-  content.className = 'text-sm text-muted-foreground';
+  content.className = 'nds-text-body nds-text-muted-foreground';
   content.textContent = 'Conteúdo do drawer.';
 
   const drawer = createDrawer({
@@ -56,7 +56,9 @@ function buildBase(opts: {
 
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[160px] flex items-center justify-center';
+  wrapper.className = 'nds-cluster nds-w-full';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.minHeight = '160px';
   wrapper.appendChild(drawer);
 
   if (opts.openInitially) queueMicrotask(() => trigger.click());
@@ -108,7 +110,9 @@ export const Controlado: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.style.contain = 'layout';
-    wrapper.className = 'flex flex-col gap-3 min-h-[160px]';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'md';
+    wrapper.style.minHeight = '160px';
 
     const externalState = { isOpen: false };
     const externalBtn = createButton({ variant: 'default', label: 'Open programmatically' });
@@ -119,7 +123,7 @@ export const Controlado: Story = {
     hiddenTrigger.setAttribute('aria-hidden', 'true');
 
     const content = document.createElement('div');
-    content.className = 'text-sm text-muted-foreground';
+    content.className = 'nds-text-body nds-text-muted-foreground';
     content.textContent = 'Drawer comandado por estado externo.';
 
     const cancel = createButton({ variant: 'outline', label: 'Cancelar' });

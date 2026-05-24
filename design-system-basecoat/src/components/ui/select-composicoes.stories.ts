@@ -24,11 +24,13 @@ type Story = StoryObj;
 
 function withLabel(select: HTMLSelectElement, labelText: string, id: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2 w-80';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'sm';
+  wrap.style.width = '20rem';
 
   const label = document.createElement('label');
   label.htmlFor = id;
-  label.className = 'text-sm font-semibold';
+  label.className = 'nds-text-body nds-font-semibold';
   label.textContent = labelText;
 
   select.id = id;
@@ -128,10 +130,12 @@ export const RegiaoComGrupos: Story = {
     });
 
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2 w-80';
+    wrap.className = 'nds-stack';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.width = '20rem';
     const label = document.createElement('label');
     label.htmlFor = 'comp-region';
-    label.className = 'text-sm font-semibold';
+    label.className = 'nds-text-body nds-font-semibold';
     label.textContent = 'Selecione a região';
     wrap.append(label, select);
     return wrap;
@@ -159,15 +163,19 @@ export const RegiaoComGrupos: Story = {
 export const EmFormulario: Story = {
   render: () => {
     const form = document.createElement('form');
-    form.className = 'flex flex-col gap-4 w-80 p-4 border rounded-lg';
+    form.className = 'nds-stack nds-border-default nds-rounded-lg';
+    form.dataset.spacing = 'md';
+    form.style.width = '20rem';
+    form.style.padding = '1rem';
     form.noValidate = true;
 
     const field = document.createElement('div');
-    field.className = 'flex flex-col gap-2';
+    field.className = 'nds-stack';
+    field.dataset.spacing = 'sm';
 
     const label = document.createElement('label');
     label.htmlFor = 'comp-form-state';
-    label.className = 'text-sm font-semibold';
+    label.className = 'nds-text-body nds-font-semibold';
     label.textContent = 'Estado';
 
     const select = createSelect({
@@ -187,12 +195,13 @@ export const EmFormulario: Story = {
 
     const submit = document.createElement('button');
     submit.type = 'submit';
-    submit.className = 'btn btn-primary self-end';
+    submit.className = 'btn btn-primary';
+    submit.style.alignSelf = 'flex-end';
     submit.textContent = 'Continuar';
     form.appendChild(submit);
 
     const out = document.createElement('p');
-    out.className = 'text-sm text-muted-foreground';
+    out.className = 'nds-text-body nds-text-muted-foreground';
     out.dataset.testid = 'form-output';
     form.appendChild(out);
 

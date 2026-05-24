@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3';
 import { expect } from 'storybook/test';
 import { Skeleton } from './index';
 
-const meta = {
+const meta: Meta<any> = {
   title: 'UI/Skeleton/Variantes',
   component: Skeleton,
   parameters: {
@@ -16,7 +16,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Skeleton>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

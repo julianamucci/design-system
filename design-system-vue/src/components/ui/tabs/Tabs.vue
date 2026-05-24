@@ -1,9 +1,22 @@
 <script setup lang="ts">
-import type { TabsRootEmits, TabsRootProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { TabsRoot, useForwardPropsEmits } from 'reka-ui'
 import { cn } from '@/lib/utils'
+
+interface TabsRootProps {
+  defaultValue?: string | number
+  modelValue?: string | number
+  orientation?: 'horizontal' | 'vertical'
+  dir?: 'ltr' | 'rtl'
+  activationMode?: 'automatic' | 'manual'
+  unmountOnHide?: boolean
+  asChild?: boolean
+  as?: any
+}
+type TabsRootEmits = {
+  'update:modelValue': [value: string | number]
+}
 
 const props = defineProps<TabsRootProps & { class?: HTMLAttributes['class'] }>()
 const emits = defineEmits<TabsRootEmits>()

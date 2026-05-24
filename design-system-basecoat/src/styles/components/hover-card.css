@@ -1,0 +1,31 @@
+/*
+ * ─── nds-hover-card ─────────────────────────────────────────────────────────
+ * Painel ancorado exibido ao hover — útil para preview de links ou perfis.
+ * Render em portal (body). Mantém aberto enquanto o mouse está sobre o painel
+ * (hide com pequeno delay).
+ *
+ *   <div class="nds-hover-card-content" role="dialog" id="hover-card-1"
+ *        style="top: …; left: …">
+ *     [conteúdo customizado]
+ *   </div>
+ *
+ * Difere do popover apenas pela largura padrão (20rem ao invés de 18rem).
+ *
+ * Tokens: --popover (bg), --popover-foreground (fg), --border, --radius
+ */
+
+.nds-hover-card-content {
+  position: absolute;
+  z-index: 50;
+  width: 20rem;                                  /* 320px — w-80 */
+
+  padding: var(--spacing-4);                     /* 16px */
+
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius, 0.5rem);
+  box-shadow:
+    0 10px 15px -3px hsl(0 0% 0% / 0.1),
+    0 4px 6px -4px hsl(0 0% 0% / 0.1);
+}

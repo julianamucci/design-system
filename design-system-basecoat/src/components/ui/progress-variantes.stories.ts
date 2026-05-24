@@ -28,7 +28,7 @@ type Story = StoryObj;
 export const Determinate: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     const bar = createProgress({ value: 42 });
     bar.setAttribute('aria-label', 'Progresso do upload');
     wrap.appendChild(bar);
@@ -47,14 +47,15 @@ export const Determinate: Story = {
 export const Indeterminate: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     const bar = createProgress({ value: 0 });
     bar.setAttribute('aria-label', 'Processando…');
     bar.removeAttribute('aria-valuenow');
     const indicator = bar.firstElementChild as HTMLElement | null;
     if (indicator) {
       indicator.style.transform = '';
-      indicator.classList.add('w-1/3', 'animate-indeterminate');
+      indicator.style.width = '33.333%';
+      indicator.classList.add('animate-indeterminate');
     }
     wrap.appendChild(bar);
     return wrap;
@@ -73,17 +74,20 @@ export const Indeterminate: Story = {
 export const WithLabel: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md space-y-2';
+    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.dataset.spacing = 'xs';
 
     const row = document.createElement('div');
-    row.className = 'flex items-center justify-between text-sm';
+    row.className = 'nds-cluster nds-text-body';
+    row.dataset.justify = 'between';
 
     const label = document.createElement('span');
-    label.className = 'text-foreground';
+    label.className = 'nds-text-foreground';
     label.textContent = 'Enviando arquivo';
 
     const value = document.createElement('span');
-    value.className = 'text-muted-foreground tabular-nums';
+    value.className = 'nds-text-muted-foreground';
+    value.style.fontVariantNumeric = 'tabular-nums';
     value.setAttribute('aria-live', 'polite');
     value.textContent = '42%';
 

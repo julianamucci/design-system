@@ -18,7 +18,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -61,6 +61,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -519,6 +520,81 @@ interface CardPartProps {
       <CardContent>
         <p class="text-sm text-muted-foreground">{$tStore('demonstration.labels.productPrice')}</p>
       </CardContent>
+    </Card>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="card"
+    items={[
+      {
+        name: $tStore('variants.compositions.withFooter.name'),
+        description: $tStore('variants.compositions.withFooter.description'),
+        useWhen: $tStore('variants.compositions.withFooter.use'),
+        code: codeWithFooter,
+        preview: compWithFooter,
+      },
+      {
+        name: $tStore('variants.compositions.withAction.name'),
+        description: $tStore('variants.compositions.withAction.description'),
+        useWhen: $tStore('variants.compositions.withAction.use'),
+        code: codeWithAction,
+        preview: compWithAction,
+      },
+      {
+        name: $tStore('variants.compositions.withImage.name'),
+        description: $tStore('variants.compositions.withImage.description'),
+        useWhen: $tStore('variants.compositions.withImage.use'),
+        code: codeWithImage,
+        preview: compWithImage,
+      },
+    ]}
+  />
+
+  {#snippet compWithFooter()}
+    <Card class="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle>Cadeira Gamer Pro</CardTitle>
+        <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p class="text-lg font-semibold">R$ 1.299,00</p>
+      </CardContent>
+      <CardFooter class="justify-end gap-2">
+        <Button variant="outline" size="sm" aria-label={`${$tStore('demonstration.labels.actionEdit')} Cadeira Gamer Pro`}>
+          {$tStore('demonstration.labels.actionEdit')}
+        </Button>
+        <Button variant="destructive" size="sm" aria-label={`${$tStore('demonstration.labels.actionDelete')} Cadeira Gamer Pro`}>
+          {$tStore('demonstration.labels.actionDelete')}
+        </Button>
+      </CardFooter>
+    </Card>
+  {/snippet}
+  {#snippet compWithAction()}
+    <Card class="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle>Assinantes ativos</CardTitle>
+        <CardDescription>+12% no mês</CardDescription>
+        <CardAction>
+          <Button variant="outline" size="sm" aria-label="Editar métrica Assinantes ativos">
+            {$tStore('demonstration.labels.actionEdit')}
+          </Button>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <p class="text-2xl font-semibold">8.742</p>
+      </CardContent>
+    </Card>
+  {/snippet}
+  {#snippet compWithImage()}
+    <Card class="w-full max-w-sm">
+      <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=600&q=80" alt="Cadeira Gamer Pro" class="w-full h-40 object-cover" />
+      <CardHeader>
+        <CardTitle>Cadeira Gamer Pro</CardTitle>
+        <CardDescription>Estrutura ergonômica.</CardDescription>
+      </CardHeader>
     </Card>
   {/snippet}
 

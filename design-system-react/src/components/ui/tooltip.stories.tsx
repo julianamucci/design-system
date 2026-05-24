@@ -45,20 +45,14 @@ const meta = {
       control: "boolean",
       description: "Estado inicial em modo não-controlado.",
     },
-  },
+  } as Meta<typeof Tooltip>["argTypes"],
   args: {
     side: "top",
     align: "center",
     sideOffset: 4,
     defaultOpen: false,
-  },
-} satisfies Meta<
-  typeof Tooltip & {
-    side?: "top" | "bottom" | "left" | "right";
-    align?: "start" | "center" | "end";
-    sideOffset?: number;
-  }
->;
+  } as Meta<typeof Tooltip>["args"],
+} satisfies Meta<typeof Tooltip>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

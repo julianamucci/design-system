@@ -50,6 +50,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   argTypes: {
+    // @ts-expect-error - argTypes locais para o Content (não pertencem ao Tooltip root)
     side: {
       control: { type: 'select' },
       options: ['top', 'bottom', 'left', 'right'],

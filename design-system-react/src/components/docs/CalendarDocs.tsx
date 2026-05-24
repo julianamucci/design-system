@@ -16,6 +16,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -54,6 +55,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -132,7 +134,7 @@ export function CalendarDocs() {
     }),
     [today]
   );
-  const [range, setRange] = useState<{ from?: Date; to?: Date } | undefined>(
+  const [range, setRange] = useState<{ from: Date; to?: Date } | undefined>(
     defaultRange
   );
 
@@ -241,7 +243,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
     <Calendar
       mode="range"
       selected={range}
-      onSelect={setRange}
+      onSelect={setRange as never}
       numberOfMonths={2}
       locale={ptBR}
     />
@@ -486,6 +488,78 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             description: stripHtml(tContent("variants.items.numberOfMonths")),
             code: codeNumberOfMonths,
             preview: previewNumberOfMonths,
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="calendar"
+        items={[
+          {
+            name: tContent("variants.compositions.inlineBordered.name"),
+            description: tContent("variants.compositions.inlineBordered.description"),
+            useWhen: tContent("variants.compositions.inlineBordered.use"),
+            code: `<Calendar
+  mode="single"
+  selected={date}
+  onSelect={setDate}
+  locale={ptBR}
+  className="rounded-md border"
+/>`,
+            preview: (
+              <Calendar
+                mode="single"
+                selected={singleDate}
+                onSelect={setSingleDate}
+                locale={ptBR}
+                className="rounded-md border"
+              />
+            ),
+          },
+          {
+            name: tContent("variants.compositions.disabledPast.name"),
+            description: tContent("variants.compositions.disabledPast.description"),
+            useWhen: tContent("variants.compositions.disabledPast.use"),
+            code: `<Calendar
+  mode="single"
+  selected={date}
+  onSelect={setDate}
+  disabled={{ before: new Date() }}
+  locale={ptBR}
+/>`,
+            preview: (
+              <Calendar
+                mode="single"
+                selected={singleDate}
+                onSelect={setSingleDate}
+                disabled={{ before: today }}
+                locale={ptBR}
+              />
+            ),
+          },
+          {
+            name: tContent("variants.compositions.rangeTwoMonths.name"),
+            description: tContent("variants.compositions.rangeTwoMonths.description"),
+            useWhen: tContent("variants.compositions.rangeTwoMonths.use"),
+            code: `<Calendar
+  mode="range"
+  selected={range}
+  onSelect={setRange}
+  numberOfMonths={2}
+  locale={ptBR}
+/>`,
+            preview: (
+              <Calendar
+                mode="range"
+                selected={range}
+                onSelect={setRange as never}
+                numberOfMonths={2}
+                locale={ptBR}
+              />
+            ),
           },
         ]}
       />

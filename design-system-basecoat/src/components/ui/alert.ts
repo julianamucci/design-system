@@ -23,7 +23,7 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
 
   const el = document.createElement('div');
   el.setAttribute('role', 'alert');
-  el.className = variant === 'destructive' ? 'alert alert-destructive' : 'alert';
+  el.className = variant === 'destructive' ? 'nds-alert nds-alert-destructive' : 'nds-alert';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
 
   return el;
@@ -33,6 +33,7 @@ export function createAlertTitle(options: AlertTitleOptions = {}): HTMLElement {
   const { text = '', className } = options;
 
   const el = document.createElement('h5');
+  el.className = 'nds-alert-title';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
   if (text) el.textContent = text;
 
@@ -42,8 +43,10 @@ export function createAlertTitle(options: AlertTitleOptions = {}): HTMLElement {
 export function createAlertDescription(options: AlertDescriptionOptions = {}): HTMLElement {
   const { text = '', className } = options;
 
-  // PATCH: a11y — basecoat-css aplica `col-start-2` no grid via seletor `> section`. Com <div> a descrição cai na col 1 (16px, coluna do ícone) e o texto quebra letra a letra. (ver PATCHES.md#basecoatalert--descrio-como-section-para-grid-do-basecoat-css)
+  // <section> mantém a semântica do upstream basecoat-css. CSS aceita tanto
+  // section quanto qualquer elemento com class nds-alert-description.
   const el = document.createElement('section');
+  el.className = 'nds-alert-description';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
   if (text) el.textContent = text;
 
@@ -75,7 +78,7 @@ export function createAlertIcon(type: AlertIconType): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'h-4 w-4');
+  // .nds-alert > svg já define width/height 16px via CSS — não precisa setar via class.
 
   for (const [tag, attrs] of ALERT_ICON_MAP[type]) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);

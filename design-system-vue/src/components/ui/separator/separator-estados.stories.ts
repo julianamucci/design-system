@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3';
 import { within, expect } from 'storybook/test';
 import { Separator } from './index';
 
-const meta = {
+const meta: Meta<any> = {
   title: 'UI/Separator/Estados',
   component: Separator,
   parameters: {
@@ -16,7 +16,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Separator>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

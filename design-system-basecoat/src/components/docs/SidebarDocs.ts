@@ -25,6 +25,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -77,6 +78,9 @@ const ICON_LAYOUT   = '<rect width="18" height="18" x="3" y="3" rx="2"/><path d=
 const ICON_SETTINGS = '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>';
 const ICON_USER     = '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>';
 const ICON_TOKENS   = '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>';
+const ICON_BELL     = '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>';
+const ICON_SEARCH   = '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>';
+const ICON_CHEVRON  = '<path d="m6 9 6 6 6-6"/>';
 
 // ─── Mini sidebar preview factory ─────────────────────────────────────────────
 
@@ -94,7 +98,8 @@ function buildMiniSidebar(opts: {
 
   const header = createSidebarHeader();
   const logoRow = document.createElement('div');
-  logoRow.className = 'px-2 py-1 text-xs font-semibold text-sidebar-foreground';
+  logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
+  logoRow.style.color = 'var(--sidebar-foreground)';
   logoRow.textContent = 'App';
   header.appendChild(logoRow);
   inner.appendChild(header);
@@ -145,18 +150,26 @@ function buildMiniSidebar(opts: {
 
   const footer = createSidebarFooter();
   const userRow = document.createElement('div');
-  userRow.className = 'px-2 py-1 text-xs text-sidebar-foreground';
+  userRow.className = 'nds-px-2 nds-py-1 nds-text-caption';
+  userRow.style.color = 'var(--sidebar-foreground)';
   userRow.textContent = t('demonstration.labels.profile');
   footer.appendChild(userRow);
   inner.appendChild(footer);
 
   const inset = document.createElement('div');
-  inset.className = 'flex flex-1 flex-col';
+  inset.className = 'nds-stack nds-flex-1';
+  inset.dataset.spacing = 'xs';
   const topbar = document.createElement('div');
-  topbar.className = 'flex h-10 items-center gap-2 border-b border-border px-3';
+  topbar.className = 'nds-cluster nds-border-b nds-px-2';
+  topbar.dataset.spacing = 'sm';
+  topbar.dataset.align = 'center';
+  topbar.style.height = '2.5rem';
+  topbar.style.paddingInline = '0.75rem';
   topbar.appendChild(createSidebarTrigger(instance.toggle));
   const mainArea = document.createElement('div');
-  mainArea.className = 'flex flex-1 items-center justify-center text-xs text-muted-foreground p-4';
+  mainArea.className = 'nds-cluster nds-flex-1 nds-text-caption nds-text-muted-foreground nds-p-4';
+  mainArea.dataset.align = 'center';
+  mainArea.dataset.justify = 'center';
   mainArea.textContent = t('demonstration.labels.dashboard');
   inset.append(topbar, mainArea);
 
@@ -165,7 +178,8 @@ function buildMiniSidebar(opts: {
   wrapper.appendChild(inset);
 
   const container = document.createElement('div');
-  container.className = 'min-h-[300px] w-full border border-border rounded-lg overflow-hidden';
+  container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+  container.style.minHeight = '300px';
   container.style.contain = 'layout';
   container.appendChild(wrapper);
   return container;
@@ -203,11 +217,12 @@ export function createSidebarDocs(): HTMLElement {
       { id: 'do-dont',       labelKey: 'nav.doDont'        },
     ]},
     { labelKey: 'nav.techRef', sections: [
-      { id: 'importacao',    labelKey: 'nav.import'   },
-      { id: 'variantes',     labelKey: 'nav.variants' },
-      { id: 'estados',       labelKey: 'nav.states'   },
-      { id: 'propriedades',  labelKey: 'nav.props'    },
-      { id: 'tokens',        labelKey: 'nav.tokens'   },
+      { id: 'importacao',    labelKey: 'nav.import'       },
+      { id: 'variantes',     labelKey: 'nav.variants'     },
+      { id: 'composicoes',   labelKey: 'nav.compositions' },
+      { id: 'estados',       labelKey: 'nav.states'       },
+      { id: 'propriedades',  labelKey: 'nav.props'        },
+      { id: 'tokens',        labelKey: 'nav.tokens'       },
     ]},
     { labelKey: 'nav.context', sections: [
       { id: 'acessibilidade',labelKey: 'nav.accessibility' },
@@ -255,7 +270,7 @@ export function createSidebarDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -330,9 +345,11 @@ export function createSidebarDocs(): HTMLElement {
               dontCaption:   t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col gap-1 p-2';
+                wrap.className = 'nds-stack nds-p-2';
+                wrap.dataset.spacing = 'xs';
                 const label = document.createElement('div');
-                label.className = 'text-xs text-sidebar-foreground/70 px-2';
+                label.className = 'nds-text-caption nds-px-2';
+                label.style.color = 'color-mix(in srgb, var(--sidebar-foreground) 70%, transparent)';
                 label.textContent = 'SidebarProvider';
                 const item = createSidebarMenuItem({ label: t('demonstration.labels.dashboard'), icon: makeIcon(ICON_HOME), active: true });
                 wrap.appendChild(label);
@@ -341,9 +358,12 @@ export function createSidebarDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col gap-1 p-2 opacity-60';
+                wrap.className = 'nds-stack nds-p-2';
+                wrap.dataset.spacing = 'xs';
+                wrap.style.opacity = '0.6';
                 const warning = document.createElement('div');
-                warning.className = 'rounded border border-destructive/30 bg-destructive/10 px-2 py-1 text-xs text-destructive';
+                warning.className = 'nds-rounded nds-border-destructive-soft nds-px-2 nds-py-1 nds-text-caption nds-text-destructive';
+                warning.style.background = 'color-mix(in srgb, var(--color-destructive) 10%, transparent)';
                 warning.textContent = 'state = { open: true } // manual';
                 wrap.appendChild(warning);
                 return wrap;
@@ -373,7 +393,8 @@ export function createSidebarDocs(): HTMLElement {
                 const btn = item.querySelector('[data-sidebar="menu-button"]');
                 if (btn) {
                   const warning = document.createElement('span');
-                  warning.className = 'ml-auto text-xs text-destructive';
+                  warning.className = 'nds-text-caption nds-text-destructive';
+                  warning.style.marginLeft = 'auto';
                   warning.textContent = 'sem aria-label';
                   btn.appendChild(warning);
                 }
@@ -387,14 +408,19 @@ export function createSidebarDocs(): HTMLElement {
               dontCaption:   t('doDont.pair3.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex items-center gap-2 p-2 rounded border border-border text-xs text-muted-foreground';
-                wrap.innerHTML = sanitizeHtml('<span class="font-mono">lg:hidden</span><span>SidebarTrigger</span>');
+                wrap.className = 'nds-cluster nds-p-2 nds-rounded nds-border-default nds-text-caption nds-text-muted-foreground';
+                wrap.dataset.spacing = 'sm';
+                wrap.dataset.align = 'center';
+                wrap.innerHTML = sanitizeHtml('<span class="nds-font-mono">lg:hidden</span><span>SidebarTrigger</span>');
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex items-center gap-2 p-2 rounded border border-destructive/30 bg-destructive/10 text-xs text-destructive';
-                wrap.innerHTML = sanitizeHtml('<span class="font-mono">block</span><span>SidebarTrigger no desktop</span>');
+                wrap.className = 'nds-cluster nds-p-2 nds-rounded nds-border-destructive-soft nds-text-caption nds-text-destructive';
+                wrap.dataset.spacing = 'sm';
+                wrap.dataset.align = 'center';
+                wrap.style.background = 'color-mix(in srgb, var(--color-destructive) 10%, transparent)';
+                wrap.innerHTML = sanitizeHtml('<span class="nds-font-mono">block</span><span>SidebarTrigger no desktop</span>');
                 return wrap;
               },
             },
@@ -465,6 +491,430 @@ export function createSidebarDocs(): HTMLElement {
               description: stripHtml(t('variants.inset')),
               code: codeInset,
               previewFactory: () => buildMiniSidebar({ variant: 'inset' }),
+            },
+          ],
+        });
+      }
+
+      // ── Composições ───────────────────────────────────────────────────────
+
+      case 'composicoes': {
+        function buildWithGroups(): HTMLElement {
+          const instance = createSidebar({ defaultOpen: true });
+          const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
+
+          const header = createSidebarHeader();
+          const logoRow = document.createElement('div');
+          logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
+  logoRow.style.color = 'var(--sidebar-foreground)';
+          logoRow.textContent = 'Design System';
+          header.appendChild(logoRow);
+          inner.appendChild(header);
+
+          const content = createSidebarContent();
+          content.appendChild(createSidebarGroup({
+            label: 'Principal',
+            items: [
+              { label: 'Dashboard',   icon: makeIcon(ICON_HOME),     active: true, href: '#' },
+              { label: 'Componentes', icon: makeIcon(ICON_LAYOUT),   href: '#' },
+              { label: 'Tokens',      icon: makeIcon(ICON_TOKENS),   href: '#' },
+            ],
+          }));
+          content.appendChild(createSidebarSeparator());
+          content.appendChild(createSidebarGroup({
+            label: 'Conta',
+            items: [
+              { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
+              { label: 'Notificações',  icon: makeIcon(ICON_BELL),     href: '#', badge: '5' },
+              { label: 'Perfil',        icon: makeIcon(ICON_USER),     href: '#' },
+            ],
+          }));
+          inner.appendChild(content);
+
+          const inset = document.createElement('div');
+          inset.className = 'nds-stack nds-flex-1';
+  inset.dataset.spacing = 'xs';
+          const topbar = document.createElement('div');
+          topbar.className = 'nds-cluster nds-border-b nds-px-2';
+  topbar.dataset.spacing = 'sm';
+  topbar.dataset.align = 'center';
+  topbar.style.height = '2.5rem';
+  topbar.style.paddingInline = '0.75rem';
+          topbar.appendChild(createSidebarTrigger(instance.toggle));
+          const lbl = document.createElement('span');
+          lbl.className = 'nds-text-caption nds-text-muted-foreground';
+          lbl.textContent = 'Dashboard';
+          topbar.appendChild(lbl);
+          inset.appendChild(topbar);
+
+          const wrapper = createSidebarProvider();
+          wrapper.appendChild(instance.element);
+          wrapper.appendChild(inset);
+          const container = document.createElement('div');
+          container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+          container.style.minHeight = '260px';
+          container.style.contain = 'layout';
+          container.appendChild(wrapper);
+          return container;
+        }
+
+        function buildWithSubMenu(): HTMLElement {
+          const instance = createSidebar({ defaultOpen: true });
+          const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
+
+          const header = createSidebarHeader();
+          const logoRow = document.createElement('div');
+          logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
+  logoRow.style.color = 'var(--sidebar-foreground)';
+          logoRow.textContent = 'Design System';
+          header.appendChild(logoRow);
+          inner.appendChild(header);
+
+          const content = createSidebarContent();
+          const group = document.createElement('div');
+          group.className = 'nds-stack nds-w-full nds-min-w-0 nds-p-2';
+          group.dataset.spacing = 'xs';
+          group.style.position = 'relative';
+          group.setAttribute('data-sidebar', 'group');
+
+          const groupLabel = document.createElement('div');
+          groupLabel.className = 'nds-cluster nds-shrink-0 nds-rounded-md nds-px-2 nds-text-caption nds-font-medium';
+          groupLabel.dataset.align = 'center';
+          groupLabel.style.height = '2rem';
+          groupLabel.style.color = 'color-mix(in srgb, var(--sidebar-foreground) 70%, transparent)';
+          groupLabel.setAttribute('data-sidebar', 'group-label');
+          groupLabel.textContent = 'Componentes';
+          group.appendChild(groupLabel);
+
+          const menu = document.createElement('ul');
+          menu.className = 'nds-stack nds-w-full nds-min-w-0';
+          menu.dataset.spacing = 'xs';
+          menu.setAttribute('data-sidebar', 'menu');
+
+          menu.appendChild(createSidebarMenuItem({ label: 'Dashboard', icon: makeIcon(ICON_HOME), active: true, href: '#' }));
+
+          const parentLi = document.createElement('li');
+          parentLi.style.position = 'relative';
+          parentLi.setAttribute('data-sidebar', 'menu-item');
+
+          let subOpen = false;
+          const parentBtn = document.createElement('button');
+          parentBtn.type = 'button';
+          parentBtn.className = 'peer/menu-button nds-cluster nds-w-full nds-overflow-hidden nds-rounded-md nds-p-2 nds-text-body [&>svg]:size-4 [&>svg]:shrink-0 [&>span:last-child]:truncate';
+          parentBtn.dataset.spacing = 'sm';
+          parentBtn.dataset.align = 'center';
+          parentBtn.style.textAlign = 'left';
+          parentBtn.style.outline = 'none';
+          parentBtn.style.transition = 'background-color .2s, color .2s';
+          parentBtn.setAttribute('data-sidebar', 'menu-button');
+          parentBtn.setAttribute('aria-expanded', 'false');
+          parentBtn.appendChild(makeIcon(ICON_LAYOUT));
+          const parentLabel = document.createElement('span');
+          parentLabel.textContent = 'Componentes';
+          parentBtn.appendChild(parentLabel);
+
+          const chevron = makeIcon(ICON_CHEVRON, 12);
+          chevron.classList.add('ml-auto', 'transition-transform', 'duration-200');
+          parentBtn.appendChild(chevron);
+
+          const subList = document.createElement('ul');
+          subList.className = 'nds-mt-1 nds-stack';
+          subList.dataset.spacing = 'xs';
+          subList.style.marginLeft = '1rem';
+          subList.style.borderLeft = '1px solid var(--sidebar-border)';
+          subList.style.paddingLeft = '0.75rem';
+          subList.setAttribute('data-sidebar', 'menu-sub');
+          subList.style.display = 'none';
+
+          ['Alert', 'Button', 'Card', 'Dialog'].forEach(name => {
+            const subLi = document.createElement('li');
+            subLi.setAttribute('data-sidebar', 'menu-sub-item');
+            const subBtn = document.createElement('a');
+            subBtn.href = '#';
+            subBtn.className = 'nds-cluster nds-rounded-md nds-px-2 nds-text-caption';
+            subBtn.dataset.spacing = 'sm';
+            subBtn.dataset.align = 'center';
+            subBtn.style.paddingBlock = '0.375rem';
+            subBtn.style.color = 'var(--sidebar-foreground)';
+            subBtn.style.transition = 'background-color .2s, color .2s';
+            subBtn.setAttribute('data-sidebar', 'menu-sub-button');
+            subBtn.textContent = name;
+            subLi.appendChild(subBtn);
+            subList.appendChild(subLi);
+          });
+
+          parentBtn.addEventListener('click', () => {
+            subOpen = !subOpen;
+            subList.style.display = subOpen ? '' : 'none';
+            parentBtn.setAttribute('aria-expanded', subOpen ? 'true' : 'false');
+            chevron.style.transform = subOpen ? 'rotate(180deg)' : '';
+          });
+
+          parentLi.appendChild(parentBtn);
+          parentLi.appendChild(subList);
+          menu.appendChild(parentLi);
+          menu.appendChild(createSidebarMenuItem({ label: 'Tokens', icon: makeIcon(ICON_TOKENS), href: '#' }));
+
+          group.appendChild(menu);
+          content.appendChild(group);
+          inner.appendChild(content);
+
+          const footer = createSidebarFooter();
+          footer.appendChild(createSidebarMenuItem({ label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' }));
+          inner.appendChild(footer);
+
+          const inset = document.createElement('div');
+          inset.className = 'nds-stack nds-flex-1';
+  inset.dataset.spacing = 'xs';
+          const topbar = document.createElement('div');
+          topbar.className = 'nds-cluster nds-border-b nds-px-2';
+  topbar.dataset.spacing = 'sm';
+  topbar.dataset.align = 'center';
+  topbar.style.height = '2.5rem';
+  topbar.style.paddingInline = '0.75rem';
+          topbar.appendChild(createSidebarTrigger(instance.toggle));
+          const lbl = document.createElement('span');
+          lbl.className = 'nds-text-caption nds-text-muted-foreground';
+          lbl.textContent = 'Clique em "Componentes"';
+          topbar.appendChild(lbl);
+          inset.appendChild(topbar);
+
+          const wrapper = createSidebarProvider();
+          wrapper.appendChild(instance.element);
+          wrapper.appendChild(inset);
+          const container = document.createElement('div');
+          container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+          container.style.minHeight = '260px';
+          container.style.contain = 'layout';
+          container.appendChild(wrapper);
+          return container;
+        }
+
+        function buildWithSearch(): HTMLElement {
+          const instance = createSidebar({ defaultOpen: true });
+          const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
+
+          const header = createSidebarHeader();
+          const logoRow = document.createElement('div');
+          logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
+  logoRow.style.color = 'var(--sidebar-foreground)';
+          logoRow.textContent = 'Design System';
+          header.appendChild(logoRow);
+
+          const searchWrapper = document.createElement('div');
+          searchWrapper.style.position = 'relative';
+          searchWrapper.style.paddingInline = 'var(--spacing-1)';
+          searchWrapper.style.paddingBottom = 'var(--spacing-1)';
+          searchWrapper.setAttribute('data-sidebar', 'input');
+          const searchIcon = makeIcon(ICON_SEARCH, 14);
+          searchIcon.classList.add('absolute', 'left-3', 'top-1/2', '-translate-y-1/2', 'nds-text-muted-foreground', 'pointer-events-none');
+          const searchInput = document.createElement('input');
+          searchInput.type = 'search';
+          searchInput.placeholder = 'Buscar...';
+          searchInput.setAttribute('aria-label', 'Buscar navegação');
+          searchInput.className = 'nds-w-full nds-rounded-md nds-px-2 nds-text-caption';
+          searchInput.style.border = '1px solid var(--sidebar-border)';
+          searchInput.style.background = 'var(--sidebar)';
+          searchInput.style.paddingBlock = '0.375rem';
+          searchInput.style.paddingLeft = '2rem';
+          searchInput.style.color = 'var(--sidebar-foreground)';
+          searchWrapper.appendChild(searchIcon);
+          searchWrapper.appendChild(searchInput);
+          header.appendChild(searchWrapper);
+
+          inner.appendChild(header);
+
+          const content = createSidebarContent();
+          content.appendChild(createSidebarGroup({
+            label: 'Navegação',
+            items: [
+              { label: 'Dashboard',     icon: makeIcon(ICON_HOME),     active: true, href: '#' },
+              { label: 'Componentes',   icon: makeIcon(ICON_LAYOUT),   href: '#' },
+              { label: 'Tokens',        icon: makeIcon(ICON_TOKENS),   href: '#' },
+              { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
+            ],
+          }));
+          inner.appendChild(content);
+
+          const inset = document.createElement('div');
+          inset.className = 'nds-stack nds-flex-1';
+  inset.dataset.spacing = 'xs';
+          const topbar = document.createElement('div');
+          topbar.className = 'nds-cluster nds-border-b nds-px-2';
+  topbar.dataset.spacing = 'sm';
+  topbar.dataset.align = 'center';
+  topbar.style.height = '2.5rem';
+  topbar.style.paddingInline = '0.75rem';
+          topbar.appendChild(createSidebarTrigger(instance.toggle));
+          const lbl = document.createElement('span');
+          lbl.className = 'nds-text-caption nds-text-muted-foreground';
+          lbl.textContent = 'Busca no header';
+          topbar.appendChild(lbl);
+          inset.appendChild(topbar);
+
+          const wrapper = createSidebarProvider();
+          wrapper.appendChild(instance.element);
+          wrapper.appendChild(inset);
+          const container = document.createElement('div');
+          container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+          container.style.minHeight = '260px';
+          container.style.contain = 'layout';
+          container.appendChild(wrapper);
+          return container;
+        }
+
+        function buildWithBadges(): HTMLElement {
+          const instance = createSidebar({ defaultOpen: true });
+          const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
+
+          const header = createSidebarHeader();
+          const logoRow = document.createElement('div');
+          logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
+  logoRow.style.color = 'var(--sidebar-foreground)';
+          logoRow.textContent = 'App';
+          header.appendChild(logoRow);
+          inner.appendChild(header);
+
+          const content = createSidebarContent();
+          content.appendChild(createSidebarGroup({
+            items: [
+              { label: 'Dashboard',     icon: makeIcon(ICON_HOME),     active: true, href: '#' },
+              { label: 'Notificações',  icon: makeIcon(ICON_BELL),     href: '#', badge: '12' },
+              { label: 'Componentes',   icon: makeIcon(ICON_LAYOUT),   href: '#', badge: '3'  },
+              { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
+            ],
+          }));
+          inner.appendChild(content);
+
+          const inset = document.createElement('div');
+          inset.className = 'nds-stack nds-flex-1';
+  inset.dataset.spacing = 'xs';
+          const topbar = document.createElement('div');
+          topbar.className = 'nds-cluster nds-border-b nds-px-2';
+  topbar.dataset.spacing = 'sm';
+  topbar.dataset.align = 'center';
+  topbar.style.height = '2.5rem';
+  topbar.style.paddingInline = '0.75rem';
+          topbar.appendChild(createSidebarTrigger(instance.toggle));
+          const lbl = document.createElement('span');
+          lbl.className = 'nds-text-caption nds-text-muted-foreground';
+          lbl.textContent = 'Inbox';
+          topbar.appendChild(lbl);
+          inset.appendChild(topbar);
+
+          const wrapper = createSidebarProvider();
+          wrapper.appendChild(instance.element);
+          wrapper.appendChild(inset);
+          const container = document.createElement('div');
+          container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+          container.style.minHeight = '260px';
+          container.style.contain = 'layout';
+          container.appendChild(wrapper);
+          return container;
+        }
+
+        const codeWithGroups = [
+          `const instance = createSidebar({ defaultOpen: true });`,
+          `const inner = instance.element.querySelector('[data-sidebar=\"sidebar\"]')!;`,
+          ``,
+          `const content = createSidebarContent();`,
+          `content.appendChild(createSidebarGroup({`,
+          `  label: 'Principal',`,
+          `  items: [`,
+          `    { label: 'Dashboard',   icon: makeIcon(ICON_HOME),     active: true, href: '#' },`,
+          `    { label: 'Componentes', icon: makeIcon(ICON_LAYOUT),   href: '#' },`,
+          `    { label: 'Tokens',      icon: makeIcon(ICON_TOKENS),   href: '#' },`,
+          `  ],`,
+          `}));`,
+          `content.appendChild(createSidebarSeparator());`,
+          `content.appendChild(createSidebarGroup({`,
+          `  label: 'Conta',`,
+          `  items: [`,
+          `    { label: 'Notificações', icon: makeIcon(ICON_BELL),    href: '#', badge: '5' },`,
+          `  ],`,
+          `}));`,
+          `inner.appendChild(content);`,
+        ].join('\n');
+
+        const codeWithSubMenu = [
+          `// SidebarMenuSub manual: <ul data-sidebar="menu-sub"> aninhada num <li>`,
+          `let open = false;`,
+          `const parentBtn = document.createElement('button');`,
+          `parentBtn.setAttribute('data-sidebar', 'menu-button');`,
+          `parentBtn.setAttribute('aria-expanded', 'false');`,
+          `// ... ícone + label + chevron`,
+          ``,
+          `const subList = document.createElement('ul');`,
+          `subList.setAttribute('data-sidebar', 'menu-sub');`,
+          `subList.style.display = 'none';`,
+          ``,
+          `parentBtn.addEventListener('click', () => {`,
+          `  open = !open;`,
+          `  subList.style.display = open ? '' : 'none';`,
+          `  parentBtn.setAttribute('aria-expanded', String(open));`,
+          `});`,
+        ].join('\n');
+
+        const codeWithSearch = [
+          `const searchWrapper = document.createElement('div');`,
+          `searchWrapper.setAttribute('data-sidebar', 'input');`,
+          `searchWrapper.className = 'relative nds-px-1 nds-pb-1';`,
+          ``,
+          `const icon = makeIcon(ICON_SEARCH, 14);`,
+          `icon.classList.add('absolute', 'left-3', 'top-1/2', '-translate-y-1/2', 'nds-text-muted-foreground');`,
+          ``,
+          `const input = document.createElement('input');`,
+          `input.type = 'search';`,
+          `input.placeholder = 'Buscar...';`,
+          `input.setAttribute('aria-label', 'Buscar navegação');`,
+          `input.className = 'nds-w-full nds-rounded-md nds-px-2 nds-text-caption';\ninput.style.border = '1px solid var(--sidebar-border)';\ninput.style.background = 'var(--sidebar)';`,
+          ``,
+          `searchWrapper.append(icon, input);`,
+          `header.appendChild(searchWrapper);`,
+        ].join('\n');
+
+        const codeWithBadges = [
+          `content.appendChild(createSidebarGroup({`,
+          `  items: [`,
+          `    { label: 'Dashboard',    icon: makeIcon(ICON_HOME),   active: true, href: '#' },`,
+          `    { label: 'Notificações', icon: makeIcon(ICON_BELL),   href: '#', badge: '12' },`,
+          `    { label: 'Componentes',  icon: makeIcon(ICON_LAYOUT), href: '#', badge: '3'  },`,
+          `  ],`,
+          `}));`,
+        ].join('\n');
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'sidebar',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.withGroups.name')),
+              description: stripHtml(t('variants.compositions.withGroups.description')),
+              useWhen: stripHtml(t('variants.compositions.withGroups.use')),
+              code: codeWithGroups,
+              previewFactory: buildWithGroups,
+            },
+            {
+              name: stripHtml(t('variants.compositions.withSubMenu.name')),
+              description: stripHtml(t('variants.compositions.withSubMenu.description')),
+              useWhen: stripHtml(t('variants.compositions.withSubMenu.use')),
+              code: codeWithSubMenu,
+              previewFactory: buildWithSubMenu,
+            },
+            {
+              name: stripHtml(t('variants.compositions.withSearch.name')),
+              description: stripHtml(t('variants.compositions.withSearch.description')),
+              useWhen: stripHtml(t('variants.compositions.withSearch.use')),
+              code: codeWithSearch,
+              previewFactory: buildWithSearch,
+            },
+            {
+              name: stripHtml(t('variants.compositions.withBadges.name')),
+              description: stripHtml(t('variants.compositions.withBadges.description')),
+              useWhen: stripHtml(t('variants.compositions.withBadges.use')),
+              code: codeWithBadges,
+              previewFactory: buildWithBadges,
             },
           ],
         });

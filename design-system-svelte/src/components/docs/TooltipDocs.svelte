@@ -6,7 +6,7 @@
     TooltipProvider,
   } from '@/components/ui/tooltip';
   import { Button } from '@/components/ui/button';
-  import { Save, Trash2, Share2 } from 'lucide-svelte';
+  import { Save, Trash2, Share2, HelpCircle, Info } from 'lucide-svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -15,7 +15,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -67,6 +67,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -487,6 +488,208 @@ interface TooltipTriggerProps {
           Compartilhe o link público desta página com qualquer pessoa.
         </TooltipContent>
       </Tooltip>
+    </TooltipProvider>
+  {/snippet}
+
+  <!-- ── Composições ─────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="tooltip"
+    items={[
+      {
+        name: $tStore('variants.compositions.iconButtonWithShortcut.name'),
+        description: $tStore('variants.compositions.iconButtonWithShortcut.description'),
+        useWhen: $tStore('variants.compositions.iconButtonWithShortcut.use'),
+        code: `<Tooltip>
+  <TooltipTrigger>
+    {#snippet child({ props })}
+      <Button variant="ghost" size="icon" aria-label="Salvar" {...props}>
+        <Save aria-hidden="true" />
+      </Button>
+    {/snippet}
+  </TooltipTrigger>
+  <TooltipContent>
+    Salvar <kbd>Ctrl</kbd><kbd>S</kbd>
+  </TooltipContent>
+</Tooltip>`,
+        preview: compIconShortcut,
+      },
+      {
+        name: $tStore('variants.compositions.formFieldHelp.name'),
+        description: $tStore('variants.compositions.formFieldHelp.description'),
+        useWhen: $tStore('variants.compositions.formFieldHelp.use'),
+        code: `<div class="flex flex-col gap-2">
+  <div class="flex items-center gap-2">
+    <label for="api-token" class="text-sm font-medium">Token de API</label>
+    <Tooltip>
+      <TooltipTrigger>
+        {#snippet child({ props })}
+          <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API" {...props}>
+            <HelpCircle aria-hidden="true" />
+          </Button>
+        {/snippet}
+      </TooltipTrigger>
+      <TooltipContent side="right" class="max-w-xs">
+        Cole o token gerado em Configurações &gt; Integrações.
+      </TooltipContent>
+    </Tooltip>
+  </div>
+  <input id="api-token" type="text" class="input w-64" placeholder="sk-..." />
+</div>`,
+        preview: compFormHelp,
+      },
+      {
+        name: $tStore('variants.compositions.metricDescription.name'),
+        description: $tStore('variants.compositions.metricDescription.description'),
+        useWhen: $tStore('variants.compositions.metricDescription.use'),
+        code: `<div class="flex flex-col gap-1">
+  <div class="flex items-center gap-2">
+    <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+    <Tooltip>
+      <TooltipTrigger>
+        {#snippet child({ props })}
+          <Button variant="ghost" size="icon" aria-label="O que é LCP" {...props}>
+            <Info aria-hidden="true" />
+          </Button>
+        {/snippet}
+      </TooltipTrigger>
+      <TooltipContent side="top" class="max-w-xs">
+        Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
+      </TooltipContent>
+    </Tooltip>
+  </div>
+  <p class="text-2xl font-semibold">1.8s</p>
+</div>`,
+        preview: compMetric,
+      },
+      {
+        name: $tStore('variants.compositions.positioningSides.name'),
+        description: $tStore('variants.compositions.positioningSides.description'),
+        useWhen: $tStore('variants.compositions.positioningSides.use'),
+        code: `<div class="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center">
+  {#each ['top','right','bottom','left'] as s}
+    <Tooltip>
+      <TooltipTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{s}</Button>
+        {/snippet}
+      </TooltipTrigger>
+      <TooltipContent side={s}>Tooltip {s}</TooltipContent>
+    </Tooltip>
+  {/each}
+</div>`,
+        preview: compSides,
+      },
+    ]}
+  />
+
+  {#snippet compIconShortcut()}
+    <TooltipProvider delayDuration={0}>
+      <Tooltip defaultOpen>
+        <TooltipTrigger>
+          {#snippet child({ props })}
+            <Button variant="ghost" size="icon" aria-label="Salvar" {...props}>
+              <Save aria-hidden="true" class="size-4" />
+            </Button>
+          {/snippet}
+        </TooltipTrigger>
+        <TooltipContent>
+          <span>Salvar</span>
+          <kbd data-slot="kbd" class="bg-background/15 text-background ml-1 inline-flex h-4 items-center rounded px-1 text-[10px] font-medium">Ctrl</kbd>
+          <kbd data-slot="kbd" class="bg-background/15 text-background inline-flex h-4 items-center rounded px-1 text-[10px] font-medium">S</kbd>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  {/snippet}
+
+  {#snippet compFormHelp()}
+    <TooltipProvider delayDuration={0}>
+      <div class="flex flex-col gap-2 items-start">
+        <div class="flex items-center gap-2">
+          <label for="api-token-svelte-comp" class="text-sm font-medium">Token de API</label>
+          <Tooltip>
+            <TooltipTrigger>
+              {#snippet child({ props })}
+                <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API" {...props}>
+                  <HelpCircle aria-hidden="true" class="size-4" />
+                </Button>
+              {/snippet}
+            </TooltipTrigger>
+            <TooltipContent side="right" class="max-w-xs">
+              Cole o token gerado em Configurações &gt; Integrações.
+            </TooltipContent>
+          </Tooltip>
+        </div>
+        <input
+          id="api-token-svelte-comp"
+          type="text"
+          class="h-9 w-64 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+          placeholder="sk-..."
+        />
+      </div>
+    </TooltipProvider>
+  {/snippet}
+
+  {#snippet compMetric()}
+    <TooltipProvider delayDuration={0}>
+      <div class="flex flex-col gap-1 items-start">
+        <div class="flex items-center gap-2">
+          <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+          <Tooltip>
+            <TooltipTrigger>
+              {#snippet child({ props })}
+                <Button variant="ghost" size="icon" aria-label="O que é LCP" {...props}>
+                  <Info aria-hidden="true" class="size-4" />
+                </Button>
+              {/snippet}
+            </TooltipTrigger>
+            <TooltipContent side="top" class="max-w-xs">
+              Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
+            </TooltipContent>
+          </Tooltip>
+        </div>
+        <p class="text-2xl font-semibold">1.8s</p>
+      </div>
+    </TooltipProvider>
+  {/snippet}
+
+  {#snippet compSides()}
+    <TooltipProvider delayDuration={0}>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center w-full" style="contain: layout; min-height: 160px;">
+        <Tooltip>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" {...props}>Top</Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent side="top">Tooltip top</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" {...props}>Right</Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent side="right">Tooltip right</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" {...props}>Bottom</Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Tooltip bottom</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" {...props}>Left</Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent side="left">Tooltip left</TooltipContent>
+        </Tooltip>
+      </div>
     </TooltipProvider>
   {/snippet}
 

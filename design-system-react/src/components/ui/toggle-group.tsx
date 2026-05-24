@@ -28,10 +28,14 @@ function ToggleGroup({
   orientation = "horizontal",
   children,
   ...props
-}: ToggleGroupPrimitive.Props &
+}: Omit<ToggleGroupPrimitive.Props, "value" | "defaultValue" | "onValueChange"> &
   VariantProps<typeof toggleVariants> & {
     spacing?: number
     orientation?: "horizontal" | "vertical"
+    type?: "single" | "multiple"
+    value?: string | readonly string[]
+    defaultValue?: string | readonly string[]
+    onValueChange?: ((value: string) => void) | ((value: string[]) => void)
   }) {
   return (
     <ToggleGroupPrimitive
@@ -46,7 +50,7 @@ function ToggleGroup({
         "group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] rounded-(--radius-button) data-vertical:flex-col data-vertical:items-stretch",
         className
       )}
-      {...props}
+      {...(props as ToggleGroupPrimitive.Props)}
     >
       <ToggleGroupContext.Provider
         value={{ variant, size, spacing, orientation }}

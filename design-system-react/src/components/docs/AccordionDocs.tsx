@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
+import { Info, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -12,6 +13,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 
 import { DocsHeader }        from "@/components/docs/shared/sections/DocsHeader";
 import { DocsPageLayout }    from "@/components/docs/shared/sections/DocsPageLayout";
@@ -21,6 +23,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -55,6 +58,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "modos",        label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -90,7 +94,7 @@ export function AccordionDocs() {
       es: "Permite múltiples ítems abiertos simultáneamente.",
     } as const;
     const requiredLabel = locale === "pt-BR" ? "Não" : "No";
-    const original = (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>>)[locale]?.props?.accordion?.items ?? {};
+    const original = (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>>)[locale]?.props?.accordion?.items ?? {};
     return Object.entries(original).map(([key, v]) => {
       if (key === "type") {
         return {
@@ -465,6 +469,229 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             ]}
           />
 
+          {/* ── Composições ───────────────────────────────────────────── */}
+          <DocsCompositions
+            title={tContent("variants.compositionsTitle")}
+            useWhenLabel={tNav("common.useWhen")}
+            componentSlug="accordion"
+            items={[
+              {
+                name: tContent("variants.compositions.iconTrigger.name"),
+                description: tContent("variants.compositions.iconTrigger.description"),
+                useWhen: tContent("variants.compositions.iconTrigger.use"),
+                code: `<Accordion type="single" collapsible className="w-full max-w-lg">
+  <AccordionItem value="info">
+    <AccordionTrigger>
+      <span className="flex items-center gap-2">
+        <Info aria-hidden="true" className="h-4 w-4" />
+        Informação
+      </span>
+    </AccordionTrigger>
+    <AccordionContent>Ícones facilitam a identificação rápida do tipo de conteúdo.</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="warning">
+    <AccordionTrigger>
+      <span className="flex items-center gap-2">
+        <AlertTriangle aria-hidden="true" className="h-4 w-4" />
+        Aviso
+      </span>
+    </AccordionTrigger>
+    <AccordionContent>Sinalize categorias distintas com ícones semânticos.</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="success">
+    <AccordionTrigger>
+      <span className="flex items-center gap-2">
+        <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+        Confirmação
+      </span>
+    </AccordionTrigger>
+    <AccordionContent>Use ícones consistentes entre itens do mesmo accordion.</AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+                preview: (
+                  <Accordion className="w-full max-w-lg">
+                    <AccordionItem value="info">
+                      <AccordionTrigger>
+                        <span className="flex items-center gap-2">
+                          <Info aria-hidden="true" className="h-4 w-4" />
+                          Informação
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>Ícones facilitam a identificação rápida do tipo de conteúdo.</AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="warning">
+                      <AccordionTrigger>
+                        <span className="flex items-center gap-2">
+                          <AlertTriangle aria-hidden="true" className="h-4 w-4" />
+                          Aviso
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>Sinalize categorias distintas com ícones semânticos.</AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="success">
+                      <AccordionTrigger>
+                        <span className="flex items-center gap-2">
+                          <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+                          Confirmação
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>Use ícones consistentes entre itens do mesmo accordion.</AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.badgeTrigger.name"),
+                description: tContent("variants.compositions.badgeTrigger.description"),
+                useWhen: tContent("variants.compositions.badgeTrigger.use"),
+                code: `<Accordion type="single" collapsible className="w-full max-w-lg">
+  <AccordionItem value="novo">
+    <AccordionTrigger>
+      <span className="flex items-center gap-2">
+        Novidades da versão 3.0
+        <Badge variant="default" className="text-[10px] h-4">Novo</Badge>
+      </span>
+    </AccordionTrigger>
+    <AccordionContent>Confira o que mudou nesta release.</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="beta">
+    <AccordionTrigger>
+      <span className="flex items-center gap-2">
+        Funcionalidades em beta
+        <Badge variant="secondary" className="text-[10px] h-4">Beta</Badge>
+      </span>
+    </AccordionTrigger>
+    <AccordionContent>Recursos em testes — sujeitos a mudanças.</AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+                preview: (
+                  <Accordion className="w-full max-w-lg">
+                    <AccordionItem value="novo">
+                      <AccordionTrigger>
+                        <span className="flex items-center gap-2">
+                          Novidades da versão 3.0
+                          <Badge variant="default" className="text-[10px] h-4">Novo</Badge>
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>Confira o que mudou nesta release.</AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="beta">
+                      <AccordionTrigger>
+                        <span className="flex items-center gap-2">
+                          Funcionalidades em beta
+                          <Badge variant="secondary" className="text-[10px] h-4">Beta</Badge>
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>Recursos em testes — sujeitos a mudanças.</AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.richContent.name"),
+                description: tContent("variants.compositions.richContent.description"),
+                useWhen: tContent("variants.compositions.richContent.use"),
+                code: `<Accordion type="multiple" className="w-full max-w-lg">
+  <AccordionItem value="layout">
+    <AccordionTrigger>Layout e Espaçamento</AccordionTrigger>
+    <AccordionContent>
+      <div className="grid grid-cols-2 gap-2 text-sm">
+        <div className="font-medium">Propriedade</div>
+        <div className="font-medium">Valor</div>
+        <div>Gutter</div><div>24px</div>
+        <div>Margem mobile</div><div>16px</div>
+        <div>Colunas</div><div>12</div>
+      </div>
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="tipografia">
+    <AccordionTrigger>Tipografia</AccordionTrigger>
+    <AccordionContent>
+      <ul className="list-disc pl-5 text-sm space-y-1">
+        <li>text-xs — 12px</li>
+        <li>text-sm — 14px</li>
+        <li>text-base — 16px</li>
+      </ul>
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+                preview: (
+                  <Accordion multiple className="w-full max-w-lg">
+                    <AccordionItem value="layout">
+                      <AccordionTrigger>Layout e Espaçamento</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div className="font-medium">Propriedade</div>
+                          <div className="font-medium">Valor</div>
+                          <div>Gutter</div><div>24px</div>
+                          <div>Margem mobile</div><div>16px</div>
+                          <div>Colunas</div><div>12</div>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="tipografia">
+                      <AccordionTrigger>Tipografia</AccordionTrigger>
+                      <AccordionContent>
+                        <ul className="list-disc pl-5 text-sm space-y-1">
+                          <li>text-xs — 12px</li>
+                          <li>text-sm — 14px</li>
+                          <li>text-base — 16px</li>
+                        </ul>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.faq.name"),
+                description: tContent("variants.compositions.faq.description"),
+                useWhen: tContent("variants.compositions.faq.use"),
+                code: `<h2 className="text-base font-semibold">Perguntas frequentes</h2>
+<Accordion type="single" collapsible className="w-full max-w-lg">
+  <AccordionItem value="senha">
+    <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
+    <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="pagamento">
+    <AccordionTrigger>Quais formas de pagamento são aceitas?</AccordionTrigger>
+    <AccordionContent>Cartão de crédito, Pix e boleto bancário.</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="cancelamento">
+    <AccordionTrigger>Como cancelar minha assinatura?</AccordionTrigger>
+    <AccordionContent>Acesse Configurações > Assinatura > Cancelar.</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="dados">
+    <AccordionTrigger>Como excluir meus dados?</AccordionTrigger>
+    <AccordionContent>Envie uma solicitação para privacidade@empresa.com.</AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+                preview: (
+                  <div className="space-y-3 w-full max-w-lg">
+                    <h2 className="text-base font-semibold">Perguntas frequentes</h2>
+                    <Accordion className="w-full max-w-lg">
+                      <AccordionItem value="senha">
+                        <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
+                        <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="pagamento">
+                        <AccordionTrigger>Quais formas de pagamento são aceitas?</AccordionTrigger>
+                        <AccordionContent>Cartão de crédito, Pix e boleto bancário.</AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="cancelamento">
+                        <AccordionTrigger>Como cancelar minha assinatura?</AccordionTrigger>
+                        <AccordionContent>Acesse Configurações &gt; Assinatura &gt; Cancelar.</AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="dados">
+                        <AccordionTrigger>Como excluir meus dados?</AccordionTrigger>
+                        <AccordionContent>Envie uma solicitação para privacidade@empresa.com.</AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </div>
+                ),
+              },
+            ]}
+          />
+
           {/* ── Estados ───────────────────────────────────────────────── */}
           <DocsStates
             title={tContent("states.title")}
@@ -522,7 +749,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   description: tContent("props.accordion.description"),
                 },
                 items: Object.entries(
-                  (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[locale]?.props?.item?.items ?? {}
+                  (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>>)[locale]?.props?.item?.items ?? {}
                 ).map(([, v]) => ({
                   name: v.name,
                   type: v.type,
@@ -541,7 +768,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   description: tContent("props.accordion.description"),
                 },
                 items: Object.entries(
-                  (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[locale]?.props?.trigger?.items ?? {}
+                  (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>>)[locale]?.props?.trigger?.items ?? {}
                 ).map(([, v]) => ({
                   name: v.name,
                   type: v.type,
@@ -560,7 +787,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   description: tContent("props.accordion.description"),
                 },
                 items: Object.entries(
-                  (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[locale]?.props?.content?.items ?? {}
+                  (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>>)[locale]?.props?.content?.items ?? {}
                 ).map(([, v]) => ({
                   name: v.name,
                   type: v.type,
@@ -584,7 +811,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
               description: tContent("tokens.table.part"),
             }}
             items={Object.entries(
-              (accordionTranslations as Record<string, Record<string, Record<string, Record<string, { token: string; class: string; part: string }>>>>)[locale]?.tokens?.items ?? {}
+              (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, { token: string; class: string; part: string }>>>>)[locale]?.tokens?.items ?? {}
             ).map(([, v]) => ({
               token: v.token,
               value: v.class,

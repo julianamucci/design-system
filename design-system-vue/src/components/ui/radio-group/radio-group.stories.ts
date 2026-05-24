@@ -43,7 +43,7 @@ const meta = {
     disabled: false,
     orientation: 'vertical',
   },
-} satisfies Meta<typeof RadioGroup>;
+} satisfies Meta<any>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

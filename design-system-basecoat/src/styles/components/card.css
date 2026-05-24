@@ -1,0 +1,134 @@
+/*
+ * ─── nds-card ────────────────────────────────────────────────────────────────
+ * Container standalone — zero dependência de Tailwind ou basecoat-css.
+ *
+ * Estrutura (todos opcionais):
+ *   <div class="nds-card" data-size="default|sm">
+ *     <div class="nds-card-header">
+ *       <h3 class="nds-card-title">Título</h3>
+ *       <div class="nds-card-description">Descrição</div>
+ *       <div class="nds-card-action"><Button /></div>
+ *     </div>
+ *     <div class="nds-card-content">Conteúdo</div>
+ *     <div class="nds-card-footer">Rodapé</div>
+ *   </div>
+ *
+ * Comportamentos:
+ *   - Footer presente: card-content perde padding-bottom (footer cola na base)
+ *   - Imagem como primeiro filho: card perde padding-top
+ *   - Imagem com classes nds-card-img-first/last: cantos arredondados conforme posição
+ *   - data-size="sm": gap/padding reduzidos
+ *
+ * Tokens: --card, --card-foreground, --foreground, --muted, --border,
+ *         --radius-card, --spacing-*
+ */
+
+.nds-card {
+  --card-bg: hsl(var(--card));
+  --card-fg: hsl(var(--card-foreground));
+  --card-ring: hsl(var(--foreground) / 0.1);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);                        /* 16px */
+  overflow: hidden;
+
+  border-radius: var(--radius-card, 0.625rem);
+  background-color: var(--card-bg);
+  color: var(--card-fg);
+  box-shadow: 0 0 0 1px var(--card-ring);
+
+  padding-block: var(--spacing-4);              /* 16px top/bottom */
+  font-size: 0.875rem;                          /* 14px */
+}
+
+/* Tamanho sm */
+.nds-card[data-size="sm"] {
+  gap: var(--spacing-2);                        /* 8px */
+  padding-block: var(--spacing-2);
+}
+
+/* Imagem como primeiro filho — perde padding-top do card */
+.nds-card:has(> img:first-child) { padding-top: 0; }
+
+/* Imagens com cantos arredondados conforme posição */
+.nds-card > img:first-child,
+.nds-card .nds-card-img-first {
+  border-top-left-radius: var(--radius-card, 0.625rem);
+  border-top-right-radius: var(--radius-card, 0.625rem);
+}
+.nds-card > img:last-child,
+.nds-card .nds-card-img-last {
+  border-bottom-left-radius: var(--radius-card, 0.625rem);
+  border-bottom-right-radius: var(--radius-card, 0.625rem);
+}
+
+/* Footer presente → zera padding-bottom do card (footer encosta na base) */
+.nds-card:has(> .nds-card-footer) { padding-bottom: 0; }
+
+/* ── Header ────────────────────────────────────────────────────────────────── */
+.nds-card-header {
+  display: grid;
+  grid-auto-rows: min-content;
+  align-items: start;
+  gap: var(--spacing-1);                        /* 4px */
+  padding-inline: var(--spacing-4);             /* 16px */
+}
+.nds-card[data-size="sm"] .nds-card-header {
+  padding-inline: var(--spacing-2);
+}
+
+/* Header com action → grid 2 colunas (texto / action) */
+.nds-card-header:has(> .nds-card-action) {
+  grid-template-columns: 1fr auto;
+}
+.nds-card-header:has(> .nds-card-description) {
+  grid-template-rows: auto auto;
+}
+
+/* ── Title ─────────────────────────────────────────────────────────────────── */
+.nds-card-title {
+  margin: 0;
+  font-size: 1rem;                              /* 16px */
+  line-height: 1.4;
+  font-weight: var(--font-weight-medium, 500);
+}
+.nds-card[data-size="sm"] .nds-card-title {
+  font-size: 0.875rem;                          /* 14px */
+}
+
+/* ── Description ───────────────────────────────────────────────────────────── */
+.nds-card-description {
+  font-size: 0.875rem;                          /* 14px */
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Action ────────────────────────────────────────────────────────────────── */
+.nds-card-action {
+  grid-column-start: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
+  justify-self: end;
+}
+
+/* ── Content ───────────────────────────────────────────────────────────────── */
+.nds-card-content {
+  padding-inline: var(--spacing-4);
+}
+.nds-card[data-size="sm"] .nds-card-content {
+  padding-inline: var(--spacing-2);
+}
+
+/* ── Footer ────────────────────────────────────────────────────────────────── */
+.nds-card-footer {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid hsl(var(--border));
+  background-color: hsl(var(--muted) / 0.5);
+  padding: var(--spacing-4);                    /* 16px */
+  border-bottom-left-radius: var(--radius-card, 0.625rem);
+  border-bottom-right-radius: var(--radius-card, 0.625rem);
+}
+.nds-card[data-size="sm"] .nds-card-footer {
+  padding: var(--spacing-2);
+}

@@ -1,0 +1,95 @@
+/*
+ * ─── nds-slider ─────────────────────────────────────────────────────────────
+ * Controle deslizante (input range estilizado). O <input type="range"> nativo
+ * fica invisível sobreposto à track visual, capturando toda a interação.
+ *
+ *   <div class="nds-slider">
+ *     <div class="nds-slider-track">
+ *       <div class="nds-slider-range" style="width: 40%"></div>
+ *       <span class="nds-slider-thumb" style="left: calc(40% - 0.5rem)"></span>
+ *       <input type="range" />
+ *     </div>
+ *   </div>
+ *
+ * Tokens: --primary (range fill), --primary/0.2 (track), --primary/0.5 (thumb border),
+ *         --background (thumb bg), --ring (focus), --spacing-*
+ */
+
+.nds-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+
+/* ── Track (barra cinza) ─────────────────────────────────────────────────── */
+.nds-slider-track {
+  position: relative;
+  flex-grow: 1;
+  height: 0.375rem;                               /* 6px — h-1.5 */
+  width: 100%;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: hsl(var(--primary) / 0.2);
+}
+
+/* ── Range (barra preenchida) ────────────────────────────────────────────── */
+.nds-slider-range {
+  position: absolute;
+  height: 100%;
+  background-color: hsl(var(--primary));
+  border-radius: 9999px;
+}
+
+/* ── Thumb (alça arrastável) ─────────────────────────────────────────────── */
+.nds-slider-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: block;
+  width: var(--spacing-4);                        /* 16px */
+  height: var(--spacing-4);
+
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--primary) / 0.5);
+  border-radius: 9999px;
+  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.1);
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+/* Focus visual: aplicado quando o native input está focado */
+.nds-slider:has(input:focus-visible) .nds-slider-thumb {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
+}
+
+/* Disabled */
+.nds-slider:has(input:disabled) {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ── Native input — invisível, sobreposto à track ────────────────────────── */
+.nds-slider > .nds-slider-track > input[type="range"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.nds-slider > .nds-slider-track > input[type="range"]:disabled {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-slider-thumb {
+    transition: none;
+  }
+}

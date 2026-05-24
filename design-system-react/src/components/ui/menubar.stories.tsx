@@ -19,7 +19,7 @@ type PlaygroundArgs = {
 
 const meta = {
   title: "UI/Menubar",
-  component: Menubar,
+  component: Menubar as never,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",

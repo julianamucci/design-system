@@ -119,6 +119,29 @@
         "default": "Switch padrão — <code>32×18.4px</code>, Label à direita.",
         "withDescription": "Switch com Label + descrição auxiliar — layout <code>flex justify-between</code> em painel.",
         "sm": "Tamanho compacto — <code>size=\"sm\"</code>, <code>24×14px</code>."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withLabel": {
+          "name": "Com label",
+          "description": "Switch + Label inline (gap pequeno). Associação obrigatória via <code>id</code>/<code>htmlFor</code>. Label descreve o estado ATIVO da função (\"Receber notificações\", não \"Notificações\").",
+          "use": "Toda configuração isolada (notificações, lembrar usuário, modo escuro). Nunca use Switch sem label visível."
+        },
+        "withDescription": {
+          "name": "Com descrição (painel)",
+          "description": "Switch em painel bordado com layout <code>flex justify-between</code> — Label + descrição auxiliar à esquerda, Switch à direita. Padrão para configurações com efeito explicado.",
+          "use": "Configurações importantes que merecem contexto (\"emails de marketing\", \"sincronização em segundo plano\")."
+        },
+        "settingsList": {
+          "name": "Lista de configurações",
+          "description": "Múltiplos Switches empilhados em painéis idênticos. Cada item tem Label, descrição auxiliar e Switch alinhado à direita.",
+          "use": "Tela de preferências do usuário — notificações, privacidade, opt-ins. Mantenha consistência visual entre os painéis."
+        },
+        "inForm": {
+          "name": "Em formulário",
+          "description": "Switch dentro de um <code>&lt;form&gt;</code> com prop <code>name</code> (React/Vue/Svelte) ou sincronizado via <code>&lt;input type=\"hidden\"&gt;</code> (Basecoat) para participar do submit nativo.",
+          "use": "Aceite de termos opcionais, opt-in de newsletter em formulários multi-campo. Use o <code>onCheckedChange</code> para sincronizar o valor."
+        }
       }
     },
     "states": {
@@ -442,6 +465,29 @@
         "default": "Default switch — <code>32×18.4px</code>, Label on the right.",
         "withDescription": "Switch with Label + helper description — <code>flex justify-between</code> layout in panel.",
         "sm": "Compact size — <code>size=\"sm\"</code>, <code>24×14px</code>."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withLabel": {
+          "name": "With label",
+          "description": "Switch + inline Label (small gap). Required association via <code>id</code>/<code>htmlFor</code>. The label describes the ACTIVE state (\"Receive notifications\", not \"Notifications\").",
+          "use": "Every isolated setting (notifications, remember user, dark mode). Never use Switch without a visible label."
+        },
+        "withDescription": {
+          "name": "With description (panel)",
+          "description": "Switch in a bordered panel with <code>flex justify-between</code> layout — Label + helper text on the left, Switch on the right. Pattern for settings that need explained effect.",
+          "use": "Important settings deserving context (\"marketing emails\", \"background sync\")."
+        },
+        "settingsList": {
+          "name": "Settings list",
+          "description": "Multiple Switches stacked in identical panels. Each item has a Label, helper description, and a Switch aligned to the right.",
+          "use": "User preferences screen — notifications, privacy, opt-ins. Keep visual consistency across panels."
+        },
+        "inForm": {
+          "name": "In a form",
+          "description": "Switch inside a <code>&lt;form&gt;</code> with a <code>name</code> prop (React/Vue/Svelte) or synced via <code>&lt;input type=\"hidden\"&gt;</code> (Basecoat) so it participates in native submit.",
+          "use": "Optional terms acceptance, newsletter opt-in in multi-field forms. Use <code>onCheckedChange</code> to sync the value."
+        }
       }
     },
     "states": {
@@ -765,6 +811,29 @@
         "default": "Switch por defecto — <code>32×18.4px</code>, Label a la derecha.",
         "withDescription": "Switch con Label + descripción auxiliar — layout <code>flex justify-between</code> en panel.",
         "sm": "Tamaño compacto — <code>size=\"sm\"</code>, <code>24×14px</code>."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withLabel": {
+          "name": "Con label",
+          "description": "Switch + Label inline (gap pequeño). Asociación obligatoria vía <code>id</code>/<code>htmlFor</code>. El label describe el estado ACTIVO (\"Recibir notificaciones\", no \"Notificaciones\").",
+          "use": "Toda configuración aislada (notificaciones, recordar usuario, modo oscuro). Nunca uses Switch sin label visible."
+        },
+        "withDescription": {
+          "name": "Con descripción (panel)",
+          "description": "Switch en panel bordeado con layout <code>flex justify-between</code> — Label + descripción a la izquierda, Switch a la derecha. Patrón para configuraciones con efecto explicado.",
+          "use": "Configuraciones importantes que merecen contexto (\"emails de marketing\", \"sincronización en segundo plano\")."
+        },
+        "settingsList": {
+          "name": "Lista de configuraciones",
+          "description": "Múltiples Switches apilados en paneles idénticos. Cada ítem tiene Label, descripción auxiliar y Switch alineado a la derecha.",
+          "use": "Pantalla de preferencias del usuario — notificaciones, privacidad, opt-ins. Mantén consistencia visual entre los paneles."
+        },
+        "inForm": {
+          "name": "En formulario",
+          "description": "Switch dentro de un <code>&lt;form&gt;</code> con prop <code>name</code> (React/Vue/Svelte) o sincronizado vía <code>&lt;input type=\"hidden\"&gt;</code> (Basecoat) para participar del submit nativo.",
+          "use": "Aceptación de términos opcionales, opt-in de newsletter en formularios multi-campo. Usa <code>onCheckedChange</code> para sincronizar el valor."
+        }
       }
     },
     "states": {

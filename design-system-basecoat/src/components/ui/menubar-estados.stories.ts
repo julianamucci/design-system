@@ -25,7 +25,10 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[220px] flex items-start justify-center p-2';
+  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.alignItems = 'flex-start';
+  wrapper.style.minHeight = '220px';
   wrapper.appendChild(child);
   return wrapper;
 }
@@ -166,7 +169,9 @@ export const CheckboxChecked: Story = {
           'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
 
         const indicator = document.createElement('span');
-        indicator.className = 'inline-flex w-4 h-4 items-center justify-center';
+        indicator.className = 'nds-cluster nds-icon-sm';
+        indicator.dataset.justify = 'center';
+        indicator.style.display = 'inline-flex';
         indicator.setAttribute('aria-hidden', 'true');
         if (checked) {
           const svgNs = 'http://www.w3.org/2000/svg';

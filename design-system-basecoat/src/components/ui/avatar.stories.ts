@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { within, expect } from 'storybook/test';
-import { createAvatar, createAvatarFallback, createAvatarImage, createAvatarRoot } from './avatar';
+import { createAvatar, createAvatarFallback, createAvatarImage, createAvatarRoot, type AvatarSize } from './avatar';
 import { createAvatarDocs } from '@/components/docs/AvatarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -10,7 +10,7 @@ type AvatarArgs = {
   src: string;
   alt: string;
   fallback: string;
-  size: '' | 'h-6 w-6' | 'h-8 w-8' | 'h-10 w-10' | 'h-12 w-12';
+  size: AvatarSize;
 };
 
 const meta: Meta<AvatarArgs> = {
@@ -25,15 +25,15 @@ const meta: Meta<AvatarArgs> = {
     fallback: { control: 'text', description: 'Iniciais exibidas quando a imagem falha ou está ausente.' },
     size: {
       control: 'select',
-      options: ['', 'h-6 w-6', 'h-8 w-8', 'h-10 w-10', 'h-12 w-12'],
-      description: 'Tamanho do Avatar via className (não existe prop size). Padrão: h-8 w-8.',
+      options: ['sm', 'md', 'lg', 'xl', '2xl'],
+      description: 'Tamanho preset (sm=24, md=32, lg=40, xl=48, 2xl=64). Padrão: md.',
     },
   },
   args: {
     src: 'https://github.com/shadcn.png',
     alt: 'Foto de perfil de Maria Rodrigues',
     fallback: 'MR',
-    size: '',
+    size: 'md',
   },
 };
 
@@ -47,7 +47,7 @@ function buildAvatar(args: AvatarArgs): HTMLElement {
     src: args.src || undefined,
     alt: args.alt,
     fallbackText: args.fallback,
-    className: args.size,
+    size: args.size,
   });
 }
 

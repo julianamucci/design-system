@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Search, Mail, Eye, EyeOff, AtSign } from "lucide-react";
+import { Search, Eye, EyeOff, AtSign } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   InputGroup,
   InputGroupAddon,
@@ -11,7 +12,6 @@ import {
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import inputTranslations from "@shared/content/input/translations.json";
@@ -24,6 +24,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -62,6 +63,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -186,18 +188,6 @@ import {
   <label htmlFor="arquivo">Arquivo</label>
   <Input id="arquivo" type="file" />
 </div>`;
-
-  const codeDisabled = `<Input type="text" placeholder="Não disponível" disabled />`;
-
-  const codeError = `<Input
-  type="email"
-  placeholder="ex: joao@empresa.com"
-  aria-invalid="true"
-  aria-describedby="email-error"
-/>
-<p id="email-error" className="text-sm text-destructive">
-  Email inválido. Use o formato nome@dominio.com
-</p>`;
 
   const codeInputGroupSearch = `<InputGroup>
   <InputGroupAddon align="inline-start">
@@ -591,6 +581,81 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                     placeholder={tContent("demonstration.labels.emailPlaceholder")}
                   />
                 </InputGroup>
+              </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ─────────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="input"
+        items={[
+          {
+            name: tContent("variants.compositions.withLabel.name"),
+            description: tContent("variants.compositions.withLabel.description"),
+            useWhen: tContent("variants.compositions.withLabel.use"),
+            code: `<div className="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label htmlFor="input-nome">Nome completo</Label>\n  <Input id="input-nome" type="text" placeholder="ex: João da Silva" />\n</div>`,
+            preview: (
+              <div className="flex flex-col gap-1.5 w-full max-w-sm">
+                <Label htmlFor="input-nome">Nome completo</Label>
+                <Input id="input-nome" type="text" placeholder="ex: João da Silva" />
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withHint.name"),
+            description: tContent("variants.compositions.withHint.description"),
+            useWhen: tContent("variants.compositions.withHint.use"),
+            code: `<div className="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label htmlFor="input-email-hint">Email</Label>\n  <Input id="input-email-hint" type="email" placeholder="ex: joao@empresa.com" />\n  <p className="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>\n</div>`,
+            preview: (
+              <div className="flex flex-col gap-1.5 w-full max-w-sm">
+                <Label htmlFor="input-email-hint">Email</Label>
+                <Input id="input-email-hint" type="email" placeholder="ex: joao@empresa.com" />
+                <p className="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withError.name"),
+            description: tContent("variants.compositions.withError.description"),
+            useWhen: tContent("variants.compositions.withError.use"),
+            code: `<div className="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label htmlFor="input-email-error">Email</Label>\n  <Input\n    id="input-email-error"\n    type="email"\n    placeholder="ex: joao@empresa.com"\n    aria-invalid="true"\n    aria-describedby="input-email-error-error"\n  />\n  <p id="input-email-error-error" className="text-xs text-destructive">\n    Email inválido. Use o formato nome@dominio.com\n  </p>\n</div>`,
+            preview: (
+              <div className="flex flex-col gap-1.5 w-full max-w-sm">
+                <Label htmlFor="input-email-error">Email</Label>
+                <Input
+                  id="input-email-error"
+                  type="email"
+                  placeholder="ex: joao@empresa.com"
+                  aria-invalid="true"
+                  aria-describedby="input-email-error-error"
+                />
+                <p id="input-email-error-error" className="text-xs text-destructive">
+                  Email inválido. Use o formato nome@dominio.com
+                </p>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withPrefix.name"),
+            description: tContent("variants.compositions.withPrefix.description"),
+            useWhen: tContent("variants.compositions.withPrefix.use"),
+            code: `<div className="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label htmlFor="input-url">URL do site</Label>\n  <div className="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">\n    <span className="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>\n    <Input\n      className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"\n      type="url"\n      id="input-url"\n      placeholder="meusite.com"\n    />\n  </div>\n</div>`,
+            preview: (
+              <div className="flex flex-col gap-1.5 w-full max-w-sm">
+                <Label htmlFor="input-url">URL do site</Label>
+                <div className="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">
+                  <span className="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>
+                  <Input
+                    className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
+                    type="url"
+                    id="input-url"
+                    placeholder="meusite.com"
+                  />
+                </div>
               </div>
             ),
           },

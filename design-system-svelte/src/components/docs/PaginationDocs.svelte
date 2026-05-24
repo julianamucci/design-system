@@ -16,7 +16,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -68,6 +68,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -178,6 +179,8 @@ interface PaginationDirectionalProps {
     required: $tStore('props.table.required'),
     description: $tStore('props.table.description'),
   });
+
+  let interactiveCurrent = $state(3);
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="pagination">
@@ -482,6 +485,182 @@ interface PaginationDirectionalProps {
         </PaginationItem>
       </PaginationContent>
     </Pagination>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="pagination"
+    items={[
+      {
+        name: $tStore('variants.compositions.simple.name'),
+        description: $tStore('variants.compositions.simple.description'),
+        useWhen: $tStore('variants.compositions.simple.use'),
+        code: `<Pagination count={50} perPage={10} page={1}>
+  {#snippet children({ pages, currentPage })}
+    <PaginationContent>
+      <PaginationItem><PaginationPrevious /></PaginationItem>
+      {#each pages as p (p.key)}
+        <PaginationItem>
+          {#if p.type !== 'ellipsis'}
+            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+          {/if}
+        </PaginationItem>
+      {/each}
+      <PaginationItem><PaginationNext /></PaginationItem>
+    </PaginationContent>
+  {/snippet}
+</Pagination>`,
+        preview: compSimple,
+      },
+      {
+        name: $tStore('variants.compositions.withEllipsis.name'),
+        description: $tStore('variants.compositions.withEllipsis.description'),
+        useWhen: $tStore('variants.compositions.withEllipsis.use'),
+        code: `<Pagination count={120} perPage={10} page={6} siblingCount={1}>
+  {#snippet children({ pages, currentPage })}
+    <PaginationContent>
+      <PaginationItem><PaginationPrevious /></PaginationItem>
+      {#each pages as p (p.key)}
+        <PaginationItem>
+          {#if p.type === 'ellipsis'}
+            <PaginationEllipsis />
+          {:else}
+            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+          {/if}
+        </PaginationItem>
+      {/each}
+      <PaginationItem><PaginationNext /></PaginationItem>
+    </PaginationContent>
+  {/snippet}
+</Pagination>`,
+        preview: compWithEllipsis,
+      },
+      {
+        name: $tStore('variants.compositions.lastPage.name'),
+        description: $tStore('variants.compositions.lastPage.description'),
+        useWhen: $tStore('variants.compositions.lastPage.use'),
+        code: `<Pagination count={100} perPage={10} page={10}>
+  {#snippet children({ pages, currentPage })}
+    <PaginationContent>
+      <PaginationItem><PaginationPrevious /></PaginationItem>
+      {#each pages as p (p.key)}
+        <PaginationItem>
+          {#if p.type !== 'ellipsis'}
+            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+          {/if}
+        </PaginationItem>
+      {/each}
+      <PaginationItem><PaginationNext /></PaginationItem>
+    </PaginationContent>
+  {/snippet}
+</Pagination>`,
+        preview: compLastPage,
+      },
+      {
+        name: $tStore('variants.compositions.interactive.name'),
+        description: $tStore('variants.compositions.interactive.description'),
+        useWhen: $tStore('variants.compositions.interactive.use'),
+        code: `let current = $state(3);
+
+<Pagination count={80} perPage={10} bind:page={current}>
+  {#snippet children({ pages, currentPage })}
+    <PaginationContent>
+      <PaginationItem><PaginationPrevious /></PaginationItem>
+      {#each pages as p (p.key)}
+        <PaginationItem>
+          {#if p.type !== 'ellipsis'}
+            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+          {/if}
+        </PaginationItem>
+      {/each}
+      <PaginationItem><PaginationNext /></PaginationItem>
+    </PaginationContent>
+  {/snippet}
+</Pagination>
+<p>Página atual: {current}</p>`,
+        preview: compInteractive,
+      },
+    ]}
+  />
+
+  {#snippet compSimple()}
+    <Pagination count={50} perPage={10} page={1}>
+      {#snippet children({ pages, currentPage })}
+        <PaginationContent>
+          <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>
+          {#each pages as p (p.key)}
+            <PaginationItem>
+              {#if p.type !== 'ellipsis'}
+                <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+              {/if}
+            </PaginationItem>
+          {/each}
+          <PaginationItem><PaginationNext aria-label="Próxima" /></PaginationItem>
+        </PaginationContent>
+      {/snippet}
+    </Pagination>
+  {/snippet}
+  {#snippet compWithEllipsis()}
+    <Pagination count={120} perPage={10} page={6} siblingCount={1}>
+      {#snippet children({ pages, currentPage })}
+        <PaginationContent>
+          <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>
+          {#each pages as p (p.key)}
+            <PaginationItem>
+              {#if p.type === 'ellipsis'}
+                <PaginationEllipsis />
+              {:else}
+                <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+              {/if}
+            </PaginationItem>
+          {/each}
+          <PaginationItem><PaginationNext aria-label="Próxima" /></PaginationItem>
+        </PaginationContent>
+      {/snippet}
+    </Pagination>
+  {/snippet}
+  {#snippet compLastPage()}
+    <Pagination count={100} perPage={10} page={10}>
+      {#snippet children({ pages, currentPage })}
+        <PaginationContent>
+          <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>
+          {#each pages as p (p.key)}
+            <PaginationItem>
+              {#if p.type === 'ellipsis'}
+                <PaginationEllipsis />
+              {:else}
+                <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+              {/if}
+            </PaginationItem>
+          {/each}
+          <PaginationItem><PaginationNext aria-label="Próxima" /></PaginationItem>
+        </PaginationContent>
+      {/snippet}
+    </Pagination>
+  {/snippet}
+  {#snippet compInteractive()}
+    <div class="flex flex-col items-center gap-3 w-full">
+      <Pagination count={80} perPage={10} bind:page={interactiveCurrent}>
+        {#snippet children({ pages, currentPage })}
+          <PaginationContent>
+            <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>
+            {#each pages as p (p.key)}
+              <PaginationItem>
+                {#if p.type === 'ellipsis'}
+                  <PaginationEllipsis />
+                {:else}
+                  <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+                {/if}
+              </PaginationItem>
+            {/each}
+            <PaginationItem><PaginationNext aria-label="Próxima" /></PaginationItem>
+          </PaginationContent>
+        {/snippet}
+      </Pagination>
+      <p class="text-sm text-muted-foreground">Página atual: {interactiveCurrent} / 8</p>
+    </div>
   {/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->

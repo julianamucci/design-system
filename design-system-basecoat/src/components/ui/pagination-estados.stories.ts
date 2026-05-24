@@ -25,7 +25,8 @@ type Story = StoryObj;
 function wrap(child: HTMLElement, minHeight = 100): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full flex items-center justify-center p-2';
+  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
+  wrapper.dataset.justify = 'center';
   wrapper.style.minHeight = `${minHeight}px`;
   wrapper.appendChild(child);
   return wrapper;

@@ -44,18 +44,21 @@ type Story = StoryObj<SeparatorArgs>;
 export const Playground: Story = {
   render: (args) => {
     const wrapper = document.createElement('div');
-    wrapper.className =
-      args.orientation === 'horizontal'
-        ? 'w-full max-w-md space-y-4'
-        : 'flex h-16 items-center gap-4 w-full max-w-md';
+    if (args.orientation === 'horizontal') {
+      wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+      wrapper.dataset.spacing = 'md';
+    } else {
+      wrapper.className = 'nds-cluster nds-w-full nds-max-w-md';
+      wrapper.style.height = '4rem';
+    }
 
     if (args.orientation === 'horizontal') {
       const top = document.createElement('p');
-      top.className = 'text-sm text-foreground';
+      top.className = 'nds-text-body nds-text-foreground';
       top.textContent = 'Seção superior';
 
       const bottom = document.createElement('p');
-      bottom.className = 'text-sm text-muted-foreground';
+      bottom.className = 'nds-text-body nds-text-muted-foreground';
       bottom.textContent = 'Seção inferior';
 
       wrapper.append(
@@ -65,11 +68,11 @@ export const Playground: Story = {
       );
     } else {
       const left = document.createElement('span');
-      left.className = 'text-sm text-foreground';
+      left.className = 'nds-text-body nds-text-foreground';
       left.textContent = 'Item A';
 
       const right = document.createElement('span');
-      right.className = 'text-sm text-muted-foreground';
+      right.className = 'nds-text-body nds-text-muted-foreground';
       right.textContent = 'Item B';
 
       wrapper.append(

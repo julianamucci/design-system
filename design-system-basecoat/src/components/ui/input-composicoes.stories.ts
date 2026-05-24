@@ -31,11 +31,12 @@ function createFormField(opts: {
   errorText?: string;
 }): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex flex-col gap-1.5 w-full max-w-sm';
+  wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';
+  wrapper.dataset.spacing = 'xs';
 
   const label = document.createElement('label');
   label.htmlFor = opts.labelFor;
-  label.className = 'text-sm font-medium text-foreground';
+  label.className = 'nds-text-body nds-font-medium nds-text-foreground';
   label.textContent = opts.labelText;
 
   opts.inputEl.id = opts.labelFor;
@@ -45,14 +46,14 @@ function createFormField(opts: {
 
   if (opts.hintText) {
     const hint = document.createElement('p');
-    hint.className = 'text-xs text-muted-foreground';
+    hint.className = 'nds-text-caption nds-text-muted-foreground';
     hint.textContent = opts.hintText;
     wrapper.appendChild(hint);
   }
 
   if (opts.errorText) {
     const error = document.createElement('p');
-    error.className = 'text-xs text-destructive';
+    error.className = 'nds-text-caption nds-text-destructive';
     error.id = `${opts.labelFor}-error`;
     error.textContent = opts.errorText;
     opts.inputEl.setAttribute('aria-describedby', `${opts.labelFor}-error`);
@@ -129,18 +130,22 @@ export const ComMensagemDeErro: Story = {
 export const ComPrefixoTexto: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-1.5 w-full max-w-sm';
+    wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';
+  wrapper.dataset.spacing = 'xs';
 
     const label = document.createElement('label');
     label.htmlFor = 'input-url';
-    label.className = 'text-sm font-medium text-foreground';
+    label.className = 'nds-text-body nds-font-medium nds-text-foreground';
     label.textContent = 'URL do site';
 
     const row = document.createElement('div');
-    row.className = 'flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden';
+    row.className = 'nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden';
+    row.dataset.spacing = 'xs';
 
     const prefix = document.createElement('span');
-    prefix.className = 'flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input h-full shrink-0';
+    prefix.className = 'nds-cluster nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0';
+    prefix.style.paddingInline = '0.75rem';
+    prefix.style.borderInlineEnd = '1px solid hsl(var(--input))';
     prefix.textContent = 'https://';
 
     const input = createInput({ type: 'url', id: 'input-url', placeholder: 'meusite.com' });

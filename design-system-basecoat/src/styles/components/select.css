@@ -1,0 +1,79 @@
+/*
+ * ─── nds-select ─────────────────────────────────────────────────────────────
+ * <select> nativo estilizado com aparência consistente. Sem altura fixa
+ * (WCAG 1.4.4) — usa padding-block + line-height.
+ *
+ *   <select class="nds-select">
+ *     <option value="">Selecione…</option>
+ *     <option value="a">Opção A</option>
+ *   </select>
+ *
+ * Tokens: --input (border), --background, --foreground, --muted-foreground,
+ *         --ring, --destructive, --radius, --spacing-*
+ */
+
+.nds-select {
+  display: block;
+  width: 100%;
+
+  padding-block: var(--spacing-2);                /* 8px */
+  padding-inline: var(--spacing-3, 0.75rem);      /* 12px */
+  padding-inline-end: var(--spacing-8);           /* 32px — espaço pro chevron */
+
+  font-family: inherit;
+  font-size: 0.875rem;                            /* 14px */
+  line-height: 1.5;
+  color: hsl(var(--foreground));
+
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius, 0.5rem);
+
+  /* Chevron SVG inline (cor controlada via stroke=currentColor) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-2-5, 0.625rem) center;
+  background-size: 1rem;
+
+  /* Esconde o chevron padrão do browser */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  cursor: pointer;
+  outline: 0;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.nds-select:hover:not(:disabled):not([aria-invalid="true"]) {
+  border-color: hsl(var(--ring) / 0.4);
+}
+
+.nds-select:focus-visible {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
+}
+
+.nds-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+.nds-select[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
+}
+
+.nds-select[aria-invalid="true"]:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.3);
+}
+
+/* Opções do select — limitado pelo browser, mas algumas propriedades funcionam */
+.nds-select > option {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.nds-select > option:disabled {
+  color: hsl(var(--muted-foreground));
+}

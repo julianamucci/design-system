@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── Dialog — Vanilla factory standalone ────────────────────────────────────
+// Visual: classes .nds-dialog-* (zero Tailwind/basecoat-css). Render via portal.
+// Comportamento: overlay click + Escape fecham; focus-trap; restaura foco.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -79,25 +81,14 @@ export function createDialog(options: DialogOptions): HTMLElement {
     previousFocus = document.activeElement as HTMLElement;
 
     overlayEl = document.createElement('div');
-    // PATCH: alinhamento cross-stack — overlay translucido + blur opcional, igual
-    // React/Vue/Svelte. Antes era `bg-black/80` (Shadcn antigo).
-    overlayEl.className =
-      'fixed inset-0 z-50 isolate bg-black/10 supports-backdrop-filter:backdrop-blur-xs data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 duration-100';
+    overlayEl.className = 'nds-dialog-overlay';
     overlayEl.dataset.slot = 'dialog-overlay';
     overlayEl.dataset.state = 'open';
     overlayEl.addEventListener('click', () => closeWithReason('overlay'));
 
     panelEl = document.createElement('div');
-    // PATCH: alinhamento cross-stack — bg-popover + ring-foreground/10 + rounded-xl + p-4.
-    // Removido `shadow-lg` e a classe `dialog` do basecoat-css (aplicava opacity:0
-    // em <div>, mantinha o painel invisível em portal manual).
-    panelEl.className = cn(
-      'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%]',
-      'gap-4 bg-popover text-popover-foreground ring-1 ring-foreground/10 p-4 sm:rounded-xl',
-      'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
-      'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
-      options.class
-    );
+    panelEl.className = 'nds-dialog-content';
+    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
     panelEl.setAttribute('role', 'dialog');
     panelEl.setAttribute('aria-modal', 'true');
     panelEl.setAttribute('aria-labelledby', titleId);
@@ -107,25 +98,26 @@ export function createDialog(options: DialogOptions): HTMLElement {
 
     // Header
     const headerEl = document.createElement('div');
-    headerEl.className = 'flex flex-col space-y-1.5 text-center sm:text-left';
+    headerEl.className = 'nds-dialog-header';
     headerEl.dataset.slot = 'dialog-header';
 
     const titleEl = document.createElement('h2');
     titleEl.id = titleId;
-    titleEl.className = 'text-base leading-none font-medium';
+    titleEl.className = 'nds-dialog-title';
     titleEl.textContent = title;
     headerEl.appendChild(titleEl);
 
     if (description) {
       const descEl = document.createElement('p');
       descEl.id = descId;
-      descEl.className = 'text-sm text-muted-foreground';
+      descEl.className = 'nds-dialog-description';
       descEl.textContent = description;
       headerEl.appendChild(descEl);
     }
 
     // Body
     const bodyEl = document.createElement('div');
+    bodyEl.className = 'nds-dialog-body';
     bodyEl.dataset.slot = 'dialog-body';
     bodyEl.appendChild(content);
 
@@ -134,8 +126,7 @@ export function createDialog(options: DialogOptions): HTMLElement {
 
     if (footer) {
       const footerEl = document.createElement('div');
-      footerEl.className =
-        '-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end';
+      footerEl.className = 'nds-dialog-footer';
       footerEl.dataset.slot = 'dialog-footer';
       footerEl.appendChild(footer);
       panelEl.appendChild(footerEl);
@@ -144,13 +135,12 @@ export function createDialog(options: DialogOptions): HTMLElement {
     if (showCloseButton) {
       const closeBtn = document.createElement('button');
       closeBtn.type = 'button';
-      closeBtn.className =
-        'absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 focus:ring-2 focus:ring-ring';
+      closeBtn.className = 'nds-dialog-close';
       closeBtn.dataset.slot = 'dialog-close';
       closeBtn.setAttribute('aria-label', 'Close');
       closeBtn.appendChild(createCloseIcon());
       const srOnly = document.createElement('span');
-      srOnly.className = 'sr-only';
+      srOnly.className = 'nds-sr-only';
       srOnly.textContent = 'Close';
       closeBtn.appendChild(srOnly);
       closeBtn.addEventListener('click', () => closeWithReason('close-button'));

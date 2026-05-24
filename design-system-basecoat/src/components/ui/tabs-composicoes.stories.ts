@@ -36,7 +36,7 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'h-4 w-4 shrink-0');
+  svg.setAttribute('class', 'nds-icon-sm nds-shrink-0');
   for (const [tag, attrs] of nodes) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
@@ -47,19 +47,20 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
 
 function makePanel(text: string): HTMLElement {
   const p = document.createElement('div');
-  p.className = 'text-sm text-muted-foreground p-3 rounded-md border bg-card';
+  p.className = 'nds-text-body nds-text-muted-foreground nds-p-3 nds-rounded-md nds-border-default nds-bg-card';
   p.textContent = text;
   return p;
 }
 
 function makeRichPanel(title: string, description: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'p-4 rounded-md border bg-card space-y-2';
+  wrap.className = 'nds-stack nds-p-4 nds-rounded-md nds-border-default nds-bg-card';
+  wrap.dataset.spacing = 'sm';
   const h = document.createElement('h3');
-  h.className = 'text-sm font-semibold';
+  h.className = 'nds-text-body nds-font-semibold';
   h.textContent = title;
   const p = document.createElement('p');
-  p.className = 'text-sm text-muted-foreground';
+  p.className = 'nds-text-body nds-text-muted-foreground';
   p.textContent = description;
   wrap.append(h, p);
   return wrap;
@@ -93,7 +94,8 @@ export const ComIconesNoTrigger: Story = {
       if (!trigger) return;
       trigger.textContent = '';
       const wrapper = document.createElement('span');
-      wrapper.className = 'flex items-center gap-2';
+      wrapper.className = 'nds-cluster';
+      wrapper.dataset.spacing = 'sm';
       wrapper.appendChild(createIcon(iconMap[item.value]));
       const label = document.createElement('span');
       label.textContent = item.label;
@@ -143,10 +145,14 @@ export const ComBadgeNoTrigger: Story = {
       if (!trigger) return;
       trigger.textContent = '';
       const wrapper = document.createElement('span');
-      wrapper.className = 'flex items-center gap-2';
+      wrapper.className = 'nds-cluster';
+      wrapper.dataset.spacing = 'sm';
       const labelEl = document.createElement('span');
       labelEl.textContent = item.label;
-      wrapper.append(labelEl, createBadge({ text: badgeCfg.text, variant: badgeCfg.variant, className: 'text-[10px] h-4' }));
+      const badge = createBadge({ text: badgeCfg.text, variant: badgeCfg.variant });
+      badge.style.fontSize = '10px';
+      badge.style.height = '1rem';
+      wrapper.append(labelEl, badge);
       trigger.appendChild(wrapper);
     });
 
@@ -181,7 +187,12 @@ export const Vertical: Story = {
     const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
     if (list) {
       list.classList.remove('inline-flex', 'h-9', 'items-center', 'justify-center');
-      list.classList.add('flex', 'flex-col', 'h-auto', 'items-stretch', 'shrink-0', 'min-w-[10rem]');
+      list.classList.add('nds-shrink-0');
+      list.style.display = 'flex';
+      list.style.flexDirection = 'column';
+      list.style.height = 'auto';
+      list.style.alignItems = 'stretch';
+      list.style.minWidth = '10rem';
       list.setAttribute('aria-orientation', 'vertical');
     }
     return setLabel(root, 'Configurações');
@@ -217,7 +228,10 @@ export const SubNavegacaoLine: Story = {
     const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
     if (list) {
       list.classList.remove('bg-muted', 'rounded-lg');
-      list.classList.add('border-b', 'rounded-none', 'bg-transparent', 'w-full', 'justify-start');
+      list.classList.add('nds-bg-transparent', 'nds-w-full');
+      list.style.borderBottom = '1px solid var(--border)';
+      list.style.borderRadius = '0';
+      list.style.justifyContent = 'flex-start';
     }
     return setLabel(root, 'Filtros de listagem');
   },

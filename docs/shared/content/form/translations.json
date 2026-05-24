@@ -1,0 +1,884 @@
+{
+  "pt-BR": {
+    "title": "Form",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Estrutura de campo de formulário — wrapper que combina rótulo, controle, texto de apoio e mensagem de erro com associação acessível. Também provê fieldset com legend para agrupar campos relacionados.",
+    "seo": {
+      "title": "Form — Formulário",
+      "description": "Documentação do Form: wrapper de campo (label + controle + descrição + erro) e fieldset com legend, com associação acessível automática e WCAG 2.1 AA.",
+      "aiSummary": "Componente Form para estruturar campos de formulário com label, controle (input/textarea/select/checkbox), descrição e mensagem de erro, mais fieldset+legend para agrupamento semântico.",
+      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.1, htmlFor, aria-invalid, aria-describedby",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "nameLabel": "Nome completo",
+        "namePlaceholder": "ex: João da Silva",
+        "nameDescription": "Como aparece em documentos oficiais.",
+        "emailLabel": "Email",
+        "emailPlaceholder": "ex: joao@empresa.com",
+        "emailDescription": "Usaremos apenas para contato.",
+        "passwordLabel": "Senha",
+        "passwordPlaceholder": "Mínimo 8 caracteres",
+        "passwordError": "A senha precisa ter pelo menos 8 caracteres.",
+        "bioLabel": "Biografia",
+        "bioPlaceholder": "Conte um pouco sobre você...",
+        "bioDescription": "Máximo 280 caracteres.",
+        "countryLabel": "País",
+        "countryPlaceholder": "Selecione um país",
+        "termsLabel": "Aceito os termos de uso",
+        "groupLegend": "Endereço de entrega",
+        "streetLabel": "Rua",
+        "streetPlaceholder": "ex: Av. Paulista, 1000",
+        "cityLabel": "Cidade",
+        "cityPlaceholder": "ex: São Paulo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>FormField</strong> — <code>&lt;div&gt;</code> com <code>data-slot=\"field\"</code> em coluna, agrupando label + controle + descrição + erro.",
+      "item2": "<strong>Label</strong> — <code>&lt;label&gt;</code> associado ao controle via <code>htmlFor</code>/<code>id</code> gerado automaticamente quando ausente.",
+      "item3": "<strong>Descrição</strong> — parágrafo opcional abaixo do controle com texto de apoio em cor <code>--muted-foreground</code>.",
+      "item4": "<strong>Erro</strong> — parágrafo opcional em <code>--destructive</code> com <code>aria-live=\"polite\"</code> para anúncio ao leitor de tela.",
+      "item5": "<strong>Fieldset</strong> — <code>&lt;fieldset&gt;</code> com <code>&lt;legend&gt;</code> para agrupar campos relacionados (endereço, dados pessoais).",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "const field = createFormField({\n  label: 'Email',\n  input: createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' }),\n  description: 'Usaremos apenas para contato.',\n  error: 'Email inválido.',\n});\n\nconst group = createFieldset({\n  legend: 'Endereço',\n  children: [\n    createFormField({ label: 'Rua',    input: createInput({ type: 'text' }) }),\n    createFormField({ label: 'Cidade', input: createInput({ type: 'text' }) }),\n  ],\n});"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Toda entrada de dado em formulário deve ser envolvida em <code>FormField</code> para garantir associação label-controle.",
+        "item2": "Forneça sempre um <code>label</code> visível — placeholder não substitui rótulo.",
+        "item3": "Use <code>description</code> para explicar formato ou política; nunca repita o que o label já diz.",
+        "item4": "Use <code>error</code> com mensagem específica que aponte o problema E sugira correção.",
+        "item5": "Agrupe campos semanticamente relacionados em <code>Fieldset</code> com <code>legend</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Campo único em formulário", "u": "Sim, FormField", "a": "-" },
+        "item2": { "s": "Grupo de campos relacionados", "u": "Sim, Fieldset com legend", "a": "-" },
+        "item3": { "s": "Validação síncrona de campo", "u": "Sim, FormField com error", "a": "-" },
+        "item4": { "s": "Mensagem de status global do form", "u": "Não", "a": "Alert" },
+        "item5": { "s": "Confirmação após submit", "u": "Não", "a": "Toast ou Dialog" },
+        "item6": { "s": "Filtros inline (sem submit)", "u": "Opcional", "a": "Primitivos diretos" }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Há um controle que precisa de label visível e associação acessível",
+        "item2": "O campo pode exibir hint, erro ou ambos abaixo do controle",
+        "item3": "Vários campos relacionados precisam de rótulo de grupo (fieldset)",
+        "item4": "O formulário tem validação e mensagens de erro por campo"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "É apenas exibição de leitura — use <code>dl</code>/<code>dt</code>/<code>dd</code>",
+        "item2": "É um único controle inline sem label visível — use <code>aria-label</code> direto no controle",
+        "item3": "É um aviso global do formulário — use <code>Alert</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Label visível + descrição abaixo do controle quando o formato exige explicação.",
+        "dont": "Apenas placeholder como rótulo — desaparece ao digitar e quebra acessibilidade."
+      },
+      "pair2": {
+        "do": "Mensagem de erro específica: 'A senha precisa de pelo menos 8 caracteres'.",
+        "dont": "Mensagem genérica: 'Campo inválido'. Não orienta o usuário."
+      },
+      "pair3": {
+        "do": "Agrupar endereço (rua, cidade, CEP) em fieldset com legend 'Endereço'.",
+        "dont": "Soltar campos relacionados sem agrupamento — perde contexto para leitor de tela."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "note": "O Form não tem variantes via prop. Sua aparência depende dos elementos opcionais (description, error) e do controle envolvido.",
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "labelOnly": {
+          "name": "Label + controle",
+          "description": "Combinação mínima: label associado ao controle via <code>htmlFor</code>/<code>id</code>. Sem texto de apoio nem erro.",
+          "use": "Campos com rótulo autoexplicativo (nome, email, telefone) sem necessidade de hint."
+        },
+        "withDescription": {
+          "name": "Com descrição",
+          "description": "Label + controle + parágrafo de apoio em <code>--muted-foreground</code> abaixo. Esclarece formato, política ou uso.",
+          "use": "Quando o label sozinho não explica o formato esperado (política de senha, máscara, exemplos)."
+        },
+        "withError": {
+          "name": "Com mensagem de erro",
+          "description": "Label + controle (com <code>aria-invalid</code>) + parágrafo em <code>--destructive</code> com <code>aria-live=\"polite\"</code>.",
+          "use": "Validação síncrona ou após submit. A mensagem deve apontar o problema e sugerir a correção."
+        },
+        "fieldset": {
+          "name": "Fieldset com legend",
+          "description": "Agrupamento semântico de campos relacionados via <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. Gap padrão de 16px entre campos internos.",
+          "use": "Endereço, dados pessoais, preferências — qualquer conjunto de 2+ campos com rótulo de grupo."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "default": {
+        "label": "Padrão",
+        "trigger": "Sem props adicionais",
+        "behavior": "Label em <code>--foreground</code>, controle em estado padrão, sem descrição nem erro"
+      },
+      "withDescription": {
+        "label": "Com descrição",
+        "trigger": "Prop <code>description</code>",
+        "behavior": "Parágrafo de apoio em <code>--muted-foreground</code> abaixo do controle"
+      },
+      "withError": {
+        "label": "Com erro",
+        "trigger": "Prop <code>error</code>",
+        "behavior": "Parágrafo em <code>--destructive</code> com <code>aria-live=\"polite\"</code>; aplique também <code>aria-invalid</code> no controle"
+      },
+      "disabled": {
+        "label": "Desabilitado",
+        "trigger": "Controle com <code>disabled</code>",
+        "behavior": "O controle interno fica desabilitado; o label permanece visível mas o conjunto não é interativo"
+      },
+      "fieldset": {
+        "label": "Fieldset",
+        "trigger": "Uso de <code>createFieldset</code>",
+        "behavior": "<code>&lt;fieldset&gt;</code> com gap de 16px entre filhos e <code>&lt;legend&gt;</code> em <code>--foreground</code>"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "fieldTitle": "createFormField",
+      "fieldsetTitle": "createFieldset",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "label": "Texto do rótulo. Renderizado como <code>&lt;label&gt;</code> associado via <code>htmlFor</code>.",
+        "input": "Elemento de controle a ser envolvido (input, textarea, select, checkbox).",
+        "description_prop": "Texto de apoio exibido abaixo do controle em <code>--muted-foreground</code>.",
+        "error": "Mensagem de erro exibida abaixo, em <code>--destructive</code>, com <code>aria-live=\"polite\"</code>.",
+        "className": "Classes adicionais para customização pontual.",
+        "legend": "Texto do <code>&lt;legend&gt;</code> que rotula o agrupamento.",
+        "children": "Lista de elementos (geralmente <code>FormField</code>) dentro do fieldset."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "<code>createFormField</code> aceita qualquer <code>HTMLElement</code> como <code>input</code> — funciona com input, textarea, select, checkbox e composições. Use <code>class</code> para customizações pontuais com tokens do projeto."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Classe",
+        "part": "Parte do componente",
+        "fieldGap": "Espaçamento vertical entre label, controle, descrição e erro",
+        "labelColor": "Cor do texto do label",
+        "labelWeight": "Peso da fonte do label",
+        "descriptionColor": "Cor do texto de apoio",
+        "errorColor": "Cor da mensagem de erro",
+        "fieldsetGap": "Espaçamento vertical entre campos dentro do fieldset",
+        "legendColor": "Cor do texto da legend"
+      },
+      "customizationTitle": "Como personalizar via tema:"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "O Form usa <code>&lt;label&gt;</code> + <code>htmlFor</code> nativos para associar rótulo e controle, e <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> para agrupamento semântico. Cumpre WCAG 2.1 AA: 1.3.1 (informação e relações), 3.3.1 (identificação de erro), 3.3.2 (rótulos ou instruções), 4.1.3 (mensagens de status).",
+      "item1": "<strong>Associação automática</strong> — quando o controle não tem <code>id</code>, é gerado automaticamente e o label recebe o <code>htmlFor</code> correspondente.",
+      "item2": "<strong>Erro com aria-live</strong> — o parágrafo de erro tem <code>aria-live=\"polite\"</code>, sendo anunciado pelo leitor de tela quando aparece.",
+      "item3": "<strong>aria-invalid manual</strong> — aplique <code>aria-invalid=\"true\"</code> no controle quando exibir erro para anunciar estado inválido.",
+      "item4": "<strong>Fieldset semântico</strong> — leitores anunciam o texto da <code>&lt;legend&gt;</code> antes de cada campo do grupo.",
+      "item5": "<strong>Contraste suficiente</strong> — label e descrição mantêm contraste mínimo 4.5:1 em todos os temas (WCAG 1.4.3).",
+      "keyboard": {
+        "tab": "Move o foco para o próximo controle do formulário.",
+        "shiftTab": "Move o foco para o controle anterior.",
+        "typing": "Insere texto no controle com foco (quando aplicável).",
+        "escape": "Fecha menus abertos (em select) sem submeter o formulário."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "input": "Campo de texto de linha única usado dentro do FormField.",
+      "textarea": "Campo de texto de múltiplas linhas usado dentro do FormField.",
+      "select": "Seleção em lista fixa, comum em FormField.",
+      "checkbox": "Caixa de marcação, geralmente associada via FormField ou label inline.",
+      "label": "Rótulo acessível — usado internamente pelo FormField."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "O <code>FormField</code> gera um <code>id</code> automático no controle quando ausente, garantindo a associação label-controle.",
+      "tip2": "Para validação visual, aplique <code>aria-invalid=\"true\"</code> no controle e passe a mensagem na prop <code>error</code> — o estilo do controle reage via seletor de atributo.",
+      "tip3": "Use o <code>Fieldset</code> mesmo para grupos pequenos (2 campos) quando o rótulo de grupo agrega contexto (ex.: 'Endereço de cobrança').",
+      "tip4": "Mensagens de erro devem explicar o problema E sugerir correção — nunca apenas 'campo inválido'.",
+      "tip5": "Para descrição com formatação rica (links, código), use <code>innerHTML</code> sanitizado com <code>sanitizeHtml</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastreie eventos de formulário apenas em funis críticos. Nunca envie valores de campos sensíveis (senha, documento, cartão).",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "fieldFocus": "field_focus",
+        "fieldFocusTrigger": "Ao focar um controle dentro do FormField — apenas funis críticos",
+        "fieldFocusPayload": "{ component: 'form', location, field_name }",
+        "fieldBlur": "field_blur",
+        "fieldBlurTrigger": "Ao sair de um controle com valor preenchido",
+        "fieldBlurPayload": "{ component: 'form', location, field_name }",
+        "fieldError": "field_error",
+        "fieldErrorTrigger": "Ao exibir mensagem de erro no FormField",
+        "fieldErrorPayload": "{ component: 'form', location, field_name, error_message }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada configuração do Form.",
+        "item1": { "action": "Renderizar FormField com label e input", "result": "Label associado via htmlFor; clique no label foca o controle", "priority": "high" },
+        "item2": { "action": "Controle sem id explícito", "result": "ID gerado automaticamente; label.htmlFor coincide com input.id", "priority": "high" },
+        "item3": { "action": "FormField com description", "result": "Parágrafo abaixo do controle com classe nds-form-description", "priority": "medium" },
+        "item4": { "action": "FormField com error", "result": "Parágrafo em --destructive com aria-live='polite'", "priority": "high" },
+        "item5": { "action": "Fieldset com legend e children", "result": "<fieldset> com <legend> no topo e filhos espaçados em 16px", "priority": "high" },
+        "item6": { "action": "Tab dentro do form", "result": "Foco percorre os controles na ordem do DOM", "priority": "high" },
+        "item7": { "action": "FormField com input desabilitado", "result": "Controle não interativo; label permanece visível", "priority": "medium" },
+        "item8": { "action": "FormField com textarea", "result": "Textarea associada ao label corretamente", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": "Sem violações reportadas pelo axe-core no estado padrão",
+        "item2": "Cada controle é acessível por getByLabelText com o texto do label",
+        "item3": "Mensagem de erro possui aria-live='polite'",
+        "item4": "Fieldset tem legend e leitor anuncia o texto antes dos campos",
+        "item5": "Contraste mínimo 4.5:1 em label, descrição e erro em todos os temas"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Padrão — label + input", "priority": "high" },
+        "item2": { "story": "Com descrição — abaixo do controle", "priority": "medium" },
+        "item3": { "story": "Com erro — aria-invalid + mensagem", "priority": "high" },
+        "item4": { "story": "Fieldset — agrupamento de campos", "priority": "high" },
+        "item5": { "story": "Dark mode — todos os estados", "priority": "high" }
+      }
+    }
+  },
+  "en": {
+    "title": "Form",
+    "category": "Form",
+    "type": "Component",
+    "description": "Form field structure — wrapper that combines label, control, helper text and error message with accessible association. Also provides fieldset with legend to group related fields.",
+    "seo": {
+      "title": "Form — Form",
+      "description": "Documentation for Form: field wrapper (label + control + description + error) and fieldset with legend, with automatic accessible association and WCAG 2.1 AA.",
+      "aiSummary": "Form component to structure form fields with label, control (input/textarea/select/checkbox), description and error message, plus fieldset+legend for semantic grouping.",
+      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.1, htmlFor, aria-invalid, aria-describedby",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "nameLabel": "Full name",
+        "namePlaceholder": "e.g. John Smith",
+        "nameDescription": "As it appears on official documents.",
+        "emailLabel": "Email",
+        "emailPlaceholder": "e.g. john@company.com",
+        "emailDescription": "We will only use it for contact.",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Minimum 8 characters",
+        "passwordError": "Password must be at least 8 characters.",
+        "bioLabel": "Biography",
+        "bioPlaceholder": "Tell us a bit about yourself...",
+        "bioDescription": "Maximum 280 characters.",
+        "countryLabel": "Country",
+        "countryPlaceholder": "Select a country",
+        "termsLabel": "I accept the terms of use",
+        "groupLegend": "Shipping address",
+        "streetLabel": "Street",
+        "streetPlaceholder": "e.g. 1000 Market St",
+        "cityLabel": "City",
+        "cityPlaceholder": "e.g. San Francisco"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>FormField</strong> — <code>&lt;div&gt;</code> with <code>data-slot=\"field\"</code> in a column, grouping label + control + description + error.",
+      "item2": "<strong>Label</strong> — <code>&lt;label&gt;</code> associated with the control via <code>htmlFor</code>/<code>id</code> auto-generated when missing.",
+      "item3": "<strong>Description</strong> — optional paragraph below the control with helper text in <code>--muted-foreground</code> color.",
+      "item4": "<strong>Error</strong> — optional paragraph in <code>--destructive</code> with <code>aria-live=\"polite\"</code> for screen reader announcement.",
+      "item5": "<strong>Fieldset</strong> — <code>&lt;fieldset&gt;</code> with <code>&lt;legend&gt;</code> to group related fields (address, personal data).",
+      "structureLabel": "Basic structure:",
+      "structureCode": "const field = createFormField({\n  label: 'Email',\n  input: createInput({ type: 'email', placeholder: 'e.g. john@company.com' }),\n  description: 'We will only use it for contact.',\n  error: 'Invalid email.',\n});\n\nconst group = createFieldset({\n  legend: 'Address',\n  children: [\n    createFormField({ label: 'Street', input: createInput({ type: 'text' }) }),\n    createFormField({ label: 'City',   input: createInput({ type: 'text' }) }),\n  ],\n});"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Every form data entry should be wrapped in <code>FormField</code> to ensure label-control association.",
+        "item2": "Always provide a visible <code>label</code> — placeholder is not a label substitute.",
+        "item3": "Use <code>description</code> to explain format or policy; never repeat what the label already says.",
+        "item4": "Use <code>error</code> with a specific message that pinpoints the problem AND suggests a fix.",
+        "item5": "Group semantically related fields in a <code>Fieldset</code> with <code>legend</code>."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Single field in a form", "u": "Yes, FormField", "a": "-" },
+        "item2": { "s": "Group of related fields", "u": "Yes, Fieldset with legend", "a": "-" },
+        "item3": { "s": "Sync field validation", "u": "Yes, FormField with error", "a": "-" },
+        "item4": { "s": "Global form status message", "u": "No", "a": "Alert" },
+        "item5": { "s": "Post-submit confirmation", "u": "No", "a": "Toast or Dialog" },
+        "item6": { "s": "Inline filters (no submit)", "u": "Optional", "a": "Direct primitives" }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "A control needs a visible label and accessible association",
+        "item2": "The field may show a hint, an error, or both below the control",
+        "item3": "Several related fields need a group label (fieldset)",
+        "item4": "The form has validation and per-field error messages"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "It is read-only display — use <code>dl</code>/<code>dt</code>/<code>dd</code>",
+        "item2": "It is a single inline control with no visible label — use <code>aria-label</code> directly on the control",
+        "item3": "It is a global form notice — use <code>Alert</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Visible label + description below the control when the format needs explanation.",
+        "dont": "Placeholder only as a label — it disappears when typing and breaks accessibility."
+      },
+      "pair2": {
+        "do": "Specific error message: 'Password must be at least 8 characters'.",
+        "dont": "Generic message: 'Invalid field'. Does not guide the user."
+      },
+      "pair3": {
+        "do": "Group address (street, city, zip) in a fieldset with legend 'Address'.",
+        "dont": "Leave related fields ungrouped — loses context for screen readers."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:"
+    },
+    "variants": {
+      "title": "Variants",
+      "note": "Form has no variants via prop. Its appearance depends on optional elements (description, error) and the wrapped control.",
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "labelOnly": {
+          "name": "Label + control",
+          "description": "Minimal combination: label associated with the control via <code>htmlFor</code>/<code>id</code>. No helper text or error.",
+          "use": "Fields with a self-explanatory label (name, email, phone) that need no hint."
+        },
+        "withDescription": {
+          "name": "With description",
+          "description": "Label + control + helper paragraph in <code>--muted-foreground</code> below. Clarifies format, policy or usage.",
+          "use": "When the label alone doesn't explain the expected format (password policy, mask, examples)."
+        },
+        "withError": {
+          "name": "With error message",
+          "description": "Label + control (with <code>aria-invalid</code>) + paragraph in <code>--destructive</code> with <code>aria-live=\"polite\"</code>.",
+          "use": "Sync or post-submit validation. The message should point out the problem and suggest a fix."
+        },
+        "fieldset": {
+          "name": "Fieldset with legend",
+          "description": "Semantic grouping of related fields via <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. Default gap of 16px between inner fields.",
+          "use": "Address, personal data, preferences — any set of 2+ fields needing a group label."
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "No additional props",
+        "behavior": "Label in <code>--foreground</code>, control in default state, no description or error"
+      },
+      "withDescription": {
+        "label": "With description",
+        "trigger": "Prop <code>description</code>",
+        "behavior": "Helper paragraph in <code>--muted-foreground</code> below the control"
+      },
+      "withError": {
+        "label": "With error",
+        "trigger": "Prop <code>error</code>",
+        "behavior": "Paragraph in <code>--destructive</code> with <code>aria-live=\"polite\"</code>; also apply <code>aria-invalid</code> on the control"
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Control with <code>disabled</code>",
+        "behavior": "Inner control becomes disabled; label remains visible but the set is not interactive"
+      },
+      "fieldset": {
+        "label": "Fieldset",
+        "trigger": "Use of <code>createFieldset</code>",
+        "behavior": "<code>&lt;fieldset&gt;</code> with 16px gap between children and <code>&lt;legend&gt;</code> in <code>--foreground</code>"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "fieldTitle": "createFormField",
+      "fieldsetTitle": "createFieldset",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "label": "Label text. Rendered as <code>&lt;label&gt;</code> associated via <code>htmlFor</code>.",
+        "input": "Control element to be wrapped (input, textarea, select, checkbox).",
+        "description_prop": "Helper text shown below the control in <code>--muted-foreground</code>.",
+        "error": "Error message shown below in <code>--destructive</code> with <code>aria-live=\"polite\"</code>.",
+        "className": "Additional classes for custom styling.",
+        "legend": "<code>&lt;legend&gt;</code> text labeling the group.",
+        "children": "List of elements (usually <code>FormField</code>) inside the fieldset."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "<code>createFormField</code> accepts any <code>HTMLElement</code> as <code>input</code> — works with input, textarea, select, checkbox and compositions. Use <code>class</code> for custom styling with project tokens."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Class",
+        "part": "Component Part",
+        "fieldGap": "Vertical spacing between label, control, description and error",
+        "labelColor": "Label text color",
+        "labelWeight": "Label font weight",
+        "descriptionColor": "Helper text color",
+        "errorColor": "Error message color",
+        "fieldsetGap": "Vertical spacing between fields inside the fieldset",
+        "legendColor": "Legend text color"
+      },
+      "customizationTitle": "How to customize via theme:"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Form uses native <code>&lt;label&gt;</code> + <code>htmlFor</code> to associate label and control, and <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> for semantic grouping. Meets WCAG 2.1 AA: 1.3.1 (info and relationships), 3.3.1 (error identification), 3.3.2 (labels or instructions), 4.1.3 (status messages).",
+      "item1": "<strong>Automatic association</strong> — when the control has no <code>id</code>, one is generated and the label receives the matching <code>htmlFor</code>.",
+      "item2": "<strong>Error with aria-live</strong> — the error paragraph has <code>aria-live=\"polite\"</code> and is announced by screen readers when it appears.",
+      "item3": "<strong>Manual aria-invalid</strong> — apply <code>aria-invalid=\"true\"</code> on the control when showing an error to announce invalid state.",
+      "item4": "<strong>Semantic fieldset</strong> — screen readers announce the <code>&lt;legend&gt;</code> text before each field in the group.",
+      "item5": "<strong>Sufficient contrast</strong> — label and description keep minimum 4.5:1 contrast across all themes (WCAG 1.4.3).",
+      "keyboard": {
+        "tab": "Moves focus to the next form control.",
+        "shiftTab": "Moves focus to the previous control.",
+        "typing": "Inserts text in the focused control (when applicable).",
+        "escape": "Closes open menus (in select) without submitting the form."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "input": "Single-line text field used inside FormField.",
+      "textarea": "Multi-line text field used inside FormField.",
+      "select": "Selection from a fixed list, common in FormField.",
+      "checkbox": "Checkbox, typically associated via FormField or inline label.",
+      "label": "Accessible label — used internally by FormField."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "<code>FormField</code> auto-generates an <code>id</code> on the control when missing, ensuring label-control association.",
+      "tip2": "For visual validation, apply <code>aria-invalid=\"true\"</code> on the control and pass the message to the <code>error</code> prop — the control style reacts via attribute selector.",
+      "tip3": "Use <code>Fieldset</code> even for small groups (2 fields) when the group label adds context (e.g., 'Billing address').",
+      "tip4": "Error messages should explain the problem AND suggest a fix — never just 'invalid field'.",
+      "tip5": "For rich-formatted description (links, code), use <code>innerHTML</code> sanitized with <code>sanitizeHtml</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Track form events only in critical funnels. Never send values of sensitive fields (password, SSN, credit card).",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "fieldFocus": "field_focus",
+        "fieldFocusTrigger": "On focus of a control inside FormField — critical funnels only",
+        "fieldFocusPayload": "{ component: 'form', location, field_name }",
+        "fieldBlur": "field_blur",
+        "fieldBlurTrigger": "On blur of a control with a non-empty value",
+        "fieldBlurPayload": "{ component: 'form', location, field_name }",
+        "fieldError": "field_error",
+        "fieldErrorTrigger": "When an error message is shown in FormField",
+        "fieldErrorPayload": "{ component: 'form', location, field_name, error_message }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each Form configuration.",
+        "item1": { "action": "Render FormField with label and input", "result": "Label associated via htmlFor; clicking the label focuses the control", "priority": "high" },
+        "item2": { "action": "Control without explicit id", "result": "ID auto-generated; label.htmlFor matches input.id", "priority": "high" },
+        "item3": { "action": "FormField with description", "result": "Paragraph below the control with class nds-form-description", "priority": "medium" },
+        "item4": { "action": "FormField with error", "result": "Paragraph in --destructive with aria-live='polite'", "priority": "high" },
+        "item5": { "action": "Fieldset with legend and children", "result": "<fieldset> with <legend> on top and children spaced by 16px", "priority": "high" },
+        "item6": { "action": "Tab within the form", "result": "Focus traverses controls in DOM order", "priority": "high" },
+        "item7": { "action": "FormField with disabled input", "result": "Control not interactive; label remains visible", "priority": "medium" },
+        "item8": { "action": "FormField with textarea", "result": "Textarea associated with label correctly", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": "No violations reported by axe-core in default state",
+        "item2": "Each control is accessible via getByLabelText with the label text",
+        "item3": "Error message has aria-live='polite'",
+        "item4": "Fieldset has a legend and screen reader announces it before the fields",
+        "item5": "Minimum contrast 4.5:1 in label, description and error across all themes"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": { "story": "Default — label + input", "priority": "high" },
+        "item2": { "story": "With description — below the control", "priority": "medium" },
+        "item3": { "story": "With error — aria-invalid + message", "priority": "high" },
+        "item4": { "story": "Fieldset — field grouping", "priority": "high" },
+        "item5": { "story": "Dark mode — all states", "priority": "high" }
+      }
+    }
+  },
+  "es": {
+    "title": "Form",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Estructura de campo de formulario — envoltorio que combina etiqueta, control, texto de apoyo y mensaje de error con asociación accesible. También provee fieldset con legend para agrupar campos relacionados.",
+    "seo": {
+      "title": "Form — Formulario",
+      "description": "Documentación del Form: envoltorio de campo (label + control + descripción + error) y fieldset con legend, con asociación accesible automática y WCAG 2.1 AA.",
+      "aiSummary": "Componente Form para estructurar campos de formulario con etiqueta, control (input/textarea/select/checkbox), descripción y mensaje de error, más fieldset+legend para agrupamiento semántico.",
+      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.1, htmlFor, aria-invalid, aria-describedby",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "nameLabel": "Nombre completo",
+        "namePlaceholder": "ej: Juan García",
+        "nameDescription": "Como aparece en documentos oficiales.",
+        "emailLabel": "Email",
+        "emailPlaceholder": "ej: juan@empresa.com",
+        "emailDescription": "Lo usaremos solo para contacto.",
+        "passwordLabel": "Contraseña",
+        "passwordPlaceholder": "Mínimo 8 caracteres",
+        "passwordError": "La contraseña debe tener al menos 8 caracteres.",
+        "bioLabel": "Biografía",
+        "bioPlaceholder": "Cuéntanos un poco sobre ti...",
+        "bioDescription": "Máximo 280 caracteres.",
+        "countryLabel": "País",
+        "countryPlaceholder": "Selecciona un país",
+        "termsLabel": "Acepto los términos de uso",
+        "groupLegend": "Dirección de envío",
+        "streetLabel": "Calle",
+        "streetPlaceholder": "ej: Av. Corrientes 1000",
+        "cityLabel": "Ciudad",
+        "cityPlaceholder": "ej: Buenos Aires"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>FormField</strong> — <code>&lt;div&gt;</code> con <code>data-slot=\"field\"</code> en columna, agrupando label + control + descripción + error.",
+      "item2": "<strong>Label</strong> — <code>&lt;label&gt;</code> asociado al control vía <code>htmlFor</code>/<code>id</code> generado automáticamente cuando falta.",
+      "item3": "<strong>Descripción</strong> — párrafo opcional debajo del control con texto de apoyo en color <code>--muted-foreground</code>.",
+      "item4": "<strong>Error</strong> — párrafo opcional en <code>--destructive</code> con <code>aria-live=\"polite\"</code> para anuncio al lector de pantalla.",
+      "item5": "<strong>Fieldset</strong> — <code>&lt;fieldset&gt;</code> con <code>&lt;legend&gt;</code> para agrupar campos relacionados (dirección, datos personales).",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "const field = createFormField({\n  label: 'Email',\n  input: createInput({ type: 'email', placeholder: 'ej: juan@empresa.com' }),\n  description: 'Lo usaremos solo para contacto.',\n  error: 'Email inválido.',\n});\n\nconst group = createFieldset({\n  legend: 'Dirección',\n  children: [\n    createFormField({ label: 'Calle',  input: createInput({ type: 'text' }) }),\n    createFormField({ label: 'Ciudad', input: createInput({ type: 'text' }) }),\n  ],\n});"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Toda entrada de dato en un formulario debe envolverse en <code>FormField</code> para garantizar la asociación label-control.",
+        "item2": "Provee siempre un <code>label</code> visible — el placeholder no reemplaza al rótulo.",
+        "item3": "Usa <code>description</code> para explicar formato o política; nunca repitas lo que el label ya dice.",
+        "item4": "Usa <code>error</code> con mensaje específico que señale el problema Y sugiera la corrección.",
+        "item5": "Agrupa campos semánticamente relacionados en <code>Fieldset</code> con <code>legend</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Campo único en formulario", "u": "Sí, FormField", "a": "-" },
+        "item2": { "s": "Grupo de campos relacionados", "u": "Sí, Fieldset con legend", "a": "-" },
+        "item3": { "s": "Validación sincrónica de campo", "u": "Sí, FormField con error", "a": "-" },
+        "item4": { "s": "Mensaje de estado global del form", "u": "No", "a": "Alert" },
+        "item5": { "s": "Confirmación tras envío", "u": "No", "a": "Toast o Dialog" },
+        "item6": { "s": "Filtros inline (sin submit)", "u": "Opcional", "a": "Primitivos directos" }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "Hay un control que necesita label visible y asociación accesible",
+        "item2": "El campo puede mostrar hint, error o ambos debajo del control",
+        "item3": "Varios campos relacionados necesitan rótulo de grupo (fieldset)",
+        "item4": "El formulario tiene validación y mensajes de error por campo"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "Es solo visualización de lectura — usa <code>dl</code>/<code>dt</code>/<code>dd</code>",
+        "item2": "Es un único control inline sin label visible — usa <code>aria-label</code> directo en el control",
+        "item3": "Es un aviso global del formulario — usa <code>Alert</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Label visible + descripción debajo del control cuando el formato necesita explicación.",
+        "dont": "Solo placeholder como rótulo — desaparece al escribir y rompe la accesibilidad."
+      },
+      "pair2": {
+        "do": "Mensaje de error específico: 'La contraseña debe tener al menos 8 caracteres'.",
+        "dont": "Mensaje genérico: 'Campo inválido'. No orienta al usuario."
+      },
+      "pair3": {
+        "do": "Agrupar dirección (calle, ciudad, CP) en un fieldset con legend 'Dirección'.",
+        "dont": "Dejar campos relacionados sueltos — se pierde el contexto para el lector de pantalla."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "note": "El Form no tiene variantes vía prop. Su apariencia depende de los elementos opcionales (description, error) y del control envuelto.",
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "labelOnly": {
+          "name": "Label + control",
+          "description": "Combinación mínima: label asociado al control vía <code>htmlFor</code>/<code>id</code>. Sin texto de apoyo ni error.",
+          "use": "Campos con rótulo autoexplicativo (nombre, email, teléfono) sin necesidad de hint."
+        },
+        "withDescription": {
+          "name": "Con descripción",
+          "description": "Label + control + párrafo de apoyo en <code>--muted-foreground</code> debajo. Aclara formato, política o uso.",
+          "use": "Cuando el label por sí solo no explica el formato esperado (política de contraseña, máscara, ejemplos)."
+        },
+        "withError": {
+          "name": "Con mensaje de error",
+          "description": "Label + control (con <code>aria-invalid</code>) + párrafo en <code>--destructive</code> con <code>aria-live=\"polite\"</code>.",
+          "use": "Validación sincrónica o tras envío. El mensaje debe señalar el problema y sugerir la corrección."
+        },
+        "fieldset": {
+          "name": "Fieldset con legend",
+          "description": "Agrupamiento semántico de campos relacionados vía <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. Gap por defecto de 16px entre campos internos.",
+          "use": "Dirección, datos personales, preferencias — cualquier conjunto de 2+ campos con rótulo de grupo."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "default": {
+        "label": "Predeterminado",
+        "trigger": "Sin props adicionales",
+        "behavior": "Label en <code>--foreground</code>, control en estado predeterminado, sin descripción ni error"
+      },
+      "withDescription": {
+        "label": "Con descripción",
+        "trigger": "Prop <code>description</code>",
+        "behavior": "Párrafo de apoyo en <code>--muted-foreground</code> debajo del control"
+      },
+      "withError": {
+        "label": "Con error",
+        "trigger": "Prop <code>error</code>",
+        "behavior": "Párrafo en <code>--destructive</code> con <code>aria-live=\"polite\"</code>; aplica también <code>aria-invalid</code> en el control"
+      },
+      "disabled": {
+        "label": "Deshabilitado",
+        "trigger": "Control con <code>disabled</code>",
+        "behavior": "El control interno queda deshabilitado; el label permanece visible pero el conjunto no es interactivo"
+      },
+      "fieldset": {
+        "label": "Fieldset",
+        "trigger": "Uso de <code>createFieldset</code>",
+        "behavior": "<code>&lt;fieldset&gt;</code> con gap de 16px entre hijos y <code>&lt;legend&gt;</code> en <code>--foreground</code>"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "fieldTitle": "createFormField",
+      "fieldsetTitle": "createFieldset",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "label": "Texto del rótulo. Se renderiza como <code>&lt;label&gt;</code> asociado vía <code>htmlFor</code>.",
+        "input": "Elemento de control a envolver (input, textarea, select, checkbox).",
+        "description_prop": "Texto de apoyo mostrado debajo del control en <code>--muted-foreground</code>.",
+        "error": "Mensaje de error mostrado debajo, en <code>--destructive</code>, con <code>aria-live=\"polite\"</code>.",
+        "className": "Clases adicionales para personalización puntual.",
+        "legend": "Texto del <code>&lt;legend&gt;</code> que rotula al agrupamiento.",
+        "children": "Lista de elementos (generalmente <code>FormField</code>) dentro del fieldset."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "<code>createFormField</code> acepta cualquier <code>HTMLElement</code> como <code>input</code> — funciona con input, textarea, select, checkbox y composiciones. Usa <code>class</code> para personalización puntual con tokens del proyecto."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Clase",
+        "part": "Parte del componente",
+        "fieldGap": "Espaciado vertical entre label, control, descripción y error",
+        "labelColor": "Color del texto del label",
+        "labelWeight": "Peso de la fuente del label",
+        "descriptionColor": "Color del texto de apoyo",
+        "errorColor": "Color del mensaje de error",
+        "fieldsetGap": "Espaciado vertical entre campos dentro del fieldset",
+        "legendColor": "Color del texto de legend"
+      },
+      "customizationTitle": "Cómo personalizar vía tema:"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Form usa <code>&lt;label&gt;</code> + <code>htmlFor</code> nativos para asociar rótulo y control, y <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> para agrupamiento semántico. Cumple WCAG 2.1 AA: 1.3.1 (información y relaciones), 3.3.1 (identificación de error), 3.3.2 (etiquetas o instrucciones), 4.1.3 (mensajes de estado).",
+      "item1": "<strong>Asociación automática</strong> — cuando el control no tiene <code>id</code>, se genera uno y el label recibe el <code>htmlFor</code> correspondiente.",
+      "item2": "<strong>Error con aria-live</strong> — el párrafo de error tiene <code>aria-live=\"polite\"</code> y es anunciado por el lector de pantalla al aparecer.",
+      "item3": "<strong>aria-invalid manual</strong> — aplica <code>aria-invalid=\"true\"</code> en el control cuando muestres error para anunciar el estado inválido.",
+      "item4": "<strong>Fieldset semántico</strong> — los lectores anuncian el texto del <code>&lt;legend&gt;</code> antes de cada campo del grupo.",
+      "item5": "<strong>Contraste suficiente</strong> — label y descripción mantienen contraste mínimo 4.5:1 en todos los temas (WCAG 1.4.3).",
+      "keyboard": {
+        "tab": "Mueve el foco al siguiente control del formulario.",
+        "shiftTab": "Mueve el foco al control anterior.",
+        "typing": "Inserta texto en el control con foco (cuando aplica).",
+        "escape": "Cierra menús abiertos (en select) sin enviar el formulario."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "input": "Campo de texto de una sola línea usado dentro del FormField.",
+      "textarea": "Campo de texto de múltiples líneas usado dentro del FormField.",
+      "select": "Selección de lista fija, común en FormField.",
+      "checkbox": "Casilla de verificación, generalmente asociada vía FormField o label inline.",
+      "label": "Rótulo accesible — usado internamente por FormField."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "El <code>FormField</code> genera un <code>id</code> automático en el control cuando falta, garantizando la asociación label-control.",
+      "tip2": "Para validación visual, aplica <code>aria-invalid=\"true\"</code> en el control y pasa el mensaje a la prop <code>error</code> — el estilo del control reacciona vía selector de atributo.",
+      "tip3": "Usa el <code>Fieldset</code> incluso para grupos pequeños (2 campos) cuando el rótulo de grupo aporta contexto (ej.: 'Dirección de facturación').",
+      "tip4": "Los mensajes de error deben explicar el problema Y sugerir corrección — nunca solo 'campo inválido'.",
+      "tip5": "Para descripción con formato rico (enlaces, código), usa <code>innerHTML</code> sanitizado con <code>sanitizeHtml</code>."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Rastrea eventos de formulario solo en funnels críticos. Nunca envíes valores de campos sensibles (contraseña, documento, tarjeta).",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "fieldFocus": "field_focus",
+        "fieldFocusTrigger": "Al enfocar un control dentro del FormField — solo funnels críticos",
+        "fieldFocusPayload": "{ component: 'form', location, field_name }",
+        "fieldBlur": "field_blur",
+        "fieldBlurTrigger": "Al salir de un control con valor cargado",
+        "fieldBlurPayload": "{ component: 'form', location, field_name }",
+        "fieldError": "field_error",
+        "fieldErrorTrigger": "Al mostrar mensaje de error en el FormField",
+        "fieldErrorPayload": "{ component: 'form', location, field_name, error_message }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al rolar hasta una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en el LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Qué debe ocurrir para cada configuración del Form.",
+        "item1": { "action": "Renderizar FormField con label e input", "result": "Label asociado vía htmlFor; clic en el label enfoca el control", "priority": "high" },
+        "item2": { "action": "Control sin id explícito", "result": "ID generado automáticamente; label.htmlFor coincide con input.id", "priority": "high" },
+        "item3": { "action": "FormField con descripción", "result": "Párrafo debajo del control con clase nds-form-description", "priority": "medium" },
+        "item4": { "action": "FormField con error", "result": "Párrafo en --destructive con aria-live='polite'", "priority": "high" },
+        "item5": { "action": "Fieldset con legend e hijos", "result": "<fieldset> con <legend> arriba e hijos espaciados en 16px", "priority": "high" },
+        "item6": { "action": "Tab dentro del form", "result": "El foco recorre los controles en orden del DOM", "priority": "high" },
+        "item7": { "action": "FormField con input deshabilitado", "result": "Control no interactivo; label permanece visible", "priority": "medium" },
+        "item8": { "action": "FormField con textarea", "result": "Textarea asociada al label correctamente", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
+        "item2": "Cada control es accesible vía getByLabelText con el texto del label",
+        "item3": "El mensaje de error tiene aria-live='polite'",
+        "item4": "Fieldset tiene legend y el lector la anuncia antes de los campos",
+        "item5": "Contraste mínimo 4.5:1 en label, descripción y error en todos los temas"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Predeterminado — label + input", "priority": "high" },
+        "item2": { "story": "Con descripción — debajo del control", "priority": "medium" },
+        "item3": { "story": "Con error — aria-invalid + mensaje", "priority": "high" },
+        "item4": { "story": "Fieldset — agrupamiento de campos", "priority": "high" },
+        "item5": { "story": "Dark mode — todos los estados", "priority": "high" }
+      }
+    }
+  }
+}

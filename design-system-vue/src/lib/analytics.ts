@@ -237,6 +237,15 @@ interface AnalyticsEvents {
     component: 'toast';
     location: string;
   };
+
+  /** Disparado quando o usuário troca de aba em Tabs. */
+  tab_change: {
+    component: string;
+    label?: string;
+    index?: number;
+    total?: number;
+    location?: string;
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

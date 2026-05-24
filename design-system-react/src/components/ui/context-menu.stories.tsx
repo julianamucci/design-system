@@ -7,7 +7,6 @@ import {
   ContextMenuTrigger,
   ContextMenuContent,
   ContextMenuGroup,
-  ContextMenuLabel,
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuShortcut,

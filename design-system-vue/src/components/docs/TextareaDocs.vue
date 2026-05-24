@@ -6,6 +6,7 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
@@ -15,6 +16,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -83,6 +85,16 @@ const demoDescription = ref('');
 const demoBio = ref('');
 const demoMax = 500;
 
+// Compositions demo state
+const compCounterValue = ref('');
+const compFormValue = ref('');
+const compFormResult = ref('');
+function handleCompFormSubmit() {
+  compFormResult.value = compFormValue.value
+    ? `Feedback enviado (${compFormValue.value.length} caracteres).`
+    : 'Digite um feedback antes de enviar.';
+}
+
 // ─── Navigation groups ────────────────────────────────────────────────────────
 
 const navGroups = computed(() => [
@@ -100,6 +112,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')    },
       { id: 'variantes',    label: tNav('nav.variants')  },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')    },
       { id: 'propriedades', label: tNav('nav.props')     },
       { id: 'tokens',       label: tNav('nav.tokens')    },
@@ -212,6 +225,39 @@ const variantItems = computed(() => [
   { name: stripHtml(tContent('variants.items.default')),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault     },
   { name: stripHtml(tContent('variants.items.withCounter')), description: stripHtml(tContent('variants.styles.withCounter')), code: codeWithCounter },
   { name: stripHtml(tContent('variants.items.noResize')),    description: stripHtml(tContent('variants.styles.noResize')),    code: codeNoResize    },
+]);
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withLabel.name'),
+    description: tContent('variants.compositions.withLabel.description'),
+    useWhen: tContent('variants.compositions.withLabel.use'),
+    code: `<div class="flex flex-col gap-1.5 w-full max-w-md">\n  <Label for="ta-label">Descrição</Label>\n  <Textarea\n    id="ta-label"\n    class="resize-y min-h-[120px]"\n    placeholder="ex: Descreva o produto..."\n  />\n</div>`,
+  },
+  {
+    name: tContent('variants.compositions.withHint.name'),
+    description: tContent('variants.compositions.withHint.description'),
+    useWhen: tContent('variants.compositions.withHint.use'),
+    code: `<div class="flex flex-col gap-1.5 w-full max-w-md">\n  <Label for="ta-hint">Descrição</Label>\n  <Textarea\n    id="ta-hint"\n    class="resize-y min-h-[120px]"\n    placeholder="ex: Descreva o produto..."\n  />\n  <p class="text-xs text-muted-foreground">\n    Descreva o produto com clareza, destacando os principais atributos.\n  </p>\n</div>`,
+  },
+  {
+    name: tContent('variants.compositions.withCounter.name'),
+    description: tContent('variants.compositions.withCounter.description'),
+    useWhen: tContent('variants.compositions.withCounter.use'),
+    code: `<script setup>\nimport { ref } from 'vue';\nconst value = ref('');\n<\/script>\n\n<template>\n  <div class="flex flex-col gap-1.5 w-full max-w-md">\n    <Label for="ta-counter">Descrição</Label>\n    <Textarea\n      id="ta-counter"\n      v-model="value"\n      :maxlength="500"\n      class="resize-y min-h-[120px]"\n      placeholder="ex: Descreva o produto..."\n    />\n    <div class="flex justify-between items-start gap-3 text-xs text-muted-foreground">\n      <span>Descreva com clareza.</span>\n      <span\n        class="tabular-nums shrink-0"\n        aria-live="polite"\n        :aria-label="\`\${value.length} de 500 caracteres usados\`"\n      >\n        {{ value.length }}/500\n      </span>\n    </div>\n  </div>\n</template>`,
+  },
+  {
+    name: tContent('variants.compositions.withError.name'),
+    description: tContent('variants.compositions.withError.description'),
+    useWhen: tContent('variants.compositions.withError.use'),
+    code: `<div class="flex flex-col gap-1.5 w-full max-w-md">\n  <Label for="ta-error">Descrição</Label>\n  <Textarea\n    id="ta-error"\n    aria-invalid="true"\n    aria-describedby="ta-error-error"\n    class="resize-y min-h-[120px]"\n    placeholder="ex: Descreva o produto..."\n  />\n  <p class="text-xs text-destructive" id="ta-error-error">\n    A descrição é obrigatória e deve ter pelo menos 20 caracteres.\n  </p>\n</div>`,
+  },
+  {
+    name: tContent('variants.compositions.inForm.name'),
+    description: tContent('variants.compositions.inForm.description'),
+    useWhen: tContent('variants.compositions.inForm.use'),
+    code: `<script setup>\nimport { ref } from 'vue';\nconst value = ref('');\nconst result = ref('');\nfunction onSubmit() {\n  result.value = value.value\n    ? \`Feedback enviado (\${value.value.length} caracteres).\`\n    : 'Digite um feedback antes de enviar.';\n}\n<\/script>\n\n<template>\n  <form class="flex flex-col gap-4 w-full max-w-md" aria-label="Formulário de feedback" @submit.prevent="onSubmit">\n    <div class="flex flex-col gap-1.5">\n      <Label for="ta-form">Feedback</Label>\n      <Textarea\n        id="ta-form"\n        name="feedback"\n        v-model="value"\n        :maxlength="500"\n        class="resize-y min-h-[120px]"\n        placeholder="O que poderíamos melhorar?"\n      />\n      <div class="flex justify-end text-xs text-muted-foreground">\n        <span\n          class="tabular-nums"\n          aria-live="polite"\n          :aria-label="\`\${value.length} de 500 caracteres usados\`"\n        >\n          {{ value.length }}/500\n        </span>\n      </div>\n    </div>\n    <Button type="submit">Enviar</Button>\n    <p aria-live="polite" class="text-xs text-muted-foreground">{{ result }}</p>\n  </form>\n</template>`,
+  },
 ]);
 
 const stateCols = computed(() => ({
@@ -557,6 +603,108 @@ const visualTestItems = computed(() => [
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="textarea"
+      :items="compositionItems"
+    >
+      <!-- 0: withLabel -->
+      <template #variant-preview-0>
+        <div class="flex flex-col gap-1.5 w-full max-w-md">
+          <Label :for="'ta-label'">Descrição</Label>
+          <Textarea id="ta-label" class="resize-y min-h-[120px]" placeholder="ex: Descreva o produto..." />
+        </div>
+      </template>
+
+      <!-- 1: withHint -->
+      <template #variant-preview-1>
+        <div class="flex flex-col gap-1.5 w-full max-w-md">
+          <Label :for="'ta-hint'">Descrição</Label>
+          <Textarea id="ta-hint" class="resize-y min-h-[120px]" placeholder="ex: Descreva o produto..." />
+          <p class="text-xs text-muted-foreground">
+            Descreva o produto com clareza, destacando os principais atributos.
+          </p>
+        </div>
+      </template>
+
+      <!-- 2: withCounter -->
+      <template #variant-preview-2>
+        <div class="flex flex-col gap-1.5 w-full max-w-md">
+          <Label :for="'ta-counter'">Descrição</Label>
+          <Textarea
+            id="ta-counter"
+            :model-value="compCounterValue"
+            @update:model-value="(v) => compCounterValue = String(v)"
+            :maxlength="500"
+            class="resize-y min-h-[120px]"
+            placeholder="ex: Descreva o produto..."
+          />
+          <div class="flex justify-between items-start gap-3 text-xs text-muted-foreground">
+            <span>Descreva com clareza.</span>
+            <span
+              class="tabular-nums shrink-0"
+              aria-live="polite"
+              :aria-label="`${compCounterValue.length} de 500 caracteres usados`"
+            >
+              {{ compCounterValue.length }}/500
+            </span>
+          </div>
+        </div>
+      </template>
+
+      <!-- 3: withError -->
+      <template #variant-preview-3>
+        <div class="flex flex-col gap-1.5 w-full max-w-md">
+          <Label :for="'ta-error'">Descrição</Label>
+          <Textarea
+            id="ta-error"
+            aria-invalid="true"
+            aria-describedby="ta-error-error"
+            class="resize-y min-h-[120px]"
+            placeholder="ex: Descreva o produto..."
+          />
+          <p class="text-xs text-destructive" id="ta-error-error">
+            A descrição é obrigatória e deve ter pelo menos 20 caracteres.
+          </p>
+        </div>
+      </template>
+
+      <!-- 4: inForm -->
+      <template #variant-preview-4>
+        <form
+          class="flex flex-col gap-4 w-full max-w-md"
+          aria-label="Formulário de feedback"
+          @submit.prevent="handleCompFormSubmit"
+        >
+          <div class="flex flex-col gap-1.5">
+            <Label :for="'ta-form'">Feedback</Label>
+            <Textarea
+              id="ta-form"
+              name="feedback"
+              :model-value="compFormValue"
+              @update:model-value="(v) => compFormValue = String(v)"
+              :maxlength="500"
+              class="resize-y min-h-[120px]"
+              placeholder="O que poderíamos melhorar?"
+            />
+            <div class="flex justify-end text-xs text-muted-foreground">
+              <span
+                class="tabular-nums"
+                aria-live="polite"
+                :aria-label="`${compFormValue.length} de 500 caracteres usados`"
+              >
+                {{ compFormValue.length }}/500
+              </span>
+            </div>
+          </div>
+          <Button type="submit">Enviar</Button>
+          <p aria-live="polite" class="text-xs text-muted-foreground">{{ compFormResult }}</p>
+        </form>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────────── -->
     <DocsStates

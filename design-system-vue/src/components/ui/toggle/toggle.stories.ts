@@ -35,7 +35,7 @@ const meta = {
       options: ['default', 'sm', 'lg'],
       description: 'Altura via tokens --height-*.',
     },
-    onUpdateModelValue: {
+    'onUpdate:modelValue': {
       action: 'update:modelValue',
       description: 'Disparado ao alternar o estado.',
     },

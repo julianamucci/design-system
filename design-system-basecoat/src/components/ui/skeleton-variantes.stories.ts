@@ -23,7 +23,8 @@ type Story = StoryObj;
 
 function buildContainer(label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-md space-y-3';
+  wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+  wrap.dataset.spacing = 'sm';
   wrap.setAttribute('role', 'status');
   wrap.setAttribute('aria-busy', 'true');
   wrap.setAttribute('aria-label', label);

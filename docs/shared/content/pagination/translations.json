@@ -126,6 +126,29 @@
         "default": "Link de página inativo — <code>variant=\"ghost\"</code>, fundo transparente.",
         "active": "Página atual — <code>variant=\"outline\"</code>, borda e <code>aria-current=\"page\"</code>.",
         "directional": "Previous e Next — link com ícone e label visíveis a partir de <code>sm</code>."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "simple": {
+          "name": "Simples (≤ 7 páginas)",
+          "description": "Total pequeno (até 7 páginas) — exibe todos os números sequencialmente, sem ellipsis. Prev/Next no início e fim do bloco.",
+          "use": "Listagens curtas (resultados de busca, posts recentes). Para 8+ páginas prefira a versão com ellipsis."
+        },
+        "withEllipsis": {
+          "name": "Com ellipsis (8+ páginas)",
+          "description": "Páginas distantes da atual são colapsadas em \"…\" — sempre mostra primeira, última, página atual e vizinhas (current ± 1).",
+          "use": "Listagens longas (relatórios, registros históricos, catálogos). Mantém o controle visualmente compacto independente do total."
+        },
+        "lastPage": {
+          "name": "Última página (Next desabilitado)",
+          "description": "Quando <code>current === total</code>, o link Next recebe <code>aria-disabled=\"true\"</code> + opacidade reduzida + <code>pointer-events: none</code>. Mesmo padrão para Prev quando <code>current === 1</code>.",
+          "use": "Estado natural de navegação nos extremos. Não esconda os botões — apenas desabilite para preservar consistência espacial."
+        },
+        "interactive": {
+          "name": "Interativo (estado externo)",
+          "description": "Em SPAs, o estado <code>current</code> vive no componente pai. Cada <code>onPageChange</code> dispara um re-render que substitui o nav inteiro com os novos valores.",
+          "use": "Apps reais com listas paginadas. Sincronize o estado com a URL (<code>?page=3</code>) para suportar deep-link e botão voltar."
+        }
       }
     },
     "states": {
@@ -441,6 +464,29 @@
         "default": "Inactive page link — <code>variant=\"ghost\"</code>, transparent background.",
         "active": "Current page — <code>variant=\"outline\"</code>, border and <code>aria-current=\"page\"</code>.",
         "directional": "Previous and Next — link with icon and label visible from <code>sm</code>."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "simple": {
+          "name": "Simple (≤ 7 pages)",
+          "description": "Small total (up to 7 pages) — shows every number sequentially, no ellipsis. Prev/Next at the start and end of the block.",
+          "use": "Short listings (search results, recent posts). For 8+ pages prefer the ellipsis variant."
+        },
+        "withEllipsis": {
+          "name": "With ellipsis (8+ pages)",
+          "description": "Pages far from the current one collapse into \"…\" — always shows first, last, current and neighbors (current ± 1).",
+          "use": "Long listings (reports, historical records, catalogs). Keeps the control visually compact regardless of total."
+        },
+        "lastPage": {
+          "name": "Last page (Next disabled)",
+          "description": "When <code>current === total</code>, the Next link receives <code>aria-disabled=\"true\"</code> + reduced opacity + <code>pointer-events: none</code>. Same pattern for Prev when <code>current === 1</code>.",
+          "use": "Natural navigation state at the extremes. Don't hide the buttons — just disable them to preserve spatial consistency."
+        },
+        "interactive": {
+          "name": "Interactive (external state)",
+          "description": "In SPAs, the <code>current</code> state lives in the parent component. Each <code>onPageChange</code> triggers a re-render that replaces the entire nav with new values.",
+          "use": "Real apps with paginated lists. Sync state with the URL (<code>?page=3</code>) to support deep-link and back button."
+        }
       }
     },
     "states": {
@@ -756,6 +802,29 @@
         "default": "Link de página inactivo — <code>variant=\"ghost\"</code>, fondo transparente.",
         "active": "Página actual — <code>variant=\"outline\"</code>, borde y <code>aria-current=\"page\"</code>.",
         "directional": "Previous y Next — link con icono y etiqueta visibles desde <code>sm</code>."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "simple": {
+          "name": "Simple (≤ 7 páginas)",
+          "description": "Total pequeño (hasta 7 páginas) — muestra todos los números secuencialmente, sin ellipsis. Prev/Next al inicio y al fin del bloque.",
+          "use": "Listados cortos (resultados de búsqueda, posts recientes). Para 8+ páginas prefiere la versión con ellipsis."
+        },
+        "withEllipsis": {
+          "name": "Con ellipsis (8+ páginas)",
+          "description": "Páginas lejos de la actual se colapsan en \"…\" — siempre muestra primera, última, página actual y vecinas (current ± 1).",
+          "use": "Listados largos (reportes, registros históricos, catálogos). Mantiene el control visualmente compacto sin importar el total."
+        },
+        "lastPage": {
+          "name": "Última página (Next deshabilitado)",
+          "description": "Cuando <code>current === total</code>, el link Next recibe <code>aria-disabled=\"true\"</code> + opacidad reducida + <code>pointer-events: none</code>. Mismo patrón para Prev cuando <code>current === 1</code>.",
+          "use": "Estado natural de navegación en los extremos. No ocultes los botones — solo deshabilítalos para preservar consistencia espacial."
+        },
+        "interactive": {
+          "name": "Interactivo (estado externo)",
+          "description": "En SPAs, el estado <code>current</code> vive en el componente padre. Cada <code>onPageChange</code> dispara un re-render que reemplaza el nav entero con los nuevos valores.",
+          "use": "Apps reales con listas paginadas. Sincroniza el estado con la URL (<code>?page=3</code>) para soportar deep-link y botón atrás."
+        }
       }
     },
     "states": {

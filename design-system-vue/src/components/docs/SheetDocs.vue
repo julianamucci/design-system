@@ -28,6 +28,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -104,6 +105,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
+      { id: 'composicoes',  label: tContent('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -215,6 +217,112 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: codeRight.replace('"right"', '"left"') },
   { name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: codeRight.replace('"right"', '"top"') },
   { name: tContent('variants.items.bottom'), description: stripHtml(tContent('variants.styles.bottom')), code: codeRight.replace('"right"', '"bottom"') },
+]);
+
+const codeCompAdvancedFilters = `<Sheet>
+  <SheetTrigger as-child>
+    <Button variant="outline">Abrir filtros</Button>
+  </SheetTrigger>
+  <SheetContent side="right" class="w-[400px] sm:w-[420px]">
+    <SheetHeader>
+      <SheetTitle>Filtros avançados</SheetTitle>
+      <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
+    </SheetHeader>
+    <form class="grid gap-4 px-4">
+      <Label for="cat">Categoria</Label>
+      <Input id="cat" default-value="Eletrônicos" />
+      <Label for="min">Preço mínimo</Label>
+      <Input id="min" type="number" default-value="100" />
+    </form>
+    <SheetFooter>
+      <SheetClose as-child>
+        <Button variant="outline">Cancelar</Button>
+      </SheetClose>
+      <Button>Aplicar filtros</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`;
+
+const codeCompSecondaryNav = `<Sheet>
+  <SheetTrigger as-child>
+    <Button variant="outline">Abrir menu</Button>
+  </SheetTrigger>
+  <SheetContent side="left">
+    <SheetHeader>
+      <SheetTitle>Menu</SheetTitle>
+      <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
+    </SheetHeader>
+    <nav aria-label="Navegação secundária" class="flex flex-col gap-1 px-4">
+      <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Dashboard</a>
+      <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Projetos</a>
+      <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Equipe</a>
+    </nav>
+  </SheetContent>
+</Sheet>`;
+
+const codeCompMobileActions = `<Sheet>
+  <SheetTrigger as-child>
+    <Button variant="outline">Mais opções</Button>
+  </SheetTrigger>
+  <SheetContent side="bottom">
+    <SheetHeader>
+      <SheetTitle>Ações rápidas</SheetTitle>
+      <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
+    </SheetHeader>
+    <div class="grid grid-cols-3 gap-3 px-4 text-sm">
+      <button type="button" class="p-3 rounded-md border hover:bg-accent">Compartilhar</button>
+      <button type="button" class="p-3 rounded-md border hover:bg-accent">Editar</button>
+      <button type="button" class="p-3 rounded-md border hover:bg-accent">Excluir</button>
+    </div>
+  </SheetContent>
+</Sheet>`;
+
+const codeCompLongScroll = `<Sheet>
+  <SheetTrigger as-child>
+    <Button variant="outline">Ler termos</Button>
+  </SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Termos de uso</SheetTitle>
+      <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
+    </SheetHeader>
+    <div class="space-y-3 px-4 text-sm text-muted-foreground">
+      <!-- parágrafos longos — body rola, footer fixo -->
+    </div>
+    <SheetFooter>
+      <SheetClose as-child>
+        <Button variant="outline">Cancelar</Button>
+      </SheetClose>
+      <Button>Aceitar termos</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.advancedFilters.name'),
+    description: tContent('variants.compositions.advancedFilters.description'),
+    useWhen: tContent('variants.compositions.advancedFilters.use'),
+    code: codeCompAdvancedFilters,
+  },
+  {
+    name: tContent('variants.compositions.secondaryNavigation.name'),
+    description: tContent('variants.compositions.secondaryNavigation.description'),
+    useWhen: tContent('variants.compositions.secondaryNavigation.use'),
+    code: codeCompSecondaryNav,
+  },
+  {
+    name: tContent('variants.compositions.mobileActions.name'),
+    description: tContent('variants.compositions.mobileActions.description'),
+    useWhen: tContent('variants.compositions.mobileActions.use'),
+    code: codeCompMobileActions,
+  },
+  {
+    name: tContent('variants.compositions.longScrollBody.name'),
+    description: tContent('variants.compositions.longScrollBody.description'),
+    useWhen: tContent('variants.compositions.longScrollBody.use'),
+    code: codeCompLongScroll,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -431,7 +539,7 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <Sheet default-open modal="false">
+        <Sheet default-open :modal="false">
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle>Filtros avançados</SheetTitle>
@@ -447,7 +555,7 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #dont-preview-0>
-        <Sheet default-open modal="false">
+        <Sheet default-open :modal="false">
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle class="sr-only">Sem título visível</SheetTitle>
@@ -461,7 +569,7 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #do-preview-1>
-        <Sheet default-open modal="false">
+        <Sheet default-open :modal="false">
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle>Filtros avançados</SheetTitle>
@@ -471,7 +579,7 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #dont-preview-1>
-        <Sheet default-open modal="false">
+        <Sheet default-open :modal="false">
           <SheetContent side="top">
             <SheetHeader>
               <SheetTitle>Filtros avançados</SheetTitle>
@@ -491,7 +599,7 @@ const a11yCritCols = computed(() => ({
     <!-- ── Variantes ────────────────────────────────────────────── -->
     <DocsVariants :title="tContent('variants.title')" :items="variantItems">
       <template #variant-preview-0>
-        <Sheet default-open modal="false">
+        <Sheet default-open :modal="false">
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.rightLabel') }}</SheetTitle>
@@ -507,7 +615,7 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-1>
-        <Sheet default-open modal="false">
+        <Sheet default-open :modal="false">
           <SheetContent side="left">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.leftLabel') }}</SheetTitle>
@@ -517,7 +625,7 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-2>
-        <Sheet default-open modal="false">
+        <Sheet default-open :modal="false">
           <SheetContent side="top">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.topLabel') }}</SheetTitle>
@@ -527,7 +635,7 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-3>
-        <Sheet default-open modal="false">
+        <Sheet default-open :modal="false">
           <SheetContent side="bottom">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.bottomLabel') }}</SheetTitle>
@@ -537,6 +645,95 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="sheet"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div style="contain: layout">
+          <Sheet default-open :modal="false">
+            <SheetContent side="right" class="w-[400px] sm:w-[420px]">
+              <SheetHeader>
+                <SheetTitle>Filtros avançados</SheetTitle>
+                <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
+              </SheetHeader>
+              <form class="grid gap-3 px-4">
+                <Label for="comp-cat">Categoria</Label>
+                <Input id="comp-cat" default-value="Eletrônicos" />
+                <Label for="comp-min">Preço mínimo</Label>
+                <Input id="comp-min" type="number" default-value="100" />
+              </form>
+              <SheetFooter>
+                <SheetClose as-child>
+                  <Button variant="outline">Cancelar</Button>
+                </SheetClose>
+                <Button>Aplicar filtros</Button>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </template>
+      <template #variant-preview-1>
+        <div style="contain: layout">
+          <Sheet default-open :modal="false">
+            <SheetContent side="left">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+                <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
+              </SheetHeader>
+              <nav aria-label="Navegação secundária" class="flex flex-col gap-1 px-4">
+                <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Dashboard</a>
+                <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Projetos</a>
+                <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Equipe</a>
+                <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Configurações</a>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div style="contain: layout">
+          <Sheet default-open :modal="false">
+            <SheetContent side="bottom">
+              <SheetHeader>
+                <SheetTitle>Ações rápidas</SheetTitle>
+                <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
+              </SheetHeader>
+              <div class="grid grid-cols-3 gap-3 px-4 text-sm">
+                <button type="button" class="p-3 rounded-md border hover:bg-accent">Compartilhar</button>
+                <button type="button" class="p-3 rounded-md border hover:bg-accent">Editar</button>
+                <button type="button" class="p-3 rounded-md border hover:bg-accent">Excluir</button>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div style="contain: layout">
+          <Sheet default-open :modal="false">
+            <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle>Termos de uso</SheetTitle>
+                <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
+              </SheetHeader>
+              <div class="space-y-3 px-4 text-sm text-muted-foreground max-h-64 overflow-auto">
+                <p v-for="i in 12" :key="i">Parágrafo {{ i }}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.</p>
+              </div>
+              <SheetFooter>
+                <SheetClose as-child>
+                  <Button variant="outline">Cancelar</Button>
+                </SheetClose>
+                <Button>Aceitar termos</Button>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ─────────────────────────────────────────────── -->
     <DocsStates

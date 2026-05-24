@@ -5,8 +5,9 @@ import { cn } from "@/lib/utils"
 function Separator({
   className,
   orientation = "horizontal",
+  decorative: _decorative,
   ...props
-}: SeparatorPrimitive.Props) {
+}: SeparatorPrimitive.Props & { decorative?: boolean }) {
   return (
     <SeparatorPrimitive
       data-slot="separator"

@@ -1,4 +1,5 @@
-import { cn } from '@/lib/utils';
+// ─── Toast — Vanilla factory standalone ─────────────────────────────────────
+// Visual: classes .nds-toaster / .nds-toast (zero Tailwind/basecoat-css).
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -21,17 +22,6 @@ export type ToasterOptions = {
   class?: string;
 };
 
-// ─── Position classes ─────────────────────────────────────────────────────────
-
-const POSITION_CLASSES: Record<ToastPosition, string> = {
-  'top-right':    'top-4 right-4',
-  'top-center':   'top-4 left-1/2 -translate-x-1/2',
-  'top-left':     'top-4 left-4',
-  'bottom-right': 'bottom-4 right-4',
-  'bottom-center':'bottom-4 left-1/2 -translate-x-1/2',
-  'bottom-left':  'bottom-4 left-4',
-};
-
 const CLOSE_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
 
@@ -44,13 +34,9 @@ export function createToaster(options: ToasterOptions = {}): HTMLElement {
 
   const toaster = document.createElement('div');
   toaster.dataset.slot = 'toaster';
-  toaster.className = cn(
-    'toaster fixed z-[9999] flex flex-col gap-2 pointer-events-none',
-    POSITION_CLASSES[position],
-    options.class
-  );
-  toaster.style.maxWidth = '420px';
-  toaster.style.width = '100%';
+  toaster.dataset.position = position;
+  toaster.className = 'nds-toaster';
+  if (options.class) toaster.classList.add(...options.class.split(' ').filter(Boolean));
   toaster.setAttribute('role', 'region');
   toaster.setAttribute('aria-label', 'Notifications');
   toaster.setAttribute('aria-live', 'polite');
@@ -70,25 +56,25 @@ export function createToast(options: ToastOptions): HTMLElement {
   toast.setAttribute('aria-live', 'polite');
   toast.setAttribute('aria-atomic', 'true');
 
-  toast.className = cn(
-    'toast pointer-events-auto w-full flex items-start gap-3 rounded-lg border p-4 shadow-lg transition-all duration-200',
-    variant === 'destructive'
-      ? 'destructive border-destructive bg-destructive text-destructive-foreground'
-      : 'bg-background text-foreground border-border'
-  );
+  toast.className = 'nds-toast';
+  toast.dataset.visible = 'false';
+  if (variant === 'destructive') {
+    toast.dataset.type = 'error';
+    toast.setAttribute('data-rich-colors', 'true');
+  }
 
   // Content
   const contentEl = document.createElement('div');
-  contentEl.className = 'toast-content flex-1 min-w-0';
+  contentEl.className = 'nds-toast-content';
 
   const titleEl = document.createElement('div');
-  titleEl.className = 'text-sm font-semibold';
+  titleEl.className = 'nds-toast-title';
   titleEl.textContent = title;
   contentEl.appendChild(titleEl);
 
   if (description) {
     const descEl = document.createElement('div');
-    descEl.className = 'text-sm opacity-90 mt-1';
+    descEl.className = 'nds-toast-description';
     descEl.textContent = description;
     contentEl.appendChild(descEl);
   }
@@ -98,7 +84,7 @@ export function createToast(options: ToastOptions): HTMLElement {
   // Close button
   const closeBtn = document.createElement('button');
   closeBtn.type = 'button';
-  closeBtn.className = 'flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity';
+  closeBtn.className = 'nds-toast-close';
   closeBtn.setAttribute('aria-label', 'Close notification');
   closeBtn.innerHTML = CLOSE_SVG;
   closeBtn.addEventListener('click', () => dismissToast(toast));
@@ -110,8 +96,7 @@ export function createToast(options: ToastOptions): HTMLElement {
 // ─── dismissToast ─────────────────────────────────────────────────────────────
 
 function dismissToast(toast: HTMLElement): void {
-  toast.style.opacity = '0';
-  toast.style.transform = 'translateY(8px)';
+  toast.dataset.visible = 'false';
   setTimeout(() => toast.remove(), 200);
 }
 
@@ -122,13 +107,10 @@ export function showToast(options: ToastOptions & { toaster?: HTMLElement }): vo
   const toast = createToast(options);
   const duration = options.duration ?? 4000;
 
-  toast.style.opacity = '0';
-  toast.style.transform = 'translateY(8px)';
   toaster.appendChild(toast);
 
   requestAnimationFrame(() => {
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateY(0)';
+    toast.dataset.visible = 'true';
   });
 
   setTimeout(() => dismissToast(toast), duration);

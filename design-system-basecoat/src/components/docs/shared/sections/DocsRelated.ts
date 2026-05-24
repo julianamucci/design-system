@@ -1,5 +1,4 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
-import { btnClass } from '@/components/ui/button';
 
 export interface DocsRelatedItem { name: string; description: string; path: string }
 export interface DocsRelatedProps {
@@ -23,26 +22,32 @@ export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
   section.id = 'relacionados';
 
   const h2 = document.createElement('h2');
-  h2.className = 'text-xl font-semibold mb-4';
+  h2.className = 'nds-section-title';
   h2.textContent = props.title;
   section.appendChild(h2);
 
   const grid = document.createElement('div');
-  grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-4';
+  grid.className = 'nds-grid';
+  grid.dataset.cols = '2';
+  grid.dataset.spacing = 'md';
 
   props.items.forEach(item => {
     const a = document.createElement('a');
     a.href = item.path;
     a.target = '_top';
-    a.className = `${btnClass('ghost', 'default')} text-left p-4 border bg-card hover:bg-muted/50 transition-colors space-y-1 cursor-pointer h-auto flex-col items-start whitespace-normal w-full`;
+    // Card clicável com aparência do button outline (border + bg + hover accent).
+    // Implementado como classe própria .nds-related-card em vez de usar
+    // .nds-button-outline porque o layout difere (vertical, multi-linha,
+    // padding maior, sem white-space:nowrap nem inline-flex centralizado).
+    a.className = 'nds-related-card';
     a.setAttribute('data-track', 'related');
     if (props.componentSlug) {
       a.setAttribute('data-track-id', `${props.componentSlug}:related:${slugify(item.name)}`);
     }
     a.setAttribute('data-track-label', item.name);
     a.innerHTML = `
-      <p class="text-sm font-semibold text-primary">${sanitizeHtml(item.name)}</p>
-      <p class="text-xs text-muted-foreground leading-relaxed">${sanitizeHtml(item.description)}</p>`;
+      <span class="nds-related-card-title">${sanitizeHtml(item.name)}</span>
+      <span class="nds-related-card-description">${sanitizeHtml(item.description)}</span>`;
     grid.appendChild(a);
   });
 

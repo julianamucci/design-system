@@ -1,4 +1,3 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
 import { createCard } from '@/components/ui/card';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
@@ -14,26 +13,26 @@ export function createDocsAnalytics(props: DocsAnalyticsProps): HTMLElement {
   section.id = 'analytics';
 
   const h2 = document.createElement('h2');
-  h2.className = 'text-xl font-semibold mb-4';
+  h2.className = 'nds-section-title';
   h2.textContent = props.title;
 
-  const wrapper = createCard({ className: 'p-4 overflow-x-auto md:overflow-visible' });
+  const wrapper = createCard({ className: 'nds-p-4 nds-overflow-x' });
 
-  const { wrapper: tableWrapper, table } = createTable('w-full text-sm');
+  const { wrapper: tableWrapper, table } = createTable('nds-w-full nds-text-body');
 
   const thead = createTableHeader();
-  const headerRow = createTableRow('border-b border-border bg-muted/50 text-left');
-  headerRow.appendChild(createTableHead(props.cols.event, 'p-3 font-semibold'));
-  headerRow.appendChild(createTableHead(props.cols.trigger, 'p-3 font-semibold'));
-  headerRow.appendChild(createTableHead(props.cols.payload, 'p-3 font-semibold'));
+  const headerRow = createTableRow('nds-border-b nds-border-default nds-bg-muted-soft');
+  headerRow.appendChild(createTableHead(props.cols.event, 'nds-p-2 nds-font-semibold'));
+  headerRow.appendChild(createTableHead(props.cols.trigger, 'nds-p-2 nds-font-semibold'));
+  headerRow.appendChild(createTableHead(props.cols.payload, 'nds-p-2 nds-font-semibold'));
   thead.appendChild(headerRow);
 
   const tbody = createTableBody();
   props.items.forEach(item => {
-    const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
-    row.appendChild(createTableCell(item.event, 'p-3 font-mono text-primary'));
-    row.appendChild(createTableCell(item.trigger, 'p-3 text-muted-foreground'));
-    row.appendChild(createTableCell(item.payload, 'p-3 font-mono text-xs text-muted-foreground'));
+    const row = createTableRow('nds-border-b nds-border-default nds-hover-bg-muted-faint');
+    row.appendChild(createTableCell(item.event, 'nds-p-2 nds-font-mono nds-text-primary'));
+    row.appendChild(createTableCell(item.trigger, 'nds-p-2 nds-text-muted-foreground'));
+    row.appendChild(createTableCell(item.payload, 'nds-p-2 nds-font-mono nds-text-caption nds-text-muted-foreground'));
     tbody.appendChild(row);
   });
 

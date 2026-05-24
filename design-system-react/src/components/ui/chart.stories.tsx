@@ -62,7 +62,7 @@ export const Playground: Story = {
   args: {
     config: chartConfig,
     className: "h-[300px] w-[500px]",
-  },
+  } as never,
   render: (args) => (
     <ChartContainer
       {...args}

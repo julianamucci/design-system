@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/navigation-menu/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.vue';
@@ -22,6 +23,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -34,6 +36,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
+const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -96,8 +99,9 @@ const navGroups = computed(() => [
     label: tContent('nav.techRef'),
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
-      { id: 'variantes',    label: tContent('nav.variants') },
-      { id: 'estados',      label: tContent('nav.states')   },
+      { id: 'variantes',    label: tContent('nav.variants')     },
+      { id: 'composicoes',  label: tContent('nav.compositions') },
+      { id: 'estados',      label: tContent('nav.states')       },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
     ],
@@ -207,6 +211,116 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: codeHorizontal },
   { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: codeVertical   },
+]);
+
+// ─── Composições ──────────────────────────────────────────────────────────────
+
+const codeLinkSimples = `<NavigationMenu aria-label="Navegação principal">
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuLink href="/">Início</NavigationMenuLink>
+    </NavigationMenuItem>
+    <NavigationMenuItem>
+      <NavigationMenuLink href="/precos">Preços</NavigationMenuLink>
+    </NavigationMenuItem>
+    <NavigationMenuItem>
+      <NavigationMenuLink href="/contato">Contato</NavigationMenuLink>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>`;
+
+const codeComDropdown = `<NavigationMenu aria-label="Navegação principal">
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuLink href="/">Início</NavigationMenuLink>
+    </NavigationMenuItem>
+    <NavigationMenuItem value="produtos">
+      <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <ul class="grid w-[240px] gap-1 p-2">
+          <li><NavigationMenuLink href="/produtos/inicial">Plano Inicial</NavigationMenuLink></li>
+          <li><NavigationMenuLink href="/produtos/profissional">Plano Profissional</NavigationMenuLink></li>
+          <li><NavigationMenuLink href="/produtos/empresarial">Plano Empresarial</NavigationMenuLink></li>
+          <li><NavigationMenuLink href="/produtos/comparar">Comparar planos</NavigationMenuLink></li>
+        </ul>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>`;
+
+const codeMegaMenuGrid = `<NavigationMenu aria-label="Navegação principal">
+  <NavigationMenuList>
+    <NavigationMenuItem value="solucoes">
+      <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <ul class="grid w-[560px] grid-cols-2 gap-2 p-3">
+          <li>
+            <NavigationMenuLink href="/solucoes/marketing">
+              <div class="text-sm font-medium">Para Marketing</div>
+              <p class="text-xs text-muted-foreground">Automação, leads e campanhas.</p>
+            </NavigationMenuLink>
+          </li>
+          <li>
+            <NavigationMenuLink href="/solucoes/vendas">
+              <div class="text-sm font-medium">Para Vendas</div>
+              <p class="text-xs text-muted-foreground">Pipeline, CRM e propostas.</p>
+            </NavigationMenuLink>
+          </li>
+          <!-- ...mais 4 itens -->
+        </ul>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>`;
+
+const codeComCardDestacado = `<NavigationMenu aria-label="Navegação principal">
+  <NavigationMenuList>
+    <NavigationMenuItem value="recursos">
+      <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <div class="flex gap-3 w-[560px] p-3">
+          <a href="/quickstart" class="flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline">
+            <div class="text-base font-semibold leading-tight">Comece em 5 minutos</div>
+            <p class="mt-2 text-sm leading-snug text-muted-foreground">
+              Crie sua primeira integração com nosso quickstart.
+            </p>
+          </a>
+          <ul class="flex flex-col flex-1 gap-1">
+            <li><NavigationMenuLink href="/docs">Documentação</NavigationMenuLink></li>
+            <li><NavigationMenuLink href="/tutoriais">Tutoriais</NavigationMenuLink></li>
+            <li><NavigationMenuLink href="/comunidade">Comunidade</NavigationMenuLink></li>
+          </ul>
+        </div>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.linkSimples.name'),
+    description: tContent('variants.compositions.linkSimples.description'),
+    useWhen: tContent('variants.compositions.linkSimples.use'),
+    code: codeLinkSimples,
+  },
+  {
+    name: tContent('variants.compositions.comDropdown.name'),
+    description: tContent('variants.compositions.comDropdown.description'),
+    useWhen: tContent('variants.compositions.comDropdown.use'),
+    code: codeComDropdown,
+  },
+  {
+    name: tContent('variants.compositions.megaMenuGrid.name'),
+    description: tContent('variants.compositions.megaMenuGrid.description'),
+    useWhen: tContent('variants.compositions.megaMenuGrid.use'),
+    code: codeMegaMenuGrid,
+  },
+  {
+    name: tContent('variants.compositions.comCardDestacado.name'),
+    description: tContent('variants.compositions.comCardDestacado.description'),
+    useWhen: tContent('variants.compositions.comCardDestacado.use'),
+    code: codeComCardDestacado,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -532,6 +646,93 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="navigation-menu"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div style="contain: layout; min-height: 200px;" class="w-full flex justify-center">
+          <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
+            <NavigationMenuList>
+              <NavigationMenuItem><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
+              <NavigationMenuItem><NavigationMenuLink href="#">Preços</NavigationMenuLink></NavigationMenuItem>
+              <NavigationMenuItem><NavigationMenuLink href="#">Contato</NavigationMenuLink></NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+      </template>
+      <template #variant-preview-1>
+        <div style="contain: layout; min-height: 280px;" class="w-full flex justify-center">
+          <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="produtos">
+            <NavigationMenuList>
+              <NavigationMenuItem><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
+              <NavigationMenuItem value="produtos">
+                <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul class="grid w-[240px] gap-1 p-2">
+                    <li><NavigationMenuLink href="#">Plano Inicial</NavigationMenuLink></li>
+                    <li><NavigationMenuLink href="#">Plano Profissional</NavigationMenuLink></li>
+                    <li><NavigationMenuLink href="#">Plano Empresarial</NavigationMenuLink></li>
+                    <li><NavigationMenuLink href="#">Comparar planos</NavigationMenuLink></li>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div style="contain: layout; min-height: 320px;" class="w-full flex justify-center">
+          <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="solucoes">
+            <NavigationMenuList>
+              <NavigationMenuItem value="solucoes">
+                <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul class="grid w-[560px] grid-cols-2 gap-2 p-3">
+                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Marketing</div><p class="text-xs text-muted-foreground">Automação, leads e campanhas.</p></NavigationMenuLink></li>
+                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Vendas</div><p class="text-xs text-muted-foreground">Pipeline, CRM e propostas.</p></NavigationMenuLink></li>
+                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Suporte</div><p class="text-xs text-muted-foreground">Tickets, base de conhecimento.</p></NavigationMenuLink></li>
+                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Sucesso</div><p class="text-xs text-muted-foreground">Onboarding e retenção.</p></NavigationMenuLink></li>
+                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Operações</div><p class="text-xs text-muted-foreground">Workflows e integrações.</p></NavigationMenuLink></li>
+                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Analytics</div><p class="text-xs text-muted-foreground">Dashboards e relatórios.</p></NavigationMenuLink></li>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div style="contain: layout; min-height: 320px;" class="w-full flex justify-center">
+          <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="recursos">
+            <NavigationMenuList>
+              <NavigationMenuItem value="recursos">
+                <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div class="flex gap-3 w-[560px] p-3">
+                    <a href="#" class="flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline">
+                      <div class="text-base font-semibold leading-tight">Comece em 5 minutos</div>
+                      <p class="mt-2 text-sm leading-snug text-muted-foreground">
+                        Crie sua primeira integração com nosso quickstart.
+                      </p>
+                    </a>
+                    <ul class="flex flex-col flex-1 gap-1">
+                      <li><NavigationMenuLink href="#">Documentação</NavigationMenuLink></li>
+                      <li><NavigationMenuLink href="#">Tutoriais</NavigationMenuLink></li>
+                      <li><NavigationMenuLink href="#">Comunidade</NavigationMenuLink></li>
+                    </ul>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────── -->
     <DocsStates

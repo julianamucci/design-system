@@ -1,0 +1,139 @@
+/*
+ * ─── nds-command ────────────────────────────────────────────────────────────
+ * Paleta de comando (search + lista filtrada por grupos). Geralmente
+ * apresentada dentro de um Dialog, mas funciona standalone.
+ *
+ *   <div class="nds-command" data-slot="command">
+ *     <div class="nds-command-input-wrapper">
+ *       <svg>…</svg>
+ *       <input class="nds-command-input" type="text" role="combobox" />
+ *     </div>
+ *     <div class="nds-command-list" role="listbox">
+ *       <div class="nds-command-group">
+ *         <div class="nds-command-group-heading">Categoria</div>
+ *         <div class="nds-command-item" role="option" aria-selected="false">…</div>
+ *       </div>
+ *       <p class="nds-command-empty">No results found.</p>
+ *     </div>
+ *   </div>
+ *
+ * Tokens: --popover, --popover-foreground, --foreground, --muted-foreground,
+ *         --accent, --accent-foreground, --border, --radius, --spacing-*
+ */
+
+.nds-command {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border-radius: var(--radius, 0.5rem);
+}
+
+/* ── Input wrapper (com ícone de busca) ──────────────────────────────────── */
+.nds-command-input-wrapper {
+  display: flex;
+  align-items: center;
+  padding-inline: var(--spacing-3, 0.75rem);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.nds-command-input-wrapper > svg {
+  width: var(--spacing-4);                        /* 16px */
+  height: var(--spacing-4);
+  margin-right: var(--spacing-2);
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+/* ── Input ───────────────────────────────────────────────────────────────── */
+.nds-command-input {
+  display: flex;
+  width: 100%;
+  height: 2.5rem;                                  /* 40px */
+  padding-block: var(--spacing-3, 0.75rem);
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  font-size: 0.875rem;                             /* 14px */
+  color: inherit;
+  outline: 0;
+}
+
+.nds-command-input::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-command-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ── List ────────────────────────────────────────────────────────────────── */
+.nds-command-list {
+  max-height: 18.75rem;                            /* 300px */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ── Group ───────────────────────────────────────────────────────────────── */
+.nds-command-group {
+  overflow: hidden;
+  padding: var(--spacing-1, 0.25rem);
+  color: hsl(var(--foreground));
+}
+
+.nds-command-group-heading {
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1-5, 0.375rem);
+  font-size: 0.75rem;                              /* 12px */
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Item ────────────────────────────────────────────────────────────────── */
+.nds-command-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1-5, 0.375rem);
+
+  border-radius: 0.25rem;                          /* 4px */
+  font-size: 0.875rem;                             /* 14px */
+  cursor: pointer;
+  user-select: none;
+  outline: 0;
+  transition: background-color 100ms, color 100ms;
+}
+
+.nds-command-item:hover,
+.nds-command-item[aria-selected="true"] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-command-item[aria-disabled="true"] {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Empty (sem resultados) ──────────────────────────────────────────────── */
+.nds-command-empty {
+  padding-block: var(--spacing-6);                 /* 24px */
+  text-align: center;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-command-item {
+    transition: none;
+  }
+}

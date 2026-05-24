@@ -13,6 +13,10 @@ import {
 } from '@/components/ui/input-otp';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/input-otp/translations.json';
+import uiTranslations from '@/i18n/ui.json';
+
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.vue';
@@ -21,6 +25,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -33,6 +38,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
+const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -96,6 +102,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
+      { id: 'composicoes',  label: tContent('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -194,6 +201,85 @@ const variantItems = computed(() => [
     code: 'import { REGEXP_ONLY_DIGITS_AND_CHARS } from "vue-input-otp";\n<InputOTP :max-length="6" :pattern="REGEXP_ONLY_DIGITS_AND_CHARS" inputmode="text" />',
   },
 ]);
+
+const codeCompLabel = `<div class="flex flex-col gap-2">
+  <Label for="otp-code">Código de verificação</Label>
+  <InputOTP id="otp-code" :max-length="6" v-model="code" autocomplete="one-time-code" inputmode="numeric">
+    <InputOTPGroup>
+      <InputOTPSlot :index="0" />
+      <InputOTPSlot :index="1" />
+      <InputOTPSlot :index="2" />
+      <InputOTPSlot :index="3" />
+      <InputOTPSlot :index="4" />
+      <InputOTPSlot :index="5" />
+    </InputOTPGroup>
+  </InputOTP>
+</div>`;
+
+const codeCompHelp = `<div class="flex flex-col gap-2">
+  <Label for="otp-help">Código de verificação</Label>
+  <InputOTP id="otp-help" :max-length="6" aria-describedby="otp-help-text"
+    autocomplete="one-time-code" inputmode="numeric">
+    <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
+  </InputOTP>
+  <p id="otp-help-text" class="text-xs text-muted-foreground">
+    Enviamos por SMS, expira em 5 min.
+  </p>
+</div>`;
+
+const codeCompError = `<div class="flex flex-col gap-2">
+  <Label for="otp-err">Código de verificação</Label>
+  <InputOTP id="otp-err" :max-length="6" aria-invalid="true"
+    aria-describedby="otp-err-text" autocomplete="one-time-code" inputmode="numeric">
+    <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
+  </InputOTP>
+  <p id="otp-err-text" class="text-xs text-destructive">
+    Código incorreto. Verifique e tente novamente.
+  </p>
+</div>`;
+
+const codeCompResend = `<div class="flex flex-col gap-3">
+  <Label for="otp-resend">Código de verificação</Label>
+  <InputOTP id="otp-resend" :max-length="6" autocomplete="one-time-code" inputmode="numeric">
+    <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
+  </InputOTP>
+  <div class="flex items-center justify-between gap-3">
+    <p class="text-xs text-muted-foreground">Não recebeu?</p>
+    <Button variant="link" size="sm">Reenviar código</Button>
+  </div>
+</div>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withLabel.name'),
+    description: tContent('variants.compositions.withLabel.description'),
+    useWhen: tContent('variants.compositions.withLabel.use'),
+    code: codeCompLabel,
+  },
+  {
+    name: tContent('variants.compositions.withHelpText.name'),
+    description: tContent('variants.compositions.withHelpText.description'),
+    useWhen: tContent('variants.compositions.withHelpText.use'),
+    code: codeCompHelp,
+  },
+  {
+    name: tContent('variants.compositions.withErrorMessage.name'),
+    description: tContent('variants.compositions.withErrorMessage.description'),
+    useWhen: tContent('variants.compositions.withErrorMessage.use'),
+    code: codeCompError,
+  },
+  {
+    name: tContent('variants.compositions.withResendButton.name'),
+    description: tContent('variants.compositions.withResendButton.description'),
+    useWhen: tContent('variants.compositions.withResendButton.use'),
+    code: codeCompResend,
+  },
+]);
+
+const compLabelValue = ref('');
+const compHelpValue = ref('');
+const compErrorValue = ref('123');
+const compResendValue = ref('');
 
 const stateItems = computed(() => [
   { label: tContent('states.items.empty'),      trigger: 'value=""',                  behavior: stripHtml(tContent('states.descriptions.empty'))    },
@@ -482,6 +568,92 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="input-otp"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div class="flex flex-col gap-2">
+          <Label for="comp-label-otp">Código de verificação</Label>
+          <InputOTP id="comp-label-otp" :max-length="6" v-model="compLabelValue" autocomplete="one-time-code" inputmode="numeric" aria-label="Código de verificação">
+            <template #default>
+              <InputOTPGroup>
+                <InputOTPSlot :index="0" />
+                <InputOTPSlot :index="1" />
+                <InputOTPSlot :index="2" />
+                <InputOTPSlot :index="3" />
+                <InputOTPSlot :index="4" />
+                <InputOTPSlot :index="5" />
+              </InputOTPGroup>
+            </template>
+          </InputOTP>
+        </div>
+      </template>
+
+      <template #variant-preview-1>
+        <div class="flex flex-col gap-2">
+          <Label for="comp-help-otp">Código de verificação</Label>
+          <InputOTP id="comp-help-otp" :max-length="6" v-model="compHelpValue" autocomplete="one-time-code" inputmode="numeric" aria-describedby="comp-help-otp-text" aria-label="Código de verificação">
+            <template #default>
+              <InputOTPGroup>
+                <InputOTPSlot :index="0" />
+                <InputOTPSlot :index="1" />
+                <InputOTPSlot :index="2" />
+                <InputOTPSlot :index="3" />
+                <InputOTPSlot :index="4" />
+                <InputOTPSlot :index="5" />
+              </InputOTPGroup>
+            </template>
+          </InputOTP>
+          <p id="comp-help-otp-text" class="text-xs text-muted-foreground">Enviamos por SMS, expira em 5 min.</p>
+        </div>
+      </template>
+
+      <template #variant-preview-2>
+        <div class="flex flex-col gap-2">
+          <Label for="comp-err-otp">Código de verificação</Label>
+          <InputOTP id="comp-err-otp" :max-length="6" v-model="compErrorValue" autocomplete="one-time-code" inputmode="numeric" aria-invalid="true" aria-describedby="comp-err-otp-text" aria-label="Código de verificação">
+            <template #default>
+              <InputOTPGroup>
+                <InputOTPSlot :index="0" />
+                <InputOTPSlot :index="1" />
+                <InputOTPSlot :index="2" />
+                <InputOTPSlot :index="3" />
+                <InputOTPSlot :index="4" />
+                <InputOTPSlot :index="5" />
+              </InputOTPGroup>
+            </template>
+          </InputOTP>
+          <p id="comp-err-otp-text" class="text-xs text-destructive">Código incorreto. Verifique e tente novamente.</p>
+        </div>
+      </template>
+
+      <template #variant-preview-3>
+        <div class="flex flex-col gap-3">
+          <Label for="comp-resend-otp">Código de verificação</Label>
+          <InputOTP id="comp-resend-otp" :max-length="6" v-model="compResendValue" autocomplete="one-time-code" inputmode="numeric" aria-label="Código de verificação">
+            <template #default>
+              <InputOTPGroup>
+                <InputOTPSlot :index="0" />
+                <InputOTPSlot :index="1" />
+                <InputOTPSlot :index="2" />
+                <InputOTPSlot :index="3" />
+                <InputOTPSlot :index="4" />
+                <InputOTPSlot :index="5" />
+              </InputOTPGroup>
+            </template>
+          </InputOTP>
+          <div class="flex items-center justify-between gap-3">
+            <p class="text-xs text-muted-foreground">Não recebeu?</p>
+            <Button variant="link" size="sm">Reenviar código</Button>
+          </div>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────── -->
     <DocsStates

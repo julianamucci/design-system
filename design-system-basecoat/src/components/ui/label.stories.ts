@@ -41,7 +41,8 @@ type Story = StoryObj<LabelArgs>;
 export const Playground: Story = {
   render: (args) => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-2';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
 
     const inputId = 'playground-input';
     const label = createLabel({ text: args.text, htmlFor: inputId, className: args.className });

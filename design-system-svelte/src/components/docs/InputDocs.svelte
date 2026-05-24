@@ -8,7 +8,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -51,6 +51,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -385,6 +386,73 @@ interface InputProps extends HTMLInputAttributes {
         <div class="flex flex-col gap-1.5 w-64">
           <Label for="v-file">Arquivo</Label>
           <Input id="v-file" type="file" />
+        </div>
+      {/snippet}
+
+      <!-- ── Composições ──────────────────────────────────────────────── -->
+      <DocsCompositions
+        title={$tStore('variants.compositionsTitle')}
+        useWhenLabel={$tNavStore('common.useWhen')}
+        componentSlug="input"
+        items={[
+          {
+            name: $tStore('variants.compositions.withLabel.name'),
+            description: $tStore('variants.compositions.withLabel.description'),
+            useWhen: $tStore('variants.compositions.withLabel.use'),
+            code: `<div class="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label for="input-nome">Nome completo</Label>\n  <Input id="input-nome" type="text" placeholder="ex: João da Silva" />\n</div>`,
+            preview: compWithLabel,
+          },
+          {
+            name: $tStore('variants.compositions.withHint.name'),
+            description: $tStore('variants.compositions.withHint.description'),
+            useWhen: $tStore('variants.compositions.withHint.use'),
+            code: `<div class="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label for="input-email">Email</Label>\n  <Input id="input-email" type="email" placeholder="ex: joao@empresa.com" />\n  <p class="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>\n</div>`,
+            preview: compWithHint,
+          },
+          {
+            name: $tStore('variants.compositions.withError.name'),
+            description: $tStore('variants.compositions.withError.description'),
+            useWhen: $tStore('variants.compositions.withError.use'),
+            code: `<div class="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label for="input-email-error">Email</Label>\n  <Input id="input-email-error" type="email" aria-invalid="true" aria-describedby="input-email-error-error" placeholder="ex: joao@empresa.com" />\n  <p id="input-email-error-error" class="text-xs text-destructive">Email inválido. Use o formato nome@dominio.com</p>\n</div>`,
+            preview: compWithError,
+          },
+          {
+            name: $tStore('variants.compositions.withPrefix.name'),
+            description: $tStore('variants.compositions.withPrefix.description'),
+            useWhen: $tStore('variants.compositions.withPrefix.use'),
+            code: `<div class="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label for="input-url">URL do site</Label>\n  <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">\n    <span class="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>\n    <Input class="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" type="url" id="input-url" placeholder="meusite.com" />\n  </div>\n</div>`,
+            preview: compWithPrefix,
+          },
+        ]}
+      />
+
+      {#snippet compWithLabel()}
+        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+          <Label for="input-nome">Nome completo</Label>
+          <Input id="input-nome" type="text" placeholder="ex: João da Silva" />
+        </div>
+      {/snippet}
+      {#snippet compWithHint()}
+        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+          <Label for="input-email">Email</Label>
+          <Input id="input-email" type="email" placeholder="ex: joao@empresa.com" />
+          <p class="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>
+        </div>
+      {/snippet}
+      {#snippet compWithError()}
+        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+          <Label for="input-email-error">Email</Label>
+          <Input id="input-email-error" type="email" aria-invalid="true" aria-describedby="input-email-error-error" placeholder="ex: joao@empresa.com" />
+          <p id="input-email-error-error" class="text-xs text-destructive">Email inválido. Use o formato nome@dominio.com</p>
+        </div>
+      {/snippet}
+      {#snippet compWithPrefix()}
+        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+          <Label for="input-url">URL do site</Label>
+          <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">
+            <span class="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>
+            <Input class="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" type="url" id="input-url" placeholder="meusite.com" />
+          </div>
         </div>
       {/snippet}
 

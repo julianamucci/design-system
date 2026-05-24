@@ -1,0 +1,64 @@
+/*
+ * ─── nds-form ───────────────────────────────────────────────────────────────
+ * Helpers de formulário: field (label + input + description + error) e
+ * fieldset (legend + children).
+ *
+ *   <div class="nds-form-field">
+ *     <label class="nds-form-label">Email</label>
+ *     <input class="nds-input" type="email" />
+ *     <p class="nds-form-description">Não compartilharemos.</p>
+ *     <p class="nds-form-error" aria-live="polite">Email inválido</p>
+ *   </div>
+ *
+ *   <fieldset class="nds-form-fieldset">
+ *     <legend class="nds-form-legend">Endereço</legend>
+ *     [.nds-form-field × N]
+ *   </fieldset>
+ *
+ * Tokens: --foreground, --muted-foreground, --destructive, --spacing-*
+ */
+
+.nds-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1-5, 0.375rem);              /* 6px */
+}
+
+.nds-form-label {
+  font-family: inherit;
+  font-size: 0.875rem;                            /* 14px */
+  font-weight: var(--font-weight-medium, 500);
+  line-height: 1;
+  color: hsl(var(--foreground));
+}
+
+.nds-form-description {
+  margin: 0;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-form-error {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--destructive));
+}
+
+/* ── Fieldset ────────────────────────────────────────────────────────────── */
+.nds-form-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);                          /* 16px entre fields */
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.nds-form-legend {
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+  line-height: 1;
+  color: hsl(var(--foreground));
+}

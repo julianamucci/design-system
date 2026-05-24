@@ -1,5 +1,7 @@
 <script lang="ts">
   import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+  import { Badge } from '@/components/ui/badge';
+  import { User, Settings, Shield } from 'lucide-svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -8,7 +10,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -60,6 +62,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -410,6 +413,186 @@ interface TabsContentProps {
       <TabsContent value="profile">Edite informações pessoais.</TabsContent>
       <TabsContent value="account">Email, senha e notificações.</TabsContent>
       <TabsContent value="security">2FA e sessões ativas.</TabsContent>
+    </Tabs>
+  {/snippet}
+
+  <!-- ── Composições ────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="tabs"
+    items={[
+      {
+        name: $tStore('variants.compositions.iconTrigger.name'),
+        description: $tStore('variants.compositions.iconTrigger.description'),
+        useWhen: $tStore('variants.compositions.iconTrigger.use'),
+        code: `<Tabs value="profile" class="w-full max-w-xl">
+  <TabsList aria-label="Configurações">
+    <TabsTrigger value="profile"><span class="flex items-center gap-2"><User class="h-4 w-4" aria-hidden="true" />Perfil</span></TabsTrigger>
+    <TabsTrigger value="account"><span class="flex items-center gap-2"><Settings class="h-4 w-4" aria-hidden="true" />Conta</span></TabsTrigger>
+    <TabsTrigger value="security"><span class="flex items-center gap-2"><Shield class="h-4 w-4" aria-hidden="true" />Segurança</span></TabsTrigger>
+  </TabsList>
+  <TabsContent value="profile">…</TabsContent>
+  <TabsContent value="account">…</TabsContent>
+  <TabsContent value="security">…</TabsContent>
+</Tabs>`,
+        preview: compIconTrigger,
+      },
+      {
+        name: $tStore('variants.compositions.badgeTrigger.name'),
+        description: $tStore('variants.compositions.badgeTrigger.description'),
+        useWhen: $tStore('variants.compositions.badgeTrigger.use'),
+        code: `<Tabs value="inbox" class="w-full max-w-xl">
+  <TabsList aria-label="Caixas de mensagem">
+    <TabsTrigger value="inbox"><span class="flex items-center gap-2">Caixa de entrada<Badge>12</Badge></span></TabsTrigger>
+    <TabsTrigger value="spam"><span class="flex items-center gap-2">Spam<Badge variant="destructive">3</Badge></span></TabsTrigger>
+    <TabsTrigger value="trash">Lixeira</TabsTrigger>
+  </TabsList>
+  <TabsContent value="inbox">…</TabsContent>
+  <TabsContent value="spam">…</TabsContent>
+  <TabsContent value="trash">…</TabsContent>
+</Tabs>`,
+        preview: compBadgeTrigger,
+      },
+      {
+        name: $tStore('variants.compositions.vertical.name'),
+        description: $tStore('variants.compositions.vertical.description'),
+        useWhen: $tStore('variants.compositions.vertical.use'),
+        code: `<Tabs value="profile" orientation="vertical" class="w-full max-w-2xl flex gap-4">
+  <TabsList class="flex flex-col h-auto items-stretch shrink-0 min-w-[10rem]" aria-label="Configurações">
+    <TabsTrigger value="profile">Perfil</TabsTrigger>
+    <TabsTrigger value="account">Conta</TabsTrigger>
+    <TabsTrigger value="security">Segurança</TabsTrigger>
+  </TabsList>
+  <TabsContent value="profile">…</TabsContent>
+  <TabsContent value="account">…</TabsContent>
+  <TabsContent value="security">…</TabsContent>
+</Tabs>`,
+        preview: compVertical,
+      },
+      {
+        name: $tStore('variants.compositions.lineSubNav.name'),
+        description: $tStore('variants.compositions.lineSubNav.description'),
+        useWhen: $tStore('variants.compositions.lineSubNav.use'),
+        code: `<Tabs value="all" class="w-full">
+  <TabsList variant="line" class="border-b rounded-none bg-transparent w-full justify-start" aria-label="Filtros de listagem">
+    <TabsTrigger value="all">Tudo</TabsTrigger>
+    <TabsTrigger value="active">Ativos</TabsTrigger>
+    <TabsTrigger value="archived">Arquivados</TabsTrigger>
+  </TabsList>
+  <TabsContent value="all">…</TabsContent>
+  <TabsContent value="active">…</TabsContent>
+  <TabsContent value="archived">…</TabsContent>
+</Tabs>`,
+        preview: compLineSubNav,
+      },
+    ]}
+  />
+
+  {#snippet compIconTrigger()}
+    <Tabs value="profile" class="w-full max-w-xl">
+      <TabsList aria-label="Configurações">
+        <TabsTrigger value="profile">
+          <span class="flex items-center gap-2"><User class="h-4 w-4" aria-hidden="true" />Perfil</span>
+        </TabsTrigger>
+        <TabsTrigger value="account">
+          <span class="flex items-center gap-2"><Settings class="h-4 w-4" aria-hidden="true" />Conta</span>
+        </TabsTrigger>
+        <TabsTrigger value="security">
+          <span class="flex items-center gap-2"><Shield class="h-4 w-4" aria-hidden="true" />Segurança</span>
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="profile">
+        <div class="p-4 rounded-md border bg-card space-y-2">
+          <h3 class="text-sm font-semibold">Perfil</h3>
+          <p class="text-sm text-muted-foreground">Edite suas informações públicas.</p>
+        </div>
+      </TabsContent>
+      <TabsContent value="account">
+        <div class="p-4 rounded-md border bg-card space-y-2">
+          <h3 class="text-sm font-semibold">Conta</h3>
+          <p class="text-sm text-muted-foreground">Email, idioma e preferências.</p>
+        </div>
+      </TabsContent>
+      <TabsContent value="security">
+        <div class="p-4 rounded-md border bg-card space-y-2">
+          <h3 class="text-sm font-semibold">Segurança</h3>
+          <p class="text-sm text-muted-foreground">Senha e autenticação em dois fatores.</p>
+        </div>
+      </TabsContent>
+    </Tabs>
+  {/snippet}
+
+  {#snippet compBadgeTrigger()}
+    <Tabs value="inbox" class="w-full max-w-xl">
+      <TabsList aria-label="Caixas de mensagem">
+        <TabsTrigger value="inbox">
+          <span class="flex items-center gap-2">Caixa de entrada<Badge>12</Badge></span>
+        </TabsTrigger>
+        <TabsTrigger value="spam">
+          <span class="flex items-center gap-2">Spam<Badge variant="destructive">3</Badge></span>
+        </TabsTrigger>
+        <TabsTrigger value="trash">Lixeira</TabsTrigger>
+      </TabsList>
+      <TabsContent value="inbox">
+        <div class="p-4 rounded-md border bg-card space-y-2">
+          <h3 class="text-sm font-semibold">Caixa de entrada</h3>
+          <p class="text-sm text-muted-foreground">12 mensagens não lidas.</p>
+        </div>
+      </TabsContent>
+      <TabsContent value="spam">
+        <div class="p-4 rounded-md border bg-card space-y-2">
+          <h3 class="text-sm font-semibold">Spam</h3>
+          <p class="text-sm text-muted-foreground">3 itens marcados como spam.</p>
+        </div>
+      </TabsContent>
+      <TabsContent value="trash">
+        <div class="p-4 rounded-md border bg-card space-y-2">
+          <h3 class="text-sm font-semibold">Lixeira</h3>
+          <p class="text-sm text-muted-foreground">Itens excluídos recentemente.</p>
+        </div>
+      </TabsContent>
+    </Tabs>
+  {/snippet}
+
+  {#snippet compVertical()}
+    <Tabs value="profile" orientation="vertical" class="w-full max-w-2xl flex gap-4">
+      <TabsList class="flex flex-col h-auto items-stretch shrink-0 min-w-[10rem]" aria-label="Configurações">
+        <TabsTrigger value="profile">Perfil</TabsTrigger>
+        <TabsTrigger value="account">Conta</TabsTrigger>
+        <TabsTrigger value="security">Segurança</TabsTrigger>
+      </TabsList>
+      <TabsContent value="profile">
+        <div class="p-4 rounded-md border bg-card space-y-2">
+          <h3 class="text-sm font-semibold">Perfil</h3>
+          <p class="text-sm text-muted-foreground">Edite suas informações públicas.</p>
+        </div>
+      </TabsContent>
+      <TabsContent value="account">
+        <div class="p-4 rounded-md border bg-card space-y-2">
+          <h3 class="text-sm font-semibold">Conta</h3>
+          <p class="text-sm text-muted-foreground">Email, idioma e preferências.</p>
+        </div>
+      </TabsContent>
+      <TabsContent value="security">
+        <div class="p-4 rounded-md border bg-card space-y-2">
+          <h3 class="text-sm font-semibold">Segurança</h3>
+          <p class="text-sm text-muted-foreground">Senha e autenticação em dois fatores.</p>
+        </div>
+      </TabsContent>
+    </Tabs>
+  {/snippet}
+
+  {#snippet compLineSubNav()}
+    <Tabs value="all" class="w-full">
+      <TabsList variant="line" class="border-b rounded-none bg-transparent w-full justify-start" aria-label="Filtros de listagem">
+        <TabsTrigger value="all">Tudo</TabsTrigger>
+        <TabsTrigger value="active">Ativos</TabsTrigger>
+        <TabsTrigger value="archived">Arquivados</TabsTrigger>
+      </TabsList>
+      <TabsContent value="all"><p class="text-sm text-muted-foreground pt-3">Mostrando todos os itens.</p></TabsContent>
+      <TabsContent value="active"><p class="text-sm text-muted-foreground pt-3">Apenas itens ativos.</p></TabsContent>
+      <TabsContent value="archived"><p class="text-sm text-muted-foreground pt-3">Itens arquivados.</p></TabsContent>
     </Tabs>
   {/snippet}
 

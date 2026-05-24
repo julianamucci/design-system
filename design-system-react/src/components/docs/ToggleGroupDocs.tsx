@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
   Bold, Italic, Underline,
-  LayoutGrid, List,
+  LayoutGrid, List, Eye,
 } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useTranslation } from "@/lib/i18n";
@@ -20,6 +20,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -58,6 +59,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -240,7 +242,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             <ToggleGroup
               type="single"
               value={demoAlignment}
-              onValueChange={(v) => v && setDemoAlignment(v as string)}
+              onValueChange={(v: string) => v && setDemoAlignment(v)}
               aria-label={tContent("demonstration.labels.alignmentLabel")}
             >
               <ToggleGroupItem value="left" aria-label={tContent("demonstration.labels.left")}>
@@ -266,7 +268,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             <ToggleGroup
               type="multiple"
               value={demoFormats}
-              onValueChange={(v) => setDemoFormats(v as string[])}
+              onValueChange={(v: string[]) => setDemoFormats(v)}
               aria-label={tContent("demonstration.labels.formattingLabel")}
             >
               <ToggleGroupItem value="bold" aria-label={tContent("demonstration.labels.bold")}>
@@ -290,7 +292,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
               type="single"
               orientation="vertical"
               value={demoView}
-              onValueChange={(v) => v && setDemoView(v as string)}
+              onValueChange={(v: string) => v && setDemoView(v)}
               aria-label={tContent("demonstration.labels.viewLabel")}
             >
               <ToggleGroupItem value="grid" aria-label={tContent("demonstration.labels.grid")}>
@@ -529,6 +531,111 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
                   <List aria-hidden="true" />
                 </ToggleGroupItem>
               </ToggleGroup>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="toggle-group"
+        items={[
+          {
+            name: tContent("variants.compositions.alignmentBar.name"),
+            description: tContent("variants.compositions.alignmentBar.description"),
+            useWhen: tContent("variants.compositions.alignmentBar.use"),
+            code: `<ToggleGroup type="single" variant="outline" defaultValue="left" aria-label="Alinhamento do texto">\n  <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">\n    <AlignLeft aria-hidden="true" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value="center" aria-label="Centralizar">\n    <AlignCenter aria-hidden="true" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value="right" aria-label="Alinhar à direita">\n    <AlignRight aria-hidden="true" />\n  </ToggleGroupItem>\n</ToggleGroup>`,
+            preview: (
+              <ToggleGroup type="single" variant="outline" defaultValue="left" aria-label="Alinhamento do texto">
+                <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
+                  <AlignLeft aria-hidden="true" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="center" aria-label="Centralizar">
+                  <AlignCenter aria-hidden="true" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="right" aria-label="Alinhar à direita">
+                  <AlignRight aria-hidden="true" />
+                </ToggleGroupItem>
+              </ToggleGroup>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.formattingBar.name"),
+            description: tContent("variants.compositions.formattingBar.description"),
+            useWhen: tContent("variants.compositions.formattingBar.use"),
+            code: `<ToggleGroup type="multiple" variant="outline" defaultValue={["bold"]} aria-label="Formatação">\n  <ToggleGroupItem value="bold" aria-label="Negrito">\n    <Bold aria-hidden="true" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value="italic" aria-label="Itálico">\n    <Italic aria-hidden="true" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value="underline" aria-label="Sublinhado">\n    <Underline aria-hidden="true" />\n  </ToggleGroupItem>\n</ToggleGroup>`,
+            preview: (
+              <ToggleGroup type="multiple" variant="outline" defaultValue={["bold"]} aria-label="Formatação">
+                <ToggleGroupItem value="bold" aria-label="Negrito">
+                  <Bold aria-hidden="true" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="italic" aria-label="Itálico">
+                  <Italic aria-hidden="true" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="underline" aria-label="Sublinhado">
+                  <Underline aria-hidden="true" />
+                </ToggleGroupItem>
+              </ToggleGroup>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.viewMode.name"),
+            description: tContent("variants.compositions.viewMode.description"),
+            useWhen: tContent("variants.compositions.viewMode.use"),
+            code: `<ToggleGroup type="single" variant="outline" defaultValue="grid" orientation="vertical" aria-label="Modo de visualização">\n  <ToggleGroupItem value="grid">\n    <LayoutGrid aria-hidden="true" />\n    Grade\n  </ToggleGroupItem>\n  <ToggleGroupItem value="list">\n    <List aria-hidden="true" />\n    Lista\n  </ToggleGroupItem>\n</ToggleGroup>`,
+            preview: (
+              <ToggleGroup type="single" variant="outline" defaultValue="grid" orientation="vertical" aria-label="Modo de visualização">
+                <ToggleGroupItem value="grid">
+                  <LayoutGrid aria-hidden="true" />
+                  Grade
+                </ToggleGroupItem>
+                <ToggleGroupItem value="list">
+                  <List aria-hidden="true" />
+                  Lista
+                </ToggleGroupItem>
+              </ToggleGroup>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.disabledItem.name"),
+            description: tContent("variants.compositions.disabledItem.description"),
+            useWhen: tContent("variants.compositions.disabledItem.use"),
+            code: `<ToggleGroup type="single" variant="outline" defaultValue="left" aria-label="Alinhamento do texto">\n  <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">\n    <AlignLeft aria-hidden="true" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value="center" disabled aria-label="Centralizar (indisponível)">\n    <AlignCenter aria-hidden="true" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value="right" aria-label="Alinhar à direita">\n    <AlignRight aria-hidden="true" />\n  </ToggleGroupItem>\n</ToggleGroup>`,
+            preview: (
+              <ToggleGroup type="single" variant="outline" defaultValue="left" aria-label="Alinhamento do texto">
+                <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
+                  <AlignLeft aria-hidden="true" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="center" disabled aria-label="Centralizar (indisponível)">
+                  <AlignCenter aria-hidden="true" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="right" aria-label="Alinhar à direita">
+                  <AlignRight aria-hidden="true" />
+                </ToggleGroupItem>
+              </ToggleGroup>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.filterWithText.name"),
+            description: tContent("variants.compositions.filterWithText.description"),
+            useWhen: tContent("variants.compositions.filterWithText.use"),
+            code: `<div className="flex flex-col gap-2 w-72">\n  <p className="text-sm font-medium">Filtros de exibição</p>\n  <ToggleGroup type="multiple" variant="outline" defaultValue={["compact"]} aria-label="Filtros de exibição">\n    <ToggleGroupItem value="hidden">\n      <Eye aria-hidden="true" />\n      Ocultos\n    </ToggleGroupItem>\n    <ToggleGroupItem value="compact">\n      <List aria-hidden="true" />\n      Compacto\n    </ToggleGroupItem>\n  </ToggleGroup>\n</div>`,
+            preview: (
+              <div className="flex flex-col gap-2 w-72">
+                <p className="text-sm font-medium">Filtros de exibição</p>
+                <ToggleGroup type="multiple" variant="outline" defaultValue={["compact"]} aria-label="Filtros de exibição">
+                  <ToggleGroupItem value="hidden">
+                    <Eye aria-hidden="true" />
+                    Ocultos
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="compact">
+                    <List aria-hidden="true" />
+                    Compacto
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              </div>
             ),
           },
         ]}

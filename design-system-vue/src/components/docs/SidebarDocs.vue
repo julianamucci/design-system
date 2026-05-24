@@ -18,16 +18,21 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarInput,
   SidebarInset,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, Blocks, Palette, Settings, User } from 'lucide-vue-next';
+import { LayoutDashboard, Blocks, Palette, Settings, User, Bell, Search, ChevronDown } from 'lucide-vue-next';
 
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
@@ -37,6 +42,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -104,8 +110,9 @@ const navGroups = computed(() => [
     label: tNav('nav.techRef'),
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
-      { id: 'variantes',    label: tNav('nav.variants') },
-      { id: 'estados',      label: tNav('nav.states')   },
+      { id: 'variantes',    label: tNav('nav.variants')     },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
+      { id: 'estados',      label: tNav('nav.states')       },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
     ],
@@ -378,6 +385,114 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
   story:    tContent(`testes.visual.item${i + 1}.story`),
   priority: localPriority(tContent(`testes.visual.item${i + 1}.priority`)),
 })));
+
+// ─── Composições ──────────────────────────────────────────────────────────────
+
+const subMenuOpen = ref(false);
+function toggleSubMenu() { subMenuOpen.value = !subMenuOpen.value; }
+
+const codeCompositionWithGroups = `<Sidebar variant="sidebar" collapsible="offcanvas">
+  <SidebarHeader><!-- logo --></SidebarHeader>
+  <SidebarContent>
+    <SidebarGroup>
+      <SidebarGroupLabel>Principal</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton :isActive="true" aria-current="page">
+              <LayoutDashboard aria-hidden="true" />
+              <span>Dashboard</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <!-- ... -->
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+    <SidebarSeparator />
+    <SidebarGroup>
+      <SidebarGroupLabel>Conta</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <Bell aria-hidden="true" />
+              <span>Notificações</span>
+            </SidebarMenuButton>
+            <SidebarMenuBadge>5</SidebarMenuBadge>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  </SidebarContent>
+</Sidebar>`;
+
+const codeCompositionWithSubMenu = `<` + `script setup>
+const open = ref(false);
+</` + `script>
+
+<template>
+  <SidebarMenuItem>
+    <SidebarMenuButton :aria-expanded="open" @click="open = !open">
+      <Blocks aria-hidden="true" />
+      <span>Componentes</span>
+      <ChevronDown aria-hidden="true" :class="open ? 'rotate-180' : ''" />
+    </SidebarMenuButton>
+    <SidebarMenuSub v-if="open">
+      <SidebarMenuSubItem>
+        <SidebarMenuSubButton>Alert</SidebarMenuSubButton>
+      </SidebarMenuSubItem>
+      <!-- ... -->
+    </SidebarMenuSub>
+  </SidebarMenuItem>
+</template>`;
+
+const codeCompositionWithSearch = `<SidebarHeader class="gap-2">
+  <span class="font-semibold">Design System</span>
+  <div class="relative">
+    <Search aria-hidden="true" class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60" />
+    <SidebarInput
+      type="search"
+      placeholder="Buscar..."
+      aria-label="Buscar navegação"
+      class="pl-7"
+    />
+  </div>
+</SidebarHeader>`;
+
+const codeCompositionWithBadges = `<SidebarMenuItem>
+  <SidebarMenuButton aria-label="Notificações (12 não lidas)">
+    <Bell aria-hidden="true" />
+    <span>Notificações</span>
+  </SidebarMenuButton>
+  <SidebarMenuBadge>12</SidebarMenuBadge>
+</SidebarMenuItem>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withGroups.name'),
+    description: tContent('variants.compositions.withGroups.description'),
+    useWhen: tContent('variants.compositions.withGroups.use'),
+    code: codeCompositionWithGroups,
+  },
+  {
+    name: tContent('variants.compositions.withSubMenu.name'),
+    description: tContent('variants.compositions.withSubMenu.description'),
+    useWhen: tContent('variants.compositions.withSubMenu.use'),
+    code: codeCompositionWithSubMenu,
+  },
+  {
+    name: tContent('variants.compositions.withSearch.name'),
+    description: tContent('variants.compositions.withSearch.description'),
+    useWhen: tContent('variants.compositions.withSearch.use'),
+    code: codeCompositionWithSearch,
+  },
+  {
+    name: tContent('variants.compositions.withBadges.name'),
+    description: tContent('variants.compositions.withBadges.description'),
+    useWhen: tContent('variants.compositions.withBadges.use'),
+    code: codeCompositionWithBadges,
+  },
+]);
 </script>
 
 <template>
@@ -882,6 +997,240 @@ const visualTestItems = computed(() => Array.from({ length: 6 }, (_, i) => ({
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ────────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="sidebar"
+      :items="compositionItems"
+    >
+      <!-- Com grupos de navegação -->
+      <template #variant-preview-0>
+        <div class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border" style="contain: layout">
+          <SidebarProvider>
+            <nav aria-label="Navegação principal">
+              <Sidebar variant="sidebar" collapsible="offcanvas">
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">Design System</SidebarHeader>
+                <SidebarContent>
+                  <SidebarGroup>
+                    <SidebarGroupLabel>Principal</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                            <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <Blocks aria-hidden="true" /><span>Componentes</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <Palette aria-hidden="true" /><span>Tokens</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                  <SidebarSeparator />
+                  <SidebarGroup>
+                    <SidebarGroupLabel>Conta</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <Settings aria-hidden="true" /><span>Configurações</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <Bell aria-hidden="true" /><span>Notificações</span>
+                          </SidebarMenuButton>
+                          <SidebarMenuBadge>5</SidebarMenuBadge>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <User aria-hidden="true" /><span>Perfil</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                </SidebarContent>
+                <SidebarRail />
+              </Sidebar>
+            </nav>
+            <SidebarInset>
+              <header class="flex h-10 items-center gap-2 px-3 border-b border-border">
+                <SidebarTrigger /><span class="text-xs text-muted-foreground">Dashboard</span>
+              </header>
+            </SidebarInset>
+          </SidebarProvider>
+        </div>
+      </template>
+
+      <!-- Com sub-menu -->
+      <template #variant-preview-1>
+        <div class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border" style="contain: layout">
+          <SidebarProvider>
+            <nav aria-label="Navegação principal">
+              <Sidebar variant="sidebar" collapsible="offcanvas">
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">Design System</SidebarHeader>
+                <SidebarContent>
+                  <SidebarGroup>
+                    <SidebarGroupLabel>Componentes</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                            <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm" :aria-expanded="subMenuOpen" @click="toggleSubMenu">
+                            <Blocks aria-hidden="true" />
+                            <span>Componentes</span>
+                            <ChevronDown aria-hidden="true" :class="['ml-auto transition-transform', subMenuOpen ? 'rotate-180' : '']" />
+                          </SidebarMenuButton>
+                          <SidebarMenuSub v-if="subMenuOpen">
+                            <SidebarMenuSubItem v-for="name in ['Alert','Button','Card','Dialog']" :key="name">
+                              <SidebarMenuSubButton>{{ name }}</SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          </SidebarMenuSub>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <Palette aria-hidden="true" /><span>Tokens</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                </SidebarContent>
+                <SidebarFooter>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton size="sm">
+                        <Settings aria-hidden="true" /><span>Configurações</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarFooter>
+              </Sidebar>
+            </nav>
+            <SidebarInset>
+              <header class="flex h-10 items-center gap-2 px-3 border-b border-border">
+                <SidebarTrigger /><span class="text-xs text-muted-foreground">Clique em "Componentes"</span>
+              </header>
+            </SidebarInset>
+          </SidebarProvider>
+        </div>
+      </template>
+
+      <!-- Com busca no header -->
+      <template #variant-preview-2>
+        <div class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border" style="contain: layout">
+          <SidebarProvider>
+            <nav aria-label="Navegação principal">
+              <Sidebar variant="sidebar" collapsible="offcanvas">
+                <SidebarHeader class="gap-2 p-3">
+                  <span class="font-semibold text-sm text-sidebar-foreground">Design System</span>
+                  <div class="relative">
+                    <Search aria-hidden="true" class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60 pointer-events-none" />
+                    <SidebarInput type="search" placeholder="Buscar..." aria-label="Buscar navegação" class="pl-7 h-8 text-xs" />
+                  </div>
+                </SidebarHeader>
+                <SidebarContent>
+                  <SidebarGroup>
+                    <SidebarGroupLabel>Navegação</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                            <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <Blocks aria-hidden="true" /><span>Componentes</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <Palette aria-hidden="true" /><span>Tokens</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <Settings aria-hidden="true" /><span>Configurações</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                </SidebarContent>
+              </Sidebar>
+            </nav>
+            <SidebarInset>
+              <header class="flex h-10 items-center gap-2 px-3 border-b border-border">
+                <SidebarTrigger /><span class="text-xs text-muted-foreground">Busca no header</span>
+              </header>
+            </SidebarInset>
+          </SidebarProvider>
+        </div>
+      </template>
+
+      <!-- Com badges -->
+      <template #variant-preview-3>
+        <div class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border" style="contain: layout">
+          <SidebarProvider>
+            <nav aria-label="Navegação principal">
+              <Sidebar variant="sidebar" collapsible="offcanvas">
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">App</SidebarHeader>
+                <SidebarContent>
+                  <SidebarGroup>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                            <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm" aria-label="Notificações (12 não lidas)">
+                            <Bell aria-hidden="true" /><span>Notificações</span>
+                          </SidebarMenuButton>
+                          <SidebarMenuBadge>12</SidebarMenuBadge>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm" aria-label="Componentes (3 atualizações)">
+                            <Blocks aria-hidden="true" /><span>Componentes</span>
+                          </SidebarMenuButton>
+                          <SidebarMenuBadge>3</SidebarMenuBadge>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton size="sm">
+                            <Settings aria-hidden="true" /><span>Configurações</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                </SidebarContent>
+              </Sidebar>
+            </nav>
+            <SidebarInset>
+              <header class="flex h-10 items-center gap-2 px-3 border-b border-border">
+                <SidebarTrigger /><span class="text-xs text-muted-foreground">Inbox</span>
+              </header>
+            </SidebarInset>
+          </SidebarProvider>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ────────────────────────────────────────────────────── -->
     <DocsStates

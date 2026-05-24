@@ -1,6 +1,7 @@
-import { cn } from '@/lib/utils';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Tabs — Vanilla factory standalone ──────────────────────────────────────
+//
+// Visual: classes .nds-tabs-* (zero Tailwind/basecoat-css).
+// Estado via data-state="active|inactive" no trigger; painéis usam hidden.
 
 export type TabsItemDef = {
   value: string;
@@ -16,11 +17,7 @@ export type TabsOptions = {
   class?: string;
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 let _tabsCounter = 0;
-
-// ─── createTabs ───────────────────────────────────────────────────────────────
 
 export function createTabs(options: TabsOptions): HTMLElement {
   const { defaultValue, items, onValueChange } = options;
@@ -30,19 +27,19 @@ export function createTabs(options: TabsOptions): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'tabs';
-  root.className = cn('w-full', options.class);
+  root.className = 'nds-tabs';
+  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
 
   // Tab list
   const listEl = document.createElement('div');
   listEl.setAttribute('role', 'tablist');
-  listEl.className =
-    'inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground';
+  listEl.className = 'nds-tabs-list';
   listEl.dataset.slot = 'tabs-list';
 
   const panelMap = new Map<string, HTMLElement>();
   const triggerMap = new Map<string, HTMLButtonElement>();
 
-  // Build panels first (hidden)
+  // Panels (hidden by default)
   items.forEach((item) => {
     const tabId = `tab-${id}-${item.value}`;
     const panelId = `tabpanel-${id}-${item.value}`;
@@ -52,8 +49,7 @@ export function createTabs(options: TabsOptions): HTMLElement {
     panelEl.setAttribute('role', 'tabpanel');
     panelEl.setAttribute('aria-labelledby', tabId);
     panelEl.setAttribute('tabindex', '0');
-    panelEl.className =
-      'mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
+    panelEl.className = 'nds-tabs-content';
     panelEl.dataset.slot = 'tabs-content';
     panelEl.dataset.value = item.value;
     panelEl.appendChild(item.content);
@@ -61,7 +57,7 @@ export function createTabs(options: TabsOptions): HTMLElement {
     panelMap.set(item.value, panelEl);
   });
 
-  // Build triggers
+  // Triggers
   items.forEach((item) => {
     const tabId = `tab-${id}-${item.value}`;
     const panelId = `tabpanel-${id}-${item.value}`;
@@ -73,17 +69,12 @@ export function createTabs(options: TabsOptions): HTMLElement {
     triggerEl.setAttribute('aria-controls', panelId);
     triggerEl.setAttribute('aria-selected', 'false');
     triggerEl.setAttribute('tabindex', '-1');
-    triggerEl.className = cn(
-      'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-      'data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow'
-    );
+    triggerEl.className = 'nds-tabs-trigger';
     triggerEl.dataset.slot = 'tabs-trigger';
     triggerEl.dataset.value = item.value;
     triggerEl.textContent = item.label;
 
-    if (item.disabled) {
-      triggerEl.disabled = true;
-    }
+    if (item.disabled) triggerEl.disabled = true;
 
     triggerMap.set(item.value, triggerEl);
     listEl.appendChild(triggerEl);
@@ -92,7 +83,6 @@ export function createTabs(options: TabsOptions): HTMLElement {
   function activate(value: string): void {
     if (activeValue === value) return;
 
-    // Deactivate current
     const prevTrigger = triggerMap.get(activeValue);
     const prevPanel = panelMap.get(activeValue);
     if (prevTrigger) {
@@ -100,13 +90,10 @@ export function createTabs(options: TabsOptions): HTMLElement {
       prevTrigger.setAttribute('tabindex', '-1');
       prevTrigger.dataset.state = 'inactive';
     }
-    if (prevPanel) {
-      prevPanel.hidden = true;
-    }
+    if (prevPanel) prevPanel.hidden = true;
 
     activeValue = value;
 
-    // Activate new
     const nextTrigger = triggerMap.get(value);
     const nextPanel = panelMap.get(value);
     if (nextTrigger) {
@@ -114,14 +101,12 @@ export function createTabs(options: TabsOptions): HTMLElement {
       nextTrigger.setAttribute('tabindex', '0');
       nextTrigger.dataset.state = 'active';
     }
-    if (nextPanel) {
-      nextPanel.hidden = false;
-    }
+    if (nextPanel) nextPanel.hidden = false;
 
     onValueChange?.(value);
   }
 
-  // Set initial active state
+  // Initial state
   items.forEach((item) => {
     const trigger = triggerMap.get(item.value)!;
     const panel = panelMap.get(item.value)!;
@@ -132,14 +117,12 @@ export function createTabs(options: TabsOptions): HTMLElement {
       trigger.dataset.state = 'active';
       panel.hidden = false;
     } else {
-      trigger.setAttribute('aria-selected', 'false');
-      trigger.setAttribute('tabindex', '-1');
       trigger.dataset.state = 'inactive';
       panel.hidden = true;
     }
   });
 
-  // Attach click events
+  // Click events
   items.forEach((item) => {
     const trigger = triggerMap.get(item.value)!;
     if (!item.disabled) {
@@ -147,7 +130,7 @@ export function createTabs(options: TabsOptions): HTMLElement {
     }
   });
 
-  // Keyboard navigation within tablist
+  // Keyboard navigation
   listEl.addEventListener('keydown', (e) => {
     const enabledItems = items.filter(i => !i.disabled);
     const currentIdx = enabledItems.findIndex(i => i.value === activeValue);

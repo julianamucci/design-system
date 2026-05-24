@@ -1,6 +1,8 @@
-import { cn } from '@/lib/utils';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Collapsible — Vanilla factory standalone ───────────────────────────────
+//
+// Visual: classe .nds-collapsible no wrapper (apenas largura).
+// Sem visual próprio para trigger/content — consumidor estiliza livremente.
+// Comportamento: aria-expanded/aria-hidden + data-state="open|closed" + hidden.
 
 export type CollapsibleOptions = {
   trigger: string | HTMLElement;
@@ -11,11 +13,7 @@ export type CollapsibleOptions = {
   class?: string;
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 let _collapsibleCounter = 0;
-
-// ─── createCollapsible ────────────────────────────────────────────────────────
 
 export function createCollapsible(options: CollapsibleOptions): HTMLElement {
   const {
@@ -33,9 +31,10 @@ export function createCollapsible(options: CollapsibleOptions): HTMLElement {
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'collapsible';
-  wrapper.className = cn('w-full', options.class);
+  wrapper.className = 'nds-collapsible';
+  if (options.class) wrapper.classList.add(...options.class.split(' ').filter(Boolean));
 
-  // Build trigger button
+  // Trigger button
   let triggerEl: HTMLButtonElement;
   if (typeof trigger === 'string') {
     triggerEl = document.createElement('button');
@@ -45,7 +44,6 @@ export function createCollapsible(options: CollapsibleOptions): HTMLElement {
     triggerEl = trigger;
     triggerEl.type = triggerEl.type || 'button';
   } else {
-    // Wrap any other element in a button-like container — promote to button
     triggerEl = document.createElement('button');
     triggerEl.type = 'button';
     triggerEl.appendChild(trigger);
@@ -60,7 +58,7 @@ export function createCollapsible(options: CollapsibleOptions): HTMLElement {
     triggerEl.setAttribute('aria-disabled', 'true');
   }
 
-  // Content wrapper
+  // Content
   const contentEl = document.createElement('div');
   contentEl.id = contentId;
   contentEl.dataset.slot = 'collapsible-content';
@@ -78,7 +76,6 @@ export function createCollapsible(options: CollapsibleOptions): HTMLElement {
     onOpenChange?.(isOpen);
   }
 
-  // Set initial data-state
   triggerEl.dataset.state = isOpen ? 'open' : 'closed';
   contentEl.dataset.state = isOpen ? 'open' : 'closed';
 

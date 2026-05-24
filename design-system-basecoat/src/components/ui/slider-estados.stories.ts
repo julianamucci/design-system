@@ -36,19 +36,23 @@ function withLabel(opts: {
   const { idPrefix, labelText, ariaLabel, min = 0, max = 100, step = 1, value = 0, disabled = false, unit = '' } = opts;
 
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2 w-72';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'sm';
+  wrap.style.width = '18rem';
 
   const row = document.createElement('div');
-  row.className = 'flex items-center justify-between';
+  row.className = 'nds-cluster';
+  row.dataset.justify = 'between';
 
   const label = document.createElement('label');
   label.id = `${idPrefix}-label`;
-  label.className = 'text-sm font-medium';
+  label.className = 'nds-text-body nds-font-medium';
   label.textContent = labelText;
 
   const valueText = document.createElement('span');
   valueText.id = `${idPrefix}-value`;
-  valueText.className = 'text-sm tabular-nums text-muted-foreground';
+  valueText.className = 'nds-text-body nds-text-muted-foreground';
+  valueText.style.fontVariantNumeric = 'tabular-nums';
   valueText.setAttribute('aria-live', 'polite');
   valueText.textContent = `${value}${unit}`;
 

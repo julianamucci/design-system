@@ -160,6 +160,29 @@
       "withEmptyState": {
         "label": "Estado vazio",
         "description": "Quando não há dados, renderize uma <code>TableRow</code> com <code>TableCell colSpan</code> cobrindo todas as colunas e mensagem centralizada em <code>text-muted-foreground</code>."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "filterableToolbar": {
+          "name": "Toolbar de filtros",
+          "description": "Tabela precedida por uma toolbar com <code>Input</code> de busca e botões de filtro. A toolbar fica fora do <code>Table</code>, no mesmo container, e atualiza o array de dados exibido.",
+          "use": "Listagens grandes onde o usuário precisa reduzir o conjunto antes de comparar — relatórios, faturas, transações."
+        },
+        "sortableHeaders": {
+          "name": "Cabeçalhos ordenáveis",
+          "description": "<code>TableHead</code> envolto em um botão com ícone de chevron e atributo <code>aria-sort=\"ascending|descending|none\"</code>. O clique alterna o estado e reordena os dados.",
+          "use": "Colunas numéricas ou textuais cuja ordenação ajuda na comparação — valores, datas, status. Sempre exponha o estado via <code>aria-sort</code>."
+        },
+        "selectableRows": {
+          "name": "Seleção de linhas",
+          "description": "Coluna inicial com <code>Checkbox</code> por linha + um <code>Checkbox</code> mestre no cabeçalho. A linha selecionada recebe <code>data-state=\"selected\"</code> para destaque visual.",
+          "use": "Operações em lote (aprovar, excluir, exportar) onde o usuário marca múltiplas linhas antes de executar a ação."
+        },
+        "withPagination": {
+          "name": "Com paginação",
+          "description": "<code>Table</code> seguido pelo componente <code>Pagination</code> alinhado à direita. A paginação fica fora da <code>Table</code> e exibe um subconjunto dos dados por vez.",
+          "use": "Listagens com mais de 20 linhas — evita scroll vertical excessivo e mantém o tempo de renderização baixo."
+        }
       }
     },
     "states": {
@@ -331,6 +354,7 @@
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Padrões de Uso",
+      "compositions": "Composições",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -504,6 +528,29 @@
       "withEmptyState": {
         "label": "Empty state",
         "description": "When there is no data, render a <code>TableRow</code> with <code>TableCell colSpan</code> covering all columns and a centered message in <code>text-muted-foreground</code>."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "filterableToolbar": {
+          "name": "Filter toolbar",
+          "description": "Table preceded by a toolbar with a search <code>Input</code> and filter buttons. The toolbar sits outside the <code>Table</code>, in the same container, and updates the displayed data array.",
+          "use": "Large listings where users must narrow the set before comparing — reports, invoices, transactions."
+        },
+        "sortableHeaders": {
+          "name": "Sortable headers",
+          "description": "<code>TableHead</code> wrapped in a button with a chevron icon and <code>aria-sort=\"ascending|descending|none\"</code>. Clicking toggles the state and reorders the data.",
+          "use": "Numeric or textual columns whose ordering aids comparison — amounts, dates, status. Always expose the state via <code>aria-sort</code>."
+        },
+        "selectableRows": {
+          "name": "Row selection",
+          "description": "Leading column with a <code>Checkbox</code> per row plus a master <code>Checkbox</code> in the header. Selected rows receive <code>data-state=\"selected\"</code> for visual emphasis.",
+          "use": "Batch operations (approve, delete, export) where the user marks multiple rows before executing the action."
+        },
+        "withPagination": {
+          "name": "With pagination",
+          "description": "<code>Table</code> followed by the <code>Pagination</code> component aligned to the right. Pagination sits outside the <code>Table</code> and displays a subset of the data at a time.",
+          "use": "Listings with more than 20 rows — avoids excessive vertical scroll and keeps render time low."
+        }
       }
     },
     "states": {
@@ -675,6 +722,7 @@
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Usage Patterns",
+      "compositions": "Compositions",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -848,6 +896,29 @@
       "withEmptyState": {
         "label": "Estado vacío",
         "description": "Cuando no hay datos, renderiza una <code>TableRow</code> con <code>TableCell colSpan</code> cubriendo todas las columnas y un mensaje centrado en <code>text-muted-foreground</code>."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "filterableToolbar": {
+          "name": "Toolbar de filtros",
+          "description": "Tabla precedida por una toolbar con <code>Input</code> de búsqueda y botones de filtro. La toolbar está fuera del <code>Table</code>, en el mismo contenedor, y actualiza el array de datos mostrado.",
+          "use": "Listados grandes donde el usuario necesita reducir el conjunto antes de comparar — informes, facturas, transacciones."
+        },
+        "sortableHeaders": {
+          "name": "Encabezados ordenables",
+          "description": "<code>TableHead</code> envuelto en un botón con icono chevron y atributo <code>aria-sort=\"ascending|descending|none\"</code>. El clic alterna el estado y reordena los datos.",
+          "use": "Columnas numéricas o textuales cuya ordenación ayuda a la comparación — importes, fechas, estado. Expone siempre el estado mediante <code>aria-sort</code>."
+        },
+        "selectableRows": {
+          "name": "Selección de filas",
+          "description": "Columna inicial con <code>Checkbox</code> por fila más un <code>Checkbox</code> maestro en el encabezado. La fila seleccionada recibe <code>data-state=\"selected\"</code> para destacarla visualmente.",
+          "use": "Operaciones en lote (aprobar, eliminar, exportar) donde el usuario marca varias filas antes de ejecutar la acción."
+        },
+        "withPagination": {
+          "name": "Con paginación",
+          "description": "<code>Table</code> seguido por el componente <code>Pagination</code> alineado a la derecha. La paginación está fuera del <code>Table</code> y muestra un subconjunto de datos a la vez.",
+          "use": "Listados con más de 20 filas — evita scroll vertical excesivo y mantiene bajo el tiempo de renderizado."
+        }
       }
     },
     "states": {
@@ -1019,6 +1090,7 @@
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Patrones de Uso",
+      "compositions": "Composiciones",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",

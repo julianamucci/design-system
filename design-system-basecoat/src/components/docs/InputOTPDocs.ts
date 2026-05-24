@@ -4,6 +4,7 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createInputOTP } from '@/components/ui/input-otp';
+import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import inputOtpTranslations from '@shared/content/input-otp/translations.json';
 
@@ -15,6 +16,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -50,11 +52,12 @@ function priorityLabel(raw: string): string {
 
 function buildDemoCell(labelKey: string, factory: () => HTMLElement): HTMLElement {
   const col = document.createElement('div');
-  col.className = 'flex flex-col gap-2';
+  col.className = 'nds-stack';
+  col.dataset.spacing = 'sm';
   col.style.contain = 'layout';
 
   const label = document.createElement('p');
-  label.className = 'text-xs font-medium text-muted-foreground';
+  label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
   label.innerHTML = sanitizeHtml(t(labelKey));
 
   col.appendChild(label);
@@ -78,10 +81,12 @@ function buildAlphanumeric(): HTMLElement {
   // Divergência idiomática: factory Basecoat suporta apenas dígitos.
   // Renderiza fallback numérico com nota inline.
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex flex-col gap-2';
+  wrapper.className = 'nds-stack';
+  wrapper.dataset.spacing = 'sm';
   const otp = createInputOTP({ length: 6 });
   const note = document.createElement('p');
-  note.className = 'text-[10px] text-muted-foreground italic';
+  note.className = 'nds-text-muted-foreground nds-italic';
+  note.style.fontSize = '10px';
   note.textContent = 'Basecoat: apenas dígitos (fallback)';
   wrapper.append(otp, note);
   return wrapper;
@@ -131,6 +136,7 @@ export function createInputOTPDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -174,7 +180,7 @@ export function createInputOTPDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -189,7 +195,10 @@ export function createInputOTPDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'grid grid-cols-1 sm:grid-cols-2 gap-6 w-full min-h-[160px]';
+            wrap.className = 'nds-grid nds-w-full';
+            wrap.dataset.spacing = 'lg';
+            wrap.dataset.min = '18rem';
+            wrap.style.minHeight = '160px';
             wrap.appendChild(buildDemoCell('demonstration.labels.sixDigits',     buildSixDigits));
             wrap.appendChild(buildDemoCell('demonstration.labels.fourDigits',    buildFourDigits));
             wrap.appendChild(buildDemoCell('demonstration.labels.withSeparator', buildWithSeparator));
@@ -262,13 +271,13 @@ export function createInputOTPDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-xs font-mono text-muted-foreground';
+                wrap.className = 'nds-text-caption nds-font-mono nds-text-muted-foreground';
                 wrap.textContent = 'autoComplete="one-time-code"';
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-xs font-mono text-muted-foreground italic';
+                wrap.className = 'nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic';
                 wrap.textContent = '(sem autoComplete)';
                 return wrap;
               },
@@ -280,9 +289,9 @@ export function createInputOTPDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-xs';
+                wrap.className = 'nds-text-caption';
                 const lbl = document.createElement('p');
-                lbl.className = 'text-xs font-medium mb-1';
+                lbl.className = 'nds-text-caption nds-font-medium nds-mb-1';
                 lbl.textContent = 'Código de verificação';
                 const otp = createInputOTP({ length: 4 });
                 wrap.append(lbl, otp);
@@ -290,7 +299,7 @@ export function createInputOTPDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-xs';
+                wrap.className = 'nds-text-caption';
                 const otp = createInputOTP({ length: 4 });
                 wrap.append(otp);
                 return wrap;
@@ -344,6 +353,184 @@ const otp = createInputOTP({ length: 6 });`;
                 ' (Não suportado pelo factory Basecoat — fallback numérico.)',
               code: codeAlpha,
               previewFactory: () => buildAlphanumeric(),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        function setAriaDescribedBy(otp: HTMLElement, id: string): void {
+          const inputs = Array.from(otp.querySelectorAll('input')) as HTMLInputElement[];
+          for (const input of inputs) input.setAttribute('aria-describedby', id);
+        }
+        function applyError(otp: HTMLElement): void {
+          const inputs = Array.from(otp.querySelectorAll('input')) as HTMLInputElement[];
+          for (const input of inputs) {
+            input.setAttribute('aria-invalid', 'true');
+            input.classList.add('nds-border-destructive', 'ring-destructive/20'); input.style.boxShadow = '0 0 0 2px var(--nds-ring, currentColor)';
+          }
+        }
+
+        const codeLabel = `const root = document.createElement('div');
+root.className = 'nds-stack';
+root.dataset.spacing = 'sm';
+
+const label = document.createElement('label');
+label.id = 'otp-label';
+label.className = 'nds-text-body nds-font-medium';
+label.textContent = 'Código de verificação';
+
+const otp = createInputOTP({ length: 6 });
+otp.setAttribute('aria-labelledby', 'otp-label');
+
+root.append(label, otp);`;
+
+        const codeHelp = `const root = document.createElement('div');
+root.className = 'nds-stack';
+root.dataset.spacing = 'sm';
+
+const label = document.createElement('label');
+label.className = 'nds-text-body nds-font-medium';
+label.textContent = 'Código de verificação';
+
+const otp = createInputOTP({ length: 6 });
+// aplicar aria-describedby em cada input interno
+otp.querySelectorAll('input').forEach(i => i.setAttribute('aria-describedby', 'otp-help'));
+
+const help = document.createElement('p');
+help.id = 'otp-help';
+help.className = 'nds-text-caption nds-text-muted-foreground';
+help.textContent = 'Enviamos por SMS, expira em 5 min.';
+
+root.append(label, otp, help);`;
+
+        const codeError = `const otp = createInputOTP({ length: 6 });
+otp.querySelectorAll('input').forEach(i => {
+  i.setAttribute('aria-invalid', 'true');
+  i.setAttribute('aria-describedby', 'otp-error');
+  i.classList.add('nds-border-destructive');
+});
+
+const err = document.createElement('p');
+err.id = 'otp-error';
+err.className = 'nds-text-caption nds-text-destructive';
+err.textContent = 'Código incorreto. Verifique e tente novamente.';`;
+
+        const codeResend = `const otp = createInputOTP({ length: 6 });
+
+const row = document.createElement('div');
+row.className = 'nds-cluster';
+row.dataset.spacing = 'sm';
+row.dataset.align = 'center';
+row.dataset.justify = 'between';
+
+const note = document.createElement('p');
+note.className = 'nds-text-caption nds-text-muted-foreground';
+note.textContent = 'Não recebeu?';
+
+const btn = createButton({ variant: 'link', label: 'Reenviar código' });
+
+row.append(note, btn);`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'input-otp',
+          items: [
+            {
+              name: t('variants.compositions.withLabel.name'),
+              description: stripHtml(t('variants.compositions.withLabel.description')),
+              useWhen: stripHtml(t('variants.compositions.withLabel.use')),
+              code: codeLabel,
+              previewFactory: () => {
+                const root = document.createElement('div');
+                root.className = 'nds-stack';
+                root.dataset.spacing = 'sm';
+                root.style.contain = 'layout';
+                const label = document.createElement('label');
+                label.id = 'comp-otp-label';
+                label.className = 'nds-text-body nds-font-medium';
+                label.textContent = 'Código de verificação';
+                const otp = createInputOTP({ length: 6 });
+                otp.setAttribute('aria-labelledby', 'comp-otp-label');
+                root.append(label, otp);
+                return root;
+              },
+            },
+            {
+              name: t('variants.compositions.withHelpText.name'),
+              description: stripHtml(t('variants.compositions.withHelpText.description')),
+              useWhen: stripHtml(t('variants.compositions.withHelpText.use')),
+              code: codeHelp,
+              previewFactory: () => {
+                const root = document.createElement('div');
+                root.className = 'nds-stack';
+                root.dataset.spacing = 'sm';
+                root.style.contain = 'layout';
+                const label = document.createElement('label');
+                label.className = 'nds-text-body nds-font-medium';
+                label.textContent = 'Código de verificação';
+                const otp = createInputOTP({ length: 6 });
+                setAriaDescribedBy(otp, 'comp-otp-help');
+                const help = document.createElement('p');
+                help.id = 'comp-otp-help';
+                help.className = 'nds-text-caption nds-text-muted-foreground';
+                help.textContent = 'Enviamos por SMS, expira em 5 min.';
+                root.append(label, otp, help);
+                return root;
+              },
+            },
+            {
+              name: t('variants.compositions.withErrorMessage.name'),
+              description: stripHtml(t('variants.compositions.withErrorMessage.description')),
+              useWhen: stripHtml(t('variants.compositions.withErrorMessage.use')),
+              code: codeError,
+              previewFactory: () => {
+                const root = document.createElement('div');
+                root.className = 'nds-stack';
+                root.dataset.spacing = 'sm';
+                root.style.contain = 'layout';
+                const label = document.createElement('label');
+                label.className = 'nds-text-body nds-font-medium';
+                label.textContent = 'Código de verificação';
+                const otp = createInputOTP({ length: 6 });
+                applyError(otp);
+                setAriaDescribedBy(otp, 'comp-otp-error');
+                const err = document.createElement('p');
+                err.id = 'comp-otp-error';
+                err.className = 'nds-text-caption nds-text-destructive';
+                err.textContent = 'Código incorreto. Verifique e tente novamente.';
+                root.append(label, otp, err);
+                return root;
+              },
+            },
+            {
+              name: t('variants.compositions.withResendButton.name'),
+              description: stripHtml(t('variants.compositions.withResendButton.description')),
+              useWhen: stripHtml(t('variants.compositions.withResendButton.use')),
+              code: codeResend,
+              previewFactory: () => {
+                const root = document.createElement('div');
+                root.className = 'nds-stack';
+                root.dataset.spacing = 'sm';
+                root.style.contain = 'layout';
+                const label = document.createElement('label');
+                label.className = 'nds-text-body nds-font-medium';
+                label.textContent = 'Código de verificação';
+                const otp = createInputOTP({ length: 6 });
+                const row = document.createElement('div');
+                row.className = 'nds-cluster';
+                row.dataset.spacing = 'sm';
+                row.dataset.align = 'center';
+                row.dataset.justify = 'between';
+                const note = document.createElement('p');
+                note.className = 'nds-text-caption nds-text-muted-foreground';
+                note.textContent = 'Não recebeu?';
+                const btn = createButton({ variant: 'link', label: 'Reenviar código' });
+                row.append(note, btn);
+                root.append(label, otp, row);
+                return root;
+              },
             },
           ],
         });

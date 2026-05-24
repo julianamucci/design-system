@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -16,6 +17,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -54,6 +56,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -452,6 +455,105 @@ import { Label } from "@/components/ui/label";`;
                   Modo avião
                 </Label>
               </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="switch"
+        items={[
+          {
+            name: tContent("variants.compositions.withLabel.name"),
+            description: tContent("variants.compositions.withLabel.description"),
+            useWhen: tContent("variants.compositions.withLabel.use"),
+            code: `<div className="flex items-center space-x-2">\n  <Switch id="sw-email" />\n  <Label htmlFor="sw-email" className="text-sm font-medium leading-none cursor-pointer">\n    Receber notificações por email\n  </Label>\n</div>`,
+            preview: (
+              <div className="flex items-center space-x-2">
+                <Switch id="sw-email" />
+                <Label
+                  htmlFor="sw-email"
+                  className="text-sm font-medium leading-none cursor-pointer"
+                >
+                  Receber notificações por email
+                </Label>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withDescription.name"),
+            description: tContent("variants.compositions.withDescription.description"),
+            useWhen: tContent("variants.compositions.withDescription.use"),
+            code: `<div className="flex items-center justify-between rounded-lg border p-3 w-80">\n  <div className="flex flex-col gap-0.5 pr-3">\n    <Label htmlFor="sw-marketing">Emails de marketing</Label>\n    <p className="text-sm text-muted-foreground">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <Switch id="sw-marketing" defaultChecked />\n</div>`,
+            preview: (
+              <div className="flex items-center justify-between rounded-lg border p-3 w-80">
+                <div className="flex flex-col gap-0.5 pr-3">
+                  <Label htmlFor="sw-marketing">Emails de marketing</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receba novidades e promoções da plataforma.
+                  </p>
+                </div>
+                <Switch id="sw-marketing" defaultChecked />
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.settingsList.name"),
+            description: tContent("variants.compositions.settingsList.description"),
+            useWhen: tContent("variants.compositions.settingsList.use"),
+            code: `<div className="space-y-2 w-96">\n  <p className="text-sm font-semibold mb-3">Preferências de notificação</p>\n  <div className="flex items-center justify-between rounded-lg border p-3">\n    <div className="flex flex-col gap-0.5 pr-3">\n      <Label htmlFor="pref-email">Receber novidades por email</Label>\n      <p className="text-sm text-muted-foreground">Resumo semanal sobre o produto.</p>\n    </div>\n    <Switch id="pref-email" defaultChecked />\n  </div>\n  <div className="flex items-center justify-between rounded-lg border p-3">\n    <div className="flex flex-col gap-0.5 pr-3">\n      <Label htmlFor="pref-push">Receber notificações push</Label>\n      <p className="text-sm text-muted-foreground">Alertas no dispositivo em tempo real.</p>\n    </div>\n    <Switch id="pref-push" />\n  </div>\n  <div className="flex items-center justify-between rounded-lg border p-3">\n    <div className="flex flex-col gap-0.5 pr-3">\n      <Label htmlFor="pref-sms">Alertas por SMS</Label>\n      <p className="text-sm text-muted-foreground">Eventos críticos via mensagem de texto.</p>\n    </div>\n    <Switch id="pref-sms" />\n  </div>\n</div>`,
+            preview: (
+              <div className="space-y-2 w-96">
+                <p className="text-sm font-semibold mb-3">Preferências de notificação</p>
+                <div className="flex items-center justify-between rounded-lg border p-3">
+                  <div className="flex flex-col gap-0.5 pr-3">
+                    <Label htmlFor="pref-email">Receber novidades por email</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Resumo semanal sobre o produto.
+                    </p>
+                  </div>
+                  <Switch id="pref-email" defaultChecked />
+                </div>
+                <div className="flex items-center justify-between rounded-lg border p-3">
+                  <div className="flex flex-col gap-0.5 pr-3">
+                    <Label htmlFor="pref-push">Receber notificações push</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Alertas no dispositivo em tempo real.
+                    </p>
+                  </div>
+                  <Switch id="pref-push" />
+                </div>
+                <div className="flex items-center justify-between rounded-lg border p-3">
+                  <div className="flex flex-col gap-0.5 pr-3">
+                    <Label htmlFor="pref-sms">Alertas por SMS</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Eventos críticos via mensagem de texto.
+                    </p>
+                  </div>
+                  <Switch id="pref-sms" />
+                </div>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.inForm.name"),
+            description: tContent("variants.compositions.inForm.description"),
+            useWhen: tContent("variants.compositions.inForm.use"),
+            code: `<form className="flex flex-col gap-3 w-80" onSubmit={(e) => e.preventDefault()}>\n  <div className="flex items-center space-x-2">\n    <Switch id="sw-form-newsletter" name="newsletter" defaultChecked />\n    <Label htmlFor="sw-form-newsletter">Aceitar newsletter semanal</Label>\n  </div>\n  <Button type="submit">Salvar preferências</Button>\n</form>`,
+            preview: (
+              <form
+                className="flex flex-col gap-3 w-80"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                <div className="flex items-center space-x-2">
+                  <Switch id="sw-form-newsletter" name="newsletter" defaultChecked />
+                  <Label htmlFor="sw-form-newsletter">Aceitar newsletter semanal</Label>
+                </div>
+                <Button type="submit">Salvar preferências</Button>
+              </form>
             ),
           },
         ]}

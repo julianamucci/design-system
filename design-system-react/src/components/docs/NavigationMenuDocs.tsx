@@ -23,6 +23,7 @@ import { DocsWhenToUse } from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont } from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport } from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants } from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates } from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps } from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens } from "@/components/docs/shared/sections/DocsTokens";
@@ -61,6 +62,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao", label: t("nav.import") },
       { id: "variantes", label: t("nav.variants") },
+      { id: "composicoes", label: t("nav.compositions") },
       { id: "estados", label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens", label: t("nav.tokens") },
@@ -551,6 +553,231 @@ interface NavigationMenuLinkProps
             preview: (
               <div className="text-xs font-mono text-muted-foreground">
                 orientation=&quot;vertical&quot;
+              </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="navigation-menu"
+        items={[
+          {
+            name: tContent("variants.compositions.linkSimples.name"),
+            description: tContent("variants.compositions.linkSimples.description"),
+            useWhen: tContent("variants.compositions.linkSimples.use"),
+            code: `<NavigationMenu aria-label="${ariaLabelMain}">
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuLink href="/">Início</NavigationMenuLink>
+    </NavigationMenuItem>
+    <NavigationMenuItem>
+      <NavigationMenuLink href="/precos">Preços</NavigationMenuLink>
+    </NavigationMenuItem>
+    <NavigationMenuItem>
+      <NavigationMenuLink href="/contato">Contato</NavigationMenuLink>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>`,
+            preview: (
+              <div style={wrapperStyle}>
+                <NavigationMenu aria-label={ariaLabelMain}>
+                  <NavigationMenuList>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink href="#">Início</NavigationMenuLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink href="#">Preços</NavigationMenuLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink href="#">Contato</NavigationMenuLink>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.comDropdown.name"),
+            description: tContent("variants.compositions.comDropdown.description"),
+            useWhen: tContent("variants.compositions.comDropdown.use"),
+            code: `<NavigationMenu aria-label="${ariaLabelMain}">
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuLink href="/">Início</NavigationMenuLink>
+    </NavigationMenuItem>
+    <NavigationMenuItem value="produtos">
+      <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <ul className="grid w-[240px] gap-1 p-2">
+          <li><NavigationMenuLink href="/produtos/inicial">Plano Inicial</NavigationMenuLink></li>
+          <li><NavigationMenuLink href="/produtos/profissional">Plano Profissional</NavigationMenuLink></li>
+          <li><NavigationMenuLink href="/produtos/empresarial">Plano Empresarial</NavigationMenuLink></li>
+          <li><NavigationMenuLink href="/produtos/comparar">Comparar planos</NavigationMenuLink></li>
+        </ul>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>`,
+            preview: (
+              <div style={wrapperStyle}>
+                <NavigationMenu aria-label={ariaLabelMain} defaultValue="produtos">
+                  <NavigationMenuList>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink href="#">Início</NavigationMenuLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem value="produtos">
+                      <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid w-[240px] gap-1 p-2">
+                          <li><NavigationMenuLink href="#">Plano Inicial</NavigationMenuLink></li>
+                          <li><NavigationMenuLink href="#">Plano Profissional</NavigationMenuLink></li>
+                          <li><NavigationMenuLink href="#">Plano Empresarial</NavigationMenuLink></li>
+                          <li><NavigationMenuLink href="#">Comparar planos</NavigationMenuLink></li>
+                        </ul>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.megaMenuGrid.name"),
+            description: tContent("variants.compositions.megaMenuGrid.description"),
+            useWhen: tContent("variants.compositions.megaMenuGrid.use"),
+            code: `<NavigationMenu aria-label="${ariaLabelMain}">
+  <NavigationMenuList>
+    <NavigationMenuItem value="solucoes">
+      <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <ul className="grid w-[560px] grid-cols-2 gap-2 p-3">
+          <li>
+            <NavigationMenuLink href="/solucoes/marketing">
+              <div className="text-sm font-medium">Para Marketing</div>
+              <p className="text-xs text-muted-foreground">Automação, leads e campanhas.</p>
+            </NavigationMenuLink>
+          </li>
+          <li>
+            <NavigationMenuLink href="/solucoes/vendas">
+              <div className="text-sm font-medium">Para Vendas</div>
+              <p className="text-xs text-muted-foreground">Pipeline, CRM e propostas.</p>
+            </NavigationMenuLink>
+          </li>
+          {/* ...mais 4 itens */}
+        </ul>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>`,
+            preview: (
+              <div style={{ ...wrapperStyle, minHeight: 320 }}>
+                <NavigationMenu aria-label={ariaLabelMain} defaultValue="solucoes">
+                  <NavigationMenuList>
+                    <NavigationMenuItem value="solucoes">
+                      <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid w-[560px] grid-cols-2 gap-2 p-3">
+                          <li>
+                            <NavigationMenuLink href="#">
+                              <div className="text-sm font-medium">Para Marketing</div>
+                              <p className="text-xs text-muted-foreground">Automação, leads e campanhas.</p>
+                            </NavigationMenuLink>
+                          </li>
+                          <li>
+                            <NavigationMenuLink href="#">
+                              <div className="text-sm font-medium">Para Vendas</div>
+                              <p className="text-xs text-muted-foreground">Pipeline, CRM e propostas.</p>
+                            </NavigationMenuLink>
+                          </li>
+                          <li>
+                            <NavigationMenuLink href="#">
+                              <div className="text-sm font-medium">Para Suporte</div>
+                              <p className="text-xs text-muted-foreground">Tickets, base de conhecimento.</p>
+                            </NavigationMenuLink>
+                          </li>
+                          <li>
+                            <NavigationMenuLink href="#">
+                              <div className="text-sm font-medium">Para Sucesso</div>
+                              <p className="text-xs text-muted-foreground">Onboarding e retenção.</p>
+                            </NavigationMenuLink>
+                          </li>
+                          <li>
+                            <NavigationMenuLink href="#">
+                              <div className="text-sm font-medium">Para Operações</div>
+                              <p className="text-xs text-muted-foreground">Workflows e integrações.</p>
+                            </NavigationMenuLink>
+                          </li>
+                          <li>
+                            <NavigationMenuLink href="#">
+                              <div className="text-sm font-medium">Para Analytics</div>
+                              <p className="text-xs text-muted-foreground">Dashboards e relatórios.</p>
+                            </NavigationMenuLink>
+                          </li>
+                        </ul>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.comCardDestacado.name"),
+            description: tContent("variants.compositions.comCardDestacado.description"),
+            useWhen: tContent("variants.compositions.comCardDestacado.use"),
+            code: `<NavigationMenu aria-label="${ariaLabelMain}">
+  <NavigationMenuList>
+    <NavigationMenuItem value="recursos">
+      <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <div className="flex gap-3 w-[560px] p-3">
+          <a href="/quickstart" className="flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline">
+            <div className="text-base font-semibold leading-tight">Comece em 5 minutos</div>
+            <p className="mt-2 text-sm leading-snug text-muted-foreground">
+              Crie sua primeira integração com nosso quickstart.
+            </p>
+          </a>
+          <ul className="flex flex-col flex-1 gap-1">
+            <li><NavigationMenuLink href="/docs">Documentação</NavigationMenuLink></li>
+            <li><NavigationMenuLink href="/tutoriais">Tutoriais</NavigationMenuLink></li>
+            <li><NavigationMenuLink href="/comunidade">Comunidade</NavigationMenuLink></li>
+          </ul>
+        </div>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>`,
+            preview: (
+              <div style={{ ...wrapperStyle, minHeight: 320 }}>
+                <NavigationMenu aria-label={ariaLabelMain} defaultValue="recursos">
+                  <NavigationMenuList>
+                    <NavigationMenuItem value="recursos">
+                      <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div className="flex gap-3 w-[560px] p-3">
+                          <a
+                            href="#"
+                            className="flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline"
+                          >
+                            <div className="text-base font-semibold leading-tight">Comece em 5 minutos</div>
+                            <p className="mt-2 text-sm leading-snug text-muted-foreground">
+                              Crie sua primeira integração com nosso quickstart.
+                            </p>
+                          </a>
+                          <ul className="flex flex-col flex-1 gap-1">
+                            <li><NavigationMenuLink href="#">Documentação</NavigationMenuLink></li>
+                            <li><NavigationMenuLink href="#">Tutoriais</NavigationMenuLink></li>
+                            <li><NavigationMenuLink href="#">Comunidade</NavigationMenuLink></li>
+                          </ul>
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
               </div>
             ),
           },

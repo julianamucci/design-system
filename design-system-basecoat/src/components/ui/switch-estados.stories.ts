@@ -24,14 +24,18 @@ type Story = StoryObj;
 
 function wrapWithLabel(sw: HTMLButtonElement, labelText: string, id: string, disabled = false): HTMLElement {
   const row = document.createElement('div');
-  row.className = 'flex items-center space-x-2';
+  row.className = 'nds-cluster';
+  row.dataset.spacing = 'sm';
   sw.id = id;
   const label = document.createElement('label');
   label.htmlFor = id;
   label.textContent = labelText;
   label.className =
-    'text-sm font-medium leading-none ' +
-    (disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer');
+    'nds-text-body nds-font-medium nds-leading-none ' +
+    (disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
+  if (disabled) {
+    label.style.opacity = '0.7';
+  }
   if (!disabled) {
     label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
   }
@@ -142,28 +146,31 @@ export const DisabledChecked: Story = {
 export const Invalid: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-1.5';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'xs';
 
     const row = document.createElement('div');
-    row.className = 'flex items-center space-x-2';
+    row.className = 'nds-cluster';
+    row.dataset.spacing = 'sm';
 
     const id = 'sw-invalid';
     const sw = createSwitch({ id });
     sw.setAttribute('aria-invalid', 'true');
     sw.setAttribute('aria-describedby', 'sw-invalid-msg');
-    sw.classList.add('border-destructive', 'ring-2', 'ring-destructive/20');
+    sw.classList.add('nds-border-destructive');
+    sw.style.boxShadow = '0 0 0 2px color-mix(in srgb, var(--destructive) 20%, transparent)';
 
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Aceitar termos de uso';
-    label.className = 'text-sm font-medium leading-none cursor-pointer';
+    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
     label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     row.append(sw, label);
 
     const msg = document.createElement('p');
     msg.id = 'sw-invalid-msg';
-    msg.className = 'text-sm text-destructive';
+    msg.className = 'nds-text-body nds-text-destructive';
     msg.textContent = 'Você precisa ativar esta opção para continuar.';
 
     wrapper.append(row, msg);

@@ -137,6 +137,29 @@
         "left": "Desliza da esquerda — <code>side=\"left\"</code>, ideal para navegação secundária.",
         "top": "Desliza do topo — <code>side=\"top\"</code>, ocupa altura automática.",
         "bottom": "Desliza de baixo — <code>side=\"bottom\"</code>, equivalente ao Drawer mas sem gesture."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "advancedFilters": {
+          "name": "Filtros avançados",
+          "description": "Painel <code>side=\"right\"</code> com formulário de filtros no body e ações <code>Cancelar</code> + ação primária no footer. Caso canônico do Sheet em desktop.",
+          "use": "Refinamento de listagens longas (catálogo, busca, relatórios) sem trocar de página. Mantenha o trigger próximo aos resultados que serão filtrados."
+        },
+        "secondaryNavigation": {
+          "name": "Navegação secundária",
+          "description": "Painel <code>side=\"left\"</code> com lista de links como conteúdo principal. Substitui menus permanentes em layouts compactos.",
+          "use": "Menus de área administrativa, navegação entre seções secundárias do app, drill-down de hierarquias profundas que não cabem no header."
+        },
+        "mobileActions": {
+          "name": "Ações rápidas mobile",
+          "description": "Painel <code>side=\"bottom\"</code> com grid de ações (compartilhar, editar, excluir). Equivalente ao Drawer, sem o gesto de arrastar.",
+          "use": "Menus de ações por item em viewports estreitos, quando o Drawer não estiver disponível ou o gesto de swipe não for esperado pelo usuário."
+        },
+        "longScrollBody": {
+          "name": "Body com scroll interno",
+          "description": "Painel <code>side=\"right\"</code> com corpo longo (termos de uso, formulário extenso) que rola internamente enquanto o footer permanece fixo.",
+          "use": "Conteúdo extenso onde o usuário precisa ler/preencher sem perder as ações primárias de vista — termos de uso, formulários de cadastro detalhado, configurações com muitas seções."
+        }
       }
     },
     "states": {
@@ -327,6 +350,7 @@
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
+      "compositions": "Composições",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -477,6 +501,29 @@
         "left": "Slides from left — <code>side=\"left\"</code>, ideal for secondary navigation.",
         "top": "Slides from top — <code>side=\"top\"</code>, takes automatic height.",
         "bottom": "Slides from bottom — <code>side=\"bottom\"</code>, equivalent to Drawer but without gesture."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "advancedFilters": {
+          "name": "Advanced filters",
+          "description": "<code>side=\"right\"</code> panel with a filters form in the body and <code>Cancel</code> + primary action in the footer. Canonical Sheet use case on desktop.",
+          "use": "Refining long lists (catalog, search, reports) without leaving the page. Keep the trigger close to the results being filtered."
+        },
+        "secondaryNavigation": {
+          "name": "Secondary navigation",
+          "description": "<code>side=\"left\"</code> panel with a list of links as main content. Replaces permanent menus in compact layouts.",
+          "use": "Admin area menus, navigation between secondary app sections, drill-down for deep hierarchies that don't fit in the header."
+        },
+        "mobileActions": {
+          "name": "Mobile quick actions",
+          "description": "<code>side=\"bottom\"</code> panel with a grid of actions (share, edit, delete). Equivalent to Drawer, without the drag gesture.",
+          "use": "Per-item action menus on narrow viewports, when Drawer isn't available or swipe isn't expected by the user."
+        },
+        "longScrollBody": {
+          "name": "Body with internal scroll",
+          "description": "<code>side=\"right\"</code> panel with long body content (terms of use, lengthy form) that scrolls internally while the footer stays fixed.",
+          "use": "Extensive content where the user needs to read/fill in without losing sight of primary actions — terms of use, detailed signup forms, settings with many sections."
+        }
       }
     },
     "states": {
@@ -667,6 +714,7 @@
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
+      "compositions": "Compositions",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -817,6 +865,29 @@
         "left": "Desliza desde la izquierda — <code>side=\"left\"</code>, ideal para navegación secundaria.",
         "top": "Desliza desde arriba — <code>side=\"top\"</code>, ocupa altura automática.",
         "bottom": "Desliza desde abajo — <code>side=\"bottom\"</code>, equivalente al Drawer pero sin gesto."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "advancedFilters": {
+          "name": "Filtros avanzados",
+          "description": "Panel <code>side=\"right\"</code> con formulario de filtros en el body y acciones <code>Cancelar</code> + acción primaria en el footer. Caso canónico del Sheet en desktop.",
+          "use": "Refinamiento de listas largas (catálogo, búsqueda, reportes) sin salir de la página. Mantén el trigger cerca de los resultados que se filtrarán."
+        },
+        "secondaryNavigation": {
+          "name": "Navegación secundaria",
+          "description": "Panel <code>side=\"left\"</code> con lista de enlaces como contenido principal. Sustituye menús permanentes en layouts compactos.",
+          "use": "Menús de área administrativa, navegación entre secciones secundarias del app, drill-down de jerarquías profundas que no caben en el header."
+        },
+        "mobileActions": {
+          "name": "Acciones rápidas móvil",
+          "description": "Panel <code>side=\"bottom\"</code> con grilla de acciones (compartir, editar, eliminar). Equivalente al Drawer, sin gesto de arrastre.",
+          "use": "Menús de acciones por ítem en viewports estrechos, cuando el Drawer no esté disponible o el swipe no sea esperado por el usuario."
+        },
+        "longScrollBody": {
+          "name": "Body con scroll interno",
+          "description": "Panel <code>side=\"right\"</code> con cuerpo largo (términos de uso, formulario extenso) que hace scroll internamente mientras el footer permanece fijo.",
+          "use": "Contenido extenso donde el usuario necesita leer/rellenar sin perder de vista las acciones primarias — términos de uso, formularios de registro detallado, configuraciones con muchas secciones."
+        }
       }
     },
     "states": {
@@ -1007,6 +1078,7 @@
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",
+      "compositions": "Composiciones",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",

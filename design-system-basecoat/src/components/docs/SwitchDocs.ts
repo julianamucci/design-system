@@ -4,6 +4,7 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createSwitch } from '@/components/ui/switch';
+import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import switchTranslations from '@shared/content/switch/translations.json';
 
@@ -15,6 +16,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -58,7 +60,8 @@ function buildSwitchRow(opts: {
   const { id, labelText, checked = false, disabled = false, onCheckedChange, ariaInvalid } = opts;
 
   const row = document.createElement('div');
-  row.className = 'flex items-center space-x-2';
+  row.className = 'nds-cluster';
+  row.dataset.spacing = 'sm';
 
   const sw = createSwitch({ id, checked, disabled, onCheckedChange });
   if (ariaInvalid) sw.setAttribute('aria-invalid', 'true');
@@ -67,8 +70,9 @@ function buildSwitchRow(opts: {
   label.htmlFor = id;
   label.textContent = labelText;
   label.className =
-    'text-sm font-medium leading-none ' +
-    (disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer');
+    'nds-text-body nds-font-medium nds-leading-none ' +
+    (disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
+  if (disabled) label.style.opacity = '0.7';
 
   // Toggle via label click (button + label htmlFor já é nativo,
   // mas como o root é <button>, garantimos o comportamento)
@@ -94,18 +98,22 @@ function buildSwitchPanel(opts: {
   const { id, labelText, descText, checked = false, onCheckedChange } = opts;
 
   const panel = document.createElement('div');
-  panel.className = 'flex items-center justify-between rounded-lg border p-3 w-80';
+  panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-2';
+  panel.dataset.justify = 'between';
+  panel.style.width = '20rem';
 
   const textGroup = document.createElement('div');
-  textGroup.className = 'flex flex-col gap-0.5 pr-3';
+  textGroup.className = 'nds-stack';
+  textGroup.dataset.spacing = 'xs';
+  textGroup.style.paddingRight = 'var(--spacing-2)';
 
   const label = document.createElement('label');
   label.htmlFor = id;
   label.textContent = labelText;
-  label.className = 'text-sm font-medium leading-none cursor-pointer';
+  label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
   const desc = document.createElement('p');
-  desc.className = 'text-sm text-muted-foreground';
+  desc.className = 'nds-text-body nds-text-muted-foreground';
   desc.textContent = descText;
 
   textGroup.append(label, desc);
@@ -164,6 +172,7 @@ export function createSwitchDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -214,7 +223,7 @@ export function createSwitchDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -229,7 +238,8 @@ export function createSwitchDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-col gap-3';
+            wrap.className = 'nds-stack';
+            wrap.dataset.spacing = 'sm';
 
             // 1) Switch simples (notificações)
             wrap.appendChild(buildSwitchRow({
@@ -357,12 +367,13 @@ export function createSwitchDocs(): HTMLElement {
         });
         const buildDontLoose = () => {
           const row = document.createElement('div');
-          row.className = 'flex items-center space-x-2';
+          row.className = 'nds-cluster';
+          row.dataset.spacing = 'sm';
           // Switch SEM id e texto solto (sem <label htmlFor>)
           const sw = createSwitch({ checked: false });
           const span = document.createElement('span');
           span.textContent = t('demonstration.labels.darkMode');
-          span.className = 'text-sm font-medium leading-none';
+          span.className = 'nds-text-body nds-font-medium nds-leading-none';
           row.append(sw, span);
           return row;
         };
@@ -430,7 +441,7 @@ label.textContent = 'Receber notificações';`,
               description: stripHtml(t('variants.styles.withDescription')),
               code: `// Layout em painel: Label + descrição à esquerda · Switch à direita
 const panel = document.createElement('div');
-panel.className = 'flex items-center justify-between rounded-lg border p-3';
+panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';
 // ... textGroup com <label htmlFor="marketing"> + <p> de descrição
 const sw = createSwitch({ id: 'marketing' });`,
               previewFactory: () => buildSwitchPanel({
@@ -448,26 +459,30 @@ const sw = createSwitch({ id: 'marketing' });`,
 const sw = createSwitch({
   id: 'sm-switch',
   checked: true,
-  class: 'h-4 w-7',
 });
+sw.style.height = '1rem'; sw.style.width = '1.75rem';
 // ajuste manual do thumb (size sm)
-sw.querySelector('[data-slot="switch-thumb"]')?.classList.add('h-3', 'w-3');`,
+const thumb = sw.querySelector('[data-slot="switch-thumb"]') as HTMLElement;
+thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
               previewFactory: () => {
                 const row = document.createElement('div');
-                row.className = 'flex items-center space-x-2';
+                row.className = 'nds-cluster';
+                row.dataset.spacing = 'sm';
 
                 const id = 'v-sm';
-                const sw = createSwitch({ id, checked: true, class: 'h-4 w-7' });
+                const sw = createSwitch({ id, checked: true });
+                sw.style.height = '1rem';
+                sw.style.width = '1.75rem';
                 const thumb = sw.querySelector('[data-slot="switch-thumb"]') as HTMLElement | null;
                 if (thumb) {
-                  thumb.classList.remove('h-4', 'w-4', 'data-[state=checked]:translate-x-4');
-                  thumb.classList.add('h-3', 'w-3', 'data-[state=checked]:translate-x-3');
+                  thumb.style.height = '0.75rem';
+                  thumb.style.width = '0.75rem';
                 }
 
                 const label = document.createElement('label');
                 label.htmlFor = id;
                 label.textContent = t('demonstration.labels.sm');
-                label.className = 'text-xs font-medium leading-none cursor-pointer';
+                label.className = 'nds-text-caption nds-font-medium nds-leading-none nds-cursor-pointer';
                 label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
                 row.append(sw, label);
@@ -477,6 +492,210 @@ sw.querySelector('[data-slot="switch-thumb"]')?.classList.add('h-3', 'w-3');`,
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'switch',
+          items: [
+            {
+              name: t('variants.compositions.withLabel.name'),
+              description: t('variants.compositions.withLabel.description'),
+              useWhen: t('variants.compositions.withLabel.use'),
+              code:
+                `const row = document.createElement('div');\n` +
+                `row.className = 'nds-cluster space-x-2';\n` +
+                `const sw = createSwitch({ id: 'sw-email' });\n` +
+                `const label = document.createElement('label');\n` +
+                `label.htmlFor = 'sw-email';\n` +
+                `label.textContent = 'Receber notificações por email';\n` +
+                `label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
+                `label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });\n` +
+                `row.append(sw, label);`,
+              previewFactory: () => {
+                const row = document.createElement('div');
+                row.className = 'nds-cluster';
+                row.dataset.spacing = 'sm';
+                const sw = createSwitch({ id: 'comp-sw-email' });
+                const label = document.createElement('label');
+                label.htmlFor = 'comp-sw-email';
+                label.textContent = 'Receber notificações por email';
+                label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+                label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
+                row.append(sw, label);
+                return row;
+              },
+            },
+            {
+              name: t('variants.compositions.withDescription.name'),
+              description: t('variants.compositions.withDescription.description'),
+              useWhen: t('variants.compositions.withDescription.use'),
+              code:
+                `const panel = document.createElement('div');\n` +
+                `panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';\n` +
+                `const sw = createSwitch({ id: 'sw-marketing', checked: true });\n` +
+                `const textGroup = document.createElement('div');\n` +
+                `textGroup.className = 'nds-stack nds-pr-3';\n` +
+                `const label = document.createElement('label');\n` +
+                `label.htmlFor = 'sw-marketing';\n` +
+                `label.textContent = 'Emails de marketing';\n` +
+                `label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
+                `label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });\n` +
+                `const desc = document.createElement('p');\n` +
+                `desc.className = 'nds-text-body nds-text-muted-foreground';\n` +
+                `desc.textContent = 'Receba novidades e promoções da plataforma.';\n` +
+                `textGroup.append(label, desc);\n` +
+                `panel.append(textGroup, sw);`,
+              previewFactory: () => {
+                const panel = document.createElement('div');
+                panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-2';
+                panel.dataset.justify = 'between';
+                panel.style.width = '20rem';
+                const id = 'comp-sw-marketing';
+                const sw = createSwitch({ id, checked: true });
+                const textGroup = document.createElement('div');
+                textGroup.className = 'nds-stack';
+                textGroup.dataset.spacing = 'xs';
+                textGroup.style.paddingRight = 'var(--spacing-2)';
+                const label = document.createElement('label');
+                label.htmlFor = id;
+                label.textContent = 'Emails de marketing';
+                label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+                label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
+                const desc = document.createElement('p');
+                desc.className = 'nds-text-body nds-text-muted-foreground';
+                desc.textContent = 'Receba novidades e promoções da plataforma.';
+                textGroup.append(label, desc);
+                panel.append(textGroup, sw);
+                return panel;
+              },
+            },
+            {
+              name: t('variants.compositions.settingsList.name'),
+              description: t('variants.compositions.settingsList.description'),
+              useWhen: t('variants.compositions.settingsList.use'),
+              code:
+                `const wrapper = document.createElement('div');\n` +
+                `wrapper.className = 'nds-stack';\n` +
+                `wrapper.dataset.spacing = 'sm';\n` +
+                `const title = document.createElement('p');\n` +
+                `title.className = 'nds-text-body nds-font-semibold nds-mb-3';\n` +
+                `title.textContent = 'Preferências de notificação';\n` +
+                `wrapper.appendChild(title);\n` +
+                `const options = [\n` +
+                `  { id: 'pref-email', label: 'Receber novidades por email', desc: 'Resumo semanal sobre o produto.', checked: true },\n` +
+                `  { id: 'pref-push',  label: 'Receber notificações push',   desc: 'Alertas no dispositivo em tempo real.', checked: false },\n` +
+                `  { id: 'pref-sms',   label: 'Alertas por SMS',             desc: 'Eventos críticos via mensagem de texto.', checked: false },\n` +
+                `];\n` +
+                `options.forEach(({ id, label: labelText, desc: descText, checked }) => {\n` +
+                `  const panel = document.createElement('div');\n` +
+                `  panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';\n` +
+                `  const sw = createSwitch({ id, checked });\n` +
+                `  // ... textGroup com <label htmlFor=id> + <p> de descrição\n` +
+                `  wrapper.appendChild(panel);\n` +
+                `});`,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack';
+                wrapper.dataset.spacing = 'sm';
+                wrapper.style.width = '24rem';
+                const title = document.createElement('p');
+                title.className = 'nds-text-body nds-font-semibold nds-mb-2';
+                title.textContent = 'Preferências de notificação';
+                wrapper.appendChild(title);
+                const options = [
+                  { id: 'comp-pref-email', label: 'Receber novidades por email', desc: 'Resumo semanal sobre o produto.', checked: true },
+                  { id: 'comp-pref-push',  label: 'Receber notificações push',   desc: 'Alertas no dispositivo em tempo real.', checked: false },
+                  { id: 'comp-pref-sms',   label: 'Alertas por SMS',             desc: 'Eventos críticos via mensagem de texto.', checked: false },
+                ];
+                options.forEach(({ id, label: labelText, desc: descText, checked }) => {
+                  const panel = document.createElement('div');
+                  panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-2';
+                  panel.dataset.justify = 'between';
+                  const sw = createSwitch({ id, checked });
+                  const textGroup = document.createElement('div');
+                  textGroup.className = 'nds-stack';
+                textGroup.dataset.spacing = 'xs';
+                textGroup.style.paddingRight = 'var(--spacing-2)';
+                  const label = document.createElement('label');
+                  label.htmlFor = id;
+                  label.textContent = labelText;
+                  label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+                  label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
+                  const desc = document.createElement('p');
+                  desc.className = 'nds-text-body nds-text-muted-foreground';
+                  desc.textContent = descText;
+                  textGroup.append(label, desc);
+                  panel.append(textGroup, sw);
+                  wrapper.appendChild(panel);
+                });
+                return wrapper;
+              },
+            },
+            {
+              name: t('variants.compositions.inForm.name'),
+              description: t('variants.compositions.inForm.description'),
+              useWhen: t('variants.compositions.inForm.use'),
+              code:
+                `// Divergência Basecoat: factory não expõe prop \`name\`.\n` +
+                `// Sincronize o estado em um <input type="hidden"> via onCheckedChange.\n` +
+                `const form = document.createElement('form');\n` +
+                `form.className = 'nds-stack';\n` +
+                `form.addEventListener('submit', (e) => e.preventDefault());\n` +
+                `const hidden = document.createElement('input');\n` +
+                `hidden.type = 'hidden';\n` +
+                `hidden.name = 'newsletter';\n` +
+                `hidden.value = 'on';\n` +
+                `const sw = createSwitch({\n` +
+                `  id: 'sw-form-newsletter',\n` +
+                `  checked: true,\n` +
+                `  onCheckedChange: (val) => { hidden.value = val ? 'on' : 'off'; },\n` +
+                `});\n` +
+                `// row com sw + <label htmlFor="sw-form-newsletter">Aceitar newsletter semanal</label>\n` +
+                `// form.append(row, hidden, createButton({ type: 'submit', label: 'Salvar preferências' }));`,
+              previewFactory: () => {
+                const form = document.createElement('form');
+                form.className = 'nds-stack';
+                form.dataset.spacing = 'sm';
+                form.style.width = '20rem';
+                form.addEventListener('submit', (e) => e.preventDefault());
+
+                const row = document.createElement('div');
+                row.className = 'nds-cluster';
+                row.dataset.spacing = 'sm';
+
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'newsletter';
+                hidden.value = 'on';
+
+                const id = 'comp-sw-form-newsletter';
+                const sw = createSwitch({
+                  id,
+                  checked: true,
+                  onCheckedChange: (val) => { hidden.value = val ? 'on' : 'off'; },
+                });
+
+                const label = document.createElement('label');
+                label.htmlFor = id;
+                label.textContent = 'Aceitar newsletter semanal';
+                label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+                label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
+
+                row.append(sw, label);
+
+                const submit = createButton({
+                  type: 'submit',
+                  label: 'Salvar preferências',
+                });
+
+                form.append(row, hidden, submit);
+                return form;
+              },
+            },
+          ],
+        });
 
       case 'estados':
         return createDocsStates({

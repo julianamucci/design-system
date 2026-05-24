@@ -6,7 +6,7 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { ChartContainer, ChartLegendContent, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 import { VisXYContainer, VisGroupedBar, VisLine, VisArea, VisAxis, VisCrosshair, VisTooltip, VisDonut } from '@unovis/vue';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import chartTranslations from '@shared/content/chart/translations.json';
@@ -18,6 +18,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -85,9 +86,10 @@ const navGroups = computed(() => [
   {
     label: tNav('nav.techRef'),
     sections: [
-      { id: 'importacao',   label: tNav('nav.import')   },
-      { id: 'variantes',    label: tNav('nav.variants') },
-      { id: 'estados',      label: tNav('nav.states')   },
+      { id: 'importacao',   label: tNav('nav.import')        },
+      { id: 'variantes',    label: tNav('nav.variants')      },
+      { id: 'composicoes',  label: tNav('nav.compositions')  },
+      { id: 'estados',      label: tNav('nav.states')        },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
     ],
@@ -254,6 +256,102 @@ const variantItems = computed(() => [
   { name: 'line', description: stripHtml(tContent('variants.items.line')), code: codeLineChart },
   { name: 'area', description: stripHtml(tContent('variants.items.area')), code: codeAreaChart },
   { name: 'pie',  description: stripHtml(tContent('variants.items.pie')),  code: codePieChart  },
+]);
+
+// ─── Compositions ─────────────────────────────────────────────────────────────
+
+const codeCompInCard = `<Card class="w-full max-w-sm">
+  <CardHeader>
+    <CardTitle>Acessos mensais</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <ChartContainer
+      :config="chartConfig"
+      class="h-[200px] w-full"
+      aria-label="Gráfico de barras: acessos mensais por dispositivo"
+    >
+      <template #default>
+        <VisXYContainer :data="chartData" :height="200">
+          <VisGroupedBar :x="barX" :y="[barDesktop]" :color="['var(--chart-1)']" />
+          <VisAxis type="x" :tick-format="(i) => xTicks[i]" />
+        </VisXYContainer>
+      </template>
+    </ChartContainer>
+  </CardContent>
+</Card>`;
+
+const codeCompMultiSeries = `<ChartContainer
+  :config="chartConfig"
+  class="h-[240px] w-full"
+  aria-label="Gráfico multi-séries: Desktop e Mobile"
+>
+  <template #default>
+    <VisXYContainer :data="chartData" :height="240">
+      <VisGroupedBar
+        :x="barX"
+        :y="[barDesktop, barMobile]"
+        :color="['var(--chart-1)', 'var(--chart-2)']"
+      />
+      <VisAxis type="x" :tick-format="(i) => xTicks[i]" />
+    </VisXYContainer>
+  </template>
+</ChartContainer>
+<ChartLegendContent :config="chartConfig" />`;
+
+const codeCompSmallInline = `<div class="flex items-center gap-4 rounded-md border p-4 w-fit">
+  <div>
+    <p class="text-xs text-muted-foreground">Acessos</p>
+    <p class="text-2xl font-semibold">1.224</p>
+  </div>
+  <ChartContainer
+    :config="{ desktop: { label: 'Desktop', color: 'var(--chart-1)' } }"
+    class="h-[48px] w-[120px]"
+    aria-label="Tendência de acessos nos últimos 6 meses"
+  >
+    <template #default>
+      <VisXYContainer :data="chartData" :height="48">
+        <VisLine :x="lineX" :y="lineY" color="var(--chart-1)" />
+      </VisXYContainer>
+    </template>
+  </ChartContainer>
+</div>`;
+
+const codeCompEmpty = `<div
+  v-if="data.length === 0"
+  role="status"
+  class="flex h-[200px] w-full items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+>
+  Nenhum dado disponível para o período selecionado.
+</div>
+<ChartContainer v-else :config="chartConfig" class="h-[200px] w-full" aria-label="...">
+  <!-- ... -->
+</ChartContainer>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.inCard.name'),
+    description: tContent('variants.compositions.inCard.description'),
+    useWhen: tContent('variants.compositions.inCard.use'),
+    code: codeCompInCard,
+  },
+  {
+    name: tContent('variants.compositions.multiSeriesWithLegend.name'),
+    description: tContent('variants.compositions.multiSeriesWithLegend.description'),
+    useWhen: tContent('variants.compositions.multiSeriesWithLegend.use'),
+    code: codeCompMultiSeries,
+  },
+  {
+    name: tContent('variants.compositions.smallInline.name'),
+    description: tContent('variants.compositions.smallInline.description'),
+    useWhen: tContent('variants.compositions.smallInline.use'),
+    code: codeCompSmallInline,
+  },
+  {
+    name: tContent('variants.compositions.withEmptyState.name'),
+    description: tContent('variants.compositions.withEmptyState.description'),
+    useWhen: tContent('variants.compositions.withEmptyState.use'),
+    code: codeCompEmpty,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -628,6 +726,91 @@ const visualTestItems = computed(() => [
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="chart"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Card class="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Acessos mensais</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer
+              :config="chartConfig"
+              class="h-[200px] w-full"
+              aria-label="Gráfico de barras: acessos mensais por dispositivo"
+            >
+              <template #default>
+                <VisXYContainer :data="chartData" :height="200">
+                  <VisGroupedBar
+                    :x="barX"
+                    :y="[barDesktop]"
+                    :color="['var(--chart-1)']"
+                  />
+                  <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
+                </VisXYContainer>
+              </template>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </template>
+
+      <template #variant-preview-1>
+        <div class="flex flex-col items-center gap-3 w-full">
+          <ChartContainer
+            :config="chartConfig"
+            class="h-[200px] w-full max-w-md"
+            aria-label="Gráfico multi-séries: Desktop e Mobile"
+          >
+            <template #default>
+              <VisXYContainer :data="chartData" :height="200">
+                <VisGroupedBar
+                  :x="barX"
+                  :y="[barDesktop, barMobile]"
+                  :color="['var(--chart-1)', 'var(--chart-2)']"
+                />
+                <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
+              </VisXYContainer>
+            </template>
+          </ChartContainer>
+          <ChartLegendContent :config="chartConfig" />
+        </div>
+      </template>
+
+      <template #variant-preview-2>
+        <div class="flex items-center gap-4 rounded-md border p-4 w-fit">
+          <div>
+            <p class="text-xs text-muted-foreground">Acessos</p>
+            <p class="text-2xl font-semibold">1.224</p>
+          </div>
+          <ChartContainer
+            :config="{ desktop: { label: 'Desktop', color: 'var(--chart-1)' } }"
+            class="h-[48px] w-[120px]"
+            aria-label="Tendência de acessos nos últimos 6 meses"
+          >
+            <template #default>
+              <VisXYContainer :data="chartData" :height="48">
+                <VisLine :x="lineX" :y="lineY" color="var(--chart-1)" />
+              </VisXYContainer>
+            </template>
+          </ChartContainer>
+        </div>
+      </template>
+
+      <template #variant-preview-3>
+        <div
+          role="status"
+          class="flex h-[200px] w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+        >
+          Nenhum dado disponível para o período selecionado.
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates

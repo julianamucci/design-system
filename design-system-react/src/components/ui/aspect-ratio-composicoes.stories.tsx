@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { within, expect } from "storybook/test";
+import { expect } from "storybook/test";
 import { AspectRatio } from "./aspect-ratio";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
@@ -24,6 +24,7 @@ const meta = {
       },
     },
   },
+  args: { ratio: 16 / 9 },
 } satisfies Meta<typeof AspectRatio>;
 
 export default meta;

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { Settings, Shield, User } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -16,6 +17,7 @@ import { DocsWhenToUse } from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont } from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport } from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants } from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates } from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps } from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens } from "@/components/docs/shared/sections/DocsTokens";
@@ -54,6 +56,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao", label: t("nav.import") },
       { id: "variantes", label: t("nav.variants") },
+      { id: "composicoes", label: t("nav.compositions") },
       { id: "estados", label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens", label: t("nav.tokens") },
@@ -126,7 +129,7 @@ export function TabsDocs() {
   const activeId = useActiveSection(allIds, handleSectionChange);
 
   const handleTabChange = useCallback(
-    (next: string, label: string, index: number, total: number) => {
+    (_next: string, label: string, index: number, total: number) => {
       track("tab_change", {
         component: "tabs",
         label,
@@ -552,6 +555,304 @@ interface TabsContentProps {
                 </TabsContent>
                 <TabsContent value="examples">
                   {tContent("demonstration.labels.examplesContent")}
+                </TabsContent>
+              </Tabs>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="tabs"
+        items={[
+          {
+            name: tContent("variants.compositions.iconTrigger.name"),
+            description: tContent("variants.compositions.iconTrigger.description"),
+            useWhen: tContent("variants.compositions.iconTrigger.use"),
+            code: `<Tabs defaultValue="profile" className="w-full max-w-xl">
+  <TabsList aria-label="Configurações">
+    <TabsTrigger value="profile">
+      <span className="flex items-center gap-2">
+        <User aria-hidden="true" className="h-4 w-4" />
+        Perfil
+      </span>
+    </TabsTrigger>
+    <TabsTrigger value="account">
+      <span className="flex items-center gap-2">
+        <Settings aria-hidden="true" className="h-4 w-4" />
+        Conta
+      </span>
+    </TabsTrigger>
+    <TabsTrigger value="security">
+      <span className="flex items-center gap-2">
+        <Shield aria-hidden="true" className="h-4 w-4" />
+        Segurança
+      </span>
+    </TabsTrigger>
+  </TabsList>
+  <TabsContent value="profile">
+    <div className="p-4 rounded-md border bg-card space-y-2">
+      <h3 className="text-sm font-semibold">Perfil</h3>
+      <p className="text-sm text-muted-foreground">Edite suas informações públicas.</p>
+    </div>
+  </TabsContent>
+  <TabsContent value="account">
+    <div className="p-4 rounded-md border bg-card space-y-2">
+      <h3 className="text-sm font-semibold">Conta</h3>
+      <p className="text-sm text-muted-foreground">Email, idioma e preferências.</p>
+    </div>
+  </TabsContent>
+  <TabsContent value="security">
+    <div className="p-4 rounded-md border bg-card space-y-2">
+      <h3 className="text-sm font-semibold">Segurança</h3>
+      <p className="text-sm text-muted-foreground">Senha e autenticação em dois fatores.</p>
+    </div>
+  </TabsContent>
+</Tabs>`,
+            preview: (
+              <Tabs defaultValue="profile" className="w-full max-w-xl">
+                <TabsList aria-label="Configurações">
+                  <TabsTrigger value="profile">
+                    <span className="flex items-center gap-2">
+                      <User aria-hidden="true" className="h-4 w-4" />
+                      Perfil
+                    </span>
+                  </TabsTrigger>
+                  <TabsTrigger value="account">
+                    <span className="flex items-center gap-2">
+                      <Settings aria-hidden="true" className="h-4 w-4" />
+                      Conta
+                    </span>
+                  </TabsTrigger>
+                  <TabsTrigger value="security">
+                    <span className="flex items-center gap-2">
+                      <Shield aria-hidden="true" className="h-4 w-4" />
+                      Segurança
+                    </span>
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="profile">
+                  <div className="p-4 rounded-md border bg-card space-y-2">
+                    <h3 className="text-sm font-semibold">Perfil</h3>
+                    <p className="text-sm text-muted-foreground">Edite suas informações públicas.</p>
+                  </div>
+                </TabsContent>
+                <TabsContent value="account">
+                  <div className="p-4 rounded-md border bg-card space-y-2">
+                    <h3 className="text-sm font-semibold">Conta</h3>
+                    <p className="text-sm text-muted-foreground">Email, idioma e preferências.</p>
+                  </div>
+                </TabsContent>
+                <TabsContent value="security">
+                  <div className="p-4 rounded-md border bg-card space-y-2">
+                    <h3 className="text-sm font-semibold">Segurança</h3>
+                    <p className="text-sm text-muted-foreground">Senha e autenticação em dois fatores.</p>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.badgeTrigger.name"),
+            description: tContent("variants.compositions.badgeTrigger.description"),
+            useWhen: tContent("variants.compositions.badgeTrigger.use"),
+            code: `<Tabs defaultValue="inbox" className="w-full max-w-xl">
+  <TabsList aria-label="Caixas de mensagem">
+    <TabsTrigger value="inbox">
+      <span className="flex items-center gap-2">
+        Caixa de entrada
+        <Badge className="text-[10px] h-4">12</Badge>
+      </span>
+    </TabsTrigger>
+    <TabsTrigger value="spam">
+      <span className="flex items-center gap-2">
+        Spam
+        <Badge variant="destructive" className="text-[10px] h-4">3</Badge>
+      </span>
+    </TabsTrigger>
+    <TabsTrigger value="trash">
+      <span className="flex items-center gap-2">Lixeira</span>
+    </TabsTrigger>
+  </TabsList>
+  <TabsContent value="inbox">
+    <div className="p-4 rounded-md border bg-card space-y-2">
+      <h3 className="text-sm font-semibold">Caixa de entrada</h3>
+      <p className="text-sm text-muted-foreground">12 mensagens não lidas</p>
+    </div>
+  </TabsContent>
+  <TabsContent value="spam">
+    <div className="p-4 rounded-md border bg-card space-y-2">
+      <h3 className="text-sm font-semibold">Spam</h3>
+      <p className="text-sm text-muted-foreground">3 marcadas como spam</p>
+    </div>
+  </TabsContent>
+  <TabsContent value="trash">
+    <div className="p-4 rounded-md border bg-card space-y-2">
+      <h3 className="text-sm font-semibold">Lixeira</h3>
+      <p className="text-sm text-muted-foreground">Itens excluídos nos últimos 30 dias.</p>
+    </div>
+  </TabsContent>
+</Tabs>`,
+            preview: (
+              <Tabs defaultValue="inbox" className="w-full max-w-xl">
+                <TabsList aria-label="Caixas de mensagem">
+                  <TabsTrigger value="inbox">
+                    <span className="flex items-center gap-2">
+                      Caixa de entrada
+                      <Badge className="text-[10px] h-4">12</Badge>
+                    </span>
+                  </TabsTrigger>
+                  <TabsTrigger value="spam">
+                    <span className="flex items-center gap-2">
+                      Spam
+                      <Badge variant="destructive" className="text-[10px] h-4">3</Badge>
+                    </span>
+                  </TabsTrigger>
+                  <TabsTrigger value="trash">
+                    <span className="flex items-center gap-2">Lixeira</span>
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="inbox">
+                  <div className="p-4 rounded-md border bg-card space-y-2">
+                    <h3 className="text-sm font-semibold">Caixa de entrada</h3>
+                    <p className="text-sm text-muted-foreground">12 mensagens não lidas</p>
+                  </div>
+                </TabsContent>
+                <TabsContent value="spam">
+                  <div className="p-4 rounded-md border bg-card space-y-2">
+                    <h3 className="text-sm font-semibold">Spam</h3>
+                    <p className="text-sm text-muted-foreground">3 marcadas como spam</p>
+                  </div>
+                </TabsContent>
+                <TabsContent value="trash">
+                  <div className="p-4 rounded-md border bg-card space-y-2">
+                    <h3 className="text-sm font-semibold">Lixeira</h3>
+                    <p className="text-sm text-muted-foreground">Itens excluídos nos últimos 30 dias.</p>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.vertical.name"),
+            description: tContent("variants.compositions.vertical.description"),
+            useWhen: tContent("variants.compositions.vertical.use"),
+            code: `<Tabs defaultValue="profile" className="w-full max-w-2xl flex gap-4" orientation="vertical">
+  <TabsList className="flex flex-col h-auto items-stretch shrink-0 min-w-[10rem]" aria-label="Configurações">
+    <TabsTrigger value="profile">Perfil</TabsTrigger>
+    <TabsTrigger value="account">Conta</TabsTrigger>
+    <TabsTrigger value="security">Segurança</TabsTrigger>
+  </TabsList>
+  <TabsContent value="profile">
+    <div className="p-4 rounded-md border bg-card space-y-2">
+      <h3 className="text-sm font-semibold">Perfil</h3>
+      <p className="text-sm text-muted-foreground">Edite suas informações públicas.</p>
+    </div>
+  </TabsContent>
+  <TabsContent value="account">
+    <div className="p-4 rounded-md border bg-card space-y-2">
+      <h3 className="text-sm font-semibold">Conta</h3>
+      <p className="text-sm text-muted-foreground">Email, idioma e preferências.</p>
+    </div>
+  </TabsContent>
+  <TabsContent value="security">
+    <div className="p-4 rounded-md border bg-card space-y-2">
+      <h3 className="text-sm font-semibold">Segurança</h3>
+      <p className="text-sm text-muted-foreground">Senha e autenticação em dois fatores.</p>
+    </div>
+  </TabsContent>
+</Tabs>`,
+            preview: (
+              <Tabs
+                defaultValue="profile"
+                className="w-full max-w-2xl flex gap-4"
+                orientation="vertical"
+              >
+                <TabsList
+                  className="flex flex-col h-auto items-stretch shrink-0 min-w-[10rem]"
+                  aria-label="Configurações"
+                >
+                  <TabsTrigger value="profile">Perfil</TabsTrigger>
+                  <TabsTrigger value="account">Conta</TabsTrigger>
+                  <TabsTrigger value="security">Segurança</TabsTrigger>
+                </TabsList>
+                <TabsContent value="profile">
+                  <div className="p-4 rounded-md border bg-card space-y-2">
+                    <h3 className="text-sm font-semibold">Perfil</h3>
+                    <p className="text-sm text-muted-foreground">Edite suas informações públicas.</p>
+                  </div>
+                </TabsContent>
+                <TabsContent value="account">
+                  <div className="p-4 rounded-md border bg-card space-y-2">
+                    <h3 className="text-sm font-semibold">Conta</h3>
+                    <p className="text-sm text-muted-foreground">Email, idioma e preferências.</p>
+                  </div>
+                </TabsContent>
+                <TabsContent value="security">
+                  <div className="p-4 rounded-md border bg-card space-y-2">
+                    <h3 className="text-sm font-semibold">Segurança</h3>
+                    <p className="text-sm text-muted-foreground">Senha e autenticação em dois fatores.</p>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.lineSubNav.name"),
+            description: tContent("variants.compositions.lineSubNav.description"),
+            useWhen: tContent("variants.compositions.lineSubNav.use"),
+            code: `<Tabs defaultValue="all" className="w-full max-w-2xl" variant="line">
+  <TabsList
+    aria-label="Filtros de listagem"
+    className="border-b rounded-none bg-transparent w-full justify-start"
+  >
+    <TabsTrigger value="all">Tudo</TabsTrigger>
+    <TabsTrigger value="active">Ativos</TabsTrigger>
+    <TabsTrigger value="archived">Arquivados</TabsTrigger>
+  </TabsList>
+  <TabsContent value="all">
+    <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+      Mostrando todos os itens.
+    </div>
+  </TabsContent>
+  <TabsContent value="active">
+    <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+      Mostrando apenas ativos.
+    </div>
+  </TabsContent>
+  <TabsContent value="archived">
+    <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+      Mostrando apenas arquivados.
+    </div>
+  </TabsContent>
+</Tabs>`,
+            preview: (
+              <Tabs defaultValue="all" className="w-full max-w-2xl" variant="line">
+                <TabsList
+                  aria-label="Filtros de listagem"
+                  className="border-b rounded-none bg-transparent w-full justify-start"
+                >
+                  <TabsTrigger value="all">Tudo</TabsTrigger>
+                  <TabsTrigger value="active">Ativos</TabsTrigger>
+                  <TabsTrigger value="archived">Arquivados</TabsTrigger>
+                </TabsList>
+                <TabsContent value="all">
+                  <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+                    Mostrando todos os itens.
+                  </div>
+                </TabsContent>
+                <TabsContent value="active">
+                  <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+                    Mostrando apenas ativos.
+                  </div>
+                </TabsContent>
+                <TabsContent value="archived">
+                  <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+                    Mostrando apenas arquivados.
+                  </div>
                 </TabsContent>
               </Tabs>
             ),

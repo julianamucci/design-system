@@ -25,7 +25,9 @@ type Story = StoryObj;
 function wrap(child: HTMLElement, minHeight = 220): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full flex items-start justify-center p-2';
+  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.alignItems = 'flex-start';
   wrapper.style.minHeight = `${minHeight}px`;
   wrapper.appendChild(child);
   return wrapper;
@@ -76,13 +78,16 @@ export const Vertical: Story = {
       { label: 'Sair',        href: '/logout' },
     ]);
     nav.setAttribute('aria-label', 'Navegação lateral');
-    nav.classList.add('flex-col', 'items-stretch');
+    nav.style.flexDirection = 'column';
+    nav.style.alignItems = 'stretch';
 
     const ul = nav.querySelector<HTMLElement>('ul[role="menubar"]');
     if (ul) {
       ul.setAttribute('aria-orientation', 'vertical');
-      ul.className =
-        'group flex flex-col list-none items-stretch space-y-1 w-full max-w-[240px]';
+      ul.className = 'group nds-stack nds-list-none nds-w-full';
+      ul.dataset.spacing = 'xs';
+      ul.style.alignItems = 'stretch';
+      ul.style.maxWidth = '240px';
     }
     return wrap(nav, 260);
   },

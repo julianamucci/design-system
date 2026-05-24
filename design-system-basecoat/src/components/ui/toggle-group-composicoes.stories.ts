@@ -35,7 +35,7 @@ type Story = StoryObj;
 
 type LucideIconNode = [string, Record<string, string>];
 
-function buildLucideSvg(icon: unknown, className = 'h-4 w-4'): SVGSVGElement {
+function buildLucideSvg(icon: unknown, className = 'nds-icon-sm'): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -58,7 +58,7 @@ function injectIcons(group: HTMLElement, icons: unknown[]): void {
   group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
     btn.textContent = '';
     const wrap = document.createElement('span');
-    wrap.className = 'inline-flex';
+    wrap.style.display = 'inline-flex';
     wrap.appendChild(buildLucideSvg(icons[i]));
     btn.appendChild(wrap);
   });
@@ -70,7 +70,9 @@ function injectIconsAndText(group: HTMLElement, entries: Array<{ icon: unknown; 
     if (!entry) return;
     btn.textContent = '';
     const wrap = document.createElement('span');
-    wrap.className = 'inline-flex items-center gap-2';
+    wrap.className = 'nds-cluster';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.display = 'inline-flex';
     wrap.appendChild(buildLucideSvg(entry.icon));
     const t = document.createElement('span');
     t.textContent = entry.text; // textContent escapa automaticamente — sem XSS
@@ -263,10 +265,12 @@ export const ComItemDesabilitado: Story = {
 export const ComFiltroVisivel: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-2 w-72';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.style.width = '18rem';
 
     const title = document.createElement('p');
-    title.className = 'text-sm font-semibold mb-1';
+    title.className = 'nds-text-body nds-font-semibold nds-mb-1';
     title.textContent = 'Filtros de exibição';
     wrapper.appendChild(title);
 

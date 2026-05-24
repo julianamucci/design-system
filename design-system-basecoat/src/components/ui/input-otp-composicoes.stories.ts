@@ -26,7 +26,9 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[180px] flex items-center justify-center';
+  wrapper.className = 'nds-cluster nds-w-full';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.minHeight = '180px';
   wrapper.appendChild(child);
   return wrapper;
 }
@@ -40,7 +42,8 @@ function applyError(otp: HTMLElement): void {
   const inputs = Array.from(otp.querySelectorAll('input')) as HTMLInputElement[];
   for (const input of inputs) {
     input.setAttribute('aria-invalid', 'true');
-    input.classList.add('border-destructive', 'ring-2', 'ring-destructive/20');
+    input.classList.add('border-destructive');
+    input.style.boxShadow = '0 0 0 2px hsl(var(--destructive) / 0.2)';
   }
 }
 
@@ -50,10 +53,12 @@ export const ComLabel: Story = {
   name: 'Com Label',
   render: () => {
     const root = document.createElement('div');
-    root.className = 'flex flex-col gap-2 w-fit';
+    root.className = 'nds-stack';
+    root.dataset.spacing = 'sm';
+    root.style.width = 'fit-content';
 
     const label = document.createElement('label');
-    label.className = 'text-sm font-medium';
+    label.className = 'nds-text-body nds-font-medium';
     label.id = 'otp-label-1';
     label.textContent = 'Código de verificação';
 
@@ -76,10 +81,12 @@ export const ComHelpText: Story = {
   name: 'Com Help Text',
   render: () => {
     const root = document.createElement('div');
-    root.className = 'flex flex-col gap-2 w-fit';
+    root.className = 'nds-stack';
+    root.dataset.spacing = 'sm';
+    root.style.width = 'fit-content';
 
     const label = document.createElement('label');
-    label.className = 'text-sm font-medium';
+    label.className = 'nds-text-body nds-font-medium';
     label.textContent = 'Código de verificação';
 
     const otp = createInputOTP({ length: 6 });
@@ -87,7 +94,7 @@ export const ComHelpText: Story = {
 
     const help = document.createElement('p');
     help.id = 'otp-help-1';
-    help.className = 'text-xs text-muted-foreground';
+    help.className = 'nds-text-caption nds-text-muted-foreground';
     help.textContent = 'Enviamos por SMS, expira em 5 min.';
 
     root.append(label, otp, help);
@@ -108,10 +115,12 @@ export const ComErrorMessage: Story = {
   name: 'Com Mensagem de Erro',
   render: () => {
     const root = document.createElement('div');
-    root.className = 'flex flex-col gap-2 w-fit';
+    root.className = 'nds-stack';
+    root.dataset.spacing = 'sm';
+    root.style.width = 'fit-content';
 
     const label = document.createElement('label');
-    label.className = 'text-sm font-medium';
+    label.className = 'nds-text-body nds-font-medium';
     label.textContent = 'Código de verificação';
 
     const otp = createInputOTP({ length: 6 });
@@ -120,7 +129,7 @@ export const ComErrorMessage: Story = {
 
     const err = document.createElement('p');
     err.id = 'otp-error-1';
-    err.className = 'text-xs text-destructive';
+    err.className = 'nds-text-caption nds-text-destructive';
     err.textContent = 'Código incorreto. Verifique e tente novamente.';
 
     root.append(label, otp, err);
@@ -144,16 +153,18 @@ export const ComResendButton: Story = {
     root.className = 'flex flex-col gap-3 w-fit';
 
     const label = document.createElement('label');
-    label.className = 'text-sm font-medium';
+    label.className = 'nds-text-body nds-font-medium';
     label.textContent = 'Código de verificação';
 
     const otp = createInputOTP({ length: 6 });
 
     const row = document.createElement('div');
-    row.className = 'flex items-center justify-between gap-3';
+    row.className = 'nds-cluster';
+    row.dataset.justify = 'between';
+    row.dataset.spacing = 'md';
 
     const note = document.createElement('p');
-    note.className = 'text-xs text-muted-foreground';
+    note.className = 'nds-text-caption nds-text-muted-foreground';
     note.textContent = 'Não recebeu?';
 
     const btn = createButton({ variant: 'link', label: 'Reenviar código' });

@@ -4,6 +4,7 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createSlider } from '@/components/ui/slider';
+import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import sliderTranslations from '@shared/content/slider/translations.json';
 
@@ -15,6 +16,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -84,19 +86,23 @@ function buildLabeledSlider(opts: {
   } = opts;
 
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2 w-72';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'xs';
+  wrap.style.width = '18rem';
 
   const row = document.createElement('div');
-  row.className = 'flex items-center justify-between';
+  row.className = 'nds-cluster';
+  row.dataset.justify = 'between';
 
   const label = document.createElement('label');
   label.id = `${idPrefix}-label`;
-  label.className = 'text-sm font-medium';
+  label.className = 'nds-text-body nds-font-medium';
   label.textContent = labelText;
 
   const valueText = document.createElement('span');
   valueText.id = `${idPrefix}-value`;
-  valueText.className = 'text-sm tabular-nums text-muted-foreground';
+  valueText.className = 'nds-text-body nds-text-muted-foreground';
+  valueText.style.fontVariantNumeric = 'tabular-nums';
   valueText.setAttribute('aria-live', 'polite');
   valueText.textContent = `${value}${unit}`;
 
@@ -173,6 +179,7 @@ export function createSliderDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -223,7 +230,7 @@ export function createSliderDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -238,7 +245,8 @@ export function createSliderDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-col gap-8';
+            wrap.className = 'nds-stack';
+            wrap.dataset.spacing = 'xl';
 
             // Volume — single
             const volume = buildLabeledSlider({
@@ -445,17 +453,21 @@ input.setAttribute('aria-label', 'Volume');`,
               code: `// Factory não suporta 2 thumbs — composição com dois createSlider() adjacentes\nconst minSlider = createSlider({ min: 0, max: 1000, value: 100 });\nconst maxSlider = createSlider({ min: 0, max: 1000, value: 400 });`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col gap-2 w-72';
+                wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'xs';
+  wrap.style.width = '18rem';
 
                 const row = document.createElement('div');
-                row.className = 'flex items-center justify-between';
+                row.className = 'nds-cluster';
+  row.dataset.justify = 'between';
                 const label = document.createElement('label');
                 label.id = 'v-range-label';
-                label.className = 'text-sm font-medium';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = t('demonstration.labels.priceRange');
                 const valueText = document.createElement('span');
                 valueText.id = 'v-range-value';
-                valueText.className = 'text-sm tabular-nums text-muted-foreground';
+                valueText.className = 'nds-text-body nds-text-muted-foreground';
+  valueText.style.fontVariantNumeric = 'tabular-nums';
                 valueText.setAttribute('aria-live', 'polite');
                 let minV = 100;
                 let maxV = 400;
@@ -521,9 +533,13 @@ input.setAttribute('aria-label', 'Volume');`,
               code: `// Não suportado — <input type=\"range\"> nativo não tem orientação vertical acessível.\n// Workaround visual via CSS rotate, mas ARIA não acompanha.`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col items-center gap-2';
+                wrap.className = 'nds-stack';
+                wrap.dataset.spacing = 'xs';
+                wrap.style.alignItems = 'center';
                 const note = document.createElement('p');
-                note.className = 'text-xs text-muted-foreground italic max-w-[12rem] text-center';
+                note.className = 'nds-text-caption nds-text-muted-foreground nds-italic';
+                note.style.maxWidth = '12rem';
+                note.style.textAlign = 'center';
                 note.textContent =
                   'Variante "vertical" não suportada de forma acessível no Basecoat — use a versão horizontal.';
                 wrap.appendChild(note);
@@ -533,6 +549,209 @@ input.setAttribute('aria-label', 'Volume');`,
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'slider',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.volume.name')),
+              description: stripHtml(t('variants.compositions.volume.description')),
+              useWhen: stripHtml(t('variants.compositions.volume.use')),
+              code: `const slider = createSlider({ min: 0, max: 100, value: 50,
+  onValueChange: (v) => { valueText.textContent = v + '%'; },
+});
+const input = slider.querySelector('input[type="range"]');
+input.setAttribute('aria-label', 'Volume');`,
+              previewFactory: () =>
+                buildLabeledSlider({
+                  idPrefix: 'comp-volume',
+                  labelText: 'Volume',
+                  ariaLabel: 'Volume',
+                  min: 0,
+                  max: 100,
+                  value: 50,
+                  unit: '%',
+                }),
+            },
+            {
+              name: stripHtml(t('variants.compositions.brightness.name')),
+              description: stripHtml(t('variants.compositions.brightness.description')),
+              useWhen: stripHtml(t('variants.compositions.brightness.use')),
+              code: `const slider = createSlider({
+  min: 0, max: 100, step: 5, value: 75,
+  onValueChange: (v) => { valueText.textContent = v + '%'; },
+});`,
+              previewFactory: () =>
+                buildLabeledSlider({
+                  idPrefix: 'comp-brightness',
+                  labelText: 'Brilho',
+                  ariaLabel: 'Brilho',
+                  min: 0,
+                  max: 100,
+                  step: 5,
+                  value: 75,
+                  unit: '%',
+                }),
+            },
+            {
+              name: stripHtml(t('variants.compositions.priceRange.name')),
+              description: stripHtml(t('variants.compositions.priceRange.description')),
+              useWhen: stripHtml(t('variants.compositions.priceRange.use')),
+              code: `// Factory custom nao suporta 2 thumbs — composicao manual com clamping mutuo
+let minV = 100, maxV = 400;
+const minSlider = createSlider({ min: 0, max: 1000, step: 10, value: minV,
+  onValueChange: (v) => { if (v > maxV) v = maxV; minV = v; fmt(); },
+});
+const maxSlider = createSlider({ min: 0, max: 1000, step: 10, value: maxV,
+  onValueChange: (v) => { if (v < minV) v = minV; maxV = v; fmt(); },
+});`,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'xs';
+  wrap.style.width = '18rem';
+
+                const row = document.createElement('div');
+                row.className = 'nds-cluster';
+  row.dataset.justify = 'between';
+                const label = document.createElement('label');
+                label.id = 'comp-range-label';
+                label.className = 'nds-text-body nds-font-medium';
+                label.textContent = 'Faixa de preço';
+                const valueText = document.createElement('span');
+                valueText.id = 'comp-range-value';
+                valueText.className = 'nds-text-body nds-text-muted-foreground';
+  valueText.style.fontVariantNumeric = 'tabular-nums';
+                valueText.setAttribute('aria-live', 'polite');
+
+                let minV = 100;
+                let maxV = 400;
+                const fmt = () => {
+                  valueText.textContent = `R$ ${minV} — R$ ${maxV}`;
+                };
+                fmt();
+                row.append(label, valueText);
+
+                const minSlider = createSlider({
+                  min: 0,
+                  max: 1000,
+                  step: 10,
+                  value: minV,
+                  onValueChange: (v) => {
+                    if (v > maxV) {
+                      minV = maxV;
+                      const i = minSlider.querySelector('input[type="range"]') as HTMLInputElement;
+                      if (i) i.value = String(maxV);
+                    } else {
+                      minV = v;
+                    }
+                    fmt();
+                  },
+                });
+                const minInput = minSlider.querySelector('input[type="range"]') as HTMLInputElement | null;
+                if (minInput) {
+                  minInput.setAttribute('aria-label', 'Faixa de preço — mínimo');
+                  minInput.setAttribute('aria-labelledby', 'comp-range-label');
+                }
+
+                const maxSlider = createSlider({
+                  min: 0,
+                  max: 1000,
+                  step: 10,
+                  value: maxV,
+                  onValueChange: (v) => {
+                    if (v < minV) {
+                      maxV = minV;
+                      const i = maxSlider.querySelector('input[type="range"]') as HTMLInputElement;
+                      if (i) i.value = String(minV);
+                    } else {
+                      maxV = v;
+                    }
+                    fmt();
+                  },
+                });
+                const maxInput = maxSlider.querySelector('input[type="range"]') as HTMLInputElement | null;
+                if (maxInput) {
+                  maxInput.setAttribute('aria-label', 'Faixa de preço — máximo');
+                  maxInput.setAttribute('aria-labelledby', 'comp-range-label');
+                }
+
+                wrap.append(row, minSlider, maxSlider);
+                return wrap;
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.form.name')),
+              description: stripHtml(t('variants.compositions.form.description')),
+              useWhen: stripHtml(t('variants.compositions.form.use')),
+              code: `// Factory nao expoe onValueCommitted — debounce manual de 300ms
+let debounceId = null;
+const slider = createSlider({ min: 0, max: 100, value: 60,
+  onValueChange: (v) => {
+    if (debounceId) clearTimeout(debounceId);
+    debounceId = setTimeout(() => {
+      track('slider_change', { component: 'slider', field_name: 'volume', value: v });
+    }, 300);
+  },
+});`,
+              previewFactory: () => {
+                const form = document.createElement('form');
+                form.className = 'nds-stack';
+                form.dataset.spacing = 'md';
+                form.style.width = '18rem';
+                form.setAttribute('aria-label', 'Configurações de áudio');
+
+                let debounceId: ReturnType<typeof setTimeout> | null = null;
+                let lastCommitted = 60;
+
+                const status = document.createElement('p');
+                status.className = 'nds-text-caption nds-text-muted-foreground';
+                status.setAttribute('aria-live', 'polite');
+                status.textContent = 'Último commit: 60%';
+
+                const slider = buildLabeledSlider({
+                  idPrefix: 'comp-form-volume',
+                  labelText: 'Volume',
+                  ariaLabel: 'Volume',
+                  min: 0,
+                  max: 100,
+                  value: lastCommitted,
+                  unit: '%',
+                  onValueChange: (v) => {
+                    if (debounceId) clearTimeout(debounceId);
+                    debounceId = setTimeout(() => {
+                      lastCommitted = v;
+                      status.textContent = `Último commit: ${v}%`;
+                    }, 300);
+                  },
+                });
+
+                const submit = createButton({
+                  variant: 'default',
+                  size: 'sm',
+                  type: 'submit',
+                  label: 'Salvar',
+                  class: 'self-start',
+                });
+
+                form.addEventListener('submit', (e) => {
+                  e.preventDefault();
+                  lastCommitted = parseInt(
+                    (slider.querySelector('input[type="range"]') as HTMLInputElement)?.value ?? '0',
+                    10,
+                  );
+                  status.textContent = `Enviado: volume=${lastCommitted}%`;
+                });
+
+                form.append(slider, submit, status);
+                return form;
+              },
+            },
+          ],
+        });
 
       case 'estados':
         return createDocsStates({

@@ -19,6 +19,9 @@ export type { DocsImportProps } from './DocsImport';
 export { createDocsVariants } from './DocsVariants';
 export type { DocsVariantsProps, DocsVariantItem } from './DocsVariants';
 
+export { createDocsCompositions } from './DocsCompositions';
+export type { DocsCompositionsProps, DocsCompositionItem } from './DocsCompositions';
+
 export { createDocsStates } from './DocsStates';
 export type { DocsStatesProps, DocsStateItem } from './DocsStates';
 

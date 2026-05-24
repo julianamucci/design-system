@@ -47,7 +47,7 @@ type Story = StoryObj<CardArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 function buildPlaygroundCard(args: CardArgs): HTMLElement {
-  const card = createCard({ className: 'w-full max-w-sm' });
+  const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
 
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: args.title, level: 3 }));
@@ -55,14 +55,16 @@ function buildPlaygroundCard(args: CardArgs): HTMLElement {
 
   const content = createCardContent();
   const price = document.createElement('p');
-  price.className = 'text-lg font-semibold';
+  price.className = 'nds-text-h4 nds-font-semibold';
   price.textContent = args.price;
   content.appendChild(price);
 
   card.append(header, content);
 
   if (args.showFooter) {
-    const footer = createCardFooter({ className: 'justify-end gap-2' });
+    const footer = createCardFooter({ className: 'nds-cluster' });
+    footer.dataset.spacing = 'sm';
+    footer.dataset.justify = 'end';
     footer.appendChild(
       createButton({
         variant: 'outline',

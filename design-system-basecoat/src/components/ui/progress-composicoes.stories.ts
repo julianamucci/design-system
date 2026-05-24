@@ -31,17 +31,20 @@ function buildBar(value: number, ariaLabel: string, className?: string): HTMLEle
 
 function buildLabeled(opts: { value: number; label: string; ariaLabel: string; barClass?: string }): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full space-y-2';
+  wrap.className = 'nds-stack nds-w-full';
+  wrap.dataset.spacing = 'xs';
 
   const row = document.createElement('div');
-  row.className = 'flex items-center justify-between text-sm';
+  row.className = 'nds-cluster nds-text-body';
+  row.dataset.justify = 'between';
 
   const label = document.createElement('span');
-  label.className = 'text-foreground';
+  label.className = 'nds-text-foreground';
   label.textContent = opts.label;
 
   const value = document.createElement('span');
-  value.className = 'text-muted-foreground tabular-nums';
+  value.className = 'nds-text-muted-foreground';
+  value.style.fontVariantNumeric = 'tabular-nums';
   value.setAttribute('aria-live', 'polite');
   value.textContent = `${opts.value}%`;
 
@@ -55,14 +58,15 @@ function buildLabeled(opts: { value: number; label: string; ariaLabel: string; b
 export const FileUpload: Story = {
   render: () => {
     const card = document.createElement('div');
-    card.className = 'w-full max-w-md p-4 rounded-lg border bg-card text-card-foreground space-y-3';
+    card.className = 'nds-stack nds-w-full nds-max-w-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground';
+    card.dataset.spacing = 'sm';
 
     const title = document.createElement('div');
-    title.className = 'text-sm font-medium';
+    title.className = 'nds-text-body nds-font-medium';
     title.textContent = 'documento-final.pdf';
 
     const meta = document.createElement('div');
-    meta.className = 'text-xs text-muted-foreground';
+    meta.className = 'nds-text-caption nds-text-muted-foreground';
     meta.textContent = '2.4 MB de 5.0 MB';
 
     card.append(title, meta, buildLabeled({
@@ -85,17 +89,19 @@ export const FileUpload: Story = {
 export const WizardSteps: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md space-y-3';
+    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.dataset.spacing = 'sm';
 
     const row = document.createElement('div');
-    row.className = 'flex items-center justify-between text-sm';
+    row.className = 'nds-cluster nds-text-body';
+    row.dataset.justify = 'between';
 
     const label = document.createElement('span');
-    label.className = 'text-foreground font-medium';
+    label.className = 'nds-text-foreground nds-font-medium';
     label.textContent = 'Etapa 3 de 5';
 
     const value = document.createElement('span');
-    value.className = 'text-muted-foreground';
+    value.className = 'nds-text-muted-foreground';
     value.setAttribute('aria-live', 'polite');
     value.textContent = 'Endereço';
 
@@ -116,7 +122,8 @@ export const WizardSteps: Story = {
 export const MultipleUploads: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md space-y-4';
+    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.dataset.spacing = 'md';
 
     wrap.append(
       buildLabeled({ value: 100, label: 'foto-1.jpg',     ariaLabel: 'Upload de foto-1.jpg concluído' }),
@@ -138,7 +145,8 @@ export const MultipleUploads: Story = {
 export const CustomColor: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md space-y-4';
+    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.dataset.spacing = 'md';
 
     wrap.append(
       buildLabeled({
@@ -170,14 +178,15 @@ export const AriaBusyContainer: Story = {
     const status = document.createElement('div');
     status.setAttribute('role', 'status');
     status.setAttribute('aria-busy', 'true');
-    status.className = 'w-full max-w-md p-4 rounded-lg border bg-card text-card-foreground space-y-3';
+    status.className = 'nds-stack nds-w-full nds-max-w-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground';
+    status.dataset.spacing = 'sm';
 
     const title = document.createElement('div');
-    title.className = 'text-sm font-medium';
+    title.className = 'nds-text-body nds-font-medium';
     title.textContent = 'Processando relatório';
 
     const desc = document.createElement('div');
-    desc.className = 'text-xs text-muted-foreground';
+    desc.className = 'nds-text-caption nds-text-muted-foreground';
     desc.textContent = 'Isso pode levar alguns minutos.';
 
     status.append(title, desc, buildLabeled({

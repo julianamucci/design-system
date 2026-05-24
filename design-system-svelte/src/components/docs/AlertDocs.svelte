@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+  import { Button } from '@/components/ui/button';
   import { Info, AlertCircle, CheckCircle2, TriangleAlert } from 'lucide-svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -8,7 +9,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -51,6 +52,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -368,6 +370,91 @@ interface AlertProps {
           <Info class="h-4 w-4" aria-hidden="true" />
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
+      {/snippet}
+
+      <!-- ── Composições ──────────────────────────────────────────────── -->
+      <DocsCompositions
+        title={$tStore('variants.compositionsTitle')}
+        useWhenLabel={$tNavStore('common.useWhen')}
+        componentSlug="alert"
+        items={[
+          {
+            name: $tStore('variants.compositions.withIcon.name'),
+            description: $tStore('variants.compositions.withIcon.description'),
+            useWhen: $tStore('variants.compositions.withIcon.use'),
+            code: `<Alert><Info class="h-4 w-4" aria-hidden="true" /><AlertTitle>Informação</AlertTitle><AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription></Alert>`,
+            preview: compWithIcon,
+          },
+          {
+            name: $tStore('variants.compositions.withAction.name'),
+            description: $tStore('variants.compositions.withAction.description'),
+            useWhen: $tStore('variants.compositions.withAction.use'),
+            code: `<Alert>\n  <Info class="h-4 w-4" aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="flex items-center justify-between gap-4 mt-1">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+            preview: compWithAction,
+          },
+          {
+            name: $tStore('variants.compositions.compact.name'),
+            description: $tStore('variants.compositions.compact.description'),
+            useWhen: $tStore('variants.compositions.compact.use'),
+            code: `<Alert variant="destructive"><AlertCircle class="h-4 w-4" aria-hidden="true" /><AlertDescription>Formulário incompleto.</AlertDescription></Alert>`,
+            preview: compCompact,
+          },
+          {
+            name: $tStore('variants.compositions.multipleTypes.name'),
+            description: $tStore('variants.compositions.multipleTypes.description'),
+            useWhen: $tStore('variants.compositions.multipleTypes.use'),
+            code: `<div class="space-y-3">\n  <Alert><Info class="h-4 w-4" aria-hidden="true" /><AlertTitle>Informação</AlertTitle><AlertDescription>Mensagem informativa e neutra.</AlertDescription></Alert>\n  <Alert variant="destructive"><AlertCircle class="h-4 w-4" aria-hidden="true" /><AlertTitle>Erro</AlertTitle><AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription></Alert>\n  <Alert class="bg-success/10 text-success border-success/30"><CheckCircle2 class="h-4 w-4" aria-hidden="true" /><AlertTitle>Sucesso</AlertTitle><AlertDescription>Ação concluída com sucesso.</AlertDescription></Alert>\n  <Alert class="bg-warning/10 text-warning border-warning/30"><TriangleAlert class="h-4 w-4" aria-hidden="true" /><AlertTitle>Aviso</AlertTitle><AlertDescription>Aviso que requer atenção.</AlertDescription></Alert>\n</div>`,
+            preview: compMultipleTypes,
+          },
+        ]}
+      />
+
+      {#snippet compWithIcon()}
+        <Alert class="w-full">
+          <Info class="h-4 w-4" aria-hidden="true" />
+          <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+          <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
+        </Alert>
+      {/snippet}
+      {#snippet compWithAction()}
+        <Alert class="w-full">
+          <Info class="h-4 w-4" aria-hidden="true" />
+          <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+          <AlertDescription class="flex items-center justify-between gap-4 mt-1">
+            <span>Salve seu trabalho para não perder as alterações.</span>
+            <Button size="sm" variant="outline">Salvar agora</Button>
+          </AlertDescription>
+        </Alert>
+      {/snippet}
+      {#snippet compCompact()}
+        <Alert variant="destructive" class="w-full">
+          <AlertCircle class="h-4 w-4" aria-hidden="true" />
+          <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
+        </Alert>
+      {/snippet}
+      {#snippet compMultipleTypes()}
+        <div class="space-y-3 w-full">
+          <Alert>
+            <Info class="h-4 w-4" aria-hidden="true" />
+            <AlertTitle>Informação</AlertTitle>
+            <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
+          </Alert>
+          <Alert variant="destructive">
+            <AlertCircle class="h-4 w-4" aria-hidden="true" />
+            <AlertTitle>Erro</AlertTitle>
+            <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
+          </Alert>
+          <Alert class="bg-success/10 text-success border-success/30">
+            <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+            <AlertTitle>Sucesso</AlertTitle>
+            <AlertDescription>Ação concluída com sucesso.</AlertDescription>
+          </Alert>
+          <Alert class="bg-warning/10 text-warning border-warning/30">
+            <TriangleAlert class="h-4 w-4" aria-hidden="true" />
+            <AlertTitle>Aviso</AlertTitle>
+            <AlertDescription>Aviso que requer atenção.</AlertDescription>
+          </Alert>
+        </div>
       {/snippet}
 
       <!-- ── Estados ────────────────────────────────────────────────── -->

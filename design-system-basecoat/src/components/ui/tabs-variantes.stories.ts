@@ -24,7 +24,7 @@ type Story = StoryObj;
 
 function makePanel(text: string): HTMLElement {
   const p = document.createElement('div');
-  p.className = 'text-sm text-muted-foreground p-3 rounded-md border bg-card';
+  p.className = 'nds-text-body nds-text-muted-foreground nds-p-3 nds-rounded-md nds-border-default nds-bg-card';
   p.textContent = text;
   return p;
 }
@@ -73,7 +73,10 @@ export const Line: Story = {
     const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
     if (list) {
       list.classList.remove('bg-muted', 'rounded-lg');
-      list.classList.add('border-b', 'rounded-none', 'bg-transparent', 'w-full', 'justify-start');
+      list.classList.add('nds-bg-transparent', 'nds-w-full');
+      list.style.borderBottom = '1px solid var(--border)';
+      list.style.borderRadius = '0';
+      list.style.justifyContent = 'flex-start';
       list.setAttribute('aria-label', 'Seções do componente');
     }
     return root;
@@ -106,7 +109,11 @@ export const Vertical: Story = {
     const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
     if (list) {
       list.classList.remove('inline-flex', 'h-9', 'items-center', 'justify-center');
-      list.classList.add('flex', 'flex-col', 'h-auto', 'items-stretch', 'shrink-0');
+      list.classList.add('nds-shrink-0');
+      list.style.display = 'flex';
+      list.style.flexDirection = 'column';
+      list.style.height = 'auto';
+      list.style.alignItems = 'stretch';
       list.setAttribute('aria-label', 'Seções do componente');
       list.setAttribute('aria-orientation', 'vertical');
     }

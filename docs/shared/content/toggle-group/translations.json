@@ -126,6 +126,34 @@
         "single": "Modo de seleção única — seleção exclusiva; <code>value</code> é string.",
         "multiple": "Modo de seleção múltipla — seleção combinada; <code>value</code> é array de strings.",
         "vertical": "<code>orientation=\"vertical\"</code> — items empilhados; navegação por setas verticais."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "alignmentBar": {
+          "name": "Barra de alinhamento (single)",
+          "description": "Três ToggleGroupItem icon-only (AlignLeft, AlignCenter, AlignRight) com <code>type=\"single\"</code> + <code>variant=\"outline\"</code>. Apenas uma opção pode estar ativa.",
+          "use": "Editores de texto, controles de alinhamento. Sempre <code>aria-label</code> no grupo (\"Alinhamento do texto\") e em cada item (função específica)."
+        },
+        "formattingBar": {
+          "name": "Barra de formatação (multiple)",
+          "description": "Três items (Bold, Italic, Underline) com <code>type=\"multiple\"</code> — múltiplas opções podem coexistir. O <code>value</code> emitido é <code>string[]</code>.",
+          "use": "Editores rich-text onde formatos podem ser combinados (negrito + itálico simultâneos). Ordem segue convenção do domínio (B → I → U), não alfabética."
+        },
+        "viewMode": {
+          "name": "Modo de visualização (vertical + texto)",
+          "description": "Layout vertical via <code>orientation=\"vertical\"</code> + items com ícone + texto visível (Grade/Lista). Como o texto está visível, items dispensam <code>aria-label</code> próprio.",
+          "use": "Switchers de visualização em sidebar, listas com modos alternativos. Vertical permite mais opções sem quebrar o layout horizontal."
+        },
+        "disabledItem": {
+          "name": "Com item desabilitado",
+          "description": "Item com <code>disabled: true</code> — útil quando uma opção não se aplica ao contexto atual. O <code>aria-label</code> deve indicar explicitamente a indisponibilidade.",
+          "use": "Editores onde alinhamento centralizado não faz sentido em listas, ou recursos premium em planos básicos."
+        },
+        "filterWithText": {
+          "name": "Filtros com texto visível",
+          "description": "ToggleGroup <code>type=\"multiple\"</code> com items contendo ícone + texto visível. O grupo recebe <code>aria-label</code> descrevendo a categoria; items dispensam aria-label próprio.",
+          "use": "Filtros booleanos independentes (Ocultos + Compacto podem coexistir). Para escolha exclusiva, troque para <code>type=\"single\"</code>."
+        }
       }
     },
     "states": {
@@ -471,6 +499,34 @@
         "single": "Single selection mode — exclusive selection; <code>value</code> is a string.",
         "multiple": "Multiple selection mode — combined selection; <code>value</code> is array of strings.",
         "vertical": "<code>orientation=\"vertical\"</code> — stacked items; vertical arrow navigation."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "alignmentBar": {
+          "name": "Alignment bar (single)",
+          "description": "Three icon-only ToggleGroupItems (AlignLeft, AlignCenter, AlignRight) with <code>type=\"single\"</code> + <code>variant=\"outline\"</code>. Only one option can be active.",
+          "use": "Text editors, alignment controls. Always set <code>aria-label</code> on the group (\"Text alignment\") and on each item (specific function)."
+        },
+        "formattingBar": {
+          "name": "Formatting bar (multiple)",
+          "description": "Three items (Bold, Italic, Underline) with <code>type=\"multiple\"</code> — multiple options can coexist. The emitted <code>value</code> is <code>string[]</code>.",
+          "use": "Rich-text editors where formats can be combined (bold + italic together). Order follows the domain convention (B → I → U), not alphabetical."
+        },
+        "viewMode": {
+          "name": "View mode (vertical + text)",
+          "description": "Vertical layout via <code>orientation=\"vertical\"</code> + items with icon + visible text (Grid/List). Since the text is visible, items don't need their own <code>aria-label</code>.",
+          "use": "View switchers in sidebars, lists with alternate modes. Vertical allows more options without breaking the horizontal layout."
+        },
+        "disabledItem": {
+          "name": "With disabled item",
+          "description": "Item with <code>disabled: true</code> — useful when an option doesn't apply to the current context. The <code>aria-label</code> should explicitly state the unavailability.",
+          "use": "Editors where center alignment doesn't make sense in lists, or premium features in basic plans."
+        },
+        "filterWithText": {
+          "name": "Filters with visible text",
+          "description": "ToggleGroup <code>type=\"multiple\"</code> with items containing icon + visible text. The group gets an <code>aria-label</code> describing the category; items don't need their own aria-label.",
+          "use": "Independent boolean filters (Hidden + Compact can coexist). For exclusive choice, switch to <code>type=\"single\"</code>."
+        }
       }
     },
     "states": {
@@ -816,6 +872,34 @@
         "single": "Modo de selección única — selección exclusiva; <code>value</code> es string.",
         "multiple": "Modo de selección múltiple — selección combinada; <code>value</code> es array de strings.",
         "vertical": "<code>orientation=\"vertical\"</code> — ítems apilados; navegación por flechas verticales."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "alignmentBar": {
+          "name": "Barra de alineación (single)",
+          "description": "Tres ToggleGroupItem icon-only (AlignLeft, AlignCenter, AlignRight) con <code>type=\"single\"</code> + <code>variant=\"outline\"</code>. Solo una opción puede estar activa.",
+          "use": "Editores de texto, controles de alineación. Provee siempre <code>aria-label</code> en el grupo (\"Alineación del texto\") y en cada ítem (función específica)."
+        },
+        "formattingBar": {
+          "name": "Barra de formato (multiple)",
+          "description": "Tres ítems (Bold, Italic, Underline) con <code>type=\"multiple\"</code> — múltiples opciones pueden coexistir. El <code>value</code> emitido es <code>string[]</code>.",
+          "use": "Editores rich-text donde formatos pueden combinarse (negrita + itálica simultáneas). El orden sigue la convención del dominio (B → I → U), no alfabético."
+        },
+        "viewMode": {
+          "name": "Modo de visualización (vertical + texto)",
+          "description": "Layout vertical vía <code>orientation=\"vertical\"</code> + ítems con ícono + texto visible (Cuadrícula/Lista). Como el texto está visible, los ítems no necesitan <code>aria-label</code> propio.",
+          "use": "Switchers de visualización en sidebar, listas con modos alternativos. Vertical permite más opciones sin romper el layout horizontal."
+        },
+        "disabledItem": {
+          "name": "Con ítem deshabilitado",
+          "description": "Ítem con <code>disabled: true</code> — útil cuando una opción no aplica al contexto actual. El <code>aria-label</code> debe indicar explícitamente la indisponibilidad.",
+          "use": "Editores donde la alineación centrada no tiene sentido en listas, o funciones premium en planes básicos."
+        },
+        "filterWithText": {
+          "name": "Filtros con texto visible",
+          "description": "ToggleGroup <code>type=\"multiple\"</code> con ítems que contienen ícono + texto visible. El grupo recibe <code>aria-label</code> describiendo la categoría; los ítems no necesitan aria-label propio.",
+          "use": "Filtros booleanos independientes (Ocultos + Compacto pueden coexistir). Para elección exclusiva, cambia a <code>type=\"single\"</code>."
+        }
       }
     },
     "states": {

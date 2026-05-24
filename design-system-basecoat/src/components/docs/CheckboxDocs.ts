@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -58,7 +59,8 @@ function buildCheckboxWithLabel(opts: {
   const { checked = false, disabled = false, id = `cb-${Math.random().toString(36).slice(2, 7)}`, ariaInvalid = false, labelText, descText } = opts;
 
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex items-center gap-2';
+  wrapper.className = 'nds-cluster';
+  wrapper.dataset.spacing = 'xs';
 
   const cb = createCheckbox({ checked, disabled, id });
   if (ariaInvalid) cb.setAttribute('aria-invalid', 'true');
@@ -67,23 +69,27 @@ function buildCheckboxWithLabel(opts: {
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = labelText;
-    label.className = 'text-sm font-medium leading-none' + (disabled ? ' cursor-not-allowed opacity-70' : ' cursor-pointer');
+    label.className = 'nds-text-body nds-font-medium nds-leading-none' + (disabled ? ' nds-cursor-default' : ' nds-cursor-pointer');
+    if (disabled) label.style.opacity = '0.7';
     wrapper.append(cb, label);
   } else {
     wrapper.append(cb);
   }
 
   if (descText) {
-    wrapper.className = 'flex gap-2 items-start';
+    wrapper.className = 'nds-cluster';
+    wrapper.dataset.spacing = 'xs';
+    wrapper.dataset.align = 'start';
     const textGroup = document.createElement('div');
-    textGroup.className = 'flex flex-col gap-1';
+    textGroup.className = 'nds-stack';
+    textGroup.dataset.spacing = 'xs';
     const label = wrapper.querySelector('label');
     if (label) {
       textGroup.appendChild(label.cloneNode(true));
       wrapper.removeChild(label);
     }
     const desc = document.createElement('p');
-    desc.className = 'text-sm text-muted-foreground';
+    desc.className = 'nds-text-body nds-text-muted-foreground';
     desc.textContent = descText;
     textGroup.appendChild(desc);
     wrapper.append(textGroup);
@@ -126,6 +132,7 @@ export function createCheckboxDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -176,7 +183,7 @@ export function createCheckboxDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -191,7 +198,8 @@ export function createCheckboxDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-col gap-3';
+            wrap.className = 'nds-stack';
+            wrap.dataset.spacing = 'sm';
 
             const items = [
               { key: 'acceptTerms', checked: false },
@@ -211,9 +219,10 @@ export function createCheckboxDocs(): HTMLElement {
               const label = document.createElement('label');
               label.htmlFor = cbId;
               label.textContent = t(`demonstration.labels.${key}`);
-              label.className = 'text-sm font-medium leading-none cursor-pointer';
+              label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
               const row = document.createElement('div');
-              row.className = 'flex items-center gap-2';
+              row.className = 'nds-cluster';
+              row.dataset.spacing = 'xs';
               row.append(cb, label);
               wrap.appendChild(row);
             });
@@ -283,22 +292,25 @@ export function createCheckboxDocs(): HTMLElement {
       case 'do-dont': {
         const buildLabeledCheckbox = (labelText: string, checked = false) => {
           const row = document.createElement('div');
-          row.className = 'flex items-center gap-2';
+          row.className = 'nds-cluster';
+          row.dataset.spacing = 'xs';
           const id = `dodont-${Math.random().toString(36).slice(2, 7)}`;
           const cb = createCheckbox({ checked, id });
           const label = document.createElement('label');
           label.htmlFor = id;
           label.textContent = labelText;
-          label.className = 'text-sm font-medium cursor-pointer';
+          label.className = 'nds-text-body nds-font-medium nds-cursor-pointer';
           row.append(cb, label);
           return row;
         };
 
         const buildFieldset = (legendText: string, itemLabels: string[]) => {
           const fs = document.createElement('fieldset');
-          fs.className = 'border rounded-lg p-3 space-y-2 w-full';
+          fs.className = 'nds-border-default nds-rounded-lg nds-stack nds-w-full';
+          fs.dataset.spacing = 'xs';
+          fs.style.padding = '0.75rem';
           const legend = document.createElement('legend');
-          legend.className = 'text-xs font-semibold px-1';
+          legend.className = 'nds-text-caption nds-font-semibold nds-px-1';
           legend.textContent = legendText;
           fs.appendChild(legend);
           itemLabels.forEach(lbl => fs.appendChild(buildLabeledCheckbox(lbl)));
@@ -327,7 +339,8 @@ export function createCheckboxDocs(): HTMLElement {
               ]),
               dontPreviewFactory: () => {
                 const loose = document.createElement('div');
-                loose.className = 'space-y-2 w-full';
+                loose.className = 'nds-stack nds-w-full';
+                loose.dataset.spacing = 'xs';
                 loose.append(
                   buildLabeledCheckbox('Receber novidades por email'),
                   buildLabeledCheckbox('Receber notificações push'),
@@ -393,17 +406,20 @@ label.textContent = 'Aceito os termos e condições';`,
               code: `const id = 'newsletter';\nconst cb = createCheckbox({ id });\n// label + description paragraph below`,
               previewFactory: () => {
                 const outer = document.createElement('div');
-                outer.className = 'flex gap-2 items-start';
+                outer.className = 'nds-cluster';
+                outer.dataset.spacing = 'xs';
+                outer.dataset.align = 'start';
                 const id = 'v-with-desc';
                 const cb = createCheckbox({ id });
                 const textGroup = document.createElement('div');
-                textGroup.className = 'flex flex-col gap-1';
+                textGroup.className = 'nds-stack';
+                textGroup.dataset.spacing = 'xs';
                 const label = document.createElement('label');
                 label.htmlFor = id;
                 label.textContent = t('demonstration.labels.newsletter');
-                label.className = 'text-sm font-medium leading-none cursor-pointer';
+                label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
                 const desc = document.createElement('p');
-                desc.className = 'text-sm text-muted-foreground';
+                desc.className = 'nds-text-body nds-text-muted-foreground';
                 desc.textContent = 'Enviaremos atualizações sobre novos recursos do produto.';
                 textGroup.append(label, desc);
                 outer.append(cb, textGroup);
@@ -413,6 +429,312 @@ label.textContent = 'Aceito os termos e condições';`,
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'checkbox',
+          items: [
+            {
+              name: t('variants.compositions.withLabel.name'),
+              description: t('variants.compositions.withLabel.description'),
+              useWhen: t('variants.compositions.withLabel.use'),
+              code:
+                `const wrapper = document.createElement('div');\n` +
+                `wrapper.className = 'nds-cluster';\n` +
+                `wrapper.dataset.spacing = 'xs';\n` +
+                `const cb = createCheckbox({ id: 'cb-tos' });\n` +
+                `const label = document.createElement('label');\n` +
+                `label.htmlFor = 'cb-tos';\n` +
+                `label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
+                `label.textContent = 'Aceito os termos e condições';\n` +
+                `wrapper.append(cb, label);`,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-cluster';
+                wrapper.dataset.spacing = 'xs';
+                const cb = createCheckbox({ id: 'comp-cb-tos' });
+                const label = document.createElement('label');
+                label.htmlFor = 'comp-cb-tos';
+                label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+                label.textContent = 'Aceito os termos e condições';
+                wrapper.append(cb, label);
+                return wrapper;
+              },
+            },
+            {
+              name: t('variants.compositions.withDescription.name'),
+              description: t('variants.compositions.withDescription.description'),
+              useWhen: t('variants.compositions.withDescription.use'),
+              code:
+                `const wrapper = document.createElement('div');\n` +
+                `wrapper.className = 'nds-cluster';\n` +
+                `wrapper.dataset.spacing = 'xs';\n` +
+                `wrapper.dataset.align = 'start';\n` +
+                `const cb = createCheckbox({ id: 'cb-news' });\n` +
+                `cb.style.marginTop = '0.125rem';\n` +
+                `const textGroup = document.createElement('div');\n` +
+                `textGroup.className = 'nds-stack';\n` +
+                `textGroup.dataset.spacing = 'xs';\n` +
+                `const label = document.createElement('label');\n` +
+                `label.htmlFor = 'cb-news';\n` +
+                `label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
+                `label.textContent = 'Receber novidades por email';\n` +
+                `const desc = document.createElement('p');\n` +
+                `desc.className = 'nds-text-body nds-text-muted-foreground';\n` +
+                `desc.textContent = 'Enviaremos atualizações sobre novos recursos e melhorias do produto.';\n` +
+                `textGroup.append(label, desc);\n` +
+                `wrapper.append(cb, textGroup);`,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-cluster';
+                wrapper.dataset.spacing = 'xs';
+                wrapper.dataset.align = 'start';
+                const cb = createCheckbox({ id: 'comp-cb-news' });
+                cb.style.marginTop = '0.125rem';
+                const textGroup = document.createElement('div');
+                textGroup.className = 'nds-stack';
+                textGroup.dataset.spacing = 'xs';
+                const label = document.createElement('label');
+                label.htmlFor = 'comp-cb-news';
+                label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+                label.textContent = 'Receber novidades por email';
+                const desc = document.createElement('p');
+                desc.className = 'nds-text-body nds-text-muted-foreground';
+                desc.textContent = 'Enviaremos atualizações sobre novos recursos e melhorias do produto.';
+                textGroup.append(label, desc);
+                wrapper.append(cb, textGroup);
+                return wrapper;
+              },
+            },
+            {
+              name: t('variants.compositions.fieldset.name'),
+              description: t('variants.compositions.fieldset.description'),
+              useWhen: t('variants.compositions.fieldset.use'),
+              code:
+                `const fieldset = document.createElement('fieldset');\n` +
+                `fieldset.className = 'nds-border-default nds-rounded-lg nds-p-4 nds-stack';\n` +
+                `fieldset.dataset.spacing = 'sm';\n` +
+                `fieldset.style.width = '18rem';\n` +
+                `const legend = document.createElement('legend');\n` +
+                `legend.className = 'nds-text-body nds-font-semibold nds-px-1';\n` +
+                `legend.textContent = 'Notificações';\n` +
+                `fieldset.appendChild(legend);\n` +
+                `const items = [\n` +
+                `  { id: 'notif-email', label: 'Receber novidades por email' },\n` +
+                `  { id: 'notif-push',  label: 'Receber notificações push' },\n` +
+                `  { id: 'notif-sms',   label: 'Alertas por SMS' },\n` +
+                `];\n` +
+                `items.forEach(({ id, label: labelText }) => {\n` +
+                `  const row = document.createElement('div');\n` +
+                `  row.className = 'nds-cluster';\n` +
+                `  row.dataset.spacing = 'xs';\n` +
+                `  const cb = createCheckbox({ id });\n` +
+                `  const label = document.createElement('label');\n` +
+                `  label.htmlFor = id;\n` +
+                `  label.textContent = labelText;\n` +
+                `  label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
+                `  row.append(cb, label);\n` +
+                `  fieldset.appendChild(row);\n` +
+                `});`,
+              previewFactory: () => {
+                const fieldset = document.createElement('fieldset');
+                fieldset.className = 'nds-border-default nds-rounded-lg nds-p-4 nds-stack';
+                fieldset.dataset.spacing = 'sm';
+                fieldset.style.width = '18rem';
+                const legend = document.createElement('legend');
+                legend.className = 'nds-text-body nds-font-semibold nds-px-1';
+                legend.textContent = 'Notificações';
+                fieldset.appendChild(legend);
+                const items = [
+                  { id: 'comp-notif-email', label: 'Receber novidades por email' },
+                  { id: 'comp-notif-push',  label: 'Receber notificações push' },
+                  { id: 'comp-notif-sms',   label: 'Alertas por SMS' },
+                ];
+                items.forEach(({ id, label: labelText }) => {
+                  const row = document.createElement('div');
+                  row.className = 'nds-cluster';
+                  row.dataset.spacing = 'xs';
+                  const cb = createCheckbox({ id });
+                  const label = document.createElement('label');
+                  label.htmlFor = id;
+                  label.textContent = labelText;
+                  label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+                  row.append(cb, label);
+                  fieldset.appendChild(row);
+                });
+                return fieldset;
+              },
+            },
+            {
+              name: t('variants.compositions.selectAll.name'),
+              description: t('variants.compositions.selectAll.description'),
+              useWhen: t('variants.compositions.selectAll.use'),
+              code:
+                `const wrapper = document.createElement('div');\n` +
+                `wrapper.className = 'nds-stack';\n` +
+                `wrapper.dataset.spacing = 'sm';\n` +
+                `wrapper.style.width = '18rem';\n` +
+                `const allRow = document.createElement('div');\n` +
+                `allRow.className = 'nds-cluster nds-border-b';\n` +
+                `allRow.dataset.spacing = 'xs';\n` +
+                `allRow.style.paddingBottom = '0.5rem';\n` +
+                `const cbAll = createCheckbox({ id: 'cb-select-all' });\n` +
+                `const labelAll = document.createElement('label');\n` +
+                `labelAll.htmlFor = 'cb-select-all';\n` +
+                `labelAll.textContent = 'Selecionar todos os itens';\n` +
+                `labelAll.className = 'nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer';\n` +
+                `allRow.append(cbAll, labelAll);\n` +
+                `const items = [\n` +
+                `  { id: 'item-1', label: 'Manter sessão ativa' },\n` +
+                `  { id: 'item-2', label: 'Receber novidades por email' },\n` +
+                `  { id: 'item-3', label: 'Receber notificações push' },\n` +
+                `];\n` +
+                `const childCheckboxes: HTMLElement[] = [];\n` +
+                `const itemRows = items.map(({ id, label: labelText }) => {\n` +
+                `  const row = document.createElement('div');\n` +
+                `  row.className = 'nds-cluster';\n` +
+                `  row.dataset.spacing = 'xs';\n` +
+                `  row.style.paddingLeft = '0.5rem';\n` +
+                `  const cb = createCheckbox({ id });\n` +
+                `  childCheckboxes.push(cb);\n` +
+                `  const label = document.createElement('label');\n` +
+                `  label.htmlFor = id;\n` +
+                `  label.textContent = labelText;\n` +
+                `  label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
+                `  row.append(cb, label);\n` +
+                `  return row;\n` +
+                `});\n` +
+                `cbAll.addEventListener('click', () => {\n` +
+                `  const nextState = cbAll.getAttribute('aria-checked') === 'true';\n` +
+                `  childCheckboxes.forEach((cb) => {\n` +
+                `    const currentState = cb.getAttribute('aria-checked') === 'true';\n` +
+                `    if (currentState !== nextState) cb.click();\n` +
+                `  });\n` +
+                `});\n` +
+                `wrapper.append(allRow, ...itemRows);`,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack';
+                wrapper.dataset.spacing = 'sm';
+                wrapper.style.width = '18rem';
+                const allRow = document.createElement('div');
+                allRow.className = 'nds-cluster nds-border-b';
+                allRow.dataset.spacing = 'xs';
+                allRow.style.paddingBottom = '0.5rem';
+                const cbAll = createCheckbox({ id: 'comp-cb-select-all' });
+                const labelAll = document.createElement('label');
+                labelAll.htmlFor = 'comp-cb-select-all';
+                labelAll.textContent = 'Selecionar todos os itens';
+                labelAll.className = 'nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer';
+                allRow.append(cbAll, labelAll);
+                const items = [
+                  { id: 'comp-item-1', label: 'Manter sessão ativa' },
+                  { id: 'comp-item-2', label: 'Receber novidades por email' },
+                  { id: 'comp-item-3', label: 'Receber notificações push' },
+                ];
+                const childCheckboxes: HTMLElement[] = [];
+                const itemRows = items.map(({ id, label: labelText }) => {
+                  const row = document.createElement('div');
+                  row.className = 'nds-cluster';
+                  row.dataset.spacing = 'xs';
+                  row.style.paddingLeft = '0.5rem';
+                  const cb = createCheckbox({ id });
+                  childCheckboxes.push(cb);
+                  const label = document.createElement('label');
+                  label.htmlFor = id;
+                  label.textContent = labelText;
+                  label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+                  row.append(cb, label);
+                  return row;
+                });
+                cbAll.addEventListener('click', () => {
+                  const nextState = cbAll.getAttribute('aria-checked') === 'true';
+                  childCheckboxes.forEach((cb) => {
+                    const currentState = cb.getAttribute('aria-checked') === 'true';
+                    if (currentState !== nextState) cb.click();
+                  });
+                });
+                wrapper.append(allRow, ...itemRows);
+                return wrapper;
+              },
+            },
+            {
+              name: t('variants.compositions.inList.name'),
+              description: t('variants.compositions.inList.description'),
+              useWhen: t('variants.compositions.inList.use'),
+              code:
+                `const wrapper = document.createElement('div');\n` +
+                `wrapper.className = 'nds-stack';\n` +
+                `wrapper.dataset.spacing = 'xs';\n` +
+                `wrapper.style.width = '20rem';\n` +
+                `const title = document.createElement('p');\n` +
+                `title.className = 'nds-text-body nds-font-semibold nds-mb-2';\n` +
+                `title.textContent = 'Preferências de contato';\n` +
+                `wrapper.appendChild(title);\n` +
+                `const options = [\n` +
+                `  { id: 'pref-email', label: 'Receber novidades por email', checked: true },\n` +
+                `  { id: 'pref-push',  label: 'Receber notificações push',   checked: false },\n` +
+                `  { id: 'pref-sms',   label: 'Alertas por SMS',             checked: false },\n` +
+                `  { id: 'pref-news',  label: 'Newsletter semanal',          checked: true },\n` +
+                `];\n` +
+                `options.forEach(({ id, label: labelText, checked }) => {\n` +
+                `  const row = document.createElement('div');\n` +
+                `  row.className = 'nds-cluster nds-rounded-md nds-border-default';\n` +
+                `  row.dataset.justify = 'between';\n` +
+                `  row.style.paddingInline = '0.75rem';\n` +
+                `  row.style.paddingBlock = '0.5rem';\n` +
+                `  const leftSide = document.createElement('div');\n` +
+                `  leftSide.className = 'nds-cluster';\n` +
+                `  leftSide.dataset.spacing = 'xs';\n` +
+                `  const cb = createCheckbox({ id, checked });\n` +
+                `  const label = document.createElement('label');\n` +
+                `  label.htmlFor = id;\n` +
+                `  label.textContent = labelText;\n` +
+                `  label.className = 'nds-text-body nds-font-medium nds-cursor-pointer';\n` +
+                `  leftSide.append(cb, label);\n` +
+                `  row.appendChild(leftSide);\n` +
+                `  wrapper.appendChild(row);\n` +
+                `});`,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack';
+                wrapper.dataset.spacing = 'xs';
+                wrapper.style.width = '20rem';
+                const title = document.createElement('p');
+                title.className = 'nds-text-body nds-font-semibold nds-mb-2';
+                title.textContent = 'Preferências de contato';
+                wrapper.appendChild(title);
+                const options = [
+                  { id: 'comp-pref-email', label: 'Receber novidades por email', checked: true },
+                  { id: 'comp-pref-push',  label: 'Receber notificações push',   checked: false },
+                  { id: 'comp-pref-sms',   label: 'Alertas por SMS',             checked: false },
+                  { id: 'comp-pref-news',  label: 'Newsletter semanal',          checked: true },
+                ];
+                options.forEach(({ id, label: labelText, checked }) => {
+                  const row = document.createElement('div');
+                  row.className = 'nds-cluster nds-rounded-md nds-border-default';
+                  row.dataset.justify = 'between';
+                  row.style.paddingInline = '0.75rem';
+                  row.style.paddingBlock = '0.5rem';
+                  const leftSide = document.createElement('div');
+                  leftSide.className = 'nds-cluster';
+                  leftSide.dataset.spacing = 'xs';
+                  const cb = createCheckbox({ id, checked });
+                  const label = document.createElement('label');
+                  label.htmlFor = id;
+                  label.textContent = labelText;
+                  label.className = 'nds-text-body nds-font-medium nds-cursor-pointer';
+                  leftSide.append(cb, label);
+                  row.appendChild(leftSide);
+                  wrapper.appendChild(row);
+                });
+                return wrapper;
+              },
+            },
+          ],
+        });
 
       case 'estados':
         return createDocsStates({

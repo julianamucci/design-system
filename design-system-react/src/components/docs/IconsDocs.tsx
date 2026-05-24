@@ -162,7 +162,7 @@ export function IconsDocs() {
           >
             {filteredNames.map((name) => {
               const IconComponent = (
-                LucideIcons as Record<string, ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>>
+                LucideIcons as unknown as Record<string, ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>>
               )[name];
               const isCopied = copied === name;
 

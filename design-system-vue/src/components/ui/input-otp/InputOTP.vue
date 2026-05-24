@@ -6,7 +6,7 @@ import { useForwardPropsEmits } from 'reka-ui'
 import { OTPInput } from 'vue-input-otp'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<OTPInputProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<Partial<OTPInputProps> & { class?: HTMLAttributes['class'] }>()
 
 const emits = defineEmits<OTPInputEmits>()
 
@@ -18,7 +18,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 <template>
   <OTPInput
     v-slot="slotProps"
-    v-bind="forwarded"
+    v-bind="(forwarded as any)"
     :container-class="cn('gap-2 flex items-center has-disabled:opacity-50', props.class)"
     data-slot="input-otp"
     :spellcheck="false"

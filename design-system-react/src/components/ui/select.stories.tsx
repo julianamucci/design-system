@@ -46,8 +46,8 @@ export const Playground: Story = {
           {...args}
           value={value}
           onValueChange={(v) => {
-            setValue(v);
-            args.onValueChange?.(v);
+            setValue((v ?? "") as string);
+            args.onValueChange?.(v as never, {} as never);
           }}
         >
           <SelectTrigger aria-label="Selecionar estado" disabled={args.disabled}>

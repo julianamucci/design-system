@@ -18,7 +18,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -70,6 +70,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
+        { id: 'composicoes',  label: tContent('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -540,6 +541,176 @@ interface TriggerProps {
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </SheetClose>
             <Button>Aplicar</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </div>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="sheet"
+    items={[
+      {
+        name: $tStore('variants.compositions.advancedFilters.name'),
+        description: $tStore('variants.compositions.advancedFilters.description'),
+        useWhen: $tStore('variants.compositions.advancedFilters.use'),
+        code: `<Sheet>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Abrir filtros</Button>
+    {/snippet}
+  </SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Filtros avançados</SheetTitle>
+      <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
+    </SheetHeader>
+    <SheetFooter>
+      <SheetClose>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>Cancelar</Button>
+        {/snippet}
+      </SheetClose>
+      <Button>Aplicar filtros</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`,
+        preview: compAdvancedFilters,
+      },
+      {
+        name: $tStore('variants.compositions.secondaryNavigation.name'),
+        description: $tStore('variants.compositions.secondaryNavigation.description'),
+        useWhen: $tStore('variants.compositions.secondaryNavigation.use'),
+        code: `<SheetContent side="left">
+  <SheetHeader>
+    <SheetTitle>Menu</SheetTitle>
+    <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
+  </SheetHeader>
+  <nav aria-label="Navegação secundária" class="flex flex-col gap-1 px-4">
+    <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Dashboard</a>
+    <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Projetos</a>
+    <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Equipe</a>
+  </nav>
+</SheetContent>`,
+        preview: compSecondaryNav,
+      },
+      {
+        name: $tStore('variants.compositions.mobileActions.name'),
+        description: $tStore('variants.compositions.mobileActions.description'),
+        useWhen: $tStore('variants.compositions.mobileActions.use'),
+        code: `<SheetContent side="bottom">
+  <SheetHeader>
+    <SheetTitle>Ações rápidas</SheetTitle>
+    <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
+  </SheetHeader>
+  <div class="grid grid-cols-3 gap-3 px-4 text-sm">
+    <button type="button" class="p-3 rounded-md border hover:bg-accent">Compartilhar</button>
+    <button type="button" class="p-3 rounded-md border hover:bg-accent">Editar</button>
+    <button type="button" class="p-3 rounded-md border hover:bg-accent">Excluir</button>
+  </div>
+</SheetContent>`,
+        preview: compMobileActions,
+      },
+      {
+        name: $tStore('variants.compositions.longScrollBody.name'),
+        description: $tStore('variants.compositions.longScrollBody.description'),
+        useWhen: $tStore('variants.compositions.longScrollBody.use'),
+        code: `<SheetContent side="right">
+  <SheetHeader>
+    <SheetTitle>Termos de uso</SheetTitle>
+    <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
+  </SheetHeader>
+  <div class="space-y-3 px-4 text-sm text-muted-foreground">
+    {#each Array(12) as _, i}
+      <p>Parágrafo {i + 1}: termos longos…</p>
+    {/each}
+  </div>
+  <SheetFooter>
+    <Button>Aceitar termos</Button>
+  </SheetFooter>
+</SheetContent>`,
+        preview: compLongScroll,
+      },
+    ]}
+  />
+
+  {#snippet compAdvancedFilters()}
+    <div style="contain: layout">
+      <Sheet open>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>Filtros avançados</SheetTitle>
+            <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
+          </SheetHeader>
+          <SheetFooter>
+            <SheetClose>
+              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            </SheetClose>
+            <Button>Aplicar filtros</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </div>
+  {/snippet}
+
+  {#snippet compSecondaryNav()}
+    <div style="contain: layout">
+      <Sheet open>
+        <SheetContent side="left">
+          <SheetHeader>
+            <SheetTitle>Menu</SheetTitle>
+            <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
+          </SheetHeader>
+          <nav aria-label="Navegação secundária" class="flex flex-col gap-1 px-4">
+            <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Dashboard</a>
+            <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Projetos</a>
+            <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Equipe</a>
+            <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Configurações</a>
+          </nav>
+        </SheetContent>
+      </Sheet>
+    </div>
+  {/snippet}
+
+  {#snippet compMobileActions()}
+    <div style="contain: layout">
+      <Sheet open>
+        <SheetContent side="bottom">
+          <SheetHeader>
+            <SheetTitle>Ações rápidas</SheetTitle>
+            <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
+          </SheetHeader>
+          <div class="grid grid-cols-3 gap-3 px-4 text-sm">
+            <button type="button" class="p-3 rounded-md border hover:bg-accent">Compartilhar</button>
+            <button type="button" class="p-3 rounded-md border hover:bg-accent">Editar</button>
+            <button type="button" class="p-3 rounded-md border hover:bg-accent">Excluir</button>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
+  {/snippet}
+
+  {#snippet compLongScroll()}
+    <div style="contain: layout">
+      <Sheet open>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>Termos de uso</SheetTitle>
+            <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
+          </SheetHeader>
+          <div class="space-y-3 px-4 text-sm text-muted-foreground max-h-64 overflow-auto">
+            {#each Array(12) as _, i}
+              <p>Parágrafo {i + 1}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.</p>
+            {/each}
+          </div>
+          <SheetFooter>
+            <SheetClose>
+              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            </SheetClose>
+            <Button>Aceitar termos</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>

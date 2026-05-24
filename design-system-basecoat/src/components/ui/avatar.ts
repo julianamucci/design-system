@@ -1,19 +1,29 @@
-// ─── Avatar ──────────────────────────────────────────────────────────────────
+// ─── Avatar — Vanilla factories standalone ──────────────────────────────────
+//
+// Visual: classes .nds-avatar-* (zero Tailwind/basecoat-css).
+// Tokens: --muted, --muted-foreground, --background.
+//
+// API:
+//   createAvatar({ src, alt, fallbackText, size })  // composto
+//   createAvatarRoot(), createAvatarImage(), createAvatarFallback()  // granular
+
+export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface AvatarOptions {
-  /** Additional CSS classes to append to the root element. */
+  /** Tamanho preset (sm=24, md=32, lg=40, xl=48, 2xl=64). Default: 'md'. */
+  size?: AvatarSize;
+  /** Classes adicionais. */
   className?: string;
 }
 
 export interface AvatarImageOptions {
   src: string;
   alt?: string;
-  /** Additional CSS classes to append. */
   className?: string;
 }
 
 export interface AvatarFallbackOptions {
-  /** Text shown when image is absent or fails to load (e.g. initials). */
+  /** Texto curto (1–3 caracteres) — iniciais ou ícone. */
   text?: string;
   className?: string;
 }
@@ -21,16 +31,20 @@ export interface AvatarFallbackOptions {
 export interface AvatarComposedOptions {
   src?: string;
   alt?: string;
-  /** Fallback text displayed when the image is absent or fails to load. */
   fallbackText?: string;
+  size?: AvatarSize;
   className?: string;
 }
 
+// ─── Factories granulares ────────────────────────────────────────────────────
+
 export function createAvatarRoot(options: AvatarOptions = {}): HTMLElement {
-  const { className } = options;
+  const { size, className } = options;
 
   const el = document.createElement('span');
-  el.className = 'relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full';
+  el.dataset.slot = 'avatar';
+  el.className = 'nds-avatar';
+  if (size) el.dataset.size = size;
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
 
   return el;
@@ -40,13 +54,12 @@ export function createAvatarImage(options: AvatarImageOptions): HTMLImageElement
   const { src, alt = '', className } = options;
 
   const img = document.createElement('img');
+  img.dataset.slot = 'avatar-image';
   img.src = src;
   img.alt = alt;
-  // Perf: lazy load + async decode para não bloquear o main thread na render inicial
   img.loading = 'lazy';
   img.decoding = 'async';
-  // PATCH: bugfix — object-cover evita distorção de imagens não-quadradas em container circular (ver PATCHES.md#avatar-object-cover)
-  img.className = 'aspect-square h-full w-full object-cover';
+  img.className = 'nds-avatar-image';
   if (className) img.classList.add(...className.split(' ').filter(Boolean));
 
   return img;
@@ -56,22 +69,20 @@ export function createAvatarFallback(options: AvatarFallbackOptions = {}): HTMLE
   const { text = '', className } = options;
 
   const el = document.createElement('span');
-  el.className = 'flex h-full w-full items-center justify-center rounded-full bg-muted';
+  el.dataset.slot = 'avatar-fallback';
+  el.className = 'nds-avatar-fallback';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
   if (text) el.textContent = text;
 
   return el;
 }
 
-/**
- * Convenience factory that composes root + image + fallback.
- * The fallback is hidden while the image loads successfully; if the image
- * fails (or no src is provided), the fallback is revealed automatically.
- */
-export function createAvatar(options: AvatarComposedOptions = {}): HTMLElement {
-  const { src, alt = '', fallbackText = '', className } = options;
+// ─── Composto: root + image + fallback com reconciliação automática ─────────
 
-  const root = createAvatarRoot({ className });
+export function createAvatar(options: AvatarComposedOptions = {}): HTMLElement {
+  const { src, alt = '', fallbackText = '', size, className } = options;
+
+  const root = createAvatarRoot({ size, className });
   const fallback = createAvatarFallback({ text: fallbackText });
 
   if (src) {
@@ -86,15 +97,12 @@ export function createAvatar(options: AvatarComposedOptions = {}): HTMLElement {
       fallback.style.display = '';
     };
 
-    // Fallback is visible by default so screen readers and tests see content
-    // even if the image is still loading or fails.
+    // Fallback visível por default para SR/tests verem conteúdo durante load.
     img.style.display = 'none';
 
     img.addEventListener('load', showImage);
     img.addEventListener('error', showFallback);
 
-    // If the browser resolved the image synchronously (cached) before listeners
-    // were attached, reconcile state now.
     if (img.complete) {
       if (img.naturalWidth > 0) showImage();
       else showFallback();

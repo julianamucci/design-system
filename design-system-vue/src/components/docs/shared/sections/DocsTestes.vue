@@ -11,16 +11,19 @@ defineProps<{
   title: string;
   functional: {
     title: string;
+    description?: string;
     cols: { action: string; result: string; priority: string };
     items: DocsTestItem[];
   };
   accessibility: {
     title: string;
+    description?: string;
     cols: { criterion: string; level: string; how: string };
     items: DocsA11yTestItem[];
   };
   visual: {
     title: string;
+    description?: string;
     cols: { story: string; priority: string };
     items: DocsVisualTestItem[];
   };
@@ -87,7 +90,7 @@ const priorityClass = (p: string) =>
               </TableHeader>
               <TableBody>
                 <TableRow v-for="(item, i) in visual.items" :key="i" class="border-b border-border last:border-0 hover:bg-muted/5">
-                  <TableCell class="p-3 font-mono text-xs">{{ item.story }}</TableCell>
+                  <TableCell class="p-3 text-sm">{{ item.story }}</TableCell>
                   <TableCell class="p-3">
                     <Badge variant="outline" :class="priorityClass(item.priority)">{{ item.priority }}</Badge>
                   </TableCell>

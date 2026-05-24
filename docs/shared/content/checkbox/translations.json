@@ -94,6 +94,34 @@
         "indeterminate": "Seleção parcial de grupo. Fundo <code>--primary</code>, ícone <code>MinusIcon</code>. Disponível apenas no Svelte via prop <code>indeterminate</code>.",
         "withLabel": "Checkbox + Label lado a lado. Par obrigatório — sempre usar <code>htmlFor</code>/<code>id</code> para associação.",
         "withDescription": "Checkbox + Label + texto auxiliar abaixo. Para contexto adicional sobre a opção selecionada."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withLabel": {
+          "name": "Com label",
+          "description": "Checkbox + Label inline (gap pequeno). Associação obrigatória via <code>id</code>/<code>htmlFor</code> — o clique no label alterna o estado.",
+          "use": "Toda opção isolada (aceitar termos, lembrar usuário). Nunca use Checkbox sem label visível ou <code>aria-label</code>."
+        },
+        "withDescription": {
+          "name": "Com descrição auxiliar",
+          "description": "Checkbox + Label + parágrafo de descrição abaixo do label, na cor <code>--muted-foreground</code>. Checkbox alinhado ao topo do bloco de texto.",
+          "use": "Quando a opção exige contexto adicional (consequência da escolha, exemplos do que será enviado)."
+        },
+        "fieldset": {
+          "name": "Em grupo (fieldset)",
+          "description": "Múltiplos checkboxes relacionados dentro de <code>&lt;fieldset&gt;</code> com <code>&lt;legend&gt;</code> descrevendo o grupo. Obrigatório para WCAG 1.3.1.",
+          "use": "Conjuntos de opções com mesmo tema (notificações, permissões, filtros). A legend descreve o critério comum."
+        },
+        "selectAll": {
+          "name": "Selecionar todos",
+          "description": "Checkbox \"pai\" que controla múltiplos filhos. Quando o pai é alternado, todos os filhos seguem o novo estado.",
+          "use": "Listas com seleção em massa (e-mails, itens de carrinho, registros). Considere indeterminate quando alguns filhos estão marcados (disponível no Svelte)."
+        },
+        "inList": {
+          "name": "Em lista de itens",
+          "description": "Checkboxes integrados em linhas com borda e padding, formando lista de preferências/configurações. Cada linha é um row independente.",
+          "use": "Painel de preferências, configurações de conta, opt-ins. Mantenha consistência de espaçamento e densidade entre as linhas."
+        }
       }
     },
     "states": {
@@ -384,6 +412,34 @@
         "indeterminate": "Partial group selection. <code>--primary</code> background, <code>MinusIcon</code>. Available only in Svelte via the <code>indeterminate</code> prop.",
         "withLabel": "Checkbox + Label side by side. Required pair — always use <code>htmlFor</code>/<code>id</code> for association.",
         "withDescription": "Checkbox + Label + helper text below. For additional context about the selected option."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withLabel": {
+          "name": "With label",
+          "description": "Checkbox + inline Label (small gap). Required association via <code>id</code>/<code>htmlFor</code> — clicking the label toggles the state.",
+          "use": "Every isolated option (accept terms, remember user). Never use Checkbox without a visible label or <code>aria-label</code>."
+        },
+        "withDescription": {
+          "name": "With helper description",
+          "description": "Checkbox + Label + description paragraph below the label, in <code>--muted-foreground</code> color. Checkbox aligned to the top of the text block.",
+          "use": "When the option needs extra context (consequence of choice, examples of what will be sent)."
+        },
+        "fieldset": {
+          "name": "In a group (fieldset)",
+          "description": "Multiple related checkboxes inside a <code>&lt;fieldset&gt;</code> with <code>&lt;legend&gt;</code> describing the group. Required for WCAG 1.3.1.",
+          "use": "Sets of options sharing a theme (notifications, permissions, filters). The legend describes the common criterion."
+        },
+        "selectAll": {
+          "name": "Select all",
+          "description": "\"Parent\" checkbox that controls multiple children. When the parent is toggled, all children follow the new state.",
+          "use": "Lists with bulk selection (emails, cart items, records). Consider indeterminate when only some children are checked (available in Svelte)."
+        },
+        "inList": {
+          "name": "In an item list",
+          "description": "Checkboxes integrated in bordered, padded rows, forming a preference/settings list. Each row is an independent row.",
+          "use": "Preferences panel, account settings, opt-ins. Keep spacing and density consistent across rows."
+        }
       }
     },
     "states": {
@@ -674,6 +730,34 @@
         "indeterminate": "Selección parcial de grupo. Fondo <code>--primary</code>, ícono <code>MinusIcon</code>. Disponible solo en Svelte vía prop <code>indeterminate</code>.",
         "withLabel": "Checkbox + Label uno al lado del otro. Par obligatorio — siempre usar <code>htmlFor</code>/<code>id</code> para la asociación.",
         "withDescription": "Checkbox + Label + texto auxiliar abajo. Para contexto adicional sobre la opción seleccionada."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withLabel": {
+          "name": "Con label",
+          "description": "Checkbox + Label inline (gap pequeño). Asociación obligatoria vía <code>id</code>/<code>htmlFor</code> — el clic en el label alterna el estado.",
+          "use": "Toda opción aislada (aceptar términos, recordar usuario). Nunca uses Checkbox sin label visible o <code>aria-label</code>."
+        },
+        "withDescription": {
+          "name": "Con descripción auxiliar",
+          "description": "Checkbox + Label + párrafo de descripción debajo del label, en color <code>--muted-foreground</code>. Checkbox alineado al inicio del bloque de texto.",
+          "use": "Cuando la opción requiere contexto adicional (consecuencia de la elección, ejemplos de lo que se enviará)."
+        },
+        "fieldset": {
+          "name": "En grupo (fieldset)",
+          "description": "Múltiples checkboxes relacionados dentro de <code>&lt;fieldset&gt;</code> con <code>&lt;legend&gt;</code> describiendo el grupo. Obligatorio para WCAG 1.3.1.",
+          "use": "Conjuntos de opciones con mismo tema (notificaciones, permisos, filtros). La legend describe el criterio común."
+        },
+        "selectAll": {
+          "name": "Seleccionar todos",
+          "description": "Checkbox \"padre\" que controla múltiples hijos. Al alternar el padre, todos los hijos siguen el nuevo estado.",
+          "use": "Listas con selección masiva (correos, ítems de carrito, registros). Considera indeterminate cuando solo algunos hijos están marcados (disponible en Svelte)."
+        },
+        "inList": {
+          "name": "En lista de ítems",
+          "description": "Checkboxes integrados en filas con borde y padding, formando una lista de preferencias/configuraciones. Cada fila es independiente.",
+          "use": "Panel de preferencias, configuraciones de cuenta, opt-ins. Mantén consistencia de espaciado y densidad entre filas."
+        }
       }
     },
     "states": {

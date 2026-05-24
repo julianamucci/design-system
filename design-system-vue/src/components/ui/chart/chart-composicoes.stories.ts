@@ -26,10 +26,10 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
   },
-} satisfies Meta<typeof ChartContainer>;
+} satisfies Meta<any>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<Meta<any>>;
 
 export const ComCard: Story = {
   render: () => ({

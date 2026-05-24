@@ -22,7 +22,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -65,6 +65,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -577,6 +578,124 @@ interface BreadcrumbEllipsisProps {
               <DropdownMenuItem>{$tStore('demonstration.labels.navigation')}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>{$tStore('demonstration.labels.breadcrumb')}</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="breadcrumb"
+    items={[
+      {
+        name: $tStore('variants.compositions.default.name'),
+        description: $tStore('variants.compositions.default.description'),
+        useWhen: $tStore('variants.compositions.default.use'),
+        code: codeDefault,
+        preview: compDefault,
+      },
+      {
+        name: $tStore('variants.compositions.withEllipsis.name'),
+        description: $tStore('variants.compositions.withEllipsis.description'),
+        useWhen: $tStore('variants.compositions.withEllipsis.use'),
+        code: codeWithEllipsis,
+        preview: compWithEllipsis,
+      },
+      {
+        name: $tStore('variants.compositions.customSeparator.name'),
+        description: $tStore('variants.compositions.customSeparator.description'),
+        useWhen: $tStore('variants.compositions.customSeparator.use'),
+        code: codeCustomSeparator,
+        preview: compCustomSeparator,
+      },
+      {
+        name: $tStore('variants.compositions.responsive.name'),
+        description: $tStore('variants.compositions.responsive.description'),
+        useWhen: $tStore('variants.compositions.responsive.use'),
+        code: codeResponsive,
+        preview: compResponsive,
+      },
+    ]}
+  />
+
+  {#snippet compDefault()}
+    <Breadcrumb class="w-full">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">{$tStore('demonstration.labels.components')}</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>{$tStore('demonstration.labels.breadcrumb')}</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  {/snippet}
+  {#snippet compWithEllipsis()}
+    <Breadcrumb class="w-full">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbEllipsis />
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">{$tStore('demonstration.labels.components')}</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>{$tStore('demonstration.labels.breadcrumb')}</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  {/snippet}
+  {#snippet compCustomSeparator()}
+    <Breadcrumb class="w-full">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator>/</BreadcrumbSeparator>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">{$tStore('demonstration.labels.components')}</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator>/</BreadcrumbSeparator>
+        <BreadcrumbItem>
+          <BreadcrumbPage>{$tStore('demonstration.labels.breadcrumb')}</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  {/snippet}
+  {#snippet compResponsive()}
+    <Breadcrumb class="w-full">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbEllipsis />
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">{$tStore('demonstration.labels.guide')}</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">{$tStore('demonstration.labels.components')}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>

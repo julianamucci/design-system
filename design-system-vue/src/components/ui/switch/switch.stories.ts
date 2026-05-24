@@ -38,7 +38,7 @@ const meta = {
       options: ['default', 'sm'],
       description: 'Tamanho do Switch.',
     },
-    onUpdateModelValue: {
+    'onUpdate:modelValue': {
       action: 'update:modelValue',
       description: 'Disparado ao alternar o estado.',
     },

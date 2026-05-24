@@ -13,9 +13,10 @@ import {
 } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
-import { Save, Trash2, Share2 } from 'lucide-vue-next';
+import { Save, Trash2, Share2, HelpCircle, Info } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/tooltip/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.vue';
@@ -24,6 +25,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -36,6 +38,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
+const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -99,6 +102,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -208,6 +212,87 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.default'),       description: stripHtml(tContent('variants.styles.default')),       code: codeDefault       },
   { name: tContent('variants.items.withShortcut'),  description: stripHtml(tContent('variants.styles.withShortcut')),  code: codeWithShortcut  },
   { name: tContent('variants.items.longText'),      description: stripHtml(tContent('variants.styles.longText')),      code: codeLongText      },
+]);
+
+const codeCompIconShortcut = `<Tooltip>
+  <TooltipTrigger as-child>
+    <Button variant="ghost" size="icon" aria-label="Salvar">
+      <Save aria-hidden="true" />
+    </Button>
+  </TooltipTrigger>
+  <TooltipContent side="bottom">
+    Salvar <Kbd>Ctrl</Kbd><Kbd>S</Kbd>
+  </TooltipContent>
+</Tooltip>`;
+
+const codeCompFormHelp = `<div class="flex flex-col gap-2">
+  <div class="flex items-center gap-2">
+    <label for="api-token" class="text-sm font-medium">Token de API</label>
+    <Tooltip>
+      <TooltipTrigger as-child>
+        <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API">
+          <HelpCircle aria-hidden="true" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="right" class="max-w-xs">
+        Cole o token gerado em Configurações &gt; Integrações.
+      </TooltipContent>
+    </Tooltip>
+  </div>
+  <input id="api-token" type="text" class="input w-64" placeholder="sk-..." />
+</div>`;
+
+const codeCompMetric = `<div class="flex flex-col gap-1">
+  <div class="flex items-center gap-2">
+    <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+    <Tooltip>
+      <TooltipTrigger as-child>
+        <Button variant="ghost" size="icon" aria-label="O que é LCP">
+          <Info aria-hidden="true" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="top" class="max-w-xs">
+        Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
+      </TooltipContent>
+    </Tooltip>
+  </div>
+  <p class="text-2xl font-semibold">1.8s</p>
+</div>`;
+
+const codeCompSides = `<div class="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center">
+  <Tooltip v-for="s in ['top','right','bottom','left']" :key="s">
+    <TooltipTrigger as-child>
+      <Button variant="outline">{{ s }}</Button>
+    </TooltipTrigger>
+    <TooltipContent :side="s">Tooltip {{ s }}</TooltipContent>
+  </Tooltip>
+</div>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.iconButtonWithShortcut.name'),
+    description: tContent('variants.compositions.iconButtonWithShortcut.description'),
+    useWhen: tContent('variants.compositions.iconButtonWithShortcut.use'),
+    code: codeCompIconShortcut,
+  },
+  {
+    name: tContent('variants.compositions.formFieldHelp.name'),
+    description: tContent('variants.compositions.formFieldHelp.description'),
+    useWhen: tContent('variants.compositions.formFieldHelp.use'),
+    code: codeCompFormHelp,
+  },
+  {
+    name: tContent('variants.compositions.metricDescription.name'),
+    description: tContent('variants.compositions.metricDescription.description'),
+    useWhen: tContent('variants.compositions.metricDescription.use'),
+    code: codeCompMetric,
+  },
+  {
+    name: tContent('variants.compositions.positioningSides.name'),
+    description: tContent('variants.compositions.positioningSides.description'),
+    useWhen: tContent('variants.compositions.positioningSides.use'),
+    code: codeCompSides,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -532,6 +617,104 @@ const a11yCritCols = computed(() => ({
           </div>
         </template>
       </DocsVariants>
+
+      <!-- ── Composições ─────────────────────────────────────────── -->
+      <DocsCompositions
+        :title="tContent('variants.compositionsTitle')"
+        :use-when-label="tNav('common.useWhen')"
+        component-slug="tooltip"
+        :items="compositionItems"
+      >
+        <template #variant-preview-0>
+          <div style="contain: layout; min-height: 100px;" class="flex items-center justify-center w-full">
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button variant="ghost" size="icon" aria-label="Salvar">
+                  <Save aria-hidden="true" class="size-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" class="gap-1">
+                Salvar
+                <Kbd>Ctrl</Kbd>
+                <Kbd>S</Kbd>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </template>
+        <template #variant-preview-1>
+          <div style="contain: layout; min-height: 120px;" class="flex items-start justify-center w-full">
+            <div class="flex flex-col gap-2 items-start">
+              <div class="flex items-center gap-2">
+                <label for="api-token-vue-comp" class="text-sm font-medium">Token de API</label>
+                <Tooltip>
+                  <TooltipTrigger as-child>
+                    <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API">
+                      <HelpCircle aria-hidden="true" class="size-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" class="max-w-xs">
+                    Cole o token gerado em Configurações &gt; Integrações.
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <input
+                id="api-token-vue-comp"
+                type="text"
+                class="h-9 w-64 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+                placeholder="sk-..."
+              />
+            </div>
+          </div>
+        </template>
+        <template #variant-preview-2>
+          <div style="contain: layout; min-height: 120px;" class="flex items-start justify-center w-full">
+            <div class="flex flex-col gap-1 items-start">
+              <div class="flex items-center gap-2">
+                <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+                <Tooltip>
+                  <TooltipTrigger as-child>
+                    <Button variant="ghost" size="icon" aria-label="O que é LCP">
+                      <Info aria-hidden="true" class="size-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" class="max-w-xs">
+                    Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <p class="text-2xl font-semibold">1.8s</p>
+            </div>
+          </div>
+        </template>
+        <template #variant-preview-3>
+          <div style="contain: layout; min-height: 160px;" class="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center w-full">
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button variant="outline">Top</Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Tooltip top</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button variant="outline">Right</Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Tooltip right</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button variant="outline">Bottom</Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Tooltip bottom</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button variant="outline">Left</Button>
+              </TooltipTrigger>
+              <TooltipContent side="left">Tooltip left</TooltipContent>
+            </Tooltip>
+          </div>
+        </template>
+      </DocsCompositions>
 
       <!-- ── Estados ──────────────────────────────────────────────── -->
       <DocsStates

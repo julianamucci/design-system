@@ -27,6 +27,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -99,6 +100,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -263,6 +265,27 @@ const variantItems = computed(() => [
   { name: 'withFooter', description: stripHtml(tContent('variants.items.withFooter')), code: codeWithFooter },
   { name: 'withAction', description: stripHtml(tContent('variants.items.withAction')), code: codeWithAction },
   { name: 'withImage',  description: stripHtml(tContent('variants.items.withImage')),  code: codeWithImage  },
+]);
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withFooter.name'),
+    description: tContent('variants.compositions.withFooter.description'),
+    useWhen: tContent('variants.compositions.withFooter.use'),
+    code: `<Card class="w-full max-w-sm">\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p class="text-lg font-semibold">R$ 1.299,00</p>\n  </CardContent>\n  <CardFooter class="justify-end gap-2">\n    <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>\n    <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>\n  </CardFooter>\n</Card>`,
+  },
+  {
+    name: tContent('variants.compositions.withAction.name'),
+    description: tContent('variants.compositions.withAction.description'),
+    useWhen: tContent('variants.compositions.withAction.use'),
+    code: `<Card class="w-full max-w-sm">\n  <CardHeader>\n    <CardTitle>Assinantes ativos</CardTitle>\n    <CardDescription>+12% no mês</CardDescription>\n    <CardAction>\n      <Button variant="outline" size="sm" aria-label="Editar métrica Assinantes ativos">Editar</Button>\n    </CardAction>\n  </CardHeader>\n  <CardContent>\n    <p class="text-2xl font-semibold">8.742</p>\n  </CardContent>\n</Card>`,
+  },
+  {
+    name: tContent('variants.compositions.withImage.name'),
+    description: tContent('variants.compositions.withImage.description'),
+    useWhen: tContent('variants.compositions.withImage.use'),
+    code: `<Card class="w-full max-w-sm">\n  <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80" alt="Cadeira Gamer Pro" class="w-full h-40 object-cover" />\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica.</CardDescription>\n  </CardHeader>\n</Card>`,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -640,6 +663,53 @@ const visualTestItems = computed(() => [
         </Card>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="card"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Card class="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Cadeira Gamer Pro</CardTitle>
+            <CardDescription>Estrutura ergonômica.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p class="text-lg font-semibold">R$ 1.299,00</p>
+          </CardContent>
+          <CardFooter class="justify-end gap-2">
+            <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>
+            <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>
+          </CardFooter>
+        </Card>
+      </template>
+      <template #variant-preview-1>
+        <Card class="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Assinantes ativos</CardTitle>
+            <CardDescription>+12% no mês</CardDescription>
+            <CardAction>
+              <Button variant="outline" size="sm" aria-label="Editar métrica Assinantes ativos">Editar</Button>
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <p class="text-2xl font-semibold">8.742</p>
+          </CardContent>
+        </Card>
+      </template>
+      <template #variant-preview-2>
+        <Card class="w-full max-w-sm">
+          <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80" alt="Cadeira Gamer Pro" class="w-full h-40 object-cover" />
+          <CardHeader>
+            <CardTitle>Cadeira Gamer Pro</CardTitle>
+            <CardDescription>Estrutura ergonômica.</CardDescription>
+          </CardHeader>
+        </Card>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Configurações (States) ──────────────────────────────────── -->
     <DocsStates

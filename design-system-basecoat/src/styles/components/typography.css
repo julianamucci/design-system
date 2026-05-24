@@ -1,0 +1,96 @@
+/*
+ * ─── Typography utilities ────────────────────────────────────────────────────
+ * Classes nomeadas pelo PAPEL semântico do texto, não pelo tamanho.
+ * Usa clamp() para tipografia fluida no h1 — não precisa de media queries.
+ *
+ * Convenção: .nds-text-<role>   (h1, h2, h3, body, lead, caption, label, code)
+ *            .nds-font-<weight> (normal, medium, semibold, bold)
+ *            .nds-tracking-<value> (tight, normal, wider)
+ *            .nds-leading-<value>  (none, tight, normal, relaxed, loose)
+ *
+ * Todas consomem tokens de font-family/weight quando aplicável.
+ */
+
+/* ── Roles ─────────────────────────────────────────────────────────────────── */
+.nds-text-h1 {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);  /* 24px → 36px */
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.nds-text-h2 {
+  font-size: 1.25rem;                       /* 20px */
+  line-height: 1.4;
+  font-weight: 600;
+}
+.nds-text-h3 {
+  font-size: 1rem;                          /* 16px */
+  line-height: 1.5;
+  font-weight: 600;
+}
+.nds-text-h4 {
+  font-size: 0.875rem;                      /* 14px */
+  line-height: 1.5;
+  font-weight: 600;
+}
+.nds-text-lead {
+  font-size: clamp(1rem, 2vw, 1.125rem);    /* 16px → 18px */
+  line-height: 1.6;
+}
+.nds-text-body {
+  font-size: 0.875rem;                      /* 14px */
+  line-height: 1.5;
+}
+.nds-text-base {
+  font-size: 1rem;                          /* 16px */
+  line-height: 1.5;
+}
+.nds-text-caption {
+  font-size: 0.75rem;                       /* 12px */
+  line-height: 1.5;
+}
+.nds-text-label {
+  font-size: 0.75rem;                       /* 12px */
+  line-height: 1;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.nds-text-code {
+  font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  font-size: 0.85em;
+}
+
+/* ── Weights ───────────────────────────────────────────────────────────────── */
+.nds-font-normal   { font-weight: 400; }
+.nds-font-medium   { font-weight: 500; }
+.nds-font-semibold { font-weight: 600; }
+.nds-font-bold     { font-weight: 700; }
+.nds-font-mono     { font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace; }
+
+/* ── Tracking ──────────────────────────────────────────────────────────────── */
+.nds-tracking-tight  { letter-spacing: -0.025em; }
+.nds-tracking-normal { letter-spacing: 0; }
+.nds-tracking-wider  { letter-spacing: 0.05em; }
+
+/* ── Leading ───────────────────────────────────────────────────────────────── */
+.nds-leading-none    { line-height: 1; }
+.nds-leading-tight   { line-height: 1.25; }
+.nds-leading-normal  { line-height: 1.5; }
+.nds-leading-relaxed { line-height: 1.625; }
+.nds-leading-loose   { line-height: 2; }
+
+/* ── Transforms ────────────────────────────────────────────────────────────── */
+.nds-uppercase { text-transform: uppercase; }
+.nds-italic    { font-style: italic; }
+
+
+/* ── Section title — pattern combinado h2 + mb-4 ────────────────────────────
+ * Repete em todas as 15 docs sections. */
+.nds-section-title {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0 0 var(--spacing-4) 0;
+}

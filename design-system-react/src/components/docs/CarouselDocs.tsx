@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from "@/lib/i18n";
@@ -22,6 +23,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -60,6 +62,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -92,6 +95,56 @@ function SlideCard({ label, className = "" }: { label: string; className?: strin
         <span className="text-2xl font-semibold text-muted-foreground">{label}</span>
       </CardContent>
     </Card>
+  );
+}
+
+function DotsCarouselPreview({ total, ariaLabel, previousLabel, nextLabel, slidePrefix, goToLabel, ofLabel }: {
+  total: number;
+  ariaLabel: string;
+  previousLabel: string;
+  nextLabel: string;
+  slidePrefix: string;
+  goToLabel: string;
+  ofLabel: string;
+}) {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    setCurrent(api.selectedScrollSnap());
+    api.on("select", () => setCurrent(api.selectedScrollSnap()));
+  }, [api]);
+
+  return (
+    <div className="w-full max-w-md space-y-3">
+      <Carousel className="w-full" aria-label={ariaLabel} setApi={setApi}>
+        <CarouselContent>
+          {Array.from({ length: total }).map((_, i) => (
+            <CarouselItem key={i}>
+              <SlideCard label={`${slidePrefix} ${i + 1}`} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious aria-label={previousLabel} />
+        <CarouselNext aria-label={nextLabel} />
+      </Carousel>
+      <div className="flex items-center justify-center gap-2" aria-label={goToLabel}>
+        {Array.from({ length: total }).map((_, i) => {
+          const active = i === current;
+          return (
+            <button
+              key={i}
+              type="button"
+              aria-label={`${goToLabel} ${i + 1} ${ofLabel} ${total}`}
+              aria-current={active ? "true" : "false"}
+              onClick={() => api?.scrollTo(i)}
+              className={`h-2 w-2 rounded-full transition-colors ${active ? "bg-primary" : "bg-muted-foreground/30"}`}
+            />
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -521,6 +574,191 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             code: codeMulti,
             preview: (
               <Carousel className="w-full max-w-2xl" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+                <CarouselContent>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
+                      <SlideCard label={`${tContent("demonstration.labels.slide")} ${i + 1}`} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious aria-label={previousLabel} />
+                <CarouselNext aria-label={nextLabel} />
+              </Carousel>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="carousel"
+        items={[
+          {
+            name: tContent("variants.compositions.withDots.name"),
+            description: tContent("variants.compositions.withDots.description"),
+            useWhen: tContent("variants.compositions.withDots.use"),
+            code: `function GalleryWithDots() {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    setCurrent(api.selectedScrollSnap());
+    api.on("select", () => setCurrent(api.selectedScrollSnap()));
+  }, [api]);
+
+  return (
+    <div className="space-y-3">
+      <Carousel setApi={setApi} aria-label="Galeria de fotos do produto">
+        <CarouselContent>
+          {slides.map((s, i) => (
+            <CarouselItem key={i}>{s}</CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious aria-label="Item anterior" />
+        <CarouselNext aria-label="Próximo item" />
+      </Carousel>
+      <div className="flex justify-center gap-2" aria-label="Ir para o slide">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={\`Ir para o slide \${i + 1} de \${slides.length}\`}
+            aria-current={i === current ? "true" : "false"}
+            onClick={() => api?.scrollTo(i)}
+            className={\`h-2 w-2 rounded-full \${i === current ? "bg-primary" : "bg-muted-foreground/30"}\`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}`,
+            preview: (
+              <DotsCarouselPreview
+                total={5}
+                ariaLabel={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+                previousLabel={previousLabel}
+                nextLabel={nextLabel}
+                slidePrefix={tContent("demonstration.labels.slide")}
+                goToLabel={tContent("demonstration.labels.goToSlide")}
+                ofLabel={tContent("demonstration.labels.of")}
+              />
+            ),
+          },
+          {
+            name: tContent("variants.compositions.gallery.name"),
+            description: tContent("variants.compositions.gallery.description"),
+            useWhen: tContent("variants.compositions.gallery.use"),
+            code: `<Carousel className="w-full max-w-md" aria-label="Galeria de fotos do produto">
+  <CarouselContent>
+    {photos.map((photo) => (
+      <CarouselItem key={photo.id}>
+        <Card className="overflow-hidden">
+          <div className="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
+            <span className="text-2xl font-semibold">{photo.title}</span>
+          </div>
+          <CardContent className="p-4">
+            <h3 className="font-semibold">{photo.title}</h3>
+            <p className="text-sm text-muted-foreground">{photo.description}</p>
+          </CardContent>
+        </Card>
+      </CarouselItem>
+    ))}
+  </CarouselContent>
+  <CarouselPrevious aria-label="Item anterior" />
+  <CarouselNext aria-label="Próximo item" />
+</Carousel>`,
+            preview: (
+              <Carousel
+                className="w-full max-w-md"
+                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+              >
+                <CarouselContent>
+                  {[
+                    { title: "Foto 1", description: "Paisagem ao amanhecer" },
+                    { title: "Foto 2", description: "Detalhe arquitetônico" },
+                    { title: "Foto 3", description: "Cidade à noite" },
+                    { title: "Foto 4", description: "Praia vista do alto" },
+                  ].map((photo, i) => (
+                    <CarouselItem key={i}>
+                      <Card className="overflow-hidden shadow-none">
+                        <div className="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
+                          <span className="text-2xl font-semibold text-foreground">{photo.title}</span>
+                        </div>
+                        <CardContent className="p-4">
+                          <h3 className="font-semibold text-foreground">{photo.title}</h3>
+                          <p className="text-sm text-muted-foreground">{photo.description}</p>
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious aria-label={previousLabel} />
+                <CarouselNext aria-label={nextLabel} />
+              </Carousel>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.autoplay.name"),
+            description: tContent("variants.compositions.autoplay.description"),
+            useWhen: tContent("variants.compositions.autoplay.use"),
+            code: `import Autoplay from "embla-carousel-autoplay";
+
+<Carousel
+  opts={{ loop: true }}
+  plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
+  aria-label="Destaques"
+>
+  <CarouselContent>
+    {highlights.map((h, i) => (
+      <CarouselItem key={i}>{h}</CarouselItem>
+    ))}
+  </CarouselContent>
+  <CarouselPrevious aria-label="Item anterior" />
+  <CarouselNext aria-label="Próximo item" />
+</Carousel>`,
+            preview: (
+              <Carousel
+                className="w-full max-w-md"
+                opts={{ loop: true }}
+                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+              >
+                <CarouselContent>
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <CarouselItem key={i}>
+                      <SlideCard label={`${tContent("demonstration.labels.slide")} ${i + 1}`} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious aria-label={previousLabel} />
+                <CarouselNext aria-label={nextLabel} />
+              </Carousel>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.multiResponsive.name"),
+            description: tContent("variants.compositions.multiResponsive.description"),
+            useWhen: tContent("variants.compositions.multiResponsive.use"),
+            code: `<Carousel className="w-full max-w-2xl" aria-label="Cards de produto">
+  <CarouselContent>
+    {products.map((p) => (
+      <CarouselItem key={p.id} className="md:basis-1/2 lg:basis-1/3">
+        <Card>
+          <CardContent>{p.name}</CardContent>
+        </Card>
+      </CarouselItem>
+    ))}
+  </CarouselContent>
+  <CarouselPrevious aria-label="Item anterior" />
+  <CarouselNext aria-label="Próximo item" />
+</Carousel>`,
+            preview: (
+              <Carousel
+                className="w-full max-w-2xl"
+                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+              >
                 <CarouselContent>
                   {Array.from({ length: 6 }).map((_, i) => (
                     <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">

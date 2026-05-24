@@ -4,7 +4,7 @@ import { Button } from './index';
 import ButtonDocs from '@/components/docs/ButtonDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta<any> = {
   title: 'UI/Button',
   component: Button,
   tags: ['autodocs'],
@@ -32,7 +32,7 @@ const meta = {
     size: 'default',
     disabled: false,
   },
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

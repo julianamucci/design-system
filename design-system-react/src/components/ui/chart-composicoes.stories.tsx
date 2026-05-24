@@ -54,7 +54,7 @@ const meta = {
 } satisfies Meta<typeof ChartContainer>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ChartContainer>;
 
 export const ComCard: Story = {
   render: () => (

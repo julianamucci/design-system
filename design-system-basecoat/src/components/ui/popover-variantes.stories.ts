@@ -28,7 +28,9 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const w = document.createElement('div');
   w.style.contain = 'layout';
-  w.className = 'w-full min-h-[260px] flex items-center justify-center';
+  w.className = 'nds-cluster nds-w-full';
+  w.dataset.justify = 'center';
+  w.style.minHeight = '260px';
   w.appendChild(child);
   return w;
 }
@@ -54,7 +56,7 @@ export const Default: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
 
     const content = document.createElement('div');
-    content.className = 'text-sm text-muted-foreground';
+    content.className = 'nds-text-body nds-text-muted-foreground';
     content.textContent = 'Conteúdo livre dentro do popover, sem header.';
 
     const el = createPopover({ trigger, content });
@@ -79,14 +81,15 @@ export const ComTitulo: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
 
     const content = document.createElement('div');
-    content.className = 'space-y-2';
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'xs';
 
     const title = document.createElement('h4');
-    title.className = 'text-sm font-medium leading-none';
+    title.className = 'nds-text-body nds-font-medium nds-leading-none';
     title.textContent = 'Configurações de exibição';
 
     const desc = document.createElement('p');
-    desc.className = 'text-xs text-muted-foreground';
+    desc.className = 'nds-text-caption nds-text-muted-foreground';
     desc.textContent = 'Ajuste a aparência do conteúdo da página.';
 
     content.append(title, desc);
@@ -114,18 +117,21 @@ export const Form: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
     const content = document.createElement('form');
-    content.className = 'space-y-3';
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'sm';
     content.addEventListener('submit', (e) => e.preventDefault());
 
     const nameRow = document.createElement('div');
-    nameRow.className = 'space-y-1';
+    nameRow.className = 'nds-stack';
+    nameRow.dataset.spacing = 'xs';
     nameRow.append(
       createLabel({ text: 'Nome', htmlFor: 'pv-name' }),
       createInput({ id: 'pv-name', placeholder: 'Joana Silva' }),
     );
 
     const emailRow = document.createElement('div');
-    emailRow.className = 'space-y-1';
+    emailRow.className = 'nds-stack';
+    emailRow.dataset.spacing = 'xs';
     emailRow.append(
       createLabel({ text: 'Email', htmlFor: 'pv-email' }),
       createInput({ id: 'pv-email', type: 'email', placeholder: 'joana@example.com' }),

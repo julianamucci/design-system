@@ -14,6 +14,7 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
+import uiTranslations from '@/i18n/ui.json';
 import componentTranslations from '@shared/content/pagination/translations.json';
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
@@ -23,6 +24,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -35,6 +37,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
+const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Locale-aware column labels ───────────────────────────────────────────────
 const stateCols = computed(() => ({
@@ -110,6 +113,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -227,6 +231,10 @@ const codeCustomizationTokens = `/* Override via CSS variables no escopo do comp
   --primary: 220 90% 50%;
 }`;
 
+// ─── Interactive composition state ────────────────────────────────────────────
+
+const compInteractiveCurrent = ref(3);
+
 // ─── Computed data ────────────────────────────────────────────────────────────
 
 const anatomyItems = computed(() => [
@@ -242,6 +250,63 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault     },
   { name: tContent('variants.items.active'),      description: stripHtml(tContent('variants.styles.active')),      code: codeActive      },
   { name: tContent('variants.items.directional'), description: stripHtml(tContent('variants.styles.directional')), code: codeDirectional },
+]);
+
+const codeCompSimple = `<Pagination :total="50" :items-per-page="10" :default-page="1">
+  <PaginationContent>
+    <PaginationItem><PaginationPrevious /></PaginationItem>
+    <PaginationItem><PaginationLink :is-active="true">1</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink>2</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink>3</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink>4</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink>5</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationNext /></PaginationItem>
+  </PaginationContent>
+</Pagination>`;
+
+const codeCompEllipsis = `<Pagination :total="120" :items-per-page="10" :default-page="6">
+  <PaginationContent>
+    <PaginationItem><PaginationPrevious /></PaginationItem>
+    <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationEllipsis /></PaginationItem>
+    <PaginationItem><PaginationLink>5</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink :is-active="true">6</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink>7</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationEllipsis /></PaginationItem>
+    <PaginationItem><PaginationLink>12</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationNext /></PaginationItem>
+  </PaginationContent>
+</Pagination>`;
+
+const codeCompLastPage = `<Pagination :total="100" :items-per-page="10" :default-page="10">
+  <PaginationContent>
+    <PaginationItem><PaginationPrevious /></PaginationItem>
+    <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationEllipsis /></PaginationItem>
+    <PaginationItem><PaginationLink>9</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink :is-active="true">10</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationNext aria-disabled="true" /></PaginationItem>
+  </PaginationContent>
+</Pagination>`;
+
+const codeCompInteractive = `const current = ref(3);
+
+<Pagination :total="80" :items-per-page="10" :page="current">
+  <PaginationContent>
+    <PaginationItem v-for="n in 8" :key="n">
+      <PaginationLink :is-active="n === current" @click="current = n">
+        {{ n }}
+      </PaginationLink>
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+<p>Página {{ current }} de 8</p>`;
+
+const compositionItems = computed(() => [
+  { name: tContent('variants.compositions.simple.name'),       description: stripHtml(tContent('variants.compositions.simple.description')),       useWhen: tContent('variants.compositions.simple.use'),       code: codeCompSimple      },
+  { name: tContent('variants.compositions.withEllipsis.name'), description: stripHtml(tContent('variants.compositions.withEllipsis.description')), useWhen: tContent('variants.compositions.withEllipsis.use'), code: codeCompEllipsis    },
+  { name: tContent('variants.compositions.lastPage.name'),     description: stripHtml(tContent('variants.compositions.lastPage.description')),     useWhen: tContent('variants.compositions.lastPage.use'),     code: codeCompLastPage    },
+  { name: tContent('variants.compositions.interactive.name'),  description: stripHtml(tContent('variants.compositions.interactive.description')),  useWhen: tContent('variants.compositions.interactive.use'),  code: codeCompInteractive },
 ]);
 
 const stateItems = computed(() => [
@@ -574,6 +639,91 @@ const a11yCritCols = computed(() => ({
         </Pagination>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="pagination"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Pagination :total="50" :items-per-page="10" :default-page="1" class="w-full">
+          <PaginationContent>
+            <PaginationItem><PaginationPrevious /></PaginationItem>
+            <PaginationItem><PaginationLink :is-active="true" :aria-label="`Página atual, 1`">1</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink :aria-label="`Ir para página 2`">2</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink :aria-label="`Ir para página 3`">3</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink :aria-label="`Ir para página 4`">4</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink :aria-label="`Ir para página 5`">5</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationNext /></PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </template>
+      <template #variant-preview-1>
+        <Pagination :total="120" :items-per-page="10" :default-page="6" class="w-full">
+          <PaginationContent>
+            <PaginationItem><PaginationPrevious /></PaginationItem>
+            <PaginationItem><PaginationLink :aria-label="`Ir para página 1`">1</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationEllipsis /></PaginationItem>
+            <PaginationItem><PaginationLink :aria-label="`Ir para página 5`">5</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink :is-active="true" :aria-label="`Página atual, 6`">6</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink :aria-label="`Ir para página 7`">7</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationEllipsis /></PaginationItem>
+            <PaginationItem><PaginationLink :aria-label="`Ir para página 12`">12</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationNext /></PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </template>
+      <template #variant-preview-2>
+        <Pagination :total="100" :items-per-page="10" :default-page="10" class="w-full">
+          <PaginationContent>
+            <PaginationItem><PaginationPrevious /></PaginationItem>
+            <PaginationItem><PaginationLink :aria-label="`Ir para página 1`">1</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationEllipsis /></PaginationItem>
+            <PaginationItem><PaginationLink :aria-label="`Ir para página 9`">9</PaginationLink></PaginationItem>
+            <PaginationItem><PaginationLink :is-active="true" :aria-label="`Página atual, 10`">10</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationNext aria-disabled="true" tabindex="-1" class="pointer-events-none opacity-50" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </template>
+      <template #variant-preview-3>
+        <div class="w-full space-y-3">
+          <Pagination :total="80" :items-per-page="10" :page="compInteractiveCurrent" class="w-full">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  :aria-disabled="compInteractiveCurrent === 1"
+                  :tabindex="compInteractiveCurrent === 1 ? -1 : 0"
+                  :class="compInteractiveCurrent === 1 ? 'pointer-events-none opacity-50' : ''"
+                  @click="compInteractiveCurrent = Math.max(1, compInteractiveCurrent - 1)"
+                />
+              </PaginationItem>
+              <PaginationItem v-for="n in 8" :key="n">
+                <PaginationLink
+                  :is-active="n === compInteractiveCurrent"
+                  :aria-label="n === compInteractiveCurrent ? `Página atual, ${n}` : `Ir para página ${n}`"
+                  @click="compInteractiveCurrent = n"
+                >
+                  {{ n }}
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext
+                  :aria-disabled="compInteractiveCurrent === 8"
+                  :tabindex="compInteractiveCurrent === 8 ? -1 : 0"
+                  :class="compInteractiveCurrent === 8 ? 'pointer-events-none opacity-50' : ''"
+                  @click="compInteractiveCurrent = Math.min(8, compInteractiveCurrent + 1)"
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+          <p class="text-sm text-muted-foreground text-center">Página {{ compInteractiveCurrent }} de 8</p>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────── -->
     <DocsStates

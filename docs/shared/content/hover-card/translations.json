@@ -136,6 +136,29 @@
       "styles": {
         "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, sombra <code>shadow-md</code>.",
         "withDelay": "Customizar via <code>openDelay</code> e <code>closeDelay</code> em ms; usar 300-500ms para previews ricos, 700ms+ para conteúdo opcional."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "userProfile": {
+          "name": "Perfil de usuário",
+          "description": "Trigger em <code>@username</code> revela cartão com avatar, nome, papel e métrica curta (ex.: seguidores). O link permanece navegável por clique e por teclado.",
+          "use": "Menções em feeds, comentários e listas onde o nome é o ponto de entrada mas a página de perfil é a fonte primária. Sempre forneça caminho alternativo (link clicável) para usuários touch."
+        },
+        "linkPreview": {
+          "name": "Preview de link",
+          "description": "Cabeçalho com favicon + URL truncada, título do destino e descrição curta. Reduz cliques exploratórios ao revelar metadados antes da navegação.",
+          "use": "Links externos em artigos, documentação e mensageria. Evite em listas densas (excesso de hovers vira ruído); use <code>openDelay</code> ≥500ms."
+        },
+        "definitionTooltip": {
+          "name": "Definição de termo",
+          "description": "Texto disparador com sublinhado pontilhado abre cartão com o termo em destaque e a definição em 1-2 frases. Complementa o glossário sem tirar o usuário do contexto.",
+          "use": "Termos técnicos, siglas (ex.: <code>WCAG 2.1 AA</code>) e jargões em prosa longa. Sempre tenha um glossário ou página dedicada como alternativa de acesso."
+        },
+        "metricExplainer": {
+          "name": "Métrica explicada",
+          "description": "Valor numérico (ex.: <code>LCP 1.8s</code>) dispara cartão com nome completo da métrica, valor com cor semântica e descrição dos limiares (bom/ruim).",
+          "use": "Dashboards e relatórios com KPIs, indicadores de performance e métricas técnicas que precisam de contexto sem poluir a visualização principal."
+        }
       }
     },
     "states": {
@@ -387,6 +410,7 @@
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
+      "compositions": "Composições",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -536,6 +560,29 @@
       "styles": {
         "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, <code>shadow-md</code>.",
         "withDelay": "Customize via <code>openDelay</code> and <code>closeDelay</code> in ms; use 300-500ms for rich previews, 700ms+ for optional content."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "userProfile": {
+          "name": "User profile",
+          "description": "Trigger on <code>@username</code> reveals a card with avatar, name, role and a short metric (e.g. followers). The link stays navigable by click and keyboard.",
+          "use": "Mentions in feeds, comments and lists where the name is the entry point but the profile page is the primary source. Always provide an alternative path (clickable link) for touch users."
+        },
+        "linkPreview": {
+          "name": "Link preview",
+          "description": "Header with favicon + truncated URL, destination title and short description. Reduces exploratory clicks by revealing metadata before navigation.",
+          "use": "External links in articles, documentation and messaging. Avoid in dense lists (too many hovers become noise); use <code>openDelay</code> ≥500ms."
+        },
+        "definitionTooltip": {
+          "name": "Term definition",
+          "description": "Trigger text with dotted underline opens a card with the highlighted term and the definition in 1-2 sentences. Complements the glossary without pulling the user out of context.",
+          "use": "Technical terms, acronyms (e.g. <code>WCAG 2.1 AA</code>) and jargon in long prose. Always have a glossary or dedicated page as an alternative access path."
+        },
+        "metricExplainer": {
+          "name": "Metric explainer",
+          "description": "Numeric value (e.g. <code>LCP 1.8s</code>) triggers a card with the full metric name, the value with semantic color, and the threshold description (good/poor).",
+          "use": "Dashboards and reports with KPIs, performance indicators and technical metrics that need context without cluttering the main visualization."
+        }
       }
     },
     "states": {
@@ -787,6 +834,7 @@
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
+      "compositions": "Compositions",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -936,6 +984,29 @@
       "styles": {
         "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, sombra <code>shadow-md</code>.",
         "withDelay": "Personaliza vía <code>openDelay</code> y <code>closeDelay</code> en ms; usa 300-500ms para previews ricos, 700ms+ para contenido opcional."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "userProfile": {
+          "name": "Perfil de usuario",
+          "description": "Trigger en <code>@username</code> revela una tarjeta con avatar, nombre, rol y una métrica corta (ej.: seguidores). El enlace sigue siendo navegable por clic y por teclado.",
+          "use": "Menciones en feeds, comentarios y listas donde el nombre es el punto de entrada pero la página de perfil es la fuente primaria. Provee siempre una ruta alternativa (enlace clicable) para usuarios touch."
+        },
+        "linkPreview": {
+          "name": "Preview de enlace",
+          "description": "Cabecera con favicon + URL truncada, título del destino y descripción corta. Reduce clics exploratorios al revelar metadatos antes de la navegación.",
+          "use": "Enlaces externos en artículos, documentación y mensajería. Evita en listas densas (demasiados hovers se vuelven ruido); usa <code>openDelay</code> ≥500ms."
+        },
+        "definitionTooltip": {
+          "name": "Definición de término",
+          "description": "Texto disparador con subrayado punteado abre una tarjeta con el término destacado y la definición en 1-2 frases. Complementa el glosario sin sacar al usuario del contexto.",
+          "use": "Términos técnicos, siglas (ej.: <code>WCAG 2.1 AA</code>) y jerga en prosa larga. Ten siempre un glosario o página dedicada como ruta alternativa de acceso."
+        },
+        "metricExplainer": {
+          "name": "Métrica explicada",
+          "description": "Valor numérico (ej.: <code>LCP 1.8s</code>) dispara una tarjeta con el nombre completo de la métrica, el valor con color semántico y la descripción de los umbrales (bueno/malo).",
+          "use": "Dashboards y reportes con KPIs, indicadores de rendimiento y métricas técnicas que necesitan contexto sin saturar la visualización principal."
+        }
       }
     },
     "states": {
@@ -1187,6 +1258,7 @@
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",
+      "compositions": "Composiciones",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",

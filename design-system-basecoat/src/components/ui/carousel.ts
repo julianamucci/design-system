@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── Carousel — Vanilla factory standalone ──────────────────────────────────
+// Visual: classes .nds-carousel-* (zero Tailwind/basecoat-css).
+// Comportamento: setas + ArrowLeft/Right + autoplay opcional (pausa no hover).
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -28,20 +30,21 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   root.dataset.slot = 'carousel';
   root.setAttribute('role', 'region');
   root.setAttribute('aria-roledescription', 'carousel');
-  root.className = cn('relative', options.class);
+  root.className = 'nds-carousel';
+  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
 
   // Overflow wrapper
   const overflow = document.createElement('div');
-  overflow.className = 'overflow-hidden';
+  overflow.className = 'nds-carousel-overflow';
 
   // Track
   const track = document.createElement('div');
-  track.className = 'flex transition-transform duration-300 ease-in-out';
+  track.className = 'nds-carousel-track';
   track.dataset.slot = 'carousel-track';
 
   items.forEach((item, i) => {
     const slide = document.createElement('div');
-    slide.className = 'min-w-0 shrink-0 grow-0 basis-full pl-4';
+    slide.className = 'nds-carousel-slide';
     slide.setAttribute('role', 'group');
     slide.setAttribute('aria-roledescription', 'slide');
     slide.setAttribute('aria-label', `Slide ${i + 1} of ${items.length}`);
@@ -55,7 +58,7 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   // Navigation buttons
   const prevBtn = document.createElement('button');
   prevBtn.type = 'button';
-  prevBtn.className = 'btn-icon-outline absolute left-2 top-1/2 -translate-y-1/2 z-10';
+  prevBtn.className = 'nds-carousel-button nds-carousel-button-prev';
   prevBtn.setAttribute('aria-label', 'Previous slide');
   prevBtn.setAttribute('aria-disabled', 'true');
   prevBtn.disabled = true;
@@ -63,7 +66,7 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
 
   const nextBtn = document.createElement('button');
   nextBtn.type = 'button';
-  nextBtn.className = 'btn-icon-outline absolute right-2 top-1/2 -translate-y-1/2 z-10';
+  nextBtn.className = 'nds-carousel-button nds-carousel-button-next';
   nextBtn.setAttribute('aria-label', 'Next slide');
   nextBtn.innerHTML = CHEVRON_RIGHT;
 

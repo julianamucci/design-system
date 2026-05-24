@@ -1,0 +1,63 @@
+/*
+ * ─── nds-textarea ───────────────────────────────────────────────────────────
+ * Campo de entrada multilinha.
+ *
+ *   <textarea class="nds-textarea" rows="3"></textarea>
+ *
+ * Compartilha tokens com .nds-input. Resize vertical apenas (horizontal
+ * normalmente quebra layout). min-height proporcional ao input para um
+ * "campo curto" coerente.
+ *
+ * Tokens: --input (border), --background, --foreground, --muted-foreground,
+ *         --ring, --destructive, --radius, --spacing-*
+ */
+
+.nds-textarea {
+  display: block;
+  width: 100%;
+  min-height: calc(var(--spacing-8) * 2);       /* ~64px — placeholder mínimo */
+
+  padding-block: var(--spacing-2);              /* 8px */
+  padding-inline: var(--spacing-3, 0.75rem);    /* 12px */
+
+  font-family: inherit;
+  font-size: 0.875rem;                          /* 14px */
+  line-height: 1.5;
+  color: hsl(var(--foreground));
+
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius, 0.5rem);
+
+  resize: vertical;
+  transition: border-color 150ms, box-shadow 150ms;
+  outline: 0;
+}
+
+.nds-textarea::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-textarea:hover:not(:disabled):not([aria-invalid="true"]) {
+  border-color: hsl(var(--ring) / 0.4);
+}
+
+.nds-textarea:focus-visible {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
+}
+
+.nds-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  resize: none;
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+.nds-textarea[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
+}
+
+.nds-textarea[aria-invalid="true"]:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.3);
+}

@@ -3,7 +3,7 @@
   import {
     AlignLeft, AlignCenter, AlignRight,
     Bold, Italic, Underline,
-    LayoutGrid, List,
+    LayoutGrid, List, Eye,
   } from 'lucide-svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -12,7 +12,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -63,6 +63,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')    },
         { id: 'variantes',    label: tNav('nav.variants')  },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')    },
         { id: 'propriedades', label: tNav('nav.props')     },
         { id: 'tokens',       label: tNav('nav.tokens')    },
@@ -107,6 +108,13 @@
   let varSingle = $state<string>('left');
   let varMultiple = $state<string[]>([]);
   let varVertical = $state<string>('grid');
+
+  // Compositions previews
+  let compAlign = $state<string>('left');
+  let compFormat = $state<string[]>(['bold']);
+  let compView = $state<string>('grid');
+  let compDisabled = $state<string>('left');
+  let compFilter = $state<string[]>(['compact']);
 
   // Do/Don't
   let dd1DoVal = $state<string>('left');
@@ -519,6 +527,142 @@ interface ToggleGroupItemProps {
         <List aria-hidden="true" />
       </ToggleGroupItem>
     </ToggleGroup>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="toggle-group"
+    items={[
+      {
+        name: $tStore('variants.compositions.alignmentBar.name'),
+        description: $tStore('variants.compositions.alignmentBar.description'),
+        useWhen: $tStore('variants.compositions.alignmentBar.use'),
+        code: `<ToggleGroup type="single" variant="outline" value="left" aria-label="Alinhamento do texto">
+  <ToggleGroupItem value="left" aria-label="Alinhar à esquerda"><AlignLeft aria-hidden="true" /></ToggleGroupItem>
+  <ToggleGroupItem value="center" aria-label="Centralizar"><AlignCenter aria-hidden="true" /></ToggleGroupItem>
+  <ToggleGroupItem value="right" aria-label="Alinhar à direita"><AlignRight aria-hidden="true" /></ToggleGroupItem>
+</ToggleGroup>`,
+        preview: compAlignmentBar,
+      },
+      {
+        name: $tStore('variants.compositions.formattingBar.name'),
+        description: $tStore('variants.compositions.formattingBar.description'),
+        useWhen: $tStore('variants.compositions.formattingBar.use'),
+        code: `<ToggleGroup type="multiple" variant="outline" value={['bold']} aria-label="Formatação">
+  <ToggleGroupItem value="bold" aria-label="Negrito"><Bold aria-hidden="true" /></ToggleGroupItem>
+  <ToggleGroupItem value="italic" aria-label="Itálico"><Italic aria-hidden="true" /></ToggleGroupItem>
+  <ToggleGroupItem value="underline" aria-label="Sublinhado"><Underline aria-hidden="true" /></ToggleGroupItem>
+</ToggleGroup>`,
+        preview: compFormattingBar,
+      },
+      {
+        name: $tStore('variants.compositions.viewMode.name'),
+        description: $tStore('variants.compositions.viewMode.description'),
+        useWhen: $tStore('variants.compositions.viewMode.use'),
+        code: `<ToggleGroup type="single" variant="outline" value="grid" orientation="vertical" aria-label="Modo de visualização">
+  <ToggleGroupItem value="grid" aria-label="Grade"><LayoutGrid aria-hidden="true" /> Grade</ToggleGroupItem>
+  <ToggleGroupItem value="list" aria-label="Lista"><List aria-hidden="true" /> Lista</ToggleGroupItem>
+</ToggleGroup>`,
+        preview: compViewMode,
+      },
+      {
+        name: $tStore('variants.compositions.disabledItem.name'),
+        description: $tStore('variants.compositions.disabledItem.description'),
+        useWhen: $tStore('variants.compositions.disabledItem.use'),
+        code: `<ToggleGroup type="single" variant="outline" value="left" aria-label="Alinhamento do texto">
+  <ToggleGroupItem value="left" aria-label="Alinhar à esquerda"><AlignLeft aria-hidden="true" /></ToggleGroupItem>
+  <ToggleGroupItem value="center" disabled aria-label="Centralizar (indisponível)"><AlignCenter aria-hidden="true" /></ToggleGroupItem>
+  <ToggleGroupItem value="right" aria-label="Alinhar à direita"><AlignRight aria-hidden="true" /></ToggleGroupItem>
+</ToggleGroup>`,
+        preview: compDisabledItem,
+      },
+      {
+        name: $tStore('variants.compositions.filterWithText.name'),
+        description: $tStore('variants.compositions.filterWithText.description'),
+        useWhen: $tStore('variants.compositions.filterWithText.use'),
+        code: `<div>
+  <p>Filtros de exibição</p>
+  <ToggleGroup type="multiple" variant="outline" value={['compact']} aria-label="Filtros de exibição">
+    <ToggleGroupItem value="hidden"><Eye aria-hidden="true" /> Ocultos</ToggleGroupItem>
+    <ToggleGroupItem value="compact"><List aria-hidden="true" /> Compacto</ToggleGroupItem>
+  </ToggleGroup>
+</div>`,
+        preview: compFilterWithText,
+      },
+    ]}
+  />
+
+  {#snippet compAlignmentBar()}
+    <ToggleGroup type="single" variant="outline" bind:value={compAlign} aria-label="Alinhamento do texto">
+      <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
+        <AlignLeft aria-hidden="true" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="center" aria-label="Centralizar">
+        <AlignCenter aria-hidden="true" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="right" aria-label="Alinhar à direita">
+        <AlignRight aria-hidden="true" />
+      </ToggleGroupItem>
+    </ToggleGroup>
+  {/snippet}
+
+  {#snippet compFormattingBar()}
+    <ToggleGroup type="multiple" variant="outline" bind:value={compFormat} aria-label="Formatação">
+      <ToggleGroupItem value="bold" aria-label="Negrito">
+        <Bold aria-hidden="true" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="italic" aria-label="Itálico">
+        <Italic aria-hidden="true" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="underline" aria-label="Sublinhado">
+        <Underline aria-hidden="true" />
+      </ToggleGroupItem>
+    </ToggleGroup>
+  {/snippet}
+
+  {#snippet compViewMode()}
+    <ToggleGroup type="single" variant="outline" orientation="vertical" bind:value={compView} aria-label="Modo de visualização">
+      <ToggleGroupItem value="grid" aria-label="Grade">
+        <LayoutGrid aria-hidden="true" />
+        <span>Grade</span>
+      </ToggleGroupItem>
+      <ToggleGroupItem value="list" aria-label="Lista">
+        <List aria-hidden="true" />
+        <span>Lista</span>
+      </ToggleGroupItem>
+    </ToggleGroup>
+  {/snippet}
+
+  {#snippet compDisabledItem()}
+    <ToggleGroup type="single" variant="outline" bind:value={compDisabled} aria-label="Alinhamento do texto">
+      <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
+        <AlignLeft aria-hidden="true" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="center" disabled aria-label="Centralizar (indisponível)">
+        <AlignCenter aria-hidden="true" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="right" aria-label="Alinhar à direita">
+        <AlignRight aria-hidden="true" />
+      </ToggleGroupItem>
+    </ToggleGroup>
+  {/snippet}
+
+  {#snippet compFilterWithText()}
+    <div class="flex flex-col gap-2 items-start">
+      <p class="text-sm font-medium text-foreground">Filtros de exibição</p>
+      <ToggleGroup type="multiple" variant="outline" bind:value={compFilter} aria-label="Filtros de exibição">
+        <ToggleGroupItem value="hidden">
+          <Eye aria-hidden="true" />
+          <span>Ocultos</span>
+        </ToggleGroupItem>
+        <ToggleGroupItem value="compact">
+          <List aria-hidden="true" />
+          <span>Compacto</span>
+        </ToggleGroupItem>
+      </ToggleGroup>
+    </div>
   {/snippet}
 
   <!-- ── Estados ──────────────────────────────────────────────────────── -->

@@ -6,6 +6,7 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
@@ -15,6 +16,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -94,6 +96,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')    },
       { id: 'variantes',    label: tNav('nav.variants')  },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')    },
       { id: 'propriedades', label: tNav('nav.props')     },
       { id: 'tokens',       label: tNav('nav.tokens')    },
@@ -132,6 +135,20 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 const volumeValue = ref<number[]>([50]);
 const priceValue = ref<number[]>([100, 400]);
 const verticalValue = ref<number[]>([60]);
+
+// Composições
+const compVolume = ref<number[]>([50]);
+const compBrightness = ref<number[]>([75]);
+const compPrice = ref<number[]>([100, 400]);
+const compFormVolume = ref<number[]>([60]);
+const compFormCommitted = ref<number>(60);
+function onCompFormSubmit(e: Event) {
+  e.preventDefault();
+  compFormCommitted.value = compFormVolume.value[0];
+}
+function onCompFormCommit(value: number[]) {
+  compFormCommitted.value = value[0];
+}
 
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
@@ -236,6 +253,91 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.single'),   description: stripHtml(tContent('variants.styles.single')),   code: codeSingle   },
   { name: tContent('variants.items.range'),    description: stripHtml(tContent('variants.styles.range')),    code: codeRange    },
   { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: codeVertical },
+]);
+
+// ─── Composições ─────────────────────────────────────────────────────────────
+
+const codeCompVolume = `<script setup lang="ts">
+import { ref } from "vue";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+const value = ref<number[]>([50]);
+<\/script>
+
+<template>
+  <div class="space-y-3 w-72">
+    <div class="flex items-center justify-between">
+      <Label>Volume</Label>
+      <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
+    </div>
+    <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
+  </div>
+</template>`;
+
+const codeCompBrightness = `<Slider
+  v-model="value"
+  :min="0"
+  :max="100"
+  :step="5"
+  aria-label="Brilho"
+/>`;
+
+const codeCompPrice = `<script setup lang="ts">
+import { ref } from "vue";
+const range = ref<number[]>([100, 400]);
+<\/script>
+
+<template>
+  <Slider
+    v-model="range"
+    :min="0"
+    :max="1000"
+    :step="10"
+    aria-label="Faixa de preço"
+  />
+</template>`;
+
+const codeCompForm = `<form aria-label="Configurações de áudio" @submit.prevent="onSubmit">
+  <Label>Volume</Label>
+  <Slider
+    v-model="value"
+    @value-commit="(v) => track('slider_change', {
+      component: 'slider',
+      field_name: 'volume',
+      value: v[0],
+    })"
+    :min="0"
+    :max="100"
+    aria-label="Volume"
+  />
+  <Button type="submit">Salvar</Button>
+</form>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.volume.name'),
+    description: tContent('variants.compositions.volume.description'),
+    useWhen: tContent('variants.compositions.volume.use'),
+    code: codeCompVolume,
+  },
+  {
+    name: tContent('variants.compositions.brightness.name'),
+    description: tContent('variants.compositions.brightness.description'),
+    useWhen: tContent('variants.compositions.brightness.use'),
+    code: codeCompBrightness,
+  },
+  {
+    name: tContent('variants.compositions.priceRange.name'),
+    description: tContent('variants.compositions.priceRange.description'),
+    useWhen: tContent('variants.compositions.priceRange.use'),
+    code: codeCompPrice,
+  },
+  {
+    name: tContent('variants.compositions.form.name'),
+    description: tContent('variants.compositions.form.description'),
+    useWhen: tContent('variants.compositions.form.use'),
+    code: codeCompForm,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -569,6 +671,72 @@ const visualTestItems = computed(() => [
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="slider"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div class="space-y-3 w-72">
+          <div class="flex items-center justify-between">
+            <Label>Volume</Label>
+            <span aria-live="polite" class="text-sm tabular-nums">{{ compVolume[0] }}%</span>
+          </div>
+          <Slider v-model="compVolume" :min="0" :max="100" aria-label="Volume" />
+        </div>
+      </template>
+
+      <template #variant-preview-1>
+        <div class="space-y-3 w-72">
+          <div class="flex items-center justify-between">
+            <Label>Brilho</Label>
+            <span aria-live="polite" class="text-sm tabular-nums">{{ compBrightness[0] }}%</span>
+          </div>
+          <Slider v-model="compBrightness" :min="0" :max="100" :step="5" aria-label="Brilho" />
+        </div>
+      </template>
+
+      <template #variant-preview-2>
+        <div class="space-y-3 w-72">
+          <div class="flex items-center justify-between">
+            <Label>Faixa de preço</Label>
+            <span aria-live="polite" class="text-sm tabular-nums">
+              R$ {{ compPrice[0] }} — R$ {{ compPrice[1] }}
+            </span>
+          </div>
+          <Slider v-model="compPrice" :min="0" :max="1000" :step="10" aria-label="Faixa de preço" />
+        </div>
+      </template>
+
+      <template #variant-preview-3>
+        <form
+          aria-label="Configurações de áudio"
+          class="flex flex-col gap-4 w-72"
+          @submit="onCompFormSubmit"
+        >
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <Label>Volume</Label>
+              <span aria-live="polite" class="text-sm tabular-nums">{{ compFormVolume[0] }}%</span>
+            </div>
+            <Slider
+              v-model="compFormVolume"
+              :min="0"
+              :max="100"
+              aria-label="Volume"
+              @value-commit="onCompFormCommit"
+            />
+          </div>
+          <Button type="submit" size="sm" class="self-start">Salvar</Button>
+          <p class="text-xs text-muted-foreground" aria-live="polite">
+            Último commit: {{ compFormCommitted }}%
+          </p>
+        </form>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────────── -->
     <DocsStates

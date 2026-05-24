@@ -27,22 +27,23 @@ export const Decorativo: Story = {
   name: 'Decorativo',
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md space-y-3';
+    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.dataset.spacing = 'sm';
 
     const heading = document.createElement('h3');
-    heading.className = 'text-sm font-medium';
+    heading.className = 'nds-text-body nds-font-medium';
     heading.textContent = 'Decorativo (padrão)';
 
     const note = document.createElement('p');
-    note.className = 'text-xs text-muted-foreground';
+    note.className = 'nds-text-caption nds-text-muted-foreground';
     note.textContent = 'role="none" + aria-hidden="true". Ignorado por leitores de tela.';
 
     const before = document.createElement('p');
-    before.className = 'text-sm';
+    before.className = 'nds-text-body';
     before.textContent = 'Conteúdo antes do separador.';
 
     const after = document.createElement('p');
-    after.className = 'text-sm';
+    after.className = 'nds-text-body';
     after.textContent = 'Conteúdo depois do separador.';
 
     wrap.append(
@@ -67,22 +68,23 @@ export const Semantico: Story = {
   name: 'Semantico',
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md space-y-3';
+    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.dataset.spacing = 'sm';
 
     const heading = document.createElement('h3');
-    heading.className = 'text-sm font-medium';
+    heading.className = 'nds-text-body nds-font-medium';
     heading.textContent = 'Semântico';
 
     const note = document.createElement('p');
-    note.className = 'text-xs text-muted-foreground';
+    note.className = 'nds-text-caption nds-text-muted-foreground';
     note.textContent = 'role="separator" + aria-orientation. Anunciado por leitores de tela.';
 
     const before = document.createElement('p');
-    before.className = 'text-sm';
+    before.className = 'nds-text-body';
     before.textContent = 'Categoria: Layout';
 
     const after = document.createElement('p');
-    after.className = 'text-sm';
+    after.className = 'nds-text-body';
     after.textContent = 'Categoria: Forms';
 
     wrap.append(

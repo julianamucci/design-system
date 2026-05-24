@@ -6,7 +6,7 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, Filter } from 'lucide-vue-next';
+import { ChevronDown, Filter, Settings } from 'lucide-vue-next';
 
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
@@ -16,6 +16,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -87,6 +88,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -201,6 +203,84 @@ const variantItems = computed(() => [
     name: 'controlled',
     description: stripHtml(tContent('variants.items.controlled')),
     code: codeControlled,
+  },
+]);
+
+const codeCustomButton = `<Collapsible class="w-full max-w-sm">
+  <CollapsibleTrigger class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent">
+    Exibir opções avançadas
+  </CollapsibleTrigger>
+  <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-2">
+    <p class="text-sm">Opção avançada 1</p>
+    <p class="text-sm">Opção avançada 2</p>
+    <p class="text-sm">Opção avançada 3</p>
+  </CollapsibleContent>
+</Collapsible>`;
+
+const codeIconTrigger = `<Collapsible class="w-full max-w-sm">
+  <CollapsibleTrigger class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent">
+    <span class="flex items-center gap-2">
+      <Filter class="h-4 w-4" aria-hidden="true" />
+      Filtros avançados
+    </span>
+  </CollapsibleTrigger>
+  <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-2">
+    <p class="text-sm">Filtro por categoria</p>
+    <p class="text-sm">Filtro por data</p>
+    <p class="text-sm">Filtro por status</p>
+  </CollapsibleContent>
+</Collapsible>`;
+
+const codeRotatingChevron = `<Collapsible class="w-full max-w-sm">
+  <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent">
+    Configurações avançadas
+    <ChevronDown aria-hidden="true" class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180" />
+  </CollapsibleTrigger>
+  <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-2">
+    <div class="flex justify-between text-sm"><span>Notificações</span><span>Ativadas</span></div>
+    <div class="flex justify-between text-sm"><span>Privacidade</span><span>Modo estrito</span></div>
+  </CollapsibleContent>
+</Collapsible>`;
+
+const codeRichContent = `<Collapsible class="w-full max-w-sm">
+  <CollapsibleTrigger class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent">
+    <span class="flex items-center gap-2">
+      <Settings class="h-4 w-4" aria-hidden="true" />
+      Configurações do sistema
+    </span>
+  </CollapsibleTrigger>
+  <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-3">
+    <p class="text-xs text-muted-foreground">Ajuste as preferências do sistema.</p>
+    <label class="flex items-center gap-2 text-sm"><input type="checkbox" /> Modo escuro</label>
+    <label class="flex items-center gap-2 text-sm"><input type="checkbox" /> Notificações push</label>
+    <label class="flex items-center gap-2 text-sm"><input type="checkbox" /> Analytics</label>
+  </CollapsibleContent>
+</Collapsible>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.customButton.name'),
+    description: tContent('variants.compositions.customButton.description'),
+    useWhen: tContent('variants.compositions.customButton.use'),
+    code: codeCustomButton,
+  },
+  {
+    name: tContent('variants.compositions.iconTrigger.name'),
+    description: tContent('variants.compositions.iconTrigger.description'),
+    useWhen: tContent('variants.compositions.iconTrigger.use'),
+    code: codeIconTrigger,
+  },
+  {
+    name: tContent('variants.compositions.rotatingChevron.name'),
+    description: tContent('variants.compositions.rotatingChevron.description'),
+    useWhen: tContent('variants.compositions.rotatingChevron.use'),
+    code: codeRotatingChevron,
+  },
+  {
+    name: tContent('variants.compositions.richContent.name'),
+    description: tContent('variants.compositions.richContent.description'),
+    useWhen: tContent('variants.compositions.richContent.use'),
+    code: codeRichContent,
   },
 ]);
 
@@ -553,6 +633,70 @@ const visualTestItems = computed(() => [
         </Collapsible>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="collapsible"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Collapsible class="w-full max-w-sm">
+          <CollapsibleTrigger class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
+            Exibir opções avançadas
+          </CollapsibleTrigger>
+          <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-2">
+            <p class="text-sm">Opção avançada 1</p>
+            <p class="text-sm">Opção avançada 2</p>
+            <p class="text-sm">Opção avançada 3</p>
+          </CollapsibleContent>
+        </Collapsible>
+      </template>
+      <template #variant-preview-1>
+        <Collapsible class="w-full max-w-sm">
+          <CollapsibleTrigger class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
+            <span class="flex items-center gap-2">
+              <Filter class="h-4 w-4" aria-hidden="true" />
+              Filtros avançados
+            </span>
+          </CollapsibleTrigger>
+          <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-2">
+            <p class="text-sm">Filtro por categoria</p>
+            <p class="text-sm">Filtro por data</p>
+            <p class="text-sm">Filtro por status</p>
+          </CollapsibleContent>
+        </Collapsible>
+      </template>
+      <template #variant-preview-2>
+        <Collapsible class="w-full max-w-sm">
+          <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
+            Configurações avançadas
+            <ChevronDown aria-hidden="true" class="h-4 w-4 shrink-0 transition-transform [[data-state=open]_&]:rotate-180" />
+          </CollapsibleTrigger>
+          <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-2">
+            <div class="flex justify-between text-sm"><span>Notificações</span><span>Ativadas</span></div>
+            <div class="flex justify-between text-sm"><span>Privacidade</span><span>Modo estrito</span></div>
+          </CollapsibleContent>
+        </Collapsible>
+      </template>
+      <template #variant-preview-3>
+        <Collapsible class="w-full max-w-sm">
+          <CollapsibleTrigger class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
+            <span class="flex items-center gap-2">
+              <Settings class="h-4 w-4" aria-hidden="true" />
+              Configurações do sistema
+            </span>
+          </CollapsibleTrigger>
+          <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-3">
+            <p class="text-xs text-muted-foreground">Ajuste as preferências do sistema.</p>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" /> Modo escuro</label>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" /> Notificações push</label>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" /> Analytics</label>
+          </CollapsibleContent>
+        </Collapsible>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates

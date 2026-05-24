@@ -8,7 +8,7 @@
       "title": "Badge — Feedback",
       "description": "Documentação do Badge: 4 variantes (default, secondary, destructive, outline), uso inline para status, contagens e categorias com tokens semânticos.",
       "aiSummary": "Componente Badge com 4 variantes (default, secondary, destructive, outline), sem size prop, não interativo por padrão, baseado em div com suporte a HTMLAttributes.",
-      "aiEntities": "Badge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, status indicator, tag, pill",
+      "aiEntities": "Badge, React, Vue, Svelte, Shadcn/UI, WCAG 2.1, status indicator, tag, pill",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -120,12 +120,35 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponíveis",
-      "note": "O Badge oferece 4 variantes nativas via prop <code>variant</code>. Não possui prop <code>size</code> — a dimensão é única (<code>text-xs font-semibold px-2.5 py-0.5</code>).",
+      "note": "O Badge oferece 4 variantes nativas via prop <code>variant</code>. Não possui prop <code>size</code> — a dimensão é única (texto pequeno semibold com padding compacto, definidos no CSS do componente).",
       "items": {
         "default": "Destaque principal. Fundo <code>primary</code>, ideal para itens novos ou ações em evidência.",
         "secondary": "Neutro informativo. Fundo <code>secondary</code>, ideal para categorias e tags.",
         "destructive": "Alerta ou erro. Fundo <code>destructive</code>, uso restrito a estados críticos.",
         "outline": "Baixa ênfase. Apenas borda e texto, sem fundo, ideal para rascunhos ou status secundários."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withIcon": {
+          "name": "Com ícone",
+          "description": "Ícone SVG como filho do Badge, antes do texto. Reforça visualmente o status (ex.: <code>Check</code> para ativo, <code>Bell</code> para notificação).",
+          "use": "Status visuais que se beneficiam de reforço icônico. Sempre marque o ícone com <code>aria-hidden=\"true\"</code>."
+        },
+        "count": {
+          "name": "Contador",
+          "description": "Badge numérico ao lado de outro elemento (ex.: ícone de sino) sinalizando contagem de itens não lidos. Envolva no container com <code>role=\"status\"</code> e <code>aria-label</code> descritivo.",
+          "use": "Contagem de notificações, mensagens, pendências. Para valores acima de 99, exiba <code>99+</code>."
+        },
+        "asLink": {
+          "name": "Como link",
+          "description": "Badge envolvido em <code>&lt;a&gt;</code>. O link é focável e navegável; o Badge permanece decorativo dentro dele.",
+          "use": "Tags clicáveis em listas ou cards (categoria, autor, hashtag). Inclua <code>aria-label</code> descritivo no link."
+        },
+        "asTrigger": {
+          "name": "Como trigger clicável",
+          "description": "Badge envolvido em <code>&lt;button&gt;</code>. O botão gerencia foco, teclado e eventos; o Badge é apenas a aparência.",
+          "use": "Filtros, chips ativáveis, trigger de menu. Nunca aplique <code>onClick</code> direto no Badge — sempre envolva em botão."
+        }
       }
     },
     "states": {
@@ -167,7 +190,7 @@
         "required": "Obrigatório",
         "description": "Descrição",
         "variant": "Variante visual: <code>\"default\" | \"secondary\" | \"destructive\" | \"outline\"</code>.",
-        "className": "Classes Tailwind adicionais para customizações pontuais (ex: cor semântica custom).",
+        "className": "Classes CSS adicionais para customizações pontuais (ex: cor semântica custom via token do tema).",
         "children": "Conteúdo do Badge: texto curto, número ou ícone + texto."
       },
       "extensibilityTitle": "Extensibilidade",
@@ -177,7 +200,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Aplicação no tema",
         "part": "Parte do componente",
         "primary": "Fundo (variante default)",
         "primaryForeground": "Texto (variante default)",
@@ -259,11 +282,11 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Badge.",
-        "item1": { "action": "Renderizar variante default", "result": "Container com bg-primary, text-primary-foreground e borda transparente", "priority": "high" },
-        "item2": { "action": "Renderizar variante secondary", "result": "bg-secondary com text-secondary-foreground aplicados", "priority": "high" },
-        "item3": { "action": "Renderizar variante destructive", "result": "bg-destructive com text-destructive-foreground aplicados", "priority": "high" },
-        "item4": { "action": "Renderizar variante outline", "result": "Apenas borda padrão e text-foreground, sem fundo", "priority": "high" },
-        "item5": { "action": "Renderizar com ícone filho", "result": "Ícone alinhado à esquerda via inline-flex items-center", "priority": "medium" },
+        "item1": { "action": "Renderizar variante default", "result": "Container usa --primary no fundo, --primary-foreground no texto e borda transparente", "priority": "high" },
+        "item2": { "action": "Renderizar variante secondary", "result": "Fundo em --secondary com texto em --secondary-foreground", "priority": "high" },
+        "item3": { "action": "Renderizar variante destructive", "result": "Fundo soft em --destructive com texto em --foreground (contraste 4.5:1)", "priority": "high" },
+        "item4": { "action": "Renderizar variante outline", "result": "Apenas borda padrão e texto em --foreground, sem fundo", "priority": "high" },
+        "item5": { "action": "Renderizar com ícone filho", "result": "Ícone alinhado à esquerda via layout inline do container", "priority": "medium" },
         "item6": { "action": "Badge envolto em button", "result": "Pai recebe foco e dispara onClick corretamente", "priority": "medium" }
       },
       "accessibility": {
@@ -313,7 +336,7 @@
       "title": "Badge — Feedback",
       "description": "Documentation for Badge: 4 variants (default, secondary, destructive, outline), inline use for status, counts, and categories with semantic tokens.",
       "aiSummary": "Badge component with 4 variants (default, secondary, destructive, outline), no size prop, non-interactive by default, built on div with HTMLAttributes support.",
-      "aiEntities": "Badge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, status indicator, tag, pill",
+      "aiEntities": "Badge, React, Vue, Svelte, Shadcn/UI, WCAG 2.1, status indicator, tag, pill",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -425,12 +448,35 @@
     "variants": {
       "title": "Variants",
       "visualTitle": "Available Variants",
-      "note": "Badge offers 4 native variants via the <code>variant</code> prop. It has no <code>size</code> prop — the dimension is fixed (<code>text-xs font-semibold px-2.5 py-0.5</code>).",
+      "note": "Badge offers 4 native variants via the <code>variant</code> prop. It has no <code>size</code> prop — the dimension is fixed (small semibold text with compact padding, defined in the component's CSS).",
       "items": {
         "default": "Primary emphasis. <code>primary</code> background, ideal for new items or highlighted actions.",
         "secondary": "Neutral informational. <code>secondary</code> background, ideal for categories and tags.",
         "destructive": "Alert or error. <code>destructive</code> background, reserved for critical states only.",
         "outline": "Low emphasis. Border and text only, no background, ideal for drafts or secondary statuses."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withIcon": {
+          "name": "With icon",
+          "description": "SVG icon as a child of the Badge, before the text. Visually reinforces status (e.g., <code>Check</code> for active, <code>Bell</code> for notification).",
+          "use": "Visual statuses that benefit from icon reinforcement. Always mark the icon with <code>aria-hidden=\"true\"</code>."
+        },
+        "count": {
+          "name": "Counter",
+          "description": "Numeric Badge next to another element (e.g., bell icon) signaling unread count. Wrap the container with <code>role=\"status\"</code> and a descriptive <code>aria-label</code>.",
+          "use": "Notification, message, or pending-item counts. For values above 99, display <code>99+</code>."
+        },
+        "asLink": {
+          "name": "As link",
+          "description": "Badge wrapped in <code>&lt;a&gt;</code>. The link is focusable and navigable; the Badge stays decorative inside it.",
+          "use": "Clickable tags in lists or cards (category, author, hashtag). Include a descriptive <code>aria-label</code> on the link."
+        },
+        "asTrigger": {
+          "name": "As clickable trigger",
+          "description": "Badge wrapped in <code>&lt;button&gt;</code>. The button handles focus, keyboard, and events; the Badge is just the appearance.",
+          "use": "Filters, toggleable chips, menu triggers. Never apply <code>onClick</code> directly to the Badge — always wrap in a button."
+        }
       }
     },
     "states": {
@@ -472,7 +518,7 @@
         "required": "Required",
         "description": "Description",
         "variant": "Visual variant: <code>\"default\" | \"secondary\" | \"destructive\" | \"outline\"</code>.",
-        "className": "Additional Tailwind classes for targeted customization (e.g., custom semantic color).",
+        "className": "Additional CSS classes for targeted customization (e.g., custom semantic color via theme token).",
         "children": "Badge content: short text, number, or icon + text."
       },
       "extensibilityTitle": "Extensibility",
@@ -482,7 +528,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": "Theme application",
         "part": "Component Part",
         "primary": "Background (default variant)",
         "primaryForeground": "Text (default variant)",
@@ -564,11 +610,11 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Badge configuration.",
-        "item1": { "action": "Render default variant", "result": "Container with bg-primary, text-primary-foreground, and transparent border", "priority": "high" },
-        "item2": { "action": "Render secondary variant", "result": "bg-secondary with text-secondary-foreground applied", "priority": "high" },
-        "item3": { "action": "Render destructive variant", "result": "bg-destructive with text-destructive-foreground applied", "priority": "high" },
-        "item4": { "action": "Render outline variant", "result": "Only default border and text-foreground, no background", "priority": "high" },
-        "item5": { "action": "Render with icon child", "result": "Icon aligned left via inline-flex items-center", "priority": "medium" },
+        "item1": { "action": "Render default variant", "result": "Container uses --primary background, --primary-foreground text, and transparent border", "priority": "high" },
+        "item2": { "action": "Render secondary variant", "result": "Background in --secondary with text in --secondary-foreground", "priority": "high" },
+        "item3": { "action": "Render destructive variant", "result": "Soft background in --destructive with text in --foreground (4.5:1 contrast)", "priority": "high" },
+        "item4": { "action": "Render outline variant", "result": "Only default border and --foreground text, no background", "priority": "high" },
+        "item5": { "action": "Render with icon child", "result": "Icon aligned left via the container's inline layout", "priority": "medium" },
         "item6": { "action": "Badge wrapped in button", "result": "Parent receives focus and fires onClick correctly", "priority": "medium" }
       },
       "accessibility": {
@@ -618,7 +664,7 @@
       "title": "Badge — Feedback",
       "description": "Documentación del Badge: 4 variantes (default, secondary, destructive, outline), uso inline para estados, conteos y categorías con tokens semánticos.",
       "aiSummary": "Componente Badge con 4 variantes (default, secondary, destructive, outline), sin prop size, no interactivo por defecto, basado en div con soporte para HTMLAttributes.",
-      "aiEntities": "Badge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, status indicator, tag, pill",
+      "aiEntities": "Badge, React, Vue, Svelte, Shadcn/UI, WCAG 2.1, status indicator, tag, pill",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -730,12 +776,35 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponibles",
-      "note": "Badge ofrece 4 variantes nativas vía la prop <code>variant</code>. No tiene prop <code>size</code> — la dimensión es única (<code>text-xs font-semibold px-2.5 py-0.5</code>).",
+      "note": "Badge ofrece 4 variantes nativas vía la prop <code>variant</code>. No tiene prop <code>size</code> — la dimensión es única (texto pequeño semibold con padding compacto, definidos en el CSS del componente).",
       "items": {
         "default": "Énfasis principal. Fondo <code>primary</code>, ideal para ítems nuevos o acciones destacadas.",
         "secondary": "Neutro informativo. Fondo <code>secondary</code>, ideal para categorías y tags.",
         "destructive": "Alerta o error. Fondo <code>destructive</code>, reservado para estados críticos.",
         "outline": "Baja énfasis. Solo borde y texto, sin fondo, ideal para borradores o estados secundarios."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withIcon": {
+          "name": "Con ícono",
+          "description": "Ícono SVG como hijo del Badge, antes del texto. Refuerza visualmente el estado (ej.: <code>Check</code> para activo, <code>Bell</code> para notificación).",
+          "use": "Estados visuales que se benefician de refuerzo icónico. Marca siempre el ícono con <code>aria-hidden=\"true\"</code>."
+        },
+        "count": {
+          "name": "Contador",
+          "description": "Badge numérico junto a otro elemento (ej.: ícono de campana) que indica cantidad no leída. Envuelve el contenedor con <code>role=\"status\"</code> y un <code>aria-label</code> descriptivo.",
+          "use": "Conteo de notificaciones, mensajes, pendientes. Para valores sobre 99, muestra <code>99+</code>."
+        },
+        "asLink": {
+          "name": "Como enlace",
+          "description": "Badge envuelto en <code>&lt;a&gt;</code>. El enlace es focalizable y navegable; el Badge permanece decorativo dentro.",
+          "use": "Tags clickeables en listas o cards (categoría, autor, hashtag). Incluye <code>aria-label</code> descriptivo en el enlace."
+        },
+        "asTrigger": {
+          "name": "Como trigger clickeable",
+          "description": "Badge envuelto en <code>&lt;button&gt;</code>. El botón gestiona foco, teclado y eventos; el Badge es solo apariencia.",
+          "use": "Filtros, chips activables, trigger de menú. Nunca apliques <code>onClick</code> directamente al Badge — envuelve siempre en un botón."
+        }
       }
     },
     "states": {
@@ -777,7 +846,7 @@
         "required": "Obligatorio",
         "description": "Descripción",
         "variant": "Variante visual: <code>\"default\" | \"secondary\" | \"destructive\" | \"outline\"</code>.",
-        "className": "Clases Tailwind adicionales para personalizaciones puntuales (ej: color semántico custom).",
+        "className": "Clases CSS adicionales para personalizaciones puntuales (ej: color semántico custom vía token del tema).",
         "children": "Contenido del Badge: texto corto, número o ícono + texto."
       },
       "extensibilityTitle": "Extensibilidad",
@@ -787,7 +856,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Aplicación en el tema",
         "part": "Parte del componente",
         "primary": "Fondo (variante default)",
         "primaryForeground": "Texto (variante default)",
@@ -869,11 +938,11 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Badge.",
-        "item1": { "action": "Renderizar variante default", "result": "Contenedor con bg-primary, text-primary-foreground y borde transparente", "priority": "high" },
-        "item2": { "action": "Renderizar variante secondary", "result": "bg-secondary con text-secondary-foreground aplicados", "priority": "high" },
-        "item3": { "action": "Renderizar variante destructive", "result": "bg-destructive con text-destructive-foreground aplicados", "priority": "high" },
-        "item4": { "action": "Renderizar variante outline", "result": "Solo borde predeterminado y text-foreground, sin fondo", "priority": "high" },
-        "item5": { "action": "Renderizar con ícono hijo", "result": "Ícono alineado a la izquierda vía inline-flex items-center", "priority": "medium" },
+        "item1": { "action": "Renderizar variante default", "result": "Contenedor usa --primary de fondo, --primary-foreground en el texto y borde transparente", "priority": "high" },
+        "item2": { "action": "Renderizar variante secondary", "result": "Fondo en --secondary con texto en --secondary-foreground", "priority": "high" },
+        "item3": { "action": "Renderizar variante destructive", "result": "Fondo soft en --destructive con texto en --foreground (contraste 4.5:1)", "priority": "high" },
+        "item4": { "action": "Renderizar variante outline", "result": "Solo borde predeterminado y texto en --foreground, sin fondo", "priority": "high" },
+        "item5": { "action": "Renderizar con ícono hijo", "result": "Ícono alineado a la izquierda vía el layout inline del contenedor", "priority": "medium" },
         "item6": { "action": "Badge envuelto en button", "result": "El padre recibe foco y dispara onClick correctamente", "priority": "medium" }
       },
       "accessibility": {

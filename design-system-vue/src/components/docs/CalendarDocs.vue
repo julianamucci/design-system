@@ -44,6 +44,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -112,6 +113,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -157,9 +159,9 @@ const rekaLocale = computed(() => {
 
 // ─── Fixed demo dates (determinístico para Chromatic) ─────────────────────────
 // Usamos datas fixas em vez de `today()` para evitar instabilidade em screenshots
-const demoAnchor = new CalendarDate(2026, 4, 15);
-const demoSelectedSingle = ref<typeof demoAnchor | undefined>(new CalendarDate(2026, 4, 12));
-const demoSelectedMultiple = ref<Array<InstanceType<typeof CalendarDate>>>([
+const demoAnchor = new CalendarDate(2026, 4, 15) as any;
+const demoSelectedSingle = ref<any>(new CalendarDate(2026, 4, 12));
+const demoSelectedMultiple = ref<any[]>([
   new CalendarDate(2026, 4, 8),
   new CalendarDate(2026, 4, 15),
   new CalendarDate(2026, 4, 22),
@@ -270,6 +272,42 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item4'),
   tContent('anatomy.item5'),
   tContent('anatomy.item6'),
+]);
+
+const codeInlineBordered = `<Calendar v-model="date" locale="pt-BR" class="rounded-md border" />`;
+
+const codeDisabledPast = `<Calendar
+  v-model="date"
+  locale="pt-BR"
+  :is-date-disabled="disablePastDates"
+/>`;
+
+const codeRangeTwoMonths = `<RangeCalendar
+  v-model="range"
+  locale="pt-BR"
+  :number-of-months="2"
+  class="rounded-md border"
+/>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.inlineBordered.name'),
+    description: tContent('variants.compositions.inlineBordered.description'),
+    useWhen: tContent('variants.compositions.inlineBordered.use'),
+    code: codeInlineBordered,
+  },
+  {
+    name: tContent('variants.compositions.disabledPast.name'),
+    description: tContent('variants.compositions.disabledPast.description'),
+    useWhen: tContent('variants.compositions.disabledPast.use'),
+    code: codeDisabledPast,
+  },
+  {
+    name: tContent('variants.compositions.rangeTwoMonths.name'),
+    description: tContent('variants.compositions.rangeTwoMonths.description'),
+    useWhen: tContent('variants.compositions.rangeTwoMonths.use'),
+    code: codeRangeTwoMonths,
+  },
 ]);
 
 const variantItems = computed(() => [
@@ -581,6 +619,41 @@ const visualTestItems = computed(() => [
         />
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="calendar"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Calendar
+          v-model="demoSelectedSingle"
+          locale="pt-BR"
+          :placeholder="demoAnchor"
+          class="rounded-md border"
+        />
+      </template>
+      <template #variant-preview-1>
+        <Calendar
+          v-model="demoSelectedSingle"
+          locale="pt-BR"
+          :placeholder="demoAnchor"
+          :is-date-disabled="disablePastDates"
+          class="rounded-md border"
+        />
+      </template>
+      <template #variant-preview-2>
+        <RangeCalendar
+          :default-value="{ start: demoRangeStart, end: demoRangeEnd }"
+          locale="pt-BR"
+          :placeholder="demoAnchor"
+          :number-of-months="2"
+          class="rounded-md border"
+        />
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates

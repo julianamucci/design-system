@@ -4,13 +4,16 @@ import { Card } from '@/components/ui/card';
 
 interface DocsKeyboardItem { key: string; description: string }
 
-defineProps<{
+withDefaults(defineProps<{
   title: string;
   summary: string;
-  items: string[];
-  keyboardTitle: string;
+  items?: string[];
+  keyboardTitle?: string;
   keyboardItems: DocsKeyboardItem[];
-}>();
+}>(), {
+  items: () => [],
+  keyboardTitle: '',
+});
 </script>
 
 <template>

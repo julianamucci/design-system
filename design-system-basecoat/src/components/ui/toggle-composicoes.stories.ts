@@ -25,7 +25,7 @@ type Story = StoryObj;
 
 type LucideIconNode = [string, Record<string, string>];
 
-function buildLucideSvg(icon: unknown, className = 'h-4 w-4'): SVGSVGElement {
+function buildLucideSvg(icon: unknown, className = 'nds-icon-sm'): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -46,7 +46,7 @@ function buildLucideSvg(icon: unknown, className = 'h-4 w-4'): SVGSVGElement {
 
 function wrapIcon(icon: unknown): HTMLSpanElement {
   const span = document.createElement('span');
-  span.className = 'inline-flex';
+  span.style.display = 'inline-flex';
   span.appendChild(buildLucideSvg(icon));
   return span;
 }
@@ -75,7 +75,8 @@ function iconToggle(opts: {
 export const ToolbarFormatacao: Story = {
   render: () => {
     const toolbar = document.createElement('div');
-    toolbar.className = 'flex items-center gap-1 rounded-md border border-input p-1';
+    toolbar.className = 'nds-cluster nds-rounded-md nds-border-default nds-p-1';
+    toolbar.dataset.spacing = 'xs';
     toolbar.setAttribute('role', 'group');
     toolbar.setAttribute('aria-label', 'Formatação de texto');
 
@@ -117,7 +118,9 @@ export const ToolbarFormatacao: Story = {
 export const FiltroComLabel: Story = {
   render: () => {
     const wrap = document.createElement('span');
-    wrap.className = 'inline-flex items-center gap-2';
+    wrap.className = 'nds-cluster';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.display = 'inline-flex';
     wrap.appendChild(buildLucideSvg(Eye));
     const text = document.createElement('span');
     text.textContent = 'Mostrar ocultos';
@@ -156,7 +159,8 @@ export const FiltroComLabel: Story = {
 export const Tamanhos: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex items-center gap-3';
+    wrap.className = 'nds-cluster';
+    wrap.dataset.spacing = 'sm';
     wrap.appendChild(iconToggle({ icon: Bold, ariaLabel: 'Negrito (sm)', size: 'sm', variant: 'outline' }));
     wrap.appendChild(iconToggle({ icon: Bold, ariaLabel: 'Negrito (default)', size: 'default', variant: 'outline' }));
     wrap.appendChild(iconToggle({ icon: Bold, ariaLabel: 'Negrito (lg)', size: 'lg', variant: 'outline' }));
@@ -190,7 +194,9 @@ export const SimulacaoToggleGroup: Story = {
     // Aqui simulamos manualmente uma escolha exclusiva (single) — em produção,
     // prefira `ToggleGroup` quando representam escolha conjunta.
     const group = document.createElement('div');
-    group.className = 'inline-flex items-center rounded-md border border-input bg-background';
+    group.className = 'nds-cluster nds-rounded-md nds-border-default nds-bg-background';
+    group.dataset.spacing = 'xs';
+    group.style.display = 'inline-flex';
     group.setAttribute('role', 'group');
     group.setAttribute('aria-label', 'Alinhamento de texto');
 
@@ -259,15 +265,19 @@ export const SimulacaoToggleGroup: Story = {
 export const ListaDeFiltros: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-2 w-72';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.style.width = '18rem';
 
     const title = document.createElement('p');
-    title.className = 'text-sm font-semibold mb-1';
+    title.className = 'nds-text-body nds-font-semibold nds-mb-1';
     title.textContent = 'Filtros de exibição';
     wrapper.appendChild(title);
 
     const row = document.createElement('div');
-    row.className = 'flex flex-wrap gap-2';
+    row.className = 'nds-cluster';
+    row.dataset.spacing = 'sm';
+    row.style.flexWrap = 'wrap';
 
     const filters = [
       { icon: Eye, label: 'Mostrar ocultos', pressed: false },
@@ -276,7 +286,9 @@ export const ListaDeFiltros: Story = {
 
     filters.forEach(({ icon, label, pressed }) => {
       const wrap = document.createElement('span');
-      wrap.className = 'inline-flex items-center gap-2';
+      wrap.className = 'nds-cluster';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.display = 'inline-flex';
       wrap.appendChild(buildLucideSvg(icon));
       const text = document.createElement('span');
       text.textContent = label;

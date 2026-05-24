@@ -120,6 +120,29 @@
         "default": "Texto explicativo curto — fundo <code>foreground</code>, texto <code>background</code>.",
         "withShortcut": "Texto + atalho (ex: \"Salvar (Ctrl+S)\") — útil para botões com hotkeys.",
         "longText": "Texto que ocupa até <code>max-w-xs</code> — quebra natural sem ser parágrafo."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "iconButtonWithShortcut": {
+          "name": "Icon-button com atalho",
+          "description": "Botão icon-only com <code>aria-label</code> próprio e Tooltip complementar exibindo o atalho de teclado (ex.: \"Salvar (Ctrl+S)\"). O Tooltip não substitui o <code>aria-label</code>.",
+          "use": "Botões de ação rápida em toolbars/headers que possuem hotkey. O <code>aria-label</code> garante anúncio em mobile/AT; o Tooltip reforça visualmente o atalho para usuários de mouse e teclado."
+        },
+        "formFieldHelp": {
+          "name": "Campo de form com ajuda",
+          "description": "Ícone \"?\" ao lado do label de um campo, com Tooltip explicando onde encontrar ou como gerar o valor esperado. O texto cabe em uma linha e usa <code>max-w-xs</code> quando necessário.",
+          "use": "Formulários com campos cujo conteúdo exige contexto extra (tokens, IDs, formatos específicos) — sem poluir o label principal nem usar um Popover quando o conteúdo é apenas texto."
+        },
+        "metricDescription": {
+          "name": "Descrição de métrica",
+          "description": "Ícone informativo \"i\" no cabeçalho de uma métrica/KPI, com Tooltip definindo a sigla ou explicando o cálculo (ex.: \"LCP — Largest Contentful Paint\").",
+          "use": "Dashboards e relatórios com siglas técnicas — torna a descoberta passiva sem ocupar espaço vertical. Para detalhes interativos (links, gráficos), prefira <code>Popover</code>."
+        },
+        "positioningSides": {
+          "name": "Lados de posicionamento",
+          "description": "Quatro triggers lado a lado demonstrando <code>side=\"top\"</code>, <code>\"right\"</code>, <code>\"bottom\"</code> e <code>\"left\"</code>. Auto-flip por colisão pode reposicionar quando há pouco espaço.",
+          "use": "Escolha o <code>side</code> pelo espaço disponível e pela direção da informação — <code>top</code>/<code>bottom</code> em linhas densas, <code>right</code>/<code>left</code> em colunas estreitas. Confie no auto-flip para evitar overflow."
+        }
       }
     },
     "states": {
@@ -443,6 +466,29 @@
         "default": "Short explanatory text — <code>foreground</code> background, <code>background</code> text.",
         "withShortcut": "Text + shortcut (e.g. \"Save (Ctrl+S)\") — useful for buttons with hotkeys.",
         "longText": "Text up to <code>max-w-xs</code> — natural wrap without being a paragraph."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "iconButtonWithShortcut": {
+          "name": "Icon-button with shortcut",
+          "description": "Icon-only button with its own <code>aria-label</code> and a complementary Tooltip showing the keyboard shortcut (e.g. \"Save (Ctrl+S)\"). The Tooltip doesn't replace the <code>aria-label</code>.",
+          "use": "Quick-action buttons in toolbars/headers that have a hotkey. The <code>aria-label</code> ensures announcement on mobile/AT; the Tooltip visually reinforces the shortcut for mouse and keyboard users."
+        },
+        "formFieldHelp": {
+          "name": "Form field with help",
+          "description": "\"?\" icon next to a field label, with a Tooltip explaining where to find or how to generate the expected value. Text fits on one line and uses <code>max-w-xs</code> when needed.",
+          "use": "Forms with fields that need extra context (tokens, IDs, specific formats) — without cluttering the main label or using a Popover when the content is just text."
+        },
+        "metricDescription": {
+          "name": "Metric description",
+          "description": "Info icon \"i\" in a metric/KPI header, with a Tooltip defining the acronym or explaining the calculation (e.g. \"LCP — Largest Contentful Paint\").",
+          "use": "Dashboards and reports with technical acronyms — enables passive discovery without taking vertical space. For interactive details (links, charts), prefer <code>Popover</code>."
+        },
+        "positioningSides": {
+          "name": "Positioning sides",
+          "description": "Four triggers side by side demonstrating <code>side=\"top\"</code>, <code>\"right\"</code>, <code>\"bottom\"</code> and <code>\"left\"</code>. Collision auto-flip may reposition when space is tight.",
+          "use": "Pick <code>side</code> by available space and the direction of information — <code>top</code>/<code>bottom</code> in dense rows, <code>right</code>/<code>left</code> in narrow columns. Trust auto-flip to avoid overflow."
+        }
       }
     },
     "states": {
@@ -766,6 +812,29 @@
         "default": "Texto explicativo corto — fondo <code>foreground</code>, texto <code>background</code>.",
         "withShortcut": "Texto + atajo (ej. \"Guardar (Ctrl+S)\") — útil para botones con hotkeys.",
         "longText": "Texto que ocupa hasta <code>max-w-xs</code> — quiebre natural sin ser párrafo."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "iconButtonWithShortcut": {
+          "name": "Icon-button con atajo",
+          "description": "Botón icon-only con su propio <code>aria-label</code> y un Tooltip complementario que muestra el atajo de teclado (ej. \"Guardar (Ctrl+S)\"). El Tooltip no sustituye al <code>aria-label</code>.",
+          "use": "Botones de acción rápida en toolbars/headers con hotkey. El <code>aria-label</code> garantiza el anuncio en móvil/AT; el Tooltip refuerza visualmente el atajo para usuarios de mouse y teclado."
+        },
+        "formFieldHelp": {
+          "name": "Campo de form con ayuda",
+          "description": "Icono \"?\" junto al label de un campo, con un Tooltip explicando dónde encontrar o cómo generar el valor esperado. El texto cabe en una línea y usa <code>max-w-xs</code> cuando hace falta.",
+          "use": "Formularios con campos que requieren contexto extra (tokens, IDs, formatos específicos) — sin saturar el label principal ni usar un Popover cuando el contenido es solo texto."
+        },
+        "metricDescription": {
+          "name": "Descripción de métrica",
+          "description": "Icono informativo \"i\" en el encabezado de una métrica/KPI, con un Tooltip que define la sigla o explica el cálculo (ej. \"LCP — Largest Contentful Paint\").",
+          "use": "Dashboards e informes con siglas técnicas — permite descubrimiento pasivo sin ocupar espacio vertical. Para detalles interactivos (links, gráficos), prefiere <code>Popover</code>."
+        },
+        "positioningSides": {
+          "name": "Lados de posicionamiento",
+          "description": "Cuatro triggers lado a lado mostrando <code>side=\"top\"</code>, <code>\"right\"</code>, <code>\"bottom\"</code> y <code>\"left\"</code>. El auto-flip por colisión puede reposicionar cuando hay poco espacio.",
+          "use": "Elige el <code>side</code> según el espacio disponible y la dirección de la información — <code>top</code>/<code>bottom</code> en filas densas, <code>right</code>/<code>left</code> en columnas estrechas. Confía en el auto-flip para evitar overflow."
+        }
       }
     },
     "states": {

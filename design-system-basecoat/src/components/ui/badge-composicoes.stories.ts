@@ -26,7 +26,7 @@ type Story = StoryObj;
 
 type LucideIconNode = [string, Record<string, string>];
 
-function createIcon(nodes: LucideIconNode[], className = 'size-3 mr-1'): SVGSVGElement {
+function createIcon(nodes: LucideIconNode[], className = ''): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -36,7 +36,15 @@ function createIcon(nodes: LucideIconNode[], className = 'size-3 mr-1'): SVGSVGE
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', className);
+  // default sizing: 0.75rem with right margin; consumers may override via className
+  if (!className) {
+    svg.setAttribute('class', 'nds-icon');
+    svg.style.width = '0.75rem';
+    svg.style.height = '0.75rem';
+    svg.style.marginRight = '0.25rem';
+  } else {
+    svg.setAttribute('class', className);
+  }
 
   for (const [tag, attrs] of nodes) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -55,7 +63,7 @@ function makeBadge(variant: BadgeVariant, ...children: Array<string | HTMLElemen
 export const WithIcon: Story = {
   render: () => {
     const icon = createIcon(Check as unknown as LucideIconNode[]);
-    return makeBadge('default', icon, 'Ativo');
+    return makeBadge('default', icon as unknown as HTMLElement, 'Ativo');
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -72,9 +80,13 @@ export const CountBadge: Story = {
     const wrap = document.createElement('span');
     wrap.setAttribute('role', 'status');
     wrap.setAttribute('aria-label', '12 notificações não lidas');
-    wrap.className = 'inline-flex items-center gap-2';
+    wrap.className = 'nds-cluster';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.display = 'inline-flex';
 
-    const bell = createIcon(Bell as unknown as LucideIconNode[], 'size-5 text-foreground');
+    const bell = createIcon(Bell as unknown as LucideIconNode[], 'nds-text-foreground');
+    bell.style.width = '1.25rem';
+    bell.style.height = '1.25rem';
     bell.removeAttribute('aria-hidden');
     bell.setAttribute('aria-hidden', 'true');
 
@@ -96,7 +108,7 @@ export const AsLink: Story = {
   render: () => {
     const link = document.createElement('a');
     link.href = '#design';
-    link.className = 'inline-flex';
+    link.style.display = 'inline-flex';
     link.setAttribute('aria-label', 'Ver todos os itens da categoria Design');
     link.appendChild(createBadge({ variant: 'secondary', children: 'Design' }));
     return link;
@@ -118,7 +130,10 @@ export const AsButton: Story = {
   render: () => {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus:outline-none rounded-md';
+    btn.className = 'nds-bg-transparent nds-cursor-pointer nds-rounded-md';
+    btn.style.display = 'inline-flex';
+    btn.style.padding = '0';
+    btn.style.border = '0';
     btn.setAttribute('aria-label', 'Filtrar por React');
     btn.appendChild(createBadge({ variant: 'outline', children: 'React' }));
     return btn;

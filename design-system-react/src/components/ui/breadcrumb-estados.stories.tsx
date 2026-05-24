@@ -33,7 +33,7 @@ type Story = StoryObj<typeof meta>;
 export const Simple: Story = {
   args: {
     onNavigate: fn(),
-  },
+  } as never,
   render: (args) => (
     <Breadcrumb>
       <BreadcrumbList>

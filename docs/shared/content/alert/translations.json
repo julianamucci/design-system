@@ -120,12 +120,35 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponíveis",
-      "note": "O Alert tem 2 variantes nativas (<code>default</code> e <code>destructive</code>). As variantes <code>success</code> e <code>warning</code> são implementadas via <code>className</code> com tokens semânticos do projeto.",
+      "note": "O Alert tem 2 variantes nativas (<code>default</code> e <code>destructive</code>). As variantes <code>success</code> e <code>warning</code> são aplicadas via classe de variante do tema, definida no CSS do projeto a partir dos tokens semânticos <code>--success</code> e <code>--warning</code>.",
       "items": {
         "default": "Mensagens informativas e neutras. Fundo e borda do tema padrão.",
-        "destructive": "Erros críticos ou ações irreversíveis. Texto e borda vermelhos.",
-        "success": "Confirmações de ações bem-sucedidas. Via <code>className=\"bg-success/10 text-success border-success/30\"</code>.",
-        "warning": "Avisos que requerem atenção, mas não bloqueiam. Via <code>className=\"bg-warning/10 text-warning border-warning/30\"</code>."
+        "destructive": "Erros críticos ou ações irreversíveis. Texto e borda na cor <code>--destructive</code>.",
+        "success": "Confirmações de ações bem-sucedidas. Aplica a variante <code>success</code> do tema, baseada no token <code>--success</code>.",
+        "warning": "Avisos que requerem atenção, mas não bloqueiam. Aplica a variante <code>warning</code> do tema, baseada no token <code>--warning</code>."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withIcon": {
+          "name": "Com ícone",
+          "description": "Ícone SVG como filho direto, posicionado automaticamente à esquerda. Reforça visualmente a severidade da mensagem.",
+          "use": "Padrão recomendado — sempre inclua ícone para sinalizar o tipo de mensagem (info, sucesso, erro, aviso)."
+        },
+        "withAction": {
+          "name": "Com ação",
+          "description": "Alert que inclui um botão de ação dentro da <code>AlertDescription</code>, alinhado à direita. A ação é opcional, secundária ao texto e deve ser <code>Button</code> de tamanho <code>sm</code> e variante <code>outline</code>.",
+          "use": "Quando a mensagem oferece uma ação contextual relacionada (\"Salvar agora\", \"Tentar de novo\", \"Ver detalhes\"). Evite mais de uma ação por Alert — para fluxos críticos, use Dialog."
+        },
+        "compact": {
+          "name": "Sem título (compacto)",
+          "description": "Variante <code>destructive</code> com apenas ícone e descrição, sem AlertTitle. Reduz o espaço vertical.",
+          "use": "Erros curtos e autoexplicativos onde o título seria redundante (ex.: validação de formulário inline)."
+        },
+        "multipleTypes": {
+          "name": "Múltiplos tipos lado a lado",
+          "description": "Vários Alerts empilhados verticalmente, um para cada variante semântica (<code>info</code>, <code>destructive</code>, <code>success</code>, <code>warning</code>). Cada Alert mantém ícone + título + descrição com a cor da própria severidade.",
+          "use": "Comparação visual de severidades em uma mesma tela (ex.: lista de notificações ou histórico de mensagens). Em produção, prefira agrupar por contexto: misturar várias severidades juntas dilui o significado de cada uma."
+        }
       }
     },
     "states": {
@@ -169,25 +192,25 @@
         "required": "Obrigatório",
         "description": "Descrição",
         "variant": "Variante visual: <code>\"default\"</code> para informativo, <code>\"destructive\"</code> para erro.",
-        "className": "Classes Tailwind adicionais — use para variantes success/warning com tokens do projeto.",
+        "className": "Classes CSS adicionais — use para aplicar variantes do tema (ex: <code>success</code>, <code>warning</code>) ou customizações pontuais.",
         "children": "Conteúdo do Alert: ícone, AlertTitle e AlertDescription."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Use tokens semânticos (<code>bg-success/10</code>, <code>text-warning</code>) para variantes não nativas — nunca cores hardcoded."
+      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Prefira as classes de variante do tema ou tokens CSS semânticos (<code>--success</code>, <code>--warning</code>) definidos no arquivo de tema do projeto — nunca cores hardcoded."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Aplicação no tema",
         "part": "Parte do componente",
         "background": "Fundo (variante default)",
         "foreground": "Texto (variante default)",
         "border": "Borda padrão",
         "destructiveBorder": "Borda (variante destructive)",
         "destructiveText": "Texto e ícone (variante destructive)",
-        "success": "Fundo + texto + borda (success via className)",
-        "warning": "Fundo + texto + borda (warning via className)",
+        "success": "Fundo + texto + borda (variante success do tema)",
+        "warning": "Fundo + texto + borda (variante warning do tema)",
         "radius": "Border radius do container"
       },
       "customizationTitle": "Como personalizar via tema:"
@@ -200,7 +223,7 @@
       "item2": "<strong>Inserção dinâmica</strong> — para alerts inseridos após a montagem, adicione <code>aria-live=\"polite\"</code> no container pai. Use <code>aria-live=\"assertive\"</code> apenas para erros críticos que bloqueiam o fluxo.",
       "item3": "<strong>Ícones decorativos</strong> — sempre <code>aria-hidden=\"true\"</code>. O texto da <code>AlertDescription</code> já descreve o estado.",
       "item4": "<strong>Cor + ícone + texto</strong> — nunca use cor como único indicador (WCAG 1.4.1). Cada variante deve ter ícone e texto correspondentes.",
-      "item5": "<strong>Contraste</strong> — variante default: 4.5:1 (texto sobre fundo). Variante destructive: cumpre 4.5:1 com <code>text-destructive</code>.",
+      "item5": "<strong>Contraste</strong> — variante default: 4.5:1 (texto sobre fundo). Demais variantes mantêm o texto corrido em <code>--foreground</code> sobre fundo soft para garantir 4.5:1.",
       "keyboard": {
         "tab": "Navega para links ou botões dentro do Alert, se houver.",
         "enter": "Ativa links ou botões internos ao Alert.",
@@ -229,8 +252,8 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "Para variantes success e warning, use tokens semânticos do projeto (<code>bg-success/10</code>, <code>text-warning</code>) — nunca cores hardcoded. Isso garante consistência no dark mode.",
-      "tip2": "O ícone deve ser filho direto do Alert — não envolva em <code>&lt;div&gt;</code>. O CSS do Shadcn usa <code>[&gt;svg]</code> para posicionamento automático.",
+      "tip1": "Para variantes success e warning, use as classes de variante do tema baseadas nos tokens <code>--success</code> e <code>--warning</code> — nunca cores hardcoded. Isso garante consistência no dark mode.",
+      "tip2": "O ícone deve ser filho direto do Alert — não envolva em <code>&lt;div&gt;</code>. O CSS do componente posiciona o SVG automaticamente via seletor de filho direto.",
       "tip3": "Em formulários, prefira inserir o Alert acima dos campos com erro, não dentro deles — o <code>role=\"alert\"</code> anuncia imediatamente ao foco mudar para a região."
     },
     "analytics": {
@@ -259,11 +282,11 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Alert.",
-        "item1": { "action": "Renderizar variante default", "result": "Container com bg-background, borda padrão, texto foreground", "priority": "high" },
-        "item2": { "action": "Renderizar variante destructive", "result": "Texto e borda com cor destructive; ícone com text-destructive", "priority": "high" },
-        "item3": { "action": "Renderizar com ícone filho direto", "result": "Ícone posicionado à esquerda via CSS [&>svg]:absolute [&>svg]:left-4", "priority": "high" },
+        "item1": { "action": "Renderizar variante default", "result": "Container usa --background, borda padrão e texto em --foreground", "priority": "high" },
+        "item2": { "action": "Renderizar variante destructive", "result": "Borda e ícone em --destructive; texto corrido em --foreground (contraste 4.5:1)", "priority": "high" },
+        "item3": { "action": "Renderizar com ícone filho direto", "result": "Ícone alinhado à coluna esquerda via CSS do componente (seletor de filho direto)", "priority": "high" },
         "item4": { "action": "Renderizar sem AlertTitle", "result": "AlertDescription ocupa o espaço completo; sem quebra de layout", "priority": "medium" },
-        "item5": { "action": "Renderizar com className de success", "result": "bg-success/10, text-success, border-success/30 aplicados corretamente", "priority": "medium" },
+        "item5": { "action": "Aplicar variante success via className", "result": "Fundo, borda e ícone em --success; texto corrido em --foreground", "priority": "medium" },
         "item6": { "action": "Inserir Alert dinamicamente no DOM", "result": "Leitor de tela anuncia o conteúdo (role=\"alert\" ativo)", "priority": "high" }
       },
       "accessibility": {
@@ -425,12 +448,35 @@
     "variants": {
       "title": "Variants",
       "visualTitle": "Available Variants",
-      "note": "Alert has 2 native variants (<code>default</code> and <code>destructive</code>). The <code>success</code> and <code>warning</code> variants are implemented via <code>className</code> using the project's semantic tokens.",
+      "note": "Alert has 2 native variants (<code>default</code> and <code>destructive</code>). The <code>success</code> and <code>warning</code> variants are applied via the theme's variant class, defined in the project's CSS using the semantic tokens <code>--success</code> and <code>--warning</code>.",
       "items": {
         "default": "Informational and neutral messages. Default theme background and border.",
-        "destructive": "Critical errors or irreversible actions. Red text and border.",
-        "success": "Successful action confirmations. Via <code>className=\"bg-success/10 text-success border-success/30\"</code>.",
-        "warning": "Warnings requiring attention but not blocking. Via <code>className=\"bg-warning/10 text-warning border-warning/30\"</code>."
+        "destructive": "Critical errors or irreversible actions. Text and border in <code>--destructive</code>.",
+        "success": "Successful action confirmations. Applies the theme's <code>success</code> variant, based on the <code>--success</code> token.",
+        "warning": "Warnings requiring attention but not blocking. Applies the theme's <code>warning</code> variant, based on the <code>--warning</code> token."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withIcon": {
+          "name": "With icon",
+          "description": "SVG icon as a direct child, automatically positioned on the left. Visually reinforces the message severity.",
+          "use": "Recommended default — always include an icon to signal the message type (info, success, error, warning)."
+        },
+        "withAction": {
+          "name": "With action",
+          "description": "Alert that includes an action button inside the <code>AlertDescription</code>, right-aligned. The action is optional, secondary to the text, and should be a <code>Button</code> of size <code>sm</code> and variant <code>outline</code>.",
+          "use": "When the message offers a contextual related action (\"Save now\", \"Try again\", \"See details\"). Avoid more than one action per Alert — for critical flows, use Dialog."
+        },
+        "compact": {
+          "name": "Without title (compact)",
+          "description": "<code>destructive</code> variant with only icon and description, no AlertTitle. Reduces vertical space.",
+          "use": "Short, self-explanatory errors where the title would be redundant (e.g., inline form validation)."
+        },
+        "multipleTypes": {
+          "name": "Multiple types side by side",
+          "description": "Several Alerts stacked vertically, one per semantic variant (<code>info</code>, <code>destructive</code>, <code>success</code>, <code>warning</code>). Each Alert keeps its own icon + title + description with the severity color.",
+          "use": "Visual comparison of severities in the same screen (e.g., notifications list or message history). In production, prefer grouping by context — mixing several severities together dilutes the meaning of each one."
+        }
       }
     },
     "states": {
@@ -474,25 +520,25 @@
         "required": "Required",
         "description": "Description",
         "variant": "Visual variant: <code>\"default\"</code> for informational, <code>\"destructive\"</code> for error.",
-        "className": "Additional Tailwind classes — use for success/warning variants with project tokens.",
+        "className": "Additional CSS classes — use to apply theme variants (e.g., <code>success</code>, <code>warning</code>) or local customizations.",
         "children": "Alert content: icon, AlertTitle, and AlertDescription."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. Use semantic tokens (<code>bg-success/10</code>, <code>text-warning</code>) for non-native variants — never hardcoded colors."
+      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. Prefer theme variant classes or semantic CSS tokens (<code>--success</code>, <code>--warning</code>) defined in the project's theme file — never hardcoded colors."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": "Theme application",
         "part": "Component Part",
         "background": "Background (default variant)",
         "foreground": "Text (default variant)",
         "border": "Default border",
         "destructiveBorder": "Border (destructive variant)",
         "destructiveText": "Text and icon (destructive variant)",
-        "success": "Background + text + border (success via className)",
-        "warning": "Background + text + border (warning via className)",
+        "success": "Background + text + border (theme's success variant)",
+        "warning": "Background + text + border (theme's warning variant)",
         "radius": "Container border radius"
       },
       "customizationTitle": "How to customize via theme:"
@@ -505,7 +551,7 @@
       "item2": "<strong>Dynamic insertion</strong> — for alerts inserted after mount, add <code>aria-live=\"polite\"</code> to the parent container. Use <code>aria-live=\"assertive\"</code> only for critical errors that block the flow.",
       "item3": "<strong>Decorative icons</strong> — always <code>aria-hidden=\"true\"</code>. The <code>AlertDescription</code> text already describes the state.",
       "item4": "<strong>Color + icon + text</strong> — never use color as the only indicator (WCAG 1.4.1). Each variant must have a matching icon and text.",
-      "item5": "<strong>Contrast</strong> — default variant: 4.5:1 (text over background). Destructive variant: meets 4.5:1 with <code>text-destructive</code>.",
+      "item5": "<strong>Contrast</strong> — default variant: 4.5:1 (text over background). Other variants keep body text in <code>--foreground</code> over a soft background to ensure 4.5:1.",
       "keyboard": {
         "tab": "Navigates to links or buttons inside the Alert, if any.",
         "enter": "Activates links or buttons inside the Alert.",
@@ -534,8 +580,8 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "For success and warning variants, use project semantic tokens (<code>bg-success/10</code>, <code>text-warning</code>) — never hardcoded colors. This ensures dark mode consistency.",
-      "tip2": "The icon must be a direct child of Alert — don't wrap in a <code>&lt;div&gt;</code>. Shadcn CSS uses <code>[&gt;svg]</code> selectors for automatic positioning.",
+      "tip1": "For success and warning variants, use the theme variant classes based on the <code>--success</code> and <code>--warning</code> tokens — never hardcoded colors. This ensures dark mode consistency.",
+      "tip2": "The icon must be a direct child of Alert — don't wrap in a <code>&lt;div&gt;</code>. The component's CSS positions the SVG automatically via a direct-child selector.",
       "tip3": "In forms, prefer inserting the Alert above the error fields, not inside them — the <code>role=\"alert\"</code> announces immediately when focus moves to the region."
     },
     "analytics": {
@@ -564,11 +610,11 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Alert configuration.",
-        "item1": { "action": "Render default variant", "result": "Container with bg-background, default border, foreground text", "priority": "high" },
-        "item2": { "action": "Render destructive variant", "result": "Text and border with destructive color; icon with text-destructive", "priority": "high" },
-        "item3": { "action": "Render with direct icon child", "result": "Icon positioned left via CSS [&>svg]:absolute [&>svg]:left-4", "priority": "high" },
+        "item1": { "action": "Render default variant", "result": "Container uses --background, default border, and --foreground text", "priority": "high" },
+        "item2": { "action": "Render destructive variant", "result": "Border and icon in --destructive; body text in --foreground (4.5:1 contrast)", "priority": "high" },
+        "item3": { "action": "Render with direct icon child", "result": "Icon aligned to the left column via the component's CSS (direct-child selector)", "priority": "high" },
         "item4": { "action": "Render without AlertTitle", "result": "AlertDescription fills available space; no layout break", "priority": "medium" },
-        "item5": { "action": "Render with success className", "result": "bg-success/10, text-success, border-success/30 applied correctly", "priority": "medium" },
+        "item5": { "action": "Apply success variant via className", "result": "Background, border, and icon in --success; body text in --foreground", "priority": "medium" },
         "item6": { "action": "Insert Alert dynamically in DOM", "result": "Screen reader announces content (active role=\"alert\")", "priority": "high" }
       },
       "accessibility": {
@@ -730,12 +776,35 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponibles",
-      "note": "Alert tiene 2 variantes nativas (<code>default</code> y <code>destructive</code>). Las variantes <code>success</code> y <code>warning</code> se implementan vía <code>className</code> con tokens semánticos del proyecto.",
+      "note": "Alert tiene 2 variantes nativas (<code>default</code> y <code>destructive</code>). Las variantes <code>success</code> y <code>warning</code> se aplican vía la clase de variante del tema, definida en el CSS del proyecto usando los tokens semánticos <code>--success</code> y <code>--warning</code>.",
       "items": {
         "default": "Mensajes informativos y neutros. Fondo y borde del tema predeterminado.",
-        "destructive": "Errores críticos o acciones irreversibles. Texto y borde en rojo.",
-        "success": "Confirmaciones de acciones exitosas. Vía <code>className=\"bg-success/10 text-success border-success/30\"</code>.",
-        "warning": "Advertencias que requieren atención pero no bloquean. Vía <code>className=\"bg-warning/10 text-warning border-warning/30\"</code>."
+        "destructive": "Errores críticos o acciones irreversibles. Texto y borde en color <code>--destructive</code>.",
+        "success": "Confirmaciones de acciones exitosas. Aplica la variante <code>success</code> del tema, basada en el token <code>--success</code>.",
+        "warning": "Advertencias que requieren atención pero no bloquean. Aplica la variante <code>warning</code> del tema, basada en el token <code>--warning</code>."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withIcon": {
+          "name": "Con ícono",
+          "description": "Ícono SVG como hijo directo, posicionado automáticamente a la izquierda. Refuerza visualmente la severidad del mensaje.",
+          "use": "Predeterminado recomendado — incluye siempre un ícono para señalar el tipo de mensaje (info, éxito, error, aviso)."
+        },
+        "withAction": {
+          "name": "Con acción",
+          "description": "Alert que incluye un botón de acción dentro de <code>AlertDescription</code>, alineado a la derecha. La acción es opcional, secundaria al texto, y debe ser un <code>Button</code> de tamaño <code>sm</code> y variante <code>outline</code>.",
+          "use": "Cuando el mensaje ofrece una acción contextual relacionada (\"Guardar ahora\", \"Reintentar\", \"Ver detalles\"). Evita más de una acción por Alert — para flujos críticos, usa Dialog."
+        },
+        "compact": {
+          "name": "Sin título (compacto)",
+          "description": "Variante <code>destructive</code> con solo ícono y descripción, sin AlertTitle. Reduce el espacio vertical.",
+          "use": "Errores cortos y autoexplicativos donde el título sería redundante (ej.: validación de formulario inline)."
+        },
+        "multipleTypes": {
+          "name": "Múltiples tipos lado a lado",
+          "description": "Varios Alerts apilados verticalmente, uno por variante semántica (<code>info</code>, <code>destructive</code>, <code>success</code>, <code>warning</code>). Cada Alert mantiene ícono + título + descripción con el color de su severidad.",
+          "use": "Comparación visual de severidades en la misma pantalla (ej.: lista de notificaciones o historial). En producción, prefiere agrupar por contexto: mezclar varias severidades diluye el significado de cada una."
+        }
       }
     },
     "states": {
@@ -779,25 +848,25 @@
         "required": "Obligatorio",
         "description": "Descripción",
         "variant": "Variante visual: <code>\"default\"</code> para informativo, <code>\"destructive\"</code> para error.",
-        "className": "Clases Tailwind adicionales — usar para variantes success/warning con tokens del proyecto.",
+        "className": "Clases CSS adicionales — usar para aplicar variantes del tema (ej: <code>success</code>, <code>warning</code>) o personalizaciones puntuales.",
         "children": "Contenido del Alert: ícono, AlertTitle y AlertDescription."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Usa tokens semánticos (<code>bg-success/10</code>, <code>text-warning</code>) para variantes no nativas — nunca colores hardcoded."
+      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Prefiere las clases de variante del tema o tokens CSS semánticos (<code>--success</code>, <code>--warning</code>) definidos en el archivo de tema del proyecto — nunca colores hardcoded."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Aplicación en el tema",
         "part": "Parte del componente",
         "background": "Fondo (variante default)",
         "foreground": "Texto (variante default)",
         "border": "Borde predeterminado",
         "destructiveBorder": "Borde (variante destructive)",
         "destructiveText": "Texto e ícono (variante destructive)",
-        "success": "Fondo + texto + borde (success vía className)",
-        "warning": "Fondo + texto + borde (warning vía className)",
+        "success": "Fondo + texto + borde (variante success del tema)",
+        "warning": "Fondo + texto + borde (variante warning del tema)",
         "radius": "Border radius del contenedor"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
@@ -810,7 +879,7 @@
       "item2": "<strong>Inserción dinámica</strong> — para alerts insertados después del montaje, agrega <code>aria-live=\"polite\"</code> al contenedor padre. Usa <code>aria-live=\"assertive\"</code> solo para errores críticos que bloquean el flujo.",
       "item3": "<strong>Íconos decorativos</strong> — siempre <code>aria-hidden=\"true\"</code>. El texto de <code>AlertDescription</code> ya describe el estado.",
       "item4": "<strong>Color + ícono + texto</strong> — nunca uses el color como único indicador (WCAG 1.4.1). Cada variante debe tener ícono y texto correspondientes.",
-      "item5": "<strong>Contraste</strong> — variante default: 4.5:1 (texto sobre fondo). Variante destructive: cumple 4.5:1 con <code>text-destructive</code>.",
+      "item5": "<strong>Contraste</strong> — variante default: 4.5:1 (texto sobre fondo). Las demás variantes mantienen el texto en <code>--foreground</code> sobre fondo soft para garantizar 4.5:1.",
       "keyboard": {
         "tab": "Navega a links o botones dentro del Alert, si los hay.",
         "enter": "Activa links o botones internos al Alert.",
@@ -839,8 +908,8 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "Para las variantes success y warning, usa tokens semánticos del proyecto (<code>bg-success/10</code>, <code>text-warning</code>) — nunca colores hardcoded. Esto garantiza consistencia en dark mode.",
-      "tip2": "El ícono debe ser hijo directo del Alert — no lo envuelvas en un <code>&lt;div&gt;</code>. El CSS de Shadcn usa selectores <code>[&gt;svg]</code> para posicionamiento automático.",
+      "tip1": "Para las variantes success y warning, usa las clases de variante del tema basadas en los tokens <code>--success</code> y <code>--warning</code> — nunca colores hardcoded. Esto garantiza consistencia en dark mode.",
+      "tip2": "El ícono debe ser hijo directo del Alert — no lo envuelvas en un <code>&lt;div&gt;</code>. El CSS del componente posiciona el SVG automáticamente vía un selector de hijo directo.",
       "tip3": "En formularios, prefiere insertar el Alert sobre los campos con error, no dentro de ellos — el <code>role=\"alert\"</code> anuncia inmediatamente cuando el foco se mueve a la región."
     },
     "analytics": {
@@ -869,11 +938,11 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Alert.",
-        "item1": { "action": "Renderizar variante default", "result": "Contenedor con bg-background, borde predeterminado, texto foreground", "priority": "high" },
-        "item2": { "action": "Renderizar variante destructive", "result": "Texto y borde con color destructive; ícono con text-destructive", "priority": "high" },
-        "item3": { "action": "Renderizar con ícono hijo directo", "result": "Ícono posicionado a la izquierda vía CSS [&>svg]:absolute [&>svg]:left-4", "priority": "high" },
+        "item1": { "action": "Renderizar variante default", "result": "Contenedor usa --background, borde predeterminado y texto en --foreground", "priority": "high" },
+        "item2": { "action": "Renderizar variante destructive", "result": "Borde e ícono en --destructive; texto corrido en --foreground (contraste 4.5:1)", "priority": "high" },
+        "item3": { "action": "Renderizar con ícono hijo directo", "result": "Ícono alineado a la columna izquierda vía el CSS del componente (selector de hijo directo)", "priority": "high" },
         "item4": { "action": "Renderizar sin AlertTitle", "result": "AlertDescription ocupa el espacio completo; sin ruptura de layout", "priority": "medium" },
-        "item5": { "action": "Renderizar con className de success", "result": "bg-success/10, text-success, border-success/30 aplicados correctamente", "priority": "medium" },
+        "item5": { "action": "Aplicar variante success vía className", "result": "Fondo, borde e ícono en --success; texto corrido en --foreground", "priority": "medium" },
         "item6": { "action": "Insertar Alert dinámicamente en el DOM", "result": "Lector de pantalla anuncia el contenido (role=\"alert\" activo)", "priority": "high" }
       },
       "accessibility": {

@@ -1,6 +1,7 @@
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { createCard } from '@/components/ui/card';
 import { createBadge } from '@/components/ui/badge';
+import { createKbd } from '@/components/ui/kbd';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
 export interface DocsTestItem { action: string; result: string; priority: string }
@@ -15,45 +16,47 @@ export interface DocsTestesProps {
 }
 
 const priorityBadgeClass = (p: string): string =>
-  ({ Alta: 'bg-red-100 text-red-700 border-red-200', Média: 'bg-yellow-100 text-yellow-700 border-yellow-200', Baixa: 'bg-green-100 text-green-700 border-green-200', High: 'bg-red-100 text-red-700 border-red-200', Medium: 'bg-yellow-100 text-yellow-700 border-yellow-200', Low: 'bg-green-100 text-green-700 border-green-200' } as Record<string, string>)[p] ?? '';
+  ({ Alta: 'nds-badge-high', Média: 'nds-badge-medium', Baixa: 'nds-badge-low', High: 'nds-badge-high', Medium: 'nds-badge-medium', Low: 'nds-badge-low' } as Record<string, string>)[p] ?? 'nds-badge-outline';
 
 export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   const section = document.createElement('section');
   section.id = 'testes';
 
   const h2 = document.createElement('h2');
-  h2.className = 'text-xl font-semibold mb-4';
+  h2.className = 'nds-section-title';
   h2.textContent = props.title;
   section.appendChild(h2);
 
   const container = document.createElement('div');
-  container.className = 'space-y-8';
+  container.className = 'nds-stack';
+  container.dataset.spacing = 'xl';
 
   // ── Functional ──────────────────────────────────────────────────────────────
   const funcBlock = document.createElement('div');
-  funcBlock.className = 'space-y-3';
+  funcBlock.className = 'nds-stack';
+  funcBlock.dataset.spacing = 'sm';
 
   const funcTitle = document.createElement('h3');
-  funcTitle.className = 'text-base font-semibold';
+  funcTitle.className = 'nds-text-base nds-font-semibold';
   funcTitle.textContent = props.functional.title;
   funcBlock.appendChild(funcTitle);
 
-  const funcWrapper = createCard({ className: 'p-4 overflow-x-auto md:overflow-visible' });
-  const { wrapper: funcTableWrapper, table: funcTable } = createTable('w-full text-sm');
+  const funcWrapper = createCard({ className: 'nds-p-4 nds-overflow-x' });
+  const { wrapper: funcTableWrapper, table: funcTable } = createTable('nds-w-full nds-text-body');
 
   const funcThead = createTableHeader();
-  const funcHeaderRow = createTableRow('border-b border-border bg-muted/50 text-left');
-  funcHeaderRow.appendChild(createTableHead(props.functional.cols.action, 'p-3 font-semibold'));
-  funcHeaderRow.appendChild(createTableHead(props.functional.cols.result, 'p-3 font-semibold'));
-  funcHeaderRow.appendChild(createTableHead(props.functional.cols.priority, 'p-3 font-semibold'));
+  const funcHeaderRow = createTableRow('nds-border-b nds-border-default nds-bg-muted-soft');
+  funcHeaderRow.appendChild(createTableHead(props.functional.cols.action, 'nds-p-2 nds-font-semibold'));
+  funcHeaderRow.appendChild(createTableHead(props.functional.cols.result, 'nds-p-2 nds-font-semibold'));
+  funcHeaderRow.appendChild(createTableHead(props.functional.cols.priority, 'nds-p-2 nds-font-semibold'));
   funcThead.appendChild(funcHeaderRow);
 
   const funcTbody = createTableBody();
   props.functional.items.forEach(item => {
-    const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
-    row.appendChild(createTableCell(item.action, 'p-3'));
-    row.appendChild(createTableCell(item.result, 'p-3 text-muted-foreground'));
-    const priorityCell = createTableCell('', 'p-3 font-medium');
+    const row = createTableRow('nds-border-b nds-border-default nds-hover-bg-muted-faint');
+    row.appendChild(createTableCell(item.action, 'nds-p-2'));
+    row.appendChild(createTableCell(item.result, 'nds-p-2 nds-text-muted-foreground'));
+    const priorityCell = createTableCell('', 'nds-p-2 nds-font-medium');
     priorityCell.appendChild(createBadge({ text: item.priority, className: priorityBadgeClass(item.priority) }));
     row.appendChild(priorityCell);
     funcTbody.appendChild(row);
@@ -65,26 +68,32 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
 
   // ── Accessibility ────────────────────────────────────────────────────────────
   const a11yBlock = document.createElement('div');
-  a11yBlock.className = 'space-y-3';
+  a11yBlock.className = 'nds-stack';
+  a11yBlock.dataset.spacing = 'sm';
 
   const a11yTitle = document.createElement('h3');
-  a11yTitle.className = 'text-base font-semibold';
+  a11yTitle.className = 'nds-text-base nds-font-semibold';
   a11yTitle.textContent = props.accessibility.title;
   a11yBlock.appendChild(a11yTitle);
 
   const a11yGrid = document.createElement('div');
-  a11yGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+  a11yGrid.className = 'nds-grid';
+  a11yGrid.dataset.cols = '2';
+  a11yGrid.dataset.spacing = 'sm';
   props.accessibility.items.forEach(item => {
-    const card = createCard({ className: 'bg-muted/30 border-0 shadow-none p-3 space-y-1' });
+    const card = createCard({ className: 'nds-bg-muted-soft nds-border-none nds-shadow-none nds-p-2 nds-stack' });
+    card.dataset.spacing = 'xs';
     const top = document.createElement('div');
-    top.className = 'flex items-center gap-2';
-    const levelBadge = createBadge({ text: item.level, className: 'text-xs font-mono font-bold text-primary border border-primary/20 rounded px-1.5 py-0.5 bg-primary/5' });
+    top.className = 'nds-row';
+    top.dataset.spacing = 'sm';
+    top.dataset.align = 'center';
+    const levelKbd = createKbd({ text: item.level });
     const criterionSpan = document.createElement('span');
-    criterionSpan.className = 'text-sm font-medium';
+    criterionSpan.className = 'nds-text-body nds-font-medium';
     criterionSpan.textContent = item.criterion;
-    top.append(levelBadge, criterionSpan);
+    top.append(levelKbd, criterionSpan);
     const howP = document.createElement('p');
-    howP.className = 'text-xs text-muted-foreground pl-0.5';
+    howP.className = 'nds-text-caption nds-text-muted-foreground';
     howP.textContent = item.how;
     card.append(top, howP);
     a11yGrid.appendChild(card);
@@ -93,27 +102,28 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
 
   // ── Visual ───────────────────────────────────────────────────────────────────
   const visualBlock = document.createElement('div');
-  visualBlock.className = 'space-y-3';
+  visualBlock.className = 'nds-stack';
+  visualBlock.dataset.spacing = 'sm';
 
   const visualTitle = document.createElement('h3');
-  visualTitle.className = 'text-base font-semibold';
+  visualTitle.className = 'nds-text-base nds-font-semibold';
   visualTitle.textContent = props.visual.title;
   visualBlock.appendChild(visualTitle);
 
-  const visualWrapper = createCard({ className: 'p-4 overflow-x-auto md:overflow-visible' });
-  const { wrapper: visualTableWrapper, table: visualTable } = createTable('w-full text-sm');
+  const visualWrapper = createCard({ className: 'nds-p-4 nds-overflow-x' });
+  const { wrapper: visualTableWrapper, table: visualTable } = createTable('nds-w-full nds-text-body');
 
   const visualThead = createTableHeader();
-  const visualHeaderRow = createTableRow('border-b border-border bg-muted/50 text-left');
-  visualHeaderRow.appendChild(createTableHead(props.visual.cols.story, 'p-3 font-semibold'));
-  visualHeaderRow.appendChild(createTableHead(props.visual.cols.priority, 'p-3 font-semibold'));
+  const visualHeaderRow = createTableRow('nds-border-b nds-border-default nds-bg-muted-soft');
+  visualHeaderRow.appendChild(createTableHead(props.visual.cols.story, 'nds-p-2 nds-font-semibold'));
+  visualHeaderRow.appendChild(createTableHead(props.visual.cols.priority, 'nds-p-2 nds-font-semibold'));
   visualThead.appendChild(visualHeaderRow);
 
   const visualTbody = createTableBody();
   props.visual.items.forEach(item => {
-    const row = createTableRow('border-b border-border last:border-0 hover:bg-muted/5');
-    row.appendChild(createTableCell(item.story, 'p-3 font-mono text-xs'));
-    const priorityCell = createTableCell('', 'p-3 font-medium');
+    const row = createTableRow('nds-border-b nds-border-default nds-hover-bg-muted-faint');
+    row.appendChild(createTableCell(item.story, 'nds-p-2'));
+    const priorityCell = createTableCell('', 'nds-p-2 nds-font-medium');
     priorityCell.appendChild(createBadge({ text: item.priority, className: priorityBadgeClass(item.priority) }));
     row.appendChild(priorityCell);
     visualTbody.appendChild(row);

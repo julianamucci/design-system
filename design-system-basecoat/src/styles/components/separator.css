@@ -1,0 +1,27 @@
+/*
+ * ─── nds-separator ──────────────────────────────────────────────────────────
+ * Linha divisória horizontal ou vertical de 1px.
+ *
+ *   <div class="nds-separator" data-orientation="horizontal" role="none"></div>
+ *   <div class="nds-separator" data-orientation="vertical"   role="separator"></div>
+ *
+ * Decorativo por default (role="none" + aria-hidden). Para uso semântico,
+ * usar role="separator" + aria-orientation.
+ *
+ * Tokens: --border
+ */
+
+.nds-separator {
+  flex-shrink: 0;
+  background-color: hsl(var(--border));
+}
+
+.nds-separator[data-orientation="horizontal"] {
+  width: 100%;
+  height: 1px;
+}
+
+.nds-separator[data-orientation="vertical"] {
+  width: 1px;
+  height: 100%;
+}

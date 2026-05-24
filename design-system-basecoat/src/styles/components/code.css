@@ -1,0 +1,40 @@
+/*
+ * ─── Code utilities ──────────────────────────────────────────────────────────
+ * Para texto monoespaçado: code inline em parágrafo, snippet em bloco, kbd.
+ * Tokens: --muted (bg), --foreground (fg), --border (border)
+ */
+
+/* Inline code dentro de prose (<p>, <li>, <td>). */
+.nds-code-inline {
+  font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  font-size: 0.85em;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border) / 0.5);
+  border-radius: 0.25rem;
+  padding: 0.1em 0.3em;
+  white-space: nowrap;
+}
+
+/* Bloco de código standalone — snippet de import/uso, structure code, etc. */
+.nds-code-block {
+  font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  border-radius: 0.625rem;
+  padding: var(--spacing-4);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* Variante embedded — sem bg/borda, dentro de outro card.
+ * Usado quando o bloco já está dentro de um createCard. */
+.nds-code-block-embedded {
+  font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre;
+}

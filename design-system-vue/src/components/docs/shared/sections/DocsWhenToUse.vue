@@ -3,7 +3,7 @@ import { sanitizeHtml } from '@/lib/sanitize-html';
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
-interface DocsWhenToUseScenario { s: string; u: string; a: string }
+interface DocsWhenToUseScenario { s?: string; u?: string; a?: string; scenario?: string; use?: string; alternative?: string }
 interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?: string }
 
 const props = defineProps<{
@@ -49,9 +49,9 @@ const props = defineProps<{
             </TableHeader>
             <TableBody>
               <TableRow v-for="(item, i) in scenarios.items" :key="i" class="border-b border-border last:border-0 hover:bg-muted/5">
-                <TableCell class="p-3">{{ item.s }}</TableCell>
-                <TableCell class="p-3 font-medium text-primary">{{ item.u }}</TableCell>
-                <TableCell class="p-3 text-muted-foreground">{{ item.a }}</TableCell>
+                <TableCell class="p-3">{{ item.s ?? item.scenario }}</TableCell>
+                <TableCell class="p-3 font-medium text-primary">{{ item.u ?? item.use }}</TableCell>
+                <TableCell class="p-3 text-muted-foreground">{{ item.a ?? item.alternative }}</TableCell>
               </TableRow>
             </TableBody>
           </Table>

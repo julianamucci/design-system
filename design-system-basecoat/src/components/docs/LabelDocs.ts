@@ -47,7 +47,8 @@ function priorityLabel(raw: string): string {
 
 function buildLabelWithInput(labelText: string, inputId: string, opts: { required?: boolean; disabled?: boolean } = {}): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex flex-col gap-2 w-full max-w-xs';
+  wrapper.className = 'nds-stack nds-w-full nds-max-w-xs';
+  wrapper.dataset.spacing = 'xs';
 
   if (opts.disabled) {
     // peer-disabled pattern: input (with peer class) BEFORE label
@@ -68,7 +69,8 @@ function buildLabelWithInput(labelText: string, inputId: string, opts: { require
       const textNode = document.createTextNode(labelText);
       const asterisk = document.createElement('span');
       asterisk.setAttribute('aria-hidden', 'true');
-      asterisk.className = 'text-destructive ml-0.5';
+      asterisk.className = 'nds-text-destructive';
+      asterisk.style.marginLeft = 'var(--spacing-0-5)';
       asterisk.textContent = '*';
       label.append(textNode, asterisk);
     } else {
@@ -183,7 +185,7 @@ export function createLabelDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'w-full space-y-4';
+            wrap.className = 'nds-stack nds-w-full';
 
             // Default label
             wrap.appendChild(buildLabelWithInput(t('demonstration.labels.default'), 'demo-default'));
@@ -260,7 +262,8 @@ export function createLabelDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col gap-2 w-full max-w-xs';
+                wrap.className = 'nds-stack nds-w-full nds-max-w-xs';
+                wrap.dataset.spacing = 'xs';
                 const label = createLabel({ text: 'Email', htmlFor: 'dodont-do-1-input' });
                 const input = createInput({ id: 'dodont-do-1-input', type: 'email', placeholder: 'seu@email.com' });
                 wrap.append(label, input);
@@ -268,7 +271,8 @@ export function createLabelDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col gap-2 w-full max-w-xs';
+                wrap.className = 'nds-stack nds-w-full nds-max-w-xs';
+                wrap.dataset.spacing = 'xs';
                 // Label without htmlFor — no association
                 const label = createLabel({ text: 'Email' });
                 const input = createInput({ type: 'email', placeholder: 'seu@email.com' });
@@ -283,7 +287,8 @@ export function createLabelDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col gap-2 w-full max-w-xs';
+                wrap.className = 'nds-stack nds-w-full nds-max-w-xs';
+                wrap.dataset.spacing = 'xs';
                 const label = createLabel({ text: 'Nome completo', htmlFor: 'dodont-do-2-input' });
                 const input = createInput({ id: 'dodont-do-2-input', placeholder: 'Maria Silva' });
                 wrap.append(label, input);
@@ -291,7 +296,8 @@ export function createLabelDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col gap-2 w-full max-w-xs';
+                wrap.className = 'nds-stack nds-w-full nds-max-w-xs';
+                wrap.dataset.spacing = 'xs';
                 const label = createLabel({ text: 'Informe seu nome completo', htmlFor: 'dodont-dont-2-input' });
                 const input = createInput({ id: 'dodont-dont-2-input', placeholder: 'Informe seu nome completo' });
                 wrap.append(label, input);
@@ -309,7 +315,7 @@ export function createLabelDocs(): HTMLElement {
 
       case 'variantes': {
         const codeDefault = `const label = createLabel({ text: 'Nome completo', htmlFor: 'nome' });\nconst input = createInput({ id: 'nome', type: 'text' });\nwrapper.append(label, input);`;
-        const codeRequired = `const label = createLabel({ htmlFor: 'email' });\nconst textNode = document.createTextNode('Email profissional');\nconst asterisk = document.createElement('span');\nasterisk.setAttribute('aria-hidden', 'true');\nasterisk.className = 'text-destructive ml-0.5';\nasterisk.textContent = '*';\nlabel.append(textNode, asterisk);\nconst input = createInput({ id: 'email', type: 'email' });\ninput.setAttribute('aria-required', 'true');`;
+        const codeRequired = `const label = createLabel({ htmlFor: 'email' });\nconst textNode = document.createTextNode('Email profissional');\nconst asterisk = document.createElement('span');\nasterisk.setAttribute('aria-hidden', 'true');\nasterisk.className = 'nds-text-destructive';\nasterisk.style.marginLeft = 'var(--spacing-0-5)';\nasterisk.textContent = '*';\nlabel.append(textNode, asterisk);\nconst input = createInput({ id: 'email', type: 'email' });\ninput.setAttribute('aria-required', 'true');`;
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -418,6 +424,7 @@ export function createLabelDocs(): HTMLElement {
             t('accessibility.item3'),
             t('accessibility.item4'),
           ],
+          keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',  description: t('accessibility.keyboard.tab') },
             { key: '—',    description: t('accessibility.keyboard.noKeyboard') },

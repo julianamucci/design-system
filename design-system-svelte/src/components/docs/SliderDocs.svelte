@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Slider } from '@/components/ui/slider';
   import { Label } from '@/components/ui/label';
+  import { Button } from '@/components/ui/button';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -8,7 +9,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -59,6 +60,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -98,6 +100,17 @@
   let demoBrightness = $state<number[]>([70]);
   let demoPriceRange = $state<number[]>([100, 400]);
 
+  // Composições
+  let compVolume = $state<number[]>([50]);
+  let compBrightness = $state<number[]>([75]);
+  let compPrice = $state<number[]>([100, 400]);
+  let compFormVolume = $state<number[]>([60]);
+  let compFormCommitted = $state<number>(60);
+  function onCompFormSubmit(e: SubmitEvent) {
+    e.preventDefault();
+    compFormCommitted = compFormVolume[0];
+  }
+
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImport = `import { Slider } from "@/components/ui/slider";`;
@@ -123,6 +136,54 @@
     aria-label="Brilho"
   />
 </div>`;
+
+  const codeCompVolume = `<script lang="ts">
+  let value = $state([50]);
+<\/script>
+
+<div class="space-y-3 w-72">
+  <div class="flex items-center justify-between">
+    <Label>Volume</Label>
+    <span aria-live="polite" class="text-sm tabular-nums">{value[0]}%</span>
+  </div>
+  <Slider bind:value min={0} max={100} aria-label="Volume" />
+</div>`;
+
+  const codeCompBrightness = `<Slider
+  bind:value
+  min={0}
+  max={100}
+  step={5}
+  aria-label="Brilho"
+/>`;
+
+  const codeCompPrice = `<script lang="ts">
+  let range = $state([100, 400]);
+<\/script>
+
+<Slider
+  bind:value={range}
+  min={0}
+  max={1000}
+  step={10}
+  aria-label="Faixa de preço"
+/>`;
+
+  const codeCompForm = `<form aria-label="Configurações de áudio" onsubmit={onSubmit}>
+  <Label>Volume</Label>
+  <Slider
+    bind:value
+    onValueCommit={(v) => track('slider_change', {
+      component: 'slider',
+      field_name: 'volume',
+      value: v[0],
+    })}
+    min={0}
+    max={100}
+    aria-label="Volume"
+  />
+  <Button type="submit">Salvar</Button>
+</form>`;
 
   const interfaceCode = `// Slider (root, bits-ui)
 interface SliderProps {
@@ -380,6 +441,101 @@ interface SliderProps {
     <div class="h-40 flex justify-center">
       <Slider value={[50]} orientation="vertical" min={0} max={100} aria-label="Brilho" />
     </div>
+  {/snippet}
+
+  <!-- ── Composições ────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="slider"
+    items={[
+      {
+        name: $tStore('variants.compositions.volume.name'),
+        description: $tStore('variants.compositions.volume.description'),
+        useWhen: $tStore('variants.compositions.volume.use'),
+        code: codeCompVolume,
+        preview: compVolumePreview,
+      },
+      {
+        name: $tStore('variants.compositions.brightness.name'),
+        description: $tStore('variants.compositions.brightness.description'),
+        useWhen: $tStore('variants.compositions.brightness.use'),
+        code: codeCompBrightness,
+        preview: compBrightnessPreview,
+      },
+      {
+        name: $tStore('variants.compositions.priceRange.name'),
+        description: $tStore('variants.compositions.priceRange.description'),
+        useWhen: $tStore('variants.compositions.priceRange.use'),
+        code: codeCompPrice,
+        preview: compPricePreview,
+      },
+      {
+        name: $tStore('variants.compositions.form.name'),
+        description: $tStore('variants.compositions.form.description'),
+        useWhen: $tStore('variants.compositions.form.use'),
+        code: codeCompForm,
+        preview: compFormPreview,
+      },
+    ]}
+  />
+
+  {#snippet compVolumePreview()}
+    <div class="space-y-3 w-72">
+      <div class="flex items-center justify-between">
+        <Label>Volume</Label>
+        <span aria-live="polite" class="text-sm tabular-nums">{compVolume[0]}%</span>
+      </div>
+      <Slider bind:value={compVolume} min={0} max={100} aria-label="Volume" />
+    </div>
+  {/snippet}
+
+  {#snippet compBrightnessPreview()}
+    <div class="space-y-3 w-72">
+      <div class="flex items-center justify-between">
+        <Label>Brilho</Label>
+        <span aria-live="polite" class="text-sm tabular-nums">{compBrightness[0]}%</span>
+      </div>
+      <Slider bind:value={compBrightness} min={0} max={100} step={5} aria-label="Brilho" />
+    </div>
+  {/snippet}
+
+  {#snippet compPricePreview()}
+    <div class="space-y-3 w-72">
+      <div class="flex items-center justify-between">
+        <Label>Faixa de preço</Label>
+        <span aria-live="polite" class="text-sm tabular-nums">
+          R$ {compPrice[0]} — R$ {compPrice[1]}
+        </span>
+      </div>
+      <Slider bind:value={compPrice} min={0} max={1000} step={10} aria-label="Faixa de preço" />
+    </div>
+  {/snippet}
+
+  {#snippet compFormPreview()}
+    <form
+      aria-label="Configurações de áudio"
+      class="flex flex-col gap-4 w-72"
+      onsubmit={onCompFormSubmit}
+    >
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <Label>Volume</Label>
+          <span aria-live="polite" class="text-sm tabular-nums">{compFormVolume[0]}%</span>
+        </div>
+        <Slider
+          bind:value={compFormVolume}
+          onValueCommit={(v: number[]) => (compFormCommitted = v[0])}
+          min={0}
+          max={100}
+          aria-label="Volume"
+        />
+      </div>
+      <Button type="submit" size="sm" class="self-start">Salvar</Button>
+      <p class="text-xs text-muted-foreground" aria-live="polite">
+        Último commit: {compFormCommitted}%
+      </p>
+    </form>
   {/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->

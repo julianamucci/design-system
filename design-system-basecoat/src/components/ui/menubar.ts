@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── Menubar — Vanilla factory standalone ───────────────────────────────────
+// Visual: classes .nds-menubar-* (zero Tailwind/basecoat-css).
+// Painel oculto via `hidden` attribute; teclado: Arrow/Escape; click fora fecha.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -18,21 +20,6 @@ export type MenubarMenu = {
   items: MenubarItem[];
 };
 
-// ─── Classes ──────────────────────────────────────────────────────────────────
-
-const ROOT_CLASS = 'flex h-9 items-center space-x-1 rounded-md border bg-background p-1 shadow-sm';
-const TRIGGER_CLASS =
-  'flex cursor-default select-none items-center rounded-sm px-3 py-1 text-sm font-medium outline-none ' +
-  'focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground';
-const PANEL_CLASS =
-  'absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md hidden';
-const MENU_ITEM_CLASS =
-  'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none ' +
-  'focus:bg-accent focus:text-accent-foreground hover:bg-accent hover:text-accent-foreground';
-const SEPARATOR_CLASS = '-mx-1 my-1 h-px bg-muted';
-const LABEL_CLASS = 'px-2 py-1.5 text-sm font-semibold text-muted-foreground';
-const SHORTCUT_CLASS = 'ml-auto text-xs tracking-widest text-muted-foreground opacity-60';
-
 let _menubarCounter = 0;
 
 // ─── createMenubar ────────────────────────────────────────────────────────────
@@ -42,13 +29,14 @@ export function createMenubar(menus: MenubarMenu[], options?: { class?: string }
   const root = document.createElement('div');
   root.dataset.slot = 'menubar';
   root.setAttribute('role', 'menubar');
-  root.className = cn(ROOT_CLASS, options?.class);
+  root.className = 'nds-menubar';
+  if (options?.class) root.classList.add(...options.class.split(' ').filter(Boolean));
 
   let openMenu: { panel: HTMLElement; trigger: HTMLElement } | null = null;
 
   function closeAll(): void {
     if (!openMenu) return;
-    openMenu.panel.classList.add('hidden');
+    openMenu.panel.hidden = true;
     openMenu.trigger.dataset.state = 'closed';
     openMenu.trigger.setAttribute('aria-expanded', 'false');
     openMenu = null;
@@ -57,11 +45,11 @@ export function createMenubar(menus: MenubarMenu[], options?: { class?: string }
   menus.forEach((menu, menuIdx) => {
     const panelId = `menubar-panel-${id}-${menuIdx}`;
     const itemWrapper = document.createElement('div');
-    itemWrapper.style.position = 'relative';
+    itemWrapper.className = 'nds-menubar-menu';
 
     const trigger = document.createElement('button');
     trigger.type = 'button';
-    trigger.className = TRIGGER_CLASS;
+    trigger.className = 'nds-menubar-trigger';
     trigger.setAttribute('role', 'menuitem');
     trigger.setAttribute('aria-haspopup', 'true');
     trigger.setAttribute('aria-controls', panelId);
@@ -71,18 +59,16 @@ export function createMenubar(menus: MenubarMenu[], options?: { class?: string }
 
     const panel = document.createElement('div');
     panel.id = panelId;
-    panel.className = PANEL_CLASS;
+    panel.className = 'nds-menubar-panel';
     panel.setAttribute('role', 'menu');
-    panel.style.top = '100%';
-    panel.style.left = '0';
-    panel.style.marginTop = '4px';
+    panel.hidden = true;
 
     const panelItems: HTMLElement[] = [];
 
     menu.items.forEach((item) => {
       if (item.type === 'separator') {
         const sep = document.createElement('div');
-        sep.className = SEPARATOR_CLASS;
+        sep.className = 'nds-menubar-separator';
         sep.setAttribute('role', 'separator');
         panel.appendChild(sep);
         return;
@@ -90,7 +76,7 @@ export function createMenubar(menus: MenubarMenu[], options?: { class?: string }
 
       if (item.type === 'label') {
         const label = document.createElement('div');
-        label.className = LABEL_CLASS;
+        label.className = 'nds-menubar-label';
         label.textContent = item.label ?? '';
         panel.appendChild(label);
         return;
@@ -99,10 +85,8 @@ export function createMenubar(menus: MenubarMenu[], options?: { class?: string }
       const itemEl = document.createElement('div');
       itemEl.setAttribute('role', 'menuitem');
       itemEl.setAttribute('tabindex', item.disabled ? '-1' : '0');
-      itemEl.className = cn(
-        MENU_ITEM_CLASS,
-        item.disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer'
-      );
+      itemEl.className = 'nds-menubar-item';
+      if (item.disabled) itemEl.setAttribute('aria-disabled', 'true');
 
       const labelSpan = document.createElement('span');
       labelSpan.textContent = item.label ?? '';
@@ -110,7 +94,7 @@ export function createMenubar(menus: MenubarMenu[], options?: { class?: string }
 
       if (item.shortcut) {
         const shortcut = document.createElement('span');
-        shortcut.className = SHORTCUT_CLASS;
+        shortcut.className = 'nds-menubar-shortcut';
         shortcut.textContent = item.shortcut;
         itemEl.appendChild(shortcut);
       }
@@ -153,7 +137,7 @@ export function createMenubar(menus: MenubarMenu[], options?: { class?: string }
       const isOpen = trigger.dataset.state === 'open';
       closeAll();
       if (!isOpen) {
-        panel.classList.remove('hidden');
+        panel.hidden = false;
         trigger.dataset.state = 'open';
         trigger.setAttribute('aria-expanded', 'true');
         openMenu = { panel, trigger };

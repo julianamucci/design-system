@@ -32,7 +32,7 @@ const meta = {
     placeholder: 'ex: João da Silva',
     disabled: false,
   },
-} satisfies Meta<typeof Input>;
+} satisfies Meta<any>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

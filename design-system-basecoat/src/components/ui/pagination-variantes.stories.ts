@@ -25,7 +25,8 @@ type Story = StoryObj;
 function wrap(child: HTMLElement, minHeight = 100): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full flex items-center justify-center p-2';
+  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
+  wrapper.dataset.justify = 'center';
   wrapper.style.minHeight = `${minHeight}px`;
   wrapper.appendChild(child);
   return wrapper;
@@ -69,7 +70,7 @@ export const Active: Story = {
     // Reforça visualmente o "outline" da variante active (factory marca apenas
     // aria-current + pointer-events-none — aqui acrescentamos border para parity).
     const current = nav.querySelector<HTMLAnchorElement>('a[aria-current="page"]');
-    if (current) current.classList.add('border', 'border-input');
+    if (current) current.classList.add('nds-border-default');
     return wrap(nav);
   },
   play: async ({ canvasElement, step }) => {

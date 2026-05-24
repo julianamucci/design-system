@@ -6,10 +6,15 @@ import { createCard, createCardContent, createCardHeader, createCardTitle, creat
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
 function buildSlide(label: string): HTMLElement {
-  const card = createCard({ className: 'w-full aspect-video flex items-center justify-center bg-muted/50' });
-  const content = createCardContent({ className: 'flex items-center justify-center' });
+  const card = createCard({ className: 'nds-w-full nds-cluster nds-bg-muted-soft' });
+  card.dataset.align = 'center';
+  card.dataset.justify = 'center';
+  card.style.aspectRatio = '16 / 9';
+  const content = createCardContent({ className: 'nds-cluster' });
+  content.dataset.align = 'center';
+  content.dataset.justify = 'center';
   const span = document.createElement('span');
-  span.className = 'text-3xl font-semibold text-foreground';
+  span.className = 'nds-text-h2 nds-font-semibold nds-text-foreground';
   span.textContent = label;
   content.appendChild(span);
   card.appendChild(content);
@@ -43,11 +48,15 @@ export const ComDots: Story = {
   render: () => {
     const total = 5;
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md space-y-3';
+    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.dataset.spacing = 'sm';
 
     // Container dos dots (alimentado via onIndexChange)
     const dotsRow = document.createElement('div');
-    dotsRow.className = 'flex items-center justify-center gap-2';
+    dotsRow.className = 'nds-cluster';
+    dotsRow.dataset.align = 'center';
+    dotsRow.dataset.justify = 'center';
+    dotsRow.dataset.spacing = 'sm';
     dotsRow.setAttribute('aria-label', 'Ir para o slide');
 
     const dots: HTMLButtonElement[] = [];
@@ -55,7 +64,13 @@ export const ComDots: Story = {
       const dot = document.createElement('button');
       dot.type = 'button';
       dot.setAttribute('aria-label', `Ir para o slide ${i + 1} de ${total}`);
-      dot.className = 'h-2 w-2 rounded-full bg-muted-foreground/30 transition-colors';
+      dot.className = 'nds-rounded-full';
+      dot.style.height = '0.5rem';
+      dot.style.width = '0.5rem';
+      dot.style.background = 'color-mix(in srgb, var(--muted-foreground) 30%, transparent)';
+      dot.style.transition = 'background-color 150ms';
+      dot.style.border = '0';
+      dot.style.padding = '0';
       dots.push(dot);
       dotsRow.appendChild(dot);
     }
@@ -65,16 +80,16 @@ export const ComDots: Story = {
       onIndexChange: (index) => {
         dots.forEach((d, i) => {
           const active = i === index;
-          d.classList.toggle('bg-primary', active);
-          d.classList.toggle('bg-muted-foreground/30', !active);
+          d.style.background = active
+            ? 'var(--primary)'
+            : 'color-mix(in srgb, var(--muted-foreground) 30%, transparent)';
           d.setAttribute('aria-current', active ? 'true' : 'false');
         });
       },
     });
 
     // Estado inicial
-    dots[0].classList.remove('bg-muted-foreground/30');
-    dots[0].classList.add('bg-primary');
+    dots[0].style.background = 'var(--primary)';
     dots[0].setAttribute('aria-current', 'true');
 
     wrap.append(carousel, dotsRow);
@@ -100,7 +115,7 @@ export const ComDots: Story = {
 export const Galeria: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
 
     const photos = [
       { title: 'Foto 1', description: 'Paisagem natural ao amanhecer' },
@@ -110,11 +125,15 @@ export const Galeria: Story = {
     ];
 
     const items = photos.map((photo) => {
-      const card = createCard({ className: 'w-full overflow-hidden' });
+      const card = createCard({ className: 'nds-w-full nds-overflow-hidden' });
       const cover = document.createElement('div');
-      cover.className = 'w-full aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center';
+      cover.className = 'nds-w-full nds-cluster';
+      cover.dataset.align = 'center';
+      cover.dataset.justify = 'center';
+      cover.style.aspectRatio = '16 / 9';
+      cover.style.background = 'linear-gradient(to bottom right, color-mix(in srgb, var(--primary) 20%, transparent), var(--muted))';
       const label = document.createElement('span');
-      label.className = 'text-2xl font-semibold text-foreground';
+      label.className = 'nds-text-h3 nds-font-semibold nds-text-foreground';
       label.textContent = photo.title;
       cover.appendChild(label);
 

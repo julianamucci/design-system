@@ -41,7 +41,7 @@ const meta = {
       control: { type: 'number', min: 0, max: 4, step: 1 },
       description: 'Distância entre itens. 0 conecta bordas (segmented).',
     },
-    onUpdateModelValue: {
+    'onUpdate:modelValue': {
       action: 'update:modelValue',
       description: 'Disparado ao trocar a seleção.',
     },

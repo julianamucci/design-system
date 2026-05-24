@@ -1,0 +1,27 @@
+/*
+ * ─── nds-chart ──────────────────────────────────────────────────────────────
+ * Container responsivo para gráficos SVG. Cores e tipo (bar/line) vêm da factory.
+ *
+ *   <div class="nds-chart">
+ *     <svg viewBox="…">…</svg>
+ *   </div>
+ *
+ * Tokens: cores delegadas à factory (--primary, --secondary, etc).
+ */
+
+.nds-chart {
+  width: 100%;
+  overflow: hidden;
+}
+
+.nds-chart > svg {
+  display: block;
+  width: 100%;
+}
+
+.nds-chart-empty {
+  padding-block: var(--spacing-4);
+  text-align: center;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}

@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 import { Code2, Eye, Settings2, User, Shield } from 'lucide-vue-next';
 
-const meta = {
+const meta: Meta<any> = {
   title: 'UI/Tabs/Composições',
   component: Tabs,
   parameters: {
@@ -18,7 +18,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Tabs>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

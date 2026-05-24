@@ -14,6 +14,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -106,6 +107,7 @@ export function createCalendarDocs(): HTMLElement {
       sections: [
         { id: 'importacao', labelKey: 'nav.import' },
         { id: 'variantes', labelKey: 'nav.variants' },
+        { id: 'composicoes', labelKey: 'nav.compositions' },
         { id: 'estados', labelKey: 'nav.states' },
         { id: 'propriedades', labelKey: 'nav.props' },
         { id: 'tokens', labelKey: 'nav.tokens' },
@@ -168,6 +170,7 @@ export function createCalendarDocs(): HTMLElement {
     'do-dont',
     'importacao',
     'variantes',
+    'composicoes',
     'estados',
     'propriedades',
     'tokens',
@@ -188,11 +191,12 @@ export function createCalendarDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'w-full flex justify-center';
+            wrap.className = 'nds-cluster nds-w-full';
+            wrap.dataset.justify = 'center';
             wrap.appendChild(
               createCalendar({ locale: 'pt-BR',
                 value: referenceDate(),
-                class: 'rounded-md border',
+                class: 'nds-rounded-md nds-border-default',
               }),
             );
             return wrap;
@@ -269,9 +273,9 @@ export function createCalendarDocs(): HTMLElement {
               doCaption: stripHtml(t('doDont.pair1.do')),
               dontCaption: stripHtml(t('doDont.pair1.dont')),
               doPreviewFactory: () =>
-                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'rounded-md border' }),
+                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }),
               dontPreviewFactory: () =>
-                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'rounded-md border opacity-80' }),
+                (() => { const c = createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }); c.style.opacity = '0.8'; return c; })(),
             },
             {
               doLabel: tNav('common.do'),
@@ -282,10 +286,10 @@ export function createCalendarDocs(): HTMLElement {
                 createCalendar({ locale: 'pt-BR',
                   value: referenceDate(),
                   disabled: (d) => d < new Date(2026, 3, 1),
-                  class: 'rounded-md border',
+                  class: 'nds-rounded-md nds-border-default',
                 }),
               dontPreviewFactory: () =>
-                createCalendar({ locale: 'pt-BR', value: new Date(2020, 0, 15), class: 'rounded-md border' }),
+                createCalendar({ locale: 'pt-BR', value: new Date(2020, 0, 15), class: 'nds-rounded-md nds-border-default' }),
             },
           ],
         });
@@ -315,7 +319,7 @@ document.body.appendChild(el);`,
 });`;
         const codeCustomClass = `const el = createCalendar({ locale: 'pt-BR',
   value: new Date(),
-  class: 'rounded-md border shadow-sm',
+  class: 'nds-rounded-md nds-border-default nds-shadow-sm',
 });`;
 
         return createDocsVariants({
@@ -326,7 +330,7 @@ document.body.appendChild(el);`,
               description: stripHtml(t('variants.items.single')),
               code: codeSingle,
               previewFactory: () =>
-                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'rounded-md border' }),
+                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }),
             },
             {
               name: 'withDisabledDates',
@@ -336,7 +340,7 @@ document.body.appendChild(el);`,
                 createCalendar({ locale: 'pt-BR',
                   value: referenceDate(),
                   disabled: withDisabledWeekends(),
-                  class: 'rounded-md border',
+                  class: 'nds-rounded-md nds-border-default',
                 }),
             },
             {
@@ -346,8 +350,61 @@ document.body.appendChild(el);`,
               previewFactory: () =>
                 createCalendar({ locale: 'pt-BR',
                   value: referenceDate(),
-                  class: 'rounded-md border shadow-sm',
+                  class: 'nds-rounded-md nds-border-default nds-shadow-sm',
                 }),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        const codeInlineBordered = `const el = createCalendar({
+  locale: 'pt-BR',
+  value: new Date(),
+  class: 'nds-rounded-md nds-border-default',
+});
+document.body.appendChild(el);`;
+
+        const codeDisabledPast = `const today = new Date();
+const el = createCalendar({
+  locale: 'pt-BR',
+  value: today,
+  disabled: (d) => d < new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+  class: 'nds-rounded-md nds-border-default',
+});`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'calendar',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.inlineBordered.name')),
+              description: stripHtml(t('variants.compositions.inlineBordered.description')),
+              useWhen: stripHtml(t('variants.compositions.inlineBordered.use')),
+              code: codeInlineBordered,
+              previewFactory: () =>
+                createCalendar({
+                  locale: 'pt-BR',
+                  value: referenceDate(),
+                  class: 'nds-rounded-md nds-border-default',
+                }),
+            },
+            {
+              name: stripHtml(t('variants.compositions.disabledPast.name')),
+              description: stripHtml(t('variants.compositions.disabledPast.description')),
+              useWhen: stripHtml(t('variants.compositions.disabledPast.use')),
+              code: codeDisabledPast,
+              previewFactory: () => {
+                const anchor = referenceDate();
+                return createCalendar({
+                  locale: 'pt-BR',
+                  value: anchor,
+                  disabled: (d) =>
+                    d < new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate()),
+                  class: 'nds-rounded-md nds-border-default',
+                });
+              },
             },
           ],
         });

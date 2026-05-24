@@ -38,7 +38,7 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-async function assertSemanticStructure(step: (label: string, fn: () => Promise<void>) => Promise<void>) {
+async function assertSemanticStructure(step: (label: string, fn: () => Promise<void>) => Promise<unknown>) {
   const body = within(document.body);
   await step("Drawer com role=dialog, Title e Description", async () => {
     const dialog = await waitFor(() => body.findByRole("dialog"));
@@ -101,7 +101,7 @@ export const ComFormulario: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    await assertSemanticStructure(step);
+    await assertSemanticStructure(step as never);
     await step("Inputs do formulário presentes", async () => {
       const body = within(document.body);
       const nameInput = await body.findByLabelText(/Nome/i);
@@ -145,7 +145,7 @@ export const ComConfirmacao: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    await assertSemanticStructure(step);
+    await assertSemanticStructure(step as never);
     await step("Botões Confirmar e Cancelar presentes", async () => {
       const body = within(document.body);
       await expect(body.getByRole("button", { name: /Confirmar/i })).toBeInTheDocument();
@@ -197,7 +197,7 @@ export const ComScroll: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    await assertSemanticStructure(step);
+    await assertSemanticStructure(step as never);
     await step("30 itens renderizados na lista", async () => {
       const items = document.querySelectorAll("[data-slot='drawer-content'] li");
       await expect(items.length).toBe(30);

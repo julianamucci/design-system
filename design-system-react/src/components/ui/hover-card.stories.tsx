@@ -1,12 +1,23 @@
+import type * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import { HoverCardDocs } from "@/components/docs/HoverCardDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
+type HoverCardPlaygroundArgs = {
+  side?: "top" | "bottom" | "left" | "right";
+  align?: "start" | "center" | "end";
+  openDelay?: number;
+  closeDelay?: number;
+  defaultOpen?: boolean;
+};
+
+const HoverCardForArgs = HoverCard as unknown as React.ComponentType<HoverCardPlaygroundArgs>;
+
 const meta = {
   title: "UI/HoverCard",
-  component: HoverCard,
+  component: HoverCardForArgs,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",
@@ -43,12 +54,7 @@ const meta = {
     closeDelay: 50,
     defaultOpen: false,
   },
-} satisfies Meta<
-  typeof HoverCard & {
-    side?: "top" | "bottom" | "left" | "right";
-    align?: "start" | "center" | "end";
-  }
->;
+} satisfies Meta<typeof HoverCardForArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

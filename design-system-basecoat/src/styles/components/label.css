@@ -1,0 +1,42 @@
+/*
+ * ─── nds-label ──────────────────────────────────────────────────────────────
+ * Rótulo de campo de formulário.
+ *
+ *   <label class="nds-label" for="email">E-mail</label>
+ *
+ * Comportamento:
+ *   - Reduz opacidade quando o controle associado (irmão com .peer) está :disabled
+ *   - Reduz opacidade quando ancestral com data-disabled="true" (form/fieldset)
+ *
+ * Tokens: --foreground, --spacing-*
+ *
+ * Acessibilidade: usar `for` (htmlFor) para associar ao input. Sem altura
+ * fixa (WCAG 1.4.4 — Resize Text 200%).
+ */
+
+.nds-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);                    /* 8px entre texto e ícone */
+
+  font-family: inherit;
+  font-size: 0.875rem;                      /* 14px — text-sm */
+  font-weight: var(--font-weight-medium, 500);
+  line-height: 1;
+  color: hsl(var(--foreground));
+  user-select: none;
+}
+
+/* Controle irmão (.peer) desabilitado → label fica esmaecida */
+.peer:disabled ~ .nds-label,
+.nds-label:has(~ .peer:disabled) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Form/fieldset desabilitado → labels descendentes esmaecidas */
+[data-disabled="true"] .nds-label,
+fieldset:disabled .nds-label {
+  pointer-events: none;
+  opacity: 0.5;
+}

@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── InputOTP — Vanilla factory standalone ──────────────────────────────────
+// Visual: classes .nds-input-otp-* (zero Tailwind/basecoat-css).
+// Comportamento: foco automático, paste distribuído, navegação Arrow/Backspace.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -24,7 +26,8 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'input-otp';
-  root.className = cn('flex items-center gap-2', options.class);
+  root.className = 'nds-input-otp';
+  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
   root.setAttribute('role', 'group');
   root.setAttribute('aria-label', 'One-time password input');
 
@@ -41,19 +44,10 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement {
     input.maxLength = 1;
     input.disabled = disabled;
     input.setAttribute('aria-label', `Digit ${index + 1}`);
-    input.className = cn(
-      'relative flex h-9 w-9 items-center justify-center border-y border-r border-input text-sm shadow-sm transition-all text-center',
-      'first:rounded-l-md first:border-l last:rounded-r-md',
-      disabled ? 'opacity-50 cursor-not-allowed' : ''
-    );
+    input.className = 'nds-input-otp-slot';
 
     input.addEventListener('focus', () => {
       input.select();
-      input.classList.add('ring-1', 'ring-ring');
-    });
-
-    input.addEventListener('blur', () => {
-      input.classList.remove('ring-1', 'ring-ring');
     });
 
     input.addEventListener('input', (e) => {
@@ -118,7 +112,7 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement {
     // Add separator before this slot if configured
     if (separatorIndices.has(i)) {
       const sep = document.createElement('div');
-      sep.className = 'flex items-center justify-center text-muted-foreground select-none';
+      sep.className = 'nds-input-otp-separator';
       sep.setAttribute('aria-hidden', 'true');
       sep.textContent = separatorChar;
       root.appendChild(sep);

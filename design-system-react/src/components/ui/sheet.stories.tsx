@@ -59,7 +59,7 @@ export const Playground: Story = {
       <Sheet
         {...args}
         onOpenChange={(open) => {
-          args.onOpenChange?.(open);
+          args.onOpenChange?.(open, undefined as never);
           if (open) {
             track("dialog_open", {
               component: "sheet",

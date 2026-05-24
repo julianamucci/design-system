@@ -50,19 +50,23 @@ type Story = StoryObj<SliderArgs>;
 export const Playground: Story = {
   render: (args) => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2 w-72';
+    wrap.className = 'nds-stack';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.width = '18rem';
 
     const row = document.createElement('div');
-    row.className = 'flex items-center justify-between';
+    row.className = 'nds-cluster';
+    row.dataset.justify = 'between';
 
     const label = document.createElement('label');
     label.id = 'pg-slider-label';
-    label.className = 'text-sm font-medium';
+    label.className = 'nds-text-body nds-font-medium';
     label.textContent = args.ariaLabel;
 
     const valueText = document.createElement('span');
     valueText.id = 'pg-slider-value';
-    valueText.className = 'text-sm tabular-nums text-muted-foreground';
+    valueText.className = 'nds-text-body nds-text-muted-foreground';
+    valueText.style.fontVariantNumeric = 'tabular-nums';
     valueText.setAttribute('aria-live', 'polite');
     valueText.textContent = `${args.value}${args.unit}`;
 

@@ -1,0 +1,29 @@
+/*
+ * ─── nds-tooltip ────────────────────────────────────────────────────────────
+ * Mensagem curta exibida ao hover/focus do trigger. Renderizada em portal
+ * (body), posicionada absolutamente pelo JS.
+ *
+ *   <div class="nds-tooltip-content" role="tooltip" id="tooltip-1"
+ *        style="top: …; left: …">Salvar alterações</div>
+ *
+ * Tokens: --primary (bg), --primary-foreground (fg), --radius-sm, --spacing-*
+ */
+
+.nds-tooltip-content {
+  position: absolute;
+  z-index: 50;
+
+  padding-inline: var(--spacing-3, 0.75rem);    /* 12px */
+  padding-block: var(--spacing-1-5, 0.375rem);  /* 6px */
+
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-radius: 0.375rem;                       /* 6px */
+  font-family: inherit;
+  font-size: 0.75rem;                            /* 12px */
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+}

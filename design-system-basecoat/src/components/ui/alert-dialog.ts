@@ -1,6 +1,14 @@
-import { cn } from '@/lib/utils';
+// ─── Alert Dialog — Vanilla factory (portal manual) ──────────────────────────
+//
+// Visual: classes .nds-alert-dialog-* (standalone, sem Tailwind/basecoat-css).
+// Comportamentos preservados:
+//   - Sem overlay-click-to-close e sem Escape-to-close (canônico para alert dialog).
+//   - Focus trap (Tab/Shift+Tab) entre cancel e action.
+//   - Restaura foco no elemento anterior ao fechar.
+//   - MutationObserver fecha o dialog quando o wrapper é removido do DOM
+//     (Storybook remount entre stories).
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 export type AlertDialogOptions = {
   trigger: HTMLElement;
@@ -12,7 +20,7 @@ export type AlertDialogOptions = {
   class?: string;
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 let _alertDialogCounter = 0;
 
@@ -24,7 +32,7 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
   ).filter(el => !el.closest('[hidden]'));
 }
 
-// ─── createAlertDialog ────────────────────────────────────────────────────────
+// ─── createAlertDialog ───────────────────────────────────────────────────────
 
 export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
   const { trigger, title, description, cancelButton, actionButton, onOpenChange } = options;
@@ -45,19 +53,12 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     previousFocus = document.activeElement as HTMLElement;
 
     overlayEl = document.createElement('div');
-    overlayEl.className = 'fixed inset-0 z-50 bg-black/80';
+    overlayEl.className = 'nds-alert-dialog-overlay';
     overlayEl.dataset.slot = 'alert-dialog-overlay';
-    // No overlay click-to-close for alert-dialog
 
     panelEl = document.createElement('div');
-    panelEl.className = cn(
-      // PATCH: bugfix — removida a classe `dialog` do basecoat-css; ela aplica
-      // `opacity-0` por padrão e só revela quando o elemento é um <dialog> nativo
-      // com [open]/:popover-open. Usamos <div role="alertdialog"> (portal manual),
-      // então aquele seletor mantinha o painel invisível nos testes.
-      'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg',
-      options.class
-    );
+    panelEl.className = 'nds-alert-dialog-content';
+    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
     panelEl.setAttribute('role', 'alertdialog');
     panelEl.setAttribute('aria-modal', 'true');
     panelEl.setAttribute('aria-labelledby', titleId);
@@ -66,27 +67,26 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
 
     // Header
     const headerEl = document.createElement('div');
-    headerEl.className = 'flex flex-col space-y-1.5 text-center sm:text-left';
+    headerEl.className = 'nds-alert-dialog-header';
     headerEl.dataset.slot = 'alert-dialog-header';
 
     const titleEl = document.createElement('h2');
     titleEl.id = titleId;
-    titleEl.className = 'text-lg font-semibold leading-none tracking-tight';
+    titleEl.className = 'nds-alert-dialog-title';
     titleEl.textContent = title;
     headerEl.appendChild(titleEl);
 
     if (description) {
       const descEl = document.createElement('p');
       descEl.id = descId;
-      descEl.className = 'text-sm text-muted-foreground';
+      descEl.className = 'nds-alert-dialog-description';
       descEl.textContent = description;
       headerEl.appendChild(descEl);
     }
 
-    // Footer with cancel + action
+    // Footer
     const footerEl = document.createElement('div');
-    footerEl.className =
-      'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2';
+    footerEl.className = 'nds-alert-dialog-footer';
     footerEl.dataset.slot = 'alert-dialog-footer';
     footerEl.appendChild(cancelButton);
     footerEl.appendChild(actionButton);
@@ -97,7 +97,6 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     document.body.appendChild(overlayEl);
     document.body.appendChild(panelEl);
 
-    // Focus the cancel button first (safer default for alert dialogs)
     cancelButton.focus();
 
     document.addEventListener('keydown', handleKeydown);
@@ -115,7 +114,7 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
   }
 
   function handleKeydown(e: KeyboardEvent): void {
-    // No Escape-to-close for alert-dialog
+    // No Escape-to-close for alert-dialog (decisão deliberada — exige escolha explícita).
     if (e.key === 'Tab' && panelEl) {
       const focusable = getFocusable(panelEl);
       if (!focusable.length) { e.preventDefault(); return; }
@@ -129,17 +128,12 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     }
   }
 
-  // Allow cancel/action buttons to close the dialog
   cancelButton.addEventListener('click', close);
   actionButton.addEventListener('click', close);
 
   trigger.addEventListener('click', open);
 
-  // PATCH: bugfix — fechar o diálogo quando o wrapper é removido do DOM
-  // (Storybook troca stories remount → panel + overlay ficavam órfãos em document.body,
-  // poluindo próximos testes com "multiple elements with role 'alertdialog'").
-  // PERF: observer precisa desconectar assim que o wrapper é removido para não
-  // vazar listener em document.body entre stories (subtree:true é caro).
+  // Cleanup ao remover o wrapper (Storybook remount).
   if (typeof MutationObserver !== 'undefined') {
     const observer = new MutationObserver(() => {
       if (!wrapper.isConnected) {

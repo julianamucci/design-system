@@ -26,6 +26,7 @@ import {
   DocsImport,
   DocsVariants,
   DocsStates,
+  DocsCompositions,
   DocsProps,
   DocsTokens,
   DocsAccessibility,
@@ -64,6 +65,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao", label: t("nav.import") },
       { id: "variantes", label: t("nav.variants") },
+      { id: "composicoes", label: t("nav.compositions") },
       { id: "estados", label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens", label: t("nav.tokens") },
@@ -205,6 +207,8 @@ type PaginationDirectionalProps =
 
   // ─── Demo state ──────────────────────────────────────────────────────────
   const [page, setPage] = useState(1);
+  const [compPage, setCompPage] = useState(3);
+  const compTotal = 8;
   const totalSimple = 5;
   const goTo = (next: number) => {
     setPage(next);
@@ -639,6 +643,263 @@ type PaginationDirectionalProps =
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="pagination"
+        items={[
+          {
+            name: tContent("variants.compositions.simple.name"),
+            description: tContent("variants.compositions.simple.description"),
+            useWhen: tContent("variants.compositions.simple.use"),
+            code: `<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious href="#" text="${lblPrev}" aria-disabled tabIndex={-1} className="pointer-events-none opacity-50" />
+    </PaginationItem>
+    {[1,2,3,4,5].map((n) => (
+      <PaginationItem key={n}>
+        <PaginationLink href="#" isActive={n === 1} aria-label={\`${lblPage} \${n}\`}>{n}</PaginationLink>
+      </PaginationItem>
+    ))}
+    <PaginationItem>
+      <PaginationNext href="#" text="${lblNext}" />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>`,
+            preview: (
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      text={lblPrev}
+                      aria-disabled
+                      tabIndex={-1}
+                      className="pointer-events-none opacity-50"
+                    />
+                  </PaginationItem>
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <PaginationItem key={n}>
+                      <PaginationLink
+                        href="#"
+                        isActive={n === 1}
+                        aria-label={`${lblPage} ${n}`}
+                      >
+                        {n}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext href="#" text={lblNext} />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withEllipsis.name"),
+            description: tContent("variants.compositions.withEllipsis.description"),
+            useWhen: tContent("variants.compositions.withEllipsis.use"),
+            code: `<Pagination>
+  <PaginationContent>
+    <PaginationItem><PaginationPrevious href="#" text="${lblPrev}" /></PaginationItem>
+    <PaginationItem><PaginationLink href="#">1</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationEllipsis /></PaginationItem>
+    <PaginationItem><PaginationLink href="#">5</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink href="#" isActive>6</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink href="#">7</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationEllipsis /></PaginationItem>
+    <PaginationItem><PaginationLink href="#">12</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationNext href="#" text="${lblNext}" /></PaginationItem>
+  </PaginationContent>
+</Pagination>`,
+            preview: (
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious href="#" text={lblPrev} />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" aria-label={`${lblPage} 1`}>1</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" aria-label={`${lblPage} 5`}>5</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" isActive aria-label={`${lblPage} 6`}>6</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" aria-label={`${lblPage} 7`}>7</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" aria-label={`${lblPage} 12`}>12</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext href="#" text={lblNext} />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.lastPage.name"),
+            description: tContent("variants.compositions.lastPage.description"),
+            useWhen: tContent("variants.compositions.lastPage.use"),
+            code: `<Pagination>
+  <PaginationContent>
+    <PaginationItem><PaginationPrevious href="#" text="${lblPrev}" /></PaginationItem>
+    <PaginationItem><PaginationLink href="#">1</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationEllipsis /></PaginationItem>
+    <PaginationItem><PaginationLink href="#">9</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink href="#" isActive>10</PaginationLink></PaginationItem>
+    <PaginationItem>
+      <PaginationNext href="#" text="${lblNext}" aria-disabled tabIndex={-1} className="pointer-events-none opacity-50" />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>`,
+            preview: (
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious href="#" text={lblPrev} />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" aria-label={`${lblPage} 1`}>1</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" aria-label={`${lblPage} 9`}>9</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" isActive aria-label={`${lblPage} 10`}>10</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      text={lblNext}
+                      aria-disabled
+                      tabIndex={-1}
+                      className="pointer-events-none opacity-50"
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.interactive.name"),
+            description: tContent("variants.compositions.interactive.description"),
+            useWhen: tContent("variants.compositions.interactive.use"),
+            code: `const [current, setCurrent] = useState(3);
+const total = 8;
+
+<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious
+        href="#"
+        text="${lblPrev}"
+        aria-disabled={current === 1}
+        tabIndex={current === 1 ? -1 : 0}
+        className={current === 1 ? "pointer-events-none opacity-50" : ""}
+        onClick={(e) => { e.preventDefault(); if (current > 1) setCurrent(current - 1); }}
+      />
+    </PaginationItem>
+    {Array.from({ length: total }, (_, i) => i + 1).map((n) => (
+      <PaginationItem key={n}>
+        <PaginationLink
+          href="#"
+          isActive={current === n}
+          onClick={(e) => { e.preventDefault(); setCurrent(n); }}
+        >
+          {n}
+        </PaginationLink>
+      </PaginationItem>
+    ))}
+    <PaginationItem>
+      <PaginationNext
+        href="#"
+        text="${lblNext}"
+        aria-disabled={current === total}
+        tabIndex={current === total ? -1 : 0}
+        className={current === total ? "pointer-events-none opacity-50" : ""}
+        onClick={(e) => { e.preventDefault(); if (current < total) setCurrent(current + 1); }}
+      />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>`,
+            preview: (
+              <div className="w-full space-y-3">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        text={lblPrev}
+                        aria-disabled={compPage === 1}
+                        tabIndex={compPage === 1 ? -1 : 0}
+                        className={
+                          compPage === 1 ? "pointer-events-none opacity-50" : ""
+                        }
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (compPage > 1) setCompPage(compPage - 1);
+                        }}
+                      />
+                    </PaginationItem>
+                    {Array.from({ length: compTotal }, (_, i) => i + 1).map((n) => (
+                      <PaginationItem key={n}>
+                        <PaginationLink
+                          href="#"
+                          isActive={compPage === n}
+                          aria-label={`${lblPage} ${n}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCompPage(n);
+                          }}
+                        >
+                          {n}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        text={lblNext}
+                        aria-disabled={compPage === compTotal}
+                        tabIndex={compPage === compTotal ? -1 : 0}
+                        className={
+                          compPage === compTotal
+                            ? "pointer-events-none opacity-50"
+                            : ""
+                        }
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (compPage < compTotal) setCompPage(compPage + 1);
+                        }}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+                <p className="text-xs text-muted-foreground text-center">
+                  {lblPage} {compPage} {locale === "en" ? "of" : "de"} {compTotal}
+                </p>
+              </div>
             ),
           },
         ]}

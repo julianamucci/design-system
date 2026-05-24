@@ -131,6 +131,29 @@
         "pie": "Proporção de partes em relação ao todo. Use <code>PieChart</code> + <code>Pie</code>. Limite a 5–6 fatias para legibilidade.",
         "radar": "Comparação multivariada em escala radial. Use <code>RadarChart</code> + <code>Radar</code>. Indicado para perfis e métricas.",
         "radialBar": "Progresso ou proporção em arco radial. Use <code>RadialBarChart</code> + <code>RadialBar</code>. Alternativa visual ao pie."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "inCard": {
+          "name": "Chart dentro de Card",
+          "description": "Gráfico envolto por <code>Card</code> com título e descrição no <code>CardHeader</code> e o gráfico no <code>CardContent</code>. Padrão recomendado para destacar contexto e atribuição temporal dos dados.",
+          "use": "Dashboards e relatórios em que o gráfico precisa de título visível, descrição do recorte temporal e moldura semântica para agrupar com outros KPIs."
+        },
+        "multiSeriesWithLegend": {
+          "name": "Multi-séries com legenda",
+          "description": "Duas séries comparativas com legenda obrigatória — cada série usa um token <code>--chart-*</code> distinto e o <code>aria-label</code> descreve as séries por nome, não apenas por cor.",
+          "use": "Comparações entre categorias (ex.: Desktop vs Mobile). Sempre que houver mais de uma série, forneça legenda visível e <code>aria-label</code> nominando as séries (WCAG 1.4.1)."
+        },
+        "smallInline": {
+          "name": "Mini gráfico inline",
+          "description": "Versão compacta sem eixos, com altura reduzida e largura limitada — usada como indicador de tendência ao lado de um número ou KPI.",
+          "use": "Cartões de métrica com indicador de tendência, listas densas, células de tabela em que o sparkline complementa o valor numérico principal."
+        },
+        "withEmptyState": {
+          "name": "Com estado vazio",
+          "description": "Quando <code>data=[]</code>, o gráfico não renderiza barras ou linhas. Substitua o canvas por uma mensagem completa orientando a próxima ação (filtro, intervalo, fonte de dados).",
+          "use": "Páginas filtráveis em que o recorte pode ficar sem dados. A mensagem substitui o gráfico no mesmo container para preservar o layout."
+        }
       }
     },
     "states": {
@@ -458,6 +481,29 @@
         "pie": "Proportion of parts relative to a whole. Use <code>PieChart</code> + <code>Pie</code>. Limit to 5–6 slices for readability.",
         "radar": "Multivariate comparison on a radial scale. Use <code>RadarChart</code> + <code>Radar</code>. Suitable for profiles and metrics.",
         "radialBar": "Progress or proportion in a radial arc. Use <code>RadialBarChart</code> + <code>RadialBar</code>. Visual alternative to pie."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "inCard": {
+          "name": "Chart inside Card",
+          "description": "Chart wrapped by a <code>Card</code> with title and description in <code>CardHeader</code> and the chart in <code>CardContent</code>. Recommended pattern to surface context and time framing.",
+          "use": "Dashboards and reports where the chart needs a visible title, a description of the time range, and a semantic frame to group with other KPIs."
+        },
+        "multiSeriesWithLegend": {
+          "name": "Multi-series with legend",
+          "description": "Two comparative series with a required legend — each series uses a distinct <code>--chart-*</code> token, and the <code>aria-label</code> names the series, not just their color.",
+          "use": "Cross-category comparisons (e.g. Desktop vs Mobile). Whenever there is more than one series, provide a visible legend and an <code>aria-label</code> that names them (WCAG 1.4.1)."
+        },
+        "smallInline": {
+          "name": "Small inline chart",
+          "description": "Compact version without axes, reduced height and constrained width — used as a trend indicator next to a headline number or KPI.",
+          "use": "Metric cards with a trend indicator, dense lists, table cells where a sparkline complements the main numeric value."
+        },
+        "withEmptyState": {
+          "name": "With empty state",
+          "description": "When <code>data=[]</code>, the chart does not render bars or lines. Replace the canvas with a complete sentence guiding the next action (filter, range, data source).",
+          "use": "Filterable pages where the current selection may have no data. The message replaces the chart inside the same container to preserve the layout."
+        }
       }
     },
     "states": {
@@ -785,6 +831,29 @@
         "pie": "Proporción de partes respecto al total. Usa <code>PieChart</code> + <code>Pie</code>. Limita a 5–6 segmentos para legibilidad.",
         "radar": "Comparación multivariada en escala radial. Usa <code>RadarChart</code> + <code>Radar</code>. Indicado para perfiles y métricas.",
         "radialBar": "Progreso o proporción en arco radial. Usa <code>RadialBarChart</code> + <code>RadialBar</code>. Alternativa visual al pie."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "inCard": {
+          "name": "Chart dentro de Card",
+          "description": "Gráfico envuelto por <code>Card</code> con título y descripción en <code>CardHeader</code> y el gráfico en <code>CardContent</code>. Patrón recomendado para resaltar contexto y rango temporal.",
+          "use": "Dashboards e informes donde el gráfico necesita un título visible, descripción del rango temporal y un marco semántico para agruparse con otros KPI."
+        },
+        "multiSeriesWithLegend": {
+          "name": "Multi-series con leyenda",
+          "description": "Dos series comparativas con leyenda obligatoria — cada serie usa un token <code>--chart-*</code> distinto y el <code>aria-label</code> describe las series por nombre, no solo por color.",
+          "use": "Comparaciones entre categorías (p.ej. Desktop vs Mobile). Siempre que haya más de una serie, muestra leyenda visible y un <code>aria-label</code> que las nombre (WCAG 1.4.1)."
+        },
+        "smallInline": {
+          "name": "Mini gráfico inline",
+          "description": "Versión compacta sin ejes, con altura reducida y ancho limitado — usada como indicador de tendencia junto a un número o KPI.",
+          "use": "Tarjetas de métrica con indicador de tendencia, listas densas, celdas de tabla donde el sparkline complementa el valor numérico principal."
+        },
+        "withEmptyState": {
+          "name": "Con estado vacío",
+          "description": "Cuando <code>data=[]</code>, el gráfico no renderiza barras ni líneas. Sustituye el canvas por un mensaje completo que oriente la próxima acción (filtro, rango, fuente de datos).",
+          "use": "Páginas filtrables donde el recorte puede quedar sin datos. El mensaje reemplaza el gráfico dentro del mismo contenedor para preservar el layout."
+        }
       }
     },
     "states": {

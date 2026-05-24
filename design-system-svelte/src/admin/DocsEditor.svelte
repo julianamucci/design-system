@@ -121,8 +121,8 @@
         </div>
       {:else}
         <div class="max-w-2xl space-y-6">
-          {#each Object.entries($localeData) as [key, value]}
-            <FieldEditor {key} fieldKey={key} {value} onchange={updateField} />
+          {#each Object.entries($localeData) as [key, value] (key)}
+            {@render FieldEditorSnippet(key, value, 0, updateField)}
           {/each}
         </div>
       {/if}
@@ -131,11 +131,6 @@
 </div>
 
 <!-- ─── FieldEditor ─────────────────────────────────────────────────────────── -->
-<script lang="ts" module>
-  // Re-exported for recursive use inside the template
-  export { FieldEditor };
-</script>
-
 {#snippet FieldEditorSnippet(fieldKey: string, value: unknown, depth: number, onchange: (k: string, v: string) => void)}
   {@const label = fieldKey.split('.').at(-1) ?? fieldKey}
   {@const isHtml = typeof value === 'string' && /<[a-z]/i.test(value)}

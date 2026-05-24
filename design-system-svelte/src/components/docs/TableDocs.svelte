@@ -11,6 +11,17 @@
   } from '@/components/ui/table';
   import { Button } from '@/components/ui/button';
   import { Skeleton } from '@/components/ui/skeleton';
+  import { Checkbox } from '@/components/ui/checkbox';
+  import { Input } from '@/components/ui/input';
+  import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+  } from '@/components/ui/pagination';
+  import { ArrowUpDown, Search } from 'lucide-svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -18,7 +29,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -61,6 +72,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -638,6 +650,249 @@ interface TableRowProps {
             </TableRow>
           </TableBody>
         </Table>
+      {/snippet}
+
+      <!-- ── Composições ──────────────────────────────────────────────── -->
+      <DocsCompositions
+        title={$tStore('variants.compositionsTitle')}
+        useWhenLabel={$tNavStore('common.useWhen')}
+        componentSlug="table"
+        items={[
+          {
+            name: $tStore('variants.compositions.filterableToolbar.name'),
+            description: $tStore('variants.compositions.filterableToolbar.description'),
+            useWhen: $tStore('variants.compositions.filterableToolbar.use'),
+            code: `<div class="flex flex-col gap-3">
+  <div class="flex items-center gap-2">
+    <Input placeholder="Filtrar faturas..." />
+    <Button variant="outline">Status</Button>
+  </div>
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead scope="col">Fatura</TableHead>
+        <TableHead scope="col">Status</TableHead>
+        <TableHead scope="col" class="text-right">Valor</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {#each filtered as invoice (invoice.id)}
+        <TableRow>
+          <TableCell>{invoice.id}</TableCell>
+          <TableCell>{invoice.status}</TableCell>
+          <TableCell class="text-right">{invoice.amount}</TableCell>
+        </TableRow>
+      {/each}
+    </TableBody>
+  </Table>
+</div>`,
+            preview: compFilterableToolbar,
+          },
+          {
+            name: $tStore('variants.compositions.sortableHeaders.name'),
+            description: $tStore('variants.compositions.sortableHeaders.description'),
+            useWhen: $tStore('variants.compositions.sortableHeaders.use'),
+            code: `<TableHead scope="col" aria-sort="ascending">
+  <Button variant="ghost" size="sm" class="-ml-2">
+    Fatura
+    <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+  </Button>
+</TableHead>`,
+            preview: compSortableHeaders,
+          },
+          {
+            name: $tStore('variants.compositions.selectableRows.name'),
+            description: $tStore('variants.compositions.selectableRows.description'),
+            useWhen: $tStore('variants.compositions.selectableRows.use'),
+            code: `<TableRow data-state={selected.has(invoice.id) ? 'selected' : undefined}>
+  <TableCell>
+    <Checkbox
+      checked={selected.has(invoice.id)}
+      onCheckedChange={(c) => toggle(invoice.id, c)}
+      aria-label={\`Selecionar fatura \${invoice.id}\`}
+    />
+  </TableCell>
+  <TableCell>{invoice.id}</TableCell>
+  <TableCell>{invoice.status}</TableCell>
+</TableRow>`,
+            preview: compSelectableRows,
+          },
+          {
+            name: $tStore('variants.compositions.withPagination.name'),
+            description: $tStore('variants.compositions.withPagination.description'),
+            useWhen: $tStore('variants.compositions.withPagination.use'),
+            code: `<div class="flex flex-col gap-3">
+  <Table><!-- linhas --></Table>
+  <Pagination>
+    <PaginationContent>
+      <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
+      <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
+      <PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem>
+      <PaginationItem><PaginationNext href="#" /></PaginationItem>
+    </PaginationContent>
+  </Pagination>
+</div>`,
+            preview: compWithPagination,
+          },
+        ]}
+      />
+
+      {#snippet compFilterableToolbar()}
+        <div class="w-full flex flex-col gap-3">
+          <div class="flex items-center gap-2">
+            <div class="relative w-full max-w-sm">
+              <Search class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <Input placeholder="Filtrar faturas..." class="pl-8" />
+            </div>
+            <Button variant="outline">Status</Button>
+          </div>
+          <Table>
+            <TableCaption class="sr-only">Lista de faturas filtráveis</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead scope="col">Fatura</TableHead>
+                <TableHead scope="col">Status</TableHead>
+                <TableHead scope="col" class="text-right">Valor</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell class="font-medium">#INV-001</TableCell>
+                <TableCell>Pago</TableCell>
+                <TableCell class="text-right">R$ 250,00</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell class="font-medium">#INV-002</TableCell>
+                <TableCell>Pendente</TableCell>
+                <TableCell class="text-right">R$ 150,00</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      {/snippet}
+
+      {#snippet compSortableHeaders()}
+        <Table>
+          <TableCaption class="sr-only">Faturas ordenáveis</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead scope="col" aria-sort="ascending">
+                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+                  Fatura
+                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                </Button>
+              </TableHead>
+              <TableHead scope="col" aria-sort="none">
+                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+                  Status
+                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                </Button>
+              </TableHead>
+              <TableHead scope="col" aria-sort="none" class="text-right">
+                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+                  Valor
+                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                </Button>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell>Pago</TableCell>
+              <TableCell class="text-right">R$ 250,00</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell>Pendente</TableCell>
+              <TableCell class="text-right">R$ 150,00</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      {/snippet}
+
+      {#snippet compSelectableRows()}
+        <Table>
+          <TableCaption class="sr-only">Faturas com seleção</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead scope="col" class="w-10">
+                <Checkbox aria-label="Selecionar todas as linhas" />
+              </TableHead>
+              <TableHead scope="col">Fatura</TableHead>
+              <TableHead scope="col">Status</TableHead>
+              <TableHead scope="col" class="text-right">Valor</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow data-state="selected">
+              <TableCell>
+                <Checkbox checked aria-label="Selecionar fatura #INV-001" />
+              </TableCell>
+              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell>Pago</TableCell>
+              <TableCell class="text-right">R$ 250,00</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Checkbox aria-label="Selecionar fatura #INV-002" />
+              </TableCell>
+              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell>Pendente</TableCell>
+              <TableCell class="text-right">R$ 150,00</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      {/snippet}
+
+      {#snippet compWithPagination()}
+        <div class="w-full flex flex-col gap-3">
+          <Table>
+            <TableCaption class="sr-only">Faturas paginadas</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead scope="col">Fatura</TableHead>
+                <TableHead scope="col">Status</TableHead>
+                <TableHead scope="col" class="text-right">Valor</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell class="font-medium">#INV-001</TableCell>
+                <TableCell>Pago</TableCell>
+                <TableCell class="text-right">R$ 250,00</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell class="font-medium">#INV-002</TableCell>
+                <TableCell>Pendente</TableCell>
+                <TableCell class="text-right">R$ 150,00</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <Pagination count={20} perPage={5}>
+            {#snippet children({ pages, currentPage })}
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious />
+                </PaginationItem>
+                {#each pages as page (page.key)}
+                  {#if page.type === 'ellipsis'}
+                    <PaginationItem>...</PaginationItem>
+                  {:else}
+                    <PaginationItem>
+                      <PaginationLink {page} isActive={currentPage === page.value}>
+                        {page.value}
+                      </PaginationLink>
+                    </PaginationItem>
+                  {/if}
+                {/each}
+                <PaginationItem>
+                  <PaginationNext />
+                </PaginationItem>
+              </PaginationContent>
+            {/snippet}
+          </Pagination>
+        </div>
       {/snippet}
 
       <!-- ── Estados ────────────────────────────────────────────────── -->

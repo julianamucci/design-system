@@ -24,12 +24,14 @@ type Story = StoryObj;
 
 function wrapWithLabel(cb: HTMLElement, labelText: string, id: string, disabled = false): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex items-center gap-2';
+  wrapper.className = 'nds-cluster';
+  wrapper.dataset.spacing = 'sm';
   cb.id = id;
   const label = document.createElement('label');
   label.htmlFor = id;
   label.textContent = labelText;
-  label.className = 'text-sm font-medium leading-none' + (disabled ? ' cursor-not-allowed opacity-70' : ' cursor-pointer');
+  label.className = 'nds-text-body nds-font-medium nds-leading-none ' + (disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
+  if (disabled) { label.style.opacity = '0.7'; label.style.cursor = 'not-allowed'; }
   wrapper.append(cb, label);
   return wrapper;
 }
@@ -141,10 +143,12 @@ export const DisabledChecked: Story = {
 export const Error: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-1.5';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'xs';
 
     const row = document.createElement('div');
-    row.className = 'flex items-center gap-2';
+    row.className = 'nds-cluster';
+    row.dataset.spacing = 'sm';
 
     const id = 'cb-error';
     const cb = createCheckbox({ id });
@@ -154,13 +158,13 @@ export const Error: Story = {
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Aceito os termos e condições';
-    label.className = 'text-sm font-medium leading-none cursor-pointer';
+    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
     row.append(cb, label);
 
     const msg = document.createElement('p');
     msg.id = 'cb-error-msg';
-    msg.className = 'text-sm text-destructive';
+    msg.className = 'nds-text-body nds-text-destructive';
     msg.textContent = 'Você precisa aceitar os termos para continuar.';
 
     wrapper.append(row, msg);

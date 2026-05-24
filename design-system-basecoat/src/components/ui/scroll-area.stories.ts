@@ -53,10 +53,14 @@ type Story = StoryObj<ScrollAreaArgs>;
 
 function buildList(count: number): HTMLElement {
   const ul = document.createElement('ul');
-  ul.className = 'flex flex-col gap-2 p-3 list-none m-0';
+  ul.className = 'nds-stack nds-list-none';
+  ul.dataset.spacing = 'sm';
+  ul.style.padding = '0.75rem';
+  ul.style.margin = '0';
   for (let i = 1; i <= count; i++) {
     const li = document.createElement('li');
-    li.className = 'text-sm border-b border-border/40 pb-2';
+    li.className = 'nds-text-body nds-border-b-soft';
+    li.style.paddingBottom = '0.5rem';
     li.textContent = `Item ${i}`;
     ul.appendChild(li);
   }
@@ -68,7 +72,7 @@ function buildList(count: number): HTMLElement {
 export const Playground: Story = {
   render: (args) => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(createScrollArea({
       height: args.height || undefined,
       width: args.width || undefined,

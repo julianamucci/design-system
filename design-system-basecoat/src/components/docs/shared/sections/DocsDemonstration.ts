@@ -33,7 +33,7 @@ export function createDocsDemonstration(props: DocsDemonstrationProps): HTMLElem
   section.id = 'demonstracao';
 
   const h2 = document.createElement('h2');
-  h2.className = 'text-xl font-semibold mb-4';
+  h2.className = 'nds-section-title';
   h2.textContent = props.title;
 
   const demo = createComponentDemo(props.demoFactory());

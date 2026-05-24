@@ -43,7 +43,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="rootRef" class="ds-docs p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+  <!-- sb-unstyled: escape hatch oficial do Storybook que desliga as regras
+       prose do @storybook/blocks na subárvore. Ver storybook-docs.css. -->
+  <div ref="rootRef" class="sb-unstyled ds-docs p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
     <slot name="header" />
 
     <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">

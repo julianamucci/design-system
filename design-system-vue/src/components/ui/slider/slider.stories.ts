@@ -43,7 +43,7 @@ const meta = {
       control: 'boolean',
       description: 'Desabilita todos os thumbs.',
     },
-    onUpdateModelValue: {
+    'onUpdate:modelValue': {
       action: 'update:modelValue',
       description: 'Disparado durante o arrasto.',
     },

@@ -1,33 +1,27 @@
-// ─── Aspect Ratio ────────────────────────────────────────────────────────────
+// ─── Aspect Ratio — Vanilla factory standalone ───────────────────────────────
+//
+// Visual: classes .nds-aspect-ratio (zero Tailwind, zero basecoat-css).
+// Usa `aspect-ratio` CSS nativo via CSS custom property `--ratio`.
 
 export interface AspectRatioOptions {
-  /** Numeric ratio expressed as width / height (e.g. 16/9, 4/3, 1). */
+  /** Proporção (width / height). Ex.: 16/9, 4/3, 1. Default: 1 (quadrado). */
   ratio?: number;
-  /** Optional child element to place inside the inner container. */
+  /** Filho opcional. */
   content?: HTMLElement;
-  /** Additional CSS classes to append to the outer wrapper. */
+  /** Classes adicionais. */
   className?: string;
 }
 
-/**
- * Creates a wrapper div that enforces the given aspect ratio via the
- * padding-bottom trick.  The optional `content` element is placed inside an
- * absolutely-positioned inner div so it fills the constrained space exactly.
- */
 export function createAspectRatio(options: AspectRatioOptions = {}): HTMLElement {
   const { ratio = 1, content, className } = options;
 
   const wrapper = document.createElement('div');
-  wrapper.className = 'relative w-full';
-  wrapper.style.paddingBottom = `${(1 / ratio) * 100}%`;
+  wrapper.dataset.slot = 'aspect-ratio';
+  wrapper.className = 'nds-aspect-ratio';
+  wrapper.style.setProperty('--ratio', String(ratio));
   if (className) wrapper.classList.add(...className.split(' ').filter(Boolean));
 
-  const inner = document.createElement('div');
-  inner.className = 'absolute inset-0';
-
-  if (content) inner.appendChild(content);
-
-  wrapper.appendChild(inner);
+  if (content) wrapper.appendChild(content);
 
   return wrapper;
 }

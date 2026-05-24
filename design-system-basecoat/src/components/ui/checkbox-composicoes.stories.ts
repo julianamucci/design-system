@@ -25,7 +25,8 @@ type Story = StoryObj;
 export const ComLabel: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex items-center gap-2';
+    wrapper.className = 'nds-cluster';
+    wrapper.dataset.spacing = 'sm';
 
     const id = 'cb-com-label';
     const cb = createCheckbox({ id });
@@ -33,7 +34,7 @@ export const ComLabel: Story = {
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Aceito os termos e condições';
-    label.className = 'text-sm font-medium leading-none cursor-pointer';
+    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
     wrapper.append(cb, label);
     return wrapper;
@@ -61,22 +62,25 @@ export const ComLabel: Story = {
 export const ComDescricao: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex gap-2 items-start';
+    wrapper.className = 'nds-cluster';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.dataset.align = 'start';
 
     const id = 'cb-com-descricao';
     const cb = createCheckbox({ id });
-    cb.className = cb.className + ' mt-0.5';
+    (cb as HTMLElement).style.marginTop = '0.125rem';
 
     const textGroup = document.createElement('div');
-    textGroup.className = 'flex flex-col gap-1';
+    textGroup.className = 'nds-stack';
+    textGroup.dataset.spacing = 'xs';
 
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Receber novidades por email';
-    label.className = 'text-sm font-medium leading-none cursor-pointer';
+    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
     const desc = document.createElement('p');
-    desc.className = 'text-sm text-muted-foreground';
+    desc.className = 'nds-text-body nds-text-muted-foreground';
     desc.textContent = 'Enviaremos atualizações sobre novos recursos e melhorias do produto.';
 
     textGroup.append(label, desc);
@@ -106,10 +110,12 @@ export const ComDescricao: Story = {
 export const EmGrupoFieldset: Story = {
   render: () => {
     const fieldset = document.createElement('fieldset');
-    fieldset.className = 'border rounded-lg p-4 space-y-3 w-72';
+    fieldset.className = 'nds-stack nds-border-default nds-rounded-lg nds-p-4';
+    fieldset.dataset.spacing = 'sm';
+    fieldset.style.width = '18rem';
 
     const legend = document.createElement('legend');
-    legend.className = 'text-sm font-semibold px-1';
+    legend.className = 'nds-text-body nds-font-semibold nds-px-1';
     legend.textContent = 'Notificações';
     fieldset.appendChild(legend);
 
@@ -121,13 +127,14 @@ export const EmGrupoFieldset: Story = {
 
     items.forEach(({ id, label: labelText }) => {
       const row = document.createElement('div');
-      row.className = 'flex items-center gap-2';
+      row.className = 'nds-cluster';
+      row.dataset.spacing = 'sm';
 
       const cb = createCheckbox({ id });
       const label = document.createElement('label');
       label.htmlFor = id;
       label.textContent = labelText;
-      label.className = 'text-sm font-medium leading-none cursor-pointer';
+      label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
       row.append(cb, label);
       fieldset.appendChild(row);
@@ -170,17 +177,21 @@ export const SelecionarTodos: Story = {
   },
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'space-y-3 w-72';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.style.width = '18rem';
 
     // "Select all" row
     const allRow = document.createElement('div');
-    allRow.className = 'flex items-center gap-2 pb-2 border-b';
+    allRow.className = 'nds-cluster nds-border-b';
+    allRow.dataset.spacing = 'sm';
+    allRow.style.paddingBottom = 'var(--spacing-2, 0.5rem)';
 
     const cbAll = createCheckbox({ id: 'cb-select-all' });
     const labelAll = document.createElement('label');
     labelAll.htmlFor = 'cb-select-all';
     labelAll.textContent = 'Selecionar todos os itens';
-    labelAll.className = 'text-sm font-semibold leading-none cursor-pointer';
+    labelAll.className = 'nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer';
     allRow.append(cbAll, labelAll);
 
     const items = [
@@ -193,13 +204,15 @@ export const SelecionarTodos: Story = {
 
     const itemRows = items.map(({ id, label: labelText }) => {
       const row = document.createElement('div');
-      row.className = 'flex items-center gap-2 pl-2';
+      row.className = 'nds-cluster';
+      row.dataset.spacing = 'sm';
+      row.style.paddingLeft = 'var(--spacing-2, 0.5rem)';
       const cb = createCheckbox({ id });
       childCheckboxes.push(cb);
       const label = document.createElement('label');
       label.htmlFor = id;
       label.textContent = labelText;
-      label.className = 'text-sm font-medium leading-none cursor-pointer';
+      label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
       row.append(cb, label);
       return row;
     });
@@ -242,10 +255,13 @@ export const NaListaDeItens: Story = {
   },
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'space-y-2 w-80';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.style.width = '20rem';
 
     const title = document.createElement('p');
-    title.className = 'text-sm font-semibold mb-3';
+    title.className = 'nds-text-body nds-font-semibold';
+    title.style.marginBottom = 'var(--spacing-3, 0.75rem)';
     title.textContent = 'Preferências de contato';
     wrapper.appendChild(title);
 
@@ -258,16 +274,19 @@ export const NaListaDeItens: Story = {
 
     options.forEach(({ id, label: labelText, checked }) => {
       const row = document.createElement('div');
-      row.className = 'flex items-center justify-between rounded-md border px-3 py-2';
+      row.className = 'nds-cluster nds-border-default nds-rounded-md';
+      row.dataset.justify = 'between';
+      row.style.padding = 'var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem)';
 
       const leftSide = document.createElement('div');
-      leftSide.className = 'flex items-center gap-2';
+      leftSide.className = 'nds-cluster';
+      leftSide.dataset.spacing = 'sm';
 
       const cb = createCheckbox({ id, checked });
       const label = document.createElement('label');
       label.htmlFor = id;
       label.textContent = labelText;
-      label.className = 'text-sm font-medium cursor-pointer';
+      label.className = 'nds-text-body nds-font-medium nds-cursor-pointer';
 
       leftSide.append(cb, label);
       row.appendChild(leftSide);

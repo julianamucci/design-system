@@ -8,7 +8,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -59,6 +59,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')    },
         { id: 'variantes',    label: tNav('nav.variants')  },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')    },
         { id: 'propriedades', label: tNav('nav.props')     },
         { id: 'tokens',       label: tNav('nav.tokens')    },
@@ -441,6 +442,93 @@ interface ToggleProps {
       <Eye aria-hidden="true" />
       <span>Mostrar ocultos</span>
     </Toggle>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="toggle"
+    items={[
+      {
+        name: $tStore('variants.compositions.toolbar.name'),
+        description: $tStore('variants.compositions.toolbar.description'),
+        useWhen: $tStore('variants.compositions.toolbar.use'),
+        code: `<div role="group" aria-label="Formatação de texto" class="flex items-center gap-1 rounded-md border border-input p-1">
+  <Toggle pressed aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
+  <Toggle aria-label="Itálico"><Italic aria-hidden="true" /></Toggle>
+  <Toggle aria-label="Sublinhado"><Underline aria-hidden="true" /></Toggle>
+</div>`,
+        preview: compToolbar,
+      },
+      {
+        name: $tStore('variants.compositions.filterWithLabel.name'),
+        description: $tStore('variants.compositions.filterWithLabel.description'),
+        useWhen: $tStore('variants.compositions.filterWithLabel.use'),
+        code: `<Toggle variant="outline">
+  <Eye aria-hidden="true" />
+  <span>Mostrar ocultos</span>
+</Toggle>`,
+        preview: compFilterWithLabel,
+      },
+      {
+        name: $tStore('variants.compositions.sizes.name'),
+        description: $tStore('variants.compositions.sizes.description'),
+        useWhen: $tStore('variants.compositions.sizes.use'),
+        code: `<div class="flex items-center gap-3">
+  <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold aria-hidden="true" /></Toggle>
+  <Toggle variant="outline" aria-label="Negrito (default)"><Bold aria-hidden="true" /></Toggle>
+  <Toggle variant="outline" size="lg" aria-label="Negrito (lg)"><Bold aria-hidden="true" /></Toggle>
+</div>`,
+        preview: compSizes,
+      },
+      {
+        name: $tStore('variants.compositions.filterList.name'),
+        description: $tStore('variants.compositions.filterList.description'),
+        useWhen: $tStore('variants.compositions.filterList.use'),
+        code: `<div class="flex flex-col gap-2">
+  <span class="text-sm font-medium">Filtros de exibição</span>
+  <div class="flex items-center gap-2">
+    <Toggle variant="outline"><Eye aria-hidden="true" /><span>Mostrar ocultos</span></Toggle>
+    <Toggle pressed variant="outline"><List aria-hidden="true" /><span>Em lista</span></Toggle>
+  </div>
+</div>`,
+        preview: compFilterList,
+      },
+    ]}
+  />
+
+  {#snippet compToolbar()}
+    <div role="group" aria-label="Formatação de texto" class="flex items-center gap-1 rounded-md border border-input p-1">
+      <Toggle pressed aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
+      <Toggle aria-label="Itálico"><Italic aria-hidden="true" /></Toggle>
+      <Toggle aria-label="Sublinhado"><Underline aria-hidden="true" /></Toggle>
+    </div>
+  {/snippet}
+
+  {#snippet compFilterWithLabel()}
+    <Toggle variant="outline">
+      <Eye aria-hidden="true" />
+      <span>Mostrar ocultos</span>
+    </Toggle>
+  {/snippet}
+
+  {#snippet compSizes()}
+    <div class="flex items-center gap-3">
+      <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold aria-hidden="true" /></Toggle>
+      <Toggle variant="outline" aria-label="Negrito (default)"><Bold aria-hidden="true" /></Toggle>
+      <Toggle variant="outline" size="lg" aria-label="Negrito (lg)"><Bold aria-hidden="true" /></Toggle>
+    </div>
+  {/snippet}
+
+  {#snippet compFilterList()}
+    <div class="flex flex-col gap-2">
+      <span class="text-sm font-medium">Filtros de exibição</span>
+      <div class="flex items-center gap-2">
+        <Toggle variant="outline"><Eye aria-hidden="true" /><span>Mostrar ocultos</span></Toggle>
+        <Toggle pressed variant="outline"><List aria-hidden="true" /><span>Em lista</span></Toggle>
+      </div>
+    </div>
   {/snippet}
 
   <!-- ── Estados ──────────────────────────────────────────────────────── -->

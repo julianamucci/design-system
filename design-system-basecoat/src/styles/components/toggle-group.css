@@ -1,0 +1,41 @@
+/*
+ * ─── nds-toggle-group ───────────────────────────────────────────────────────
+ * Grupo de toggles (single ou multiple). Variante outline emenda os toggles
+ * em um único container com borda compartilhada.
+ *
+ *   <div class="nds-toggle-group" role="group" data-variant="default|outline">
+ *     <button class="nds-toggle" …>B</button>
+ *     <button class="nds-toggle" …>I</button>
+ *     <button class="nds-toggle" …>U</button>
+ *   </div>
+ *
+ * Tokens: --input, --border, --radius
+ */
+
+.nds-toggle-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1);                          /* 4px entre toggles */
+}
+
+/* ── Variante outline (toggles emendados num único container) ────────────── */
+.nds-toggle-group[data-variant="outline"] {
+  gap: 0;
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius, 0.5rem);
+  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+  overflow: hidden;
+}
+
+/* Toggles internos do outline group perdem a borda própria */
+.nds-toggle-group[data-variant="outline"] > .nds-toggle {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Divisor entre toggles do outline group */
+.nds-toggle-group[data-variant="outline"] > .nds-toggle + .nds-toggle {
+  border-left: 1px solid hsl(var(--input, var(--border)));
+}

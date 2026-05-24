@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── NavigationMenu — Vanilla factory standalone ────────────────────────────
+// Visual: classes .nds-navigation-menu-* (zero Tailwind/basecoat-css).
+// Painel via `hidden` attribute; um aberto por vez; click-fora fecha.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -14,28 +16,26 @@ export type NavigationMenuItem = {
   children?: NavigationMenuChild[];
 };
 
-// ─── Classes ──────────────────────────────────────────────────────────────────
+// ─── Chevron SVG (anexado via createElementNS) ───────────────────────────────
 
-const ROOT_CLASS = 'relative z-10 flex max-w-max flex-1 items-center justify-center';
-const LIST_CLASS = 'group flex flex-1 list-none items-center justify-center space-x-1';
-const TRIGGER_CLASS =
-  'group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium ' +
-  'transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ' +
-  'focus:outline-none disabled:pointer-events-none disabled:opacity-50';
-const LINK_CLASS =
-  'inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium ' +
-  'transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ' +
-  'focus:outline-none';
-const CONTENT_CLASS =
-  'absolute top-full left-0 mt-1.5 min-w-[180px] rounded-md border bg-popover p-2 text-popover-foreground shadow-md z-50 hidden';
-const CHILD_LINK_CLASS =
-  'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors ' +
-  'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground';
+const SVG_NS = 'http://www.w3.org/2000/svg';
 
-const CHEVRON_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
-  'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 inline-block transition-transform duration-200" aria-hidden="true">' +
-  '<path d="m6 9 6 6 6-6"/></svg>';
+function createChevronSvg(): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('xmlns', SVG_NS);
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('class', 'nds-navigation-menu-chevron');
+  svg.setAttribute('aria-hidden', 'true');
+  const path = document.createElementNS(SVG_NS, 'path');
+  path.setAttribute('d', 'm6 9 6 6 6-6');
+  svg.appendChild(path);
+  return svg;
+}
 
 let _navCounter = 0;
 
@@ -49,20 +49,20 @@ export function createNavigationMenu(
   const nav = document.createElement('nav');
   nav.dataset.slot = 'navigation-menu';
   nav.setAttribute('aria-label', 'Main navigation');
-  nav.className = cn(ROOT_CLASS, options?.class);
+  nav.className = 'nds-navigation-menu';
+  if (options?.class) nav.classList.add(...options.class.split(' ').filter(Boolean));
 
   const ul = document.createElement('ul');
-  ul.className = LIST_CLASS;
+  ul.className = 'nds-navigation-menu-list';
   ul.setAttribute('role', 'menubar');
 
-  let openItem: { content: HTMLElement; trigger: HTMLElement; chevron: SVGElement | null } | null = null;
+  let openItem: { content: HTMLElement; trigger: HTMLElement } | null = null;
 
   function closeAll(): void {
     if (!openItem) return;
-    openItem.content.classList.add('hidden');
+    openItem.content.hidden = true;
     openItem.trigger.setAttribute('aria-expanded', 'false');
     openItem.trigger.dataset.state = 'closed';
-    if (openItem.chevron) openItem.chevron.style.transform = '';
     openItem = null;
   }
 
@@ -73,7 +73,7 @@ export function createNavigationMenu(
     if (!item.children || item.children.length === 0) {
       const a = document.createElement('a');
       a.href = item.href ?? '#';
-      a.className = LINK_CLASS;
+      a.className = 'nds-navigation-menu-link';
       a.setAttribute('role', 'menuitem');
       a.textContent = item.label;
       li.appendChild(a);
@@ -81,42 +81,37 @@ export function createNavigationMenu(
       const contentId = `nav-menu-content-${id}-${idx}`;
       const trigger = document.createElement('button');
       trigger.type = 'button';
-      trigger.className = TRIGGER_CLASS;
+      trigger.className = 'nds-navigation-menu-trigger';
       trigger.setAttribute('aria-expanded', 'false');
       trigger.setAttribute('aria-controls', contentId);
       trigger.setAttribute('aria-haspopup', 'true');
       trigger.setAttribute('role', 'menuitem');
       trigger.dataset.state = 'closed';
-      // PATCH: security — substituído innerHTML por createElement + parseHtml para evitar XSS via item.label.
       const labelSpan = document.createElement('span');
       labelSpan.textContent = item.label;
       trigger.appendChild(labelSpan);
-      const chevronWrapper = document.createElement('span');
-      chevronWrapper.innerHTML = CHEVRON_SVG; // CHEVRON_SVG é string literal interna (segura)
-      const chevronEl = chevronWrapper.firstElementChild;
-      if (chevronEl) trigger.appendChild(chevronEl);
+      trigger.appendChild(createChevronSvg());
 
       const content = document.createElement('div');
       content.id = contentId;
-      content.className = CONTENT_CLASS;
+      content.className = 'nds-navigation-menu-content';
       content.setAttribute('role', 'menu');
-
-      const chevron = trigger.querySelector<SVGElement>('svg');
+      content.hidden = true;
 
       item.children.forEach((child) => {
         const childA = document.createElement('a');
         childA.href = child.href;
-        childA.className = CHILD_LINK_CLASS;
+        childA.className = 'nds-navigation-menu-child';
         childA.setAttribute('role', 'menuitem');
 
         const labelEl = document.createElement('div');
-        labelEl.className = 'text-sm font-medium leading-none';
+        labelEl.className = 'nds-navigation-menu-child-label';
         labelEl.textContent = child.label;
         childA.appendChild(labelEl);
 
         if (child.description) {
           const descEl = document.createElement('p');
-          descEl.className = 'line-clamp-2 text-sm leading-snug text-muted-foreground mt-1';
+          descEl.className = 'nds-navigation-menu-child-description';
           descEl.textContent = child.description;
           childA.appendChild(descEl);
         }
@@ -128,11 +123,10 @@ export function createNavigationMenu(
         const isOpen = trigger.dataset.state === 'open';
         closeAll();
         if (!isOpen) {
-          content.classList.remove('hidden');
+          content.hidden = false;
           trigger.setAttribute('aria-expanded', 'true');
           trigger.dataset.state = 'open';
-          if (chevron) chevron.style.transform = 'rotate(180deg)';
-          openItem = { content, trigger, chevron };
+          openItem = { content, trigger };
         }
       });
 
@@ -164,7 +158,7 @@ export function createNavigationMenu(
       });
 
       const itemWrapper = document.createElement('div');
-      itemWrapper.style.position = 'relative';
+      itemWrapper.className = 'nds-navigation-menu-item';
       itemWrapper.appendChild(trigger);
       itemWrapper.appendChild(content);
       li.appendChild(itemWrapper);

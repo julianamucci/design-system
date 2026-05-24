@@ -24,7 +24,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Card>;
+} satisfies Meta<any>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -52,7 +52,7 @@ export const Default: Story = {
 export const Clickable: Story = {
   args: {
     onCardClick: fn(),
-  },
+  } as any,
   render: (args) => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     setup() {

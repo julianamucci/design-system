@@ -67,7 +67,12 @@ type Story = StoryObj<ResizableArgs>;
 
 function panelContent(label: string, extraClass = ''): HTMLElement {
   const el = document.createElement('div');
-  el.className = `h-full w-full flex items-center justify-center p-4 text-sm font-medium ${extraClass}`;
+  el.className = `nds-cluster nds-text-body nds-font-medium ${extraClass}`.trim();
+  el.dataset.justify = 'center';
+  el.dataset.align = 'center';
+  el.style.height = '100%';
+  el.style.width = '100%';
+  el.style.padding = '1rem';
   const span = document.createElement('span');
   span.textContent = label;
   el.appendChild(span);
@@ -78,7 +83,7 @@ function frame(child: HTMLElement, minHeight = '220px'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.contain = 'layout';
   wrap.style.minHeight = minHeight;
-  wrap.className = 'w-full border border-border rounded-md overflow-hidden bg-background';
+  wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
   wrap.appendChild(child);
   return wrap;
 }
@@ -90,7 +95,7 @@ export const Playground: Story = {
     const root = createResizablePanel({
       direction: args.direction,
       panels: [
-        { defaultSize: args.defaultSizeA, minSize: args.minSizeA, content: panelContent('Painel A', 'bg-muted text-muted-foreground') },
+        { defaultSize: args.defaultSizeA, minSize: args.minSizeA, content: panelContent('Painel A', 'nds-bg-muted nds-text-muted-foreground')},
         { defaultSize: args.defaultSizeB, minSize: args.minSizeB, content: panelContent('Painel B') },
       ],
     });

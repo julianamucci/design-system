@@ -1,16 +1,27 @@
-// ─── Skeleton ────────────────────────────────────────────────────────────────
+// ─── Skeleton — Vanilla factory standalone ──────────────────────────────────
+//
+// Visual: classe .nds-skeleton (zero Tailwind/basecoat-css).
+// Sem dimensão padrão — o consumidor define width/height via style ou className.
 
 export interface SkeletonOptions {
-  /** Additional CSS classes to append (e.g. sizing utilities like `h-4 w-[200px]`). */
+  /** Classes adicionais (ex: utilitárias para sizing). */
   className?: string;
+  /** Altura inline conveniente (ex: "1rem" ou "16px"). */
+  height?: string;
+  /** Largura inline conveniente. */
+  width?: string;
 }
 
 export function createSkeleton(options: SkeletonOptions = {}): HTMLElement {
-  const { className } = options;
+  const { className, height, width } = options;
 
   const el = document.createElement('div');
-  el.className = 'animate-pulse rounded-md bg-primary/10';
+  el.dataset.slot = 'skeleton';
+  el.setAttribute('aria-hidden', 'true');
+  el.className = 'nds-skeleton';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  if (height) el.style.height = height;
+  if (width) el.style.width = width;
 
   return el;
 }

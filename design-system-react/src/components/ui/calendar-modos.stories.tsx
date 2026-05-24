@@ -108,8 +108,8 @@ export const Range: Story = {
     return (
       <Calendar
         mode="range"
-        selected={range}
-        onSelect={setRange}
+        selected={range as never}
+        onSelect={setRange as never}
         numberOfMonths={2}
         locale={ptBR}
       />

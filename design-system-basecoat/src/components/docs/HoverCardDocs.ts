@@ -16,6 +16,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -52,21 +53,23 @@ function priorityLabel(raw: string): string {
 function buildProfilePreview(): HTMLElement {
   const trigger = document.createElement('a');
   trigger.href = '#joana';
-  trigger.className = 'text-primary underline-offset-4 hover:underline';
+  trigger.className = 'nds-text-primary nds-hover-underline';
+  trigger.style.textUnderlineOffset = '4px';
   trigger.textContent = '@joana';
 
   const content = document.createElement('div');
-  content.className = 'flex gap-3';
+  content.className = 'nds-cluster';
+  content.dataset.spacing = 'sm';
 
   const avatar = createAvatar({ fallbackText: 'JS' });
 
   const info = document.createElement('div');
-  info.className = 'flex flex-col';
+  info.className = 'nds-stack';
   const name = document.createElement('p');
-  name.className = 'font-medium text-sm';
+  name.className = 'nds-font-medium nds-text-body';
   name.textContent = 'Joana Silva';
   const meta = document.createElement('p');
-  meta.className = 'text-xs text-muted-foreground';
+  meta.className = 'nds-text-caption nds-text-muted-foreground';
   meta.textContent = 'Designer · 142 seguidores';
   info.appendChild(name);
   info.appendChild(meta);
@@ -80,16 +83,22 @@ function buildProfilePreview(): HTMLElement {
 function buildLinkPreview(): HTMLElement {
   const trigger = document.createElement('a');
   trigger.href = '#link';
-  trigger.className = 'text-primary underline-offset-4 hover:underline';
+  trigger.className = 'nds-text-primary nds-hover-underline';
+  trigger.style.textUnderlineOffset = '4px';
   trigger.textContent = 'design-system.dev';
 
   const content = document.createElement('div');
-  content.className = 'flex flex-col gap-2';
+  content.className = 'nds-stack';
+  content.dataset.spacing = 'sm';
 
   const meta = document.createElement('div');
-  meta.className = 'flex items-center gap-2 text-xs text-muted-foreground';
+  meta.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
+  meta.dataset.spacing = 'sm';
   const favicon = document.createElement('span');
-  favicon.className = 'inline-flex h-4 w-4 items-center justify-center rounded bg-muted';
+  favicon.className = 'nds-icon nds-rounded-sm nds-bg-muted';
+  favicon.style.display = 'inline-flex';
+  favicon.style.alignItems = 'center';
+  favicon.style.justifyContent = 'center';
   favicon.textContent = 'D';
   const url = document.createElement('span');
   url.textContent = 'design-system.dev';
@@ -97,7 +106,7 @@ function buildLinkPreview(): HTMLElement {
   meta.appendChild(url);
 
   const title = document.createElement('p');
-  title.className = 'font-medium';
+  title.className = 'nds-font-medium';
   title.textContent = 'Guia de overlays acessíveis';
 
   content.appendChild(meta);
@@ -109,15 +118,16 @@ function buildLinkPreview(): HTMLElement {
 function buildDefinitionPreview(): HTMLElement {
   const trigger = document.createElement('a');
   trigger.href = '#wcag';
-  trigger.className = 'text-primary underline-offset-4 hover:underline';
+  trigger.className = 'nds-text-primary nds-hover-underline';
+  trigger.style.textUnderlineOffset = '4px';
   trigger.textContent = 'WCAG 2.1';
 
   const content = document.createElement('div');
   const title = document.createElement('p');
-  title.className = 'font-medium text-sm';
+  title.className = 'nds-font-medium nds-text-body';
   title.textContent = 'WCAG 2.1';
   const desc = document.createElement('p');
-  desc.className = 'text-xs text-muted-foreground';
+  desc.className = 'nds-text-caption nds-text-muted-foreground';
   desc.textContent = 'Web Content Accessibility Guidelines: padrão internacional de acessibilidade.';
   content.appendChild(title);
   content.appendChild(desc);
@@ -128,18 +138,19 @@ function buildDefinitionPreview(): HTMLElement {
 function buildMetricPreview(): HTMLElement {
   const trigger = document.createElement('a');
   trigger.href = '#metric';
-  trigger.className = 'text-primary underline-offset-4 hover:underline';
+  trigger.className = 'nds-text-primary nds-hover-underline';
+  trigger.style.textUnderlineOffset = '4px';
   trigger.textContent = '3,42%';
 
   const content = document.createElement('div');
   const label = document.createElement('p');
-  label.className = 'text-xs text-muted-foreground';
+  label.className = 'nds-text-caption nds-text-muted-foreground';
   label.textContent = 'Conversão (últimos 30d)';
   const value = document.createElement('p');
-  value.className = 'text-2xl font-semibold';
+  value.className = 'nds-text-h4 nds-font-semibold';
   value.textContent = '3,42%';
   const desc = document.createElement('p');
-  desc.className = 'text-xs text-muted-foreground';
+  desc.className = 'nds-text-caption nds-text-muted-foreground';
   desc.textContent = 'Cliques no CTA / usuários únicos.';
   content.appendChild(label);
   content.appendChild(value);
@@ -190,9 +201,10 @@ export function createHoverCardDocs(): HTMLElement {
       { id: 'do-dont',      labelKey: 'nav.doDont'        },
     ]},
     { labelKey: 'nav.techRef', sections: [
-      { id: 'importacao',   labelKey: 'nav.import'   },
-      { id: 'variantes',    labelKey: 'nav.variants' },
-      { id: 'estados',      labelKey: 'nav.states'   },
+      { id: 'importacao',   labelKey: 'nav.import'        },
+      { id: 'variantes',    labelKey: 'nav.variants'      },
+      { id: 'composicoes',  labelKey: 'nav.compositions'  },
+      { id: 'estados',      labelKey: 'nav.states'        },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
     ]},
@@ -235,7 +247,7 @@ export function createHoverCardDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -250,7 +262,11 @@ export function createHoverCardDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'grid grid-cols-1 sm:grid-cols-2 gap-6 w-full min-h-[160px]';
+            wrap.className = 'nds-grid nds-w-full';
+            wrap.dataset.cols = '2';
+            wrap.dataset.spacing = 'lg';
+            wrap.dataset.min = '16rem';
+            wrap.style.minHeight = '160px';
 
             const cells: Array<{ labelKey: string; build: () => HTMLElement }> = [
               { labelKey: 'demonstration.labels.userProfile',       build: buildProfilePreview    },
@@ -261,13 +277,14 @@ export function createHoverCardDocs(): HTMLElement {
 
             for (const cell of cells) {
               const col = document.createElement('div');
-              col.className = 'space-y-2';
+              col.className = 'nds-stack';
+              col.dataset.spacing = 'sm';
               col.style.contain = 'layout';
               col.style.position = 'relative';
               col.style.minHeight = '100px';
 
               const label = document.createElement('p');
-              label.className = 'text-xs font-medium text-muted-foreground';
+              label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
               label.innerHTML = sanitizeHtml(t(cell.labelKey));
 
               col.appendChild(label);
@@ -343,12 +360,14 @@ export function createHoverCardDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-sm space-y-1';
+                wrap.className = 'nds-text-body nds-stack';
+                wrap.dataset.spacing = 'xs';
                 const link = document.createElement('div');
-                link.className = 'text-primary underline';
+                link.className = 'nds-text-primary';
+                link.style.textDecoration = 'underline';
                 link.textContent = '@joana';
                 const note = document.createElement('div');
-                note.className = 'text-xs text-muted-foreground';
+                note.className = 'nds-text-caption nds-text-muted-foreground';
                 note.textContent = '+ link para /users/joana';
                 wrap.appendChild(link);
                 wrap.appendChild(note);
@@ -356,12 +375,13 @@ export function createHoverCardDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-sm';
+                wrap.className = 'nds-text-body';
                 const link = document.createElement('div');
-                link.className = 'text-primary underline';
+                link.className = 'nds-text-primary';
+                link.style.textDecoration = 'underline';
                 link.textContent = '@joana';
                 const note = document.createElement('div');
-                note.className = 'text-xs text-muted-foreground italic';
+                note.className = 'nds-text-caption nds-text-muted-foreground nds-italic';
                 note.textContent = 'apenas hover (touch users perdem)';
                 wrap.appendChild(link);
                 wrap.appendChild(note);
@@ -375,13 +395,13 @@ export function createHoverCardDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const code = document.createElement('div');
-                code.className = 'text-sm font-mono';
+                code.className = 'nds-text-body nds-font-mono';
                 code.textContent = 'openDelay={500}';
                 return code;
               },
               dontPreviewFactory: () => {
                 const code = document.createElement('div');
-                code.className = 'text-sm font-mono';
+                code.className = 'nds-text-body nds-font-mono';
                 code.textContent = 'openDelay={0}';
                 return code;
               },
@@ -429,7 +449,7 @@ createHoverCard({ trigger, content });`;
               code: codeWithDelay,
               previewFactory: () => {
                 const note = document.createElement('div');
-                note.className = 'text-xs font-mono text-muted-foreground';
+                note.className = 'nds-text-caption nds-font-mono nds-text-muted-foreground';
                 note.textContent = 'SHOW_DELAY=300 / HIDE_DELAY=150 (factory)';
                 return note;
               },
@@ -437,6 +457,178 @@ createHoverCard({ trigger, content });`;
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'hover-card',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.userProfile.name')),
+              description: stripHtml(t('variants.compositions.userProfile.description')),
+              useWhen: stripHtml(t('variants.compositions.userProfile.use')),
+              code: `const trigger = document.createElement('a');
+trigger.href = '/users/joana';
+trigger.className = 'nds-text-primary underline-offset-4 hover:underline';
+trigger.textContent = '@joana';
+
+const content = document.createElement('div');
+content.className = 'nds-cluster';
+content.dataset.spacing = 'md';
+
+const avatar = createAvatar({ fallbackText: 'JS' });
+const info = document.createElement('div');
+info.className = 'nds-stack';
+const name = document.createElement('p');
+name.className = 'nds-font-medium nds-text-body';
+name.textContent = 'Joana Silva';
+const meta = document.createElement('p');
+meta.className = 'nds-text-caption nds-text-muted-foreground';
+meta.textContent = 'Designer · 142 seguidores';
+info.append(name, meta);
+content.append(avatar, info);
+
+const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`,
+              previewFactory: () => buildProfilePreview(),
+            },
+            {
+              name: stripHtml(t('variants.compositions.linkPreview.name')),
+              description: stripHtml(t('variants.compositions.linkPreview.description')),
+              useWhen: stripHtml(t('variants.compositions.linkPreview.use')),
+              code: `const trigger = document.createElement('a');
+trigger.href = 'https://design-system.dev';
+trigger.className = 'nds-text-primary underline-offset-4 hover:underline';
+trigger.textContent = 'design-system.dev';
+
+const content = document.createElement('div');
+content.className = 'nds-stack';
+
+const meta = document.createElement('div');
+meta.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
+const favicon = document.createElement('span');
+favicon.className = 'nds-cluster nds-rounded nds-bg-muted';
+favicon.dataset.justify = 'center';
+favicon.textContent = 'D';
+const url = document.createElement('span');
+url.textContent = 'design-system.dev';
+meta.append(favicon, url);
+
+const title = document.createElement('p');
+title.className = 'nds-font-medium';
+title.textContent = 'Guia de overlays acessíveis';
+
+content.append(meta, title);
+
+const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`,
+              previewFactory: () => buildLinkPreview(),
+            },
+            {
+              name: stripHtml(t('variants.compositions.definitionTooltip.name')),
+              description: stripHtml(t('variants.compositions.definitionTooltip.description')),
+              useWhen: stripHtml(t('variants.compositions.definitionTooltip.use')),
+              code: `const trigger = document.createElement('button');
+trigger.type = 'button';
+trigger.className = 'nds-text-primary nds-text-body nds-font-medium';
+Object.assign(trigger.style, { background: 'transparent', border: '0', padding: '0', textDecoration: 'underline dotted', textUnderlineOffset: '4px', cursor: 'help' });
+trigger.textContent = 'WCAG 2.1 AA';
+
+const content = document.createElement('div');
+const term = document.createElement('p');
+term.className = 'nds-font-medium nds-text-body';
+term.textContent = 'WCAG 2.1 AA';
+const def = document.createElement('p');
+def.className = 'nds-text-caption nds-text-muted-foreground';
+def.textContent =
+  'Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.';
+content.append(term, def);
+
+const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`,
+              previewFactory: () => {
+                const trigger = document.createElement('button');
+                trigger.type = 'button';
+                trigger.className =
+                  'nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer';
+                Object.assign(trigger.style, { background: 'transparent', border: '0', padding: '0', textDecoration: 'underline dotted', textUnderlineOffset: '4px', cursor: 'help' });
+                trigger.textContent = 'WCAG 2.1 AA';
+
+                const content = document.createElement('div');
+                const term = document.createElement('p');
+                term.className = 'nds-font-medium nds-text-body';
+                term.textContent = 'WCAG 2.1 AA';
+                const def = document.createElement('p');
+                def.className = 'nds-text-caption nds-text-muted-foreground';
+                def.textContent =
+                  'Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.';
+                content.append(term, def);
+
+                return createHoverCard({ trigger, content, side: 'bottom', align: 'start' });
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.metricExplainer.name')),
+              description: stripHtml(t('variants.compositions.metricExplainer.description')),
+              useWhen: stripHtml(t('variants.compositions.metricExplainer.use')),
+              code: `const trigger = document.createElement('button');
+trigger.type = 'button';
+trigger.className = 'nds-text-primary nds-text-body nds-font-medium';
+Object.assign(trigger.style, { background: 'transparent', border: '0', padding: '0', textDecoration: 'underline dotted', textUnderlineOffset: '4px', cursor: 'help' });
+trigger.textContent = 'LCP 1.8s';
+
+const content = document.createElement('div');
+const head = document.createElement('div');
+head.className = 'nds-cluster';
+head.dataset.spacing = 'sm';
+head.dataset.justify = 'between';
+head.style.alignItems = 'baseline';
+const metric = document.createElement('p');
+metric.className = 'nds-text-body nds-font-medium';
+metric.textContent = 'Largest Contentful Paint';
+const value = document.createElement('span');
+value.className = 'nds-text-caption nds-font-medium nds-text-success';
+value.textContent = '1.8s';
+head.append(metric, value);
+
+const desc = document.createElement('p');
+desc.className = 'nds-text-caption nds-text-muted-foreground';
+desc.textContent =
+  'Tempo até o maior elemento visível ser renderizado. Bom: <2.5s · Ruim: >4s.';
+content.append(head, desc);
+
+const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`,
+              previewFactory: () => {
+                const trigger = document.createElement('button');
+                trigger.type = 'button';
+                trigger.className =
+                  'nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer';
+                Object.assign(trigger.style, { background: 'transparent', border: '0', padding: '0', textDecoration: 'underline dotted', textUnderlineOffset: '4px', cursor: 'help' });
+                trigger.textContent = 'LCP 1.8s';
+
+                const content = document.createElement('div');
+                const head = document.createElement('div');
+                head.className = 'nds-cluster';
+                head.dataset.justify = 'between';
+                head.dataset.align = 'baseline';
+                head.dataset.spacing = 'sm';
+                const metric = document.createElement('p');
+                metric.className = 'nds-text-body nds-font-medium';
+                metric.textContent = 'Largest Contentful Paint';
+                const value = document.createElement('span');
+                value.className = 'nds-text-caption nds-font-medium nds-text-success';
+                value.textContent = '1.8s';
+                head.append(metric, value);
+
+                const desc = document.createElement('p');
+                desc.className = 'nds-text-caption nds-text-muted-foreground';
+                desc.textContent =
+                  'Tempo até o maior elemento visível ser renderizado. Bom: <2.5s · Ruim: >4s.';
+                content.append(head, desc);
+
+                return createHoverCard({ trigger, content, side: 'bottom', align: 'start' });
+              },
+            },
+          ],
+        });
 
       case 'estados': {
         const locale = getLocale();

@@ -1,0 +1,190 @@
+/*
+ * ─── nds-dialog ─────────────────────────────────────────────────────────────
+ * Modal centralizado com overlay translúcido + painel arredondado.
+ * Render via portal (body). Estado via data-state="open|closed".
+ *
+ * Estrutura:
+ *   <div class="nds-dialog-overlay" data-state="open" />
+ *   <div class="nds-dialog-content" role="dialog" aria-modal="true" data-state="open">
+ *     <div class="nds-dialog-header">
+ *       <h2 class="nds-dialog-title">Título</h2>
+ *       <p  class="nds-dialog-description">Descrição</p>
+ *     </div>
+ *     <div class="nds-dialog-body">[conteúdo]</div>
+ *     <div class="nds-dialog-footer">[ações]</div>
+ *     <button class="nds-dialog-close" aria-label="Close">✕</button>
+ *   </div>
+ *
+ * Tokens: --popover (bg), --popover-foreground (fg), --foreground (ring),
+ *         --muted (footer bg), --border, --radius-xl, --spacing-*
+ */
+
+/* ── Overlay ─────────────────────────────────────────────────────────────── */
+.nds-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  isolation: isolate;
+  background-color: hsl(0 0% 0% / 0.1);
+  animation: nds-dialog-fade-in 100ms ease-out;
+}
+
+@supports (backdrop-filter: blur(4px)) {
+  .nds-dialog-overlay {
+    backdrop-filter: blur(4px);
+  }
+}
+
+.nds-dialog-overlay[data-state="closed"] {
+  animation: nds-dialog-fade-out 100ms ease-in;
+}
+
+/* ── Content panel ───────────────────────────────────────────────────────── */
+.nds-dialog-content {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 50;
+  translate: -50% -50%;
+
+  display: grid;
+  gap: var(--spacing-4);                          /* 16px */
+
+  width: calc(100% - var(--spacing-8));
+  max-width: 32rem;                                /* 512px — lg */
+
+  padding: var(--spacing-4);                       /* 16px */
+
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);
+  border-radius: 0;
+  animation: nds-dialog-zoom-in 100ms ease-out;
+}
+
+@media (min-width: 40rem) {
+  .nds-dialog-content {
+    border-radius: 0.75rem;                        /* 12px — rounded-xl */
+  }
+}
+
+.nds-dialog-content[data-state="closed"] {
+  animation: nds-dialog-zoom-out 100ms ease-in;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.nds-dialog-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1-5, 0.375rem);              /* 6px */
+  text-align: center;
+}
+
+@media (min-width: 40rem) {
+  .nds-dialog-header {
+    text-align: left;
+  }
+}
+
+/* ── Title ───────────────────────────────────────────────────────────────── */
+.nds-dialog-title {
+  margin: 0;
+  font-size: 1rem;                                 /* 16px — text-base */
+  font-weight: var(--font-weight-medium, 500);
+  line-height: 1;
+  color: hsl(var(--foreground));
+}
+
+/* ── Description ─────────────────────────────────────────────────────────── */
+.nds-dialog-description {
+  margin: 0;
+  font-size: 0.875rem;                             /* 14px */
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────── */
+.nds-dialog-body {
+  /* sem estilos próprios — o consumidor define padding/spacing do conteúdo */
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.nds-dialog-footer {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--spacing-2);                           /* 8px */
+
+  margin-inline: calc(var(--spacing-4) * -1);     /* -16px — rasga até as bordas */
+  margin-bottom: calc(var(--spacing-4) * -1);
+  padding: var(--spacing-4);
+
+  background-color: hsl(var(--muted) / 0.5);
+  border-top: 1px solid hsl(var(--border));
+  border-end-start-radius: 0.75rem;
+  border-end-end-radius: 0.75rem;
+}
+
+@media (min-width: 40rem) {
+  .nds-dialog-footer {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+/* ── Close button ────────────────────────────────────────────────────────── */
+.nds-dialog-close {
+  position: absolute;
+  top: var(--spacing-4);
+  right: var(--spacing-4);
+
+  background: transparent;
+  border: 0;
+  border-radius: 0.25rem;                          /* 4px — radius-sm */
+  padding: var(--spacing-1);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 150ms, box-shadow 150ms;
+}
+
+.nds-dialog-close:hover {
+  opacity: 1;
+}
+
+.nds-dialog-close:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+}
+
+.nds-dialog-close > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  color: currentColor;
+}
+
+/* ── Animations ──────────────────────────────────────────────────────────── */
+@keyframes nds-dialog-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes nds-dialog-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes nds-dialog-zoom-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes nds-dialog-zoom-out {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.95); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-dialog-overlay,
+  .nds-dialog-content {
+    animation: none;
+  }
+}

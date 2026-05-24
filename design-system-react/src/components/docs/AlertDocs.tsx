@@ -6,6 +6,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -21,6 +22,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -59,6 +61,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -435,6 +438,86 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     <Info aria-hidden="true" className="h-4 w-4" />
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
                   </Alert>
+                ),
+              },
+            ]}
+          />
+
+          {/* ── Composições ───────────────────────────────────────────── */}
+          <DocsCompositions
+            title={tContent("variants.compositionsTitle")}
+            useWhenLabel={tNav("common.useWhen")}
+            componentSlug="alert"
+            items={[
+              {
+                name: tContent("variants.compositions.withIcon.name"),
+                description: tContent("variants.compositions.withIcon.description"),
+                useWhen: tContent("variants.compositions.withIcon.use"),
+                code: `<Alert>\n  <Info aria-hidden="true" className="h-4 w-4" />\n  <AlertTitle>Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
+                preview: (
+                  <Alert className="w-full">
+                    <Info aria-hidden="true" className="h-4 w-4" />
+                    <AlertTitle>{tContent("demonstration.labels.infoTitle")}</AlertTitle>
+                    <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
+                  </Alert>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.withAction.name"),
+                description: tContent("variants.compositions.withAction.description"),
+                useWhen: tContent("variants.compositions.withAction.use"),
+                code: `<Alert>\n  <Info aria-hidden="true" className="h-4 w-4" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription className="flex items-center justify-between gap-4 mt-1">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+                preview: (
+                  <Alert className="w-full">
+                    <Info aria-hidden="true" className="h-4 w-4" />
+                    <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+                    <AlertDescription className="flex items-center justify-between gap-4 mt-1">
+                      <span>Salve seu trabalho para não perder as alterações.</span>
+                      <Button size="sm" variant="outline">Salvar agora</Button>
+                    </AlertDescription>
+                  </Alert>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.compact.name"),
+                description: tContent("variants.compositions.compact.description"),
+                useWhen: tContent("variants.compositions.compact.use"),
+                code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" className="h-4 w-4" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
+                preview: (
+                  <Alert variant="destructive" className="w-full">
+                    <AlertCircle aria-hidden="true" className="h-4 w-4" />
+                    <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
+                  </Alert>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.multipleTypes.name"),
+                description: tContent("variants.compositions.multipleTypes.description"),
+                useWhen: tContent("variants.compositions.multipleTypes.use"),
+                code: `<div className="space-y-3">\n  <Alert>\n    <Info aria-hidden="true" className="h-4 w-4" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle aria-hidden="true" className="h-4 w-4" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert className="bg-success/10 text-success border-success/30">\n    <CheckCircle2 aria-hidden="true" className="h-4 w-4" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert className="bg-warning/10 text-warning border-warning/30">\n    <TriangleAlert aria-hidden="true" className="h-4 w-4" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
+                preview: (
+                  <div className="space-y-3 w-full">
+                    <Alert>
+                      <Info aria-hidden="true" className="h-4 w-4" />
+                      <AlertTitle>Informação</AlertTitle>
+                      <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
+                    </Alert>
+                    <Alert variant="destructive">
+                      <AlertCircle aria-hidden="true" className="h-4 w-4" />
+                      <AlertTitle>Erro</AlertTitle>
+                      <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
+                    </Alert>
+                    <Alert className="bg-success/10 text-success border-success/30">
+                      <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+                      <AlertTitle>Sucesso</AlertTitle>
+                      <AlertDescription>Ação concluída com sucesso.</AlertDescription>
+                    </Alert>
+                    <Alert className="bg-warning/10 text-warning border-warning/30">
+                      <TriangleAlert aria-hidden="true" className="h-4 w-4" />
+                      <AlertTitle>Aviso</AlertTitle>
+                      <AlertDescription>Aviso que requer atenção.</AlertDescription>
+                    </Alert>
+                  </div>
                 ),
               },
             ]}

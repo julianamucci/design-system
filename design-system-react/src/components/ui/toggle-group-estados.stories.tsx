@@ -23,7 +23,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <ToggleGroup type="single" aria-label="Alinhamento do texto">
+    <ToggleGroup aria-label="Alinhamento do texto">
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />
       </ToggleGroupItem>
@@ -57,7 +57,7 @@ export const Default: Story = {
 
 export const Selected: Story = {
   render: () => (
-    <ToggleGroup type="single" defaultValue="center" aria-label="Alinhamento do texto">
+    <ToggleGroup defaultValue={["center"]} aria-label="Alinhamento do texto">
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />
       </ToggleGroupItem>
@@ -89,7 +89,7 @@ export const Selected: Story = {
 
 export const Focus: Story = {
   render: () => (
-    <ToggleGroup type="single" aria-label="Alinhamento do texto">
+    <ToggleGroup aria-label="Alinhamento do texto">
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />
       </ToggleGroupItem>
@@ -129,7 +129,7 @@ export const Focus: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <ToggleGroup type="single" disabled defaultValue="center" aria-label="Alinhamento do texto">
+    <ToggleGroup disabled defaultValue={["center"]} aria-label="Alinhamento do texto">
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />
       </ToggleGroupItem>
@@ -171,7 +171,7 @@ export const Disabled: Story = {
 
 export const DisabledItem: Story = {
   render: () => (
-    <ToggleGroup type="single" aria-label="Alinhamento do texto">
+    <ToggleGroup aria-label="Alinhamento do texto">
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />
       </ToggleGroupItem>

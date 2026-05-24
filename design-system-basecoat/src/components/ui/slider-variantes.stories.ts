@@ -35,19 +35,23 @@ function withLabel(opts: {
   const { idPrefix, labelText, ariaLabel, min = 0, max = 100, step = 1, value = 0, unit = '' } = opts;
 
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2 w-72';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'sm';
+  wrap.style.width = '18rem';
 
   const row = document.createElement('div');
-  row.className = 'flex items-center justify-between';
+  row.className = 'nds-cluster';
+  row.dataset.justify = 'between';
 
   const label = document.createElement('label');
   label.id = `${idPrefix}-label`;
-  label.className = 'text-sm font-medium';
+  label.className = 'nds-text-body nds-font-medium';
   label.textContent = labelText;
 
   const valueText = document.createElement('span');
   valueText.id = `${idPrefix}-value`;
-  valueText.className = 'text-sm tabular-nums text-muted-foreground';
+  valueText.className = 'nds-text-body nds-text-muted-foreground';
+  valueText.style.fontVariantNumeric = 'tabular-nums';
   valueText.setAttribute('aria-live', 'polite');
   valueText.textContent = `${value}${unit}`;
 
@@ -114,17 +118,21 @@ export const Range: Story = {
   render: () => {
     // Composição manual com 2 sliders — factory custom não suporta 2 thumbs
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2 w-80';
+    wrap.className = 'nds-stack';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.width = '20rem';
 
     const row = document.createElement('div');
-    row.className = 'flex items-center justify-between';
+    row.className = 'nds-cluster';
+    row.dataset.justify = 'between';
     const label = document.createElement('label');
     label.id = 'v-range-label';
-    label.className = 'text-sm font-medium';
+    label.className = 'nds-text-body nds-font-medium';
     label.textContent = 'Faixa de preço';
     const valueText = document.createElement('span');
     valueText.id = 'v-range-value';
-    valueText.className = 'text-sm tabular-nums text-muted-foreground';
+    valueText.className = 'nds-text-body nds-text-muted-foreground';
+    valueText.style.fontVariantNumeric = 'tabular-nums';
     valueText.setAttribute('aria-live', 'polite');
 
     let minV = 100;
@@ -210,10 +218,14 @@ export const Range: Story = {
 export const Vertical: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col items-center gap-3 w-72';
+    wrap.className = 'nds-stack nds-italic';
+    wrap.dataset.spacing = 'sm';
+    wrap.dataset.align = 'center';
+    wrap.style.width = '18rem';
 
     const note = document.createElement('p');
-    note.className = 'text-sm text-muted-foreground italic text-center';
+    note.className = 'nds-text-body nds-text-muted-foreground nds-italic';
+    note.style.textAlign = 'center';
     note.textContent =
       'A variante "vertical" NÃO é suportada de forma acessível no Basecoat — <input type="range"> nativo não expõe orientação vertical via ARIA. Use a variante horizontal.';
 

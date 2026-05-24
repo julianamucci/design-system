@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── Chart — Vanilla factory standalone ─────────────────────────────────────
+// Visual: classe .nds-chart (zero Tailwind/basecoat-css). SVG renderizado
+// inline com cores controladas via props/tokens.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -44,11 +46,12 @@ export function createChart(options: ChartOptions): HTMLElement {
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'chart';
-  wrapper.className = cn('w-full overflow-hidden', options.class);
+  wrapper.className = 'nds-chart';
+  if (options.class) wrapper.classList.add(...options.class.split(' ').filter(Boolean));
 
   if (!data.length) {
     const empty = document.createElement('p');
-    empty.className = 'text-sm text-muted-foreground text-center py-4';
+    empty.className = 'nds-chart-empty';
     empty.textContent = 'No data';
     wrapper.appendChild(empty);
     return wrapper;

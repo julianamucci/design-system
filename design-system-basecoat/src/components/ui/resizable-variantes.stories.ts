@@ -24,7 +24,9 @@ type Story = StoryObj;
 
 function panelContent(label: string, extraClass = ''): HTMLElement {
   const el = document.createElement('div');
-  el.className = `h-full w-full flex items-center justify-center p-4 text-sm font-medium ${extraClass}`;
+  el.className = `nds-cluster nds-w-full nds-p-4 nds-text-body nds-font-medium ${extraClass}`.trim();
+  el.dataset.justify = 'center';
+  el.style.height = '100%';
   const span = document.createElement('span');
   span.textContent = label;
   el.appendChild(span);
@@ -35,7 +37,7 @@ function frame(child: HTMLElement, minHeight = '220px'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.contain = 'layout';
   wrap.style.minHeight = minHeight;
-  wrap.className = 'w-full border border-border rounded-md overflow-hidden bg-background';
+  wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
   wrap.appendChild(child);
   return wrap;
 }
@@ -48,7 +50,7 @@ export const Horizontal: Story = {
     const root = createResizablePanel({
       direction: 'horizontal',
       panels: [
-        { defaultSize: 30, minSize: 15, content: panelContent('Sidebar', 'bg-muted text-muted-foreground') },
+        { defaultSize: 30, minSize: 15, content: panelContent('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
         { defaultSize: 70, minSize: 30, content: panelContent('Conteúdo principal') },
       ],
     });
@@ -79,7 +81,7 @@ export const Vertical: Story = {
       direction: 'vertical',
       panels: [
         { defaultSize: 50, minSize: 20, content: panelContent('Topo') },
-        { defaultSize: 50, minSize: 20, content: panelContent('Rodapé', 'bg-muted text-muted-foreground') },
+        { defaultSize: 50, minSize: 20, content: panelContent('Rodapé', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
     const handle = root.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
@@ -106,7 +108,7 @@ export const Nested: Story = {
       direction: 'vertical',
       panels: [
         { defaultSize: 60, minSize: 20, content: panelContent('Editor') },
-        { defaultSize: 40, minSize: 20, content: panelContent('Console', 'bg-muted text-muted-foreground') },
+        { defaultSize: 40, minSize: 20, content: panelContent('Console', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
     const innerWrap = document.createElement('div');
@@ -117,7 +119,7 @@ export const Nested: Story = {
     const root = createResizablePanel({
       direction: 'horizontal',
       panels: [
-        { defaultSize: 30, minSize: 15, content: panelContent('Sidebar', 'bg-muted text-muted-foreground') },
+        { defaultSize: 30, minSize: 15, content: panelContent('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
         { defaultSize: 70, minSize: 30, content: innerWrap },
       ],
     });

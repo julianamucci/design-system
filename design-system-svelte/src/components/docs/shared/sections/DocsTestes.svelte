@@ -79,7 +79,7 @@
             <TableBody>
               {#each visual.items as item}
                 <TableRow class="border-b border-border last:border-0 hover:bg-muted/5">
-                  <TableCell class="p-3 font-mono text-xs">{item.story}</TableCell>
+                  <TableCell class="p-3 text-sm">{item.story}</TableCell>
                   <TableCell class="p-3">
                     <Badge variant="outline" class={priorityClass(item.priority)}>{item.priority}</Badge>
                   </TableCell>

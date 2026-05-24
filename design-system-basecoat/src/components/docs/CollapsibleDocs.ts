@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -47,9 +48,54 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+// ─── Icon helpers (inline SVG, no lucide dep) ─────────────────────────────────
+
+type IconNode = [string, Record<string, string>];
+
+const FilterIcon: IconNode[] = [
+  ['polygon', { points: '22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3' }],
+];
+const ChevronDownIcon: IconNode[] = [
+  ['path', { d: 'm6 9 6 6 6-6' }],
+];
+const SettingsIcon: IconNode[] = [
+  ['path', { d: 'M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z' }],
+  ['circle', { cx: '12', cy: '12', r: '3' }],
+];
+
+function createIcon(nodes: IconNode[], extraClass = ''): SVGSVGElement {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('class', `nds-icon nds-shrink-0${extraClass ? ' ' + extraClass : ''}`);
+  for (const [tag, attrs] of nodes) {
+    const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+    svg.appendChild(child);
+  }
+  return svg;
+}
+
+function makeTriggerWithIcon(nodes: IconNode[], label: string): HTMLElement {
+  const span = document.createElement('span');
+  span.className = 'nds-cluster';
+  span.dataset.spacing = 'sm';
+  span.appendChild(createIcon(nodes));
+  const text = document.createElement('span');
+  text.textContent = label;
+  span.appendChild(text);
+  return span;
+}
+
 function makeContent(items: string[]): HTMLElement {
   const div = document.createElement('div');
-  div.className = 'rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2';
+  div.className = 'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
+  div.dataset.spacing = 'sm';
   for (const text of items) {
     const p = document.createElement('p');
     p.textContent = text;
@@ -68,7 +114,7 @@ function buildDemoDefault(): HTMLElement {
       t('demonstration.labels.advancedFilter2'),
     ]),
     defaultOpen: false,
-    class: 'w-full max-w-sm',
+    class: 'nds-w-full nds-max-w-sm',
   });
 }
 
@@ -80,7 +126,7 @@ function buildDemoDefaultOpen(): HTMLElement {
       t('demonstration.labels.advancedFilter2'),
     ]),
     defaultOpen: true,
-    class: 'w-full max-w-sm',
+    class: 'nds-w-full nds-max-w-sm',
   });
 }
 
@@ -92,7 +138,7 @@ function buildDemoDisabled(): HTMLElement {
       t('demonstration.labels.advancedFilter2'),
     ]),
     disabled: true,
-    class: 'w-full max-w-sm',
+    class: 'nds-w-full nds-max-w-sm',
   });
 }
 
@@ -130,6 +176,7 @@ export function createCollapsibleDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -180,7 +227,7 @@ export function createCollapsibleDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -193,31 +240,35 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Demonstração ───────────────────────────────────────────────────
       case 'demonstracao': {
         const demoWrapper = document.createElement('div');
-        demoWrapper.className = 'space-y-8';
+        demoWrapper.className = 'nds-stack';
+        demoWrapper.dataset.spacing = 'xl';
 
         // Demo 1: Default (uncontrolled, fechado)
         const block1 = document.createElement('div');
-        block1.className = 'space-y-2';
+        block1.className = 'nds-stack';
+        block1.dataset.spacing = 'sm';
         const label1 = document.createElement('p');
-        label1.className = 'text-sm font-medium text-muted-foreground';
+        label1.className = 'nds-text-body nds-font-medium nds-text-muted-foreground';
         label1.textContent = 'Padrão (não-controlado, fechado)';
         block1.appendChild(label1);
         block1.appendChild(buildDemoDefault());
 
         // Demo 2: defaultOpen=true
         const block2 = document.createElement('div');
-        block2.className = 'space-y-2';
+        block2.className = 'nds-stack';
+        block2.dataset.spacing = 'sm';
         const label2 = document.createElement('p');
-        label2.className = 'text-sm font-medium text-muted-foreground';
+        label2.className = 'nds-text-body nds-font-medium nds-text-muted-foreground';
         label2.textContent = 'Aberto por padrão (defaultOpen: true)';
         block2.appendChild(label2);
         block2.appendChild(buildDemoDefaultOpen());
 
         // Demo 3: Disabled
         const block3 = document.createElement('div');
-        block3.className = 'space-y-2';
+        block3.className = 'nds-stack';
+        block3.dataset.spacing = 'sm';
         const label3 = document.createElement('p');
-        label3.className = 'text-sm font-medium text-muted-foreground';
+        label3.className = 'nds-text-body nds-font-medium nds-text-muted-foreground';
         label3.textContent = 'Desabilitado';
         block3.appendChild(label3);
         block3.appendChild(buildDemoDisabled());
@@ -289,12 +340,12 @@ export function createCollapsibleDocs(): HTMLElement {
               doPreviewFactory: () => createCollapsible({
                 trigger: 'Exibir filtros avançados',
                 content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
-                class: 'w-full max-w-xs text-sm',
+                class: 'nds-w-full nds-max-w-xs nds-text-body',
               }),
               dontPreviewFactory: () => createCollapsible({
                 trigger: 'Ver mais',
                 content: makeContent(['Conteúdo extra']),
-                class: 'w-full max-w-xs text-sm',
+                class: 'nds-w-full nds-max-w-xs nds-text-body',
               }),
             },
             {
@@ -305,16 +356,17 @@ export function createCollapsibleDocs(): HTMLElement {
               doPreviewFactory: () => createCollapsible({
                 trigger: 'Exibir detalhes adicionais',
                 content: makeContent(['Detalhe 1', 'Detalhe 2']),
-                class: 'w-full max-w-xs text-sm',
+                class: 'nds-w-full nds-max-w-xs nds-text-body',
               }),
               dontPreviewFactory: () => {
                 const wrapper = document.createElement('div');
-                wrapper.className = 'space-y-2 w-full max-w-xs';
+                wrapper.className = 'nds-stack nds-w-full nds-max-w-xs';
+                wrapper.dataset.spacing = 'sm';
                 for (let i = 1; i <= 3; i++) {
                   wrapper.appendChild(createCollapsible({
                     trigger: `Seção ${i}`,
                     content: makeContent([`Conteúdo da seção ${i}`]),
-                    class: 'w-full text-sm',
+                    class: 'nds-w-full nds-text-body',
                   }));
                 }
                 return wrapper;
@@ -348,7 +400,7 @@ export function createCollapsibleDocs(): HTMLElement {
               previewFactory: () => createCollapsible({
                 trigger: 'Exibir filtros avançados',
                 content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
-                class: 'w-full max-w-sm text-sm',
+                class: 'nds-w-full nds-max-w-sm nds-text-body',
               }),
             },
             {
@@ -359,7 +411,7 @@ export function createCollapsibleDocs(): HTMLElement {
                 trigger: 'Ocultar filtros avançados',
                 content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
                 defaultOpen: true,
-                class: 'w-full max-w-sm text-sm',
+                class: 'nds-w-full nds-max-w-sm nds-text-body',
               }),
             },
             {
@@ -373,7 +425,150 @@ export function createCollapsibleDocs(): HTMLElement {
                   content: makeContent(['Filtro avançado 1 (controlado)', 'Filtro avançado 2 (controlado)']),
                   defaultOpen: isOpen,
                   onOpenChange: (next) => { isOpen = next; },
-                  class: 'w-full max-w-sm text-sm',
+                  class: 'nds-w-full nds-max-w-sm nds-text-body',
+                });
+              },
+            },
+          ],
+        });
+      }
+
+      // ── Composições ────────────────────────────────────────────────────
+      case 'composicoes': {
+        const codeCustomButton = `const btn = document.createElement('button');\nbtn.className = 'nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';\nbtn.dataset.spacing = 'sm';\nbtn.style.display = 'inline-flex';\nbtn.textContent = 'Exibir opções avançadas';\n\ncreateCollapsible({\n  trigger: btn,\n  content: contentEl,\n});`;
+        const codeIconTrigger = `const trigger = document.createElement('span');\ntrigger.className = 'nds-cluster';\ntrigger.dataset.spacing = 'sm';\ntrigger.appendChild(filterIconSvg); // aria-hidden\nconst label = document.createElement('span');\nlabel.textContent = 'Filtros avançados';\ntrigger.appendChild(label);\n\ncreateCollapsible({ trigger, content: contentEl });`;
+        const codeRotatingChevron = `const chevron = chevronDownSvg;\nchevron.classList.add('transition-transform', 'duration-200', '[[data-state=open]_&]:rotate-180');\n\nconst inner = document.createElement('span');\ninner.className = 'nds-cluster nds-w-full';\ninner.dataset.justify = 'between';\ninner.append(labelSpan, chevron);\n\nconst btn = document.createElement('button');\nbtn.className = 'nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';\nbtn.dataset.justify = 'between';\nbtn.appendChild(inner);\n\ncreateCollapsible({ trigger: btn, content: contentEl });`;
+        const codeRichContent = `const trigger = makeTriggerWithIcon(SettingsIcon, 'Configurações do sistema');\n\nconst content = document.createElement('div');\ncontent.className = 'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';\ncontent.dataset.spacing = 'sm';\n// append note + checkbox labels…\n\ncreateCollapsible({ trigger, content });`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'collapsible',
+          items: [
+            {
+              name: t('variants.compositions.customButton.name'),
+              description: t('variants.compositions.customButton.description'),
+              useWhen: t('variants.compositions.customButton.use'),
+              code: codeCustomButton,
+              previewFactory: () => {
+                const btn = document.createElement('button');
+                btn.className =
+                  'nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';
+                btn.dataset.spacing = 'sm';
+                btn.style.display = 'inline-flex';
+                btn.textContent = 'Exibir opções avançadas';
+                return createCollapsible({
+                  trigger: btn,
+                  content: makeContent(['Opção avançada 1', 'Opção avançada 2', 'Opção avançada 3']),
+                  class: 'nds-w-full nds-max-w-sm',
+                });
+              },
+            },
+            {
+              name: t('variants.compositions.iconTrigger.name'),
+              description: t('variants.compositions.iconTrigger.description'),
+              useWhen: t('variants.compositions.iconTrigger.use'),
+              code: codeIconTrigger,
+              previewFactory: () => {
+                const triggerEl = makeTriggerWithIcon(FilterIcon, 'Filtros avançados');
+                return createCollapsible({
+                  trigger: triggerEl,
+                  content: makeContent(['Filtro por categoria', 'Filtro por data', 'Filtro por status']),
+                  class: 'nds-w-full nds-max-w-sm',
+                });
+              },
+            },
+            {
+              name: t('variants.compositions.rotatingChevron.name'),
+              description: t('variants.compositions.rotatingChevron.description'),
+              useWhen: t('variants.compositions.rotatingChevron.use'),
+              code: codeRotatingChevron,
+              previewFactory: () => {
+                const chevron = createIcon(
+                  ChevronDownIcon,
+                  'transition-transform duration-200 [[data-state=open]_&]:rotate-180',
+                );
+                const triggerEl = document.createElement('span');
+                triggerEl.className = 'nds-cluster nds-w-full';
+                triggerEl.dataset.justify = 'between';
+                const label = document.createElement('span');
+                label.textContent = 'Configurações avançadas';
+                triggerEl.appendChild(label);
+                triggerEl.appendChild(chevron);
+
+                const btn = document.createElement('button');
+                btn.className =
+                  'nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';
+                btn.dataset.justify = 'between';
+                btn.appendChild(triggerEl);
+
+                const content = document.createElement('div');
+                content.className = 'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
+                content.dataset.spacing = 'sm';
+                [
+                  { key: 'Notificações', val: 'Ativadas' },
+                  { key: 'Privacidade', val: 'Modo estrito' },
+                ].forEach(({ key, val }) => {
+                  const row = document.createElement('div');
+                  row.className = 'nds-cluster';
+                  row.dataset.justify = 'between';
+                  const k = document.createElement('span');
+                  k.className = 'nds-text-muted-foreground';
+                  k.textContent = key;
+                  const v = document.createElement('span');
+                  v.className = 'nds-font-medium';
+                  v.textContent = val;
+                  row.appendChild(k);
+                  row.appendChild(v);
+                  content.appendChild(row);
+                });
+
+                return createCollapsible({
+                  trigger: btn,
+                  content,
+                  class: 'nds-w-full nds-max-w-sm',
+                });
+              },
+            },
+            {
+              name: t('variants.compositions.richContent.name'),
+              description: t('variants.compositions.richContent.description'),
+              useWhen: t('variants.compositions.richContent.use'),
+              code: codeRichContent,
+              previewFactory: () => {
+                const triggerEl = makeTriggerWithIcon(SettingsIcon, 'Configurações do sistema');
+
+                const content = document.createElement('div');
+                content.className = 'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
+                content.dataset.spacing = 'sm';
+
+                const note = document.createElement('p');
+                note.className = 'nds-text-muted-foreground nds-text-caption';
+                note.textContent = 'Altere as configurações abaixo com cuidado. As mudanças são aplicadas imediatamente.';
+                content.appendChild(note);
+
+                [
+                  'Habilitar modo de depuração',
+                  'Limpar cache ao sair',
+                  'Exportar logs automaticamente',
+                ].forEach((item) => {
+                  const row = document.createElement('label');
+                  row.className = 'nds-cluster nds-cursor-pointer';
+                  row.dataset.spacing = 'sm';
+                  const checkbox = document.createElement('input');
+                  checkbox.type = 'checkbox';
+                  checkbox.className = 'nds-icon nds-rounded-sm nds-border-default';
+                  const text = document.createElement('span');
+                  text.textContent = item;
+                  row.appendChild(checkbox);
+                  row.appendChild(text);
+                  content.appendChild(row);
+                });
+
+                return createCollapsible({
+                  trigger: triggerEl,
+                  content,
+                  class: 'nds-w-full nds-max-w-sm',
                 });
               },
             },

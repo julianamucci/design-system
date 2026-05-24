@@ -18,7 +18,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -62,6 +62,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -458,6 +459,106 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction>Sair</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="alert-dialog"
+    items={[
+      {
+        name: $tStore('variants.compositions.destructive.name'),
+        description: $tStore('variants.compositions.destructive.description'),
+        useWhen: $tStore('variants.compositions.destructive.use'),
+        code: `<AlertDialog>
+  <AlertDialogTrigger>
+    {#snippet child({ props })}
+      <Button variant="destructive" {...props}>Excluir conta</Button>
+    {/snippet}
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
+      <AlertDialogDescription>
+        Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+      <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+        Excluir conta
+      </AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>`,
+        preview: compDestructive,
+      },
+      {
+        name: $tStore('variants.compositions.neutral.name'),
+        description: $tStore('variants.compositions.neutral.description'),
+        useWhen: $tStore('variants.compositions.neutral.use'),
+        code: `<AlertDialog>
+  <AlertDialogTrigger>
+    {#snippet child({ props })}
+      <Button {...props}>Publicar agora</Button>
+    {/snippet}
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Publicar este conteúdo?</AlertDialogTitle>
+      <AlertDialogDescription>
+        Ao publicar, o conteúdo fica visível para todos os usuários.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Voltar</AlertDialogCancel>
+      <AlertDialogAction>Publicar</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>`,
+        preview: compNeutral,
+      },
+    ]}
+  />
+
+  {#snippet compDestructive()}
+    <AlertDialog>
+      <AlertDialogTrigger>
+        {#snippet child({ props })}
+          <Button variant="destructive" {...props}>Excluir conta</Button>
+        {/snippet}
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
+          <AlertDialogDescription>Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">Excluir conta</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  {/snippet}
+  {#snippet compNeutral()}
+    <AlertDialog>
+      <AlertDialogTrigger>
+        {#snippet child({ props })}
+          <Button {...props}>Publicar agora</Button>
+        {/snippet}
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Publicar este conteúdo?</AlertDialogTitle>
+          <AlertDialogDescription>Ao publicar, o conteúdo fica visível para todos os usuários.</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Voltar</AlertDialogCancel>
+          <AlertDialogAction>Publicar</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -26,6 +26,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -64,6 +65,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -584,6 +586,264 @@ interface PopoverContentProps {
                         {tContent("demonstration.labels.form.submit")}
                       </Button>
                     </form>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="popover"
+        items={[
+          {
+            name: tContent("variants.compositions.editProfile.name"),
+            description: tContent("variants.compositions.editProfile.description"),
+            useWhen: tContent("variants.compositions.editProfile.use"),
+            code: `<Popover defaultOpen>
+  <PopoverTrigger asChild>
+    <Button variant="outline">Editar perfil</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Dados do perfil</PopoverTitle>
+      <PopoverDescription>
+        As mudanças são salvas ao confirmar.
+      </PopoverDescription>
+    </PopoverHeader>
+    <form
+      className="space-y-3"
+      onSubmit={(e) => e.preventDefault()}
+    >
+      <div className="space-y-1">
+        <Label htmlFor="pc-name">Nome</Label>
+        <Input id="pc-name" defaultValue="Joana Silva" />
+      </div>
+      <div className="space-y-1">
+        <Label htmlFor="pc-email">Email</Label>
+        <Input id="pc-email" type="email" defaultValue="joana@example.com" />
+      </div>
+      <Button type="submit" size="sm">Atualizar</Button>
+    </form>
+  </PopoverContent>
+</Popover>`,
+            preview: (
+              <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      {tContent("demonstration.labels.form.trigger")}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverHeader>
+                      <PopoverTitle>
+                        {tContent("demonstration.labels.form.trigger")}
+                      </PopoverTitle>
+                    </PopoverHeader>
+                    <form
+                      className="space-y-2"
+                      onSubmit={(e) => e.preventDefault()}
+                    >
+                      <div className="space-y-1">
+                        <Label htmlFor="pc-name" className="text-xs">
+                          {tContent("demonstration.labels.form.name")}
+                        </Label>
+                        <Input id="pc-name" defaultValue="Joana Silva" />
+                      </div>
+                      <div className="space-y-1">
+                        <Label htmlFor="pc-email" className="text-xs">
+                          {tContent("demonstration.labels.form.email")}
+                        </Label>
+                        <Input id="pc-email" type="email" defaultValue="joana@example.com" />
+                      </div>
+                      <Button type="submit" size="sm">
+                        {tContent("demonstration.labels.form.submit")}
+                      </Button>
+                    </form>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.tableFilter.name"),
+            description: tContent("variants.compositions.tableFilter.description"),
+            useWhen: tContent("variants.compositions.tableFilter.use"),
+            code: `<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="outline">Filtros</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Filtrar por status</PopoverTitle>
+    </PopoverHeader>
+    <div className="space-y-2">
+      <label className="flex items-center gap-2 text-sm">
+        <input type="checkbox" defaultChecked />
+        Ativo
+      </label>
+      <label className="flex items-center gap-2 text-sm">
+        <input type="checkbox" />
+        Pendente
+      </label>
+      <label className="flex items-center gap-2 text-sm">
+        <input type="checkbox" />
+        Arquivado
+      </label>
+    </div>
+    <div className="flex justify-end gap-2 pt-2">
+      <Button variant="ghost" size="sm">Limpar</Button>
+      <Button size="sm">Aplicar</Button>
+    </div>
+  </PopoverContent>
+</Popover>`,
+            preview: (
+              <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm">Filtros</Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverHeader>
+                      <PopoverTitle>Filtrar por status</PopoverTitle>
+                    </PopoverHeader>
+                    <div className="space-y-2">
+                      {["Ativo", "Pendente", "Arquivado"].map((opt) => (
+                        <label key={opt} className="flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            defaultChecked={opt === "Ativo"}
+                            className="h-4 w-4"
+                          />
+                          {opt}
+                        </label>
+                      ))}
+                    </div>
+                    <div className="flex justify-end gap-2 pt-2">
+                      <Button variant="ghost" size="sm">Limpar</Button>
+                      <Button size="sm">Aplicar</Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.colorPicker.name"),
+            description: tContent("variants.compositions.colorPicker.description"),
+            useWhen: tContent("variants.compositions.colorPicker.use"),
+            code: `<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="outline">Cor</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Selecionar cor</PopoverTitle>
+    </PopoverHeader>
+    <div className="grid grid-cols-6 gap-2">
+      {["Vermelho","Laranja","Amarelo","Verde","Azul","Roxo"].map((name, i) => (
+        <button
+          key={name}
+          type="button"
+          aria-label={name}
+          className={\`h-6 w-6 rounded-full ring-1 ring-foreground/10 \${["bg-red-500","bg-orange-500","bg-yellow-500","bg-green-500","bg-blue-500","bg-purple-500"][i]}\`}
+        />
+      ))}
+    </div>
+  </PopoverContent>
+</Popover>`,
+            preview: (
+              <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm">Cor</Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverHeader>
+                      <PopoverTitle>Selecionar cor</PopoverTitle>
+                    </PopoverHeader>
+                    <div className="grid grid-cols-6 gap-2">
+                      {[
+                        { name: "Vermelho", bg: "bg-red-500" },
+                        { name: "Laranja", bg: "bg-orange-500" },
+                        { name: "Amarelo", bg: "bg-yellow-500" },
+                        { name: "Verde", bg: "bg-green-500" },
+                        { name: "Azul", bg: "bg-blue-500" },
+                        { name: "Roxo", bg: "bg-purple-500" },
+                      ].map((s) => (
+                        <button
+                          key={s.name}
+                          type="button"
+                          aria-label={s.name}
+                          className={`h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring ${s.bg}`}
+                        />
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.quickSettings.name"),
+            description: tContent("variants.compositions.quickSettings.description"),
+            useWhen: tContent("variants.compositions.quickSettings.use"),
+            code: `<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="outline">Configurações</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Preferências rápidas</PopoverTitle>
+    </PopoverHeader>
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <Label htmlFor="cfg-notifs">Notificações</Label>
+        <input id="cfg-notifs" type="checkbox" defaultChecked className="h-4 w-4" />
+      </div>
+      <div className="flex items-center justify-between gap-3">
+        <Label htmlFor="cfg-dark">Modo escuro</Label>
+        <input id="cfg-dark" type="checkbox" className="h-4 w-4" />
+      </div>
+      <div className="flex items-center justify-between gap-3">
+        <Label htmlFor="cfg-compact">Modo compacto</Label>
+        <input id="cfg-compact" type="checkbox" className="h-4 w-4" />
+      </div>
+    </div>
+  </PopoverContent>
+</Popover>`,
+            preview: (
+              <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm">Configurações</Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverHeader>
+                      <PopoverTitle>Preferências rápidas</PopoverTitle>
+                    </PopoverHeader>
+                    <div className="space-y-3">
+                      {[
+                        { id: "cfg-notifs", label: "Notificações", checked: true },
+                        { id: "cfg-dark", label: "Modo escuro", checked: false },
+                        { id: "cfg-compact", label: "Modo compacto", checked: false },
+                      ].map((t) => (
+                        <div key={t.id} className="flex items-center justify-between gap-3">
+                          <Label htmlFor={t.id} className="text-sm">{t.label}</Label>
+                          <input
+                            id={t.id}
+                            type="checkbox"
+                            defaultChecked={t.checked}
+                            className="h-4 w-4"
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </PopoverContent>
                 </Popover>
               </div>

@@ -106,7 +106,6 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
     const targetWin = isIframe ? window.parent : window;
 
     const fullTitle = `${title} · Design System`;
-    const canonicalBase = `${targetWin.location.origin}${targetWin.location.pathname}${targetWin.location.search.replace(/[?&]lang=[^&]*/g, '').replace(/^&/, '?')}`;
 
     // ── Salva estado anterior para cleanup ────────────────────────────────
     const prevTitle = targetDoc.title;

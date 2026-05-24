@@ -28,7 +28,8 @@ export const EmptyState: Story = {
   name: 'Empty State — Sem resultados',
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-[320px] border rounded-md shadow-md';
+    wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+    wrap.style.width = '320px';
 
     // Cria command com query que não retorna resultados via input pre-preenchido
     const cmd = createCommand({
@@ -72,7 +73,8 @@ export const DisabledItem: Story = {
   name: 'Item Desabilitado',
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-[320px] border rounded-md shadow-md';
+    wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+    wrap.style.width = '320px';
     wrap.appendChild(
       createCommand({
         placeholder: 'Buscar...',

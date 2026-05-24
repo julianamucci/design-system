@@ -52,23 +52,29 @@ type Story = StoryObj<HoverCardArgs>;
 
 function buildPreviewContent(): HTMLElement {
   const root = document.createElement('div');
-  root.className = 'flex gap-3 items-start';
+  root.className = 'nds-cluster';
+  root.dataset.spacing = 'md';
+  root.dataset.align = 'start';
 
   const avatar = document.createElement('div');
   avatar.className =
-    'flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground text-sm font-medium';
+    'nds-cluster nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-muted-foreground nds-text-body nds-font-medium';
+  avatar.dataset.justify = 'center';
+  avatar.style.width = '2.5rem';
+  avatar.style.height = '2.5rem';
   avatar.setAttribute('aria-hidden', 'true');
   avatar.textContent = 'JS';
 
   const info = document.createElement('div');
-  info.className = 'flex flex-col gap-1';
+  info.className = 'nds-stack';
+  info.dataset.spacing = 'xs';
 
   const name = document.createElement('p');
-  name.className = 'text-sm font-medium leading-none';
+  name.className = 'nds-text-body nds-font-medium nds-leading-none';
   name.textContent = 'Joana Silva';
 
   const meta = document.createElement('p');
-  meta.className = 'text-xs text-muted-foreground';
+  meta.className = 'nds-text-caption nds-text-muted-foreground';
   meta.textContent = 'Designer · 142 seguidores';
 
   info.append(name, meta);
@@ -79,7 +85,9 @@ function buildPreviewContent(): HTMLElement {
 function buildHoverEl(args: HoverCardArgs): { el: HTMLElement; trigger: HTMLAnchorElement } {
   const trigger = document.createElement('a');
   trigger.href = '/users/joana';
-  trigger.className = 'underline underline-offset-4 text-sm font-medium text-primary';
+  trigger.className = 'nds-text-body nds-font-medium nds-text-primary';
+  trigger.style.textDecoration = 'underline';
+  trigger.style.textUnderlineOffset = '4px';
   trigger.textContent = args.triggerLabel;
 
   const el = createHoverCard({
@@ -97,7 +105,9 @@ export const Playground: Story = {
   render: (args) => {
     const container = document.createElement('div');
     container.style.contain = 'layout';
-    container.className = 'w-full min-h-[220px] flex items-center justify-center';
+    container.className = 'nds-cluster nds-w-full';
+    container.dataset.justify = 'center';
+    container.style.minHeight = '220px';
 
     const { el, trigger } = buildHoverEl(args);
     container.appendChild(el);

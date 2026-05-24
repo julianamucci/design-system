@@ -62,7 +62,9 @@ function createPreviewImage(src: string, alt: string): HTMLImageElement {
   img.alt = alt;
   img.loading = 'lazy';
   img.decoding = 'async';
-  img.className = 'object-cover w-full h-full rounded-md';
+  img.className = 'nds-w-full nds-rounded-md';
+  img.style.objectFit = 'cover';
+  img.style.height = '100%';
   return img;
 }
 
@@ -70,7 +72,9 @@ function createPreviewIframe(src: string, title: string): HTMLIFrameElement {
   const f = document.createElement('iframe');
   f.src = src;
   f.title = title;
-  f.className = 'w-full h-full rounded-md border-0';
+  f.className = 'nds-w-full nds-rounded-md';
+  f.style.height = '100%';
+  f.style.border = '0';
   f.loading = 'lazy';
   return f;
 }
@@ -79,7 +83,9 @@ function createPreviewVideo(poster: string, captionLabel: string): HTMLVideoElem
   const v = document.createElement('video');
   v.poster = poster;
   v.controls = true;
-  v.className = 'object-cover w-full h-full rounded-md';
+  v.className = 'nds-w-full nds-rounded-md';
+  v.style.objectFit = 'cover';
+  v.style.height = '100%';
   const track = document.createElement('track');
   track.kind = 'captions';
   track.srclang = 'pt';
@@ -91,9 +97,10 @@ function createPreviewVideo(poster: string, captionLabel: string): HTMLVideoElem
 
 function ratioPreview(ratio: number, labelKey: string, src: string = PREVIEW_IMAGES.landscape): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full space-y-2';
+  wrap.className = 'nds-stack nds-w-full';
+  wrap.dataset.spacing = 'xs';
   const caption = document.createElement('div');
-  caption.className = 'text-xs text-muted-foreground';
+  caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = stripHtml(t(labelKey));
   const ratioEl = createAspectRatio({
     ratio,
@@ -201,7 +208,8 @@ export function createAspectRatioDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const grid = document.createElement('div');
-            grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 w-full';
+            grid.className = 'nds-grid nds-w-full';
+            grid.style.gap = 'var(--spacing-6)';
             grid.append(
               ratioPreview(16 / 9, 'demonstration.labels.sixteenNine', PREVIEW_IMAGES.landscape),
               ratioPreview(4 / 3,  'demonstration.labels.fourThree',   PREVIEW_IMAGES.product),
@@ -218,9 +226,9 @@ export function createAspectRatioDocs(): HTMLElement {
           items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3')],
           structureLabel: t('anatomy.title'),
           structureCode:
-            `<div class="relative w-full" style="padding-bottom: 56.25%">   // Root — wrapper com ratio\n` +
+            `<div class="relative nds-w-full" style="padding-bottom: 56.25%">   // Root — wrapper com ratio\n` +
             `  <div class="absolute inset-0">                               // Inner — preenche o container\n` +
-            `    <img class="object-cover w-full h-full rounded-md" />      // Slot — conteúdo filho\n` +
+            `    <img class="object-cover nds-w-full h-full nds-rounded-md" />      // Slot — conteúdo filho\n` +
             `  </div>\n` +
             `</div>`,
         });
@@ -286,7 +294,9 @@ export function createAspectRatioDocs(): HTMLElement {
                 img.alt = 'Paisagem com object-cover';
                 img.loading = 'lazy';
                 img.decoding = 'async';
-                img.className = 'object-cover w-full h-full rounded-md';
+                img.className = 'nds-w-full nds-rounded-md';
+  img.style.objectFit = 'cover';
+  img.style.height = '100%';
                 return createAspectRatio({ ratio: 16 / 9, content: img });
               },
               dontPreviewFactory: () => {
@@ -295,7 +305,9 @@ export function createAspectRatioDocs(): HTMLElement {
                 img.alt = 'Retrato com object-contain';
                 img.loading = 'lazy';
                 img.decoding = 'async';
-                img.className = 'object-contain w-full h-full rounded-md bg-muted';
+                img.className = 'nds-w-full nds-rounded-md nds-bg-muted';
+                img.style.objectFit = 'contain';
+                img.style.height = '100%';
                 return createAspectRatio({ ratio: 16 / 9, content: img });
               },
             },
@@ -310,7 +322,9 @@ export function createAspectRatioDocs(): HTMLElement {
                 img.alt = 'Imagem com rounded-md no filho';
                 img.loading = 'lazy';
                 img.decoding = 'async';
-                img.className = 'object-cover w-full h-full rounded-md';
+                img.className = 'nds-w-full nds-rounded-md';
+  img.style.objectFit = 'cover';
+  img.style.height = '100%';
                 return createAspectRatio({ ratio: 4 / 3, content: img });
               },
               dontPreviewFactory: () => {
@@ -319,11 +333,13 @@ export function createAspectRatioDocs(): HTMLElement {
                 img.alt = 'Imagem sem rounded no filho';
                 img.loading = 'lazy';
                 img.decoding = 'async';
-                img.className = 'object-cover w-full h-full';
+                img.className = 'nds-w-full';
+                img.style.objectFit = 'cover';
+                img.style.height = '100%';
                 return createAspectRatio({
                   ratio: 4 / 3,
                   content: img,
-                  className: 'rounded-md overflow-hidden',
+                  className: 'nds-rounded-md nds-overflow-hidden',
                 });
               },
             },
@@ -340,7 +356,7 @@ export function createAspectRatioDocs(): HTMLElement {
             `const img = document.createElement('img');\n` +
             `img.src = '/cover.jpg';\n` +
             `img.alt = 'Capa do artigo';\n` +
-            `img.className = 'object-cover w-full h-full rounded-md';\n\n` +
+            `img.className = 'object-cover nds-w-full h-full nds-rounded-md';\n\n` +
             `const el = createAspectRatio({ ratio: 16 / 9, content: img });`,
         });
 
@@ -349,7 +365,7 @@ export function createAspectRatioDocs(): HTMLElement {
           `const img = document.createElement('img');\n` +
           `img.src = '/media.jpg';\n` +
           `img.alt = 'Descrição da mídia';\n` +
-          `img.className = 'object-cover w-full h-full rounded-md';\n\n` +
+          `img.className = 'object-cover nds-w-full h-full nds-rounded-md';\n\n` +
           `const el = createAspectRatio({ ratio: ${ratioExpr}, content: img });`;
 
         return createDocsVariants({
@@ -385,7 +401,7 @@ export function createAspectRatioDocs(): HTMLElement {
               code: mkCode('21 / 9'),
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full';
+                wrap.className = 'nds-w-full';
                 wrap.appendChild(createAspectRatio({
                   ratio: 21 / 9,
                   content: createPreviewImage(PREVIEW_IMAGES.ultrawide, '21 / 9 ultra-wide'),
@@ -454,10 +470,10 @@ export interface AspectRatioOptions {
 
       case 'tokens': {
         const customizationCode = `/* AspectRatio não aplica tokens próprios. Aplique no filho: */
-<img class="rounded-md object-cover w-full h-full" />
+<img class="nds-rounded-md object-cover nds-w-full h-full" />
 
 /* Placeholder opcional quando o conteúdo ainda não carregou: */
-<div class="absolute inset-0 bg-muted rounded-md" aria-hidden="true"></div>`;
+<div class="absolute inset-0 nds-bg-muted nds-rounded-md" aria-hidden="true"></div>`;
 
         return createDocsTokens({
           title: t('tokens.title'),

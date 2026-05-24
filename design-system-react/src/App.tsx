@@ -7,7 +7,7 @@ import { Sidebar, SidebarContent, SidebarHeader, SidebarProvider, SidebarInset, 
 import { Button } from './components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion';
 import { Toaster } from './components/ui/sonner';
-import { Moon, Sun, Home, Palette, FileText, Database, MessageSquare, Sparkles } from 'lucide-react';
+import { Moon, Sun, Home, MessageSquare, Sparkles } from 'lucide-react';
 import { HomePage } from './components/HomePage';
 import { ThemeSelector } from './components/ThemeSelector';
 import { getThemeInfo, themeDisplayNames } from '@shared/themes/theme-config';
@@ -130,7 +130,7 @@ export default function App() {
                 </SidebarMenuItem>
               </SidebarMenu>
 
-              <Accordion type="multiple" className="w-full">
+              <Accordion className="w-full">
                 {componentCategories.map((category) => (
                   <AccordionItem key={category.name} value={category.name} className="border-none">
                     <AccordionTrigger className="py-2 px-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md [&[data-state=open]>svg]:rotate-90">

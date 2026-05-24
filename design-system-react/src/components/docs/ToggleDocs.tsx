@@ -16,6 +16,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -54,6 +55,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -453,6 +455,121 @@ import { Bold } from "lucide-react";`;
                 <Eye aria-hidden="true" />
                 Mostrar ocultos
               </Toggle>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="toggle"
+        items={[
+          {
+            name: tContent("variants.compositions.toolbar.name"),
+            description: tContent("variants.compositions.toolbar.description"),
+            useWhen: tContent("variants.compositions.toolbar.use"),
+            code: `<div role="group" aria-label="Formatação de texto" className="flex items-center gap-1 rounded-md border border-input p-1">
+  <Toggle aria-label="Negrito" defaultPressed>
+    <Bold className="h-4 w-4" />
+  </Toggle>
+  <Toggle aria-label="Itálico">
+    <Italic className="h-4 w-4" />
+  </Toggle>
+  <Toggle aria-label="Sublinhado">
+    <Underline className="h-4 w-4" />
+  </Toggle>
+</div>`,
+            preview: (
+              <div role="group" aria-label="Formatação de texto" className="flex items-center gap-1 rounded-md border border-input p-1">
+                <Toggle aria-label="Negrito" defaultPressed>
+                  <Bold className="h-4 w-4" />
+                </Toggle>
+                <Toggle aria-label="Itálico">
+                  <Italic className="h-4 w-4" />
+                </Toggle>
+                <Toggle aria-label="Sublinhado">
+                  <Underline className="h-4 w-4" />
+                </Toggle>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.filterWithLabel.name"),
+            description: tContent("variants.compositions.filterWithLabel.description"),
+            useWhen: tContent("variants.compositions.filterWithLabel.use"),
+            code: `<Toggle variant="outline">
+  <Eye className="h-4 w-4" />
+  Mostrar ocultos
+</Toggle>`,
+            preview: (
+              <Toggle variant="outline">
+                <Eye className="h-4 w-4" />
+                Mostrar ocultos
+              </Toggle>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.sizes.name"),
+            description: tContent("variants.compositions.sizes.description"),
+            useWhen: tContent("variants.compositions.sizes.use"),
+            code: `<div className="flex items-center gap-3">
+  <Toggle variant="outline" size="sm" aria-label="Negrito (sm)">
+    <Bold className="h-4 w-4" />
+  </Toggle>
+  <Toggle variant="outline" size="default" aria-label="Negrito (default)">
+    <Bold className="h-4 w-4" />
+  </Toggle>
+  <Toggle variant="outline" size="lg" aria-label="Negrito (lg)">
+    <Bold className="h-4 w-4" />
+  </Toggle>
+</div>`,
+            preview: (
+              <div className="flex items-center gap-3">
+                <Toggle variant="outline" size="sm" aria-label="Negrito (sm)">
+                  <Bold className="h-4 w-4" />
+                </Toggle>
+                <Toggle variant="outline" size="default" aria-label="Negrito (default)">
+                  <Bold className="h-4 w-4" />
+                </Toggle>
+                <Toggle variant="outline" size="lg" aria-label="Negrito (lg)">
+                  <Bold className="h-4 w-4" />
+                </Toggle>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.filterList.name"),
+            description: tContent("variants.compositions.filterList.description"),
+            useWhen: tContent("variants.compositions.filterList.use"),
+            code: `<div className="flex flex-col gap-2 w-72">
+  <p className="text-sm font-semibold mb-1">Filtros de exibição</p>
+  <div className="flex flex-wrap gap-2">
+    <Toggle variant="outline">
+      <Eye className="h-4 w-4" />
+      Mostrar ocultos
+    </Toggle>
+    <Toggle variant="outline" defaultPressed>
+      <List className="h-4 w-4" />
+      Visão compacta
+    </Toggle>
+  </div>
+</div>`,
+            preview: (
+              <div className="flex flex-col gap-2 w-72">
+                <p className="text-sm font-semibold mb-1">Filtros de exibição</p>
+                <div className="flex flex-wrap gap-2">
+                  <Toggle variant="outline">
+                    <Eye className="h-4 w-4" />
+                    Mostrar ocultos
+                  </Toggle>
+                  <Toggle variant="outline" defaultPressed>
+                    <List className="h-4 w-4" />
+                    Visão compacta
+                  </Toggle>
+                </div>
+              </div>
             ),
           },
         ]}

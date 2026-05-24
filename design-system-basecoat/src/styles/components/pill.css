@@ -1,0 +1,54 @@
+/*
+ * ─── nds-pill ────────────────────────────────────────────────────────────────
+ * Pílula circular pequena para indicar status, índice numérico ou check/cross.
+ * Padrão repetido em DocsAnatomy (números), DocsDoDont (✓/✗), DocsWhenToUse
+ * (✓/✗ em headers e títulos), DocsTestes (nível A/AA).
+ *
+ *   <span class="nds-pill" data-tone="primary">1</span>
+ *   <span class="nds-pill" data-tone="success">✓</span>
+ *   <span class="nds-pill" data-tone="destructive">✗</span>
+ *
+ * Tokens: --pill-size (1.25rem default), --pill-bg, --pill-fg
+ */
+.nds-pill {
+  --pill-size: 1.25rem;                 /* 20px */
+  --pill-bg: hsl(var(--muted));
+  --pill-fg: hsl(var(--foreground));
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--pill-size);
+  height: var(--pill-size);
+  border-radius: 9999px;
+  background-color: var(--pill-bg);
+  color: var(--pill-fg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.nds-pill[data-tone="primary"] {
+  --pill-bg: hsl(var(--primary));
+  --pill-fg: hsl(var(--primary-foreground));
+}
+.nds-pill[data-tone="success"] {
+  --pill-bg: hsl(var(--success) / 0.15);
+  --pill-fg: hsl(var(--success));
+}
+.nds-pill[data-tone="destructive"] {
+  --pill-bg: hsl(var(--destructive) / 0.15);
+  --pill-fg: hsl(var(--destructive));
+}
+.nds-pill[data-tone="warning"] {
+  --pill-bg: hsl(var(--warning) / 0.15);
+  --pill-fg: hsl(var(--warning));
+}
+.nds-pill[data-tone="info"] {
+  --pill-bg: hsl(var(--info) / 0.15);
+  --pill-fg: hsl(var(--info));
+}
+
+.nds-pill[data-size="sm"] { --pill-size: 1rem; font-size: 0.625rem; }
+.nds-pill[data-size="lg"] { --pill-size: 1.5rem; font-size: 0.875rem; }

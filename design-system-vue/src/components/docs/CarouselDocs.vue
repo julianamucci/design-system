@@ -17,6 +17,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -85,6 +86,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -216,6 +218,135 @@ const variantItems = computed(() => [
   { name: 'single',     description: stripHtml(tContent('variants.items.single')),     code: codeSingle     },
   { name: 'multi',      description: stripHtml(tContent('variants.items.multi')),      code: codeMulti      },
 ]);
+
+const codeCompositionWithDots = `<script setup lang="ts">
+import { ref } from "vue";
+import type { CarouselApi } from "@/components/ui/carousel";
+
+const api = ref<CarouselApi>();
+const current = ref(0);
+
+function onInitApi(payload: CarouselApi) {
+  api.value = payload;
+  current.value = payload.selectedScrollSnap();
+  payload.on("select", () => (current.value = payload.selectedScrollSnap()));
+}
+<\/script>
+
+<template>
+  <div class="space-y-3">
+    <Carousel @init-api="onInitApi" aria-label="Galeria de fotos do produto">
+      <CarouselContent>
+        <CarouselItem v-for="(s, i) in slides" :key="i">{{ s }}</CarouselItem>
+      </CarouselContent>
+      <CarouselPrevious aria-label="Item anterior" />
+      <CarouselNext aria-label="Próximo item" />
+    </Carousel>
+    <div class="flex justify-center gap-2" aria-label="Ir para o slide">
+      <button
+        v-for="(_, i) in slides"
+        :key="i"
+        type="button"
+        :aria-label="\`Ir para o slide \${i + 1} de \${slides.length}\`"
+        :aria-current="i === current ? 'true' : 'false'"
+        :class="['h-2 w-2 rounded-full', i === current ? 'bg-primary' : 'bg-muted-foreground/30']"
+        @click="api?.scrollTo(i)"
+      />
+    </div>
+  </div>
+</template>`;
+
+const codeCompositionGallery = `<Carousel class="w-full max-w-md" aria-label="Galeria de fotos do produto">
+  <CarouselContent>
+    <CarouselItem v-for="photo in photos" :key="photo.id">
+      <Card class="overflow-hidden">
+        <div class="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
+          <span class="text-2xl font-semibold">{{ photo.title }}</span>
+        </div>
+        <div class="p-4">
+          <h3 class="font-semibold">{{ photo.title }}</h3>
+          <p class="text-sm text-muted-foreground">{{ photo.description }}</p>
+        </div>
+      </Card>
+    </CarouselItem>
+  </CarouselContent>
+  <CarouselPrevious aria-label="Item anterior" />
+  <CarouselNext aria-label="Próximo item" />
+</Carousel>`;
+
+const codeCompositionAutoplay = `<script setup lang="ts">
+import Autoplay from "embla-carousel-autoplay";
+<\/script>
+
+<template>
+  <Carousel
+    :opts="{ loop: true }"
+    :plugins="[Autoplay({ delay: 4000, stopOnInteraction: true })]"
+    aria-label="Destaques"
+  >
+    <CarouselContent>
+      <CarouselItem v-for="(h, i) in highlights" :key="i">{{ h }}</CarouselItem>
+    </CarouselContent>
+    <CarouselPrevious aria-label="Item anterior" />
+    <CarouselNext aria-label="Próximo item" />
+  </Carousel>
+</template>`;
+
+const codeCompositionMultiResponsive = `<Carousel class="w-full max-w-2xl" aria-label="Cards de produto">
+  <CarouselContent>
+    <CarouselItem
+      v-for="p in products"
+      :key="p.id"
+      class="md:basis-1/2 lg:basis-1/3"
+    >
+      <Card>{{ p.name }}</Card>
+    </CarouselItem>
+  </CarouselContent>
+  <CarouselPrevious aria-label="Item anterior" />
+  <CarouselNext aria-label="Próximo item" />
+</Carousel>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withDots.name'),
+    description: tContent('variants.compositions.withDots.description'),
+    useWhen: tContent('variants.compositions.withDots.use'),
+    code: codeCompositionWithDots,
+  },
+  {
+    name: tContent('variants.compositions.gallery.name'),
+    description: tContent('variants.compositions.gallery.description'),
+    useWhen: tContent('variants.compositions.gallery.use'),
+    code: codeCompositionGallery,
+  },
+  {
+    name: tContent('variants.compositions.autoplay.name'),
+    description: tContent('variants.compositions.autoplay.description'),
+    useWhen: tContent('variants.compositions.autoplay.use'),
+    code: codeCompositionAutoplay,
+  },
+  {
+    name: tContent('variants.compositions.multiResponsive.name'),
+    description: tContent('variants.compositions.multiResponsive.description'),
+    useWhen: tContent('variants.compositions.multiResponsive.use'),
+    code: codeCompositionMultiResponsive,
+  },
+]);
+
+// Dots demo state (preview)
+const dotsApi = ref<unknown>();
+const dotsCurrent = ref(0);
+function onDotsInit(payload: any) {
+  dotsApi.value = payload;
+  dotsCurrent.value = payload.selectedScrollSnap();
+  payload.on('select', () => (dotsCurrent.value = payload.selectedScrollSnap()));
+}
+const galleryPhotos = [
+  { title: 'Foto 1', description: 'Paisagem ao amanhecer' },
+  { title: 'Foto 2', description: 'Detalhe arquitetônico' },
+  { title: 'Foto 3', description: 'Cidade à noite' },
+  { title: 'Foto 4', description: 'Praia vista do alto' },
+];
 
 const stateItems = computed(() => [
   { label: tContent('states.single.label'),   trigger: stripHtml(tContent('states.single.trigger')),   behavior: stripHtml(tContent('states.single.behavior'))   },
@@ -546,6 +677,100 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="carousel"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div class="w-full max-w-md space-y-3">
+          <Carousel
+            class="w-full"
+            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+            @init-api="onDotsInit"
+          >
+            <CarouselContent>
+              <CarouselItem v-for="n in demoSlides" :key="n">
+                <Card class="flex aspect-square items-center justify-center p-6">
+                  <span class="text-2xl font-semibold">{{ n }}</span>
+                </Card>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
+            <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
+          </Carousel>
+          <div class="flex items-center justify-center gap-2" :aria-label="tContent('demonstration.labels.goToSlide')">
+            <button
+              v-for="(_, i) in demoSlides"
+              :key="i"
+              type="button"
+              :aria-label="`${tContent('demonstration.labels.goToSlide')} ${i + 1} ${tContent('demonstration.labels.of')} ${demoSlides.length}`"
+              :aria-current="i === dotsCurrent ? 'true' : 'false'"
+              :class="['h-2 w-2 rounded-full transition-colors', i === dotsCurrent ? 'bg-primary' : 'bg-muted-foreground/30']"
+              @click="(dotsApi as any)?.scrollTo(i)"
+            />
+          </div>
+        </div>
+      </template>
+      <template #variant-preview-1>
+        <div class="py-6 px-4">
+          <Carousel class="w-full max-w-sm" :aria-label="tContent('usage.uxWriting.table.caption.good')">
+            <CarouselContent>
+              <CarouselItem v-for="(photo, i) in galleryPhotos" :key="i">
+                <Card class="overflow-hidden">
+                  <div class="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
+                    <span class="text-2xl font-semibold text-foreground">{{ photo.title }}</span>
+                  </div>
+                  <div class="p-4">
+                    <h3 class="text-sm font-semibold text-foreground">{{ photo.title }}</h3>
+                    <p class="text-xs text-muted-foreground">{{ photo.description }}</p>
+                  </div>
+                </Card>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
+            <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
+          </Carousel>
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div class="py-10 px-12">
+          <Carousel
+            class="w-full max-w-xs"
+            :opts="{ loop: true }"
+            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          >
+            <CarouselContent>
+              <CarouselItem v-for="n in demoSlides" :key="n">
+                <Card class="flex aspect-square items-center justify-center p-6">
+                  <span class="text-2xl font-semibold">{{ n }}</span>
+                </Card>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
+            <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
+          </Carousel>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div class="py-10 px-12">
+          <Carousel class="w-full max-w-md" :aria-label="tContent('usage.uxWriting.table.caption.good')">
+            <CarouselContent>
+              <CarouselItem v-for="n in [1, 2, 3, 4, 5, 6]" :key="n" class="md:basis-1/2 lg:basis-1/3">
+                <Card class="flex aspect-square items-center justify-center p-4">
+                  <span class="text-xl font-semibold">{{ n }}</span>
+                </Card>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
+            <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
+          </Carousel>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Configurações (States) ──────────────────────────────────── -->
     <DocsStates

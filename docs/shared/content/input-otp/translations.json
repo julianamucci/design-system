@@ -147,6 +147,29 @@
         "fourDigits": "<code>maxLength=4</code>; PIN local (carteira, conta); <code>inputMode=\"numeric\"</code>.",
         "withSeparator": "Dois <code>InputOTPGroup</code> separados por <code>InputOTPSeparator</code> — formato 3-3 ou 4-4.",
         "alphanumeric": "<code>pattern={REGEXP_ONLY_DIGITS_AND_CHARS}</code> e <code>inputMode=\"text\"</code>; útil para auth codes do GitHub/Google."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withLabel": {
+          "name": "Com Label",
+          "description": "InputOTP precedido de um <code>label</code> conectado por <code>aria-labelledby</code> (ou <code>htmlFor</code> + <code>id</code>). O texto descreve o que o código representa.",
+          "use": "Sempre que o componente aparece em formulários — o label é o que o leitor de tela anuncia ao focar o campo. Texto curto e direto (\"Código de verificação\")."
+        },
+        "withHelpText": {
+          "name": "Com Help Text",
+          "description": "Combina label + InputOTP + parágrafo auxiliar conectado via <code>aria-describedby</code>. O help text informa origem do código e tempo de validade.",
+          "use": "Quando o usuário precisa de contexto antes de digitar (canal de envio, tempo de validade). Format: \"Enviamos por SMS, expira em 5 min\"."
+        },
+        "withErrorMessage": {
+          "name": "Com Mensagem de Erro",
+          "description": "InputOTP com <code>aria-invalid=\"true\"</code> + borda destructive + parágrafo de erro conectado por <code>aria-describedby</code>. A mensagem indica causa e ação corretiva.",
+          "use": "Após validação que falhou no backend ou no client. Texto: \"Código incorreto. Verifique e tente novamente.\" — nunca apenas \"Erro\"."
+        },
+        "withResendButton": {
+          "name": "Com Botão Reenviar",
+          "description": "InputOTP seguido de uma linha com nota (\"Não recebeu?\") e botão <code>variant=\"link\"</code> para reenviar o código. Mantém o foco no campo após o reenvio.",
+          "use": "Em fluxos OTP onde o código pode expirar ou não chegar (SMS/email). Combine com cooldown de 30-60s no botão para evitar abuso."
+        }
       }
     },
     "states": {
@@ -410,6 +433,7 @@
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
+      "compositions": "Composições",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -570,6 +594,29 @@
         "fourDigits": "<code>maxLength=4</code>; local PIN (wallet, account); <code>inputMode=\"numeric\"</code>.",
         "withSeparator": "Two <code>InputOTPGroup</code> separated by <code>InputOTPSeparator</code> — 3-3 or 4-4 format.",
         "alphanumeric": "<code>pattern={REGEXP_ONLY_DIGITS_AND_CHARS}</code> and <code>inputMode=\"text\"</code>; useful for GitHub/Google auth codes."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withLabel": {
+          "name": "With Label",
+          "description": "InputOTP preceded by a <code>label</code> connected via <code>aria-labelledby</code> (or <code>htmlFor</code> + <code>id</code>). The text describes what the code represents.",
+          "use": "Whenever the component appears in forms — the label is what the screen reader announces on focus. Keep it short and direct (\"Verification code\")."
+        },
+        "withHelpText": {
+          "name": "With Help Text",
+          "description": "Combines label + InputOTP + helper paragraph connected via <code>aria-describedby</code>. The help text reports the code's source and validity time.",
+          "use": "When the user needs context before typing (delivery channel, validity window). Format: \"Sent via SMS, expires in 5 min\"."
+        },
+        "withErrorMessage": {
+          "name": "With Error Message",
+          "description": "InputOTP with <code>aria-invalid=\"true\"</code> + destructive border + error paragraph connected via <code>aria-describedby</code>. The message states cause and corrective action.",
+          "use": "After backend or client validation fails. Text: \"Incorrect code. Check and try again.\" — never just \"Error\"."
+        },
+        "withResendButton": {
+          "name": "With Resend Button",
+          "description": "InputOTP followed by a row with note (\"Didn't receive it?\") and a <code>variant=\"link\"</code> button to resend the code. Keep focus on the field after resending.",
+          "use": "In OTP flows where the code may expire or fail to arrive (SMS/email). Pair with a 30-60s cooldown on the button to prevent abuse."
+        }
       }
     },
     "states": {
@@ -833,6 +880,7 @@
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
+      "compositions": "Compositions",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -993,6 +1041,29 @@
         "fourDigits": "<code>maxLength=4</code>; PIN local (cartera, cuenta); <code>inputMode=\"numeric\"</code>.",
         "withSeparator": "Dos <code>InputOTPGroup</code> separados por <code>InputOTPSeparator</code> — formato 3-3 o 4-4.",
         "alphanumeric": "<code>pattern={REGEXP_ONLY_DIGITS_AND_CHARS}</code> e <code>inputMode=\"text\"</code>; útil para auth codes de GitHub/Google."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withLabel": {
+          "name": "Con Label",
+          "description": "InputOTP precedido por un <code>label</code> conectado vía <code>aria-labelledby</code> (o <code>htmlFor</code> + <code>id</code>). El texto describe qué representa el código.",
+          "use": "Siempre que el componente aparezca en formularios — el label es lo que el lector de pantalla anuncia al enfocar el campo. Texto corto y directo (\"Código de verificación\")."
+        },
+        "withHelpText": {
+          "name": "Con Help Text",
+          "description": "Combina label + InputOTP + párrafo auxiliar conectado vía <code>aria-describedby</code>. El help text informa el origen del código y el tiempo de validez.",
+          "use": "Cuando el usuario necesita contexto antes de escribir (canal de envío, tiempo de validez). Formato: \"Enviado por SMS, expira en 5 min\"."
+        },
+        "withErrorMessage": {
+          "name": "Con Mensaje de Error",
+          "description": "InputOTP con <code>aria-invalid=\"true\"</code> + borde destructive + párrafo de error conectado por <code>aria-describedby</code>. El mensaje indica causa y acción correctiva.",
+          "use": "Tras una validación fallida en backend o client. Texto: \"Código incorrecto. Verifica e intenta de nuevo.\" — nunca solo \"Error\"."
+        },
+        "withResendButton": {
+          "name": "Con Botón Reenviar",
+          "description": "InputOTP seguido de una fila con nota (\"¿No lo recibiste?\") y botón <code>variant=\"link\"</code> para reenviar el código. Mantén el foco en el campo tras reenviar.",
+          "use": "En flujos OTP donde el código puede caducar o no llegar (SMS/email). Combina con un cooldown de 30-60s en el botón para evitar abuso."
+        }
       }
     },
     "states": {
@@ -1256,6 +1327,7 @@
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",
+      "compositions": "Composiciones",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",

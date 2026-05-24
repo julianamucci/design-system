@@ -24,10 +24,11 @@ type Story = StoryObj;
 
 function withLegend(group: HTMLElement, labelText: string, id: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'xs';
   const legend = document.createElement('p');
   legend.id = id;
-  legend.className = 'text-sm font-semibold';
+  legend.className = 'nds-text-body nds-font-semibold';
   legend.textContent = labelText;
   group.setAttribute('role', 'radiogroup');
   group.setAttribute('aria-labelledby', id);
@@ -79,8 +80,10 @@ export const Horizontal: Story = {
         { value: 'express', label: 'Expressa (1 dia)' },
         { value: 'pickup', label: 'Retirar na loja' },
       ],
-      class: 'grid-flow-col auto-cols-max gap-6',
     });
+    group.style.gridAutoFlow = 'column';
+    group.style.gridAutoColumns = 'max-content';
+    group.style.gap = '1.5rem';
     return withLegend(group, 'Forma de entrega', 'rg-horizontal-legend');
   },
   parameters: {
@@ -105,18 +108,24 @@ export const Horizontal: Story = {
 export const WithDescription: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2 w-80';
+    wrap.className = 'nds-stack';
+    wrap.dataset.spacing = 'xs';
+    wrap.style.width = '20rem';
 
     const legend = document.createElement('p');
     legend.id = 'rg-desc-legend';
-    legend.className = 'text-sm font-semibold';
+    legend.className = 'nds-text-body nds-font-semibold';
     legend.textContent = 'Forma de entrega';
 
     // Custom factory não suporta description por item — construímos o layout
     // manualmente reaproveitando o item visual do createRadioGroup e injetando
     // um <p> de descrição ao lado do label.
     const fieldset = document.createElement('fieldset');
-    fieldset.className = 'grid gap-3 border-0 p-0 m-0';
+    fieldset.className = 'nds-grid';
+    fieldset.dataset.spacing = 'sm';
+    fieldset.style.border = '0';
+    fieldset.style.padding = '0';
+    fieldset.style.margin = '0';
     fieldset.setAttribute('role', 'radiogroup');
     fieldset.setAttribute('aria-labelledby', 'rg-desc-legend');
 
@@ -148,17 +157,17 @@ export const WithDescription: Story = {
     items.forEach((item, idx) => {
       const row = base.children[idx] as HTMLElement;
       if (!row) return;
-      row.classList.remove('items-center');
-      row.classList.add('items-start');
+      row.style.alignItems = 'flex-start';
 
       const label = row.querySelector('label');
       if (label) {
         const textGroup = document.createElement('div');
-        textGroup.className = 'flex flex-col gap-1';
+        textGroup.className = 'nds-stack';
+        textGroup.dataset.spacing = 'xs';
         label.replaceWith(textGroup);
-        label.className = 'text-sm font-medium leading-none cursor-pointer';
+        label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
         const desc = document.createElement('p');
-        desc.className = 'text-sm text-muted-foreground';
+        desc.className = 'nds-text-body nds-text-muted-foreground';
         desc.textContent = item.description;
         textGroup.append(label, desc);
       }

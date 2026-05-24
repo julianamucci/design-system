@@ -17,6 +17,17 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+import { ArrowUpDown, Search } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import tableTranslations from '@shared/content/table/translations.json';
@@ -28,6 +39,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -96,6 +108,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -294,6 +307,117 @@ const variantItems = computed(() => [
   { name: tContent('variants.withSrOnlyCaption.label'), description: tContent('variants.withSrOnlyCaption.description'), code: codeWithSrOnlyCaption },
   { name: tContent('variants.withInlineActions.label'), description: tContent('variants.withInlineActions.description'), code: codeWithActions   },
   { name: tContent('variants.withEmptyState.label'),  description: tContent('variants.withEmptyState.description'),  code: codeEmpty           },
+]);
+
+const codeCompFilterableToolbar = `<div class="flex flex-col gap-3">
+  <div class="flex items-center gap-2">
+    <Input v-model="search" placeholder="Filtrar faturas..." />
+    <Button variant="outline">Status</Button>
+  </div>
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead scope="col">Fatura</TableHead>
+        <TableHead scope="col">Status</TableHead>
+        <TableHead scope="col" class="text-right">Valor</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRow v-for="invoice in filtered" :key="invoice.id">
+        <TableCell>{{ invoice.id }}</TableCell>
+        <TableCell>{{ invoice.status }}</TableCell>
+        <TableCell class="text-right">{{ invoice.amount }}</TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+</div>`;
+
+const codeCompSortableHeaders = `<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead scope="col" aria-sort="ascending">
+        <Button variant="ghost" size="sm" class="-ml-2">
+          Fatura
+          <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+        </Button>
+      </TableHead>
+      <TableHead scope="col" aria-sort="none">
+        <Button variant="ghost" size="sm" class="-ml-2">
+          Valor
+          <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+        </Button>
+      </TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody><!-- linhas --></TableBody>
+</Table>`;
+
+const codeCompSelectableRows = `<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead scope="col" class="w-10">
+        <Checkbox aria-label="Selecionar todas as linhas" />
+      </TableHead>
+      <TableHead scope="col">Fatura</TableHead>
+      <TableHead scope="col">Status</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow v-for="invoice in invoices" :key="invoice.id" :data-state="selected.has(invoice.id) ? 'selected' : undefined">
+      <TableCell>
+        <Checkbox :model-value="selected.has(invoice.id)" @update:model-value="toggle(invoice.id)" :aria-label="\`Selecionar fatura \${invoice.id}\`" />
+      </TableCell>
+      <TableCell>{{ invoice.id }}</TableCell>
+      <TableCell>{{ invoice.status }}</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>`;
+
+const codeCompWithPagination = `<div class="flex flex-col gap-3">
+  <Table><!-- linhas --></Table>
+  <Pagination>
+    <PaginationContent>
+      <PaginationItem>
+        <PaginationPrevious href="#" />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLink href="#" is-active>1</PaginationLink>
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLink href="#">2</PaginationLink>
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationNext href="#" />
+      </PaginationItem>
+    </PaginationContent>
+  </Pagination>
+</div>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.filterableToolbar.name'),
+    description: tContent('variants.compositions.filterableToolbar.description'),
+    useWhen: tContent('variants.compositions.filterableToolbar.use'),
+    code: codeCompFilterableToolbar,
+  },
+  {
+    name: tContent('variants.compositions.sortableHeaders.name'),
+    description: tContent('variants.compositions.sortableHeaders.description'),
+    useWhen: tContent('variants.compositions.sortableHeaders.use'),
+    code: codeCompSortableHeaders,
+  },
+  {
+    name: tContent('variants.compositions.selectableRows.name'),
+    description: tContent('variants.compositions.selectableRows.description'),
+    useWhen: tContent('variants.compositions.selectableRows.use'),
+    code: codeCompSelectableRows,
+  },
+  {
+    name: tContent('variants.compositions.withPagination.name'),
+    description: tContent('variants.compositions.withPagination.description'),
+    useWhen: tContent('variants.compositions.withPagination.use'),
+    code: codeCompWithPagination,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -740,6 +864,166 @@ const visualTestItems = computed(() => [
         </Table>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="table"
+      :items="compositionItems"
+    >
+      <!-- Toolbar de filtros -->
+      <template #variant-preview-0>
+        <div class="w-full flex flex-col gap-3">
+          <div class="flex items-center gap-2">
+            <div class="relative w-full max-w-sm">
+              <Search class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <Input placeholder="Filtrar faturas..." class="pl-8" />
+            </div>
+            <Button variant="outline">Status</Button>
+          </div>
+          <Table>
+            <TableCaption class="sr-only">Lista de faturas filtráveis</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead scope="col">Fatura</TableHead>
+                <TableHead scope="col">Status</TableHead>
+                <TableHead scope="col" class="text-right">Valor</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell class="font-medium">#INV-001</TableCell>
+                <TableCell>Pago</TableCell>
+                <TableCell class="text-right">R$ 250,00</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell class="font-medium">#INV-002</TableCell>
+                <TableCell>Pendente</TableCell>
+                <TableCell class="text-right">R$ 150,00</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      </template>
+      <!-- Cabeçalhos ordenáveis -->
+      <template #variant-preview-1>
+        <Table>
+          <TableCaption class="sr-only">Faturas ordenáveis</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead scope="col" aria-sort="ascending">
+                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+                  Fatura
+                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                </Button>
+              </TableHead>
+              <TableHead scope="col" aria-sort="none">
+                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+                  Status
+                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                </Button>
+              </TableHead>
+              <TableHead scope="col" aria-sort="none" class="text-right">
+                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+                  Valor
+                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                </Button>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell>Pago</TableCell>
+              <TableCell class="text-right">R$ 250,00</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell>Pendente</TableCell>
+              <TableCell class="text-right">R$ 150,00</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </template>
+      <!-- Seleção de linhas -->
+      <template #variant-preview-2>
+        <Table>
+          <TableCaption class="sr-only">Faturas com seleção</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead scope="col" class="w-10">
+                <Checkbox aria-label="Selecionar todas as linhas" />
+              </TableHead>
+              <TableHead scope="col">Fatura</TableHead>
+              <TableHead scope="col">Status</TableHead>
+              <TableHead scope="col" class="text-right">Valor</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow data-state="selected">
+              <TableCell>
+                <Checkbox :model-value="true" aria-label="Selecionar fatura #INV-001" />
+              </TableCell>
+              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell>Pago</TableCell>
+              <TableCell class="text-right">R$ 250,00</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Checkbox aria-label="Selecionar fatura #INV-002" />
+              </TableCell>
+              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell>Pendente</TableCell>
+              <TableCell class="text-right">R$ 150,00</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </template>
+      <!-- Com paginação -->
+      <template #variant-preview-3>
+        <div class="w-full flex flex-col gap-3">
+          <Table>
+            <TableCaption class="sr-only">Faturas paginadas</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead scope="col">Fatura</TableHead>
+                <TableHead scope="col">Status</TableHead>
+                <TableHead scope="col" class="text-right">Valor</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell class="font-medium">#INV-001</TableCell>
+                <TableCell>Pago</TableCell>
+                <TableCell class="text-right">R$ 250,00</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell class="font-medium">#INV-002</TableCell>
+                <TableCell>Pendente</TableCell>
+                <TableCell class="text-right">R$ 150,00</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#" :is-active="true">1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">2</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates

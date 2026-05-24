@@ -131,6 +131,24 @@
         "captionDropdown": "<code>captionLayout=\"dropdown\"</code> — mês e ano viram selects rápidos para navegação longa.",
         "withWeekNumber": "<code>showWeekNumber</code> — adiciona coluna com o número da semana ISO.",
         "numberOfMonths": "<code>numberOfMonths={2}</code> — exibe 2 meses lado a lado em <code>range</code>."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "inlineBordered": {
+          "name": "Calendar inline com borda",
+          "description": "Calendar montado direto na página com <code>className=\"rounded-md border\"</code>. O wrapper desenha borda e raio próprios em vez de depender de Popover.",
+          "use": "Telas dedicadas à seleção de data (reservas, agendamento) em que o Calendar ocupa lugar fixo no layout — sem trigger nem dialog."
+        },
+        "disabledPast": {
+          "name": "Bloqueio de datas passadas",
+          "description": "Calendar com <code>disabled={{ before: today }}</code>. Datas anteriores ao dia atual ficam <code>aria-disabled</code> e não disparam <code>onSelect</code>.",
+          "use": "Reservas, eventos futuros, formulários de check-in — sempre que selecionar uma data no passado for inválido por regra de negócio."
+        },
+        "rangeTwoMonths": {
+          "name": "Range com dois meses",
+          "description": "Calendar em modo range com <code>numberOfMonths={2}</code>. Mostra mês atual e seguinte lado a lado, reduzindo cliques de navegação para selecionar início e fim.",
+          "use": "Reservas de hospedagem, períodos de férias, intervalos longos — qualquer fluxo em que <code>from</code> e <code>to</code> tendem a cair em meses diferentes."
+        }
       }
     },
     "states": {
@@ -469,6 +487,24 @@
         "captionDropdown": "<code>captionLayout=\"dropdown\"</code> — month and year become quick-jump selects.",
         "withWeekNumber": "<code>showWeekNumber</code> — adds a column with the ISO week number.",
         "numberOfMonths": "<code>numberOfMonths={2}</code> — displays 2 months side by side in <code>range</code>."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "inlineBordered": {
+          "name": "Inline Calendar with border",
+          "description": "Calendar mounted directly on the page with <code>className=\"rounded-md border\"</code>. The wrapper draws its own border and radius instead of relying on a Popover.",
+          "use": "Screens dedicated to date selection (bookings, scheduling) where the Calendar occupies a fixed place in the layout — no trigger, no dialog."
+        },
+        "disabledPast": {
+          "name": "Block past dates",
+          "description": "Calendar with <code>disabled={{ before: today }}</code>. Dates before today become <code>aria-disabled</code> and do not fire <code>onSelect</code>.",
+          "use": "Bookings, future events, check-in forms — whenever selecting a past date is invalid per business rules."
+        },
+        "rangeTwoMonths": {
+          "name": "Range with two months",
+          "description": "Calendar in range mode with <code>numberOfMonths={2}</code>. Shows current month and the next side by side, cutting navigation clicks for picking start and end.",
+          "use": "Stay bookings, vacation periods, long intervals — any flow where <code>from</code> and <code>to</code> tend to fall in different months."
+        }
       }
     },
     "states": {
@@ -807,6 +843,24 @@
         "captionDropdown": "<code>captionLayout=\"dropdown\"</code> — mes y año se vuelven selects de acceso rápido.",
         "withWeekNumber": "<code>showWeekNumber</code> — agrega una columna con el número de semana ISO.",
         "numberOfMonths": "<code>numberOfMonths={2}</code> — muestra 2 meses lado a lado en <code>range</code>."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "inlineBordered": {
+          "name": "Calendar inline con borde",
+          "description": "Calendar montado directamente en la página con <code>className=\"rounded-md border\"</code>. El wrapper dibuja su propio borde y radio en vez de depender de un Popover.",
+          "use": "Pantallas dedicadas a la selección de fechas (reservas, agendamiento) donde el Calendar ocupa un lugar fijo en el layout — sin trigger ni diálogo."
+        },
+        "disabledPast": {
+          "name": "Bloqueo de fechas pasadas",
+          "description": "Calendar con <code>disabled={{ before: today }}</code>. Las fechas anteriores a hoy quedan <code>aria-disabled</code> y no disparan <code>onSelect</code>.",
+          "use": "Reservas, eventos futuros, formularios de check-in — siempre que seleccionar una fecha pasada sea inválido por regla de negocio."
+        },
+        "rangeTwoMonths": {
+          "name": "Range con dos meses",
+          "description": "Calendar en modo range con <code>numberOfMonths={2}</code>. Muestra el mes actual y el siguiente lado a lado, reduciendo clics de navegación para elegir inicio y fin.",
+          "use": "Reservas de alojamiento, períodos de vacaciones, intervalos largos — cualquier flujo donde <code>from</code> y <code>to</code> tiendan a caer en meses distintos."
+        }
       }
     },
     "states": {

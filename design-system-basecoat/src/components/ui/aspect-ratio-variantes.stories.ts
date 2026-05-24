@@ -29,13 +29,16 @@ function buildImage(src: string, alt: string): HTMLImageElement {
   img.alt = alt;
   img.loading = 'lazy';
   img.decoding = 'async';
-  img.className = 'object-cover w-full h-full rounded-md';
+  img.className = 'nds-w-full nds-rounded-md';
+  img.style.objectFit = 'cover';
+  img.style.height = '100%';
   return img;
 }
 
-function boxed(el: HTMLElement, maxWidth = 'max-w-xl'): HTMLElement {
+function boxed(el: HTMLElement, maxWidth = '36rem'): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = `w-full ${maxWidth}`;
+  wrap.className = 'nds-w-full';
+  wrap.style.maxWidth = maxWidth;
   wrap.appendChild(el);
   return wrap;
 }

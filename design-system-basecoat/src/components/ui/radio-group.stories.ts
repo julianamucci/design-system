@@ -47,11 +47,12 @@ type Story = StoryObj<RadioGroupArgs>;
 export const Playground: Story = {
   render: (args) => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2';
+    wrap.className = 'nds-stack';
+    wrap.dataset.spacing = 'xs';
 
     const legend = document.createElement('p');
     legend.id = 'rg-pg-legend';
-    legend.className = 'text-sm font-semibold';
+    legend.className = 'nds-text-body nds-font-semibold';
     legend.textContent = args.groupLabel;
 
     const group = createRadioGroup({

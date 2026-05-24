@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── DropdownMenu — Vanilla factory standalone ──────────────────────────────
+// Visual: classes .nds-dropdown-menu-* (zero Tailwind/basecoat-css).
+// Render via portal, navegação por teclado (Arrow/Home/End/Esc/Tab).
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -53,12 +55,9 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement {
     const menu = document.createElement('ul');
     menu.id = menuId;
     menu.setAttribute('role', 'menu');
-    menu.className = cn(
-      'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md',
-      options.class
-    );
+    menu.className = 'nds-dropdown-menu-content';
+    if (options.class) menu.classList.add(...options.class.split(' ').filter(Boolean));
     menu.dataset.slot = 'dropdown-menu-content';
-    menu.style.position = 'absolute';
 
     items.forEach((item) => {
       const type = item.type ?? 'item';
@@ -66,7 +65,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement {
       if (type === 'separator') {
         const sep = document.createElement('li');
         sep.setAttribute('role', 'separator');
-        sep.className = '-mx-1 my-1 h-px bg-muted';
+        sep.className = 'nds-dropdown-menu-separator';
         menu.appendChild(sep);
         return;
       }
@@ -74,7 +73,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement {
       if (type === 'label') {
         const lbl = document.createElement('li');
         lbl.setAttribute('role', 'presentation');
-        lbl.className = 'px-2 py-1.5 text-xs font-semibold text-muted-foreground';
+        lbl.className = 'nds-dropdown-menu-label';
         lbl.textContent = item.label ?? '';
         menu.appendChild(lbl);
         return;
@@ -83,10 +82,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement {
       // type === 'item'
       const li = document.createElement('li');
       li.setAttribute('role', 'menuitem');
-      li.className = cn(
-        'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground',
-        item.disabled && 'pointer-events-none opacity-50'
-      );
+      li.className = 'nds-dropdown-menu-item';
       if (item.disabled) li.setAttribute('aria-disabled', 'true');
       if (!item.disabled) li.setAttribute('tabindex', '-1');
       if (item.value) li.dataset.value = item.value;

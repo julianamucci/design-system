@@ -25,7 +25,8 @@ type Story = StoryObj;
 function wrap(child: HTMLElement, minHeight = 120): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full flex items-center justify-center p-2';
+  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
+  wrapper.dataset.justify = 'center';
   wrapper.style.minHeight = `${minHeight}px`;
   wrapper.appendChild(child);
   return wrapper;
@@ -123,10 +124,14 @@ export const Interativo: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.style.contain = 'layout';
-    wrapper.className = 'w-full min-h-[160px] flex flex-col items-center justify-center gap-3 p-2';
+    wrapper.className = 'nds-stack nds-w-full nds-p-2';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.style.minHeight = '160px';
+    wrapper.style.alignItems = 'center';
+    wrapper.style.justifyContent = 'center';
 
     const status = document.createElement('p');
-    status.className = 'text-sm text-muted-foreground';
+    status.className = 'nds-text-body nds-text-muted-foreground';
     status.dataset.testid = 'page-status';
 
     const total = 8;

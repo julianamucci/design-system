@@ -27,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Single: Story = {
   render: () => (
-    <ToggleGroup type="single" defaultValue="center" aria-label="Alinhamento do texto">
+    <ToggleGroup defaultValue={["center"]} aria-label="Alinhamento do texto">
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />
       </ToggleGroupItem>
@@ -66,7 +66,7 @@ export const Single: Story = {
 
 export const Multiple: Story = {
   render: () => (
-    <ToggleGroup type="multiple" defaultValue={["bold", "italic"]} aria-label="Formatação">
+    <ToggleGroup defaultValue={["bold", "italic"]} aria-label="Formatação">
       <ToggleGroupItem value="bold" aria-label="Negrito">
         <Bold aria-hidden="true" />
       </ToggleGroupItem>
@@ -103,9 +103,8 @@ export const Multiple: Story = {
 export const Vertical: Story = {
   render: () => (
     <ToggleGroup
-      type="single"
       orientation="vertical"
-      defaultValue="grid"
+      defaultValue={["grid"]}
       aria-label="Modo de visualização"
     >
       <ToggleGroupItem value="grid" aria-label="Grade">

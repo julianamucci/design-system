@@ -24,14 +24,17 @@ type Story = StoryObj;
 
 function block(title: string, body: string, extraClass = ''): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = `h-full w-full p-4 overflow-auto ${extraClass}`;
+  wrap.className = `nds-w-full nds-p-4 ${extraClass}`.trim();
+  wrap.style.height = '100%';
+  wrap.style.overflow = 'auto';
 
   const h = document.createElement('p');
-  h.className = 'text-sm font-semibold mb-2';
+  h.className = 'nds-text-body nds-font-semibold nds-mb-2';
   h.textContent = title;
 
   const p = document.createElement('p');
-  p.className = 'text-xs text-muted-foreground leading-snug';
+  p.className = 'nds-text-caption nds-text-muted-foreground';
+  p.style.lineHeight = '1.375';
   p.textContent = body;
 
   wrap.append(h, p);
@@ -40,18 +43,21 @@ function block(title: string, body: string, extraClass = ''): HTMLElement {
 
 function listBlock(title: string, items: string[]): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'h-full w-full p-4 overflow-auto bg-muted/40';
+  wrap.className = 'nds-w-full nds-p-4 nds-bg-muted-soft';
+  wrap.style.height = '100%';
+  wrap.style.overflow = 'auto';
 
   const h = document.createElement('p');
-  h.className = 'text-sm font-semibold mb-2';
+  h.className = 'nds-text-body nds-font-semibold nds-mb-2';
   h.textContent = title;
   wrap.appendChild(h);
 
   const ul = document.createElement('ul');
-  ul.className = 'space-y-1 text-xs';
+  ul.className = 'nds-stack nds-text-caption';
+  ul.dataset.spacing = 'xs';
   items.forEach((item) => {
     const li = document.createElement('li');
-    li.className = 'px-2 py-1 rounded hover:bg-accent hover:text-accent-foreground cursor-pointer';
+    li.className = 'nds-px-2 nds-py-1 nds-rounded nds-hover-bg-accent nds-hover-text-foreground nds-cursor-pointer';
     li.textContent = item;
     ul.appendChild(li);
   });
@@ -63,7 +69,7 @@ function frame(child: HTMLElement, minHeight = '320px'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.contain = 'layout';
   wrap.style.minHeight = minHeight;
-  wrap.className = 'w-full border border-border rounded-md overflow-hidden bg-background';
+  wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
   wrap.appendChild(child);
   return wrap;
 }
@@ -83,12 +89,12 @@ export const EditorComPreview: Story = {
     const editor = block(
       'Editor',
       '## Resizable\n\nPainéis redimensionáveis com suporte a arrasto e teclado.\n\n- Defina defaultSize\n- Defina minSize\n- Adicione aria-label',
-      'font-mono',
+      'nds-font-mono',
     );
     const preview = block(
       'Preview',
       'Resizable — painéis redimensionáveis com suporte a arrasto e teclado. Defina defaultSize, minSize e aria-label.',
-      'bg-muted text-muted-foreground',
+      'nds-bg-muted nds-text-muted-foreground',
     );
 
     const root = createResizablePanel({
@@ -126,7 +132,7 @@ export const SidebarComConteudoEConsole: Story = {
     const console_ = block(
       'Console',
       '> npm run dev\n  ✓ Pronto em 412ms\n> watching for changes…',
-      'bg-muted text-muted-foreground font-mono',
+      'nds-bg-muted nds-text-muted-foreground nds-font-mono',
     );
 
     const right = createResizablePanel({
@@ -208,7 +214,7 @@ export const TresColunas: Story = {
     const meta_ = block(
       'Metadados',
       'Última atualização: 2026-05-07\nAutor: Design System\nVersão: 1.4.0',
-      'bg-muted text-muted-foreground',
+      'nds-bg-muted nds-text-muted-foreground',
     );
 
     const root = createResizablePanel({

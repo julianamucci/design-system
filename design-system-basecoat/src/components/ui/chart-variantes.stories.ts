@@ -31,7 +31,7 @@ type Story = StoryObj;
 export const Bar: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
       createChart({
         data: chartData,
@@ -66,7 +66,7 @@ export const Bar: Story = {
 export const Linha: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
       createChart({
         data: chartData,

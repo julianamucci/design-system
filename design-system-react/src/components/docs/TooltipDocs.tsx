@@ -13,7 +13,7 @@ import { sanitizeHtml } from "@/lib/sanitize-html";
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import tooltipTranslations from "@shared/content/tooltip/translations.json";
-import { Save, Trash2, Share2 } from "lucide-react";
+import { Save, Trash2, Share2, HelpCircle, Info } from "lucide-react";
 
 import { DocsHeader }        from "@/components/docs/shared/sections/DocsHeader";
 import { DocsPageLayout }    from "@/components/docs/shared/sections/DocsPageLayout";
@@ -23,6 +23,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -64,6 +65,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -476,6 +478,206 @@ interface TooltipContentProps {
                       : "Cria um link público com permissão de leitura — qualquer pessoa com o link pode visualizar."}
                   </TooltipContent>
                 </Tooltip>
+              ),
+            },
+          ]}
+        />
+
+        {/* ── Composições ───────────────────────────────────────────── */}
+        <DocsCompositions
+          title={tContent("variants.compositionsTitle")}
+          useWhenLabel={tNav("common.useWhen")}
+          componentSlug="tooltip"
+          items={[
+            {
+              name: tContent("variants.compositions.iconButtonWithShortcut.name"),
+              description: tContent("variants.compositions.iconButtonWithShortcut.description"),
+              useWhen: tContent("variants.compositions.iconButtonWithShortcut.use"),
+              code: `<Tooltip>
+  <TooltipTrigger
+    render={(props) => (
+      <Button {...props} variant="ghost" size="icon" aria-label="Salvar">
+        <Save aria-hidden="true" />
+      </Button>
+    )}
+  />
+  <TooltipContent side="bottom">
+    <span>Salvar</span>
+    <kbd>Ctrl</kbd>
+    <kbd>S</kbd>
+  </TooltipContent>
+</Tooltip>`,
+              preview: (
+                <Tooltip>
+                  <TooltipTrigger
+                    render={(props) => (
+                      <Button {...props} variant="ghost" size="icon" aria-label={labelSaveBtn}>
+                        <Save aria-hidden="true" />
+                      </Button>
+                    )}
+                  />
+                  <TooltipContent>
+                    <span>{labelSaveBtn}</span>
+                    <kbd className={kbdClass}>Ctrl</kbd>
+                    <kbd className={kbdClass}>S</kbd>
+                  </TooltipContent>
+                </Tooltip>
+              ),
+            },
+            {
+              name: tContent("variants.compositions.formFieldHelp.name"),
+              description: tContent("variants.compositions.formFieldHelp.description"),
+              useWhen: tContent("variants.compositions.formFieldHelp.use"),
+              code: `<div className="flex flex-col gap-2">
+  <div className="flex items-center gap-2">
+    <label htmlFor="api-token" className="text-sm font-medium">Token de API</label>
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => (
+          <Button {...props} variant="ghost" size="icon" aria-label="Ajuda sobre Token de API">
+            <HelpCircle aria-hidden="true" />
+          </Button>
+        )}
+      />
+      <TooltipContent side="right" className="max-w-xs">
+        Cole o token gerado em Configurações &gt; Integrações.
+      </TooltipContent>
+    </Tooltip>
+  </div>
+  <input id="api-token" type="text" className="input w-64" placeholder="sk-..." />
+</div>`,
+              preview: (
+                <div className="flex flex-col gap-2 items-start">
+                  <div className="flex items-center gap-2">
+                    <label htmlFor="api-token-react-comp" className="text-sm font-medium">
+                      {locale === "en" ? "API Token" : locale === "es" ? "Token de API" : "Token de API"}
+                    </label>
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={(props) => (
+                          <Button
+                            {...props}
+                            variant="ghost"
+                            size="icon"
+                            aria-label={
+                              locale === "en"
+                                ? "Help about API Token"
+                                : locale === "es"
+                                ? "Ayuda sobre Token de API"
+                                : "Ajuda sobre Token de API"
+                            }
+                          >
+                            <HelpCircle aria-hidden="true" />
+                          </Button>
+                        )}
+                      />
+                      <TooltipContent side="right" className="max-w-xs">
+                        {locale === "en"
+                          ? "Paste the token generated in Settings > Integrations."
+                          : locale === "es"
+                          ? "Pega el token generado en Ajustes > Integraciones."
+                          : "Cole o token gerado em Configurações > Integrações."}
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <input
+                    id="api-token-react-comp"
+                    type="text"
+                    className="h-9 w-64 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+                    placeholder="sk-..."
+                  />
+                </div>
+              ),
+            },
+            {
+              name: tContent("variants.compositions.metricDescription.name"),
+              description: tContent("variants.compositions.metricDescription.description"),
+              useWhen: tContent("variants.compositions.metricDescription.use"),
+              code: `<div className="flex flex-col gap-1">
+  <div className="flex items-center gap-2">
+    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => (
+          <Button {...props} variant="ghost" size="icon" aria-label="O que é LCP">
+            <Info aria-hidden="true" />
+          </Button>
+        )}
+      />
+      <TooltipContent side="top" className="max-w-xs">
+        Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
+      </TooltipContent>
+    </Tooltip>
+  </div>
+  <p className="text-2xl font-semibold">1.8s</p>
+</div>`,
+              preview: (
+                <div className="flex flex-col gap-1 items-start">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={(props) => (
+                          <Button
+                            {...props}
+                            variant="ghost"
+                            size="icon"
+                            aria-label={
+                              locale === "en"
+                                ? "What is LCP"
+                                : locale === "es"
+                                ? "Qué es LCP"
+                                : "O que é LCP"
+                            }
+                          >
+                            <Info aria-hidden="true" />
+                          </Button>
+                        )}
+                      />
+                      <TooltipContent side="top" className="max-w-xs">
+                        {locale === "en"
+                          ? "Largest Contentful Paint — time until the largest visible element is rendered."
+                          : locale === "es"
+                          ? "Largest Contentful Paint — tiempo hasta que el elemento visible más grande se renderiza."
+                          : "Largest Contentful Paint — tempo até o maior elemento visível ser renderizado."}
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <p className="text-2xl font-semibold">1.8s</p>
+                </div>
+              ),
+            },
+            {
+              name: tContent("variants.compositions.positioningSides.name"),
+              description: tContent("variants.compositions.positioningSides.description"),
+              useWhen: tContent("variants.compositions.positioningSides.use"),
+              code: `<div className="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center">
+  {(["top", "right", "bottom", "left"] as const).map((side) => (
+    <Tooltip key={side}>
+      <TooltipTrigger
+        render={(props) => (
+          <Button {...props} variant="outline">{side}</Button>
+        )}
+      />
+      <TooltipContent side={side}>Tooltip {side}</TooltipContent>
+    </Tooltip>
+  ))}
+</div>`,
+              preview: (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center w-full" style={{ contain: "layout", minHeight: 140 }}>
+                  {(["top", "right", "bottom", "left"] as const).map((side) => (
+                    <Tooltip key={side}>
+                      <TooltipTrigger
+                        render={(props) => (
+                          <Button {...props} variant="outline">
+                            {side.charAt(0).toUpperCase() + side.slice(1)}
+                          </Button>
+                        )}
+                      />
+                      <TooltipContent side={side}>Tooltip {side}</TooltipContent>
+                    </Tooltip>
+                  ))}
+                </div>
               ),
             },
           ]}

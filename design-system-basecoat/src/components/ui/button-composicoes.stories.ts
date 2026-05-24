@@ -84,7 +84,8 @@ export const IconOnly: Story = {
 export const ParDeAcoes: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex gap-2';
+    wrap.className = 'nds-cluster';
+    wrap.dataset.spacing = 'sm';
     wrap.append(
       createButton({ variant: 'outline', label: 'Cancelar' }),
       createButton({ variant: 'default', label: 'Confirmar' }),

@@ -60,7 +60,10 @@ export const Playground: Story = {
   render: (args) => {
     const container = document.createElement('div');
     container.style.contain = 'layout';
-    container.className = 'w-full min-h-[260px] flex items-start justify-center p-2';
+    container.className = 'nds-cluster nds-w-full nds-p-2';
+    container.dataset.justify = 'center';
+    container.style.alignItems = 'flex-start';
+    container.style.minHeight = '260px';
 
     const bar = createMenubar([
       {

@@ -8,7 +8,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -51,6 +51,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')    },
         { id: 'variantes',    label: tNav('nav.variants')  },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')    },
         { id: 'propriedades', label: tNav('nav.props')     },
         { id: 'tokens',       label: tNav('nav.tokens')    },
@@ -157,6 +158,118 @@ import { Label } from "@/components/ui/label";`;
   let doPair2Checked1 = $state(false);
   let doPair2Checked2 = $state(false);
   let doPair2Checked3 = $state(false);
+
+  // ─── Compositions state ──────────────────────────────────────────────────────
+  let compWithLabelChecked = $state(false);
+  let compWithDescChecked = $state(false);
+  let compFieldsetEmail = $state(true);
+  let compFieldsetPush = $state(false);
+  let compFieldsetSms = $state(false);
+
+  let compSelectAllChild1 = $state(true);
+  let compSelectAllChild2 = $state(false);
+  let compSelectAllChild3 = $state(true);
+  let compSelectAllParent = $state(false);
+  let compSelectAllIndeterminate = $state(false);
+
+  $effect(() => {
+    const all = compSelectAllChild1 && compSelectAllChild2 && compSelectAllChild3;
+    const none = !compSelectAllChild1 && !compSelectAllChild2 && !compSelectAllChild3;
+    compSelectAllParent = all;
+    compSelectAllIndeterminate = !all && !none;
+  });
+
+  function toggleSelectAll(v: boolean) {
+    compSelectAllChild1 = v;
+    compSelectAllChild2 = v;
+    compSelectAllChild3 = v;
+  }
+
+  let compInListEmail = $state(true);
+  let compInListPush = $state(false);
+  let compInListSms = $state(false);
+  let compInListNewsletter = $state(true);
+
+  // ─── Composition code strings ────────────────────────────────────────────────
+  const codeCompWithLabel = `<div class="flex items-center gap-2">
+  <Checkbox id="cb-tos" bind:checked />
+  <Label for="cb-tos">Aceito os termos e condições</Label>
+</div>`;
+
+  const codeCompWithDescription = `<div class="flex gap-2 items-start">
+  <Checkbox id="cb-newsletter" bind:checked class="mt-0.5" aria-describedby="cb-newsletter-desc" />
+  <div class="flex flex-col gap-1">
+    <Label for="cb-newsletter">Receber novidades por email</Label>
+    <p id="cb-newsletter-desc" class="text-sm text-muted-foreground">
+      Enviaremos atualizações ocasionais sobre novos produtos.
+    </p>
+  </div>
+</div>`;
+
+  const codeCompFieldset = `<fieldset class="border rounded-lg p-4 space-y-3 w-72">
+  <legend class="text-sm font-medium px-1">Notificações</legend>
+  <div class="flex items-center gap-2">
+    <Checkbox id="notif-email" bind:checked={email} />
+    <Label for="notif-email">Email</Label>
+  </div>
+  <div class="flex items-center gap-2">
+    <Checkbox id="notif-push" bind:checked={push} />
+    <Label for="notif-push">Push</Label>
+  </div>
+  <div class="flex items-center gap-2">
+    <Checkbox id="notif-sms" bind:checked={sms} />
+    <Label for="notif-sms">SMS</Label>
+  </div>
+</fieldset>`;
+
+  const codeCompSelectAll = `<script lang="ts">
+  let c1 = $state(false);
+  let c2 = $state(false);
+  let c3 = $state(false);
+  let parent = $state(false);
+  let indeterminate = $state(false);
+
+  $effect(() => {
+    const all = c1 && c2 && c3;
+    const none = !c1 && !c2 && !c3;
+    parent = all;
+    indeterminate = !all && !none;
+  });
+
+  function toggleAll(v: boolean) { c1 = v; c2 = v; c3 = v; }
+<\/script>
+
+<div class="space-y-3 w-72">
+  <div class="flex items-center gap-2">
+    <Checkbox id="sa-parent" checked={parent} {indeterminate} onCheckedChange={toggleAll} />
+    <Label for="sa-parent">Selecionar todos</Label>
+  </div>
+  <div class="pl-6 space-y-2">
+    <div class="flex items-center gap-2"><Checkbox id="sa-1" bind:checked={c1} /><Label for="sa-1">Opção 1</Label></div>
+    <div class="flex items-center gap-2"><Checkbox id="sa-2" bind:checked={c2} /><Label for="sa-2">Opção 2</Label></div>
+    <div class="flex items-center gap-2"><Checkbox id="sa-3" bind:checked={c3} /><Label for="sa-3">Opção 3</Label></div>
+  </div>
+</div>`;
+
+  const codeCompInList = `<div class="space-y-2 w-80">
+  <h3 class="text-sm font-medium">Preferências de contato</h3>
+  <div class="flex items-center gap-2 border rounded-md p-3">
+    <Checkbox id="list-email" bind:checked={email} />
+    <Label for="list-email">Email</Label>
+  </div>
+  <div class="flex items-center gap-2 border rounded-md p-3">
+    <Checkbox id="list-push" bind:checked={push} />
+    <Label for="list-push">Push</Label>
+  </div>
+  <div class="flex items-center gap-2 border rounded-md p-3">
+    <Checkbox id="list-sms" bind:checked={sms} />
+    <Label for="list-sms">SMS</Label>
+  </div>
+  <div class="flex items-center gap-2 border rounded-md p-3">
+    <Checkbox id="list-newsletter" bind:checked={newsletter} />
+    <Label for="list-newsletter">Newsletter</Label>
+  </div>
+</div>`;
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="checkbox">
@@ -391,6 +504,137 @@ import { Label } from "@/components/ui/label";`;
         <p id="var-with-desc-text" class="text-sm text-muted-foreground">
           Ao marcar esta opção, você concorda em receber comunicações de marketing.
         </p>
+      </div>
+    </div>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="checkbox"
+    items={[
+      {
+        name: $tStore('variants.compositions.withLabel.name'),
+        description: $tStore('variants.compositions.withLabel.description'),
+        useWhen: $tStore('variants.compositions.withLabel.use'),
+        code: codeCompWithLabel,
+        preview: compWithLabel,
+      },
+      {
+        name: $tStore('variants.compositions.withDescription.name'),
+        description: $tStore('variants.compositions.withDescription.description'),
+        useWhen: $tStore('variants.compositions.withDescription.use'),
+        code: codeCompWithDescription,
+        preview: compWithDescription,
+      },
+      {
+        name: $tStore('variants.compositions.fieldset.name'),
+        description: $tStore('variants.compositions.fieldset.description'),
+        useWhen: $tStore('variants.compositions.fieldset.use'),
+        code: codeCompFieldset,
+        preview: compFieldset,
+      },
+      {
+        name: $tStore('variants.compositions.selectAll.name'),
+        description: $tStore('variants.compositions.selectAll.description'),
+        useWhen: $tStore('variants.compositions.selectAll.use'),
+        code: codeCompSelectAll,
+        preview: compSelectAll,
+      },
+      {
+        name: $tStore('variants.compositions.inList.name'),
+        description: $tStore('variants.compositions.inList.description'),
+        useWhen: $tStore('variants.compositions.inList.use'),
+        code: codeCompInList,
+        preview: compInList,
+      },
+    ]}
+  />
+
+  {#snippet compWithLabel()}
+    <div class="flex items-center gap-2">
+      <Checkbox id="comp-tos" bind:checked={compWithLabelChecked} />
+      <Label for="comp-tos">Aceito os termos e condições</Label>
+    </div>
+  {/snippet}
+
+  {#snippet compWithDescription()}
+    <div class="flex gap-2 items-start">
+      <Checkbox id="comp-newsletter" bind:checked={compWithDescChecked} class="mt-0.5" aria-describedby="comp-newsletter-desc" />
+      <div class="flex flex-col gap-1">
+        <Label for="comp-newsletter">Receber novidades por email</Label>
+        <p id="comp-newsletter-desc" class="text-sm text-muted-foreground">
+          Enviaremos atualizações ocasionais sobre novos produtos.
+        </p>
+      </div>
+    </div>
+  {/snippet}
+
+  {#snippet compFieldset()}
+    <fieldset class="border rounded-lg p-4 space-y-3 w-72">
+      <legend class="text-sm font-medium px-1">Notificações</legend>
+      <div class="flex items-center gap-2">
+        <Checkbox id="notif-email" bind:checked={compFieldsetEmail} />
+        <Label for="notif-email">Email</Label>
+      </div>
+      <div class="flex items-center gap-2">
+        <Checkbox id="notif-push" bind:checked={compFieldsetPush} />
+        <Label for="notif-push">Push</Label>
+      </div>
+      <div class="flex items-center gap-2">
+        <Checkbox id="notif-sms" bind:checked={compFieldsetSms} />
+        <Label for="notif-sms">SMS</Label>
+      </div>
+    </fieldset>
+  {/snippet}
+
+  {#snippet compSelectAll()}
+    <div class="space-y-3 w-72">
+      <div class="flex items-center gap-2">
+        <Checkbox
+          id="sa-parent"
+          checked={compSelectAllParent}
+          indeterminate={compSelectAllIndeterminate}
+          onCheckedChange={(v) => toggleSelectAll(Boolean(v))}
+        />
+        <Label for="sa-parent">Selecionar todos</Label>
+      </div>
+      <div class="pl-6 space-y-2">
+        <div class="flex items-center gap-2">
+          <Checkbox id="sa-1" bind:checked={compSelectAllChild1} />
+          <Label for="sa-1">Opção 1</Label>
+        </div>
+        <div class="flex items-center gap-2">
+          <Checkbox id="sa-2" bind:checked={compSelectAllChild2} />
+          <Label for="sa-2">Opção 2</Label>
+        </div>
+        <div class="flex items-center gap-2">
+          <Checkbox id="sa-3" bind:checked={compSelectAllChild3} />
+          <Label for="sa-3">Opção 3</Label>
+        </div>
+      </div>
+    </div>
+  {/snippet}
+
+  {#snippet compInList()}
+    <div class="space-y-2 w-80">
+      <h3 class="text-sm font-medium">Preferências de contato</h3>
+      <div class="flex items-center gap-2 border rounded-md p-3">
+        <Checkbox id="list-email" bind:checked={compInListEmail} />
+        <Label for="list-email">Email</Label>
+      </div>
+      <div class="flex items-center gap-2 border rounded-md p-3">
+        <Checkbox id="list-push" bind:checked={compInListPush} />
+        <Label for="list-push">Push</Label>
+      </div>
+      <div class="flex items-center gap-2 border rounded-md p-3">
+        <Checkbox id="list-sms" bind:checked={compInListSms} />
+        <Label for="list-sms">SMS</Label>
+      </div>
+      <div class="flex items-center gap-2 border rounded-md p-3">
+        <Checkbox id="list-newsletter" bind:checked={compInListNewsletter} />
+        <Label for="list-newsletter">Newsletter</Label>
       </div>
     </div>
   {/snippet}

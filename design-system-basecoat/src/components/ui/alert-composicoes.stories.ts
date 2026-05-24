@@ -57,12 +57,12 @@ export const MultiplosTipos: Story = {
     a2.appendChild(createAlertTitle({ text: 'Erro' }));
     a2.appendChild(createAlertDescription({ text: 'Erro crítico que bloqueia o fluxo.' }));
 
-    const a3 = createAlert({ className: 'bg-success/10 text-success border-success/30' });
+    const a3 = createAlert({ className: 'nds-alert-success' });
     a3.appendChild(createAlertIcon('success'));
     a3.appendChild(createAlertTitle({ text: 'Sucesso' }));
     a3.appendChild(createAlertDescription({ text: 'Ação concluída com sucesso.' }));
 
-    const a4 = createAlert({ className: 'bg-warning/10 text-warning border-warning/30' });
+    const a4 = createAlert({ className: 'nds-alert-warning' });
     a4.appendChild(createAlertIcon('warning'));
     a4.appendChild(createAlertTitle({ text: 'Aviso' }));
     a4.appendChild(createAlertDescription({ text: 'Aviso que requer atenção.' }));

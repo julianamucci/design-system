@@ -39,7 +39,9 @@ function buildVariantDemo(variant: SidebarVariant): HTMLElement {
 
   const header = createSidebarHeader();
   const logoRow = document.createElement('div');
-  logoRow.className = 'px-2 py-1 text-sm font-semibold text-sidebar-foreground';
+  logoRow.className = 'nds-text-body nds-font-semibold';
+  logoRow.style.padding = '0.25rem 0.5rem';
+  logoRow.style.color = 'var(--sidebar-foreground)';
   logoRow.textContent = 'Design System';
   header.appendChild(logoRow);
   inner.appendChild(header);
@@ -60,25 +62,35 @@ function buildVariantDemo(variant: SidebarVariant): HTMLElement {
 
   const footer = createSidebarFooter();
   const userRow = document.createElement('div');
-  userRow.className = 'px-2 py-1 text-sm text-sidebar-foreground';
+  userRow.className = 'nds-text-body';
+  userRow.style.padding = '0.25rem 0.5rem';
+  userRow.style.color = 'var(--sidebar-foreground)';
   userRow.textContent = 'Usuário';
   footer.appendChild(userRow);
   inner.appendChild(footer);
 
   const inset = document.createElement('div');
-  inset.className = 'flex flex-1 flex-col';
+  inset.className = 'nds-flex-1';
+  inset.style.display = 'flex';
+  inset.style.flexDirection = 'column';
 
   const topbar = document.createElement('div');
-  topbar.className = 'flex h-12 items-center gap-2 border-b border-border px-4';
+  topbar.className = 'nds-cluster nds-border-b';
+  topbar.dataset.spacing = 'sm';
+  topbar.style.height = '3rem';
+  topbar.style.paddingLeft = '1rem';
+  topbar.style.paddingRight = '1rem';
   topbar.appendChild(createSidebarTrigger(instance.toggle));
 
   const variantLabel = document.createElement('span');
-  variantLabel.className = 'text-xs text-muted-foreground font-mono';
+  variantLabel.className = 'nds-text-caption nds-text-muted-foreground nds-font-mono';
   variantLabel.textContent = `variant="${variant}"`;
   topbar.appendChild(variantLabel);
 
   const mainContent = document.createElement('div');
-  mainContent.className = 'flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground';
+  mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+  mainContent.dataset.justify = 'center';
+  mainContent.style.padding = '2rem';
   mainContent.textContent = 'Conteúdo principal';
 
   inset.append(topbar, mainContent);
@@ -88,7 +100,8 @@ function buildVariantDemo(variant: SidebarVariant): HTMLElement {
   wrapper.appendChild(inset);
 
   const container = document.createElement('div');
-  container.className = 'min-h-[400px] w-full border border-border rounded-lg overflow-hidden';
+  container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+  container.style.minHeight = '400px';
   container.appendChild(wrapper);
   return container;
 }
@@ -168,7 +181,9 @@ export const LadoDireito: Story = {
 
     const header = createSidebarHeader();
     const logoRow = document.createElement('div');
-    logoRow.className = 'px-2 py-1 text-sm font-semibold text-sidebar-foreground';
+    logoRow.className = 'nds-text-body nds-font-semibold';
+  logoRow.style.padding = '0.25rem 0.5rem';
+  logoRow.style.color = 'var(--sidebar-foreground)';
     logoRow.textContent = 'Painel de Detalhes';
     header.appendChild(logoRow);
     inner.appendChild(header);
@@ -186,14 +201,23 @@ export const LadoDireito: Story = {
     inner.appendChild(content);
 
     const inset = document.createElement('div');
-    inset.className = 'flex flex-1 flex-col';
+    inset.className = 'nds-flex-1';
+  inset.style.display = 'flex';
+  inset.style.flexDirection = 'column';
 
     const topbar = document.createElement('div');
-    topbar.className = 'flex h-12 items-center justify-end gap-2 border-b border-border px-4';
+    topbar.className = 'nds-cluster nds-border-b';
+    topbar.dataset.spacing = 'sm';
+    topbar.dataset.justify = 'end';
+    topbar.style.height = '3rem';
+    topbar.style.paddingLeft = '1rem';
+    topbar.style.paddingRight = '1rem';
     topbar.appendChild(createSidebarTrigger(instance.toggle));
 
     const mainContent = document.createElement('div');
-    mainContent.className = 'flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground';
+    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+  mainContent.dataset.justify = 'center';
+  mainContent.style.padding = '2rem';
     mainContent.textContent = 'Conteúdo principal';
 
     inset.append(topbar, mainContent);
@@ -203,7 +227,8 @@ export const LadoDireito: Story = {
     wrapper.appendChild(instance.element);
 
     const container = document.createElement('div');
-    container.className = 'min-h-[400px] w-full border border-border rounded-lg overflow-hidden';
+    container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+  container.style.minHeight = '400px';
     container.appendChild(wrapper);
     return container;
   },

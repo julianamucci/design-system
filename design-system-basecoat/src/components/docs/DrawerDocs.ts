@@ -17,6 +17,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -67,11 +68,13 @@ function buildDrawerDemo(opts: DrawerDemoOptions): HTMLElement {
     label: opts.actionLabel,
   });
   const footer = document.createElement('div');
-  footer.className = 'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2';
+  footer.className = 'nds-cluster';
+  footer.dataset.justify = 'end';
+  footer.dataset.spacing = 'xs';
   footer.append(cancel, action);
 
   const body = document.createElement('div');
-  body.className = 'text-sm text-muted-foreground';
+  body.className = 'nds-text-body nds-text-muted-foreground';
   body.textContent = opts.bodyText ?? '';
 
   const side = opts.side ?? 'bottom';
@@ -143,6 +146,7 @@ export function createDrawerDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -186,7 +190,7 @@ export function createDrawerDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -200,7 +204,11 @@ export function createDrawerDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'flex flex-wrap items-center justify-center gap-3 min-h-[140px]';
+            wrap.className = 'nds-cluster';
+            wrap.dataset.justify = 'center';
+            wrap.dataset.spacing = 'sm';
+            wrap.style.flexWrap = 'wrap';
+            wrap.style.minHeight = '140px';
             wrap.append(
               buildDrawerDemo({
                 triggerLabel: t('demonstration.labels.bottom'),
@@ -399,6 +407,218 @@ const drawer = createSheet({
                 description: 'Painel de filtros.',
                 cancelLabel: 'Cancelar',
                 actionLabel: 'Aplicar',
+                side: 'right',
+              }),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        function buildField(labelText: string, type: string, value: string): HTMLLabelElement {
+          const label = document.createElement('label');
+          label.className = 'nds-stack nds-text-body';
+          label.dataset.spacing = 'xs';
+          const span = document.createElement('span');
+          span.className = 'nds-font-medium';
+          span.textContent = labelText;
+          const input = document.createElement('input');
+          input.className = 'nds-border-default nds-rounded-md';
+          input.style.padding = '0.5rem 0.75rem';
+          input.type = type;
+          input.value = value;
+          label.append(span, input);
+          return label;
+        }
+
+        const codeWithForm = `const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
+
+const form = document.createElement('form');
+form.className = 'nds-stack';
+form.dataset.spacing = 'sm';
+form.append(
+  buildField('Nome', 'text', 'Maria Souza'),
+  buildField('E-mail', 'email', 'maria@exemplo.com'),
+);
+
+const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+const action = createButton({ variant: 'default', label: 'Salvar alterações' });
+const footer = document.createElement('div');
+footer.className = 'nds-cluster';
+footer.dataset.justify = 'end';
+footer.dataset.spacing = 'xs';
+footer.append(cancel, action);
+
+const drawer = createDrawer({
+  trigger,
+  title: 'Editar perfil',
+  description: 'Atualize seus dados pessoais.',
+  content: form,
+  footer,
+});`;
+
+        const codeWithConfirmation = `const trigger = createButton({ variant: 'outline', label: 'Remover item' });
+
+const body = document.createElement('div');
+body.className = 'nds-text-body nds-text-muted-foreground';
+body.textContent = 'Você poderá adicioná-lo novamente a qualquer momento.';
+
+const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+const action = createButton({ variant: 'destructive', label: 'Remover' });
+const footer = document.createElement('div');
+footer.className = 'nds-cluster';
+footer.dataset.justify = 'end';
+footer.dataset.spacing = 'xs';
+footer.append(cancel, action);
+
+const drawer = createDrawer({
+  trigger,
+  title: 'Remover item da lista?',
+  description: 'Você poderá adicioná-lo novamente a qualquer momento.',
+  content: body,
+  footer,
+});`;
+
+        const codeWithScroll = `const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
+
+const longBody = document.createElement('div');
+longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y';
+longBody.dataset.spacing = 'sm';
+longBody.style.maxHeight = '16rem';
+longBody.style.paddingRight = '0.5rem';
+for (let i = 1; i <= 12; i++) {
+  const p = document.createElement('p');
+  p.textContent = \`Parágrafo \${i}: termos longos para garantir scroll interno.\`;
+  longBody.appendChild(p);
+}
+
+const drawer = createDrawer({
+  trigger,
+  title: 'Termos de uso',
+  description: 'Leia atentamente antes de aceitar.',
+  content: longBody,
+  footer,
+});`;
+
+        const codeRightPanel = `// Em basecoat, direction != 'bottom' usa createSheet
+import { createSheet } from '@/components/ui/sheet';
+
+const trigger = createButton({ variant: 'outline', label: 'Abrir filtros' });
+const body = document.createElement('div');
+body.className = 'nds-px-4 nds-text-body nds-text-muted-foreground';
+body.textContent = 'Conteúdo dos filtros…';
+
+const drawer = createSheet({
+  trigger,
+  side: 'right',
+  title: 'Filtros',
+  description: 'Refine os resultados.',
+  content: body,
+  footer,
+});`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'drawer',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.withForm.name')),
+              description: stripHtml(t('variants.compositions.withForm.description')),
+              useWhen: stripHtml(t('variants.compositions.withForm.use')),
+              code: codeWithForm,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
+                const form = document.createElement('form');
+                form.className = 'nds-stack';
+form.dataset.spacing = 'sm';
+                form.append(
+                  buildField('Nome', 'text', 'Maria Souza'),
+                  buildField('E-mail', 'email', 'maria@exemplo.com'),
+                );
+                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                const action = createButton({ variant: 'default', label: 'Salvar alterações' });
+                const footer = document.createElement('div');
+                footer.className = 'nds-cluster';
+  footer.dataset.justify = 'end';
+  footer.dataset.spacing = 'xs';
+                footer.append(cancel, action);
+                const el = createDrawer({
+                  trigger,
+                  title: 'Editar perfil',
+                  description: 'Atualize seus dados pessoais.',
+                  content: form,
+                  footer,
+                });
+                el.dataset.slot = 'drawer';
+                el.dataset.vaulDrawerDirection = 'bottom';
+                return el;
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.withConfirmation.name')),
+              description: stripHtml(t('variants.compositions.withConfirmation.description')),
+              useWhen: stripHtml(t('variants.compositions.withConfirmation.use')),
+              code: codeWithConfirmation,
+              previewFactory: () => buildDrawerDemo({
+                triggerLabel: 'Remover item',
+                title: 'Remover item da lista?',
+                description: 'Você poderá adicioná-lo novamente a qualquer momento.',
+                cancelLabel: 'Cancelar',
+                actionLabel: 'Remover',
+                destructive: true,
+                bodyText: 'Esta ação remove o item desta lista.',
+                side: 'bottom',
+              }),
+            },
+            {
+              name: stripHtml(t('variants.compositions.withScroll.name')),
+              description: stripHtml(t('variants.compositions.withScroll.description')),
+              useWhen: stripHtml(t('variants.compositions.withScroll.use')),
+              code: codeWithScroll,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
+                const longBody = document.createElement('div');
+                longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y';
+longBody.dataset.spacing = 'sm';
+longBody.style.maxHeight = '16rem';
+longBody.style.paddingRight = '0.5rem';
+                for (let i = 1; i <= 12; i++) {
+                  const p = document.createElement('p');
+                  p.textContent = `Parágrafo ${i}: termos longos para garantir scroll interno.`;
+                  longBody.appendChild(p);
+                }
+                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                const action = createButton({ variant: 'default', label: 'Aceitar termos' });
+                const footer = document.createElement('div');
+                footer.className = 'nds-cluster';
+  footer.dataset.justify = 'end';
+  footer.dataset.spacing = 'xs';
+                footer.append(cancel, action);
+                const el = createDrawer({
+                  trigger,
+                  title: 'Termos de uso',
+                  description: 'Leia atentamente antes de aceitar.',
+                  content: longBody,
+                  footer,
+                });
+                el.dataset.slot = 'drawer';
+                el.dataset.vaulDrawerDirection = 'bottom';
+                return el;
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.rightPanel.name')),
+              description: stripHtml(t('variants.compositions.rightPanel.description')),
+              useWhen: stripHtml(t('variants.compositions.rightPanel.use')),
+              code: codeRightPanel,
+              previewFactory: () => buildDrawerDemo({
+                triggerLabel: 'Abrir filtros',
+                title: 'Filtros',
+                description: 'Refine os resultados.',
+                cancelLabel: 'Cancelar',
+                actionLabel: 'Aplicar',
+                bodyText: 'Conteúdo dos filtros…',
                 side: 'right',
               }),
             },

@@ -48,7 +48,7 @@ type Story = StoryObj<ProgressArgs>;
 export const Playground: Story = {
   render: (args) => {
     const container = document.createElement('div');
-    container.className = 'w-full max-w-md';
+    container.className = 'nds-w-full nds-max-w-md';
     const bar = createProgress({ value: args.value, max: args.max });
     bar.setAttribute('aria-label', args.ariaLabel);
     container.appendChild(bar);

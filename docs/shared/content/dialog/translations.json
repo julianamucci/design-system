@@ -143,6 +143,24 @@
         "noFooter": "Apenas Title + Description, sem Footer. Para uso informativo ou pré-visualização passiva.",
         "withDestructiveAction": "Footer com ação primária <code>destructive</code>. Diferente de AlertDialog — use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista).",
         "customCloseInFooter": "<code>showCloseButton={false}</code> no Content e <code>showCloseButton</code> no Footer — botão de fechar fica abaixo das ações."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "confirmEmail": {
+          "name": "Confirmação de e-mail",
+          "description": "Body curto com mensagem informativa + footer com ação primária neutra. Confirma uma operação reversível antes de disparar o efeito real (envio, agendamento, geração).",
+          "use": "Confirmar envio de link, mensagem ou convite. O usuário pode revisar o endereço/destinatário antes de prosseguir e cancelar sem consequência."
+        },
+        "profileEdit": {
+          "name": "Edição de perfil",
+          "description": "Body com formulário inline (campos de texto e <code>textarea</code>) + footer com <code>Cancelar</code> e ação primária descritiva (<code>Salvar alterações</code>). Caso de uso canônico do Dialog.",
+          "use": "Edição de recurso curto sem sair da tela atual (perfil, item, configuração). Combine com <code>Form</code> e valide antes de fechar — em erro, mantenha o diálogo aberto."
+        },
+        "mediaPreview": {
+          "name": "Pré-visualização de mídia",
+          "description": "Body com mídia em destaque (imagem, vídeo, capa) e botão Close visível, sem footer de ações. A única intenção é \"ver\", não \"fazer\".",
+          "use": "Pré-visualizar imagem em tamanho real, capa de post, vídeo curto. Quando não há ação primária, dispense o footer e mantenha o botão Close."
+        }
       }
     },
     "states": {
@@ -334,6 +352,7 @@
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
+      "compositions": "Composições",
       "states": "Configurações",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -490,6 +509,24 @@
         "noFooter": "Only Title + Description, no Footer. For informational use or passive preview.",
         "withDestructiveAction": "Footer with <code>destructive</code> primary action. Different from AlertDialog — use only when destructiveness is secondary to the flow (e.g. remove item from list).",
         "customCloseInFooter": "<code>showCloseButton={false}</code> on Content and <code>showCloseButton</code> on Footer — close button sits below the actions."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "confirmEmail": {
+          "name": "Email confirmation",
+          "description": "Short informational body + footer with a neutral primary action. Confirms a reversible operation before triggering the real effect (send, schedule, generate).",
+          "use": "Confirm sending a link, message, or invite. The user can review the address/recipient before proceeding and cancel without consequence."
+        },
+        "profileEdit": {
+          "name": "Profile editing",
+          "description": "Body with inline form (text inputs and <code>textarea</code>) + footer with <code>Cancel</code> and a descriptive primary action (<code>Save changes</code>). Canonical Dialog use case.",
+          "use": "Editing a short resource without leaving the current screen (profile, item, setting). Pair with <code>Form</code> and validate before closing — on error, keep the dialog open."
+        },
+        "mediaPreview": {
+          "name": "Media preview",
+          "description": "Body with highlighted media (image, video, cover) and visible Close button, no actions footer. The only intent is to \"view\", not to \"do\".",
+          "use": "Preview a full-size image, post cover, or short video. When there is no primary action, drop the footer and keep the Close button."
+        }
       }
     },
     "states": {
@@ -681,6 +718,7 @@
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
+      "compositions": "Compositions",
       "states": "Configurations",
       "props": "Properties",
       "tokens": "Tokens",
@@ -837,6 +875,24 @@
         "noFooter": "Solo Title + Description, sin Footer. Para uso informativo o previsualización pasiva.",
         "withDestructiveAction": "Footer con acción primaria <code>destructive</code>. Distinto de AlertDialog — úsalo solo cuando lo destructivo es secundario al flujo (ej. quitar ítem de lista).",
         "customCloseInFooter": "<code>showCloseButton={false}</code> en Content y <code>showCloseButton</code> en Footer — el botón de cerrar queda debajo de las acciones."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "confirmEmail": {
+          "name": "Confirmación de e-mail",
+          "description": "Body corto con mensaje informativo + footer con acción primaria neutra. Confirma una operación reversible antes de disparar el efecto real (envío, programación, generación).",
+          "use": "Confirmar el envío de un enlace, mensaje o invitación. El usuario puede revisar la dirección/destinatario antes de continuar y cancelar sin consecuencia."
+        },
+        "profileEdit": {
+          "name": "Edición de perfil",
+          "description": "Body con formulario inline (campos de texto y <code>textarea</code>) + footer con <code>Cancelar</code> y acción primaria descriptiva (<code>Guardar cambios</code>). Caso de uso canónico del Dialog.",
+          "use": "Edición de recurso corto sin salir de la pantalla actual (perfil, ítem, configuración). Combina con <code>Form</code> y valida antes de cerrar — en error, mantén el diálogo abierto."
+        },
+        "mediaPreview": {
+          "name": "Previsualización de media",
+          "description": "Body con media destacada (imagen, video, portada) y botón Close visible, sin footer de acciones. La única intención es \"ver\", no \"hacer\".",
+          "use": "Previsualizar una imagen a tamaño real, portada de post o video corto. Cuando no hay acción primaria, omite el footer y mantén el botón Close."
+        }
       }
     },
     "states": {
@@ -1028,6 +1084,7 @@
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",
+      "compositions": "Composiciones",
       "states": "Configuraciones",
       "props": "Propiedades",
       "tokens": "Tokens",

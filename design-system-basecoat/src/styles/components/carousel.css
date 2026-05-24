@@ -1,0 +1,91 @@
+/*
+ * ─── nds-carousel ───────────────────────────────────────────────────────────
+ * Carrossel de slides com setas de navegação e suporte a autoplay.
+ *
+ *   <div class="nds-carousel" role="region" aria-roledescription="carousel">
+ *     <div class="nds-carousel-overflow">
+ *       <div class="nds-carousel-track">
+ *         <div class="nds-carousel-slide" role="group">[slide]</div>
+ *       </div>
+ *     </div>
+ *     <button class="nds-carousel-button nds-carousel-button-prev">‹</button>
+ *     <button class="nds-carousel-button nds-carousel-button-next">›</button>
+ *   </div>
+ *
+ * Tokens: --background, --foreground, --border, --ring, --accent,
+ *         --accent-foreground, --radius, --spacing-*
+ */
+
+.nds-carousel {
+  position: relative;
+}
+
+/* ── Overflow (recorta os slides fora da viewport) ───────────────────────── */
+.nds-carousel-overflow {
+  overflow: hidden;
+}
+
+/* ── Track (linha horizontal com todos os slides) ────────────────────────── */
+.nds-carousel-track {
+  display: flex;
+  transition: transform 300ms ease-in-out;
+}
+
+/* ── Slide ───────────────────────────────────────────────────────────────── */
+.nds-carousel-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  padding-left: var(--spacing-4);                 /* 16px */
+}
+
+/* ── Navigation buttons ──────────────────────────────────────────────────── */
+.nds-carousel-button {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  transform: translateY(-50%);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--spacing-9, 2.25rem);               /* 36px */
+  height: var(--spacing-9, 2.25rem);
+
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 9999px;
+  cursor: pointer;
+  outline: 0;
+  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+  transition: background-color 150ms, color 150ms, opacity 150ms;
+}
+
+.nds-carousel-button-prev { left: var(--spacing-2); }
+.nds-carousel-button-next { right: var(--spacing-2); }
+
+.nds-carousel-button:hover:not(:disabled) {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-carousel-button:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+}
+
+.nds-carousel-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.nds-carousel-button > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-carousel-track,
+  .nds-carousel-button {
+    transition: none;
+  }
+}

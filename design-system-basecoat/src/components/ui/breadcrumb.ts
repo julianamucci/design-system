@@ -1,4 +1,6 @@
-// ─── Breadcrumb ──────────────────────────────────────────────────────────────
+// ─── Breadcrumb — Vanilla factories standalone ──────────────────────────────
+//
+// Visual: classes .nds-breadcrumb-* (zero Tailwind/basecoat-css).
 
 export interface BreadcrumbOptions {
   /** Accessible label for the nav landmark (default: "breadcrumb"). */
@@ -32,7 +34,7 @@ export interface BreadcrumbSeparatorOptions {
 }
 
 export interface BreadcrumbEllipsisOptions {
-  /** Accessible label for the ellipsis button (default: "More pages"). */
+  /** Accessible label for the ellipsis (default: "More"). */
   label?: string;
   className?: string;
 }
@@ -41,8 +43,9 @@ export function createBreadcrumb(options: BreadcrumbOptions = {}): HTMLElement {
   const { label = 'breadcrumb', className } = options;
 
   const nav = document.createElement('nav');
+  nav.dataset.slot = 'breadcrumb';
   nav.setAttribute('aria-label', label);
-  nav.className = '';
+  nav.className = 'nds-breadcrumb';
   if (className) nav.classList.add(...className.split(' ').filter(Boolean));
 
   return nav;
@@ -52,8 +55,8 @@ export function createBreadcrumbList(options: BreadcrumbListOptions = {}): HTMLE
   const { className } = options;
 
   const ol = document.createElement('ol');
-  ol.className =
-    'flex flex-wrap items-center gap-1.5 text-sm wrap-break-word text-muted-foreground';
+  ol.dataset.slot = 'breadcrumb-list';
+  ol.className = 'nds-breadcrumb-list';
   if (className) ol.classList.add(...className.split(' ').filter(Boolean));
 
   return ol;
@@ -63,7 +66,8 @@ export function createBreadcrumbItem(options: BreadcrumbItemOptions = {}): HTMLE
   const { className } = options;
 
   const li = document.createElement('li');
-  li.className = 'inline-flex items-center gap-1';
+  li.dataset.slot = 'breadcrumb-item';
+  li.className = 'nds-breadcrumb-item';
   if (className) li.classList.add(...className.split(' ').filter(Boolean));
 
   return li;
@@ -73,8 +77,9 @@ export function createBreadcrumbLink(options: BreadcrumbLinkOptions): HTMLAnchor
   const { href, text = '', className } = options;
 
   const a = document.createElement('a');
+  a.dataset.slot = 'breadcrumb-link';
   a.href = href;
-  a.className = 'transition-colors hover:text-foreground';
+  a.className = 'nds-breadcrumb-link';
   if (className) a.classList.add(...className.split(' ').filter(Boolean));
   if (text) a.textContent = text;
 
@@ -85,10 +90,11 @@ export function createBreadcrumbPage(options: BreadcrumbPageOptions = {}): HTMLE
   const { text = '', className } = options;
 
   const span = document.createElement('span');
+  span.dataset.slot = 'breadcrumb-page';
   span.setAttribute('role', 'link');
   span.setAttribute('aria-current', 'page');
   span.setAttribute('aria-disabled', 'true');
-  span.className = 'font-normal text-foreground';
+  span.className = 'nds-breadcrumb-page';
   if (className) span.classList.add(...className.split(' ').filter(Boolean));
   if (text) span.textContent = text;
 
@@ -99,9 +105,10 @@ export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = 
   const { content = '›', className } = options;
 
   const li = document.createElement('li');
+  li.dataset.slot = 'breadcrumb-separator';
   li.setAttribute('role', 'presentation');
   li.setAttribute('aria-hidden', 'true');
-  li.className = '[&>svg]:size-3.5';
+  li.className = 'nds-breadcrumb-separator';
   if (className) li.classList.add(...className.split(' ').filter(Boolean));
 
   if (typeof content === 'string') {
@@ -114,27 +121,41 @@ export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = 
 }
 
 /**
- * Renders an ellipsis indicator used when some breadcrumb items are collapsed.
- * Callers should wire up a click handler to expand the hidden items.
- *
- * Paridade com React: ícone MoreHorizontal + `sr-only "More"` para leitores de tela.
+ * Indicador de overflow (MoreHorizontal). Quando algumas trilhas são colapsadas,
+ * o consumidor liga um click handler externo pra expandir.
  */
 export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}): HTMLElement {
   const { label = 'More', className } = options;
 
   const span = document.createElement('span');
+  span.dataset.slot = 'breadcrumb-ellipsis';
   span.setAttribute('role', 'presentation');
   span.setAttribute('aria-hidden', 'true');
-  span.className = 'flex size-5 items-center justify-center [&>svg]:size-4';
+  span.className = 'nds-breadcrumb-ellipsis';
   if (className) span.classList.add(...className.split(' ').filter(Boolean));
 
-  // Ícone MoreHorizontal (paridade com lucide-react MoreHorizontalIcon)
-  span.innerHTML =
-    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>';
+  // SVG MoreHorizontal — anexado via createElementNS (sem innerHTML em elemento de fluxo).
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('xmlns', SVG_NS);
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+  for (const cx of ['5', '12', '19']) {
+    const c = document.createElementNS(SVG_NS, 'circle');
+    c.setAttribute('cx', cx);
+    c.setAttribute('cy', '12');
+    c.setAttribute('r', '1');
+    svg.appendChild(c);
+  }
+  span.appendChild(svg);
 
-  // Texto acessível para leitores de tela
   const srOnly = document.createElement('span');
-  srOnly.className = 'sr-only';
+  srOnly.className = 'nds-sr-only';
   srOnly.textContent = label;
   span.appendChild(srOnly);
 

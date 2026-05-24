@@ -16,6 +16,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -85,7 +86,7 @@ function buildLongTextTooltip(): HTMLElement {
     trigger,
     content: t('demonstration.labels.share'),
     side: 'top',
-    class: 'max-w-xs whitespace-normal text-center',
+    class: 'nds-max-w-xs nds-whitespace-normal',
   });
 }
 
@@ -133,6 +134,7 @@ export function createTooltipDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -176,7 +178,7 @@ export function createTooltipDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -191,7 +193,10 @@ export function createTooltipDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'grid grid-cols-1 sm:grid-cols-3 gap-6 w-full min-h-[180px]';
+            wrap.className = 'nds-grid nds-w-full';
+            wrap.dataset.cols = '3';
+            wrap.dataset.spacing = 'lg';
+            wrap.style.minHeight = '180px';
 
             const cells: Array<{ labelKey: string; build: () => HTMLElement }> = [
               { labelKey: 'variants.items.default',      build: buildDefaultTooltip      },
@@ -201,13 +206,14 @@ export function createTooltipDocs(): HTMLElement {
 
             for (const cell of cells) {
               const col = document.createElement('div');
-              col.className = 'space-y-2';
+              col.className = 'nds-stack';
+              col.dataset.spacing = 'xs';
               col.style.contain = 'layout';
               col.style.position = 'relative';
               col.style.minHeight = '120px';
 
               const label = document.createElement('p');
-              label.className = 'text-xs font-medium text-muted-foreground';
+              label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
               label.textContent = t(cell.labelKey);
 
               col.appendChild(label);
@@ -283,13 +289,13 @@ export function createTooltipDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-xs font-mono';
+                wrap.className = 'nds-text-caption nds-font-mono';
                 wrap.textContent = 'aria-label="Salvar" + Tooltip "Salvar (Ctrl+S)"';
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-xs font-mono';
+                wrap.className = 'nds-text-caption nds-font-mono';
                 wrap.textContent = 'Tooltip "Salvar" (sem aria-label)';
                 return wrap;
               },
@@ -301,13 +307,13 @@ export function createTooltipDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const code = document.createElement('div');
-                code.className = 'text-sm font-mono';
+                code.className = 'nds-text-body nds-font-mono';
                 code.textContent = '"Salvar (Ctrl+S)"';
                 return code;
               },
               dontPreviewFactory: () => {
                 const code = document.createElement('div');
-                code.className = 'text-sm font-mono';
+                code.className = 'nds-text-body nds-font-mono';
                 code.textContent = '"Clique aqui para abrir o formulário…"';
                 return code;
               },
@@ -344,7 +350,7 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
   trigger,
   content: 'Esta ação salva todas as alterações localmente e sincroniza com o servidor.',
   side: 'top',
-  class: 'max-w-xs whitespace-normal text-center',
+  class: 'nds-max-w-xs nds-whitespace-normal',
 });`;
 
         return createDocsVariants({
@@ -367,6 +373,211 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
               description: stripHtml(t('variants.styles.longText')),
               code: codeLong,
               previewFactory: () => buildLongTextTooltip(),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        const codeIconShortcut = `const iconWrap = document.createElement('span');
+iconWrap.setAttribute('aria-hidden', 'true');
+iconWrap.appendChild(createButtonIcon('download'));
+
+const trigger = createButton({
+  variant: 'ghost',
+  size: 'icon',
+  ariaLabel: 'Salvar',
+  children: iconWrap,
+});
+
+createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
+
+        const codeFormHelp = `const help = createButton({
+  variant: 'ghost',
+  size: 'icon-xs',
+  ariaLabel: 'Ajuda sobre Token de API',
+  label: '?',
+});
+
+createTooltip({
+  trigger: help,
+  content: 'Cole o token gerado em Configurações > Integrações.',
+  side: 'right',
+  class: 'nds-max-w-xs nds-whitespace-normal',
+});`;
+
+        const codeMetric = `const help = createButton({
+  variant: 'ghost',
+  size: 'icon-xs',
+  ariaLabel: 'O que é LCP',
+  label: 'i',
+});
+
+createTooltip({
+  trigger: help,
+  content: 'Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.',
+  side: 'top',
+  class: 'nds-max-w-xs nds-whitespace-normal',
+});`;
+
+        const codeSides = `for (const side of ['top', 'right', 'bottom', 'left'] as const) {
+  const trigger = createButton({ variant: 'outline', label: side, ariaLabel: side });
+  const el = createTooltip({ trigger, content: \`Tooltip \${side}\`, side });
+  grid.appendChild(el);
+}`;
+
+        function buildIconShortcutPreview(): HTMLElement {
+          const iconWrap = document.createElement('span');
+          iconWrap.setAttribute('aria-hidden', 'true');
+          iconWrap.appendChild(createButtonIcon('download'));
+          const trigger = createButton({
+            variant: 'ghost',
+            size: 'icon',
+            ariaLabel: 'Salvar',
+            children: iconWrap,
+          });
+          return createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });
+        }
+
+        function buildFormHelpPreview(): HTMLElement {
+          const root = document.createElement('div');
+          root.className = 'nds-stack';
+          root.dataset.spacing = 'xs';
+          root.style.alignItems = 'flex-start';
+
+          const labelRow = document.createElement('div');
+          labelRow.className = 'nds-cluster';
+          labelRow.dataset.spacing = 'xs';
+
+          const label = document.createElement('label');
+          label.className = 'nds-text-body nds-font-medium';
+          label.textContent = 'Token de API';
+          label.htmlFor = 'api-token-bc-comp';
+
+          const help = createButton({
+            variant: 'ghost',
+            size: 'icon-sm',
+            ariaLabel: 'Ajuda sobre Token de API',
+            label: '?',
+          });
+
+          const tooltip = createTooltip({
+            trigger: help,
+            content: 'Cole o token gerado em Configurações > Integrações.',
+            side: 'right',
+            class: 'nds-max-w-xs nds-whitespace-normal',
+          });
+
+          labelRow.append(label, tooltip);
+
+          const input = document.createElement('input');
+          input.id = 'api-token-bc-comp';
+          input.type = 'text';
+          input.className = 'input';
+          input.style.width = '16rem';
+          input.placeholder = 'sk-...';
+
+          root.append(labelRow, input);
+          return root;
+        }
+
+        function buildMetricPreview(): HTMLElement {
+          const root = document.createElement('div');
+          root.className = 'nds-stack';
+          root.dataset.spacing = 'xs';
+          root.style.alignItems = 'flex-start';
+
+          const headerRow = document.createElement('div');
+          headerRow.className = 'nds-cluster';
+          headerRow.dataset.spacing = 'xs';
+
+          const title = document.createElement('p');
+          title.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider';
+          title.textContent = 'LCP';
+
+          const help = createButton({
+            variant: 'ghost',
+            size: 'icon-sm',
+            ariaLabel: 'O que é LCP',
+            label: 'i',
+          });
+
+          const tooltip = createTooltip({
+            trigger: help,
+            content: 'Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.',
+            side: 'top',
+            class: 'nds-max-w-xs nds-whitespace-normal',
+          });
+
+          headerRow.append(title, tooltip);
+
+          const value = document.createElement('p');
+          value.className = 'nds-font-semibold';
+          value.style.fontSize = '1.5rem';
+          value.style.lineHeight = '2rem';
+          value.textContent = '1.8s';
+
+          root.append(headerRow, value);
+          return root;
+        }
+
+        function buildSidesPreview(): HTMLElement {
+          const grid = document.createElement('div');
+          grid.style.contain = 'layout';
+          grid.style.minHeight = '160px';
+          grid.className = 'nds-grid nds-w-full';
+          grid.dataset.cols = '4';
+          grid.dataset.spacing = 'xl';
+          grid.style.placeItems = 'center';
+
+          const sides: Array<{ side: 'top' | 'bottom' | 'left' | 'right'; label: string }> = [
+            { side: 'top',    label: 'Top'    },
+            { side: 'right',  label: 'Right'  },
+            { side: 'bottom', label: 'Bottom' },
+            { side: 'left',   label: 'Left'   },
+          ];
+
+          for (const { side, label } of sides) {
+            const trigger = createButton({ variant: 'outline', label, ariaLabel: label });
+            const el = createTooltip({ trigger, content: `Tooltip ${label}`, side });
+            grid.appendChild(el);
+          }
+
+          return grid;
+        }
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'tooltip',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.iconButtonWithShortcut.name')),
+              description: stripHtml(t('variants.compositions.iconButtonWithShortcut.description')),
+              useWhen: stripHtml(t('variants.compositions.iconButtonWithShortcut.use')),
+              code: codeIconShortcut,
+              previewFactory: buildIconShortcutPreview,
+            },
+            {
+              name: stripHtml(t('variants.compositions.formFieldHelp.name')),
+              description: stripHtml(t('variants.compositions.formFieldHelp.description')),
+              useWhen: stripHtml(t('variants.compositions.formFieldHelp.use')),
+              code: codeFormHelp,
+              previewFactory: buildFormHelpPreview,
+            },
+            {
+              name: stripHtml(t('variants.compositions.metricDescription.name')),
+              description: stripHtml(t('variants.compositions.metricDescription.description')),
+              useWhen: stripHtml(t('variants.compositions.metricDescription.use')),
+              code: codeMetric,
+              previewFactory: buildMetricPreview,
+            },
+            {
+              name: stripHtml(t('variants.compositions.positioningSides.name')),
+              description: stripHtml(t('variants.compositions.positioningSides.description')),
+              useWhen: stripHtml(t('variants.compositions.positioningSides.use')),
+              code: codeSides,
+              previewFactory: buildSidesPreview,
             },
           ],
         });

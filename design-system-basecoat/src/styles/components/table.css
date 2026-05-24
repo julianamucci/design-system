@@ -1,0 +1,90 @@
+/*
+ * ─── nds-table ──────────────────────────────────────────────────────────────
+ * Tabela de dados acessível.
+ *
+ *   <div class="nds-table-wrapper">
+ *     <table class="nds-table">
+ *       <thead>
+ *         <tr>
+ *           <th>Coluna</th>
+ *         </tr>
+ *       </thead>
+ *       <tbody>
+ *         <tr>
+ *           <td>Valor</td>
+ *         </tr>
+ *       </tbody>
+ *     </table>
+ *   </div>
+ *
+ * Tokens: --foreground, --muted-foreground, --muted, --border, --spacing-*
+ */
+
+.nds-table-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.nds-table {
+  width: 100%;
+  caption-side: bottom;
+  border-collapse: collapse;
+  font-family: inherit;
+  font-size: 0.875rem;                            /* 14px */
+}
+
+/* Caption — alinha legenda da tabela */
+.nds-table > caption {
+  margin-top: var(--spacing-4);                   /* 16px */
+  color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
+}
+
+/* ── Linhas ──────────────────────────────────────────────────────────────── */
+.nds-table thead tr,
+.nds-table tbody tr,
+.nds-table tfoot tr {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.nds-table tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.nds-table tbody tr:hover {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+.nds-table tbody tr[data-state="selected"] {
+  background-color: hsl(var(--muted));
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.nds-table th {
+  height: var(--spacing-10, 2.5rem);              /* 40px */
+  padding-inline: var(--spacing-2);               /* 8px */
+  text-align: left;
+  vertical-align: middle;
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--muted-foreground));
+  white-space: normal;
+}
+
+/* ── Cells ───────────────────────────────────────────────────────────────── */
+.nds-table td {
+  padding: var(--spacing-2);                       /* 8px */
+  vertical-align: middle;
+  white-space: normal;
+  color: hsl(var(--foreground));
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.nds-table tfoot tr {
+  background-color: hsl(var(--muted) / 0.5);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.nds-table tfoot tr:last-child {
+  border-bottom: 0;
+}

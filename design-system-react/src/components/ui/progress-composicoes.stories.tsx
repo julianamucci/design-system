@@ -25,7 +25,7 @@ const meta = {
 } satisfies Meta<typeof Progress>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Progress>;
 
 export const MultiplosNiveis: Story = {
   render: () => (

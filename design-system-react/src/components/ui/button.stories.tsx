@@ -26,10 +26,6 @@ const meta = {
       control: "boolean",
       description: "Desabilita interação com o botão",
     },
-    asChild: {
-      control: "boolean",
-      description: "Renderiza o filho passando props (usa Radix Slot)",
-    },
   },
   args: {
     variant: "default",

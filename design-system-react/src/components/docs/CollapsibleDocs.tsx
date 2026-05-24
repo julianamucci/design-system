@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Filter, Settings } from "lucide-react";
 import {
   Collapsible,
   CollapsibleTrigger,
@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import collapsibleTranslations from "@shared/content/collapsible/translations.json";
@@ -22,6 +21,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -60,6 +60,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -494,6 +495,195 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             description: stripHtml(tContent("variants.items.controlled")),
             code: codeControlled,
             preview: <ControlledDemo tContent={tContent} />,
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="collapsible"
+        items={[
+          {
+            name: tContent("variants.compositions.customButton.name"),
+            description: tContent("variants.compositions.customButton.description"),
+            useWhen: tContent("variants.compositions.customButton.use"),
+            code: `<Collapsible className="w-full max-w-sm">
+  <CollapsibleTrigger asChild>
+    <Button variant="outline">Exibir opções avançadas</Button>
+  </CollapsibleTrigger>
+  <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
+    <p>Opção avançada 1</p>
+    <p>Opção avançada 2</p>
+    <p>Opção avançada 3</p>
+  </CollapsibleContent>
+</Collapsible>`,
+            preview: (
+              <Collapsible className="w-full max-w-sm">
+                <CollapsibleTrigger asChild>
+                  <Button variant="outline">Exibir opções avançadas</Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
+                  <p>Opção avançada 1</p>
+                  <p>Opção avançada 2</p>
+                  <p>Opção avançada 3</p>
+                </CollapsibleContent>
+              </Collapsible>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.iconTrigger.name"),
+            description: tContent("variants.compositions.iconTrigger.description"),
+            useWhen: tContent("variants.compositions.iconTrigger.use"),
+            code: `<Collapsible className="w-full max-w-sm">
+  <CollapsibleTrigger asChild>
+    <Button variant="outline">
+      <span className="flex items-center gap-2">
+        <Filter aria-hidden="true" className="h-4 w-4" />
+        Filtros avançados
+      </span>
+    </Button>
+  </CollapsibleTrigger>
+  <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
+    <p>Filtro por categoria</p>
+    <p>Filtro por data</p>
+    <p>Filtro por status</p>
+  </CollapsibleContent>
+</Collapsible>`,
+            preview: (
+              <Collapsible className="w-full max-w-sm">
+                <CollapsibleTrigger asChild>
+                  <Button variant="outline">
+                    <span className="flex items-center gap-2">
+                      <Filter aria-hidden="true" className="h-4 w-4" />
+                      Filtros avançados
+                    </span>
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
+                  <p>Filtro por categoria</p>
+                  <p>Filtro por data</p>
+                  <p>Filtro por status</p>
+                </CollapsibleContent>
+              </Collapsible>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.rotatingChevron.name"),
+            description: tContent("variants.compositions.rotatingChevron.description"),
+            useWhen: tContent("variants.compositions.rotatingChevron.use"),
+            code: `<Collapsible className="group/collapsible w-full max-w-sm">
+  <CollapsibleTrigger asChild>
+    <button
+      type="button"
+      className="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent"
+    >
+      <span>Configurações avançadas</span>
+      <ChevronDown
+        aria-hidden="true"
+        className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180"
+      />
+    </button>
+  </CollapsibleTrigger>
+  <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
+    <div className="flex items-center justify-between">
+      <span className="text-muted-foreground">Notificações</span>
+      <span className="font-medium">Ativadas</span>
+    </div>
+    <div className="flex items-center justify-between">
+      <span className="text-muted-foreground">Privacidade</span>
+      <span className="font-medium">Modo estrito</span>
+    </div>
+  </CollapsibleContent>
+</Collapsible>`,
+            preview: (
+              <Collapsible className="group/collapsible w-full max-w-sm">
+                <CollapsibleTrigger asChild>
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent"
+                  >
+                    <span>Configurações avançadas</span>
+                    <ChevronDown
+                      aria-hidden="true"
+                      className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180"
+                    />
+                  </button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Notificações</span>
+                    <span className="font-medium">Ativadas</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Privacidade</span>
+                    <span className="font-medium">Modo estrito</span>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.richContent.name"),
+            description: tContent("variants.compositions.richContent.description"),
+            useWhen: tContent("variants.compositions.richContent.use"),
+            code: `<Collapsible className="w-full max-w-sm">
+  <CollapsibleTrigger asChild>
+    <Button variant="outline">
+      <span className="flex items-center gap-2">
+        <Settings aria-hidden="true" className="h-4 w-4" />
+        Configurações do sistema
+      </span>
+    </Button>
+  </CollapsibleTrigger>
+  <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-3 mt-2">
+    <p className="text-muted-foreground">
+      Altere as configurações abaixo com cuidado. As mudanças são aplicadas imediatamente.
+    </p>
+    <label className="flex items-center gap-2">
+      <input type="checkbox" />
+      <span>Habilitar modo de depuração</span>
+    </label>
+    <label className="flex items-center gap-2">
+      <input type="checkbox" />
+      <span>Limpar cache ao sair</span>
+    </label>
+    <label className="flex items-center gap-2">
+      <input type="checkbox" />
+      <span>Exportar logs automaticamente</span>
+    </label>
+  </CollapsibleContent>
+</Collapsible>`,
+            preview: (
+              <Collapsible className="w-full max-w-sm">
+                <CollapsibleTrigger asChild>
+                  <Button variant="outline">
+                    <span className="flex items-center gap-2">
+                      <Settings aria-hidden="true" className="h-4 w-4" />
+                      Configurações do sistema
+                    </span>
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-3 mt-2">
+                  <p className="text-muted-foreground">
+                    Altere as configurações abaixo com cuidado. As mudanças são aplicadas imediatamente.
+                  </p>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" />
+                    <span>Habilitar modo de depuração</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" />
+                    <span>Limpar cache ao sair</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" />
+                    <span>Exportar logs automaticamente</span>
+                  </label>
+                </CollapsibleContent>
+              </Collapsible>
+            ),
           },
         ]}
       />

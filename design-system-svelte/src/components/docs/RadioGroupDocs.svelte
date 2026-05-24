@@ -1,6 +1,7 @@
 <script lang="ts">
   import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
   import { Label } from '@/components/ui/label';
+  import { Button } from '@/components/ui/button';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -8,7 +9,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -59,6 +60,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')    },
         { id: 'variantes',    label: tNav('nav.variants')  },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')    },
         { id: 'propriedades', label: tNav('nav.props')     },
         { id: 'tokens',       label: tNav('nav.tokens')    },
@@ -103,6 +105,18 @@
   let varVerticalValue = $state('');
   let varHorizontalValue = $state('');
   let varDescValue = $state('');
+
+  // Compositions preview state
+  let compVerticalValue = $state('');
+  let compHorizontalValue = $state('');
+  let compDescValue = $state('');
+  let compFormValue = $state('');
+  let compFormOutput = $state('');
+
+  function handleCompFormSubmit(e: Event) {
+    e.preventDefault();
+    compFormOutput = compFormValue || '—';
+  }
 
   // Do & Don't state
   let dd1DoValue = $state('pix');
@@ -571,6 +585,141 @@ interface RadioGroupItemProps {
         </div>
       </div>
     </RadioGroup>
+  {/snippet}
+
+  <!-- ── Composições ───────────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="radio-group"
+    items={[
+      {
+        name: $tStore('variants.compositions.vertical.name'),
+        description: $tStore('variants.compositions.vertical.description'),
+        useWhen: $tStore('variants.compositions.vertical.use'),
+        code: codeVertical,
+        preview: compVertical,
+      },
+      {
+        name: $tStore('variants.compositions.horizontal.name'),
+        description: $tStore('variants.compositions.horizontal.description'),
+        useWhen: $tStore('variants.compositions.horizontal.use'),
+        code: codeHorizontal,
+        preview: compHorizontal,
+      },
+      {
+        name: $tStore('variants.compositions.withDescription.name'),
+        description: $tStore('variants.compositions.withDescription.description'),
+        useWhen: $tStore('variants.compositions.withDescription.use'),
+        code: codeWithDescription,
+        preview: compWithDescription,
+      },
+      {
+        name: $tStore('variants.compositions.inForm.name'),
+        description: $tStore('variants.compositions.inForm.description'),
+        useWhen: $tStore('variants.compositions.inForm.use'),
+        code: codeVertical,
+        preview: compInForm,
+      },
+    ]}
+  />
+
+  {#snippet compVertical()}
+    <div class="flex flex-col gap-2">
+      <p class="text-sm font-semibold">Forma de pagamento</p>
+      <RadioGroup bind:value={compVerticalValue} aria-label="Forma de pagamento" class="grid gap-2">
+        <div class="flex items-center gap-2">
+          <RadioGroupItem value="card" id="comp-v-card" />
+          <Label for="comp-v-card">Cartão de crédito</Label>
+        </div>
+        <div class="flex items-center gap-2">
+          <RadioGroupItem value="pix" id="comp-v-pix" />
+          <Label for="comp-v-pix">Pix</Label>
+        </div>
+        <div class="flex items-center gap-2">
+          <RadioGroupItem value="boleto" id="comp-v-boleto" />
+          <Label for="comp-v-boleto">Boleto bancário</Label>
+        </div>
+      </RadioGroup>
+    </div>
+  {/snippet}
+
+  {#snippet compHorizontal()}
+    <div class="flex flex-col gap-2">
+      <p class="text-sm font-semibold">Forma de entrega</p>
+      <RadioGroup
+        bind:value={compHorizontalValue}
+        orientation="horizontal"
+        class="grid grid-flow-col auto-cols-max gap-6"
+        aria-label="Forma de entrega"
+      >
+        <div class="flex items-center gap-2">
+          <RadioGroupItem value="standard" id="comp-h-standard" />
+          <Label for="comp-h-standard">Padrão (5 dias)</Label>
+        </div>
+        <div class="flex items-center gap-2">
+          <RadioGroupItem value="express" id="comp-h-express" />
+          <Label for="comp-h-express">Expressa (1 dia)</Label>
+        </div>
+        <div class="flex items-center gap-2">
+          <RadioGroupItem value="pickup" id="comp-h-pickup" />
+          <Label for="comp-h-pickup">Retirar na loja</Label>
+        </div>
+      </RadioGroup>
+    </div>
+  {/snippet}
+
+  {#snippet compWithDescription()}
+    <div class="flex flex-col gap-2 w-80">
+      <p class="text-sm font-semibold">Forma de entrega</p>
+      <RadioGroup bind:value={compDescValue} aria-label="Forma de entrega" class="grid gap-3">
+        <div class="flex items-start gap-2">
+          <RadioGroupItem value="standard" id="comp-d-standard" class="mt-1" />
+          <div class="flex flex-col gap-0.5">
+            <Label for="comp-d-standard">Padrão</Label>
+            <p class="text-sm text-muted-foreground">Entrega em 5 dias úteis — frete grátis acima de R$ 199.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-2">
+          <RadioGroupItem value="express" id="comp-d-express" class="mt-1" />
+          <div class="flex flex-col gap-0.5">
+            <Label for="comp-d-express">Expressa</Label>
+            <p class="text-sm text-muted-foreground">Receba em 1 dia útil — taxa adicional de R$ 19,90.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-2">
+          <RadioGroupItem value="pickup" id="comp-d-pickup" class="mt-1" />
+          <div class="flex flex-col gap-0.5">
+            <Label for="comp-d-pickup">Retirar na loja</Label>
+            <p class="text-sm text-muted-foreground">Disponível em 2h — sem custo de frete.</p>
+          </div>
+        </div>
+      </RadioGroup>
+    </div>
+  {/snippet}
+
+  {#snippet compInForm()}
+    <form class="flex flex-col gap-4 w-80 p-4 border rounded-lg" onsubmit={handleCompFormSubmit}>
+      <fieldset class="border-0 p-0 m-0 flex flex-col gap-2">
+        <legend class="text-sm font-semibold mb-2">Forma de pagamento</legend>
+        <RadioGroup bind:value={compFormValue} aria-label="Forma de pagamento" class="grid gap-2">
+          <div class="flex items-center gap-2">
+            <RadioGroupItem value="card" id="comp-f-card" />
+            <Label for="comp-f-card">Cartão de crédito</Label>
+          </div>
+          <div class="flex items-center gap-2">
+            <RadioGroupItem value="pix" id="comp-f-pix" />
+            <Label for="comp-f-pix">Pix</Label>
+          </div>
+          <div class="flex items-center gap-2">
+            <RadioGroupItem value="boleto" id="comp-f-boleto" />
+            <Label for="comp-f-boleto">Boleto bancário</Label>
+          </div>
+        </RadioGroup>
+      </fieldset>
+      <Button type="submit" class="self-end">Continuar</Button>
+      <p class="text-sm text-muted-foreground">Selecionado: {compFormOutput}</p>
+    </form>
   {/snippet}
 
   <!-- ── Estados ──────────────────────────────────────────────────────── -->

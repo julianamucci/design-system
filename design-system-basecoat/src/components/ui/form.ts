@@ -1,4 +1,7 @@
-import { cn } from '@/lib/utils';
+// ─── Form — Vanilla factories standalone ────────────────────────────────────
+// Visual: classes .nds-form-* (zero Tailwind/basecoat-css).
+// createFormField: wrapper de label + input + description + error.
+// createFieldset: <fieldset> + <legend> + children.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -22,7 +25,8 @@ export function createFormField(options: FormFieldOptions): HTMLElement {
   const { label, input, description, error } = options;
 
   const field = document.createElement('div');
-  field.className = cn('field', options.class);
+  field.className = 'nds-form-field';
+  if (options.class) field.classList.add(...options.class.split(' ').filter(Boolean));
   field.dataset.slot = 'field';
 
   const inputId = input.id || `field-input-${Math.random().toString(36).slice(2, 8)}`;
@@ -31,7 +35,7 @@ export function createFormField(options: FormFieldOptions): HTMLElement {
   if (label) {
     const labelEl = document.createElement('label');
     labelEl.htmlFor = inputId;
-    labelEl.className = 'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70';
+    labelEl.className = 'nds-form-label';
     labelEl.dataset.slot = 'label';
     labelEl.textContent = label;
     field.appendChild(labelEl);
@@ -41,7 +45,7 @@ export function createFormField(options: FormFieldOptions): HTMLElement {
 
   if (description) {
     const descEl = document.createElement('p');
-    descEl.className = 'text-sm text-muted-foreground';
+    descEl.className = 'nds-form-description';
     descEl.dataset.slot = 'field-description';
     descEl.textContent = description;
     field.appendChild(descEl);
@@ -49,7 +53,7 @@ export function createFormField(options: FormFieldOptions): HTMLElement {
 
   if (error) {
     const errorEl = document.createElement('p');
-    errorEl.className = 'text-sm font-medium text-destructive';
+    errorEl.className = 'nds-form-error';
     errorEl.dataset.slot = 'field-error';
     errorEl.setAttribute('aria-live', 'polite');
     errorEl.textContent = error;
@@ -65,12 +69,13 @@ export function createFieldset(options: FieldsetOptions = {}): HTMLElement {
   const { legend, children = [] } = options;
 
   const fieldset = document.createElement('fieldset');
-  fieldset.className = cn('fieldset', options.class);
+  fieldset.className = 'nds-form-fieldset';
+  if (options.class) fieldset.classList.add(...options.class.split(' ').filter(Boolean));
   fieldset.dataset.slot = 'fieldset';
 
   if (legend) {
     const legendEl = document.createElement('legend');
-    legendEl.className = 'text-sm font-medium leading-none';
+    legendEl.className = 'nds-form-legend';
     legendEl.dataset.slot = 'fieldset-legend';
     legendEl.textContent = legend;
     fieldset.appendChild(legendEl);

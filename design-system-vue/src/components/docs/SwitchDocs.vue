@@ -6,6 +6,7 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
@@ -15,6 +16,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -101,6 +103,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')    },
       { id: 'variantes',    label: tNav('nav.variants')  },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')    },
       { id: 'propriedades', label: tNav('nav.props')     },
       { id: 'tokens',       label: tNav('nav.tokens')    },
@@ -197,6 +200,83 @@ const variantItems = computed(() => [
   { name: stripHtml(tContent('variants.items.default')),         description: stripHtml(tContent('variants.styles.default')),         code: codeDefault         },
   { name: stripHtml(tContent('variants.items.withDescription')), description: stripHtml(tContent('variants.styles.withDescription')), code: codeWithDescription },
   { name: stripHtml(tContent('variants.items.sm')),              description: stripHtml(tContent('variants.styles.sm')),              code: codeSm              },
+]);
+
+const codeCompWithLabel = `<div class="flex items-center space-x-2">
+  <Switch id="sw-email" />
+  <Label for="sw-email" class="text-sm font-medium leading-none cursor-pointer">
+    Receber notificações por email
+  </Label>
+</div>`;
+
+const codeCompWithDescription = `<div class="flex items-center justify-between rounded-lg border p-3 w-80">
+  <div class="flex flex-col gap-0.5 pr-3">
+    <Label for="sw-marketing">Emails de marketing</Label>
+    <p class="text-sm text-muted-foreground">
+      Receba novidades e promoções da plataforma.
+    </p>
+  </div>
+  <Switch id="sw-marketing" :checked="true" />
+</div>`;
+
+const codeCompSettingsList = `<div class="space-y-2 w-96">
+  <h4 class="text-sm font-medium">Preferências de notificação</h4>
+  <div class="flex items-center justify-between rounded-lg border p-3">
+    <div class="flex flex-col gap-0.5 pr-3">
+      <Label for="pref-email">Receber novidades por email</Label>
+      <p class="text-sm text-muted-foreground">Resumo semanal sobre o produto.</p>
+    </div>
+    <Switch id="pref-email" :checked="true" />
+  </div>
+  <div class="flex items-center justify-between rounded-lg border p-3">
+    <div class="flex flex-col gap-0.5 pr-3">
+      <Label for="pref-push">Receber notificações push</Label>
+      <p class="text-sm text-muted-foreground">Alertas no dispositivo em tempo real.</p>
+    </div>
+    <Switch id="pref-push" />
+  </div>
+  <div class="flex items-center justify-between rounded-lg border p-3">
+    <div class="flex flex-col gap-0.5 pr-3">
+      <Label for="pref-sms">Alertas por SMS</Label>
+      <p class="text-sm text-muted-foreground">Eventos críticos via mensagem de texto.</p>
+    </div>
+    <Switch id="pref-sms" />
+  </div>
+</div>`;
+
+const codeCompInForm = `<form class="flex flex-col gap-3 w-80" @submit.prevent>
+  <div class="flex items-center space-x-2">
+    <Switch id="sw-form-newsletter" name="newsletter" :checked="true" />
+    <Label for="sw-form-newsletter">Aceitar newsletter semanal</Label>
+  </div>
+  <Button type="submit">Salvar preferências</Button>
+</form>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withLabel.name'),
+    description: tContent('variants.compositions.withLabel.description'),
+    useWhen: tContent('variants.compositions.withLabel.use'),
+    code: codeCompWithLabel,
+  },
+  {
+    name: tContent('variants.compositions.withDescription.name'),
+    description: tContent('variants.compositions.withDescription.description'),
+    useWhen: tContent('variants.compositions.withDescription.use'),
+    code: codeCompWithDescription,
+  },
+  {
+    name: tContent('variants.compositions.settingsList.name'),
+    description: tContent('variants.compositions.settingsList.description'),
+    useWhen: tContent('variants.compositions.settingsList.use'),
+    code: codeCompSettingsList,
+  },
+  {
+    name: tContent('variants.compositions.inForm.name'),
+    description: tContent('variants.compositions.inForm.description'),
+    useWhen: tContent('variants.compositions.inForm.use'),
+    code: codeCompInForm,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -532,6 +612,76 @@ const visualTestItems = computed(() => [
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="switch"
+      :items="compositionItems"
+    >
+      <!-- withLabel -->
+      <template #variant-preview-0>
+        <div class="flex items-center space-x-2">
+          <Switch id="sw-email" />
+          <Label :for="'sw-email'" class="text-sm font-medium leading-none cursor-pointer">
+            Receber notificações por email
+          </Label>
+        </div>
+      </template>
+
+      <!-- withDescription -->
+      <template #variant-preview-1>
+        <div class="flex items-center justify-between rounded-lg border p-3 w-80">
+          <div class="flex flex-col gap-0.5 pr-3">
+            <Label :for="'sw-marketing'">Emails de marketing</Label>
+            <p class="text-sm text-muted-foreground">
+              Receba novidades e promoções da plataforma.
+            </p>
+          </div>
+          <Switch id="sw-marketing" :model-value="true" />
+        </div>
+      </template>
+
+      <!-- settingsList -->
+      <template #variant-preview-2>
+        <div class="space-y-2 w-96">
+          <h4 class="text-sm font-medium">Preferências de notificação</h4>
+          <div class="flex items-center justify-between rounded-lg border p-3">
+            <div class="flex flex-col gap-0.5 pr-3">
+              <Label :for="'pref-email'">Receber novidades por email</Label>
+              <p class="text-sm text-muted-foreground">Resumo semanal sobre o produto.</p>
+            </div>
+            <Switch id="pref-email" :model-value="true" />
+          </div>
+          <div class="flex items-center justify-between rounded-lg border p-3">
+            <div class="flex flex-col gap-0.5 pr-3">
+              <Label :for="'pref-push'">Receber notificações push</Label>
+              <p class="text-sm text-muted-foreground">Alertas no dispositivo em tempo real.</p>
+            </div>
+            <Switch id="pref-push" />
+          </div>
+          <div class="flex items-center justify-between rounded-lg border p-3">
+            <div class="flex flex-col gap-0.5 pr-3">
+              <Label :for="'pref-sms'">Alertas por SMS</Label>
+              <p class="text-sm text-muted-foreground">Eventos críticos via mensagem de texto.</p>
+            </div>
+            <Switch id="pref-sms" />
+          </div>
+        </div>
+      </template>
+
+      <!-- inForm -->
+      <template #variant-preview-3>
+        <form class="flex flex-col gap-3 w-80" @submit.prevent>
+          <div class="flex items-center space-x-2">
+            <Switch id="sw-form-newsletter" name="newsletter" :model-value="true" />
+            <Label :for="'sw-form-newsletter'">Aceitar newsletter semanal</Label>
+          </div>
+          <Button type="submit">Salvar preferências</Button>
+        </form>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────────── -->
     <DocsStates

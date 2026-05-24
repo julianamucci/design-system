@@ -33,24 +33,6 @@ const ICONS: Record<ToastType, string> = {
   loading: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ds-toast-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
 };
 
-const RICH_COLORS: Record<ToastType, string> = {
-  default: 'bg-background text-foreground border-border',
-  success: 'bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-200 border-green-200 dark:border-green-800',
-  error: 'bg-red-50 dark:bg-red-950/30 text-red-800 dark:text-red-200 border-red-200 dark:border-red-800',
-  warning: 'bg-yellow-50 dark:bg-yellow-950/30 text-yellow-800 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800',
-  info: 'bg-blue-50 dark:bg-blue-950/30 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-800',
-  loading: 'bg-background text-foreground border-border',
-};
-
-const POSITION_CLASSES: Record<ToastPosition, string> = {
-  'top-right': 'top-4 right-4 items-end',
-  'top-center': 'top-4 left-1/2 -translate-x-1/2 items-center',
-  'top-left': 'top-4 left-4 items-start',
-  'bottom-right': 'bottom-4 right-4 items-end',
-  'bottom-center': 'bottom-4 left-1/2 -translate-x-1/2 items-center',
-  'bottom-left': 'bottom-4 left-4 items-start',
-};
-
 function ensureContainer(position: ToastPosition): HTMLElement {
   if (containerEl && currentPosition === position) return containerEl;
 
@@ -60,9 +42,8 @@ function ensureContainer(position: ToastPosition): HTMLElement {
   el.setAttribute('role', 'region');
   el.setAttribute('aria-label', 'Notifications');
   el.setAttribute('data-sonner-toaster', '');
-  el.className = `fixed z-[9999] flex flex-col gap-2 pointer-events-none ${POSITION_CLASSES[position]}`;
-  el.style.maxWidth = '420px';
-  el.style.width = '100%';
+  el.className = 'nds-toaster';
+  el.dataset.position = position;
   document.body.appendChild(el);
   containerEl = el;
   currentPosition = position;
@@ -74,8 +55,7 @@ function removeToast(id: number) {
   if (idx === -1) return;
   const entry = activeToasts[idx];
   if (entry.timer) clearTimeout(entry.timer);
-  entry.el.style.opacity = '0';
-  entry.el.style.transform = 'translateY(8px)';
+  entry.el.dataset.visible = 'false';
   setTimeout(() => {
     entry.el.remove();
     activeToasts.splice(idx, 1);
@@ -97,29 +77,30 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
   toast.setAttribute('data-sonner-toast', '');
   toast.setAttribute('role', 'status');
   toast.setAttribute('aria-live', 'polite');
-  const colorClass = richColors ? RICH_COLORS[type] : 'bg-background text-foreground border-border';
-  toast.className = `pointer-events-auto w-full rounded-lg border p-4 shadow-lg flex items-start gap-3 transition-all duration-200 ${colorClass}`;
-  toast.style.opacity = '0';
-  toast.style.transform = 'translateY(8px)';
+  toast.className = 'nds-toast';
+  toast.dataset.type = type;
+  toast.dataset.richColors = String(richColors);
+  toast.dataset.visible = 'false';
 
   if (ICONS[type]) {
     const iconWrap = document.createElement('span');
-    iconWrap.className = 'flex-shrink-0 mt-0.5';
+    iconWrap.className = 'nds-toast-icon';
+    if (type === 'loading') iconWrap.classList.add('nds-toast-icon-spin');
     iconWrap.innerHTML = ICONS[type];
     toast.appendChild(iconWrap);
   }
 
   const content = document.createElement('div');
-  content.className = 'flex-1 min-w-0';
+  content.className = 'nds-toast-content';
 
   const title = document.createElement('p');
-  title.className = 'text-sm font-medium';
+  title.className = 'nds-toast-title';
   title.textContent = message;
   content.appendChild(title);
 
   if (opts.description) {
     const desc = document.createElement('p');
-    desc.className = 'text-sm text-muted-foreground mt-1';
+    desc.className = 'nds-toast-description';
     desc.textContent = opts.description;
     content.appendChild(desc);
   }
@@ -127,7 +108,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
   if (opts.action) {
     const actionBtn = document.createElement('button');
     actionBtn.type = 'button';
-    actionBtn.className = 'mt-2 text-sm font-medium text-primary hover:text-primary/80 underline-offset-4 hover:underline';
+    actionBtn.className = 'nds-toast-action';
     actionBtn.textContent = opts.action.label;
     actionBtn.addEventListener('click', () => {
       opts.action!.onClick();
@@ -143,16 +124,15 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
     closeBtn.type = 'button';
     closeBtn.setAttribute('data-close-button', '');
     closeBtn.setAttribute('aria-label', 'Close');
-    closeBtn.className = 'flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors';
-    closeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+    closeBtn.className = 'nds-toast-close';
+    closeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
     closeBtn.addEventListener('click', () => removeToast(id));
     toast.appendChild(closeBtn);
   }
 
   container.appendChild(toast);
   requestAnimationFrame(() => {
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateY(0)';
+    toast.dataset.visible = 'true';
   });
 
   const entry: ToastEntry = { id, el: toast };
@@ -194,18 +174,10 @@ export const toast = Object.assign(
   },
 );
 
+/**
+ * No-op kept for API compatibility with React/Vue/Svelte stacks.
+ * Estilos do toast vivem em `styles/components/toast.css` (sem injeção dinâmica).
+ */
 export function injectToastStyles(): void {
-  if (document.querySelector('#ds-toast-styles')) return;
-  const style = document.createElement('style');
-  style.id = 'ds-toast-styles';
-  style.textContent = `
-    @keyframes ds-toast-spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    .ds-toast-spin {
-      animation: ds-toast-spin 1s linear infinite;
-    }
-  `;
-  document.head.appendChild(style);
+  // intentionally empty — CSS é importado pelo globals.css
 }

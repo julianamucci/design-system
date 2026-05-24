@@ -17,7 +17,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -69,6 +69,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
+        { id: 'composicoes',  label: tContent('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -585,6 +586,133 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           </DialogClose>
           <Button>Enviar convite</Button>
         </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  {/snippet}
+
+  <!-- ── Composições ────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="dialog"
+    items={[
+      {
+        name: $tStore('variants.compositions.confirmEmail.name'),
+        description: $tStore('variants.compositions.confirmEmail.description'),
+        useWhen: $tStore('variants.compositions.confirmEmail.use'),
+        code: `<Dialog>
+  <DialogTrigger>...</DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Confirmar e-mail</DialogTitle>
+      <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
+    </DialogHeader>
+    <p class="text-sm text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
+    <DialogFooter>
+      <DialogClose>...</DialogClose>
+      <Button>Enviar link</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>`,
+        preview: compConfirmEmail,
+      },
+      {
+        name: $tStore('variants.compositions.profileEdit.name'),
+        description: $tStore('variants.compositions.profileEdit.description'),
+        useWhen: $tStore('variants.compositions.profileEdit.use'),
+        code: `<Dialog>
+  <DialogTrigger>...</DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Editar perfil</DialogTitle>
+      <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+    </DialogHeader>
+    <form class="grid gap-3">
+      <Input name="name" defaultValue="Maria Souza" />
+      <Input name="role" defaultValue="Designer" />
+    </form>
+    <DialogFooter>
+      <DialogClose>...</DialogClose>
+      <Button>Salvar alterações</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>`,
+        preview: compProfileEdit,
+      },
+      {
+        name: $tStore('variants.compositions.mediaPreview.name'),
+        description: $tStore('variants.compositions.mediaPreview.description'),
+        useWhen: $tStore('variants.compositions.mediaPreview.use'),
+        code: `<Dialog>
+  <DialogTrigger>...</DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Capa do post</DialogTitle>
+      <DialogDescription>Pré-visualização em tamanho real.</DialogDescription>
+    </DialogHeader>
+    <div class="aspect-video w-full bg-muted rounded-md grid place-items-center text-xs text-muted-foreground">
+      Pré-visualização da mídia
+    </div>
+  </DialogContent>
+</Dialog>`,
+        preview: compMediaPreview,
+      },
+    ]}
+  />
+
+  {#snippet compConfirmEmail()}
+    <Dialog open>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Confirmar e-mail</DialogTitle>
+          <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
+        </DialogHeader>
+        <p class="text-sm text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
+        <DialogFooter>
+          <DialogClose>
+            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+          </DialogClose>
+          <Button>Enviar link</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  {/snippet}
+  {#snippet compProfileEdit()}
+    <Dialog open>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Editar perfil</DialogTitle>
+          <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+        </DialogHeader>
+        <form class="grid gap-3">
+          <label class="grid gap-1 text-sm">
+            <span>Nome de exibição</span>
+            <input type="text" class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm" defaultValue="Maria Souza" />
+          </label>
+          <label class="grid gap-1 text-sm">
+            <span>Função</span>
+            <input type="text" class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm" defaultValue="Designer" />
+          </label>
+        </form>
+        <DialogFooter>
+          <DialogClose>
+            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+          </DialogClose>
+          <Button>Salvar alterações</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  {/snippet}
+  {#snippet compMediaPreview()}
+    <Dialog open>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Capa do post</DialogTitle>
+          <DialogDescription>Pré-visualização em tamanho real.</DialogDescription>
+        </DialogHeader>
+        <div class="aspect-video w-full bg-muted rounded-md grid place-items-center text-xs text-muted-foreground">
+          Pré-visualização da mídia
+        </div>
       </DialogContent>
     </Dialog>
   {/snippet}

@@ -167,8 +167,8 @@ export const RangeWithMiddle: Story = {
     return (
       <Calendar
         mode="range"
-        selected={range}
-        onSelect={setRange}
+        selected={range as never}
+        onSelect={setRange as never}
         locale={ptBR}
       />
     );

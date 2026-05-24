@@ -15,31 +15,37 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
   section.id = 'acessibilidade';
 
   const h2 = document.createElement('h2');
-  h2.className = 'text-xl font-semibold mb-4';
+  h2.className = 'nds-section-title';
   h2.textContent = props.title;
   section.appendChild(h2);
 
-  const container = createCard({ className: 'p-4 space-y-6' });
+  const container = createCard({ className: 'nds-p-4 nds-stack' });
+  container.dataset.spacing = 'lg';
 
   const summaryBlock = document.createElement('div');
-  summaryBlock.className = 'space-y-4';
+  summaryBlock.className = 'nds-stack';
+  summaryBlock.dataset.spacing = 'md';
   summaryBlock.innerHTML = `
-    <p class="text-sm text-muted-foreground leading-relaxed">${sanitizeHtml(props.summary)}</p>
-    <ul class="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">
-      ${props.items.map(item => `<li class="leading-relaxed">${sanitizeHtml(item)}</li>`).join('')}
+    <p class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">${sanitizeHtml(props.summary)}</p>
+    <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
+      ${props.items.map(item => `<li class="nds-leading-relaxed">${sanitizeHtml(item)}</li>`).join('')}
     </ul>`;
 
   const keyboardBlock = document.createElement('div');
-  keyboardBlock.innerHTML = `<h3 class="text-base font-semibold mb-3">${sanitizeHtml(props.keyboardTitle)}</h3>`;
+  keyboardBlock.innerHTML = `<h3 class="nds-text-base nds-font-semibold nds-mb-4">${sanitizeHtml(props.keyboardTitle)}</h3>`;
   const kbGrid = document.createElement('div');
-  kbGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+  kbGrid.className = 'nds-grid';
+  kbGrid.dataset.cols = '2';
+  kbGrid.dataset.spacing = 'sm';
   props.keyboardItems.forEach(item => {
-    const card = createCard({ className: 'flex items-start gap-3 border-0 shadow-none bg-muted/30 p-4' });
+    const card = createCard({ className: 'nds-row nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4' });
+    card.dataset.spacing = 'sm';
+    card.dataset.align = 'start';
     const kbd = document.createElement('kbd');
-    kbd.className = 'inline-flex items-center justify-center rounded border border-border bg-background px-2 py-1 text-xs font-mono font-semibold shrink-0';
+    kbd.className = 'nds-kbd';
     kbd.textContent = item.key;
     const span = document.createElement('span');
-    span.className = 'text-sm text-muted-foreground leading-relaxed';
+    span.className = 'nds-text-body nds-text-muted-foreground nds-leading-relaxed';
     span.textContent = item.description;
     card.append(kbd, span);
     kbGrid.appendChild(card);

@@ -62,7 +62,8 @@ function buildItems(withGroups: boolean) {
 export const Playground: Story = {
   render: (args) => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-[320px] border rounded-md shadow-md';
+    wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+    wrap.style.width = '320px';
     wrap.appendChild(
       createCommand({
         placeholder: args.placeholder,

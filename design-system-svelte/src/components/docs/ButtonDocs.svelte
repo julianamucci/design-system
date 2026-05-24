@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Button } from '@/components/ui/button';
-  import { Plus, Trash2, Pencil, ChevronRight } from 'lucide-svelte';
+  import { Plus, Trash2, Pencil, ChevronRight, Download } from 'lucide-svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -8,7 +8,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -51,8 +51,9 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
-        { id: 'tamanhos',     label: tNav('nav.sizes')    },
-        { id: 'estados',      label: tNav('nav.states')   },
+        { id: 'tamanhos',     label: tNav('nav.sizes')        },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
+        { id: 'estados',      label: tNav('nav.states')       },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
       ]},
@@ -372,6 +373,90 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         <Button size="icon-lg" aria-label={$tStore('demonstration.labels.withIcon')}>
           <Plus class="h-4 w-4" aria-hidden="true" />
         </Button>
+      {/snippet}
+
+      <!-- ── Composições ──────────────────────────────────────────────── -->
+      <DocsCompositions
+        title={$tStore('variants.compositionsTitle')}
+        useWhenLabel={$tNavStore('common.useWhen')}
+        componentSlug="button"
+        items={[
+          {
+            name: $tStore('variants.compositions.iconLeft.name'),
+            description: $tStore('variants.compositions.iconLeft.description'),
+            useWhen: $tStore('variants.compositions.iconLeft.use'),
+            code: `<Button>\n  <Plus aria-hidden="true" />\n  Adicionar item\n</Button>`,
+            preview: compIconLeft,
+          },
+          {
+            name: $tStore('variants.compositions.iconRight.name'),
+            description: $tStore('variants.compositions.iconRight.description'),
+            useWhen: $tStore('variants.compositions.iconRight.use'),
+            code: `<Button variant="outline">\n  Próximo\n  <ChevronRight aria-hidden="true" />\n</Button>`,
+            preview: compIconRight,
+          },
+          {
+            name: $tStore('variants.compositions.destructiveWithIcon.name'),
+            description: $tStore('variants.compositions.destructiveWithIcon.description'),
+            useWhen: $tStore('variants.compositions.destructiveWithIcon.use'),
+            code: `<Button variant="destructive">\n  <Trash2 aria-hidden="true" />\n  Excluir\n</Button>`,
+            preview: compDestructive,
+          },
+          {
+            name: $tStore('variants.compositions.iconOnly.name'),
+            description: $tStore('variants.compositions.iconOnly.description'),
+            useWhen: $tStore('variants.compositions.iconOnly.use'),
+            code: `<Button size="icon" aria-label="Baixar arquivo">\n  <Download aria-hidden="true" />\n</Button>`,
+            preview: compIconOnly,
+          },
+          {
+            name: $tStore('variants.compositions.actionPair.name'),
+            description: $tStore('variants.compositions.actionPair.description'),
+            useWhen: $tStore('variants.compositions.actionPair.use'),
+            code: `<div class="flex gap-2">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
+            preview: compActionPair,
+          },
+          {
+            name: $tStore('variants.compositions.asLink.name'),
+            description: $tStore('variants.compositions.asLink.description'),
+            useWhen: $tStore('variants.compositions.asLink.use'),
+            code: `<a href="/docs" class={buttonVariants({ variant: 'link' })}>\n  Ver documentação\n</a>`,
+            preview: compAsLink,
+          },
+        ]}
+      />
+
+      {#snippet compIconLeft()}
+        <Button>
+          <Plus class="h-4 w-4" aria-hidden="true" />
+          Adicionar item
+        </Button>
+      {/snippet}
+      {#snippet compIconRight()}
+        <Button variant="outline">
+          Próximo
+          <ChevronRight class="h-4 w-4" aria-hidden="true" />
+        </Button>
+      {/snippet}
+      {#snippet compDestructive()}
+        <Button variant="destructive">
+          <Trash2 class="h-4 w-4" aria-hidden="true" />
+          Excluir
+        </Button>
+      {/snippet}
+      {#snippet compIconOnly()}
+        <Button size="icon" aria-label="Baixar arquivo">
+          <Download class="h-4 w-4" aria-hidden="true" />
+        </Button>
+      {/snippet}
+      {#snippet compActionPair()}
+        <div class="flex gap-2">
+          <Button variant="outline">Cancelar</Button>
+          <Button>Confirmar</Button>
+        </div>
+      {/snippet}
+      {#snippet compAsLink()}
+        <a href="#docs" class="underline-offset-4 text-primary hover:underline">Ver documentação</a>
       {/snippet}
 
       <!-- ── Estados ────────────────────────────────────────────────── -->

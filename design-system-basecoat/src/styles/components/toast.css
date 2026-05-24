@@ -1,0 +1,183 @@
+/*
+ * ─── nds-toast / nds-toaster ────────────────────────────────────────────────
+ * Notificação flutuante temporária. Compartilhado entre Sonner e Toast factories.
+ *
+ *   <div class="nds-toaster" data-position="bottom-right">
+ *     <div class="nds-toast" role="status" data-type="success">
+ *       <span class="nds-toast-icon"><svg>…</svg></span>
+ *       <div class="nds-toast-content">
+ *         <p class="nds-toast-title">Salvo</p>
+ *         <p class="nds-toast-description">Alterações aplicadas.</p>
+ *         <button class="nds-toast-action">Desfazer</button>
+ *       </div>
+ *       <button class="nds-toast-close" aria-label="Close">…</button>
+ *     </div>
+ *   </div>
+ *
+ * Tokens: --background, --foreground, --muted-foreground, --border, --primary,
+ *         --success, --destructive, --warning, --info, --spacing-*
+ */
+
+/* ── Toaster (container fixed posicionado) ───────────────────────────────── */
+.nds-toaster {
+  position: fixed;
+  z-index: 9999;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  max-width: 26.25rem;                            /* 420px */
+  width: 100%;
+  pointer-events: none;
+}
+
+/* Posições */
+.nds-toaster[data-position="top-right"]    { top: var(--spacing-4); right: var(--spacing-4); align-items: flex-end; }
+.nds-toaster[data-position="top-left"]     { top: var(--spacing-4); left:  var(--spacing-4); align-items: flex-start; }
+.nds-toaster[data-position="top-center"]   { top: var(--spacing-4); left: 50%; transform: translateX(-50%); align-items: center; }
+.nds-toaster[data-position="bottom-right"] { bottom: var(--spacing-4); right: var(--spacing-4); align-items: flex-end; }
+.nds-toaster[data-position="bottom-left"]  { bottom: var(--spacing-4); left:  var(--spacing-4); align-items: flex-start; }
+.nds-toaster[data-position="bottom-center"]{ bottom: var(--spacing-4); left: 50%; transform: translateX(-50%); align-items: center; }
+
+/* ── Toast (notificação individual) ──────────────────────────────────────── */
+.nds-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3, 0.75rem);                 /* 12px */
+
+  width: 100%;
+  padding: var(--spacing-4);                       /* 16px */
+
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius, 0.5rem);
+  box-shadow:
+    0 10px 15px -3px hsl(0 0% 0% / 0.1),
+    0 4px 6px -4px hsl(0 0% 0% / 0.1);
+
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.nds-toast[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Variantes coloridas (rich-colors) ───────────────────────────────────── */
+.nds-toast[data-rich-colors="true"][data-type="success"] {
+  background-color: hsl(var(--success) / 0.1);
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--success) / 0.3);
+}
+.nds-toast[data-rich-colors="true"][data-type="success"] .nds-toast-icon { color: hsl(var(--success)); }
+
+.nds-toast[data-rich-colors="true"][data-type="error"] {
+  background-color: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--destructive) / 0.3);
+}
+.nds-toast[data-rich-colors="true"][data-type="error"] .nds-toast-icon { color: hsl(var(--destructive)); }
+
+.nds-toast[data-rich-colors="true"][data-type="warning"] {
+  background-color: hsl(var(--warning) / 0.1);
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--warning) / 0.3);
+}
+.nds-toast[data-rich-colors="true"][data-type="warning"] .nds-toast-icon { color: hsl(var(--warning)); }
+
+.nds-toast[data-rich-colors="true"][data-type="info"] {
+  background-color: hsl(var(--info) / 0.1);
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--info) / 0.3);
+}
+.nds-toast[data-rich-colors="true"][data-type="info"] .nds-toast-icon { color: hsl(var(--info)); }
+
+/* ── Icon ────────────────────────────────────────────────────────────────── */
+.nds-toast-icon {
+  flex-shrink: 0;
+  margin-top: var(--spacing-0-5);                 /* 2px — alinha com 1ª linha */
+}
+
+.nds-toast-icon > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+/* Spinner para tipo loading */
+.nds-toast-icon-spin {
+  animation: nds-toast-spin 1s linear infinite;
+}
+
+@keyframes nds-toast-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Content ─────────────────────────────────────────────────────────────── */
+.nds-toast-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.nds-toast-title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.nds-toast-description {
+  margin: var(--spacing-1) 0 0;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Action button (Desfazer/Retry) ──────────────────────────────────────── */
+.nds-toast-action {
+  margin-top: var(--spacing-2);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--primary));
+  cursor: pointer;
+  text-underline-offset: 4px;
+}
+
+.nds-toast-action:hover {
+  text-decoration: underline;
+}
+
+/* ── Close button ────────────────────────────────────────────────────────── */
+.nds-toast-close {
+  flex-shrink: 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  transition: color 150ms;
+}
+
+.nds-toast-close:hover {
+  color: hsl(var(--foreground));
+}
+
+.nds-toast-close > svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-toast,
+  .nds-toast-close,
+  .nds-toast-icon-spin {
+    transition: none;
+    animation: none;
+  }
+}

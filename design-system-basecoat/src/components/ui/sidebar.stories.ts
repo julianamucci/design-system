@@ -72,7 +72,10 @@ function buildDemoSidebar(args: SidebarArgs): HTMLElement {
   // Header
   const header = createSidebarHeader();
   const appLabel = document.createElement('div');
-  appLabel.className = 'flex items-center gap-2 px-2 py-1 font-semibold text-sm text-sidebar-foreground';
+  appLabel.className = 'nds-cluster nds-font-semibold nds-text-body';
+  appLabel.dataset.spacing = 'sm';
+  appLabel.style.padding = '0.25rem 0.5rem';
+  appLabel.style.color = 'var(--sidebar-foreground)';
   appLabel.innerHTML =
     '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>' +
     '<span>Design System</span>';
@@ -106,28 +109,39 @@ function buildDemoSidebar(args: SidebarArgs): HTMLElement {
   // Footer
   const footer = createSidebarFooter();
   const userRow = document.createElement('div');
-  userRow.className = 'flex items-center gap-2 px-2 py-1 text-sm text-sidebar-foreground';
+  userRow.className = 'nds-cluster nds-text-body';
+  userRow.dataset.spacing = 'sm';
+  userRow.style.padding = '0.25rem 0.5rem';
+  userRow.style.color = 'var(--sidebar-foreground)';
   userRow.textContent = 'Usuário';
   footer.appendChild(userRow);
   inner.appendChild(footer);
 
   // Inset / main area
   const inset = document.createElement('div');
-  inset.className = 'flex flex-1 flex-col';
+  inset.className = 'nds-flex-1';
+  inset.style.display = 'flex';
+  inset.style.flexDirection = 'column';
 
   const topbar = document.createElement('div');
-  topbar.className = 'flex h-12 items-center gap-2 border-b border-border px-4';
+  topbar.className = 'nds-cluster nds-border-b';
+  topbar.dataset.spacing = 'sm';
+  topbar.style.height = '3rem';
+  topbar.style.paddingLeft = '1rem';
+  topbar.style.paddingRight = '1rem';
 
   const trigger = createSidebarTrigger(instance.toggle);
   topbar.appendChild(trigger);
 
   const breadcrumb = document.createElement('span');
-  breadcrumb.className = 'text-sm text-muted-foreground';
+  breadcrumb.className = 'nds-text-body nds-text-muted-foreground';
   breadcrumb.textContent = 'Dashboard';
   topbar.appendChild(breadcrumb);
 
   const mainContent = document.createElement('div');
-  mainContent.className = 'flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground';
+  mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+  mainContent.dataset.justify = 'center';
+  mainContent.style.padding = '2rem';
   mainContent.textContent = 'Conteúdo principal';
 
   inset.appendChild(topbar);
@@ -138,7 +152,8 @@ function buildDemoSidebar(args: SidebarArgs): HTMLElement {
   wrapper.appendChild(inset);
 
   const container = document.createElement('div');
-  container.className = 'min-h-[400px] w-full border border-border rounded-lg overflow-hidden';
+  container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+  container.style.minHeight = '400px';
   container.appendChild(wrapper);
   return container;
 }

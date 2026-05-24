@@ -12,28 +12,38 @@ export interface DocsHeaderProps {
 
 export function createDocsHeader(props: DocsHeaderProps): HTMLElement {
   const header = document.createElement('header');
-  header.className = 'ds-docs mb-8 sm:mb-12 border-b pb-6 sm:pb-8 border-border/50';
+  // ds-docs (tipografia base) + nds-stack para ritmo interno + borda inferior soft
+  header.className = 'ds-docs nds-stack nds-border-b-soft';
+  header.dataset.spacing = 'md';
+  // Padding-bottom via inline style — variável conforme viewport não é trivial em CSS puro
+  header.style.paddingBottom = 'var(--spacing-6)';
 
+  // Linha superior: badges à esquerda + language switcher à direita
   const top = document.createElement('div');
-  top.className = 'flex flex-wrap items-center justify-between gap-3 mb-4';
+  top.className = 'nds-cluster';
+  top.dataset.spacing = 'sm';
+  top.dataset.justify = 'between';
 
   const badges = document.createElement('div');
-  badges.className = 'flex items-center gap-2 flex-wrap';
-  badges.appendChild(createBadge({ text: props.category, variant: 'secondary', className: 'bg-primary/5 text-primary border-primary/10 font-medium px-2 py-0' }));
-  badges.appendChild(createBadge({ text: props.type, variant: 'outline', className: 'text-muted-foreground font-normal px-2 py-0' }));
+  badges.className = 'nds-cluster';
+  badges.dataset.spacing = 'sm';
+  badges.appendChild(createBadge({ text: props.category, variant: 'secondary', className: 'nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium' }));
+  badges.appendChild(createBadge({ text: props.type, variant: 'outline', className: 'nds-text-muted-foreground nds-font-normal' }));
   top.appendChild(badges);
   top.appendChild(createLanguageSwitcher());
   header.appendChild(top);
 
+  // Bloco de título + descrição
   const content = document.createElement('div');
-  content.className = 'space-y-3 sm:space-y-4';
+  content.className = 'nds-stack';
+  content.dataset.spacing = 'sm';
 
   const h1 = document.createElement('h1');
-  h1.className = 'text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground';
+  h1.className = 'nds-text-h1 nds-text-foreground';
   h1.textContent = props.title;
 
   const desc = document.createElement('p');
-  desc.className = 'text-muted-foreground text-base sm:text-lg max-w-3xl leading-relaxed';
+  desc.className = 'nds-text-lead nds-text-muted-foreground nds-max-w-prose';
   desc.textContent = props.description;
 
   content.append(h1, desc);
@@ -41,8 +51,9 @@ export function createDocsHeader(props: DocsHeaderProps): HTMLElement {
 
   if (props.installNote) {
     const installRow = document.createElement('div');
-    installRow.className = 'mt-6 flex items-center gap-3 text-sm text-muted-foreground/80';
-    installRow.innerHTML = `<span class="flex items-center gap-1.5"><code class="bg-muted px-1.5 py-0.5 rounded text-xs font-mono border border-border/50">${sanitizeHtml(props.installNote)}</code></span>`;
+    installRow.className = 'nds-cluster nds-text-body nds-text-muted-foreground';
+    installRow.dataset.spacing = 'sm';
+    installRow.innerHTML = `<span class="nds-cluster" data-spacing="xs"><code class="nds-code-inline">${sanitizeHtml(props.installNote)}</code></span>`;
     header.appendChild(installRow);
   }
 

@@ -23,7 +23,7 @@ const meta = {
 } satisfies Meta<typeof InputOTP>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof InputOTP>;
 
 const slotsArray = (n: number) => Array.from({ length: n });
 

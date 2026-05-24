@@ -1,0 +1,94 @@
+/*
+ * ─── Misc utilities ──────────────────────────────────────────────────────────
+ * Pequeno conjunto de utilities que NÃO se encaixam em layout/typography/
+ * colors. Mantidos curtos e específicos — não recriar Tailwind aqui.
+ */
+
+/* ── Lists ─────────────────────────────────────────────────────────────────── */
+.nds-list-disc {
+  list-style: disc;
+  padding-left: 1.25rem;                 /* 20px — espaço para o bullet */
+}
+.nds-list-disc::marker { color: hsl(var(--muted-foreground)); }
+.nds-list-disc > li::marker { color: hsl(var(--muted-foreground)); }
+
+.nds-list-none {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+/* ── Overflow ──────────────────────────────────────────────────────────────── */
+.nds-overflow-x { overflow-x: auto; }
+.nds-overflow-y { overflow-y: auto; }
+.nds-overflow-hidden { overflow: hidden; }
+
+/* ── Whitespace ────────────────────────────────────────────────────────────── */
+.nds-whitespace-pre    { white-space: pre; }
+.nds-whitespace-nowrap { white-space: nowrap; }
+.nds-whitespace-normal { white-space: normal; }
+
+/* ── Sizing ────────────────────────────────────────────────────────────────── */
+.nds-w-full   { width: 100%; }
+.nds-w-auto   { width: auto; }
+.nds-max-w-xs    { max-width: 20rem; }                 /* 320px */
+.nds-max-w-sm    { max-width: 24rem; }                 /* 384px — formulários */
+.nds-max-w-md    { max-width: 28rem; }                 /* 448px */
+.nds-max-w-lg    { max-width: 32rem; }                 /* 512px */
+.nds-max-w-prose { max-width: 48rem; }                 /* leitura confortável */
+.nds-max-w-content { max-width: 64rem; }
+.nds-min-w-0  { min-width: 0; }
+.nds-shrink-0 { flex-shrink: 0; }
+.nds-flex-1   { flex: 1 1 0%; }
+.nds-flex-auto { flex: 1 1 auto; }
+
+/* ── Table ─────────────────────────────────────────────────────────────────── */
+.nds-border-collapse { border-collapse: collapse; }
+.nds-border-separate { border-collapse: separate; }
+
+/* Tamanhos de ícone — para SVGs decorativos */
+.nds-icon-sm { width: 0.875rem; height: 0.875rem; }   /* 14px */
+.nds-icon    { width: 1rem;     height: 1rem;     }   /* 16px */
+.nds-icon-lg { width: 1.25rem;  height: 1.25rem;  }   /* 20px */
+
+/* ── Border radius ─────────────────────────────────────────────────────────── */
+.nds-rounded-sm   { border-radius: 0.25rem; }
+.nds-rounded      { border-radius: 0.375rem; }
+.nds-rounded-md   { border-radius: 0.5rem; }
+.nds-rounded-lg   { border-radius: 0.625rem; }
+.nds-rounded-full { border-radius: 9999px; }
+
+/* ── Visibility / Accessibility ────────────────────────────────────────────── */
+.nds-sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.nds-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Cursor / pointer ─────────────────────────────────────────────────────── */
+.nds-cursor-pointer { cursor: pointer; }
+.nds-cursor-default { cursor: default; }
+
+/* ── Display ───────────────────────────────────────────────────────────────── */
+.nds-hidden       { display: none; }
+.nds-inline-block { display: inline-block; }
+.nds-block        { display: block; }
+
+/* ── Divider ───────────────────────────────────────────────────────────────── */
+.nds-divider {
+  height: 1px;
+  width: 100%;
+  background-color: hsl(var(--border));
+  border: 0;
+  margin: 0;
+}

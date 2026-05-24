@@ -7,8 +7,8 @@
     "seo": {
       "title": "Card — Layout",
       "description": "Documentação do Card: 2 tamanhos (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens de tema.",
-      "aiSummary": "Componente Card estrutural com 2 sizes (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens --radius-card/bg-card.",
-      "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container, Composition, Slot",
+      "aiSummary": "Componente Card estrutural com 2 sizes (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens semânticos --card e --radius-card do tema.",
+      "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, WCAG 2.1, Layout, Container, Composition, Slot",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -32,14 +32,14 @@
     "anatomy": {
       "title": "Anatomia",
       "item1": "<strong>Card</strong> — container <code>&lt;div data-slot=\"card\"&gt;</code> com borda, radius e fundo do tema.",
-      "item2": "<strong>CardHeader</strong> — grid opcional com título, descrição e ação; usa <code>rounded-t-(--radius-card)</code>.",
-      "item3": "<strong>CardTitle</strong> — heading visual do card. <code>text-base</code> padrão, <code>text-sm</code> no size <code>sm</code>.",
-      "item4": "<strong>CardDescription</strong> — texto complementar em <code>text-muted-foreground</code>.",
-      "item5": "<strong>CardAction</strong> — slot para botão, badge ou menu à direita do header (<code>grid-cols-[1fr_auto]</code>).",
+      "item2": "<strong>CardHeader</strong> — grid opcional com título, descrição e ação; usa o radius do tema (<code>--radius-card</code>).",
+      "item3": "<strong>CardTitle</strong> — heading visual do card. Tamanho base no size padrão; reduzido no size <code>sm</code>.",
+      "item4": "<strong>CardDescription</strong> — texto complementar na cor <code>--muted-foreground</code>.",
+      "item5": "<strong>CardAction</strong> — slot para botão, badge ou menu à direita do header (segunda coluna do grid <code>1fr auto</code>).",
       "item6": "<strong>CardContent</strong> — corpo do card com padding lateral padrão; conteúdo principal.",
-      "item7": "<strong>CardFooter</strong> — rodapé com <code>border-t</code> e <code>bg-muted/50</code>; ideal para ações.",
+      "item7": "<strong>CardFooter</strong> — rodapé com borda superior e fundo soft (<code>--muted</code>); ideal para ações.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundário */}\n    <CardAction />       {/* slot à direita */}\n  </CardHeader>\n  <CardContent />        {/* corpo */}\n  <CardFooter />         {/* rodapé com bg-muted/50 */}\n</Card>"
+      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundário */}\n    <CardAction />       {/* slot à direita */}\n  </CardHeader>\n  <CardContent />        {/* corpo */}\n  <CardFooter />         {/* rodapé com fundo soft */}\n</Card>"
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -134,11 +134,29 @@
       "visualTitle": "Tamanhos e Composições",
       "note": "O Card não tem variantes <code>cva()</code>. O que varia é o <strong>tamanho</strong> (prop <code>size=\"default\"|\"sm\"</code>) e a <strong>composição</strong> de subcomponentes (header, content, footer são opcionais).",
       "items": {
-        "default": "<code>size=\"default\"</code> — padding <code>py-4</code> + <code>px-4</code>, título em <code>text-base</code>. Padrão para a maioria dos casos.",
-        "sm": "<code>size=\"sm\"</code> — padding <code>py-3</code> + <code>px-3</code>, título em <code>text-sm</code>. Use em listas densas e dashboards.",
-        "withFooter": "Com <code>CardFooter</code> — ganha <code>border-t</code> e fundo <code>bg-muted/50</code>; o Card absorve o <code>pb-0</code> para alinhar o footer.",
+        "default": "<code>size=\"default\"</code> — padding interno padrão e título em tamanho base. Padrão para a maioria dos casos.",
+        "sm": "<code>size=\"sm\"</code> — padding interno reduzido e título em tamanho menor. Use em listas densas e dashboards.",
+        "withFooter": "Com <code>CardFooter</code> — ganha borda superior e fundo soft (<code>--muted</code>); o Card remove o padding inferior para alinhar o footer.",
         "withAction": "Com <code>CardAction</code> — header vira grid <code>[1fr_auto]</code>; a ação (Button, Badge, DropdownMenu) fica à direita.",
         "withImage": "Primeiro ou último filho <code>&lt;img&gt;</code> — o Card aplica <code>rounded-t/b-(--radius-card)</code> automaticamente e remove o padding correspondente."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withFooter": {
+          "name": "Com footer (ações)",
+          "description": "Card com <code>CardFooter</code> alojando botões alinhados à direita. Footer ganha borda superior e fundo soft; o padding inferior do Card é removido automaticamente.",
+          "use": "Produtos, registros editáveis, cards com ações primárias e secundárias. Sempre inclua <code>aria-label</code> contextual nos botões com o título do item."
+        },
+        "withAction": {
+          "name": "Com slot de ação no header",
+          "description": "Header com <code>CardAction</code> posiciona um elemento (Button, Badge, DropdownMenu) à direita do título e descrição, em coluna separada do grid.",
+          "use": "Métricas, KPIs, cards com uma única ação contextual (editar, configurar, mais opções) sem necessidade de footer."
+        },
+        "withImage": {
+          "name": "Com imagem",
+          "description": "Imagem como primeiro filho do Card — o padding superior é removido automaticamente e a imagem herda o radius superior do Card.",
+          "use": "Cards de produto, post, mídia. Imagem deve ter <code>alt</code> descritivo e <code>object-fit: cover</code> para manter proporção."
+        }
       }
     },
     "states": {
@@ -151,12 +169,12 @@
       "default": {
         "label": "Padrão",
         "trigger": "Composição básica sem props extras",
-        "behavior": "Fundo <code>bg-card</code>, borda <code>ring-foreground/10</code>, radius <code>--radius-card</code>"
+        "behavior": "Fundo no token <code>--card</code>, borda suave (<code>--foreground</code> com baixa opacidade), radius <code>--radius-card</code>"
       },
       "small": {
         "label": "Compacto",
         "trigger": "Prop <code>size=\"sm\"</code>",
-        "behavior": "Padding reduzido (<code>py-3</code>/<code>px-3</code>), título em <code>text-sm</code>"
+        "behavior": "Padding interno reduzido, título em tamanho menor"
       },
       "interactive": {
         "label": "Clicável",
@@ -171,7 +189,7 @@
       "withFooter": {
         "label": "Com footer",
         "trigger": "Incluir <code>&lt;CardFooter&gt;</code>",
-        "behavior": "Card absorve <code>pb-0</code>; footer ganha <code>border-t</code> e <code>bg-muted/50</code>"
+        "behavior": "Card remove o padding inferior; footer ganha borda superior e fundo soft (<code>--muted</code>)"
       }
     },
     "props": {
@@ -191,7 +209,7 @@
         "required": "Obrigatório",
         "description": "Descrição",
         "size": "Tamanho do Card. <code>\"default\"</code> para uso geral, <code>\"sm\"</code> em listas densas e dashboards.",
-        "className": "Classes Tailwind adicionais — sobrescreve o padding, fundo ou borda padrão quando necessário.",
+        "className": "Classes CSS adicionais — sobrescreve o padding, fundo ou borda padrão quando necessário.",
         "children": "Conteúdo do Card: header, content e/ou footer compostos."
       },
       "extensibilityTitle": "Extensibilidade",
@@ -201,14 +219,14 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Aplicação no tema",
         "part": "Parte do componente",
         "radiusCard": "Raio dos cantos do Card",
         "card": "Fundo do Card",
         "cardForeground": "Texto principal do Card",
-        "muted": "Fundo do CardFooter (<code>bg-muted/50</code>)",
+        "muted": "Fundo soft do CardFooter (token <code>--muted</code>)",
         "mutedForeground": "Texto da CardDescription",
-        "foreground": "Cor do ring em <code>ring-foreground/10</code>",
+        "foreground": "Cor da borda suave (token <code>--foreground</code> com baixa opacidade)",
         "border": "Linha divisora acima do CardFooter"
       },
       "customizationTitle": "Como personalizar via tema:"
@@ -221,7 +239,7 @@
       "item2": "<strong>CardTitle como âncora</strong> — use o <code>id</code> do <code>CardTitle</code> como <code>aria-labelledby</code> do container quando o Card todo for anunciado (ex: dentro de uma lista <code>role=\"list\"</code>).",
       "item3": "<strong>Botões com aria-label contextual</strong> — em listas de cards, \"Excluir\" vira \"Excluir produto Cadeira Gamer Pro\" para evitar ambiguidade.",
       "item4": "<strong>Card clicável</strong> — envolva em <code>&lt;a&gt;</code> ou <code>&lt;button&gt;</code> com <code>aria-label</code> descritivo; adicione <code>focus-visible:ring-2</code> para foco visível.",
-      "item5": "<strong>Contraste</strong> — <code>text-card-foreground</code> sobre <code>bg-card</code> cumpre 4.5:1; <code>text-muted-foreground</code> na descrição também atinge o limiar AA.",
+      "item5": "<strong>Contraste</strong> — <code>--card-foreground</code> sobre <code>--card</code> cumpre 4.5:1; <code>--muted-foreground</code> na descrição também atinge o limiar AA.",
       "keyboard": {
         "tab": "Move foco para os elementos interativos dentro do Card (botões, links, menus).",
         "enter": "Ativa o elemento focado (botão no footer, link no conteúdo, trigger de menu).",
@@ -252,7 +270,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "O Card detecta <code>CardFooter</code> via <code>has-data-[slot=card-footer]:pb-0</code> — ao adicionar o footer, o padding do fundo é removido automaticamente para alinhar a borda.",
+      "tip1": "O Card detecta <code>CardFooter</code> via seletor CSS de filho — ao adicionar o footer, o padding inferior é removido automaticamente para alinhar a borda.",
       "tip2": "Imagens como primeiro/último filho recebem <code>rounded-t/b-(--radius-card)</code> por CSS; não precisa passar classe manualmente.",
       "tip3": "A prop <code>size</code> propaga via <code>data-size</code> e <code>group-data-[size=sm]/card</code> — os subcomponentes ajustam padding e fonte sem passar a prop explícita.",
       "tip4": "Para Card clicável, prefira compor com elemento filho (envolver em <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) em vez de <code>onClick</code> no container — garante semântica e navegação por teclado."
@@ -286,10 +304,10 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Card.",
-        "item1": { "action": "Renderizar Card com Header, Content e Footer", "result": "3 blocos visíveis; Card com <code>data-slot=\"card\"</code>; footer com <code>border-t</code> e <code>bg-muted/50</code>", "priority": "high" },
-        "item2": { "action": "Renderizar Card com size=\"sm\"", "result": "<code>data-size=\"sm\"</code> no root; padding reduzido; <code>CardTitle</code> em <code>text-sm</code>", "priority": "high" },
+        "item1": { "action": "Renderizar Card com Header, Content e Footer", "result": "3 blocos visíveis; Card com <code>data-slot=\"card\"</code>; footer com borda superior e fundo soft (<code>--muted</code>)", "priority": "high" },
+        "item2": { "action": "Renderizar Card com size=\"sm\"", "result": "<code>data-size=\"sm\"</code> no root; padding reduzido; CardTitle em tamanho menor", "priority": "high" },
         "item3": { "action": "Renderizar Card com CardAction", "result": "Header vira grid <code>[1fr_auto]</code>; ação fica à direita mantendo ordem DOM original", "priority": "medium" },
-        "item4": { "action": "Renderizar Card com imagem como primeiro filho", "result": "Imagem ganha <code>rounded-t-(--radius-card)</code>; padding do topo é removido", "priority": "medium" },
+        "item4": { "action": "Renderizar Card com imagem como primeiro filho", "result": "Imagem herda o radius superior do Card (<code>--radius-card</code>); padding do topo é removido", "priority": "medium" },
         "item5": { "action": "Clicar em botão no CardFooter", "result": "Handler do botão é chamado; evento não borbulha para o Card raiz se houver wrapper clicável", "priority": "high" },
         "item6": { "action": "Card envolvido em <a> com aria-label", "result": "<kbd>Tab</kbd> foca o Card; <kbd>Enter</kbd> navega; leitor anuncia o <code>aria-label</code>", "priority": "medium" }
       },
@@ -342,8 +360,8 @@
     "seo": {
       "title": "Card — Layout",
       "description": "Documentation for Card: 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and theme tokens.",
-      "aiSummary": "Structural Card component with 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and --radius-card/bg-card tokens.",
-      "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container, Composition, Slot",
+      "aiSummary": "Structural Card component with 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and semantic theme tokens --card and --radius-card.",
+      "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, WCAG 2.1, Layout, Container, Composition, Slot",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -367,14 +385,14 @@
     "anatomy": {
       "title": "Anatomy",
       "item1": "<strong>Card</strong> — <code>&lt;div data-slot=\"card\"&gt;</code> container with theme border, radius and background.",
-      "item2": "<strong>CardHeader</strong> — optional grid with title, description and action; uses <code>rounded-t-(--radius-card)</code>.",
-      "item3": "<strong>CardTitle</strong> — visual heading. <code>text-base</code> default, <code>text-sm</code> in <code>sm</code> size.",
-      "item4": "<strong>CardDescription</strong> — complementary text in <code>text-muted-foreground</code>.",
-      "item5": "<strong>CardAction</strong> — slot for button, badge or menu on the right of the header (<code>grid-cols-[1fr_auto]</code>).",
+      "item2": "<strong>CardHeader</strong> — optional grid with title, description and action; uses the theme radius (<code>--radius-card</code>).",
+      "item3": "<strong>CardTitle</strong> — visual heading. Base size in the default size; reduced in <code>sm</code> size.",
+      "item4": "<strong>CardDescription</strong> — complementary text in the <code>--muted-foreground</code> color.",
+      "item5": "<strong>CardAction</strong> — slot for button, badge or menu on the right of the header (second column of the <code>1fr auto</code> grid).",
       "item6": "<strong>CardContent</strong> — card body with default horizontal padding; primary content area.",
-      "item7": "<strong>CardFooter</strong> — footer with <code>border-t</code> and <code>bg-muted/50</code>; ideal for actions.",
+      "item7": "<strong>CardFooter</strong> — footer with top border and soft background (<code>--muted</code>); ideal for actions.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* optional grid */}\n    <CardTitle />        {/* visual heading */}\n    <CardDescription />  {/* secondary text */}\n    <CardAction />       {/* right-aligned slot */}\n  </CardHeader>\n  <CardContent />        {/* body */}\n  <CardFooter />         {/* footer with bg-muted/50 */}\n</Card>"
+      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* optional grid */}\n    <CardTitle />        {/* visual heading */}\n    <CardDescription />  {/* secondary text */}\n    <CardAction />       {/* right-aligned slot */}\n  </CardHeader>\n  <CardContent />        {/* body */}\n  <CardFooter />         {/* footer with soft background */}\n</Card>"
     },
     "usage": {
       "title": "When and How to Use",
@@ -469,11 +487,29 @@
       "visualTitle": "Sizes and Compositions",
       "note": "Card has no <code>cva()</code> variants. What varies is the <strong>size</strong> (prop <code>size=\"default\"|\"sm\"</code>) and the <strong>composition</strong> of subcomponents (header, content, footer are optional).",
       "items": {
-        "default": "<code>size=\"default\"</code> — <code>py-4</code> + <code>px-4</code> padding, title in <code>text-base</code>. Default for most cases.",
-        "sm": "<code>size=\"sm\"</code> — <code>py-3</code> + <code>px-3</code> padding, title in <code>text-sm</code>. Use in dense lists and dashboards.",
-        "withFooter": "With <code>CardFooter</code> — gains <code>border-t</code> and <code>bg-muted/50</code>; Card absorbs <code>pb-0</code> to align the footer.",
+        "default": "<code>size=\"default\"</code> — default inner padding and base-size title. Default for most cases.",
+        "sm": "<code>size=\"sm\"</code> — reduced inner padding and smaller title. Use in dense lists and dashboards.",
+        "withFooter": "With <code>CardFooter</code> — gains top border and soft background (<code>--muted</code>); Card removes its bottom padding to align the footer.",
         "withAction": "With <code>CardAction</code> — header becomes <code>[1fr_auto]</code> grid; the action (Button, Badge, DropdownMenu) sits on the right.",
         "withImage": "First or last <code>&lt;img&gt;</code> child — Card applies <code>rounded-t/b-(--radius-card)</code> automatically and removes the matching padding."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withFooter": {
+          "name": "With footer (actions)",
+          "description": "Card with <code>CardFooter</code> housing right-aligned buttons. Footer gains top border and soft background; Card's bottom padding is removed automatically.",
+          "use": "Products, editable records, cards with primary and secondary actions. Always include contextual <code>aria-label</code> on buttons referencing the item title."
+        },
+        "withAction": {
+          "name": "With header action slot",
+          "description": "Header with <code>CardAction</code> places an element (Button, Badge, DropdownMenu) to the right of the title and description, in a separate grid column.",
+          "use": "Metrics, KPIs, cards with a single contextual action (edit, configure, more options) without needing a footer."
+        },
+        "withImage": {
+          "name": "With image",
+          "description": "Image as the first child of Card — top padding is removed automatically and the image inherits the Card's top radius.",
+          "use": "Product, post, or media cards. Image must have descriptive <code>alt</code> and <code>object-fit: cover</code> to preserve aspect ratio."
+        }
       }
     },
     "states": {
@@ -486,12 +522,12 @@
       "default": {
         "label": "Default",
         "trigger": "Basic composition without extra props",
-        "behavior": "<code>bg-card</code> background, <code>ring-foreground/10</code> border, <code>--radius-card</code> radius"
+        "behavior": "Background in token <code>--card</code>, soft border (<code>--foreground</code> with low opacity), <code>--radius-card</code> radius"
       },
       "small": {
         "label": "Compact",
         "trigger": "<code>size=\"sm\"</code> prop",
-        "behavior": "Reduced padding (<code>py-3</code>/<code>px-3</code>), title in <code>text-sm</code>"
+        "behavior": "Reduced inner padding and smaller title"
       },
       "interactive": {
         "label": "Clickable",
@@ -506,7 +542,7 @@
       "withFooter": {
         "label": "With footer",
         "trigger": "Include <code>&lt;CardFooter&gt;</code>",
-        "behavior": "Card absorbs <code>pb-0</code>; footer gains <code>border-t</code> and <code>bg-muted/50</code>"
+        "behavior": "Card removes its bottom padding; footer gains top border and soft background (<code>--muted</code>)"
       }
     },
     "props": {
@@ -526,7 +562,7 @@
         "required": "Required",
         "description": "Description",
         "size": "Card size. <code>\"default\"</code> for general use, <code>\"sm\"</code> in dense lists and dashboards.",
-        "className": "Additional Tailwind classes — override default padding, background or border when needed.",
+        "className": "Additional CSS classes — override default padding, background or border when needed.",
         "children": "Card content: header, content and/or footer composed."
       },
       "extensibilityTitle": "Extensibility",
@@ -536,14 +572,14 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": "Theme application",
         "part": "Component Part",
         "radiusCard": "Card corner radius",
         "card": "Card background",
         "cardForeground": "Card main text",
-        "muted": "CardFooter background (<code>bg-muted/50</code>)",
+        "muted": "Soft CardFooter background (token <code>--muted</code>)",
         "mutedForeground": "CardDescription text",
-        "foreground": "Ring color in <code>ring-foreground/10</code>",
+        "foreground": "Soft border color (<code>--foreground</code> token with low opacity)",
         "border": "Divider line above CardFooter"
       },
       "customizationTitle": "How to customize via theme:"
@@ -556,7 +592,7 @@
       "item2": "<strong>CardTitle as anchor</strong> — use the <code>CardTitle</code> <code>id</code> as <code>aria-labelledby</code> on the container when the whole Card is announced (e.g. inside a <code>role=\"list\"</code>).",
       "item3": "<strong>Contextual aria-label on buttons</strong> — in card lists, \"Delete\" becomes \"Delete product Pro Gaming Chair\" to avoid ambiguity.",
       "item4": "<strong>Clickable Card</strong> — wrap in <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> with a descriptive <code>aria-label</code>; add <code>focus-visible:ring-2</code> for visible focus.",
-      "item5": "<strong>Contrast</strong> — <code>text-card-foreground</code> over <code>bg-card</code> meets 4.5:1; <code>text-muted-foreground</code> in descriptions also hits AA.",
+      "item5": "<strong>Contrast</strong> — <code>--card-foreground</code> over <code>--card</code> meets 4.5:1; <code>--muted-foreground</code> in descriptions also hits AA.",
       "keyboard": {
         "tab": "Moves focus to interactive elements inside the Card (buttons, links, menus).",
         "enter": "Activates the focused element (footer button, content link, menu trigger).",
@@ -587,7 +623,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "Card detects <code>CardFooter</code> via <code>has-data-[slot=card-footer]:pb-0</code> — adding the footer removes bottom padding automatically to align the border.",
+      "tip1": "Card detects <code>CardFooter</code> via a CSS child selector — adding the footer removes bottom padding automatically to align the border.",
       "tip2": "Images as first/last child get <code>rounded-t/b-(--radius-card)</code> via CSS; you don't need to pass a class manually.",
       "tip3": "The <code>size</code> prop propagates via <code>data-size</code> and <code>group-data-[size=sm]/card</code> — subcomponents adjust padding and font without receiving the prop explicitly.",
       "tip4": "For a clickable Card, prefer composing with a child element (wrap in <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) instead of <code>onClick</code> on the container — ensures semantics and keyboard navigation."
@@ -621,10 +657,10 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Card configuration.",
-        "item1": { "action": "Render Card with Header, Content and Footer", "result": "3 blocks visible; Card with <code>data-slot=\"card\"</code>; footer with <code>border-t</code> and <code>bg-muted/50</code>", "priority": "high" },
-        "item2": { "action": "Render Card with size=\"sm\"", "result": "<code>data-size=\"sm\"</code> on root; reduced padding; <code>CardTitle</code> in <code>text-sm</code>", "priority": "high" },
+        "item1": { "action": "Render Card with Header, Content and Footer", "result": "3 blocks visible; Card with <code>data-slot=\"card\"</code>; footer with top border and soft background (<code>--muted</code>)", "priority": "high" },
+        "item2": { "action": "Render Card with size=\"sm\"", "result": "<code>data-size=\"sm\"</code> on root; reduced padding; CardTitle in smaller size", "priority": "high" },
         "item3": { "action": "Render Card with CardAction", "result": "Header becomes <code>[1fr_auto]</code> grid; action stays right with original DOM order", "priority": "medium" },
-        "item4": { "action": "Render Card with image as first child", "result": "Image gets <code>rounded-t-(--radius-card)</code>; top padding is removed", "priority": "medium" },
+        "item4": { "action": "Render Card with image as first child", "result": "Image inherits the Card's top radius (<code>--radius-card</code>); top padding is removed", "priority": "medium" },
         "item5": { "action": "Click a button in CardFooter", "result": "Button handler fires; event doesn't bubble to Card root if there's a clickable wrapper", "priority": "high" },
         "item6": { "action": "Card wrapped in <a> with aria-label", "result": "<kbd>Tab</kbd> focuses the Card; <kbd>Enter</kbd> navigates; reader announces the <code>aria-label</code>", "priority": "medium" }
       },
@@ -677,8 +713,8 @@
     "seo": {
       "title": "Card — Layout",
       "description": "Documentación del Card: 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens de tema.",
-      "aiSummary": "Componente Card estructural con 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens --radius-card/bg-card.",
-      "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, Tailwind CSS, WCAG 2.1, Layout, Container, Composition, Slot",
+      "aiSummary": "Componente Card estructural con 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens semánticos --card y --radius-card del tema.",
+      "aiEntities": "Card, React, Vue, Svelte, TypeScript, Shadcn/UI, WCAG 2.1, Layout, Container, Composition, Slot",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -702,14 +738,14 @@
     "anatomy": {
       "title": "Anatomía",
       "item1": "<strong>Card</strong> — contenedor <code>&lt;div data-slot=\"card\"&gt;</code> con borde, radius y fondo del tema.",
-      "item2": "<strong>CardHeader</strong> — grid opcional con título, descripción y acción; usa <code>rounded-t-(--radius-card)</code>.",
-      "item3": "<strong>CardTitle</strong> — heading visual del card. <code>text-base</code> por defecto, <code>text-sm</code> en el size <code>sm</code>.",
-      "item4": "<strong>CardDescription</strong> — texto complementario en <code>text-muted-foreground</code>.",
-      "item5": "<strong>CardAction</strong> — slot para botón, badge o menú a la derecha del header (<code>grid-cols-[1fr_auto]</code>).",
+      "item2": "<strong>CardHeader</strong> — grid opcional con título, descripción y acción; usa el radius del tema (<code>--radius-card</code>).",
+      "item3": "<strong>CardTitle</strong> — heading visual del card. Tamaño base en el size predeterminado; reducido en size <code>sm</code>.",
+      "item4": "<strong>CardDescription</strong> — texto complementario en el color <code>--muted-foreground</code>.",
+      "item5": "<strong>CardAction</strong> — slot para botón, badge o menú a la derecha del header (segunda columna del grid <code>1fr auto</code>).",
       "item6": "<strong>CardContent</strong> — cuerpo del card con padding lateral por defecto; contenido principal.",
-      "item7": "<strong>CardFooter</strong> — pie con <code>border-t</code> y <code>bg-muted/50</code>; ideal para acciones.",
+      "item7": "<strong>CardFooter</strong> — pie con borde superior y fondo soft (<code>--muted</code>); ideal para acciones.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundario */}\n    <CardAction />       {/* slot a la derecha */}\n  </CardHeader>\n  <CardContent />        {/* cuerpo */}\n  <CardFooter />         {/* pie con bg-muted/50 */}\n</Card>"
+      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundario */}\n    <CardAction />       {/* slot a la derecha */}\n  </CardHeader>\n  <CardContent />        {/* cuerpo */}\n  <CardFooter />         {/* pie con fondo soft */}\n</Card>"
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -804,11 +840,29 @@
       "visualTitle": "Tamaños y Composiciones",
       "note": "Card no tiene variantes <code>cva()</code>. Lo que varía es el <strong>tamaño</strong> (prop <code>size=\"default\"|\"sm\"</code>) y la <strong>composición</strong> de subcomponentes (header, content, footer son opcionales).",
       "items": {
-        "default": "<code>size=\"default\"</code> — padding <code>py-4</code> + <code>px-4</code>, título en <code>text-base</code>. Predeterminado para la mayoría de los casos.",
-        "sm": "<code>size=\"sm\"</code> — padding <code>py-3</code> + <code>px-3</code>, título en <code>text-sm</code>. Úsalo en listas densas y dashboards.",
-        "withFooter": "Con <code>CardFooter</code> — gana <code>border-t</code> y fondo <code>bg-muted/50</code>; el Card absorbe <code>pb-0</code> para alinear el footer.",
+        "default": "<code>size=\"default\"</code> — padding interno por defecto y título en tamaño base. Predeterminado para la mayoría de los casos.",
+        "sm": "<code>size=\"sm\"</code> — padding interno reducido y título en tamaño menor. Úsalo en listas densas y dashboards.",
+        "withFooter": "Con <code>CardFooter</code> — gana borde superior y fondo soft (<code>--muted</code>); el Card elimina su padding inferior para alinear el footer.",
         "withAction": "Con <code>CardAction</code> — el header se vuelve grid <code>[1fr_auto]</code>; la acción (Button, Badge, DropdownMenu) queda a la derecha.",
         "withImage": "Primer o último hijo <code>&lt;img&gt;</code> — el Card aplica <code>rounded-t/b-(--radius-card)</code> automáticamente y elimina el padding correspondiente."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withFooter": {
+          "name": "Con footer (acciones)",
+          "description": "Card con <code>CardFooter</code> alojando botones alineados a la derecha. Footer gana borde superior y fondo soft; el padding inferior del Card se elimina automáticamente.",
+          "use": "Productos, registros editables, cards con acciones primarias y secundarias. Incluye siempre <code>aria-label</code> contextual en los botones con el título del ítem."
+        },
+        "withAction": {
+          "name": "Con slot de acción en el header",
+          "description": "Header con <code>CardAction</code> posiciona un elemento (Button, Badge, DropdownMenu) a la derecha del título y descripción, en columna separada del grid.",
+          "use": "Métricas, KPIs, cards con una única acción contextual (editar, configurar, más opciones) sin necesidad de footer."
+        },
+        "withImage": {
+          "name": "Con imagen",
+          "description": "Imagen como primer hijo del Card — el padding superior se elimina automáticamente y la imagen hereda el radius superior del Card.",
+          "use": "Cards de producto, post, medio. La imagen debe tener <code>alt</code> descriptivo y <code>object-fit: cover</code> para preservar la proporción."
+        }
       }
     },
     "states": {
@@ -821,12 +875,12 @@
       "default": {
         "label": "Predeterminado",
         "trigger": "Composición básica sin props extra",
-        "behavior": "Fondo <code>bg-card</code>, borde <code>ring-foreground/10</code>, radius <code>--radius-card</code>"
+        "behavior": "Fondo en el token <code>--card</code>, borde suave (<code>--foreground</code> con baja opacidad), radius <code>--radius-card</code>"
       },
       "small": {
         "label": "Compacto",
         "trigger": "Prop <code>size=\"sm\"</code>",
-        "behavior": "Padding reducido (<code>py-3</code>/<code>px-3</code>), título en <code>text-sm</code>"
+        "behavior": "Padding interno reducido, título en tamaño menor"
       },
       "interactive": {
         "label": "Clicable",
@@ -841,7 +895,7 @@
       "withFooter": {
         "label": "Con footer",
         "trigger": "Incluir <code>&lt;CardFooter&gt;</code>",
-        "behavior": "Card absorbe <code>pb-0</code>; el footer gana <code>border-t</code> y <code>bg-muted/50</code>"
+        "behavior": "Card elimina su padding inferior; el footer gana borde superior y fondo soft (<code>--muted</code>)"
       }
     },
     "props": {
@@ -861,7 +915,7 @@
         "required": "Obligatorio",
         "description": "Descripción",
         "size": "Tamaño del Card. <code>\"default\"</code> para uso general, <code>\"sm\"</code> en listas densas y dashboards.",
-        "className": "Clases Tailwind adicionales — sobrescribe el padding, fondo o borde por defecto cuando sea necesario.",
+        "className": "Clases CSS adicionales — sobrescribe el padding, fondo o borde por defecto cuando sea necesario.",
         "children": "Contenido del Card: header, content y/o footer compuestos."
       },
       "extensibilityTitle": "Extensibilidad",
@@ -871,14 +925,14 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Aplicación en el tema",
         "part": "Parte del componente",
         "radiusCard": "Radio de los cantos del Card",
         "card": "Fondo del Card",
         "cardForeground": "Texto principal del Card",
-        "muted": "Fondo del CardFooter (<code>bg-muted/50</code>)",
+        "muted": "Fondo soft del CardFooter (token <code>--muted</code>)",
         "mutedForeground": "Texto del CardDescription",
-        "foreground": "Color del ring en <code>ring-foreground/10</code>",
+        "foreground": "Color del borde suave (token <code>--foreground</code> con baja opacidad)",
         "border": "Línea divisora arriba del CardFooter"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
@@ -891,7 +945,7 @@
       "item2": "<strong>CardTitle como ancla</strong> — usa el <code>id</code> del <code>CardTitle</code> como <code>aria-labelledby</code> del contenedor cuando el Card completo debe ser anunciado (ej: dentro de un <code>role=\"list\"</code>).",
       "item3": "<strong>Botones con aria-label contextual</strong> — en listas de cards, \"Eliminar\" se convierte en \"Eliminar producto Silla Gamer Pro\" para evitar ambigüedad.",
       "item4": "<strong>Card clicable</strong> — envuelve en <code>&lt;a&gt;</code> o <code>&lt;button&gt;</code> con <code>aria-label</code> descriptivo; agrega <code>focus-visible:ring-2</code> para foco visible.",
-      "item5": "<strong>Contraste</strong> — <code>text-card-foreground</code> sobre <code>bg-card</code> cumple 4.5:1; <code>text-muted-foreground</code> en la descripción también alcanza AA.",
+      "item5": "<strong>Contraste</strong> — <code>--card-foreground</code> sobre <code>--card</code> cumple 4.5:1; <code>--muted-foreground</code> en la descripción también alcanza AA.",
       "keyboard": {
         "tab": "Mueve el foco a los elementos interactivos dentro del Card (botones, links, menús).",
         "enter": "Activa el elemento enfocado (botón del footer, link del contenido, trigger de menú).",
@@ -922,7 +976,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "El Card detecta <code>CardFooter</code> vía <code>has-data-[slot=card-footer]:pb-0</code> — al agregar el footer, se elimina el padding inferior automáticamente para alinear el borde.",
+      "tip1": "El Card detecta <code>CardFooter</code> vía un selector CSS de hijo — al agregar el footer, se elimina el padding inferior automáticamente para alinear el borde.",
       "tip2": "Las imágenes como primer/último hijo reciben <code>rounded-t/b-(--radius-card)</code> vía CSS; no necesitas pasar una clase manualmente.",
       "tip3": "La prop <code>size</code> se propaga vía <code>data-size</code> y <code>group-data-[size=sm]/card</code> — los subcomponentes ajustan padding y fuente sin recibir la prop explícita.",
       "tip4": "Para Card clicable, prefiere componer con elemento hijo (envolver en <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) en lugar de <code>onClick</code> en el contenedor — asegura semántica y navegación por teclado."
@@ -956,10 +1010,10 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Card.",
-        "item1": { "action": "Renderizar Card con Header, Content y Footer", "result": "3 bloques visibles; Card con <code>data-slot=\"card\"</code>; footer con <code>border-t</code> y <code>bg-muted/50</code>", "priority": "high" },
-        "item2": { "action": "Renderizar Card con size=\"sm\"", "result": "<code>data-size=\"sm\"</code> en el root; padding reducido; <code>CardTitle</code> en <code>text-sm</code>", "priority": "high" },
+        "item1": { "action": "Renderizar Card con Header, Content y Footer", "result": "3 bloques visibles; Card con <code>data-slot=\"card\"</code>; footer con borde superior y fondo soft (<code>--muted</code>)", "priority": "high" },
+        "item2": { "action": "Renderizar Card con size=\"sm\"", "result": "<code>data-size=\"sm\"</code> en el root; padding reducido; CardTitle en tamaño menor", "priority": "high" },
         "item3": { "action": "Renderizar Card con CardAction", "result": "Header se vuelve grid <code>[1fr_auto]</code>; la acción queda a la derecha manteniendo el orden DOM original", "priority": "medium" },
-        "item4": { "action": "Renderizar Card con imagen como primer hijo", "result": "La imagen gana <code>rounded-t-(--radius-card)</code>; el padding superior se elimina", "priority": "medium" },
+        "item4": { "action": "Renderizar Card con imagen como primer hijo", "result": "La imagen hereda el radius superior del Card (<code>--radius-card</code>); el padding superior se elimina", "priority": "medium" },
         "item5": { "action": "Hacer clic en botón del CardFooter", "result": "El handler del botón se llama; el evento no burbujea al Card raíz si hay wrapper clicable", "priority": "high" },
         "item6": { "action": "Card envuelto en <a> con aria-label", "result": "<kbd>Tab</kbd> enfoca el Card; <kbd>Enter</kbd> navega; el lector anuncia el <code>aria-label</code>", "priority": "medium" }
       },

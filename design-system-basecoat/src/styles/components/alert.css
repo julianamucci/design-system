@@ -1,0 +1,146 @@
+/*
+ * ─── nds-alert ───────────────────────────────────────────────────────────────
+ * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ *
+ * Estrutura:
+ *   <div class="nds-alert" role="alert">
+ *     <svg>...</svg>             ← opcional, vai pra coluna 1
+ *     <h5 class="nds-alert-title">Title</h5>
+ *     <section class="nds-alert-description"><p>Descrição…</p></section>
+ *   </div>
+ *
+ * Variantes:
+ *   .nds-alert                  → default (bg-card, fg-card-foreground)
+ *   .nds-alert.nds-alert-destructive → vermelho (texto destructive)
+ *
+ * Tokens: --card, --card-foreground, --destructive, --muted-foreground,
+ *         --border, --radius-alert, --spacing-*
+ */
+
+.nds-alert {
+  --alert-bg: hsl(var(--card));
+  --alert-fg: hsl(var(--card-foreground));
+  --alert-border: hsl(var(--border));
+
+  position: relative;
+  display: grid;
+  grid-template-columns: 0 1fr;
+  align-items: flex-start;
+  row-gap: var(--spacing-0-5);                  /* 2px */
+  column-gap: 0;
+
+  width: 100%;
+  border: 1px solid var(--alert-border);
+  border-radius: var(--radius-alert, 0.625rem);
+  padding-inline: var(--spacing-4);             /* 16px */
+  padding-block: var(--spacing-2);              /* 8px */
+
+  background-color: var(--alert-bg);
+  color: var(--alert-fg);
+  font-size: 0.875rem;                          /* 14px — text-sm */
+  line-height: 1.5;
+}
+
+/* Quando há ícone svg como filho, abre coluna pro ícone */
+.nds-alert:has(> svg) {
+  grid-template-columns: var(--spacing-4) 1fr;
+  column-gap: var(--spacing-2);                 /* 8px */
+}
+
+.nds-alert > svg {
+  width: var(--spacing-4);                      /* 16px */
+  height: var(--spacing-4);
+  color: currentColor;
+  translate: 0 var(--spacing-0-5);              /* alinha visualmente com 1ª linha do título */
+}
+
+/* Título — h1-h6 ou strong ou [data-title] */
+.nds-alert-title,
+.nds-alert > h1,
+.nds-alert > h2,
+.nds-alert > h3,
+.nds-alert > h4,
+.nds-alert > h5,
+.nds-alert > h6,
+.nds-alert > strong,
+.nds-alert > [data-title] {
+  grid-column-start: 2;
+  min-height: var(--spacing-4);
+  margin: 0;
+  font-size: inherit;
+  font-weight: var(--font-weight-medium, 500);
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+}
+
+/* Descrição — section nativa (preserva semântica do basecoat-css upstream).
+ * Display grid para empilhar parágrafos com gap consistente. */
+.nds-alert-description,
+.nds-alert > section {
+  grid-column-start: 2;
+  display: grid;
+  gap: var(--spacing-1);                        /* 4px entre <p> */
+  justify-items: start;
+  font-size: inherit;
+  color: hsl(var(--muted-foreground));
+}
+.nds-alert-description > p,
+.nds-alert > section > p {
+  margin: 0;
+  line-height: 1.625;
+}
+.nds-alert-description ul,
+.nds-alert > section ul {
+  list-style: disc inside;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Variantes semânticas ──────────────────────────────────────────────────── *
+ * Regra WCAG 2.1 AA (contraste 4.5:1):
+ *   - Container colorido: bg-soft + border-soft com tons da cor semântica
+ *   - Ícone e título: podem usar a cor semântica (são curtos, contraste 3:1 ok)
+ *   - Texto corrido (description): SEMPRE --foreground para garantir 4.5:1
+ * ────────────────────────────────────────────────────────────────────────── */
+
+/* destructive — vermelho com bg soft */
+.nds-alert-destructive {
+  --alert-bg: hsl(var(--destructive) / 0.1);
+  --alert-fg: hsl(var(--destructive));
+  --alert-border: hsl(var(--destructive) / 0.3);
+}
+
+/* success — verde com bg soft */
+.nds-alert-success {
+  --alert-bg: hsl(var(--success) / 0.1);
+  --alert-fg: hsl(var(--success));
+  --alert-border: hsl(var(--success) / 0.3);
+}
+
+/* warning — âmbar com bg soft */
+.nds-alert-warning {
+  --alert-bg: hsl(var(--warning) / 0.1);
+  --alert-fg: hsl(var(--warning));
+  --alert-border: hsl(var(--warning) / 0.3);
+}
+
+/* info — azul com bg soft */
+.nds-alert-info {
+  --alert-bg: hsl(var(--info) / 0.1);
+  --alert-fg: hsl(var(--info));
+  --alert-border: hsl(var(--info) / 0.3);
+}
+
+/* Descrição em qualquer variante semântica → sempre foreground.
+   Garante contraste WCAG AA (4.5:1) no texto longo, mesmo sobre bg colorido. */
+.nds-alert-destructive .nds-alert-description,
+.nds-alert-destructive > section,
+.nds-alert-success .nds-alert-description,
+.nds-alert-success > section,
+.nds-alert-warning .nds-alert-description,
+.nds-alert-warning > section,
+.nds-alert-info .nds-alert-description,
+.nds-alert-info > section {
+  color: hsl(var(--foreground));
+}

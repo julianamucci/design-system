@@ -34,13 +34,14 @@ function buildSheet(opts: {
 }): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: opts.triggerLabel });
   const body = document.createElement('div');
-  body.className = 'text-sm text-muted-foreground';
+  body.className = 'nds-text-body nds-text-muted-foreground';
   body.textContent = 'Conteúdo do painel.';
 
   const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
   const action = createButton({ variant: 'default', label: 'Aplicar filtros' });
   const footer = document.createElement('div');
-  footer.className = 'flex gap-2';
+  footer.className = 'nds-cluster';
+  footer.dataset.spacing = 'sm';
   footer.append(cancel, action);
 
   const sheet = createSheet({
@@ -109,22 +110,24 @@ export const Controlled: Story = {
   },
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-3';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
 
     // Trigger interno do sheet (oculto): permite reuso da factory sem expor open() público.
     const hiddenTrigger = createButton({ variant: 'outline', label: 'internal-trigger' });
-    hiddenTrigger.classList.add('sr-only');
+    hiddenTrigger.classList.add('nds-sr-only');
     hiddenTrigger.setAttribute('tabindex', '-1');
     hiddenTrigger.setAttribute('aria-hidden', 'true');
 
     const body = document.createElement('div');
-    body.className = 'text-sm text-muted-foreground';
+    body.className = 'nds-text-body nds-text-muted-foreground';
     body.textContent = 'Este painel é comandado por estado externo.';
 
     const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
     const action = createButton({ variant: 'default', label: 'Confirmar' });
     const footer = document.createElement('div');
-    footer.className = 'flex gap-2';
+    footer.className = 'nds-cluster';
+  footer.dataset.spacing = 'sm';
     footer.append(cancel, action);
 
     let isOpen = false;

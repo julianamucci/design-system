@@ -26,7 +26,9 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[220px] flex items-center justify-center';
+  wrapper.className = 'nds-cluster nds-w-full';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.minHeight = '220px';
   wrapper.appendChild(child);
   return wrapper;
 }

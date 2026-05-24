@@ -45,18 +45,19 @@ function priorityLabel(raw: string): string {
 
 function buildHorizontalDemo(label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-sm space-y-3';
+  wrap.className = 'nds-w-full nds-max-w-sm nds-stack';
+  wrap.dataset.spacing = 'sm';
 
   const caption = document.createElement('div');
-  caption.className = 'text-xs text-muted-foreground';
+  caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
   const top = document.createElement('p');
-  top.className = 'text-sm font-medium';
+  top.className = 'nds-text-body nds-font-medium';
   top.textContent = 'Configurações';
 
   const bottom = document.createElement('p');
-  bottom.className = 'text-sm text-muted-foreground';
+  bottom.className = 'nds-text-body nds-text-muted-foreground';
   bottom.textContent = 'Preferências';
 
   wrap.append(caption, top, createSeparator({ orientation: 'horizontal' }), bottom);
@@ -65,25 +66,29 @@ function buildHorizontalDemo(label: string): HTMLElement {
 
 function buildVerticalDemo(label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full space-y-2';
+  wrap.className = 'nds-w-full nds-stack';
+  wrap.dataset.spacing = 'sm';
 
   const caption = document.createElement('div');
-  caption.className = 'text-xs text-muted-foreground';
+  caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
   const row = document.createElement('div');
-  row.className = 'flex h-12 items-center gap-3';
+  row.className = 'nds-cluster';
+  row.dataset.spacing = 'sm';
+  row.dataset.align = 'center';
+  row.style.height = '3rem';
 
   const a = document.createElement('span');
-  a.className = 'text-sm';
+  a.className = 'nds-text-body';
   a.textContent = 'Blog';
 
   const b = document.createElement('span');
-  b.className = 'text-sm';
+  b.className = 'nds-text-body';
   b.textContent = 'Docs';
 
   const c = document.createElement('span');
-  c.className = 'text-sm';
+  c.className = 'nds-text-body';
   c.textContent = 'Contato';
 
   row.append(
@@ -100,32 +105,36 @@ function buildVerticalDemo(label: string): HTMLElement {
 
 function buildMenuDemo(label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-xs space-y-2';
+  wrap.className = 'nds-w-full nds-max-w-xs nds-stack';
+  wrap.dataset.spacing = 'sm';
 
   const caption = document.createElement('div');
-  caption.className = 'text-xs text-muted-foreground';
+  caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
   const menu = document.createElement('div');
-  menu.className = 'flex flex-col rounded-md border border-border bg-background p-1 text-sm';
+  menu.className = 'nds-stack nds-rounded-md nds-border-default nds-bg-background nds-p-1 nds-text-body';
+  menu.dataset.spacing = 'xs';
 
   const items1 = ['Perfil', 'Conta'];
   const items2 = ['Sair'];
 
   items1.forEach((txt) => {
     const item = document.createElement('div');
-    item.className = 'px-2 py-1.5 rounded-sm hover:bg-accent';
+    item.className = 'nds-rounded-sm nds-hover-bg-accent nds-px-2';
+    item.style.paddingBlock = '0.375rem';
     item.textContent = txt;
     menu.appendChild(item);
   });
 
   const sep = createSeparator({ orientation: 'horizontal' });
-  sep.classList.add('my-1');
+  sep.classList.add('nds-my-1');
   menu.appendChild(sep);
 
   items2.forEach((txt) => {
     const item = document.createElement('div');
-    item.className = 'px-2 py-1.5 rounded-sm hover:bg-accent';
+    item.className = 'nds-rounded-sm nds-hover-bg-accent nds-px-2';
+    item.style.paddingBlock = '0.375rem';
     item.textContent = txt;
     menu.appendChild(item);
   });
@@ -136,27 +145,28 @@ function buildMenuDemo(label: string): HTMLElement {
 
 function buildCardDemo(label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-sm space-y-2';
+  wrap.className = 'nds-w-full nds-max-w-sm nds-stack';
+  wrap.dataset.spacing = 'sm';
 
   const caption = document.createElement('div');
-  caption.className = 'text-xs text-muted-foreground';
+  caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
   const card = document.createElement('div');
-  card.className = 'rounded-md border border-border bg-background';
+  card.className = 'nds-rounded-md nds-border-default nds-bg-background';
 
   const header = document.createElement('div');
-  header.className = 'p-4';
+  header.className = 'nds-p-4';
   const headerTitle = document.createElement('p');
-  headerTitle.className = 'text-sm font-semibold';
+  headerTitle.className = 'nds-text-body nds-font-semibold';
   headerTitle.textContent = 'Cabeçalho do Card';
   const headerDesc = document.createElement('p');
-  headerDesc.className = 'text-xs text-muted-foreground';
+  headerDesc.className = 'nds-text-caption nds-text-muted-foreground';
   headerDesc.textContent = 'Descrição curta da seção.';
   header.append(headerTitle, headerDesc);
 
   const body = document.createElement('div');
-  body.className = 'p-4 text-sm text-muted-foreground';
+  body.className = 'nds-p-4 nds-text-body nds-text-muted-foreground';
   body.textContent = 'Conteúdo principal do card.';
 
   card.append(
@@ -268,7 +278,9 @@ export function createSeparatorDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const grid = document.createElement('div');
-            grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 w-full';
+            grid.className = 'nds-grid nds-w-full';
+            grid.dataset.spacing = 'lg';
+            grid.dataset.min = '18rem';
             grid.append(
               buildHorizontalDemo(t('demonstration.labels.horizontal')),
               buildVerticalDemo(t('demonstration.labels.vertical')),
@@ -348,28 +360,33 @@ export function createSeparatorDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-xs flex flex-col rounded-md border border-border bg-background p-1 text-sm';
+                wrap.className = 'nds-w-full nds-max-w-xs nds-stack nds-rounded-md nds-border-default nds-bg-background nds-p-1 nds-text-body';
+                wrap.dataset.spacing = 'xs';
                 const a = document.createElement('div');
-                a.className = 'px-2 py-1.5';
+                a.className = 'nds-px-2';
+                a.style.paddingBlock = '0.375rem';
                 a.textContent = 'Perfil';
                 const b = document.createElement('div');
-                b.className = 'px-2 py-1.5';
+                b.className = 'nds-px-2';
+                b.style.paddingBlock = '0.375rem';
                 b.textContent = 'Conta';
                 const c = document.createElement('div');
-                c.className = 'px-2 py-1.5';
+                c.className = 'nds-px-2';
+                c.style.paddingBlock = '0.375rem';
                 c.textContent = 'Sair';
                 const sep = createSeparator({ orientation: 'horizontal' });
-                sep.classList.add('my-1');
+                sep.classList.add('nds-my-1');
                 wrap.append(a, b, sep, c);
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-xs flex flex-col text-sm';
+                wrap.className = 'nds-w-full nds-max-w-xs nds-stack nds-text-body';
+                wrap.dataset.spacing = 'xs';
                 const a = document.createElement('p');
                 a.textContent = 'Linha 1';
                 const sep = createSeparator({ orientation: 'horizontal' });
-                sep.classList.add('my-2');
+                sep.classList.add('nds-my-2');
                 const b = document.createElement('p');
                 b.textContent = 'Linha 2';
                 wrap.append(a, sep, b);
@@ -383,24 +400,27 @@ export function createSeparatorDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex h-12 items-center gap-3 w-full max-w-sm';
+                wrap.className = 'nds-cluster nds-w-full nds-max-w-sm';
+                wrap.dataset.spacing = 'sm';
+                wrap.dataset.align = 'center';
+                wrap.style.height = '3rem';
                 const a = document.createElement('span');
-                a.className = 'text-sm';
+                a.className = 'nds-text-body';
                 a.textContent = 'Blog';
                 const b = document.createElement('span');
-                b.className = 'text-sm';
+                b.className = 'nds-text-body';
                 b.textContent = 'Docs';
                 wrap.append(a, createSeparator({ orientation: 'vertical' }), b);
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'block w-full max-w-sm';
+                wrap.className = 'nds-block nds-w-full nds-max-w-sm';
                 const a = document.createElement('span');
-                a.className = 'text-sm';
+                a.className = 'nds-text-body';
                 a.textContent = 'Blog';
                 const b = document.createElement('span');
-                b.className = 'text-sm';
+                b.className = 'nds-text-body';
                 b.textContent = 'Docs';
                 wrap.append(a, createSeparator({ orientation: 'vertical' }), b);
                 return wrap;
@@ -422,7 +442,7 @@ export function createSeparatorDocs(): HTMLElement {
         const codeVertical =
           `// Parent precisa de altura — use flex container:\n` +
           `const row = document.createElement('div');\n` +
-          `row.className = 'flex h-12 items-center gap-3';\n` +
+          `row.className = 'nds-cluster';\nrow.dataset.spacing = 'sm';\nrow.dataset.align = 'center';\nrow.style.height = '3rem';\n` +
           `row.append(itemA, createSeparator({ orientation: 'vertical' }), itemB);`;
 
         return createDocsVariants({

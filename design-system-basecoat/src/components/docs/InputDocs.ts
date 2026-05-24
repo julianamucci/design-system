@@ -14,6 +14,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -55,11 +56,12 @@ function buildDemoInput(opts: {
   errorText?: string;
 }): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex flex-col gap-1.5 w-full';
+  wrapper.className = 'nds-stack nds-w-full';
+  wrapper.dataset.spacing = 'xs';
 
   if (opts.labelText) {
     const label = document.createElement('label');
-    label.className = 'text-sm font-medium text-foreground';
+    label.className = 'nds-text-body nds-font-medium nds-text-foreground';
     label.textContent = opts.labelText;
     wrapper.appendChild(label);
   }
@@ -78,7 +80,7 @@ function buildDemoInput(opts: {
 
   if (opts.errorText) {
     const error = document.createElement('p');
-    error.className = 'text-xs text-destructive';
+    error.className = 'nds-text-caption nds-text-destructive';
     error.textContent = opts.errorText;
     wrapper.appendChild(error);
   }
@@ -120,6 +122,7 @@ export function createInputDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -170,7 +173,7 @@ export function createInputDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -184,7 +187,8 @@ export function createInputDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'w-full space-y-4 max-w-sm';
+            wrap.className = 'nds-w-full nds-max-w-sm nds-stack';
+            wrap.dataset.spacing = 'md';
 
             wrap.appendChild(buildDemoInput({
               type: 'text',
@@ -283,9 +287,10 @@ export function createInputDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrapper = document.createElement('div');
-                wrapper.className = 'flex flex-col gap-1.5 w-full';
+                wrapper.className = 'nds-stack nds-w-full';
+                wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
-                label.className = 'text-sm font-medium text-foreground';
+                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
                 label.textContent = 'Email';
                 const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });
                 wrapper.appendChild(label);
@@ -294,9 +299,10 @@ export function createInputDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrapper = document.createElement('div');
-                wrapper.className = 'flex flex-col gap-1.5 w-full';
+                wrapper.className = 'nds-stack nds-w-full';
+                wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
-                label.className = 'text-sm font-medium text-foreground';
+                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
                 label.textContent = 'Email';
                 const input = createInput({ type: 'email', placeholder: 'Digite seu email' });
                 wrapper.appendChild(label);
@@ -311,9 +317,10 @@ export function createInputDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const wrapper = document.createElement('div');
-                wrapper.className = 'flex flex-col gap-1.5 w-full';
+                wrapper.className = 'nds-stack nds-w-full';
+                wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
-                label.className = 'text-sm font-medium text-foreground';
+                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
                 label.textContent = 'Email';
                 const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });
                 wrapper.appendChild(label);
@@ -322,9 +329,10 @@ export function createInputDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrapper = document.createElement('div');
-                wrapper.className = 'flex flex-col gap-1.5 w-full';
+                wrapper.className = 'nds-stack nds-w-full';
+                wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
-                label.className = 'text-sm font-medium text-foreground';
+                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
                 label.textContent = 'Email';
                 const input = createInput({ type: 'text', placeholder: 'ex: joao@empresa.com' });
                 wrapper.appendChild(label);
@@ -339,9 +347,10 @@ export function createInputDocs(): HTMLElement {
               dontCaption: t('doDont.pair3.dont'),
               doPreviewFactory: () => {
                 const wrapper = document.createElement('div');
-                wrapper.className = 'flex flex-col gap-1.5 w-full';
+                wrapper.className = 'nds-stack nds-w-full';
+                wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
-                label.className = 'text-sm font-medium text-foreground';
+                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
                 label.textContent = 'Nome completo';
                 const input = createInput({ type: 'text', placeholder: 'ex: João da Silva' });
                 wrapper.appendChild(label);
@@ -401,6 +410,162 @@ export function createInputDocs(): HTMLElement {
               description: stripHtml(t('variants.types.file')),
               code: codeFile,
               previewFactory: () => createInput({ type: 'file' }),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        const codeWithLabel =
+          `const wrapper = document.createElement('div');\n` +
+          `wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';\n` +
+          `const label = document.createElement('label');\n` +
+          `label.htmlFor = 'input-nome';\n` +
+          `label.className = 'nds-text-body nds-font-medium nds-text-foreground';\n` +
+          `label.textContent = 'Nome completo';\n` +
+          `const input = createInput({ type: 'text', id: 'input-nome', placeholder: 'ex: João da Silva' });\n` +
+          `wrapper.append(label, input);`;
+
+        const codeWithHint =
+          `const wrapper = document.createElement('div');\n` +
+          `wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';\n` +
+          `const label = document.createElement('label');\n` +
+          `label.htmlFor = 'input-email';\n` +
+          `label.className = 'nds-text-body nds-font-medium nds-text-foreground';\n` +
+          `label.textContent = 'Email';\n` +
+          `const input = createInput({ type: 'email', id: 'input-email', placeholder: 'ex: joao@empresa.com' });\n` +
+          `const hint = document.createElement('p');\n` +
+          `hint.className = 'nds-text-caption nds-text-muted-foreground';\n` +
+          `hint.textContent = 'Usaremos seu email apenas para contato.';\n` +
+          `wrapper.append(label, input, hint);`;
+
+        const codeWithError =
+          `const wrapper = document.createElement('div');\n` +
+          `wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';\n` +
+          `const label = document.createElement('label');\n` +
+          `label.htmlFor = 'input-email-err';\n` +
+          `label.className = 'nds-text-body nds-font-medium nds-text-foreground';\n` +
+          `label.textContent = 'Email';\n` +
+          `const input = createInput({ type: 'email', id: 'input-email-err', placeholder: 'ex: joao@empresa.com' });\n` +
+          `input.setAttribute('aria-invalid', 'true');\n` +
+          `input.setAttribute('aria-describedby', 'input-email-err-msg');\n` +
+          `const error = document.createElement('p');\n` +
+          `error.id = 'input-email-err-msg';\n` +
+          `error.className = 'nds-text-caption nds-text-destructive';\n` +
+          `error.textContent = 'Informe um email válido.';\n` +
+          `wrapper.append(label, input, error);`;
+
+        const codeWithPrefix =
+          `const wrapper = document.createElement('div');\n` +
+          `wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';\n` +
+          `const label = document.createElement('label');\n` +
+          `label.htmlFor = 'input-url';\n` +
+          `label.className = 'nds-text-body nds-font-medium nds-text-foreground';\n` +
+          `label.textContent = 'URL do site';\n` +
+          `const row = document.createElement('div');\n` +
+          `row.className = 'nds-cluster nds-rounded-md nds-border-default border-input focus-within:ring-2 focus-within:ring-ring/50 nds-overflow-hidden';\n` +
+          `const prefix = document.createElement('span');\n` +
+          `prefix.className = 'nds-cluster nds-px-3 nds-text-body nds-text-muted-foreground nds-bg-muted border-r border-input nds-shrink-0';\n` +
+          `prefix.textContent = 'https://';\n` +
+          `const input = createInput({ type: 'url', id: 'input-url', placeholder: 'meusite.com' });\n` +
+          `input.className = 'border-0 focus-visible:ring-0 focus-visible:ring-offset-0 nds-flex-1';\n` +
+          `row.append(prefix, input);\n` +
+          `wrapper.append(label, row);`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'input',
+          items: [
+            {
+              name: t('variants.compositions.withLabel.name'),
+              description: t('variants.compositions.withLabel.description'),
+              useWhen: t('variants.compositions.withLabel.use'),
+              code: codeWithLabel,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';
+                wrapper.dataset.spacing = 'xs';
+                const label = document.createElement('label');
+                label.htmlFor = 'input-nome';
+                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.textContent = 'Nome completo';
+                const input = createInput({ type: 'text', id: 'input-nome', placeholder: 'ex: João da Silva' });
+                wrapper.append(label, input);
+                return wrapper;
+              },
+            },
+            {
+              name: t('variants.compositions.withHint.name'),
+              description: t('variants.compositions.withHint.description'),
+              useWhen: t('variants.compositions.withHint.use'),
+              code: codeWithHint,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';
+                wrapper.dataset.spacing = 'xs';
+                const label = document.createElement('label');
+                label.htmlFor = 'input-email';
+                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.textContent = 'Email';
+                const input = createInput({ type: 'email', id: 'input-email', placeholder: 'ex: joao@empresa.com' });
+                const hint = document.createElement('p');
+                hint.className = 'nds-text-caption nds-text-muted-foreground';
+                hint.textContent = 'Usaremos seu email apenas para contato.';
+                wrapper.append(label, input, hint);
+                return wrapper;
+              },
+            },
+            {
+              name: t('variants.compositions.withError.name'),
+              description: t('variants.compositions.withError.description'),
+              useWhen: t('variants.compositions.withError.use'),
+              code: codeWithError,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';
+                wrapper.dataset.spacing = 'xs';
+                const label = document.createElement('label');
+                label.htmlFor = 'input-email-err';
+                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.textContent = 'Email';
+                const input = createInput({ type: 'email', id: 'input-email-err', placeholder: 'ex: joao@empresa.com' });
+                input.setAttribute('aria-invalid', 'true');
+                input.setAttribute('aria-describedby', 'input-email-err-msg');
+                const error = document.createElement('p');
+                error.id = 'input-email-err-msg';
+                error.className = 'nds-text-caption nds-text-destructive';
+                error.textContent = 'Informe um email válido.';
+                wrapper.append(label, input, error);
+                return wrapper;
+              },
+            },
+            {
+              name: t('variants.compositions.withPrefix.name'),
+              description: t('variants.compositions.withPrefix.description'),
+              useWhen: t('variants.compositions.withPrefix.use'),
+              code: codeWithPrefix,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';
+                wrapper.dataset.spacing = 'xs';
+                const label = document.createElement('label');
+                label.htmlFor = 'input-url';
+                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.textContent = 'URL do site';
+                const row = document.createElement('div');
+                row.className = 'nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden';
+                const prefix = document.createElement('span');
+                prefix.className = 'nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0';
+                prefix.style.borderRight = '1px solid var(--input)';
+                prefix.textContent = 'https://';
+                const input = createInput({ type: 'url', id: 'input-url', placeholder: 'meusite.com' });
+                input.className = 'nds-flex-1';
+                input.style.border = '0';
+                row.append(prefix, input);
+                wrapper.append(label, row);
+                return wrapper;
+              },
             },
           ],
         });

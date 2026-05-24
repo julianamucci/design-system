@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Textarea } from '@/components/ui/textarea';
   import { Label } from '@/components/ui/label';
+  import { Button } from '@/components/ui/button';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -8,7 +9,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -59,6 +60,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -94,6 +96,19 @@
   let demoBioValue = $state('');
   const demoMax = 500;
   const demoBioMax = 200;
+
+  // Composition state
+  let compCounterValue = $state('');
+  let compFormValue = $state('');
+  let compFormSubmitted = $state(false);
+  const compMax = 500;
+  const compCounterAriaLabel = $derived(`${compCounterValue.length} de ${compMax} caracteres usados`);
+  const compFormAriaLabel = $derived(`${compFormValue.length} de ${compMax} caracteres usados`);
+
+  function handleCompFormSubmit(e: Event) {
+    e.preventDefault();
+    compFormSubmitted = true;
+  }
 
   // ─── Code strings ────────────────────────────────────────────────────────────
 
@@ -373,6 +388,125 @@ interface TextareaProps extends HTMLTextareaAttributes {
       <Label for="v-noresize">Observações</Label>
       <Textarea id="v-noresize" placeholder="Adicione observações..." class="resize-none min-h-[100px]" />
     </div>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="textarea"
+    items={[
+      {
+        name: $tStore('variants.compositions.withLabel.name'),
+        description: $tStore('variants.compositions.withLabel.description'),
+        useWhen: $tStore('variants.compositions.withLabel.use'),
+        code: `<div class="flex flex-col gap-1.5 w-full max-w-md">\n  <Label for="ta-label">Descrição</Label>\n  <Textarea id="ta-label" placeholder="ex: Descreva o produto..." class="resize-y min-h-[120px]" />\n</div>`,
+        preview: compWithLabel,
+      },
+      {
+        name: $tStore('variants.compositions.withHint.name'),
+        description: $tStore('variants.compositions.withHint.description'),
+        useWhen: $tStore('variants.compositions.withHint.use'),
+        code: `<div class="flex flex-col gap-1.5 w-full max-w-md">\n  <Label for="ta-hint">Descrição</Label>\n  <Textarea id="ta-hint" placeholder="ex: Descreva o produto..." class="resize-y min-h-[120px]" />\n  <p class="text-xs text-muted-foreground">Descreva o produto com clareza, destacando os principais atributos.</p>\n</div>`,
+        preview: compWithHint,
+      },
+      {
+        name: $tStore('variants.compositions.withCounter.name'),
+        description: $tStore('variants.compositions.withCounter.description'),
+        useWhen: $tStore('variants.compositions.withCounter.use'),
+        code: `<script lang="ts">\n  let value = $state('');\n  const max = 500;\n</` + `script>\n\n<div class="flex flex-col gap-1.5 w-full max-w-md">\n  <Label for="ta-counter">Descrição</Label>\n  <Textarea id="ta-counter" bind:value maxlength={max} class="resize-y min-h-[120px]" />\n  <div class="flex justify-between text-xs text-muted-foreground">\n    <span>Descreva com clareza.</span>\n    <span class="tabular-nums shrink-0" aria-live="polite" aria-label={\`\${value.length} de \${max} caracteres usados\`}>{value.length}/{max}</span>\n  </div>\n</div>`,
+        preview: compWithCounter,
+      },
+      {
+        name: $tStore('variants.compositions.withError.name'),
+        description: $tStore('variants.compositions.withError.description'),
+        useWhen: $tStore('variants.compositions.withError.use'),
+        code: `<div class="flex flex-col gap-1.5 w-full max-w-md">\n  <Label for="ta-error">Descrição</Label>\n  <Textarea id="ta-error" aria-invalid="true" aria-describedby="ta-error-error" class="resize-y min-h-[120px]" />\n  <p id="ta-error-error" class="text-xs text-destructive">A descrição é obrigatória e deve ter pelo menos 20 caracteres.</p>\n</div>`,
+        preview: compWithError,
+      },
+      {
+        name: $tStore('variants.compositions.inForm.name'),
+        description: $tStore('variants.compositions.inForm.description'),
+        useWhen: $tStore('variants.compositions.inForm.use'),
+        code: `<form class="flex flex-col gap-4 w-full max-w-md" aria-label="Formulário de feedback" onsubmit={handleSubmit}>\n  <div class="flex flex-col gap-1.5">\n    <Label for="ta-form">Feedback</Label>\n    <Textarea id="ta-form" name="feedback" bind:value maxlength={500} class="resize-y min-h-[120px]" />\n    <div class="flex justify-end text-xs text-muted-foreground">\n      <span class="tabular-nums shrink-0" aria-live="polite">{value.length}/500</span>\n    </div>\n  </div>\n  <Button type="submit">Enviar</Button>\n  {#if submitted}<p aria-live="polite" class="text-xs text-success">Obrigado pelo feedback!</p>{/if}\n</form>`,
+        preview: compInForm,
+      },
+    ]}
+  />
+
+  {#snippet compWithLabel()}
+    <div class="flex flex-col gap-1.5 w-full max-w-md">
+      <Label for="ta-label">Descrição</Label>
+      <Textarea id="ta-label" class="resize-y min-h-[120px]" placeholder="ex: Descreva o produto..." />
+    </div>
+  {/snippet}
+  {#snippet compWithHint()}
+    <div class="flex flex-col gap-1.5 w-full max-w-md">
+      <Label for="ta-hint">Descrição</Label>
+      <Textarea id="ta-hint" class="resize-y min-h-[120px]" placeholder="ex: Descreva o produto..." />
+      <p class="text-xs text-muted-foreground">Descreva o produto com clareza, destacando os principais atributos.</p>
+    </div>
+  {/snippet}
+  {#snippet compWithCounter()}
+    <div class="flex flex-col gap-1.5 w-full max-w-md">
+      <Label for="ta-counter">Descrição</Label>
+      <Textarea
+        id="ta-counter"
+        bind:value={compCounterValue}
+        maxlength={compMax}
+        class="resize-y min-h-[120px]"
+        placeholder="ex: Descreva o produto..."
+      />
+      <div class="flex justify-between text-xs text-muted-foreground">
+        <span>Descreva com clareza.</span>
+        <span class="tabular-nums shrink-0" aria-live="polite" aria-label={compCounterAriaLabel}>
+          {compCounterValue.length}/{compMax}
+        </span>
+      </div>
+    </div>
+  {/snippet}
+  {#snippet compWithError()}
+    <div class="flex flex-col gap-1.5 w-full max-w-md">
+      <Label for="ta-error">Descrição</Label>
+      <Textarea
+        id="ta-error"
+        aria-invalid="true"
+        aria-describedby="ta-error-error"
+        class="resize-y min-h-[120px]"
+        placeholder="ex: Descreva o produto..."
+      />
+      <p id="ta-error-error" class="text-xs text-destructive">
+        A descrição é obrigatória e deve ter pelo menos 20 caracteres.
+      </p>
+    </div>
+  {/snippet}
+  {#snippet compInForm()}
+    <form
+      class="flex flex-col gap-4 w-full max-w-md"
+      aria-label="Formulário de feedback"
+      onsubmit={handleCompFormSubmit}
+    >
+      <div class="flex flex-col gap-1.5">
+        <Label for="ta-form">Feedback</Label>
+        <Textarea
+          id="ta-form"
+          name="feedback"
+          bind:value={compFormValue}
+          maxlength={compMax}
+          class="resize-y min-h-[120px]"
+          placeholder="Conte sua experiência..."
+        />
+        <div class="flex justify-end text-xs text-muted-foreground">
+          <span class="tabular-nums shrink-0" aria-live="polite" aria-label={compFormAriaLabel}>
+            {compFormValue.length}/{compMax}
+          </span>
+        </div>
+      </div>
+      <Button type="submit">Enviar</Button>
+      {#if compFormSubmitted}
+        <p aria-live="polite" class="text-xs text-success">Obrigado pelo feedback!</p>
+      {/if}
+    </form>
   {/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->

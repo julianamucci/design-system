@@ -1,0 +1,17 @@
+/*
+ * ─── nds-collapsible ────────────────────────────────────────────────────────
+ * Disclosure primitivo — trigger + content que alterna visibilidade.
+ * Sem visual próprio: o consumidor estiliza trigger e content como quiser.
+ *
+ * Estrutura:
+ *   <div class="nds-collapsible" data-slot="collapsible">
+ *     <button data-slot="collapsible-trigger" data-state="open|closed"
+ *             aria-controls="..." aria-expanded="true|false">…</button>
+ *     <div data-slot="collapsible-content" data-state="open|closed"
+ *          aria-hidden="true|false" hidden>…</div>
+ *   </div>
+ */
+
+.nds-collapsible {
+  width: 100%;
+}

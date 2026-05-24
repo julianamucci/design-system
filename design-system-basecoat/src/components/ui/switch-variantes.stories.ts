@@ -24,12 +24,13 @@ type Story = StoryObj;
 
 function switchRow(opts: { id: string; labelText: string; checked?: boolean }): HTMLElement {
   const row = document.createElement('div');
-  row.className = 'flex items-center space-x-2';
+  row.className = 'nds-cluster';
+  row.dataset.spacing = 'sm';
   const sw = createSwitch({ id: opts.id, checked: opts.checked ?? false });
   const label = document.createElement('label');
   label.htmlFor = opts.id;
   label.textContent = opts.labelText;
-  label.className = 'text-sm font-medium leading-none cursor-pointer';
+  label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
   label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
   row.append(sw, label);
   return row;
@@ -68,22 +69,26 @@ export const Default: Story = {
 export const WithDescription: Story = {
   render: () => {
     const panel = document.createElement('div');
-    panel.className = 'flex items-center justify-between rounded-lg border p-3 w-80';
+    panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';
+    panel.dataset.justify = 'between';
+    panel.style.width = '20rem';
 
     const id = 'v-with-desc-switch';
     const sw = createSwitch({ id, checked: false });
 
     const textGroup = document.createElement('div');
-    textGroup.className = 'flex flex-col gap-0.5 pr-3';
+    textGroup.className = 'nds-stack';
+    textGroup.dataset.spacing = 'xs';
+    textGroup.style.paddingRight = '0.75rem';
 
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Emails de marketing';
-    label.className = 'text-sm font-medium leading-none cursor-pointer';
+    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
     label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     const desc = document.createElement('p');
-    desc.className = 'text-sm text-muted-foreground';
+    desc.className = 'nds-text-body nds-text-muted-foreground';
     desc.textContent = 'Receba novidades e promoções da plataforma.';
 
     textGroup.append(label, desc);
@@ -114,7 +119,8 @@ export const WithDescription: Story = {
 export const Sm: Story = {
   render: () => {
     const row = document.createElement('div');
-    row.className = 'flex items-center space-x-2';
+    row.className = 'nds-cluster';
+  row.dataset.spacing = 'sm';
 
     const id = 'v-sm-switch';
     // Factory Basecoat não expõe prop `size` — replicamos via class
@@ -128,7 +134,7 @@ export const Sm: Story = {
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Tamanho compacto';
-    label.className = 'text-xs font-medium leading-none cursor-pointer';
+    label.className = 'nds-text-caption nds-font-medium nds-leading-none nds-cursor-pointer';
     label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     row.append(sw, label);

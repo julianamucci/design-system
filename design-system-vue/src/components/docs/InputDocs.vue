@@ -17,6 +17,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -82,6 +83,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -169,6 +171,58 @@ const variantItems = computed(() => [
   { name: 'password', description: tContent('variants.types.password'), code: codePassword  },
   { name: 'number',   description: tContent('variants.types.number'),   code: codeNumber    },
   { name: 'file',     description: tContent('variants.types.file'),     code: codeFile      },
+]);
+
+const codeCompWithLabel = `<div class="flex flex-col gap-1.5 w-full max-w-sm">
+  <Label for="input-nome">Nome completo</Label>
+  <Input id="input-nome" type="text" placeholder="ex: João da Silva" />
+</div>`;
+
+const codeCompWithHint = `<div class="flex flex-col gap-1.5 w-full max-w-sm">
+  <Label for="input-email">Email</Label>
+  <Input id="input-email" type="email" placeholder="ex: joao@empresa.com" />
+  <p class="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>
+</div>`;
+
+const codeCompWithError = `<div class="flex flex-col gap-1.5 w-full max-w-sm">
+  <Label for="input-email-error">Email</Label>
+  <Input id="input-email-error" type="email" placeholder="ex: joao@empresa.com" aria-invalid="true" aria-describedby="input-email-error-error" />
+  <p class="text-xs text-destructive" id="input-email-error-error">Email inválido. Use o formato nome@dominio.com</p>
+</div>`;
+
+const codeCompWithPrefix = `<div class="flex flex-col gap-1.5 w-full max-w-sm">
+  <Label for="input-url">URL do site</Label>
+  <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">
+    <span class="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>
+    <Input class="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" type="url" id="input-url" placeholder="meusite.com" />
+  </div>
+</div>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withLabel.name'),
+    description: tContent('variants.compositions.withLabel.description'),
+    useWhen: tContent('variants.compositions.withLabel.use'),
+    code: codeCompWithLabel,
+  },
+  {
+    name: tContent('variants.compositions.withHint.name'),
+    description: tContent('variants.compositions.withHint.description'),
+    useWhen: tContent('variants.compositions.withHint.use'),
+    code: codeCompWithHint,
+  },
+  {
+    name: tContent('variants.compositions.withError.name'),
+    description: tContent('variants.compositions.withError.description'),
+    useWhen: tContent('variants.compositions.withError.use'),
+    code: codeCompWithError,
+  },
+  {
+    name: tContent('variants.compositions.withPrefix.name'),
+    description: tContent('variants.compositions.withPrefix.description'),
+    useWhen: tContent('variants.compositions.withPrefix.use'),
+    code: codeCompWithPrefix,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -453,6 +507,44 @@ const visualTestItems = computed(() => [
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="input"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+          <Label for="input-nome">Nome completo</Label>
+          <Input id="input-nome" type="text" placeholder="ex: João da Silva" />
+        </div>
+      </template>
+      <template #variant-preview-1>
+        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+          <Label for="input-email">Email</Label>
+          <Input id="input-email" type="email" placeholder="ex: joao@empresa.com" />
+          <p class="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+          <Label for="input-email-error">Email</Label>
+          <Input id="input-email-error" type="email" placeholder="ex: joao@empresa.com" aria-invalid="true" aria-describedby="input-email-error-error" />
+          <p class="text-xs text-destructive" id="input-email-error-error">Email inválido. Use o formato nome@dominio.com</p>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+          <Label for="input-url">URL do site</Label>
+          <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">
+            <span class="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>
+            <Input class="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" type="url" id="input-url" placeholder="meusite.com" />
+          </div>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ───────────────────────────────────────────────── -->
     <DocsStates

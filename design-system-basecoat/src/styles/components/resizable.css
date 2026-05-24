@@ -1,0 +1,90 @@
+/*
+ * ─── nds-resizable ──────────────────────────────────────────────────────────
+ * Containers redimensionáveis com handles arrastáveis entre painéis.
+ *
+ *   <div class="nds-resizable" data-direction="horizontal|vertical">
+ *     <div class="nds-resizable-panel">…</div>
+ *     <div class="nds-resizable-handle" role="separator" tabindex="0">
+ *       <div class="nds-resizable-grip"><svg>…</svg></div>
+ *     </div>
+ *     <div class="nds-resizable-panel">…</div>
+ *   </div>
+ *
+ * Tokens: --border, --ring, --background, --radius-sm
+ */
+
+.nds-resizable {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.nds-resizable[data-direction="horizontal"] { flex-direction: row;    }
+.nds-resizable[data-direction="vertical"]   { flex-direction: column; }
+
+/* ── Panel ───────────────────────────────────────────────────────────────── */
+.nds-resizable-panel {
+  flex-shrink: 0;
+  overflow: auto;
+}
+
+/* ── Handle (linha arrastável) ───────────────────────────────────────────── */
+.nds-resizable-handle {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  background-color: hsl(var(--border));
+  outline: 0;
+  transition: background-color 150ms;
+}
+
+.nds-resizable[data-direction="horizontal"] > .nds-resizable-handle {
+  width: 1px;
+  cursor: col-resize;
+}
+
+.nds-resizable[data-direction="vertical"] > .nds-resizable-handle {
+  height: 1px;
+  cursor: row-resize;
+}
+
+.nds-resizable-handle:hover {
+  background-color: hsl(var(--ring));
+}
+
+.nds-resizable-handle:focus-visible {
+  box-shadow: 0 0 0 1px hsl(var(--ring));
+}
+
+/* ── Grip (alça com pontos) ──────────────────────────────────────────────── */
+.nds-resizable-grip {
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.75rem;                                  /* 12px */
+  height: var(--spacing-4);                        /* 16px */
+
+  background-color: hsl(var(--border));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.25rem;
+}
+
+.nds-resizable[data-direction="vertical"] > .nds-resizable-handle > .nds-resizable-grip {
+  transform: rotate(90deg);
+}
+
+.nds-resizable-grip > svg {
+  width: 0.625rem;                                 /* 10px */
+  height: 0.625rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-resizable-handle {
+    transition: none;
+  }
+}

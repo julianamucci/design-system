@@ -20,7 +20,11 @@ export function DocsPageLayout({ navGroups, activeSection, header, children, com
   }, [componentSlug]);
 
   return (
-    <div ref={rootRef} className="ds-docs p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+    // sb-unstyled é a escape hatch oficial do Storybook (@storybook/blocks):
+    // todas as regras prose emotion (.css-XXXX :where(p|h1|table|...)) usam
+    // :not(.sb-unstyled, .sb-unstyled <tag>), então marcar o root com essa
+    // classe desliga 100% do prose-style injetado pelo emotion na subárvore.
+    <div ref={rootRef} className="sb-unstyled ds-docs p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
       {header}
 
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">

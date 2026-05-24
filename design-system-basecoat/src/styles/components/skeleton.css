@@ -1,0 +1,29 @@
+/*
+ * ─── nds-skeleton ────────────────────────────────────────────────────────────
+ * Placeholder animado durante carregamento de dados.
+ *
+ *   <div class="nds-skeleton" style="height: 16px; width: 200px"></div>
+ *
+ * Default sem dimensão própria — o consumidor define width/height via style
+ * ou utilitárias. Pulsa via opacity, respeita prefers-reduced-motion.
+ *
+ * Tokens: --primary (cor de fundo soft), --radius
+ */
+
+.nds-skeleton {
+  display: block;
+  background-color: hsl(var(--primary) / 0.1);
+  border-radius: var(--radius, 0.5rem);
+  animation: nds-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes nds-skeleton-pulse {
+  0%, 100% { opacity: 1;   }
+  50%      { opacity: 0.5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-skeleton {
+    animation: none;
+  }
+}

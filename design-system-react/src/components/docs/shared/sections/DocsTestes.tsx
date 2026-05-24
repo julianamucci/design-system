@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -134,7 +133,7 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
                 <TableBody>
                   {visual.items.map((item, i) => (
                     <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                      <TableCell className="p-3 font-mono text-xs">{item.story}</TableCell>
+                      <TableCell className="p-3 text-sm">{item.story}</TableCell>
                       <TableCell className="p-3"><PriorityBadge priority={item.priority} /></TableCell>
                     </TableRow>
                   ))}

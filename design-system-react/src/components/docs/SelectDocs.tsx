@@ -25,6 +25,7 @@ import { DocsWhenToUse } from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont } from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport } from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants } from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates } from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps } from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens } from "@/components/docs/shared/sections/DocsTokens";
@@ -63,6 +64,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao", label: t("nav.import") },
       { id: "variantes", label: t("nav.variants") },
+      { id: "composicoes", label: t("nav.compositions") },
       { id: "estados", label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens", label: t("nav.tokens") },
@@ -253,7 +255,7 @@ interface SelectContentProps {
             <p className="text-xs font-medium text-muted-foreground">
               {tContent("variants.items.default")}
             </p>
-            <Select value={stateValue} onValueChange={setStateValue}>
+            <Select value={stateValue} onValueChange={(v) => setStateValue(v ?? "")}>
               <SelectTrigger aria-label={tContent("demonstration.labels.stateLabel")}>
                 <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
               </SelectTrigger>
@@ -274,7 +276,7 @@ interface SelectContentProps {
             <p className="text-xs font-medium text-muted-foreground">
               {tContent("variants.items.withGroups")}
             </p>
-            <Select value={regionValue} onValueChange={setRegionValue}>
+            <Select value={regionValue} onValueChange={(v) => setRegionValue(v ?? "")}>
               <SelectTrigger aria-label={tContent("demonstration.labels.regionLabel")}>
                 <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
               </SelectTrigger>
@@ -303,7 +305,7 @@ interface SelectContentProps {
             <p className="text-xs font-medium text-muted-foreground">
               size="sm"
             </p>
-            <Select value={smValue} onValueChange={setSmValue}>
+            <Select value={smValue} onValueChange={(v) => setSmValue(v ?? "")}>
               <SelectTrigger size="sm" aria-label={tContent("demonstration.labels.stateLabel")}>
                 <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
               </SelectTrigger>
@@ -571,6 +573,173 @@ interface SelectContentProps {
                   </SelectContent>
                 </Select>
               </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="select"
+        items={[
+          {
+            name: tContent("variants.compositions.states.name"),
+            description: tContent("variants.compositions.states.description"),
+            useWhen: tContent("variants.compositions.states.use"),
+            code: `<div className="flex flex-col gap-2 w-80">
+  <label htmlFor="state" className="text-sm font-semibold">Estado</label>
+  <Select>
+    <SelectTrigger id="state" aria-label="Estado">
+      <SelectValue placeholder="Selecione..." />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="sp">São Paulo</SelectItem>
+      <SelectItem value="rj">Rio de Janeiro</SelectItem>
+      <SelectItem value="mg">Minas Gerais</SelectItem>
+      <SelectItem value="rs">Rio Grande do Sul</SelectItem>
+    </SelectContent>
+  </Select>
+</div>`,
+            preview: (
+              <div
+                className="flex flex-col gap-2 w-80"
+                style={{ contain: "layout", minHeight: 100, position: "relative" }}
+              >
+                <label htmlFor="comp-state" className="text-sm font-semibold">
+                  {tContent("demonstration.labels.stateLabel")}
+                </label>
+                <Select>
+                  <SelectTrigger id="comp-state" aria-label={tContent("demonstration.labels.stateLabel")}>
+                    <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sp">{tContent("demonstration.labels.sp")}</SelectItem>
+                    <SelectItem value="rj">{tContent("demonstration.labels.rj")}</SelectItem>
+                    <SelectItem value="mg">{tContent("demonstration.labels.mg")}</SelectItem>
+                    <SelectItem value="rs">{tContent("demonstration.labels.rs")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.regionGroups.name"),
+            description: tContent("variants.compositions.regionGroups.description"),
+            useWhen: tContent("variants.compositions.regionGroups.use"),
+            code: `<div className="flex flex-col gap-2 w-80">
+  <label htmlFor="region" className="text-sm font-semibold">Região</label>
+  <Select>
+    <SelectTrigger id="region" aria-label="Região">
+      <SelectValue placeholder="Selecione..." />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>Sudeste</SelectLabel>
+        <SelectItem value="sp">São Paulo</SelectItem>
+        <SelectItem value="rj">Rio de Janeiro</SelectItem>
+        <SelectItem value="mg">Minas Gerais</SelectItem>
+        <SelectItem value="es">Espírito Santo</SelectItem>
+      </SelectGroup>
+      <SelectGroup>
+        <SelectLabel>Sul</SelectLabel>
+        <SelectItem value="rs">Rio Grande do Sul</SelectItem>
+        <SelectItem value="sc">Santa Catarina</SelectItem>
+        <SelectItem value="pr">Paraná</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+</div>`,
+            preview: (
+              <div
+                className="flex flex-col gap-2 w-80"
+                style={{ contain: "layout", minHeight: 100, position: "relative" }}
+              >
+                <label htmlFor="comp-region" className="text-sm font-semibold">
+                  {tContent("demonstration.labels.regionLabel")}
+                </label>
+                <Select>
+                  <SelectTrigger id="comp-region" aria-label={tContent("demonstration.labels.regionLabel")}>
+                    <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>{tContent("demonstration.labels.groupSoutheast")}</SelectLabel>
+                      <SelectItem value="sp">{tContent("demonstration.labels.sp")}</SelectItem>
+                      <SelectItem value="rj">{tContent("demonstration.labels.rj")}</SelectItem>
+                      <SelectItem value="mg">{tContent("demonstration.labels.mg")}</SelectItem>
+                      <SelectItem value="es">{tContent("demonstration.labels.es")}</SelectItem>
+                    </SelectGroup>
+                    <SelectGroup>
+                      <SelectLabel>{tContent("demonstration.labels.groupSouth")}</SelectLabel>
+                      <SelectItem value="rs">{tContent("demonstration.labels.rs")}</SelectItem>
+                      <SelectItem value="sc">{tContent("demonstration.labels.sc")}</SelectItem>
+                      <SelectItem value="pr">{tContent("demonstration.labels.pr")}</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.inForm.name"),
+            description: tContent("variants.compositions.inForm.description"),
+            useWhen: tContent("variants.compositions.inForm.use"),
+            code: `<form
+  className="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+  onSubmit={(e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    console.log("Estado:", data.get("state"));
+  }}
+>
+  <div className="flex flex-col gap-2">
+    <label htmlFor="form-state" className="text-sm font-semibold">Estado</label>
+    <Select name="state" required>
+      <SelectTrigger id="form-state" aria-label="Estado">
+        <SelectValue placeholder="Selecione..." />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="sp">São Paulo</SelectItem>
+        <SelectItem value="rj">Rio de Janeiro</SelectItem>
+        <SelectItem value="mg">Minas Gerais</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+  <button type="submit" className="self-end">Continuar</button>
+</form>`,
+            preview: (
+              <form
+                className="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+                style={{ contain: "layout", minHeight: 180, position: "relative" }}
+                onSubmit={(e) => e.preventDefault()}
+              >
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="comp-form-state" className="text-sm font-semibold">
+                    {tContent("demonstration.labels.stateLabel")}
+                  </label>
+                  <Select name="state">
+                    <SelectTrigger
+                      id="comp-form-state"
+                      aria-label={tContent("demonstration.labels.stateLabel")}
+                    >
+                      <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sp">{tContent("demonstration.labels.sp")}</SelectItem>
+                      <SelectItem value="rj">{tContent("demonstration.labels.rj")}</SelectItem>
+                      <SelectItem value="mg">{tContent("demonstration.labels.mg")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <button
+                  type="submit"
+                  className="self-end inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-3 py-1.5 text-sm font-medium"
+                >
+                  {locale === "en" ? "Continue" : locale === "es" ? "Continuar" : "Continuar"}
+                </button>
+              </form>
             ),
           },
         ]}

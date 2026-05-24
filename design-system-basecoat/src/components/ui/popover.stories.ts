@@ -59,17 +59,19 @@ type Story = StoryObj<PopoverArgs>;
 
 function buildContent(args: PopoverArgs): HTMLElement {
   const content = document.createElement('div');
-  content.className = 'space-y-3';
+  content.className = 'nds-stack';
+  content.dataset.spacing = 'sm';
 
   const header = document.createElement('div');
-  header.className = 'space-y-1';
+  header.className = 'nds-stack';
+  header.dataset.spacing = 'xs';
 
   const title = document.createElement('h4');
-  title.className = 'text-sm font-medium leading-none';
+  title.className = 'nds-text-body nds-font-medium nds-leading-none';
   title.textContent = args.title;
 
   const desc = document.createElement('p');
-  desc.className = 'text-xs text-muted-foreground';
+  desc.className = 'nds-text-caption nds-text-muted-foreground';
   desc.textContent = args.description;
 
   header.append(title, desc);
@@ -90,7 +92,9 @@ export const Playground: Story = {
   render: (args) => {
     const container = document.createElement('div');
     container.style.contain = 'layout';
-    container.className = 'w-full min-h-[260px] flex items-center justify-center';
+    container.className = 'nds-cluster nds-w-full';
+    container.dataset.justify = 'center';
+    container.style.minHeight = '260px';
 
     const trigger = createButton({ variant: 'outline', label: args.triggerLabel });
     const el = createPopover({

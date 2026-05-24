@@ -27,7 +27,7 @@ function createIcon(nodes: LucideIconNode[], extraClass = ''): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', `h-4 w-4 shrink-0${extraClass ? ' ' + extraClass : ''}`);
+  svg.setAttribute('class', `nds-icon-sm nds-shrink-0${extraClass ? ' ' + extraClass : ''}`);
   for (const [tag, attrs] of nodes) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
@@ -38,7 +38,8 @@ function createIcon(nodes: LucideIconNode[], extraClass = ''): SVGSVGElement {
 
 function makeTriggerWithIcon(nodes: LucideIconNode[], label: string): HTMLElement {
   const span = document.createElement('span');
-  span.className = 'flex items-center gap-2';
+  span.className = 'nds-cluster';
+  span.dataset.spacing = 'sm';
   span.appendChild(createIcon(nodes));
   const text = document.createElement('span');
   text.textContent = label;
@@ -48,7 +49,8 @@ function makeTriggerWithIcon(nodes: LucideIconNode[], label: string): HTMLElemen
 
 function makeContent(items: string[]): HTMLElement {
   const div = document.createElement('div');
-  div.className = 'rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2';
+  div.className = 'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
+  div.dataset.spacing = 'sm';
   for (const text of items) {
     const p = document.createElement('p');
     p.textContent = text;
@@ -63,13 +65,15 @@ export const ComBotaoCustomizado: Story = {
   render: () => {
     const btn = document.createElement('button');
     btn.className =
-      'inline-flex items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+      'nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';
+    btn.dataset.spacing = 'sm';
+    btn.style.display = 'inline-flex';
     btn.textContent = 'Exibir opções avançadas';
 
     return createCollapsible({
       trigger: btn,
       content: makeContent(['Opção avançada 1', 'Opção avançada 2', 'Opção avançada 3']),
-      class: 'w-full max-w-sm',
+      class: 'nds-w-full nds-max-w-sm',
     });
   },
   parameters: {
@@ -106,7 +110,7 @@ export const ComIconeNoTrigger: Story = {
     return createCollapsible({
       trigger: triggerEl,
       content: makeContent(['Filtro por categoria', 'Filtro por data', 'Filtro por status']),
-      class: 'w-full max-w-sm',
+      class: 'nds-w-full nds-max-w-sm',
     });
   },
   parameters: {
@@ -129,11 +133,13 @@ export const ComChevronRotativo: Story = {
   render: () => {
     const chevron = createIcon(
       ChevronDown as unknown as LucideIconNode[],
-      'transition-transform duration-200 [[data-state=open]_&]:rotate-180',
+      'nds-collapsible-chevron',
     );
+    chevron.style.transition = 'transform 200ms';
 
     const triggerEl = document.createElement('span');
-    triggerEl.className = 'flex items-center justify-between w-full';
+    triggerEl.className = 'nds-cluster nds-w-full';
+    triggerEl.dataset.justify = 'between';
     const label = document.createElement('span');
     label.textContent = 'Configurações avançadas';
     triggerEl.appendChild(label);
@@ -141,22 +147,25 @@ export const ComChevronRotativo: Story = {
 
     const btn = document.createElement('button');
     btn.className =
-      'flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+      'nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';
+    btn.dataset.justify = 'between';
     btn.appendChild(triggerEl);
 
     const content = document.createElement('div');
-    content.className = 'rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2';
+    content.className = 'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
+    content.dataset.spacing = 'sm';
     [
       { key: 'Notificações', val: 'Ativadas' },
       { key: 'Privacidade', val: 'Modo estrito' },
     ].forEach(({ key, val }) => {
       const row = document.createElement('div');
-      row.className = 'flex justify-between';
+      row.className = 'nds-cluster';
+      row.dataset.justify = 'between';
       const k = document.createElement('span');
-      k.className = 'text-muted-foreground';
+      k.className = 'nds-text-muted-foreground';
       k.textContent = key;
       const v = document.createElement('span');
-      v.className = 'font-medium';
+      v.className = 'nds-font-medium';
       v.textContent = val;
       row.appendChild(k);
       row.appendChild(v);
@@ -166,7 +175,7 @@ export const ComChevronRotativo: Story = {
     return createCollapsible({
       trigger: btn,
       content,
-      class: 'w-full max-w-sm',
+      class: 'nds-w-full nds-max-w-sm',
     });
   },
   parameters: {
@@ -202,10 +211,11 @@ export const ComIconeSettings: Story = {
     );
 
     const content = document.createElement('div');
-    content.className = 'rounded-md border border-border bg-muted/50 p-4 text-sm space-y-3 mt-2';
+    content.className = 'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
+    content.dataset.spacing = 'sm';
 
     const note = document.createElement('p');
-    note.className = 'text-muted-foreground text-xs';
+    note.className = 'nds-text-muted-foreground nds-text-caption';
     note.textContent = 'Altere as configurações abaixo com cuidado. As mudanças são aplicadas imediatamente.';
     content.appendChild(note);
 
@@ -215,10 +225,13 @@ export const ComIconeSettings: Story = {
       'Exportar logs automaticamente',
     ].forEach((item) => {
       const row = document.createElement('label');
-      row.className = 'flex items-center gap-2 cursor-pointer';
+      row.className = 'nds-cluster nds-cursor-pointer';
+      row.dataset.spacing = 'sm';
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.className = 'h-4 w-4 rounded border-border';
+      checkbox.className = 'nds-rounded nds-border-default';
+      checkbox.style.height = '1rem';
+      checkbox.style.width = '1rem';
       const text = document.createElement('span');
       text.textContent = item;
       row.appendChild(checkbox);
@@ -229,7 +242,7 @@ export const ComIconeSettings: Story = {
     return createCollapsible({
       trigger: triggerEl,
       content,
-      class: 'w-full max-w-sm',
+      class: 'nds-w-full nds-max-w-sm',
     });
   },
   parameters: {

@@ -15,6 +15,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -102,6 +103,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')    },
       { id: 'variantes',    label: tNav('nav.variants')  },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')    },
       { id: 'propriedades', label: tNav('nav.props')     },
       { id: 'tokens',       label: tNav('nav.tokens')    },
@@ -192,6 +194,64 @@ const variantItems = computed(() => [
   { name: stripHtml(tContent('variants.items.default')),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
   { name: stripHtml(tContent('variants.items.outline')),   description: stripHtml(tContent('variants.styles.outline')),   code: codeOutline   },
   { name: stripHtml(tContent('variants.items.withLabel')), description: stripHtml(tContent('variants.styles.withLabel')), code: codeWithLabel },
+]);
+
+const codeToolbar = `<div role="group" aria-label="Formatação de texto" class="flex items-center gap-1 rounded-md border border-input p-1">
+  <Toggle aria-label="Negrito" :model-value="true"><Bold class="h-4 w-4" aria-hidden="true" /></Toggle>
+  <Toggle aria-label="Itálico"><Italic class="h-4 w-4" aria-hidden="true" /></Toggle>
+  <Toggle aria-label="Sublinhado"><Underline class="h-4 w-4" aria-hidden="true" /></Toggle>
+</div>`;
+
+const codeFilterWithLabel = `<Toggle variant="outline">
+  <Eye class="h-4 w-4" aria-hidden="true" />
+  Mostrar ocultos
+</Toggle>`;
+
+const codeSizes = `<div class="flex items-center gap-3">
+  <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold class="h-4 w-4" aria-hidden="true" /></Toggle>
+  <Toggle variant="outline" aria-label="Negrito (default)"><Bold class="h-4 w-4" aria-hidden="true" /></Toggle>
+  <Toggle variant="outline" size="lg" aria-label="Negrito (lg)"><Bold class="h-4 w-4" aria-hidden="true" /></Toggle>
+</div>`;
+
+const codeFilterList = `<div class="flex flex-col gap-2 w-72">
+  <span class="text-sm font-medium">Filtros de exibição</span>
+  <div class="flex flex-wrap gap-2">
+    <Toggle variant="outline">
+      <Eye class="h-4 w-4" aria-hidden="true" />
+      Mostrar ocultos
+    </Toggle>
+    <Toggle variant="outline" :model-value="true">
+      <List class="h-4 w-4" aria-hidden="true" />
+      Visão compacta
+    </Toggle>
+  </div>
+</div>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.toolbar.name'),
+    description: tContent('variants.compositions.toolbar.description'),
+    useWhen: tContent('variants.compositions.toolbar.use'),
+    code: codeToolbar,
+  },
+  {
+    name: tContent('variants.compositions.filterWithLabel.name'),
+    description: tContent('variants.compositions.filterWithLabel.description'),
+    useWhen: tContent('variants.compositions.filterWithLabel.use'),
+    code: codeFilterWithLabel,
+  },
+  {
+    name: tContent('variants.compositions.sizes.name'),
+    description: tContent('variants.compositions.sizes.description'),
+    useWhen: tContent('variants.compositions.sizes.use'),
+    code: codeSizes,
+  },
+  {
+    name: tContent('variants.compositions.filterList.name'),
+    description: tContent('variants.compositions.filterList.description'),
+    useWhen: tContent('variants.compositions.filterList.use'),
+    code: codeFilterList,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -515,6 +575,62 @@ const visualTestItems = computed(() => [
         </Toggle>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="toggle"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div role="group" aria-label="Formatação de texto" class="flex items-center gap-1 rounded-md border border-input p-1">
+          <Toggle aria-label="Negrito" :model-value="true">
+            <Bold class="h-4 w-4" aria-hidden="true" />
+          </Toggle>
+          <Toggle aria-label="Itálico">
+            <Italic class="h-4 w-4" aria-hidden="true" />
+          </Toggle>
+          <Toggle aria-label="Sublinhado">
+            <Underline class="h-4 w-4" aria-hidden="true" />
+          </Toggle>
+        </div>
+      </template>
+      <template #variant-preview-1>
+        <Toggle variant="outline">
+          <Eye class="h-4 w-4" aria-hidden="true" />
+          Mostrar ocultos
+        </Toggle>
+      </template>
+      <template #variant-preview-2>
+        <div class="flex items-center gap-3">
+          <Toggle variant="outline" size="sm" aria-label="Negrito (sm)">
+            <Bold class="h-4 w-4" aria-hidden="true" />
+          </Toggle>
+          <Toggle variant="outline" aria-label="Negrito (default)">
+            <Bold class="h-4 w-4" aria-hidden="true" />
+          </Toggle>
+          <Toggle variant="outline" size="lg" aria-label="Negrito (lg)">
+            <Bold class="h-4 w-4" aria-hidden="true" />
+          </Toggle>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div class="flex flex-col gap-2 w-72">
+          <span class="text-sm font-medium">Filtros de exibição</span>
+          <div class="flex flex-wrap gap-2">
+            <Toggle variant="outline">
+              <Eye class="h-4 w-4" aria-hidden="true" />
+              Mostrar ocultos
+            </Toggle>
+            <Toggle variant="outline" :model-value="true">
+              <List class="h-4 w-4" aria-hidden="true" />
+              Visão compacta
+            </Toggle>
+          </div>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────────── -->
     <DocsStates

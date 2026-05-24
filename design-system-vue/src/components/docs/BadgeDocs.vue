@@ -5,7 +5,7 @@ import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Badge } from '@/components/ui/badge';
-import { Check } from 'lucide-vue-next';
+import { Check, Bell } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import badgeTranslations from '@shared/content/badge/translations.json';
@@ -17,6 +17,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -85,6 +86,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -164,6 +166,33 @@ const variantItems = computed(() => [
   { name: 'secondary',   description: stripHtml(tContent('variants.items.secondary')),   code: codeSecondary   },
   { name: 'destructive', description: stripHtml(tContent('variants.items.destructive')), code: codeDestructive },
   { name: 'outline',     description: stripHtml(tContent('variants.items.outline')),     code: codeOutline     },
+]);
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withIcon.name'),
+    description: tContent('variants.compositions.withIcon.description'),
+    useWhen: tContent('variants.compositions.withIcon.use'),
+    code: `<Badge>\n  <Check class="h-3 w-3" aria-hidden="true" />\n  Ativo\n</Badge>`,
+  },
+  {
+    name: tContent('variants.compositions.count.name'),
+    description: tContent('variants.compositions.count.description'),
+    useWhen: tContent('variants.compositions.count.use'),
+    code: `<span role="status" aria-label="12 notificações não lidas" class="inline-flex items-center gap-2">\n  <Bell class="h-5 w-5" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
+  },
+  {
+    name: tContent('variants.compositions.asLink.name'),
+    description: tContent('variants.compositions.asLink.description'),
+    useWhen: tContent('variants.compositions.asLink.use'),
+    code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" class="inline-flex">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
+  },
+  {
+    name: tContent('variants.compositions.asTrigger.name'),
+    description: tContent('variants.compositions.asTrigger.description'),
+    useWhen: tContent('variants.compositions.asTrigger.use'),
+    code: `<button type="button" aria-label="Filtrar por React" class="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md">\n  <Badge variant="outline">React</Badge>\n</button>`,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -402,6 +431,37 @@ const visualTestItems = computed(() => [
         <Badge variant="outline">{{ tContent('demonstration.labels.outlineLabel') }}</Badge>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="badge"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Badge>
+          <Check class="h-3 w-3" aria-hidden="true" />
+          Ativo
+        </Badge>
+      </template>
+      <template #variant-preview-1>
+        <span role="status" aria-label="12 notificações não lidas" class="inline-flex items-center gap-2">
+          <Bell class="h-5 w-5" aria-hidden="true" />
+          <Badge variant="destructive">12</Badge>
+        </span>
+      </template>
+      <template #variant-preview-2>
+        <a href="#design" aria-label="Ver todos os itens da categoria Design" class="inline-flex">
+          <Badge variant="secondary">Design</Badge>
+        </a>
+      </template>
+      <template #variant-preview-3>
+        <button type="button" aria-label="Filtrar por React" class="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md">
+          <Badge variant="outline">React</Badge>
+        </button>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Configurações (States) ──────────────────────────────────── -->
     <DocsStates

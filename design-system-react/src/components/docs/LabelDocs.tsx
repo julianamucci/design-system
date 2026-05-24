@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -121,12 +120,6 @@ export function LabelDocs() {
 
   const codeDefault = `<Label htmlFor="nome">Nome completo</Label>
 <Input id="nome" placeholder="ex: João da Silva" />`;
-
-  const codeRequired = `<Label htmlFor="email">
-  Email profissional
-  <span className="text-destructive" aria-hidden="true">*</span>
-</Label>
-<Input id="email" type="email" aria-required="true" />`;
 
   const codeCustomization = `/* Personalização via className */
 <Label htmlFor="field" className="text-muted-foreground">

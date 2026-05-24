@@ -9,11 +9,11 @@
     "strict": true,
     "skipLibCheck": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "baseUrl": ".",
+    "jsx": "react-jsx",
     "paths": {
       "@/*": ["./src/*"],
       "@shared/*": ["../docs/shared/*"]
     }
   },
-  "include": ["src/**/*.ts", ".storybook/**/*.ts", "vite.config.ts", "../scripts/**/*"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", ".storybook/**/*.ts", "vite.config.ts", "../scripts/**/*"]
 }

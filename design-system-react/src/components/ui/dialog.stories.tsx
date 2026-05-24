@@ -52,7 +52,7 @@ export const Playground: Story = {
       <Dialog
         {...args}
         onOpenChange={(open) => {
-          args.onOpenChange?.(open);
+          args.onOpenChange?.(open, undefined as never);
           if (open) {
             track("dialog_open", {
               component: "dialog",

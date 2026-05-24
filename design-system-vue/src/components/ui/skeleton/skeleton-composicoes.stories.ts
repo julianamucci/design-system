@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { Skeleton } from './index';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
-const meta = {
+const meta: Meta<any> = {
   title: 'UI/Skeleton/Composições',
   component: Skeleton,
   parameters: {
@@ -17,7 +17,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Skeleton>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

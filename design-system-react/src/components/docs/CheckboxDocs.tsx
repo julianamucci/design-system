@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -15,6 +16,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -53,6 +55,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -75,6 +78,52 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
+
+// ─── SelectAll preview (parent + children pattern) ───────────────────────────
+
+function SelectAllPreview() {
+  const [a, setA] = useState(false);
+  const [b, setB] = useState(false);
+  const [c, setC] = useState(false);
+  const allChecked = a && b && c;
+  const toggleAll = (v: boolean) => {
+    setA(v);
+    setB(v);
+    setC(v);
+  };
+  return (
+    <div className="space-y-3 w-72">
+      <div className="flex items-center gap-2">
+        <Checkbox
+          id="cb-select-all"
+          checked={allChecked}
+          onCheckedChange={(v) => toggleAll(Boolean(v))}
+        />
+        <Label htmlFor="cb-select-all" className="text-sm font-medium leading-none cursor-pointer">
+          Selecionar todos os itens
+        </Label>
+      </div>
+      <div className="flex items-center gap-2 pl-6">
+        <Checkbox id="cb-child-1" checked={a} onCheckedChange={(v) => setA(Boolean(v))} />
+        <Label htmlFor="cb-child-1" className="text-sm font-medium leading-none cursor-pointer">
+          Manter sessão ativa
+        </Label>
+      </div>
+      <div className="flex items-center gap-2 pl-6">
+        <Checkbox id="cb-child-2" checked={b} onCheckedChange={(v) => setB(Boolean(v))} />
+        <Label htmlFor="cb-child-2" className="text-sm font-medium leading-none cursor-pointer">
+          Receber novidades por email
+        </Label>
+      </div>
+      <div className="flex items-center gap-2 pl-6">
+        <Checkbox id="cb-child-3" checked={c} onCheckedChange={(v) => setC(Boolean(v))} />
+        <Label htmlFor="cb-child-3" className="text-sm font-medium leading-none cursor-pointer">
+          Receber notificações push
+        </Label>
+      </div>
+    </div>
+  );
+}
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -418,6 +467,173 @@ export function CheckboxDocs() {
                       <p className="text-sm text-muted-foreground">
                         Enviaremos no máximo 2 emails por semana.
                       </p>
+                    </div>
+                  </div>
+                ),
+              },
+            ]}
+          />
+
+          {/* ── Composições ───────────────────────────────────────────── */}
+          <DocsCompositions
+            title={tContent("variants.compositionsTitle")}
+            useWhenLabel={tNav("common.useWhen")}
+            componentSlug="checkbox"
+            items={[
+              {
+                name: tContent("variants.compositions.withLabel.name"),
+                description: tContent("variants.compositions.withLabel.description"),
+                useWhen: tContent("variants.compositions.withLabel.use"),
+                code: `<div className="flex items-center gap-2">
+  <Checkbox id="cb-tos" />
+  <Label htmlFor="cb-tos" className="text-sm font-medium leading-none cursor-pointer">
+    Aceito os termos e condições
+  </Label>
+</div>`,
+                preview: (
+                  <div className="flex items-center gap-2">
+                    <Checkbox id="cb-tos" />
+                    <Label htmlFor="cb-tos" className="text-sm font-medium leading-none cursor-pointer">
+                      Aceito os termos e condições
+                    </Label>
+                  </div>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.withDescription.name"),
+                description: tContent("variants.compositions.withDescription.description"),
+                useWhen: tContent("variants.compositions.withDescription.use"),
+                code: `<div className="flex gap-2 items-start">
+  <Checkbox id="cb-newsletter" className="mt-0.5" />
+  <div className="flex flex-col gap-1">
+    <Label htmlFor="cb-newsletter">Receber novidades por email</Label>
+    <p className="text-sm text-muted-foreground">
+      Enviaremos atualizações sobre novos recursos e melhorias do produto.
+    </p>
+  </div>
+</div>`,
+                preview: (
+                  <div className="flex gap-2 items-start">
+                    <Checkbox id="cb-newsletter" className="mt-0.5" />
+                    <div className="flex flex-col gap-1">
+                      <Label htmlFor="cb-newsletter">Receber novidades por email</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Enviaremos atualizações sobre novos recursos e melhorias do produto.
+                      </p>
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.fieldset.name"),
+                description: tContent("variants.compositions.fieldset.description"),
+                useWhen: tContent("variants.compositions.fieldset.use"),
+                code: `<fieldset className="border rounded-lg p-4 space-y-3 w-72">
+  <legend className="text-sm font-semibold px-1">Notificações</legend>
+  <div className="flex items-center gap-2">
+    <Checkbox id="notif-email" />
+    <Label htmlFor="notif-email">Receber novidades por email</Label>
+  </div>
+  <div className="flex items-center gap-2">
+    <Checkbox id="notif-push" />
+    <Label htmlFor="notif-push">Receber notificações push</Label>
+  </div>
+  <div className="flex items-center gap-2">
+    <Checkbox id="notif-sms" />
+    <Label htmlFor="notif-sms">Alertas por SMS</Label>
+  </div>
+</fieldset>`,
+                preview: (
+                  <fieldset className="border rounded-lg p-4 space-y-3 w-72">
+                    <legend className="text-sm font-semibold px-1">Notificações</legend>
+                    <div className="flex items-center gap-2">
+                      <Checkbox id="notif-email" />
+                      <Label htmlFor="notif-email">Receber novidades por email</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox id="notif-push" />
+                      <Label htmlFor="notif-push">Receber notificações push</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox id="notif-sms" />
+                      <Label htmlFor="notif-sms">Alertas por SMS</Label>
+                    </div>
+                  </fieldset>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.selectAll.name"),
+                description: tContent("variants.compositions.selectAll.description"),
+                useWhen: tContent("variants.compositions.selectAll.use"),
+                code: `const [a, setA] = useState(false);
+const [b, setB] = useState(false);
+const [c, setC] = useState(false);
+const allChecked = a && b && c;
+const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
+
+<div className="space-y-3 w-72">
+  <div className="flex items-center gap-2">
+    <Checkbox
+      id="cb-select-all"
+      checked={allChecked}
+      onCheckedChange={(v) => toggleAll(Boolean(v))}
+    />
+    <Label htmlFor="cb-select-all">Selecionar todos os itens</Label>
+  </div>
+  <div className="flex items-center gap-2 pl-6">
+    <Checkbox id="cb-child-1" checked={a} onCheckedChange={(v) => setA(Boolean(v))} />
+    <Label htmlFor="cb-child-1">Manter sessão ativa</Label>
+  </div>
+  {/* …demais filhos */}
+</div>`,
+                preview: <SelectAllPreview />,
+              },
+              {
+                name: tContent("variants.compositions.inList.name"),
+                description: tContent("variants.compositions.inList.description"),
+                useWhen: tContent("variants.compositions.inList.use"),
+                code: `<div className="space-y-2 w-80">
+  <p className="text-sm font-semibold mb-3">Preferências de contato</p>
+  <div className="flex items-center justify-between rounded-md border px-3 py-2">
+    <div className="flex items-center gap-2">
+      <Checkbox id="pref-email" defaultChecked />
+      <Label htmlFor="pref-email">Receber novidades por email</Label>
+    </div>
+  </div>
+  <div className="flex items-center justify-between rounded-md border px-3 py-2">
+    <div className="flex items-center gap-2">
+      <Checkbox id="pref-push" />
+      <Label htmlFor="pref-push">Receber notificações push</Label>
+    </div>
+  </div>
+  {/* …demais linhas */}
+</div>`,
+                preview: (
+                  <div className="space-y-2 w-80">
+                    <p className="text-sm font-semibold mb-3">Preferências de contato</p>
+                    <div className="flex items-center justify-between rounded-md border px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <Checkbox id="pref-email" defaultChecked />
+                        <Label htmlFor="pref-email">Receber novidades por email</Label>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between rounded-md border px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <Checkbox id="pref-push" />
+                        <Label htmlFor="pref-push">Receber notificações push</Label>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between rounded-md border px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <Checkbox id="pref-sms" />
+                        <Label htmlFor="pref-sms">Alertas por SMS</Label>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between rounded-md border px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <Checkbox id="pref-weekly" defaultChecked />
+                        <Label htmlFor="pref-weekly">Newsletter semanal</Label>
+                      </div>
                     </div>
                   </div>
                 ),

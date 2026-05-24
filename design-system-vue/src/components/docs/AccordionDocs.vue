@@ -10,7 +10,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Info, AlertTriangle, CheckCircle } from 'lucide-vue-next';
+import { Info, AlertTriangle, CheckCircle2 } from 'lucide-vue-next';
+import { Badge } from '@/components/ui/badge';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import accordionTranslations from '@shared/content/accordion/translations.json';
@@ -22,6 +23,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -90,6 +92,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'modos',        label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -193,8 +196,8 @@ type LocaleKey = keyof TranslationLocale;
 function getPropItems(tableKey: string) {
   return computed(() => {
     const loc = locale.value as LocaleKey;
-    const table = (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[loc]?.props?.[tableKey]?.items ?? {};
-    return Object.values(table).map((v) => ({
+    const table = (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[loc]?.props?.[tableKey]?.items ?? {};
+    return Object.values(table).map((v: any) => ({
       name: v.name,
       type: v.type,
       defaultValue: v.default,
@@ -219,8 +222,8 @@ const propCols = computed(() => ({
 
 const tokenRows = computed(() => {
   const loc = locale.value as LocaleKey;
-  const items = (accordionTranslations as Record<string, Record<string, Record<string, Record<string, string>>>>)[loc]?.tokens?.items ?? {};
-  return Object.values(items).map((v) => ({
+  const items = (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, string>>>>)[loc]?.tokens?.items ?? {};
+  return Object.values(items).map((v: any) => ({
     token: v.token,
     value: v.class,
     description: v.part,
@@ -239,6 +242,65 @@ const modeItems = computed(() => [
   { name: tContent('variants.multiple.label'),    description: stripHtml(tContent('variants.multiple.description')),    code: codeMultiple    },
   { name: tContent('variants.controlled.label'),  description: stripHtml(tContent('variants.controlled.description')),  code: codeControlled  },
   { name: tContent('variants.defaultOpen.label'), description: stripHtml(tContent('variants.defaultOpen.description')), code: codeSingle      },
+]);
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.iconTrigger.name'),
+    description: tContent('variants.compositions.iconTrigger.description'),
+    useWhen: tContent('variants.compositions.iconTrigger.use'),
+    code: `<Accordion type="single" :collapsible="true" class="w-full max-w-lg">
+  <AccordionItem value="info">
+    <AccordionTrigger>
+      <Info class="h-4 w-4" aria-hidden="true" />
+      Informações gerais
+    </AccordionTrigger>
+    <AccordionContent>Detalhes sobre a conta e preferências.</AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+  },
+  {
+    name: tContent('variants.compositions.badgeTrigger.name'),
+    description: tContent('variants.compositions.badgeTrigger.description'),
+    useWhen: tContent('variants.compositions.badgeTrigger.use'),
+    code: `<Accordion type="single" :collapsible="true" class="w-full max-w-lg">
+  <AccordionItem value="novo">
+    <AccordionTrigger>
+      Novidades da versão
+      <Badge>Novo</Badge>
+    </AccordionTrigger>
+    <AccordionContent>Lista das funcionalidades adicionadas nesta release.</AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+  },
+  {
+    name: tContent('variants.compositions.richContent.name'),
+    description: tContent('variants.compositions.richContent.description'),
+    useWhen: tContent('variants.compositions.richContent.use'),
+    code: `<Accordion type="multiple" class="w-full max-w-lg">
+  <AccordionItem value="specs">
+    <AccordionTrigger>Especificações</AccordionTrigger>
+    <AccordionContent>
+      <table class="w-full text-sm">
+        <tr><td>CPU</td><td>Intel i7</td></tr>
+        <tr><td>RAM</td><td>16GB</td></tr>
+      </table>
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+  },
+  {
+    name: tContent('variants.compositions.faq.name'),
+    description: tContent('variants.compositions.faq.description'),
+    useWhen: tContent('variants.compositions.faq.use'),
+    code: `<h2>Perguntas frequentes</h2>
+<Accordion type="single" :collapsible="true" class="w-full max-w-lg">
+  <AccordionItem value="senha">
+    <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
+    <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+  },
 ]);
 
 const keyboardItems = computed(() => [
@@ -505,6 +567,117 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
             </Accordion>
           </template>
         </DocsVariants>
+
+        <!-- ── Composições ─────────────────────────────────────────────── -->
+        <DocsCompositions
+          :title="tContent('variants.compositionsTitle')"
+          :use-when-label="tNav('common.useWhen')"
+          component-slug="accordion"
+          :items="compositionItems"
+        >
+          <template #variant-preview-0>
+            <Accordion type="single" :collapsible="true" class="w-full max-w-lg text-sm">
+              <AccordionItem value="info">
+                <AccordionTrigger>
+                  <span class="flex items-center gap-2">
+                    <Info class="h-4 w-4" aria-hidden="true" />
+                    Informações gerais
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>Detalhes sobre a conta e preferências.</AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="aviso">
+                <AccordionTrigger>
+                  <span class="flex items-center gap-2">
+                    <AlertTriangle class="h-4 w-4" aria-hidden="true" />
+                    Avisos importantes
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>Pendências que requerem atenção do usuário.</AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="sucesso">
+                <AccordionTrigger>
+                  <span class="flex items-center gap-2">
+                    <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+                    Itens concluídos
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>Lista de tarefas finalizadas com sucesso.</AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </template>
+          <template #variant-preview-1>
+            <Accordion type="single" :collapsible="true" class="w-full max-w-lg text-sm">
+              <AccordionItem value="novo">
+                <AccordionTrigger>
+                  <span class="flex items-center gap-2">
+                    Novidades da versão
+                    <Badge>Novo</Badge>
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>Lista das funcionalidades adicionadas nesta release.</AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="beta">
+                <AccordionTrigger>
+                  <span class="flex items-center gap-2">
+                    Funcionalidades em teste
+                    <Badge variant="secondary">Beta</Badge>
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>Recursos disponíveis para usuários do programa beta.</AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </template>
+          <template #variant-preview-2>
+            <Accordion type="multiple" class="w-full max-w-lg text-sm">
+              <AccordionItem value="specs">
+                <AccordionTrigger>Especificações técnicas</AccordionTrigger>
+                <AccordionContent>
+                  <table class="w-full text-sm border-collapse">
+                    <tbody>
+                      <tr class="border-b"><td class="py-1 pr-4">CPU</td><td class="py-1">Intel Core i7-12700</td></tr>
+                      <tr class="border-b"><td class="py-1 pr-4">RAM</td><td class="py-1">16GB DDR5</td></tr>
+                      <tr><td class="py-1 pr-4">SSD</td><td class="py-1">512GB NVMe</td></tr>
+                    </tbody>
+                  </table>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="inclui">
+                <AccordionTrigger>O que está incluso</AccordionTrigger>
+                <AccordionContent>
+                  <ul class="list-disc pl-5 space-y-1">
+                    <li>Cabo de alimentação</li>
+                    <li>Manual do usuário</li>
+                    <li>Garantia de 24 meses</li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </template>
+          <template #variant-preview-3>
+            <div class="w-full max-w-lg">
+              <h2 class="text-lg font-semibold mb-3">Perguntas frequentes</h2>
+              <Accordion type="single" :collapsible="true" class="w-full text-sm">
+                <AccordionItem value="senha">
+                  <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
+                  <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha". Você receberá um link de redefinição no email cadastrado.</AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="pagamento">
+                  <AccordionTrigger>Quais formas de pagamento são aceitas?</AccordionTrigger>
+                  <AccordionContent>Aceitamos cartão de crédito, Pix e boleto bancário.</AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="cancelamento">
+                  <AccordionTrigger>Como cancelo minha assinatura?</AccordionTrigger>
+                  <AccordionContent>Você pode cancelar a qualquer momento em Configurações → Assinatura.</AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="dados">
+                  <AccordionTrigger>Onde encontro meus dados de acesso?</AccordionTrigger>
+                  <AccordionContent>Seus dados de acesso estão disponíveis em Configurações → Conta.</AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          </template>
+        </DocsCompositions>
 
         <!-- ── Estados ───────────────────────────────────────────────── -->
         <DocsStates

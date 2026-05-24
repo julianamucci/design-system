@@ -34,7 +34,9 @@ function createUserIconSvg(): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'h-5 w-5 text-muted-foreground');
+  svg.setAttribute('class', 'nds-text-muted-foreground');
+  svg.style.width = '1.25rem';
+  svg.style.height = '1.25rem';
 
   for (const [tag, attrs] of User as unknown as LucideIconNode[]) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -125,7 +127,7 @@ export const Group: Story = {
   },
   render: () => {
     const group = document.createElement('div');
-    group.className = 'flex -space-x-2';
+    group.style.display = 'flex';
     group.setAttribute('role', 'group');
     group.setAttribute('aria-label', 'Participantes');
 
@@ -136,15 +138,16 @@ export const Group: Story = {
       { alt: '', fallback: '+3' },
     ];
 
-    for (const m of members) {
+    members.forEach((m, i) => {
       const av = createAvatar({
         src: m.src,
         alt: m.alt,
         fallbackText: m.fallback,
-        className: 'ring-2 ring-background',
       });
+      av.style.boxShadow = '0 0 0 2px var(--background)';
+      if (i > 0) av.style.marginLeft = '-0.5rem';
       group.appendChild(av);
-    }
+    });
     return group;
   },
 
@@ -165,7 +168,8 @@ export const WithStatus: Story = {
   },
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'relative inline-block';
+    wrapper.className = 'nds-inline-block';
+    wrapper.style.position = 'relative';
 
     const avatar = createAvatar({
       src: 'https://github.com/shadcn.png',

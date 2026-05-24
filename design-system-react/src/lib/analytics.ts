@@ -112,6 +112,7 @@ interface AnalyticsEvents {
   dialog_open: {
     component: string;
     label?: string;
+    trigger_label?: string;
     location?: string;
   };
 
@@ -253,6 +254,34 @@ interface AnalyticsEvents {
   menu_item_click: {
     label: string;
     menu: string;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário confirma a ação primária de um Dialog/Sheet/Drawer. */
+  dialog_confirm: {
+    component: string;
+    trigger_label?: string;
+    action?: string;
+    label?: string;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário muda de página em Pagination. */
+  page_change: {
+    component?: string;
+    trigger_label?: string;
+    page?: number;
+    total_pages?: number;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário muda de aba em Tabs. */
+  tab_change: {
+    component?: string;
+    value?: string;
+    label?: string;
+    index?: number;
+    total?: number;
     location?: string;
   };
 }

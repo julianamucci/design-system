@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -71,7 +72,7 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
     label: opts.actionLabel,
     class:
       opts.tone === 'destructive'
-        ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+        ? 'nds-bg-destructive'
         : '',
   });
   return createAlertDialog({
@@ -121,6 +122,7 @@ export function createAlertDialogDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -171,7 +173,7 @@ export function createAlertDialogDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -185,7 +187,9 @@ export function createAlertDialogDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-wrap items-center justify-center gap-4';
+            wrap.className = 'nds-cluster';
+            wrap.dataset.spacing = 'md';
+            wrap.dataset.justify = 'center';
             wrap.append(
               buildAlertDialogDemo({
                 triggerLabel: t('demonstration.labels.triggerLabel'),
@@ -419,6 +423,73 @@ createAlertDialog({ trigger, title: 'Sair da conta', description: '...', cancelB
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'alert-dialog',
+          items: [
+            {
+              name: t('variants.compositions.destructive.name'),
+              description: t('variants.compositions.destructive.description'),
+              useWhen: t('variants.compositions.destructive.use'),
+              code: `const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
+const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+const action = createButton({ variant: 'default', label: 'Excluir conta', class: 'bg-destructive text-destructive-foreground hover:bg-destructive/90' });
+const dialog = createAlertDialog({
+  trigger,
+  title: 'Excluir sua conta?',
+  description: 'Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.',
+  cancelButton: cancel,
+  actionButton: action,
+});`,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
+                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                const action = createButton({
+                  variant: 'default',
+                  label: 'Excluir conta',
+                  class: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+                });
+                return createAlertDialog({
+                  trigger,
+                  title: 'Excluir sua conta?',
+                  description: 'Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.',
+                  cancelButton: cancel,
+                  actionButton: action,
+                });
+              },
+            },
+            {
+              name: t('variants.compositions.neutral.name'),
+              description: t('variants.compositions.neutral.description'),
+              useWhen: t('variants.compositions.neutral.use'),
+              code: `const trigger = createButton({ variant: 'default', label: 'Publicar agora' });
+const cancel = createButton({ variant: 'outline', label: 'Voltar' });
+const action = createButton({ variant: 'default', label: 'Publicar' });
+const dialog = createAlertDialog({
+  trigger,
+  title: 'Publicar este conteúdo?',
+  description: 'Ao publicar, o conteúdo fica visível para todos os usuários.',
+  cancelButton: cancel,
+  actionButton: action,
+});`,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'default', label: 'Publicar agora' });
+                const cancel = createButton({ variant: 'outline', label: 'Voltar' });
+                const action = createButton({ variant: 'default', label: 'Publicar' });
+                return createAlertDialog({
+                  trigger,
+                  title: 'Publicar este conteúdo?',
+                  description: 'Ao publicar, o conteúdo fica visível para todos os usuários.',
+                  cancelButton: cancel,
+                  actionButton: action,
+                });
+              },
+            },
+          ],
+        });
 
       case 'estados':
         return createDocsStates({

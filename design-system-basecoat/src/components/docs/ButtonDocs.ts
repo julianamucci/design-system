@@ -2,7 +2,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createButton, createButtonIcon, type ButtonVariant, type ButtonSize } from '@/components/ui/button';
+import { createButton, createButtonIcon, btnClass, type ButtonVariant, type ButtonSize } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import buttonTranslations from '@shared/content/button/translations.json';
 
@@ -14,6 +14,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -58,7 +59,12 @@ function buildDemoButton(variant: ButtonVariant, label: string, location: string
 
 function buildIconButton(variant: ButtonVariant, size: ButtonSize, ariaLabel: string): HTMLButtonElement {
   const btn = createButton({ variant, size, ariaLabel });
-  btn.appendChild(createButtonIcon('plus'));
+  // Mapeia o size do button para o size do icon SVG.
+  const iconSize: 'sm' | 'md' | 'lg' =
+    size === 'icon-sm' ? 'sm' :
+    size === 'icon-lg' ? 'lg' :
+                         'md';
+  btn.appendChild(createButtonIcon('plus', { size: iconSize }));
   return btn;
 }
 
@@ -94,12 +100,13 @@ export function createButtonDocs(): HTMLElement {
       { id: 'do-dont',      labelKey: 'nav.doDont'        },
     ]},
     { labelKey: 'nav.techRef', sections: [
-      { id: 'importacao',   labelKey: 'nav.import'   },
-      { id: 'variantes',    labelKey: 'nav.variants' },
-      { id: 'tamanhos',     labelKey: 'nav.sizes'    },
-      { id: 'estados',      labelKey: 'nav.states'   },
-      { id: 'propriedades', labelKey: 'nav.props'    },
-      { id: 'tokens',       labelKey: 'nav.tokens'   },
+      { id: 'importacao',   labelKey: 'nav.import'       },
+      { id: 'variantes',    labelKey: 'nav.variants'     },
+      { id: 'tamanhos',     labelKey: 'nav.sizes'        },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
+      { id: 'estados',      labelKey: 'nav.states'       },
+      { id: 'propriedades', labelKey: 'nav.props'        },
+      { id: 'tokens',       labelKey: 'nav.tokens'       },
     ]},
     { labelKey: 'nav.context', sections: [
       { id: 'acessibilidade', labelKey: 'nav.accessibility' },
@@ -147,7 +154,7 @@ export function createButtonDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'tamanhos', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'tamanhos', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -161,7 +168,8 @@ export function createButtonDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-wrap items-center gap-3';
+            wrap.className = 'nds-cluster';
+            wrap.dataset.spacing = 'sm';
             wrap.append(
               buildDemoButton('default',     t('demonstration.labels.primary'),     'docs-demo'),
               buildDemoButton('secondary',   t('demonstration.labels.secondary'),   'docs-demo'),
@@ -281,7 +289,8 @@ export function createButtonDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex gap-2';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.spacing = 'xs';
                 wrap.append(
                   createButton({ variant: 'outline', label: 'Cancelar' }),
                   createButton({ variant: 'default', label: 'Confirmar' }),
@@ -290,7 +299,8 @@ export function createButtonDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex gap-2';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.spacing = 'xs';
                 wrap.append(
                   createButton({ variant: 'default', label: 'Salvar' }),
                   createButton({ variant: 'default', label: 'Enviar' }),
@@ -406,6 +416,126 @@ export function createButtonDocs(): HTMLElement {
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'button',
+          items: [
+            {
+              name: t('variants.compositions.iconLeft.name'),
+              description: t('variants.compositions.iconLeft.description'),
+              useWhen: t('variants.compositions.iconLeft.use'),
+              code:
+                `const btn = createButton({ variant: 'default' });\n` +
+                `btn.appendChild(createButtonIcon('plus'));\n` +
+                `const label = document.createElement('span');\n` +
+                `label.textContent = 'Adicionar item';\n` +
+                `btn.appendChild(label);`,
+              previewFactory: () => {
+                const btn = createButton({ variant: 'default' });
+                btn.appendChild(createButtonIcon('plus'));
+                const label = document.createElement('span');
+                label.textContent = 'Adicionar item';
+                btn.appendChild(label);
+                return btn;
+              },
+            },
+            {
+              name: t('variants.compositions.iconRight.name'),
+              description: t('variants.compositions.iconRight.description'),
+              useWhen: t('variants.compositions.iconRight.use'),
+              code:
+                `const btn = createButton({ variant: 'outline' });\n` +
+                `const label = document.createElement('span');\n` +
+                `label.textContent = 'Próximo';\n` +
+                `btn.appendChild(label);\n` +
+                `btn.appendChild(createButtonIcon('chevron-right'));`,
+              previewFactory: () => {
+                const btn = createButton({ variant: 'outline' });
+                const label = document.createElement('span');
+                label.textContent = 'Próximo';
+                btn.appendChild(label);
+                btn.appendChild(createButtonIcon('chevron-right'));
+                return btn;
+              },
+            },
+            {
+              name: t('variants.compositions.destructiveWithIcon.name'),
+              description: t('variants.compositions.destructiveWithIcon.description'),
+              useWhen: t('variants.compositions.destructiveWithIcon.use'),
+              code:
+                `const btn = createButton({ variant: 'destructive' });\n` +
+                `btn.appendChild(createButtonIcon('trash'));\n` +
+                `const label = document.createElement('span');\n` +
+                `label.textContent = 'Excluir';\n` +
+                `btn.appendChild(label);`,
+              previewFactory: () => {
+                const btn = createButton({ variant: 'destructive' });
+                btn.appendChild(createButtonIcon('trash'));
+                const label = document.createElement('span');
+                label.textContent = 'Excluir';
+                btn.appendChild(label);
+                return btn;
+              },
+            },
+            {
+              name: t('variants.compositions.iconOnly.name'),
+              description: t('variants.compositions.iconOnly.description'),
+              useWhen: t('variants.compositions.iconOnly.use'),
+              code:
+                `const btn = createButton({ size: 'icon', ariaLabel: 'Baixar arquivo' });\n` +
+                `btn.appendChild(createButtonIcon('download'));`,
+              previewFactory: () => {
+                const btn = createButton({ size: 'icon', ariaLabel: 'Baixar arquivo' });
+                btn.appendChild(createButtonIcon('download'));
+                return btn;
+              },
+            },
+            {
+              name: t('variants.compositions.actionPair.name'),
+              description: t('variants.compositions.actionPair.description'),
+              useWhen: t('variants.compositions.actionPair.use'),
+              code:
+                `const wrap = document.createElement('div');\n` +
+                `wrap.className = 'nds-cluster';\n` +
+                `wrap.dataset.spacing = 'xs';\n` +
+                `wrap.append(\n` +
+                `  createButton({ variant: 'outline', label: 'Cancelar' }),\n` +
+                `  createButton({ variant: 'default', label: 'Confirmar' }),\n` +
+                `);`,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.className = 'nds-cluster';
+                wrap.dataset.spacing = 'xs';
+                wrap.append(
+                  createButton({ variant: 'outline', label: 'Cancelar' }),
+                  createButton({ variant: 'default', label: 'Confirmar' }),
+                );
+                return wrap;
+              },
+            },
+            {
+              name: t('variants.compositions.asLink.name'),
+              description: t('variants.compositions.asLink.description'),
+              useWhen: t('variants.compositions.asLink.use'),
+              code:
+                `import { btnClass } from '@/components/ui/button';\n\n` +
+                `const a = document.createElement('a');\n` +
+                `a.href = '/docs';\n` +
+                `a.className = btnClass('link', 'default');\n` +
+                `a.textContent = 'Ver documentação';`,
+              previewFactory: () => {
+                const a = document.createElement('a');
+                a.href = '#docs';
+                a.className = btnClass('link', 'default');
+                a.textContent = 'Ver documentação';
+                return a;
+              },
+            },
+          ],
+        });
 
       case 'estados':
         return createDocsStates({

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Check, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
@@ -16,6 +16,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -54,6 +55,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -346,6 +348,61 @@ const badgeVariants = cva(
             description: stripHtml(tContent("variants.items.outline")),
             code: codeOutline,
             preview: <Badge variant="outline">{tContent("demonstration.labels.outlineLabel")}</Badge>,
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="badge"
+        items={[
+          {
+            name: tContent("variants.compositions.withIcon.name"),
+            description: tContent("variants.compositions.withIcon.description"),
+            useWhen: tContent("variants.compositions.withIcon.use"),
+            code: `<Badge>\n  <Check className="h-3 w-3" aria-hidden="true" />\n  Ativo\n</Badge>`,
+            preview: (
+              <Badge>
+                <Check className="h-3 w-3" aria-hidden="true" />
+                Ativo
+              </Badge>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.count.name"),
+            description: tContent("variants.compositions.count.description"),
+            useWhen: tContent("variants.compositions.count.use"),
+            code: `<span role="status" aria-label="12 notificações não lidas" className="inline-flex items-center gap-2">\n  <Bell className="h-5 w-5" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
+            preview: (
+              <span role="status" aria-label="12 notificações não lidas" className="inline-flex items-center gap-2">
+                <Bell className="h-5 w-5" aria-hidden="true" />
+                <Badge variant="destructive">12</Badge>
+              </span>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.asLink.name"),
+            description: tContent("variants.compositions.asLink.description"),
+            useWhen: tContent("variants.compositions.asLink.use"),
+            code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" className="inline-flex">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
+            preview: (
+              <a href="#design" aria-label="Ver todos os itens da categoria Design" className="inline-flex">
+                <Badge variant="secondary">Design</Badge>
+              </a>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.asTrigger.name"),
+            description: tContent("variants.compositions.asTrigger.description"),
+            useWhen: tContent("variants.compositions.asTrigger.use"),
+            code: `<button type="button" aria-label="Filtrar por React" className="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md">\n  <Badge variant="outline">React</Badge>\n</button>`,
+            preview: (
+              <button type="button" aria-label="Filtrar por React" className="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md">
+                <Badge variant="outline">React</Badge>
+              </button>
+            ),
           },
         ]}
       />

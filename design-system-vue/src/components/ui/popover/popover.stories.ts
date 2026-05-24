@@ -45,10 +45,10 @@ const meta = {
     defaultOpen: false,
     modal: false,
   },
-} satisfies Meta<typeof Popover>;
+} satisfies Meta<any>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<Meta<any>>;
 
 export const Playground: Story = {
   argTypes: {
@@ -64,7 +64,6 @@ export const Playground: Story = {
     },
   },
   args: {
-    // @ts-expect-error - argTypes locais para preview do Content
     side: 'bottom',
     align: 'center',
   },

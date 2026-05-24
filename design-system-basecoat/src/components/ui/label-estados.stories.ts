@@ -26,7 +26,8 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-2';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
 
     const inputId = 'estado-default-input';
     const label = createLabel({ text: 'Nome completo', htmlFor: inputId });
@@ -63,7 +64,8 @@ export const Default: Story = {
 export const Disabled: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-2';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
 
     const inputId = 'estado-disabled-input';
 
@@ -106,7 +108,8 @@ export const Disabled: Story = {
 export const Required: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-2';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
 
     const inputId = 'estado-required-input';
     const label = createLabel({ htmlFor: inputId });
@@ -114,7 +117,8 @@ export const Required: Story = {
     const labelText = document.createTextNode('Email profissional');
     const asterisk = document.createElement('span');
     asterisk.setAttribute('aria-hidden', 'true');
-    asterisk.className = 'text-destructive ml-0.5';
+    asterisk.className = 'nds-text-destructive';
+    asterisk.style.marginLeft = '0.125rem';
     asterisk.textContent = '*';
 
     label.append(labelText, asterisk);

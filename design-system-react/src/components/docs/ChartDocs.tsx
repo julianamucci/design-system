@@ -37,6 +37,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -107,6 +108,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -608,6 +610,159 @@ interface ChartLegendContentProps {
                   </Pie>
                 </PieChart>
               </ChartContainer>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="chart"
+        items={[
+          {
+            name: tContent("variants.compositions.inCard.name"),
+            description: tContent("variants.compositions.inCard.description"),
+            useWhen: tContent("variants.compositions.inCard.use"),
+            code: `<Card className="w-full max-w-sm">
+  <CardHeader>
+    <CardTitle>Acessos mensais</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <ChartContainer
+      config={chartConfig}
+      className="h-[200px] w-full"
+      aria-label="Gráfico de barras: acessos mensais por dispositivo"
+    >
+      <BarChart data={chartData} accessibilityLayer>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="month" tickLine={false} axisLine={false} />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+      </BarChart>
+    </ChartContainer>
+  </CardContent>
+</Card>`,
+            preview: (
+              <Card className="w-full max-w-sm">
+                <CardHeader>
+                  <CardTitle>Acessos mensais</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ChartContainer
+                    config={chartConfig}
+                    className="h-[200px] w-full"
+                    aria-label="Gráfico de barras: acessos mensais por dispositivo"
+                  >
+                    <BarChart data={chartData} accessibilityLayer>
+                      <CartesianGrid vertical={false} />
+                      <XAxis dataKey="month" tickLine={false} axisLine={false} tickFormatter={(v) => v.slice(0, 3)} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+                    </BarChart>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.multiSeriesWithLegend.name"),
+            description: tContent("variants.compositions.multiSeriesWithLegend.description"),
+            useWhen: tContent("variants.compositions.multiSeriesWithLegend.use"),
+            code: `<ChartContainer
+  config={chartConfig}
+  className="h-[240px] w-full"
+  aria-label="Gráfico multi-séries: Desktop e Mobile"
+>
+  <BarChart data={chartData} accessibilityLayer>
+    <CartesianGrid vertical={false} />
+    <XAxis dataKey="month" tickLine={false} axisLine={false} />
+    <ChartTooltip content={<ChartTooltipContent />} />
+    <ChartLegend content={<ChartLegendContent />} />
+    <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+    <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+  </BarChart>
+</ChartContainer>`,
+            preview: (
+              <ChartContainer
+                config={chartConfig}
+                className="h-[240px] w-full"
+                aria-label="Gráfico multi-séries: Desktop e Mobile"
+              >
+                <BarChart data={chartData} accessibilityLayer>
+                  <CartesianGrid vertical={false} />
+                  <XAxis dataKey="month" tickLine={false} axisLine={false} tickFormatter={(v) => v.slice(0, 3)} />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <ChartLegend content={<ChartLegendContent />} />
+                  <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+                  <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+                </BarChart>
+              </ChartContainer>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.smallInline.name"),
+            description: tContent("variants.compositions.smallInline.description"),
+            useWhen: tContent("variants.compositions.smallInline.use"),
+            code: `<div className="flex items-center gap-4 rounded-md border p-4 w-fit">
+  <div>
+    <p className="text-xs text-muted-foreground">Acessos</p>
+    <p className="text-2xl font-semibold">1.224</p>
+  </div>
+  <ChartContainer
+    config={singleConfig}
+    className="h-[48px] w-[120px]"
+    aria-label="Tendência de acessos nos últimos 6 meses"
+  >
+    <LineChart data={chartData} accessibilityLayer>
+      <Line dataKey="desktop" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
+    </LineChart>
+  </ChartContainer>
+</div>`,
+            preview: (
+              <div className="flex items-center gap-4 rounded-md border p-4 w-fit">
+                <div>
+                  <p className="text-xs text-muted-foreground">Acessos</p>
+                  <p className="text-2xl font-semibold">1.224</p>
+                </div>
+                <ChartContainer
+                  config={singleConfig}
+                  className="h-[48px] w-[120px]"
+                  aria-label="Tendência de acessos nos últimos 6 meses"
+                >
+                  <LineChart data={chartData} accessibilityLayer>
+                    <Line dataKey="desktop" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
+                  </LineChart>
+                </ChartContainer>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withEmptyState.name"),
+            description: tContent("variants.compositions.withEmptyState.description"),
+            useWhen: tContent("variants.compositions.withEmptyState.use"),
+            code: `{data.length === 0 ? (
+  <div
+    role="status"
+    className="flex h-[200px] w-full items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+  >
+    Nenhum dado disponível para o período selecionado.
+  </div>
+) : (
+  <ChartContainer config={chartConfig} className="h-[200px] w-full" aria-label="...">
+    <BarChart data={data} accessibilityLayer>
+      {/* ... */}
+    </BarChart>
+  </ChartContainer>
+)}`,
+            preview: (
+              <div
+                role="status"
+                className="flex h-[200px] w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+              >
+                Nenhum dado disponível para o período selecionado.
+              </div>
             ),
           },
         ]}

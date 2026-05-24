@@ -26,10 +26,14 @@ type Story = StoryObj;
 
 function buildList(count: number): HTMLElement {
   const ul = document.createElement('ul');
-  ul.className = 'flex flex-col gap-2 p-3 list-none m-0';
+  ul.className = 'nds-stack nds-list-none';
+  ul.dataset.spacing = 'sm';
+  ul.style.padding = '0.75rem';
+  ul.style.margin = '0';
   for (let i = 1; i <= count; i++) {
     const li = document.createElement('li');
-    li.className = 'text-sm border-b border-border/40 pb-2';
+    li.className = 'nds-text-body nds-border-b-soft';
+    li.style.paddingBottom = '0.5rem';
     li.textContent = `Item ${i}`;
     ul.appendChild(li);
   }
@@ -44,10 +48,10 @@ export const Idle: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'w-full max-w-sm';
+    outer.className = 'nds-w-full nds-max-w-sm';
     outer.appendChild(createScrollArea({
       height: '200px',
-      class: 'w-full rounded-md border',
+      class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildList(25),
     }));
     return outer;
@@ -65,10 +69,10 @@ export const Scrolling: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'w-full max-w-sm';
+    outer.className = 'nds-w-full nds-max-w-sm';
     const area = createScrollArea({
       height: '200px',
-      class: 'w-full rounded-md border',
+      class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildList(25),
     });
     outer.appendChild(area);
@@ -92,10 +96,10 @@ export const Hover: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'w-full max-w-sm';
+    outer.className = 'nds-w-full nds-max-w-sm';
     outer.appendChild(createScrollArea({
       height: '200px',
-      class: 'w-full rounded-md border',
+      class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildList(25),
     }));
     return outer;
@@ -113,17 +117,17 @@ export const Focus: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'w-full max-w-sm';
+    outer.className = 'nds-w-full nds-max-w-sm';
     const area = createScrollArea({
       height: '200px',
-      class: 'w-full rounded-md border',
+      class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildList(25),
     });
     const vp = area.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]');
     if (vp) {
       vp.tabIndex = 0;
       vp.setAttribute('aria-label', 'Lista rolável de itens');
-      vp.classList.add('focus-visible:outline-none', 'focus-visible:ring-[3px]', 'focus-visible:ring-ring/50');
+      vp.style.outline = 'none';
     }
     outer.appendChild(area);
     return outer;

@@ -1,0 +1,88 @@
+/*
+ * ─── nds-dropdown-menu ──────────────────────────────────────────────────────
+ * Menu suspenso disparado por um trigger. Renderizado em portal (body) com
+ * navegação por teclado (Arrow/Home/End/Escape) e foco automático no primeiro
+ * item ao abrir.
+ *
+ *   <ul class="nds-dropdown-menu-content" role="menu" id="dropdown-menu-1">
+ *     <li class="nds-dropdown-menu-label">Conta</li>
+ *     <li class="nds-dropdown-menu-item" role="menuitem">Perfil</li>
+ *     <li class="nds-dropdown-menu-separator" role="separator"></li>
+ *     <li class="nds-dropdown-menu-item" role="menuitem">Sair</li>
+ *   </ul>
+ *
+ * Tokens: --popover, --popover-foreground, --accent, --accent-foreground,
+ *         --muted, --muted-foreground, --border, --radius, --radius-sm
+ */
+
+.nds-dropdown-menu-content {
+  position: absolute;
+  z-index: 50;
+  min-width: 8rem;                                /* 128px */
+
+  margin: 0;
+  padding: var(--spacing-1, 0.25rem);             /* 4px interno */
+  list-style: none;
+  overflow: hidden;
+
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius, 0.5rem);
+  box-shadow:
+    0 10px 15px -3px hsl(0 0% 0% / 0.1),
+    0 4px 6px -4px hsl(0 0% 0% / 0.1);
+}
+
+/* ── Item ────────────────────────────────────────────────────────────────── */
+.nds-dropdown-menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding-inline: var(--spacing-2);               /* 8px */
+  padding-block: var(--spacing-1-5, 0.375rem);    /* 6px */
+
+  border-radius: 0.25rem;                          /* 4px — radius-sm */
+  font-size: 0.875rem;                             /* 14px */
+  color: inherit;
+  cursor: default;
+  user-select: none;
+  outline: 0;
+  transition: background-color 100ms, color 100ms;
+}
+
+.nds-dropdown-menu-item:focus,
+.nds-dropdown-menu-item:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-dropdown-menu-item[aria-disabled="true"] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ── Label (não-interativo) ──────────────────────────────────────────────── */
+.nds-dropdown-menu-label {
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1-5, 0.375rem);
+  font-size: 0.75rem;                              /* 12px */
+  font-weight: var(--font-weight-semibold, 600);
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Separator ───────────────────────────────────────────────────────────── */
+.nds-dropdown-menu-separator {
+  height: 1px;
+  margin-inline: calc(var(--spacing-1) * -1);     /* -4px (rasga até as bordas) */
+  margin-block: var(--spacing-1);                  /* 4px */
+  background-color: hsl(var(--muted));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-dropdown-menu-item {
+    transition: none;
+  }
+}

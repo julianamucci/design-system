@@ -64,7 +64,7 @@ const meta = {
     disabled: false,
     onPageChange: fn(),
   },
-} satisfies Meta<typeof Pagination>;
+} satisfies Meta<any>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

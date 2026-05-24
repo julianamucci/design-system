@@ -25,7 +25,8 @@ type Story = StoryObj;
 export const ComLabel: Story = {
   render: () => {
     const row = document.createElement('div');
-    row.className = 'flex items-center space-x-2';
+    row.className = 'nds-cluster';
+    row.dataset.spacing = 'sm';
 
     const id = 'sw-com-label';
     const sw = createSwitch({ id });
@@ -33,7 +34,7 @@ export const ComLabel: Story = {
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Receber notificações por email';
-    label.className = 'text-sm font-medium leading-none cursor-pointer';
+    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
     label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     row.append(sw, label);
@@ -63,22 +64,26 @@ export const ComLabel: Story = {
 export const ComDescricao: Story = {
   render: () => {
     const panel = document.createElement('div');
-    panel.className = 'flex items-center justify-between rounded-lg border p-3 w-80';
+    panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';
+    panel.dataset.justify = 'between';
+    panel.style.width = '20rem';
 
     const id = 'sw-com-desc';
     const sw = createSwitch({ id, checked: true });
 
     const textGroup = document.createElement('div');
-    textGroup.className = 'flex flex-col gap-0.5 pr-3';
+    textGroup.className = 'nds-stack';
+    textGroup.dataset.spacing = 'xs';
+    textGroup.style.paddingRight = '0.75rem';
 
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Emails de marketing';
-    label.className = 'text-sm font-medium leading-none cursor-pointer';
+    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
     label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     const desc = document.createElement('p');
-    desc.className = 'text-sm text-muted-foreground';
+    desc.className = 'nds-text-body nds-text-muted-foreground';
     desc.textContent = 'Receba novidades e promoções da plataforma.';
 
     textGroup.append(label, desc);
@@ -109,10 +114,12 @@ export const ComDescricao: Story = {
 export const ListaDeConfiguracoes: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'space-y-2 w-96';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.style.width = '24rem';
 
     const title = document.createElement('p');
-    title.className = 'text-sm font-semibold mb-3';
+    title.className = 'nds-text-body nds-font-semibold nds-mb-3';
     title.textContent = 'Preferências de notificação';
     wrapper.appendChild(title);
 
@@ -124,20 +131,23 @@ export const ListaDeConfiguracoes: Story = {
 
     options.forEach(({ id, label: labelText, desc: descText, checked }) => {
       const panel = document.createElement('div');
-      panel.className = 'flex items-center justify-between rounded-lg border p-3';
+      panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';
+      panel.dataset.justify = 'between';
 
       const sw = createSwitch({ id, checked });
 
       const textGroup = document.createElement('div');
-      textGroup.className = 'flex flex-col gap-0.5 pr-3';
+      textGroup.className = 'nds-stack';
+    textGroup.dataset.spacing = 'xs';
+    textGroup.style.paddingRight = '0.75rem';
       const label = document.createElement('label');
       label.htmlFor = id;
       label.textContent = labelText;
-      label.className = 'text-sm font-medium leading-none cursor-pointer';
+      label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
       label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
       const desc = document.createElement('p');
-      desc.className = 'text-sm text-muted-foreground';
+      desc.className = 'nds-text-body nds-text-muted-foreground';
       desc.textContent = descText;
 
       textGroup.append(label, desc);
@@ -176,11 +186,14 @@ export const EmFormularioComHidden: Story = {
     // Divergência Basecoat: o factory custom NÃO expõe prop `name`.
     // Para envio em formulário, sincronizamos o estado em um <input type="hidden">.
     const form = document.createElement('form');
-    form.className = 'flex flex-col gap-3 w-80';
+    form.className = 'nds-stack';
+    form.dataset.spacing = 'sm';
+    form.style.width = '20rem';
     form.addEventListener('submit', (e) => e.preventDefault());
 
     const row = document.createElement('div');
-    row.className = 'flex items-center space-x-2';
+    row.className = 'nds-cluster';
+    row.dataset.spacing = 'sm';
 
     const id = 'sw-form-newsletter';
     const sw = createSwitch({
@@ -194,7 +207,7 @@ export const EmFormularioComHidden: Story = {
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Aceitar newsletter semanal';
-    label.className = 'text-sm font-medium leading-none cursor-pointer';
+    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
     label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     const hidden = document.createElement('input');
@@ -207,9 +220,7 @@ export const EmFormularioComHidden: Story = {
     const submit = document.createElement('button');
     submit.type = 'submit';
     submit.textContent = 'Salvar preferências';
-    submit.className =
-      'inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground ' +
-      'h-9 px-4 text-sm font-medium hover:bg-primary/90 cursor-pointer';
+    submit.className = 'btn btn-primary';
 
     form.append(row, hidden, submit);
     return form;

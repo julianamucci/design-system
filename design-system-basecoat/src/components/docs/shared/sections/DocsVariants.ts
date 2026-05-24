@@ -11,6 +11,7 @@ export interface DocsVariantItem {
 
 export interface DocsVariantsProps {
   title: string;
+  description?: string;
   items: DocsVariantItem[];
   id?: string;
   /**
@@ -27,23 +28,32 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
   section.id = props.id ?? 'variantes';
 
   const h2 = document.createElement('h2');
-  h2.className = 'text-xl font-semibold mb-4';
+  h2.className = 'nds-section-title';
   h2.textContent = props.title;
   section.appendChild(h2);
 
+  if (props.description) {
+    const p = document.createElement('p');
+    p.className = 'nds-text-muted-foreground nds-mb-4';
+    p.innerHTML = sanitizeHtml(props.description);
+    section.appendChild(p);
+  }
+
   const container = document.createElement('div');
-  container.className = 'space-y-4';
+  container.className = 'nds-stack';
+  container.dataset.spacing = 'md';
 
   props.items.forEach(item => {
-    const card = createCard({ className: 'p-4 gap-2' });
+    const card = createCard({ className: 'nds-p-4' });
 
     const info = document.createElement('div');
     info.innerHTML = `
-      <p class="text-sm font-semibold">${sanitizeHtml(item.name)}</p>
-      <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">${sanitizeHtml(item.description)}</p>`;
+      <h3 class="nds-text-body nds-font-semibold nds-m-0">${sanitizeHtml(item.name)}</h3>
+      <p class="nds-text-caption nds-text-muted-foreground nds-mt-1 nds-leading-relaxed">${sanitizeHtml(item.description)}</p>`;
 
     const previewWrap = document.createElement('div');
-    previewWrap.className = 'flex items-center justify-center';
+    previewWrap.className = 'nds-cluster';
+    previewWrap.dataset.justify = 'center';
     previewWrap.appendChild(item.previewFactory());
 
     card.append(info, previewWrap);
@@ -55,11 +65,11 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
       const toggle = createButton({
         variant: 'link',
         label: 'Ver código',
-        class: 'px-0 h-auto',
+        class: 'nds-px-0',
         onClick: () => {
           codeVisible = !codeVisible;
           toggle.textContent = codeVisible ? 'Ocultar código' : 'Ver código';
-          codeBlock.classList.toggle('hidden', !codeVisible);
+          codeBlock.classList.toggle('nds-hidden', !codeVisible);
         },
       });
       toggle.setAttribute('data-track', 'code');
@@ -68,9 +78,9 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
       }
       toggle.setAttribute('data-track-label', 'Copiar código');
 
-      const codeBlock = createCard({ className: 'bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-2 hidden' });
+      const codeBlock = document.createElement('pre');
+      codeBlock.className = 'nds-code-block nds-mt-2 nds-hidden';
       const codeEl = document.createElement('code');
-      codeEl.className = 'whitespace-pre';
       codeEl.textContent = item.code;
       codeBlock.appendChild(codeEl);
 

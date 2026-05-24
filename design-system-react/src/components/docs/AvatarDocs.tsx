@@ -16,6 +16,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -62,6 +63,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -533,6 +535,89 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                   aria-label="online"
                   className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
                 />
+              </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="avatar"
+        items={[
+          {
+            name: tContent("variants.compositions.withImage.name"),
+            description: tContent("variants.compositions.withImage.description"),
+            useWhen: tContent("variants.compositions.withImage.use"),
+            code: `<Avatar>\n  <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n  <AvatarFallback>MR</AvatarFallback>\n</Avatar>`,
+            preview: (
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+                <AvatarFallback>MR</AvatarFallback>
+              </Avatar>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withInitials.name"),
+            description: tContent("variants.compositions.withInitials.description"),
+            useWhen: tContent("variants.compositions.withInitials.use"),
+            code: `<Avatar>\n  <AvatarFallback>JP</AvatarFallback>\n</Avatar>`,
+            preview: (
+              <Avatar>
+                <AvatarFallback>JP</AvatarFallback>
+              </Avatar>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withIcon.name"),
+            description: tContent("variants.compositions.withIcon.description"),
+            useWhen: tContent("variants.compositions.withIcon.use"),
+            code: `<Avatar>\n  <AvatarFallback role="img" aria-label="Usuário genérico">\n    <User aria-hidden="true" className="h-5 w-5 text-muted-foreground" />\n  </AvatarFallback>\n</Avatar>`,
+            preview: (
+              <Avatar>
+                <AvatarFallback role="img" aria-label="Usuário genérico">
+                  <User aria-hidden="true" className="h-5 w-5 text-muted-foreground" />
+                </AvatarFallback>
+              </Avatar>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.group.name"),
+            description: tContent("variants.compositions.group.description"),
+            useWhen: tContent("variants.compositions.group.use"),
+            code: `<div className="flex -space-x-2" role="group" aria-label="Participantes">\n  <Avatar className="ring-2 ring-background">\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <Avatar className="ring-2 ring-background">\n    <AvatarFallback>JP</AvatarFallback>\n  </Avatar>\n  <Avatar className="ring-2 ring-background">\n    <AvatarFallback>AL</AvatarFallback>\n  </Avatar>\n  <Avatar className="ring-2 ring-background">\n    <AvatarFallback>+3</AvatarFallback>\n  </Avatar>\n</div>`,
+            preview: (
+              <div className="flex -space-x-2" role="group" aria-label="Participantes">
+                <Avatar className="ring-2 ring-background">
+                  <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+                  <AvatarFallback>MR</AvatarFallback>
+                </Avatar>
+                <Avatar className="ring-2 ring-background">
+                  <AvatarFallback>JP</AvatarFallback>
+                </Avatar>
+                <Avatar className="ring-2 ring-background">
+                  <AvatarFallback>AL</AvatarFallback>
+                </Avatar>
+                <Avatar className="ring-2 ring-background">
+                  <AvatarFallback>+3</AvatarFallback>
+                </Avatar>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withStatus.name"),
+            description: tContent("variants.compositions.withStatus.description"),
+            useWhen: tContent("variants.compositions.withStatus.use"),
+            code: `<div className="relative inline-block">\n  <Avatar>\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span role="status" aria-label="online" className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background" />\n</div>`,
+            preview: (
+              <div className="relative inline-block">
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+                  <AvatarFallback>MR</AvatarFallback>
+                </Avatar>
+                <span role="status" aria-label="online" className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background" />
               </div>
             ),
           },

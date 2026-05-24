@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
@@ -14,11 +13,6 @@ const meta = {
     docs: { page: withAutoDocsTab(ToggleGroupDocs) },
   },
   argTypes: {
-    type: {
-      control: "inline-radio",
-      options: ["single", "multiple"],
-      description: "Modo de seleção (define o tipo de value)",
-    },
     orientation: {
       control: "inline-radio",
       options: ["horizontal", "vertical"],
@@ -44,7 +38,6 @@ const meta = {
     },
   },
   args: {
-    type: "single",
     orientation: "horizontal",
     variant: "default",
     size: "default",
@@ -60,11 +53,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    // key força re-mount quando type muda (single/multiple usam tipos diferentes de defaultValue)
     <ToggleGroup
-      key={String(args.type)}
       {...args}
-      defaultValue={args.type === "multiple" ? ["left"] : "left"}
+      defaultValue={["left"]}
     >
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />

@@ -4,7 +4,7 @@ import { Skeleton } from './index';
 import SkeletonDocs from '@/components/docs/SkeletonDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta<any> = {
   title: 'UI/Skeleton',
   component: Skeleton,
   tags: ['autodocs'],
@@ -27,7 +27,7 @@ const meta = {
   args: {
     class: 'h-4 w-[250px]',
   },
-} satisfies Meta<typeof Skeleton>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

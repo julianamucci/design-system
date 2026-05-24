@@ -68,14 +68,18 @@ function buildBase(defaultOpen: boolean, collapsible?: 'offcanvas' | 'icon' | 'n
 
   const header = createSidebarHeader();
   const logoRow = document.createElement('div');
-  logoRow.className = 'px-2 py-1 text-sm font-semibold text-sidebar-foreground';
+  logoRow.className = 'nds-text-body nds-font-semibold';
+  logoRow.style.padding = '0.25rem 0.5rem';
+  logoRow.style.color = 'var(--sidebar-foreground)';
   logoRow.textContent = 'Design System';
   header.appendChild(logoRow);
   inner.appendChild(header);
 
   const content = createSidebarContent();
   const menu = document.createElement('ul');
-  menu.className = 'flex w-full min-w-0 flex-col gap-1 p-2';
+  menu.className = 'nds-stack nds-w-full nds-min-w-0';
+  menu.dataset.spacing = 'xs';
+  menu.style.padding = '0.5rem';
   menu.setAttribute('data-sidebar', 'menu');
 
   const navItems = [
@@ -96,22 +100,30 @@ function buildBase(defaultOpen: boolean, collapsible?: 'offcanvas' | 'icon' | 'n
   inner.appendChild(footer);
 
   const inset = document.createElement('div');
-  inset.className = 'flex flex-1 flex-col';
+  inset.className = 'nds-flex-1';
+  inset.style.display = 'flex';
+  inset.style.flexDirection = 'column';
 
   const topbar = document.createElement('div');
-  topbar.className = 'flex h-12 items-center gap-2 border-b border-border px-4';
+  topbar.className = 'nds-cluster nds-border-b';
+  topbar.dataset.spacing = 'sm';
+  topbar.style.height = '3rem';
+  topbar.style.paddingLeft = '1rem';
+  topbar.style.paddingRight = '1rem';
 
   if (collapsible !== 'none') {
     topbar.appendChild(createSidebarTrigger(instance.toggle));
   }
 
   const stateLabel = document.createElement('span');
-  stateLabel.className = 'text-xs text-muted-foreground font-mono';
+  stateLabel.className = 'nds-text-caption nds-text-muted-foreground nds-font-mono';
   stateLabel.textContent = collapsible ? `collapsible="${collapsible}"` : `open=${defaultOpen}`;
   topbar.appendChild(stateLabel);
 
   const mainContent = document.createElement('div');
-  mainContent.className = 'flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground';
+  mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+  mainContent.dataset.justify = 'center';
+  mainContent.style.padding = '2rem';
   mainContent.textContent = 'Conteúdo principal';
 
   inset.append(topbar, mainContent);
@@ -121,7 +133,8 @@ function buildBase(defaultOpen: boolean, collapsible?: 'offcanvas' | 'icon' | 'n
   wrapper.appendChild(inset);
 
   const container = document.createElement('div');
-  container.className = 'min-h-[400px] w-full border border-border rounded-lg overflow-hidden';
+  container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+  container.style.minHeight = '400px';
   container.appendChild(wrapper);
   return container;
 }
@@ -185,7 +198,10 @@ export const ModoIcon: Story = {
 
     const header = createSidebarHeader();
     const logoRow = document.createElement('div');
-    logoRow.className = 'flex items-center justify-center py-1';
+    logoRow.className = 'nds-cluster';
+    logoRow.dataset.justify = 'center';
+    logoRow.style.paddingTop = '0.25rem';
+    logoRow.style.paddingBottom = '0.25rem';
     logoRow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>';
     header.appendChild(logoRow);
     inner.appendChild(header);
@@ -198,7 +214,9 @@ export const ModoIcon: Story = {
     ];
 
     const menu = document.createElement('ul');
-    menu.className = 'flex w-full min-w-0 flex-col gap-1 p-2';
+    menu.className = 'nds-stack nds-w-full nds-min-w-0';
+  menu.dataset.spacing = 'xs';
+  menu.style.padding = '0.5rem';
     menu.setAttribute('data-sidebar', 'menu');
 
     navItems.forEach(item => {
@@ -217,19 +235,27 @@ export const ModoIcon: Story = {
     inner.appendChild(content);
 
     const inset = document.createElement('div');
-    inset.className = 'flex flex-1 flex-col';
+    inset.className = 'nds-flex-1';
+  inset.style.display = 'flex';
+  inset.style.flexDirection = 'column';
 
     const topbar = document.createElement('div');
-    topbar.className = 'flex h-12 items-center gap-2 border-b border-border px-4';
+    topbar.className = 'nds-cluster nds-border-b';
+  topbar.dataset.spacing = 'sm';
+  topbar.style.height = '3rem';
+  topbar.style.paddingLeft = '1rem';
+  topbar.style.paddingRight = '1rem';
     topbar.appendChild(createSidebarTrigger(instance.toggle));
 
     const label = document.createElement('span');
-    label.className = 'text-xs text-muted-foreground font-mono';
+    label.className = 'nds-text-caption nds-text-muted-foreground nds-font-mono';
     label.textContent = 'collapsible="icon"';
     topbar.appendChild(label);
 
     const mainContent = document.createElement('div');
-    mainContent.className = 'flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground';
+    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+  mainContent.dataset.justify = 'center';
+  mainContent.style.padding = '2rem';
     mainContent.textContent = 'Sidebar recolhida no modo icon: apenas ícones visíveis';
 
     inset.append(topbar, mainContent);
@@ -239,7 +265,8 @@ export const ModoIcon: Story = {
     wrapper.appendChild(inset);
 
     const container = document.createElement('div');
-    container.className = 'min-h-[400px] w-full border border-border rounded-lg overflow-hidden';
+    container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+  container.style.minHeight = '400px';
     container.appendChild(wrapper);
     return container;
   },
@@ -281,7 +308,11 @@ export const MobileOverlay: Story = {
   render: () => {
     const container = buildBase(true);
     const infoEl = document.createElement('div');
-    infoEl.className = 'absolute top-2 right-2 rounded bg-muted px-2 py-1 text-xs text-muted-foreground';
+    infoEl.className = 'nds-rounded nds-bg-muted nds-text-caption nds-text-muted-foreground';
+    infoEl.style.position = 'absolute';
+    infoEl.style.top = '0.5rem';
+    infoEl.style.right = '0.5rem';
+    infoEl.style.padding = '0.25rem 0.5rem';
     infoEl.textContent = 'Em mobile: Sheet overlay';
     container.style.position = 'relative';
     container.appendChild(infoEl);

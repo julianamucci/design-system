@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -16,6 +17,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -54,6 +56,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -138,6 +141,64 @@ function VerticalDemo({ label }: { label: string }) {
         aria-label={label}
       />
     </div>
+  );
+}
+
+function BrightnessCompDemo() {
+  const [value, setValue] = useState<number[]>([75]);
+  return (
+    <div className="space-y-3 w-full max-w-xs">
+      <div className="flex items-center justify-between">
+        <Label>Brilho</Label>
+        <span aria-live="polite" className="text-sm tabular-nums text-foreground">
+          {value[0]}%
+        </span>
+      </div>
+      <Slider
+        value={value}
+        onValueChange={(v) => setValue(v as number[])}
+        min={0}
+        max={100}
+        step={5}
+        aria-label="Brilho"
+      />
+    </div>
+  );
+}
+
+function FormCompDemo() {
+  const [value, setValue] = useState<number[]>([60]);
+  const [committed, setCommitted] = useState<number>(60);
+  return (
+    <form
+      aria-label="Configurações de áudio"
+      className="flex flex-col gap-4 w-full max-w-xs"
+      onSubmit={(e) => {
+        e.preventDefault();
+        setCommitted(value[0]);
+      }}
+    >
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label>Volume</Label>
+          <span aria-live="polite" className="text-sm tabular-nums text-foreground">
+            {value[0]}%
+          </span>
+        </div>
+        <Slider
+          value={value}
+          onValueChange={(v) => setValue(v as number[])}
+          onValueCommitted={(v) => setCommitted((v as number[])[0])}
+          min={0}
+          max={100}
+          aria-label="Volume"
+        />
+      </div>
+      <Button type="submit" size="sm" className="self-start">Salvar</Button>
+      <p className="text-xs text-muted-foreground" aria-live="polite">
+        Último commit: {committed}%
+      </p>
+    </form>
   );
 }
 
@@ -463,6 +524,98 @@ interface SliderProps {
                 />
               </div>
             ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="slider"
+        items={[
+          {
+            name: tContent("variants.compositions.volume.name"),
+            description: tContent("variants.compositions.volume.description"),
+            useWhen: tContent("variants.compositions.volume.use"),
+            code: `const [value, setValue] = useState([50]);
+
+<div className="space-y-3">
+  <div className="flex items-center justify-between">
+    <Label>Volume</Label>
+    <span aria-live="polite" className="text-sm tabular-nums">{value[0]}%</span>
+  </div>
+  <Slider
+    value={value}
+    onValueChange={setValue}
+    min={0}
+    max={100}
+    aria-label="Volume"
+  />
+</div>`,
+            preview: <VolumeDemo label="Volume" />,
+          },
+          {
+            name: tContent("variants.compositions.brightness.name"),
+            description: tContent("variants.compositions.brightness.description"),
+            useWhen: tContent("variants.compositions.brightness.use"),
+            code: `<Slider
+  value={value}
+  onValueChange={setValue}
+  min={0}
+  max={100}
+  step={5}
+  aria-label="Brilho"
+/>`,
+            preview: <BrightnessCompDemo />,
+          },
+          {
+            name: tContent("variants.compositions.priceRange.name"),
+            description: tContent("variants.compositions.priceRange.description"),
+            useWhen: tContent("variants.compositions.priceRange.use"),
+            code: `const [range, setRange] = useState([100, 400]);
+
+<div className="space-y-3">
+  <div className="flex items-center justify-between">
+    <Label>Faixa de preço</Label>
+    <span aria-live="polite" className="text-sm tabular-nums">
+      R$ {range[0]} — R$ {range[1]}
+    </span>
+  </div>
+  <Slider
+    value={range}
+    onValueChange={setRange}
+    min={0}
+    max={1000}
+    step={10}
+    aria-label="Faixa de preço"
+  />
+</div>`,
+            preview: <PriceRangeDemo label="Faixa de preço" />,
+          },
+          {
+            name: tContent("variants.compositions.form.name"),
+            description: tContent("variants.compositions.form.description"),
+            useWhen: tContent("variants.compositions.form.use"),
+            code: `<form aria-label="Configurações de áudio" onSubmit={handleSubmit}>
+  <Label>Volume</Label>
+  <Slider
+    value={value}
+    onValueChange={setValue}
+    onValueCommitted={(v) => {
+      track("slider_change", {
+        component: "slider",
+        field_name: "volume",
+        value: v[0],
+      });
+    }}
+    min={0}
+    max={100}
+    aria-label="Volume"
+  />
+  <Button type="submit">Salvar</Button>
+</form>`,
+            preview: <FormCompDemo />,
           },
         ]}
       />

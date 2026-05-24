@@ -21,6 +21,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -59,6 +60,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -464,6 +466,177 @@ interface HoverCardContentProps {
             preview: (
               <div className="text-xs font-mono text-muted-foreground">
                 openDelay=500 / closeDelay=200
+              </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="hover-card"
+        items={[
+          {
+            name: tContent("variants.compositions.userProfile.name"),
+            description: tContent("variants.compositions.userProfile.description"),
+            useWhen: tContent("variants.compositions.userProfile.use"),
+            code: `<HoverCard openDelay={500} closeDelay={200}>
+  <HoverCardTrigger asChild>
+    <a href="/users/joana">@joana</a>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <div className="flex gap-3">
+      <Avatar>
+        <AvatarImage src="/joana.jpg" alt="" />
+        <AvatarFallback>JS</AvatarFallback>
+      </Avatar>
+      <div className="flex flex-col">
+        <p className="font-medium text-sm">Joana Silva</p>
+        <p className="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+      </div>
+    </div>
+  </HoverCardContent>
+</HoverCard>`,
+            preview: (
+              <div style={{ contain: "layout", minHeight: 140, position: "relative" }}>
+                <HoverCard openDelay={50} closeDelay={50} defaultOpen>
+                  <HoverCardTrigger asChild>
+                    <a href="#joana" className="text-primary underline-offset-4 hover:underline">@joana</a>
+                  </HoverCardTrigger>
+                  <HoverCardContent>
+                    <div className="flex gap-3">
+                      <Avatar>
+                        <AvatarImage src="" alt="" />
+                        <AvatarFallback>JS</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <p className="font-medium text-sm">Joana Silva</p>
+                        <p className="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.linkPreview.name"),
+            description: tContent("variants.compositions.linkPreview.description"),
+            useWhen: tContent("variants.compositions.linkPreview.use"),
+            code: `<HoverCard openDelay={500} closeDelay={200}>
+  <HoverCardTrigger asChild>
+    <a href="https://design-system.dev">design-system.dev</a>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <span className="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+        <span>design-system.dev</span>
+      </div>
+      <p className="font-medium">Guia de overlays acessíveis</p>
+    </div>
+  </HoverCardContent>
+</HoverCard>`,
+            preview: (
+              <div style={{ contain: "layout", minHeight: 140, position: "relative" }}>
+                <HoverCard openDelay={50} closeDelay={50} defaultOpen>
+                  <HoverCardTrigger asChild>
+                    <a href="#link" className="text-primary underline-offset-4 hover:underline">design-system.dev</a>
+                  </HoverCardTrigger>
+                  <HoverCardContent>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span className="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+                        <span>design-system.dev</span>
+                      </div>
+                      <p className="font-medium">Guia de overlays acessíveis</p>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.definitionTooltip.name"),
+            description: tContent("variants.compositions.definitionTooltip.description"),
+            useWhen: tContent("variants.compositions.definitionTooltip.use"),
+            code: `<HoverCard openDelay={400} closeDelay={150}>
+  <HoverCardTrigger asChild>
+    <button type="button" className="underline decoration-dotted underline-offset-4">
+      WCAG 2.1 AA
+    </button>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <p className="font-medium text-sm">WCAG 2.1 AA</p>
+    <p className="text-xs text-muted-foreground">
+      Web Content Accessibility Guidelines 2.1 — nível AA.
+    </p>
+  </HoverCardContent>
+</HoverCard>`,
+            preview: (
+              <div style={{ contain: "layout", minHeight: 140, position: "relative" }}>
+                <HoverCard openDelay={50} closeDelay={50} defaultOpen>
+                  <HoverCardTrigger asChild>
+                    <button
+                      type="button"
+                      className="bg-transparent border-0 p-0 text-primary text-sm font-medium underline decoration-dotted underline-offset-4 cursor-help"
+                    >
+                      WCAG 2.1 AA
+                    </button>
+                  </HoverCardTrigger>
+                  <HoverCardContent>
+                    <p className="font-medium text-sm">WCAG 2.1 AA</p>
+                    <p className="text-xs text-muted-foreground">
+                      Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.
+                    </p>
+                  </HoverCardContent>
+                </HoverCard>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.metricExplainer.name"),
+            description: tContent("variants.compositions.metricExplainer.description"),
+            useWhen: tContent("variants.compositions.metricExplainer.use"),
+            code: `<HoverCard openDelay={400} closeDelay={150}>
+  <HoverCardTrigger asChild>
+    <button type="button" className="underline decoration-dotted underline-offset-4">
+      LCP 1.8s
+    </button>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <div className="flex items-baseline justify-between gap-2">
+      <p className="text-sm font-medium">Largest Contentful Paint</p>
+      <span className="text-xs font-medium text-emerald-600">1.8s</span>
+    </div>
+    <p className="text-xs text-muted-foreground">
+      Tempo até o maior elemento visível. Bom: &lt;2.5s · Ruim: &gt;4s.
+    </p>
+  </HoverCardContent>
+</HoverCard>`,
+            preview: (
+              <div style={{ contain: "layout", minHeight: 140, position: "relative" }}>
+                <HoverCard openDelay={50} closeDelay={50} defaultOpen>
+                  <HoverCardTrigger asChild>
+                    <button
+                      type="button"
+                      className="bg-transparent border-0 p-0 text-primary text-sm font-medium underline decoration-dotted underline-offset-4 cursor-help"
+                    >
+                      LCP 1.8s
+                    </button>
+                  </HoverCardTrigger>
+                  <HoverCardContent>
+                    <div className="flex items-baseline justify-between gap-2">
+                      <p className="text-sm font-medium">Largest Contentful Paint</p>
+                      <span className="text-xs font-medium text-emerald-600">1.8s</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Tempo até o maior elemento visível ser renderizado. Bom: &lt;2.5s · Ruim: &gt;4s.
+                    </p>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             ),
           },

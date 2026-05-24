@@ -1,0 +1,101 @@
+/*
+ * ─── nds-alert-dialog ──────────────────────────────────────────────────────
+ * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ *
+ * Estrutura (portal — root é body):
+ *   <div class="nds-alert-dialog-overlay" />
+ *   <div class="nds-alert-dialog-content" role="alertdialog" aria-modal="true">
+ *     <div class="nds-alert-dialog-header">
+ *       <h2 class="nds-alert-dialog-title">Título</h2>
+ *       <p  class="nds-alert-dialog-description">Descrição</p>
+ *     </div>
+ *     <div class="nds-alert-dialog-footer">
+ *       <button>Cancelar</button>
+ *       <button>Confirmar</button>
+ *     </div>
+ *   </div>
+ *
+ * Sem overlay-click-to-close e sem Escape-to-close — comportamento canônico
+ * de alert dialog (decisão crítica, exige escolha explícita do usuário).
+ *
+ * Tokens: --background, --foreground, --muted-foreground, --border,
+ *         --radius-dialog, --spacing-*
+ */
+
+/* ── Overlay ─────────────────────────────────────────────────────────────── */
+.nds-alert-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: hsl(0 0% 0% / 0.8);
+}
+
+/* ── Content panel ───────────────────────────────────────────────────────── */
+.nds-alert-dialog-content {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 50;
+
+  display: grid;
+  gap: var(--spacing-4);                          /* 16px entre header e footer */
+
+  width: calc(100% - var(--spacing-8));           /* 100% - 32px de margem */
+  max-width: 32rem;                               /* 512px — tamanho lg confortável */
+  translate: -50% -50%;
+
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-dialog, 0.625rem);
+  padding: var(--spacing-6);                      /* 24px */
+  box-shadow:
+    0 10px 15px -3px hsl(0 0% 0% / 0.1),
+    0 4px 6px -4px hsl(0 0% 0% / 0.1);
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.nds-alert-dialog-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);                          /* 8px entre título e descrição */
+  text-align: center;
+}
+
+@media (min-width: 40rem) {
+  .nds-alert-dialog-header {
+    text-align: left;
+  }
+}
+
+/* ── Title ───────────────────────────────────────────────────────────────── */
+.nds-alert-dialog-title {
+  margin: 0;
+  font-size: 1.125rem;                            /* 18px — text-lg */
+  font-weight: var(--font-weight-semibold, 600);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: hsl(var(--foreground));
+}
+
+/* ── Description ─────────────────────────────────────────────────────────── */
+.nds-alert-dialog-description {
+  margin: 0;
+  font-size: 0.875rem;                            /* 14px */
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.nds-alert-dialog-footer {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--spacing-2);                          /* 8px entre botões empilhados */
+}
+
+@media (min-width: 40rem) {
+  .nds-alert-dialog-footer {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}

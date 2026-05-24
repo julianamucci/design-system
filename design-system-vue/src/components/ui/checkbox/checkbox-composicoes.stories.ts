@@ -170,7 +170,7 @@ export const SelecionarTodos: Story = {
   render: () => ({
     components: { Checkbox },
     setup() {
-      const { ref, computed } = window.Vue ?? {};
+      const { ref, computed } = (window as any).Vue ?? {};
       // Fallback for Storybook environment
       const items = ['Receber novidades por email', 'Receber notificações push', 'Manter sessão ativa'];
       const checked = [false, false, false];

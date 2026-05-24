@@ -26,14 +26,17 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const w = document.createElement('div');
   w.style.contain = 'layout';
-  w.className = 'w-full min-h-[220px] flex items-center justify-center gap-3';
+  w.className = 'nds-cluster nds-w-full';
+  w.dataset.spacing = 'sm';
+  w.dataset.justify = 'center';
+  w.style.minHeight = '220px';
   w.appendChild(child);
   return w;
 }
 
 function buildSimpleContent(text: string): HTMLElement {
   const c = document.createElement('div');
-  c.className = 'text-sm text-muted-foreground';
+  c.className = 'nds-text-body nds-text-muted-foreground';
   c.textContent = text;
   return c;
 }
@@ -105,10 +108,13 @@ export const Controlado: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.style.contain = 'layout';
-    wrapper.className = 'flex flex-col gap-3 min-h-[220px] items-center';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.style.minHeight = '220px';
+    wrapper.style.alignItems = 'center';
 
     const status = document.createElement('span');
-    status.className = 'text-xs font-mono text-muted-foreground';
+    status.className = 'nds-text-caption nds-font-mono nds-text-muted-foreground';
     status.textContent = 'open=false';
 
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
@@ -157,7 +163,8 @@ export const Focado: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
 
     const content = document.createElement('div');
-    content.className = 'space-y-2';
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'xs';
 
     const action = createButton({ variant: 'default', size: 'sm', label: 'Confirmar' });
     content.appendChild(action);

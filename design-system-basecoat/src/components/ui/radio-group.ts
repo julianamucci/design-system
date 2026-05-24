@@ -1,17 +1,12 @@
-import { cn } from '@/lib/utils';
+// ─── Radio Group — Vanilla factory standalone ───────────────────────────────
+//
+// Visual: classes .nds-radio-* (zero Tailwind/basecoat-css).
+// Estado controlado via aria-checked + display do .nds-radio-indicator.
+// Native <input type="radio"> presente em cada item para participação em forms.
 
-// ─── Radio-group classes ──────────────────────────────────────────────────────
-
-const RADIO_ITEM =
-  'aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow ' +
-  'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring ' +
-  'disabled:cursor-not-allowed disabled:opacity-50';
-
-const ICON_RADIO_INDICATOR_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" ' +
-  'fill="currentColor" class="h-3.5 w-3.5 fill-primary" aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+const RADIO_INDICATOR_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" ' +
+  'aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>';
 
 export type RadioGroupItem = {
   value: string;
@@ -27,45 +22,53 @@ export type RadioGroupOptions = {
   class?: string;
 };
 
-// ─── createRadioGroup ─────────────────────────────────────────────────────────
-
 export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
   const { name, items, defaultValue, onValueChange } = options;
 
   const fieldset = document.createElement('fieldset');
-  fieldset.className = cn('grid gap-2 border-0 p-0 m-0', options.class);
   fieldset.dataset.slot = 'radio-group';
+  fieldset.className = 'nds-radio-group';
+  if (options.class) fieldset.classList.add(...options.class.split(' ').filter(Boolean));
+
+  function selectItem(value: string): void {
+    fieldset.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {
+      const v = btn.dataset.value!;
+      const isSelected = v === value;
+      btn.setAttribute('aria-checked', String(isSelected));
+      const ind = btn.querySelector<HTMLElement>('[data-slot="radio-indicator"]');
+      if (ind) ind.style.display = isSelected ? '' : 'none';
+    });
+    fieldset.querySelectorAll<HTMLInputElement>('input[type="radio"]').forEach((inp) => {
+      inp.checked = inp.value === value;
+    });
+    onValueChange?.(value);
+  }
 
   items.forEach((item) => {
     const rowEl = document.createElement('div');
-    rowEl.className = 'flex items-center gap-2';
+    rowEl.className = 'nds-radio-row';
 
-    // Custom visual button
     const itemBtn = document.createElement('button');
     itemBtn.type = 'button';
-    itemBtn.className = cn(RADIO_ITEM);
     itemBtn.dataset.slot = 'radio-group-item';
     itemBtn.dataset.value = item.value;
+    itemBtn.className = 'nds-radio-item';
     itemBtn.setAttribute('role', 'radio');
     itemBtn.setAttribute('aria-checked', String(item.value === defaultValue));
-    if (item.disabled) {
-      itemBtn.disabled = true;
-    }
+    if (item.disabled) itemBtn.disabled = true;
 
     const indicatorSpan = document.createElement('span');
-    indicatorSpan.className = 'grid place-content-center';
     indicatorSpan.dataset.slot = 'radio-indicator';
+    indicatorSpan.className = 'nds-radio-indicator';
     indicatorSpan.style.display = item.value === defaultValue ? '' : 'none';
-    // PATCH: security — substituído `indicatorSpan.innerHTML = ICON_RADIO_INDICATOR_SVG` por
-    // wrapper descartável + appendChild do <svg> parseado. ICON_RADIO_INDICATOR_SVG é constante
-    // literal interna (segura), mas evitamos atribuir innerHTML em elemento do fluxo do DOM.
-    const indicatorWrapper = document.createElement('span');
-    indicatorWrapper.innerHTML = ICON_RADIO_INDICATOR_SVG; // ICON_RADIO_INDICATOR_SVG é constante literal interna (segura)
-    const indicatorSvg = indicatorWrapper.firstElementChild;
-    if (indicatorSvg) indicatorSpan.appendChild(indicatorSvg);
+
+    // SVG parseado e anexado (não innerHTML em elemento do fluxo).
+    const wrap = document.createElement('span');
+    wrap.innerHTML = RADIO_INDICATOR_SVG;
+    const svg = wrap.firstElementChild;
+    if (svg) indicatorSpan.appendChild(svg);
     itemBtn.appendChild(indicatorSpan);
 
-    // Hidden native input for form participation
     const nativeInput = document.createElement('input');
     nativeInput.type = 'radio';
     nativeInput.name = name;
@@ -74,28 +77,14 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
     nativeInput.disabled = item.disabled ?? false;
     nativeInput.setAttribute('aria-hidden', 'true');
     nativeInput.tabIndex = -1;
-    nativeInput.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;';
+    itemBtn.appendChild(nativeInput);
 
     const labelEl = document.createElement('label');
-    labelEl.className = 'text-sm font-medium leading-none';
+    labelEl.className = 'nds-radio-label';
     labelEl.textContent = item.label;
 
-    rowEl.append(itemBtn, nativeInput, labelEl);
+    rowEl.append(itemBtn, labelEl);
     fieldset.appendChild(rowEl);
-
-    function selectItem(value: string): void {
-      fieldset.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {
-        const v = btn.dataset.value!;
-        const isSelected = v === value;
-        btn.setAttribute('aria-checked', String(isSelected));
-        const ind = btn.querySelector<HTMLElement>('[data-slot="radio-indicator"]');
-        if (ind) ind.style.display = isSelected ? '' : 'none';
-      });
-      fieldset.querySelectorAll<HTMLInputElement>('input[type="radio"]').forEach((inp) => {
-        inp.checked = inp.value === value;
-      });
-      onValueChange?.(value);
-    }
 
     if (!item.disabled) {
       itemBtn.addEventListener('click', () => selectItem(item.value));

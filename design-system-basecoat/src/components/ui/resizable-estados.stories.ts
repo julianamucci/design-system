@@ -24,7 +24,9 @@ type Story = StoryObj;
 
 function panelContent(label: string, extraClass = ''): HTMLElement {
   const el = document.createElement('div');
-  el.className = `h-full w-full flex items-center justify-center p-4 text-sm font-medium ${extraClass}`;
+  el.className = `nds-cluster nds-w-full nds-p-4 nds-text-body nds-font-medium ${extraClass}`.trim();
+  el.dataset.justify = 'center';
+  el.style.height = '100%';
   const span = document.createElement('span');
   span.textContent = label;
   el.appendChild(span);
@@ -35,7 +37,7 @@ function frame(child: HTMLElement, minHeight = '220px'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.contain = 'layout';
   wrap.style.minHeight = minHeight;
-  wrap.className = 'w-full border border-border rounded-md overflow-hidden bg-background';
+  wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
   wrap.appendChild(child);
   return wrap;
 }
@@ -44,7 +46,7 @@ function basicHorizontal(): HTMLElement {
   const root = createResizablePanel({
     direction: 'horizontal',
     panels: [
-      { defaultSize: 40, minSize: 20, content: panelContent('Painel A', 'bg-muted text-muted-foreground') },
+      { defaultSize: 40, minSize: 20, content: panelContent('Painel A', 'nds-bg-muted nds-text-muted-foreground') },
       { defaultSize: 60, minSize: 30, content: panelContent('Painel B') },
     ],
   });
@@ -118,7 +120,7 @@ export const Disabled: Story = {
       handle.dataset.disabled = '';
       handle.style.pointerEvents = 'none';
       handle.style.cursor = 'not-allowed';
-      handle.classList.add('opacity-50');
+      handle.style.opacity = '0.5';
     }
     return frame(root);
   },

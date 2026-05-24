@@ -16,6 +16,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -63,7 +64,8 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: opts.triggerLabel });
 
   const body = document.createElement('div');
-  body.className = 'text-sm text-muted-foreground space-y-3';
+  body.className = 'nds-stack nds-text-body nds-text-muted-foreground';
+  body.dataset.spacing = 'sm';
   const p = document.createElement('p');
   p.textContent = opts.bodyText ?? 'Conteúdo do painel — imagine campos de filtro aqui.';
   body.appendChild(p);
@@ -71,7 +73,8 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   const cancel = createButton({ variant: 'outline', label: opts.cancelLabel });
   const apply = createButton({ variant: 'default', label: opts.applyLabel });
   const footer = document.createElement('div');
-  footer.className = 'flex gap-2';
+  footer.className = 'nds-cluster';
+  footer.dataset.spacing = 'xs';
   footer.append(cancel, apply);
 
   // Fechar ao clicar nas ações: dispara click no overlay (close interno da factory).
@@ -136,6 +139,7 @@ export function createSheetDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -179,7 +183,7 @@ export function createSheetDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -193,7 +197,10 @@ export function createSheetDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-wrap items-center justify-center gap-3';
+            wrap.className = 'nds-cluster';
+            wrap.dataset.justify = 'center';
+            wrap.dataset.spacing = 'sm';
+            wrap.style.flexWrap = 'wrap';
             wrap.appendChild(buildSheetDemo({
               side: 'right',
               triggerLabel: t('demonstration.labels.trigger'),
@@ -270,21 +277,22 @@ export function createSheetDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-sm space-y-1';
+                wrap.className = 'nds-stack nds-text-body';
+                wrap.dataset.spacing = 'xs';
                 const title = document.createElement('div');
-                title.className = 'font-medium';
+                title.className = 'nds-font-medium';
                 title.textContent = t('demonstration.labels.title');
                 const desc = document.createElement('div');
-                desc.className = 'text-xs text-muted-foreground';
+                desc.className = 'nds-text-caption nds-text-muted-foreground';
                 desc.textContent = t('demonstration.labels.description');
                 wrap.append(title, desc);
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-sm';
+                wrap.className = 'nds-text-body';
                 const note = document.createElement('div');
-                note.className = 'text-xs text-muted-foreground italic';
+                note.className = 'nds-text-caption nds-text-muted-foreground nds-italic';
                 note.textContent = 'sem Title/Description — SR sem contexto';
                 wrap.append(note);
                 return wrap;
@@ -297,13 +305,13 @@ export function createSheetDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const code = document.createElement('div');
-                code.className = 'text-sm font-mono';
+                code.className = 'nds-text-body nds-font-mono';
                 code.textContent = "side='right' (filtros desktop)";
                 return code;
               },
               dontPreviewFactory: () => {
                 const code = document.createElement('div');
-                code.className = 'text-sm font-mono';
+                code.className = 'nds-text-body nds-font-mono';
                 code.textContent = "side='top' em todos os contextos";
                 return code;
               },
@@ -386,6 +394,192 @@ createSheet({
                 cancelLabel: t('demonstration.labels.cancel'),
                 applyLabel: t('demonstration.labels.apply'),
               }),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        const buildSecondaryNavBody = () => {
+          const nav = document.createElement('nav');
+          nav.setAttribute('aria-label', 'Navegação secundária');
+          nav.className = 'nds-stack nds-px-4';
+          nav.dataset.spacing = 'xs';
+          ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'].forEach((label) => {
+            const a = document.createElement('a');
+            a.href = '#';
+            a.className = 'nds-rounded-md nds-text-body nds-hover-bg-accent';
+            a.style.padding = '0.5rem 0.75rem';
+            a.textContent = label;
+            nav.appendChild(a);
+          });
+          return nav;
+        };
+        const buildMobileActionsBody = () => {
+          const grid = document.createElement('div');
+          grid.className = 'nds-grid nds-px-4 nds-text-body';
+          grid.dataset.cols = '3';
+          grid.dataset.spacing = 'sm';
+          ['Compartilhar', 'Editar', 'Excluir', 'Arquivar', 'Mover', 'Copiar link'].forEach((label) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent';
+            btn.dataset.spacing = 'xs';
+            btn.style.alignItems = 'center';
+            btn.style.padding = '0.75rem';
+            btn.textContent = label;
+            grid.appendChild(btn);
+          });
+          return grid;
+        };
+        const buildLongBody = () => {
+          const wrap = document.createElement('div');
+          wrap.className = 'nds-stack nds-text-body nds-text-muted-foreground';
+          wrap.dataset.spacing = 'sm';
+          for (let i = 1; i <= 14; i++) {
+            const p = document.createElement('p');
+            p.textContent = `Parágrafo ${i}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.`;
+            wrap.appendChild(p);
+          }
+          return wrap;
+        };
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'sheet',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.advancedFilters.name')),
+              description: stripHtml(t('variants.compositions.advancedFilters.description')),
+              useWhen: stripHtml(t('variants.compositions.advancedFilters.use')),
+              code: `const trigger = createButton({ variant: 'outline', label: 'Abrir filtros' });
+const form = document.createElement('form');
+// ...campos de filtro
+const footer = document.createElement('div');
+footer.className = 'nds-cluster';
+footer.dataset.spacing = 'xs';
+footer.append(
+  createButton({ variant: 'outline', label: 'Cancelar' }),
+  createButton({ variant: 'default', label: 'Aplicar filtros' }),
+);
+createSheet({
+  trigger,
+  side: 'right',
+  title: 'Filtros avançados',
+  description: 'Configure os filtros para refinar os resultados.',
+  content: form,
+  footer,
+});`,
+              previewFactory: () => buildSheetDemo({
+                side: 'right',
+                triggerLabel: t('demonstration.labels.trigger'),
+                title: t('demonstration.labels.title'),
+                description: t('demonstration.labels.description'),
+                cancelLabel: t('demonstration.labels.cancel'),
+                applyLabel: t('demonstration.labels.apply'),
+              }),
+            },
+            {
+              name: stripHtml(t('variants.compositions.secondaryNavigation.name')),
+              description: stripHtml(t('variants.compositions.secondaryNavigation.description')),
+              useWhen: stripHtml(t('variants.compositions.secondaryNavigation.use')),
+              code: `const nav = document.createElement('nav');
+nav.setAttribute('aria-label', 'Navegação secundária');
+['Dashboard', 'Projetos', 'Equipe'].forEach(label => {
+  const a = document.createElement('a');
+  a.href = '#';
+  a.textContent = label;
+  nav.appendChild(a);
+});
+createSheet({
+  trigger,
+  side: 'left',
+  title: 'Menu',
+  description: 'Navegue entre as áreas do sistema.',
+  content: nav,
+});`,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Abrir menu' });
+                return createSheet({
+                  trigger,
+                  side: 'left',
+                  title: 'Menu',
+                  description: 'Navegue entre as áreas do sistema.',
+                  content: buildSecondaryNavBody(),
+                });
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.mobileActions.name')),
+              description: stripHtml(t('variants.compositions.mobileActions.description')),
+              useWhen: stripHtml(t('variants.compositions.mobileActions.use')),
+              code: `const grid = document.createElement('div');
+grid.className = 'nds-grid';
+grid.dataset.cols = '3';
+grid.dataset.spacing = 'sm';
+['Compartilhar', 'Editar', 'Excluir'].forEach(label => {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = label;
+  grid.appendChild(btn);
+});
+createSheet({
+  trigger,
+  side: 'bottom',
+  title: 'Ações rápidas',
+  description: 'Escolha o que fazer com este item.',
+  content: grid,
+});`,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Mais opções' });
+                return createSheet({
+                  trigger,
+                  side: 'bottom',
+                  title: 'Ações rápidas',
+                  description: 'Escolha o que fazer com este item.',
+                  content: buildMobileActionsBody(),
+                });
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.longScrollBody.name')),
+              description: stripHtml(t('variants.compositions.longScrollBody.description')),
+              useWhen: stripHtml(t('variants.compositions.longScrollBody.use')),
+              code: `// body longo — factory aplica flex-1 overflow-auto no corpo automaticamente
+const body = document.createElement('div');
+// ...muitos parágrafos
+createSheet({
+  trigger,
+  side: 'right',
+  title: 'Termos de uso',
+  description: 'Leia atentamente antes de aceitar.',
+  content: body,
+  footer,
+});`,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
+                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                const accept = createButton({ variant: 'default', label: 'Aceitar termos' });
+                const footer = document.createElement('div');
+                footer.className = 'nds-cluster';
+  footer.dataset.spacing = 'xs';
+                footer.append(cancel, accept);
+                const closeFromAction = () => {
+                  const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
+                  overlay?.click();
+                };
+                cancel.addEventListener('click', closeFromAction);
+                accept.addEventListener('click', closeFromAction);
+                return createSheet({
+                  trigger,
+                  side: 'right',
+                  title: 'Termos de uso',
+                  description: 'Leia atentamente antes de aceitar.',
+                  content: buildLongBody(),
+                  footer,
+                });
+              },
             },
           ],
         });

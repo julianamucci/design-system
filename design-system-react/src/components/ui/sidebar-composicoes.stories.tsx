@@ -7,7 +7,6 @@ import {
   Coins,
   Settings,
   User,
-  Search,
   Bell,
   ChevronRight,
   Plus,

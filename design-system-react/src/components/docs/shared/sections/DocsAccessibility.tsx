@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card } from '@/components/ui/card';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 

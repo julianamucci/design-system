@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils"
 function Tabs({
   className,
   orientation = "horizontal",
+  variant: _variant,
   ...props
-}: TabsPrimitive.Root.Props) {
+}: TabsPrimitive.Root.Props & { variant?: "default" | "line" }) {
   return (
     <TabsPrimitive.Root
       data-slot="tabs"

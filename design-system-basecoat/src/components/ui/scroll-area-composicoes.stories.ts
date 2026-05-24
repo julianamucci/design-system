@@ -26,9 +26,11 @@ type Story = StoryObj;
 
 function tagItem(label: string, count: string): HTMLElement {
   const row = document.createElement('div');
-  row.className = 'flex items-center justify-between px-3 py-2 border-b border-border/40';
+  row.className = 'nds-cluster nds-border-b-soft';
+  row.dataset.justify = 'between';
+  row.style.padding = '0.5rem 0.75rem';
   const left = document.createElement('span');
-  left.className = 'text-sm';
+  left.className = 'nds-text-body';
   left.textContent = label;
   const badge = createBadge({ variant: 'secondary', text: count });
   row.append(left, badge);
@@ -41,10 +43,11 @@ export const TagsList: Story = {
   name: 'Lista vertical com badges',
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'w-full max-w-sm';
+    outer.className = 'nds-w-full nds-max-w-sm';
 
     const list = document.createElement('div');
-    list.className = 'flex flex-col';
+    list.style.display = 'flex';
+    list.style.flexDirection = 'column';
     const tags = [
       ['v1.0.0', '120'], ['v1.1.0', '98'], ['v1.2.0', '76'], ['v2.0.0', '210'],
       ['v2.1.0', '54'], ['v2.2.0', '88'], ['v3.0.0', '162'], ['v3.1.0', '42'],
@@ -56,7 +59,7 @@ export const TagsList: Story = {
 
     outer.appendChild(createScrollArea({
       height: '300px',
-      class: 'w-full rounded-md border',
+      class: 'nds-w-full nds-rounded-md nds-border-default',
       children: list,
     }));
     return outer;
@@ -74,10 +77,14 @@ export const HorizontalCards: Story = {
   name: 'Carrossel horizontal de cards',
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'w-full max-w-2xl';
+    outer.className = 'nds-w-full';
+    outer.style.maxWidth = '42rem';
 
     const row = document.createElement('div');
-    row.className = 'flex gap-4 p-3 w-max';
+    row.className = 'nds-cluster';
+    row.dataset.spacing = 'md';
+    row.style.padding = '0.75rem';
+    row.style.width = 'max-content';
 
     const products = [
       { title: 'Cadeira Pro',   desc: 'Ergonômica · apoio lombar' },
@@ -93,11 +100,12 @@ export const HorizontalCards: Story = {
     ];
 
     products.forEach(p => {
-      const card = createCard({ className: 'w-56 shrink-0' });
+      const card = createCard({ className: 'nds-shrink-0' });
+      card.style.width = '14rem';
       const header = createCardHeader();
-      header.appendChild(createCardTitle({ text: p.title, level: 3, className: 'text-base' }));
+      header.appendChild(createCardTitle({ text: p.title, level: 3, className: 'nds-text-base' }));
       header.appendChild(createCardDescription({ text: p.desc }));
-      const content = createCardContent({ className: 'text-sm text-muted-foreground' });
+      const content = createCardContent({ className: 'nds-text-body nds-text-muted-foreground' });
       content.textContent = 'Produto em destaque.';
       card.append(header, content);
       row.appendChild(card);
@@ -105,7 +113,7 @@ export const HorizontalCards: Story = {
 
     outer.appendChild(createScrollArea({
       width: '100%',
-      class: 'rounded-md border whitespace-nowrap',
+      class: 'nds-rounded-md nds-border-default',
       children: row,
     }));
     return outer;
@@ -121,20 +129,25 @@ export const WideTable: Story = {
   name: 'Tabela ampla (bidirecional)',
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'w-full max-w-2xl';
+    outer.className = 'nds-w-full';
+    outer.style.maxWidth = '42rem';
 
     const wrap = document.createElement('div');
-    wrap.className = 'p-0';
 
     const table = document.createElement('table');
-    table.className = 'border-collapse text-xs w-max';
+    table.className = 'nds-text-caption';
+    table.style.borderCollapse = 'collapse';
+    table.style.width = 'max-content';
 
     const header = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    headerRow.className = 'bg-muted/40';
+    headerRow.className = 'nds-bg-muted-soft';
     for (let c = 0; c <= 12; c++) {
       const th = document.createElement('th');
-      th.className = 'border border-border px-3 py-2 text-left whitespace-nowrap font-medium';
+      th.className = 'nds-border-default nds-font-medium';
+      th.style.padding = '0.5rem 0.75rem';
+      th.style.textAlign = 'left';
+      th.style.whiteSpace = 'nowrap';
       th.textContent = c === 0 ? 'ID' : `Coluna ${c}`;
       headerRow.appendChild(th);
     }
@@ -146,7 +159,9 @@ export const WideTable: Story = {
       const tr = document.createElement('tr');
       for (let c = 0; c <= 12; c++) {
         const td = document.createElement('td');
-        td.className = 'border border-border px-3 py-2 whitespace-nowrap';
+        td.className = 'nds-border-default';
+        td.style.padding = '0.5rem 0.75rem';
+        td.style.whiteSpace = 'nowrap';
         td.textContent = c === 0 ? `#${String(r).padStart(3, '0')}` : `${r}.${c}`;
         tr.appendChild(td);
       }
@@ -158,7 +173,7 @@ export const WideTable: Story = {
     outer.appendChild(createScrollArea({
       height: '320px',
       width: '100%',
-      class: 'rounded-md border',
+      class: 'nds-rounded-md nds-border-default',
       children: wrap,
     }));
     return outer;
@@ -173,16 +188,20 @@ export const WideTable: Story = {
 export const InsideCard: Story = {
   name: 'Dentro de Card',
   render: () => {
-    const card = createCard({ className: 'w-full max-w-md' });
+    const card = createCard({ className: 'nds-w-full nds-max-w-md' });
 
     const header = createCardHeader();
     header.appendChild(createCardTitle({ text: 'Histórico de atividades', level: 3 }));
     header.appendChild(createCardDescription({ text: 'Últimas 30 ações do usuário' }));
 
-    const content = createCardContent({ className: 'p-0' });
+    const content = createCardContent({ className: '' });
+    content.style.padding = '0';
 
     const list = document.createElement('ul');
-    list.className = 'flex flex-col gap-1 p-3 list-none m-0';
+    list.className = 'nds-stack nds-list-none';
+    list.dataset.spacing = 'xs';
+    list.style.padding = '0.75rem';
+    list.style.margin = '0';
     const actions = ['Login', 'Editou perfil', 'Trocou senha', 'Removeu sessão', 'Adicionou cartão',
       'Cancelou assinatura', 'Renovou plano', 'Exportou dados', 'Importou contatos', 'Convidou usuário',
       'Removeu usuário', 'Alterou permissão', 'Criou projeto', 'Arquivou projeto', 'Restaurou projeto',
@@ -191,11 +210,14 @@ export const InsideCard: Story = {
       'Configurou webhook', 'Testou webhook', 'Removeu webhook', 'Conectou GitHub', 'Desconectou GitHub'];
     actions.forEach((a, i) => {
       const li = document.createElement('li');
-      li.className = 'flex items-center justify-between text-sm border-b border-border/40 py-2 last:border-0';
+      li.className = 'nds-cluster nds-text-body nds-border-b-soft';
+      li.dataset.justify = 'between';
+      li.style.paddingTop = '0.5rem';
+      li.style.paddingBottom = '0.5rem';
       const left = document.createElement('span');
       left.textContent = a;
       const right = document.createElement('span');
-      right.className = 'text-xs text-muted-foreground';
+      right.className = 'nds-text-caption nds-text-muted-foreground';
       right.textContent = `${i + 1} min`;
       li.append(left, right);
       list.appendChild(li);
@@ -203,14 +225,14 @@ export const InsideCard: Story = {
 
     content.appendChild(createScrollArea({
       height: '240px',
-      class: 'w-full border-t',
+      class: 'nds-w-full nds-border-default',
       children: list,
     }));
 
     card.append(header, content);
 
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(card);
     return wrap;
   },
@@ -225,13 +247,19 @@ export const Sidebar: Story = {
   name: 'Sidebar de navegação',
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'flex w-full max-w-3xl gap-4';
+    outer.className = 'nds-cluster nds-w-full';
+    outer.dataset.spacing = 'md';
+    outer.dataset.align = 'stretch';
+    outer.style.maxWidth = '48rem';
 
     const nav = document.createElement('nav');
     nav.setAttribute('aria-label', 'Componentes do design system');
 
     const list = document.createElement('ul');
-    list.className = 'flex flex-col gap-1 p-3 list-none m-0';
+    list.className = 'nds-stack nds-list-none';
+    list.dataset.spacing = 'xs';
+    list.style.padding = '0.75rem';
+    list.style.margin = '0';
     const items = [
       'Accordion', 'Alert', 'AlertDialog', 'AspectRatio', 'Avatar', 'Badge', 'Breadcrumb', 'Button',
       'Calendar', 'Card', 'Carousel', 'Chart', 'Checkbox', 'Collapsible', 'Command', 'ContextMenu',
@@ -244,7 +272,8 @@ export const Sidebar: Story = {
       const li = document.createElement('li');
       const link = document.createElement('a');
       link.href = '#';
-      link.className = 'block px-3 py-1.5 rounded-md text-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+      link.className = 'nds-block nds-rounded-md nds-text-body nds-hover-bg-accent';
+      link.style.padding = '0.375rem 0.75rem';
       link.textContent = label;
       li.appendChild(link);
       list.appendChild(li);
@@ -254,12 +283,14 @@ export const Sidebar: Story = {
 
     const sidebar = createScrollArea({
       height: '360px',
-      class: 'w-56 rounded-md border',
+      class: 'nds-rounded-md nds-border-default',
       children: nav,
     });
+    sidebar.style.width = '14rem';
 
     const content = document.createElement('div');
-    content.className = 'flex-1 rounded-md border p-4 text-sm text-muted-foreground';
+    content.className = 'nds-flex-1 nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground';
+    content.style.padding = '1rem';
     content.textContent = 'Conteúdo principal — a sidebar à esquerda rola independentemente desta área.';
 
     outer.append(sidebar, content);

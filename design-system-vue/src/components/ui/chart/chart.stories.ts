@@ -36,10 +36,10 @@ const meta = {
   args: {
     cursor: false,
   },
-} satisfies Meta<typeof ChartContainer>;
+} satisfies Meta<any>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<Meta<any>>;
 
 export const Playground: Story = {
   render: (args) => ({

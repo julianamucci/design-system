@@ -60,7 +60,12 @@ type Story = StoryObj<ContextMenuArgs>;
 function makeTrigger(label: string): HTMLElement {
   const el = document.createElement('div');
   el.className =
-    'flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed border-border text-sm text-muted-foreground select-none cursor-default';
+    'nds-cluster nds-rounded-md nds-text-body nds-text-muted-foreground nds-cursor-default';
+  el.dataset.justify = 'center';
+  el.style.width = '300px';
+  el.style.height = '150px';
+  el.style.border = '1px dashed hsl(var(--border))';
+  el.style.userSelect = 'none';
   el.textContent = label;
   return el;
 }

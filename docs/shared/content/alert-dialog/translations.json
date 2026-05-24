@@ -133,6 +133,19 @@
       "items": {
         "destructive": "Trigger e action com variante <code>destructive</code>. Para exclusão, cancelamento, remoção permanente.",
         "default": "Trigger e action com variante <code>default</code>. Para confirmações neutras como sair, arquivar, publicar."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "destructive": {
+          "name": "Confirmação destrutiva",
+          "description": "Trigger com variante <code>destructive</code> + AlertDialogAction estilizado com tokens <code>--destructive</code>. Reforça visualmente a irreversibilidade da ação.",
+          "use": "Excluir conta, remover dados permanentemente, cancelar assinatura. Sempre exija escolha explícita — não use Escape ou clique no overlay para fechar."
+        },
+        "neutral": {
+          "name": "Confirmação neutra",
+          "description": "Trigger com variante <code>default</code> + AlertDialogAction com estilo padrão do Button. Sem cor de alerta — apenas confirmação de intenção.",
+          "use": "Publicar conteúdo, arquivar item, enviar formulário. Ações reversíveis ou de baixo risco onde o usuário pode mudar de ideia depois."
+        }
       }
     },
     "states": {
@@ -187,17 +200,17 @@
         "onOpenChange": "Callback disparado ao abrir ou fechar. Recebe o novo estado booleano.",
         "asChild": "Permite compor com um elemento filho (ex: <code>Button</code>) sem renderizar wrapper.",
         "onClick": "Callback da confirmação ou cancelamento. O diálogo fecha automaticamente após disparar.",
-        "className": "Classes Tailwind adicionais para override de estilo.",
+        "className": "Classes CSS adicionais para override de estilo.",
         "children": "Conteúdo renderizado dentro do subcomponente."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "Todos os subcomponentes aceitam <code>className</code> e props HTML nativos. O <code>AlertDialogAction</code> aceita <code>className=\"bg-destructive...\"</code> para herdar severidade do trigger — o estilo do Button pode ser sobrescrito diretamente sem precisar envolver em <code>Button asChild</code>."
+      "extensibility": "Todos os subcomponentes aceitam <code>className</code> e props HTML nativos. O <code>AlertDialogAction</code> aceita classes utilitárias para herdar severidade do trigger (ex.: variante <code>destructive</code> baseada no token <code>--destructive</code>) — o estilo do Button pode ser sobrescrito diretamente sem precisar envolver em <code>Button asChild</code>."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Aplicação no tema",
         "part": "Parte do componente",
         "overlayBg": "Fundo do overlay (backdrop)",
         "contentBg": "Fundo do AlertDialogContent",
@@ -472,6 +485,19 @@
       "items": {
         "destructive": "Trigger and action with <code>destructive</code> variant. For deletion, cancellation, permanent removal.",
         "default": "Trigger and action with <code>default</code> variant. For neutral confirmations like sign out, archive, publish."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "destructive": {
+          "name": "Destructive confirmation",
+          "description": "Trigger with <code>destructive</code> variant + AlertDialogAction styled with <code>--destructive</code> tokens. Visually reinforces the irreversibility of the action.",
+          "use": "Delete account, permanently remove data, cancel subscription. Always require explicit choice — never close on Escape or overlay click."
+        },
+        "neutral": {
+          "name": "Neutral confirmation",
+          "description": "Trigger with <code>default</code> variant + AlertDialogAction with default Button style. No alert color — just intent confirmation.",
+          "use": "Publish content, archive item, submit form. Reversible or low-risk actions where the user can change their mind later."
+        }
       }
     },
     "states": {
@@ -526,17 +552,17 @@
         "onOpenChange": "Callback fired when opening or closing. Receives the new boolean state.",
         "asChild": "Lets you compose with a child element (e.g. <code>Button</code>) without rendering a wrapper.",
         "onClick": "Confirmation or cancellation callback. The dialog closes automatically after firing.",
-        "className": "Additional Tailwind classes for style overrides.",
+        "className": "Additional CSS classes for style overrides.",
         "children": "Content rendered inside the subcomponent."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "All subcomponents accept <code>className</code> and native HTML props. <code>AlertDialogAction</code> accepts <code>className=\"bg-destructive...\"</code> to inherit trigger severity — Button styling can be overridden directly without wrapping in <code>Button asChild</code>."
+      "extensibility": "All subcomponents accept <code>className</code> and native HTML props. <code>AlertDialogAction</code> accepts utility classes to inherit trigger severity (e.g., <code>destructive</code> variant based on the <code>--destructive</code> token) — Button styling can be overridden directly without wrapping in <code>Button asChild</code>."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": "Theme application",
         "part": "Component Part",
         "overlayBg": "Overlay background (backdrop)",
         "contentBg": "AlertDialogContent background",
@@ -811,6 +837,19 @@
       "items": {
         "destructive": "Trigger y action con variante <code>destructive</code>. Para eliminación, cancelación, remoción permanente.",
         "default": "Trigger y action con variante <code>default</code>. Para confirmaciones neutras como cerrar sesión, archivar, publicar."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "destructive": {
+          "name": "Confirmación destructiva",
+          "description": "Trigger con variante <code>destructive</code> + AlertDialogAction estilizado con tokens <code>--destructive</code>. Refuerza visualmente la irreversibilidad de la acción.",
+          "use": "Eliminar cuenta, remover datos permanentemente, cancelar suscripción. Exige siempre elección explícita — nunca cerrar con Escape ni clic en overlay."
+        },
+        "neutral": {
+          "name": "Confirmación neutra",
+          "description": "Trigger con variante <code>default</code> + AlertDialogAction con estilo predeterminado del Button. Sin color de alerta — solo confirmación de intención.",
+          "use": "Publicar contenido, archivar ítem, enviar formulario. Acciones reversibles o de bajo riesgo donde el usuario puede cambiar de opinión luego."
+        }
       }
     },
     "states": {
@@ -865,17 +904,17 @@
         "onOpenChange": "Callback disparado al abrir o cerrar. Recibe el nuevo estado booleano.",
         "asChild": "Permite componer con un elemento hijo (ej. <code>Button</code>) sin renderizar wrapper.",
         "onClick": "Callback de confirmación o cancelación. El diálogo se cierra automáticamente tras disparar.",
-        "className": "Clases Tailwind adicionales para override de estilo.",
+        "className": "Clases CSS adicionales para override de estilo.",
         "children": "Contenido renderizado dentro del subcomponente."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "Todos los subcomponentes aceptan <code>className</code> y props HTML nativos. <code>AlertDialogAction</code> acepta <code>className=\"bg-destructive...\"</code> para heredar la severidad del trigger — el estilo del Button puede sobrescribirse directamente sin envolver en <code>Button asChild</code>."
+      "extensibility": "Todos los subcomponentes aceptan <code>className</code> y props HTML nativos. <code>AlertDialogAction</code> acepta clases utilitarias para heredar la severidad del trigger (ej.: variante <code>destructive</code> basada en el token <code>--destructive</code>) — el estilo del Button puede sobrescribirse directamente sin envolver en <code>Button asChild</code>."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Aplicación en el tema",
         "part": "Parte del componente",
         "overlayBg": "Fondo del overlay (backdrop)",
         "contentBg": "Fondo del AlertDialogContent",

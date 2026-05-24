@@ -1,0 +1,93 @@
+/*
+ * ─── nds-breadcrumb ─────────────────────────────────────────────────────────
+ * Navegação de trilha (rastro de páginas até a atual).
+ *
+ * Estrutura:
+ *   <nav class="nds-breadcrumb" aria-label="breadcrumb">
+ *     <ol class="nds-breadcrumb-list">
+ *       <li class="nds-breadcrumb-item">
+ *         <a class="nds-breadcrumb-link" href="/">Home</a>
+ *       </li>
+ *       <li class="nds-breadcrumb-separator" aria-hidden="true">›</li>
+ *       <li class="nds-breadcrumb-item">
+ *         <span class="nds-breadcrumb-page" aria-current="page">Atual</span>
+ *       </li>
+ *     </ol>
+ *   </nav>
+ *
+ * Tokens: --foreground, --muted-foreground
+ */
+
+.nds-breadcrumb {
+  /* nav é landmark — nenhum estilo próprio */
+}
+
+/* ── List ────────────────────────────────────────────────────────────────── */
+.nds-breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-1-5, 0.375rem);            /* 6px */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  word-break: break-word;
+  font-size: 0.875rem;                           /* 14px */
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Item ────────────────────────────────────────────────────────────────── */
+.nds-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);                         /* 4px */
+}
+
+/* ── Link ────────────────────────────────────────────────────────────────── */
+.nds-breadcrumb-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 150ms;
+}
+
+.nds-breadcrumb-link:hover {
+  color: hsl(var(--foreground));
+}
+
+.nds-breadcrumb-link:focus-visible {
+  outline: 2px solid hsl(var(--ring) / 0.5);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* ── Page (atual, não navegável) ─────────────────────────────────────────── */
+.nds-breadcrumb-page {
+  font-weight: var(--font-weight-normal, 400);
+  color: hsl(var(--foreground));
+}
+
+/* ── Separator (chevron/›) ───────────────────────────────────────────────── */
+.nds-breadcrumb-separator {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+}
+
+.nds-breadcrumb-separator > svg {
+  width: 0.875rem;                               /* 14px */
+  height: 0.875rem;
+}
+
+/* ── Ellipsis (overflow) ─────────────────────────────────────────────────── */
+.nds-breadcrumb-ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--spacing-5, 1.25rem);              /* 20px */
+  height: var(--spacing-5, 1.25rem);
+}
+
+.nds-breadcrumb-ellipsis > svg {
+  width: var(--spacing-4);                       /* 16px */
+  height: var(--spacing-4);
+}

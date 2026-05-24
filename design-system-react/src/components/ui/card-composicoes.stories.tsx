@@ -232,20 +232,18 @@ export const MetricCard: Story = {
 
 export const ProfileCard: Story = {
   render: () => (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <div className="flex items-center gap-3">
-          <Avatar>
-            <AvatarImage
-              src={DEMO_IMAGE_AVATAR}
-              alt="Foto de perfil de Maria Rodrigues"
-            />
-            <AvatarFallback>MR</AvatarFallback>
-          </Avatar>
-          <div className="min-w-0">
-            <CardTitle>Maria Rodrigues</CardTitle>
-            <CardDescription>Designer de produto · São Paulo, BR</CardDescription>
-          </div>
+    <Card className="max-w-sm w-[24rem]">
+      <CardHeader className="flex flex-row items-center gap-3">
+        <Avatar>
+          <AvatarImage
+            src={DEMO_IMAGE_AVATAR}
+            alt="Foto de perfil de Maria Rodrigues"
+          />
+          <AvatarFallback>MR</AvatarFallback>
+        </Avatar>
+        <div className="flex-1">
+          <CardTitle>Maria Rodrigues</CardTitle>
+          <CardDescription>Designer de produto · São Paulo, BR</CardDescription>
         </div>
       </CardHeader>
     </Card>

@@ -8,7 +8,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -51,6 +51,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -431,6 +432,132 @@ interface AvatarFallbackProps {
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>
       <span
+        aria-label="online"
+        class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+      ></span>
+    </div>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="avatar"
+    items={[
+      {
+        name: $tStore('variants.compositions.withImage.name'),
+        description: $tStore('variants.compositions.withImage.description'),
+        useWhen: $tStore('variants.compositions.withImage.use'),
+        code: `<Avatar>
+  <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+  <AvatarFallback>MR</AvatarFallback>
+</Avatar>`,
+        preview: compWithImage,
+      },
+      {
+        name: $tStore('variants.compositions.withInitials.name'),
+        description: $tStore('variants.compositions.withInitials.description'),
+        useWhen: $tStore('variants.compositions.withInitials.use'),
+        code: `<Avatar>
+  <AvatarFallback>JP</AvatarFallback>
+</Avatar>`,
+        preview: compWithInitials,
+      },
+      {
+        name: $tStore('variants.compositions.withIcon.name'),
+        description: $tStore('variants.compositions.withIcon.description'),
+        useWhen: $tStore('variants.compositions.withIcon.use'),
+        code: `<Avatar>
+  <AvatarFallback role="img" aria-label="Usuário genérico">
+    <User aria-hidden="true" class="h-5 w-5 text-muted-foreground" />
+  </AvatarFallback>
+</Avatar>`,
+        preview: compWithIcon,
+      },
+      {
+        name: $tStore('variants.compositions.group.name'),
+        description: $tStore('variants.compositions.group.description'),
+        useWhen: $tStore('variants.compositions.group.use'),
+        code: `<div class="flex -space-x-2" role="group" aria-label="Participantes">
+  <Avatar class="ring-2 ring-background">
+    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+    <AvatarFallback>MR</AvatarFallback>
+  </Avatar>
+  <Avatar class="ring-2 ring-background">
+    <AvatarFallback>JP</AvatarFallback>
+  </Avatar>
+  <Avatar class="ring-2 ring-background">
+    <AvatarFallback>AL</AvatarFallback>
+  </Avatar>
+  <Avatar class="ring-2 ring-background">
+    <AvatarFallback>+3</AvatarFallback>
+  </Avatar>
+</div>`,
+        preview: compGroup,
+      },
+      {
+        name: $tStore('variants.compositions.withStatus.name'),
+        description: $tStore('variants.compositions.withStatus.description'),
+        useWhen: $tStore('variants.compositions.withStatus.use'),
+        code: `<div class="relative inline-block">
+  <Avatar>
+    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+    <AvatarFallback>MR</AvatarFallback>
+  </Avatar>
+  <span
+    role="status"
+    aria-label="online"
+    class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+  ></span>
+</div>`,
+        preview: compWithStatus,
+      },
+    ]}
+  />
+
+  {#snippet compWithImage()}
+    <Avatar>
+      <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+      <AvatarFallback>MR</AvatarFallback>
+    </Avatar>
+  {/snippet}
+  {#snippet compWithInitials()}
+    <Avatar>
+      <AvatarFallback>JP</AvatarFallback>
+    </Avatar>
+  {/snippet}
+  {#snippet compWithIcon()}
+    <Avatar>
+      <AvatarFallback role="img" aria-label="Usuário genérico">
+        <User aria-hidden="true" class="h-5 w-5 text-muted-foreground" />
+      </AvatarFallback>
+    </Avatar>
+  {/snippet}
+  {#snippet compGroup()}
+    <div class="flex -space-x-2" role="group" aria-label="Participantes">
+      <Avatar class="ring-2 ring-background">
+        <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+        <AvatarFallback>MR</AvatarFallback>
+      </Avatar>
+      <Avatar class="ring-2 ring-background">
+        <AvatarFallback>JP</AvatarFallback>
+      </Avatar>
+      <Avatar class="ring-2 ring-background">
+        <AvatarFallback>AL</AvatarFallback>
+      </Avatar>
+      <Avatar class="ring-2 ring-background">
+        <AvatarFallback>+3</AvatarFallback>
+      </Avatar>
+    </div>
+  {/snippet}
+  {#snippet compWithStatus()}
+    <div class="relative inline-block">
+      <Avatar>
+        <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+        <AvatarFallback>MR</AvatarFallback>
+      </Avatar>
+      <span
+        role="status"
         aria-label="online"
         class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
       ></span>

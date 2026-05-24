@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from '@storybook/vue3';
 import { expect } from 'storybook/test';
 import { Button } from './index';
 
-const meta = {
+const meta: Meta<any> = {
   title: 'UI/Button/Variantes',
   component: Button,
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
   },
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

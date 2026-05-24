@@ -28,7 +28,7 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'h-4 w-4 shrink-0');
+  svg.setAttribute('class', 'nds-icon-sm nds-shrink-0');
   for (const [tag, attrs] of nodes) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
@@ -39,7 +39,8 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
 
 function makeIconTrigger(nodes: LucideIconNode[], text: string): HTMLElement {
   const span = document.createElement('span');
-  span.className = 'flex items-center gap-2';
+  span.className = 'nds-cluster';
+  span.dataset.spacing = 'sm';
   span.appendChild(createIcon(nodes));
   const label = document.createElement('span');
   label.textContent = text;
@@ -52,7 +53,7 @@ function makeIconTrigger(nodes: LucideIconNode[], text: string): HTMLElement {
 export const ComIconeNoTrigger: Story = {
   render: () => {
     const root = document.createElement('div');
-    root.className = 'w-full max-w-lg';
+    root.className = 'nds-w-full nds-max-w-lg';
 
     const iconItems = [
       { value: 'info',    nodes: Info as unknown as LucideIconNode[],          label: 'Informação',   content: 'Ícones facilitam a identificação rápida do tipo de conteúdo. Adicione aria-hidden="true" no ícone.' },
@@ -98,7 +99,7 @@ export const ComIconeNoTrigger: Story = {
 export const ComBadgeNoTrigger: Story = {
   render: () => {
     const root = document.createElement('div');
-    root.className = 'w-full max-w-lg';
+    root.className = 'nds-w-full nds-max-w-lg';
 
     const badgeItems = [
       { value: 'novo',  label: 'Novidades da versão 3.0',  badge: 'Novo',  variant: 'default' as const,    content: 'Conteúdo das novidades. Use badges para sinalizar status sem alterar o trigger textual.' },
@@ -118,9 +119,12 @@ export const ComBadgeNoTrigger: Story = {
       const span = trigger.querySelector('span');
       if (!span) return;
       const wrapper = document.createElement('span');
-      wrapper.className = 'flex items-center gap-2';
+      wrapper.className = 'nds-cluster';
+      wrapper.dataset.spacing = 'sm';
       wrapper.textContent = label;
-      const badgeEl = createBadge({ text: badge, variant, className: 'text-[10px] h-4' });
+      const badgeEl = createBadge({ text: badge, variant });
+      badgeEl.style.fontSize = '10px';
+      badgeEl.style.height = '1rem';
       wrapper.appendChild(badgeEl);
       span.replaceWith(wrapper);
     });
@@ -147,7 +151,7 @@ export const ComBadgeNoTrigger: Story = {
 export const ConteudoRico: Story = {
   render: () => {
     const root = document.createElement('div');
-    root.className = 'w-full max-w-lg';
+    root.className = 'nds-w-full nds-max-w-lg';
 
     const accordion = createAccordion({
       type: 'multiple',
@@ -161,24 +165,24 @@ export const ConteudoRico: Story = {
     const layoutContent = accordion.querySelector<HTMLElement>('[data-content-for="layout"] div');
     if (layoutContent) {
       layoutContent.innerHTML = `
-        <div class="space-y-2 text-sm">
-          <div class="grid grid-cols-2 gap-2 font-medium">
-            <span class="text-muted-foreground">Propriedade</span>
-            <span class="text-muted-foreground">Valor</span>
+        <div class="nds-stack nds-text-body" data-spacing="sm">
+          <div class="nds-grid nds-font-medium" data-cols="2" data-spacing="sm">
+            <span class="nds-text-muted-foreground">Propriedade</span>
+            <span class="nds-text-muted-foreground">Valor</span>
           </div>
-          <div class="grid grid-cols-2 gap-2 border-t pt-2"><span>Gutter</span><code class="text-xs bg-muted px-1 rounded">24px</code></div>
-          <div class="grid grid-cols-2 gap-2 border-t pt-2"><span>Margem mobile</span><code class="text-xs bg-muted px-1 rounded">16px</code></div>
-          <div class="grid grid-cols-2 gap-2 border-t pt-2"><span>Colunas</span><code class="text-xs bg-muted px-1 rounded">12</code></div>
+          <div class="nds-grid" data-cols="2" data-spacing="sm" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Gutter</span><code class="nds-code-inline nds-text-caption">24px</code></div>
+          <div class="nds-grid" data-cols="2" data-spacing="sm" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Margem mobile</span><code class="nds-code-inline nds-text-caption">16px</code></div>
+          <div class="nds-grid" data-cols="2" data-spacing="sm" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Colunas</span><code class="nds-code-inline nds-text-caption">12</code></div>
         </div>`;
     }
 
     const tipoContent = accordion.querySelector<HTMLElement>('[data-content-for="tipografia"] div');
     if (tipoContent) {
       tipoContent.innerHTML = `
-        <ul class="space-y-1 text-sm list-none p-0">
-          <li class="flex items-center gap-2"><code class="text-xs bg-muted px-1 rounded">text-xs</code><span>12px — legendas e labels</span></li>
-          <li class="flex items-center gap-2"><code class="text-xs bg-muted px-1 rounded">text-sm</code><span>14px — corpo principal</span></li>
-          <li class="flex items-center gap-2"><code class="text-xs bg-muted px-1 rounded">text-base</code><span>16px — títulos de seção</span></li>
+        <ul class="nds-stack nds-text-body nds-list-none" data-spacing="xs" style="padding:0">
+          <li class="nds-cluster" data-spacing="sm"><code class="nds-code-inline nds-text-caption">text-xs</code><span>12px — legendas e labels</span></li>
+          <li class="nds-cluster" data-spacing="sm"><code class="nds-code-inline nds-text-caption">text-sm</code><span>14px — corpo principal</span></li>
+          <li class="nds-cluster" data-spacing="sm"><code class="nds-code-inline nds-text-caption">text-base</code><span>16px — títulos de seção</span></li>
         </ul>`;
     }
 
@@ -211,10 +215,11 @@ const FAQ_ITEMS: AccordionOptions['items'] = [
 export const FAQ: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'w-full max-w-lg space-y-2';
+    wrapper.className = 'nds-stack nds-w-full nds-max-w-lg';
+    wrapper.dataset.spacing = 'sm';
 
     const heading = document.createElement('h2');
-    heading.className = 'text-base font-semibold';
+    heading.className = 'nds-text-h4 nds-font-semibold';
     heading.textContent = 'Perguntas frequentes';
 
     wrapper.append(heading, createAccordion({ type: 'single', collapsible: true, items: FAQ_ITEMS }));

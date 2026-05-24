@@ -28,7 +28,7 @@ function buildVariant(side: SheetSide, triggerLabel: string, title: string): HTM
   const trigger = createButton({ variant: 'outline', label: triggerLabel });
 
   const content = document.createElement('div');
-  content.className = 'text-sm text-muted-foreground';
+  content.className = 'nds-text-body nds-text-muted-foreground';
   content.textContent = 'Conteúdo do drawer.';
 
   const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
@@ -48,7 +48,9 @@ function buildVariant(side: SheetSide, triggerLabel: string, title: string): HTM
 
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[160px] flex items-center justify-center';
+  wrapper.className = 'nds-cluster nds-w-full';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.minHeight = '160px';
   wrapper.appendChild(el);
   queueMicrotask(() => trigger.click());
   return wrapper;

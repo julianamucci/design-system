@@ -27,13 +27,13 @@ export default meta;
 type Story = StoryObj;
 
 function buildProductCard(): HTMLElement {
-  const card = createCard({ className: 'w-full max-w-sm' });
+  const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
   header.appendChild(createCardDescription({ text: 'Estrutura ergonômica com ajuste de altura e apoio lombar.' }));
   const content = createCardContent();
   const price = document.createElement('p');
-  price.className = 'text-lg font-semibold';
+  price.className = 'nds-text-h4 nds-font-semibold';
   price.textContent = 'R$ 1.299,00';
   content.appendChild(price);
   card.append(header, content);
@@ -41,12 +41,12 @@ function buildProductCard(): HTMLElement {
 }
 
 function buildSmallCard(): HTMLElement {
-  const card = createCard({ size: 'sm', className: 'w-full max-w-xs' });
+  const card = createCard({ size: 'sm', className: 'nds-w-full nds-max-w-xs' });
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 4 }));
   const content = createCardContent();
   const value = document.createElement('p');
-  value.className = 'text-lg font-semibold';
+  value.className = 'nds-text-h4 nds-font-semibold';
   value.textContent = '8.742';
   content.appendChild(value);
   card.append(header, content);

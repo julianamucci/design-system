@@ -1,0 +1,58 @@
+/*
+ * ─── Spacing utilities ───────────────────────────────────────────────────────
+ * Padding/margin atômicos, restritos ao grid 8 (múltiplos/divisores de 8 apenas).
+ * Sempre preferir primitivas (.nds-stack, .nds-cluster, .nds-box) — estas classes
+ * só devem ser usadas como complemento pontual.
+ *
+ * Convenção do número:
+ *   0    = 0
+ *   0-5  = 2px  (--spacing-0-5)
+ *   1    = 4px  (--spacing-1)
+ *   2    = 8px  (--spacing-2)
+ *   4    = 16px (--spacing-4)
+ *   6    = 24px (--spacing-6)
+ *   8    = 32px (--spacing-8)
+ *
+ * Valores fora do grid (3=12, 5=20, 7=28, etc.) NÃO existem como utility.
+ * Use a opção mais próxima do grid (3→2 ou 4; 5→4 ou 6).
+ */
+
+/* ── Padding (todos os lados) ──────────────────────────────────────────────── */
+.nds-p-0    { padding: 0; }
+.nds-p-0-5  { padding: var(--spacing-0-5); }
+.nds-p-1    { padding: var(--spacing-1); }
+.nds-p-2    { padding: var(--spacing-2); }
+.nds-p-4    { padding: var(--spacing-4); }
+.nds-p-6    { padding: var(--spacing-6); }
+.nds-p-8    { padding: var(--spacing-8); }
+
+/* ── Padding inline (px) ───────────────────────────────────────────────────── */
+.nds-px-0    { padding-inline: 0; }
+.nds-px-0-5  { padding-inline: var(--spacing-0-5); }
+.nds-px-1    { padding-inline: var(--spacing-1); }
+.nds-px-2    { padding-inline: var(--spacing-2); }
+.nds-px-4    { padding-inline: var(--spacing-4); }
+
+/* ── Padding block (py) ────────────────────────────────────────────────────── */
+.nds-py-0    { padding-block: 0; }
+.nds-py-0-5  { padding-block: var(--spacing-0-5); }
+.nds-py-1    { padding-block: var(--spacing-1); }
+.nds-py-2    { padding-block: var(--spacing-2); }
+
+/* ── Margin-bottom (mb) ────────────────────────────────────────────────────── */
+.nds-mb-0    { margin-bottom: 0; }
+.nds-mb-1    { margin-bottom: var(--spacing-1); }
+.nds-mb-2    { margin-bottom: var(--spacing-2); }
+.nds-mb-4    { margin-bottom: var(--spacing-4); }
+.nds-mb-6    { margin-bottom: var(--spacing-6); }
+.nds-mb-8    { margin-bottom: var(--spacing-8); }
+
+/* ── Margin-top (mt) ───────────────────────────────────────────────────────── */
+.nds-mt-0    { margin-top: 0; }
+.nds-mt-1    { margin-top: var(--spacing-1); }
+.nds-mt-2    { margin-top: var(--spacing-2); }
+.nds-mt-4    { margin-top: var(--spacing-4); }
+.nds-mt-6    { margin-top: var(--spacing-6); }
+
+/* ── Margin (todos) ────────────────────────────────────────────────────────── */
+.nds-m-0    { margin: 0; }

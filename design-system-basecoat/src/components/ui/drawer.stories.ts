@@ -66,7 +66,7 @@ function buildDrawerEl(args: DrawerArgs): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: args.triggerLabel });
 
   const content = document.createElement('div');
-  content.className = 'text-sm text-muted-foreground';
+  content.className = 'nds-text-body nds-text-muted-foreground';
   content.textContent = 'Conteúdo do drawer (formulário, mensagem, mídia).';
 
   const cancel = createButton({ variant: 'outline', label: args.cancelLabel });
@@ -109,7 +109,9 @@ export const Playground: Story = {
   render: (args) => {
     const container = document.createElement('div');
     container.style.contain = 'layout';
-    container.className = 'w-full min-h-[200px] flex items-center justify-center';
+    container.className = 'nds-cluster nds-w-full';
+    container.dataset.justify = 'center';
+    container.style.minHeight = '200px';
 
     const drawer = buildDrawerEl(args);
     container.appendChild(drawer);

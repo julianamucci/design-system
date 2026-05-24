@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   LayoutDashboard,
   Blocks,
@@ -6,6 +6,8 @@ import {
   Settings,
   User,
   Bell,
+  Search,
+  ChevronDown,
 } from "lucide-react";
 
 import {
@@ -16,11 +18,15 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarInput,
   SidebarInset,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarProvider,
   SidebarSeparator,
   SidebarTrigger,
@@ -42,6 +48,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -80,6 +87,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -193,6 +201,286 @@ function SidebarDemoPreview({
         </SidebarInset>
       </SidebarProvider>
     </div>
+  );
+}
+
+// ─── Composition previews ─────────────────────────────────────────────────────
+
+function CompositionWrap({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-[260px] flex w-full overflow-hidden rounded-lg border border-border" style={{ contain: "layout" }}>
+      {children}
+    </div>
+  );
+}
+
+function PreviewWithGroups() {
+  return (
+    <CompositionWrap>
+      <SidebarProvider defaultOpen={true}>
+        <nav aria-label="Navegação principal">
+          <Sidebar variant="sidebar" collapsible="offcanvas">
+            <SidebarHeader className="p-3">
+              <span className="font-semibold text-xs text-sidebar-foreground">Design System</span>
+            </SidebarHeader>
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>Principal</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton isActive aria-current="page">
+                        <LayoutDashboard aria-hidden="true" />
+                        <span>Dashboard</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <Blocks aria-hidden="true" />
+                        <span>Componentes</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <Coins aria-hidden="true" />
+                        <span>Tokens</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+              <SidebarSeparator />
+              <SidebarGroup>
+                <SidebarGroupLabel>Conta</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <Settings aria-hidden="true" />
+                        <span>Configurações</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <Bell aria-hidden="true" />
+                        <span>Notificações</span>
+                      </SidebarMenuButton>
+                      <SidebarMenuBadge>5</SidebarMenuBadge>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <User aria-hidden="true" />
+                        <span>Perfil</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+          </Sidebar>
+        </nav>
+        <SidebarInset>
+          <header className="flex items-center gap-2 p-3 border-b border-border">
+            <SidebarTrigger />
+            <span className="text-xs text-muted-foreground">Dashboard</span>
+          </header>
+        </SidebarInset>
+      </SidebarProvider>
+    </CompositionWrap>
+  );
+}
+
+function PreviewWithSubMenu() {
+  const [open, setOpen] = useState(false);
+  return (
+    <CompositionWrap>
+      <SidebarProvider defaultOpen={true}>
+        <nav aria-label="Navegação principal">
+          <Sidebar variant="sidebar" collapsible="offcanvas">
+            <SidebarHeader className="p-3">
+              <span className="font-semibold text-xs text-sidebar-foreground">Design System</span>
+            </SidebarHeader>
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>Componentes</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton isActive aria-current="page">
+                        <LayoutDashboard aria-hidden="true" />
+                        <span>Dashboard</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        aria-expanded={open}
+                        onClick={() => setOpen((v) => !v)}
+                      >
+                        <Blocks aria-hidden="true" />
+                        <span>Componentes</span>
+                        <ChevronDown
+                          aria-hidden="true"
+                          className={`ml-auto transition-transform ${open ? "rotate-180" : ""}`}
+                        />
+                      </SidebarMenuButton>
+                      {open && (
+                        <SidebarMenuSub>
+                          {["Alert", "Button", "Card", "Dialog"].map((name) => (
+                            <SidebarMenuSubItem key={name}>
+                              <SidebarMenuSubButton>{name}</SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      )}
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <Coins aria-hidden="true" />
+                        <span>Tokens</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+            <SidebarFooter>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton>
+                    <Settings aria-hidden="true" />
+                    <span>Configurações</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarFooter>
+          </Sidebar>
+        </nav>
+        <SidebarInset>
+          <header className="flex items-center gap-2 p-3 border-b border-border">
+            <SidebarTrigger />
+            <span className="text-xs text-muted-foreground">Clique em "Componentes"</span>
+          </header>
+        </SidebarInset>
+      </SidebarProvider>
+    </CompositionWrap>
+  );
+}
+
+function PreviewWithSearch() {
+  return (
+    <CompositionWrap>
+      <SidebarProvider defaultOpen={true}>
+        <nav aria-label="Navegação principal">
+          <Sidebar variant="sidebar" collapsible="offcanvas">
+            <SidebarHeader className="gap-2 p-3">
+              <span className="font-semibold text-xs text-sidebar-foreground">Design System</span>
+              <div className="relative">
+                <Search
+                  aria-hidden="true"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60 pointer-events-none"
+                />
+                <SidebarInput type="search" placeholder="Buscar..." aria-label="Buscar navegação" className="pl-7 h-8 text-xs" />
+              </div>
+            </SidebarHeader>
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>Navegação</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton isActive aria-current="page">
+                        <LayoutDashboard aria-hidden="true" />
+                        <span>Dashboard</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <Blocks aria-hidden="true" />
+                        <span>Componentes</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <Coins aria-hidden="true" />
+                        <span>Tokens</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <Settings aria-hidden="true" />
+                        <span>Configurações</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+          </Sidebar>
+        </nav>
+        <SidebarInset>
+          <header className="flex items-center gap-2 p-3 border-b border-border">
+            <SidebarTrigger />
+            <span className="text-xs text-muted-foreground">Busca no header</span>
+          </header>
+        </SidebarInset>
+      </SidebarProvider>
+    </CompositionWrap>
+  );
+}
+
+function PreviewWithBadges() {
+  return (
+    <CompositionWrap>
+      <SidebarProvider defaultOpen={true}>
+        <nav aria-label="Navegação principal">
+          <Sidebar variant="sidebar" collapsible="offcanvas">
+            <SidebarHeader className="p-3">
+              <span className="font-semibold text-xs text-sidebar-foreground">App</span>
+            </SidebarHeader>
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton isActive aria-current="page">
+                        <LayoutDashboard aria-hidden="true" />
+                        <span>Dashboard</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton aria-label="Notificações (12 não lidas)">
+                        <Bell aria-hidden="true" />
+                        <span>Notificações</span>
+                      </SidebarMenuButton>
+                      <SidebarMenuBadge>12</SidebarMenuBadge>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton aria-label="Componentes (3 atualizações)">
+                        <Blocks aria-hidden="true" />
+                        <span>Componentes</span>
+                      </SidebarMenuButton>
+                      <SidebarMenuBadge>3</SidebarMenuBadge>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <Settings aria-hidden="true" />
+                        <span>Configurações</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+          </Sidebar>
+        </nav>
+        <SidebarInset>
+          <header className="flex items-center gap-2 p-3 border-b border-border">
+            <SidebarTrigger />
+            <span className="text-xs text-muted-foreground">Inbox</span>
+          </header>
+        </SidebarInset>
+      </SidebarProvider>
+    </CompositionWrap>
   );
 }
 
@@ -541,6 +829,115 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             description: tContent("variants.right"),
             code: `<Sidebar side="right">{/* sidebar na direita */}</Sidebar>`,
             preview: <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" side="right" defaultOpen={true} />,
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="sidebar"
+        items={[
+          {
+            name: tContent("variants.compositions.withGroups.name"),
+            description: tContent("variants.compositions.withGroups.description"),
+            useWhen: tContent("variants.compositions.withGroups.use"),
+            code: `<Sidebar variant="sidebar" collapsible="offcanvas">
+  <SidebarHeader>{/* logo */}</SidebarHeader>
+  <SidebarContent>
+    <SidebarGroup>
+      <SidebarGroupLabel>Principal</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton isActive aria-current="page">
+              <LayoutDashboard aria-hidden="true" />
+              <span>Dashboard</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          {/* ... */}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+    <SidebarSeparator />
+    <SidebarGroup>
+      <SidebarGroupLabel>Conta</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <Bell aria-hidden="true" />
+              <span>Notificações</span>
+            </SidebarMenuButton>
+            <SidebarMenuBadge>5</SidebarMenuBadge>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  </SidebarContent>
+</Sidebar>`,
+            preview: <PreviewWithGroups />,
+          },
+          {
+            name: tContent("variants.compositions.withSubMenu.name"),
+            description: tContent("variants.compositions.withSubMenu.description"),
+            useWhen: tContent("variants.compositions.withSubMenu.use"),
+            code: `function ComponentsItem() {
+  const [open, setOpen] = useState(false);
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        aria-expanded={open}
+        onClick={() => setOpen(v => !v)}
+      >
+        <Blocks aria-hidden="true" />
+        <span>Componentes</span>
+        <ChevronDown aria-hidden="true" className={open ? "rotate-180" : ""} />
+      </SidebarMenuButton>
+      {open && (
+        <SidebarMenuSub>
+          <SidebarMenuSubItem>
+            <SidebarMenuSubButton>Alert</SidebarMenuSubButton>
+          </SidebarMenuSubItem>
+          {/* ... */}
+        </SidebarMenuSub>
+      )}
+    </SidebarMenuItem>
+  );
+}`,
+            preview: <PreviewWithSubMenu />,
+          },
+          {
+            name: tContent("variants.compositions.withSearch.name"),
+            description: tContent("variants.compositions.withSearch.description"),
+            useWhen: tContent("variants.compositions.withSearch.use"),
+            code: `<SidebarHeader className="gap-2">
+  <span className="font-semibold">Design System</span>
+  <div className="relative">
+    <Search aria-hidden="true" className="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60" />
+    <SidebarInput
+      type="search"
+      placeholder="Buscar..."
+      aria-label="Buscar navegação"
+      className="pl-7"
+    />
+  </div>
+</SidebarHeader>`,
+            preview: <PreviewWithSearch />,
+          },
+          {
+            name: tContent("variants.compositions.withBadges.name"),
+            description: tContent("variants.compositions.withBadges.description"),
+            useWhen: tContent("variants.compositions.withBadges.use"),
+            code: `<SidebarMenuItem>
+  <SidebarMenuButton aria-label="Notificações (12 não lidas)">
+    <Bell aria-hidden="true" />
+    <span>Notificações</span>
+  </SidebarMenuButton>
+  <SidebarMenuBadge>12</SidebarMenuBadge>
+</SidebarMenuItem>`,
+            preview: <PreviewWithBadges />,
           },
         ]}
       />

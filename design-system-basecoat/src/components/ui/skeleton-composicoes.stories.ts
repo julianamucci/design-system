@@ -30,7 +30,7 @@ function makeSkeleton(className: string): HTMLElement {
 
 function loadingContainer(label: string, extraClass = ''): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = `w-full ${extraClass}`.trim();
+  wrap.className = `nds-w-full ${extraClass}`.trim();
   wrap.setAttribute('role', 'status');
   wrap.setAttribute('aria-busy', 'true');
   wrap.setAttribute('aria-label', label);
@@ -42,15 +42,17 @@ function loadingContainer(label: string, extraClass = ''): HTMLElement {
 export const CardDePerfil: Story = {
   name: 'Card de Perfil',
   render: () => {
-    const wrap = loadingContainer('Carregando card de perfil', 'max-w-sm');
+    const wrap = loadingContainer('Carregando card de perfil', 'nds-max-w-sm');
 
     const row = document.createElement('div');
-    row.className = 'flex items-center gap-4';
+    row.className = 'nds-cluster';
+    row.dataset.spacing = 'md';
 
     row.appendChild(makeSkeleton('h-12 w-12 rounded-full motion-reduce:animate-none'));
 
     const lines = document.createElement('div');
-    lines.className = 'space-y-2';
+    lines.className = 'nds-stack';
+    lines.dataset.spacing = 'xs';
     lines.appendChild(makeSkeleton('h-4 w-[250px] motion-reduce:animate-none'));
     lines.appendChild(makeSkeleton('h-4 w-[200px] motion-reduce:animate-none'));
 
@@ -74,16 +76,19 @@ export const CardDePerfil: Story = {
 export const ListaComAvatar: Story = {
   name: 'Lista com Avatar',
   render: () => {
-    const wrap = loadingContainer('Carregando lista de pedidos', 'max-w-md space-y-4');
+    const wrap = loadingContainer('Carregando lista de pedidos', 'nds-stack nds-max-w-md');
+    wrap.dataset.spacing = 'md';
 
     for (let i = 0; i < 5; i++) {
       const row = document.createElement('div');
-      row.className = 'flex items-center gap-4';
+      row.className = 'nds-cluster';
+      row.dataset.spacing = 'md';
 
       row.appendChild(makeSkeleton('h-10 w-10 rounded-full motion-reduce:animate-none'));
 
       const text = document.createElement('div');
-      text.className = 'space-y-2 flex-1';
+      text.className = 'nds-stack nds-flex-1';
+      text.dataset.spacing = 'xs';
       text.appendChild(makeSkeleton('h-4 w-[60%] motion-reduce:animate-none'));
       text.appendChild(makeSkeleton('h-3 w-[40%] motion-reduce:animate-none'));
 
@@ -110,10 +115,11 @@ export const ListaComAvatar: Story = {
 export const ImagemEmAspectRatio: Story = {
   name: 'Imagem em AspectRatio',
   render: () => {
-    const wrap = loadingContainer('Carregando imagem', 'max-w-md');
+    const wrap = loadingContainer('Carregando imagem', 'nds-max-w-md');
 
     const ratio = document.createElement('div');
-    ratio.className = 'relative w-full';
+    ratio.className = 'nds-w-full';
+    ratio.style.position = 'relative';
     ratio.style.aspectRatio = '16 / 9';
 
     const skeleton = makeSkeleton('absolute inset-0 h-full w-full motion-reduce:animate-none');
@@ -135,7 +141,8 @@ export const ImagemEmAspectRatio: Story = {
 export const Paragrafo: Story = {
   name: 'Parágrafo',
   render: () => {
-    const wrap = loadingContainer('Carregando parágrafo', 'max-w-md space-y-2');
+    const wrap = loadingContainer('Carregando parágrafo', 'nds-stack nds-max-w-md');
+    wrap.dataset.spacing = 'xs';
 
     const widths = ['w-full', 'w-[95%]', 'w-[60%]'];
     widths.forEach((w) => {

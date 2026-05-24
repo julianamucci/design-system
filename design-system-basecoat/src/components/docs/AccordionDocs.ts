@@ -3,6 +3,8 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createAccordion } from '@/components/ui/accordion';
+import { createBadge } from '@/components/ui/badge';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 import uiTranslations from '@/i18n/ui.json';
 import accordionTranslations from '@shared/content/accordion/translations.json';
 
@@ -14,6 +16,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -50,7 +53,7 @@ function buildDemoAccordion(): HTMLElement {
   return createAccordion({
     type: 'single',
     collapsible: true,
-    class: 'w-full max-w-lg',
+    class: 'nds-w-full nds-max-w-lg',
     items: [
       {
         value: 'q1',
@@ -87,7 +90,7 @@ function getTokenItems(): Array<{ token: string; value: string; description: str
   type AT = typeof accordionTranslations;
   type LK = keyof AT;
   const locale = getLocale() as LK;
-  const items = (accordionTranslations as Record<string, Record<string, Record<string, Record<string, string>>>>)[locale]?.tokens?.items ?? {};
+  const items = (accordionTranslations as unknown as Record<string, { tokens?: { items?: Record<string, { token: string; class: string; part: string }> } }>)[locale]?.tokens?.items ?? {};
   return Object.values(items).map(v => ({ token: v.token, value: v.class, description: v.part }));
 }
 
@@ -95,7 +98,8 @@ function getPropItems(tableKey: string): Array<{ name: string; type: string; def
   type AT = typeof accordionTranslations;
   type LK = keyof AT;
   const locale = getLocale() as LK;
-  const items = (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[locale]?.props?.[tableKey]?.items ?? {};
+  type PropItem = { name: string; type: string; default: string; required: string; description: string };
+  const items = (accordionTranslations as unknown as Record<string, { props?: Record<string, { items?: Record<string, PropItem> }> }>)[locale]?.props?.[tableKey]?.items ?? {};
   return Object.values(items).map(v => ({
     name: v.name,
     type: v.type,
@@ -139,6 +143,7 @@ export function createAccordionDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'modos',        labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -189,7 +194,7 @@ export function createAccordionDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'modos', 'estados', 'propriedades', 'tokens',
+    'importacao', 'modos', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -267,11 +272,11 @@ export function createAccordionDocs(): HTMLElement {
               doCaption: t('doDont.pair1.do'),
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => createAccordion({
-                type: 'single', collapsible: true, class: 'w-full max-w-xs text-sm',
+                type: 'single', collapsible: true, class: 'nds-w-full nds-max-w-xs nds-text-body',
                 items: [{ value: 'faq', trigger: 'Como faço para redefinir minha senha?', content: 'Acesse a tela de login e clique em "Esqueci minha senha".' }],
               }),
               dontPreviewFactory: () => createAccordion({
-                type: 'single', collapsible: true, class: 'w-full max-w-xs text-sm',
+                type: 'single', collapsible: true, class: 'nds-w-full nds-max-w-xs nds-text-body',
                 items: [{ value: 'faq', trigger: 'Senha', content: 'Informações sobre redefinição.' }],
               }),
             },
@@ -281,14 +286,14 @@ export function createAccordionDocs(): HTMLElement {
               doCaption: t('doDont.pair2.do'),
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => createAccordion({
-                type: 'multiple', class: 'w-full max-w-xs text-sm',
+                type: 'multiple', class: 'nds-w-full nds-max-w-xs nds-text-body',
                 items: [
                   { value: 's1', trigger: 'Especificações técnicas', content: 'CPU, RAM, SSD.' },
                   { value: 's2', trigger: 'Compatibilidade', content: 'Windows 11, macOS, Linux.' },
                 ],
               }),
               dontPreviewFactory: () => createAccordion({
-                type: 'single', collapsible: true, class: 'w-full max-w-xs text-sm',
+                type: 'single', collapsible: true, class: 'nds-w-full nds-max-w-xs nds-text-body',
                 items: [{ value: 's1', trigger: 'Expandir', content: 'Conteúdo único.' }],
               }),
             },
@@ -316,7 +321,7 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.single.description')),
               code: codeSingle,
               previewFactory: () => createAccordion({
-                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'w-full max-w-sm text-sm',
+                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-w-full nds-max-w-sm nds-text-body',
                 items: [
                   { value: 'item-1', trigger: 'Pergunta 1', content: 'Resposta objetiva em 1–2 linhas.' },
                   { value: 'item-2', trigger: 'Pergunta 2', content: 'Outro conteúdo aqui.' },
@@ -328,7 +333,7 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.multiple.description')),
               code: codeMultiple,
               previewFactory: () => createAccordion({
-                type: 'multiple', class: 'w-full max-w-sm text-sm',
+                type: 'multiple', class: 'nds-w-full nds-max-w-sm nds-text-body',
                 items: [
                   { value: 's1', trigger: 'Especificações técnicas', content: 'CPU, RAM, SSD.' },
                   { value: 's2', trigger: 'Compatibilidade', content: 'Windows 11, macOS, Linux.' },
@@ -340,7 +345,7 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.controlled.description')),
               code: codeControlled,
               previewFactory: () => createAccordion({
-                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'w-full max-w-sm text-sm',
+                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-w-full nds-max-w-sm nds-text-body',
                 items: [
                   { value: 'item-1', trigger: 'Item 1 — controlado', content: 'Estado gerenciado externamente.' },
                   { value: 'item-2', trigger: 'Item 2 — controlado', content: 'Útil para sincronizar com URL.' },
@@ -352,12 +357,253 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.defaultOpen.description')),
               code: codeSingle,
               previewFactory: () => createAccordion({
-                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'w-full max-w-sm text-sm',
+                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-w-full nds-max-w-sm nds-text-body',
                 items: [
                   { value: 'item-1', trigger: 'Item aberto por padrão', content: 'Este item inicia expandido via defaultValue.' },
                   { value: 'item-2', trigger: 'Item fechado por padrão', content: 'Este item inicia colapsado.' },
                 ],
               }),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        // ── Helpers locais ───────────────────────────────────────────────
+        type IconNode = [string, Record<string, string>];
+        const makeIcon = (nodes: IconNode[]): SVGSVGElement => {
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('viewBox', '0 0 24 24');
+          svg.setAttribute('fill', 'none');
+          svg.setAttribute('stroke', 'currentColor');
+          svg.setAttribute('stroke-width', '2');
+          svg.setAttribute('stroke-linecap', 'round');
+          svg.setAttribute('stroke-linejoin', 'round');
+          svg.setAttribute('aria-hidden', 'true');
+          svg.setAttribute('width', '16');
+          svg.setAttribute('height', '16');
+          svg.setAttribute('class', 'nds-icon-sm nds-shrink-0');
+          for (const [tag, attrs] of nodes) {
+            const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+            for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+            svg.appendChild(child);
+          }
+          return svg;
+        };
+
+        const INFO_ICON: IconNode[] = [
+          ['circle', { cx: '12', cy: '12', r: '10' }],
+          ['line',   { x1: '12', y1: '16', x2: '12', y2: '12' }],
+          ['line',   { x1: '12', y1: '8',  x2: '12.01', y2: '8' }],
+        ];
+        const WARNING_ICON: IconNode[] = [
+          ['path', { d: 'M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z' }],
+          ['line', { x1: '12', y1: '9',  x2: '12', y2: '13' }],
+          ['line', { x1: '12', y1: '17', x2: '12.01', y2: '17' }],
+        ];
+        const SUCCESS_ICON: IconNode[] = [
+          ['circle', { cx: '12', cy: '12', r: '10' }],
+          ['path',   { d: 'm9 12 2 2 4-4' }],
+        ];
+
+        const makeIconTrigger = (nodes: IconNode[], text: string): HTMLElement => {
+          const span = document.createElement('span');
+          span.className = 'nds-cluster';
+          span.dataset.spacing = 'xs';
+          span.appendChild(makeIcon(nodes));
+          const label = document.createElement('span');
+          label.textContent = text;
+          span.appendChild(label);
+          return span;
+        };
+
+        // ── Códigos ──────────────────────────────────────────────────────
+        const codeIconTrigger =
+          `const items = [\n` +
+          `  { value: 'info',    label: 'Informação',  nodes: Info },\n` +
+          `  { value: 'warning', label: 'Aviso',       nodes: AlertTriangle },\n` +
+          `  { value: 'success', label: 'Confirmação', nodes: CheckCircle2 },\n` +
+          `];\n` +
+          `const accordion = createAccordion({\n` +
+          `  type: 'single', collapsible: true,\n` +
+          `  items: items.map(({ value, label }) => ({ value, trigger: label, content: '...' })),\n` +
+          `});\n` +
+          `items.forEach(({ value, nodes, label }) => {\n` +
+          `  const span = accordion.querySelector(\`[data-value="\${value}"] span\`);\n` +
+          `  span?.replaceWith(makeIconTrigger(nodes, label));\n` +
+          `});`;
+
+        const codeBadgeTrigger =
+          `const items = [\n` +
+          `  { value: 'novo', label: 'Novidades da versão 3.0', badge: 'Novo', variant: 'default' },\n` +
+          `  { value: 'beta', label: 'Funcionalidades em beta',   badge: 'Beta', variant: 'secondary' },\n` +
+          `];\n` +
+          `const accordion = createAccordion({\n` +
+          `  type: 'single', collapsible: true,\n` +
+          `  items: items.map(({ value, label }) => ({ value, trigger: label, content: '...' })),\n` +
+          `});\n` +
+          `items.forEach(({ value, label, badge, variant }) => {\n` +
+          `  const span = accordion.querySelector(\`[data-value="\${value}"] span\`);\n` +
+          `  const wrapper = document.createElement('span');\n` +
+          `  wrapper.className = 'nds-cluster';\n` +
+          `  wrapper.dataset.spacing = 'xs';\n` +
+          `  wrapper.textContent = label;\n` +
+          `  wrapper.appendChild(createBadge({ text: badge, variant }));\n` +
+          `  span?.replaceWith(wrapper);\n` +
+          `});`;
+
+        const codeRichContent =
+          `const accordion = createAccordion({\n` +
+          `  type: 'multiple',\n` +
+          `  items: [\n` +
+          `    { value: 'layout',     trigger: 'Layout e Espaçamento', content: '' },\n` +
+          `    { value: 'tipografia', trigger: 'Tipografia',           content: '' },\n` +
+          `  ],\n` +
+          `});\n` +
+          `const layout = accordion.querySelector('[data-content-for="layout"] div');\n` +
+          `if (layout) layout.innerHTML = sanitizeHtml(richLayoutHtml);`;
+
+        const codeFAQ =
+          `const wrapper = document.createElement('div');\n` +
+          `const heading = document.createElement('h2');\n` +
+          `heading.textContent = 'Perguntas frequentes';\n` +
+          `wrapper.append(heading, createAccordion({\n` +
+          `  type: 'single', collapsible: true,\n` +
+          `  items: [\n` +
+          `    { value: 'senha',        trigger: 'Como faço para redefinir minha senha?', content: '...' },\n` +
+          `    { value: 'pagamento',    trigger: 'Quais formas de pagamento são aceitas?', content: '...' },\n` +
+          `    { value: 'cancelamento', trigger: 'Como cancelo minha assinatura?',         content: '...' },\n` +
+          `    { value: 'dados',        trigger: 'Onde encontro meus dados de acesso?',    content: '...' },\n` +
+          `  ],\n` +
+          `}));`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'accordion',
+          items: [
+            {
+              name: t('variants.compositions.iconTrigger.name'),
+              description: stripHtml(t('variants.compositions.iconTrigger.description')),
+              useWhen: stripHtml(t('variants.compositions.iconTrigger.use')),
+              code: codeIconTrigger,
+              previewFactory: () => {
+                const root = document.createElement('div');
+                root.className = 'nds-w-full nds-max-w-lg';
+                const iconItems = [
+                  { value: 'info',    nodes: INFO_ICON,    label: 'Informação',  content: 'Ícones facilitam a identificação rápida do tipo de conteúdo. Adicione aria-hidden="true" no ícone.' },
+                  { value: 'warning', nodes: WARNING_ICON, label: 'Aviso',       content: 'Sinalize categorias distintas com ícones semânticos. O texto do trigger já descreve para leitores de tela.' },
+                  { value: 'success', nodes: SUCCESS_ICON, label: 'Confirmação', content: 'Use ícones consistentes entre itens do mesmo accordion para criar padrão visual.' },
+                ];
+                const accordion = createAccordion({
+                  type: 'single', collapsible: true,
+                  items: iconItems.map(({ value, label, content }) => ({ value, trigger: label, content })),
+                });
+                iconItems.forEach(({ value, nodes, label }) => {
+                  const trigger = accordion.querySelector<HTMLButtonElement>(`[data-value="${value}"]`);
+                  const span = trigger?.querySelector('span');
+                  if (span) span.replaceWith(makeIconTrigger(nodes, label));
+                });
+                root.appendChild(accordion);
+                return root;
+              },
+            },
+            {
+              name: t('variants.compositions.badgeTrigger.name'),
+              description: stripHtml(t('variants.compositions.badgeTrigger.description')),
+              useWhen: stripHtml(t('variants.compositions.badgeTrigger.use')),
+              code: codeBadgeTrigger,
+              previewFactory: () => {
+                const root = document.createElement('div');
+                root.className = 'nds-w-full nds-max-w-lg';
+                const badgeItems = [
+                  { value: 'novo', label: 'Novidades da versão 3.0', badge: 'Novo', variant: 'default' as const,   content: 'Conteúdo das novidades. Use badges para sinalizar status sem alterar o trigger textual.' },
+                  { value: 'beta', label: 'Funcionalidades em beta', badge: 'Beta', variant: 'secondary' as const, content: 'Funcionalidades beta podem mudar. Feedback é bem-vindo.' },
+                ];
+                const accordion = createAccordion({
+                  type: 'single', collapsible: true,
+                  items: badgeItems.map(({ value, label, content }) => ({ value, trigger: label, content })),
+                });
+                badgeItems.forEach(({ value, label, badge, variant }) => {
+                  const trigger = accordion.querySelector<HTMLButtonElement>(`[data-value="${value}"]`);
+                  const span = trigger?.querySelector('span');
+                  if (!span) return;
+                  const wrapper = document.createElement('span');
+                  wrapper.className = 'nds-cluster';
+                  wrapper.dataset.spacing = 'xs';
+                  wrapper.textContent = label;
+                  const badgeEl = createBadge({ text: badge, variant });
+                  badgeEl.style.fontSize = '10px';
+                  badgeEl.style.height = '1rem';
+                  wrapper.appendChild(badgeEl);
+                  span.replaceWith(wrapper);
+                });
+                root.appendChild(accordion);
+                return root;
+              },
+            },
+            {
+              name: t('variants.compositions.richContent.name'),
+              description: stripHtml(t('variants.compositions.richContent.description')),
+              useWhen: stripHtml(t('variants.compositions.richContent.use')),
+              code: codeRichContent,
+              previewFactory: () => {
+                const root = document.createElement('div');
+                root.className = 'nds-w-full nds-max-w-lg';
+                const accordion = createAccordion({
+                  type: 'multiple',
+                  items: [
+                    { value: 'layout',     trigger: 'Layout e Espaçamento', content: '' },
+                    { value: 'tipografia', trigger: 'Tipografia',           content: '' },
+                  ],
+                });
+                const layoutHtml = `
+                  <div class="nds-stack nds-text-body" data-spacing="xs">
+                    <div class="nds-grid nds-font-medium" data-cols="2" data-spacing="xs">
+                      <span class="nds-text-muted-foreground">Propriedade</span>
+                      <span class="nds-text-muted-foreground">Valor</span>
+                    </div>
+                    <div class="nds-grid" data-cols="2" data-spacing="xs" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Gutter</span><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">24px</code></div>
+                    <div class="nds-grid" data-cols="2" data-spacing="xs" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Margem mobile</span><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">16px</code></div>
+                    <div class="nds-grid" data-cols="2" data-spacing="xs" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Colunas</span><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">12</code></div>
+                  </div>`;
+                const tipoHtml = `
+                  <ul class="nds-stack nds-text-body nds-list-none" data-spacing="xs" style="padding:0">
+                    <li class="nds-cluster" data-spacing="xs"><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">text-xs</code><span>12px — legendas e labels</span></li>
+                    <li class="nds-cluster" data-spacing="xs"><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">text-sm</code><span>14px — corpo principal</span></li>
+                    <li class="nds-cluster" data-spacing="xs"><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">text-base</code><span>16px — títulos de seção</span></li>
+                  </ul>`;
+                const layoutContent = accordion.querySelector<HTMLElement>('[data-content-for="layout"] div');
+                if (layoutContent) layoutContent.innerHTML = sanitizeHtml(layoutHtml);
+                const tipoContent = accordion.querySelector<HTMLElement>('[data-content-for="tipografia"] div');
+                if (tipoContent) tipoContent.innerHTML = sanitizeHtml(tipoHtml);
+                root.appendChild(accordion);
+                return root;
+              },
+            },
+            {
+              name: t('variants.compositions.faq.name'),
+              description: stripHtml(t('variants.compositions.faq.description')),
+              useWhen: stripHtml(t('variants.compositions.faq.use')),
+              code: codeFAQ,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack nds-w-full nds-max-w-lg';
+                wrapper.dataset.spacing = 'xs';
+                const heading = document.createElement('h2');
+                heading.className = 'nds-text-base nds-font-semibold';
+                heading.textContent = 'Perguntas frequentes';
+                wrapper.append(heading, createAccordion({
+                  type: 'single', collapsible: true,
+                  items: [
+                    { value: 'senha',        trigger: 'Como faço para redefinir minha senha?', content: 'Acesse a tela de login e clique em "Esqueci minha senha". Você receberá um link de redefinição no email cadastrado, válido por 24 horas.' },
+                    { value: 'pagamento',    trigger: 'Quais formas de pagamento são aceitas?', content: 'Aceitamos cartão de crédito, Pix e boleto bancário. Parcelamento disponível em até 12 vezes sem juros no cartão.' },
+                    { value: 'cancelamento', trigger: 'Como cancelo minha assinatura?',         content: 'Você pode cancelar a qualquer momento em Configurações → Assinatura. O acesso permanece ativo até o fim do período já pago.' },
+                    { value: 'dados',        trigger: 'Onde encontro meus dados de acesso?',    content: 'Seus dados de acesso estão disponíveis em Configurações → Conta.' },
+                  ],
+                }));
+                return wrapper;
+              },
             },
           ],
         });

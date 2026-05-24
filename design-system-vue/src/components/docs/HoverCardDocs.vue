@@ -13,6 +13,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/hover-card/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.vue';
@@ -21,6 +22,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -33,6 +35,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
+const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -94,9 +97,10 @@ const navGroups = computed(() => [
   {
     label: tContent('nav.techRef'),
     sections: [
-      { id: 'importacao',   label: tContent('nav.import')   },
-      { id: 'variantes',    label: tContent('nav.variants') },
-      { id: 'estados',      label: tContent('nav.states')   },
+      { id: 'importacao',   label: tContent('nav.import')        },
+      { id: 'variantes',    label: tContent('nav.variants')      },
+      { id: 'composicoes',  label: tContent('nav.compositions')  },
+      { id: 'estados',      label: tContent('nav.states')        },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
     ],
@@ -181,6 +185,97 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: tContent('variants.items.default'),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
   { name: tContent('variants.items.withDelay'), description: stripHtml(tContent('variants.styles.withDelay')), code: codeWithDelay },
+]);
+
+const codeCompUserProfile = `<HoverCard :open-delay="500" :close-delay="200">
+  <HoverCardTrigger as-child>
+    <a href="/users/joana">@joana</a>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <div class="flex gap-3">
+      <Avatar>
+        <AvatarImage src="/joana.jpg" alt="" />
+        <AvatarFallback>JS</AvatarFallback>
+      </Avatar>
+      <div class="flex flex-col">
+        <p class="font-medium text-sm">Joana Silva</p>
+        <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+      </div>
+    </div>
+  </HoverCardContent>
+</HoverCard>`;
+
+const codeCompLinkPreview = `<HoverCard :open-delay="500" :close-delay="200">
+  <HoverCardTrigger as-child>
+    <a href="https://design-system.dev">design-system.dev</a>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-2 text-xs text-muted-foreground">
+        <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+        <span>design-system.dev</span>
+      </div>
+      <p class="font-medium">Guia de overlays acessíveis</p>
+    </div>
+  </HoverCardContent>
+</HoverCard>`;
+
+const codeCompDefinition = `<HoverCard :open-delay="400" :close-delay="150">
+  <HoverCardTrigger as-child>
+    <button type="button" class="underline decoration-dotted underline-offset-4">
+      WCAG 2.1 AA
+    </button>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <p class="font-medium text-sm">WCAG 2.1 AA</p>
+    <p class="text-xs text-muted-foreground">
+      Web Content Accessibility Guidelines 2.1 — nível AA.
+    </p>
+  </HoverCardContent>
+</HoverCard>`;
+
+const codeCompMetric = `<HoverCard :open-delay="400" :close-delay="150">
+  <HoverCardTrigger as-child>
+    <button type="button" class="underline decoration-dotted underline-offset-4">
+      LCP 1.8s
+    </button>
+  </HoverCardTrigger>
+  <HoverCardContent>
+    <div class="flex items-baseline justify-between gap-2">
+      <p class="text-sm font-medium">Largest Contentful Paint</p>
+      <span class="text-xs font-medium text-emerald-600">1.8s</span>
+    </div>
+    <p class="text-xs text-muted-foreground">
+      Tempo até o maior elemento visível. Bom: &lt;2.5s · Ruim: &gt;4s.
+    </p>
+  </HoverCardContent>
+</HoverCard>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.userProfile.name'),
+    description: tContent('variants.compositions.userProfile.description'),
+    useWhen: tContent('variants.compositions.userProfile.use'),
+    code: codeCompUserProfile,
+  },
+  {
+    name: tContent('variants.compositions.linkPreview.name'),
+    description: tContent('variants.compositions.linkPreview.description'),
+    useWhen: tContent('variants.compositions.linkPreview.use'),
+    code: codeCompLinkPreview,
+  },
+  {
+    name: tContent('variants.compositions.definitionTooltip.name'),
+    description: tContent('variants.compositions.definitionTooltip.description'),
+    useWhen: tContent('variants.compositions.definitionTooltip.use'),
+    code: codeCompDefinition,
+  },
+  {
+    name: tContent('variants.compositions.metricExplainer.name'),
+    description: tContent('variants.compositions.metricExplainer.description'),
+    useWhen: tContent('variants.compositions.metricExplainer.use'),
+    code: codeCompMetric,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -493,6 +588,97 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="hover-card"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
+          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+            <HoverCardTrigger as-child>
+              <a href="#joana" class="text-primary underline-offset-4 hover:underline">@joana</a>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div class="flex gap-3">
+                <Avatar>
+                  <AvatarImage src="" alt="" />
+                  <AvatarFallback>JS</AvatarFallback>
+                </Avatar>
+                <div class="flex flex-col">
+                  <p class="font-medium text-sm">Joana Silva</p>
+                  <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+      </template>
+      <template #variant-preview-1>
+        <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
+          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+            <HoverCardTrigger as-child>
+              <a href="#link" class="text-primary underline-offset-4 hover:underline">design-system.dev</a>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                  <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+                  <span>design-system.dev</span>
+                </div>
+                <p class="font-medium">Guia de overlays acessíveis</p>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
+          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+            <HoverCardTrigger as-child>
+              <button
+                type="button"
+                class="bg-transparent border-0 p-0 text-primary text-sm font-medium underline decoration-dotted underline-offset-4 cursor-help"
+              >
+                WCAG 2.1 AA
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <p class="font-medium text-sm">WCAG 2.1 AA</p>
+              <p class="text-xs text-muted-foreground">
+                Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.
+              </p>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
+          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+            <HoverCardTrigger as-child>
+              <button
+                type="button"
+                class="bg-transparent border-0 p-0 text-primary text-sm font-medium underline decoration-dotted underline-offset-4 cursor-help"
+              >
+                LCP 1.8s
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div class="flex items-baseline justify-between gap-2">
+                <p class="text-sm font-medium">Largest Contentful Paint</p>
+                <span class="text-xs font-medium text-emerald-600">1.8s</span>
+              </div>
+              <p class="text-xs text-muted-foreground">
+                Tempo até o maior elemento visível ser renderizado. Bom: &lt;2.5s · Ruim: &gt;4s.
+              </p>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────── -->
     <DocsStates

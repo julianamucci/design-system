@@ -12,15 +12,19 @@ export interface BadgeOptions {
   children?: string | HTMLElement | Array<string | HTMLElement>;
   /** Alias legado para `children: string`. Mantido por compatibilidade. */
   text?: string;
-  /** Classes Tailwind adicionais concatenadas ao className base. */
+  /** Classes adicionais concatenadas ao className base. */
   className?: string;
 }
 
 function badgeClass(variant: BadgeVariant = 'default'): string {
-  // PATCH: bugfix — cada variante do basecoat-css é self-contained (define bg/text completos).
-  // Antes aplicávamos "badge badge-outline", o que fazia .badge (bg-primary + text-primary-foreground)
-  // vazar para a outline (que só redefine text-foreground), quebrando contraste (axe color-contrast).
-  return variant === 'default' ? 'badge' : `badge-${variant}`;
+  const base = 'nds-badge';
+  const modifier =
+    variant === 'default'     ? '' :
+    variant === 'secondary'   ? 'nds-badge-secondary' :
+    variant === 'destructive' ? 'nds-badge-destructive' :
+    variant === 'outline'     ? 'nds-badge-outline' :
+                                '';
+  return [base, modifier].filter(Boolean).join(' ');
 }
 
 export function createBadge(options: BadgeOptions = {}): HTMLElement {

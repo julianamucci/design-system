@@ -33,11 +33,12 @@ function createTextareaField(opts: {
   maxLength?: number;
 }): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex flex-col gap-1.5 w-full max-w-md';
+  wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+  wrapper.dataset.spacing = 'xs';
 
   const label = document.createElement('label');
   label.htmlFor = opts.labelFor;
-  label.className = 'text-sm font-medium text-foreground';
+  label.className = 'nds-text-body nds-font-medium nds-text-foreground';
   label.textContent = opts.labelText;
 
   opts.textareaEl.id = opts.labelFor;
@@ -50,7 +51,10 @@ function createTextareaField(opts: {
 
   if (hasHint || hasCounter) {
     const row = document.createElement('div');
-    row.className = 'flex justify-between items-start gap-3 text-xs text-muted-foreground';
+    row.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
+    row.dataset.justify = 'between';
+    row.dataset.align = 'start';
+    row.dataset.spacing = 'sm';
 
     const hintSpan = document.createElement('span');
     if (hasHint) hintSpan.textContent = opts.hintText!;
@@ -62,7 +66,8 @@ function createTextareaField(opts: {
       const max = opts.maxLength!;
       counter.setAttribute('aria-live', 'polite');
       counter.setAttribute('aria-label', `0 de ${max} caracteres usados`);
-      counter.className = 'tabular-nums shrink-0';
+      counter.className = 'nds-shrink-0';
+      counter.style.fontVariantNumeric = 'tabular-nums';
       counter.textContent = `0/${max}`;
       opts.textareaEl.addEventListener('input', () => {
         const len = opts.textareaEl.value.length;
@@ -77,7 +82,7 @@ function createTextareaField(opts: {
 
   if (opts.errorText) {
     const error = document.createElement('p');
-    error.className = 'text-xs text-destructive';
+    error.className = 'nds-text-caption nds-text-destructive';
     error.id = `${opts.labelFor}-error`;
     error.textContent = opts.errorText;
     opts.textareaEl.setAttribute('aria-describedby', `${opts.labelFor}-error`);
@@ -190,7 +195,8 @@ export const ComMensagemDeErro: Story = {
 export const EmFormulario: Story = {
   render: () => {
     const form = document.createElement('form');
-    form.className = 'flex flex-col gap-4 w-full max-w-md';
+    form.className = 'nds-stack nds-w-full nds-max-w-md';
+    form.dataset.spacing = 'md';
     form.setAttribute('aria-label', 'Formulário de feedback');
 
     const textarea = createTextarea({
@@ -214,7 +220,7 @@ export const EmFormulario: Story = {
     });
 
     const result = document.createElement('p');
-    result.className = 'text-xs text-muted-foreground';
+    result.className = 'nds-text-caption nds-text-muted-foreground';
     result.setAttribute('aria-live', 'polite');
 
     form.addEventListener('submit', (e) => {

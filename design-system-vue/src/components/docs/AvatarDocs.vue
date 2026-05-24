@@ -17,6 +17,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -92,6 +93,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -216,6 +218,39 @@ const variantItems = computed(() => [
   { name: 'icon',       description: stripHtml(tContent('variants.items.icon')),       code: codeIcon       },
   { name: 'group',      description: stripHtml(tContent('variants.items.group')),      code: codeGroup      },
   { name: 'withStatus', description: stripHtml(tContent('variants.items.withStatus')), code: codeWithStatus },
+]);
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withImage.name'),
+    description: tContent('variants.compositions.withImage.description'),
+    useWhen: tContent('variants.compositions.withImage.use'),
+    code: `<Avatar>\n  <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n  <AvatarFallback>MR</AvatarFallback>\n</Avatar>`,
+  },
+  {
+    name: tContent('variants.compositions.withInitials.name'),
+    description: tContent('variants.compositions.withInitials.description'),
+    useWhen: tContent('variants.compositions.withInitials.use'),
+    code: `<Avatar>\n  <AvatarFallback>JP</AvatarFallback>\n</Avatar>`,
+  },
+  {
+    name: tContent('variants.compositions.withIcon.name'),
+    description: tContent('variants.compositions.withIcon.description'),
+    useWhen: tContent('variants.compositions.withIcon.use'),
+    code: `<Avatar>\n  <AvatarFallback role="img" aria-label="Usuário genérico">\n    <User aria-hidden="true" class="h-5 w-5 text-muted-foreground" />\n  </AvatarFallback>\n</Avatar>`,
+  },
+  {
+    name: tContent('variants.compositions.group.name'),
+    description: tContent('variants.compositions.group.description'),
+    useWhen: tContent('variants.compositions.group.use'),
+    code: `<div class="flex -space-x-2" role="group" aria-label="Participantes">\n  <Avatar class="ring-2 ring-background">\n    <AvatarImage src="https://github.com/shadcn.png" alt="" />\n    <AvatarFallback aria-hidden="true">MR</AvatarFallback>\n  </Avatar>\n  <Avatar class="ring-2 ring-background">\n    <AvatarFallback aria-hidden="true">JP</AvatarFallback>\n  </Avatar>\n  <Avatar class="ring-2 ring-background">\n    <AvatarFallback aria-hidden="true">AL</AvatarFallback>\n  </Avatar>\n  <Avatar class="ring-2 ring-background">\n    <AvatarFallback class="text-xs" aria-hidden="true">+3</AvatarFallback>\n  </Avatar>\n</div>`,
+  },
+  {
+    name: tContent('variants.compositions.withStatus.name'),
+    description: tContent('variants.compositions.withStatus.description'),
+    useWhen: tContent('variants.compositions.withStatus.use'),
+    code: `<div class="relative inline-block">\n  <Avatar>\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span\n    class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"\n    role="status"\n    aria-label="online"\n  />\n</div>`,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -589,6 +624,63 @@ const testesVisual = computed(() => ({
             </div>
           </template>
         </DocsVariants>
+
+        <!-- ── Composições ─────────────────────────────────────────────── -->
+        <DocsCompositions
+          :title="tContent('variants.compositionsTitle')"
+          :use-when-label="tNav('common.useWhen')"
+          component-slug="avatar"
+          :items="compositionItems"
+        >
+          <template #variant-preview-0>
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+              <AvatarFallback>MR</AvatarFallback>
+            </Avatar>
+          </template>
+          <template #variant-preview-1>
+            <Avatar>
+              <AvatarFallback>JP</AvatarFallback>
+            </Avatar>
+          </template>
+          <template #variant-preview-2>
+            <Avatar>
+              <AvatarFallback role="img" aria-label="Usuário genérico">
+                <User aria-hidden="true" class="h-5 w-5 text-muted-foreground" />
+              </AvatarFallback>
+            </Avatar>
+          </template>
+          <template #variant-preview-3>
+            <div class="flex -space-x-2" role="group" aria-label="Participantes">
+              <Avatar class="ring-2 ring-background">
+                <AvatarImage src="https://github.com/shadcn.png" alt="" />
+                <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+              </Avatar>
+              <Avatar class="ring-2 ring-background">
+                <AvatarFallback aria-hidden="true">JP</AvatarFallback>
+              </Avatar>
+              <Avatar class="ring-2 ring-background">
+                <AvatarFallback aria-hidden="true">AL</AvatarFallback>
+              </Avatar>
+              <Avatar class="ring-2 ring-background">
+                <AvatarFallback class="text-xs" aria-hidden="true">+3</AvatarFallback>
+              </Avatar>
+            </div>
+          </template>
+          <template #variant-preview-4>
+            <div class="relative inline-block">
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+                <AvatarFallback>MR</AvatarFallback>
+              </Avatar>
+              <span
+                class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+                role="status"
+                aria-label="online"
+              />
+            </div>
+          </template>
+        </DocsCompositions>
 
         <!-- ── Configurações (States) ──────────────────────────────────── -->
         <DocsStates

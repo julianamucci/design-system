@@ -52,7 +52,8 @@ type Story = StoryObj<CheckboxArgs>;
 
 function buildCheckboxWithLabel(args: CheckboxArgs): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex items-center gap-2';
+  wrapper.className = 'nds-cluster';
+  wrapper.dataset.spacing = 'sm';
 
   const id = `checkbox-playground-${Math.random().toString(36).slice(2, 8)}`;
   const cb = createCheckbox({
@@ -66,7 +67,8 @@ function buildCheckboxWithLabel(args: CheckboxArgs): HTMLElement {
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = args.label;
-    label.className = 'text-sm font-medium leading-none' + (args.disabled ? ' cursor-not-allowed opacity-70' : ' cursor-pointer');
+    label.className = 'nds-text-body nds-font-medium nds-leading-none ' + (args.disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
+    if (args.disabled) { label.style.opacity = '0.7'; label.style.cursor = 'not-allowed'; }
     wrapper.append(cb, label);
   } else {
     wrapper.append(cb);

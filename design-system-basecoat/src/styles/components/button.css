@@ -1,0 +1,246 @@
+/*
+ * ─── nds-button ───────────────────────────────────────────────────────────────
+ * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ * Consome apenas custom properties já definidas em tokens.css + themes/*.css.
+ *
+ * A11Y — WCAG 1.4.4 (Resize Text 200%):
+ * Sem `height` fixo. Altura final é resultado de padding-block + line-height,
+ * de modo que o button cresça proporcionalmente ao tamanho de fonte do navegador
+ * (ex: zoom textual, settings → font size). NUNCA reintroduzir `height` nem
+ * `min-height` em pixels fixos.
+ *
+ * Tokens de cor: --primary, --primary-foreground, --secondary, --secondary-foreground,
+ *                --accent, --accent-foreground, --destructive, --destructive-foreground,
+ *                --background, --foreground, --input, --ring, --border
+ * Tokens de spacing: --spacing-* (grid 8: múltiplos/divisores de 8 apenas)
+ * Tokens de raio: --radius-button
+ * Tokens de tipografia: --font-family
+ *
+ * Variantes: default (primary), secondary, outline, ghost, link, destructive
+ * Tamanhos: sm, default (padrão), lg + icon-only equivalentes
+ *
+ * Estados: :hover, :focus-visible, :disabled, [aria-pressed="true"], [aria-invalid="true"]
+ * Dark: .dark .nds-button-* (combina via cascade)
+ */
+
+/* ── Base (todas as variantes e tamanhos compartilham) ─────────────────────── */
+.nds-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding-inline: var(--spacing-4);
+  padding-block: var(--spacing-2);
+  border: 0 solid transparent;
+  border-radius: var(--radius-button, 0.625rem);
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-family, inherit);
+  font-size: 0.875rem;                          /* 14px — text-sm */
+  line-height: 1.25;                            /* unitless — escala com font-size */
+  font-weight: var(--font-weight-medium, 500);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 150ms, color 150ms, border-color 150ms, box-shadow 150ms, opacity 150ms;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* SVG children — usam classes específicas para garantir tamanho mesmo quando
+ * o componente é renderizado em contextos com cascade hostil (ex: emotion-css
+ * do Storybook). Dimensões em rem (escalam com font-size do <html>) e não em
+ * em (que dependeria do font-size do button, vulnerável a sobrescrita). */
+.nds-button > svg,
+.nds-button-icon-svg {
+  pointer-events: none;
+  flex-shrink: 0;
+  width: 1rem;                                  /* 16px — default */
+  height: 1rem;
+}
+.nds-button-icon-svg-sm { width: 0.875rem; height: 0.875rem; } /* 14px */
+.nds-button-icon-svg-md { width: 1rem;     height: 1rem;     } /* 16px (default explícito) */
+.nds-button-icon-svg-lg { width: 1.25rem;  height: 1.25rem;  } /* 20px */
+
+/* Quando o button tem ícone (qualquer SVG filho direto), reduz padding lateral */
+.nds-button:has(> svg) {
+  padding-inline: var(--spacing-2);
+}
+
+/* ── Estados ───────────────────────────────────────────────────────────────── */
+.nds-button:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring) / 0.5);
+}
+.nds-button:disabled,
+.nds-button[aria-disabled="true"] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.nds-button[aria-invalid="true"] {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
+}
+
+/* ── Tamanhos ──────────────────────────────────────────────────────────────────
+ * Diferenciados por font-size + padding-block (não por height).
+ * Texto e altura crescem juntos quando o usuário aumenta o tamanho da fonte. */
+/* Escala vertical (grid 8 estrito — múltiplos/divisores de 8):
+ *   sm:      padding-block 4 + 12×1.25 = ~23px
+ *   default: padding-block 8 + 14×1.25 = ~33.5px
+ *   lg:      padding-block 8 + 16×1.25 = ~36px
+ *
+ * lg diferencia de default pelo font-size (16 vs 14). sm reduz padding + font. */
+.nds-button-sm {
+  gap: var(--spacing-2);
+  padding-inline: var(--spacing-4);
+  padding-block: var(--spacing-1);
+  font-size: 0.75rem;                           /* 12px */
+}
+.nds-button-sm:has(> svg) {
+  padding-inline: var(--spacing-2);
+}
+.nds-button-lg {
+  gap: var(--spacing-2);
+  padding-inline: var(--spacing-6);
+  padding-block: var(--spacing-2);
+  font-size: 1rem;                              /* 16px */
+}
+.nds-button-lg:has(> svg) {
+  padding-inline: var(--spacing-4);
+}
+
+/* Icon-only (quadrado) — sem texto. width/height explícitos em rem garantem
+ * tamanho previsível em qualquer contexto (não dependem de font-size do
+ * componente nem de cascade externa). Como não há texto, height fixo aqui
+ * não viola a regra WCAG 1.4.4 — não existe texto a ser cortado.
+ * O ícone interno escala via classes .nds-button-icon-svg-* aplicadas pela
+ * factory, independentes do font-size do botão. */
+.nds-button-icon,
+.nds-button-icon-sm,
+.nds-button-icon-lg {
+  padding: 0;
+}
+.nds-button-icon-sm {
+  width: 2rem;                                  /* 32px */
+  height: 2rem;
+}
+.nds-button-icon {
+  width: 2.25rem;                               /* 36px */
+  height: 2.25rem;
+}
+.nds-button-icon-lg {
+  width: 2.5rem;                                /* 40px */
+  height: 2.5rem;
+}
+
+/* ── Variantes ─────────────────────────────────────────────────────────────── */
+
+/* Default = primary (filled) */
+.nds-button-default {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.nds-button-default:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}
+.nds-button-default[aria-pressed="true"] {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
+/* Secondary */
+.nds-button-secondary {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.nds-button-secondary:hover,
+.nds-button-secondary[aria-pressed="true"] {
+  background-color: hsl(var(--secondary) / 0.8);
+}
+
+/* Outline */
+.nds-button-outline {
+  border: 1px solid hsl(var(--border));
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.nds-button-outline:hover,
+.nds-button-outline[aria-pressed="true"] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+.dark .nds-button-outline {
+  border-color: hsl(var(--input));
+  background-color: hsl(var(--input) / 0.3);
+}
+.dark .nds-button-outline:hover,
+.dark .nds-button-outline[aria-pressed="true"] {
+  background-color: hsl(var(--accent) / 0.5);
+}
+
+/* Ghost */
+.nds-button-ghost {
+  color: hsl(var(--foreground));
+}
+.nds-button-ghost:hover,
+.nds-button-ghost[aria-pressed="true"] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+.dark .nds-button-ghost:hover,
+.dark .nds-button-ghost[aria-pressed="true"] {
+  background-color: hsl(var(--accent) / 0.5);
+}
+
+/* Link */
+.nds-button-link {
+  padding: 0;
+  background: transparent;
+  color: hsl(var(--primary));
+  text-underline-offset: 4px;
+}
+.nds-button-link:hover,
+.nds-button-link[aria-pressed="true"] {
+  text-decoration: underline;
+}
+
+/* Destructive (soft style, alinhada ao restante do projeto) */
+.nds-button-destructive {
+  background-color: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.nds-button-destructive:hover,
+.nds-button-destructive[aria-pressed="true"] {
+  background-color: hsl(var(--destructive) / 0.15);
+}
+.nds-button-destructive:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
+}
+.dark .nds-button-destructive {
+  background-color: hsl(var(--destructive) / 0.15);
+}
+.dark .nds-button-destructive:hover {
+  background-color: hsl(var(--destructive) / 0.25);
+}
+
+/* ── Spin (loading) ─────────────────────────────────────────────────────────── */
+@keyframes nds-spin {
+  to { transform: rotate(360deg); }
+}
+.nds-spin {
+  animation: nds-spin 1s linear infinite;
+}
+
+/* ── Animação reduzida ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .nds-button {
+    transition: none;
+  }
+  .nds-spin {
+    animation: none;
+  }
+}

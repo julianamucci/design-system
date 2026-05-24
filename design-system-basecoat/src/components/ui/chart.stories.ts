@@ -26,7 +26,7 @@ type ChartArgs = {
 
 const meta: Meta<ChartArgs> = {
   title: 'UI/Chart',
-  component: createChart,
+  component: createChart as unknown as Meta<ChartArgs>['component'],
   tags: ['autodocs'],
   parameters: {
     docs: { page: withAutoDocsTab(createChartDocs) },
@@ -57,7 +57,7 @@ type Story = StoryObj<ChartArgs>;
 export const Playground: Story = {
   render: (args) => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
       createChart({
         data: chartData,

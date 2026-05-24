@@ -4,7 +4,7 @@ import { Separator } from './index';
 import SeparatorDocs from '@/components/docs/SeparatorDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta<any> = {
   title: 'UI/Separator',
   component: Separator,
   tags: ['autodocs'],
@@ -34,7 +34,7 @@ const meta = {
     orientation: 'horizontal',
     decorative: true,
   },
-} satisfies Meta<typeof Separator>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

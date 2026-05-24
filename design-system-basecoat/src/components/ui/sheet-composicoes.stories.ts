@@ -29,12 +29,14 @@ type Story = StoryObj;
 
 function buildInputField(labelText: string, type: string, value: string): HTMLLabelElement {
   const label = document.createElement('label');
-  label.className = 'grid gap-1 text-sm';
+  label.className = 'nds-stack nds-text-body';
+  label.dataset.spacing = 'xs';
   const span = document.createElement('span');
-  span.className = 'font-medium';
+  span.className = 'nds-font-medium';
   span.textContent = labelText;
   const input = document.createElement('input');
-  input.className = 'border rounded-md px-3 py-2';
+  input.className = 'nds-border-default nds-rounded-md';
+  input.style.padding = '0.5rem 0.75rem';
   input.type = type;
   input.value = value;
   label.append(span, input);
@@ -45,7 +47,8 @@ function makeFooter(cancelLabel: string, actionLabel: string): HTMLElement {
   const cancel = createButton({ variant: 'outline', label: cancelLabel });
   const action = createButton({ variant: 'default', label: actionLabel });
   const footer = document.createElement('div');
-  footer.className = 'flex gap-2';
+  footer.className = 'nds-cluster';
+  footer.dataset.spacing = 'sm';
   footer.append(cancel, action);
   // Fechar via overlay click (factory Basecoat não suporta SheetClose asChild)
   const closeFromAction = () => {
@@ -70,7 +73,8 @@ export const AdvancedFilters: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Abrir filtros' });
     const form = document.createElement('form');
-    form.className = 'grid gap-3';
+    form.className = 'nds-stack';
+    form.dataset.spacing = 'sm';
     form.append(
       buildInputField('Categoria', 'text', 'Eletrônicos'),
       buildInputField('Preço mínimo', 'number', '100'),
@@ -108,13 +112,15 @@ export const SecondaryNavigation: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Abrir menu' });
 
     const nav = document.createElement('nav');
-    nav.className = 'flex flex-col gap-2';
+    nav.className = 'nds-stack';
+    nav.dataset.spacing = 'sm';
     nav.setAttribute('aria-label', 'Secondary navigation');
     const items = ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'];
     for (const label of items) {
       const a = document.createElement('a');
       a.href = '#';
-      a.className = 'px-3 py-2 rounded-md text-sm hover:bg-accent';
+      a.className = 'nds-rounded-md nds-text-body nds-hover-bg-accent';
+      a.style.padding = '0.5rem 0.75rem';
       a.textContent = label;
       nav.appendChild(a);
     }
@@ -151,14 +157,21 @@ export const MobileBottomPanel: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Mais opções' });
 
     const list = document.createElement('div');
-    list.className = 'grid grid-cols-3 gap-3 text-sm';
+    list.className = 'nds-grid nds-text-body';
+    list.dataset.cols = '3';
+    list.dataset.spacing = 'sm';
     const actions = ['Compartilhar', 'Copiar link', 'Editar', 'Arquivar', 'Mover', 'Excluir'];
     for (const label of actions) {
       const item = document.createElement('button');
       item.type = 'button';
-      item.className = 'flex flex-col items-center gap-1 p-3 rounded-md border hover:bg-accent';
+      item.className = 'nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent';
+      item.dataset.spacing = 'xs';
+      item.dataset.align = 'center';
+      item.style.padding = '0.75rem';
       const dot = document.createElement('div');
-      dot.className = 'w-8 h-8 rounded-full bg-muted';
+      dot.className = 'nds-rounded-full nds-bg-muted';
+      dot.style.width = '2rem';
+      dot.style.height = '2rem';
       const span = document.createElement('span');
       span.textContent = label;
       item.append(dot, span);
@@ -196,7 +209,8 @@ export const WithLongScrollContent: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
 
     const longBody = document.createElement('div');
-    longBody.className = 'text-sm text-muted-foreground space-y-3';
+    longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground';
+    longBody.dataset.spacing = 'sm';
     for (let i = 1; i <= 18; i++) {
       const p = document.createElement('p');
       p.textContent = `Parágrafo ${i}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.`;

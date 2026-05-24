@@ -17,7 +17,8 @@ type Story = StoryObj;
 
 function makeContent(items: string[]): HTMLElement {
   const div = document.createElement('div');
-  div.className = 'rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2';
+  div.className = 'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
+  div.dataset.spacing = 'sm';
   for (const text of items) {
     const p = document.createElement('p');
     p.textContent = text;
@@ -34,7 +35,7 @@ export const NaoControlado: Story = {
       trigger: 'Exibir filtros avançados',
       content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
       defaultOpen: false,
-      class: 'w-full max-w-sm',
+      class: 'nds-w-full nds-max-w-sm',
     }),
   parameters: {
     docs: {
@@ -71,7 +72,7 @@ export const AbertoporPadrao: Story = {
       trigger: 'Ocultar filtros avançados',
       content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
       defaultOpen: true,
-      class: 'w-full max-w-sm',
+      class: 'nds-w-full nds-max-w-sm',
     }),
   parameters: {
     docs: {
@@ -103,7 +104,7 @@ export const Disabled: Story = {
       trigger: 'Filtros avançados (desabilitado)',
       content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
       disabled: true,
-      class: 'w-full max-w-sm',
+      class: 'nds-w-full nds-max-w-sm',
     }),
   parameters: {
     docs: {

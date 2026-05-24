@@ -5,7 +5,8 @@
     AccordionItem,
     AccordionTrigger,
   } from '@/components/ui/accordion';
-  import { Info, AlertTriangle, CheckCircle } from 'lucide-svelte';
+  import { Info, AlertTriangle, CheckCircle, CheckCircle2 } from 'lucide-svelte';
+  import { Badge } from '@/components/ui/badge';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -13,7 +14,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -56,6 +57,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'modos',        label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -395,6 +397,210 @@ type AccordionProps = Accordion.RootProps & {
             <AccordionContent>Este item inicia colapsado.</AccordionContent>
           </AccordionItem>
         </Accordion>
+      {/snippet}
+
+      <!-- ── Composições ──────────────────────────────────────────────── -->
+      <DocsCompositions
+        title={$tStore('variants.compositionsTitle')}
+        useWhenLabel={$tNavStore('common.useWhen')}
+        componentSlug="accordion"
+        items={[
+          {
+            name: $tStore('variants.compositions.iconTrigger.name'),
+            description: $tStore('variants.compositions.iconTrigger.description'),
+            useWhen: $tStore('variants.compositions.iconTrigger.use'),
+            code: `<Accordion type="single" class="w-full">
+  <AccordionItem value="info">
+    <AccordionTrigger>
+      <Info class="h-4 w-4" aria-hidden="true" />
+      Informações gerais
+    </AccordionTrigger>
+    <AccordionContent>Conteúdo informativo.</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="warn">
+    <AccordionTrigger>
+      <AlertTriangle class="h-4 w-4" aria-hidden="true" />
+      Avisos importantes
+    </AccordionTrigger>
+    <AccordionContent>Atenção aos detalhes.</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="ok">
+    <AccordionTrigger>
+      <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+      Confirmações
+    </AccordionTrigger>
+    <AccordionContent>Tudo certo por aqui.</AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+            preview: compIconTrigger,
+          },
+          {
+            name: $tStore('variants.compositions.badgeTrigger.name'),
+            description: $tStore('variants.compositions.badgeTrigger.description'),
+            useWhen: $tStore('variants.compositions.badgeTrigger.use'),
+            code: `<Accordion type="single" class="w-full">
+  <AccordionItem value="news">
+    <AccordionTrigger>
+      Novidades
+      <Badge>Novo</Badge>
+    </AccordionTrigger>
+    <AccordionContent>Confira as novidades da versão.</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="beta">
+    <AccordionTrigger>
+      Funcionalidades em beta
+      <Badge variant="secondary">Beta</Badge>
+    </AccordionTrigger>
+    <AccordionContent>Recursos experimentais.</AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+            preview: compBadgeTrigger,
+          },
+          {
+            name: $tStore('variants.compositions.richContent.name'),
+            description: $tStore('variants.compositions.richContent.description'),
+            useWhen: $tStore('variants.compositions.richContent.use'),
+            code: `<Accordion type="multiple" class="w-full">
+  <AccordionItem value="layout">
+    <AccordionTrigger>Layout e espaçamento</AccordionTrigger>
+    <AccordionContent>
+      <div class="grid grid-cols-2 gap-2 text-sm">
+        <div class="font-medium">Token</div><div class="font-medium">Valor</div>
+        <div>--spacing-sm</div><div>8px</div>
+        <div>--spacing-md</div><div>16px</div>
+      </div>
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="typo">
+    <AccordionTrigger>Tipografia</AccordionTrigger>
+    <AccordionContent>
+      <ul class="list-disc pl-5 text-sm">
+        <li>text-xs · 12px</li>
+        <li>text-sm · 14px</li>
+        <li>text-base · 16px</li>
+      </ul>
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+            preview: compRichContent,
+          },
+          {
+            name: $tStore('variants.compositions.faq.name'),
+            description: $tStore('variants.compositions.faq.description'),
+            useWhen: $tStore('variants.compositions.faq.use'),
+            code: `<section>
+  <h2 class="text-lg font-semibold mb-3">Perguntas frequentes</h2>
+  <Accordion type="single" class="w-full">
+    <AccordionItem value="senha">
+      <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
+      <AccordionContent>Use a opção "Esqueci minha senha" na tela de login.</AccordionContent>
+    </AccordionItem>
+    <AccordionItem value="pagamento">
+      <AccordionTrigger>Quais formas de pagamento aceitam?</AccordionTrigger>
+      <AccordionContent>Cartão, Pix e boleto.</AccordionContent>
+    </AccordionItem>
+    <AccordionItem value="cancelamento">
+      <AccordionTrigger>Como cancelar minha assinatura?</AccordionTrigger>
+      <AccordionContent>Acesse Configurações > Plano > Cancelar.</AccordionContent>
+    </AccordionItem>
+    <AccordionItem value="dados">
+      <AccordionTrigger>Meus dados estão seguros?</AccordionTrigger>
+      <AccordionContent>Seguimos LGPD e criptografia em repouso e em trânsito.</AccordionContent>
+    </AccordionItem>
+  </Accordion>
+</section>`,
+            preview: compFaq,
+          },
+        ]}
+      />
+
+      {#snippet compIconTrigger()}
+        <Accordion type="single" class="w-full max-w-sm text-sm">
+          <AccordionItem value="info">
+            <AccordionTrigger>
+              <Info class="h-4 w-4" aria-hidden="true" />
+              Informações gerais
+            </AccordionTrigger>
+            <AccordionContent>Conteúdo informativo.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="warn">
+            <AccordionTrigger>
+              <AlertTriangle class="h-4 w-4" aria-hidden="true" />
+              Avisos importantes
+            </AccordionTrigger>
+            <AccordionContent>Atenção aos detalhes.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="ok">
+            <AccordionTrigger>
+              <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+              Confirmações
+            </AccordionTrigger>
+            <AccordionContent>Tudo certo por aqui.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      {/snippet}
+      {#snippet compBadgeTrigger()}
+        <Accordion type="single" class="w-full max-w-sm text-sm">
+          <AccordionItem value="news">
+            <AccordionTrigger>
+              <span class="flex items-center gap-2">Novidades <Badge>Novo</Badge></span>
+            </AccordionTrigger>
+            <AccordionContent>Confira as novidades da versão.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="beta">
+            <AccordionTrigger>
+              <span class="flex items-center gap-2">Funcionalidades em beta <Badge variant="secondary">Beta</Badge></span>
+            </AccordionTrigger>
+            <AccordionContent>Recursos experimentais.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      {/snippet}
+      {#snippet compRichContent()}
+        <Accordion type="multiple" class="w-full max-w-sm text-sm">
+          <AccordionItem value="layout">
+            <AccordionTrigger>Layout e espaçamento</AccordionTrigger>
+            <AccordionContent>
+              <div class="grid grid-cols-2 gap-2 text-sm">
+                <div class="font-medium">Token</div><div class="font-medium">Valor</div>
+                <div>--spacing-sm</div><div>8px</div>
+                <div>--spacing-md</div><div>16px</div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="typo">
+            <AccordionTrigger>Tipografia</AccordionTrigger>
+            <AccordionContent>
+              <ul class="list-disc pl-5 text-sm">
+                <li>text-xs · 12px</li>
+                <li>text-sm · 14px</li>
+                <li>text-base · 16px</li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      {/snippet}
+      {#snippet compFaq()}
+        <section class="w-full max-w-sm text-sm">
+          <h2 class="text-lg font-semibold mb-3">Perguntas frequentes</h2>
+          <Accordion type="single" class="w-full">
+            <AccordionItem value="senha">
+              <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
+              <AccordionContent>Use a opção "Esqueci minha senha" na tela de login.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="pagamento">
+              <AccordionTrigger>Quais formas de pagamento aceitam?</AccordionTrigger>
+              <AccordionContent>Cartão, Pix e boleto.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="cancelamento">
+              <AccordionTrigger>Como cancelar minha assinatura?</AccordionTrigger>
+              <AccordionContent>Acesse Configurações &gt; Plano &gt; Cancelar.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="dados">
+              <AccordionTrigger>Meus dados estão seguros?</AccordionTrigger>
+              <AccordionContent>Seguimos LGPD e criptografia em repouso e em trânsito.</AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </section>
       {/snippet}
 
       <!-- ── Estados ───────────────────────────────────────────────── -->

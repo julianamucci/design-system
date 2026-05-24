@@ -50,32 +50,45 @@ function makeSkeleton(className: string): HTMLElement {
   return el;
 }
 
-function loadingWrap(label: string, extra = ''): HTMLElement {
+function loadingWrap(label: string, extraClass = '', stackSpacing?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = `w-full ${extra}`.trim();
+  wrap.className = `nds-w-full ${extraClass}`.trim();
+  if (stackSpacing) {
+    wrap.classList.add('nds-stack');
+    wrap.dataset.spacing = stackSpacing;
+  }
   wrap.setAttribute('role', 'status');
   wrap.setAttribute('aria-busy', 'true');
   wrap.setAttribute('aria-label', label);
   return wrap;
 }
 
+function sizedSkeleton(styles: Partial<CSSStyleDeclaration>, className = 'motion-reduce:animate-none'): HTMLElement {
+  const el = makeSkeleton(className);
+  Object.assign(el.style, styles);
+  return el;
+}
+
 function buildCardDemo(label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-sm space-y-2';
+  wrap.className = 'nds-w-full nds-max-w-sm nds-stack';
+  wrap.dataset.spacing = 'sm';
 
   const caption = document.createElement('div');
-  caption.className = 'text-xs text-muted-foreground';
+  caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
-  const inner = loadingWrap('Carregando card de perfil', 'max-w-sm');
+  const inner = loadingWrap('Carregando card de perfil', 'nds-max-w-sm');
   const row = document.createElement('div');
-  row.className = 'flex items-center gap-4';
-  row.appendChild(makeSkeleton('h-12 w-12 rounded-full motion-reduce:animate-none'));
+  row.className = 'nds-cluster';
+  row.dataset.spacing = 'md';
+  row.appendChild(sizedSkeleton({ height: '3rem', width: '3rem', borderRadius: '9999px' }));
 
   const lines = document.createElement('div');
-  lines.className = 'space-y-2';
-  lines.appendChild(makeSkeleton('h-4 w-[200px] motion-reduce:animate-none'));
-  lines.appendChild(makeSkeleton('h-4 w-[160px] motion-reduce:animate-none'));
+  lines.className = 'nds-stack';
+  lines.dataset.spacing = 'sm';
+  lines.appendChild(sizedSkeleton({ height: '1rem', width: '200px' }));
+  lines.appendChild(sizedSkeleton({ height: '1rem', width: '160px' }));
   row.appendChild(lines);
   inner.appendChild(row);
 
@@ -85,21 +98,24 @@ function buildCardDemo(label: string): HTMLElement {
 
 function buildListDemo(label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-md space-y-2';
+  wrap.className = 'nds-w-full nds-max-w-md nds-stack';
+  wrap.dataset.spacing = 'sm';
 
   const caption = document.createElement('div');
-  caption.className = 'text-xs text-muted-foreground';
+  caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
-  const list = loadingWrap('Carregando lista', 'space-y-3');
+  const list = loadingWrap('Carregando lista', '', 'md');
   for (let i = 0; i < 5; i++) {
     const row = document.createElement('div');
-    row.className = 'flex items-center gap-3';
-    row.appendChild(makeSkeleton('h-8 w-8 rounded-full motion-reduce:animate-none'));
+    row.className = 'nds-cluster';
+    row.dataset.spacing = 'sm';
+    row.appendChild(sizedSkeleton({ height: '2rem', width: '2rem', borderRadius: '9999px' }));
     const text = document.createElement('div');
-    text.className = 'space-y-2 flex-1';
-    text.appendChild(makeSkeleton('h-3 w-[60%] motion-reduce:animate-none'));
-    text.appendChild(makeSkeleton('h-3 w-[40%] motion-reduce:animate-none'));
+    text.className = 'nds-stack nds-flex-1';
+    text.dataset.spacing = 'sm';
+    text.appendChild(sizedSkeleton({ height: '0.75rem', width: '60%' }));
+    text.appendChild(sizedSkeleton({ height: '0.75rem', width: '40%' }));
     row.appendChild(text);
     list.appendChild(row);
   }
@@ -110,17 +126,22 @@ function buildListDemo(label: string): HTMLElement {
 
 function buildImageDemo(label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-md space-y-2';
+  wrap.className = 'nds-w-full nds-max-w-md nds-stack';
+  wrap.dataset.spacing = 'sm';
 
   const caption = document.createElement('div');
-  caption.className = 'text-xs text-muted-foreground';
+  caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
   const inner = loadingWrap('Carregando imagem');
   const ratio = document.createElement('div');
-  ratio.className = 'relative w-full';
+  ratio.className = 'nds-w-full';
+  ratio.style.position = 'relative';
   ratio.style.aspectRatio = '16 / 9';
-  ratio.appendChild(makeSkeleton('absolute inset-0 h-full w-full motion-reduce:animate-none'));
+  const skel = sizedSkeleton({ height: '100%', width: '100%' });
+  skel.style.position = 'absolute';
+  skel.style.inset = '0';
+  ratio.appendChild(skel);
   inner.appendChild(ratio);
 
   wrap.append(caption, inner);
@@ -129,15 +150,16 @@ function buildImageDemo(label: string): HTMLElement {
 
 function buildParagraphDemo(label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-md space-y-2';
+  wrap.className = 'nds-w-full nds-max-w-md nds-stack';
+  wrap.dataset.spacing = 'sm';
 
   const caption = document.createElement('div');
-  caption.className = 'text-xs text-muted-foreground';
+  caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
-  const inner = loadingWrap('Carregando parágrafo', 'space-y-2');
-  ['w-full', 'w-[95%]', 'w-[60%]'].forEach((w) => {
-    inner.appendChild(makeSkeleton(`h-4 ${w} motion-reduce:animate-none`));
+  const inner = loadingWrap('Carregando parágrafo', '', 'sm');
+  (['100%', '95%', '60%'] as const).forEach((w) => {
+    inner.appendChild(sizedSkeleton({ height: '1rem', width: w }));
   });
 
   wrap.append(caption, inner);
@@ -145,21 +167,21 @@ function buildParagraphDemo(label: string): HTMLElement {
 }
 
 function buildRectangleVariant(): HTMLElement {
-  const wrap = loadingWrap('Carregando bloco', 'max-w-sm');
-  wrap.appendChild(makeSkeleton('h-24 w-full motion-reduce:animate-none'));
+  const wrap = loadingWrap('Carregando bloco', 'nds-max-w-sm');
+  wrap.appendChild(sizedSkeleton({ height: '6rem', width: '100%' }));
   return wrap;
 }
 
 function buildCircleVariant(): HTMLElement {
-  const wrap = loadingWrap('Carregando avatar', 'max-w-sm');
-  wrap.appendChild(makeSkeleton('h-12 w-12 rounded-full motion-reduce:animate-none'));
+  const wrap = loadingWrap('Carregando avatar', 'nds-max-w-sm');
+  wrap.appendChild(sizedSkeleton({ height: '3rem', width: '3rem', borderRadius: '9999px' }));
   return wrap;
 }
 
 function buildLineVariant(): HTMLElement {
-  const wrap = loadingWrap('Carregando linhas', 'max-w-sm space-y-2');
-  ['h-4 w-[250px]', 'h-4 w-[200px]', 'h-4 w-[160px]'].forEach((cls) => {
-    wrap.appendChild(makeSkeleton(`${cls} motion-reduce:animate-none`));
+  const wrap = loadingWrap('Carregando linhas', 'nds-max-w-sm', 'sm');
+  (['250px', '200px', '160px'] as const).forEach((w) => {
+    wrap.appendChild(sizedSkeleton({ height: '1rem', width: w }));
   });
   return wrap;
 }
@@ -263,7 +285,10 @@ export function createSkeletonDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const grid = document.createElement('div');
-            grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 w-full';
+            grid.className = 'nds-grid nds-w-full';
+            grid.dataset.cols = '2';
+            grid.dataset.spacing = 'lg';
+            grid.dataset.min = '16rem';
             grid.append(
               buildCardDemo(t('demonstration.labels.card')),
               buildListDemo(t('demonstration.labels.list')),
@@ -342,22 +367,24 @@ export function createSkeletonDocs(): HTMLElement {
               doCaption: t('doDont.pair1.do'),
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
-                const wrap = loadingWrap('Carregando card de perfil', 'max-w-sm');
+                const wrap = loadingWrap('Carregando card de perfil', 'nds-max-w-sm');
                 const row = document.createElement('div');
-                row.className = 'flex items-center gap-4';
-                row.appendChild(makeSkeleton('h-12 w-12 rounded-full motion-reduce:animate-none'));
+                row.className = 'nds-cluster';
+                row.dataset.spacing = 'md';
+                row.appendChild(sizedSkeleton({ height: '3rem', width: '3rem', borderRadius: '9999px' }));
                 const lines = document.createElement('div');
-                lines.className = 'space-y-2';
-                lines.appendChild(makeSkeleton('h-4 w-[200px] motion-reduce:animate-none'));
-                lines.appendChild(makeSkeleton('h-4 w-[160px] motion-reduce:animate-none'));
+                lines.className = 'nds-stack';
+                lines.dataset.spacing = 'sm';
+                lines.appendChild(sizedSkeleton({ height: '1rem', width: '200px' }));
+                lines.appendChild(sizedSkeleton({ height: '1rem', width: '160px' }));
                 row.appendChild(lines);
                 wrap.appendChild(row);
                 return wrap;
               },
               dontPreviewFactory: () => {
-                const wrap = loadingWrap('Carregando', 'max-w-sm space-y-2');
-                wrap.appendChild(makeSkeleton('h-20 w-full'));
-                wrap.appendChild(makeSkeleton('h-20 w-full'));
+                const wrap = loadingWrap('Carregando', 'nds-max-w-sm', 'sm');
+                wrap.appendChild(sizedSkeleton({ height: '5rem', width: '100%' }, ''));
+                wrap.appendChild(sizedSkeleton({ height: '5rem', width: '100%' }, ''));
                 return wrap;
               },
             },
@@ -367,14 +394,16 @@ export function createSkeletonDocs(): HTMLElement {
               doCaption: t('doDont.pair2.do'),
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
-                const wrap = loadingWrap('Carregando bloco', 'max-w-sm');
-                wrap.appendChild(makeSkeleton('h-16 w-full motion-reduce:animate-none'));
+                const wrap = loadingWrap('Carregando bloco', 'nds-max-w-sm');
+                wrap.appendChild(sizedSkeleton({ height: '4rem', width: '100%' }));
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm';
-                const skeleton = createSkeleton({ className: 'h-16 w-full' });
+                wrap.className = 'nds-w-full nds-max-w-sm';
+                const skeleton = createSkeleton({ className: '' });
+                skeleton.style.height = '4rem';
+                skeleton.style.width = '100%';
                 wrap.appendChild(skeleton);
                 return wrap;
               },
@@ -390,13 +419,13 @@ export function createSkeletonDocs(): HTMLElement {
 
       case 'variantes': {
         const codeRect =
-          `const skeleton = createSkeleton({ className: 'h-24 w-full motion-reduce:animate-none' });\n` +
+          `const skeleton = createSkeleton({ height: '6rem', width: '100%' });\n` +
           `skeleton.setAttribute('aria-hidden', 'true');`;
         const codeCircle =
-          `const avatar = createSkeleton({ className: 'h-12 w-12 rounded-full motion-reduce:animate-none' });\n` +
+          `const avatar = createSkeleton({ height: '3rem', width: '3rem', className: 'nds-rounded-full' });\n` +
           `avatar.setAttribute('aria-hidden', 'true');`;
         const codeLine =
-          `const line = createSkeleton({ className: 'h-4 w-[250px] motion-reduce:animate-none' });\n` +
+          `const line = createSkeleton({ height: '1rem', width: '250px' });\n` +
           `line.setAttribute('aria-hidden', 'true');`;
 
         return createDocsVariants({

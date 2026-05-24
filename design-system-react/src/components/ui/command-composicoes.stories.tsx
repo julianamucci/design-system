@@ -85,7 +85,7 @@ export const ComGrupos: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
+    void within(canvasElement);
 
     await step("dois grupos são renderizados", async () => {
       const groups = canvasElement.querySelectorAll("[data-slot='command-group']");

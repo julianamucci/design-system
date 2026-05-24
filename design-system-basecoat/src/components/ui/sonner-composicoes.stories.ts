@@ -31,12 +31,12 @@ function buildToastEl(opts: {
   onAction?: () => void;
   persistent?: boolean;
 }): HTMLElement {
-  const RICH_COLORS: Record<string, string> = {
-    default: 'bg-background text-foreground border-border',
-    success: 'bg-green-50 text-green-800 border-green-200',
-    error:   'bg-red-50 text-red-800 border-red-200',
-    info:    'bg-blue-50 text-blue-800 border-blue-200',
-    loading: 'bg-background text-foreground border-border',
+  const RICH_COLORS: Record<string, { bg: string; color: string; borderColor: string }> = {
+    default: { bg: 'var(--background)', color: 'var(--foreground)', borderColor: 'var(--border)' },
+    success: { bg: '#f0fdf4',           color: '#166534',           borderColor: '#bbf7d0' },
+    error:   { bg: '#fef2f2',           color: '#991b1b',           borderColor: '#fecaca' },
+    info:    { bg: '#eff6ff',           color: '#1e40af',           borderColor: '#bfdbfe' },
+    loading: { bg: 'var(--background)', color: 'var(--foreground)', borderColor: 'var(--border)' },
   };
 
   const ICONS: Record<string, string> = {
@@ -47,33 +47,40 @@ function buildToastEl(opts: {
     loading:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ds-toast-spin" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
   };
 
-  const colorClass = RICH_COLORS[opts.type] ?? RICH_COLORS.default;
+  const palette = RICH_COLORS[opts.type] ?? RICH_COLORS.default;
 
   const toastEl = document.createElement('div');
   toastEl.setAttribute('data-sonner-toast', '');
   toastEl.setAttribute('role', 'status');
   toastEl.setAttribute('aria-live', 'polite');
-  toastEl.className = `pointer-events-auto w-full max-w-sm rounded-lg border p-4 shadow-lg flex items-start gap-3 ${colorClass}`;
+  toastEl.className = 'nds-cluster nds-w-full nds-max-w-sm nds-rounded-lg nds-p-4 nds-shadow-lg';
+  toastEl.dataset.spacing = 'sm';
+  toastEl.dataset.align = 'start';
+  toastEl.style.pointerEvents = 'auto';
+  toastEl.style.background = palette.bg;
+  toastEl.style.color = palette.color;
+  toastEl.style.border = `1px solid ${palette.borderColor}`;
 
   const icon = ICONS[opts.type];
   if (icon) {
     const iconWrap = document.createElement('span');
-    iconWrap.className = 'flex-shrink-0 mt-0.5';
+    iconWrap.className = 'nds-shrink-0';
+    iconWrap.style.marginTop = '0.125rem';
     iconWrap.innerHTML = sanitizeHtml(icon);
     toastEl.appendChild(iconWrap);
   }
 
   const contentEl = document.createElement('div');
-  contentEl.className = 'flex-1 min-w-0';
+  contentEl.className = 'nds-flex-1 nds-min-w-0';
 
   const titleEl = document.createElement('p');
-  titleEl.className = 'text-sm font-medium';
+  titleEl.className = 'nds-text-body nds-font-medium';
   titleEl.textContent = opts.message;
   contentEl.appendChild(titleEl);
 
   if (opts.description) {
     const descEl = document.createElement('p');
-    descEl.className = 'text-sm text-muted-foreground mt-1';
+    descEl.className = 'nds-text-body nds-text-muted-foreground nds-mt-1';
     descEl.textContent = opts.description;
     contentEl.appendChild(descEl);
   }
@@ -81,7 +88,8 @@ function buildToastEl(opts: {
   if (opts.actionLabel && opts.onAction) {
     const actionBtn = document.createElement('button');
     actionBtn.type = 'button';
-    actionBtn.className = 'mt-2 text-sm font-medium text-primary hover:text-primary/80 underline-offset-4 hover:underline';
+    actionBtn.className = 'nds-mt-2 nds-text-body nds-font-medium nds-text-primary nds-hover-underline';
+    actionBtn.style.textUnderlineOffset = '4px';
     actionBtn.textContent = opts.actionLabel;
     actionBtn.dataset.actionBtn = 'true';
     actionBtn.addEventListener('click', () => {
@@ -98,7 +106,8 @@ function buildToastEl(opts: {
   const closeBtn = document.createElement('button');
   closeBtn.type = 'button';
   closeBtn.setAttribute('aria-label', 'Fechar');
-  closeBtn.className = 'flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors';
+  closeBtn.className = 'nds-shrink-0 nds-text-muted-foreground nds-hover-text-foreground';
+  closeBtn.style.transition = 'color 150ms';
   closeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
   closeBtn.addEventListener('click', () => {
     toastEl.style.opacity = '0';
@@ -126,7 +135,8 @@ function createComposicaoStory(opts: {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.textContent = opts.btnLabel;
-  btn.className = 'inline-flex self-start items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2';
+  btn.className = 'btn btn-outline';
+  btn.style.alignSelf = 'flex-start';
 
   btn.addEventListener('click', () => {
     const toastEl = opts.buildFn();
@@ -235,7 +245,8 @@ export const WithPromise: Story = {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.textContent = 'Com promise';
-    btn.className = 'inline-flex self-start items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2';
+    btn.className = 'btn btn-outline';
+  btn.style.alignSelf = 'flex-start';
 
     btn.addEventListener('click', () => {
       // Show loading toast

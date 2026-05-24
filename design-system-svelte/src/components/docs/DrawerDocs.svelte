@@ -18,7 +18,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -70,6 +70,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -538,6 +539,220 @@ interface TriggerProps {
           </DrawerHeader>
           <DrawerFooter>
             <Button>OK</Button>
+            <DrawerClose>
+              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </div>
+  {/snippet}
+
+  <!-- ── Composições ────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="drawer"
+    items={[
+      {
+        name: $tStore('variants.compositions.withForm.name'),
+        description: $tStore('variants.compositions.withForm.description'),
+        useWhen: $tStore('variants.compositions.withForm.use'),
+        code: `<Drawer>
+  <DrawerTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Editar perfil</Button>
+    {/snippet}
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Editar perfil</DrawerTitle>
+      <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+    </DrawerHeader>
+    <form class="grid gap-3 px-4">
+      <label class="grid gap-1 text-sm">
+        <span class="font-medium">Nome</span>
+        <input class="border rounded-md px-3 py-2" value="Maria Souza" />
+      </label>
+      <label class="grid gap-1 text-sm">
+        <span class="font-medium">E-mail</span>
+        <input type="email" class="border rounded-md px-3 py-2" value="maria@exemplo.com" />
+      </label>
+    </form>
+    <DrawerFooter>
+      <Button>Salvar alterações</Button>
+      <DrawerClose>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`,
+        preview: compWithForm,
+      },
+      {
+        name: $tStore('variants.compositions.withConfirmation.name'),
+        description: $tStore('variants.compositions.withConfirmation.description'),
+        useWhen: $tStore('variants.compositions.withConfirmation.use'),
+        code: `<Drawer>
+  <DrawerTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Remover item</Button>
+    {/snippet}
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Remover item da lista?</DrawerTitle>
+      <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
+    </DrawerHeader>
+    <DrawerFooter>
+      <Button variant="destructive">Remover</Button>
+      <DrawerClose>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`,
+        preview: compWithConfirmation,
+      },
+      {
+        name: $tStore('variants.compositions.withScroll.name'),
+        description: $tStore('variants.compositions.withScroll.description'),
+        useWhen: $tStore('variants.compositions.withScroll.use'),
+        code: `<Drawer>
+  <DrawerTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Ler termos</Button>
+    {/snippet}
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Termos de uso</DrawerTitle>
+      <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
+    </DrawerHeader>
+    <div class="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
+      {#each Array.from({ length: 12 }) as _, i}
+        <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
+      {/each}
+    </div>
+    <DrawerFooter>
+      <Button>Aceitar termos</Button>
+      <DrawerClose>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`,
+        preview: compWithScroll,
+      },
+      {
+        name: $tStore('variants.compositions.rightPanel.name'),
+        description: $tStore('variants.compositions.rightPanel.description'),
+        useWhen: $tStore('variants.compositions.rightPanel.use'),
+        code: `<Drawer direction="right">
+  <DrawerTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Abrir filtros</Button>
+    {/snippet}
+  </DrawerTrigger>
+  <DrawerContent class="max-w-md">
+    <DrawerHeader>
+      <DrawerTitle>Filtros</DrawerTitle>
+      <DrawerDescription>Refine os resultados.</DrawerDescription>
+    </DrawerHeader>
+    <div class="px-4 text-sm text-muted-foreground">Conteúdo dos filtros…</div>
+    <DrawerFooter>
+      <Button>Aplicar</Button>
+      <DrawerClose>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`,
+        preview: compRightPanel,
+      },
+    ]}
+  />
+
+  {#snippet compWithForm()}
+    <div style="contain: layout">
+      <Drawer defaultOpen={true}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Editar perfil</DrawerTitle>
+            <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+          </DrawerHeader>
+          <form class="grid gap-3 px-4">
+            <label class="grid gap-1 text-sm">
+              <span class="font-medium">Nome</span>
+              <input class="border rounded-md px-3 py-2" value="Maria Souza" />
+            </label>
+            <label class="grid gap-1 text-sm">
+              <span class="font-medium">E-mail</span>
+              <input type="email" class="border rounded-md px-3 py-2" value="maria@exemplo.com" />
+            </label>
+          </form>
+          <DrawerFooter>
+            <Button>Salvar alterações</Button>
+            <DrawerClose>
+              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </div>
+  {/snippet}
+  {#snippet compWithConfirmation()}
+    <div style="contain: layout">
+      <Drawer defaultOpen={true}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Remover item da lista?</DrawerTitle>
+            <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button variant="destructive">Remover</Button>
+            <DrawerClose>
+              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </div>
+  {/snippet}
+  {#snippet compWithScroll()}
+    <div style="contain: layout">
+      <Drawer defaultOpen={true}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Termos de uso</DrawerTitle>
+            <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
+          </DrawerHeader>
+          <div class="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
+            {#each Array.from({ length: 12 }) as _, i}
+              <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
+            {/each}
+          </div>
+          <DrawerFooter>
+            <Button>Aceitar termos</Button>
+            <DrawerClose>
+              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </div>
+  {/snippet}
+  {#snippet compRightPanel()}
+    <div style="contain: layout">
+      <Drawer direction="right" defaultOpen={true}>
+        <DrawerContent class="max-w-md">
+          <DrawerHeader>
+            <DrawerTitle>Filtros</DrawerTitle>
+            <DrawerDescription>Refine os resultados.</DrawerDescription>
+          </DrawerHeader>
+          <div class="px-4 text-sm text-muted-foreground">Conteúdo dos filtros…</div>
+          <DrawerFooter>
+            <Button>Aplicar</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>

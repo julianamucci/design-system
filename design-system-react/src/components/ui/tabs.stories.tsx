@@ -17,11 +17,6 @@ const meta = {
       options: ["horizontal", "vertical"],
       description: "Direção da navegação por setas e do layout.",
     },
-    activationMode: {
-      control: "inline-radio",
-      options: ["automatic", "manual"],
-      description: "automatic ativa ao mover setas; manual exige Enter/Space.",
-    },
     defaultValue: {
       control: "text",
       description: "Valor inicial da tab ativa (não-controlado).",
@@ -29,7 +24,6 @@ const meta = {
   },
   args: {
     orientation: "horizontal",
-    activationMode: "automatic",
     defaultValue: "overview",
   },
 } satisfies Meta<typeof Tabs>;
@@ -42,7 +36,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {
   render: (args) => (
     <Tabs
-      key={`${args.orientation}-${args.activationMode}-${String(args.defaultValue)}`}
+      key={`${args.orientation}-${String(args.defaultValue)}`}
       {...args}
       className="w-full max-w-lg"
     >

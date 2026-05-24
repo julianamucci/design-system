@@ -52,10 +52,11 @@ export const Playground: Story = {
     img.alt = args.alt;
     img.loading = 'lazy';
     img.decoding = 'async';
-    img.className = 'object-cover w-full h-full rounded-md';
+    img.className = 'object-cover w-full h-full nds-rounded-md';
 
     const wrapper = document.createElement('div');
-    wrapper.className = 'w-full max-w-xl';
+    wrapper.className = 'nds-w-full';
+    wrapper.style.maxWidth = '36rem';
     wrapper.appendChild(createAspectRatio({ ratio: args.ratio, content: img }));
     return wrapper;
   },

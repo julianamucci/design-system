@@ -31,7 +31,7 @@ type Story = StoryObj;
 export const CoresPersonalizadas: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
       createChart({
         data: chartData,
@@ -61,7 +61,7 @@ export const CoresPersonalizadas: Story = {
 export const AlturaPersonalizada: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
       createChart({
         data: chartData,

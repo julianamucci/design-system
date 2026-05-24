@@ -1,4 +1,5 @@
-import { cn } from '@/lib/utils';
+// ─── ScrollArea — Vanilla factory standalone ────────────────────────────────
+// Visual: classes .nds-scroll-area + .nds-scroll-area-viewport (zero Tailwind).
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -16,13 +17,14 @@ export function createScrollArea(options: ScrollAreaOptions = {}): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'scroll-area';
-  root.className = cn('relative overflow-hidden scrollbar', options.class);
+  root.className = 'nds-scroll-area';
+  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
   if (height) root.style.height = height;
   if (width) root.style.width = width;
 
   const viewport = document.createElement('div');
   viewport.dataset.slot = 'scroll-area-viewport';
-  viewport.className = 'h-full w-full rounded-[inherit] overflow-auto';
+  viewport.className = 'nds-scroll-area-viewport';
   if (height) viewport.style.maxHeight = height;
 
   if (children) viewport.appendChild(children);

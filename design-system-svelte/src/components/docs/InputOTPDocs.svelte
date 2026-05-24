@@ -14,9 +14,11 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
+  import { Button } from '@/components/ui/button';
+  import { Label } from '@/components/ui/label';
   import uiTranslations from '@/i18n/ui.json';
   import inputOtpTranslations from '@shared/content/input-otp/translations.json';
 
@@ -66,6 +68,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
+        { id: 'composicoes',  label: tContent('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -109,6 +112,10 @@
   let fourValue = $state('');
   let sepValue = $state('');
   let alphaValue = $state('');
+  let compLabelValue = $state('');
+  let compHelpValue = $state('');
+  let compErrorValue = $state('123');
+  let compResendValue = $state('');
 
   // ─── Code strings ────────────────────────────────────────────────────────────
 
@@ -443,6 +450,152 @@ interface InputOTPProps {
   {#snippet variantAlpha()}
     <div class="text-xs font-mono text-muted-foreground" style="contain: layout">
       pattern=DIGITS_AND_CHARS · inputmode=text
+    </div>
+  {/snippet}
+
+  <!-- ── Composições ────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="input-otp"
+    items={[
+      {
+        name: $tStore('variants.compositions.withLabel.name'),
+        description: $tStore('variants.compositions.withLabel.description'),
+        useWhen: $tStore('variants.compositions.withLabel.use'),
+        code: `<div class="flex flex-col gap-2">
+  <Label for="otp-code">Código de verificação</Label>
+  <InputOTP id="otp-code" maxlength={6} bind:value={code} autocomplete="one-time-code" inputmode="numeric">
+    <InputOTPGroup>
+      <InputOTPSlot index={0} />
+      <InputOTPSlot index={1} />
+      <InputOTPSlot index={2} />
+      <InputOTPSlot index={3} />
+      <InputOTPSlot index={4} />
+      <InputOTPSlot index={5} />
+    </InputOTPGroup>
+  </InputOTP>
+</div>`,
+        preview: compLabel,
+      },
+      {
+        name: $tStore('variants.compositions.withHelpText.name'),
+        description: $tStore('variants.compositions.withHelpText.description'),
+        useWhen: $tStore('variants.compositions.withHelpText.use'),
+        code: `<div class="flex flex-col gap-2">
+  <Label for="otp-help">Código de verificação</Label>
+  <InputOTP id="otp-help" maxlength={6} bind:value={code}
+    autocomplete="one-time-code" inputmode="numeric" aria-describedby="otp-help-text">
+    <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
+  </InputOTP>
+  <p id="otp-help-text" class="text-xs text-muted-foreground">
+    Enviamos por SMS, expira em 5 min.
+  </p>
+</div>`,
+        preview: compHelp,
+      },
+      {
+        name: $tStore('variants.compositions.withErrorMessage.name'),
+        description: $tStore('variants.compositions.withErrorMessage.description'),
+        useWhen: $tStore('variants.compositions.withErrorMessage.use'),
+        code: `<div class="flex flex-col gap-2">
+  <Label for="otp-err">Código de verificação</Label>
+  <InputOTP id="otp-err" maxlength={6} bind:value={code} aria-invalid="true"
+    autocomplete="one-time-code" inputmode="numeric" aria-describedby="otp-err-text">
+    <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
+  </InputOTP>
+  <p id="otp-err-text" class="text-xs text-destructive">
+    Código incorreto. Verifique e tente novamente.
+  </p>
+</div>`,
+        preview: compError,
+      },
+      {
+        name: $tStore('variants.compositions.withResendButton.name'),
+        description: $tStore('variants.compositions.withResendButton.description'),
+        useWhen: $tStore('variants.compositions.withResendButton.use'),
+        code: `<div class="flex flex-col gap-3">
+  <Label for="otp-resend">Código de verificação</Label>
+  <InputOTP id="otp-resend" maxlength={6} bind:value={code} autocomplete="one-time-code" inputmode="numeric">
+    <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
+  </InputOTP>
+  <div class="flex items-center justify-between gap-3">
+    <p class="text-xs text-muted-foreground">Não recebeu?</p>
+    <Button variant="link" size="sm">Reenviar código</Button>
+  </div>
+</div>`,
+        preview: compResend,
+      },
+    ]}
+  />
+
+  {#snippet compLabel()}
+    <div class="flex flex-col gap-2" style="contain: layout">
+      <Label for="comp-label-otp">Código de verificação</Label>
+      <InputOTP id="comp-label-otp" maxlength={6} bind:value={compLabelValue} aria-label="Código de verificação">
+        <InputOTPGroup>
+          <InputOTPSlot index={0} />
+          <InputOTPSlot index={1} />
+          <InputOTPSlot index={2} />
+          <InputOTPSlot index={3} />
+          <InputOTPSlot index={4} />
+          <InputOTPSlot index={5} />
+        </InputOTPGroup>
+      </InputOTP>
+    </div>
+  {/snippet}
+
+  {#snippet compHelp()}
+    <div class="flex flex-col gap-2" style="contain: layout">
+      <Label for="comp-help-otp">Código de verificação</Label>
+      <InputOTP id="comp-help-otp" maxlength={6} bind:value={compHelpValue} aria-describedby="comp-help-otp-text" aria-label="Código de verificação">
+        <InputOTPGroup>
+          <InputOTPSlot index={0} />
+          <InputOTPSlot index={1} />
+          <InputOTPSlot index={2} />
+          <InputOTPSlot index={3} />
+          <InputOTPSlot index={4} />
+          <InputOTPSlot index={5} />
+        </InputOTPGroup>
+      </InputOTP>
+      <p id="comp-help-otp-text" class="text-xs text-muted-foreground">Enviamos por SMS, expira em 5 min.</p>
+    </div>
+  {/snippet}
+
+  {#snippet compError()}
+    <div class="flex flex-col gap-2" style="contain: layout">
+      <Label for="comp-err-otp">Código de verificação</Label>
+      <InputOTP id="comp-err-otp" maxlength={6} bind:value={compErrorValue} aria-invalid="true" aria-describedby="comp-err-otp-text" aria-label="Código de verificação">
+        <InputOTPGroup>
+          <InputOTPSlot index={0} />
+          <InputOTPSlot index={1} />
+          <InputOTPSlot index={2} />
+          <InputOTPSlot index={3} />
+          <InputOTPSlot index={4} />
+          <InputOTPSlot index={5} />
+        </InputOTPGroup>
+      </InputOTP>
+      <p id="comp-err-otp-text" class="text-xs text-destructive">Código incorreto. Verifique e tente novamente.</p>
+    </div>
+  {/snippet}
+
+  {#snippet compResend()}
+    <div class="flex flex-col gap-3" style="contain: layout">
+      <Label for="comp-resend-otp">Código de verificação</Label>
+      <InputOTP id="comp-resend-otp" maxlength={6} bind:value={compResendValue} aria-label="Código de verificação">
+        <InputOTPGroup>
+          <InputOTPSlot index={0} />
+          <InputOTPSlot index={1} />
+          <InputOTPSlot index={2} />
+          <InputOTPSlot index={3} />
+          <InputOTPSlot index={4} />
+          <InputOTPSlot index={5} />
+        </InputOTPGroup>
+      </InputOTP>
+      <div class="flex items-center justify-between gap-3">
+        <p class="text-xs text-muted-foreground">Não recebeu?</p>
+        <Button variant="link" size="sm">Reenviar código</Button>
+      </div>
     </div>
   {/snippet}
 

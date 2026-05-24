@@ -108,7 +108,30 @@
       "checkboxItem": "Item com indicador de marcação (CheckIcon). Estado controlado via prop <code>checked</code>.",
       "radioItem": "Item de seleção exclusiva dentro de um <code>ContextMenuRadioGroup</code>.",
       "subTrigger": "Abre submenu ao focar ou clicar; exibe ChevronRightIcon automaticamente à direita.",
-      "label": "Rótulo de grupo não interativo. Prop <code>inset</code> adiciona padding-left para alinhar com itens com ícone."
+      "label": "Rótulo de grupo não interativo. Prop <code>inset</code> adiciona padding-left para alinhar com itens com ícone.",
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withCheckbox": {
+          "name": "Menu com checkboxes",
+          "description": "Grupo de <code>CheckboxItem</code> sob um <code>Label</code> (ex.: \"Aparência\"). Cada item mantém estado booleano independente — múltiplas opções podem coexistir.",
+          "use": "Configurações de visualização múltiplas e não exclusivas (mostrar grade, mostrar régua, mostrar barra de status). Combine com <code>Label</code> para agrupar semanticamente."
+        },
+        "withRadio": {
+          "name": "Menu com radio group",
+          "description": "<code>RadioGroup</code> contendo <code>RadioItem</code> de seleção exclusiva — um único valor ativo por vez. Geralmente acompanhado de um <code>Label</code> indicando a propriedade controlada.",
+          "use": "Modos mutuamente exclusivos (densidade compacta/confortável/espaçosa, tema claro/escuro/sistema, ordenação). Para múltipla escolha, prefira <code>CheckboxItem</code>."
+        },
+        "withSubmenu": {
+          "name": "Menu com submenu",
+          "description": "Item <code>SubTrigger</code> que abre um <code>SubContent</code> à direita ao receber foco ou hover. Mantenha apenas um nível de aninhamento — submenus profundos prejudicam a navegação por teclado.",
+          "use": "Agrupar variações de uma mesma ação (Compartilhar → por e-mail, por link). Evite quando a lista cabe diretamente no menu raiz — submenus aumentam carga cognitiva."
+        },
+        "withShortcuts": {
+          "name": "Itens com atalhos",
+          "description": "Itens combinando label + <code>Shortcut</code> alinhado à direita. O <code>Shortcut</code> é puramente visual (<code>aria-hidden</code>) — o atalho real precisa ser registrado por um listener global.",
+          "use": "Ações que já possuem atalho global na aplicação (⌘E, ⌘D, ⌫). Mantém paridade entre menu contextual e teclado e ensina o atalho ao usuário."
+        }
+      }
     },
     "states": {
       "title": "Estados",
@@ -327,6 +350,7 @@
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
+      "compositions": "Composições",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -448,7 +472,30 @@
       "checkboxItem": "Item with check indicator (CheckIcon). State controlled via the <code>checked</code> prop.",
       "radioItem": "Exclusive selection item inside a <code>ContextMenuRadioGroup</code>.",
       "subTrigger": "Opens a submenu on focus or click; automatically displays ChevronRightIcon on the right.",
-      "label": "Non-interactive group label. The <code>inset</code> prop adds padding-left to align with icon items."
+      "label": "Non-interactive group label. The <code>inset</code> prop adds padding-left to align with icon items.",
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withCheckbox": {
+          "name": "Menu with checkboxes",
+          "description": "Group of <code>CheckboxItem</code> under a <code>Label</code> (e.g., \"Appearance\"). Each item holds an independent boolean state — multiple options can coexist.",
+          "use": "Multiple non-exclusive view settings (show grid, show ruler, show status bar). Combine with <code>Label</code> to group items semantically."
+        },
+        "withRadio": {
+          "name": "Menu with radio group",
+          "description": "<code>RadioGroup</code> containing <code>RadioItem</code> for exclusive selection — a single active value at a time. Usually paired with a <code>Label</code> describing the controlled property.",
+          "use": "Mutually exclusive modes (compact/comfortable/spacious density, light/dark/system theme, sorting). For multi-choice, prefer <code>CheckboxItem</code>."
+        },
+        "withSubmenu": {
+          "name": "Menu with submenu",
+          "description": "<code>SubTrigger</code> item opening a <code>SubContent</code> to the right on focus or hover. Keep only one level of nesting — deep submenus hurt keyboard navigation.",
+          "use": "Group variations of a single action (Share → by email, by link). Avoid when the list fits directly in the root menu — submenus increase cognitive load."
+        },
+        "withShortcuts": {
+          "name": "Items with shortcuts",
+          "description": "Items combining label + <code>Shortcut</code> aligned to the right. <code>Shortcut</code> is purely visual (<code>aria-hidden</code>) — the actual shortcut must be wired via a global listener.",
+          "use": "Actions that already have a global app shortcut (⌘E, ⌘D, ⌫). Keeps parity between context menu and keyboard and teaches the shortcut to the user."
+        }
+      }
     },
     "states": {
       "title": "States",
@@ -667,6 +714,7 @@
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
+      "compositions": "Compositions",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -788,7 +836,30 @@
       "checkboxItem": "Ítem con indicador de marca (CheckIcon). Estado controlado vía la prop <code>checked</code>.",
       "radioItem": "Ítem de selección exclusiva dentro de un <code>ContextMenuRadioGroup</code>.",
       "subTrigger": "Abre submenú al enfocar o clicar; muestra ChevronRightIcon automáticamente a la derecha.",
-      "label": "Etiqueta de grupo no interactiva. La prop <code>inset</code> agrega padding-left para alinear con ítems con ícono."
+      "label": "Etiqueta de grupo no interactiva. La prop <code>inset</code> agrega padding-left para alinear con ítems con ícono.",
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withCheckbox": {
+          "name": "Menú con checkboxes",
+          "description": "Grupo de <code>CheckboxItem</code> bajo un <code>Label</code> (ej.: \"Apariencia\"). Cada ítem mantiene un estado booleano independiente — múltiples opciones pueden coexistir.",
+          "use": "Configuraciones de visualización múltiples y no exclusivas (mostrar cuadrícula, mostrar regla, mostrar barra de estado). Combina con <code>Label</code> para agrupar semánticamente."
+        },
+        "withRadio": {
+          "name": "Menú con radio group",
+          "description": "<code>RadioGroup</code> que contiene <code>RadioItem</code> de selección exclusiva — un único valor activo a la vez. Habitualmente acompañado de un <code>Label</code> que describe la propiedad controlada.",
+          "use": "Modos mutuamente exclusivos (densidad compacta/cómoda/espaciosa, tema claro/oscuro/sistema, ordenación). Para múltiple opción, prefiere <code>CheckboxItem</code>."
+        },
+        "withSubmenu": {
+          "name": "Menú con submenú",
+          "description": "Ítem <code>SubTrigger</code> que abre un <code>SubContent</code> a la derecha al recibir foco o hover. Mantén solo un nivel de anidamiento — submenús profundos perjudican la navegación por teclado.",
+          "use": "Agrupar variantes de una misma acción (Compartir → por correo, por enlace). Evítalo cuando la lista cabe directamente en el menú raíz — los submenús aumentan la carga cognitiva."
+        },
+        "withShortcuts": {
+          "name": "Ítems con atajos",
+          "description": "Ítems que combinan label + <code>Shortcut</code> alineado a la derecha. <code>Shortcut</code> es puramente visual (<code>aria-hidden</code>) — el atajo real debe registrarse mediante un listener global.",
+          "use": "Acciones que ya tienen atajo global en la aplicación (⌘E, ⌘D, ⌫). Mantiene paridad entre menú contextual y teclado y enseña el atajo al usuario."
+        }
+      }
     },
     "states": {
       "title": "Estados",
@@ -1007,6 +1078,7 @@
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",
+      "compositions": "Composiciones",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",

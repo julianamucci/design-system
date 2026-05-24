@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/popover/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.vue';
@@ -26,6 +27,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -38,6 +40,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
+const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -101,6 +104,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -215,6 +219,106 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.default'),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
   { name: tContent('variants.items.withTitle'), description: stripHtml(tContent('variants.styles.withTitle')), code: codeWithTitle },
   { name: tContent('variants.items.form'),      description: stripHtml(tContent('variants.styles.form')),      code: codeForm      },
+]);
+
+const codeEditProfile = `<Popover>
+  <PopoverTrigger as-child>
+    <Button variant="outline">Editar perfil</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Dados do perfil</PopoverTitle>
+      <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
+    </PopoverHeader>
+    <form class="space-y-3" @submit.prevent>
+      <div class="space-y-1">
+        <Label for="pc-name">Nome</Label>
+        <Input id="pc-name" model-value="Joana Silva" />
+      </div>
+      <div class="space-y-1">
+        <Label for="pc-email">Email</Label>
+        <Input id="pc-email" type="email" model-value="joana@example.com" />
+      </div>
+      <Button type="submit" size="sm">Atualizar</Button>
+    </form>
+  </PopoverContent>
+</Popover>`;
+
+const codeTableFilter = `<Popover>
+  <PopoverTrigger as-child>
+    <Button variant="outline">Filtros</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Filtrar por status</PopoverTitle>
+    </PopoverHeader>
+    <div class="space-y-2">
+      <label class="flex items-center gap-2 text-sm">
+        <input type="checkbox" checked /> Ativo
+      </label>
+      <label class="flex items-center gap-2 text-sm">
+        <input type="checkbox" /> Pendente
+      </label>
+      <label class="flex items-center gap-2 text-sm">
+        <input type="checkbox" /> Arquivado
+      </label>
+    </div>
+    <div class="flex justify-end gap-2 pt-2">
+      <Button variant="ghost" size="sm">Limpar</Button>
+      <Button size="sm">Aplicar</Button>
+    </div>
+  </PopoverContent>
+</Popover>`;
+
+const codeColorPicker = `<Popover>
+  <PopoverTrigger as-child>
+    <Button variant="outline">Cor</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Selecionar cor</PopoverTitle>
+    </PopoverHeader>
+    <div class="grid grid-cols-6 gap-2">
+      <button type="button" aria-label="Vermelho" class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-red-500" />
+      <button type="button" aria-label="Laranja"  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-orange-500" />
+      <button type="button" aria-label="Amarelo"  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-yellow-500" />
+      <button type="button" aria-label="Verde"    class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-green-500" />
+      <button type="button" aria-label="Azul"     class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-blue-500" />
+      <button type="button" aria-label="Roxo"     class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-purple-500" />
+    </div>
+  </PopoverContent>
+</Popover>`;
+
+const codeQuickSettings = `<Popover>
+  <PopoverTrigger as-child>
+    <Button variant="outline">Configurações</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Preferências rápidas</PopoverTitle>
+    </PopoverHeader>
+    <div class="space-y-3">
+      <div class="flex items-center justify-between gap-3">
+        <Label for="cfg-notifs">Notificações</Label>
+        <input id="cfg-notifs" type="checkbox" checked class="h-4 w-4" />
+      </div>
+      <div class="flex items-center justify-between gap-3">
+        <Label for="cfg-dark">Modo escuro</Label>
+        <input id="cfg-dark" type="checkbox" class="h-4 w-4" />
+      </div>
+      <div class="flex items-center justify-between gap-3">
+        <Label for="cfg-compact">Modo compacto</Label>
+        <input id="cfg-compact" type="checkbox" class="h-4 w-4" />
+      </div>
+    </div>
+  </PopoverContent>
+</Popover>`;
+
+const compositionItems = computed(() => [
+  { name: tContent('variants.compositions.editProfile.name'),   description: tContent('variants.compositions.editProfile.description'),   useWhen: tContent('variants.compositions.editProfile.use'),   code: codeEditProfile   },
+  { name: tContent('variants.compositions.tableFilter.name'),   description: tContent('variants.compositions.tableFilter.description'),   useWhen: tContent('variants.compositions.tableFilter.use'),   code: codeTableFilter   },
+  { name: tContent('variants.compositions.colorPicker.name'),   description: tContent('variants.compositions.colorPicker.description'),   useWhen: tContent('variants.compositions.colorPicker.use'),   code: codeColorPicker   },
+  { name: tContent('variants.compositions.quickSettings.name'), description: tContent('variants.compositions.quickSettings.description'), useWhen: tContent('variants.compositions.quickSettings.use'), code: codeQuickSettings },
 ]);
 
 const stateItems = computed(() => [
@@ -519,6 +623,119 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="popover"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div style="contain: layout; min-height: 60px;" class="w-full">
+          <Popover>
+            <PopoverTrigger as-child>
+              <Button variant="outline" size="sm">{{ tContent('demonstration.labels.form.trigger') }}</Button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" align="start">
+              <PopoverHeader>
+                <PopoverTitle>{{ tContent('demonstration.labels.form.trigger') }}</PopoverTitle>
+              </PopoverHeader>
+              <form class="space-y-2" @submit.prevent>
+                <div class="space-y-1">
+                  <Label for="pc-name-vue" class="text-xs">{{ tContent('demonstration.labels.form.name') }}</Label>
+                  <Input id="pc-name-vue" model-value="Joana Silva" />
+                </div>
+                <div class="space-y-1">
+                  <Label for="pc-email-vue" class="text-xs">{{ tContent('demonstration.labels.form.email') }}</Label>
+                  <Input id="pc-email-vue" type="email" model-value="joana@example.com" />
+                </div>
+                <Button type="submit" size="sm">{{ tContent('demonstration.labels.form.submit') }}</Button>
+              </form>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </template>
+      <template #variant-preview-1>
+        <div style="contain: layout; min-height: 60px;" class="w-full">
+          <Popover>
+            <PopoverTrigger as-child>
+              <Button variant="outline" size="sm">Filtros</Button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" align="start">
+              <PopoverHeader>
+                <PopoverTitle>Filtrar por status</PopoverTitle>
+              </PopoverHeader>
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked class="h-4 w-4" /> Ativo
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" class="h-4 w-4" /> Pendente
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" class="h-4 w-4" /> Arquivado
+                </label>
+              </div>
+              <div class="flex justify-end gap-2 pt-2">
+                <Button variant="ghost" size="sm">Limpar</Button>
+                <Button size="sm">Aplicar</Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div style="contain: layout; min-height: 60px;" class="w-full">
+          <Popover>
+            <PopoverTrigger as-child>
+              <Button variant="outline" size="sm">Cor</Button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" align="start">
+              <PopoverHeader>
+                <PopoverTitle>Selecionar cor</PopoverTitle>
+              </PopoverHeader>
+              <div class="grid grid-cols-6 gap-2">
+                <button type="button" aria-label="Vermelho" class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-red-500" />
+                <button type="button" aria-label="Laranja"  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-orange-500" />
+                <button type="button" aria-label="Amarelo"  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-yellow-500" />
+                <button type="button" aria-label="Verde"    class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-green-500" />
+                <button type="button" aria-label="Azul"     class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-blue-500" />
+                <button type="button" aria-label="Roxo"     class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-purple-500" />
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div style="contain: layout; min-height: 60px;" class="w-full">
+          <Popover>
+            <PopoverTrigger as-child>
+              <Button variant="outline" size="sm">Configurações</Button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" align="start">
+              <PopoverHeader>
+                <PopoverTitle>Preferências rápidas</PopoverTitle>
+              </PopoverHeader>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between gap-3">
+                  <Label for="cfg-notifs-vue">Notificações</Label>
+                  <input id="cfg-notifs-vue" type="checkbox" checked class="h-4 w-4" />
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <Label for="cfg-dark-vue">Modo escuro</Label>
+                  <input id="cfg-dark-vue" type="checkbox" class="h-4 w-4" />
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <Label for="cfg-compact-vue">Modo compacto</Label>
+                  <input id="cfg-compact-vue" type="checkbox" class="h-4 w-4" />
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────── -->
     <DocsStates

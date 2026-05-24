@@ -6,6 +6,7 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
@@ -15,6 +16,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -94,6 +96,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')    },
       { id: 'variantes',    label: tNav('nav.variants')  },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')    },
       { id: 'propriedades', label: tNav('nav.props')     },
       { id: 'tokens',       label: tNav('nav.tokens')    },
@@ -229,6 +232,136 @@ const variantItems = computed(() => [
   { name: 'vertical',        description: stripHtml(tContent('variants.styles.vertical')),        code: codeVertical        },
   { name: 'horizontal',      description: stripHtml(tContent('variants.styles.horizontal')),      code: codeHorizontal      },
   { name: 'withDescription', description: stripHtml(tContent('variants.styles.withDescription')), code: codeWithDescription },
+]);
+
+// ─── Compositions ─────────────────────────────────────────────────────────────
+
+const inFormOutput = ref<string>('—');
+
+function handleInFormSubmit(e: Event) {
+  const form = e.target as HTMLFormElement;
+  const data = new FormData(form);
+  const value = data.get('payment');
+  inFormOutput.value = value ? String(value) : '—';
+}
+
+const codeCompVertical = `<div class="flex flex-col gap-2">
+  <p id="comp-payment-legend" class="text-sm font-semibold">Forma de pagamento</p>
+  <RadioGroup name="payment" aria-labelledby="comp-payment-legend">
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem value="card" id="comp-v-card" />
+      <Label :for="'comp-v-card'">Cartão de crédito</Label>
+    </div>
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem value="pix" id="comp-v-pix" />
+      <Label :for="'comp-v-pix'">Pix</Label>
+    </div>
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem value="boleto" id="comp-v-boleto" />
+      <Label :for="'comp-v-boleto'">Boleto bancário</Label>
+    </div>
+  </RadioGroup>
+</div>`;
+
+const codeCompHorizontal = `<div class="flex flex-col gap-2">
+  <p id="comp-delivery-legend" class="text-sm font-semibold">Forma de entrega</p>
+  <RadioGroup
+    name="delivery"
+    aria-labelledby="comp-delivery-legend"
+    class="grid grid-flow-col auto-cols-max gap-6"
+  >
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem value="standard" id="comp-h-standard" />
+      <Label :for="'comp-h-standard'">Padrão (5 dias)</Label>
+    </div>
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem value="express" id="comp-h-express" />
+      <Label :for="'comp-h-express'">Expressa (1 dia)</Label>
+    </div>
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem value="pickup" id="comp-h-pickup" />
+      <Label :for="'comp-h-pickup'">Retirar na loja</Label>
+    </div>
+  </RadioGroup>
+</div>`;
+
+const codeCompWithDescription = `<div class="flex flex-col gap-2 w-80">
+  <p id="comp-delivery-desc-legend" class="text-sm font-semibold">Forma de entrega</p>
+  <RadioGroup name="delivery" aria-labelledby="comp-delivery-desc-legend">
+    <div class="flex items-start space-x-2">
+      <RadioGroupItem value="standard" id="comp-d-standard" class="mt-1" />
+      <div class="flex flex-col gap-1">
+        <Label :for="'comp-d-standard'">Padrão</Label>
+        <p class="text-sm text-muted-foreground">Entrega em 5 dias úteis — frete grátis acima de R$ 199.</p>
+      </div>
+    </div>
+    <div class="flex items-start space-x-2">
+      <RadioGroupItem value="express" id="comp-d-express" class="mt-1" />
+      <div class="flex flex-col gap-1">
+        <Label :for="'comp-d-express'">Expressa</Label>
+        <p class="text-sm text-muted-foreground">Receba em 1 dia útil — taxa adicional de R$ 19,90.</p>
+      </div>
+    </div>
+    <div class="flex items-start space-x-2">
+      <RadioGroupItem value="pickup" id="comp-d-pickup" class="mt-1" />
+      <div class="flex flex-col gap-1">
+        <Label :for="'comp-d-pickup'">Retirar na loja</Label>
+        <p class="text-sm text-muted-foreground">Disponível em 2h — sem custo de frete.</p>
+      </div>
+    </div>
+  </RadioGroup>
+</div>`;
+
+const codeCompInForm = `<form
+  class="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+  @submit.prevent="handleSubmit"
+>
+  <fieldset class="border-0 p-0 m-0 flex flex-col gap-2">
+    <legend class="text-sm font-semibold mb-2">Forma de pagamento</legend>
+    <RadioGroup name="payment">
+      <div class="flex items-center space-x-2">
+        <RadioGroupItem value="card" id="form-card" />
+        <Label :for="'form-card'">Cartão de crédito</Label>
+      </div>
+      <div class="flex items-center space-x-2">
+        <RadioGroupItem value="pix" id="form-pix" />
+        <Label :for="'form-pix'">Pix</Label>
+      </div>
+      <div class="flex items-center space-x-2">
+        <RadioGroupItem value="boleto" id="form-boleto" />
+        <Label :for="'form-boleto'">Boleto bancário</Label>
+      </div>
+    </RadioGroup>
+  </fieldset>
+  <Button type="submit" class="self-end">Continuar</Button>
+  <p class="text-sm text-muted-foreground">Selecionado: {{ output }}</p>
+</form>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.vertical.name'),
+    description: tContent('variants.compositions.vertical.description'),
+    useWhen: tContent('variants.compositions.vertical.use'),
+    code: codeCompVertical,
+  },
+  {
+    name: tContent('variants.compositions.horizontal.name'),
+    description: tContent('variants.compositions.horizontal.description'),
+    useWhen: tContent('variants.compositions.horizontal.use'),
+    code: codeCompHorizontal,
+  },
+  {
+    name: tContent('variants.compositions.withDescription.name'),
+    description: tContent('variants.compositions.withDescription.description'),
+    useWhen: tContent('variants.compositions.withDescription.use'),
+    code: codeCompWithDescription,
+  },
+  {
+    name: tContent('variants.compositions.inForm.name'),
+    description: tContent('variants.compositions.inForm.description'),
+    useWhen: tContent('variants.compositions.inForm.use'),
+    code: codeCompInForm,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -631,6 +764,118 @@ const visualTestItems = computed(() => [
         </RadioGroup>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="radio-group"
+      :items="compositionItems"
+    >
+      <!-- vertical -->
+      <template #variant-preview-0>
+        <div class="flex flex-col gap-2">
+          <p id="comp-payment-legend" class="text-sm font-semibold">Forma de pagamento</p>
+          <RadioGroup name="payment" aria-labelledby="comp-payment-legend">
+            <div class="flex items-center space-x-2">
+              <RadioGroupItem value="card" id="comp-v-card" />
+              <Label :for="'comp-v-card'">Cartão de crédito</Label>
+            </div>
+            <div class="flex items-center space-x-2">
+              <RadioGroupItem value="pix" id="comp-v-pix" />
+              <Label :for="'comp-v-pix'">Pix</Label>
+            </div>
+            <div class="flex items-center space-x-2">
+              <RadioGroupItem value="boleto" id="comp-v-boleto" />
+              <Label :for="'comp-v-boleto'">Boleto bancário</Label>
+            </div>
+          </RadioGroup>
+        </div>
+      </template>
+
+      <!-- horizontal -->
+      <template #variant-preview-1>
+        <div class="flex flex-col gap-2">
+          <p id="comp-delivery-legend" class="text-sm font-semibold">Forma de entrega</p>
+          <RadioGroup
+            name="delivery"
+            aria-labelledby="comp-delivery-legend"
+            class="grid grid-flow-col auto-cols-max gap-6"
+          >
+            <div class="flex items-center space-x-2">
+              <RadioGroupItem value="standard" id="comp-h-standard" />
+              <Label :for="'comp-h-standard'">Padrão (5 dias)</Label>
+            </div>
+            <div class="flex items-center space-x-2">
+              <RadioGroupItem value="express" id="comp-h-express" />
+              <Label :for="'comp-h-express'">Expressa (1 dia)</Label>
+            </div>
+            <div class="flex items-center space-x-2">
+              <RadioGroupItem value="pickup" id="comp-h-pickup" />
+              <Label :for="'comp-h-pickup'">Retirar na loja</Label>
+            </div>
+          </RadioGroup>
+        </div>
+      </template>
+
+      <!-- withDescription -->
+      <template #variant-preview-2>
+        <div class="flex flex-col gap-2 w-80">
+          <p id="comp-delivery-desc-legend" class="text-sm font-semibold">Forma de entrega</p>
+          <RadioGroup name="delivery" aria-labelledby="comp-delivery-desc-legend">
+            <div class="flex items-start space-x-2">
+              <RadioGroupItem value="standard" id="comp-d-standard" class="mt-1" />
+              <div class="flex flex-col gap-1">
+                <Label :for="'comp-d-standard'">Padrão</Label>
+                <p class="text-sm text-muted-foreground">Entrega em 5 dias úteis — frete grátis acima de R$ 199.</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-2">
+              <RadioGroupItem value="express" id="comp-d-express" class="mt-1" />
+              <div class="flex flex-col gap-1">
+                <Label :for="'comp-d-express'">Expressa</Label>
+                <p class="text-sm text-muted-foreground">Receba em 1 dia útil — taxa adicional de R$ 19,90.</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-2">
+              <RadioGroupItem value="pickup" id="comp-d-pickup" class="mt-1" />
+              <div class="flex flex-col gap-1">
+                <Label :for="'comp-d-pickup'">Retirar na loja</Label>
+                <p class="text-sm text-muted-foreground">Disponível em 2h — sem custo de frete.</p>
+              </div>
+            </div>
+          </RadioGroup>
+        </div>
+      </template>
+
+      <!-- inForm -->
+      <template #variant-preview-3>
+        <form
+          class="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+          @submit.prevent="handleInFormSubmit"
+        >
+          <fieldset class="border-0 p-0 m-0 flex flex-col gap-2">
+            <legend class="text-sm font-semibold mb-2">Forma de pagamento</legend>
+            <RadioGroup name="payment">
+              <div class="flex items-center space-x-2">
+                <RadioGroupItem value="card" id="form-card" />
+                <Label :for="'form-card'">Cartão de crédito</Label>
+              </div>
+              <div class="flex items-center space-x-2">
+                <RadioGroupItem value="pix" id="form-pix" />
+                <Label :for="'form-pix'">Pix</Label>
+              </div>
+              <div class="flex items-center space-x-2">
+                <RadioGroupItem value="boleto" id="form-boleto" />
+                <Label :for="'form-boleto'">Boleto bancário</Label>
+              </div>
+            </RadioGroup>
+          </fieldset>
+          <Button type="submit" class="self-end">Continuar</Button>
+          <p class="text-sm text-muted-foreground">Selecionado: {{ inFormOutput }}</p>
+        </form>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────────── -->
     <DocsStates

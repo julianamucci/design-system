@@ -28,13 +28,12 @@ type Story = StoryObj<typeof meta>;
 
 export const AlinhamentoSingle: Story = {
   render: function AlinhamentoSingleRender() {
-    const [alignment, setAlignment] = useState<string>("left");
+    const [alignment, setAlignment] = useState<string[]>(["left"]);
     return (
       <div className="flex flex-col items-start gap-3 w-72">
         <ToggleGroup
-          type="single"
           value={alignment}
-          onValueChange={(v) => v && setAlignment(v as string)}
+          onValueChange={(v: string[]) => v.length && setAlignment([v[v.length - 1]])}
           aria-label="Alinhamento do texto"
         >
           <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
@@ -51,7 +50,7 @@ export const AlinhamentoSingle: Story = {
           </ToggleGroupItem>
         </ToggleGroup>
         <p className="text-xs text-muted-foreground">
-          Atual: <code className="font-mono">{alignment}</code>
+          Atual: <code className="font-mono">{alignment[0]}</code>
         </p>
       </div>
     );
@@ -87,9 +86,8 @@ export const FormatacaoMultiple: Story = {
     return (
       <div className="flex flex-col items-start gap-3 w-72">
         <ToggleGroup
-          type="multiple"
           value={formats}
-          onValueChange={(v) => setFormats(v as string[])}
+          onValueChange={(v: string[]) => setFormats(v)}
           aria-label="Formatação"
         >
           <ToggleGroupItem value="bold" aria-label="Negrito">
@@ -136,9 +134,8 @@ export const FormatacaoMultiple: Story = {
 export const Vertical: Story = {
   render: () => (
     <ToggleGroup
-      type="single"
       orientation="vertical"
-      defaultValue="grid"
+      defaultValue={["grid"]}
       aria-label="Modo de visualização"
     >
       <ToggleGroupItem value="grid" aria-label="Grade">
@@ -173,10 +170,9 @@ export const Vertical: Story = {
 export const OutlineSpaced: Story = {
   render: () => (
     <ToggleGroup
-      type="single"
       variant="outline"
       spacing={1}
-      defaultValue="center"
+      defaultValue={["center"]}
       aria-label="Alinhamento do texto"
     >
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
@@ -199,8 +195,6 @@ export const OutlineSpaced: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
     await step("Grupo tem data-variant=outline e data-spacing=1", async () => {
       const group = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
       await expect(group).toHaveAttribute("data-variant", "outline");

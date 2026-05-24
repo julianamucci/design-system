@@ -20,10 +20,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof ResizablePanelGroup>;
+} satisfies Meta<any>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<Meta<any>>;
 
 export const Horizontal: Story = {
   render: () => ({

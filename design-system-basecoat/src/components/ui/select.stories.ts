@@ -53,11 +53,13 @@ type Story = StoryObj<SelectArgs>;
 export const Playground: Story = {
   render: (args) => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2 w-80';
+    wrap.className = 'nds-stack';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.width = '20rem';
 
     const label = document.createElement('label');
     label.htmlFor = 'sel-pg';
-    label.className = 'text-sm font-semibold';
+    label.className = 'nds-text-body nds-font-semibold';
     label.textContent = args.labelText;
 
     const select = createSelect({

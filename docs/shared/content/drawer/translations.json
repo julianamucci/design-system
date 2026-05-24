@@ -151,6 +151,29 @@
         "top": "Entra por cima; rounded-b-xl; útil para notificações ou seletores rápidos.",
         "left": "Painel lateral à esquerda; w-3/4 mobile, max-w-sm desktop; rounded-r-xl.",
         "right": "Painel lateral à direita (padrão para edição em desktop); rounded-l-xl."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withForm": {
+          "name": "Com formulário",
+          "description": "Drawer contendo um formulário de edição com campos de texto e ações de confirmar/cancelar no footer. Título e descrição comunicam o objetivo da edição.",
+          "use": "Edição de perfil, criação rápida de registros e fluxos mobile com múltiplos campos. Sempre inclua <code>DrawerTitle</code> e ação de cancelar visível no footer."
+        },
+        "withConfirmation": {
+          "name": "Com confirmação destrutiva",
+          "description": "Drawer com mensagem curta e par de ações (cancelar + ação destrutiva). A action principal usa a variante <code>destructive</code> para reforçar a consequência.",
+          "use": "Confirmações reversíveis ou de baixo risco em mobile. Para ações realmente bloqueantes/críticas, prefira <code>AlertDialog</code> com <code>role=\"alertdialog\"</code>."
+        },
+        "withScroll": {
+          "name": "Com conteúdo rolável",
+          "description": "Drawer cujo body usa <code>overflow-y-auto</code> e altura máxima, permitindo rolagem interna sem expandir o painel. Header e footer permanecem fixos.",
+          "use": "Termos de uso, listas longas e detalhes que excedem a altura visível do painel. Garanta foco visível em elementos interativos dentro da área rolável."
+        },
+        "rightPanel": {
+          "name": "Painel lateral à direita",
+          "description": "Drawer com <code>direction=\"right\"</code> renderizado como painel lateral fixo (útil em desktop). Largura controlada via <code>max-w-*</code> no <code>DrawerContent</code>.",
+          "use": "Filtros, detalhes contextuais e painéis de edição em desktop. Em mobile, prefira <code>direction=\"bottom\"</code> para aproveitar o gesto natural de swipe."
+        }
       }
     },
     "states": {
@@ -558,6 +581,29 @@
         "top": "Enters from above; rounded-b-xl; useful for notifications or quick selectors.",
         "left": "Left side panel; w-3/4 mobile, max-w-sm desktop; rounded-r-xl.",
         "right": "Right side panel (default for desktop edit); rounded-l-xl."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withForm": {
+          "name": "With form",
+          "description": "Drawer containing an edit form with text fields and confirm/cancel actions in the footer. Title and description communicate the goal of the edit.",
+          "use": "Profile editing, quick record creation, and mobile flows with multiple fields. Always include <code>DrawerTitle</code> and a visible cancel action in the footer."
+        },
+        "withConfirmation": {
+          "name": "With destructive confirmation",
+          "description": "Drawer with a short message and a pair of actions (cancel + destructive action). The primary action uses the <code>destructive</code> variant to reinforce the consequence.",
+          "use": "Reversible or low-risk confirmations on mobile. For truly blocking/critical actions, prefer <code>AlertDialog</code> with <code>role=\"alertdialog\"</code>."
+        },
+        "withScroll": {
+          "name": "With scrollable content",
+          "description": "Drawer whose body uses <code>overflow-y-auto</code> and a max-height, allowing internal scroll without expanding the panel. Header and footer stay fixed.",
+          "use": "Terms of use, long lists, and details that exceed the panel's visible height. Ensure visible focus on interactive elements inside the scrollable area."
+        },
+        "rightPanel": {
+          "name": "Right side panel",
+          "description": "Drawer with <code>direction=\"right\"</code> rendered as a fixed side panel (useful on desktop). Width controlled via <code>max-w-*</code> on <code>DrawerContent</code>.",
+          "use": "Filters, contextual details and editing panels on desktop. On mobile, prefer <code>direction=\"bottom\"</code> to leverage the natural swipe gesture."
+        }
       }
     },
     "states": {
@@ -965,6 +1011,29 @@
         "top": "Entra desde arriba; rounded-b-xl; útil para notificaciones o selectores rápidos.",
         "left": "Panel lateral izquierdo; w-3/4 mobile, max-w-sm desktop; rounded-r-xl.",
         "right": "Panel lateral derecho (predeterminado para edición en desktop); rounded-l-xl."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withForm": {
+          "name": "Con formulario",
+          "description": "Drawer que contiene un formulario de edición con campos de texto y acciones confirmar/cancelar en el footer. Título y descripción comunican el objetivo de la edición.",
+          "use": "Edición de perfil, creación rápida de registros y flujos mobile con varios campos. Incluye siempre <code>DrawerTitle</code> y una acción cancelar visible en el footer."
+        },
+        "withConfirmation": {
+          "name": "Con confirmación destructiva",
+          "description": "Drawer con un mensaje corto y un par de acciones (cancelar + acción destructiva). La acción principal usa la variante <code>destructive</code> para reforzar la consecuencia.",
+          "use": "Confirmaciones reversibles o de bajo riesgo en mobile. Para acciones realmente bloqueantes/críticas, prefiere <code>AlertDialog</code> con <code>role=\"alertdialog\"</code>."
+        },
+        "withScroll": {
+          "name": "Con contenido desplazable",
+          "description": "Drawer cuyo body usa <code>overflow-y-auto</code> y una max-height, permitiendo scroll interno sin expandir el panel. Header y footer permanecen fijos.",
+          "use": "Términos de uso, listas largas y detalles que exceden la altura visible del panel. Garantiza foco visible en elementos interactivos dentro del área desplazable."
+        },
+        "rightPanel": {
+          "name": "Panel lateral derecho",
+          "description": "Drawer con <code>direction=\"right\"</code> renderizado como panel lateral fijo (útil en desktop). Ancho controlado vía <code>max-w-*</code> en <code>DrawerContent</code>.",
+          "use": "Filtros, detalles contextuales y paneles de edición en desktop. En mobile, prefiere <code>direction=\"bottom\"</code> para aprovechar el gesto natural de swipe."
+        }
       }
     },
     "states": {

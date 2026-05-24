@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/drawer/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.vue';
@@ -27,6 +28,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -39,6 +41,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
+const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -102,6 +105,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -221,6 +225,121 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: codeBottom.replace('<Drawer>', '<Drawer direction="top">') },
   { name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: codeBottom.replace('<Drawer>', '<Drawer direction="left">') },
   { name: tContent('variants.items.right'),  description: stripHtml(tContent('variants.styles.right')),  code: codeRight },
+]);
+
+const codeCompWithForm = `<Drawer>
+  <DrawerTrigger as-child>
+    <Button variant="outline">Editar perfil</Button>
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Editar perfil</DrawerTitle>
+      <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+    </DrawerHeader>
+    <form class="grid gap-3 px-4">
+      <Label class="grid gap-1 text-sm">
+        Nome
+        <Input default-value="Maria Souza" />
+      </Label>
+      <Label class="grid gap-1 text-sm">
+        E-mail
+        <Input type="email" default-value="maria@exemplo.com" />
+      </Label>
+    </form>
+    <DrawerFooter>
+      <Button>Salvar alterações</Button>
+      <DrawerClose as-child>
+        <Button variant="outline">Cancelar</Button>
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`;
+
+const codeCompWithConfirmation = `<Drawer>
+  <DrawerTrigger as-child>
+    <Button variant="outline">Remover item</Button>
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Remover item da lista?</DrawerTitle>
+      <DrawerDescription>
+        Você poderá adicioná-lo novamente a qualquer momento.
+      </DrawerDescription>
+    </DrawerHeader>
+    <DrawerFooter>
+      <Button variant="destructive">Remover</Button>
+      <DrawerClose as-child>
+        <Button variant="outline">Cancelar</Button>
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`;
+
+const codeCompWithScroll = `<Drawer>
+  <DrawerTrigger as-child>
+    <Button variant="outline">Ler termos</Button>
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Termos de uso</DrawerTitle>
+      <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
+    </DrawerHeader>
+    <div class="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
+      <p v-for="i in 12" :key="i">Parágrafo {{ i }}: termos longos para garantir scroll interno.</p>
+    </div>
+    <DrawerFooter>
+      <Button>Aceitar termos</Button>
+      <DrawerClose as-child>
+        <Button variant="outline">Cancelar</Button>
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`;
+
+const codeCompRightPanel = `<Drawer direction="right">
+  <DrawerTrigger as-child>
+    <Button variant="outline">Abrir filtros</Button>
+  </DrawerTrigger>
+  <DrawerContent class="max-w-md">
+    <DrawerHeader>
+      <DrawerTitle>Filtros</DrawerTitle>
+      <DrawerDescription>Refine os resultados.</DrawerDescription>
+    </DrawerHeader>
+    <div class="px-4 text-sm text-muted-foreground">Conteúdo dos filtros…</div>
+    <DrawerFooter>
+      <Button>Aplicar</Button>
+      <DrawerClose as-child>
+        <Button variant="outline">Cancelar</Button>
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withForm.name'),
+    description: tContent('variants.compositions.withForm.description'),
+    useWhen: tContent('variants.compositions.withForm.use'),
+    code: codeCompWithForm,
+  },
+  {
+    name: tContent('variants.compositions.withConfirmation.name'),
+    description: tContent('variants.compositions.withConfirmation.description'),
+    useWhen: tContent('variants.compositions.withConfirmation.use'),
+    code: codeCompWithConfirmation,
+  },
+  {
+    name: tContent('variants.compositions.withScroll.name'),
+    description: tContent('variants.compositions.withScroll.description'),
+    useWhen: tContent('variants.compositions.withScroll.use'),
+    code: codeCompWithScroll,
+  },
+  {
+    name: tContent('variants.compositions.rightPanel.name'),
+    description: tContent('variants.compositions.rightPanel.description'),
+    useWhen: tContent('variants.compositions.rightPanel.use'),
+    code: codeCompRightPanel,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -578,6 +697,113 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="drawer"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div style="contain: layout" class="w-full">
+          <Drawer>
+            <DrawerTrigger as-child>
+              <Button variant="outline">Editar perfil</Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Editar perfil</DrawerTitle>
+                <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+              </DrawerHeader>
+              <form class="grid gap-3 px-4">
+                <Label class="grid gap-1 text-sm">
+                  Nome
+                  <Input default-value="Maria Souza" />
+                </Label>
+                <Label class="grid gap-1 text-sm">
+                  E-mail
+                  <Input type="email" default-value="maria@exemplo.com" />
+                </Label>
+              </form>
+              <DrawerFooter>
+                <Button>Salvar alterações</Button>
+                <DrawerClose as-child>
+                  <Button variant="outline">Cancelar</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </div>
+      </template>
+      <template #variant-preview-1>
+        <div style="contain: layout" class="w-full">
+          <Drawer>
+            <DrawerTrigger as-child>
+              <Button variant="outline">Remover item</Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Remover item da lista?</DrawerTitle>
+                <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
+              </DrawerHeader>
+              <DrawerFooter>
+                <Button variant="destructive">Remover</Button>
+                <DrawerClose as-child>
+                  <Button variant="outline">Cancelar</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div style="contain: layout" class="w-full">
+          <Drawer>
+            <DrawerTrigger as-child>
+              <Button variant="outline">Ler termos</Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Termos de uso</DrawerTitle>
+                <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
+              </DrawerHeader>
+              <div class="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
+                <p v-for="i in 12" :key="i">Parágrafo {{ i }}: termos longos para garantir scroll interno.</p>
+              </div>
+              <DrawerFooter>
+                <Button>Aceitar termos</Button>
+                <DrawerClose as-child>
+                  <Button variant="outline">Cancelar</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div style="contain: layout" class="w-full">
+          <Drawer direction="right">
+            <DrawerTrigger as-child>
+              <Button variant="outline">Abrir filtros</Button>
+            </DrawerTrigger>
+            <DrawerContent class="max-w-md">
+              <DrawerHeader>
+                <DrawerTitle>Filtros</DrawerTitle>
+                <DrawerDescription>Refine os resultados.</DrawerDescription>
+              </DrawerHeader>
+              <div class="px-4 text-sm text-muted-foreground">Conteúdo dos filtros…</div>
+              <DrawerFooter>
+                <Button>Aplicar</Button>
+                <DrawerClose as-child>
+                  <Button variant="outline">Cancelar</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────── -->
     <DocsStates

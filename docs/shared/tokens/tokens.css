@@ -83,9 +83,32 @@
 
   /* Spacing base — consumido pelo Tailwind v4 via @theme inline (--spacing).
      Tailwind calcula p-{n}, gap-{n}, m-{n}, space-{n}, etc. como n × --spacing-base.
-     Temas podem override este valor para ficarem mais densos (Lyra/Mira) ou
-     folgados (Maia/Luma), afetando TODOS os espaçamentos proporcionalmente. */
+     Densidades em themes/densities.css override este valor (condensado/confortável),
+     afetando TODOS os espaçamentos proporcionalmente. */
   --spacing-base: 0.25rem; /* 4px — padrão Tailwind */
+
+  /* Spacing scale — grid de 8 (múltiplos ou divisores de 8 apenas).
+     Use estes tokens em CSS standalone (.nds-*, basecoat-overrides) quando
+     precisar de um valor de spacing nomeado.
+     Acompanham a densidade automaticamente porque referenciam --spacing-base.
+
+     Regra do projeto: spacing deve ser múltiplo OU divisor de 8.
+     Valores fora do grid (10, 12, 14, 20, 28, 36, 44, 56...) NÃO devem existir
+     como tokens — se aparecerem em CSS, são bug a ser corrigido. */
+  --spacing-0:   0;
+  --spacing-px:  1px;                               /* hairline / border */
+  --spacing-0-5: calc(var(--spacing-base) * 0.5);   /* 2px  — divisor de 8 (8÷4) */
+  --spacing-1:   calc(var(--spacing-base) * 1);     /* 4px  — divisor de 8 (8÷2) */
+  --spacing-2:   calc(var(--spacing-base) * 2);     /* 8px  — base do grid */
+  --spacing-4:   calc(var(--spacing-base) * 4);     /* 16px */
+  --spacing-6:   calc(var(--spacing-base) * 6);     /* 24px */
+  --spacing-8:   calc(var(--spacing-base) * 8);     /* 32px */
+  --spacing-10:  calc(var(--spacing-base) * 10);    /* 40px */
+  --spacing-12:  calc(var(--spacing-base) * 12);    /* 48px */
+  --spacing-14:  calc(var(--spacing-base) * 14);    /* 56px */
+  --spacing-16:  calc(var(--spacing-base) * 16);    /* 64px */
+  --spacing-20:  calc(var(--spacing-base) * 20);    /* 80px */
+  --spacing-24:  calc(var(--spacing-base) * 24);    /* 96px */
 
   /* Elevation / Shadows */
   --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);

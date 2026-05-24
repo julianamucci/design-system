@@ -85,7 +85,7 @@ export const LinhaSelecionada: Story = {
       const tr = createTableRow();
       if (inv.id === '#INV-002') {
         tr.setAttribute('data-state', 'selected');
-        tr.className = 'bg-muted';
+        tr.className = 'nds-bg-muted';
       }
       tr.appendChild(createTableCell(inv.id));
       tr.appendChild(createTableCell(inv.status));
@@ -123,7 +123,8 @@ export const Carregando: Story = {
       for (let j = 0; j < 4; j++) {
         const td = createTableCell('');
         const skeleton = document.createElement('div');
-        skeleton.className = 'skeleton h-4 rounded';
+        skeleton.className = 'skeleton nds-rounded';
+        skeleton.style.height = '1rem';
         skeleton.style.width = j === 3 ? '5rem' : '100%';
         skeleton.setAttribute('aria-hidden', 'true');
         td.appendChild(skeleton);

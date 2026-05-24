@@ -29,6 +29,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -105,6 +106,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
+      { id: 'composicoes',  label: tContent('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -262,6 +264,85 @@ const variantItems = computed(() => [
   { name: 'noFooter',              description: stripHtml(tContent('variants.items.noFooter')),              code: codeDefault },
   { name: 'withDestructiveAction', description: stripHtml(tContent('variants.items.withDestructiveAction')), code: codeDefault },
   { name: 'customCloseInFooter',   description: stripHtml(tContent('variants.items.customCloseInFooter')),   code: codeDefault },
+]);
+
+const codeCompositionConfirmEmail = `<Dialog>
+  <DialogTrigger as-child>
+    <Button>Enviar link</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Confirmar e-mail</DialogTitle>
+      <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
+    </DialogHeader>
+    <p class="text-sm text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
+    <DialogFooter>
+      <DialogClose as-child>
+        <Button variant="outline">Cancelar</Button>
+      </DialogClose>
+      <Button>Enviar link</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>`;
+
+const codeCompositionProfileEdit = `<Dialog>
+  <DialogTrigger as-child>
+    <Button variant="outline">Editar perfil</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Editar perfil</DialogTitle>
+      <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+    </DialogHeader>
+    <form class="grid gap-3">
+      <Label for="name">Nome de exibição</Label>
+      <Input id="name" model-value="Maria Souza" />
+      <Label for="role">Função</Label>
+      <Input id="role" model-value="Designer" />
+    </form>
+    <DialogFooter>
+      <DialogClose as-child>
+        <Button variant="outline">Cancelar</Button>
+      </DialogClose>
+      <Button>Salvar alterações</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>`;
+
+const codeCompositionMediaPreview = `<Dialog>
+  <DialogTrigger as-child>
+    <Button variant="outline">Pré-visualizar</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Capa do post</DialogTitle>
+      <DialogDescription>Pré-visualização em tamanho real.</DialogDescription>
+    </DialogHeader>
+    <div class="aspect-video w-full bg-muted rounded-md grid place-items-center text-xs text-muted-foreground">
+      Pré-visualização da mídia
+    </div>
+  </DialogContent>
+</Dialog>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.confirmEmail.name'),
+    description: tContent('variants.compositions.confirmEmail.description'),
+    useWhen: tContent('variants.compositions.confirmEmail.use'),
+    code: codeCompositionConfirmEmail,
+  },
+  {
+    name: tContent('variants.compositions.profileEdit.name'),
+    description: tContent('variants.compositions.profileEdit.description'),
+    useWhen: tContent('variants.compositions.profileEdit.use'),
+    code: codeCompositionProfileEdit,
+  },
+  {
+    name: tContent('variants.compositions.mediaPreview.name'),
+    description: tContent('variants.compositions.mediaPreview.description'),
+    useWhen: tContent('variants.compositions.mediaPreview.use'),
+    code: codeCompositionMediaPreview,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -675,6 +756,71 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="dialog"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Dialog default-open>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirmar e-mail</DialogTitle>
+              <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
+            </DialogHeader>
+            <p class="text-sm text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
+            <DialogFooter>
+              <DialogClose as-child>
+                <Button variant="outline">Cancelar</Button>
+              </DialogClose>
+              <Button>Enviar link</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </template>
+      <template #variant-preview-1>
+        <Dialog default-open>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Editar perfil</DialogTitle>
+              <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+            </DialogHeader>
+            <form class="grid gap-3">
+              <div class="grid gap-1.5">
+                <Label for="docs-comp-name">Nome de exibição</Label>
+                <Input id="docs-comp-name" model-value="Maria Souza" />
+              </div>
+              <div class="grid gap-1.5">
+                <Label for="docs-comp-role">Função</Label>
+                <Input id="docs-comp-role" model-value="Designer" />
+              </div>
+            </form>
+            <DialogFooter>
+              <DialogClose as-child>
+                <Button variant="outline">Cancelar</Button>
+              </DialogClose>
+              <Button>Salvar alterações</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </template>
+      <template #variant-preview-2>
+        <Dialog default-open>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Capa do post</DialogTitle>
+              <DialogDescription>Pré-visualização em tamanho real.</DialogDescription>
+            </DialogHeader>
+            <div class="aspect-video w-full bg-muted rounded-md grid place-items-center text-xs text-muted-foreground">
+              Pré-visualização da mídia
+            </div>
+          </DialogContent>
+        </Dialog>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Configurações (States) ──────────────────────────────── -->
     <DocsStates

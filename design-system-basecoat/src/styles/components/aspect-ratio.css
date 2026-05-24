@@ -1,0 +1,30 @@
+/*
+ * ─── nds-aspect-ratio ───────────────────────────────────────────────────────
+ * Container que preserva proporção arbitrária via CSS `aspect-ratio` nativo.
+ * Substitui o "padding-bottom trick" — `aspect-ratio` é suportado por todos
+ * os browsers modernos (>= 2021) e respeita `min-height`/`max-height`.
+ *
+ * Estrutura:
+ *   <div class="nds-aspect-ratio" style="--ratio: 16/9">
+ *     <img src="..." />        ← filhos preenchem o container
+ *   </div>
+ *
+ *   Default `--ratio` é 1 (quadrado). Para alterar:
+ *     style="--ratio: 16/9"    ou aspect-ratio inline.
+ *
+ * O filho recebe `position: absolute; inset: 0` para garantir cobertura
+ * uniforme mesmo se o conteúdo tiver dimensões intrínsecas (img/iframe).
+ */
+
+.nds-aspect-ratio {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--ratio, 1);
+}
+
+.nds-aspect-ratio > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}

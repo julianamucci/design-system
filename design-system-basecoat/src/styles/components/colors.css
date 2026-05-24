@@ -1,0 +1,84 @@
+/*
+ * ─── Semantic color utilities ────────────────────────────────────────────────
+ * Classes que consomem tokens semânticos (--foreground, --primary, --success…).
+ * Acompanham automaticamente trocas de tema (default/warm/cold) e dark mode.
+ *
+ * NUNCA use cores Tailwind hardcoded (green-600, red-500/15, etc.) na docs page
+ * ou no projeto — elas ignoram o tema ativo. Use os tokens semânticos:
+ *   --primary, --secondary, --accent, --destructive, --success, --warning, --info,
+ *   --background, --foreground, --card, --muted, --border, --ring
+ *
+ * Convenção: .nds-text-<token>    (foreground color)
+ *            .nds-bg-<token>      (background color)
+ *            .nds-bg-<token>-soft (background com opacidade reduzida — soft variant)
+ *            .nds-border-<token>  (border color)
+ *
+ * Modificador /N (ex.: --text-primary com opacidade) usa custom property na
+ * própria classe — preferimos classes nomeadas para os usos comuns.
+ */
+
+/* ── Foreground colors ─────────────────────────────────────────────────────── */
+.nds-text-foreground       { color: hsl(var(--foreground)); }
+.nds-text-muted-foreground { color: hsl(var(--muted-foreground)); }
+.nds-text-primary          { color: hsl(var(--primary)); }
+.nds-text-primary-foreground { color: hsl(var(--primary-foreground)); }
+.nds-text-secondary        { color: hsl(var(--secondary)); }
+.nds-text-secondary-foreground { color: hsl(var(--secondary-foreground)); }
+.nds-text-accent           { color: hsl(var(--accent)); }
+.nds-text-accent-foreground { color: hsl(var(--accent-foreground)); }
+.nds-text-destructive      { color: hsl(var(--destructive)); }
+.nds-text-success          { color: hsl(var(--success)); }
+.nds-text-warning          { color: hsl(var(--warning)); }
+.nds-text-info             { color: hsl(var(--info)); }
+.nds-text-card-foreground  { color: hsl(var(--card-foreground)); }
+.nds-text-inherit          { color: inherit; }
+
+/* ── Background colors (full) ──────────────────────────────────────────────── */
+.nds-bg-background    { background-color: hsl(var(--background)); }
+.nds-bg-card          { background-color: hsl(var(--card)); }
+.nds-bg-muted         { background-color: hsl(var(--muted)); }
+.nds-bg-primary       { background-color: hsl(var(--primary)); }
+.nds-bg-secondary     { background-color: hsl(var(--secondary)); }
+.nds-bg-accent        { background-color: hsl(var(--accent)); }
+.nds-bg-destructive   { background-color: hsl(var(--destructive)); }
+.nds-bg-success       { background-color: hsl(var(--success)); }
+.nds-bg-warning       { background-color: hsl(var(--warning)); }
+.nds-bg-info          { background-color: hsl(var(--info)); }
+.nds-bg-transparent   { background-color: transparent; }
+
+/* ── Background colors (soft — 10–15% opacity) ─────────────────────────────── */
+.nds-bg-primary-soft     { background-color: hsl(var(--primary) / 0.1); }
+.nds-bg-destructive-soft { background-color: hsl(var(--destructive) / 0.1); }
+.nds-bg-success-soft     { background-color: hsl(var(--success) / 0.1); }
+.nds-bg-warning-soft     { background-color: hsl(var(--warning) / 0.1); }
+.nds-bg-info-soft        { background-color: hsl(var(--info) / 0.1); }
+.nds-bg-muted-soft       { background-color: hsl(var(--muted) / 0.5); }
+.nds-bg-accent-soft      { background-color: hsl(var(--accent) / 0.5); }
+
+/* ── Border colors ─────────────────────────────────────────────────────────── */
+.nds-border-default     { border: 1px solid hsl(var(--border)); }
+.nds-border-soft        { border: 1px solid hsl(var(--border) / 0.5); }
+.nds-border-primary     { border: 1px solid hsl(var(--primary)); }
+.nds-border-primary-soft { border: 1px solid hsl(var(--primary) / 0.2); }
+.nds-border-success     { border: 1px solid hsl(var(--success)); }
+.nds-border-success-soft { border: 1px solid hsl(var(--success) / 0.3); }
+.nds-border-destructive { border: 1px solid hsl(var(--destructive)); }
+.nds-border-destructive-soft { border: 1px solid hsl(var(--destructive) / 0.3); }
+.nds-border-none        { border: 0; }
+
+/* Border-bottom isolado (divisor inferior) */
+.nds-border-b           { border-bottom: 1px solid hsl(var(--border)); }
+.nds-border-b-soft      { border-bottom: 1px solid hsl(var(--border) / 0.5); }
+
+/* ── Hover variants (apenas as mais usadas) ────────────────────────────────── */
+.nds-hover-bg-muted-faint:hover { background-color: hsl(var(--muted) / 0.05); }  /* zebra suave de table-row */
+.nds-hover-bg-muted-soft:hover  { background-color: hsl(var(--muted) / 0.5); }
+.nds-hover-bg-accent:hover      { background-color: hsl(var(--accent)); color: hsl(var(--accent-foreground)); }
+.nds-hover-underline:hover      { text-decoration: underline; }
+.nds-hover-text-foreground:hover { color: hsl(var(--foreground)); }
+
+/* ── Shadow tokens ─────────────────────────────────────────────────────────── */
+.nds-shadow-none { box-shadow: none; }
+.nds-shadow-sm   { box-shadow: var(--elevation-sm); }
+.nds-shadow-md   { box-shadow: var(--elevation-md); }
+.nds-shadow-lg   { box-shadow: var(--elevation-lg); }

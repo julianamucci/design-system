@@ -31,11 +31,12 @@ function buildLabeled(opts: {
   maxLength?: number;
 }): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex flex-col gap-1.5 w-full max-w-md';
+  wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+  wrapper.dataset.spacing = 'xs';
 
   const label = document.createElement('label');
   label.htmlFor = opts.id;
-  label.className = 'text-sm font-medium text-foreground';
+  label.className = 'nds-text-body nds-font-medium nds-text-foreground';
   label.textContent = opts.labelText;
 
   const textarea = createTextarea({
@@ -52,7 +53,9 @@ function buildLabeled(opts: {
     const counter = document.createElement('span');
     counter.setAttribute('aria-live', 'polite');
     counter.setAttribute('aria-label', `0 de ${opts.maxLength} caracteres usados`);
-    counter.className = 'text-xs text-muted-foreground tabular-nums self-end';
+    counter.className = 'nds-text-caption nds-text-muted-foreground';
+    counter.style.fontVariantNumeric = 'tabular-nums';
+    counter.style.alignSelf = 'flex-end';
     counter.textContent = `0/${opts.maxLength}`;
     textarea.addEventListener('input', () => {
       const len = textarea.value.length;

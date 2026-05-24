@@ -25,7 +25,9 @@ type Story = StoryObj;
 function wrap(child: HTMLElement, minHeight = 280): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full flex items-start justify-center p-2';
+  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.alignItems = 'flex-start';
   wrapper.style.minHeight = `${minHeight}px`;
   wrapper.appendChild(child);
   return wrapper;
@@ -128,7 +130,10 @@ export const MegaMenuGrid: Story = {
     if (content) {
       content.classList.remove('hidden');
       content.style.minWidth = '560px';
-      content.classList.add('grid', 'grid-cols-2', 'gap-2', 'p-3');
+      content.classList.add('nds-grid');
+      content.dataset.cols = '2';
+      content.dataset.spacing = 'sm';
+      content.style.padding = '0.75rem';
       // Abrir após mount
       queueMicrotask(() => {
         const trigger = nav.querySelector<HTMLButtonElement>('button[aria-haspopup]');
@@ -177,7 +182,9 @@ export const ComCardDestacado: Story = {
     const content = nav.querySelector<HTMLElement>('[role="menu"]');
     if (content) {
       content.style.minWidth = '560px';
-      content.classList.add('flex', 'gap-3', 'p-3');
+      content.classList.add('nds-cluster');
+      content.style.gap = '0.75rem';
+      content.style.padding = '0.75rem';
 
       // Card destacado (hero)
       const card = document.createElement('a');
@@ -186,10 +193,11 @@ export const ComCardDestacado: Story = {
       card.className =
         'flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline transition-colors hover:from-accent hover:to-accent';
       const cardTitle = document.createElement('div');
-      cardTitle.className = 'text-base font-semibold leading-tight';
+      cardTitle.className = 'nds-text-base nds-font-semibold nds-leading-tight';
       cardTitle.textContent = 'Comece em 5 minutos';
       const cardDesc = document.createElement('p');
-      cardDesc.className = 'mt-2 text-sm leading-snug text-muted-foreground';
+      cardDesc.className = 'nds-mt-2 nds-text-body nds-text-muted-foreground';
+      cardDesc.style.lineHeight = '1.375';
       cardDesc.textContent = 'Crie sua primeira integração com nosso quickstart.';
       card.append(cardTitle, cardDesc);
 
@@ -198,7 +206,8 @@ export const ComCardDestacado: Story = {
 
       // Empacota os links restantes em uma coluna lateral
       const sideList = document.createElement('div');
-      sideList.className = 'flex flex-col flex-1 gap-1';
+      sideList.className = 'nds-stack nds-flex-1';
+      sideList.dataset.spacing = 'xs';
       const links = Array.from(content.querySelectorAll<HTMLElement>('a[role="menuitem"]:not(:first-child)'));
       for (const link of links) {
         sideList.appendChild(link);

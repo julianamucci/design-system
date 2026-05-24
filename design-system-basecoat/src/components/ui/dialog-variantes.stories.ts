@@ -40,12 +40,14 @@ function makeFooter(cancelLabel: string, actionLabel: string, destructive = fals
 
 function buildField(labelText: string, type: string, value: string): HTMLLabelElement {
   const label = document.createElement('label');
-  label.className = 'grid gap-1 text-sm';
+  label.className = 'nds-stack nds-text-body';
+  label.dataset.spacing = 'xs';
   const span = document.createElement('span');
-  span.className = 'font-medium';
+  span.className = 'nds-font-medium';
   span.textContent = labelText;
   const input = document.createElement('input');
-  input.className = 'border rounded-md px-3 py-2';
+  input.className = 'nds-border-default nds-rounded-md';
+  input.style.padding = '0.5rem 0.75rem';
   input.type = type;
   input.value = value;
   label.append(span, input);
@@ -54,7 +56,7 @@ function buildField(labelText: string, type: string, value: string): HTMLLabelEl
 
 function makeBody(text: string): HTMLElement {
   const body = document.createElement('div');
-  body.className = 'text-sm text-muted-foreground';
+  body.className = 'nds-text-body nds-text-muted-foreground';
   body.textContent = text;
   return body;
 }
@@ -89,7 +91,8 @@ export const WithForm: Story = {
   },
   render: () => {
     const form = document.createElement('form');
-    form.className = 'grid gap-3';
+    form.className = 'nds-stack';
+    form.dataset.spacing = 'md';
     form.append(
       buildField('Nome', 'text', 'Maria Souza'),
       buildField('E-mail', 'email', 'maria@exemplo.com'),
@@ -122,7 +125,10 @@ export const WithScrollContent: Story = {
   },
   render: () => {
     const longBody = document.createElement('div');
-    longBody.className = 'text-sm text-muted-foreground max-h-64 overflow-y-auto pr-2 space-y-3';
+    longBody.className = 'nds-text-body nds-text-muted-foreground nds-stack overflow-y-auto';
+    longBody.dataset.spacing = 'md';
+    longBody.style.maxHeight = '16rem';
+    longBody.style.paddingRight = '0.5rem';
     for (let i = 1; i <= 12; i++) {
       const p = document.createElement('p');
       p.textContent = `Parágrafo ${i}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.`;

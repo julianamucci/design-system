@@ -42,7 +42,7 @@ const meta = {
     loop: false,
     shouldFilter: true,
   },
-} satisfies Meta<typeof Command>;
+} satisfies Meta<any>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -50,7 +50,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {
   args: {
     onUpdate: fn(),
-  },
+  } as any,
   render: (args) => ({
     components: {
       Command,

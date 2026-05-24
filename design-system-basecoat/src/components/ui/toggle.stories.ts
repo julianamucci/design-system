@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 type LucideIconNode = [string, Record<string, string>];
 
-function buildLucideSvg(icon: unknown, className = 'h-4 w-4'): SVGSVGElement {
+function buildLucideSvg(icon: unknown, className = 'nds-icon-sm'): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -92,7 +92,9 @@ function buildPlaygroundToggle(args: ToggleArgs): HTMLElement {
   let children: HTMLElement;
   if (args.label) {
     children = document.createElement('span');
-    children.className = 'inline-flex items-center gap-2';
+    children.className = 'nds-cluster nds-inline-block';
+    children.dataset.spacing = 'sm';
+    children.style.display = 'inline-flex';
     children.appendChild(buildLucideSvg(Bold));
     const text = document.createElement('span');
     text.textContent = args.label;
@@ -100,7 +102,7 @@ function buildPlaygroundToggle(args: ToggleArgs): HTMLElement {
   } else {
     // icon-only — usamos o ícone como filho
     const wrap = document.createElement('span');
-    wrap.className = 'inline-flex';
+    wrap.style.display = 'inline-flex';
     wrap.appendChild(buildLucideSvg(Bold));
     children = wrap;
   }

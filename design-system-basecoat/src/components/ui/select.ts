@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── Select — Vanilla factory standalone ────────────────────────────────────
+// Visual: classe .nds-select (zero Tailwind/basecoat-css). <select> nativo
+// estilizado com chevron CSS inline.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -23,7 +25,8 @@ export function createSelect(options: SelectOptions): HTMLSelectElement {
   const { items, placeholder, defaultValue, disabled = false, onValueChange } = options;
 
   const select = document.createElement('select');
-  select.className = cn('select', options.class);
+  select.className = 'nds-select';
+  if (options.class) select.classList.add(...options.class.split(' ').filter(Boolean));
   select.dataset.slot = 'select';
 
   if (disabled) select.disabled = true;

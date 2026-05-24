@@ -13,7 +13,7 @@ type PlaygroundArgs = {
 
 const meta = {
   title: "UI/ScrollArea",
-  component: ScrollArea,
+  component: ScrollArea as never,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",

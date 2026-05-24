@@ -16,6 +16,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -105,6 +106,7 @@ export function createDropdownMenuDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -148,7 +150,7 @@ export function createDropdownMenuDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -163,7 +165,10 @@ export function createDropdownMenuDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'flex flex-wrap items-center justify-center gap-3 min-h-[140px]';
+            wrap.className = 'nds-cluster';
+            wrap.dataset.justify = 'center';
+            wrap.dataset.align = 'center';
+            wrap.style.minHeight = '140px';
             wrap.appendChild(buildDemoMenu(t('demonstration.labels.basic')));
             return wrap;
           },
@@ -264,7 +269,8 @@ export function createDropdownMenuDocs(): HTMLElement {
                 const li = document.createElement('li');
                 li.setAttribute('role', 'menuitem');
                 li.className =
-                  'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-destructive border border-destructive/30 rounded-md min-w-[160px]';
+                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
+                li.style.minWidth = '160px';
                 li.textContent = 'Excluir conta';
                 return li;
               },
@@ -272,7 +278,8 @@ export function createDropdownMenuDocs(): HTMLElement {
                 const li = document.createElement('li');
                 li.setAttribute('role', 'menuitem');
                 li.className =
-                  'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm border border-border rounded-md min-w-[160px]';
+                  'nds-dropdown-menu-item nds-border-default nds-rounded-md';
+                li.style.minWidth = '160px';
                 li.textContent = 'Excluir conta';
                 return li;
               },
@@ -300,10 +307,7 @@ createDropdownMenu({
         const codeDestructive = `// Item destrutivo: classes aplicadas manualmente no <li>
 const li = document.createElement('li');
 li.setAttribute('role', 'menuitem');
-li.className = [
-  'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm',
-  'text-destructive focus:bg-destructive/10 focus:text-destructive',
-].join(' ');
+li.className = 'nds-dropdown-menu-item nds-text-destructive';
 li.textContent = 'Excluir';`;
 
         return createDocsVariants({
@@ -323,10 +327,223 @@ li.textContent = 'Excluir';`;
                 const li = document.createElement('li');
                 li.setAttribute('role', 'menuitem');
                 li.className =
-                  'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-destructive border border-destructive/30 rounded-md min-w-[160px]';
+                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
+                li.style.minWidth = '160px';
                 li.textContent = 'Excluir';
                 return li;
               },
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        function makeLabelItem(text: string): HTMLLIElement {
+          const li = document.createElement('li');
+          li.setAttribute('role', 'presentation');
+          li.className = 'nds-text-caption nds-font-semibold nds-text-muted-foreground';
+          li.style.padding = 'var(--spacing-1) var(--spacing-2)';
+          li.textContent = text;
+          return li;
+        }
+        function makeSeparator(): HTMLLIElement {
+          const li = document.createElement('li');
+          li.setAttribute('role', 'separator');
+          li.style.margin = 'var(--spacing-1) calc(var(--spacing-1) * -1)';
+          li.style.height = '1px';
+          li.style.background = 'hsl(var(--muted))';
+          return li;
+        }
+        function makeItem(label: string, shortcut?: string): HTMLLIElement {
+          const li = document.createElement('li');
+          li.setAttribute('role', 'menuitem');
+          li.setAttribute('tabindex', '-1');
+          li.className = 'nds-dropdown-menu-item';
+          const text = document.createElement('span');
+          text.className = 'nds-flex-1';
+          text.textContent = label;
+          li.appendChild(text);
+          if (shortcut) {
+            const sc = document.createElement('span');
+            sc.className = 'nds-text-caption nds-text-muted-foreground';
+            sc.style.marginLeft = 'auto';
+            sc.style.letterSpacing = '0.1em';
+            sc.setAttribute('aria-hidden', 'true');
+            sc.textContent = shortcut;
+            li.appendChild(sc);
+          }
+          return li;
+        }
+        function makeCheckboxItem(label: string, checked: boolean): HTMLLIElement {
+          const li = document.createElement('li');
+          li.setAttribute('role', 'menuitemcheckbox');
+          li.setAttribute('aria-checked', String(checked));
+          li.setAttribute('tabindex', '-1');
+          if (checked) li.dataset.state = 'checked';
+          li.className = 'nds-dropdown-menu-item';
+          const indicator = document.createElement('span');
+          indicator.className = 'nds-icon-sm nds-rounded';
+          indicator.style.display = 'inline-flex';
+          indicator.style.alignItems = 'center';
+          indicator.style.justifyContent = 'center';
+          indicator.setAttribute('aria-hidden', 'true');
+          if (checked) indicator.textContent = '✓';
+          const text = document.createElement('span');
+          text.textContent = label;
+          li.append(indicator, text);
+          return li;
+        }
+        function makeRadioItem(label: string, checked: boolean): HTMLLIElement {
+          const li = document.createElement('li');
+          li.setAttribute('role', 'menuitemradio');
+          li.setAttribute('aria-checked', String(checked));
+          li.setAttribute('tabindex', '-1');
+          if (checked) li.dataset.state = 'checked';
+          li.className = 'nds-dropdown-menu-item';
+          const indicator = document.createElement('span');
+          indicator.className = 'nds-icon-sm nds-rounded';
+          indicator.style.display = 'inline-flex';
+          indicator.style.alignItems = 'center';
+          indicator.style.justifyContent = 'center';
+          indicator.setAttribute('aria-hidden', 'true');
+          if (checked) indicator.textContent = '●';
+          const text = document.createElement('span');
+          text.textContent = label;
+          li.append(indicator, text);
+          return li;
+        }
+        function makeStaticMenu(build: (ul: HTMLUListElement) => void): HTMLElement {
+          const ul = document.createElement('ul');
+          ul.setAttribute('role', 'menu');
+          ul.className =
+            'nds-overflow-hidden nds-rounded-md nds-border-default nds-shadow-md';
+          ul.style.zIndex = '50';
+          ul.style.minWidth = '12rem';
+          ul.style.padding = 'var(--spacing-1)';
+          ul.style.background = 'hsl(var(--popover))';
+          ul.style.color = 'hsl(var(--popover-foreground))';
+          build(ul);
+          return ul;
+        }
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'dropdown-menu',
+          items: [
+            {
+              name: t('variants.compositions.withLabel.name'),
+              description: stripHtml(t('variants.compositions.withLabel.description')),
+              useWhen: stripHtml(t('variants.compositions.withLabel.use')),
+              code: `const trigger = createButton({ variant: 'outline', label: 'Conta' });
+const menu = createDropdownMenu({
+  trigger,
+  items: [
+    { type: 'label',     label: 'Conta'          },
+    { type: 'item',      label: 'Perfil'         },
+    { type: 'item',      label: 'Configurações'  },
+    { type: 'separator' },
+    { type: 'label',     label: 'Suporte'        },
+    { type: 'item',      label: 'Documentação'   },
+    { type: 'item',      label: 'Sair'           },
+  ],
+});`,
+              previewFactory: () => makeStaticMenu((ul) => {
+                ul.append(
+                  makeLabelItem('Conta'),
+                  makeItem('Perfil'),
+                  makeItem('Configurações'),
+                  makeSeparator(),
+                  makeLabelItem('Suporte'),
+                  makeItem('Documentação'),
+                  makeItem('Sair'),
+                );
+              }),
+            },
+            {
+              name: t('variants.compositions.withCheckboxItems.name'),
+              description: stripHtml(t('variants.compositions.withCheckboxItems.description')),
+              useWhen: stripHtml(t('variants.compositions.withCheckboxItems.use')),
+              code: `// Basecoat: factory padrão não tem checkbox-item; monte manualmente.
+const li = document.createElement('li');
+li.setAttribute('role', 'menuitemcheckbox');
+li.setAttribute('aria-checked', 'true');
+li.dataset.state = 'checked';
+li.className = 'nds-cluster relative nds-px-2 nds-py-1.5 nds-text-body nds-rounded-sm focus:bg-accent';
+// indicator + texto…
+li.addEventListener('click', () => {
+  const next = li.getAttribute('aria-checked') !== 'true';
+  li.setAttribute('aria-checked', String(next));
+  li.dataset.state = next ? 'checked' : 'unchecked';
+});`,
+              previewFactory: () => makeStaticMenu((ul) => {
+                ul.append(
+                  makeLabelItem('Colunas visíveis'),
+                  makeCheckboxItem('Status', true),
+                  makeCheckboxItem('Email', true),
+                  makeCheckboxItem('Função', false),
+                );
+              }),
+            },
+            {
+              name: t('variants.compositions.withRadioGroup.name'),
+              description: stripHtml(t('variants.compositions.withRadioGroup.description')),
+              useWhen: stripHtml(t('variants.compositions.withRadioGroup.use')),
+              code: `// Basecoat: monte radio-items manualmente; gerencie exclusividade no click.
+function makeRadio(label, checked, group) {
+  const li = document.createElement('li');
+  li.setAttribute('role', 'menuitemradio');
+  li.setAttribute('aria-checked', String(checked));
+  li.addEventListener('click', () => {
+    group.querySelectorAll('[role="menuitemradio"]').forEach(el => {
+      el.setAttribute('aria-checked', 'false');
+    });
+    li.setAttribute('aria-checked', 'true');
+  });
+  return li;
+}`,
+              previewFactory: () => makeStaticMenu((ul) => {
+                ul.append(
+                  makeLabelItem('Aparência'),
+                  makeRadioItem('Claro', false),
+                  makeRadioItem('Escuro', true),
+                  makeRadioItem('Sistema', false),
+                );
+              }),
+            },
+            {
+              name: t('variants.compositions.withShortcuts.name'),
+              description: stripHtml(t('variants.compositions.withShortcuts.description')),
+              useWhen: stripHtml(t('variants.compositions.withShortcuts.use')),
+              code: `// Basecoat: factory padrão não exibe shortcut. Adicione um <span aria-hidden>
+function makeItem(label, shortcut) {
+  const li = document.createElement('li');
+  li.setAttribute('role', 'menuitem');
+  li.className = 'nds-dropdown-menu-item';
+  const text = document.createElement('span');
+  text.className = 'nds-flex-1';
+  text.textContent = label;
+  li.appendChild(text);
+  if (shortcut) {
+    const sc = document.createElement('span');
+    sc.className = 'ml-auto nds-text-caption tracking-widest nds-text-muted-foreground';
+    sc.setAttribute('aria-hidden', 'true');
+    sc.textContent = shortcut;
+    li.appendChild(sc);
+  }
+  return li;
+}
+// O atalho real precisa ser registrado pelo consumidor (useHotkeys / tinykeys).`,
+              previewFactory: () => makeStaticMenu((ul) => {
+                ul.append(
+                  makeItem('Desfazer', '⌘Z'),
+                  makeItem('Refazer', '⇧⌘Z'),
+                  makeSeparator(),
+                  makeItem('Recortar', '⌘X'),
+                  makeItem('Copiar', '⌘C'),
+                  makeItem('Colar', '⌘V'),
+                );
+              }),
             },
           ],
         });

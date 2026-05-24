@@ -1,6 +1,6 @@
-import { cn } from '@/lib/utils';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Textarea — Vanilla factory standalone ──────────────────────────────────
+//
+// Visual: classe .nds-textarea (zero Tailwind/basecoat-css).
 
 export type TextareaOptions = {
   placeholder?: string;
@@ -12,13 +12,13 @@ export type TextareaOptions = {
   name?: string;
 };
 
-// ─── createTextarea ───────────────────────────────────────────────────────────
-
 export function createTextarea(options: TextareaOptions = {}): HTMLTextAreaElement {
   const { placeholder, disabled = false, value, rows, id, name } = options;
 
   const textarea = document.createElement('textarea');
-  textarea.className = cn('textarea', options.class);
+  textarea.dataset.slot = 'textarea';
+  textarea.className = 'nds-textarea';
+  if (options.class) textarea.classList.add(...options.class.split(' ').filter(Boolean));
 
   if (placeholder !== undefined) textarea.placeholder = placeholder;
   if (disabled) textarea.disabled = true;

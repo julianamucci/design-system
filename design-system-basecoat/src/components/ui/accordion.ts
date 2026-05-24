@@ -1,14 +1,16 @@
-import { cn } from '@/lib/utils';
+// ─── Accordion — Vanilla factory alinhada ao primitive React (shadcn) ────────
+//
+// Visual: classes .nds-accordion-* (standalone, sem Tailwind/basecoat-css).
+// Comportamentos preservados:
+//   - type="single" | "multiple" + collapsible
+//   - defaultValue (string | string[])
+//   - data-state="open|closed" no trigger e content (chevron gira via CSS)
+//   - keyboard: ArrowUp/Down, Home, End
+//   - disabled por item
 
-// ─── Accordion classes ────────────────────────────────────────────────────────
+const CHEVRON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nds-accordion-icon" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>`;
 
-const TRIGGER_BASE =
-  'flex flex-1 items-center justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all ' +
-  'outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 hover:underline cursor-pointer';
-
-const CHEVRON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground pointer-events-none size-4 shrink-0 transition-transform duration-200" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>`;
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 export type AccordionOptions = {
   type?: 'single' | 'multiple';
@@ -29,53 +31,44 @@ export type AccordionOptions = {
 export function createAccordion(options: AccordionOptions): HTMLElement {
   const { type = 'single', collapsible = true, defaultValue, items, onValueChange } = options;
 
-  let openValues: Set<string>;
-  if (defaultValue !== undefined) {
-    openValues = new Set(Array.isArray(defaultValue) ? defaultValue : [defaultValue]);
-  } else {
-    openValues = new Set();
-  }
+  const openValues: Set<string> =
+    defaultValue !== undefined
+      ? new Set(Array.isArray(defaultValue) ? defaultValue : [defaultValue])
+      : new Set();
 
   const root = document.createElement('div');
   root.dataset.slot = 'accordion';
-  root.className = cn('w-full', options.class);
+  root.className = 'nds-accordion';
+  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
 
   function isOpen(value: string): boolean {
     return openValues.has(value);
   }
 
-  function toggle(value: string, triggerEl: HTMLButtonElement, contentEl: HTMLElement, chevronEl: SVGElement | null): void {
+  function toggle(value: string, triggerEl: HTMLButtonElement, contentEl: HTMLElement): void {
     const currentlyOpen = isOpen(value);
 
     if (type === 'single') {
       if (currentlyOpen) {
-        if (collapsible) {
-          openValues.delete(value);
-        } else {
-          return;
-        }
+        if (collapsible) openValues.delete(value);
+        else return;
       } else {
         openValues.clear();
         openValues.add(value);
       }
     } else {
-      if (currentlyOpen) {
-        openValues.delete(value);
-      } else {
-        openValues.add(value);
-      }
+      if (currentlyOpen) openValues.delete(value);
+      else openValues.add(value);
     }
 
-    updateItemState(triggerEl, contentEl, chevronEl, isOpen(value));
+    updateItemState(triggerEl, contentEl, isOpen(value));
 
     if (type === 'single') {
-      // Update all other items
       root.querySelectorAll<HTMLButtonElement>('[data-slot="accordion-trigger"]').forEach(t => {
         if (t !== triggerEl) {
           const itemValue = t.dataset.value!;
           const c = root.querySelector<HTMLElement>(`[data-content-for="${itemValue}"]`);
-          const ch = t.querySelector<SVGElement>('svg');
-          updateItemState(t, c!, ch, isOpen(itemValue));
+          updateItemState(t, c!, isOpen(itemValue));
         }
       });
     }
@@ -86,31 +79,21 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     }
   }
 
-  function updateItemState(triggerEl: HTMLButtonElement, contentEl: HTMLElement, chevronEl: SVGElement | null, open: boolean): void {
+  function updateItemState(triggerEl: HTMLButtonElement, contentEl: HTMLElement, open: boolean): void {
     triggerEl.setAttribute('aria-expanded', String(open));
     contentEl.hidden = !open;
-    if (open) {
-      contentEl.removeAttribute('data-state');
-      contentEl.dataset.state = 'open';
-      triggerEl.dataset.state = 'open';
-      if (chevronEl) chevronEl.style.transform = 'rotate(180deg)';
-    } else {
-      contentEl.dataset.state = 'closed';
-      triggerEl.dataset.state = 'closed';
-      if (chevronEl) chevronEl.style.transform = '';
-    }
+    triggerEl.dataset.state = open ? 'open' : 'closed';
+    contentEl.dataset.state = open ? 'open' : 'closed';
   }
 
-  items.forEach((item, idx) => {
+  items.forEach(item => {
     const itemEl = document.createElement('div');
     itemEl.dataset.slot = 'accordion-item';
-    itemEl.className = 'border-b last:border-b-0';
+    itemEl.className = 'nds-accordion-item';
 
-    // Header
     const headerEl = document.createElement('h3');
-    headerEl.className = 'flex';
+    headerEl.className = 'nds-accordion-header';
 
-    // Trigger
     const triggerId = `accordion-trigger-${item.value}`;
     const contentId = `accordion-content-${item.value}`;
 
@@ -121,55 +104,47 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     triggerEl.dataset.value = item.value;
     triggerEl.setAttribute('aria-controls', contentId);
     triggerEl.setAttribute('aria-expanded', 'false');
-    triggerEl.className = TRIGGER_BASE;
-    if (item.disabled) {
-      triggerEl.disabled = true;
-      triggerEl.className += ' opacity-50 pointer-events-none';
-    }
+    triggerEl.className = 'nds-accordion-trigger';
+    if (item.disabled) triggerEl.disabled = true;
+
     const triggerSpan = document.createElement('span');
     triggerSpan.textContent = item.trigger;
     triggerEl.appendChild(triggerSpan);
     triggerEl.insertAdjacentHTML('beforeend', CHEVRON_SVG);
     headerEl.appendChild(triggerEl);
 
-    // Content
     const contentEl = document.createElement('div');
     contentEl.id = contentId;
     contentEl.dataset.slot = 'accordion-content';
     contentEl.setAttribute('data-content-for', item.value);
     contentEl.setAttribute('role', 'region');
     contentEl.setAttribute('aria-labelledby', triggerId);
-    contentEl.className = 'overflow-hidden text-sm';
+    contentEl.className = 'nds-accordion-content';
     contentEl.hidden = true;
     contentEl.dataset.state = 'closed';
 
     const innerEl = document.createElement('div');
-    innerEl.className = 'pt-0 pb-4';
+    innerEl.className = 'nds-accordion-content-inner';
     innerEl.textContent = item.content;
     contentEl.appendChild(innerEl);
 
-    const chevronEl = triggerEl.querySelector<SVGElement>('svg');
-
-    // Set initial state
     if (isOpen(item.value)) {
-      updateItemState(triggerEl, contentEl, chevronEl, true);
+      updateItemState(triggerEl, contentEl, true);
     }
 
-    // Event
     if (!item.disabled) {
-      triggerEl.addEventListener('click', () => toggle(item.value, triggerEl, contentEl, chevronEl));
+      triggerEl.addEventListener('click', () => toggle(item.value, triggerEl, contentEl));
     }
 
-    // Keyboard nav: ArrowDown/ArrowUp
     triggerEl.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
-        const allTriggers = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-slot="accordion-trigger"]:not([disabled])'));
-        const currentIdx = allTriggers.indexOf(triggerEl);
+        const all = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-slot="accordion-trigger"]:not([disabled])'));
+        const currentIdx = all.indexOf(triggerEl);
         const nextIdx = e.key === 'ArrowDown'
-          ? (currentIdx + 1) % allTriggers.length
-          : (currentIdx - 1 + allTriggers.length) % allTriggers.length;
-        allTriggers[nextIdx]?.focus();
+          ? (currentIdx + 1) % all.length
+          : (currentIdx - 1 + all.length) % all.length;
+        all[nextIdx]?.focus();
       }
       if (e.key === 'Home') {
         e.preventDefault();

@@ -26,21 +26,24 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[200px] flex items-center justify-center';
+  wrapper.className = 'nds-cluster nds-w-full';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.minHeight = '200px';
   wrapper.appendChild(child);
   return wrapper;
 }
 
 function buildContent(): HTMLElement {
   const root = document.createElement('div');
-  root.className = 'flex flex-col gap-1';
+  root.className = 'nds-stack';
+  root.dataset.spacing = 'xs';
 
   const title = document.createElement('p');
-  title.className = 'text-sm font-medium';
+  title.className = 'nds-text-body nds-font-medium';
   title.textContent = 'Joana Silva';
 
   const sub = document.createElement('p');
-  sub.className = 'text-xs text-muted-foreground';
+  sub.className = 'nds-text-caption nds-text-muted-foreground';
   sub.textContent = 'Designer no time de UX';
 
   root.append(title, sub);
@@ -50,7 +53,9 @@ function buildContent(): HTMLElement {
 function buildTrigger(label: string): HTMLAnchorElement {
   const a = document.createElement('a');
   a.href = '/users/joana';
-  a.className = 'underline underline-offset-4 text-sm font-medium text-primary';
+  a.className = 'nds-text-body nds-font-medium nds-text-primary';
+  a.style.textDecoration = 'underline';
+  a.style.textUnderlineOffset = '4px';
   a.textContent = label;
   return a;
 }
@@ -118,7 +123,10 @@ export const Controlado: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.style.contain = 'layout';
-    wrapper.className = 'flex flex-col gap-3 min-h-[200px] items-center';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'md';
+    wrapper.style.minHeight = '200px';
+    wrapper.style.alignItems = 'center';
 
     const externalBtn = createButton({ variant: 'default', label: 'Open programmatically' });
     const trigger = buildTrigger('@joana');

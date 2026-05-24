@@ -16,7 +16,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -68,6 +68,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')    },
         { id: 'variantes',    label: tContent('nav.variants')  },
+        { id: 'composicoes',  label: tContent('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')    },
         { id: 'propriedades', label: tContent('nav.props')     },
         { id: 'tokens',       label: tContent('nav.tokens')    },
@@ -122,6 +123,11 @@
   let dd1DontValue = $state('');
   let dd2DoValue = $state('');
   let dd2DontValue = $state('');
+
+  // Composições state
+  let compStatesValue = $state('');
+  let compGroupsValue = $state('');
+  let compFormValue = $state('');
 
   // ─── Localized labels ────────────────────────────────────────────────────────
 
@@ -665,6 +671,158 @@ interface SelectItemProps {
         </SelectContent>
       </Select>
     </div>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="select"
+    items={[
+      {
+        name: $tStore('variants.compositions.states.name'),
+        description: $tStore('variants.compositions.states.description'),
+        useWhen: $tStore('variants.compositions.states.use'),
+        code: `<div class="flex flex-col gap-2 w-80">
+  <label for="state" class="text-sm font-semibold">Estado</label>
+  <Select type="single" bind:value>
+    <SelectTrigger id="state" aria-label="Estado" class="w-full" />
+    <SelectContent>
+      {#each stateOptions as opt (opt.value)}
+        <SelectItem value={opt.value} label={opt.label} />
+      {/each}
+    </SelectContent>
+  </Select>
+</div>`,
+        preview: compStatesSnippet,
+      },
+      {
+        name: $tStore('variants.compositions.regionGroups.name'),
+        description: $tStore('variants.compositions.regionGroups.description'),
+        useWhen: $tStore('variants.compositions.regionGroups.use'),
+        code: `<div class="flex flex-col gap-2 w-80">
+  <label for="region" class="text-sm font-semibold">Região</label>
+  <Select type="single" bind:value>
+    <SelectTrigger id="region" aria-label="Região" class="w-full" />
+    <SelectContent>
+      {#each regionGroups as group (group.label)}
+        <SelectGroup>
+          <SelectGroupHeading>{group.label}</SelectGroupHeading>
+          {#each group.options as opt (opt.value)}
+            <SelectItem value={opt.value} label={opt.label} />
+          {/each}
+        </SelectGroup>
+      {/each}
+    </SelectContent>
+  </Select>
+</div>`,
+        preview: compGroupsSnippet,
+      },
+      {
+        name: $tStore('variants.compositions.inForm.name'),
+        description: $tStore('variants.compositions.inForm.description'),
+        useWhen: $tStore('variants.compositions.inForm.use'),
+        code: `<form
+  class="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+  onsubmit={(e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    console.log('Estado:', data.get('state'));
+  }}
+>
+  <div class="flex flex-col gap-2">
+    <label for="form-state" class="text-sm font-semibold">Estado</label>
+    <Select type="single" name="state" required bind:value>
+      <SelectTrigger id="form-state" aria-label="Estado" class="w-full" />
+      <SelectContent>
+        {#each stateOptions as opt (opt.value)}
+          <SelectItem value={opt.value} label={opt.label} />
+        {/each}
+      </SelectContent>
+    </Select>
+  </div>
+  <button type="submit" class="self-end">Continuar</button>
+</form>`,
+        preview: compFormSnippet,
+      },
+    ]}
+  />
+
+  {#snippet compStatesSnippet()}
+    <div class="flex flex-col gap-2 w-80" style="contain: layout">
+      <label for="comp-state" class="text-sm font-semibold">{demoLabels.stateLabel}</label>
+      <Select type="single" bind:value={compStatesValue}>
+        <SelectTrigger id="comp-state" class="w-full" aria-label={demoLabels.stateLabel}>
+          {#if compStatesValue}
+            <span>{findLabel(stateOptions, compStatesValue)}</span>
+          {:else}
+            <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+          {/if}
+        </SelectTrigger>
+        <SelectContent>
+          {#each stateOptions as opt (opt.value)}
+            <SelectItem value={opt.value} label={opt.label} />
+          {/each}
+        </SelectContent>
+      </Select>
+    </div>
+  {/snippet}
+
+  {#snippet compGroupsSnippet()}
+    <div class="flex flex-col gap-2 w-80" style="contain: layout">
+      <label for="comp-region" class="text-sm font-semibold">{demoLabels.regionLabel}</label>
+      <Select type="single" bind:value={compGroupsValue}>
+        <SelectTrigger id="comp-region" class="w-full" aria-label={demoLabels.regionLabel}>
+          {#if compGroupsValue}
+            <span>{findLabelInGroups(regionGroups, compGroupsValue)}</span>
+          {:else}
+            <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+          {/if}
+        </SelectTrigger>
+        <SelectContent>
+          {#each regionGroups as group (group.label)}
+            <SelectGroup>
+              <SelectGroupHeading>{group.label}</SelectGroupHeading>
+              {#each group.options as opt (opt.value)}
+                <SelectItem value={opt.value} label={opt.label} />
+              {/each}
+            </SelectGroup>
+          {/each}
+        </SelectContent>
+      </Select>
+    </div>
+  {/snippet}
+
+  {#snippet compFormSnippet()}
+    <form
+      class="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+      style="contain: layout"
+      onsubmit={(e) => e.preventDefault()}
+    >
+      <div class="flex flex-col gap-2">
+        <label for="comp-form-state" class="text-sm font-semibold">{demoLabels.stateLabel}</label>
+        <Select type="single" name="state" bind:value={compFormValue}>
+          <SelectTrigger id="comp-form-state" class="w-full" aria-label={demoLabels.stateLabel}>
+            {#if compFormValue}
+              <span>{findLabel(stateOptions, compFormValue)}</span>
+            {:else}
+              <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+            {/if}
+          </SelectTrigger>
+          <SelectContent>
+            {#each stateOptions as opt (opt.value)}
+              <SelectItem value={opt.value} label={opt.label} />
+            {/each}
+          </SelectContent>
+        </Select>
+      </div>
+      <button
+        type="submit"
+        class="self-end inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-3 py-1.5 text-sm font-medium"
+      >
+        Continuar
+      </button>
+    </form>
   {/snippet}
 
   <!-- ── Estados ──────────────────────────────────────────────────────── -->

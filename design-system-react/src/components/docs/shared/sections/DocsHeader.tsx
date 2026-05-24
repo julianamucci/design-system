@@ -1,4 +1,4 @@
-import React from 'react';
+import type * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { LanguageSwitcher } from '@/components/product/LanguageSwitcher';
 
@@ -8,9 +8,10 @@ export interface DocsHeaderProps {
   category: string;
   type: string;
   installNote?: string;
+  languageSwitcher?: React.ReactNode;
 }
 
-export function DocsHeader({ title, description, category, type, installNote }: DocsHeaderProps) {
+export function DocsHeader({ title, description, category, type, installNote, languageSwitcher }: DocsHeaderProps) {
   return (
     <header className="ds-docs mb-8 sm:mb-12 border-b pb-6 sm:pb-8 border-border/50">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
@@ -25,7 +26,7 @@ export function DocsHeader({ title, description, category, type, installNote }: 
             {type}
           </Badge>
         </div>
-        <LanguageSwitcher />
+        {languageSwitcher ?? <LanguageSwitcher />}
       </div>
 
       <div className="space-y-3 sm:space-y-4">

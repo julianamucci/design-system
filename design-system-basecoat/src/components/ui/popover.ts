@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── Popover — Vanilla factory standalone ───────────────────────────────────
+// Visual: classe .nds-popover-content (zero Tailwind/basecoat-css).
+// Render via portal (body), posicionado pelo JS. Click-outside + Escape fecham.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -91,10 +93,8 @@ export function createPopover(options: PopoverOptions): HTMLElement {
   function open(): void {
     panelEl = document.createElement('div');
     panelEl.id = contentId;
-    panelEl.className = cn(
-      'z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md popover',
-      options.class
-    );
+    panelEl.className = 'nds-popover-content';
+    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
     panelEl.dataset.slot = 'popover-content';
     panelEl.setAttribute('role', 'dialog');
     panelEl.style.position = 'absolute';

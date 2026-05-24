@@ -41,7 +41,7 @@ const meta = {
     disabled: false,
     required: false,
   },
-} satisfies Meta<typeof Checkbox>;
+} satisfies Meta<any>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

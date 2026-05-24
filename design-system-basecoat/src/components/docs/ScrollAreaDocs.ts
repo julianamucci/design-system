@@ -51,11 +51,14 @@ function priorityLabel(raw: string): string {
 
 function buildTagList(count: number): HTMLElement {
   const list = document.createElement('div');
-  list.className = 'flex flex-col gap-2 p-3';
+  list.className = 'nds-stack nds-p-sm';
+  list.dataset.spacing = 'xs';
   const tagLabel = stripHtml(t('demonstration.labels.tag'));
   for (let i = 1; i <= count; i++) {
     const row = document.createElement('div');
-    row.className = 'flex items-center justify-between text-sm border-b border-border/40 pb-2';
+    row.className = 'nds-cluster nds-text-body nds-border-b-soft';
+    row.dataset.justify = 'between';
+    row.style.paddingBottom = 'var(--spacing-2)';
     const left = document.createElement('span');
     left.textContent = `${tagLabel} ${i}`;
     const badge = createBadge({ variant: 'secondary', text: `#${String(i).padStart(2, '0')}` });
@@ -67,15 +70,18 @@ function buildTagList(count: number): HTMLElement {
 
 function buildHorizontalCards(count: number): HTMLElement {
   const row = document.createElement('div');
-  row.className = 'flex gap-4 p-3 w-max';
+  row.className = 'nds-cluster nds-p-2';
+  row.dataset.spacing = 'md';
+  row.style.width = 'max-content';
   for (let i = 1; i <= count; i++) {
     const card = document.createElement('div');
-    card.className = 'w-40 shrink-0 rounded-md border bg-card text-card-foreground p-4';
+    card.className = 'nds-shrink-0 nds-rounded-md nds-border-default nds-bg-card nds-text-card-foreground nds-p-4';
+    card.style.width = '10rem';
     const title = document.createElement('div');
-    title.className = 'text-sm font-medium';
+    title.className = 'nds-text-body nds-font-medium';
     title.textContent = `Card ${i}`;
     const desc = document.createElement('div');
-    desc.className = 'text-xs text-muted-foreground mt-1';
+    desc.className = 'nds-text-caption nds-text-muted-foreground nds-mt-1';
     desc.textContent = `#${String(i).padStart(2, '0')}`;
     card.append(title, desc);
     row.appendChild(card);
@@ -85,19 +91,20 @@ function buildHorizontalCards(count: number): HTMLElement {
 
 function buildMatrix(rows: number, cols: number): HTMLElement {
   const table = document.createElement('table');
-  table.className = 'border-collapse text-xs';
+  table.className = 'nds-text-caption';
+  table.style.borderCollapse = 'collapse';
   for (let r = 1; r <= rows; r++) {
     const tr = document.createElement('tr');
     for (let c = 1; c <= cols; c++) {
       const td = document.createElement('td');
-      td.className = 'border border-border px-3 py-2 whitespace-nowrap';
+      td.className = 'nds-border-default nds-px-2 nds-py-2 nds-whitespace-nowrap';
       td.textContent = `R${r}·C${c}`;
       tr.appendChild(td);
     }
     table.appendChild(tr);
   }
   const wrap = document.createElement('div');
-  wrap.className = 'p-3';
+  wrap.className = 'nds-p-2';
   wrap.appendChild(table);
   return wrap;
 }
@@ -208,33 +215,39 @@ export function createScrollAreaDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const container = document.createElement('div');
-            container.className = 'w-full space-y-6';
+            container.className = 'nds-w-full nds-stack';
+            container.dataset.spacing = 'lg';
 
             const grid = document.createElement('div');
-            grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 w-full';
+            grid.className = 'nds-grid nds-w-full';
+            grid.dataset.cols = '2';
+            grid.dataset.spacing = 'lg';
+            grid.dataset.min = '16rem';
 
             // Vertical
             const verticalWrap = document.createElement('div');
-            verticalWrap.className = 'space-y-2';
+            verticalWrap.className = 'nds-stack';
+            verticalWrap.dataset.spacing = 'sm';
             const verticalTitle = document.createElement('div');
-            verticalTitle.className = 'text-xs text-muted-foreground';
+            verticalTitle.className = 'nds-text-caption nds-text-muted-foreground';
             verticalTitle.textContent = stripHtml(t('demonstration.labels.verticalTitle'));
             const verticalArea = createScrollArea({
               height: '240px',
-              class: 'w-full rounded-md border',
+              class: 'nds-w-full nds-rounded-md nds-border-default',
               children: buildTagList(30),
             });
             verticalWrap.append(verticalTitle, verticalArea);
 
             // Horizontal
             const horizontalWrap = document.createElement('div');
-            horizontalWrap.className = 'space-y-2';
+            horizontalWrap.className = 'nds-stack';
+            horizontalWrap.dataset.spacing = 'sm';
             const horizontalTitle = document.createElement('div');
-            horizontalTitle.className = 'text-xs text-muted-foreground';
+            horizontalTitle.className = 'nds-text-caption nds-text-muted-foreground';
             horizontalTitle.textContent = stripHtml(t('demonstration.labels.horizontalTitle'));
             const horizontalArea = createScrollArea({
               width: '100%',
-              class: 'rounded-md border whitespace-nowrap',
+              class: 'nds-rounded-md nds-border-default nds-whitespace-nowrap',
               children: buildHorizontalCards(12),
             });
             horizontalWrap.append(horizontalTitle, horizontalArea);
@@ -243,14 +256,15 @@ export function createScrollAreaDocs(): HTMLElement {
 
             // Both (bidirecional) — full width abaixo
             const bothWrap = document.createElement('div');
-            bothWrap.className = 'space-y-2';
+            bothWrap.className = 'nds-stack';
+            bothWrap.dataset.spacing = 'sm';
             const bothTitle = document.createElement('div');
-            bothTitle.className = 'text-xs text-muted-foreground';
+            bothTitle.className = 'nds-text-caption nds-text-muted-foreground';
             bothTitle.textContent = stripHtml(t('demonstration.labels.bothTitle'));
             const bothArea = createScrollArea({
               height: '240px',
               width: '100%',
-              class: 'rounded-md border whitespace-nowrap',
+              class: 'nds-rounded-md nds-border-default nds-whitespace-nowrap',
               children: buildMatrix(12, 15),
             });
             bothWrap.append(bothTitle, bothArea);
@@ -345,15 +359,16 @@ export function createScrollAreaDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => createScrollArea({
                 height: '160px',
-                class: 'w-full rounded-md border',
+                class: 'nds-w-full nds-rounded-md nds-border-default',
                 children: buildTagList(20),
               }),
               dontPreviewFactory: () => {
                 // Sem altura — conteúdo expande, ScrollArea fica invisível.
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full rounded-md border max-h-[160px] overflow-hidden';
+                wrap.className = 'nds-w-full nds-rounded-md nds-border-default nds-overflow-hidden';
+                wrap.style.maxHeight = '160px';
                 const area = createScrollArea({
-                  class: 'w-full',
+                  class: 'nds-w-full',
                   children: buildTagList(20),
                 });
                 wrap.appendChild(area);
@@ -367,20 +382,20 @@ export function createScrollAreaDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => createScrollArea({
                 height: '160px',
-                class: 'w-full rounded-md border',
+                class: 'nds-w-full nds-rounded-md nds-border-default',
                 children: buildTagList(20),
               }),
               dontPreviewFactory: () => {
                 // ScrollArea aninhada (anti-padrão).
                 const outer = createScrollArea({
                   height: '160px',
-                  class: 'w-full rounded-md border',
+                  class: 'nds-w-full nds-rounded-md nds-border-default',
                 });
                 const innerWrap = document.createElement('div');
-                innerWrap.className = 'p-2';
+                innerWrap.className = 'nds-p-2';
                 innerWrap.appendChild(createScrollArea({
                   height: '120px',
-                  class: 'w-full rounded-md border',
+                  class: 'nds-w-full nds-rounded-md nds-border-default',
                   children: buildTagList(20),
                 }));
                 const viewport = outer.querySelector('[data-slot="scroll-area-viewport"]') as HTMLElement | null;
@@ -402,7 +417,7 @@ export function createScrollAreaDocs(): HTMLElement {
             `// ... popular o conteúdo\n\n` +
             `const area = createScrollArea({\n` +
             `  height: '400px',\n` +
-            `  class: 'w-full rounded-md border',\n` +
+            `  class: 'nds-w-full nds-rounded-md nds-border-default',\n` +
             `  children: list,\n` +
             `});`,
         });
@@ -411,20 +426,20 @@ export function createScrollAreaDocs(): HTMLElement {
         const codeVertical =
           `createScrollArea({\n` +
           `  height: '240px',\n` +
-          `  class: 'w-full rounded-md border',\n` +
+          `  class: 'nds-w-full nds-rounded-md nds-border-default',\n` +
           `  children: list,\n` +
           `});`;
         const codeHorizontal =
           `createScrollArea({\n` +
           `  width: '100%',\n` +
-          `  class: 'rounded-md border whitespace-nowrap',\n` +
-          `  children: row, // div com flex w-max\n` +
+          `  class: 'nds-rounded-md nds-border-default nds-whitespace-nowrap',\n` +
+          `  children: row, // div com nds-cluster w-max\n` +
           `});`;
         const codeBoth =
           `createScrollArea({\n` +
           `  height: '240px',\n` +
           `  width: '100%',\n` +
-          `  class: 'rounded-md border',\n` +
+          `  class: 'nds-rounded-md nds-border-default',\n` +
           `  children: matrix, // table ou grid largo\n` +
           `});`;
 
@@ -437,7 +452,7 @@ export function createScrollAreaDocs(): HTMLElement {
               code: codeVertical,
               previewFactory: () => createScrollArea({
                 height: '180px',
-                class: 'w-full rounded-md border',
+                class: 'nds-w-full nds-rounded-md nds-border-default',
                 children: buildTagList(20),
               }),
             },
@@ -447,7 +462,7 @@ export function createScrollAreaDocs(): HTMLElement {
               code: codeHorizontal,
               previewFactory: () => createScrollArea({
                 width: '100%',
-                class: 'rounded-md border whitespace-nowrap',
+                class: 'nds-rounded-md nds-border-default nds-whitespace-nowrap',
                 children: buildHorizontalCards(12),
               }),
             },
@@ -458,7 +473,7 @@ export function createScrollAreaDocs(): HTMLElement {
               previewFactory: () => createScrollArea({
                 height: '200px',
                 width: '100%',
-                class: 'rounded-md border whitespace-nowrap',
+                class: 'nds-rounded-md nds-border-default nds-whitespace-nowrap',
                 children: buildMatrix(10, 10),
               }),
             },

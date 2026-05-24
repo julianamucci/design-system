@@ -90,8 +90,8 @@ export const TwoMonths: Story = {
       <Calendar
         mode="range"
         numberOfMonths={2}
-        selected={range}
-        onSelect={setRange}
+        selected={range as never}
+        onSelect={setRange as never}
         locale={ptBR}
       />
     );

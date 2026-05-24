@@ -31,13 +31,13 @@ type Story = StoryObj;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function buildBasicCard(): HTMLElement {
-  const card = createCard({ className: 'w-full max-w-sm' });
+  const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
   header.appendChild(createCardDescription({ text: 'Estrutura ergonômica com ajuste de altura e apoio lombar.' }));
   const content = createCardContent();
   const price = document.createElement('p');
-  price.className = 'text-lg font-semibold';
+  price.className = 'nds-text-h4 nds-font-semibold';
   price.textContent = 'R$ 1.299,00';
   content.appendChild(price);
   card.append(header, content);
@@ -78,8 +78,7 @@ export const Clickable: Story = {
 
     const link = document.createElement('a');
     link.href = '#';
-    link.className =
-      'block w-full max-w-sm rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+    link.className = 'nds-block nds-w-full nds-max-w-sm nds-rounded-lg';
     link.setAttribute('aria-label', 'Abrir detalhes do produto Cadeira Gamer Pro');
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -118,18 +117,20 @@ export const WithFooter: Story = {
     },
   },
   render: () => {
-    const card = createCard({ className: 'w-full max-w-sm' });
+    const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
     const header = createCardHeader();
     header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
     header.appendChild(createCardDescription({ text: 'Estrutura ergonômica com ajuste de altura e apoio lombar.' }));
 
     const content = createCardContent();
     const price = document.createElement('p');
-    price.className = 'text-lg font-semibold';
+    price.className = 'nds-text-h4 nds-font-semibold';
     price.textContent = 'R$ 1.299,00';
     content.appendChild(price);
 
-    const footer = createCardFooter({ className: 'justify-end gap-2' });
+    const footer = createCardFooter({ className: 'nds-cluster' });
+    footer.dataset.spacing = 'sm';
+    footer.dataset.justify = 'end';
     footer.appendChild(
       createButton({ variant: 'outline', label: 'Editar', ariaLabel: 'Editar produto Cadeira Gamer Pro' }),
     );

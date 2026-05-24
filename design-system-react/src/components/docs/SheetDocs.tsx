@@ -27,6 +27,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -61,6 +62,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -549,6 +551,167 @@ export function SheetDocs() {
                 side="bottom"
                 location="docs:variants:bottom"
               />
+            ),
+          },
+        ]}
+      />
+
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="sheet"
+        items={[
+          {
+            name: tContent("variants.compositions.advancedFilters.name"),
+            description: tContent("variants.compositions.advancedFilters.description"),
+            useWhen: tContent("variants.compositions.advancedFilters.use"),
+            code: `<Sheet>
+  <SheetTrigger render={<Button variant="outline" />}>Abrir filtros</SheetTrigger>
+  <SheetContent side="right" className="w-[400px] sm:w-[420px]">
+    <SheetHeader>
+      <SheetTitle>Filtros avançados</SheetTitle>
+      <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
+    </SheetHeader>
+    <form className="grid gap-4 px-4">
+      <Label htmlFor="cat">Categoria</Label>
+      <Input id="cat" defaultValue="Eletrônicos" />
+      <Label htmlFor="min">Preço mínimo</Label>
+      <Input id="min" type="number" defaultValue="100" />
+    </form>
+    <SheetFooter>
+      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+      <Button>Aplicar filtros</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`,
+            preview: (
+              <FiltersFormDemo
+                trigger={tContent("demonstration.labels.trigger")}
+                title={tContent("demonstration.labels.title")}
+                description={tContent("demonstration.labels.description")}
+                cancel={tContent("demonstration.labels.cancel")}
+                apply={tContent("demonstration.labels.apply")}
+                location="docs:comp:filters"
+              />
+            ),
+          },
+          {
+            name: tContent("variants.compositions.secondaryNavigation.name"),
+            description: tContent("variants.compositions.secondaryNavigation.description"),
+            useWhen: tContent("variants.compositions.secondaryNavigation.use"),
+            code: `<Sheet>
+  <SheetTrigger render={<Button variant="outline" />}>Abrir menu</SheetTrigger>
+  <SheetContent side="left">
+    <SheetHeader>
+      <SheetTitle>Menu</SheetTitle>
+      <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
+    </SheetHeader>
+    <nav aria-label="Navegação secundária" className="flex flex-col gap-1 px-4">
+      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Dashboard</a>
+      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Projetos</a>
+      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Equipe</a>
+      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Configurações</a>
+    </nav>
+  </SheetContent>
+</Sheet>`,
+            preview: (
+              <div style={{ contain: "layout" }}>
+                <Sheet>
+                  <SheetTrigger render={<Button variant="outline" />}>Abrir menu</SheetTrigger>
+                  <SheetContent side="left">
+                    <SheetHeader>
+                      <SheetTitle>Menu</SheetTitle>
+                      <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
+                    </SheetHeader>
+                    <nav aria-label="Navegação secundária" className="flex flex-col gap-1 px-4">
+                      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Dashboard</a>
+                      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Projetos</a>
+                      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Equipe</a>
+                      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Configurações</a>
+                    </nav>
+                  </SheetContent>
+                </Sheet>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.mobileActions.name"),
+            description: tContent("variants.compositions.mobileActions.description"),
+            useWhen: tContent("variants.compositions.mobileActions.use"),
+            code: `<Sheet>
+  <SheetTrigger render={<Button variant="outline" />}>Mais opções</SheetTrigger>
+  <SheetContent side="bottom">
+    <SheetHeader>
+      <SheetTitle>Ações rápidas</SheetTitle>
+      <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
+    </SheetHeader>
+    <div className="grid grid-cols-3 gap-3 px-4 text-sm">
+      <button type="button" className="p-3 rounded-md border hover:bg-accent">Compartilhar</button>
+      <button type="button" className="p-3 rounded-md border hover:bg-accent">Editar</button>
+      <button type="button" className="p-3 rounded-md border hover:bg-accent">Excluir</button>
+    </div>
+  </SheetContent>
+</Sheet>`,
+            preview: (
+              <div style={{ contain: "layout" }}>
+                <Sheet>
+                  <SheetTrigger render={<Button variant="outline" />}>Mais opções</SheetTrigger>
+                  <SheetContent side="bottom">
+                    <SheetHeader>
+                      <SheetTitle>Ações rápidas</SheetTitle>
+                      <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
+                    </SheetHeader>
+                    <div className="grid grid-cols-3 gap-3 px-4 text-sm">
+                      <button type="button" className="p-3 rounded-md border hover:bg-accent">Compartilhar</button>
+                      <button type="button" className="p-3 rounded-md border hover:bg-accent">Editar</button>
+                      <button type="button" className="p-3 rounded-md border hover:bg-accent">Excluir</button>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.longScrollBody.name"),
+            description: tContent("variants.compositions.longScrollBody.description"),
+            useWhen: tContent("variants.compositions.longScrollBody.use"),
+            code: `<Sheet>
+  <SheetTrigger render={<Button variant="outline" />}>Ler termos</SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Termos de uso</SheetTitle>
+      <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
+    </SheetHeader>
+    <div className="space-y-3 px-4 text-sm text-muted-foreground">
+      {/* parágrafos longos — body rola, footer fixo */}
+    </div>
+    <SheetFooter>
+      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+      <Button>Aceitar termos</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>`,
+            preview: (
+              <div style={{ contain: "layout" }}>
+                <Sheet>
+                  <SheetTrigger render={<Button variant="outline" />}>Ler termos</SheetTrigger>
+                  <SheetContent side="right">
+                    <SheetHeader>
+                      <SheetTitle>Termos de uso</SheetTitle>
+                      <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
+                    </SheetHeader>
+                    <div className="space-y-3 px-4 text-sm text-muted-foreground">
+                      {Array.from({ length: 12 }).map((_, i) => (
+                        <p key={i}>Parágrafo {i + 1}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.</p>
+                      ))}
+                    </div>
+                    <SheetFooter>
+                      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+                      <Button>Aceitar termos</Button>
+                    </SheetFooter>
+                  </SheetContent>
+                </Sheet>
+              </div>
             ),
           },
         ]}

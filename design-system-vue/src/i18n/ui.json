@@ -13,6 +13,7 @@
       "examples": "Exemplos",
       "variants": "Variantes",
       "sizes": "Tamanhos",
+      "compositions": "Composições",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -37,7 +38,8 @@
       "themeLight": "Tema light",
       "themeDark": "Tema dark",
       "criterion": "Critério",
-      "howToVerify": "Como verificar"
+      "howToVerify": "Como verificar",
+      "useWhen": "Quando usar:"
     }
   },
   "en": {
@@ -54,6 +56,7 @@
       "examples": "Examples",
       "variants": "Variants",
       "sizes": "Sizes",
+      "compositions": "Compositions",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -78,7 +81,8 @@
       "themeLight": "Light theme",
       "themeDark": "Dark theme",
       "criterion": "Criterion",
-      "howToVerify": "How to verify"
+      "howToVerify": "How to verify",
+      "useWhen": "When to use:"
     }
   },
   "es": {
@@ -95,6 +99,7 @@
       "examples": "Ejemplos",
       "variants": "Variantes",
       "sizes": "Tamaños",
+      "compositions": "Composiciones",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",
@@ -119,7 +124,8 @@
       "themeLight": "Tema light",
       "themeDark": "Tema dark",
       "criterion": "Criterio",
-      "howToVerify": "Cómo verificar"
+      "howToVerify": "Cómo verificar",
+      "useWhen": "Cuándo usar:"
     }
   }
 }

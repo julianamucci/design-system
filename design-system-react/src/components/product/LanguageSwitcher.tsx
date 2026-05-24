@@ -20,7 +20,7 @@ export function LanguageSwitcher() {
       <ToggleGroup
         type="single"
         value={locale}
-        onValueChange={(value) => {
+        onValueChange={(value: string) => {
           if (!value || value === locale) return;
           track('language_switched', {
             previous_language: locale,

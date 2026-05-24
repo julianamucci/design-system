@@ -28,7 +28,8 @@ export const ComGrupos: Story = {
   name: 'Com Grupos',
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-[320px] border rounded-md shadow-md';
+    wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+    wrap.style.width = '320px';
     wrap.appendChild(
       createCommand({
         placeholder: 'Buscar componente...',
@@ -72,7 +73,8 @@ export const ComItensDesabilitados: Story = {
   name: 'Com Itens Desabilitados',
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-[320px] border rounded-md shadow-md';
+    wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+    wrap.style.width = '320px';
     wrap.appendChild(
       createCommand({
         placeholder: 'Buscar...',
@@ -109,7 +111,8 @@ export const ListaLonga: Story = {
   name: 'Lista Longa (scroll)',
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-[320px] border rounded-md shadow-md';
+    wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+    wrap.style.width = '320px';
 
     const items = [
       'Accordion', 'Alert', 'AlertDialog', 'AspectRatio', 'Avatar',

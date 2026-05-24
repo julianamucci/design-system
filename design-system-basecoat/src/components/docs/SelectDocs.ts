@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -63,11 +64,12 @@ function buildLabeledSelect(opts: {
   onValueChange?: (value: string) => void;
 }): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'xs';
 
   const label = document.createElement('label');
   label.htmlFor = opts.id;
-  label.className = 'text-sm font-semibold';
+  label.className = 'nds-text-body nds-font-semibold';
   label.textContent = opts.labelText;
 
   const select = createSelect({
@@ -81,7 +83,8 @@ function buildLabeledSelect(opts: {
   select.name = opts.name;
   if (opts.ariaInvalid) {
     select.setAttribute('aria-invalid', 'true');
-    select.classList.add('border-destructive', 'ring-destructive/20');
+    select.classList.add('nds-border-destructive');
+    select.style.boxShadow = '0 0 0 3px rgb(from var(--destructive) r g b / 0.2)';
   }
 
   wrap.append(label, select);
@@ -101,11 +104,12 @@ function buildLabeledSelectWithGroups(opts: {
   groups: { label: string; items: { value: string; label: string }[] }[];
 }): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'xs';
 
   const label = document.createElement('label');
   label.htmlFor = opts.id;
-  label.className = 'text-sm font-semibold';
+  label.className = 'nds-text-body nds-font-semibold';
   label.textContent = opts.labelText;
 
   const select = document.createElement('select');
@@ -181,6 +185,7 @@ export function createSelectDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -231,7 +236,7 @@ export function createSelectDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -246,7 +251,9 @@ export function createSelectDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-col gap-6 w-80';
+            wrap.className = 'nds-stack';
+            wrap.dataset.spacing = 'lg';
+            wrap.style.width = '20rem';
 
             const stateField = buildLabeledSelect({
               id: 'demo-state',
@@ -266,13 +273,13 @@ export function createSelectDocs(): HTMLElement {
                   mg: t('demonstration.labels.mg'),
                   rs: t('demonstration.labels.rs'),
                 };
-                track('option_select', {
+                track('field_change', {
                   component: 'select',
                   field_name: 'state',
                   value,
-                  label: labelMap[value] ?? value,
                   location: 'docs-demo',
                 });
+                void labelMap;
               },
             });
             wrap.appendChild(stateField);
@@ -541,9 +548,11 @@ select.name = 'state';`,
               code: `// Indisponível com <select> nativo — use Combobox ou implementação custom.`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col gap-2 w-80';
+                wrap.className = 'nds-stack';
+                wrap.dataset.spacing = 'xs';
+                wrap.style.width = '20rem';
                 const note = document.createElement('p');
-                note.className = 'text-sm text-muted-foreground italic';
+                note.className = 'nds-text-body nds-text-muted-foreground nds-italic';
                 note.textContent =
                   'Limitação do HTML <select> nativo — ícones inline em <option> não são suportados pelo navegador. Para essa necessidade, use Combobox.';
                 wrap.appendChild(note);
@@ -553,6 +562,202 @@ select.name = 'state';`,
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'select',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.states.name')),
+              description: stripHtml(t('variants.compositions.states.description')),
+              useWhen: stripHtml(t('variants.compositions.states.use')),
+              code: `const wrap = document.createElement('div');
+wrap.className = 'nds-stack';
+wrap.dataset.spacing = 'xs';
+wrap.style.width = '20rem';
+
+const label = document.createElement('label');
+label.htmlFor = 'state';
+label.className = 'nds-text-body nds-font-semibold';
+label.textContent = 'Estado';
+
+const select = createSelect({
+  placeholder: 'Selecione...',
+  items: [
+    { value: 'sp', label: 'São Paulo' },
+    { value: 'rj', label: 'Rio de Janeiro' },
+    { value: 'mg', label: 'Minas Gerais' },
+    { value: 'rs', label: 'Rio Grande do Sul' },
+  ],
+});
+select.id = 'state';
+
+wrap.append(label, select);`,
+              previewFactory: () =>
+                buildLabeledSelect({
+                  id: 'comp-state',
+                  labelText: t('demonstration.labels.stateLabel'),
+                  name: 'comp-state',
+                  placeholder: t('demonstration.labels.placeholder'),
+                  items: [
+                    { value: 'sp', label: t('demonstration.labels.sp') },
+                    { value: 'rj', label: t('demonstration.labels.rj') },
+                    { value: 'mg', label: t('demonstration.labels.mg') },
+                    { value: 'rs', label: t('demonstration.labels.rs') },
+                  ],
+                }),
+            },
+            {
+              name: stripHtml(t('variants.compositions.regionGroups.name')),
+              description: stripHtml(t('variants.compositions.regionGroups.description')),
+              useWhen: stripHtml(t('variants.compositions.regionGroups.use')),
+              code: `// O factory createSelect só aceita items planos.
+// Para grupos, monte <select> + <optgroup> manualmente.
+const select = document.createElement('select');
+select.className = 'select';
+select.id = 'region';
+
+const groups = [
+  { label: 'Sudeste', items: [
+    { value: 'sp', label: 'São Paulo' },
+    { value: 'rj', label: 'Rio de Janeiro' },
+  ]},
+  { label: 'Sul', items: [
+    { value: 'rs', label: 'Rio Grande do Sul' },
+    { value: 'sc', label: 'Santa Catarina' },
+  ]},
+];
+
+groups.forEach((g) => {
+  const og = document.createElement('optgroup');
+  og.label = g.label;
+  g.items.forEach((it) => {
+    const opt = document.createElement('option');
+    opt.value = it.value;
+    opt.textContent = it.label;
+    og.appendChild(opt);
+  });
+  select.appendChild(og);
+});`,
+              previewFactory: () =>
+                buildLabeledSelectWithGroups({
+                  id: 'comp-region',
+                  labelText: t('demonstration.labels.regionLabel'),
+                  name: 'comp-region',
+                  placeholder: t('demonstration.labels.placeholder'),
+                  groups: [
+                    {
+                      label: t('demonstration.labels.groupSoutheast'),
+                      items: [
+                        { value: 'sp', label: t('demonstration.labels.sp') },
+                        { value: 'rj', label: t('demonstration.labels.rj') },
+                        { value: 'mg', label: t('demonstration.labels.mg') },
+                        { value: 'es', label: t('demonstration.labels.es') },
+                      ],
+                    },
+                    {
+                      label: t('demonstration.labels.groupSouth'),
+                      items: [
+                        { value: 'rs', label: t('demonstration.labels.rs') },
+                        { value: 'sc', label: t('demonstration.labels.sc') },
+                        { value: 'pr', label: t('demonstration.labels.pr') },
+                      ],
+                    },
+                  ],
+                }),
+            },
+            {
+              name: stripHtml(t('variants.compositions.inForm.name')),
+              description: stripHtml(t('variants.compositions.inForm.description')),
+              useWhen: stripHtml(t('variants.compositions.inForm.use')),
+              code: `const form = document.createElement('form');
+form.className = 'nds-stack nds-border-default nds-rounded-lg';
+form.dataset.spacing = 'md';
+form.style.cssText = 'width:20rem;padding:1rem;';
+
+const field = document.createElement('div');
+field.className = 'nds-stack';
+field.dataset.spacing = 'xs';
+
+const label = document.createElement('label');
+label.htmlFor = 'form-state';
+label.className = 'nds-text-body nds-font-semibold';
+label.textContent = 'Estado';
+
+const select = createSelect({
+  placeholder: 'Selecione...',
+  items: [
+    { value: 'sp', label: 'São Paulo' },
+    { value: 'rj', label: 'Rio de Janeiro' },
+    { value: 'mg', label: 'Minas Gerais' },
+  ],
+});
+select.id = 'form-state';
+select.name = 'state';
+select.required = true;
+
+field.append(label, select);
+form.appendChild(field);
+
+const submit = document.createElement('button');
+submit.type = 'submit';
+submit.className = 'btn btn-primary self-end';
+submit.textContent = 'Continuar';
+form.appendChild(submit);
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const data = new FormData(form);
+  console.log('Estado:', data.get('state'));
+});`,
+              previewFactory: () => {
+                const form = document.createElement('form');
+                form.className = 'nds-stack nds-border-default nds-rounded-lg';
+                form.dataset.spacing = 'md';
+                form.style.cssText = 'width:20rem;padding:1rem;';
+                form.noValidate = true;
+
+                const field = document.createElement('div');
+                field.className = 'nds-stack';
+                field.dataset.spacing = 'xs';
+
+                const label = document.createElement('label');
+                label.htmlFor = 'comp-form-state';
+                label.className = 'nds-text-body nds-font-semibold';
+                label.textContent = t('demonstration.labels.stateLabel');
+
+                const select = createSelect({
+                  placeholder: t('demonstration.labels.placeholder'),
+                  items: [
+                    { value: 'sp', label: t('demonstration.labels.sp') },
+                    { value: 'rj', label: t('demonstration.labels.rj') },
+                    { value: 'mg', label: t('demonstration.labels.mg') },
+                  ],
+                });
+                select.id = 'comp-form-state';
+                select.name = 'state';
+
+                field.append(label, select);
+                form.appendChild(field);
+
+                const submit = document.createElement('button');
+                submit.type = 'submit';
+                submit.className = 'nds-rounded-md nds-bg-primary nds-text-body nds-font-medium';
+                submit.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;align-self:flex-end;padding:0.375rem 0.75rem;color:var(--primary-foreground);';
+                submit.textContent = 'Continuar';
+                form.appendChild(submit);
+
+                form.addEventListener('submit', (e) => {
+                  e.preventDefault();
+                });
+
+                return form;
+              },
+            },
+          ],
+        });
 
       case 'estados':
         return createDocsStates({

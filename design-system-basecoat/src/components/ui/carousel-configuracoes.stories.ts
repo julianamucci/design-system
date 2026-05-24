@@ -6,10 +6,15 @@ import { within, expect } from 'storybook/test';
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
 function buildSlide(label: string): HTMLElement {
-  const card = createCard({ className: 'w-full aspect-video flex items-center justify-center bg-muted/50' });
-  const content = createCardContent({ className: 'flex items-center justify-center' });
+  const card = createCard({ className: 'nds-w-full nds-cluster nds-bg-muted-soft' });
+  card.dataset.align = 'center';
+  card.dataset.justify = 'center';
+  card.style.aspectRatio = '16 / 9';
+  const content = createCardContent({ className: 'nds-cluster' });
+  content.dataset.align = 'center';
+  content.dataset.justify = 'center';
   const span = document.createElement('span');
-  span.className = 'text-3xl font-semibold text-foreground';
+  span.className = 'nds-text-h2 nds-font-semibold nds-text-foreground';
   span.textContent = label;
   content.appendChild(span);
   card.appendChild(content);
@@ -42,7 +47,7 @@ type Story = StoryObj;
 export const Single: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(createCarousel({ items: buildSlides(4) }));
     return wrap;
   },
@@ -59,7 +64,8 @@ export const MultiResponsive: Story = {
     // dentro do mesmo viewport — a mudança real por breakpoint fica a cargo
     // do wrapper consumidor aplicando `basis-1/2`/`md:basis-1/3` nos slides.
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-xl';
+    wrap.className = 'nds-w-full';
+    wrap.style.maxWidth = '36rem';
     wrap.appendChild(createCarousel({ items: buildSlides(6) }));
     return wrap;
   },
@@ -73,7 +79,7 @@ export const MultiResponsive: Story = {
 export const Autoplay: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md';
+    wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
       createCarousel({
         items: buildSlides(4),

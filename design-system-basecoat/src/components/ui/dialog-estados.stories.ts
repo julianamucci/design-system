@@ -40,7 +40,7 @@ function buildDialog(opts: {
   footer.appendChild(cancel);
   footer.appendChild(action);
   const content = document.createElement('div');
-  content.className = 'text-sm text-muted-foreground';
+  content.className = 'nds-text-body nds-text-muted-foreground';
   content.textContent = 'Conteúdo do diálogo.';
   const dialog = createDialog({
     trigger,
@@ -138,7 +138,8 @@ export const Controlled: Story = {
   },
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-3';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'md';
 
     // Trigger interno do dialog (oculto): permite reuso da factory createDialog
     // sem expor um método open() público — o pai controla via .click().
@@ -155,7 +156,7 @@ export const Controlled: Story = {
     footer.appendChild(action);
 
     const content = document.createElement('div');
-    content.className = 'text-sm text-muted-foreground';
+    content.className = 'nds-text-body nds-text-muted-foreground';
     content.textContent = 'Este diálogo é comandado por estado externo.';
 
     let isOpen = false;

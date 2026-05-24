@@ -8,7 +8,7 @@
       "title": "Accordion — Disclosure",
       "description": "Documentação do Accordion: tipos single e multiple, modo controlado, acessibilidade WCAG com ARIA automático e animação.",
       "aiSummary": "Componente Accordion com tipos single e multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI e suporte a keyboard navigation.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, aria-expanded, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -27,7 +27,7 @@
     "anatomy": {
       "title": "Anatomia",
       "item1": "<strong>Accordion</strong> — container raiz. Suporta modo único (apenas um item aberto) ou múltiplo (vários simultaneamente).",
-      "item2": "<strong>AccordionItem</strong> — representa um item com <code>value</code> único obrigatório. Renderiza <code>&lt;div&gt;</code> com <code>border-b</code>.",
+      "item2": "<strong>AccordionItem</strong> — representa um item com <code>value</code> único obrigatório. Renderiza <code>&lt;div&gt;</code> com borda inferior (token <code>--border</code>).",
       "item3": "<strong>AccordionTrigger</strong> — botão de ação. Inclui <code>aria-expanded</code> automático e chevron rotativo.",
       "item4": "<strong>AccordionContent</strong> — área de conteúdo com animação de abertura/fechamento via CSS. Respeita <code>prefers-reduced-motion</code>.",
       "structureLabel": "Estrutura básica:",
@@ -140,6 +140,29 @@
       "defaultOpen": {
         "label": "Com item padrão aberto",
         "description": "Prop <code>defaultValue</code> abre um item por padrão sem modo controlado. Comum em documentação e onboarding."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "iconTrigger": {
+          "name": "Com ícone no trigger",
+          "description": "Ícone SVG (info, aviso, sucesso) ao lado do texto do trigger. O texto deve continuar autoexplicativo — o ícone reforça mas não substitui.",
+          "use": "Categorias visualmente distintas (FAQ por tipo, central de ajuda). Sempre marque o ícone com <code>aria-hidden=\"true\"</code>."
+        },
+        "badgeTrigger": {
+          "name": "Com badge no trigger",
+          "description": "Badge ao lado do label do trigger sinalizando status (Novo, Beta, Atualizado). Decorativo — não receba foco nem clique próprios.",
+          "use": "Sinalizar novidades, recursos beta ou atualizados em changelogs e releases."
+        },
+        "richContent": {
+          "name": "Conteúdo rico",
+          "description": "AccordionContent aceita qualquer HTML — listas, tabelas, código, parágrafos. Mantenha hierarquia semântica (h3 dentro de content só se justificável).",
+          "use": "Especificações técnicas, tabelas comparativas, documentação detalhada."
+        },
+        "faq": {
+          "name": "FAQ",
+          "description": "Padrão canônico de Perguntas Frequentes: heading <code>h2</code> acima do accordion, perguntas interrogativas completas no trigger, respostas objetivas em 2–3 linhas no content.",
+          "use": "Páginas de ajuda, suporte ao usuário, dúvidas comuns em onboarding."
+        }
       }
     },
     "states": {
@@ -298,48 +321,48 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Classe Tailwind",
+        "class": "Aplicação no tema",
         "part": "Parte"
       },
       "items": {
         "border": {
           "token": "--border",
-          "class": "border-b",
+          "class": "border-bottom: 1px solid hsl(var(--border))",
           "part": "AccordionItem — separador inferior"
         },
         "foreground": {
           "token": "--foreground",
-          "class": "text-foreground",
+          "class": "color: hsl(var(--foreground))",
           "part": "AccordionTrigger — texto do título"
         },
         "mutedForeground": {
           "token": "--muted-foreground",
-          "class": "text-muted-foreground",
+          "class": "color: hsl(var(--muted-foreground))",
           "part": "Chevron — ícone de indicação"
         },
         "background": {
           "token": "--background",
-          "class": "bg-background",
+          "class": "background-color: hsl(var(--background))",
           "part": "AccordionContent — fundo do conteúdo"
         },
         "ring": {
           "token": "--ring",
-          "class": "ring-ring",
+          "class": "box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5)",
           "part": "AccordionTrigger — focus ring"
         },
         "animateDown": {
           "token": "--animate-accordion-down",
-          "class": "animate-accordion-down",
+          "class": "animation: accordion-down",
           "part": "AccordionContent — animação de abertura"
         },
         "animateUp": {
           "token": "--animate-accordion-up",
-          "class": "animate-accordion-up",
+          "class": "animation: accordion-up",
           "part": "AccordionContent — animação de fechamento"
         }
       },
       "customizationTitle": "Customização via tokens",
-      "customizationCode": "/* Aumentar separador entre itens */\n.my-accordion .accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger com background em hover */\n.my-accordion [data-state] {\n  @apply hover:bg-muted/40 rounded-md;\n}"
+      "customizationCode": "/* Aumentar separador entre itens */\n.my-accordion .nds-accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger com background em hover */\n.my-accordion .nds-accordion-trigger:hover {\n  background-color: hsl(var(--muted) / 0.4);\n  border-radius: 0.375rem;\n}"
     },
     "doDont": {
       "pair1": {
@@ -374,7 +397,7 @@
         "open": "Trigger anunciado como \"expandido\" (expanded). Conteúdo acessível por Tab.",
         "disabled": "Item desabilitado anunciado como \"desabilitado\" — não recebe foco em alguns leitores."
       },
-      "contrast": "Contraste mínimo 4.5:1 para o texto do trigger. Chevron usa <code>text-muted-foreground</code> — verificar contraste em temas customizados.",
+      "contrast": "Contraste mínimo 4.5:1 para o texto do trigger. Chevron usa o token <code>--muted-foreground</code> — verificar contraste em temas customizados.",
       "keyboardTitle": "Navegação por Teclado"
     },
     "related": {
@@ -397,7 +420,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "O chevron rotativo (<code>rotate-180</code>) é aplicado via <code>[&[data-state=open]>svg]:rotate-180</code> no AccordionTrigger — não adicionar manualmente.",
+      "item1": "O chevron rotaciona automaticamente via seletor CSS <code>[data-state=\"open\"] svg</code> no AccordionTrigger — não aplicar a rotação manualmente.",
       "item2": "Animações de abertura/fechamento usam CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas em <code>tailwind.config.ts</code>.",
       "item3": "Para modo controlado, use <code>value</code> + callback de mudança. O formato do valor pode variar conforme o modo (único = string; múltiplo = array) — consulte a tabela de propriedades.",
       "item4": "Não aninhe Accordions sem propósito claro — prefira Sidebar com Accordion para hierarquia de navegação.",
@@ -546,7 +569,7 @@
       "title": "Accordion — Disclosure",
       "description": "Documentation for Accordion: single and multiple types, controlled mode, WCAG accessibility with automatic ARIA and animation.",
       "aiSummary": "Accordion component with single and multiple types, controlled mode, animated chevron, automatic ARIA via Radix/Reka/Bits UI and keyboard navigation support.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, aria-expanded, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -565,7 +588,7 @@
     "anatomy": {
       "title": "Anatomy",
       "item1": "<strong>Accordion</strong> — root container. Supports single mode (only one item open) or multiple (several simultaneously).",
-      "item2": "<strong>AccordionItem</strong> — represents an item with a required unique <code>value</code>. Renders <code>&lt;div&gt;</code> with <code>border-b</code>.",
+      "item2": "<strong>AccordionItem</strong> — represents an item with a required unique <code>value</code>. Renders <code>&lt;div&gt;</code> with bottom border (token <code>--border</code>).",
       "item3": "<strong>AccordionTrigger</strong> — action button. Includes automatic <code>aria-expanded</code> and rotating chevron.",
       "item4": "<strong>AccordionContent</strong> — content area with open/close animation via CSS. Respects <code>prefers-reduced-motion</code>.",
       "structureLabel": "Basic structure:",
@@ -678,6 +701,29 @@
       "defaultOpen": {
         "label": "With default open item",
         "description": "<code>defaultValue</code> prop opens an item by default without controlled mode. Common in documentation and onboarding."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "iconTrigger": {
+          "name": "With icon in trigger",
+          "description": "SVG icon (info, warning, success) next to the trigger text. The text must remain self-explanatory — the icon reinforces but does not replace.",
+          "use": "Visually distinct categories (FAQ by type, help center). Always mark the icon with <code>aria-hidden=\"true\"</code>."
+        },
+        "badgeTrigger": {
+          "name": "With badge in trigger",
+          "description": "Badge next to the trigger label signaling status (New, Beta, Updated). Decorative — should not receive its own focus or click.",
+          "use": "Highlight new, beta or updated features in changelogs and releases."
+        },
+        "richContent": {
+          "name": "Rich content",
+          "description": "AccordionContent accepts any HTML — lists, tables, code, paragraphs. Keep semantic hierarchy (h3 inside content only if justified).",
+          "use": "Technical specs, comparison tables, detailed documentation."
+        },
+        "faq": {
+          "name": "FAQ",
+          "description": "Canonical Frequently Asked Questions pattern: <code>h2</code> heading above the accordion, complete interrogative questions in the trigger, objective 2–3 line answers in the content.",
+          "use": "Help pages, user support, common onboarding questions."
+        }
       }
     },
     "states": {
@@ -836,48 +882,48 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Tailwind Class",
+        "class": "Theme application",
         "part": "Part"
       },
       "items": {
         "border": {
           "token": "--border",
-          "class": "border-b",
+          "class": "border-bottom: 1px solid hsl(var(--border))",
           "part": "AccordionItem — bottom separator"
         },
         "foreground": {
           "token": "--foreground",
-          "class": "text-foreground",
+          "class": "color: hsl(var(--foreground))",
           "part": "AccordionTrigger — title text"
         },
         "mutedForeground": {
           "token": "--muted-foreground",
-          "class": "text-muted-foreground",
+          "class": "color: hsl(var(--muted-foreground))",
           "part": "Chevron — indicator icon"
         },
         "background": {
           "token": "--background",
-          "class": "bg-background",
+          "class": "background-color: hsl(var(--background))",
           "part": "AccordionContent — content background"
         },
         "ring": {
           "token": "--ring",
-          "class": "ring-ring",
+          "class": "box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5)",
           "part": "AccordionTrigger — focus ring"
         },
         "animateDown": {
           "token": "--animate-accordion-down",
-          "class": "animate-accordion-down",
+          "class": "animation: accordion-down",
           "part": "AccordionContent — open animation"
         },
         "animateUp": {
           "token": "--animate-accordion-up",
-          "class": "animate-accordion-up",
+          "class": "animation: accordion-up",
           "part": "AccordionContent — close animation"
         }
       },
       "customizationTitle": "Customization via tokens",
-      "customizationCode": "/* Increase separator between items */\n.my-accordion .accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger with background on hover */\n.my-accordion [data-state] {\n  @apply hover:bg-muted/40 rounded-md;\n}"
+      "customizationCode": "/* Increase separator between items */\n.my-accordion .nds-accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger with background on hover */\n.my-accordion .nds-accordion-trigger:hover {\n  background-color: hsl(var(--muted) / 0.4);\n  border-radius: 0.375rem;\n}"
     },
     "doDont": {
       "pair1": {
@@ -912,7 +958,7 @@
         "open": "Trigger announced as \"expanded\". Content accessible via Tab.",
         "disabled": "Disabled item announced as \"disabled\" — may not receive focus in some readers."
       },
-      "contrast": "Minimum 4.5:1 contrast for trigger text. Chevron uses <code>text-muted-foreground</code> — check contrast in custom themes.",
+      "contrast": "Minimum 4.5:1 contrast for trigger text. Chevron uses the <code>--muted-foreground</code> token — check contrast in custom themes.",
       "keyboardTitle": "Keyboard Navigation"
     },
     "related": {
@@ -935,7 +981,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "The rotating chevron (<code>rotate-180</code>) is applied via <code>[&[data-state=open]>svg]:rotate-180</code> in AccordionTrigger — don't add manually.",
+      "item1": "The chevron rotates automatically via a CSS selector <code>[data-state=\"open\"] svg</code> in AccordionTrigger — don't apply the rotation manually.",
       "item2": "Open/close animations use CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) defined in <code>tailwind.config.ts</code>.",
       "item3": "For controlled mode, use <code>value</code> + change callback. The value format may vary with the mode (single = string; multiple = array) — see the properties table.",
       "item4": "Don't nest Accordions without a clear purpose — prefer Sidebar with Accordion for navigation hierarchy.",
@@ -1084,7 +1130,7 @@
       "title": "Accordion — Disclosure",
       "description": "Documentación del Accordion: tipos single y multiple, modo controlado, accesibilidad WCAG con ARIA automático y animación.",
       "aiSummary": "Componente Accordion con tipos single y multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI y soporte de navegación por teclado.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, aria-expanded, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -1103,7 +1149,7 @@
     "anatomy": {
       "title": "Anatomía",
       "item1": "<strong>Accordion</strong> — contenedor raíz. Soporta modo único (solo un ítem abierto) o múltiple (varios simultáneamente).",
-      "item2": "<strong>AccordionItem</strong> — representa un ítem con <code>value</code> único obligatorio. Renderiza <code>&lt;div&gt;</code> con <code>border-b</code>.",
+      "item2": "<strong>AccordionItem</strong> — representa un ítem con <code>value</code> único obligatorio. Renderiza <code>&lt;div&gt;</code> con borde inferior (token <code>--border</code>).",
       "item3": "<strong>AccordionTrigger</strong> — botón de acción. Incluye <code>aria-expanded</code> automático y chevron rotativo.",
       "item4": "<strong>AccordionContent</strong> — área de contenido con animación de apertura/cierre via CSS. Respeta <code>prefers-reduced-motion</code>.",
       "structureLabel": "Estructura básica:",
@@ -1216,6 +1262,29 @@
       "defaultOpen": {
         "label": "Con ítem abierto por defecto",
         "description": "La prop <code>defaultValue</code> abre un ítem por defecto sin modo controlado. Común en documentación y onboarding."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "iconTrigger": {
+          "name": "Con ícono en el trigger",
+          "description": "Ícono SVG (info, aviso, éxito) junto al texto del trigger. El texto debe seguir siendo autoexplicativo — el ícono refuerza pero no reemplaza.",
+          "use": "Categorías visualmente distintas (FAQ por tipo, centro de ayuda). Marca siempre el ícono con <code>aria-hidden=\"true\"</code>."
+        },
+        "badgeTrigger": {
+          "name": "Con badge en el trigger",
+          "description": "Badge junto al label del trigger señalando estado (Nuevo, Beta, Actualizado). Decorativo — no debe recibir foco ni clic propios.",
+          "use": "Señalar novedades, funciones beta o actualizadas en changelogs y releases."
+        },
+        "richContent": {
+          "name": "Contenido enriquecido",
+          "description": "AccordionContent acepta cualquier HTML — listas, tablas, código, párrafos. Mantén la jerarquía semántica (h3 dentro de content solo si se justifica).",
+          "use": "Especificaciones técnicas, tablas comparativas, documentación detallada."
+        },
+        "faq": {
+          "name": "FAQ",
+          "description": "Patrón canónico de Preguntas Frecuentes: encabezado <code>h2</code> sobre el accordion, preguntas interrogativas completas en el trigger, respuestas objetivas en 2–3 líneas en el content.",
+          "use": "Páginas de ayuda, soporte al usuario, preguntas comunes en onboarding."
+        }
       }
     },
     "states": {
@@ -1374,48 +1443,48 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Clase Tailwind",
+        "class": "Aplicación en el tema",
         "part": "Parte"
       },
       "items": {
         "border": {
           "token": "--border",
-          "class": "border-b",
+          "class": "border-bottom: 1px solid hsl(var(--border))",
           "part": "AccordionItem — separador inferior"
         },
         "foreground": {
           "token": "--foreground",
-          "class": "text-foreground",
+          "class": "color: hsl(var(--foreground))",
           "part": "AccordionTrigger — texto del título"
         },
         "mutedForeground": {
           "token": "--muted-foreground",
-          "class": "text-muted-foreground",
+          "class": "color: hsl(var(--muted-foreground))",
           "part": "Chevron — icono indicador"
         },
         "background": {
           "token": "--background",
-          "class": "bg-background",
+          "class": "background-color: hsl(var(--background))",
           "part": "AccordionContent — fondo del contenido"
         },
         "ring": {
           "token": "--ring",
-          "class": "ring-ring",
+          "class": "box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5)",
           "part": "AccordionTrigger — focus ring"
         },
         "animateDown": {
           "token": "--animate-accordion-down",
-          "class": "animate-accordion-down",
+          "class": "animation: accordion-down",
           "part": "AccordionContent — animación de apertura"
         },
         "animateUp": {
           "token": "--animate-accordion-up",
-          "class": "animate-accordion-up",
+          "class": "animation: accordion-up",
           "part": "AccordionContent — animación de cierre"
         }
       },
       "customizationTitle": "Personalización via tokens",
-      "customizationCode": "/* Aumentar separador entre ítems */\n.my-accordion .accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger con fondo en hover */\n.my-accordion [data-state] {\n  @apply hover:bg-muted/40 rounded-md;\n}"
+      "customizationCode": "/* Aumentar separador entre ítems */\n.my-accordion .nds-accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger con fondo en hover */\n.my-accordion .nds-accordion-trigger:hover {\n  background-color: hsl(var(--muted) / 0.4);\n  border-radius: 0.375rem;\n}"
     },
     "doDont": {
       "pair1": {
@@ -1450,7 +1519,7 @@
         "open": "Trigger anunciado como \"expandido\" (expanded). Contenido accesible via Tab.",
         "disabled": "Ítem deshabilitado anunciado como \"deshabilitado\" — puede no recibir foco en algunos lectores."
       },
-      "contrast": "Contraste mínimo 4.5:1 para el texto del trigger. El chevron usa <code>text-muted-foreground</code> — verificar contraste en temas personalizados.",
+      "contrast": "Contraste mínimo 4.5:1 para el texto del trigger. El chevron usa el token <code>--muted-foreground</code> — verificar contraste en temas personalizados.",
       "keyboardTitle": "Navegación por Teclado"
     },
     "related": {
@@ -1473,7 +1542,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "El chevron rotativo (<code>rotate-180</code>) se aplica via <code>[&[data-state=open]>svg]:rotate-180</code> en AccordionTrigger — no agregar manualmente.",
+      "item1": "El chevron rota automáticamente vía un selector CSS <code>[data-state=\"open\"] svg</code> en AccordionTrigger — no aplicar la rotación manualmente.",
       "item2": "Las animaciones de apertura/cierre usan CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas en <code>tailwind.config.ts</code>.",
       "item3": "Para modo controlado, usa <code>value</code> + callback de cambio. El formato del valor puede variar según el modo (único = string; múltiple = array) — consulta la tabla de propiedades.",
       "item4": "No anides Accordions sin un propósito claro — prefiere Sidebar con Accordion para jerarquía de navegación.",

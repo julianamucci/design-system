@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/menubar';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/menubar/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.vue';
@@ -29,6 +30,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -41,6 +43,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
+const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -103,8 +106,9 @@ const navGroups = computed(() => [
     label: tContent('nav.techRef'),
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
-      { id: 'variantes',    label: tContent('nav.variants') },
-      { id: 'estados',      label: tContent('nav.states')   },
+      { id: 'variantes',    label: tContent('nav.variants')     },
+      { id: 'composicoes',  label: tContent('nav.compositions') },
+      { id: 'estados',      label: tContent('nav.states')       },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
     ],
@@ -223,6 +227,102 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault },
   { name: tContent('variants.items.destructive'), description: stripHtml(tContent('variants.styles.destructive')), code: codeDestructive },
+]);
+
+const codeWithShortcuts = `<Menubar default-value="edit">
+  <MenubarMenu value="edit">
+    <MenubarTrigger>Editar</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarSeparator />
+      <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
+      <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`;
+
+const codeWithCheckbox = `<Menubar default-value="view">
+  <MenubarMenu value="view">
+    <MenubarTrigger>Exibir</MenubarTrigger>
+    <MenubarContent>
+      <MenubarCheckboxItem :checked="showSidebar" @update:checked="showSidebar = $event">Sidebar</MenubarCheckboxItem>
+      <MenubarCheckboxItem :checked="showGrid" @update:checked="showGrid = $event">Grid</MenubarCheckboxItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`;
+
+const codeWithRadio = `<Menubar default-value="theme">
+  <MenubarMenu value="theme">
+    <MenubarTrigger>Tema</MenubarTrigger>
+    <MenubarContent>
+      <MenubarRadioGroup v-model="theme">
+        <MenubarRadioItem value="light">Claro</MenubarRadioItem>
+        <MenubarRadioItem value="dark">Escuro</MenubarRadioItem>
+        <MenubarRadioItem value="system">Sistema</MenubarRadioItem>
+      </MenubarRadioGroup>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`;
+
+const codeEditorComplete = `<Menubar>
+  <MenubarMenu value="file">
+    <MenubarTrigger>Arquivo</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
+      <MenubarItem>Abrir... <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
+      <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu value="edit">
+    <MenubarTrigger>Editar</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu value="view">
+    <MenubarTrigger>Exibir</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Tela cheia <MenubarShortcut>F11</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu value="help">
+    <MenubarTrigger>Ajuda</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Sobre</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`;
+
+const compShowSidebar = ref(true);
+const compShowGrid = ref(false);
+const compTheme = ref('system');
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withShortcuts.name'),
+    description: tContent('variants.compositions.withShortcuts.description'),
+    useWhen: tContent('variants.compositions.withShortcuts.use'),
+    code: codeWithShortcuts,
+  },
+  {
+    name: tContent('variants.compositions.withCheckbox.name'),
+    description: tContent('variants.compositions.withCheckbox.description'),
+    useWhen: tContent('variants.compositions.withCheckbox.use'),
+    code: codeWithCheckbox,
+  },
+  {
+    name: tContent('variants.compositions.withRadio.name'),
+    description: tContent('variants.compositions.withRadio.description'),
+    useWhen: tContent('variants.compositions.withRadio.use'),
+    code: codeWithRadio,
+  },
+  {
+    name: tContent('variants.compositions.editorComplete.name'),
+    description: tContent('variants.compositions.editorComplete.description'),
+    useWhen: tContent('variants.compositions.editorComplete.use'),
+    code: codeEditorComplete,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -561,6 +661,97 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="menubar"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <div style="contain: layout; min-height: 220px;" class="w-full">
+          <Menubar default-value="edit">
+            <MenubarMenu value="edit">
+              <MenubarTrigger>Editar</MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+                <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+                <MenubarSeparator />
+                <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
+                <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        </div>
+      </template>
+      <template #variant-preview-1>
+        <div style="contain: layout; min-height: 220px;" class="w-full">
+          <Menubar default-value="view">
+            <MenubarMenu value="view">
+              <MenubarTrigger>Exibir</MenubarTrigger>
+              <MenubarContent>
+                <MenubarCheckboxItem :checked="compShowSidebar" @update:checked="(v: boolean) => (compShowSidebar = v)">Sidebar</MenubarCheckboxItem>
+                <MenubarCheckboxItem :checked="compShowGrid" @update:checked="(v: boolean) => (compShowGrid = v)">Grid</MenubarCheckboxItem>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div style="contain: layout; min-height: 220px;" class="w-full">
+          <Menubar default-value="theme">
+            <MenubarMenu value="theme">
+              <MenubarTrigger>Tema</MenubarTrigger>
+              <MenubarContent>
+                <MenubarRadioGroup v-model="compTheme">
+                  <MenubarRadioItem value="light">Claro</MenubarRadioItem>
+                  <MenubarRadioItem value="dark">Escuro</MenubarRadioItem>
+                  <MenubarRadioItem value="system">Sistema</MenubarRadioItem>
+                </MenubarRadioGroup>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        </div>
+      </template>
+      <template #variant-preview-3>
+        <div style="contain: layout; min-height: 220px;" class="w-full">
+          <Menubar>
+            <MenubarMenu value="file">
+              <MenubarTrigger>Arquivo</MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
+                <MenubarItem>Abrir... <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
+                <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+                <MenubarSeparator />
+                <MenubarItem>Sair <MenubarShortcut>⌘Q</MenubarShortcut></MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+            <MenubarMenu value="edit">
+              <MenubarTrigger>Editar</MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+                <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+            <MenubarMenu value="view">
+              <MenubarTrigger>Exibir</MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem>Modo escuro</MenubarItem>
+                <MenubarItem>Tela cheia <MenubarShortcut>F11</MenubarShortcut></MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+            <MenubarMenu value="help">
+              <MenubarTrigger>Ajuda</MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem>Documentação</MenubarItem>
+                <MenubarItem>Sobre</MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────── -->
     <DocsStates

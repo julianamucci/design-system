@@ -32,34 +32,42 @@ const ICONS: Record<string, string> = {
   loading:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ds-toast-spin" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
 };
 
-const RICH_COLORS: Record<string, string> = {
-  default: 'bg-background text-foreground border-border',
-  success: 'bg-green-50 text-green-800 border-green-200',
-  error:   'bg-red-50 text-red-800 border-red-200',
-  warning: 'bg-yellow-50 text-yellow-800 border-yellow-200',
-  info:    'bg-blue-50 text-blue-800 border-blue-200',
-  loading: 'bg-background text-foreground border-border',
+type ToastStyle = { bg: string; color: string; borderColor: string };
+const RICH_COLORS: Record<string, ToastStyle> = {
+  default: { bg: 'var(--background)',  color: 'var(--foreground)', borderColor: 'var(--border)' },
+  success: { bg: '#f0fdf4',            color: '#166534',           borderColor: '#bbf7d0' },
+  error:   { bg: '#fef2f2',            color: '#991b1b',           borderColor: '#fecaca' },
+  warning: { bg: '#fefce8',            color: '#854d0e',           borderColor: '#fef08a' },
+  info:    { bg: '#eff6ff',            color: '#1e40af',           borderColor: '#bfdbfe' },
+  loading: { bg: 'var(--background)',  color: 'var(--foreground)', borderColor: 'var(--border)' },
 };
 
 function buildToastEl(type: string, message: string): HTMLElement {
-  const colorClass = RICH_COLORS[type] ?? RICH_COLORS.default;
+  const palette = RICH_COLORS[type] ?? RICH_COLORS.default;
   const toastEl = document.createElement('div');
   toastEl.setAttribute('data-sonner-toast', '');
   toastEl.setAttribute('role', 'status');
   toastEl.setAttribute('aria-live', 'polite');
-  toastEl.className = `pointer-events-auto w-full max-w-sm rounded-lg border p-4 shadow-lg flex items-start gap-3 ${colorClass}`;
+  toastEl.className = 'nds-cluster nds-w-full nds-max-w-sm nds-rounded-lg nds-p-4 nds-shadow-lg';
+  toastEl.dataset.spacing = 'sm';
+  toastEl.dataset.align = 'start';
+  toastEl.style.pointerEvents = 'auto';
+  toastEl.style.background = palette.bg;
+  toastEl.style.color = palette.color;
+  toastEl.style.border = `1px solid ${palette.borderColor}`;
 
   if (ICONS[type]) {
     const iconWrap = document.createElement('span');
-    iconWrap.className = 'flex-shrink-0 mt-0.5';
+    iconWrap.className = 'nds-shrink-0';
+    iconWrap.style.marginTop = '0.125rem';
     iconWrap.innerHTML = sanitizeHtml(ICONS[type]);
     toastEl.appendChild(iconWrap);
   }
 
   const contentEl = document.createElement('div');
-  contentEl.className = 'flex-1 min-w-0';
+  contentEl.className = 'nds-flex-1 nds-min-w-0';
   const titleEl = document.createElement('p');
-  titleEl.className = 'text-sm font-medium';
+  titleEl.className = 'nds-text-body nds-font-medium';
   titleEl.textContent = message;
   contentEl.appendChild(titleEl);
   toastEl.appendChild(contentEl);
@@ -83,7 +91,8 @@ function createToastTipoStory(
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.textContent = btnLabel;
-  btn.className = 'inline-flex self-start items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2';
+  btn.className = 'btn btn-outline';
+  btn.style.alignSelf = 'flex-start';
 
   btn.addEventListener('click', () => {
     const toastEl = buildToastEl(type, message);

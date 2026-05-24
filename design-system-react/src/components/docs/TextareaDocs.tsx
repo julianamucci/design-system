@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -16,6 +17,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -54,6 +56,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -136,6 +139,11 @@ export function TextareaDocs() {
   const [demoBio, setDemoBio] = useState("");
   const [demoFeedback, setDemoFeedback] = useState("");
   const demoMax = 500;
+
+  // Compositions state
+  const [compCounter, setCompCounter] = useState("");
+  const [compForm, setCompForm] = useState("");
+  const [compFormResult, setCompFormResult] = useState<string | null>(null);
 
   // ─── Code strings ─────────────────────────────────────────────────────────
 
@@ -517,6 +525,229 @@ function Textarea({
                   className="resize-none min-h-[120px]"
                 />
               </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ─────────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="textarea"
+        items={[
+          {
+            name: tContent("variants.compositions.withLabel.name"),
+            description: tContent("variants.compositions.withLabel.description"),
+            useWhen: tContent("variants.compositions.withLabel.use"),
+            code: `<div className="flex flex-col gap-1.5 w-full max-w-md">
+  <Label htmlFor="ta-label">Descrição</Label>
+  <Textarea
+    id="ta-label"
+    className="resize-y min-h-[120px]"
+    placeholder="ex: Descreva o produto..."
+  />
+</div>`,
+            preview: (
+              <div className="flex flex-col gap-1.5 w-full max-w-md">
+                <Label htmlFor="comp-ta-label">Descrição</Label>
+                <Textarea
+                  id="comp-ta-label"
+                  className="resize-y min-h-[120px]"
+                  placeholder="ex: Descreva o produto..."
+                />
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withHint.name"),
+            description: tContent("variants.compositions.withHint.description"),
+            useWhen: tContent("variants.compositions.withHint.use"),
+            code: `<div className="flex flex-col gap-1.5 w-full max-w-md">
+  <Label htmlFor="ta-hint">Descrição</Label>
+  <Textarea
+    id="ta-hint"
+    className="resize-y min-h-[120px]"
+    placeholder="ex: Descreva o produto..."
+  />
+  <p className="text-xs text-muted-foreground">
+    Descreva o produto com clareza, destacando os principais atributos.
+  </p>
+</div>`,
+            preview: (
+              <div className="flex flex-col gap-1.5 w-full max-w-md">
+                <Label htmlFor="comp-ta-hint">Descrição</Label>
+                <Textarea
+                  id="comp-ta-hint"
+                  className="resize-y min-h-[120px]"
+                  placeholder="ex: Descreva o produto..."
+                />
+                <p className="text-xs text-muted-foreground">
+                  Descreva o produto com clareza, destacando os principais atributos.
+                </p>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withCounter.name"),
+            description: tContent("variants.compositions.withCounter.description"),
+            useWhen: tContent("variants.compositions.withCounter.use"),
+            code: `const [value, setValue] = useState("");
+
+<div className="flex flex-col gap-1.5 w-full max-w-md">
+  <Label htmlFor="ta-counter">Descrição</Label>
+  <Textarea
+    id="ta-counter"
+    className="resize-y min-h-[120px]"
+    placeholder="ex: Descreva o produto..."
+    maxLength={500}
+    value={value}
+    onChange={(e) => setValue(e.target.value)}
+  />
+  <div className="flex justify-between items-start gap-3 text-xs text-muted-foreground">
+    <span>Descreva o produto com clareza.</span>
+    <span
+      className="tabular-nums shrink-0"
+      aria-live="polite"
+      aria-label={\`\${value.length} de 500 caracteres usados\`}
+    >
+      0/500
+    </span>
+  </div>
+</div>`,
+            preview: (
+              <div className="flex flex-col gap-1.5 w-full max-w-md">
+                <Label htmlFor="comp-ta-counter">Descrição</Label>
+                <Textarea
+                  id="comp-ta-counter"
+                  className="resize-y min-h-[120px]"
+                  placeholder="ex: Descreva o produto..."
+                  maxLength={500}
+                  value={compCounter}
+                  onChange={(e) => setCompCounter(e.target.value)}
+                />
+                <div className="flex justify-between items-start gap-3 text-xs text-muted-foreground">
+                  <span>Descreva o produto com clareza.</span>
+                  <span
+                    className="tabular-nums shrink-0"
+                    aria-live="polite"
+                    aria-label={counterLabel(compCounter.length, 500)}
+                  >
+                    {compCounter.length}/500
+                  </span>
+                </div>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withError.name"),
+            description: tContent("variants.compositions.withError.description"),
+            useWhen: tContent("variants.compositions.withError.use"),
+            code: `<div className="flex flex-col gap-1.5 w-full max-w-md">
+  <Label htmlFor="ta-error">Descrição</Label>
+  <Textarea
+    id="ta-error"
+    className="resize-y min-h-[120px]"
+    placeholder="ex: Descreva o produto..."
+    aria-invalid="true"
+    aria-describedby="ta-error-error"
+  />
+  <p className="text-xs text-destructive" id="ta-error-error">
+    A descrição é obrigatória e deve ter pelo menos 20 caracteres.
+  </p>
+</div>`,
+            preview: (
+              <div className="flex flex-col gap-1.5 w-full max-w-md">
+                <Label htmlFor="comp-ta-error">Descrição</Label>
+                <Textarea
+                  id="comp-ta-error"
+                  className="resize-y min-h-[120px]"
+                  placeholder="ex: Descreva o produto..."
+                  aria-invalid="true"
+                  aria-describedby="comp-ta-error-error"
+                />
+                <p className="text-xs text-destructive" id="comp-ta-error-error">
+                  A descrição é obrigatória e deve ter pelo menos 20 caracteres.
+                </p>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.inForm.name"),
+            description: tContent("variants.compositions.inForm.description"),
+            useWhen: tContent("variants.compositions.inForm.use"),
+            code: `const [value, setValue] = useState("");
+
+<form
+  className="flex flex-col gap-4 w-full max-w-md"
+  aria-label="Formulário de feedback"
+  onSubmit={(e) => {
+    e.preventDefault();
+    // submit value
+  }}
+>
+  <div className="flex flex-col gap-1.5">
+    <Label htmlFor="ta-form">Feedback</Label>
+    <Textarea
+      id="ta-form"
+      name="feedback"
+      className="resize-y min-h-[120px]"
+      placeholder="Compartilhe sua opinião..."
+      maxLength={280}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+    <div className="flex justify-between items-start gap-3 text-xs text-muted-foreground">
+      <span>Seja específico para ajudarmos melhor.</span>
+      <span
+        className="tabular-nums shrink-0"
+        aria-live="polite"
+        aria-label={\`\${value.length} de 280 caracteres usados\`}
+      >
+        0/280
+      </span>
+    </div>
+  </div>
+  <Button type="submit">Enviar</Button>
+</form>`,
+            preview: (
+              <form
+                className="flex flex-col gap-4 w-full max-w-md"
+                aria-label="Formulário de feedback"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setCompFormResult(compForm.trim() ? `Enviado: "${compForm}"` : "Digite algo antes de enviar.");
+                }}
+              >
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="comp-ta-form">Feedback</Label>
+                  <Textarea
+                    id="comp-ta-form"
+                    name="feedback"
+                    className="resize-y min-h-[120px]"
+                    placeholder="Compartilhe sua opinião..."
+                    maxLength={280}
+                    value={compForm}
+                    onChange={(e) => setCompForm(e.target.value)}
+                  />
+                  <div className="flex justify-between items-start gap-3 text-xs text-muted-foreground">
+                    <span>Seja específico para ajudarmos melhor.</span>
+                    <span
+                      className="tabular-nums shrink-0"
+                      aria-live="polite"
+                      aria-label={counterLabel(compForm.length, 280)}
+                    >
+                      {compForm.length}/280
+                    </span>
+                  </div>
+                </div>
+                <Button type="submit">Enviar</Button>
+                {compFormResult && (
+                  <p className="text-xs text-muted-foreground" aria-live="polite">
+                    {compFormResult}
+                  </p>
+                )}
+              </form>
             ),
           },
         ]}

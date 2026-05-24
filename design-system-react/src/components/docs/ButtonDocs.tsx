@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { Plus, Trash2, Pencil, ChevronRight } from "lucide-react";
+import { Plus, Trash2, Pencil, ChevronRight, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
@@ -16,6 +16,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -51,6 +52,7 @@ const getNavGroups = (t: (key: string) => string) => [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
       { id: "tamanhos",     label: t("nav.sizes") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -434,6 +436,85 @@ import { Plus } from "lucide-react";`;
                 preview: (
                   <Button size="icon-lg" aria-label={tContent("demonstration.labels.withIcon")}>
                     <Plus aria-hidden="true" />
+                  </Button>
+                ),
+              },
+            ]}
+          />
+
+          {/* ── Composições ───────────────────────────────────────────── */}
+          <DocsCompositions
+            title={tContent("variants.compositionsTitle")}
+            useWhenLabel={tNav("common.useWhen")}
+            componentSlug="button"
+            items={[
+              {
+                name: tContent("variants.compositions.iconLeft.name"),
+                description: tContent("variants.compositions.iconLeft.description"),
+                useWhen: tContent("variants.compositions.iconLeft.use"),
+                code: `<Button>\n  <Plus aria-hidden="true" />\n  Adicionar item\n</Button>`,
+                preview: (
+                  <Button>
+                    <Plus aria-hidden="true" />
+                    Adicionar item
+                  </Button>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.iconRight.name"),
+                description: tContent("variants.compositions.iconRight.description"),
+                useWhen: tContent("variants.compositions.iconRight.use"),
+                code: `<Button variant="outline">\n  Próximo\n  <ChevronRight aria-hidden="true" />\n</Button>`,
+                preview: (
+                  <Button variant="outline">
+                    Próximo
+                    <ChevronRight aria-hidden="true" />
+                  </Button>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.destructiveWithIcon.name"),
+                description: tContent("variants.compositions.destructiveWithIcon.description"),
+                useWhen: tContent("variants.compositions.destructiveWithIcon.use"),
+                code: `<Button variant="destructive">\n  <Trash2 aria-hidden="true" />\n  Excluir\n</Button>`,
+                preview: (
+                  <Button variant="destructive">
+                    <Trash2 aria-hidden="true" />
+                    Excluir
+                  </Button>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.iconOnly.name"),
+                description: tContent("variants.compositions.iconOnly.description"),
+                useWhen: tContent("variants.compositions.iconOnly.use"),
+                code: `<Button size="icon" aria-label="Baixar arquivo">\n  <Download aria-hidden="true" />\n</Button>`,
+                preview: (
+                  <Button size="icon" aria-label="Baixar arquivo">
+                    <Download aria-hidden="true" />
+                  </Button>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.actionPair.name"),
+                description: tContent("variants.compositions.actionPair.description"),
+                useWhen: tContent("variants.compositions.actionPair.use"),
+                code: `<div className="flex gap-2">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
+                preview: (
+                  <div className="flex gap-2">
+                    <Button variant="outline">Cancelar</Button>
+                    <Button>Confirmar</Button>
+                  </div>
+                ),
+              },
+              {
+                name: tContent("variants.compositions.asLink.name"),
+                description: tContent("variants.compositions.asLink.description"),
+                useWhen: tContent("variants.compositions.asLink.use"),
+                code: `<Button render={<a href="/docs" />} variant="link">\n  Ver documentação\n</Button>`,
+                preview: (
+                  <Button render={<a href="#docs" />} variant="link">
+                    Ver documentação
                   </Button>
                 ),
               },

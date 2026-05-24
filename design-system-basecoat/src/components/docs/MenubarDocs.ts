@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -132,11 +133,12 @@ export function createMenubarDocs(): HTMLElement {
       { id: 'do-dont',      labelKey: 'nav.doDont'        },
     ]},
     { labelKey: 'nav.techRef', sections: [
-      { id: 'importacao',   labelKey: 'nav.import'   },
-      { id: 'variantes',    labelKey: 'nav.variants' },
-      { id: 'estados',      labelKey: 'nav.states'   },
-      { id: 'propriedades', labelKey: 'nav.props'    },
-      { id: 'tokens',       labelKey: 'nav.tokens'   },
+      { id: 'importacao',   labelKey: 'nav.import'        },
+      { id: 'variantes',    labelKey: 'nav.variants'      },
+      { id: 'composicoes',  labelKey: 'nav.compositions'  },
+      { id: 'estados',      labelKey: 'nav.states'        },
+      { id: 'propriedades', labelKey: 'nav.props'         },
+      { id: 'tokens',       labelKey: 'nav.tokens'        },
     ]},
     { labelKey: 'nav.context', sections: [
       { id: 'acessibilidade', labelKey: 'nav.accessibility' },
@@ -177,7 +179,7 @@ export function createMenubarDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -192,7 +194,11 @@ export function createMenubarDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'flex items-start justify-center w-full min-h-[200px] p-2';
+            wrap.className = 'nds-cluster nds-w-full';
+            wrap.dataset.align = 'start';
+            wrap.dataset.justify = 'center';
+            wrap.style.minHeight = '200px';
+            wrap.style.padding = 'var(--spacing-2)';
             wrap.appendChild(buildDemoMenubar());
             return wrap;
           },
@@ -263,7 +269,9 @@ export function createMenubarDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-start justify-center';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
                 wrap.appendChild(
                   createMenubar([
                     { label: 'Arquivo', items: [{ type: 'item', label: 'Novo' }] },
@@ -276,7 +284,9 @@ export function createMenubarDocs(): HTMLElement {
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-start justify-center';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
                 wrap.appendChild(
                   createMenubar([
                     { label: 'Menu', items: [{ type: 'item', label: 'Ação única' }] },
@@ -293,7 +303,9 @@ export function createMenubarDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-start justify-center';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
                 wrap.appendChild(
                   createMenubar([
                     {
@@ -310,7 +322,9 @@ export function createMenubarDocs(): HTMLElement {
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex flex-col items-center text-xs text-muted-foreground italic gap-1';
+                wrap.className = 'nds-stack nds-text-caption nds-text-muted-foreground nds-italic';
+                wrap.dataset.spacing = 'xs';
+                wrap.style.alignItems = 'center';
                 const note = document.createElement('p');
                 note.textContent = 'Submenu aninhado em submenu (não-suportado pelo factory Basecoat).';
                 wrap.appendChild(note);
@@ -346,10 +360,7 @@ const panel = bar.querySelector('[role="menu"]');
 const li = document.createElement('div');
 li.setAttribute('role', 'menuitem');
 li.setAttribute('tabindex', '0');
-li.className = [
-  'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm',
-  'text-destructive focus:bg-destructive/10 focus:text-destructive',
-].join(' ');
+li.className = 'nds-dropdown-menu-item nds-text-destructive';
 li.textContent = 'Excluir arquivo';
 panel.appendChild(li);`;
 
@@ -363,7 +374,10 @@ panel.appendChild(li);`;
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-start justify-center min-h-[140px]';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '140px';
                 wrap.appendChild(
                   createMenubar([
                     {
@@ -388,10 +402,228 @@ panel.appendChild(li);`;
                 const li = document.createElement('div');
                 li.setAttribute('role', 'menuitem');
                 li.className =
-                  'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-destructive border border-destructive/30 rounded-md min-w-[180px]';
+                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
+                li.style.minWidth = '180px';
                 li.textContent = 'Excluir arquivo';
                 return li;
               },
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        function injectCheckbox(panel: HTMLElement, label: string, checked: boolean): void {
+          const item = document.createElement('div');
+          item.setAttribute('role', 'menuitemcheckbox');
+          item.setAttribute('aria-checked', String(checked));
+          item.setAttribute('tabindex', '0');
+          if (checked) item.dataset.state = 'checked';
+          item.className = 'nds-dropdown-menu-item nds-hover-bg-accent';
+          const indicator = document.createElement('span');
+          indicator.className = 'nds-icon-sm nds-rounded';
+          indicator.style.display = 'inline-flex';
+          indicator.style.alignItems = 'center';
+          indicator.style.justifyContent = 'center';
+          indicator.setAttribute('aria-hidden', 'true');
+          if (checked) indicator.textContent = '✓';
+          const text = document.createElement('span');
+          text.textContent = label;
+          item.append(indicator, text);
+          item.addEventListener('click', () => {
+            const next = item.getAttribute('aria-checked') !== 'true';
+            item.setAttribute('aria-checked', String(next));
+            item.dataset.state = next ? 'checked' : 'unchecked';
+            indicator.textContent = next ? '✓' : '';
+          });
+          panel.appendChild(item);
+        }
+
+        function injectRadio(panel: HTMLElement, label: string, checked: boolean): void {
+          const item = document.createElement('div');
+          item.setAttribute('role', 'menuitemradio');
+          item.setAttribute('aria-checked', String(checked));
+          item.setAttribute('tabindex', '0');
+          if (checked) item.dataset.state = 'checked';
+          item.className = 'nds-dropdown-menu-item nds-hover-bg-accent';
+          const indicator = document.createElement('span');
+          indicator.className = 'nds-icon-sm nds-rounded';
+          indicator.style.display = 'inline-flex';
+          indicator.style.alignItems = 'center';
+          indicator.style.justifyContent = 'center';
+          indicator.setAttribute('aria-hidden', 'true');
+          if (checked) indicator.textContent = '●';
+          const text = document.createElement('span');
+          text.textContent = label;
+          item.append(indicator, text);
+          item.addEventListener('click', () => {
+            panel.querySelectorAll<HTMLElement>('[role="menuitemradio"]').forEach((el) => {
+              el.setAttribute('aria-checked', 'false');
+              el.dataset.state = 'unchecked';
+              const ind = el.querySelector<HTMLElement>('span[aria-hidden="true"]');
+              if (ind) ind.textContent = '';
+            });
+            item.setAttribute('aria-checked', 'true');
+            item.dataset.state = 'checked';
+            indicator.textContent = '●';
+          });
+          panel.appendChild(item);
+        }
+
+        function wrapPreview(child: HTMLElement): HTMLElement {
+          const wrap = document.createElement('div');
+          wrap.style.contain = 'layout';
+          wrap.className = 'nds-cluster nds-w-full';
+          wrap.dataset.align = 'start';
+          wrap.dataset.justify = 'center';
+          wrap.style.minHeight = '220px';
+          wrap.style.padding = 'var(--spacing-2)';
+          wrap.appendChild(child);
+          return wrap;
+        }
+
+        const codeWithShortcuts = `const bar = createMenubar([
+  {
+    label: 'Editar',
+    items: [
+      { type: 'item', label: 'Desfazer', shortcut: '⌘Z' },
+      { type: 'item', label: 'Refazer',  shortcut: '⇧⌘Z' },
+      { type: 'separator' },
+      { type: 'item', label: 'Copiar',   shortcut: '⌘C' },
+      { type: 'item', label: 'Colar',    shortcut: '⌘V' },
+    ],
+  },
+]);`;
+
+        const codeWithCheckbox = `// O factory Basecoat não tem CheckboxItem nativo.
+// Compor manualmente com role="menuitemcheckbox" sobre o panel:
+const bar = createMenubar([{ label: 'Exibir', items: [{ type: 'label', label: 'Painéis' }] }]);
+const panel = bar.querySelector('[role="menu"]');
+// injectCheckbox(panel, 'Sidebar', true);
+// injectCheckbox(panel, 'Grid', false);`;
+
+        const codeWithRadio = `// Idem para radio — composição manual com role="menuitemradio":
+const bar = createMenubar([{ label: 'Tema', items: [{ type: 'label', label: 'Aparência' }] }]);
+const panel = bar.querySelector('[role="menu"]');
+// injectRadio(panel, 'Claro',   false);
+// injectRadio(panel, 'Escuro',  true);
+// injectRadio(panel, 'Sistema', false);`;
+
+        const codeEditorComplete = `const bar = createMenubar([
+  { label: 'Arquivo', items: [
+    { type: 'item', label: 'Novo',    shortcut: '⌘N' },
+    { type: 'item', label: 'Abrir...', shortcut: '⌘O' },
+    { type: 'item', label: 'Salvar',  shortcut: '⌘S' },
+    { type: 'separator' },
+    { type: 'item', label: 'Sair',    shortcut: '⌘Q' },
+  ]},
+  { label: 'Editar', items: [
+    { type: 'item', label: 'Desfazer', shortcut: '⌘Z' },
+    { type: 'item', label: 'Refazer',  shortcut: '⇧⌘Z' },
+  ]},
+  { label: 'Exibir', items: [
+    { type: 'label', label: 'Aparência' },
+    { type: 'item',  label: 'Modo escuro' },
+    { type: 'separator' },
+    { type: 'item',  label: 'Tela cheia', shortcut: 'F11' },
+  ]},
+  { label: 'Ajuda', items: [
+    { type: 'item', label: 'Documentação' },
+    { type: 'item', label: 'Sobre' },
+  ]},
+]);`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'menubar',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.withShortcuts.name')),
+              description: stripHtml(t('variants.compositions.withShortcuts.description')),
+              useWhen: stripHtml(t('variants.compositions.withShortcuts.use')),
+              code: codeWithShortcuts,
+              previewFactory: () => wrapPreview(
+                createMenubar([
+                  {
+                    label: 'Editar',
+                    items: [
+                      { type: 'item', label: 'Desfazer', shortcut: '⌘Z' },
+                      { type: 'item', label: 'Refazer',  shortcut: '⇧⌘Z' },
+                      { type: 'separator' },
+                      { type: 'item', label: 'Copiar',   shortcut: '⌘C' },
+                      { type: 'item', label: 'Colar',    shortcut: '⌘V' },
+                    ],
+                  },
+                ]),
+              ),
+            },
+            {
+              name: stripHtml(t('variants.compositions.withCheckbox.name')),
+              description: stripHtml(t('variants.compositions.withCheckbox.description')),
+              useWhen: stripHtml(t('variants.compositions.withCheckbox.use')),
+              code: codeWithCheckbox,
+              previewFactory: () => {
+                const bar = createMenubar([
+                  { label: 'Exibir', items: [{ type: 'label', label: 'Painéis' }] },
+                ]);
+                const panel = bar.querySelector<HTMLElement>('[role="menu"]');
+                if (panel) {
+                  injectCheckbox(panel, 'Sidebar', true);
+                  injectCheckbox(panel, 'Grid', false);
+                  injectCheckbox(panel, 'Régua', false);
+                }
+                return wrapPreview(bar);
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.withRadio.name')),
+              description: stripHtml(t('variants.compositions.withRadio.description')),
+              useWhen: stripHtml(t('variants.compositions.withRadio.use')),
+              code: codeWithRadio,
+              previewFactory: () => {
+                const bar = createMenubar([
+                  { label: 'Tema', items: [{ type: 'label', label: 'Aparência' }] },
+                ]);
+                const panel = bar.querySelector<HTMLElement>('[role="menu"]');
+                if (panel) {
+                  injectRadio(panel, 'Claro',   false);
+                  injectRadio(panel, 'Escuro',  true);
+                  injectRadio(panel, 'Sistema', false);
+                }
+                return wrapPreview(bar);
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.editorComplete.name')),
+              description: stripHtml(t('variants.compositions.editorComplete.description')),
+              useWhen: stripHtml(t('variants.compositions.editorComplete.use')),
+              code: codeEditorComplete,
+              previewFactory: () => wrapPreview(
+                createMenubar([
+                  { label: 'Arquivo', items: [
+                    { type: 'item', label: 'Novo',     shortcut: '⌘N' },
+                    { type: 'item', label: 'Abrir...', shortcut: '⌘O' },
+                    { type: 'item', label: 'Salvar',   shortcut: '⌘S' },
+                    { type: 'separator' },
+                    { type: 'item', label: 'Sair',     shortcut: '⌘Q' },
+                  ]},
+                  { label: 'Editar', items: [
+                    { type: 'item', label: 'Desfazer', shortcut: '⌘Z' },
+                    { type: 'item', label: 'Refazer',  shortcut: '⇧⌘Z' },
+                  ]},
+                  { label: 'Exibir', items: [
+                    { type: 'label', label: 'Aparência' },
+                    { type: 'item',  label: 'Modo escuro' },
+                    { type: 'separator' },
+                    { type: 'item',  label: 'Tela cheia', shortcut: 'F11' },
+                  ]},
+                  { label: 'Ajuda', items: [
+                    { type: 'item', label: 'Documentação' },
+                    { type: 'item', label: 'Sobre' },
+                  ]},
+                ]),
+              ),
             },
           ],
         });

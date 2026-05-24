@@ -24,10 +24,11 @@ type Story = StoryObj;
 
 function withLegend(group: HTMLElement, labelText: string, id: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'xs';
   const legend = document.createElement('p');
   legend.id = id;
-  legend.className = 'text-sm font-semibold';
+  legend.className = 'nds-text-body nds-font-semibold';
   legend.textContent = labelText;
   group.setAttribute('role', 'radiogroup');
   group.setAttribute('aria-labelledby', id);
@@ -84,8 +85,10 @@ export const FormaDeEntrega: Story = {
         { value: 'express', label: 'Expressa (1 dia)' },
         { value: 'pickup', label: 'Retirar na loja' },
       ],
-      class: 'grid-flow-col auto-cols-max gap-6',
     });
+    group.style.gridAutoFlow = 'column';
+    group.style.gridAutoColumns = 'max-content';
+    group.style.gap = '1.5rem';
     return withLegend(group, 'Forma de entrega', 'comp-delivery-legend');
   },
   parameters: {
@@ -109,11 +112,13 @@ export const FormaDeEntrega: Story = {
 export const ComDescricao: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2 w-80';
+    wrap.className = 'nds-stack';
+    wrap.dataset.spacing = 'xs';
+    wrap.style.width = '20rem';
 
     const legend = document.createElement('p');
     legend.id = 'comp-desc-legend';
-    legend.className = 'text-sm font-semibold';
+    legend.className = 'nds-text-body nds-font-semibold';
     legend.textContent = 'Forma de entrega';
 
     const items = [
@@ -133,17 +138,17 @@ export const ComDescricao: Story = {
     items.forEach((item, idx) => {
       const row = base.children[idx] as HTMLElement;
       if (!row) return;
-      row.classList.remove('items-center');
-      row.classList.add('items-start');
+      row.style.alignItems = 'flex-start';
 
       const label = row.querySelector('label');
       if (label) {
         const textGroup = document.createElement('div');
-        textGroup.className = 'flex flex-col gap-1';
+        textGroup.className = 'nds-stack';
+        textGroup.dataset.spacing = 'xs';
         label.replaceWith(textGroup);
-        label.className = 'text-sm font-medium leading-none cursor-pointer';
+        label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
         const desc = document.createElement('p');
-        desc.className = 'text-sm text-muted-foreground';
+        desc.className = 'nds-text-body nds-text-muted-foreground';
         desc.textContent = item.description;
         textGroup.append(label, desc);
       }
@@ -175,15 +180,21 @@ export const ComDescricao: Story = {
 export const EmFormulario: Story = {
   render: () => {
     const form = document.createElement('form');
-    form.className = 'flex flex-col gap-4 w-80 p-4 border rounded-lg';
+    form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';
+    form.dataset.spacing = 'md';
+    form.style.width = '20rem';
     form.noValidate = true;
 
     // Fieldset semântico com legend nativo
     const fs = document.createElement('fieldset');
-    fs.className = 'border-0 p-0 m-0 flex flex-col gap-2';
+    fs.className = 'nds-stack';
+    fs.dataset.spacing = 'xs';
+    fs.style.border = '0';
+    fs.style.padding = '0';
+    fs.style.margin = '0';
 
     const legend = document.createElement('legend');
-    legend.className = 'text-sm font-semibold mb-2';
+    legend.className = 'nds-text-body nds-font-semibold nds-mb-2';
     legend.textContent = 'Forma de pagamento';
     fs.appendChild(legend);
 
@@ -202,12 +213,13 @@ export const EmFormulario: Story = {
 
     const submit = document.createElement('button');
     submit.type = 'submit';
-    submit.className = 'btn btn-primary self-end';
+    submit.className = 'btn btn-primary';
+    submit.style.alignSelf = 'flex-end';
     submit.textContent = 'Continuar';
     form.appendChild(submit);
 
     const out = document.createElement('p');
-    out.className = 'text-sm text-muted-foreground';
+    out.className = 'nds-text-body nds-text-muted-foreground';
     out.dataset.testid = 'form-output';
     form.appendChild(out);
 

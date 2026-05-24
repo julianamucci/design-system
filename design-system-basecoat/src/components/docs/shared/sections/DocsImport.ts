@@ -1,5 +1,3 @@
-import { createCard } from '@/components/ui/card';
-
 export interface DocsImportProps {
   title: string;
   description?: string;
@@ -21,20 +19,20 @@ export function createDocsImport(props: DocsImportProps): HTMLElement {
   section.id = 'importacao';
 
   const h2 = document.createElement('h2');
-  h2.className = 'text-xl font-semibold mb-4';
+  h2.className = 'nds-section-title';
   h2.textContent = props.title;
   section.appendChild(h2);
 
   if (props.description) {
     const p = document.createElement('p');
-    p.className = 'text-sm text-muted-foreground mb-3';
+    p.className = 'nds-text-body nds-text-muted-foreground nds-mb-4';
     p.textContent = props.description;
     section.appendChild(p);
   }
 
-  const codeBlock = createCard({ className: 'bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none' });
+  const codeBlock = document.createElement('pre');
+  codeBlock.className = 'nds-code-block';
   const codeEl = document.createElement('code');
-  codeEl.className = 'whitespace-pre';
   codeEl.textContent = props.code;
   codeBlock.appendChild(codeEl);
   section.appendChild(codeBlock);
@@ -42,13 +40,13 @@ export function createDocsImport(props: DocsImportProps): HTMLElement {
   if (props.secondaryCode) {
     if (props.secondaryDescription) {
       const p2 = document.createElement('p');
-      p2.className = 'text-sm text-muted-foreground mt-4 mb-3';
+      p2.className = 'nds-text-body nds-text-muted-foreground nds-mt-4 nds-mb-4';
       p2.textContent = props.secondaryDescription;
       section.appendChild(p2);
     }
-    const codeBlock2 = createCard({ className: 'bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-3' });
+    const codeBlock2 = document.createElement('pre');
+    codeBlock2.className = 'nds-code-block nds-mt-2';
     const codeEl2 = document.createElement('code');
-    codeEl2.className = 'whitespace-pre';
     codeEl2.textContent = props.secondaryCode;
     codeBlock2.appendChild(codeEl2);
     section.appendChild(codeBlock2);

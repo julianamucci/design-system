@@ -26,6 +26,7 @@ const meta = {
       },
     },
   },
+  args: { ratio: 16 / 9 },
 } satisfies Meta<typeof AspectRatio>;
 
 export default meta;

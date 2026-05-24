@@ -35,7 +35,7 @@ function buildBoldIcon(): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'h-4 w-4');
+  svg.setAttribute('class', 'nds-icon-sm');
   for (const [tag, attrs] of Bold as unknown as LucideIconNode[]) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
@@ -46,7 +46,7 @@ function buildBoldIcon(): SVGSVGElement {
 
 function wrapBoldIcon(): HTMLSpanElement {
   const span = document.createElement('span');
-  span.className = 'inline-flex';
+  span.style.display = 'inline-flex';
   span.appendChild(buildBoldIcon());
   return span;
 }
@@ -144,16 +144,19 @@ export const DisabledOn: Story = {
 export const Invalid: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-1.5 items-start';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'xs';
+    wrapper.style.alignItems = 'flex-start';
 
     const btn = makeToggle({ pressed: false, ariaLabel: 'Aceitar termos' });
     btn.setAttribute('aria-invalid', 'true');
     btn.setAttribute('aria-describedby', 'toggle-invalid-msg');
-    btn.classList.add('border', 'border-destructive', 'ring-2', 'ring-destructive/20');
+    btn.classList.add('nds-border-destructive');
+    btn.style.boxShadow = '0 0 0 2px color-mix(in srgb, var(--destructive) 20%, transparent)';
 
     const msg = document.createElement('p');
     msg.id = 'toggle-invalid-msg';
-    msg.className = 'text-sm text-destructive';
+    msg.className = 'nds-text-body nds-text-destructive';
     msg.textContent = 'Você precisa ativar esta opção para continuar.';
 
     wrapper.append(btn, msg);

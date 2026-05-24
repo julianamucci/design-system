@@ -1,0 +1,79 @@
+/*
+ * ─── nds-checkbox ───────────────────────────────────────────────────────────
+ * Checkbox vanilla com semântica ARIA (role="checkbox") sobre <div>.
+ *
+ *   <div class="nds-checkbox" role="checkbox" tabindex="0"
+ *        aria-checked="false" data-state="unchecked">
+ *     <input type="checkbox" aria-hidden="true" ... />  ← native sr-only
+ *     <span class="nds-checkbox-indicator">              ← visual check
+ *       <svg>...</svg>
+ *     </span>
+ *   </div>
+ *
+ * Tokens: --primary, --primary-foreground, --input, --border, --ring,
+ *         --destructive, --background, --radius-sm
+ */
+
+.nds-checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: var(--spacing-4);                      /* 16px */
+  height: var(--spacing-4);
+
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: 0.25rem;                        /* 4px — radius-sm */
+  cursor: pointer;
+  outline: 0;
+  transition: background-color 150ms, border-color 150ms, box-shadow 150ms;
+}
+
+.nds-checkbox:focus-visible {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+}
+
+.nds-checkbox[data-state="checked"] {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.nds-checkbox[aria-disabled="true"],
+.nds-checkbox:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.nds-checkbox[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
+}
+
+.nds-checkbox[aria-invalid="true"]:focus-visible {
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.3);
+}
+
+/* ── Indicator ───────────────────────────────────────────────────────────── */
+.nds-checkbox-indicator {
+  display: grid;
+  place-content: center;
+  color: currentColor;
+}
+
+.nds-checkbox-indicator > svg {
+  width: 0.875rem;                              /* 14px */
+  height: 0.875rem;
+}
+
+/* Native input visualmente oculto (mas presente para forms) */
+.nds-checkbox > input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}

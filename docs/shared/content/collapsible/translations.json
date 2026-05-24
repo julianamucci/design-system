@@ -90,6 +90,29 @@
       "items": {
         "controlled": "Modo controlado: estado externo combinado com callback de mudança. Use quando o estado influencia outros elementos da UI ou precisa ser sincronizado externamente.",
         "uncontrolled": "Modo não-controlado: <code>defaultOpen</code>. Use quando a seção é independente e o estado interno é suficiente."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "customButton": {
+          "name": "Com botão customizado",
+          "description": "Trigger passado como <code>HTMLButtonElement</code> totalmente estilizado pelo consumidor. O Collapsible apenas adiciona <code>aria-expanded</code>, <code>aria-controls</code> e <code>data-state</code>.",
+          "use": "Quando o trigger precisa de visual específico (ex.: botão outlined com hover de accent). Mantém total liberdade visual."
+        },
+        "iconTrigger": {
+          "name": "Com ícone no trigger",
+          "description": "Ícone SVG antes do label dentro do trigger (ex.: <code>Filter</code>, <code>Settings</code>). Marque o ícone com <code>aria-hidden=\"true\"</code> — o texto descreve a ação.",
+          "use": "Painéis de filtros, configurações, áreas avançadas — ícones reforçam o tipo de conteúdo escondido."
+        },
+        "rotatingChevron": {
+          "name": "Com chevron rotativo",
+          "description": "Trigger com layout <code>justify-between</code> contendo label à esquerda e <code>ChevronDown</code> à direita. A rotação de 180° é aplicada via seletor CSS de <code>[data-state=\"open\"]</code>.",
+          "use": "Padrão visual quando o trigger ocupa a largura inteira (configurações em coluna, listas de FAQ). Reforça o feedback de \"clique pra abrir\"."
+        },
+        "richContent": {
+          "name": "Conteúdo rico (formulário)",
+          "description": "CollapsibleContent acepta qualquer HTML — incluindo formulários com checkboxes, inputs e textareas. Útil para configurações raramente acessadas.",
+          "use": "Configurações avançadas, opções de exportação, formulários secundários que poluiriam a tela se sempre visíveis."
+        }
       }
     },
     "states": {
@@ -366,6 +389,29 @@
       "items": {
         "controlled": "Controlled mode: external state combined with a change callback. Use when the state affects other UI elements or needs external synchronization.",
         "uncontrolled": "Uncontrolled mode: <code>defaultOpen</code>. Use when the section is independent and internal state is sufficient."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "customButton": {
+          "name": "With custom button",
+          "description": "Trigger passed as a fully consumer-styled <code>HTMLButtonElement</code>. The Collapsible only adds <code>aria-expanded</code>, <code>aria-controls</code>, and <code>data-state</code>.",
+          "use": "When the trigger needs specific styling (e.g., outlined button with accent hover). Full visual freedom retained."
+        },
+        "iconTrigger": {
+          "name": "With icon in trigger",
+          "description": "SVG icon before the label inside the trigger (e.g., <code>Filter</code>, <code>Settings</code>). Mark the icon with <code>aria-hidden=\"true\"</code> — the text describes the action.",
+          "use": "Filter panels, settings, advanced areas — icons reinforce the type of hidden content."
+        },
+        "rotatingChevron": {
+          "name": "With rotating chevron",
+          "description": "Trigger with <code>justify-between</code> layout containing label on the left and <code>ChevronDown</code> on the right. The 180° rotation is applied via a CSS <code>[data-state=\"open\"]</code> selector.",
+          "use": "Visual default when the trigger spans the full width (settings columns, FAQ lists). Reinforces the \"click to open\" feedback."
+        },
+        "richContent": {
+          "name": "Rich content (form)",
+          "description": "CollapsibleContent accepts any HTML — including forms with checkboxes, inputs, and textareas. Useful for rarely-accessed settings.",
+          "use": "Advanced settings, export options, secondary forms that would clutter the screen if always visible."
+        }
       }
     },
     "states": {
@@ -642,6 +688,29 @@
       "items": {
         "controlled": "Modo controlado: estado externo combinado con un callback de cambio. Úsalo cuando el estado afecta otros elementos de la UI o necesita sincronizarse externamente.",
         "uncontrolled": "Modo no controlado: <code>defaultOpen</code>. Úsalo cuando la sección es independiente y el estado interno es suficiente."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "customButton": {
+          "name": "Con botón personalizado",
+          "description": "Trigger pasado como <code>HTMLButtonElement</code> totalmente estilizado por el consumidor. El Collapsible solo agrega <code>aria-expanded</code>, <code>aria-controls</code> y <code>data-state</code>.",
+          "use": "Cuando el trigger necesita un estilo específico (ej.: botón outlined con hover de accent). Mantiene total libertad visual."
+        },
+        "iconTrigger": {
+          "name": "Con ícono en el trigger",
+          "description": "Ícono SVG antes del label dentro del trigger (ej.: <code>Filter</code>, <code>Settings</code>). Marca el ícono con <code>aria-hidden=\"true\"</code> — el texto describe la acción.",
+          "use": "Paneles de filtros, configuraciones, áreas avanzadas — los íconos refuerzan el tipo de contenido oculto."
+        },
+        "rotatingChevron": {
+          "name": "Con chevron rotativo",
+          "description": "Trigger con layout <code>justify-between</code> que contiene label a la izquierda y <code>ChevronDown</code> a la derecha. La rotación de 180° se aplica vía un selector CSS de <code>[data-state=\"open\"]</code>.",
+          "use": "Patrón visual cuando el trigger ocupa todo el ancho (configuraciones en columna, listas de FAQ). Refuerza el feedback de \"clic para abrir\"."
+        },
+        "richContent": {
+          "name": "Contenido enriquecido (formulario)",
+          "description": "CollapsibleContent acepta cualquier HTML — incluyendo formularios con checkboxes, inputs y textareas. Útil para configuraciones poco accedidas.",
+          "use": "Configuraciones avanzadas, opciones de exportación, formularios secundarios que abarrotarían la pantalla si estuvieran siempre visibles."
+        }
       }
     },
     "states": {

@@ -1,0 +1,71 @@
+/*
+ * ─── nds-switch ─────────────────────────────────────────────────────────────
+ * Toggle binário (liga/desliga) com aparência de switch físico.
+ *
+ *   <button class="nds-switch" role="switch" aria-checked="false"
+ *           data-state="unchecked">
+ *     <span class="nds-switch-thumb" data-state="unchecked"></span>
+ *   </button>
+ *
+ * Track: 36×20px (grid-8 mais bonus 4px). Thumb: 16×16px (grid-8).
+ *
+ * Tokens: --primary (track on), --input (track off), --background (thumb),
+ *         --ring, --spacing-*
+ */
+
+.nds-switch {
+  display: inline-flex;
+  align-items: center;
+
+  width: calc(var(--spacing-8) + var(--spacing-1));   /* 32 + 4 = 36px */
+  height: var(--spacing-5, 1.25rem);                  /* 20px */
+  padding: 2px;
+
+  background-color: hsl(var(--input, var(--border)));
+  border: 0;
+  border-radius: 9999px;
+  cursor: pointer;
+  outline: 0;
+  transition: background-color 200ms;
+}
+
+.nds-switch:focus-visible {
+  box-shadow:
+    0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--ring) / 0.5);
+}
+
+.nds-switch[data-state="checked"] {
+  background-color: hsl(var(--primary));
+}
+
+.nds-switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ── Thumb ───────────────────────────────────────────────────────────────── */
+.nds-switch-thumb {
+  display: block;
+  width: var(--spacing-4);                            /* 16px */
+  height: var(--spacing-4);
+
+  background-color: hsl(var(--background));
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px hsl(0 0% 0% / 0.2);
+  pointer-events: none;
+
+  transform: translateX(0);
+  transition: transform 200ms;
+}
+
+.nds-switch-thumb[data-state="checked"] {
+  transform: translateX(var(--spacing-4));            /* 16px deslocamento */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-switch,
+  .nds-switch-thumb {
+    transition: none;
+  }
+}

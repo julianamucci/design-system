@@ -1,0 +1,87 @@
+/*
+ * ─── nds-input-otp ──────────────────────────────────────────────────────────
+ * Input de código OTP (One-Time Password) com slots individuais conectados.
+ *
+ *   <div class="nds-input-otp" role="group" aria-label="One-time password input">
+ *     <input class="nds-input-otp-slot" type="text" inputmode="numeric" maxlength="1" />
+ *     <input class="nds-input-otp-slot" type="text" inputmode="numeric" maxlength="1" />
+ *     <div class="nds-input-otp-separator">—</div>
+ *     <input class="nds-input-otp-slot" type="text" inputmode="numeric" maxlength="1" />
+ *     <input class="nds-input-otp-slot" type="text" inputmode="numeric" maxlength="1" />
+ *   </div>
+ *
+ * Tokens: --input, --background, --foreground, --muted-foreground, --ring,
+ *         --radius, --spacing-*
+ */
+
+.nds-input-otp {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);                          /* 8px entre grupos com separador */
+}
+
+/* ── Slot (cada input de 1 caractere) ────────────────────────────────────── */
+.nds-input-otp-slot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: var(--spacing-9, 2.25rem);               /* 36px */
+  height: var(--spacing-9, 2.25rem);
+  padding: 0;
+
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border-block: 1px solid hsl(var(--input, var(--border)));
+  border-inline-end: 1px solid hsl(var(--input, var(--border)));
+  border-inline-start: 0;
+  font-family: inherit;
+  font-size: 0.875rem;                            /* 14px */
+  text-align: center;
+  outline: 0;
+  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+  transition: box-shadow 150ms, border-color 150ms;
+}
+
+/* Primeiro slot do grupo (mesmo após separator): borda esquerda + radius esquerdo */
+.nds-input-otp > .nds-input-otp-slot:first-child,
+.nds-input-otp-separator + .nds-input-otp-slot {
+  border-inline-start: 1px solid hsl(var(--input, var(--border)));
+  border-start-start-radius: var(--radius, 0.5rem);
+  border-end-start-radius: var(--radius, 0.5rem);
+}
+
+/* Último slot do grupo (antes de separator ou no fim): radius direito */
+.nds-input-otp > .nds-input-otp-slot:last-child,
+.nds-input-otp-slot:has(+ .nds-input-otp-separator) {
+  border-start-end-radius: var(--radius, 0.5rem);
+  border-end-end-radius: var(--radius, 0.5rem);
+}
+
+.nds-input-otp-slot:focus {
+  z-index: 1;
+  box-shadow: 0 0 0 1px hsl(var(--ring));
+  border-color: hsl(var(--ring));
+}
+
+.nds-input-otp-slot:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Separator (— entre grupos) ──────────────────────────────────────────── */
+.nds-input-otp-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--muted-foreground));
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-input-otp-slot {
+    transition: none;
+  }
+}

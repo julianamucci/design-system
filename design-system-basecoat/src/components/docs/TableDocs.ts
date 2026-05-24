@@ -13,6 +13,10 @@ import {
   createTableCell,
   createTableCaption,
 } from '@/components/ui/table';
+import { createButton } from '@/components/ui/button';
+import { createCheckbox } from '@/components/ui/checkbox';
+import { createInput } from '@/components/ui/input';
+import { createPagination } from '@/components/ui/pagination';
 import uiTranslations from '@/i18n/ui.json';
 import tableTranslations from '@shared/content/table/translations.json';
 
@@ -24,6 +28,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -132,6 +137,7 @@ export function createTableDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -182,7 +188,7 @@ export function createTableDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -340,7 +346,9 @@ export function createTableDocs(): HTMLElement {
                 table.appendChild(thead);
                 const tbody = createTableBody();
                 const emptyRow = createTableRow();
-                const emptyCell = createTableCell('Nenhuma fatura encontrada.', 'h-16 text-center text-muted-foreground');
+                const emptyCell = createTableCell('Nenhuma fatura encontrada.', 'nds-text-muted-foreground');
+                emptyCell.style.height = '4rem';
+                emptyCell.style.textAlign = 'center';
                 emptyCell.setAttribute('colspan', '1');
                 emptyRow.appendChild(emptyCell);
                 tbody.appendChild(emptyRow);
@@ -512,6 +520,236 @@ export function createTableDocs(): HTMLElement {
                 table.appendChild(tbody);
                 return wrapper;
               },
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        const codeFilterableToolbar = `const container = document.createElement('div');
+container.className = 'nds-stack';
+container.dataset.spacing = 'sm';
+
+const toolbar = document.createElement('div');
+toolbar.className = 'nds-cluster';
+toolbar.dataset.spacing = 'xs';
+
+const input = createInput({ placeholder: 'Filtrar faturas...' });
+toolbar.appendChild(input);
+
+const filterBtn = createButton({ variant: 'outline', label: 'Status' });
+toolbar.appendChild(filterBtn);
+
+container.appendChild(toolbar);
+
+const { wrapper, table } = createTable();
+// ... cabeçalho + corpo filtrado
+container.appendChild(wrapper);`;
+
+        const codeSortableHeaders = `const th = createTableHead('');
+th.setAttribute('scope', 'col');
+th.setAttribute('aria-sort', 'ascending');
+
+const sortBtn = createButton({ variant: 'ghost', size: 'sm', label: 'Fatura' });
+// adicione ícone chevron via SVG/innerHTML com aria-hidden="true"
+th.appendChild(sortBtn);`;
+
+        const codeSelectableRows = `// Cabeçalho com checkbox mestre
+const headRow = createTableRow();
+const masterCell = createTableHead('');
+masterCell.setAttribute('scope', 'col');
+masterCell.appendChild(createCheckbox({ 'aria-label': 'Selecionar todas as linhas' }));
+headRow.appendChild(masterCell);
+// ...demais headers
+
+// Linha selecionável
+const tr = createTableRow();
+tr.dataset.state = 'selected';
+const cell = createTableCell('');
+cell.appendChild(createCheckbox({ checked: true, 'aria-label': \`Selecionar fatura \${inv.id}\` }));
+tr.appendChild(cell);`;
+
+        const codeWithPagination = `const container = document.createElement('div');
+container.className = 'nds-stack';
+container.dataset.spacing = 'sm';
+
+const { wrapper, table } = createTable();
+// ... popula table
+container.appendChild(wrapper);
+
+const pagination = createPagination({
+  total: 5,
+  current: 1,
+  onPageChange: (page) => render(page),
+});
+container.appendChild(pagination);`;
+
+        function buildFilterableToolbarPreview(): HTMLElement {
+          const container = document.createElement('div');
+          container.className = 'nds-stack nds-w-full';
+          container.dataset.spacing = 'sm';
+
+          const toolbar = document.createElement('div');
+          toolbar.className = 'nds-cluster';
+          toolbar.dataset.spacing = 'xs';
+          const input = createInput({ placeholder: 'Filtrar faturas...', class: 'nds-max-w-sm' });
+          toolbar.appendChild(input);
+          const filterBtn = createButton({ variant: 'outline', label: 'Status' });
+          toolbar.appendChild(filterBtn);
+          container.appendChild(toolbar);
+
+          const { wrapper, table } = createTable();
+          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'sr-only'));
+          const thead = createTableHeader();
+          const headerRow = createTableRow();
+          for (const key of ['invoice', 'status', 'amount'] as const) {
+            const th = createTableHead(t(`demonstration.labels.${key}`));
+            th.setAttribute('scope', 'col');
+            headerRow.appendChild(th);
+          }
+          thead.appendChild(headerRow);
+          table.appendChild(thead);
+          const tbody = createTableBody();
+          for (const inv of invoices.slice(0, 2)) {
+            const row = createTableRow();
+            row.appendChild(createTableCell(inv.id));
+            row.appendChild(createTableCell(inv.status()));
+            row.appendChild(createTableCell(inv.amount()));
+            tbody.appendChild(row);
+          }
+          table.appendChild(tbody);
+          container.appendChild(wrapper);
+          return container;
+        }
+
+        function buildSortableHeadersPreview(): HTMLElement {
+          const { wrapper, table } = createTable();
+          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'sr-only'));
+          const thead = createTableHeader();
+          const headerRow = createTableRow();
+          const colDefs: Array<{ label: string; sort: 'ascending' | 'none' }> = [
+            { label: t('demonstration.labels.invoice'), sort: 'ascending' },
+            { label: t('demonstration.labels.status'), sort: 'none' },
+            { label: t('demonstration.labels.amount'), sort: 'none' },
+          ];
+          for (const col of colDefs) {
+            const th = createTableHead('');
+            th.setAttribute('scope', 'col');
+            th.setAttribute('aria-sort', col.sort);
+            const btn = createButton({ variant: 'ghost', size: 'sm', label: col.label });
+            btn.style.marginLeft = '-0.5rem';
+            btn.style.height = '2rem';
+            th.appendChild(btn);
+            headerRow.appendChild(th);
+          }
+          thead.appendChild(headerRow);
+          table.appendChild(thead);
+          const tbody = createTableBody();
+          for (const inv of invoices.slice(0, 2)) {
+            const row = createTableRow();
+            row.appendChild(createTableCell(inv.id));
+            row.appendChild(createTableCell(inv.status()));
+            row.appendChild(createTableCell(inv.amount()));
+            tbody.appendChild(row);
+          }
+          table.appendChild(tbody);
+          return wrapper;
+        }
+
+        function buildSelectableRowsPreview(): HTMLElement {
+          const { wrapper, table } = createTable();
+          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'sr-only'));
+          const thead = createTableHeader();
+          const headerRow = createTableRow();
+          const masterCell = createTableHead('');
+          masterCell.setAttribute('scope', 'col');
+          masterCell.style.width = '2.5rem';
+          masterCell.appendChild(createCheckbox({ 'aria-label': 'Selecionar todas as linhas' }));
+          headerRow.appendChild(masterCell);
+          for (const key of ['invoice', 'status', 'amount'] as const) {
+            const th = createTableHead(t(`demonstration.labels.${key}`));
+            th.setAttribute('scope', 'col');
+            headerRow.appendChild(th);
+          }
+          thead.appendChild(headerRow);
+          table.appendChild(thead);
+          const tbody = createTableBody();
+          invoices.slice(0, 3).forEach((inv, i) => {
+            const row = createTableRow();
+            if (i === 0) row.dataset.state = 'selected';
+            const cb = createTableCell('');
+            cb.appendChild(createCheckbox({ checked: i === 0, 'aria-label': `Selecionar fatura ${inv.id}` }));
+            row.appendChild(cb);
+            row.appendChild(createTableCell(inv.id));
+            row.appendChild(createTableCell(inv.status()));
+            row.appendChild(createTableCell(inv.amount()));
+            tbody.appendChild(row);
+          });
+          table.appendChild(tbody);
+          return wrapper;
+        }
+
+        function buildWithPaginationPreview(): HTMLElement {
+          const container = document.createElement('div');
+          container.className = 'nds-stack nds-w-full';
+          container.dataset.spacing = 'sm';
+          const { wrapper, table } = createTable();
+          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'sr-only'));
+          const thead = createTableHeader();
+          const headerRow = createTableRow();
+          for (const key of ['invoice', 'status', 'amount'] as const) {
+            const th = createTableHead(t(`demonstration.labels.${key}`));
+            th.setAttribute('scope', 'col');
+            headerRow.appendChild(th);
+          }
+          thead.appendChild(headerRow);
+          table.appendChild(thead);
+          const tbody = createTableBody();
+          for (const inv of invoices.slice(0, 2)) {
+            const row = createTableRow();
+            row.appendChild(createTableCell(inv.id));
+            row.appendChild(createTableCell(inv.status()));
+            row.appendChild(createTableCell(inv.amount()));
+            tbody.appendChild(row);
+          }
+          table.appendChild(tbody);
+          container.appendChild(wrapper);
+          container.appendChild(createPagination({ total: 5, current: 1, onPageChange: () => {} }));
+          return container;
+        }
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'table',
+          items: [
+            {
+              name: t('variants.compositions.filterableToolbar.name'),
+              description: sanitizeHtml(t('variants.compositions.filterableToolbar.description')),
+              useWhen: sanitizeHtml(t('variants.compositions.filterableToolbar.use')),
+              code: codeFilterableToolbar,
+              previewFactory: buildFilterableToolbarPreview,
+            },
+            {
+              name: t('variants.compositions.sortableHeaders.name'),
+              description: sanitizeHtml(t('variants.compositions.sortableHeaders.description')),
+              useWhen: sanitizeHtml(t('variants.compositions.sortableHeaders.use')),
+              code: codeSortableHeaders,
+              previewFactory: buildSortableHeadersPreview,
+            },
+            {
+              name: t('variants.compositions.selectableRows.name'),
+              description: sanitizeHtml(t('variants.compositions.selectableRows.description')),
+              useWhen: sanitizeHtml(t('variants.compositions.selectableRows.use')),
+              code: codeSelectableRows,
+              previewFactory: buildSelectableRowsPreview,
+            },
+            {
+              name: t('variants.compositions.withPagination.name'),
+              description: sanitizeHtml(t('variants.compositions.withPagination.description')),
+              useWhen: sanitizeHtml(t('variants.compositions.withPagination.use')),
+              code: codeWithPagination,
+              previewFactory: buildWithPaginationPreview,
             },
           ],
         });

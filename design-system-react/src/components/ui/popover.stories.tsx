@@ -51,13 +51,7 @@ const meta = {
     defaultOpen: false,
     modal: false,
   },
-} satisfies Meta<
-  typeof Popover & {
-    side?: "top" | "bottom" | "left" | "right";
-    align?: "start" | "center" | "end";
-    sideOffset?: number;
-  }
->;
+} as Meta<typeof Popover>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -9,7 +9,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -52,6 +52,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -373,6 +374,60 @@ interface CalendarProps {
     <CalendarStory variant="captionDropdown" locale={previewLocale} />
   {/snippet}
   {#snippet variantTwoMonths()}
+    <CalendarStory variant="twoMonths" locale={previewLocale} />
+  {/snippet}
+
+  <!-- ── Composições ─────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="calendar"
+    items={[
+      {
+        name: $tStore('variants.compositions.inlineBordered.name'),
+        description: $tStore('variants.compositions.inlineBordered.description'),
+        useWhen: $tStore('variants.compositions.inlineBordered.use'),
+        code: `<div class="rounded-md border">
+  <Calendar type="single" bind:value locale="pt-BR" />
+</div>`,
+        preview: compInline,
+      },
+      {
+        name: $tStore('variants.compositions.disabledPast.name'),
+        description: $tStore('variants.compositions.disabledPast.description'),
+        useWhen: $tStore('variants.compositions.disabledPast.use'),
+        code: `<Calendar
+  type="single"
+  bind:value
+  locale="pt-BR"
+  isDateDisabled={(d) => d.compare(today(getLocalTimeZone())) < 0}
+/>`,
+        preview: compDisabledPast,
+      },
+      {
+        name: $tStore('variants.compositions.rangeTwoMonths.name'),
+        description: $tStore('variants.compositions.rangeTwoMonths.description'),
+        useWhen: $tStore('variants.compositions.rangeTwoMonths.use'),
+        code: `<Calendar
+  type="single"
+  bind:value
+  locale="pt-BR"
+  numberOfMonths={2}
+/>`,
+        preview: compTwoMonths,
+      },
+    ]}
+  />
+
+  {#snippet compInline()}
+    <div class="rounded-md border">
+      <CalendarStory variant="single" locale={previewLocale} />
+    </div>
+  {/snippet}
+  {#snippet compDisabledPast()}
+    <CalendarStory variant="disabled" locale={previewLocale} />
+  {/snippet}
+  {#snippet compTwoMonths()}
     <CalendarStory variant="twoMonths" locale={previewLocale} />
   {/snippet}
 

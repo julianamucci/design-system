@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── HoverCard — Vanilla factory standalone ─────────────────────────────────
+// Visual: classe .nds-hover-card-content (zero Tailwind/basecoat-css).
+// Mostra ao hover do trigger; mantém aberto enquanto mouse está sobre o painel.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -94,10 +96,8 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement {
     panelEl = document.createElement('div');
     panelEl.id = cardId;
     panelEl.setAttribute('role', 'dialog');
-    panelEl.className = cn(
-      'z-50 w-80 rounded-md border bg-popover p-4 text-popover-foreground shadow-md',
-      options.class
-    );
+    panelEl.className = 'nds-hover-card-content';
+    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
     panelEl.dataset.slot = 'hover-card-content';
     panelEl.style.position = 'absolute';
     panelEl.appendChild(content);

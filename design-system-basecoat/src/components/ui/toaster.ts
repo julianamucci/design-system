@@ -22,15 +22,13 @@ export function mountToaster(options: ToasterOptions = {}): MountedToaster {
     if (id) {
       const el = toasterEl.querySelector<HTMLElement>(`#${id}`);
       if (el) {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(8px)';
+        el.dataset.visible = 'false';
         setTimeout(() => el.remove(), 200);
       }
     } else {
       // Dismiss all
       Array.from(toasterEl.children).forEach((child) => {
-        (child as HTMLElement).style.opacity = '0';
-        (child as HTMLElement).style.transform = 'translateY(8px)';
+        (child as HTMLElement).dataset.visible = 'false';
         setTimeout(() => child.remove(), 200);
       });
     }

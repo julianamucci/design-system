@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -98,6 +99,7 @@ export function createPaginationDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -141,7 +143,7 @@ export function createPaginationDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -156,7 +158,9 @@ export function createPaginationDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'flex items-center justify-center w-full min-h-[120px] p-2';
+            wrap.className = 'nds-cluster nds-w-full nds-p-2';
+            wrap.dataset.justify = 'center';
+            wrap.style.minHeight = '120px';
             wrap.appendChild(buildDemoPagination(10, 3));
             return wrap;
           },
@@ -227,32 +231,41 @@ export function createPaginationDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-center justify-center min-h-[80px]';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '80px';
                 wrap.appendChild(buildDemoPagination(12, 6));
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-center justify-center min-h-[80px]';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '80px';
                 // Don't: muitos números seguidos sem ellipsis (composição manual).
                 const nav = document.createElement('nav');
                 nav.setAttribute('role', 'navigation');
                 nav.setAttribute('aria-label', 'Pagination (anti-padrão)');
-                nav.className = 'mx-auto flex w-full justify-center';
+                nav.className = 'nds-cluster nds-w-full';
+                nav.dataset.justify = 'center';
+                nav.style.marginInline = 'auto';
                 const ul = document.createElement('ul');
-                ul.className = 'flex flex-row items-center gap-1 flex-wrap';
+                ul.className = 'nds-cluster';
+                ul.dataset.spacing = 'xs';
+                ul.style.flexWrap = 'wrap';
                 for (let i = 1; i <= 14; i++) {
                   const li = document.createElement('li');
-                  li.className = 'list-none';
+                  li.className = 'nds-list-none';
                   const a = document.createElement('a');
                   a.href = '#';
                   a.className =
-                    'inline-flex items-center justify-center rounded-md text-sm font-medium h-9 w-9 hover:bg-accent';
+                    'nds-rounded-md nds-text-body nds-font-medium nds-hover-bg-accent';
+                  a.style.cssText += ';display:inline-flex;align-items:center;justify-content:center;height:2.25rem;width:2.25rem;';
                   a.textContent = String(i);
                   if (i === 7) {
                     a.setAttribute('aria-current', 'page');
-                    a.className += ' border';
+                    a.classList.add('nds-border-default');
                   }
                   a.addEventListener('click', (e) => e.preventDefault());
                   li.appendChild(a);
@@ -271,27 +284,35 @@ export function createPaginationDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-center justify-center min-h-[80px]';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '80px';
                 wrap.appendChild(buildDemoPagination(5, 2));
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-center justify-center min-h-[80px]';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '80px';
                 // Don't: setas sem aria-label (composição manual).
                 const nav = document.createElement('nav');
                 nav.setAttribute('role', 'navigation');
-                nav.className = 'mx-auto flex w-full justify-center';
+                nav.className = 'nds-cluster nds-w-full';
+                nav.dataset.justify = 'center';
+                nav.style.marginInline = 'auto';
                 const ul = document.createElement('ul');
-                ul.className = 'flex flex-row items-center gap-1';
+                ul.className = 'nds-cluster';
+                ul.dataset.spacing = 'xs';
                 ['<', '1', '2', '3', '>'].forEach((label) => {
                   const li = document.createElement('li');
-                  li.className = 'list-none';
+                  li.className = 'nds-list-none';
                   const a = document.createElement('a');
                   a.href = '#';
                   a.className =
-                    'inline-flex items-center justify-center rounded-md text-sm font-medium h-9 w-9 hover:bg-accent';
+                    'nds-rounded-md nds-text-body nds-font-medium nds-hover-bg-accent';
+                  a.style.cssText += ';display:inline-flex;align-items:center;justify-content:center;height:2.25rem;width:2.25rem;';
                   a.textContent = label;
                   a.addEventListener('click', (e) => e.preventDefault());
                   li.appendChild(a);
@@ -346,7 +367,9 @@ const nav = createPagination({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-center justify-center min-h-[80px]';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '80px';
                 wrap.appendChild(buildDemoPagination(5, 2));
                 return wrap;
               },
@@ -358,11 +381,13 @@ const nav = createPagination({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-center justify-center min-h-[80px]';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '80px';
                 const pag = buildDemoPagination(5, 3);
                 // realça visualmente o link aria-current="page" com border-outline para parity de variant
                 const current = pag.querySelector<HTMLAnchorElement>('a[aria-current="page"]');
-                if (current) current.classList.add('border', 'border-input');
+                if (current) current.classList.add('nds-border-default');
                 wrap.appendChild(pag);
                 return wrap;
               },
@@ -374,7 +399,9 @@ const nav = createPagination({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-center justify-center min-h-[80px]';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '80px';
                 wrap.appendChild(buildDemoPagination(10, 1));
                 return wrap;
               },
@@ -382,6 +409,154 @@ const nav = createPagination({
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'pagination',
+          items: [
+            {
+              name: t('variants.compositions.simple.name'),
+              description: t('variants.compositions.simple.description'),
+              useWhen: t('variants.compositions.simple.use'),
+              code:
+                `const nav = createPagination({\n` +
+                `  total: 5,\n` +
+                `  current: 1,\n` +
+                `  showPrevNext: true,\n` +
+                `  onPageChange: (page) => console.log('page', page),\n` +
+                `});`,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.style.contain = 'layout';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '80px';
+                wrap.appendChild(createPagination({
+                  total: 5,
+                  current: 1,
+                  showPrevNext: true,
+                  onPageChange: () => {},
+                }));
+                return wrap;
+              },
+            },
+            {
+              name: t('variants.compositions.withEllipsis.name'),
+              description: t('variants.compositions.withEllipsis.description'),
+              useWhen: t('variants.compositions.withEllipsis.use'),
+              code:
+                `const nav = createPagination({\n` +
+                `  total: 12,\n` +
+                `  current: 6,\n` +
+                `  showPrevNext: true,\n` +
+                `  onPageChange: (page) => console.log('page', page),\n` +
+                `});`,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.style.contain = 'layout';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '80px';
+                wrap.appendChild(createPagination({
+                  total: 12,
+                  current: 6,
+                  showPrevNext: true,
+                  onPageChange: () => {},
+                }));
+                return wrap;
+              },
+            },
+            {
+              name: t('variants.compositions.lastPage.name'),
+              description: t('variants.compositions.lastPage.description'),
+              useWhen: t('variants.compositions.lastPage.use'),
+              code:
+                `const nav = createPagination({\n` +
+                `  total: 10,\n` +
+                `  current: 10,\n` +
+                `  showPrevNext: true,\n` +
+                `  onPageChange: (page) => console.log('page', page),\n` +
+                `});\n` +
+                `// Next fica desabilitado automaticamente em current=total.`,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.style.contain = 'layout';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '80px';
+                wrap.appendChild(createPagination({
+                  total: 10,
+                  current: 10,
+                  showPrevNext: true,
+                  onPageChange: () => {},
+                }));
+                return wrap;
+              },
+            },
+            {
+              name: t('variants.compositions.interactive.name'),
+              description: t('variants.compositions.interactive.description'),
+              useWhen: t('variants.compositions.interactive.use'),
+              code:
+                `let current = 3;\n` +
+                `const total = 8;\n` +
+                `const wrapper = document.createElement('div');\n` +
+                `wrapper.className = 'nds-stack';\n` +
+                `wrapper.dataset.spacing = 'sm';\n` +
+                `wrapper.style.alignItems = 'center';\n` +
+                `const status = document.createElement('p');\n` +
+                `const navContainer = document.createElement('div');\n` +
+                `function rerender() {\n` +
+                `  status.textContent = \`Página \${current} de \${total}\`;\n` +
+                `  navContainer.replaceChildren(createPagination({\n` +
+                `    total,\n` +
+                `    current,\n` +
+                `    showPrevNext: true,\n` +
+                `    onPageChange: (page) => { current = page; rerender(); },\n` +
+                `  }));\n` +
+                `}\n` +
+                `wrapper.append(status, navContainer);\n` +
+                `rerender();`,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.style.contain = 'layout';
+                wrap.className = 'nds-cluster';
+            wrap.dataset.justify = 'center';
+            wrap.style.minHeight = '120px';
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack';
+                wrapper.dataset.spacing = 'sm';
+                wrapper.style.alignItems = 'center';
+
+                const status = document.createElement('p');
+                status.className = 'nds-text-body nds-text-muted-foreground';
+
+                const navContainer = document.createElement('div');
+
+                let current = 3;
+                const total = 8;
+
+                const rerender = () => {
+                  status.textContent = `Página ${current} de ${total}`;
+                  navContainer.replaceChildren(createPagination({
+                    total,
+                    current,
+                    showPrevNext: true,
+                    onPageChange: (page: number) => { current = page; rerender(); },
+                  }));
+                };
+
+                wrapper.append(status, navContainer);
+                rerender();
+                wrap.appendChild(wrapper);
+                return wrap;
+              },
+            },
+          ],
+        });
 
       case 'estados': {
         const locale = getLocale();

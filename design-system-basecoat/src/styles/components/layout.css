@@ -1,0 +1,357 @@
+/*
+ * ─── Layout primitives ───────────────────────────────────────────────────────
+ * Pequeno conjunto de classes nomeadas pela INTENÇÃO de layout, cada uma
+ * resolvendo um problema único. Consumidores compõem por aninhamento, não
+ * por dezenas de utilities por elemento.
+ *
+ * Inspirado em Every Layout (every-layout.dev), adaptado aos tokens do projeto.
+ *
+ * Convenções:
+ *   - Configuração via data-spacing="xs|sm|md|lg|xl" + custom properties
+ *     locais, nunca via class modifier (ex.: NÃO usar .nds-stack-lg)
+ *   - Sempre consome --spacing-* (grid 8), nunca px/rem hardcoded
+ *   - Sem media queries explícitas — usa clamp/min/max e container-query-like
+ *     properties (flex-wrap, auto-fit) para adaptar a qualquer viewport
+ */
+
+
+/* ── nds-page ──────────────────────────────────────────────────────────────
+ * Wrapper top-level de qualquer página. Define max-width, padding lateral
+ * e ritmo vertical entre seções top-level (via stack interno).
+ *
+ *   <div class="nds-page">
+ *     <header>…</header>
+ *     <main>…</main>
+ *     <footer>…</footer>
+ *   </div>
+ *
+ * Tokens: --page-max-width, --page-padding-x, --page-gap
+ */
+.nds-page {
+  --page-max-width: 64rem;            /* 1024px — legibilidade ótima */
+  --page-padding-x: var(--spacing-4); /* 16px — mobile */
+  --page-padding-y: var(--spacing-4); /* 16px — mobile */
+  --page-gap: var(--spacing-8);       /* 32px entre filhos diretos */
+
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin-inline: auto;
+  padding-inline: var(--page-padding-x);
+  padding-block: var(--page-padding-y);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-gap);
+}
+
+/* Em viewports maiores aumenta os paddings progressivamente */
+@media (min-width: 40rem) {
+  .nds-page {
+    --page-padding-x: var(--spacing-6);   /* 24px */
+    --page-padding-y: var(--spacing-6);
+  }
+}
+@media (min-width: 64rem) {
+  .nds-page {
+    --page-padding-x: var(--spacing-8);   /* 32px */
+    --page-padding-y: var(--spacing-8);
+  }
+}
+
+.nds-page[data-width="narrow"]  { --page-max-width: 48rem; }   /* 768px — leitura longa */
+.nds-page[data-width="wide"]    { --page-max-width: 80rem; }   /* 1280px — dashboard */
+.nds-page[data-width="full"]    { --page-max-width: 100%; }    /* sem limite */
+
+
+/* ── nds-stack ─────────────────────────────────────────────────────────────
+ * Ritmo vertical entre filhos diretos. Usa margin-top em vez de gap porque
+ * preserva fluxo natural (filhos position:absolute/sticky são ignorados,
+ * primeiro filho não recebe margin).
+ *
+ *   <div class="nds-stack" data-spacing="md">
+ *     <h2>Título</h2>
+ *     <p>Conteúdo</p>
+ *     <p>Mais conteúdo</p>
+ *   </div>
+ *
+ * Tokens: --stack-gap (override via data-spacing)
+ */
+.nds-stack {
+  --stack-gap: var(--spacing-4);  /* default: 16px */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.nds-stack > * + * {
+  margin-top: var(--stack-gap);
+}
+
+.nds-stack[data-spacing="xs"]  { --stack-gap: var(--spacing-1);  }  /* 4px  */
+.nds-stack[data-spacing="sm"]  { --stack-gap: var(--spacing-2);  }  /* 8px  */
+.nds-stack[data-spacing="md"]  { --stack-gap: var(--spacing-4);  }  /* 16px (default) */
+.nds-stack[data-spacing="lg"]  { --stack-gap: var(--spacing-6);  }  /* 24px */
+.nds-stack[data-spacing="xl"]  { --stack-gap: var(--spacing-8);  }  /* 32px */
+.nds-stack[data-spacing="2xl"] { --stack-gap: var(--spacing-12); }  /* 48px */
+
+/* data-recursive="true" aplica o gap a TODOS os descendentes, não só filhos
+ * diretos. Útil para prose / artigos longos onde tudo herda o mesmo ritmo. */
+.nds-stack[data-recursive="true"] * + * {
+  margin-top: var(--stack-gap);
+}
+
+/* data-split="N" empurra o N-ésimo filho (1-indexed) para o final via auto.
+ * Ex: footer no rodapé de um stack que ocupa altura total.
+ *
+ *   <div class="nds-stack" data-split="last" style="height: 100%">
+ *     <header>…</header>
+ *     <main>…</main>
+ *     <footer>…</footer>  ← empurrado para baixo
+ *   </div>
+ */
+.nds-stack[data-split="last"] > :last-child { margin-top: auto; }
+
+
+/* ── nds-cluster ───────────────────────────────────────────────────────────
+ * Grupo horizontal de itens que quebra linha quando não cabem. Útil para
+ * toolbars, tags, breadcrumbs, grupos de botões.
+ *
+ *   <div class="nds-cluster" data-spacing="sm" data-align="center">
+ *     <Tag>react</Tag>
+ *     <Tag>vue</Tag>
+ *     <Tag>svelte</Tag>
+ *   </div>
+ *
+ * Tokens: --cluster-gap, --cluster-align, --cluster-justify
+ */
+.nds-cluster {
+  --cluster-gap: var(--spacing-2);     /* default: 8px */
+  --cluster-align: center;             /* align-items default */
+  --cluster-justify: flex-start;       /* justify-content default */
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cluster-gap);
+  align-items: var(--cluster-align);
+  justify-content: var(--cluster-justify);
+}
+
+.nds-cluster[data-spacing="xs"]  { --cluster-gap: var(--spacing-1); }  /* 4px  */
+.nds-cluster[data-spacing="sm"]  { --cluster-gap: var(--spacing-2); }  /* 8px  */
+.nds-cluster[data-spacing="md"]  { --cluster-gap: var(--spacing-4); }  /* 16px */
+.nds-cluster[data-spacing="lg"]  { --cluster-gap: var(--spacing-6); }  /* 24px */
+.nds-cluster[data-spacing="xl"]  { --cluster-gap: var(--spacing-8); }  /* 32px */
+
+.nds-cluster[data-align="start"]    { --cluster-align: flex-start; }
+.nds-cluster[data-align="center"]   { --cluster-align: center; }
+.nds-cluster[data-align="end"]      { --cluster-align: flex-end; }
+.nds-cluster[data-align="baseline"] { --cluster-align: baseline; }
+
+.nds-cluster[data-justify="start"]   { --cluster-justify: flex-start; }
+.nds-cluster[data-justify="center"]  { --cluster-justify: center; }
+.nds-cluster[data-justify="end"]     { --cluster-justify: flex-end; }
+.nds-cluster[data-justify="between"] { --cluster-justify: space-between; }
+
+
+/* ── nds-row ───────────────────────────────────────────────────────────────
+ * Linha horizontal SEM wrap. Use quando os itens devem ficar sempre na mesma
+ * linha e o conteúdo de um deles deve crescer/encolher (texto wrappando
+ * dentro do próprio item).
+ *
+ *   <div class="nds-row" data-align="start">
+ *     <span>1</span>
+ *     <p>Texto longo que pode quebrar em várias linhas mas continua à direita do número…</p>
+ *   </div>
+ *
+ * Diferente de .nds-cluster (que quebra linha quando aperta). Use cluster
+ * para grupos onde a quebra é desejada (tags, breadcrumbs, toolbar).
+ *
+ * Filhos com `min-width: 0` evitam que conteúdo "incomprimível" (ex: <code>)
+ * force o pai a transbordar — aplicamos `min-width: 0` em todos os filhos
+ * por default; o item que precisa ser fixo deve setar `min-width: auto`
+ * inline ou via flex-shrink: 0.
+ */
+.nds-row {
+  --row-gap: var(--spacing-2);
+  --row-align: flex-start;
+
+  display: flex;
+  flex-direction: row;
+  gap: var(--row-gap);
+  align-items: var(--row-align);
+}
+.nds-row > * { min-width: 0; }
+
+.nds-row[data-spacing="xs"]  { --row-gap: var(--spacing-1); }
+.nds-row[data-spacing="sm"]  { --row-gap: var(--spacing-2); }
+.nds-row[data-spacing="md"]  { --row-gap: var(--spacing-4); }
+.nds-row[data-spacing="lg"]  { --row-gap: var(--spacing-6); }
+.nds-row[data-spacing="xl"]  { --row-gap: var(--spacing-8); }
+
+.nds-row[data-align="start"]    { --row-align: flex-start; }
+.nds-row[data-align="center"]   { --row-align: center; }
+.nds-row[data-align="end"]      { --row-align: flex-end; }
+.nds-row[data-align="baseline"] { --row-align: baseline; }
+
+
+/* ── nds-grid ──────────────────────────────────────────────────────────────
+ * Grid responsivo auto-fit. Cada item tem largura mínima `--grid-min` e
+ * cresce até preencher; quantas colunas cabem é calculado pelo navegador.
+ * Não usa media query.
+ *
+ *   <div class="nds-grid" data-min="20rem" data-spacing="md">
+ *     <Card />  <Card />  <Card />
+ *   </div>
+ *
+ *   data-cols="2" força no máximo 2 colunas (até a viewport quebrar).
+ *
+ * Tokens: --grid-gap, --grid-min
+ */
+.nds-grid {
+  --grid-gap: var(--spacing-4);
+  --grid-min: 16rem;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--grid-min)), 1fr));
+  gap: var(--grid-gap);
+}
+
+.nds-grid[data-spacing="xs"]  { --grid-gap: var(--spacing-1); }
+.nds-grid[data-spacing="sm"]  { --grid-gap: var(--spacing-2); }
+.nds-grid[data-spacing="md"]  { --grid-gap: var(--spacing-4); }
+.nds-grid[data-spacing="lg"]  { --grid-gap: var(--spacing-6); }
+.nds-grid[data-spacing="xl"]  { --grid-gap: var(--spacing-8); }
+
+/* data-cols="2" — duas colunas balanceadas; quebra para 1 quando o conteúdo
+ * fica apertado. Equivalente a grid-cols-1 md:grid-cols-2 do Tailwind. */
+.nds-grid[data-cols="2"] {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, max(var(--grid-min), 18rem)), 1fr));
+}
+
+
+/* ── nds-sidebar-layout ────────────────────────────────────────────────────
+ * Sidebar + conteúdo principal lado-a-lado. Abaixo de um threshold (definido
+ * por --sidebar-min do conteúdo), empilha em uma coluna. Não usa media query
+ * — usa flex-wrap + flex-basis para se adaptar ao container.
+ *
+ *   <div class="nds-sidebar-layout" data-sidebar-sticky="true">
+ *     <nav>…</nav>     ← sidebar (largura fixa em desktop)
+ *     <main>…</main>   ← conteúdo (cresce e ocupa o resto)
+ *   </div>
+ *
+ * Tokens: --sidebar-gap, --sidebar-width, --sidebar-content-min
+ */
+.nds-sidebar-layout {
+  --sidebar-gap: var(--spacing-8);           /* 32px entre sidebar e conteúdo */
+  --sidebar-width: 13rem;                    /* 208px — largura ideal da nav */
+  --sidebar-content-min: 60%;                /* conteúdo nunca abaixo disso */
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sidebar-gap);
+  align-items: flex-start;
+}
+
+/* Sidebar = primeiro filho. Cresce até a largura definida; sem wrap fica
+ * fixa, com wrap (telas estreitas) ocupa 100%. */
+.nds-sidebar-layout > :first-child {
+  flex-basis: var(--sidebar-width);
+  flex-grow: 1;
+}
+
+/* Conteúdo = todos os filhos depois do primeiro. flex-grow alto força ele a
+ * "puxar" o sidebar pra ficar do lado quando há espaço; o min-width define
+ * quando a quebra acontece. */
+.nds-sidebar-layout > :first-child ~ * {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: var(--sidebar-content-min);
+}
+
+.nds-sidebar-layout[data-spacing="sm"]  { --sidebar-gap: var(--spacing-4); }
+.nds-sidebar-layout[data-spacing="md"]  { --sidebar-gap: var(--spacing-8); }
+.nds-sidebar-layout[data-spacing="lg"]  { --sidebar-gap: var(--spacing-12); }
+.nds-sidebar-layout[data-spacing="xl"]  { --sidebar-gap: var(--spacing-16); }
+
+.nds-sidebar-layout[data-side="right"] {
+  flex-direction: row-reverse;
+}
+.nds-sidebar-layout[data-side="right"] > :first-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: var(--sidebar-content-min);
+}
+.nds-sidebar-layout[data-side="right"] > :first-child ~ * {
+  flex-basis: var(--sidebar-width);
+  flex-grow: 1;
+}
+
+/* Sidebar sticky: ativo APENAS quando o layout está lado-a-lado.
+ * Quando o flex-wrap empilha (viewport estreito), o sticky precisa ser
+ * desligado — senão o nav fica colando no topo do viewport e o conteúdo
+ * passa por trás durante o scroll, criando sobreposição visual.
+ *
+ * O breakpoint coincide aproximadamente com o threshold do flex-wrap:
+ * sidebar 13rem + content 60% min ≈ 33rem antes de quebrar; usamos 48rem
+ * como margem de segurança. CSS puro não tem como detectar wrap. */
+@media (min-width: 48rem) {
+  .nds-sidebar-layout[data-sidebar-sticky="true"] > :first-child {
+    position: sticky;
+    top: var(--spacing-8);                   /* 32px do topo do viewport */
+  }
+}
+
+
+/* ── nds-box ───────────────────────────────────────────────────────────────
+ * Container com padding interno consistente. Por si só não tem bg/border —
+ * use os modificadores data-surface para isso.
+ *
+ *   <div class="nds-box" data-padding="lg" data-surface="card">…</div>
+ *
+ * Tokens: --box-padding, --box-radius, --box-bg, --box-border-color
+ */
+.nds-box {
+  --box-padding: var(--spacing-4);     /* default: 16px */
+  --box-radius: 0.625rem;              /* 10px */
+  --box-bg: transparent;
+  --box-border-color: transparent;
+  --box-border-width: 0;
+
+  padding: var(--box-padding);
+  background-color: var(--box-bg);
+  border-radius: var(--box-radius);
+  border: var(--box-border-width) solid var(--box-border-color);
+}
+
+.nds-box[data-padding="xs"]   { --box-padding: var(--spacing-2);  }  /* 8px */
+.nds-box[data-padding="sm"]   { --box-padding: var(--spacing-4);  }  /* 16px */
+.nds-box[data-padding="md"]   { --box-padding: var(--spacing-6);  }  /* 24px (default visual) */
+.nds-box[data-padding="lg"]   { --box-padding: var(--spacing-8);  }  /* 32px */
+.nds-box[data-padding="xl"]   { --box-padding: var(--spacing-12); }  /* 48px */
+
+/* Superfícies — semântica de bg/border via tokens do tema (acompanha
+ * light/dark, warm/cold, etc. automaticamente). */
+.nds-box[data-surface="card"] {
+  --box-bg: hsl(var(--card));
+  --box-border-color: hsl(var(--border));
+  --box-border-width: 1px;
+  color: hsl(var(--card-foreground));
+}
+.nds-box[data-surface="muted"] {
+  --box-bg: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+}
+.nds-box[data-surface="outline"] {
+  --box-border-color: hsl(var(--border));
+  --box-border-width: 1px;
+}
+.nds-box[data-surface="accent"] {
+  --box-bg: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* Quando .nds-box é também um .nds-stack, o stack governa o ritmo dos
+ * filhos. Apenas zera o gap horizontal que o flex traria por padrão. */
+.nds-box.nds-stack {
+  justify-content: flex-start;
+}

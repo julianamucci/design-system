@@ -5,6 +5,8 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
@@ -22,6 +24,7 @@ import { DocsWhenToUse } from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont } from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport } from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants } from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates } from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps } from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens } from "@/components/docs/shared/sections/DocsTokens";
@@ -60,6 +63,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao", label: t("nav.import") },
       { id: "variantes", label: t("nav.variants") },
+      { id: "composicoes", label: t("nav.compositions") },
       { id: "estados", label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens", label: t("nav.tokens") },
@@ -529,6 +533,158 @@ interface InputOTPProps {
             preview: (
               <div className="text-xs font-mono text-muted-foreground">
                 pattern=DIGITS_AND_CHARS · inputMode=text
+              </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="input-otp"
+        items={[
+          {
+            name: tContent("variants.compositions.withLabel.name"),
+            description: tContent("variants.compositions.withLabel.description"),
+            useWhen: tContent("variants.compositions.withLabel.use"),
+            code: `<div className="flex flex-col gap-2">
+  <Label htmlFor="otp-code">Código de verificação</Label>
+  <InputOTP id="otp-code" maxLength={6} autoComplete="one-time-code" inputMode="numeric">
+    <InputOTPGroup>
+      <InputOTPSlot index={0} />
+      <InputOTPSlot index={1} />
+      <InputOTPSlot index={2} />
+      <InputOTPSlot index={3} />
+      <InputOTPSlot index={4} />
+      <InputOTPSlot index={5} />
+    </InputOTPGroup>
+  </InputOTP>
+</div>`,
+            preview: (
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="comp-label-otp">Código de verificação</Label>
+                <InputOTP id="comp-label-otp" maxLength={6} autoComplete="one-time-code" inputMode="numeric" aria-label="Código de verificação">
+                  <InputOTPGroup>
+                    {sixSlots.map((_, i) => (
+                      <InputOTPSlot key={i} index={i} />
+                    ))}
+                  </InputOTPGroup>
+                </InputOTP>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withHelpText.name"),
+            description: tContent("variants.compositions.withHelpText.description"),
+            useWhen: tContent("variants.compositions.withHelpText.use"),
+            code: `<div className="flex flex-col gap-2">
+  <Label htmlFor="otp-help">Código de verificação</Label>
+  <InputOTP id="otp-help" maxLength={6} aria-describedby="otp-help-text"
+    autoComplete="one-time-code" inputMode="numeric">
+    <InputOTPGroup>{/* 6 slots */}</InputOTPGroup>
+  </InputOTP>
+  <p id="otp-help-text" className="text-xs text-muted-foreground">
+    Enviamos por SMS, expira em 5 min.
+  </p>
+</div>`,
+            preview: (
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="comp-help-otp">Código de verificação</Label>
+                <InputOTP
+                  id="comp-help-otp"
+                  maxLength={6}
+                  autoComplete="one-time-code"
+                  inputMode="numeric"
+                  aria-describedby="comp-help-otp-text"
+                  aria-label="Código de verificação"
+                >
+                  <InputOTPGroup>
+                    {sixSlots.map((_, i) => (
+                      <InputOTPSlot key={i} index={i} />
+                    ))}
+                  </InputOTPGroup>
+                </InputOTP>
+                <p id="comp-help-otp-text" className="text-xs text-muted-foreground">
+                  Enviamos por SMS, expira em 5 min.
+                </p>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withErrorMessage.name"),
+            description: tContent("variants.compositions.withErrorMessage.description"),
+            useWhen: tContent("variants.compositions.withErrorMessage.use"),
+            code: `<div className="flex flex-col gap-2">
+  <Label htmlFor="otp-err">Código de verificação</Label>
+  <InputOTP id="otp-err" maxLength={6} aria-invalid="true"
+    aria-describedby="otp-err-text" autoComplete="one-time-code" inputMode="numeric">
+    <InputOTPGroup>{/* 6 slots */}</InputOTPGroup>
+  </InputOTP>
+  <p id="otp-err-text" className="text-xs text-destructive">
+    Código incorreto. Verifique e tente novamente.
+  </p>
+</div>`,
+            preview: (
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="comp-err-otp">Código de verificação</Label>
+                <InputOTP
+                  id="comp-err-otp"
+                  maxLength={6}
+                  defaultValue="123"
+                  autoComplete="one-time-code"
+                  inputMode="numeric"
+                  aria-invalid="true"
+                  aria-describedby="comp-err-otp-text"
+                  aria-label="Código de verificação"
+                >
+                  <InputOTPGroup>
+                    {sixSlots.map((_, i) => (
+                      <InputOTPSlot key={i} index={i} />
+                    ))}
+                  </InputOTPGroup>
+                </InputOTP>
+                <p id="comp-err-otp-text" className="text-xs text-destructive">
+                  Código incorreto. Verifique e tente novamente.
+                </p>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withResendButton.name"),
+            description: tContent("variants.compositions.withResendButton.description"),
+            useWhen: tContent("variants.compositions.withResendButton.use"),
+            code: `<div className="flex flex-col gap-3">
+  <Label htmlFor="otp-resend">Código de verificação</Label>
+  <InputOTP id="otp-resend" maxLength={6} autoComplete="one-time-code" inputMode="numeric">
+    <InputOTPGroup>{/* 6 slots */}</InputOTPGroup>
+  </InputOTP>
+  <div className="flex items-center justify-between gap-3">
+    <p className="text-xs text-muted-foreground">Não recebeu?</p>
+    <Button variant="link" size="sm">Reenviar código</Button>
+  </div>
+</div>`,
+            preview: (
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="comp-resend-otp">Código de verificação</Label>
+                <InputOTP
+                  id="comp-resend-otp"
+                  maxLength={6}
+                  autoComplete="one-time-code"
+                  inputMode="numeric"
+                  aria-label="Código de verificação"
+                >
+                  <InputOTPGroup>
+                    {sixSlots.map((_, i) => (
+                      <InputOTPSlot key={i} index={i} />
+                    ))}
+                  </InputOTPGroup>
+                </InputOTP>
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-xs text-muted-foreground">Não recebeu?</p>
+                  <Button variant="link" size="sm">Reenviar código</Button>
+                </div>
               </div>
             ),
           },

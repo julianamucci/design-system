@@ -4,7 +4,7 @@ import { sanitizeHtml } from '@/lib/sanitize-html';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type ButtonVariant = 'default' | 'secondary' | 'outline' | 'ghost' | 'link' | 'destructive';
-export type ButtonSize = 'default' | 'xs' | 'sm' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg';
+export type ButtonSize = 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg';
 
 export type ButtonOptions = {
   variant?: ButtonVariant;
@@ -21,18 +21,26 @@ export type ButtonOptions = {
 };
 
 // ─── btnClass ─────────────────────────────────────────────────────────────────
+//
+// Retorna a lista de classes .nds-button-* aplicáveis. Sempre inclui .nds-button
+// (base) + variante + (opcional) modificador de tamanho/ícone.
+//
+// Exemplos:
+//   btnClass('default', 'default')  → 'nds-button nds-button-default'
+//   btnClass('outline', 'sm')       → 'nds-button nds-button-sm nds-button-outline'
+//   btnClass('ghost',   'icon-lg')  → 'nds-button nds-button-icon-lg nds-button-ghost'
 
 export function btnClass(variant: ButtonVariant | string = 'default', size: ButtonSize | string = 'default'): string {
-  const prefix =
-    size === 'icon'    ? 'btn-icon' :
-    size === 'icon-xs' ? 'btn-xs-icon' :
-    size === 'icon-sm' ? 'btn-sm-icon' :
-    size === 'icon-lg' ? 'btn-lg-icon' :
-    size === 'xs'      ? 'btn-xs' :
-    size === 'sm'      ? 'btn-sm' :
-    size === 'lg'      ? 'btn-lg' :
-                         'btn';
-  return variant === 'default' ? prefix : `${prefix}-${variant}`;
+  const base = 'nds-button';
+  const sizeClass =
+    size === 'icon'    ? 'nds-button-icon' :
+    size === 'icon-sm' ? 'nds-button-icon-sm' :
+    size === 'icon-lg' ? 'nds-button-icon-lg' :
+    size === 'sm'      ? 'nds-button-sm' :
+    size === 'lg'      ? 'nds-button-lg' :
+                         '';
+  const variantClass = `nds-button-${variant}`;
+  return [base, sizeClass, variantClass].filter(Boolean).join(' ');
 }
 
 // ─── createButton ─────────────────────────────────────────────────────────────
@@ -82,7 +90,13 @@ const BUTTON_ICON_MAP: Record<ButtonIconKind, LucideIconNode[]> = {
   'x':             X            as unknown as LucideIconNode[],
 };
 
-export function createButtonIcon(kind: ButtonIconKind, options: { spin?: boolean; className?: string } = {}): SVGSVGElement {
+export type ButtonIconSize = 'sm' | 'md' | 'lg';
+
+export function createButtonIcon(
+  kind: ButtonIconKind,
+  options: { size?: ButtonIconSize; spin?: boolean; className?: string } = {},
+): SVGSVGElement {
+  const { size = 'md', spin, className } = options;
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -92,7 +106,12 @@ export function createButtonIcon(kind: ButtonIconKind, options: { spin?: boolean
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', cn('size-4', options.spin && 'animate-spin', options.className));
+  // Classes próprias .nds-* — independentes de Tailwind e de cascade externa.
+  // .nds-button-icon-svg dá width/height base (1rem); modificador -<size> ajusta.
+  svg.setAttribute(
+    'class',
+    cn('nds-button-icon-svg', `nds-button-icon-svg-${size}`, spin && 'nds-spin', className),
+  );
 
   for (const [tag, attrs] of BUTTON_ICON_MAP[kind]) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);

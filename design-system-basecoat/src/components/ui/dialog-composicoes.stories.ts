@@ -27,12 +27,14 @@ type Story = StoryObj;
 
 function buildInputField(labelText: string, type: string, value: string): HTMLLabelElement {
   const label = document.createElement('label');
-  label.className = 'grid gap-1 text-sm';
+  label.className = 'nds-stack nds-text-body';
+  label.dataset.spacing = 'xs';
   const span = document.createElement('span');
-  span.className = 'font-medium';
+  span.className = 'nds-font-medium';
   span.textContent = labelText;
   const input = document.createElement('input');
-  input.className = 'border rounded-md px-3 py-2';
+  input.className = 'nds-border-default nds-rounded-md';
+  input.style.padding = '0.5rem 0.75rem';
   input.type = type;
   input.value = value;
   label.append(span, input);
@@ -41,12 +43,14 @@ function buildInputField(labelText: string, type: string, value: string): HTMLLa
 
 function buildTextareaField(labelText: string, value: string): HTMLLabelElement {
   const label = document.createElement('label');
-  label.className = 'grid gap-1 text-sm';
+  label.className = 'nds-stack nds-text-body';
+  label.dataset.spacing = 'xs';
   const span = document.createElement('span');
-  span.className = 'font-medium';
+  span.className = 'nds-font-medium';
   span.textContent = labelText;
   const ta = document.createElement('textarea');
-  ta.className = 'border rounded-md px-3 py-2';
+  ta.className = 'nds-border-default nds-rounded-md';
+  ta.style.padding = '0.5rem 0.75rem';
   ta.rows = 3;
   ta.value = value;
   label.append(span, ta);
@@ -75,7 +79,7 @@ export const ConfirmEmail: Story = {
   },
   render: () => {
     const body = document.createElement('div');
-    body.className = 'text-sm text-muted-foreground';
+    body.className = 'nds-text-body nds-text-muted-foreground';
     body.textContent = 'Vamos enviar um link para maria@exemplo.com. Confirme o endereço antes de prosseguir.';
     const dialog = createDialog({
       trigger: createButton({ variant: 'default', label: 'Enviar link' }),
@@ -105,7 +109,8 @@ export const ProfileEdit: Story = {
   },
   render: () => {
     const form = document.createElement('form');
-    form.className = 'grid gap-3';
+    form.className = 'nds-stack';
+    form.dataset.spacing = 'md';
     form.append(
       buildInputField('Nome de exibição', 'text', 'Maria Souza'),
       buildInputField('Função', 'text', 'Designer'),
@@ -139,7 +144,10 @@ export const MediaPreview: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'aspect-video w-full bg-muted rounded-md grid place-items-center text-xs text-muted-foreground';
+    wrap.className = 'nds-w-full nds-bg-muted nds-rounded-md nds-text-caption nds-text-muted-foreground';
+    wrap.style.aspectRatio = '16 / 9';
+    wrap.style.display = 'grid';
+    wrap.style.placeItems = 'center';
     wrap.textContent = 'Pré-visualização da mídia';
     const dialog = createDialog({
       trigger: createButton({ variant: 'outline', label: 'Pré-visualizar' }),

@@ -25,7 +25,9 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[260px] flex items-center justify-center';
+  wrapper.className = 'nds-cluster nds-w-full';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.minHeight = '260px';
   wrapper.appendChild(child);
   return wrapper;
 }
@@ -33,7 +35,9 @@ function wrap(child: HTMLElement): HTMLElement {
 function buildLink(label: string, href = '/preview'): HTMLAnchorElement {
   const a = document.createElement('a');
   a.href = href;
-  a.className = 'underline underline-offset-4 text-sm font-medium text-primary';
+  a.className = 'nds-text-body nds-font-medium nds-text-primary';
+  a.style.textDecoration = 'underline';
+  a.style.textUnderlineOffset = '4px';
   a.textContent = label;
   return a;
 }
@@ -42,7 +46,12 @@ function buildSpan(label: string): HTMLElement {
   const s = document.createElement('button');
   s.type = 'button';
   s.className =
-    'underline underline-offset-4 decoration-dotted text-sm font-medium text-primary cursor-help bg-transparent border-0 p-0';
+    'nds-text-body nds-font-medium nds-text-primary nds-bg-transparent';
+  s.style.textDecoration = 'underline dotted';
+  s.style.textUnderlineOffset = '4px';
+  s.style.cursor = 'help';
+  s.style.border = '0';
+  s.style.padding = '0';
   s.textContent = label;
   return s;
 }
@@ -76,27 +85,34 @@ export const PerfilDeUsuario: Story = {
     const trigger = buildLink('@joana');
 
     const content = document.createElement('div');
-    content.className = 'flex gap-3 items-start';
+    content.className = 'nds-cluster';
+    content.dataset.spacing = 'md';
+    content.dataset.align = 'start';
 
     const avatar = document.createElement('div');
     avatar.className =
-      'flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground text-sm font-medium';
+      'nds-cluster nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-muted-foreground nds-text-body nds-font-medium';
+    avatar.dataset.justify = 'center';
+    avatar.style.width = '3rem';
+    avatar.style.height = '3rem';
     avatar.setAttribute('aria-hidden', 'true');
     avatar.textContent = 'JS';
 
     const info = document.createElement('div');
-    info.className = 'flex flex-col gap-1';
+    info.className = 'nds-stack';
+    info.dataset.spacing = 'xs';
 
     const name = document.createElement('p');
-    name.className = 'text-sm font-medium leading-none';
+    name.className = 'nds-text-body nds-font-medium nds-leading-none';
     name.textContent = 'Joana Silva';
 
     const handle = document.createElement('p');
-    handle.className = 'text-xs text-muted-foreground';
+    handle.className = 'nds-text-caption nds-text-muted-foreground';
     handle.textContent = '@joana · Designer';
 
     const bio = document.createElement('p');
-    bio.className = 'text-xs leading-snug';
+    bio.className = 'nds-text-caption';
+    bio.style.lineHeight = '1.375';
     bio.textContent = 'Trabalhando em sistemas de design acessíveis. 142 seguidores.';
 
     info.append(name, handle, bio);
@@ -127,27 +143,33 @@ export const PreviewDeLink: Story = {
     const trigger = buildLink('design-system.dev', 'https://design-system.dev');
 
     const content = document.createElement('div');
-    content.className = 'flex flex-col gap-2';
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'sm';
 
     const header = document.createElement('div');
-    header.className = 'flex items-center gap-2';
+    header.className = 'nds-cluster';
+    header.dataset.spacing = 'sm';
 
     const favicon = document.createElement('div');
-    favicon.className = 'h-4 w-4 rounded-sm bg-primary';
+    favicon.className = 'nds-rounded-sm nds-bg-primary';
+    favicon.style.width = '1rem';
+    favicon.style.height = '1rem';
     favicon.setAttribute('aria-hidden', 'true');
 
     const url = document.createElement('p');
-    url.className = 'text-xs text-muted-foreground truncate';
+    url.className = 'nds-text-caption nds-text-muted-foreground nds-truncate';
     url.textContent = 'design-system.dev';
 
     header.append(favicon, url);
 
     const title = document.createElement('p');
-    title.className = 'text-sm font-medium leading-snug';
+    title.className = 'nds-text-body nds-font-medium';
+    title.style.lineHeight = '1.375';
     title.textContent = 'Design System — Documentação completa';
 
     const desc = document.createElement('p');
-    desc.className = 'text-xs text-muted-foreground leading-snug';
+    desc.className = 'nds-text-caption nds-text-muted-foreground';
+    desc.style.lineHeight = '1.375';
     desc.textContent = 'Componentes acessíveis em React, Vue, Svelte e Basecoat.';
 
     content.append(header, title, desc);
@@ -176,14 +198,16 @@ export const DefinicaoDeTermo: Story = {
     const trigger = buildSpan('WCAG 2.1 AA');
 
     const content = document.createElement('div');
-    content.className = 'flex flex-col gap-1';
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'xs';
 
     const term = document.createElement('p');
-    term.className = 'text-sm font-medium';
+    term.className = 'nds-text-body nds-font-medium';
     term.textContent = 'WCAG 2.1 AA';
 
     const def = document.createElement('p');
-    def.className = 'text-xs text-muted-foreground leading-snug';
+    def.className = 'nds-text-caption nds-text-muted-foreground';
+    def.style.lineHeight = '1.375';
     def.textContent =
       'Web Content Accessibility Guidelines 2.1 — nível AA. Diretrizes de acessibilidade para conteúdo web, incluindo contraste mínimo 4.5:1 e operação por teclado.';
 
@@ -213,23 +237,28 @@ export const MetricaExplicada: Story = {
     const trigger = buildSpan('LCP 1.8s');
 
     const content = document.createElement('div');
-    content.className = 'flex flex-col gap-2';
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'sm';
 
     const head = document.createElement('div');
-    head.className = 'flex items-baseline justify-between gap-2';
+    head.className = 'nds-cluster';
+    head.dataset.spacing = 'sm';
+    head.dataset.justify = 'between';
+    head.dataset.align = 'baseline';
 
     const metric = document.createElement('p');
-    metric.className = 'text-sm font-medium';
+    metric.className = 'nds-text-body nds-font-medium';
     metric.textContent = 'Largest Contentful Paint';
 
     const value = document.createElement('span');
-    value.className = 'text-xs font-medium text-emerald-600';
+    value.className = 'nds-text-caption nds-font-medium nds-text-success';
     value.textContent = '1.8s';
 
     head.append(metric, value);
 
     const desc = document.createElement('p');
-    desc.className = 'text-xs text-muted-foreground leading-snug';
+    desc.className = 'nds-text-caption nds-text-muted-foreground';
+    desc.style.lineHeight = '1.375';
     desc.textContent =
       'Tempo até o maior elemento visível ser renderizado. Bom: <2.5s · Ruim: >4s.';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 

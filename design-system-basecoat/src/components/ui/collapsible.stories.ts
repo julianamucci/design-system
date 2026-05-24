@@ -41,7 +41,8 @@ type Story = StoryObj<CollapsibleArgs>;
 export const Playground: Story = {
   render: (args) => {
     const content = document.createElement('div');
-    content.className = 'rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2';
+    content.className = 'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
+    content.dataset.spacing = 'sm';
     const p1 = document.createElement('p');
     p1.textContent = 'Filtro avançado 1';
     const p2 = document.createElement('p');
@@ -54,7 +55,7 @@ export const Playground: Story = {
       content,
       defaultOpen: args.defaultOpen,
       disabled: args.disabled,
-      class: 'w-full max-w-sm',
+      class: 'nds-w-full nds-max-w-sm',
     });
   },
   play: async ({ canvasElement, step }) => {

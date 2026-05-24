@@ -1,0 +1,98 @@
+/*
+ * ─── nds-radio-group ────────────────────────────────────────────────────────
+ * Grupo de radios mutuamente exclusivos.
+ *
+ *   <fieldset class="nds-radio-group" data-slot="radio-group">
+ *     <div class="nds-radio-row">
+ *       <button class="nds-radio-item" role="radio" aria-checked="false">
+ *         <span class="nds-radio-indicator"><svg>...</svg></span>
+ *         <input type="radio" />        ← native sr-only
+ *       </button>
+ *       <label class="nds-radio-label">Opção</label>
+ *     </div>
+ *   </fieldset>
+ *
+ * Tokens: --primary, --background, --border, --ring, --spacing-*
+ */
+
+.nds-radio-group {
+  display: grid;
+  gap: var(--spacing-2);                          /* 8px entre rows */
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* ── Row (item + label) ──────────────────────────────────────────────────── */
+.nds-radio-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);                          /* 8px entre radio e label */
+}
+
+/* ── Item (botão visual com semântica role="radio") ──────────────────────── */
+.nds-radio-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: var(--spacing-4);                        /* 16px */
+  height: var(--spacing-4);
+
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--primary));
+  border-radius: 9999px;
+  cursor: pointer;
+  outline: 0;
+  padding: 0;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.nds-radio-item:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+}
+
+.nds-radio-item:disabled,
+.nds-radio-item[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ── Indicator (círculo central) ─────────────────────────────────────────── */
+.nds-radio-indicator {
+  display: grid;
+  place-content: center;
+}
+
+.nds-radio-indicator > svg {
+  width: 0.625rem;                                /* 10px — círculo interno */
+  height: 0.625rem;
+  fill: hsl(var(--primary));
+}
+
+/* Native input visualmente oculto (mas presente para forms) */
+.nds-radio-item > input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Label ───────────────────────────────────────────────────────────────── */
+.nds-radio-label {
+  font-family: inherit;
+  font-size: 0.875rem;                            /* 14px */
+  font-weight: var(--font-weight-medium, 500);
+  line-height: 1;
+  color: hsl(var(--foreground));
+  user-select: none;
+  cursor: pointer;
+}
+
+.nds-radio-row:has(.nds-radio-item:disabled) .nds-radio-label {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

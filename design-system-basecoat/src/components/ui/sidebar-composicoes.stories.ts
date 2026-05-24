@@ -66,7 +66,8 @@ function wrapSidebar(instance: ReturnType<typeof createSidebar>, main: HTMLEleme
   wrapper.appendChild(main);
 
   const container = document.createElement('div');
-  container.className = 'min-h-[400px] w-full border border-border rounded-lg overflow-hidden';
+  container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+  container.style.minHeight = '400px';
   container.appendChild(wrapper);
   return container;
 }
@@ -81,7 +82,9 @@ export const ComGrupos: Story = {
 
     const header = createSidebarHeader();
     const logoRow = document.createElement('div');
-    logoRow.className = 'px-2 py-1 text-sm font-semibold text-sidebar-foreground';
+    logoRow.className = 'nds-text-body nds-font-semibold';
+    logoRow.style.padding = '0.25rem 0.5rem';
+    logoRow.style.color = 'var(--sidebar-foreground)';
     logoRow.textContent = 'Design System';
     header.appendChild(logoRow);
     inner.appendChild(header);
@@ -115,16 +118,24 @@ export const ComGrupos: Story = {
     inner.appendChild(content);
 
     const inset = document.createElement('div');
-    inset.className = 'flex flex-1 flex-col';
+    inset.className = 'nds-flex-1';
+    inset.style.display = 'flex';
+    inset.style.flexDirection = 'column';
     const topbar = document.createElement('div');
-    topbar.className = 'flex h-12 items-center gap-2 border-b border-border px-4';
+    topbar.className = 'nds-cluster nds-border-b';
+    topbar.dataset.spacing = 'sm';
+    topbar.style.height = '3rem';
+    topbar.style.paddingLeft = '1rem';
+    topbar.style.paddingRight = '1rem';
     topbar.appendChild(createSidebarTrigger(instance.toggle));
     const lbl = document.createElement('span');
-    lbl.className = 'text-sm text-muted-foreground';
+    lbl.className = 'nds-text-body nds-text-muted-foreground';
     lbl.textContent = 'Dashboard';
     topbar.appendChild(lbl);
     const mainContent = document.createElement('div');
-    mainContent.className = 'flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground';
+    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+    mainContent.dataset.justify = 'center';
+    mainContent.style.padding = '2rem';
     mainContent.textContent = 'Conteúdo principal';
     inset.append(topbar, mainContent);
 
@@ -155,24 +166,34 @@ export const ComSubMenu: Story = {
 
     const header = createSidebarHeader();
     const logoRow = document.createElement('div');
-    logoRow.className = 'px-2 py-1 text-sm font-semibold text-sidebar-foreground';
+    logoRow.className = 'nds-text-body nds-font-semibold';
+    logoRow.style.padding = '0.25rem 0.5rem';
+    logoRow.style.color = 'var(--sidebar-foreground)';
     logoRow.textContent = 'Design System';
     header.appendChild(logoRow);
     inner.appendChild(header);
 
     const content = createSidebarContent();
     const group = document.createElement('div');
-    group.className = 'relative flex w-full min-w-0 flex-col p-2';
+    group.className = 'nds-stack nds-w-full nds-min-w-0';
+    group.dataset.spacing = 'xs';
+    group.style.position = 'relative';
+    group.style.padding = '0.5rem';
     group.setAttribute('data-sidebar', 'group');
 
     const groupLabel = document.createElement('div');
-    groupLabel.className = 'flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70';
+    groupLabel.className = 'nds-cluster nds-shrink-0 nds-rounded-md nds-text-caption nds-font-medium';
+    groupLabel.style.height = '2rem';
+    groupLabel.style.paddingLeft = '0.5rem';
+    groupLabel.style.paddingRight = '0.5rem';
+    groupLabel.style.color = 'color-mix(in oklab, var(--sidebar-foreground) 70%, transparent)';
     groupLabel.setAttribute('data-sidebar', 'group-label');
     groupLabel.textContent = 'Componentes';
     group.appendChild(groupLabel);
 
     const menu = document.createElement('ul');
-    menu.className = 'flex w-full min-w-0 flex-col gap-1';
+    menu.className = 'nds-stack nds-w-full nds-min-w-0';
+    menu.dataset.spacing = 'xs';
     menu.setAttribute('data-sidebar', 'menu');
 
     // Dashboard item
@@ -180,18 +201,20 @@ export const ComSubMenu: Story = {
 
     // Componentes item with collapsible sub-menu
     const parentLi = document.createElement('li');
-    parentLi.className = 'group/menu-item relative';
+    parentLi.className = 'group/menu-item';
+    parentLi.style.position = 'relative';
     parentLi.setAttribute('data-sidebar', 'menu-item');
 
     let subOpen = false;
     const parentBtn = document.createElement('button');
-    parentBtn.className = [
-      'peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2',
-      'text-left text-sm outline-none ring-sidebar-ring transition-colors',
-      'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-      'focus-visible:ring-2',
-      '[&>svg]:size-4 [&>svg]:shrink-0 [&>span:last-child]:truncate',
-    ].join(' ');
+    parentBtn.className = 'peer/menu-button nds-cluster nds-w-full nds-overflow-hidden nds-rounded-md nds-text-body';
+    parentBtn.dataset.spacing = 'sm';
+    parentBtn.style.padding = '0.5rem';
+    parentBtn.style.textAlign = 'left';
+    parentBtn.style.outline = 'none';
+    parentBtn.style.background = 'transparent';
+    parentBtn.style.border = 'none';
+    parentBtn.style.cursor = 'pointer';
     parentBtn.setAttribute('data-sidebar', 'menu-button');
     parentBtn.setAttribute('aria-expanded', 'false');
     parentBtn.appendChild(makeIcon(ICON_LAYOUT));
@@ -211,11 +234,17 @@ export const ComSubMenu: Story = {
     chevron.setAttribute('stroke-linejoin', 'round');
     chevron.setAttribute('aria-hidden', 'true');
     chevron.innerHTML = sanitizeHtml('<path d="m6 9 6 6 6-6"/>');
-    chevron.className = 'ml-auto transition-transform duration-200';
+    chevron.style.marginLeft = 'auto';
+    chevron.style.transition = 'transform 200ms';
     parentBtn.appendChild(chevron);
 
     const subList = document.createElement('ul');
-    subList.className = 'ml-4 mt-1 flex flex-col gap-1 border-l border-sidebar-border pl-3';
+    subList.className = 'nds-stack';
+    subList.dataset.spacing = 'xs';
+    subList.style.marginLeft = '1rem';
+    subList.style.marginTop = '0.25rem';
+    subList.style.paddingLeft = '0.75rem';
+    subList.style.borderLeft = '1px solid var(--sidebar-border)';
     subList.setAttribute('data-sidebar', 'menu-sub');
     subList.style.display = 'none';
 
@@ -225,7 +254,11 @@ export const ComSubMenu: Story = {
       subLi.setAttribute('data-sidebar', 'menu-sub-item');
       const subBtn = document.createElement('a');
       subBtn.href = '#';
-      subBtn.className = 'flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors';
+      subBtn.className = 'nds-cluster nds-rounded-md nds-text-caption';
+      subBtn.dataset.spacing = 'sm';
+      subBtn.style.padding = '0.375rem 0.5rem';
+      subBtn.style.color = 'var(--sidebar-foreground)';
+      subBtn.style.transition = 'background 150ms, color 150ms';
       subBtn.setAttribute('data-sidebar', 'menu-sub-button');
       subBtn.textContent = name;
       subLi.appendChild(subBtn);
@@ -253,16 +286,24 @@ export const ComSubMenu: Story = {
     inner.appendChild(footer);
 
     const inset = document.createElement('div');
-    inset.className = 'flex flex-1 flex-col';
+    inset.className = 'nds-flex-1';
+    inset.style.display = 'flex';
+    inset.style.flexDirection = 'column';
     const topbar = document.createElement('div');
-    topbar.className = 'flex h-12 items-center gap-2 border-b border-border px-4';
+    topbar.className = 'nds-cluster nds-border-b';
+    topbar.dataset.spacing = 'sm';
+    topbar.style.height = '3rem';
+    topbar.style.paddingLeft = '1rem';
+    topbar.style.paddingRight = '1rem';
     topbar.appendChild(createSidebarTrigger(instance.toggle));
     const lbl = document.createElement('span');
-    lbl.className = 'text-sm text-muted-foreground';
+    lbl.className = 'nds-text-body nds-text-muted-foreground';
     lbl.textContent = 'Dashboard';
     topbar.appendChild(lbl);
     const mainContent = document.createElement('div');
-    mainContent.className = 'flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground';
+    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+    mainContent.dataset.justify = 'center';
+    mainContent.style.padding = '2rem';
     mainContent.textContent = 'Clique em "Componentes" para expandir o sub-menu';
     inset.append(topbar, mainContent);
 
@@ -294,22 +335,32 @@ export const ComBusca: Story = {
     const header = createSidebarHeader();
 
     const logoRow = document.createElement('div');
-    logoRow.className = 'px-2 py-1 text-sm font-semibold text-sidebar-foreground';
+    logoRow.className = 'nds-text-body nds-font-semibold';
+    logoRow.style.padding = '0.25rem 0.5rem';
+    logoRow.style.color = 'var(--sidebar-foreground)';
     logoRow.textContent = 'Design System';
     header.appendChild(logoRow);
 
     // Search input
     const searchWrapper = document.createElement('div');
-    searchWrapper.className = 'relative px-1 pb-1';
+    searchWrapper.style.position = 'relative';
+    searchWrapper.style.paddingLeft = '0.25rem';
+    searchWrapper.style.paddingRight = '0.25rem';
+    searchWrapper.style.paddingBottom = '0.25rem';
     searchWrapper.setAttribute('data-sidebar', 'input');
     const searchIcon = makeIcon(ICON_SEARCH);
     searchIcon.setAttribute('width', '14');
     searchIcon.setAttribute('height', '14');
-    searchIcon.className = 'absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none';
+    searchIcon.setAttribute('class', 'nds-text-muted-foreground');
+    searchIcon.setAttribute('style', 'position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);pointer-events:none');
     const searchInput = document.createElement('input');
     searchInput.type = 'search';
     searchInput.placeholder = 'Buscar...';
-    searchInput.className = 'w-full rounded-md border border-sidebar-border bg-sidebar px-2 py-1.5 pl-8 text-xs text-sidebar-foreground placeholder:text-sidebar-foreground/50 focus:outline-none focus:ring-2 focus:ring-sidebar-ring';
+    searchInput.className = 'nds-w-full nds-rounded-md nds-text-caption';
+    searchInput.style.border = '1px solid var(--sidebar-border)';
+    searchInput.style.background = 'var(--sidebar)';
+    searchInput.style.padding = '0.375rem 0.5rem 0.375rem 2rem';
+    searchInput.style.color = 'var(--sidebar-foreground)';
     searchWrapper.appendChild(searchIcon);
     searchWrapper.appendChild(searchInput);
     header.appendChild(searchWrapper);
@@ -335,12 +386,20 @@ export const ComBusca: Story = {
     inner.appendChild(footer);
 
     const inset = document.createElement('div');
-    inset.className = 'flex flex-1 flex-col';
+    inset.className = 'nds-flex-1';
+    inset.style.display = 'flex';
+    inset.style.flexDirection = 'column';
     const topbar = document.createElement('div');
-    topbar.className = 'flex h-12 items-center gap-2 border-b border-border px-4';
+    topbar.className = 'nds-cluster nds-border-b';
+    topbar.dataset.spacing = 'sm';
+    topbar.style.height = '3rem';
+    topbar.style.paddingLeft = '1rem';
+    topbar.style.paddingRight = '1rem';
     topbar.appendChild(createSidebarTrigger(instance.toggle));
     const mainContent = document.createElement('div');
-    mainContent.className = 'flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground';
+    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+    mainContent.dataset.justify = 'center';
+    mainContent.style.padding = '2rem';
     mainContent.textContent = 'SidebarInput no header para busca rápida';
     inset.append(topbar, mainContent);
 
@@ -371,7 +430,9 @@ export const ComBadges: Story = {
 
     const header = createSidebarHeader();
     const logoRow = document.createElement('div');
-    logoRow.className = 'px-2 py-1 text-sm font-semibold text-sidebar-foreground';
+    logoRow.className = 'nds-text-body nds-font-semibold';
+    logoRow.style.padding = '0.25rem 0.5rem';
+    logoRow.style.color = 'var(--sidebar-foreground)';
     logoRow.textContent = 'App';
     header.appendChild(logoRow);
     inner.appendChild(header);
@@ -390,12 +451,20 @@ export const ComBadges: Story = {
     inner.appendChild(content);
 
     const inset = document.createElement('div');
-    inset.className = 'flex flex-1 flex-col';
+    inset.className = 'nds-flex-1';
+    inset.style.display = 'flex';
+    inset.style.flexDirection = 'column';
     const topbar = document.createElement('div');
-    topbar.className = 'flex h-12 items-center gap-2 border-b border-border px-4';
+    topbar.className = 'nds-cluster nds-border-b';
+    topbar.dataset.spacing = 'sm';
+    topbar.style.height = '3rem';
+    topbar.style.paddingLeft = '1rem';
+    topbar.style.paddingRight = '1rem';
     topbar.appendChild(createSidebarTrigger(instance.toggle));
     const mainContent = document.createElement('div');
-    mainContent.className = 'flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground';
+    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+    mainContent.dataset.justify = 'center';
+    mainContent.style.padding = '2rem';
     mainContent.textContent = 'Badges indicam contadores de notificação';
     inset.append(topbar, mainContent);
 

@@ -2,6 +2,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { injectToastStyles } from '@/components/ui/sonner';
+import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import sonnerTranslations from '@shared/content/sonner/translations.json';
 import { sanitizeHtml } from '@/lib/sanitize-html';
@@ -81,27 +82,33 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
   toastEl.setAttribute('data-sonner-toast', '');
   toastEl.setAttribute('role', 'status');
   toastEl.setAttribute('aria-live', 'polite');
-  toastEl.className = `pointer-events-auto w-full max-w-sm rounded-lg border p-4 shadow-lg flex items-start gap-3 ${colorClass}`;
+  toastEl.className = `nds-w-full nds-max-w-sm nds-rounded-lg nds-border-default nds-shadow-lg nds-cluster ${colorClass}`;
+  toastEl.dataset.align = 'start';
+  toastEl.dataset.spacing = 'sm';
+  toastEl.style.pointerEvents = 'auto';
+  toastEl.style.padding = 'var(--spacing-4)';
 
   const icon = TOAST_ICONS[type];
   if (icon) {
     const iconWrap = document.createElement('span');
-    iconWrap.className = 'flex-shrink-0 mt-0.5';
+    iconWrap.className = 'nds-shrink-0';
+    iconWrap.style.marginTop = 'var(--spacing-0-5)';
     iconWrap.innerHTML = sanitizeHtml(icon);
     toastEl.appendChild(iconWrap);
   }
 
   const contentEl = document.createElement('div');
-  contentEl.className = 'flex-1 min-w-0';
+  contentEl.className = 'nds-flex-1 nds-min-w-0';
 
   const titleEl = document.createElement('p');
-  titleEl.className = 'text-sm font-medium';
+  titleEl.className = 'nds-text-body nds-font-medium';
   titleEl.textContent = message;
   contentEl.appendChild(titleEl);
 
   if (opts.description) {
     const descEl = document.createElement('p');
-    descEl.className = 'text-sm text-muted-foreground mt-1';
+    descEl.className = 'nds-text-body nds-text-muted-foreground';
+    descEl.style.marginTop = 'var(--spacing-1)';
     descEl.textContent = opts.description;
     contentEl.appendChild(descEl);
   }
@@ -109,7 +116,8 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
   if (opts.actionLabel && opts.onAction) {
     const actionBtn = document.createElement('button');
     actionBtn.type = 'button';
-    actionBtn.className = 'mt-2 text-sm font-medium text-primary hover:text-primary/80 underline-offset-4 hover:underline';
+    actionBtn.className = 'nds-text-body nds-font-medium nds-text-primary nds-hover-underline';
+    actionBtn.style.marginTop = 'var(--spacing-2)';
     actionBtn.textContent = opts.actionLabel;
     actionBtn.addEventListener('click', () => {
       track('toast_action_click', {
@@ -129,7 +137,7 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
   const closeBtn = document.createElement('button');
   closeBtn.type = 'button';
   closeBtn.setAttribute('aria-label', 'Fechar');
-  closeBtn.className = 'flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors';
+  closeBtn.className = 'nds-shrink-0 nds-text-muted-foreground nds-hover-text-foreground';
   closeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
   closeBtn.addEventListener('click', () => {
     toastEl.style.opacity = '0';
@@ -182,13 +190,13 @@ function createDemoToastArea(btnConfigs: Array<{ label: string; fn: (container: 
   btnsRow.style.cssText = 'display: flex; flex-wrap: wrap; gap: 0.5rem;';
 
   for (const { label, fn } of btnConfigs) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = label;
-    btn.className = 'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2';
-    btn.addEventListener('click', () => {
-      track('toast_demo_triggered', { toast_type: label, locale: getLocale() });
-      fn(toastContainer);
+    const btn = createButton({
+      variant: 'outline',
+      label,
+      onClick: () => {
+        track('toast_demo_triggered', { toast_type: label, locale: getLocale() });
+        fn(toastContainer);
+      },
     });
     btnsRow.appendChild(btn);
   }

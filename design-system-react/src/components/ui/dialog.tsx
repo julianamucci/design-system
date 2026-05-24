@@ -9,8 +9,9 @@ function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
-function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+type DialogTriggerProps = DialogPrimitive.Trigger.Props & { asChild?: boolean }
+function DialogTrigger({ ...props }: DialogTriggerProps) {
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...(props as DialogPrimitive.Trigger.Props)} />
 }
 
 function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {

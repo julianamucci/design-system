@@ -92,10 +92,11 @@ export const Multiple: Story = {
 export const Controlled: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'w-full max-w-lg space-y-3';
+    wrapper.className = 'nds-stack nds-w-full nds-max-w-lg';
+    wrapper.dataset.spacing = 'sm';
 
     const indicator = document.createElement('p');
-    indicator.className = 'text-xs text-muted-foreground';
+    indicator.className = 'nds-text-caption nds-text-muted-foreground';
 
     const setIndicator = (val: string | string[]) => {
       const display = Array.isArray(val) ? val.join(', ') : val || '(nenhum)';

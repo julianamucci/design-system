@@ -25,7 +25,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Breadcrumb>;
+} satisfies Meta<any>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -33,7 +33,7 @@ type Story = StoryObj<typeof meta>;
 export const Simple: Story = {
   args: {
     onNavigate: fn(),
-  },
+  } as any,
   render: (args) => ({
     components: {
       Breadcrumb,

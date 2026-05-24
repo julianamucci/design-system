@@ -48,7 +48,7 @@ export const Controlled: Story = {
           className="flex flex-col gap-4 min-w-[280px]"
           style={{ contain: "layout", minHeight: 160, position: "relative" }}
         >
-          <Select value={value} onValueChange={setValue}>
+          <Select value={value} onValueChange={(v) => setValue(v ?? "")}>
             <SelectTrigger aria-label="Selecionar estado">
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
@@ -109,7 +109,7 @@ export const EmFormulario: Story = {
         >
           <div className="flex flex-col gap-2">
             <Label htmlFor="form-state">Estado</Label>
-            <Select name="state" value={value} onValueChange={setValue}>
+            <Select name="state" value={value} onValueChange={(v) => setValue(v ?? "")}>
               <SelectTrigger id="form-state" aria-label="Selecionar estado">
                 <SelectValue placeholder="Selecione..." />
               </SelectTrigger>
@@ -178,7 +178,7 @@ export const WithLabel: Story = {
           style={{ contain: "layout", minHeight: 140, position: "relative" }}
         >
           <Label htmlFor="labeled-state">Estado de residência</Label>
-          <Select value={value} onValueChange={setValue}>
+          <Select value={value} onValueChange={(v) => setValue(v ?? "")}>
             <SelectTrigger id="labeled-state" aria-label="Estado de residência">
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>

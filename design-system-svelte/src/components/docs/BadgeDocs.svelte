@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Badge } from '@/components/ui/badge';
-  import { Check, Tag as TagIcon } from 'lucide-svelte';
+  import { Check, Tag as TagIcon, Bell } from 'lucide-svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -8,7 +8,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -51,6 +51,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -317,6 +318,66 @@ interface BadgeProps extends HTMLAnchorAttributes {
   {/snippet}
   {#snippet variantOutline()}
     <Badge variant="outline">{$tStore('demonstration.labels.outlineLabel')}</Badge>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="badge"
+    items={[
+      {
+        name: $tStore('variants.compositions.withIcon.name'),
+        description: $tStore('variants.compositions.withIcon.description'),
+        useWhen: $tStore('variants.compositions.withIcon.use'),
+        code: `<Badge>\n  <Check class="h-3 w-3" aria-hidden="true" />\n  Ativo\n</Badge>`,
+        preview: compWithIcon,
+      },
+      {
+        name: $tStore('variants.compositions.count.name'),
+        description: $tStore('variants.compositions.count.description'),
+        useWhen: $tStore('variants.compositions.count.use'),
+        code: `<span role="status" aria-label="12 notificações não lidas" class="inline-flex items-center gap-2">\n  <Bell class="h-5 w-5" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
+        preview: compCount,
+      },
+      {
+        name: $tStore('variants.compositions.asLink.name'),
+        description: $tStore('variants.compositions.asLink.description'),
+        useWhen: $tStore('variants.compositions.asLink.use'),
+        code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" class="inline-flex">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
+        preview: compAsLink,
+      },
+      {
+        name: $tStore('variants.compositions.asTrigger.name'),
+        description: $tStore('variants.compositions.asTrigger.description'),
+        useWhen: $tStore('variants.compositions.asTrigger.use'),
+        code: `<button type="button" aria-label="Filtrar por React" class="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md">\n  <Badge variant="outline">React</Badge>\n</button>`,
+        preview: compAsTrigger,
+      },
+    ]}
+  />
+
+  {#snippet compWithIcon()}
+    <Badge>
+      <Check class="h-3 w-3" aria-hidden="true" />
+      Ativo
+    </Badge>
+  {/snippet}
+  {#snippet compCount()}
+    <span role="status" aria-label="12 notificações não lidas" class="inline-flex items-center gap-2">
+      <Bell class="h-5 w-5" aria-hidden="true" />
+      <Badge variant="destructive">12</Badge>
+    </span>
+  {/snippet}
+  {#snippet compAsLink()}
+    <a href="#design" aria-label="Ver todos os itens da categoria Design" class="inline-flex">
+      <Badge variant="secondary">Design</Badge>
+    </a>
+  {/snippet}
+  {#snippet compAsTrigger()}
+    <button type="button" aria-label="Filtrar por React" class="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md">
+      <Badge variant="outline">React</Badge>
+    </button>
   {/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->

@@ -53,7 +53,8 @@ type Story = StoryObj<SwitchArgs>;
 
 function buildSwitchWithLabel(args: SwitchArgs): HTMLElement {
   const row = document.createElement('div');
-  row.className = 'flex items-center space-x-2';
+  row.className = 'nds-cluster';
+  row.dataset.spacing = 'sm';
 
   const id = `switch-playground-${Math.random().toString(36).slice(2, 8)}`;
   const sw = createSwitch({

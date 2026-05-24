@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -86,7 +87,7 @@ function buildLabelBadge(variant: BadgeVariant, label: string): HTMLElement {
 }
 
 function buildIconBadge(variant: BadgeVariant, icon: SVGSVGElement, label: string): HTMLElement {
-  return createBadge({ variant, children: [icon, label] });
+  return createBadge({ variant, children: [icon as unknown as HTMLElement, label] });
 }
 
 // ─── createBadgeDocs ──────────────────────────────────────────────────────────
@@ -127,6 +128,7 @@ export function createBadgeDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -177,7 +179,7 @@ export function createBadgeDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -191,7 +193,8 @@ export function createBadgeDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-wrap items-center gap-3';
+            wrap.className = 'nds-cluster';
+            wrap.dataset.spacing = 'sm';
             wrap.append(
               buildLabelBadge('default',     t('demonstration.labels.defaultLabel')),
               buildLabelBadge('secondary',   t('demonstration.labels.secondaryLabel')),
@@ -282,7 +285,8 @@ export function createBadgeDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex items-center gap-2';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.spacing = 'xs';
                 wrap.append(
                   buildLabelBadge('default',   'Novo'),
                   buildLabelBadge('secondary', 'Beta'),
@@ -304,7 +308,8 @@ export function createBadgeDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex items-center gap-2';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.spacing = 'xs';
                 wrap.append(
                   buildIconBadge('destructive', buildXIcon(), 'Expirado'),
                   buildLabelBadge('destructive', 'Urgente'),
@@ -313,7 +318,8 @@ export function createBadgeDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex items-center gap-2';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.spacing = 'xs';
                 wrap.append(
                   buildLabelBadge('destructive', 'Promoção'),
                   buildLabelBadge('destructive', 'Novo'),
@@ -365,6 +371,123 @@ export function createBadgeDocs(): HTMLElement {
               description: stripHtml(t('variants.items.outline')),
               code: codeOutline,
               previewFactory: () => buildLabelBadge('outline', t('demonstration.labels.outlineLabel')),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        function createCheckSvg(): SVGSVGElement {
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+          svg.setAttribute('viewBox', '0 0 24 24');
+          svg.setAttribute('width', '12'); svg.setAttribute('height', '12');
+          svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor');
+          svg.setAttribute('stroke-width', '2'); svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+          svg.setAttribute('aria-hidden', 'true');
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+          path.setAttribute('points', '20 6 9 17 4 12');
+          svg.appendChild(path);
+          return svg;
+        }
+
+        function createBellSvg(): SVGSVGElement {
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+          svg.setAttribute('viewBox', '0 0 24 24');
+          svg.setAttribute('width', '20'); svg.setAttribute('height', '20');
+          svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor');
+          svg.setAttribute('stroke-width', '2'); svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+          svg.setAttribute('aria-hidden', 'true');
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.setAttribute('d', 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9');
+          svg.appendChild(path);
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          circle.setAttribute('d', 'M10 21a2 2 0 0 0 4 0');
+          svg.appendChild(circle);
+          return svg;
+        }
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'badge',
+          items: [
+            {
+              name: t('variants.compositions.withIcon.name'),
+              description: t('variants.compositions.withIcon.description'),
+              useWhen: t('variants.compositions.withIcon.use'),
+              code:
+                `const checkSvg = createCheckSvg();\n` +
+                `const badge = createBadge({ variant: 'default', children: [checkSvg, 'Ativo'] });`,
+              previewFactory: () => createBadge({ variant: 'default', children: [createCheckSvg() as unknown as HTMLElement, 'Ativo'] }),
+            },
+            {
+              name: t('variants.compositions.count.name'),
+              description: t('variants.compositions.count.description'),
+              useWhen: t('variants.compositions.count.use'),
+              code:
+                `const wrap = document.createElement('span');\n` +
+                `wrap.setAttribute('role', 'status');\n` +
+                `wrap.setAttribute('aria-label', '12 notificações não lidas');\n` +
+                `wrap.style.display = 'inline-flex';\n` +
+                `wrap.style.alignItems = 'center';\n` +
+                `wrap.style.gap = 'var(--spacing-2)';\n` +
+                `wrap.append(createBellSvg(), createBadge({ variant: 'destructive', children: '12' }));`,
+              previewFactory: () => {
+                const wrap = document.createElement('span');
+                wrap.setAttribute('role', 'status');
+                wrap.setAttribute('aria-label', '12 notificações não lidas');
+                wrap.style.display = 'inline-flex';
+                wrap.style.alignItems = 'center';
+                wrap.style.gap = 'var(--spacing-2)';
+                wrap.append(createBellSvg(), createBadge({ variant: 'destructive', children: '12' }));
+                return wrap;
+              },
+            },
+            {
+              name: t('variants.compositions.asLink.name'),
+              description: t('variants.compositions.asLink.description'),
+              useWhen: t('variants.compositions.asLink.use'),
+              code:
+                `const link = document.createElement('a');\n` +
+                `link.href = '#design';\n` +
+                `link.setAttribute('aria-label', 'Ver todos os itens da categoria Design');\n` +
+                `link.style.display = 'inline-flex';\n` +
+                `link.appendChild(createBadge({ variant: 'secondary', children: 'Design' }));`,
+              previewFactory: () => {
+                const link = document.createElement('a');
+                link.href = '#design';
+                link.setAttribute('aria-label', 'Ver todos os itens da categoria Design');
+                link.style.display = 'inline-flex';
+                link.appendChild(createBadge({ variant: 'secondary', children: 'Design' }));
+                return link;
+              },
+            },
+            {
+              name: t('variants.compositions.asTrigger.name'),
+              description: t('variants.compositions.asTrigger.description'),
+              useWhen: t('variants.compositions.asTrigger.use'),
+              code:
+                `const btn = document.createElement('button');\n` +
+                `btn.type = 'button';\n` +
+                `btn.setAttribute('aria-label', 'Filtrar por React');\n` +
+                `btn.className = 'nds-rounded-md nds-cursor-pointer nds-bg-transparent';\n` +
+                `btn.style.display = 'inline-flex';\n` +
+                `btn.style.padding = '0';\n` +
+                `btn.style.border = '0';\n` +
+                `btn.appendChild(createBadge({ variant: 'outline', children: 'React' }));`,
+              previewFactory: () => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.setAttribute('aria-label', 'Filtrar por React');
+                btn.className = 'nds-rounded-md nds-cursor-pointer nds-bg-transparent';
+                btn.style.display = 'inline-flex';
+                btn.style.padding = '0';
+                btn.style.border = '0';
+                btn.appendChild(createBadge({ variant: 'outline', children: 'React' }));
+                return btn;
+              },
             },
           ],
         });

@@ -1,0 +1,241 @@
+/*
+ * ─── nds-sidebar ────────────────────────────────────────────────────────────
+ * Sidebar lateral fixa com modos expanded/collapsed e variantes.
+ * Reusa custom properties --sidebar-width (16rem) e --sidebar-width-icon (3rem).
+ *
+ * Estrutura:
+ *   <div class="nds-sidebar-wrapper">
+ *     <div class="nds-sidebar-root" data-state="expanded" data-side="left" data-variant="sidebar">
+ *       <div class="nds-sidebar-gap" data-state="expanded">
+ *         <div class="nds-sidebar-gap-inner"></div>
+ *       </div>
+ *       <div class="nds-sidebar-panel">
+ *         <div class="nds-sidebar-inner" data-sidebar="sidebar">
+ *           <div class="nds-sidebar-header">…</div>
+ *           <div class="nds-sidebar-content">…</div>
+ *           <div class="nds-sidebar-footer">…</div>
+ *         </div>
+ *       </div>
+ *     </div>
+ *   </div>
+ *
+ * Tokens: --sidebar (bg), --sidebar-foreground, --sidebar-accent,
+ *         --sidebar-accent-foreground, --sidebar-border, --sidebar-ring,
+ *         --radius, --spacing-*
+ */
+
+/* ── Provider wrapper ────────────────────────────────────────────────────── */
+.nds-sidebar-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100svh;
+  --sidebar-width: 16rem;
+  --sidebar-width-icon: 3rem;
+}
+
+/* ── Root ────────────────────────────────────────────────────────────────── */
+.nds-sidebar-root {
+  /* container que envolve gap + panel */
+}
+
+/* ── Gap (espaço reservado no fluxo) ─────────────────────────────────────── */
+.nds-sidebar-gap {
+  display: none;
+  color: hsl(var(--sidebar-foreground));
+}
+
+@media (min-width: 48rem) {
+  .nds-sidebar-gap {
+    display: block;
+  }
+}
+
+.nds-sidebar-gap-inner {
+  position: relative;
+  height: 100svh;
+  width: var(--sidebar-width);
+  transition: width 200ms linear;
+}
+
+.nds-sidebar-gap[data-state="collapsed"] .nds-sidebar-gap-inner {
+  width: var(--sidebar-width-icon);
+}
+
+/* ── Panel (sidebar fixa) ────────────────────────────────────────────────── */
+.nds-sidebar-panel {
+  position: fixed;
+  inset-block: 0;
+  z-index: 10;
+  height: 100svh;
+  width: var(--sidebar-width);
+
+  display: none;
+  transition: width 200ms linear, left 200ms linear, right 200ms linear;
+}
+
+@media (min-width: 48rem) {
+  .nds-sidebar-panel {
+    display: flex;
+  }
+}
+
+.nds-sidebar-root[data-side="left"] .nds-sidebar-panel  { left:  0; }
+.nds-sidebar-root[data-side="right"] .nds-sidebar-panel { right: 0; }
+
+.nds-sidebar-root[data-side="left"][data-variant="sidebar"] .nds-sidebar-panel  { border-right: 1px solid hsl(var(--sidebar-border)); }
+.nds-sidebar-root[data-side="right"][data-variant="sidebar"] .nds-sidebar-panel { border-left:  1px solid hsl(var(--sidebar-border)); }
+
+.nds-sidebar-root[data-state="collapsed"] .nds-sidebar-panel {
+  width: var(--sidebar-width-icon);
+}
+
+/* ── Inner (conteúdo da sidebar) ─────────────────────────────────────────── */
+.nds-sidebar-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: hsl(var(--sidebar));
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.nds-sidebar-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2);
+}
+
+/* ── Content (área principal scrollável) ─────────────────────────────────── */
+.nds-sidebar-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.nds-sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2);
+}
+
+/* ── Group (seção dentro da sidebar com label opcional) ──────────────────── */
+.nds-sidebar-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  padding: var(--spacing-2);
+}
+
+.nds-sidebar-group-label {
+  display: flex;
+  align-items: center;
+  height: var(--spacing-8, 2rem);
+  flex-shrink: 0;
+
+  padding-inline: var(--spacing-2);
+  border-radius: var(--radius, 0.5rem);
+
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--sidebar-foreground) / 0.7);
+}
+
+/* ── Menu (lista de itens) ───────────────────────────────────────────────── */
+.nds-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ── Menu item (li wrapper) ──────────────────────────────────────────────── */
+.nds-sidebar-menu-item {
+  position: relative;
+}
+
+/* ── Menu button (link ou button dentro do item) ─────────────────────────── */
+.nds-sidebar-menu-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  width: 100%;
+  padding: var(--spacing-2);
+  overflow: hidden;
+
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius, 0.5rem);
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  outline: 0;
+  transition: background-color 150ms, color 150ms;
+}
+
+.nds-sidebar-menu-button:hover {
+  background-color: hsl(var(--sidebar-accent));
+  color: hsl(var(--sidebar-accent-foreground));
+}
+
+.nds-sidebar-menu-button:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--sidebar-ring) / 0.5);
+}
+
+.nds-sidebar-menu-button:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.nds-sidebar-menu-button[data-active="true"] {
+  background-color: hsl(var(--sidebar-accent));
+  color: hsl(var(--sidebar-accent-foreground));
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.nds-sidebar-menu-button > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  flex-shrink: 0;
+}
+
+.nds-sidebar-menu-button > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Badge à direita (numeric counter) */
+.nds-sidebar-menu-button-badge {
+  margin-left: auto;
+}
+
+/* ── Separator ───────────────────────────────────────────────────────────── */
+.nds-sidebar-separator {
+  height: 1px;
+  margin-inline: var(--spacing-2);
+  background-color: hsl(var(--sidebar-border));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-sidebar-gap-inner,
+  .nds-sidebar-panel,
+  .nds-sidebar-menu-button {
+    transition: none;
+  }
+}

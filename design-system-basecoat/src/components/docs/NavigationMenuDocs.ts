@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -113,11 +114,12 @@ export function createNavigationMenuDocs(): HTMLElement {
       { id: 'do-dont',      labelKey: 'nav.doDont'        },
     ]},
     { labelKey: 'nav.techRef', sections: [
-      { id: 'importacao',   labelKey: 'nav.import'   },
-      { id: 'variantes',    labelKey: 'nav.variants' },
-      { id: 'estados',      labelKey: 'nav.states'   },
-      { id: 'propriedades', labelKey: 'nav.props'    },
-      { id: 'tokens',       labelKey: 'nav.tokens'   },
+      { id: 'importacao',   labelKey: 'nav.import'       },
+      { id: 'variantes',    labelKey: 'nav.variants'     },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
+      { id: 'estados',      labelKey: 'nav.states'       },
+      { id: 'propriedades', labelKey: 'nav.props'        },
+      { id: 'tokens',       labelKey: 'nav.tokens'       },
     ]},
     { labelKey: 'nav.context', sections: [
       { id: 'acessibilidade', labelKey: 'nav.accessibility' },
@@ -158,7 +160,7 @@ export function createNavigationMenuDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -173,7 +175,10 @@ export function createNavigationMenuDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'flex items-start justify-center w-full min-h-[220px] p-2';
+            wrap.className = 'nds-cluster nds-w-full nds-p-2';
+            wrap.dataset.align = 'start';
+            wrap.dataset.justify = 'center';
+            wrap.style.minHeight = '220px';
             wrap.appendChild(buildDemoNav());
             return wrap;
           },
@@ -244,7 +249,9 @@ export function createNavigationMenuDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-start justify-center';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
                 const nav = createNavigationMenu([
                   { label: 'Início',   href: '/' },
                   { label: 'Produtos', href: '/produtos' },
@@ -254,7 +261,7 @@ export function createNavigationMenuDocs(): HTMLElement {
                 const home = nav.querySelector<HTMLAnchorElement>('a[href="/"]');
                 if (home) {
                   home.setAttribute('aria-current', 'page');
-                  home.classList.add('bg-accent', 'text-accent-foreground');
+                  home.classList.add('nds-bg-accent', 'nds-text-accent-foreground');
                 }
                 wrap.appendChild(nav);
                 return wrap;
@@ -262,7 +269,9 @@ export function createNavigationMenuDocs(): HTMLElement {
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-start justify-center';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
                 const nav = createNavigationMenu([
                   { label: 'Item 1', href: '/1' },
                   { label: 'Item 2', href: '/2' },
@@ -281,7 +290,9 @@ export function createNavigationMenuDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-start justify-center';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
                 const nav = createNavigationMenu([
                   {
                     label: 'Soluções',
@@ -300,7 +311,9 @@ export function createNavigationMenuDocs(): HTMLElement {
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex flex-col items-center text-xs text-muted-foreground italic gap-1';
+                wrap.className = 'nds-stack nds-text-caption nds-text-muted-foreground nds-italic';
+                wrap.dataset.spacing = 'xs';
+                wrap.style.alignItems = 'center';
                 const note = document.createElement('p');
                 note.textContent = 'Mega-menu com 30+ links sem agrupamento (anti-padrão).';
                 wrap.appendChild(note);
@@ -332,19 +345,17 @@ nav.setAttribute('aria-label', 'Navegação principal');`;
 
         const codeVertical = `// DIVERGÊNCIA IDIOMÁTICA:
 // O factory Basecoat fixa orientação horizontal — para vertical,
-// aplicamos classes Tailwind manualmente no <ul role="menubar">.
+// aplicamos estilos inline e nds-stack manualmente.
 const nav = createNavigationMenu([
   { label: 'Início',      href: '/' },
   { label: 'Dashboard',   href: '/dashboard' },
   { label: 'Configurações', href: '/configuracoes' },
 ]);
 nav.setAttribute('aria-label', 'Navegação lateral');
-nav.classList.add('flex-col', 'items-stretch');
-const ul = nav.querySelector('ul[role="menubar"]');
+nav.classList.add('nds-stack');
+const ul = nav.querySelector('ul[role="menubar"]') as HTMLElement | null;
 ul?.setAttribute('aria-orientation', 'vertical');
-ul?.classList.replace('items-center', 'items-stretch');
-ul?.classList.replace('space-x-1', 'space-y-1');
-ul?.classList.add('flex-col');`;
+if (ul) { ul.classList.add('nds-stack'); ul.style.alignItems = 'stretch'; }`;
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -356,7 +367,10 @@ ul?.classList.add('flex-col');`;
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-start justify-center min-h-[140px]';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '140px';
                 wrap.appendChild(buildDemoNav());
                 return wrap;
               },
@@ -370,23 +384,260 @@ ul?.classList.add('flex-col');`;
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
-                wrap.className = 'flex items-start justify-center min-h-[200px]';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '200px';
                 const nav = createNavigationMenu([
                   { label: 'Início',     href: '/' },
                   { label: 'Dashboard',  href: '/dashboard' },
                   { label: 'Configurações', href: '/configuracoes' },
                 ]);
                 nav.setAttribute('aria-label', 'Navegação lateral');
-                nav.classList.add('flex-col', 'items-stretch');
+                nav.classList.add('nds-stack');
                 const ul = nav.querySelector<HTMLElement>('ul[role="menubar"]');
                 if (ul) {
                   ul.setAttribute('aria-orientation', 'vertical');
                   ul.className =
-                    'group flex flex-col list-none items-stretch space-y-1 w-full max-w-[220px]';
+                    'nds-stack nds-list-none nds-w-full';
+                  ul.dataset.spacing = 'xs';
+                  ul.style.alignItems = 'stretch';
+                  ul.style.maxWidth = '220px';
                 }
                 wrap.appendChild(nav);
                 return wrap;
               },
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        function buildLinkSimples(): HTMLElement {
+          const wrap = document.createElement('div');
+          wrap.style.contain = 'layout';
+          wrap.className = 'nds-cluster nds-w-full nds-p-2';
+          wrap.dataset.align = 'start';
+          wrap.dataset.justify = 'center';
+          wrap.style.minHeight = '200px';
+          const nav = createNavigationMenu([
+            { label: 'Início',  href: '/' },
+            { label: 'Preços',  href: '/precos' },
+            { label: 'Contato', href: '/contato' },
+          ]);
+          nav.setAttribute('aria-label', 'Navegação principal');
+          wrap.appendChild(nav);
+          return wrap;
+        }
+
+        function buildComDropdown(): HTMLElement {
+          const wrap = document.createElement('div');
+          wrap.style.contain = 'layout';
+          wrap.className = 'nds-cluster nds-w-full nds-p-2';
+          wrap.dataset.align = 'start';
+          wrap.dataset.justify = 'center';
+          wrap.style.minHeight = '280px';
+          const nav = createNavigationMenu([
+            { label: 'Início', href: '/' },
+            {
+              label: 'Produtos',
+              children: [
+                { label: 'Plano Inicial',      href: '/produtos/inicial'      },
+                { label: 'Plano Profissional', href: '/produtos/profissional' },
+                { label: 'Plano Empresarial',  href: '/produtos/empresarial'  },
+                { label: 'Comparar planos',    href: '/produtos/comparar'     },
+              ],
+            },
+          ]);
+          nav.setAttribute('aria-label', 'Navegação principal');
+          wrap.appendChild(nav);
+          return wrap;
+        }
+
+        function buildMegaMenuGrid(): HTMLElement {
+          const wrap = document.createElement('div');
+          wrap.style.contain = 'layout';
+          wrap.className = 'nds-cluster nds-w-full nds-p-2';
+          wrap.dataset.align = 'start';
+          wrap.dataset.justify = 'center';
+          wrap.style.minHeight = '320px';
+          const nav = createNavigationMenu([
+            { label: 'Início', href: '/' },
+            {
+              label: 'Soluções',
+              children: [
+                { label: 'Para Marketing', href: '/solucoes/marketing', description: 'Automação, leads e campanhas.' },
+                { label: 'Para Vendas',    href: '/solucoes/vendas',    description: 'Pipeline, CRM e propostas.'    },
+                { label: 'Para Suporte',   href: '/solucoes/suporte',   description: 'Tickets, base de conhecimento.' },
+                { label: 'Para Sucesso',   href: '/solucoes/sucesso',   description: 'Onboarding e retenção.'         },
+                { label: 'Para Operações', href: '/solucoes/operacoes', description: 'Workflows e integrações.'       },
+                { label: 'Para Analytics', href: '/solucoes/analytics', description: 'Dashboards e relatórios.'       },
+              ],
+            },
+          ]);
+          nav.setAttribute('aria-label', 'Navegação principal');
+          const content = nav.querySelector<HTMLElement>('[role="menu"]');
+          if (content) {
+            content.style.minWidth = '560px';
+            content.classList.add('nds-grid', 'nds-p-3'); content.dataset.cols = '2'; content.dataset.spacing = 'sm';
+          }
+          wrap.appendChild(nav);
+          return wrap;
+        }
+
+        function buildComCardDestacado(): HTMLElement {
+          const wrap = document.createElement('div');
+          wrap.style.contain = 'layout';
+          wrap.className = 'nds-cluster nds-w-full nds-p-2';
+          wrap.dataset.align = 'start';
+          wrap.dataset.justify = 'center';
+          wrap.style.minHeight = '320px';
+          const nav = createNavigationMenu([
+            { label: 'Início', href: '/' },
+            {
+              label: 'Recursos',
+              children: [
+                { label: 'Documentação', href: '/docs',       description: 'Guias completos e referência da API.' },
+                { label: 'Tutoriais',    href: '/tutoriais',  description: 'Aprenda com exemplos práticos.'       },
+                { label: 'Comunidade',   href: '/comunidade', description: 'Fóruns e Discord ativo.'              },
+              ],
+            },
+          ]);
+          nav.setAttribute('aria-label', 'Navegação principal');
+          const content = nav.querySelector<HTMLElement>('[role="menu"]');
+          if (content) {
+            content.style.minWidth = '560px';
+            content.classList.add('flex', 'gap-3', 'nds-p-3');
+            const card = document.createElement('a');
+            card.href = '/quickstart';
+            card.setAttribute('role', 'menuitem');
+            card.className = 'nds-stack nds-rounded-md nds-p-4';
+            card.style.justifyContent = 'flex-end';
+            card.style.width = '220px';
+            card.style.textDecoration = 'none';
+            card.style.background = 'linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))';
+            card.style.transition = 'background 150ms';
+            const cardTitle = document.createElement('div');
+            cardTitle.className = 'nds-text-base nds-font-semibold nds-leading-tight';
+            cardTitle.textContent = 'Comece em 5 minutos';
+            const cardDesc = document.createElement('p');
+            cardDesc.className = 'nds-mt-2 nds-text-body nds-leading-tight nds-text-muted-foreground';
+            cardDesc.textContent = 'Crie sua primeira integração com nosso quickstart.';
+            card.append(cardTitle, cardDesc);
+            content.insertBefore(card, content.firstChild);
+            const sideList = document.createElement('div');
+            sideList.className = 'nds-stack nds-flex-1';
+            sideList.dataset.spacing = 'xs';
+            const links = Array.from(
+              content.querySelectorAll<HTMLElement>('a[role="menuitem"]:not(:first-child)')
+            );
+            for (const link of links) sideList.appendChild(link);
+            content.appendChild(sideList);
+          }
+          wrap.appendChild(nav);
+          return wrap;
+        }
+
+        const codeLinkSimples = `const nav = createNavigationMenu([
+  { label: 'Início',  href: '/' },
+  { label: 'Preços',  href: '/precos' },
+  { label: 'Contato', href: '/contato' },
+]);
+nav.setAttribute('aria-label', 'Navegação principal');`;
+
+        const codeComDropdown = `const nav = createNavigationMenu([
+  { label: 'Início', href: '/' },
+  {
+    label: 'Produtos',
+    children: [
+      { label: 'Plano Inicial',      href: '/produtos/inicial'      },
+      { label: 'Plano Profissional', href: '/produtos/profissional' },
+      { label: 'Plano Empresarial',  href: '/produtos/empresarial'  },
+      { label: 'Comparar planos',    href: '/produtos/comparar'     },
+    ],
+  },
+]);
+nav.setAttribute('aria-label', 'Navegação principal');`;
+
+        const codeMegaMenuGrid = `const nav = createNavigationMenu([
+  { label: 'Início', href: '/' },
+  {
+    label: 'Soluções',
+    children: [
+      { label: 'Para Marketing', href: '/solucoes/marketing', description: 'Automação, leads e campanhas.' },
+      { label: 'Para Vendas',    href: '/solucoes/vendas',    description: 'Pipeline, CRM e propostas.'    },
+      // ...mais 4 itens
+    ],
+  },
+]);
+nav.setAttribute('aria-label', 'Navegação principal');
+
+// Reorganiza Content em grid 2-cols (factory padrão é coluna única).
+const content = nav.querySelector('[role="menu"]');
+content.style.minWidth = '560px';
+content.classList.add('nds-grid', 'nds-p-3'); content.dataset.cols = '2'; content.dataset.spacing = 'sm';`;
+
+        const codeComCardDestacado = `const nav = createNavigationMenu([
+  { label: 'Início', href: '/' },
+  {
+    label: 'Recursos',
+    children: [
+      { label: 'Documentação', href: '/docs',       description: 'Guias completos e referência da API.' },
+      { label: 'Tutoriais',    href: '/tutoriais',  description: 'Aprenda com exemplos práticos.'       },
+      { label: 'Comunidade',   href: '/comunidade', description: 'Fóruns e Discord ativo.'              },
+    ],
+  },
+]);
+nav.setAttribute('aria-label', 'Navegação principal');
+
+// Compõe Content como flex linha: card hero + lista lateral.
+const content = nav.querySelector('[role="menu"]');
+content.style.minWidth = '560px';
+content.classList.add('nds-cluster', 'nds-p-3');
+content.dataset.spacing = 'md';
+
+const card = document.createElement('a');
+card.href = '/quickstart';
+card.setAttribute('role', 'menuitem');
+card.className = 'nds-stack nds-rounded-md nds-bg-muted nds-p-4';
+card.style.width = '220px';
+card.style.justifyContent = 'flex-end';
+card.style.textDecoration = 'none';
+// + título + descrição, inserir antes dos demais links
+content.insertBefore(card, content.firstChild);`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'navigation-menu',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.linkSimples.name')),
+              description: stripHtml(t('variants.compositions.linkSimples.description')),
+              useWhen: stripHtml(t('variants.compositions.linkSimples.use')),
+              code: codeLinkSimples,
+              previewFactory: buildLinkSimples,
+            },
+            {
+              name: stripHtml(t('variants.compositions.comDropdown.name')),
+              description: stripHtml(t('variants.compositions.comDropdown.description')),
+              useWhen: stripHtml(t('variants.compositions.comDropdown.use')),
+              code: codeComDropdown,
+              previewFactory: buildComDropdown,
+            },
+            {
+              name: stripHtml(t('variants.compositions.megaMenuGrid.name')),
+              description: stripHtml(t('variants.compositions.megaMenuGrid.description')),
+              useWhen: stripHtml(t('variants.compositions.megaMenuGrid.use')),
+              code: codeMegaMenuGrid,
+              previewFactory: buildMegaMenuGrid,
+            },
+            {
+              name: stripHtml(t('variants.compositions.comCardDestacado.name')),
+              description: stripHtml(t('variants.compositions.comCardDestacado.description')),
+              useWhen: stripHtml(t('variants.compositions.comCardDestacado.use')),
+              code: codeComCardDestacado,
+              previewFactory: buildComCardDestacado,
             },
           ],
         });

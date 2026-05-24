@@ -1,0 +1,70 @@
+/*
+ * ─── nds-related-card ────────────────────────────────────────────────────────
+ * Card clicável usado em "Componentes Relacionados" das docs pages.
+ *
+ * Visual = button outline (border 1px + bg-background + hover accent),
+ * mas layout de card (vertical, multi-linha, padding generoso, sem inline-flex).
+ *
+ * Tokens: --background, --border, --foreground, --primary, --muted-foreground,
+ *         --accent, --accent-foreground, --ring, --radius-button, --spacing-*
+ */
+
+.nds-related-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  padding: var(--spacing-4);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-button, 0.625rem);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  transition: background-color 150ms, color 150ms, border-color 150ms, box-shadow 150ms;
+}
+
+.nds-related-card:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-related-card:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring) / 0.5);
+}
+
+.dark .nds-related-card {
+  border-color: hsl(var(--input));
+  background-color: hsl(var(--input) / 0.3);
+}
+.dark .nds-related-card:hover {
+  background-color: hsl(var(--accent) / 0.5);
+}
+
+/* Conteúdo */
+.nds-related-card-title {
+  font-size: 0.875rem;                          /* 14px */
+  line-height: 1.25;
+  font-weight: 600;
+  color: hsl(var(--primary));
+}
+
+.nds-related-card-description {
+  font-size: 0.75rem;                           /* 12px */
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Hover dos textos: herdam cor do card (accent-foreground) */
+.nds-related-card:hover .nds-related-card-title,
+.nds-related-card:hover .nds-related-card-description {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-related-card {
+    transition: none;
+  }
+}

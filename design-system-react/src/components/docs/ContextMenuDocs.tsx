@@ -18,7 +18,6 @@ import {
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import contextMenuTranslations from "@shared/content/context-menu/translations.json";
@@ -31,6 +30,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -69,6 +69,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -233,17 +234,6 @@ export function ContextMenuDocs() {
   ContextMenuSubTrigger,
   ContextMenuSubContent,
   ContextMenuSeparator,
-} from "@/components/ui/context-menu";`;
-
-  const codeImportWithCheckbox = `import {
-  ContextMenu,
-  ContextMenuTrigger,
-  ContextMenuContent,
-  ContextMenuGroup,
-  ContextMenuLabel,
-  ContextMenuCheckboxItem,
-  ContextMenuRadioGroup,
-  ContextMenuRadioItem,
 } from "@/components/ui/context-menu";`;
 
   const codeVariantDefault = `<ContextMenu>
@@ -628,6 +618,141 @@ interface ContextMenuCheckboxItemProps
                     <ContextMenuItem inset>Editar</ContextMenuItem>
                     <ContextMenuItem inset>Duplicar</ContextMenuItem>
                   </ContextMenuGroup>
+                </ContextMenuContent>
+              </ContextMenu>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ────────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="context-menu"
+        items={[
+          {
+            name: tContent("variants.compositions.withCheckbox.name"),
+            description: tContent("variants.compositions.withCheckbox.description"),
+            useWhen: tContent("variants.compositions.withCheckbox.use"),
+            code: `const [showGrid, setShowGrid] = useState(true);
+const [showRulers, setShowRulers] = useState(false);
+
+<ContextMenu>
+  <ContextMenuTrigger>Área de clique direito</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuGroup>
+      <ContextMenuLabel inset>Visualização</ContextMenuLabel>
+      <ContextMenuCheckboxItem checked={showGrid} onCheckedChange={setShowGrid}>
+        Mostrar grade
+      </ContextMenuCheckboxItem>
+      <ContextMenuCheckboxItem checked={showRulers} onCheckedChange={setShowRulers}>
+        Mostrar réguas
+      </ContextMenuCheckboxItem>
+    </ContextMenuGroup>
+  </ContextMenuContent>
+</ContextMenu>`,
+            preview: <CheckboxDemo tContent={tContent} />,
+          },
+          {
+            name: tContent("variants.compositions.withRadio.name"),
+            description: tContent("variants.compositions.withRadio.description"),
+            useWhen: tContent("variants.compositions.withRadio.use"),
+            code: `const [zoom, setZoom] = useState("100");
+
+<ContextMenu>
+  <ContextMenuTrigger>Área de clique direito</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuGroup>
+      <ContextMenuLabel inset>Zoom</ContextMenuLabel>
+      <ContextMenuRadioGroup value={zoom} onValueChange={setZoom}>
+        <ContextMenuRadioItem value="75">75%</ContextMenuRadioItem>
+        <ContextMenuRadioItem value="100">100%</ContextMenuRadioItem>
+        <ContextMenuRadioItem value="150">150%</ContextMenuRadioItem>
+      </ContextMenuRadioGroup>
+    </ContextMenuGroup>
+  </ContextMenuContent>
+</ContextMenu>`,
+            preview: <RadioDemo tContent={tContent} />,
+          },
+          {
+            name: tContent("variants.compositions.withSubmenu.name"),
+            description: tContent("variants.compositions.withSubmenu.description"),
+            useWhen: tContent("variants.compositions.withSubmenu.use"),
+            code: `<ContextMenu>
+  <ContextMenuTrigger>Área de clique direito</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem>Editar</ContextMenuItem>
+    <ContextMenuItem>Duplicar</ContextMenuItem>
+    <ContextMenuSub>
+      <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
+      <ContextMenuSubContent>
+        <ContextMenuItem>Por e-mail</ContextMenuItem>
+        <ContextMenuItem>Por link</ContextMenuItem>
+      </ContextMenuSubContent>
+    </ContextMenuSub>
+  </ContextMenuContent>
+</ContextMenu>`,
+            preview: (
+              <ContextMenu>
+                <ContextMenuTrigger className="flex items-center justify-center rounded-lg border border-dashed border-border px-8 py-3 text-xs text-muted-foreground select-none">
+                  Right-click aqui
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem>Editar</ContextMenuItem>
+                  <ContextMenuItem>Duplicar</ContextMenuItem>
+                  <ContextMenuSub>
+                    <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
+                    <ContextMenuSubContent>
+                      <ContextMenuItem>Por e-mail</ContextMenuItem>
+                      <ContextMenuItem>Por link</ContextMenuItem>
+                    </ContextMenuSubContent>
+                  </ContextMenuSub>
+                </ContextMenuContent>
+              </ContextMenu>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withShortcuts.name"),
+            description: tContent("variants.compositions.withShortcuts.description"),
+            useWhen: tContent("variants.compositions.withShortcuts.use"),
+            code: `<ContextMenu>
+  <ContextMenuTrigger>Área de clique direito</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem>
+      Editar
+      <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+    </ContextMenuItem>
+    <ContextMenuItem>
+      Duplicar
+      <ContextMenuShortcut>⌘D</ContextMenuShortcut>
+    </ContextMenuItem>
+    <ContextMenuSeparator />
+    <ContextMenuItem variant="destructive">
+      Excluir
+      <ContextMenuShortcut>⌫</ContextMenuShortcut>
+    </ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>`,
+            preview: (
+              <ContextMenu>
+                <ContextMenuTrigger className="flex items-center justify-center rounded-lg border border-dashed border-border px-8 py-3 text-xs text-muted-foreground select-none">
+                  Right-click aqui
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem>
+                    Editar
+                    <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+                  </ContextMenuItem>
+                  <ContextMenuItem>
+                    Duplicar
+                    <ContextMenuShortcut>⌘D</ContextMenuShortcut>
+                  </ContextMenuItem>
+                  <ContextMenuSeparator />
+                  <ContextMenuItem variant="destructive">
+                    Excluir
+                    <ContextMenuShortcut>⌫</ContextMenuShortcut>
+                  </ContextMenuItem>
                 </ContextMenuContent>
               </ContextMenu>
             ),

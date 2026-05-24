@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn, userEvent, within, expect } from "storybook/test";
+import { userEvent, within, expect } from "storybook/test";
 import {
   LayoutDashboard,
   Blocks,
@@ -7,7 +7,6 @@ import {
   Settings,
   User,
   Bell,
-  Search,
 } from "lucide-react";
 
 import {

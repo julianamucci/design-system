@@ -70,7 +70,8 @@ function buildIndeterminate(ariaLabel: string): HTMLElement {
   const indicator = el.firstElementChild as HTMLElement | null;
   if (indicator) {
     indicator.style.transform = '';
-    indicator.classList.add('w-1/3', 'animate-indeterminate');
+    indicator.style.width = '33.3333%';
+    indicator.classList.add('animate-indeterminate');
   }
   return el;
 }
@@ -86,17 +87,21 @@ function buildLabeled(opts: {
   ariaLabel: string;
 }): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full space-y-2';
+  wrap.className = 'nds-stack nds-w-full';
+  wrap.dataset.spacing = 'xs';
 
   const row = document.createElement('div');
-  row.className = 'flex items-center justify-between text-sm';
+  row.className = 'nds-cluster nds-text-body';
+  row.dataset.align = 'center';
+  row.dataset.justify = 'between';
 
   const label = document.createElement('span');
-  label.className = 'text-foreground';
+  label.className = 'nds-text-foreground';
   label.textContent = opts.labelText;
 
   const value = document.createElement('span');
-  value.className = 'text-muted-foreground tabular-nums';
+  value.className = 'nds-text-muted-foreground';
+  value.style.fontVariantNumeric = 'tabular-nums';
   value.setAttribute('aria-live', 'polite');
   value.textContent = `${opts.value}%`;
 
@@ -216,7 +221,8 @@ export function createProgressDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const grid = document.createElement('div');
-            grid.className = 'w-full space-y-6';
+            grid.className = 'nds-stack nds-w-full';
+            grid.dataset.spacing = 'lg';
 
             // Animated upload row
             const animated = buildLabeled({
@@ -254,11 +260,14 @@ export function createProgressDocs(): HTMLElement {
 
             // Indeterminate row
             const indWrap = document.createElement('div');
-            indWrap.className = 'w-full space-y-2';
+            indWrap.className = 'nds-stack nds-w-full';
+            indWrap.dataset.spacing = 'xs';
             const indRow = document.createElement('div');
-            indRow.className = 'flex items-center justify-between text-sm';
+            indRow.className = 'nds-cluster nds-text-body';
+            indRow.dataset.align = 'center';
+            indRow.dataset.justify = 'between';
             const indLabel = document.createElement('span');
-            indLabel.className = 'text-foreground';
+            indLabel.className = 'nds-text-foreground';
             indLabel.textContent = t('demonstration.labels.indeterminate');
             indRow.appendChild(indLabel);
             indWrap.appendChild(indRow);
@@ -389,7 +398,9 @@ export function createProgressDocs(): HTMLElement {
           `const bar = createProgress({ value: 0 });\n` +
           `bar.setAttribute('aria-label', 'Processando…');\n` +
           `bar.removeAttribute('aria-valuenow');\n` +
-          `(bar.firstElementChild as HTMLElement).classList.add('w-1/3', 'animate-indeterminate');`;
+          `const ind = bar.firstElementChild as HTMLElement;\n` +
+          `ind.style.width = '33.3333%';\n` +
+          `ind.classList.add('animate-indeterminate');`;
         const codeWithLabel =
           `// DIVERGÊNCIA Basecoat: factory não expõe ProgressLabel/ProgressValue.\n` +
           `// Componha manualmente com DOM nativo acima da barra.\n` +
@@ -505,7 +516,7 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: `<pre class="text-xs bg-muted p-3 rounded overflow-x-auto"><code>${t('props.extensibilityCode').replace(/</g, '&lt;')}</code></pre>`,
+          extensibilityNotes: `<pre class="nds-text-caption nds-bg-muted nds-rounded nds-overflow-x" style="padding: var(--spacing-3);"><code>${t('props.extensibilityCode').replace(/</g, '&lt;')}</code></pre>`,
         });
       }
 

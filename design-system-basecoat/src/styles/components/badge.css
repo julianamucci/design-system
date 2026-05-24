@@ -1,0 +1,127 @@
+/*
+ * ─── nds-badge ───────────────────────────────────────────────────────────────
+ * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ * Etiqueta inline pequena para status, contagem ou tag.
+ *
+ *   <span class="nds-badge nds-badge-secondary">5</span>
+ *
+ * Variantes: default (primary), secondary, destructive, outline
+ *
+ * Acessibilidade: badge não tem semântica nativa. Use texto descritivo
+ * ou aria-label se conteúdo for crítico (ex.: "5 mensagens não lidas").
+ *
+ * Tokens: --primary, --secondary, --destructive, --foreground, --background,
+ *         --border, --ring, --accent, --spacing-*
+ */
+
+.nds-badge {
+  --badge-bg: transparent;
+  --badge-fg: hsl(var(--foreground));
+  --badge-border: transparent;
+
+  display: inline-flex;
+  width: fit-content;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1);                        /* 4px */
+  overflow: hidden;
+
+  border: 1px solid var(--badge-border);
+  border-radius: 9999px;
+  padding-inline: var(--spacing-2);             /* 8px */
+  padding-block: var(--spacing-0-5);            /* 2px */
+
+  background-color: var(--badge-bg);
+  color: var(--badge-fg);
+  font-family: var(--font-family, inherit);
+  font-size: 0.75rem;                           /* 12px — text-xs */
+  line-height: 1;
+  font-weight: var(--font-weight-medium, 500);
+  white-space: nowrap;
+  transition: background-color 150ms, color 150ms, border-color 150ms, box-shadow 150ms;
+}
+
+.nds-badge > svg {
+  pointer-events: none;
+  width: 0.75rem;                               /* 12px — fora do grid 8, padrão visual de badge */
+  height: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* ── Estados ───────────────────────────────────────────────────────────────── */
+.nds-badge:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring) / 0.5);
+}
+.nds-badge[aria-invalid="true"] {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
+}
+
+/* ── Variantes ─────────────────────────────────────────────────────────────── */
+
+/* Default = primary (filled) */
+.nds-badge,
+.nds-badge-default,
+.nds-badge-primary {
+  --badge-bg: hsl(var(--primary));
+  --badge-fg: hsl(var(--primary-foreground));
+  --badge-border: transparent;
+}
+
+/* Secondary */
+.nds-badge-secondary {
+  --badge-bg: hsl(var(--secondary));
+  --badge-fg: hsl(var(--secondary-foreground));
+  --badge-border: transparent;
+}
+
+/* Destructive (soft style alinhado ao restante do projeto)
+ * WCAG: bg colorido + border colorida + texto foreground (contraste 4.5:1). */
+.nds-badge-destructive {
+  --badge-bg: hsl(var(--destructive) / 0.1);
+  --badge-fg: hsl(var(--foreground));
+  --badge-border: hsl(var(--destructive) / 0.3);
+}
+.dark .nds-badge-destructive {
+  --badge-bg: hsl(var(--destructive) / 0.15);
+}
+.nds-badge-destructive:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
+}
+
+/* Outline */
+.nds-badge-outline {
+  --badge-bg: transparent;
+  --badge-fg: hsl(var(--foreground));
+  --badge-border: hsl(var(--border));
+}
+
+/* ── Prioridade (usado em DocsTestes — tabelas funcional/visual) ──────────────
+ * WCAG: bg/border sinalizam a cor; texto sempre --foreground (contraste 4.5:1). */
+.nds-badge-high {
+  --badge-bg: hsl(var(--destructive) / 0.12);
+  --badge-fg: hsl(var(--foreground));
+  --badge-border: hsl(var(--destructive) / 0.35);
+}
+.nds-badge-medium {
+  --badge-bg: hsl(var(--warning) / 0.15);
+  --badge-fg: hsl(var(--foreground));
+  --badge-border: hsl(var(--warning) / 0.4);
+}
+.nds-badge-low {
+  --badge-bg: hsl(var(--success) / 0.12);
+  --badge-fg: hsl(var(--foreground));
+  --badge-border: hsl(var(--success) / 0.35);
+}
+
+/* Hover em link wrapping badge */
+a > .nds-badge:hover,
+a.nds-badge:hover {
+  filter: brightness(0.95);
+}
+
+/* ── prefers-reduced-motion ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .nds-badge { transition: none; }
+}

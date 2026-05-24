@@ -1,0 +1,159 @@
+/*
+ * ─── nds-calendar ───────────────────────────────────────────────────────────
+ * Date picker visual com grid mensal navegável.
+ *
+ *   <div class="nds-calendar">
+ *     <div class="nds-calendar-nav">
+ *       <button class="nds-calendar-nav-button">‹</button>
+ *       <div class="nds-calendar-month-label">Janeiro 2026</div>
+ *       <button class="nds-calendar-nav-button">›</button>
+ *     </div>
+ *     <table class="nds-calendar-grid" role="grid">
+ *       <thead><tr><th>Dom</th>…</tr></thead>
+ *       <tbody><tr><td><button class="nds-calendar-day">1</button></td>…</tr></tbody>
+ *     </table>
+ *   </div>
+ *
+ * Tokens: --background, --foreground, --muted-foreground, --primary,
+ *         --primary-foreground, --accent, --accent-foreground, --input,
+ *         --ring, --radius, --spacing-*
+ */
+
+.nds-calendar {
+  padding: var(--spacing-3, 0.75rem);             /* 12px */
+  user-select: none;
+}
+
+/* ── Nav (header com mês + setas) ────────────────────────────────────────── */
+.nds-calendar-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--spacing-1);
+  margin-bottom: var(--spacing-2);
+}
+
+.nds-calendar-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;                                  /* 28px */
+  height: 1.75rem;
+
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius, 0.5rem);
+  font-family: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+  outline: 0;
+  transition: background-color 150ms, color 150ms;
+}
+
+.nds-calendar-nav-button:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-calendar-nav-button:focus-visible {
+  box-shadow: 0 0 0 1px hsl(var(--ring));
+}
+
+.nds-calendar-nav-button > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+.nds-calendar-month-label {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--foreground));
+}
+
+/* ── Grid (tabela com dias) ──────────────────────────────────────────────── */
+.nds-calendar-grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.nds-calendar-grid > thead > tr {
+  display: flex;
+}
+
+.nds-calendar-grid > thead > tr > th {
+  width: var(--spacing-8, 2rem);                  /* 32px */
+  text-align: center;
+  font-size: 0.8rem;                               /* 12.8px */
+  font-weight: var(--font-weight-normal, 400);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-calendar-grid > tbody > tr {
+  display: flex;
+  width: 100%;
+  margin-top: var(--spacing-2);
+}
+
+.nds-calendar-grid > tbody > tr > td {
+  position: relative;
+  padding: 0;
+  text-align: center;
+}
+
+/* ── Day button ──────────────────────────────────────────────────────────── */
+.nds-calendar-day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: var(--spacing-8, 2rem);                   /* 32px */
+  height: var(--spacing-8, 2rem);
+  padding: 0;
+
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius, 0.5rem);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-normal, 400);
+  color: inherit;
+  cursor: pointer;
+  outline: 0;
+  transition: background-color 150ms, color 150ms;
+}
+
+.nds-calendar-day:hover:not(:disabled):not([aria-selected="true"]) {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-calendar-day:focus-visible {
+  box-shadow: 0 0 0 1px hsl(var(--ring));
+}
+
+/* Estado: hoje (sem seleção) — fundo accent suave */
+.nds-calendar-day[data-today="true"]:not([aria-selected="true"]) {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* Estado: selecionado — fundo primary */
+.nds-calendar-day[aria-selected="true"] {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.nds-calendar-day:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-calendar-nav-button,
+  .nds-calendar-day {
+    transition: none;
+  }
+}

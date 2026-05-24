@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 interface DocsVariantItem {
   name: string;
@@ -44,7 +45,10 @@ function trackId(name: string): string | undefined {
       <Card v-for="(item, i) in items" :key="i" class="p-4 gap-2">
         <div>
           <p class="text-sm font-semibold">{{ item.name }}</p>
-          <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">{{ item.description }}</p>
+          <p
+            class="text-xs text-muted-foreground mt-0.5 leading-relaxed"
+            v-html="sanitizeHtml(item.description)"
+          />
         </div>
         <div class="flex items-center justify-center">
           <slot :name="`variant-preview-${i}`" />

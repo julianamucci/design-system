@@ -121,6 +121,29 @@
         "single": "Um único thumb — <code>value={[50]}</code>, controla um valor.",
         "range": "Dois thumbs — <code>value={[20, 80]}</code>, controla min e max.",
         "vertical": "Orientação vertical — <code>orientation=\"vertical\"</code> + altura definida no pai."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "volume": {
+          "name": "Controle de volume",
+          "description": "Slider single com valor exibido em <code>%</code> ao lado do label. O texto do valor usa <code>aria-live=\"polite\"</code> para anunciar mudanças em tempo real.",
+          "use": "Controles de mídia, brilho, opacidade ou qualquer ajuste contínuo com unidade percentual. Sempre exiba o valor numérico próximo ao slider."
+        },
+        "brightness": {
+          "name": "Ajuste com step grande",
+          "description": "Slider single com <code>step={5}</code> — granularidade discreta para evitar movimentos minúsculos quando o ajuste fino não importa.",
+          "use": "Configurações onde o usuário não precisa de precisão (brilho de tela, zoom em incrementos fixos). Combine com <code>aria-live</code> para anunciar o salto."
+        },
+        "priceRange": {
+          "name": "Faixa de preço (range)",
+          "description": "Slider com dois thumbs controlando <code>min</code> e <code>max</code>. Valor exibido como \"R$ <em>min</em> — R$ <em>max</em>\" com travessão entre os limites.",
+          "use": "Filtros de busca por preço, faixa etária, intervalos de data numérica. Forneça <code>aria-label</code> distinto para cada thumb (\"mínimo\" e \"máximo\")."
+        },
+        "form": {
+          "name": "Em formulário com debounce",
+          "description": "Slider dentro de <code>&lt;form&gt;</code> com analytics disparado apenas no valor confirmado (drag end ou keyup), evitando 1 evento por pixel arrastado.",
+          "use": "Sliders que persistem o valor (configurações de áudio, filtros salvos). Use o callback de commit para <code>track()</code>, não o callback contínuo."
+        }
       }
     },
     "states": {
@@ -462,6 +485,29 @@
         "single": "Single thumb — <code>value={[50]}</code>, controls one value.",
         "range": "Two thumbs — <code>value={[20, 80]}</code>, controls min and max.",
         "vertical": "Vertical orientation — <code>orientation=\"vertical\"</code> + height defined on parent."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "volume": {
+          "name": "Volume control",
+          "description": "Single slider with value shown as <code>%</code> next to the label. The value text uses <code>aria-live=\"polite\"</code> to announce changes in real time.",
+          "use": "Media controls, brightness, opacity or any continuous adjustment with a percent unit. Always display the numeric value near the slider."
+        },
+        "brightness": {
+          "name": "Large step adjustment",
+          "description": "Single slider with <code>step={5}</code> — discrete granularity to avoid tiny movements when fine tuning is unnecessary.",
+          "use": "Settings where the user doesn't need precision (screen brightness, zoom in fixed increments). Combine with <code>aria-live</code> to announce each jump."
+        },
+        "priceRange": {
+          "name": "Price range",
+          "description": "Slider with two thumbs controlling <code>min</code> and <code>max</code>. Value displayed as \"$<em>min</em> — $<em>max</em>\" with an em-dash between the limits.",
+          "use": "Price search filters, age ranges, numeric date intervals. Provide a distinct <code>aria-label</code> for each thumb (\"minimum\" and \"maximum\")."
+        },
+        "form": {
+          "name": "In form with debounce",
+          "description": "Slider inside a <code>&lt;form&gt;</code> with analytics fired only on the committed value (drag end or keyup), avoiding one event per dragged pixel.",
+          "use": "Sliders that persist the value (audio settings, saved filters). Use the commit callback for <code>track()</code>, not the continuous callback."
+        }
       }
     },
     "states": {
@@ -803,6 +849,29 @@
         "single": "Un único thumb — <code>value={[50]}</code>, controla un valor.",
         "range": "Dos thumbs — <code>value={[20, 80]}</code>, controla min y max.",
         "vertical": "Orientación vertical — <code>orientation=\"vertical\"</code> + altura definida en el padre."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "volume": {
+          "name": "Control de volumen",
+          "description": "Slider single con el valor mostrado en <code>%</code> al lado del label. El texto del valor usa <code>aria-live=\"polite\"</code> para anunciar cambios en tiempo real.",
+          "use": "Controles de medios, brillo, opacidad o cualquier ajuste continuo con unidad porcentual. Siempre muestra el valor numérico cerca del slider."
+        },
+        "brightness": {
+          "name": "Ajuste con step grande",
+          "description": "Slider single con <code>step={5}</code> — granularidad discreta para evitar movimientos minúsculos cuando el ajuste fino no importa.",
+          "use": "Configuraciones donde el usuario no necesita precisión (brillo de pantalla, zoom en incrementos fijos). Combina con <code>aria-live</code> para anunciar el salto."
+        },
+        "priceRange": {
+          "name": "Rango de precio",
+          "description": "Slider con dos thumbs controlando <code>min</code> y <code>max</code>. Valor mostrado como \"$<em>min</em> — $<em>max</em>\" con raya entre los límites.",
+          "use": "Filtros de búsqueda por precio, rangos de edad, intervalos de fecha numérica. Provee <code>aria-label</code> distinto para cada thumb (\"mínimo\" y \"máximo\")."
+        },
+        "form": {
+          "name": "En formulario con debounce",
+          "description": "Slider dentro de <code>&lt;form&gt;</code> con analytics disparado solo en el valor confirmado (drag end o keyup), evitando 1 evento por pixel arrastrado.",
+          "use": "Sliders que persisten el valor (configuraciones de audio, filtros guardados). Usa el callback de commit para <code>track()</code>, no el callback continuo."
+        }
       }
     },
     "states": {

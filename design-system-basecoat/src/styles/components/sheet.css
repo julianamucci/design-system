@@ -1,0 +1,195 @@
+/*
+ * ─── nds-sheet ──────────────────────────────────────────────────────────────
+ * Painel deslizante a partir de uma das bordas (top/right/bottom/left).
+ * Render via portal. Drawer reusa o sheet com side="bottom".
+ *
+ * Estrutura:
+ *   <div class="nds-sheet-overlay" />
+ *   <div class="nds-sheet-content" data-side="right" role="dialog" aria-modal="true">
+ *     <div class="nds-sheet-header">…</div>
+ *     <div class="nds-sheet-body">…</div>
+ *     <div class="nds-sheet-footer">…</div>
+ *     <button class="nds-sheet-close" aria-label="Close">…</button>
+ *   </div>
+ *
+ * Tokens: --background, --foreground, --muted-foreground, --border,
+ *         --ring, --spacing-*
+ */
+
+/* ── Overlay ─────────────────────────────────────────────────────────────── */
+.nds-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: hsl(0 0% 0% / 0.8);
+  animation: nds-sheet-fade-in 200ms ease-out;
+}
+
+/* ── Content panel ───────────────────────────────────────────────────────── */
+.nds-sheet-content {
+  position: fixed;
+  z-index: 50;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);                          /* 16px */
+  padding: var(--spacing-6);                       /* 24px */
+
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  box-shadow:
+    0 25px 50px -12px hsl(0 0% 0% / 0.25),
+    0 0 0 1px hsl(0 0% 0% / 0.05);
+}
+
+/* ── Sides ───────────────────────────────────────────────────────────────── */
+.nds-sheet-content[data-side="right"] {
+  inset-block: 0;
+  right: 0;
+  height: 100%;
+  width: 75%;
+  max-width: 24rem;                                /* 384px — sm:max-w-sm */
+  border-left: 1px solid hsl(var(--border));
+  animation: nds-sheet-slide-in-right 250ms ease-out;
+}
+
+.nds-sheet-content[data-side="left"] {
+  inset-block: 0;
+  left: 0;
+  height: 100%;
+  width: 75%;
+  max-width: 24rem;
+  border-right: 1px solid hsl(var(--border));
+  animation: nds-sheet-slide-in-left 250ms ease-out;
+}
+
+.nds-sheet-content[data-side="top"] {
+  inset-inline: 0;
+  top: 0;
+  height: auto;
+  border-bottom: 1px solid hsl(var(--border));
+  animation: nds-sheet-slide-in-top 250ms ease-out;
+}
+
+.nds-sheet-content[data-side="bottom"] {
+  inset-inline: 0;
+  bottom: 0;
+  height: auto;
+  border-top: 1px solid hsl(var(--border));
+  animation: nds-sheet-slide-in-bottom 250ms ease-out;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.nds-sheet-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1-5, 0.375rem);
+  margin-bottom: var(--spacing-4);
+  text-align: center;
+}
+
+@media (min-width: 40rem) {
+  .nds-sheet-header {
+    text-align: left;
+  }
+}
+
+.nds-sheet-title {
+  margin: 0;
+  font-size: 1.125rem;                             /* 18px — text-lg */
+  font-weight: var(--font-weight-semibold, 600);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: hsl(var(--foreground));
+}
+
+.nds-sheet-description {
+  margin: 0;
+  font-size: 0.875rem;                             /* 14px */
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────── */
+.nds-sheet-body {
+  flex: 1;
+  overflow: auto;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.nds-sheet-footer {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-4);
+}
+
+@media (min-width: 40rem) {
+  .nds-sheet-footer {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+/* ── Close button ────────────────────────────────────────────────────────── */
+.nds-sheet-close {
+  position: absolute;
+  top: var(--spacing-4);
+  right: var(--spacing-4);
+
+  background: transparent;
+  border: 0;
+  border-radius: 0.25rem;
+  padding: var(--spacing-1);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 150ms, box-shadow 150ms;
+}
+
+.nds-sheet-close:hover {
+  opacity: 1;
+}
+
+.nds-sheet-close:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+}
+
+.nds-sheet-close > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  color: currentColor;
+}
+
+/* ── Animations ──────────────────────────────────────────────────────────── */
+@keyframes nds-sheet-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes nds-sheet-slide-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes nds-sheet-slide-in-left {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes nds-sheet-slide-in-top {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes nds-sheet-slide-in-bottom {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-sheet-overlay,
+  .nds-sheet-content {
+    animation: none;
+  }
+}

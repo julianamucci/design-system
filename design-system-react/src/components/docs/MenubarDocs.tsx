@@ -30,6 +30,7 @@ import { DocsWhenToUse } from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont } from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport } from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants } from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates } from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps } from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens } from "@/components/docs/shared/sections/DocsTokens";
@@ -68,6 +69,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao", label: t("nav.import") },
       { id: "variantes", label: t("nav.variants") },
+      { id: "composicoes", label: t("nav.compositions") },
       { id: "estados", label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens", label: t("nav.tokens") },
@@ -507,6 +509,219 @@ interface MenubarItemProps {
             preview: (
               <div className="text-xs font-mono text-destructive">
                 variant=&quot;destructive&quot;
+              </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="menubar"
+        items={[
+          {
+            name: tContent("variants.compositions.withShortcuts.name"),
+            description: tContent("variants.compositions.withShortcuts.description"),
+            useWhen: tContent("variants.compositions.withShortcuts.use"),
+            code: `<Menubar>
+  <MenubarMenu>
+    <MenubarTrigger>Editar</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarSeparator />
+      <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
+      <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+            preview: (
+              <div style={wrapperStyle}>
+                <Menubar>
+                  <MenubarMenu defaultOpen>
+                    <MenubarTrigger>Editar</MenubarTrigger>
+                    <MenubarContent>
+                      <MenubarItem>
+                        Desfazer <MenubarShortcut>⌘Z</MenubarShortcut>
+                      </MenubarItem>
+                      <MenubarItem>
+                        Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+                      </MenubarItem>
+                      <MenubarSeparator />
+                      <MenubarItem>
+                        Copiar <MenubarShortcut>⌘C</MenubarShortcut>
+                      </MenubarItem>
+                      <MenubarItem>
+                        Colar <MenubarShortcut>⌘V</MenubarShortcut>
+                      </MenubarItem>
+                    </MenubarContent>
+                  </MenubarMenu>
+                </Menubar>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withCheckbox.name"),
+            description: tContent("variants.compositions.withCheckbox.description"),
+            useWhen: tContent("variants.compositions.withCheckbox.use"),
+            code: `<Menubar>
+  <MenubarMenu>
+    <MenubarTrigger>Exibir</MenubarTrigger>
+    <MenubarContent>
+      <MenubarCheckboxItem checked={showSidebar} onCheckedChange={setShowSidebar}>
+        Sidebar
+      </MenubarCheckboxItem>
+      <MenubarCheckboxItem checked={showGrid} onCheckedChange={setShowGrid}>
+        Grid
+      </MenubarCheckboxItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+            preview: (
+              <div style={wrapperStyle}>
+                <Menubar>
+                  <MenubarMenu defaultOpen>
+                    <MenubarTrigger>Exibir</MenubarTrigger>
+                    <MenubarContent>
+                      <MenubarCheckboxItem
+                        checked={showSidebar}
+                        onCheckedChange={setShowSidebar}
+                      >
+                        Sidebar
+                      </MenubarCheckboxItem>
+                      <MenubarCheckboxItem
+                        checked={showGrid}
+                        onCheckedChange={setShowGrid}
+                      >
+                        Grid
+                      </MenubarCheckboxItem>
+                    </MenubarContent>
+                  </MenubarMenu>
+                </Menubar>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withRadio.name"),
+            description: tContent("variants.compositions.withRadio.description"),
+            useWhen: tContent("variants.compositions.withRadio.use"),
+            code: `<Menubar>
+  <MenubarMenu>
+    <MenubarTrigger>Tema</MenubarTrigger>
+    <MenubarContent>
+      <MenubarRadioGroup value={theme} onValueChange={setTheme}>
+        <MenubarRadioItem value="light">Claro</MenubarRadioItem>
+        <MenubarRadioItem value="dark">Escuro</MenubarRadioItem>
+        <MenubarRadioItem value="system">Sistema</MenubarRadioItem>
+      </MenubarRadioGroup>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+            preview: (
+              <div style={wrapperStyle}>
+                <Menubar>
+                  <MenubarMenu defaultOpen>
+                    <MenubarTrigger>Tema</MenubarTrigger>
+                    <MenubarContent>
+                      <MenubarRadioGroup value={theme} onValueChange={setTheme}>
+                        <MenubarRadioItem value="light">Claro</MenubarRadioItem>
+                        <MenubarRadioItem value="dark">Escuro</MenubarRadioItem>
+                        <MenubarRadioItem value="system">Sistema</MenubarRadioItem>
+                      </MenubarRadioGroup>
+                    </MenubarContent>
+                  </MenubarMenu>
+                </Menubar>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.editorComplete.name"),
+            description: tContent("variants.compositions.editorComplete.description"),
+            useWhen: tContent("variants.compositions.editorComplete.use"),
+            code: `<Menubar>
+  <MenubarMenu>
+    <MenubarTrigger>Arquivo</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
+      <MenubarItem>Abrir... <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
+      <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+      <MenubarSeparator />
+      <MenubarItem>Sair <MenubarShortcut>⌘Q</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu>
+    <MenubarTrigger>Editar</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu>
+    <MenubarTrigger>Exibir</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Modo escuro</MenubarItem>
+      <MenubarItem>Tela cheia <MenubarShortcut>F11</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu>
+    <MenubarTrigger>Ajuda</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Documentação</MenubarItem>
+      <MenubarItem>Sobre</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+            preview: (
+              <div style={wrapperStyle}>
+                <Menubar>
+                  <MenubarMenu>
+                    <MenubarTrigger>Arquivo</MenubarTrigger>
+                    <MenubarContent>
+                      <MenubarItem>
+                        Novo <MenubarShortcut>⌘N</MenubarShortcut>
+                      </MenubarItem>
+                      <MenubarItem>
+                        Abrir... <MenubarShortcut>⌘O</MenubarShortcut>
+                      </MenubarItem>
+                      <MenubarItem>
+                        Salvar <MenubarShortcut>⌘S</MenubarShortcut>
+                      </MenubarItem>
+                      <MenubarSeparator />
+                      <MenubarItem>
+                        Sair <MenubarShortcut>⌘Q</MenubarShortcut>
+                      </MenubarItem>
+                    </MenubarContent>
+                  </MenubarMenu>
+                  <MenubarMenu>
+                    <MenubarTrigger>Editar</MenubarTrigger>
+                    <MenubarContent>
+                      <MenubarItem>
+                        Desfazer <MenubarShortcut>⌘Z</MenubarShortcut>
+                      </MenubarItem>
+                      <MenubarItem>
+                        Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+                      </MenubarItem>
+                    </MenubarContent>
+                  </MenubarMenu>
+                  <MenubarMenu>
+                    <MenubarTrigger>Exibir</MenubarTrigger>
+                    <MenubarContent>
+                      <MenubarItem>Modo escuro</MenubarItem>
+                      <MenubarItem>
+                        Tela cheia <MenubarShortcut>F11</MenubarShortcut>
+                      </MenubarItem>
+                    </MenubarContent>
+                  </MenubarMenu>
+                  <MenubarMenu>
+                    <MenubarTrigger>Ajuda</MenubarTrigger>
+                    <MenubarContent>
+                      <MenubarItem>Documentação</MenubarItem>
+                      <MenubarItem>Sobre</MenubarItem>
+                    </MenubarContent>
+                  </MenubarMenu>
+                </Menubar>
               </div>
             ),
           },

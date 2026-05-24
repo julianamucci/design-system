@@ -20,6 +20,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -66,7 +67,7 @@ function buildUserIconSvg(): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'h-5 w-5 text-muted-foreground');
+  svg.setAttribute('class', 'nds-icon nds-text-muted-foreground');
 
   for (const [tag, attrs] of User as unknown as LucideIconNode[]) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -102,29 +103,37 @@ function buildIconAvatar(className = ''): HTMLElement {
 
 function buildGroupAvatar(): HTMLElement {
   const group = document.createElement('div');
-  group.className = 'flex -space-x-2';
+  group.style.display = 'flex';
   group.setAttribute('role', 'group');
   group.setAttribute('aria-label', stripHtml(t('demonstration.labels.groupTitle')));
 
-  group.appendChild(
-    createAvatar({
-      src: PREVIEW_SRC,
-      alt: t('demonstration.labels.withImageAlt'),
-      fallbackText: 'MR',
-      className: 'ring-2 ring-background',
-    }),
-  );
+  const ringStyle = 'box-shadow: 0 0 0 2px var(--background);';
+  const applyRing = (el: HTMLElement, offset: boolean) => {
+    el.style.cssText += ringStyle;
+    if (offset) el.style.marginLeft = '-0.5rem';
+  };
 
-  const initialsA = createAvatarRoot({ className: 'ring-2 ring-background' });
+  const a1 = createAvatar({
+    src: PREVIEW_SRC,
+    alt: t('demonstration.labels.withImageAlt'),
+    fallbackText: 'MR',
+  });
+  applyRing(a1, false);
+  group.appendChild(a1);
+
+  const initialsA = createAvatarRoot();
   initialsA.appendChild(createAvatarFallback({ text: 'JP' }));
+  applyRing(initialsA, true);
   group.appendChild(initialsA);
 
-  const initialsB = createAvatarRoot({ className: 'ring-2 ring-background' });
+  const initialsB = createAvatarRoot();
   initialsB.appendChild(createAvatarFallback({ text: 'AL' }));
+  applyRing(initialsB, true);
   group.appendChild(initialsB);
 
-  const more = createAvatarRoot({ className: 'ring-2 ring-background' });
-  more.appendChild(createAvatarFallback({ text: '+3', className: 'text-xs' }));
+  const more = createAvatarRoot();
+  more.appendChild(createAvatarFallback({ text: '+3', className: 'nds-text-caption' }));
+  applyRing(more, true);
   group.appendChild(more);
 
   return group;
@@ -132,7 +141,8 @@ function buildGroupAvatar(): HTMLElement {
 
 function buildStatusAvatar(): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'relative inline-block';
+  wrapper.style.position = 'relative';
+  wrapper.style.display = 'inline-block';
 
   const avatar = createAvatar({
     src: PREVIEW_SRC,
@@ -141,8 +151,8 @@ function buildStatusAvatar(): HTMLElement {
   });
 
   const status = document.createElement('span');
-  status.className =
-    'absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background';
+  status.className = 'nds-rounded-full nds-bg-primary';
+  status.style.cssText = 'position:absolute;bottom:0;right:0;height:0.625rem;width:0.625rem;box-shadow:0 0 0 2px var(--background);';
   status.setAttribute('aria-label', stripHtml(t('demonstration.labels.statusOnline')));
 
   wrapper.append(avatar, status);
@@ -187,6 +197,7 @@ export function createAvatarDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -237,7 +248,7 @@ export function createAvatarDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -251,13 +262,19 @@ export function createAvatarDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-wrap items-end justify-center gap-8';
+            wrap.className = 'nds-cluster';
+            wrap.dataset.justify = 'center';
+            wrap.dataset.spacing = 'xl';
+            wrap.style.alignItems = 'flex-end';
+            wrap.style.flexWrap = 'wrap';
 
             const withLabel = (child: HTMLElement, labelKey: string): HTMLElement => {
               const item = document.createElement('div');
-              item.className = 'flex flex-col items-center gap-2';
+              item.className = 'nds-stack';
+              item.dataset.spacing = 'xs';
+              item.style.alignItems = 'center';
               const label = document.createElement('span');
-              label.className = 'text-xs text-muted-foreground';
+              label.className = 'nds-text-caption nds-text-muted-foreground';
               label.textContent = stripHtml(t(labelKey));
               item.append(child, label);
               return item;
@@ -412,19 +429,23 @@ fallback.setAttribute('aria-label', 'Usuário genérico');
 root.appendChild(fallback);`;
 
         const codeGroup = `const group = document.createElement('div');
-group.className = 'flex -space-x-2';
+group.style.display = 'flex';
 group.setAttribute('role', 'group');
 group.setAttribute('aria-label', 'Participantes');
 
-group.appendChild(createAvatar({ src, alt, fallbackText: 'MR', className: 'ring-2 ring-background' }));`;
+const av = createAvatar({ src, alt, fallbackText: 'MR' });
+av.style.cssText = 'box-shadow:0 0 0 2px var(--background);';
+group.appendChild(av);`;
 
         const codeStatus = `const wrapper = document.createElement('div');
-wrapper.className = 'relative inline-block';
+wrapper.style.position = 'relative';
+wrapper.style.display = 'inline-block';
 
 wrapper.appendChild(createAvatar({ src, alt, fallbackText: 'MR' }));
 
 const status = document.createElement('span');
-status.className = 'absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background';
+status.className = 'nds-rounded-full nds-bg-primary';
+status.style.cssText = 'position:absolute;bottom:0;right:0;height:0.625rem;width:0.625rem;box-shadow:0 0 0 2px var(--background);';
 status.setAttribute('aria-label', 'online');
 wrapper.appendChild(status);`;
 
@@ -464,6 +485,138 @@ wrapper.appendChild(status);`;
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'avatar',
+          items: [
+            {
+              name: t('variants.compositions.withImage.name'),
+              description: t('variants.compositions.withImage.description'),
+              useWhen: t('variants.compositions.withImage.use'),
+              code:
+                `const av = createAvatar({\n` +
+                `  src: 'https://github.com/shadcn.png',\n` +
+                `  alt: 'Foto de perfil de Maria Rodrigues',\n` +
+                `  fallbackText: 'MR',\n` +
+                `});`,
+              previewFactory: () => buildImageAvatar(),
+            },
+            {
+              name: t('variants.compositions.withInitials.name'),
+              description: t('variants.compositions.withInitials.description'),
+              useWhen: t('variants.compositions.withInitials.use'),
+              code:
+                `const root = createAvatarRoot();\n` +
+                `root.appendChild(createAvatarFallback({ text: 'JP' }));`,
+              previewFactory: () => buildInitialsAvatar('', 'JP'),
+            },
+            {
+              name: t('variants.compositions.withIcon.name'),
+              description: t('variants.compositions.withIcon.description'),
+              useWhen: t('variants.compositions.withIcon.use'),
+              code:
+                `const root = createAvatarRoot();\n` +
+                `const fallback = createAvatarFallback();\n` +
+                `fallback.setAttribute('role', 'img');\n` +
+                `fallback.setAttribute('aria-label', 'Usuário genérico');\n` +
+                `const svg = createUserIconSvg(); // nds-icon nds-text-muted-foreground, aria-hidden\n` +
+                `fallback.appendChild(svg);\n` +
+                `root.appendChild(fallback);`,
+              previewFactory: () => {
+                const root = createAvatarRoot();
+                const fallback = createAvatarFallback();
+                fallback.setAttribute('role', 'img');
+                fallback.setAttribute('aria-label', 'Usuário genérico');
+                fallback.appendChild(buildUserIconSvg());
+                root.appendChild(fallback);
+                return root;
+              },
+            },
+            {
+              name: t('variants.compositions.group.name'),
+              description: t('variants.compositions.group.description'),
+              useWhen: t('variants.compositions.group.use'),
+              code:
+                `const group = document.createElement('div');\n` +
+                `group.style.display = 'flex';\n` +
+                `group.setAttribute('role', 'group');\n` +
+                `group.setAttribute('aria-label', 'Participantes');\n` +
+                `const members = [\n` +
+                `  { src: 'https://github.com/shadcn.png', alt: 'Foto de perfil de Maria Rodrigues', fallback: 'MR' },\n` +
+                `  { alt: '', fallback: 'JP' },\n` +
+                `  { alt: '', fallback: 'AL' },\n` +
+                `  { alt: '', fallback: '+3' },\n` +
+                `];\n` +
+                `members.forEach((m, i) => {\n` +
+                `  const av = createAvatar({ src: m.src, alt: m.alt, fallbackText: m.fallback });\n` +
+                `  av.style.cssText = 'box-shadow:0 0 0 2px var(--background);' + (i > 0 ? 'margin-left:-0.5rem;' : '');\n` +
+                `  group.appendChild(av);\n` +
+                `});`,
+              previewFactory: () => {
+                const group = document.createElement('div');
+                group.style.display = 'flex';
+                group.setAttribute('role', 'group');
+                group.setAttribute('aria-label', 'Participantes');
+                const members: Array<{ src?: string; alt: string; fallback: string }> = [
+                  { src: PREVIEW_SRC, alt: 'Foto de perfil de Maria Rodrigues', fallback: 'MR' },
+                  { alt: '', fallback: 'JP' },
+                  { alt: '', fallback: 'AL' },
+                  { alt: '', fallback: '+3' },
+                ];
+                members.forEach((m, i) => {
+                  const av = createAvatar({
+                    src: m.src,
+                    alt: m.alt,
+                    fallbackText: m.fallback,
+                  });
+                  av.style.cssText = 'box-shadow:0 0 0 2px var(--background);' + (i > 0 ? 'margin-left:-0.5rem;' : '');
+                  group.appendChild(av);
+                });
+                return group;
+              },
+            },
+            {
+              name: t('variants.compositions.withStatus.name'),
+              description: t('variants.compositions.withStatus.description'),
+              useWhen: t('variants.compositions.withStatus.use'),
+              code:
+                `const wrapper = document.createElement('div');\n` +
+                `wrapper.style.position = 'relative';\n` +
+                `wrapper.style.display = 'inline-block';\n` +
+                `const av = createAvatar({\n` +
+                `  src: 'https://github.com/shadcn.png',\n` +
+                `  alt: 'Foto de perfil de Maria Rodrigues',\n` +
+                `  fallbackText: 'MR',\n` +
+                `});\n` +
+                `const status = document.createElement('span');\n` +
+                `status.className = 'nds-rounded-full nds-bg-primary';\n` +
+                `status.style.cssText = 'position:absolute;bottom:0;right:0;height:0.625rem;width:0.625rem;box-shadow:0 0 0 2px var(--background);';\n` +
+                `status.setAttribute('role', 'status');\n` +
+                `status.setAttribute('aria-label', 'online');\n` +
+                `wrapper.append(av, status);`,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.style.display = 'inline-block';
+                const av = createAvatar({
+                  src: PREVIEW_SRC,
+                  alt: 'Foto de perfil de Maria Rodrigues',
+                  fallbackText: 'MR',
+                });
+                const status = document.createElement('span');
+                status.className = 'nds-rounded-full nds-bg-primary';
+                status.style.cssText = 'position:absolute;bottom:0;right:0;height:0.625rem;width:0.625rem;box-shadow:0 0 0 2px var(--background);';
+                status.setAttribute('role', 'status');
+                status.setAttribute('aria-label', 'online');
+                wrapper.append(av, status);
+                return wrapper;
+              },
+            },
+          ],
+        });
 
       case 'estados':
         return createDocsStates({

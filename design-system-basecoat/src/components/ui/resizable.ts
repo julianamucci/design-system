@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+// ─── Resizable — Vanilla factory standalone ─────────────────────────────────
+// Visual: classes .nds-resizable-* (zero Tailwind/basecoat-css).
+// Drag handle + keyboard resize (Arrow keys).
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -23,12 +25,9 @@ export function createResizablePanel(options: ResizablePanelOptions): HTMLElemen
 
   const root = document.createElement('div');
   root.dataset.slot = 'resizable';
-  root.className = cn(
-    'flex w-full h-full',
-    isHorizontal ? 'flex-row' : 'flex-col',
-    options.class
-  );
-  root.style.overflow = 'hidden';
+  root.dataset.direction = direction;
+  root.className = 'nds-resizable';
+  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
 
   // Distribute sizes
   const defaultSizes = panels.map((p) => p.defaultSize ?? 100 / count);
@@ -50,8 +49,7 @@ export function createResizablePanel(options: ResizablePanelOptions): HTMLElemen
   panels.forEach((panel, i) => {
     const panelEl = document.createElement('div');
     panelEl.dataset.slot = 'resizable-panel';
-    panelEl.style.overflow = 'auto';
-    panelEl.style.flexShrink = '0';
+    panelEl.className = 'nds-resizable-panel';
     panelEl.appendChild(panel.content);
     panelEls.push(panelEl);
     root.appendChild(panelEl);
@@ -64,21 +62,29 @@ export function createResizablePanel(options: ResizablePanelOptions): HTMLElemen
       handle.setAttribute('role', 'separator');
       handle.setAttribute('aria-orientation', isHorizontal ? 'vertical' : 'horizontal');
       handle.setAttribute('tabindex', '0');
-      handle.className = cn(
-        'relative flex shrink-0 items-center justify-center bg-border',
-        isHorizontal
-          ? 'w-px cursor-col-resize hover:bg-ring focus-visible:ring-1 focus-visible:ring-ring'
-          : 'h-px cursor-row-resize hover:bg-ring focus-visible:ring-1 focus-visible:ring-ring'
-      );
+      handle.className = 'nds-resizable-handle';
 
-      // Drag handle icon
+      // Grip (alça com pontos) — SVG via createElementNS (sem innerHTML).
       const grip = document.createElement('div');
-      grip.className = cn(
-        'z-10 flex h-4 w-3 items-center justify-center rounded-sm border bg-border',
-        isHorizontal ? '' : 'rotate-90'
-      );
-      grip.innerHTML =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>';
+      grip.className = 'nds-resizable-grip';
+      const SVG_NS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(SVG_NS, 'svg');
+      svg.setAttribute('xmlns', SVG_NS);
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('stroke', 'currentColor');
+      svg.setAttribute('stroke-width', '2');
+      svg.setAttribute('stroke-linecap', 'round');
+      svg.setAttribute('stroke-linejoin', 'round');
+      svg.setAttribute('aria-hidden', 'true');
+      for (const [cx, cy] of [['9','5'],['9','12'],['9','19'],['15','5'],['15','12'],['15','19']]) {
+        const c = document.createElementNS(SVG_NS, 'circle');
+        c.setAttribute('cx', cx);
+        c.setAttribute('cy', cy);
+        c.setAttribute('r', '1');
+        svg.appendChild(c);
+      }
+      grip.appendChild(svg);
       handle.appendChild(grip);
 
       // Drag logic

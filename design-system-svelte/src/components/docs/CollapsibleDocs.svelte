@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-  import { ChevronDown, Settings2 } from 'lucide-svelte';
+  import { ChevronDown, Settings2, Filter, Settings } from 'lucide-svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -15,6 +15,7 @@
     DocsDoDont,
     DocsImport,
     DocsVariants,
+    DocsCompositions,
     DocsStates,
     DocsProps,
     DocsTokens,
@@ -64,6 +65,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -461,6 +463,164 @@ interface CollapsibleContentProps {
       <CollapsibleContent>
         <div class="rounded-md border border-border bg-muted/50 px-4 py-3 text-sm mt-2">
           {$tStore('demonstration.labels.advancedFilter1')}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="collapsible"
+    items={[
+      {
+        name: $tStore('variants.compositions.customButton.name'),
+        description: $tStore('variants.compositions.customButton.description'),
+        useWhen: $tStore('variants.compositions.customButton.use'),
+        code: `<Collapsible class="w-full max-w-sm">
+  <CollapsibleTrigger class="inline-flex items-center justify-center gap-2 rounded-md border border-border bg-transparent px-4 py-2 text-sm font-medium hover:bg-accent">
+    Exibir opções avançadas
+  </CollapsibleTrigger>
+  <CollapsibleContent>
+    <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-2">
+      <p>Primeira opção avançada.</p>
+      <p>Segunda opção avançada.</p>
+      <p>Terceira opção avançada.</p>
+    </div>
+  </CollapsibleContent>
+</Collapsible>`,
+        preview: compCustomButton,
+      },
+      {
+        name: $tStore('variants.compositions.iconTrigger.name'),
+        description: $tStore('variants.compositions.iconTrigger.description'),
+        useWhen: $tStore('variants.compositions.iconTrigger.use'),
+        code: `<Collapsible class="w-full">
+  <CollapsibleTrigger class="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent">
+    <Filter aria-hidden="true" class="h-4 w-4" />
+    Filtros avançados
+  </CollapsibleTrigger>
+  <CollapsibleContent>
+    <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-1">
+      <p>Categoria</p>
+      <p>Preço</p>
+      <p>Disponibilidade</p>
+    </div>
+  </CollapsibleContent>
+</Collapsible>`,
+        preview: compIconTrigger,
+      },
+      {
+        name: $tStore('variants.compositions.rotatingChevron.name'),
+        description: $tStore('variants.compositions.rotatingChevron.description'),
+        useWhen: $tStore('variants.compositions.rotatingChevron.use'),
+        code: `<Collapsible class="w-full">
+  <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium hover:bg-accent">
+    Configurações avançadas
+    <ChevronDown aria-hidden="true" class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180" />
+  </CollapsibleTrigger>
+  <CollapsibleContent>
+    <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-2">
+      <div class="flex justify-between"><span class="text-muted-foreground">Timeout</span><span>30s</span></div>
+      <div class="flex justify-between"><span class="text-muted-foreground">Retries</span><span>3</span></div>
+    </div>
+  </CollapsibleContent>
+</Collapsible>`,
+        preview: compRotatingChevron,
+      },
+      {
+        name: $tStore('variants.compositions.richContent.name'),
+        description: $tStore('variants.compositions.richContent.description'),
+        useWhen: $tStore('variants.compositions.richContent.use'),
+        code: `<Collapsible class="w-full">
+  <CollapsibleTrigger class="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent">
+    <Settings aria-hidden="true" class="h-4 w-4" />
+    Configurações do sistema
+  </CollapsibleTrigger>
+  <CollapsibleContent>
+    <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-3">
+      <p class="text-muted-foreground">Selecione as opções desejadas.</p>
+      <label class="flex items-center gap-2"><input type="checkbox" /> Notificações por e-mail</label>
+      <label class="flex items-center gap-2"><input type="checkbox" /> Sincronização automática</label>
+      <label class="flex items-center gap-2"><input type="checkbox" /> Modo escuro</label>
+    </div>
+  </CollapsibleContent>
+</Collapsible>`,
+        preview: compRichContent,
+      },
+    ]}
+  />
+
+  {#snippet compCustomButton()}
+    <Collapsible class="w-full max-w-sm">
+      <CollapsibleTrigger
+        class="inline-flex items-center justify-center gap-2 rounded-md border border-border bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        Exibir opções avançadas
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-2">
+          <p>Primeira opção avançada disponível.</p>
+          <p>Segunda opção avançada disponível.</p>
+          <p>Terceira opção avançada disponível.</p>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  {/snippet}
+
+  {#snippet compIconTrigger()}
+    <Collapsible class="w-full">
+      <CollapsibleTrigger
+        class="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <Filter aria-hidden="true" class="h-4 w-4 text-muted-foreground" />
+        Filtros avançados
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-1">
+          <p>Categoria</p>
+          <p>Preço</p>
+          <p>Disponibilidade</p>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  {/snippet}
+
+  {#snippet compRotatingChevron()}
+    <Collapsible class="w-full">
+      <CollapsibleTrigger
+        class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        Configurações avançadas
+        <ChevronDown
+          aria-hidden="true"
+          class="h-4 w-4 shrink-0 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180"
+        />
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-2">
+          <div class="flex justify-between"><span class="text-muted-foreground">Timeout</span><span>30s</span></div>
+          <div class="flex justify-between"><span class="text-muted-foreground">Retries</span><span>3</span></div>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  {/snippet}
+
+  {#snippet compRichContent()}
+    <Collapsible class="w-full">
+      <CollapsibleTrigger
+        class="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <Settings aria-hidden="true" class="h-4 w-4 text-muted-foreground" />
+        Configurações do sistema
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-3">
+          <p class="text-muted-foreground text-xs">Selecione as opções desejadas.</p>
+          <label class="flex items-center gap-2"><input type="checkbox" class="rounded border-border" /> Notificações por e-mail</label>
+          <label class="flex items-center gap-2"><input type="checkbox" class="rounded border-border" /> Sincronização automática</label>
+          <label class="flex items-center gap-2"><input type="checkbox" class="rounded border-border" /> Modo escuro</label>
         </div>
       </CollapsibleContent>
     </Collapsible>

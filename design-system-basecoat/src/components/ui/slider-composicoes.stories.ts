@@ -36,19 +36,23 @@ function withLabel(opts: {
   const { idPrefix, labelText, ariaLabel, min = 0, max = 100, step = 1, value = 0, unit = '', onValueChange } = opts;
 
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2 w-80';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'sm';
+  wrap.style.width = '20rem';
 
   const row = document.createElement('div');
-  row.className = 'flex items-center justify-between';
+  row.className = 'nds-cluster';
+  row.dataset.justify = 'between';
 
   const label = document.createElement('label');
   label.id = `${idPrefix}-label`;
-  label.className = 'text-sm font-medium';
+  label.className = 'nds-text-body nds-font-medium';
   label.textContent = labelText;
 
   const valueText = document.createElement('span');
   valueText.id = `${idPrefix}-value`;
-  valueText.className = 'text-sm tabular-nums text-muted-foreground';
+  valueText.className = 'nds-text-body nds-text-muted-foreground';
+  valueText.style.fontVariantNumeric = 'tabular-nums';
   valueText.setAttribute('aria-live', 'polite');
   valueText.textContent = `${value}${unit}`;
 
@@ -139,17 +143,21 @@ export const Brilho: Story = {
 export const FaixaDePreco: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2 w-80';
+    wrap.className = 'nds-stack';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.width = '20rem';
 
     const row = document.createElement('div');
-    row.className = 'flex items-center justify-between';
+    row.className = 'nds-cluster';
+    row.dataset.justify = 'between';
     const label = document.createElement('label');
     label.id = 'comp-range-label';
-    label.className = 'text-sm font-medium';
+    label.className = 'nds-text-body nds-font-medium';
     label.textContent = 'Faixa de preço';
     const valueText = document.createElement('span');
     valueText.id = 'comp-range-value';
-    valueText.className = 'text-sm tabular-nums text-muted-foreground';
+    valueText.className = 'nds-text-body nds-text-muted-foreground';
+  valueText.style.fontVariantNumeric = 'tabular-nums';
     valueText.setAttribute('aria-live', 'polite');
 
     let minV = 100;
@@ -232,7 +240,9 @@ export const FaixaDePreco: Story = {
 export const EmFormulario: Story = {
   render: () => {
     const form = document.createElement('form');
-    form.className = 'flex flex-col gap-4 w-80';
+    form.className = 'nds-stack';
+    form.dataset.spacing = 'md';
+    form.style.width = '20rem';
     form.setAttribute('aria-label', 'Configurações de áudio');
 
     // Debounce manual — o factory Basecoat não tem onValueCommitted
@@ -240,7 +250,7 @@ export const EmFormulario: Story = {
     let lastCommitted = 60;
 
     const submitStatus = document.createElement('p');
-    submitStatus.className = 'text-xs text-muted-foreground';
+    submitStatus.className = 'nds-text-caption nds-text-muted-foreground';
     submitStatus.setAttribute('aria-live', 'polite');
     submitStatus.textContent = 'Aguardando alteração…';
 

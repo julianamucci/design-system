@@ -78,13 +78,14 @@ type Story = StoryObj<TextareaArgs>;
 export const Playground: Story = {
   render: (args) => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-1.5 w-full max-w-md';
+    wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrapper.dataset.spacing = 'xs';
 
     const id = 'playground-textarea';
 
     const label = document.createElement('label');
     label.htmlFor = id;
-    label.className = 'text-sm font-medium text-foreground';
+    label.className = 'nds-text-body nds-font-medium nds-text-foreground';
     label.textContent = 'Descrição';
     wrapper.appendChild(label);
 
@@ -110,7 +111,9 @@ export const Playground: Story = {
 
     if (args.maxLength > 0) {
       const counter = document.createElement('span');
-      counter.className = 'text-xs text-muted-foreground tabular-nums self-end';
+      counter.className = 'nds-text-caption nds-text-muted-foreground';
+      counter.style.fontVariantNumeric = 'tabular-nums';
+      counter.style.alignSelf = 'flex-end';
       const initial = textarea.value.length;
       counter.textContent = `${initial}/${args.maxLength}`;
       counter.setAttribute('aria-live', 'polite');

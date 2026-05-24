@@ -24,11 +24,13 @@ type Story = StoryObj;
 
 function withLabel(select: HTMLSelectElement, labelText: string, id: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2 w-80';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'sm';
+  wrap.style.width = '20rem';
 
   const label = document.createElement('label');
   label.htmlFor = id;
-  label.className = 'text-sm font-semibold';
+  label.className = 'nds-text-body nds-font-semibold';
   label.textContent = labelText;
 
   select.id = id;
@@ -149,14 +151,18 @@ export const WithGroups: Story = {
 export const WithIcon: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2 w-80 p-4 rounded-md border border-dashed';
+    wrap.className = 'nds-stack nds-rounded-md';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.width = '20rem';
+    wrap.style.padding = '1rem';
+    wrap.style.border = '1px dashed var(--color-border)';
 
     const title = document.createElement('p');
-    title.className = 'text-sm font-semibold';
+    title.className = 'nds-text-body nds-font-semibold';
     title.textContent = 'Variante indisponível no Basecoat';
 
     const note = document.createElement('p');
-    note.className = 'text-sm text-muted-foreground';
+    note.className = 'nds-text-body nds-text-muted-foreground';
     note.textContent =
       'O factory custom é um wrapper do <select> HTML nativo. O navegador não permite renderizar ícones inline em <option>, portanto a variante "WithIcon" não é suportada nessa stack. Para essa necessidade, use Combobox ou uma implementação custom de dropdown.';
 

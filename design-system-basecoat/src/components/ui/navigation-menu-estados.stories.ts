@@ -25,7 +25,10 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[240px] flex items-start justify-center p-2';
+  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.alignItems = 'flex-start';
+  wrapper.style.minHeight = '240px';
   wrapper.appendChild(child);
   return wrapper;
 }
@@ -124,7 +127,7 @@ export const Ativo: Story = {
     const homeLink = nav.querySelector<HTMLAnchorElement>('a[href="/"]');
     if (homeLink) {
       homeLink.setAttribute('aria-current', 'page');
-      homeLink.classList.add('bg-accent', 'text-accent-foreground');
+      homeLink.classList.add('nds-bg-accent', 'nds-text-accent-foreground');
     }
     return wrap(nav);
   },

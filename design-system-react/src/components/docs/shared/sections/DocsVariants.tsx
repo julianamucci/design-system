@@ -13,6 +13,7 @@ export interface DocsVariantsProps {
   title: string;
   items: DocsVariantItem[];
   id?: string;
+  note?: string;
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, o
    * botão "Ver código / Ocultar código" de cada variant recebe
@@ -30,7 +31,10 @@ function VariantCard({ item, componentSlug }: { item: DocsVariantItem; component
     <Card className="p-4 space-y-2">
       <div>
         <p className="text-sm font-semibold">{item.name}</p>
-        <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.description}</p>
+        <p
+          className="text-xs text-muted-foreground mt-0.5 leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: item.description }}
+        />
       </div>
       <div className="flex items-center justify-center">
         {item.preview}

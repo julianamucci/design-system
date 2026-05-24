@@ -54,13 +54,14 @@ function buildPlayground(args: SheetArgs, onApply?: () => void): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: args.triggerLabel });
 
   const body = document.createElement('div');
-  body.className = 'text-sm text-muted-foreground';
+  body.className = 'nds-text-body nds-text-muted-foreground';
   body.textContent = 'Conteúdo do painel (formulário, lista, mensagem).';
 
   const cancel = createButton({ variant: 'outline', label: args.cancelLabel });
   const apply = createButton({ variant: 'default', label: args.applyLabel });
   const footer = document.createElement('div');
-  footer.className = 'flex gap-2';
+  footer.className = 'nds-cluster';
+  footer.dataset.spacing = 'sm';
   footer.append(cancel, apply);
 
   const closeFromAction = () => {

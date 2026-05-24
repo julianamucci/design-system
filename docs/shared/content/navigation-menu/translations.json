@@ -147,6 +147,29 @@
       "styles": {
         "horizontal": "Lista horizontal de items; padrão para header de site. Triggers e Content posicionados acima/abaixo.",
         "vertical": "Lista vertical (orientation=vertical); usado em sidebars ou mobile drawers. Content abre lateralmente."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "linkSimples": {
+          "name": "Link simples",
+          "description": "Lista de <code>NavigationMenuLink</code> diretos, sem <code>NavigationMenuTrigger</code> nem <code>NavigationMenuContent</code>. Cada item navega imediatamente ao clique.",
+          "use": "Headers institucionais ou navegação secundária com 2 a 5 destinos planos, sem hierarquia. Quando todos os itens são páginas-folha e não há sub-categorias."
+        },
+        "comDropdown": {
+          "name": "Com dropdown",
+          "description": "Um item com <code>NavigationMenuTrigger</code> abre <code>NavigationMenuContent</code> contendo uma lista vertical de sub-links. Os demais itens permanecem como links diretos.",
+          "use": "Categorias com 3 a 8 sub-páginas relacionadas (ex.: planos, recursos). Mantenha rótulos curtos e ordene por relevância."
+        },
+        "megaMenuGrid": {
+          "name": "Mega-menu grid",
+          "description": "<code>NavigationMenuContent</code> com grid de 2 colunas, onde cada link tem título e descrição curta. Ideal para apresentar várias soluções com contexto.",
+          "use": "Categorias com 4 a 8 destinos que se beneficiam de descrição (\"Para Marketing\", \"Para Vendas\"). Evite passar de 8 itens — quebra escaneabilidade."
+        },
+        "comCardDestacado": {
+          "name": "Com card destacado",
+          "description": "<code>NavigationMenuContent</code> dividido em duas regiões: um card hero (CTA visual com gradiente, título e descrição) e uma lista lateral de links secundários.",
+          "use": "Quando há uma ação prioritária (\"Comece agora\", quickstart) que deve ofuscar visualmente os links de apoio. Use o card para 1 destino principal e a coluna lateral para 3 a 5 complementares."
+        }
       }
     },
     "states": {
@@ -405,6 +428,7 @@
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
+      "compositions": "Composições",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -565,6 +589,29 @@
       "styles": {
         "horizontal": "Horizontal list of items; default for site headers. Triggers and Content positioned above/below.",
         "vertical": "Vertical list (orientation=vertical); used in sidebars or mobile drawers. Content opens to the side."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "linkSimples": {
+          "name": "Simple link",
+          "description": "List of direct <code>NavigationMenuLink</code> items, with no <code>NavigationMenuTrigger</code> or <code>NavigationMenuContent</code>. Each item navigates immediately on click.",
+          "use": "Marketing headers or secondary navigation with 2 to 5 flat destinations, no hierarchy. When every item is a leaf page and there are no sub-categories."
+        },
+        "comDropdown": {
+          "name": "With dropdown",
+          "description": "One item with <code>NavigationMenuTrigger</code> opens <code>NavigationMenuContent</code> holding a vertical list of sub-links. Remaining items stay as direct links.",
+          "use": "Categories with 3 to 8 related sub-pages (e.g., plans, resources). Keep labels short and order by relevance."
+        },
+        "megaMenuGrid": {
+          "name": "Mega-menu grid",
+          "description": "<code>NavigationMenuContent</code> with a 2-column grid where each link has a title and short description. Ideal to present several solutions with context.",
+          "use": "Categories with 4 to 8 destinations that benefit from a description (\"For Marketing\", \"For Sales\"). Avoid going past 8 items — it breaks scannability."
+        },
+        "comCardDestacado": {
+          "name": "With featured card",
+          "description": "<code>NavigationMenuContent</code> split into two regions: a hero card (visual CTA with gradient, title and description) and a side list of secondary links.",
+          "use": "When there's a priority action (\"Get started\", quickstart) that should visually outshine the supporting links. Use the card for 1 main destination and the side column for 3 to 5 complements."
+        }
       }
     },
     "states": {
@@ -823,6 +870,7 @@
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
+      "compositions": "Compositions",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -983,6 +1031,29 @@
       "styles": {
         "horizontal": "Lista horizontal de items; predeterminado para header de sitio. Triggers y Content posicionados arriba/abajo.",
         "vertical": "Lista vertical (orientation=vertical); usado en sidebars o mobile drawers. Content abre lateralmente."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "linkSimples": {
+          "name": "Enlace simple",
+          "description": "Lista de <code>NavigationMenuLink</code> directos, sin <code>NavigationMenuTrigger</code> ni <code>NavigationMenuContent</code>. Cada item navega inmediatamente al hacer clic.",
+          "use": "Headers institucionales o navegación secundaria con 2 a 5 destinos planos, sin jerarquía. Cuando todos los items son páginas-hoja y no hay sub-categorías."
+        },
+        "comDropdown": {
+          "name": "Con dropdown",
+          "description": "Un item con <code>NavigationMenuTrigger</code> abre <code>NavigationMenuContent</code> con una lista vertical de sub-enlaces. Los demás items se mantienen como enlaces directos.",
+          "use": "Categorías con 3 a 8 sub-páginas relacionadas (ej.: planes, recursos). Mantén etiquetas cortas y ordena por relevancia."
+        },
+        "megaMenuGrid": {
+          "name": "Mega-menú grid",
+          "description": "<code>NavigationMenuContent</code> con grid de 2 columnas, donde cada enlace tiene título y descripción corta. Ideal para presentar varias soluciones con contexto.",
+          "use": "Categorías con 4 a 8 destinos que se benefician de una descripción (\"Para Marketing\", \"Para Ventas\"). Evita pasar de 8 items — rompe la escaneabilidad."
+        },
+        "comCardDestacado": {
+          "name": "Con tarjeta destacada",
+          "description": "<code>NavigationMenuContent</code> dividido en dos regiones: una tarjeta hero (CTA visual con gradiente, título y descripción) y una lista lateral de enlaces secundarios.",
+          "use": "Cuando hay una acción prioritaria (\"Empieza ahora\", quickstart) que debe destacar visualmente sobre los enlaces de apoyo. Usa la tarjeta para 1 destino principal y la columna lateral para 3 a 5 complementos."
+        }
       }
     },
     "states": {
@@ -1241,6 +1312,7 @@
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",
+      "compositions": "Composiciones",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",

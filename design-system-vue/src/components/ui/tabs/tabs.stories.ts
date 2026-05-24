@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 import TabsDocs from '@/components/docs/TabsDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta<any> = {
   title: 'UI/Tabs',
   component: Tabs,
   tags: ['autodocs'],
@@ -38,7 +38,7 @@ const meta = {
     orientation: 'horizontal',
     activationMode: 'automatic',
   },
-} satisfies Meta<typeof Tabs>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

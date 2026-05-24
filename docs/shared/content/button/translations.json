@@ -8,7 +8,7 @@
       "title": "Button — Formulário",
       "description": "Documentação do Button: 6 variantes, 6 tamanhos, composição com elemento filho para links, acessibilidade WCAG e suporte a ícones.",
       "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamanhos, composição com elemento filho via Radix Slot, foco visível e suporte a ícones decorativos.",
-      "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, Tailwind CSS, WCAG 2.1, class-variance-authority",
+      "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, WCAG 2.1, class-variance-authority",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -133,12 +133,45 @@
       },
       "sizesTitle": "Tamanhos",
       "sizes": {
-        "default": "Altura 36px (<code>h-9</code>). Tamanho padrão para a maioria dos contextos.",
-        "sm": "Altura 32px (<code>h-8</code>). Para toolbars densos ou áreas compactas.",
-        "lg": "Altura 40px (<code>h-10</code>). Para CTAs principais em landing pages.",
-        "icon": "Quadrado 36px (<code>size-9</code>). Para botões icon-only padrão.",
-        "icon-sm": "Quadrado 32px (<code>size-8</code>). Para toolbars compactos com ícone.",
-        "icon-lg": "Quadrado 40px (<code>size-10</code>). Para ações de ícone com destaque."
+        "default": "Texto 14px, padding vertical 8px. Tamanho padrão para a maioria dos contextos.",
+        "sm": "Texto 12px, padding vertical 4px. Para toolbars densos ou áreas compactas.",
+        "lg": "Texto 16px, padding vertical 8px. Para CTAs principais em landing pages.",
+        "icon": "Quadrado 36px. Para botões icon-only padrão.",
+        "icon-sm": "Quadrado 32px. Para toolbars compactos com ícone.",
+        "icon-lg": "Quadrado 40px. Para ações de ícone com destaque."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "iconLeft": {
+          "name": "Ícone à esquerda",
+          "description": "SVG antes do label, separado por <code>gap</code> interno. O ícone reforça visualmente a ação (adicionar, criar, enviar). Use quando a ação tem um símbolo amplamente reconhecido.",
+          "use": "CTAs com ação de criação ou submissão: \"Adicionar item\", \"Criar projeto\", \"Enviar mensagem\"."
+        },
+        "iconRight": {
+          "name": "Ícone à direita",
+          "description": "Label antes do SVG. Direção de navegação progressiva — sugere movimento para frente.",
+          "use": "Wizard steps, paginação, \"Próximo\", \"Continuar\", \"Avançar\"."
+        },
+        "destructiveWithIcon": {
+          "name": "Destrutivo com ícone",
+          "description": "Variante <code>destructive</code> combinada com ícone (geralmente lixeira). O ícone aumenta a percepção de irreversibilidade.",
+          "use": "Excluir, remover, deletar definitivamente. Confirma intenção destrutiva antes do clique."
+        },
+        "iconOnly": {
+          "name": "Apenas ícone",
+          "description": "Botão quadrado com tamanho <code>icon</code> (ou <code>icon-sm</code>/<code>icon-lg</code>). Exige <code>aria-label</code> obrigatório — sem ele o leitor de tela anuncia apenas \"button\".",
+          "use": "Toolbars densos, ações repetitivas com símbolo universal (download, fechar, editar). Evite para ações ambíguas."
+        },
+        "actionPair": {
+          "name": "Par de ações",
+          "description": "Combinação canônica: variante <code>outline</code> (ação secundária / cancelar) à esquerda, <code>default</code> (ação primária / confirmar) à direita. Convenção ocidental — primária sempre na posição final.",
+          "use": "Diálogos de confirmação, formulários com botão de cancelar, footers de modal. Mantenha ordem consistente em todo o sistema."
+        },
+        "asLink": {
+          "name": "Como link",
+          "description": "Elemento <code>&lt;a&gt;</code> recebendo as classes via <code>btnClass()</code>. Preserva semântica de link nativo (href, target, navegação do navegador) mas com aparência de botão.",
+          "use": "Navegação para outra página/rota que precisa parecer ação primária. Mantém o <code>&lt;a&gt;</code> para SEO, abertura em nova aba (middle-click) e acessibilidade nativa."
+        }
       }
     },
     "states": {
@@ -156,17 +189,17 @@
       "hover": {
         "label": "Hover",
         "trigger": "Ponteiro sobre o botão",
-        "behavior": "Aplica <code>hover:bg-*</code> da variante (ex: <code>primary/90</code>, <code>accent</code>)"
+        "behavior": "Aplica o fundo de hover da variante (versão soft do token <code>--primary</code>, ou <code>--accent</code> em outline/ghost)"
       },
       "focusVisible": {
         "label": "Focus visible",
         "trigger": "Foco via teclado (Tab)",
-        "behavior": "Ring de 3px em <code>ring/50</code> com <code>border-ring</code>. Indica foco acessível"
+        "behavior": "Ring de 3px no token <code>--ring</code> com borda na mesma cor. Indica foco acessível"
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Prop <code>disabled={true}</code>",
-        "behavior": "<code>pointer-events-none</code> + <code>opacity-50</code>. Não dispara eventos"
+        "behavior": "Bloqueia eventos de ponteiro e reduz a opacidade para metade. Não dispara eventos"
       },
       "loading": {
         "label": "Loading",
@@ -176,7 +209,7 @@
       "invalid": {
         "label": "Invalid",
         "trigger": "<code>aria-invalid=\"true\"</code>",
-        "behavior": "Ring <code>destructive/20</code>; borda <code>destructive</code>. Usado em integração com formulários"
+        "behavior": "Ring suave e borda no token <code>--destructive</code>. Usado em integração com formulários"
       }
     },
     "props": {
@@ -192,19 +225,19 @@
         "variant": "Variante visual do botão. Define cor de fundo, texto e borda.",
         "size": "Tamanho do botão. Altura, padding e proporção icon-only.",
         "asChild": "Se <code>true</code>, renderiza o filho (via Radix Slot) e repassa os estilos — útil para links.",
-        "disabled": "Desabilita o botão e aplica <code>pointer-events-none</code> + <code>opacity-50</code>.",
+        "disabled": "Desabilita o botão: bloqueia eventos de ponteiro e reduz a opacidade pela metade.",
         "type": "Tipo HTML do botão. Use <code>\"submit\"</code> dentro de forms, <code>\"button\"</code> fora.",
         "onClick": "Callback disparado ao clique. Não dispara quando <code>disabled</code>.",
-        "className": "Classes Tailwind adicionais — mesclam com as classes da variante via <code>cn()</code>."
+        "className": "Classes CSS adicionais — mescladas com as classes da variante pelo utilitário <code>cn()</code>."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "<code>className</code> — todas as classes Tailwind são mescladas via <code>cn()</code> (tailwind-merge), permitindo override seguro. <code>asChild</code> — composição com Link do Next.js/React Router mantendo semântica de navegação."
+      "extensibility": "<code>className</code> — todas as classes são mescladas com segurança via <code>cn()</code>, permitindo override de qualquer aspecto visual do componente. <code>asChild</code> — composição com Link do Next.js/React Router mantendo semântica de navegação."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Aplicação no tema",
         "part": "Parte do componente",
         "primary": "Fundo (variante default)",
         "primaryForeground": "Texto (variante default)",
@@ -222,7 +255,7 @@
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Button usa o elemento <code>&lt;button&gt;</code> nativo, que já tem suporte completo a teclado e leitor de tela. Cumpre WCAG 2.1 AA: 2.1.1 (acessível por teclado), 2.4.7 (foco visível), 4.1.2 (name, role, value).",
       "item1": "<strong>Elemento nativo &lt;button&gt;</strong> — a semântica, o role e o comportamento de teclado vêm do HTML. Nunca substitua por <code>&lt;div onClick&gt;</code>.",
-      "item2": "<strong>Foco visível</strong> — ring de 3px via <code>focus-visible:ring-ring/50</code>. Atende WCAG 2.4.7 (Focus Visible, AA).",
+      "item2": "<strong>Foco visível</strong> — ring de 3px no token <code>--ring</code>, aplicado via pseudo-classe <code>:focus-visible</code>. Atende WCAG 2.4.7 (Focus Visible, AA).",
       "item3": "<strong>aria-label contextual</strong> — quando o texto do botão é ambíguo (\"Editar\", \"Excluir\"), adicione contexto: <code>aria-label=\"Excluir produto Cadeira Gamer Pro\"</code>.",
       "item4": "<strong>Botão icon-only</strong> — <code>aria-label</code> obrigatório; ícone filho com <code>aria-hidden=\"true\"</code>.",
       "item5": "<strong>Contraste</strong> — todas as variantes atendem 4.5:1 entre texto e fundo. Variante <code>link</code> inclui sublinhado no hover para não depender só de cor.",
@@ -259,7 +292,7 @@
       "title": "Notas de Implementação",
       "tip1": "Para integrar com Link do Next.js ou React Router, componha o Button com o componente de link como elemento filho — mantém a semântica de navegação (<code>&lt;a href&gt;</code>) e os estilos do botão.",
       "tip2": "Em formulários com submit assíncrono, bloqueie o botão com <code>disabled={form.formState.isSubmitting}</code> e troque o label para gerúndio (\"Salvando...\"). Evita duplo envio.",
-      "tip3": "Ícones devem ter <code>aria-hidden=\"true\"</code> e tamanho padrão <code>size-4</code> — o CSS do Button já aplica <code>[&amp;_svg]:size-4</code> quando não há override."
+      "tip3": "Ícones devem ter <code>aria-hidden=\"true\"</code> e tamanho 16px — o CSS do Button já dimensiona SVGs filhos automaticamente quando não há override."
     },
     "analytics": {
       "title": "Analytics",
@@ -322,6 +355,8 @@
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
+      "sizes": "Tamanhos",
+      "compositions": "Composições",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -343,7 +378,7 @@
       "title": "Button — Form",
       "description": "Documentation for Button: 6 variants, 6 sizes, child element composition for links, WCAG accessibility and icon support.",
       "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 6 sizes, child element composition via Radix Slot, visible focus ring, and support for decorative icons.",
-      "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, Tailwind CSS, WCAG 2.1, class-variance-authority",
+      "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, WCAG 2.1, class-variance-authority",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -468,12 +503,45 @@
       },
       "sizesTitle": "Sizes",
       "sizes": {
-        "default": "Height 36px (<code>h-9</code>). Standard size for most contexts.",
-        "sm": "Height 32px (<code>h-8</code>). For dense toolbars or compact areas.",
-        "lg": "Height 40px (<code>h-10</code>). For primary CTAs on landing pages.",
-        "icon": "Square 36px (<code>size-9</code>). For standard icon-only buttons.",
-        "icon-sm": "Square 32px (<code>size-8</code>). For compact toolbars with icons.",
-        "icon-lg": "Square 40px (<code>size-10</code>). For emphasized icon actions."
+        "default": "Text 14px, vertical padding 8px. Standard size for most contexts.",
+        "sm": "Text 12px, vertical padding 4px. For dense toolbars or compact areas.",
+        "lg": "Text 16px, vertical padding 8px. For primary CTAs on landing pages.",
+        "icon": "Square 36px. For standard icon-only buttons.",
+        "icon-sm": "Square 32px. For compact toolbars with icons.",
+        "icon-lg": "Square 40px. For emphasized icon actions."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "iconLeft": {
+          "name": "Icon at left",
+          "description": "SVG before the label, separated by inner <code>gap</code>. The icon visually reinforces the action (add, create, send). Use when the action has a widely recognized symbol.",
+          "use": "CTAs with creation or submission actions: \"Add item\", \"Create project\", \"Send message\"."
+        },
+        "iconRight": {
+          "name": "Icon at right",
+          "description": "Label before the SVG. Forward navigation direction — suggests progressive movement.",
+          "use": "Wizard steps, pagination, \"Next\", \"Continue\", \"Proceed\"."
+        },
+        "destructiveWithIcon": {
+          "name": "Destructive with icon",
+          "description": "<code>destructive</code> variant combined with an icon (typically a trash can). The icon increases the perception of irreversibility.",
+          "use": "Delete, remove, permanently erase. Reinforces destructive intent before the click."
+        },
+        "iconOnly": {
+          "name": "Icon only",
+          "description": "Square button with size <code>icon</code> (or <code>icon-sm</code>/<code>icon-lg</code>). Requires mandatory <code>aria-label</code> — without it the screen reader only announces \"button\".",
+          "use": "Dense toolbars, repetitive actions with universal symbols (download, close, edit). Avoid for ambiguous actions."
+        },
+        "actionPair": {
+          "name": "Action pair",
+          "description": "Canonical combination: <code>outline</code> variant (secondary / cancel) on the left, <code>default</code> (primary / confirm) on the right. Western convention — primary always in the final position.",
+          "use": "Confirmation dialogs, forms with cancel button, modal footers. Keep the order consistent across the whole system."
+        },
+        "asLink": {
+          "name": "As link",
+          "description": "<code>&lt;a&gt;</code> element receiving the classes via <code>btnClass()</code>. Preserves native link semantics (href, target, browser navigation) with button appearance.",
+          "use": "Navigation to another page/route that needs to look like a primary action. Keeps the <code>&lt;a&gt;</code> for SEO, new-tab opening (middle-click) and native accessibility."
+        }
       }
     },
     "states": {
@@ -491,17 +559,17 @@
       "hover": {
         "label": "Hover",
         "trigger": "Pointer over the button",
-        "behavior": "Applies <code>hover:bg-*</code> of the variant (e.g., <code>primary/90</code>, <code>accent</code>)"
+        "behavior": "Applies the variant's hover background (soft version of <code>--primary</code>, or <code>--accent</code> for outline/ghost)"
       },
       "focusVisible": {
         "label": "Focus visible",
         "trigger": "Keyboard focus (Tab)",
-        "behavior": "3px ring in <code>ring/50</code> with <code>border-ring</code>. Indicates accessible focus"
+        "behavior": "3px ring in the <code>--ring</code> token with a matching border. Indicates accessible focus"
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Prop <code>disabled={true}</code>",
-        "behavior": "<code>pointer-events-none</code> + <code>opacity-50</code>. Doesn't fire events"
+        "behavior": "Blocks pointer events and reduces opacity by half. Doesn't fire events"
       },
       "loading": {
         "label": "Loading",
@@ -511,7 +579,7 @@
       "invalid": {
         "label": "Invalid",
         "trigger": "<code>aria-invalid=\"true\"</code>",
-        "behavior": "Ring <code>destructive/20</code>; border <code>destructive</code>. Used in form integration"
+        "behavior": "Soft ring and border in the <code>--destructive</code> token. Used in form integration"
       }
     },
     "props": {
@@ -527,19 +595,19 @@
         "variant": "Visual button variant. Sets background color, text, and border.",
         "size": "Button size. Height, padding, and icon-only proportion.",
         "asChild": "If <code>true</code>, renders the child (via Radix Slot) and forwards styles — useful for links.",
-        "disabled": "Disables the button and applies <code>pointer-events-none</code> + <code>opacity-50</code>.",
+        "disabled": "Disables the button: blocks pointer events and reduces opacity by half.",
         "type": "HTML button type. Use <code>\"submit\"</code> inside forms, <code>\"button\"</code> outside.",
         "onClick": "Callback fired on click. Doesn't fire when <code>disabled</code>.",
-        "className": "Additional Tailwind classes — merged with variant classes via <code>cn()</code>."
+        "className": "Additional CSS classes — merged with variant classes via the <code>cn()</code> utility."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "<code>className</code> — all Tailwind classes are merged via <code>cn()</code> (tailwind-merge), allowing safe overrides. <code>asChild</code> — composition with Next.js/React Router Link while keeping navigation semantics."
+      "extensibility": "<code>className</code> — all classes are safely merged via <code>cn()</code>, allowing override of any visual aspect of the component. <code>asChild</code> — composition with Next.js/React Router Link while keeping navigation semantics."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": "Theme application",
         "part": "Component Part",
         "primary": "Background (default variant)",
         "primaryForeground": "Text (default variant)",
@@ -557,7 +625,7 @@
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Button uses the native <code>&lt;button&gt;</code> element, which has full keyboard and screen reader support. Meets WCAG 2.1 AA: 2.1.1 (keyboard accessible), 2.4.7 (focus visible), 4.1.2 (name, role, value).",
       "item1": "<strong>Native &lt;button&gt; element</strong> — semantics, role, and keyboard behavior come from HTML. Never replace with <code>&lt;div onClick&gt;</code>.",
-      "item2": "<strong>Visible focus</strong> — 3px ring via <code>focus-visible:ring-ring/50</code>. Meets WCAG 2.4.7 (Focus Visible, AA).",
+      "item2": "<strong>Visible focus</strong> — 3px ring in the <code>--ring</code> token, applied via the <code>:focus-visible</code> pseudo-class. Meets WCAG 2.4.7 (Focus Visible, AA).",
       "item3": "<strong>Contextual aria-label</strong> — when the button text is ambiguous (\"Edit\", \"Delete\"), add context: <code>aria-label=\"Delete product Gaming Chair Pro\"</code>.",
       "item4": "<strong>Icon-only button</strong> — <code>aria-label</code> required; icon child with <code>aria-hidden=\"true\"</code>.",
       "item5": "<strong>Contrast</strong> — all variants meet 4.5:1 between text and background. <code>link</code> variant includes hover underline to not rely solely on color.",
@@ -594,7 +662,7 @@
       "title": "Implementation Notes",
       "tip1": "To integrate with Next.js or React Router Link, compose the Button with the link component as a child — keeps navigation semantics (<code>&lt;a href&gt;</code>) and button styles.",
       "tip2": "In forms with async submit, block the button with <code>disabled={form.formState.isSubmitting}</code> and change the label to gerund (\"Saving...\"). Prevents double submission.",
-      "tip3": "Icons must have <code>aria-hidden=\"true\"</code> and default <code>size-4</code> — the Button CSS already applies <code>[&amp;_svg]:size-4</code> when no override is present."
+      "tip3": "Icons must have <code>aria-hidden=\"true\"</code> and a default size of 16px — the Button CSS already sizes child SVGs automatically when no override is present."
     },
     "analytics": {
       "title": "Analytics",
@@ -657,6 +725,8 @@
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
+      "sizes": "Sizes",
+      "compositions": "Compositions",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -678,7 +748,7 @@
       "title": "Button — Formulario",
       "description": "Documentación del Button: 6 variantes, 6 tamaños, composición con elemento hijo para enlaces, accesibilidad WCAG y soporte para íconos.",
       "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamaños, composición con elemento hijo vía Radix Slot, foco visible y soporte para íconos decorativos.",
-      "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, Tailwind CSS, WCAG 2.1, class-variance-authority",
+      "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, WCAG 2.1, class-variance-authority",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -803,12 +873,45 @@
       },
       "sizesTitle": "Tamaños",
       "sizes": {
-        "default": "Altura 36px (<code>h-9</code>). Tamaño estándar para la mayoría de contextos.",
-        "sm": "Altura 32px (<code>h-8</code>). Para toolbars densos o áreas compactas.",
-        "lg": "Altura 40px (<code>h-10</code>). Para CTAs principales en landing pages.",
-        "icon": "Cuadrado 36px (<code>size-9</code>). Para botones icon-only estándar.",
-        "icon-sm": "Cuadrado 32px (<code>size-8</code>). Para toolbars compactos con ícono.",
-        "icon-lg": "Cuadrado 40px (<code>size-10</code>). Para acciones de ícono con énfasis."
+        "default": "Texto 14px, padding vertical 8px. Tamaño estándar para la mayoría de contextos.",
+        "sm": "Texto 12px, padding vertical 4px. Para toolbars densos o áreas compactas.",
+        "lg": "Texto 16px, padding vertical 8px. Para CTAs principales en landing pages.",
+        "icon": "Cuadrado 36px. Para botones icon-only estándar.",
+        "icon-sm": "Cuadrado 32px. Para toolbars compactos con ícono.",
+        "icon-lg": "Cuadrado 40px. Para acciones de ícono con énfasis."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "iconLeft": {
+          "name": "Ícono a la izquierda",
+          "description": "SVG antes del label, separado por <code>gap</code> interno. El ícono refuerza visualmente la acción (agregar, crear, enviar). Usa cuando la acción tiene un símbolo ampliamente reconocido.",
+          "use": "CTAs con acción de creación o envío: \"Agregar ítem\", \"Crear proyecto\", \"Enviar mensaje\"."
+        },
+        "iconRight": {
+          "name": "Ícono a la derecha",
+          "description": "Label antes del SVG. Dirección de navegación progresiva — sugiere movimiento hacia adelante.",
+          "use": "Wizard steps, paginación, \"Siguiente\", \"Continuar\", \"Avanzar\"."
+        },
+        "destructiveWithIcon": {
+          "name": "Destructivo con ícono",
+          "description": "Variante <code>destructive</code> combinada con ícono (típicamente una papelera). El ícono aumenta la percepción de irreversibilidad.",
+          "use": "Eliminar, borrar definitivamente. Refuerza la intención destructiva antes del clic."
+        },
+        "iconOnly": {
+          "name": "Solo ícono",
+          "description": "Botón cuadrado con tamaño <code>icon</code> (o <code>icon-sm</code>/<code>icon-lg</code>). Requiere <code>aria-label</code> obligatorio — sin él el lector de pantalla anuncia solo \"button\".",
+          "use": "Toolbars densos, acciones repetitivas con símbolos universales (descargar, cerrar, editar). Evita para acciones ambiguas."
+        },
+        "actionPair": {
+          "name": "Par de acciones",
+          "description": "Combinación canónica: variante <code>outline</code> (acción secundaria / cancelar) a la izquierda, <code>default</code> (acción primaria / confirmar) a la derecha. Convención occidental — primaria siempre en la posición final.",
+          "use": "Diálogos de confirmación, formularios con botón de cancelar, footers de modal. Mantén el orden consistente en todo el sistema."
+        },
+        "asLink": {
+          "name": "Como link",
+          "description": "Elemento <code>&lt;a&gt;</code> recibiendo las clases vía <code>btnClass()</code>. Preserva la semántica nativa de link (href, target, navegación del navegador) con apariencia de botón.",
+          "use": "Navegación a otra página/ruta que necesita parecer una acción primaria. Mantiene el <code>&lt;a&gt;</code> para SEO, apertura en nueva pestaña (clic medio) y accesibilidad nativa."
+        }
       }
     },
     "states": {
@@ -826,17 +929,17 @@
       "hover": {
         "label": "Hover",
         "trigger": "Puntero sobre el botón",
-        "behavior": "Aplica <code>hover:bg-*</code> de la variante (ej: <code>primary/90</code>, <code>accent</code>)"
+        "behavior": "Aplica el fondo de hover de la variante (versión soft del token <code>--primary</code>, o <code>--accent</code> en outline/ghost)"
       },
       "focusVisible": {
         "label": "Focus visible",
         "trigger": "Foco vía teclado (Tab)",
-        "behavior": "Ring de 3px en <code>ring/50</code> con <code>border-ring</code>. Indica foco accesible"
+        "behavior": "Ring de 3px en el token <code>--ring</code> con borde del mismo color. Indica foco accesible"
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Prop <code>disabled={true}</code>",
-        "behavior": "<code>pointer-events-none</code> + <code>opacity-50</code>. No dispara eventos"
+        "behavior": "Bloquea eventos de puntero y reduce la opacidad a la mitad. No dispara eventos"
       },
       "loading": {
         "label": "Loading",
@@ -846,7 +949,7 @@
       "invalid": {
         "label": "Invalid",
         "trigger": "<code>aria-invalid=\"true\"</code>",
-        "behavior": "Ring <code>destructive/20</code>; borde <code>destructive</code>. Usado en integración con formularios"
+        "behavior": "Ring suave y borde en el token <code>--destructive</code>. Usado en integración con formularios"
       }
     },
     "props": {
@@ -862,19 +965,19 @@
         "variant": "Variante visual del botón. Define color de fondo, texto y borde.",
         "size": "Tamaño del botón. Altura, padding y proporción icon-only.",
         "asChild": "Si <code>true</code>, renderiza el hijo (vía Radix Slot) y reenvía los estilos — útil para enlaces.",
-        "disabled": "Deshabilita el botón y aplica <code>pointer-events-none</code> + <code>opacity-50</code>.",
+        "disabled": "Deshabilita el botón: bloquea eventos de puntero y reduce la opacidad a la mitad.",
         "type": "Tipo HTML del botón. Usa <code>\"submit\"</code> dentro de forms, <code>\"button\"</code> fuera.",
         "onClick": "Callback disparado al clic. No dispara cuando <code>disabled</code>.",
-        "className": "Clases Tailwind adicionales — se combinan con las clases de la variante vía <code>cn()</code>."
+        "className": "Clases CSS adicionales — se combinan con las clases de la variante vía el utilitario <code>cn()</code>."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "<code>className</code> — todas las clases Tailwind se combinan vía <code>cn()</code> (tailwind-merge), permitiendo override seguro. <code>asChild</code> — composición con Link de Next.js/React Router manteniendo semántica de navegación."
+      "extensibility": "<code>className</code> — todas las clases se combinan de forma segura vía <code>cn()</code>, permitiendo override de cualquier aspecto visual del componente. <code>asChild</code> — composición con Link de Next.js/React Router manteniendo semántica de navegación."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Aplicación en el tema",
         "part": "Parte del componente",
         "primary": "Fondo (variante default)",
         "primaryForeground": "Texto (variante default)",
@@ -892,7 +995,7 @@
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Button usa el elemento <code>&lt;button&gt;</code> nativo, que ya tiene soporte completo de teclado y lector de pantalla. Cumple WCAG 2.1 AA: 2.1.1 (accesible por teclado), 2.4.7 (foco visible), 4.1.2 (name, role, value).",
       "item1": "<strong>Elemento nativo &lt;button&gt;</strong> — la semántica, el role y el comportamiento de teclado vienen del HTML. Nunca lo sustituyas por <code>&lt;div onClick&gt;</code>.",
-      "item2": "<strong>Foco visible</strong> — ring de 3px vía <code>focus-visible:ring-ring/50</code>. Cumple WCAG 2.4.7 (Focus Visible, AA).",
+      "item2": "<strong>Foco visible</strong> — ring de 3px en el token <code>--ring</code>, aplicado vía la pseudo-clase <code>:focus-visible</code>. Cumple WCAG 2.4.7 (Focus Visible, AA).",
       "item3": "<strong>aria-label contextual</strong> — cuando el texto del botón es ambiguo (\"Editar\", \"Eliminar\"), agrega contexto: <code>aria-label=\"Eliminar producto Silla Gamer Pro\"</code>.",
       "item4": "<strong>Botón icon-only</strong> — <code>aria-label</code> obligatorio; ícono hijo con <code>aria-hidden=\"true\"</code>.",
       "item5": "<strong>Contraste</strong> — todas las variantes cumplen 4.5:1 entre texto y fondo. La variante <code>link</code> incluye subrayado en hover para no depender solo del color.",
@@ -929,7 +1032,7 @@
       "title": "Notas de Implementación",
       "tip1": "Para integrar con Link de Next.js o React Router, compón el Button con el componente de enlace como hijo — mantiene la semántica de navegación (<code>&lt;a href&gt;</code>) y los estilos del botón.",
       "tip2": "En formularios con submit asíncrono, bloquea el botón con <code>disabled={form.formState.isSubmitting}</code> y cambia el label a gerundio (\"Guardando...\"). Evita doble envío.",
-      "tip3": "Los íconos deben tener <code>aria-hidden=\"true\"</code> y tamaño estándar <code>size-4</code> — el CSS del Button ya aplica <code>[&amp;_svg]:size-4</code> cuando no hay override."
+      "tip3": "Los íconos deben tener <code>aria-hidden=\"true\"</code> y tamaño 16px — el CSS del Button ya dimensiona los SVG hijos automáticamente cuando no hay override."
     },
     "analytics": {
       "title": "Analytics",
@@ -992,6 +1095,8 @@
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",
+      "sizes": "Tamaños",
+      "compositions": "Composiciones",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",

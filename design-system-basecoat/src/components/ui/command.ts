@@ -1,4 +1,5 @@
-import { cn } from '@/lib/utils';
+// ─── Command — Vanilla factory standalone ───────────────────────────────────
+// Visual: classes .nds-command-* (zero Tailwind/basecoat-css).
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -23,14 +24,12 @@ export function createCommand(options: CommandOptions): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'command';
-  root.className = cn(
-    'command flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground',
-    options.class
-  );
+  root.className = 'nds-command';
+  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
 
   // Search input wrapper
   const inputWrapper = document.createElement('div');
-  inputWrapper.className = 'flex items-center border-b px-3';
+  inputWrapper.className = 'nds-command-input-wrapper';
 
   // Build SVG via DOM (avoids innerHTML for static content — scanner-safe)
   const svgNS = 'http://www.w3.org/2000/svg';
@@ -44,7 +43,6 @@ export function createCommand(options: CommandOptions): HTMLElement {
   searchIcon.setAttribute('stroke-width', '2');
   searchIcon.setAttribute('stroke-linecap', 'round');
   searchIcon.setAttribute('stroke-linejoin', 'round');
-  searchIcon.setAttribute('class', 'mr-2 shrink-0 opacity-50');
   searchIcon.setAttribute('aria-hidden', 'true');
   const circle = document.createElementNS(svgNS, 'circle');
   circle.setAttribute('cx', '11');
@@ -58,8 +56,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
   const input = document.createElement('input');
   input.type = 'text';
   input.placeholder = placeholder;
-  input.className =
-    'flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50';
+  input.className = 'nds-command-input';
   input.setAttribute('role', 'combobox');
   input.setAttribute('aria-autocomplete', 'list');
   input.setAttribute('aria-expanded', 'true');
@@ -68,7 +65,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
 
   // List
   const list = document.createElement('div');
-  list.className = 'max-h-[300px] overflow-y-auto overflow-x-hidden';
+  list.className = 'nds-command-list';
   list.setAttribute('role', 'listbox');
   root.appendChild(list);
 
@@ -97,7 +94,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
 
     if (filtered.length === 0) {
       const empty = document.createElement('p');
-      empty.className = 'py-6 text-center text-sm text-muted-foreground';
+      empty.className = 'nds-command-empty';
       empty.textContent = 'No results found.';
       list.appendChild(empty);
       return;
@@ -106,33 +103,23 @@ export function createCommand(options: CommandOptions): HTMLElement {
     const grouped = groupItems(filtered);
 
     grouped.forEach((groupItems, groupName) => {
+      const groupEl = document.createElement('div');
+      groupEl.className = 'nds-command-group';
+
       if (groupName) {
-        const groupEl = document.createElement('div');
-        groupEl.className = 'overflow-hidden p-1 text-foreground';
         const heading = document.createElement('div');
-        heading.className = 'px-2 py-1.5 text-xs font-medium text-muted-foreground';
+        heading.className = 'nds-command-group-heading';
         heading.textContent = groupName;
         groupEl.appendChild(heading);
-
-        groupItems.forEach((item) => {
-          const el = buildItemEl(item);
-          groupEl.appendChild(el);
-          visibleItems.push(el);
-        });
-
-        list.appendChild(groupEl);
-      } else {
-        const groupEl = document.createElement('div');
-        groupEl.className = 'overflow-hidden p-1 text-foreground';
-
-        groupItems.forEach((item) => {
-          const el = buildItemEl(item);
-          groupEl.appendChild(el);
-          visibleItems.push(el);
-        });
-
-        list.appendChild(groupEl);
       }
+
+      groupItems.forEach((item) => {
+        const el = buildItemEl(item);
+        groupEl.appendChild(el);
+        visibleItems.push(el);
+      });
+
+      list.appendChild(groupEl);
     });
   }
 
@@ -142,12 +129,8 @@ export function createCommand(options: CommandOptions): HTMLElement {
     el.dataset.value = item.value;
     el.setAttribute('role', 'option');
     el.setAttribute('aria-selected', 'false');
-    el.className = cn(
-      'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none',
-      item.disabled
-        ? 'pointer-events-none opacity-50'
-        : 'cursor-pointer hover:bg-accent hover:text-accent-foreground'
-    );
+    el.className = 'nds-command-item';
+    if (item.disabled) el.setAttribute('aria-disabled', 'true');
     el.textContent = item.label;
 
     if (!item.disabled) {
@@ -163,11 +146,9 @@ export function createCommand(options: CommandOptions): HTMLElement {
   function setActive(index: number): void {
     visibleItems.forEach((el, i) => {
       if (i === index) {
-        el.classList.add('bg-accent', 'text-accent-foreground');
         el.setAttribute('aria-selected', 'true');
         el.scrollIntoView({ block: 'nearest' });
       } else {
-        el.classList.remove('bg-accent', 'text-accent-foreground');
         el.setAttribute('aria-selected', 'false');
       }
     });

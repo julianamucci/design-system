@@ -1,0 +1,22 @@
+/*
+ * ─── nds-scroll-area ────────────────────────────────────────────────────────
+ * Container com altura/largura fixa que rola o conteúdo interno via scrollbar
+ * nativo do browser. Sem scrollbar customizado (padrão consistente com OS).
+ *
+ *   <div class="nds-scroll-area" style="height: 200px">
+ *     <div class="nds-scroll-area-viewport">[conteúdo longo]</div>
+ *   </div>
+ */
+
+.nds-scroll-area {
+  position: relative;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.nds-scroll-area-viewport {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-radius: inherit;
+}

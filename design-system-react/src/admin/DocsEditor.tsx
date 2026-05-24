@@ -277,7 +277,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
         body: JSON.stringify({ data: data[locale], fromLocale: locale, toLocales }),
       });
       const result = await res.json() as Record<string, Record<string, unknown>> | { error: string };
-      if ('error' in result) throw new Error(result.error);
+      if ('error' in result) throw new Error(result.error as string);
       for (const [lang, translated] of Object.entries(result)) {
         setLocaleData(lang as Locale, translated);
       }

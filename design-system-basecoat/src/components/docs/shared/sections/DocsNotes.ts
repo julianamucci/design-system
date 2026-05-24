@@ -21,12 +21,13 @@ export function createDocsNotes(props: DocsNotesProps): HTMLElement {
   section.id = 'notas';
 
   const h2 = document.createElement('h2');
-  h2.className = 'text-xl font-semibold mb-4';
+  h2.className = 'nds-section-title';
   h2.textContent = props.title;
   section.appendChild(h2);
 
   const container = document.createElement('div');
-  container.className = 'space-y-4';
+  container.className = 'nds-stack';
+  container.dataset.spacing = 'md';
 
   props.items.forEach((item, i) => {
     const wrapper = document.createElement('div');

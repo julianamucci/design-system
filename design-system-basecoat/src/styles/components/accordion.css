@@ -1,0 +1,119 @@
+/*
+ * ─── nds-accordion ──────────────────────────────────────────────────────────
+ * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ *
+ * Estrutura:
+ *   <div class="nds-accordion" data-slot="accordion">
+ *     <div class="nds-accordion-item" data-slot="accordion-item">
+ *       <h3 class="nds-accordion-header">
+ *         <button class="nds-accordion-trigger" data-slot="accordion-trigger"
+ *                 aria-expanded="false" aria-controls="...">
+ *           <span>Pergunta</span>
+ *           <svg class="nds-accordion-icon">...</svg>
+ *         </button>
+ *       </h3>
+ *       <div class="nds-accordion-content" data-slot="accordion-content"
+ *            role="region" aria-labelledby="..." hidden>
+ *         <div class="nds-accordion-content-inner">Resposta</div>
+ *       </div>
+ *     </div>
+ *   </div>
+ *
+ * Tokens: --border, --foreground, --muted-foreground, --ring, --spacing-*
+ */
+
+.nds-accordion {
+  width: 100%;
+}
+
+/* ── Item ────────────────────────────────────────────────────────────────── */
+.nds-accordion-item {
+  border-bottom: 1px solid hsl(var(--border));
+}
+.nds-accordion-item:last-child {
+  border-bottom: 0;
+}
+
+/* ── Header (wrapper do trigger; mantém semântica de heading) ────────────── */
+.nds-accordion-header {
+  display: flex;
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+/* ── Trigger ─────────────────────────────────────────────────────────────── */
+.nds-accordion-trigger {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);                   /* 16px */
+
+  padding-block: var(--spacing-4);         /* 16px */
+  padding-inline: 0;
+
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius, 0.5rem);
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.875rem;                     /* 14px */
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  outline: 0;
+
+  transition: color 150ms;
+}
+
+.nds-accordion-trigger:hover > span:first-child {
+  text-decoration: underline;
+}
+
+.nds-accordion-trigger:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+}
+
+.nds-accordion-trigger:disabled,
+.nds-accordion-trigger[aria-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* ── Chevron icon ────────────────────────────────────────────────────────── */
+.nds-accordion-icon {
+  width: var(--spacing-4);                 /* 16px */
+  height: var(--spacing-4);
+  flex-shrink: 0;
+  color: hsl(var(--muted-foreground));
+  pointer-events: none;
+  transition: transform 200ms;
+}
+
+.nds-accordion-trigger[data-state="open"] .nds-accordion-icon {
+  transform: rotate(180deg);
+}
+
+/* ── Content ─────────────────────────────────────────────────────────────── */
+.nds-accordion-content {
+  overflow: hidden;
+  font-size: 0.875rem;                     /* 14px */
+  color: hsl(var(--foreground));
+}
+
+.nds-accordion-content-inner {
+  padding-top: 0;
+  padding-bottom: var(--spacing-4);        /* 16px */
+  line-height: 1.5;
+}
+
+/* ── prefers-reduced-motion ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .nds-accordion-trigger,
+  .nds-accordion-icon {
+    transition: none;
+  }
+}

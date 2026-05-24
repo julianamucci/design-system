@@ -5,6 +5,8 @@ import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { User, Settings, Shield } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import tabsTranslations from '@shared/content/tabs/translations.json';
@@ -16,6 +18,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -92,6 +95,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -210,6 +214,77 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.default'),  description: stripHtml(tContent('variants.styles.default')),  code: codeDefault  },
   { name: tContent('variants.items.line'),     description: stripHtml(tContent('variants.styles.line')),     code: codeLine     },
   { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: codeVertical },
+]);
+
+const codeIconTrigger = `<Tabs default-value="profile" class="w-full max-w-xl">
+  <TabsList aria-label="Configurações">
+    <TabsTrigger value="profile"><User aria-hidden="true" class="h-4 w-4" /> Perfil</TabsTrigger>
+    <TabsTrigger value="account"><Settings aria-hidden="true" class="h-4 w-4" /> Conta</TabsTrigger>
+    <TabsTrigger value="security"><Shield aria-hidden="true" class="h-4 w-4" /> Segurança</TabsTrigger>
+  </TabsList>
+  <TabsContent value="profile">Perfil</TabsContent>
+  <TabsContent value="account">Conta</TabsContent>
+  <TabsContent value="security">Segurança</TabsContent>
+</Tabs>`;
+
+const codeBadgeTrigger = `<Tabs default-value="inbox" class="w-full max-w-xl">
+  <TabsList aria-label="Caixas de mensagem">
+    <TabsTrigger value="inbox">Caixa de entrada <Badge>12</Badge></TabsTrigger>
+    <TabsTrigger value="spam">Spam <Badge variant="destructive">3</Badge></TabsTrigger>
+    <TabsTrigger value="trash">Lixeira</TabsTrigger>
+  </TabsList>
+  <TabsContent value="inbox">Caixa de entrada</TabsContent>
+  <TabsContent value="spam">Spam</TabsContent>
+  <TabsContent value="trash">Lixeira</TabsContent>
+</Tabs>`;
+
+const codeVerticalComp = `<Tabs default-value="profile" orientation="vertical" class="w-full max-w-2xl flex gap-4">
+  <TabsList class="flex flex-col h-auto items-stretch shrink-0 min-w-[10rem]" aria-label="Configurações">
+    <TabsTrigger value="profile">Perfil</TabsTrigger>
+    <TabsTrigger value="account">Conta</TabsTrigger>
+    <TabsTrigger value="security">Segurança</TabsTrigger>
+  </TabsList>
+  <TabsContent value="profile">Perfil</TabsContent>
+  <TabsContent value="account">Conta</TabsContent>
+  <TabsContent value="security">Segurança</TabsContent>
+</Tabs>`;
+
+const codeLineSubNav = `<Tabs default-value="all" class="w-full">
+  <TabsList variant="line" class="border-b rounded-none bg-transparent w-full justify-start" aria-label="Filtros de listagem">
+    <TabsTrigger value="all">Tudo</TabsTrigger>
+    <TabsTrigger value="active">Ativos</TabsTrigger>
+    <TabsTrigger value="archived">Arquivados</TabsTrigger>
+  </TabsList>
+  <TabsContent value="all">Tudo</TabsContent>
+  <TabsContent value="active">Ativos</TabsContent>
+  <TabsContent value="archived">Arquivados</TabsContent>
+</Tabs>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.iconTrigger.name'),
+    description: tContent('variants.compositions.iconTrigger.description'),
+    useWhen: tContent('variants.compositions.iconTrigger.use'),
+    code: codeIconTrigger,
+  },
+  {
+    name: tContent('variants.compositions.badgeTrigger.name'),
+    description: tContent('variants.compositions.badgeTrigger.description'),
+    useWhen: tContent('variants.compositions.badgeTrigger.use'),
+    code: codeBadgeTrigger,
+  },
+  {
+    name: tContent('variants.compositions.vertical.name'),
+    description: tContent('variants.compositions.vertical.description'),
+    useWhen: tContent('variants.compositions.vertical.use'),
+    code: codeVerticalComp,
+  },
+  {
+    name: tContent('variants.compositions.lineSubNav.name'),
+    description: tContent('variants.compositions.lineSubNav.description'),
+    useWhen: tContent('variants.compositions.lineSubNav.use'),
+    code: codeLineSubNav,
+  },
 ]);
 
 const stateCols = computed(() => ({
@@ -545,6 +620,119 @@ function handleTabChange(value: string) {
         </Tabs>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="tabs"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Tabs default-value="profile" class="w-full max-w-xl">
+          <TabsList aria-label="Configurações">
+            <TabsTrigger value="profile" class="gap-2"><User aria-hidden="true" class="h-4 w-4" /> Perfil</TabsTrigger>
+            <TabsTrigger value="account" class="gap-2"><Settings aria-hidden="true" class="h-4 w-4" /> Conta</TabsTrigger>
+            <TabsTrigger value="security" class="gap-2"><Shield aria-hidden="true" class="h-4 w-4" /> Segurança</TabsTrigger>
+          </TabsList>
+          <TabsContent value="profile">
+            <div class="p-4 rounded-md border bg-card space-y-2">
+              <h3 class="text-sm font-semibold">Perfil</h3>
+              <p class="text-sm text-muted-foreground">Configurações, painéis administrativos, navegação por categorias reconhecíveis (Perfil, Conta, Segurança).</p>
+            </div>
+          </TabsContent>
+          <TabsContent value="account">
+            <div class="p-4 rounded-md border bg-card space-y-2">
+              <h3 class="text-sm font-semibold">Conta</h3>
+              <p class="text-sm text-muted-foreground">Configurações, painéis administrativos, navegação por categorias reconhecíveis (Perfil, Conta, Segurança).</p>
+            </div>
+          </TabsContent>
+          <TabsContent value="security">
+            <div class="p-4 rounded-md border bg-card space-y-2">
+              <h3 class="text-sm font-semibold">Segurança</h3>
+              <p class="text-sm text-muted-foreground">Configurações, painéis administrativos, navegação por categorias reconhecíveis (Perfil, Conta, Segurança).</p>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </template>
+
+      <template #variant-preview-1>
+        <Tabs default-value="inbox" class="w-full max-w-xl">
+          <TabsList aria-label="Caixas de mensagem">
+            <TabsTrigger value="inbox" class="gap-2">Caixa de entrada <Badge>12</Badge></TabsTrigger>
+            <TabsTrigger value="spam" class="gap-2">Spam <Badge variant="destructive">3</Badge></TabsTrigger>
+            <TabsTrigger value="trash">Lixeira</TabsTrigger>
+          </TabsList>
+          <TabsContent value="inbox">
+            <div class="p-4 rounded-md border bg-card space-y-2">
+              <h3 class="text-sm font-semibold">Caixa de entrada</h3>
+              <p class="text-sm text-muted-foreground">Caixas de mensagem, listas com contadores, abas que apresentam recursos beta.</p>
+            </div>
+          </TabsContent>
+          <TabsContent value="spam">
+            <div class="p-4 rounded-md border bg-card space-y-2">
+              <h3 class="text-sm font-semibold">Spam</h3>
+              <p class="text-sm text-muted-foreground">Caixas de mensagem, listas com contadores, abas que apresentam recursos beta.</p>
+            </div>
+          </TabsContent>
+          <TabsContent value="trash">
+            <div class="p-4 rounded-md border bg-card space-y-2">
+              <h3 class="text-sm font-semibold">Lixeira</h3>
+              <p class="text-sm text-muted-foreground">Caixas de mensagem, listas com contadores, abas que apresentam recursos beta.</p>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </template>
+
+      <template #variant-preview-2>
+        <Tabs default-value="profile" orientation="vertical" class="w-full max-w-2xl flex gap-4">
+          <TabsList class="flex flex-col h-auto items-stretch shrink-0 min-w-[10rem]" aria-label="Configurações">
+            <TabsTrigger value="profile">Perfil</TabsTrigger>
+            <TabsTrigger value="account">Conta</TabsTrigger>
+            <TabsTrigger value="security">Segurança</TabsTrigger>
+          </TabsList>
+          <div class="flex-1">
+            <TabsContent value="profile">
+              <div class="p-4 rounded-md border bg-card space-y-2">
+                <h3 class="text-sm font-semibold">Perfil</h3>
+                <p class="text-sm text-muted-foreground">Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.</p>
+              </div>
+            </TabsContent>
+            <TabsContent value="account">
+              <div class="p-4 rounded-md border bg-card space-y-2">
+                <h3 class="text-sm font-semibold">Conta</h3>
+                <p class="text-sm text-muted-foreground">Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.</p>
+              </div>
+            </TabsContent>
+            <TabsContent value="security">
+              <div class="p-4 rounded-md border bg-card space-y-2">
+                <h3 class="text-sm font-semibold">Segurança</h3>
+                <p class="text-sm text-muted-foreground">Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.</p>
+              </div>
+            </TabsContent>
+          </div>
+        </Tabs>
+      </template>
+
+      <template #variant-preview-3>
+        <Tabs default-value="all" class="w-full">
+          <TabsList variant="line" class="border-b rounded-none bg-transparent w-full justify-start" aria-label="Filtros de listagem">
+            <TabsTrigger value="all">Tudo</TabsTrigger>
+            <TabsTrigger value="active">Ativos</TabsTrigger>
+            <TabsTrigger value="archived">Arquivados</TabsTrigger>
+          </TabsList>
+          <TabsContent value="all" class="pt-3">
+            <div class="text-sm text-muted-foreground p-3 rounded-md border bg-card">Filtros de listagem (Tudo / Ativos / Arquivados), sub-seções dentro de uma página onde o estilo default competiria com outros containers.</div>
+          </TabsContent>
+          <TabsContent value="active" class="pt-3">
+            <div class="text-sm text-muted-foreground p-3 rounded-md border bg-card">Filtros de listagem (Tudo / Ativos / Arquivados), sub-seções dentro de uma página onde o estilo default competiria com outros containers.</div>
+          </TabsContent>
+          <TabsContent value="archived" class="pt-3">
+            <div class="text-sm text-muted-foreground p-3 rounded-md border bg-card">Filtros de listagem (Tudo / Ativos / Arquivados), sub-seções dentro de uma página onde o estilo default competiria com outros containers.</div>
+          </TabsContent>
+        </Tabs>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ───────────────────────────────────────────────── -->
     <DocsStates

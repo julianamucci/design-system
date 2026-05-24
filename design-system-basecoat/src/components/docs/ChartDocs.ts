@@ -3,7 +3,7 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createChart } from '@/components/ui/chart';
-import { createCard, createCardHeader, createCardTitle, createCardContent } from '@/components/ui/card';
+import { createCard, createCardHeader, createCardTitle, createCardDescription, createCardContent } from '@/components/ui/card';
 import uiTranslations from '@/i18n/ui.json';
 import chartTranslations from '@shared/content/chart/translations.json';
 
@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -60,14 +61,14 @@ function priorityLabel(raw: string): string {
 
 function buildBarPreview(): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-md';
+  wrap.className = 'nds-w-full nds-max-w-md';
   wrap.appendChild(createChart({ data: chartData, type: 'bar', height: 200 }));
   return wrap;
 }
 
 function buildLinePreview(): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-md';
+  wrap.className = 'nds-w-full nds-max-w-md';
   wrap.appendChild(createChart({ data: chartData, type: 'line', height: 200 }));
   return wrap;
 }
@@ -120,6 +121,7 @@ export function createChartDocs(): HTMLElement {
       sections: [
         { id: 'importacao', labelKey: 'nav.import' },
         { id: 'variantes', labelKey: 'nav.variants' },
+        { id: 'composicoes', labelKey: 'nav.compositions' },
         { id: 'estados', labelKey: 'nav.states' },
         { id: 'propriedades', labelKey: 'nav.props' },
         { id: 'tokens', labelKey: 'nav.tokens' },
@@ -182,6 +184,7 @@ export function createChartDocs(): HTMLElement {
     'do-dont',
     'importacao',
     'variantes',
+    'composicoes',
     'estados',
     'propriedades',
     'tokens',
@@ -272,12 +275,16 @@ export function createChartDocs(): HTMLElement {
               dontCaption: stripHtml(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm space-y-2';
+                wrap.className = 'nds-stack nds-w-full nds-max-w-sm';
+                wrap.dataset.spacing = 'xs';
                 wrap.appendChild(createChart({ data: chartData, type: 'bar', height: 160 }));
                 const legend = document.createElement('div');
-                legend.className = 'flex items-center gap-2 text-xs text-muted-foreground';
+                legend.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
+                legend.dataset.spacing = 'xs';
                 const dot = document.createElement('span');
-                dot.className = 'inline-block w-2 h-2 rounded-full bg-primary';
+                dot.className = 'nds-rounded-full nds-bg-primary nds-inline-block';
+                dot.style.width = '0.5rem';
+                dot.style.height = '0.5rem';
                 const label = document.createElement('span');
                 label.textContent = t('demonstration.labels.bar');
                 legend.append(dot, label);
@@ -287,7 +294,7 @@ export function createChartDocs(): HTMLElement {
               dontPreviewFactory: () => {
                 // Don't: sem legenda, difere séries só por cor
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm';
+                wrap.className = 'nds-w-full nds-max-w-sm';
                 wrap.appendChild(
                   createChart({
                     data: chartData,
@@ -306,7 +313,7 @@ export function createChartDocs(): HTMLElement {
               dontCaption: stripHtml(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm';
+                wrap.className = 'nds-w-full nds-max-w-sm';
                 const chart = createChart({ data: chartData, type: 'bar', height: 160 });
                 chart.setAttribute('aria-label', 'Gráfico de barras: acessos mensais');
                 wrap.appendChild(chart);
@@ -314,7 +321,7 @@ export function createChartDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm';
+                wrap.className = 'nds-w-full nds-max-w-sm';
                 const chart = createChart({ data: chartData, type: 'bar', height: 160 });
                 // No aria-label — inacessível
                 wrap.appendChild(chart);
@@ -371,6 +378,179 @@ document.body.appendChild(el);`,
               description: stripHtml(t('variants.items.line')),
               code: codeLine,
               previewFactory: () => buildLinePreview(),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        const codeInCard = `const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+
+const header = createCardHeader();
+header.appendChild(createCardTitle({ text: 'Acessos mensais', level: 3 }));
+header.appendChild(createCardDescription({ text: 'Janeiro — Junho' }));
+
+const content = createCardContent();
+content.appendChild(createChart({ data: chartData, type: 'bar', height: 200 }));
+
+card.appendChild(header);
+card.appendChild(content);`;
+
+        const codeMultiSeries = `const chart = createChart({
+  data: chartData,
+  type: 'bar',
+  height: 200,
+});
+chart.setAttribute('aria-label', 'Gráfico multi-séries: Desktop e Mobile');
+
+// Legenda manual (Basecoat não inclui legenda automática)
+const legend = document.createElement('div');
+legend.className = 'nds-cluster nds-text-caption nds-text-muted-foreground nds-mt-2';
+legend.dataset.spacing = 'md';
+legend.innerHTML =
+  '<span class="nds-cluster" data-spacing="xs" style="display:inline-flex"><span class="nds-inline-block nds-rounded-sm" style="width:0.75rem;height:0.75rem;background: hsl(var(--chart-1))"></span>Desktop</span>' +
+  '<span class="nds-cluster" data-spacing="xs" style="display:inline-flex"><span class="nds-inline-block nds-rounded-sm" style="width:0.75rem;height:0.75rem;background: hsl(var(--chart-2))"></span>Mobile</span>';`;
+
+        const codeSmallInline = `const wrap = document.createElement('div');
+wrap.className = 'nds-cluster nds-rounded-md nds-border-default';
+wrap.dataset.spacing = 'md';
+wrap.style.padding = '1rem';
+wrap.style.width = 'fit-content';
+
+const stats = document.createElement('div');
+stats.innerHTML =
+  '<p class="nds-text-caption nds-text-muted-foreground">Acessos</p>' +
+  '<p class="nds-font-semibold" style="font-size:1.5rem;line-height:2rem;">1.224</p>';
+wrap.appendChild(stats);
+
+const spark = createChart({ data: chartData, type: 'line', height: 48 });
+spark.style.width = '120px';
+spark.setAttribute('aria-label', 'Tendência de acessos nos últimos 6 meses');
+wrap.appendChild(spark);`;
+
+        const codeEmptyState = `if (data.length === 0) {
+  const empty = document.createElement('div');
+  empty.setAttribute('role', 'status');
+  empty.className =
+    'nds-cluster nds-w-full nds-rounded-md nds-text-body nds-text-muted-foreground';
+  empty.dataset.justify = 'center';
+  empty.style.height = '200px';
+  empty.style.alignItems = 'center';
+  empty.style.border = '1px dashed var(--border)';
+  empty.textContent = 'Nenhum dado disponível para o período selecionado.';
+  container.appendChild(empty);
+} else {
+  container.appendChild(createChart({ data, type: 'bar', height: 200 }));
+}`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'chart',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.inCard.name')),
+              description: stripHtml(t('variants.compositions.inCard.description')),
+              useWhen: stripHtml(t('variants.compositions.inCard.use')),
+              code: codeInCard,
+              previewFactory: () => {
+                const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+                const header = createCardHeader();
+                header.appendChild(createCardTitle({ text: 'Acessos mensais', level: 3 }));
+                header.appendChild(createCardDescription({ text: 'Janeiro — Junho' }));
+                const content = createCardContent();
+                content.appendChild(createChart({ data: chartData, type: 'bar', height: 200 }));
+                card.appendChild(header);
+                card.appendChild(content);
+                return card;
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.multiSeriesWithLegend.name')),
+              description: stripHtml(t('variants.compositions.multiSeriesWithLegend.description')),
+              useWhen: stripHtml(t('variants.compositions.multiSeriesWithLegend.use')),
+              code: codeMultiSeries,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+                wrap.dataset.spacing = 'xs';
+                const chart = createChart({ data: chartData, type: 'bar', height: 200 });
+                chart.setAttribute('aria-label', 'Gráfico multi-séries: Desktop e Mobile');
+                wrap.appendChild(chart);
+                const legend = document.createElement('div');
+                legend.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
+                legend.dataset.spacing = 'md';
+                const series = [
+                  { label: 'Desktop', color: 'hsl(var(--chart-1))' },
+                  { label: 'Mobile',  color: 'hsl(var(--chart-2))' },
+                ];
+                for (const s of series) {
+                  const item = document.createElement('span');
+                  item.className = 'nds-cluster';
+                  item.dataset.spacing = 'xs';
+                  item.style.display = 'inline-flex';
+                  const dot = document.createElement('span');
+                  dot.className = 'nds-inline-block nds-rounded-sm';
+                  dot.style.width = '0.75rem';
+                  dot.style.height = '0.75rem';
+                  dot.style.background = s.color;
+                  const lbl = document.createElement('span');
+                  lbl.textContent = s.label;
+                  item.appendChild(dot);
+                  item.appendChild(lbl);
+                  legend.appendChild(item);
+                }
+                wrap.appendChild(legend);
+                return wrap;
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.smallInline.name')),
+              description: stripHtml(t('variants.compositions.smallInline.description')),
+              useWhen: stripHtml(t('variants.compositions.smallInline.use')),
+              code: codeSmallInline,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.className = 'nds-cluster nds-rounded-md nds-border-default';
+wrap.dataset.spacing = 'md';
+wrap.style.padding = '1rem';
+wrap.style.width = 'fit-content';
+                const stats = document.createElement('div');
+                const label = document.createElement('p');
+                label.className = 'nds-text-caption nds-text-muted-foreground';
+                label.textContent = 'Acessos';
+                const value = document.createElement('p');
+                value.className = 'nds-font-semibold';
+                value.style.fontSize = '1.5rem';
+                value.style.lineHeight = '2rem';
+                value.textContent = '1.224';
+                stats.appendChild(label);
+                stats.appendChild(value);
+                wrap.appendChild(stats);
+                const spark = createChart({ data: chartData, type: 'line', height: 48 });
+                spark.style.width = '120px';
+                spark.setAttribute('aria-label', 'Tendência de acessos nos últimos 6 meses');
+                wrap.appendChild(spark);
+                return wrap;
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.withEmptyState.name')),
+              description: stripHtml(t('variants.compositions.withEmptyState.description')),
+              useWhen: stripHtml(t('variants.compositions.withEmptyState.use')),
+              code: codeEmptyState,
+              previewFactory: () => {
+                const empty = document.createElement('div');
+                empty.setAttribute('role', 'status');
+                empty.className =
+                  'nds-cluster nds-w-full nds-max-w-sm nds-rounded-md nds-text-body nds-text-muted-foreground';
+                empty.dataset.justify = 'center';
+                empty.style.height = '200px';
+                empty.style.alignItems = 'center';
+                empty.style.border = '1px dashed var(--border)';
+                empty.textContent = 'Nenhum dado disponível para o período selecionado.';
+                return empty;
+              },
             },
           ],
         });

@@ -45,7 +45,7 @@ export const Destructive: Story = {
 
 export const Success: Story = {
   render: () => {
-    const alert = createAlert({ className: 'bg-success/10 text-success border-success/30' });
+    const alert = createAlert({ className: 'nds-alert-success' });
     alert.appendChild(createAlertIcon('success'));
     alert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));
     alert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));
@@ -60,7 +60,7 @@ export const Success: Story = {
 
 export const Warning: Story = {
   render: () => {
-    const alert = createAlert({ className: 'bg-warning/10 text-warning border-warning/30' });
+    const alert = createAlert({ className: 'nds-alert-warning' });
     alert.appendChild(createAlertIcon('warning'));
     alert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));
     alert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));

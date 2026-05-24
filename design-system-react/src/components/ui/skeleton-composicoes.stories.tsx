@@ -73,7 +73,7 @@ export const CardDePerfil: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    await assertSkeletonsAccessible(canvasElement, step);
+    await assertSkeletonsAccessible(canvasElement, step as never);
   },
 };
 
@@ -113,7 +113,7 @@ export const ListaComAvatar: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    await assertSkeletonsAccessible(canvasElement, step);
+    await assertSkeletonsAccessible(canvasElement, step as never);
   },
 };
 
@@ -140,7 +140,7 @@ export const ImagemEmAspectRatio: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    await assertSkeletonsAccessible(canvasElement, step);
+    await assertSkeletonsAccessible(canvasElement, step as never);
   },
 };
 
@@ -174,6 +174,6 @@ export const Paragrafo: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    await assertSkeletonsAccessible(canvasElement, step);
+    await assertSkeletonsAccessible(canvasElement, step as never);
   },
 };

@@ -25,19 +25,29 @@ export interface DocsPageLayoutHandle {
 
 export function createDocsPageLayout(props: DocsPageLayoutProps): DocsPageLayoutHandle {
   const root = document.createElement('div');
-  root.className = 'ds-docs p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto';
+  // .sb-unstyled é a escape hatch oficial do Storybook que desliga o
+  // prose-style emotion na subárvore (ver storybook-docs.css).
+  // .nds-page = wrapper top-level: max-width + padding lateral + ritmo vertical.
+  root.className = 'sb-unstyled ds-docs nds-page';
+  root.dataset.width = 'wide';
 
   const headerSlot = document.createElement('div');
 
+  // Layout sidebar+conteúdo, adaptável (empilha em telas estreitas).
   const layout = document.createElement('div');
-  layout.className = 'flex flex-col lg:flex-row gap-8 lg:gap-16 items-start';
+  layout.className = 'nds-sidebar-layout';
+  layout.dataset.sidebarSticky = 'true';
 
+  // Sidebar: nav com espaçamento vertical entre grupos.
   const sidebar = document.createElement('nav');
   sidebar.setAttribute('aria-label', 'Navegação das seções do componente');
-  sidebar.className = 'w-full lg:sticky lg:top-8 lg:w-52 lg:shrink-0 self-start space-y-5';
+  sidebar.className = 'nds-stack';
+  sidebar.dataset.spacing = 'md';
 
+  // Conteúdo: stack com gap grande entre seções.
   const main = document.createElement('div');
-  main.className = 'ds-docs flex-1 min-w-0 w-full space-y-12';
+  main.className = 'ds-docs nds-stack';
+  main.dataset.spacing = '2xl';
 
   layout.append(sidebar, main);
   root.append(headerSlot, layout);

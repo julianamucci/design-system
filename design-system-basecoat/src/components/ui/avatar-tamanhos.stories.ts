@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html';
 import { within, expect } from 'storybook/test';
-import { createAvatar } from './avatar';
+import { createAvatar, type AvatarSize } from './avatar';
 
 const meta: Meta = {
   title: 'UI/Avatar/Tamanhos',
@@ -11,7 +11,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Tamanhos do Avatar via className. Não existe prop size — use h-6/h-8 (padrão)/h-10/h-12 com w equivalente.',
+          'Tamanhos do Avatar via prop `size`: sm (24px), md (32px, padrão), lg (40px), xl (48px), 2xl (64px).',
       },
     },
   },
@@ -22,22 +22,22 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function buildAvatar(size: string, alt = 'Foto de perfil de Maria Rodrigues'): HTMLElement {
+function buildAvatar(size: AvatarSize, alt = 'Foto de perfil de Maria Rodrigues'): HTMLElement {
   return createAvatar({
     src: 'https://github.com/shadcn.png',
     alt,
     fallbackText: 'MR',
-    className: size,
+    size,
   });
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Size6: Story = {
+export const Sm: Story = {
   parameters: {
-    docs: { description: { story: 'Tamanho compacto (h-6 w-6) — listas densas.' } },
+    docs: { description: { story: 'Tamanho compacto (24px) — listas densas.' } },
   },
-  render: () => buildAvatar('h-6 w-6'),
+  render: () => buildAvatar('sm'),
 
   play: async ({ canvasElement }) => {
     const el = canvasElement as HTMLElement;
@@ -45,24 +45,23 @@ export const Size6: Story = {
   },
 };
 
-export const Size8: Story = {
+export const Md: Story = {
   parameters: {
-    docs: { description: { story: 'Tamanho padrão do componente (h-8 w-8) — comentários e chips.' } },
+    docs: { description: { story: 'Tamanho padrão do componente (32px) — comentários e chips.' } },
   },
-  render: () => buildAvatar('h-8 w-8'),
+  render: () => buildAvatar('md'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    // hidden:true — img começa com display:none até o load completar.
     const img = (await canvas.findByRole('img', { hidden: true })) as HTMLImageElement;
     await expect(img).toBeInTheDocument();
   },
 };
 
-export const Size10: Story = {
+export const Lg: Story = {
   parameters: {
-    docs: { description: { story: 'Tamanho médio-grande (h-10 w-10).' } },
+    docs: { description: { story: 'Tamanho médio-grande (40px).' } },
   },
-  render: () => buildAvatar('h-10 w-10'),
+  render: () => buildAvatar('lg'),
 
   play: async ({ canvasElement }) => {
     const el = canvasElement as HTMLElement;
@@ -70,11 +69,11 @@ export const Size10: Story = {
   },
 };
 
-export const Size12: Story = {
+export const Xl: Story = {
   parameters: {
-    docs: { description: { story: 'Tamanho grande (h-12 w-12) — headers de perfil.' } },
+    docs: { description: { story: 'Tamanho grande (48px) — headers de perfil.' } },
   },
-  render: () => buildAvatar('h-12 w-12'),
+  render: () => buildAvatar('xl'),
 
   play: async ({ canvasElement }) => {
     const el = canvasElement as HTMLElement;

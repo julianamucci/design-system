@@ -17,8 +17,7 @@
  *   PATCHES.md#basecoat-nova-parity
  *
  * Ordem de import em globals.css:
- *   @import "tailwindcss";
- *   @import "basecoat-css";
+ *   @import "basecoat-css/dist/basecoat.cdn.min.css";
  *   @import "@shared/tokens/tokens.css";
  *   @import "@shared/themes/index.css";
  *   @import "./basecoat-theme-overrides.css";  ← ESTE por último
@@ -91,14 +90,53 @@
    * ═══════════════════════════════════════════════════════════════════════════ */
 
   .btn-xs, .btn-xs-primary, .btn-xs-secondary, .btn-xs-outline, .btn-xs-ghost, .btn-xs-link, .btn-xs-destructive {
-    /* Base aplicada por @apply para compartilhar regras do basecoat */
-    @apply inline-flex items-center justify-center whitespace-nowrap text-xs font-medium transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer rounded-md border border-transparent gap-1 px-2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition-property: all;
+    transition-duration: 150ms;
+    flex-shrink: 0;
+    outline: none;
+    cursor: pointer;
+    border-radius: 0.375rem;
+    border: 1px solid transparent;
+    gap: 0.25rem;
+    padding: 0 0.5rem;
     height: var(--height-xs);
   }
+  .btn-xs:disabled, .btn-xs-primary:disabled, .btn-xs-secondary:disabled, .btn-xs-outline:disabled, .btn-xs-ghost:disabled, .btn-xs-link:disabled, .btn-xs-destructive:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .btn-xs:focus-visible, .btn-xs-primary:focus-visible, .btn-xs-secondary:focus-visible, .btn-xs-outline:focus-visible, .btn-xs-ghost:focus-visible, .btn-xs-link:focus-visible, .btn-xs-destructive:focus-visible {
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+  }
   .btn-xs-icon, .btn-xs-icon-primary, .btn-xs-icon-secondary, .btn-xs-icon-outline, .btn-xs-icon-ghost, .btn-xs-icon-link, .btn-xs-icon-destructive {
-    @apply inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 aria-invalid:border-destructive cursor-pointer rounded-md border border-transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    transition-property: all;
+    transition-duration: 150ms;
+    flex-shrink: 0;
+    outline: none;
+    cursor: pointer;
+    border-radius: 0.375rem;
+    border: 1px solid transparent;
     width: var(--size-xs);
     height: var(--size-xs);
+  }
+  .btn-xs-icon:disabled, .btn-xs-icon-primary:disabled, .btn-xs-icon-secondary:disabled, .btn-xs-icon-outline:disabled, .btn-xs-icon-ghost:disabled, .btn-xs-icon-link:disabled, .btn-xs-icon-destructive:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .btn-xs-icon:focus-visible, .btn-xs-icon-primary:focus-visible, .btn-xs-icon-secondary:focus-visible, .btn-xs-icon-outline:focus-visible, .btn-xs-icon-ghost:focus-visible, .btn-xs-icon-link:focus-visible, .btn-xs-icon-destructive:focus-visible {
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
   }
 
   /* Variantes do xs — replica as cores dos tamanhos maiores */

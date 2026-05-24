@@ -10,7 +10,11 @@ function NavigationMenu({
   children,
   ...props
 }: NavigationMenuPrimitive.Root.Props &
-  Pick<NavigationMenuPrimitive.Positioner.Props, "align">) {
+  Pick<NavigationMenuPrimitive.Positioner.Props, "align"> & {
+    defaultValue?: string
+    delayDuration?: number
+    orientation?: "horizontal" | "vertical"
+  }) {
   return (
     <NavigationMenuPrimitive.Root
       data-slot="navigation-menu"

@@ -25,16 +25,20 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[120px] flex items-center justify-center';
+  wrapper.className = 'nds-cluster nds-w-full';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.minHeight = '120px';
   wrapper.appendChild(child);
   return wrapper;
 }
 
 function withLabel(label: string, child: HTMLElement): HTMLElement {
   const col = document.createElement('div');
-  col.className = 'flex flex-col items-center gap-2';
+  col.className = 'nds-stack';
+  col.dataset.spacing = 'sm';
+  col.style.alignItems = 'center';
   const span = document.createElement('p');
-  span.className = 'text-xs text-muted-foreground';
+  span.className = 'nds-text-caption nds-text-muted-foreground';
   span.textContent = label;
   col.append(span, child);
   return col;
@@ -90,9 +94,12 @@ export const Alfanumerico: Story = {
   name: 'Alfanumérico (não suportado)',
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col items-center gap-3 text-center max-w-md';
+    wrapper.className = 'nds-stack nds-max-w-md';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.style.alignItems = 'center';
+    wrapper.style.textAlign = 'center';
     const note = document.createElement('p');
-    note.className = 'text-xs text-muted-foreground';
+    note.className = 'nds-text-caption nds-text-muted-foreground';
     note.textContent =
       'O factory Basecoat aceita apenas dígitos (inputMode=numeric, paste com regex \\D). Para códigos alfanuméricos use a variante das stacks React/Vue/Svelte ou estenda o factory.';
     const fallback = createInputOTP({ length: 6 });

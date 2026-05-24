@@ -17,7 +17,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -69,6 +69,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -467,6 +468,241 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       </PopoverContent>
     </Popover>
   {/snippet}
+  <!-- ── Composições ────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="popover"
+    items={[
+      {
+        name: $tStore('variants.compositions.editProfile.name'),
+        description: $tStore('variants.compositions.editProfile.description'),
+        useWhen: $tStore('variants.compositions.editProfile.use'),
+        code: `<Popover>
+  <PopoverTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Editar perfil</Button>
+    {/snippet}
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Dados do perfil</PopoverTitle>
+      <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
+    </PopoverHeader>
+    <form class="space-y-3" onsubmit={(e) => e.preventDefault()}>
+      <label class="grid gap-1 text-sm">
+        <span>Nome</span>
+        <input type="text" value="Joana Silva" />
+      </label>
+      <label class="grid gap-1 text-sm">
+        <span>Email</span>
+        <input type="email" value="joana@example.com" />
+      </label>
+      <Button type="submit" size="sm">Atualizar</Button>
+    </form>
+  </PopoverContent>
+</Popover>`,
+        preview: compEditProfile,
+      },
+      {
+        name: $tStore('variants.compositions.tableFilter.name'),
+        description: $tStore('variants.compositions.tableFilter.description'),
+        useWhen: $tStore('variants.compositions.tableFilter.use'),
+        code: `<Popover>
+  <PopoverTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Filtros</Button>
+    {/snippet}
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Filtrar por status</PopoverTitle>
+    </PopoverHeader>
+    <div class="space-y-2">
+      <label class="flex items-center gap-2 text-sm">
+        <input type="checkbox" checked /> Ativo
+      </label>
+      <label class="flex items-center gap-2 text-sm">
+        <input type="checkbox" /> Pendente
+      </label>
+      <label class="flex items-center gap-2 text-sm">
+        <input type="checkbox" /> Arquivado
+      </label>
+    </div>
+    <div class="flex justify-end gap-2 pt-2">
+      <Button variant="ghost" size="sm">Limpar</Button>
+      <Button size="sm">Aplicar</Button>
+    </div>
+  </PopoverContent>
+</Popover>`,
+        preview: compTableFilter,
+      },
+      {
+        name: $tStore('variants.compositions.colorPicker.name'),
+        description: $tStore('variants.compositions.colorPicker.description'),
+        useWhen: $tStore('variants.compositions.colorPicker.use'),
+        code: `<Popover>
+  <PopoverTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Cor</Button>
+    {/snippet}
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Selecionar cor</PopoverTitle>
+    </PopoverHeader>
+    <div class="grid grid-cols-6 gap-2">
+      {#each swatches as s}
+        <button type="button" aria-label={s.name} class={\`h-6 w-6 rounded-full ring-1 ring-foreground/10 \${s.bg}\`}></button>
+      {/each}
+    </div>
+  </PopoverContent>
+</Popover>`,
+        preview: compColorPicker,
+      },
+      {
+        name: $tStore('variants.compositions.quickSettings.name'),
+        description: $tStore('variants.compositions.quickSettings.description'),
+        useWhen: $tStore('variants.compositions.quickSettings.use'),
+        code: `<Popover>
+  <PopoverTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Configurações</Button>
+    {/snippet}
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Preferências rápidas</PopoverTitle>
+    </PopoverHeader>
+    <div class="space-y-3">
+      <div class="flex items-center justify-between gap-3">
+        <label for="cfg-notifs">Notificações</label>
+        <input id="cfg-notifs" type="checkbox" checked />
+      </div>
+      <div class="flex items-center justify-between gap-3">
+        <label for="cfg-dark">Modo escuro</label>
+        <input id="cfg-dark" type="checkbox" />
+      </div>
+      <div class="flex items-center justify-between gap-3">
+        <label for="cfg-compact">Modo compacto</label>
+        <input id="cfg-compact" type="checkbox" />
+      </div>
+    </div>
+  </PopoverContent>
+</Popover>`,
+        preview: compQuickSettings,
+      },
+    ]}
+  />
+
+  {#snippet compEditProfile()}
+    <Popover open>
+      <PopoverContent>
+        <PopoverHeader>
+          <PopoverTitle>Dados do perfil</PopoverTitle>
+          <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
+        </PopoverHeader>
+        <form class="space-y-3 pt-1" onsubmit={(e) => e.preventDefault()}>
+          <label class="grid gap-1 text-sm">
+            <span>Nome</span>
+            <input
+              type="text"
+              class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+              value="Joana Silva"
+            />
+          </label>
+          <label class="grid gap-1 text-sm">
+            <span>Email</span>
+            <input
+              type="email"
+              class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+              value="joana@example.com"
+            />
+          </label>
+          <div class="flex justify-end">
+            <Button type="submit" size="sm">Atualizar</Button>
+          </div>
+        </form>
+      </PopoverContent>
+    </Popover>
+  {/snippet}
+
+  {#snippet compTableFilter()}
+    <Popover open>
+      <PopoverContent>
+        <PopoverHeader>
+          <PopoverTitle>Filtrar por status</PopoverTitle>
+        </PopoverHeader>
+        <div class="space-y-2 pt-1">
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked class="h-4 w-4" />
+            <span>Ativo</span>
+          </label>
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" class="h-4 w-4" />
+            <span>Pendente</span>
+          </label>
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" class="h-4 w-4" />
+            <span>Arquivado</span>
+          </label>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <Button variant="ghost" size="sm">Limpar</Button>
+          <Button size="sm">Aplicar</Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  {/snippet}
+
+  {#snippet compColorPicker()}
+    <Popover open>
+      <PopoverContent>
+        <PopoverHeader>
+          <PopoverTitle>Selecionar cor</PopoverTitle>
+        </PopoverHeader>
+        <div class="grid grid-cols-6 gap-2 pt-1">
+          {#each [
+            { name: 'Vermelho', bg: 'bg-red-500' },
+            { name: 'Laranja',  bg: 'bg-orange-500' },
+            { name: 'Amarelo',  bg: 'bg-yellow-500' },
+            { name: 'Verde',    bg: 'bg-green-500' },
+            { name: 'Azul',     bg: 'bg-blue-500' },
+            { name: 'Roxo',     bg: 'bg-purple-500' },
+          ] as s}
+            <button
+              type="button"
+              aria-label={s.name}
+              class={`h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring ${s.bg}`}
+            ></button>
+          {/each}
+        </div>
+      </PopoverContent>
+    </Popover>
+  {/snippet}
+
+  {#snippet compQuickSettings()}
+    <Popover open>
+      <PopoverContent>
+        <PopoverHeader>
+          <PopoverTitle>Preferências rápidas</PopoverTitle>
+        </PopoverHeader>
+        <div class="space-y-3 pt-1">
+          {#each [
+            { id: 'cfg-notifs-sv',  label: 'Notificações',  checked: true  },
+            { id: 'cfg-dark-sv',    label: 'Modo escuro',   checked: false },
+            { id: 'cfg-compact-sv', label: 'Modo compacto', checked: false },
+          ] as t}
+            <div class="flex items-center justify-between gap-3">
+              <label for={t.id} class="text-sm">{t.label}</label>
+              <input id={t.id} type="checkbox" checked={t.checked} class="h-4 w-4" />
+            </div>
+          {/each}
+        </div>
+      </PopoverContent>
+    </Popover>
+  {/snippet}
+
   {#snippet variantForm()}
     <Popover open>
       <PopoverContent>

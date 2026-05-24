@@ -18,6 +18,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -55,10 +56,11 @@ function buildDefaultPopover(): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.trigger') });
 
   const content = document.createElement('div');
-  content.className = 'space-y-2';
+  content.className = 'nds-stack';
+  content.dataset.spacing = 'xs';
 
   const p = document.createElement('p');
-  p.className = 'text-sm text-muted-foreground';
+  p.className = 'nds-text-body nds-text-muted-foreground';
   p.textContent = t('demonstration.labels.description');
   content.appendChild(p);
 
@@ -69,20 +71,24 @@ function buildWithTitlePopover(): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.trigger') });
 
   const content = document.createElement('div');
-  content.className = 'space-y-3';
+  content.className = 'nds-stack';
+  content.dataset.spacing = 'sm';
 
   const header = document.createElement('div');
-  header.className = 'space-y-1';
+  header.className = 'nds-stack';
+  header.dataset.spacing = 'xs';
   const title = document.createElement('h4');
-  title.className = 'text-sm font-medium leading-none';
+  title.className = 'nds-text-body nds-font-medium nds-leading-none';
   title.textContent = t('demonstration.labels.title');
   const desc = document.createElement('p');
-  desc.className = 'text-xs text-muted-foreground';
+  desc.className = 'nds-text-caption nds-text-muted-foreground';
   desc.textContent = t('demonstration.labels.description');
   header.append(title, desc);
 
   const actions = document.createElement('div');
-  actions.className = 'flex justify-end gap-2';
+  actions.className = 'nds-cluster';
+  actions.dataset.spacing = 'xs';
+  actions.dataset.justify = 'end';
   const cancel = createButton({ variant: 'ghost', size: 'sm', label: t('demonstration.labels.cancel') });
   const save = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.save') });
   actions.append(cancel, save);
@@ -96,17 +102,20 @@ function buildFormPopover(): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.form.trigger') });
 
   const content = document.createElement('form');
-  content.className = 'space-y-3';
+  content.className = 'nds-stack';
+  content.dataset.spacing = 'sm';
   content.addEventListener('submit', (e) => e.preventDefault());
 
   const nameRow = document.createElement('div');
-  nameRow.className = 'space-y-1';
+  nameRow.className = 'nds-stack';
+  nameRow.dataset.spacing = 'xs';
   const nameLabel = createLabel({ text: t('demonstration.labels.form.name'), htmlFor: 'popover-demo-name' });
   const nameInput = createInput({ id: 'popover-demo-name', placeholder: t('demonstration.labels.form.name') });
   nameRow.append(nameLabel, nameInput);
 
   const emailRow = document.createElement('div');
-  emailRow.className = 'space-y-1';
+  emailRow.className = 'nds-stack';
+  emailRow.dataset.spacing = 'xs';
   const emailLabel = createLabel({ text: t('demonstration.labels.form.email'), htmlFor: 'popover-demo-email' });
   const emailInput = createInput({ id: 'popover-demo-email', type: 'email', placeholder: 'name@example.com' });
   emailRow.append(emailLabel, emailInput);
@@ -162,6 +171,7 @@ export function createPopoverDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -205,7 +215,7 @@ export function createPopoverDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -220,7 +230,10 @@ export function createPopoverDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
-            wrap.className = 'grid grid-cols-1 sm:grid-cols-3 gap-6 w-full min-h-[180px]';
+            wrap.className = 'nds-grid nds-w-full';
+            wrap.dataset.cols = '3';
+            wrap.dataset.spacing = 'lg';
+            wrap.style.minHeight = '180px';
 
             const cells: Array<{ labelKey: string; build: () => HTMLElement }> = [
               { labelKey: 'variants.items.default',   build: buildDefaultPopover   },
@@ -230,13 +243,14 @@ export function createPopoverDocs(): HTMLElement {
 
             for (const cell of cells) {
               const col = document.createElement('div');
-              col.className = 'space-y-2';
+              col.className = 'nds-stack';
+              col.dataset.spacing = 'xs';
               col.style.contain = 'layout';
               col.style.position = 'relative';
               col.style.minHeight = '120px';
 
               const label = document.createElement('p');
-              label.className = 'text-xs font-medium text-muted-foreground';
+              label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
               label.textContent = t(cell.labelKey);
 
               col.appendChild(label);
@@ -312,21 +326,22 @@ export function createPopoverDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-sm space-y-1';
+                wrap.className = 'nds-stack nds-text-body';
+                wrap.dataset.spacing = 'xs';
                 const title = document.createElement('div');
-                title.className = 'font-medium';
+                title.className = 'nds-font-medium';
                 title.textContent = t('demonstration.labels.title');
                 const desc = document.createElement('div');
-                desc.className = 'text-xs text-muted-foreground';
+                desc.className = 'nds-text-caption nds-text-muted-foreground';
                 desc.textContent = '+ PopoverTitle anunciado pelo SR';
                 wrap.append(title, desc);
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'text-sm';
+                wrap.className = 'nds-text-body';
                 const note = document.createElement('div');
-                note.className = 'text-xs text-muted-foreground italic';
+                note.className = 'nds-text-caption nds-text-muted-foreground nds-italic';
                 note.textContent = 'sem título — SR sem contexto';
                 wrap.append(note);
                 return wrap;
@@ -339,13 +354,13 @@ export function createPopoverDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const code = document.createElement('div');
-                code.className = 'text-sm font-mono';
+                code.className = 'nds-text-body nds-font-mono';
                 code.textContent = '"Editar perfil"';
                 return code;
               },
               dontPreviewFactory: () => {
                 const code = document.createElement('div');
-                code.className = 'text-sm font-mono';
+                code.className = 'nds-text-body nds-font-mono';
                 code.textContent = '"Clique aqui"';
                 return code;
               },
@@ -371,10 +386,10 @@ createPopover({ trigger, content, side: 'bottom', align: 'center' });`;
 
 const content = document.createElement('div');
 const title = document.createElement('h4');
-title.className = 'text-sm font-medium';
+title.className = 'nds-text-body nds-font-medium';
 title.textContent = 'Configurações de exibição';
 const desc = document.createElement('p');
-desc.className = 'text-xs text-muted-foreground';
+desc.className = 'nds-text-caption nds-text-muted-foreground';
 desc.textContent = 'Ajuste a aparência do conteúdo.';
 content.append(title, desc);
 
@@ -406,6 +421,337 @@ createPopover({ trigger, content: form });`;
               description: stripHtml(t('variants.styles.form')),
               code: codeForm,
               previewFactory: () => buildFormPopover(),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        const codeEditProfile = `const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
+
+const form = document.createElement('form');
+form.className = 'nds-stack';
+form.dataset.spacing = 'sm';
+form.addEventListener('submit', (e) => e.preventDefault());
+
+const title = document.createElement('h4');
+title.className = 'nds-text-body nds-font-medium nds-leading-none';
+title.textContent = 'Dados do perfil';
+
+const desc = document.createElement('p');
+desc.className = 'nds-text-caption nds-text-muted-foreground';
+desc.textContent = 'As mudanças são salvas ao confirmar.';
+
+const nameRow = document.createElement('div');
+nameRow.className = 'nds-stack';
+nameRow.dataset.spacing = 'xs';
+nameRow.append(
+  createLabel({ text: 'Nome', htmlFor: 'pc-name' }),
+  createInput({ id: 'pc-name', value: 'Joana Silva' }),
+);
+
+const emailRow = document.createElement('div');
+emailRow.className = 'nds-stack';
+emailRow.dataset.spacing = 'xs';
+emailRow.append(
+  createLabel({ text: 'Email', htmlFor: 'pc-email' }),
+  createInput({ id: 'pc-email', type: 'email', value: 'joana@example.com' }),
+);
+
+const submit = createButton({ variant: 'default', size: 'sm', label: 'Atualizar', type: 'submit' });
+form.append(title, desc, nameRow, emailRow, submit);
+
+createPopover({ trigger, content: form });`;
+
+        const codeTableFilter = `const trigger = createButton({ variant: 'outline', label: 'Filtros' });
+
+const content = document.createElement('div');
+content.className = 'nds-stack';
+content.dataset.spacing = 'xs';
+
+const title = document.createElement('h4');
+title.className = 'nds-text-body nds-font-medium nds-leading-none';
+title.textContent = 'Filtrar por status';
+content.appendChild(title);
+
+for (const opt of ['Ativo', 'Pendente', 'Arquivado']) {
+  const row = document.createElement('label');
+  row.className = 'nds-cluster nds-text-body';
+  row.dataset.spacing = 'xs';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.className = 'nds-icon-sm';
+  if (opt === 'Ativo') cb.checked = true;
+  const text = document.createElement('span');
+  text.textContent = opt;
+  row.append(cb, text);
+  content.appendChild(row);
+}
+
+const actions = document.createElement('div');
+actions.className = 'nds-cluster';
+actions.dataset.spacing = 'xs';
+actions.dataset.justify = 'end';
+actions.style.paddingTop = '0.5rem';
+actions.append(
+  createButton({ variant: 'ghost',   size: 'sm', label: 'Limpar'  }),
+  createButton({ variant: 'default', size: 'sm', label: 'Aplicar' }),
+);
+content.appendChild(actions);
+
+createPopover({ trigger, content });`;
+
+        const codeColorPicker = `const trigger = createButton({ variant: 'outline', label: 'Cor' });
+
+const content = document.createElement('div');
+content.className = 'nds-stack';
+content.dataset.spacing = 'xs';
+
+const title = document.createElement('h4');
+title.className = 'nds-text-body nds-font-medium nds-leading-none';
+title.textContent = 'Selecionar cor';
+
+const grid = document.createElement('div');
+grid.className = 'nds-grid';
+grid.dataset.cols = '6';
+grid.dataset.spacing = 'xs';
+
+const swatches = [
+  { name: 'Vermelho', color: '#ef4444' },
+  { name: 'Laranja',  color: '#f97316' },
+  { name: 'Amarelo',  color: '#eab308' },
+  { name: 'Verde',    color: '#22c55e' },
+  { name: 'Azul',     color: '#3b82f6' },
+  { name: 'Roxo',     color: '#a855f7' },
+];
+
+for (const s of swatches) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.setAttribute('aria-label', s.name);
+  btn.className = 'nds-rounded-full';
+  btn.style.width = '1.5rem';
+  btn.style.height = '1.5rem';
+  btn.style.background = s.color;
+  grid.appendChild(btn);
+}
+
+content.append(title, grid);
+createPopover({ trigger, content });`;
+
+        const codeQuickSettings = `const trigger = createButton({ variant: 'outline', label: 'Configurações' });
+
+const content = document.createElement('div');
+content.className = 'nds-stack';
+content.dataset.spacing = 'sm';
+
+const title = document.createElement('h4');
+title.className = 'nds-text-body nds-font-medium nds-leading-none';
+title.textContent = 'Preferências rápidas';
+content.appendChild(title);
+
+const toggles = [
+  { id: 'cfg-notifs',  label: 'Notificações',  checked: true  },
+  { id: 'cfg-dark',    label: 'Modo escuro',   checked: false },
+  { id: 'cfg-compact', label: 'Modo compacto', checked: false },
+];
+
+for (const t of toggles) {
+  const row = document.createElement('div');
+  row.className = 'nds-cluster';
+  row.dataset.spacing = 'sm';
+  row.dataset.justify = 'between';
+  const label = createLabel({ text: t.label, htmlFor: t.id });
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.id = t.id;
+  cb.className = 'nds-icon-sm';
+  cb.checked = t.checked;
+  row.append(label, cb);
+  content.appendChild(row);
+}
+
+createPopover({ trigger, content });`;
+
+        function buildEditProfilePreview(): HTMLElement {
+          const trigger = createButton({ variant: 'outline', size: 'sm', label: t('demonstration.labels.form.trigger') });
+          const form = document.createElement('form');
+          form.className = 'nds-stack';
+          form.dataset.spacing = 'xs';
+          form.addEventListener('submit', (e) => e.preventDefault());
+
+          const heading = document.createElement('h4');
+          heading.className = 'nds-text-body nds-font-medium nds-leading-none';
+          heading.textContent = t('demonstration.labels.form.trigger');
+
+          const nameRow = document.createElement('div');
+          nameRow.className = 'nds-stack';
+          nameRow.dataset.spacing = 'xs';
+          nameRow.append(
+            createLabel({ text: t('demonstration.labels.form.name'), htmlFor: 'pc-name-bc' }),
+            createInput({ id: 'pc-name-bc', value: 'Joana Silva' }),
+          );
+
+          const emailRow = document.createElement('div');
+          emailRow.className = 'nds-stack';
+          emailRow.dataset.spacing = 'xs';
+          emailRow.append(
+            createLabel({ text: t('demonstration.labels.form.email'), htmlFor: 'pc-email-bc' }),
+            createInput({ id: 'pc-email-bc', type: 'email', value: 'joana@example.com' }),
+          );
+
+          const submit = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.form.submit'), type: 'submit' });
+          form.append(heading, nameRow, emailRow, submit);
+
+          return createPopover({ trigger, content: form, side: 'bottom', align: 'start' });
+        }
+
+        function buildTableFilterPreview(): HTMLElement {
+          const trigger = createButton({ variant: 'outline', size: 'sm', label: 'Filtros' });
+          const content = document.createElement('div');
+          content.className = 'nds-stack';
+          content.dataset.spacing = 'xs';
+
+          const title = document.createElement('h4');
+          title.className = 'nds-text-body nds-font-medium nds-leading-none';
+          title.textContent = 'Filtrar por status';
+          content.appendChild(title);
+
+          for (const opt of ['Ativo', 'Pendente', 'Arquivado']) {
+            const row = document.createElement('label');
+            row.className = 'nds-cluster nds-text-body';
+            row.dataset.spacing = 'xs';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.className = 'nds-icon-sm';
+            if (opt === 'Ativo') cb.checked = true;
+            const text = document.createElement('span');
+            text.textContent = opt;
+            row.append(cb, text);
+            content.appendChild(row);
+          }
+
+          const actions = document.createElement('div');
+          actions.className = 'nds-cluster';
+          actions.dataset.spacing = 'xs';
+          actions.dataset.justify = 'end';
+          actions.style.paddingTop = '0.5rem';
+          actions.append(
+            createButton({ variant: 'ghost',   size: 'sm', label: 'Limpar'  }),
+            createButton({ variant: 'default', size: 'sm', label: 'Aplicar' }),
+          );
+          content.appendChild(actions);
+
+          return createPopover({ trigger, content, side: 'bottom', align: 'start' });
+        }
+
+        function buildColorPickerPreview(): HTMLElement {
+          const trigger = createButton({ variant: 'outline', size: 'sm', label: 'Cor' });
+          const content = document.createElement('div');
+          content.className = 'nds-stack';
+          content.dataset.spacing = 'xs';
+
+          const title = document.createElement('h4');
+          title.className = 'nds-text-body nds-font-medium nds-leading-none';
+          title.textContent = 'Selecionar cor';
+
+          const grid = document.createElement('div');
+          grid.className = 'nds-grid';
+          grid.dataset.cols = '6';
+          grid.dataset.spacing = 'xs';
+
+          const swatches = [
+            { name: 'Vermelho', color: '#ef4444' },
+            { name: 'Laranja',  color: '#f97316' },
+            { name: 'Amarelo',  color: '#eab308' },
+            { name: 'Verde',    color: '#22c55e' },
+            { name: 'Azul',     color: '#3b82f6' },
+            { name: 'Roxo',     color: '#a855f7' },
+          ];
+
+          for (const s of swatches) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.setAttribute('aria-label', s.name);
+            btn.className = 'nds-rounded-full';
+            btn.style.width = '1.5rem';
+            btn.style.height = '1.5rem';
+            btn.style.background = s.color;
+            btn.style.boxShadow = '0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent)';
+            grid.appendChild(btn);
+          }
+
+          content.append(title, grid);
+          return createPopover({ trigger, content, side: 'bottom', align: 'start' });
+        }
+
+        function buildQuickSettingsPreview(): HTMLElement {
+          const trigger = createButton({ variant: 'outline', size: 'sm', label: 'Configurações' });
+          const content = document.createElement('div');
+          content.className = 'nds-stack';
+          content.dataset.spacing = 'sm';
+
+          const title = document.createElement('h4');
+          title.className = 'nds-text-body nds-font-medium nds-leading-none';
+          title.textContent = 'Preferências rápidas';
+          content.appendChild(title);
+
+          const toggles = [
+            { id: 'cfg-notifs-bc',  label: 'Notificações',  checked: true  },
+            { id: 'cfg-dark-bc',    label: 'Modo escuro',   checked: false },
+            { id: 'cfg-compact-bc', label: 'Modo compacto', checked: false },
+          ];
+
+          for (const tg of toggles) {
+            const row = document.createElement('div');
+            row.className = 'nds-cluster';
+            row.dataset.spacing = 'sm';
+            row.dataset.justify = 'between';
+            const label = createLabel({ text: tg.label, htmlFor: tg.id });
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.id = tg.id;
+            cb.className = 'nds-icon-sm';
+            cb.checked = tg.checked;
+            row.append(label, cb);
+            content.appendChild(row);
+          }
+
+          return createPopover({ trigger, content, side: 'bottom', align: 'start' });
+        }
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'popover',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.editProfile.name')),
+              description: stripHtml(t('variants.compositions.editProfile.description')),
+              useWhen: stripHtml(t('variants.compositions.editProfile.use')),
+              code: codeEditProfile,
+              previewFactory: () => buildEditProfilePreview(),
+            },
+            {
+              name: stripHtml(t('variants.compositions.tableFilter.name')),
+              description: stripHtml(t('variants.compositions.tableFilter.description')),
+              useWhen: stripHtml(t('variants.compositions.tableFilter.use')),
+              code: codeTableFilter,
+              previewFactory: () => buildTableFilterPreview(),
+            },
+            {
+              name: stripHtml(t('variants.compositions.colorPicker.name')),
+              description: stripHtml(t('variants.compositions.colorPicker.description')),
+              useWhen: stripHtml(t('variants.compositions.colorPicker.use')),
+              code: codeColorPicker,
+              previewFactory: () => buildColorPickerPreview(),
+            },
+            {
+              name: stripHtml(t('variants.compositions.quickSettings.name')),
+              description: stripHtml(t('variants.compositions.quickSettings.description')),
+              useWhen: stripHtml(t('variants.compositions.quickSettings.use')),
+              code: codeQuickSettings,
+              previewFactory: () => buildQuickSettingsPreview(),
             },
           ],
         });

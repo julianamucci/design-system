@@ -17,7 +17,7 @@ type Story = StoryObj;
 
 function makePanel(text: string): HTMLElement {
   const p = document.createElement('div');
-  p.className = 'text-sm text-muted-foreground p-3 rounded-md border bg-card';
+  p.className = 'nds-text-body nds-text-muted-foreground nds-p-3 nds-rounded-md nds-border-default nds-bg-card';
   p.textContent = text;
   return p;
 }

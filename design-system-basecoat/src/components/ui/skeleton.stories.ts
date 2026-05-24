@@ -37,7 +37,7 @@ type Story = StoryObj<SkeletonArgs>;
 export const Playground: Story = {
   render: (args) => {
     const container = document.createElement('div');
-    container.className = 'w-full max-w-md';
+    container.className = 'nds-w-full nds-max-w-md';
     container.setAttribute('role', 'status');
     container.setAttribute('aria-busy', 'true');
     container.setAttribute('aria-label', 'Carregando conteúdo');

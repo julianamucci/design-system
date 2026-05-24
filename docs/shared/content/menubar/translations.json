@@ -148,6 +148,30 @@
       "styles": {
         "default": "Item neutro com hover <code>bg-accent</code>; padrão para a maioria das ações.",
         "destructive": "Item de ação irreversível com <code>text-destructive</code> e <code>bg-destructive/10</code> no hover."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withShortcuts": {
+          "name": "Menu com shortcuts",
+          "description": "Menu com items que exibem atalhos de teclado à direita via <code>Shortcut</code>. O texto fica alinhado à esquerda e o atalho à direita com cor <code>muted-foreground</code>.",
+          "use": "Editores e ferramentas com ações frequentes (Salvar, Desfazer, Copiar). O atalho exibido é puramente visual — registre o handler real no consumidor (ex.: <code>useHotkeys</code>)."
+        },
+        "withCheckbox": {
+          "name": "Menu com checkbox",
+          "description": "Menu contendo items com <code>role=\"menuitemcheckbox\"</code> e estado boolean independente. Cada checkbox alterna isolado, sem fechar o menu."
+        ,
+          "use": "Preferências de exibição que combinam livremente (mostrar régua + barra lateral + grade). Para escolha única, prefira radio group."
+        },
+        "withRadio": {
+          "name": "Menu com radio group",
+          "description": "Menu contendo um <code>RadioGroup</code> com items <code>role=\"menuitemradio\"</code>; somente um pode estar ativo por vez.",
+          "use": "Escolha mutuamente exclusiva dentro de um menu (tema claro/escuro/sistema, modo de visualização, perfil ativo)."
+        },
+        "editorComplete": {
+          "name": "Editor completo",
+          "description": "Barra com 4 menus categorizados (Arquivo, Editar, Exibir, Ajuda) cobrindo as ações típicas de uma aplicação desktop, com separators, shortcuts e labels de grupo.",
+          "use": "Aplicações estilo desktop (editores de texto/imagem, IDEs, design tools) onde o usuário espera o padrão clássico de menus categorizados no topo."
+        }
       }
     },
     "states": {
@@ -418,6 +442,7 @@
       "techRef": "Referência Técnica",
       "import": "Importação",
       "variants": "Variantes",
+      "compositions": "Composições",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -579,6 +604,29 @@
       "styles": {
         "default": "Neutral item with <code>bg-accent</code> hover; default for most actions.",
         "destructive": "Irreversible action item with <code>text-destructive</code> and <code>bg-destructive/10</code> on hover."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withShortcuts": {
+          "name": "Menu with shortcuts",
+          "description": "Menu with items that display keyboard shortcuts on the right via <code>Shortcut</code>. The label aligns left while the shortcut sits on the right with <code>muted-foreground</code> color.",
+          "use": "Editors and tools with frequent actions (Save, Undo, Copy). The displayed shortcut is visual only — register the real handler in the consumer (e.g., <code>useHotkeys</code>)."
+        },
+        "withCheckbox": {
+          "name": "Menu with checkbox",
+          "description": "Menu containing items with <code>role=\"menuitemcheckbox\"</code> and independent boolean state. Each checkbox toggles in isolation without closing the menu.",
+          "use": "Display preferences that combine freely (show ruler + sidebar + grid). For single choice, prefer a radio group."
+        },
+        "withRadio": {
+          "name": "Menu with radio group",
+          "description": "Menu containing a <code>RadioGroup</code> with items <code>role=\"menuitemradio\"</code>; only one can be active at a time.",
+          "use": "Mutually exclusive choice inside a menu (light/dark/system theme, view mode, active profile)."
+        },
+        "editorComplete": {
+          "name": "Complete editor",
+          "description": "Bar with 4 categorized menus (File, Edit, View, Help) covering the typical actions of a desktop application, with separators, shortcuts and group labels.",
+          "use": "Desktop-style applications (text/image editors, IDEs, design tools) where the user expects the classic pattern of categorized top menus."
+        }
       }
     },
     "states": {
@@ -849,6 +897,7 @@
       "techRef": "Technical Reference",
       "import": "Import",
       "variants": "Variants",
+      "compositions": "Compositions",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -1010,6 +1059,29 @@
       "styles": {
         "default": "Item neutro con hover <code>bg-accent</code>; predeterminado para la mayoría de las acciones.",
         "destructive": "Item de acción irreversible con <code>text-destructive</code> y <code>bg-destructive/10</code> en hover."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withShortcuts": {
+          "name": "Menú con shortcuts",
+          "description": "Menú con items que muestran atajos de teclado a la derecha vía <code>Shortcut</code>. El texto se alinea a la izquierda y el atajo a la derecha con color <code>muted-foreground</code>.",
+          "use": "Editores y herramientas con acciones frecuentes (Guardar, Deshacer, Copiar). El atajo mostrado es solo visual — registra el handler real en el consumidor (ej.: <code>useHotkeys</code>)."
+        },
+        "withCheckbox": {
+          "name": "Menú con checkbox",
+          "description": "Menú con items que tienen <code>role=\"menuitemcheckbox\"</code> y estado boolean independiente. Cada checkbox alterna aislado, sin cerrar el menú.",
+          "use": "Preferencias de vista que combinan libremente (mostrar regla + barra lateral + cuadrícula). Para elección única, prefiere radio group."
+        },
+        "withRadio": {
+          "name": "Menú con radio group",
+          "description": "Menú con un <code>RadioGroup</code> e items <code>role=\"menuitemradio\"</code>; solo uno puede estar activo a la vez.",
+          "use": "Elección mutuamente exclusiva dentro de un menú (tema claro/oscuro/sistema, modo de vista, perfil activo)."
+        },
+        "editorComplete": {
+          "name": "Editor completo",
+          "description": "Barra con 4 menús categorizados (Archivo, Editar, Ver, Ayuda) que cubre las acciones típicas de una aplicación desktop, con separators, shortcuts y labels de grupo.",
+          "use": "Aplicaciones estilo desktop (editores de texto/imagen, IDEs, design tools) donde el usuario espera el patrón clásico de menús categorizados arriba."
+        }
       }
     },
     "states": {
@@ -1280,6 +1352,7 @@
       "techRef": "Referencia Técnica",
       "import": "Importación",
       "variants": "Variantes",
+      "compositions": "Composiciones",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",

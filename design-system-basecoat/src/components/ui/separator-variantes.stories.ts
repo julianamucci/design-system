@@ -27,25 +27,26 @@ export const Horizontal: Story = {
   name: 'Horizontal',
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'w-full max-w-md space-y-4';
+    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.dataset.spacing = 'md';
 
     const top = document.createElement('div');
-    top.className = 'text-sm';
+    top.className = 'nds-text-body';
     const topTitle = document.createElement('p');
-    topTitle.className = 'font-medium';
+    topTitle.className = 'nds-font-medium';
     topTitle.textContent = 'Configurações da conta';
     const topDesc = document.createElement('p');
-    topDesc.className = 'text-muted-foreground';
+    topDesc.className = 'nds-text-muted-foreground';
     topDesc.textContent = 'Gerencie seu nome e e-mail.';
     top.append(topTitle, topDesc);
 
     const bottom = document.createElement('div');
-    bottom.className = 'text-sm';
+    bottom.className = 'nds-text-body';
     const bottomTitle = document.createElement('p');
-    bottomTitle.className = 'font-medium';
+    bottomTitle.className = 'nds-font-medium';
     bottomTitle.textContent = 'Preferências';
     const bottomDesc = document.createElement('p');
-    bottomDesc.className = 'text-muted-foreground';
+    bottomDesc.className = 'nds-text-muted-foreground';
     bottomDesc.textContent = 'Tema, idioma e notificações.';
     bottom.append(bottomTitle, bottomDesc);
 
@@ -69,18 +70,19 @@ export const Vertical: Story = {
   name: 'Vertical',
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex h-16 items-center gap-4 w-full max-w-md';
+    wrap.className = 'nds-cluster nds-w-full nds-max-w-md';
+    wrap.style.height = '4rem';
 
     const a = document.createElement('span');
-    a.className = 'text-sm';
+    a.className = 'nds-text-body';
     a.textContent = 'Blog';
 
     const b = document.createElement('span');
-    b.className = 'text-sm';
+    b.className = 'nds-text-body';
     b.textContent = 'Documentação';
 
     const c = document.createElement('span');
-    c.className = 'text-sm';
+    c.className = 'nds-text-body';
     c.textContent = 'Contato';
 
     wrap.append(

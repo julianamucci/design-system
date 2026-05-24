@@ -54,7 +54,7 @@ function buildPlayground(args: DialogArgs, onAction?: () => void): HTMLElement {
   const action = createButton({ variant: 'default', label: args.actionLabel });
 
   const content = document.createElement('div');
-  content.className = 'text-sm text-muted-foreground';
+  content.className = 'nds-text-body nds-text-muted-foreground';
   content.textContent = 'Conteúdo do corpo do diálogo (formulário, mensagem, mídia).';
 
   const footer = document.createElement('div');

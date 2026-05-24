@@ -44,7 +44,7 @@ const meta = {
       description: 'Nome do campo no formulário HTML.',
     },
     // Vue não tem argTypesRegex — declarar handler manualmente
-    onUpdateModelValue: {
+    'onUpdate:modelValue': {
       action: 'update:modelValue',
       description: 'Disparado ao trocar a seleção.',
       table: { category: 'events' },

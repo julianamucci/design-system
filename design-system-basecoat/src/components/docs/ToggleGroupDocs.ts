@@ -12,6 +12,7 @@ import {
   Underline,
   LayoutGrid,
   List,
+  Eye,
 } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from '@/components/ui/toggle-group';
 import uiTranslations from '@/i18n/ui.json';
@@ -25,6 +26,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -61,7 +63,7 @@ function priorityLabel(raw: string): string {
 
 type LucideIconNode = [string, Record<string, string>];
 
-function buildLucideSvg(icon: unknown, className = 'h-4 w-4'): SVGSVGElement {
+function buildLucideSvg(icon: unknown, className = ''): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -79,6 +81,40 @@ function buildLucideSvg(icon: unknown, className = 'h-4 w-4'): SVGSVGElement {
     svg.appendChild(child);
   }
   return svg;
+}
+
+function injectIcons(group: HTMLElement, icons: unknown[]): void {
+  group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
+    btn.textContent = '';
+    const wrap = document.createElement('span');
+    wrap.style.display = 'inline-flex';
+    wrap.appendChild(buildLucideSvg(icons[i]));
+    btn.appendChild(wrap);
+  });
+}
+
+function injectIconsAndText(group: HTMLElement, entries: Array<{ icon: unknown; text: string }>): void {
+  group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
+    const entry = entries[i];
+    if (!entry) return;
+    btn.textContent = '';
+    const wrap = document.createElement('span');
+    wrap.className = 'nds-cluster';
+    wrap.dataset.spacing = 'sm';
+    wrap.dataset.align = 'center';
+    wrap.style.display = 'inline-flex';
+    wrap.appendChild(buildLucideSvg(entry.icon));
+    const t = document.createElement('span');
+    t.textContent = entry.text;
+    wrap.appendChild(t);
+    btn.appendChild(wrap);
+  });
+}
+
+function applyItemAriaLabels(group: HTMLElement, labels: string[]): void {
+  group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
+    if (labels[i]) btn.setAttribute('aria-label', labels[i]);
+  });
 }
 
 // ─── Group builder (com aria-label + analytics + items icon-only) ─────────────
@@ -126,7 +162,7 @@ function buildToggleGroupDemo(opts: {
   if (orientation === 'vertical') {
     // Basecoat: factory não expõe orientation — aplicar utility classes manualmente
     root.classList.remove('flex-row');
-    root.classList.add('flex-col', 'items-stretch');
+    root.classList.add('nds-stack');
   }
 
   // Injeta SVG (seguro: createElementNS, sem innerHTML) + aria-label por item
@@ -136,7 +172,7 @@ function buildToggleGroupDemo(opts: {
     if (meta) {
       btn.textContent = ''; // limpa placeholder
       const wrap = document.createElement('span');
-      wrap.className = 'inline-flex';
+      wrap.style.display = 'inline-flex';
       wrap.appendChild(buildLucideSvg(meta.icon));
       btn.appendChild(wrap);
       btn.setAttribute('aria-label', meta.ariaLabel);
@@ -191,7 +227,8 @@ export function createToggleGroupDocs(): HTMLElement {
     ]},
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
-      { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'variantes',    labelKey: 'nav.variants'     },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -242,7 +279,7 @@ export function createToggleGroupDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -257,7 +294,9 @@ export function createToggleGroupDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-col gap-6 items-start';
+            wrap.className = 'nds-stack';
+            wrap.dataset.spacing = 'lg';
+            wrap.style.alignItems = 'flex-start';
 
             // 1) Single — alinhamento
             wrap.appendChild(buildToggleGroupDemo({
@@ -377,12 +416,19 @@ export function createToggleGroupDocs(): HTMLElement {
           // Anti-pattern: 3 Toggles soltos sem aria-label no grupo,
           // simulando o cenário ruim de não usar ToggleGroup.
           const wrap = document.createElement('div');
-          wrap.className = 'flex items-center gap-3';
+          wrap.className = 'nds-cluster';
+          wrap.dataset.spacing = 'sm';
+          wrap.dataset.align = 'center';
           ['B', 'I', 'U'].forEach((label) => {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.textContent = label;
-            btn.className = 'inline-flex items-center justify-center h-9 w-9 rounded-md text-sm font-medium border border-input bg-transparent';
+            btn.className = 'nds-cluster nds-rounded-md nds-text-body nds-font-medium nds-border-default nds-bg-transparent';
+            btn.dataset.align = 'center';
+            btn.dataset.justify = 'center';
+            btn.style.display = 'inline-flex';
+            btn.style.width = '2.25rem';
+            btn.style.height = '2.25rem';
             wrap.appendChild(btn);
           });
           return wrap;
@@ -412,7 +458,7 @@ export function createToggleGroupDocs(): HTMLElement {
           g.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
             btn.textContent = '';
             const wrap = document.createElement('span');
-            wrap.className = 'inline-flex';
+            wrap.style.display = 'inline-flex';
             wrap.appendChild(buildLucideSvg(icons[i]));
             btn.appendChild(wrap);
           });
@@ -545,7 +591,7 @@ const group = createToggleGroup({
 group.setAttribute('aria-label', 'Modo de visualização');
 group.setAttribute('aria-orientation', 'vertical');
 group.classList.remove('flex-row');
-group.classList.add('flex-col', 'items-stretch');`,
+group.classList.add('nds-stack');`,
               previewFactory: () => buildToggleGroupDemo({
                 type: 'single',
                 ariaLabel: stripHtml(t('demonstration.labels.viewLabel')),
@@ -562,6 +608,228 @@ group.classList.add('flex-col', 'items-stretch');`,
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'toggle-group',
+          items: [
+            {
+              name: t('variants.compositions.alignmentBar.name'),
+              description: t('variants.compositions.alignmentBar.description'),
+              useWhen: t('variants.compositions.alignmentBar.use'),
+              code: `const items: ToggleGroupItem[] = [
+  { value: 'left',   children: '' },
+  { value: 'center', children: '' },
+  { value: 'right',  children: '' },
+];
+const group = createToggleGroup({
+  type: 'single',
+  variant: 'outline',
+  items,
+  defaultValue: 'left',
+});
+injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
+group.setAttribute('aria-label', 'Alinhamento do texto');
+applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita']);`,
+              previewFactory: () => {
+                const items: ToggleGroupItem[] = [
+                  { value: 'left',   children: '' },
+                  { value: 'center', children: '' },
+                  { value: 'right',  children: '' },
+                ];
+                const group = createToggleGroup({
+                  type: 'single',
+                  variant: 'outline',
+                  items,
+                  defaultValue: 'left',
+                });
+                injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
+                group.setAttribute('aria-label', 'Alinhamento do texto');
+                applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita']);
+                return group;
+              },
+            },
+            {
+              name: t('variants.compositions.formattingBar.name'),
+              description: t('variants.compositions.formattingBar.description'),
+              useWhen: t('variants.compositions.formattingBar.use'),
+              code: `const items: ToggleGroupItem[] = [
+  { value: 'bold',      children: '' },
+  { value: 'italic',    children: '' },
+  { value: 'underline', children: '' },
+];
+const group = createToggleGroup({
+  type: 'multiple',
+  variant: 'outline',
+  items,
+  defaultValue: ['bold'],
+});
+injectIcons(group, [Bold, Italic, Underline]);
+group.setAttribute('aria-label', 'Formatação');
+applyItemAriaLabels(group, ['Negrito', 'Itálico', 'Sublinhado']);`,
+              previewFactory: () => {
+                const items: ToggleGroupItem[] = [
+                  { value: 'bold',      children: '' },
+                  { value: 'italic',    children: '' },
+                  { value: 'underline', children: '' },
+                ];
+                const group = createToggleGroup({
+                  type: 'multiple',
+                  variant: 'outline',
+                  items,
+                  defaultValue: ['bold'],
+                });
+                injectIcons(group, [Bold, Italic, Underline]);
+                group.setAttribute('aria-label', 'Formatação');
+                applyItemAriaLabels(group, ['Negrito', 'Itálico', 'Sublinhado']);
+                return group;
+              },
+            },
+            {
+              name: t('variants.compositions.viewMode.name'),
+              description: t('variants.compositions.viewMode.description'),
+              useWhen: t('variants.compositions.viewMode.use'),
+              code: `const items: ToggleGroupItem[] = [
+  { value: 'grid', children: '' },
+  { value: 'list', children: '' },
+];
+const group = createToggleGroup({
+  type: 'single',
+  variant: 'outline',
+  items,
+  defaultValue: 'grid',
+});
+injectIconsAndText(group, [
+  { icon: LayoutGrid, text: 'Grade' },
+  { icon: List,       text: 'Lista' },
+]);
+group.setAttribute('aria-label', 'Modo de visualização');
+group.setAttribute('aria-orientation', 'vertical');
+// Divergência Basecoat: factory não expõe orientation
+group.classList.remove('flex-row');
+group.classList.add('nds-stack');`,
+              previewFactory: () => {
+                const items: ToggleGroupItem[] = [
+                  { value: 'grid', children: '' },
+                  { value: 'list', children: '' },
+                ];
+                const group = createToggleGroup({
+                  type: 'single',
+                  variant: 'outline',
+                  items,
+                  defaultValue: 'grid',
+                });
+                injectIconsAndText(group, [
+                  { icon: LayoutGrid, text: 'Grade' },
+                  { icon: List,       text: 'Lista' },
+                ]);
+                group.setAttribute('aria-label', 'Modo de visualização');
+                group.setAttribute('aria-orientation', 'vertical');
+                group.classList.remove('flex-row');
+                group.classList.add('nds-stack');
+                return group;
+              },
+            },
+            {
+              name: t('variants.compositions.disabledItem.name'),
+              description: t('variants.compositions.disabledItem.description'),
+              useWhen: t('variants.compositions.disabledItem.use'),
+              code: `const items: ToggleGroupItem[] = [
+  { value: 'left',   children: '' },
+  { value: 'center', children: '', disabled: true },
+  { value: 'right',  children: '' },
+];
+const group = createToggleGroup({
+  type: 'single',
+  variant: 'outline',
+  items,
+  defaultValue: 'left',
+});
+injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
+group.setAttribute('aria-label', 'Alinhamento do texto');
+applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar (indisponível)', 'Alinhar à direita']);`,
+              previewFactory: () => {
+                const items: ToggleGroupItem[] = [
+                  { value: 'left',   children: '' },
+                  { value: 'center', children: '', disabled: true },
+                  { value: 'right',  children: '' },
+                ];
+                const group = createToggleGroup({
+                  type: 'single',
+                  variant: 'outline',
+                  items,
+                  defaultValue: 'left',
+                });
+                injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
+                group.setAttribute('aria-label', 'Alinhamento do texto');
+                applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar (indisponível)', 'Alinhar à direita']);
+                return group;
+              },
+            },
+            {
+              name: t('variants.compositions.filterWithText.name'),
+              description: t('variants.compositions.filterWithText.description'),
+              useWhen: t('variants.compositions.filterWithText.use'),
+              code: `const wrapper = document.createElement('div');
+wrapper.className = 'nds-stack';
+wrapper.dataset.spacing = 'sm';
+wrapper.style.width = '18rem';
+
+const title = document.createElement('p');
+title.className = 'nds-text-body nds-font-semibold nds-mb-1';
+title.textContent = 'Filtros de exibição';
+wrapper.appendChild(title);
+
+const items: ToggleGroupItem[] = [
+  { value: 'hidden',  children: '' },
+  { value: 'compact', children: '' },
+];
+const group = createToggleGroup({
+  type: 'multiple',
+  variant: 'outline',
+  items,
+  defaultValue: ['compact'],
+});
+injectIconsAndText(group, [
+  { icon: Eye,  text: 'Ocultos'  },
+  { icon: List, text: 'Compacto' },
+]);
+group.setAttribute('aria-label', 'Filtros de exibição');
+wrapper.appendChild(group);`,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack';
+                wrapper.dataset.spacing = 'sm';
+                wrapper.style.width = '18rem';
+
+                const title = document.createElement('p');
+                title.className = 'nds-text-body nds-font-semibold nds-mb-1';
+                title.textContent = 'Filtros de exibição';
+                wrapper.appendChild(title);
+
+                const items: ToggleGroupItem[] = [
+                  { value: 'hidden',  children: '' },
+                  { value: 'compact', children: '' },
+                ];
+                const group = createToggleGroup({
+                  type: 'multiple',
+                  variant: 'outline',
+                  items,
+                  defaultValue: ['compact'],
+                });
+                injectIconsAndText(group, [
+                  { icon: Eye,  text: 'Ocultos'  },
+                  { icon: List, text: 'Compacto' },
+                ]);
+                group.setAttribute('aria-label', 'Filtros de exibição');
+                wrapper.appendChild(group);
+                return wrapper;
+              },
+            },
+          ],
+        });
 
       case 'estados': {
         const locale = getLocale();

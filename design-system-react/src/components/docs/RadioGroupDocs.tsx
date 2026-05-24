@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -17,6 +18,7 @@ import { DocsWhenToUse } from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont } from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport } from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants } from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates } from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps } from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens } from "@/components/docs/shared/sections/DocsTokens";
@@ -55,6 +57,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao", label: t("nav.import") },
       { id: "variantes", label: t("nav.variants") },
+      { id: "composicoes", label: t("nav.compositions") },
       { id: "estados", label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens", label: t("nav.tokens") },
@@ -130,6 +133,7 @@ export function RadioGroupDocs() {
   const [paymentValue, setPaymentValue] = useState<string>("");
   const [deliveryValue, setDeliveryValue] = useState<string>("");
   const [descValue, setDescValue] = useState<string>("");
+  const [formOutput, setFormOutput] = useState<string>("—");
 
   // ─── Code strings ───────────────────────────────────────────────────────
 
@@ -604,6 +608,161 @@ interface RadioGroupItemProps {
                   </div>
                 </div>
               </RadioGroup>
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="radio-group"
+        items={[
+          {
+            name: tContent("variants.compositions.vertical.name"),
+            description: tContent("variants.compositions.vertical.description"),
+            useWhen: tContent("variants.compositions.vertical.use"),
+            code: codeVertical,
+            preview: (
+              <div className="flex flex-col gap-2">
+                <p id="comp-payment-legend" className="text-sm font-semibold">
+                  Forma de pagamento
+                </p>
+                <RadioGroup name="payment" aria-labelledby="comp-payment-legend">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="card" id="r-card" />
+                    <Label htmlFor="r-card">Cartão de crédito</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="pix" id="r-pix" />
+                    <Label htmlFor="r-pix">Pix</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="boleto" id="r-boleto" />
+                    <Label htmlFor="r-boleto">Boleto bancário</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.horizontal.name"),
+            description: tContent("variants.compositions.horizontal.description"),
+            useWhen: tContent("variants.compositions.horizontal.use"),
+            code: codeHorizontal,
+            preview: (
+              <div className="flex flex-col gap-2">
+                <p id="comp-delivery-legend" className="text-sm font-semibold">
+                  Forma de entrega
+                </p>
+                <RadioGroup
+                  name="delivery"
+                  aria-labelledby="comp-delivery-legend"
+                  className="grid grid-flow-col auto-cols-max gap-6"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="standard" id="r-standard" />
+                    <Label htmlFor="r-standard">Padrão (5 dias)</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="express" id="r-express" />
+                    <Label htmlFor="r-express">Expressa (1 dia)</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="pickup" id="r-pickup" />
+                    <Label htmlFor="r-pickup">Retirar na loja</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withDescription.name"),
+            description: tContent("variants.compositions.withDescription.description"),
+            useWhen: tContent("variants.compositions.withDescription.use"),
+            code: codeWithDescription,
+            preview: (
+              <div className="flex flex-col gap-2 w-80">
+                <p id="comp-delivery-desc-legend" className="text-sm font-semibold">
+                  Forma de entrega
+                </p>
+                <RadioGroup
+                  name="delivery-desc"
+                  aria-labelledby="comp-delivery-desc-legend"
+                >
+                  <div className="flex items-start space-x-2">
+                    <RadioGroupItem value="standard" id="rd-standard" className="mt-1" />
+                    <div className="flex flex-col gap-1">
+                      <Label htmlFor="rd-standard">Padrão</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Entrega em 5 dias úteis — frete grátis acima de R$ 199.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <RadioGroupItem value="express" id="rd-express" className="mt-1" />
+                    <div className="flex flex-col gap-1">
+                      <Label htmlFor="rd-express">Expressa</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Receba em 1 dia útil — taxa adicional de R$ 19,90.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <RadioGroupItem value="pickup" id="rd-pickup" className="mt-1" />
+                    <div className="flex flex-col gap-1">
+                      <Label htmlFor="rd-pickup">Retirar na loja</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Disponível em 2h — sem custo de frete.
+                      </p>
+                    </div>
+                  </div>
+                </RadioGroup>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.inForm.name"),
+            description: tContent("variants.compositions.inForm.description"),
+            useWhen: tContent("variants.compositions.inForm.use"),
+            code: codeVertical,
+            preview: (
+              <form
+                className="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const data = new FormData(e.currentTarget);
+                  const selected = (data.get("payment") as string) ?? "—";
+                  setFormOutput(selected);
+                }}
+              >
+                <fieldset className="border-0 p-0 m-0 flex flex-col gap-2">
+                  <legend className="text-sm font-semibold mb-2">
+                    Forma de pagamento
+                  </legend>
+                  <RadioGroup name="payment">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="card" id="rf-card" />
+                      <Label htmlFor="rf-card">Cartão de crédito</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="pix" id="rf-pix" />
+                      <Label htmlFor="rf-pix">Pix</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="boleto" id="rf-boleto" />
+                      <Label htmlFor="rf-boleto">Boleto bancário</Label>
+                    </div>
+                  </RadioGroup>
+                </fieldset>
+                <Button type="submit" className="self-end">
+                  Continuar
+                </Button>
+                <p className="text-sm text-muted-foreground">
+                  Selecionado: {formOutput}
+                </p>
+              </form>
             ),
           },
         ]}

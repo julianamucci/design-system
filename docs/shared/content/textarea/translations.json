@@ -125,6 +125,34 @@
         "default": "Padrão — <code>resize-y min-h-[120px]</code>, vertical apenas.",
         "withCounter": "Com contador de caracteres — <code>maxLength</code> + span com <code>aria-live=\"polite\"</code>.",
         "noResize": "<code>resize-none</code> — útil em modais ou layouts onde o redimensionamento quebra a UI."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withLabel": {
+          "name": "Com label",
+          "description": "Textarea associada a <code>&lt;label&gt;</code> via <code>htmlFor</code>/<code>id</code>. Label fica acima; clique no label foca o campo.",
+          "use": "Padrão de todo formulário com campo multilinha. Sempre forneça label visível."
+        },
+        "withHint": {
+          "name": "Com texto de apoio",
+          "description": "Textarea com label + parágrafo de hint na cor <code>--muted-foreground</code>. Explica formato, tom esperado ou exemplo.",
+          "use": "Quando o label não basta — descreva o que esperar (\"explique em 2–3 frases\", \"use linguagem objetiva\")."
+        },
+        "withCounter": {
+          "name": "Com contador acessível",
+          "description": "Textarea com <code>maxLength</code> + span de contador (formato <code>N/MAX</code>) usando <code>aria-live=\"polite\"</code> + <code>aria-label</code> dinâmico (\"N de MAX caracteres usados\").",
+          "use": "Campos com limite (bio, descrição, resposta curta). Use <code>aria-live=\"polite\"</code> para anunciar mudanças sem interromper o usuário."
+        },
+        "withError": {
+          "name": "Com mensagem de erro",
+          "description": "Textarea com <code>aria-invalid=\"true\"</code> + mensagem de erro abaixo na cor <code>--destructive</code>. <code>aria-describedby</code> aponta para o id da mensagem.",
+          "use": "Validação obrigatória ou de tamanho mínimo. Explique o problema E como corrigir."
+        },
+        "inForm": {
+          "name": "Em formulário",
+          "description": "Textarea com prop <code>name</code> dentro de <code>&lt;form&gt;</code>, integrada via FormData nativo no submit.",
+          "use": "Formulários HTML clássicos sem framework de validação. O <code>name</code> é o que vai na FormData; <code>aria-label</code> no <code>&lt;form&gt;</code> descreve o contexto."
+        }
       }
     },
     "states": {
@@ -467,6 +495,34 @@
         "default": "Default — <code>resize-y min-h-[120px]</code>, vertical only.",
         "withCounter": "With character counter — <code>maxLength</code> + span with <code>aria-live=\"polite\"</code>.",
         "noResize": "<code>resize-none</code> — useful in modals or layouts where resizing breaks the UI."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withLabel": {
+          "name": "With label",
+          "description": "Textarea associated with <code>&lt;label&gt;</code> via <code>htmlFor</code>/<code>id</code>. Label sits above; clicking the label focuses the field.",
+          "use": "Standard for every form with a multi-line field. Always provide a visible label."
+        },
+        "withHint": {
+          "name": "With helper text",
+          "description": "Textarea with label + hint paragraph in <code>--muted-foreground</code> color. Explains format, expected tone or example.",
+          "use": "When the label isn't enough — describe what to expect (\"explain in 2–3 sentences\", \"use plain language\")."
+        },
+        "withCounter": {
+          "name": "With accessible counter",
+          "description": "Textarea with <code>maxLength</code> + counter span (<code>N/MAX</code> format) using <code>aria-live=\"polite\"</code> + dynamic <code>aria-label</code> (\"N of MAX characters used\").",
+          "use": "Fields with a limit (bio, description, short answer). Use <code>aria-live=\"polite\"</code> to announce changes without interrupting the user."
+        },
+        "withError": {
+          "name": "With error message",
+          "description": "Textarea with <code>aria-invalid=\"true\"</code> + error message below in <code>--destructive</code> color. <code>aria-describedby</code> points to the message id.",
+          "use": "Required or minimum-length validation. Explain the problem AND how to fix it."
+        },
+        "inForm": {
+          "name": "In a form",
+          "description": "Textarea with <code>name</code> prop inside a <code>&lt;form&gt;</code>, integrated via native FormData on submit.",
+          "use": "Classic HTML forms without a validation framework. The <code>name</code> is what goes into FormData; <code>aria-label</code> on the <code>&lt;form&gt;</code> describes the context."
+        }
       }
     },
     "states": {
@@ -809,6 +865,34 @@
         "default": "Por defecto — <code>resize-y min-h-[120px]</code>, solo vertical.",
         "withCounter": "Con contador de caracteres — <code>maxLength</code> + span con <code>aria-live=\"polite\"</code>.",
         "noResize": "<code>resize-none</code> — útil en modales o layouts donde el redimensionamiento rompe la UI."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withLabel": {
+          "name": "Con label",
+          "description": "Textarea asociada a <code>&lt;label&gt;</code> vía <code>htmlFor</code>/<code>id</code>. El label queda encima; el clic en el label enfoca el campo.",
+          "use": "Estándar de todo formulario con campo multilínea. Provee siempre un label visible."
+        },
+        "withHint": {
+          "name": "Con texto de apoyo",
+          "description": "Textarea con label + párrafo de hint en color <code>--muted-foreground</code>. Explica formato, tono esperado o ejemplo.",
+          "use": "Cuando el label no basta — describe qué esperar (\"explica en 2–3 frases\", \"usa lenguaje objetivo\")."
+        },
+        "withCounter": {
+          "name": "Con contador accesible",
+          "description": "Textarea con <code>maxLength</code> + span de contador (formato <code>N/MAX</code>) usando <code>aria-live=\"polite\"</code> + <code>aria-label</code> dinámico (\"N de MAX caracteres usados\").",
+          "use": "Campos con límite (bio, descripción, respuesta corta). Usa <code>aria-live=\"polite\"</code> para anunciar cambios sin interrumpir al usuario."
+        },
+        "withError": {
+          "name": "Con mensaje de error",
+          "description": "Textarea con <code>aria-invalid=\"true\"</code> + mensaje de error debajo en color <code>--destructive</code>. <code>aria-describedby</code> apunta al id del mensaje.",
+          "use": "Validación obligatoria o de longitud mínima. Explica el problema Y cómo corregirlo."
+        },
+        "inForm": {
+          "name": "En formulario",
+          "description": "Textarea con prop <code>name</code> dentro de <code>&lt;form&gt;</code>, integrada vía FormData nativo en el submit.",
+          "use": "Formularios HTML clásicos sin framework de validación. El <code>name</code> es lo que va en FormData; <code>aria-label</code> en el <code>&lt;form&gt;</code> describe el contexto."
+        }
       }
     },
     "states": {

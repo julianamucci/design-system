@@ -46,12 +46,7 @@ const meta = {
     modal: true,
     defaultOpen: false,
   },
-} satisfies Meta<
-  typeof DropdownMenu & {
-    side?: "top" | "bottom" | "left" | "right";
-    align?: "start" | "center" | "end";
-  }
->;
+} as Meta<typeof DropdownMenu>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

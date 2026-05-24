@@ -14,7 +14,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -57,6 +57,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -116,6 +117,23 @@
     demoApi?.scrollTo(i);
   }
 
+  // Composições — dots preview state
+  let dotsApi = $state<any>(undefined);
+  let dotsCurrent = $state(0);
+  function setDotsApi(a: any) {
+    dotsApi = a;
+    if (!a) return;
+    dotsCurrent = a.selectedScrollSnap();
+    a.on('select', () => { dotsCurrent = a.selectedScrollSnap(); });
+  }
+
+  const galleryPhotos = [
+    { title: 'Foto 1', description: 'Paisagem ao amanhecer' },
+    { title: 'Foto 2', description: 'Detalhe arquitetônico' },
+    { title: 'Foto 3', description: 'Cidade à noite' },
+    { title: 'Foto 4', description: 'Praia vista do alto' },
+  ];
+
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import {
@@ -173,6 +191,89 @@ import Autoplay from "embla-carousel-autoplay";`;
   </CarouselContent>
   <CarouselPrevious />
   <CarouselNext />
+</Carousel>`;
+
+  const codeCompositionWithDots = `<script lang="ts">
+  let api = $state<any>(undefined);
+  let current = $state(0);
+  function setApi(a: any) {
+    api = a;
+    current = a.selectedScrollSnap();
+    a.on('select', () => (current = a.selectedScrollSnap()));
+  }
+<\/script>
+
+<div class="space-y-3">
+  <Carousel {setApi} aria-label="Galeria de fotos do produto">
+    <CarouselContent>
+      {#each slides as s, i}
+        <CarouselItem>{s}</CarouselItem>
+      {/each}
+    </CarouselContent>
+    <CarouselPrevious aria-label="Item anterior" />
+    <CarouselNext aria-label="Próximo item" />
+  </Carousel>
+  <div class="flex justify-center gap-2" aria-label="Ir para o slide">
+    {#each slides as _, i}
+      <button
+        type="button"
+        aria-label={\`Ir para o slide \${i + 1} de \${slides.length}\`}
+        aria-current={i === current ? 'true' : 'false'}
+        class={\`h-2 w-2 rounded-full \${i === current ? 'bg-primary' : 'bg-muted-foreground/30'}\`}
+        onclick={() => api?.scrollTo(i)}
+      />
+    {/each}
+  </div>
+</div>`;
+
+  const codeCompositionGallery = `<Carousel class="w-full max-w-md" aria-label="Galeria de fotos do produto">
+  <CarouselContent>
+    {#each photos as photo}
+      <CarouselItem>
+        <div class="overflow-hidden rounded-md border">
+          <div class="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
+            <span class="text-2xl font-semibold">{photo.title}</span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-semibold">{photo.title}</h3>
+            <p class="text-sm text-muted-foreground">{photo.description}</p>
+          </div>
+        </div>
+      </CarouselItem>
+    {/each}
+  </CarouselContent>
+  <CarouselPrevious aria-label="Item anterior" />
+  <CarouselNext aria-label="Próximo item" />
+</Carousel>`;
+
+  const codeCompositionAutoplay = `<script lang="ts">
+  import Autoplay from 'embla-carousel-autoplay';
+<\/script>
+
+<Carousel
+  opts={{ loop: true }}
+  plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
+  aria-label="Destaques"
+>
+  <CarouselContent>
+    {#each highlights as h, i}
+      <CarouselItem>{h}</CarouselItem>
+    {/each}
+  </CarouselContent>
+  <CarouselPrevious aria-label="Item anterior" />
+  <CarouselNext aria-label="Próximo item" />
+</Carousel>`;
+
+  const codeCompositionMultiResponsive = `<Carousel class="w-full max-w-2xl" aria-label="Cards de produto">
+  <CarouselContent>
+    {#each products as p}
+      <CarouselItem class="md:basis-1/2 lg:basis-1/3">
+        <div class="rounded-md border p-4">{p.name}</div>
+      </CarouselItem>
+    {/each}
+  </CarouselContent>
+  <CarouselPrevious aria-label="Item anterior" />
+  <CarouselNext aria-label="Próximo item" />
 </Carousel>`;
 
   const interfaceCode = `// Carousel
@@ -527,6 +628,142 @@ interface CarouselNavProps extends ButtonProps {
   {#snippet variantMulti()}
     <div class="w-full max-w-[480px]">
       <Carousel aria-label="Multi responsivo" class="relative">
+        <CarouselContent>
+          {#each [1, 2, 3, 4, 5, 6] as i}
+            <CarouselItem class="md:basis-1/2 lg:basis-1/3">
+              <div class="p-1">
+                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-xl font-semibold text-muted-foreground">
+                  {i}
+                </div>
+              </div>
+            </CarouselItem>
+          {/each}
+        </CarouselContent>
+        <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
+        <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
+      </Carousel>
+    </div>
+  {/snippet}
+
+  <!-- ── Composições ────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="carousel"
+    items={[
+      {
+        name: $tStore('variants.compositions.withDots.name'),
+        description: $tStore('variants.compositions.withDots.description'),
+        useWhen: $tStore('variants.compositions.withDots.use'),
+        code: codeCompositionWithDots,
+        preview: compWithDots,
+      },
+      {
+        name: $tStore('variants.compositions.gallery.name'),
+        description: $tStore('variants.compositions.gallery.description'),
+        useWhen: $tStore('variants.compositions.gallery.use'),
+        code: codeCompositionGallery,
+        preview: compGallery,
+      },
+      {
+        name: $tStore('variants.compositions.autoplay.name'),
+        description: $tStore('variants.compositions.autoplay.description'),
+        useWhen: $tStore('variants.compositions.autoplay.use'),
+        code: codeCompositionAutoplay,
+        preview: compAutoplay,
+      },
+      {
+        name: $tStore('variants.compositions.multiResponsive.name'),
+        description: $tStore('variants.compositions.multiResponsive.description'),
+        useWhen: $tStore('variants.compositions.multiResponsive.use'),
+        code: codeCompositionMultiResponsive,
+        preview: compMultiResponsive,
+      },
+    ]}
+  />
+
+  {#snippet compWithDots()}
+    <div class="w-full max-w-[280px] space-y-3">
+      <Carousel setApi={setDotsApi} aria-label="Galeria">
+        <CarouselContent>
+          {#each [1, 2, 3, 4, 5] as i}
+            <CarouselItem>
+              <div class="p-1">
+                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+                  {i}
+                </div>
+              </div>
+            </CarouselItem>
+          {/each}
+        </CarouselContent>
+        <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
+        <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
+      </Carousel>
+      <div class="flex items-center justify-center gap-2" aria-label={$tStore('demonstration.labels.goToSlide')}>
+        {#each [1, 2, 3, 4, 5] as _, i}
+          <button
+            type="button"
+            aria-label={`${$tStore('demonstration.labels.goToSlide')} ${i + 1} ${$tStore('demonstration.labels.of')} 5`}
+            aria-current={i === dotsCurrent ? 'true' : 'false'}
+            class={`h-2 w-2 rounded-full transition-colors ${i === dotsCurrent ? 'bg-primary' : 'bg-muted-foreground/30'}`}
+            onclick={() => dotsApi?.scrollTo(i)}
+          ></button>
+        {/each}
+      </div>
+    </div>
+  {/snippet}
+
+  {#snippet compGallery()}
+    <div class="w-full max-w-[280px]">
+      <Carousel aria-label="Galeria de fotos">
+        <CarouselContent>
+          {#each galleryPhotos as photo}
+            <CarouselItem>
+              <div class="overflow-hidden rounded-md border bg-card">
+                <div class="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
+                  <span class="text-2xl font-semibold text-foreground">{photo.title}</span>
+                </div>
+                <div class="p-3">
+                  <h3 class="text-sm font-semibold text-foreground">{photo.title}</h3>
+                  <p class="text-xs text-muted-foreground">{photo.description}</p>
+                </div>
+              </div>
+            </CarouselItem>
+          {/each}
+        </CarouselContent>
+        <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
+        <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
+      </Carousel>
+    </div>
+  {/snippet}
+
+  {#snippet compAutoplay()}
+    <div class="w-full max-w-[280px]">
+      <Carousel
+        opts={{ loop: true }}
+        plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
+        aria-label="Destaques"
+      >
+        <CarouselContent>
+          {#each [1, 2, 3, 4] as i}
+            <CarouselItem>
+              <div class="p-1">
+                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+                  {i}
+                </div>
+              </div>
+            </CarouselItem>
+          {/each}
+        </CarouselContent>
+        <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
+        <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
+      </Carousel>
+    </div>
+  {/snippet}
+
+  {#snippet compMultiResponsive()}
+    <div class="w-full max-w-[480px]">
+      <Carousel aria-label="Multi responsivo">
         <CarouselContent>
           {#each [1, 2, 3, 4, 5, 6] as i}
             <CarouselItem class="md:basis-1/2 lg:basis-1/3">

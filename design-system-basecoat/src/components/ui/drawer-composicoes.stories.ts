@@ -25,12 +25,14 @@ type Story = StoryObj;
 
 function buildField(labelText: string, type: string, value: string): HTMLLabelElement {
   const label = document.createElement('label');
-  label.className = 'grid gap-1 text-sm';
+  label.className = 'nds-stack nds-text-body';
+  label.dataset.spacing = 'xs';
   const span = document.createElement('span');
-  span.className = 'font-medium';
+  span.className = 'nds-font-medium';
   span.textContent = labelText;
   const input = document.createElement('input');
-  input.className = 'border rounded-md px-3 py-2';
+  input.className = 'nds-border-default nds-rounded-md';
+  input.style.padding = '0.5rem 0.75rem';
   input.type = type;
   input.value = value;
   label.append(span, input);
@@ -40,7 +42,9 @@ function buildField(labelText: string, type: string, value: string): HTMLLabelEl
 function buildWrapper(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[200px] flex items-center justify-center';
+  wrapper.className = 'nds-cluster nds-w-full';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.minHeight = '200px';
   wrapper.appendChild(child);
   return wrapper;
 }
@@ -63,7 +67,8 @@ export const ComFormulario: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
     const form = document.createElement('form');
-    form.className = 'grid gap-3';
+    form.className = 'nds-stack';
+    form.dataset.spacing = 'md';
     form.append(
       buildField('Nome', 'text', 'Maria Souza'),
       buildField('E-mail', 'email', 'maria@exemplo.com'),
@@ -104,7 +109,7 @@ export const ComConfirmacao: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Remover item' });
 
     const body = document.createElement('div');
-    body.className = 'text-sm text-muted-foreground';
+    body.className = 'nds-text-body nds-text-muted-foreground';
     body.textContent = 'Esta ação remove o item desta lista (continua na biblioteca).';
 
     const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
@@ -142,7 +147,10 @@ export const ComScroll: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
 
     const longBody = document.createElement('div');
-    longBody.className = 'text-sm text-muted-foreground max-h-64 overflow-y-auto pr-2 space-y-3';
+    longBody.className = 'nds-text-body nds-text-muted-foreground nds-stack overflow-y-auto';
+    longBody.dataset.spacing = 'md';
+    longBody.style.maxHeight = '16rem';
+    longBody.style.paddingRight = '0.5rem';
     for (let i = 1; i <= 12; i++) {
       const p = document.createElement('p');
       p.textContent = `Parágrafo ${i}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.`;

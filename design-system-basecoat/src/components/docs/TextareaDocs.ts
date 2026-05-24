@@ -4,6 +4,7 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createTextarea } from '@/components/ui/textarea';
+import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import textareaTranslations from '@shared/content/textarea/translations.json';
 
@@ -15,6 +16,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -65,11 +67,12 @@ interface FieldOpts {
 
 function buildField(opts: FieldOpts): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex flex-col gap-1.5 w-full max-w-md';
+  wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+  wrapper.dataset.spacing = 'xs';
 
   const label = document.createElement('label');
   label.htmlFor = opts.id;
-  label.className = 'text-sm font-medium text-foreground';
+  label.className = 'nds-text-body nds-font-medium nds-text-foreground';
   label.textContent = opts.labelText;
   wrapper.appendChild(label);
 
@@ -99,7 +102,10 @@ function buildField(opts: FieldOpts): HTMLElement {
 
   if (hasCounter || hasHelp) {
     const row = document.createElement('div');
-    row.className = 'flex justify-between items-start gap-3 text-xs text-muted-foreground';
+    row.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
+    row.dataset.justify = 'between';
+    row.dataset.spacing = 'sm';
+    row.style.alignItems = 'flex-start';
 
     const helpSpan = document.createElement('span');
     if (hasHelp) helpSpan.textContent = opts.helpText!;
@@ -112,7 +118,7 @@ function buildField(opts: FieldOpts): HTMLElement {
       const max = opts.maxLength!;
       counter.textContent = `${initial}/${max}`;
       counter.setAttribute('aria-label', `${initial} de ${max} caracteres usados`);
-      counter.className = 'tabular-nums shrink-0';
+      counter.className = 'tabular-nums nds-shrink-0';
       row.appendChild(counter);
 
       textarea.addEventListener('input', () => {
@@ -128,7 +134,7 @@ function buildField(opts: FieldOpts): HTMLElement {
   if (opts.errorText) {
     const err = document.createElement('p');
     err.id = `${opts.id}-error`;
-    err.className = 'text-xs text-destructive';
+    err.className = 'nds-text-caption nds-text-destructive';
     err.textContent = opts.errorText;
     textarea.setAttribute('aria-describedby', `${opts.id}-error`);
     wrapper.appendChild(err);
@@ -191,6 +197,7 @@ export function createTextareaDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -241,7 +248,7 @@ export function createTextareaDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -256,7 +263,8 @@ export function createTextareaDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-col gap-4 w-full';
+            wrap.className = 'nds-stack nds-w-full';
+            wrap.dataset.spacing = 'md';
 
             wrap.appendChild(buildField({
               id: 'demo-description',
@@ -363,10 +371,11 @@ export function createTextareaDocs(): HTMLElement {
               dontPreviewFactory: () => {
                 // Sem contador apesar do maxLength
                 const wrapper = document.createElement('div');
-                wrapper.className = 'flex flex-col gap-1.5 w-full max-w-md';
+                wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+  wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
                 label.htmlFor = 'dodont-dont-counter';
-                label.className = 'text-sm font-medium text-foreground';
+                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
                 label.textContent = t('demonstration.labels.descriptionLabel');
                 const ta = createTextarea({
                   id: 'dodont-dont-counter',
@@ -494,6 +503,282 @@ textarea.addEventListener('input', () => {
                 placeholder: t('demonstration.labels.feedbackPlaceholder'),
                 resize: 'none',
               }),
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        function createTextareaField(opts: {
+          labelText: string;
+          labelFor: string;
+          textareaEl: HTMLTextAreaElement;
+          hintText?: string;
+          errorText?: string;
+          maxLength?: number;
+        }): HTMLElement {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+  wrapper.dataset.spacing = 'xs';
+
+          const label = document.createElement('label');
+          label.htmlFor = opts.labelFor;
+          label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+          label.textContent = opts.labelText;
+
+          opts.textareaEl.id = opts.labelFor;
+
+          wrapper.appendChild(label);
+          wrapper.appendChild(opts.textareaEl);
+
+          const hasHint = !!opts.hintText;
+          const hasCounter = opts.maxLength !== undefined;
+
+          if (hasHint || hasCounter) {
+            const row = document.createElement('div');
+            row.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
+    row.dataset.justify = 'between';
+    row.dataset.spacing = 'sm';
+    row.style.alignItems = 'flex-start';
+
+            const hintSpan = document.createElement('span');
+            if (hasHint) hintSpan.textContent = opts.hintText!;
+            row.appendChild(hintSpan);
+
+            if (hasCounter) {
+              opts.textareaEl.maxLength = opts.maxLength!;
+              const counter = document.createElement('span');
+              const max = opts.maxLength!;
+              counter.setAttribute('aria-live', 'polite');
+              counter.setAttribute('aria-label', `0 de ${max} caracteres usados`);
+              counter.className = 'tabular-nums nds-shrink-0';
+              counter.textContent = `0/${max}`;
+              opts.textareaEl.addEventListener('input', () => {
+                const len = opts.textareaEl.value.length;
+                counter.textContent = `${len}/${max}`;
+                counter.setAttribute('aria-label', `${len} de ${max} caracteres usados`);
+              });
+              row.appendChild(counter);
+            }
+
+            wrapper.appendChild(row);
+          }
+
+          if (opts.errorText) {
+            const error = document.createElement('p');
+            error.className = 'nds-text-caption nds-text-destructive';
+            error.id = `${opts.labelFor}-error`;
+            error.textContent = opts.errorText;
+            opts.textareaEl.setAttribute('aria-describedby', `${opts.labelFor}-error`);
+            wrapper.appendChild(error);
+          }
+
+          return wrapper;
+        }
+
+        const codeWithLabel = `const textarea = createTextarea({
+  placeholder: 'ex: Descreva o produto...',
+  class: 'resize-y min-h-[120px]',
+});
+
+const wrapper = document.createElement('div');
+wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+wrapper.dataset.spacing = 'xs';
+
+const label = document.createElement('label');
+label.htmlFor = 'description';
+label.textContent = 'Descrição';
+textarea.id = 'description';
+
+wrapper.append(label, textarea);`;
+
+        const codeWithHint = `const textarea = createTextarea({
+  placeholder: 'ex: Descreva o produto...',
+  class: 'resize-y min-h-[120px]',
+});
+
+// ... label + textarea ...
+
+const hint = document.createElement('span');
+hint.className = 'nds-text-caption nds-text-muted-foreground';
+hint.textContent = 'Descreva o produto com clareza, destacando os principais atributos.';
+wrapper.appendChild(hint);`;
+
+        const codeWithCounter = `const max = 500;
+const textarea = createTextarea({
+  placeholder: 'ex: Descreva o produto...',
+  class: 'resize-y min-h-[120px]',
+});
+textarea.maxLength = max;
+
+const counter = document.createElement('span');
+counter.setAttribute('aria-live', 'polite');
+counter.setAttribute('aria-label', \`0 de \${max} caracteres usados\`);
+counter.textContent = \`0/\${max}\`;
+
+textarea.addEventListener('input', () => {
+  const len = textarea.value.length;
+  counter.textContent = \`\${len}/\${max}\`;
+  counter.setAttribute('aria-label', \`\${len} de \${max} caracteres usados\`);
+});`;
+
+        const codeWithError = `const textarea = createTextarea({
+  placeholder: 'ex: Descreva o produto...',
+  class: 'resize-y min-h-[120px]',
+});
+textarea.setAttribute('aria-invalid', 'true');
+
+const error = document.createElement('p');
+error.id = 'description-error';
+error.className = 'nds-text-caption nds-text-destructive';
+error.textContent = 'A descrição é obrigatória e deve ter pelo menos 20 caracteres.';
+textarea.setAttribute('aria-describedby', 'description-error');`;
+
+        const codeInForm = `const form = document.createElement('form');
+form.className = 'nds-stack nds-w-full nds-max-w-md';
+form.dataset.spacing = 'md';
+form.setAttribute('aria-label', 'Formulário de feedback');
+
+const textarea = createTextarea({
+  name: 'feedback',
+  placeholder: 'O que poderíamos melhorar?',
+  class: 'resize-y min-h-[120px]',
+});
+textarea.maxLength = 280;
+
+const submit = createButton({ label: 'Enviar', type: 'submit', variant: 'default' });
+
+const result = document.createElement('p');
+result.setAttribute('aria-live', 'polite');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const data = new FormData(form);
+  result.textContent = \`Enviado: feedback="\${String(data.get('feedback') ?? '')}"\`;
+});`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'textarea',
+          items: [
+            {
+              name: t('variants.compositions.withLabel.name'),
+              description: t('variants.compositions.withLabel.description'),
+              useWhen: t('variants.compositions.withLabel.use'),
+              code: codeWithLabel,
+              previewFactory: () => {
+                const ta = createTextarea({
+                  placeholder: 'ex: Descreva o produto...',
+                  class: 'resize-y min-h-[120px]',
+                });
+                return createTextareaField({
+                  labelText: 'Descrição',
+                  labelFor: 'comp-label',
+                  textareaEl: ta,
+                });
+              },
+            },
+            {
+              name: t('variants.compositions.withHint.name'),
+              description: t('variants.compositions.withHint.description'),
+              useWhen: t('variants.compositions.withHint.use'),
+              code: codeWithHint,
+              previewFactory: () => {
+                const ta = createTextarea({
+                  placeholder: 'ex: Descreva o produto...',
+                  class: 'resize-y min-h-[120px]',
+                });
+                return createTextareaField({
+                  labelText: 'Descrição',
+                  labelFor: 'comp-hint',
+                  textareaEl: ta,
+                  hintText: 'Descreva o produto com clareza, destacando os principais atributos.',
+                });
+              },
+            },
+            {
+              name: t('variants.compositions.withCounter.name'),
+              description: t('variants.compositions.withCounter.description'),
+              useWhen: t('variants.compositions.withCounter.use'),
+              code: codeWithCounter,
+              previewFactory: () => {
+                const ta = createTextarea({
+                  placeholder: 'ex: Descreva o produto em até 500 caracteres...',
+                  class: 'resize-y min-h-[120px]',
+                });
+                return createTextareaField({
+                  labelText: 'Descrição',
+                  labelFor: 'comp-counter',
+                  textareaEl: ta,
+                  hintText: 'Descreva o produto com clareza.',
+                  maxLength: 500,
+                });
+              },
+            },
+            {
+              name: t('variants.compositions.withError.name'),
+              description: t('variants.compositions.withError.description'),
+              useWhen: t('variants.compositions.withError.use'),
+              code: codeWithError,
+              previewFactory: () => {
+                const ta = createTextarea({
+                  placeholder: 'ex: Descreva o produto...',
+                  class: 'resize-y min-h-[120px]',
+                });
+                ta.setAttribute('aria-invalid', 'true');
+                return createTextareaField({
+                  labelText: 'Descrição',
+                  labelFor: 'comp-error',
+                  textareaEl: ta,
+                  errorText: 'A descrição é obrigatória e deve ter pelo menos 20 caracteres.',
+                });
+              },
+            },
+            {
+              name: t('variants.compositions.inForm.name'),
+              description: t('variants.compositions.inForm.description'),
+              useWhen: t('variants.compositions.inForm.use'),
+              code: codeInForm,
+              previewFactory: () => {
+                const form = document.createElement('form');
+                form.className = 'nds-stack nds-w-full nds-max-w-md';
+form.dataset.spacing = 'md';
+                form.setAttribute('aria-label', 'Formulário de feedback');
+
+                const textarea = createTextarea({
+                  name: 'feedback',
+                  placeholder: 'O que poderíamos melhorar?',
+                  class: 'resize-y min-h-[120px]',
+                });
+
+                const field = createTextareaField({
+                  labelText: 'Feedback',
+                  labelFor: 'comp-form-feedback',
+                  textareaEl: textarea,
+                  hintText: 'Sua opinião nos ajuda a evoluir.',
+                  maxLength: 280,
+                });
+
+                const submitBtn = createButton({
+                  label: 'Enviar',
+                  type: 'submit',
+                  variant: 'default',
+                });
+
+                const result = document.createElement('p');
+                result.className = 'nds-text-caption nds-text-muted-foreground';
+                result.setAttribute('aria-live', 'polite');
+
+                form.addEventListener('submit', (e) => {
+                  e.preventDefault();
+                  const data = new FormData(form);
+                  result.textContent = `Enviado: feedback="${String(data.get('feedback') ?? '')}"`;
+                });
+
+                form.append(field, submitBtn, result);
+                return form;
+              },
             },
           ],
         });

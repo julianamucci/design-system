@@ -24,7 +24,7 @@ for (const name of ALL_ICON_NAMES) {
     .join('');
 }
 
-const SVG_OPEN = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-foreground/80 group-hover:text-primary transition-colors" aria-hidden="true">';
+const SVG_OPEN = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-foreground/80 group-hover:text-primary transition-colors" aria-hidden="true">';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -37,10 +37,15 @@ export function createIconsDocs(): HTMLElement {
 
   // Root
   const root = document.createElement('div');
-  root.className = 'flex-1 h-full overflow-auto ds-docs';
+  root.className = 'nds-flex-1 ds-docs';
+  root.style.height = '100%';
+  root.style.overflow = 'auto';
 
   const container = document.createElement('div');
-  container.className = 'p-8 max-w-6xl mx-auto space-y-8';
+  container.className = 'nds-p-8 nds-stack';
+  container.dataset.spacing = 'xl';
+  container.style.maxWidth = '72rem';
+  container.style.marginInline = 'auto';
   root.appendChild(container);
 
   // ── SEO + analytics reativos ───────────────────────────────────────────────
@@ -71,40 +76,52 @@ export function createIconsDocs(): HTMLElement {
   // ── Header ────────────────────────────────────────────────────────────────
 
   const header = document.createElement('header');
-  header.className = 'space-y-4 border-b border-border/50 pb-8';
+  header.className = 'nds-stack nds-border-b-soft nds-pb-8';
+  header.style.paddingBottom = '2rem';
 
   // Linha superior: badges + language switcher
   const topRow = document.createElement('div');
-  topRow.className = 'flex items-center justify-between';
+  topRow.className = 'nds-cluster';
+  topRow.dataset.justify = 'between';
+  topRow.dataset.align = 'center';
 
   const badgeRow = document.createElement('div');
-  badgeRow.className = 'flex items-center gap-2';
+  badgeRow.className = 'nds-cluster';
+  badgeRow.dataset.spacing = 'sm';
+  badgeRow.dataset.align = 'center';
 
   const badgeCategory = document.createElement('span');
-  badgeCategory.className = 'inline-flex items-center rounded-md border border-primary/10 bg-primary/5 px-2 py-0 text-xs font-medium text-primary';
+  badgeCategory.className = 'nds-pill nds-text-caption nds-font-medium nds-text-primary';
+  badgeCategory.style.borderColor = 'color-mix(in srgb, var(--color-primary) 10%, transparent)';
+  badgeCategory.style.background = 'color-mix(in srgb, var(--color-primary) 5%, transparent)';
 
   const badgeType = document.createElement('span');
-  badgeType.className = 'inline-flex items-center rounded-md border border-border px-2 py-0 text-xs font-normal text-muted-foreground';
+  badgeType.className = 'nds-pill nds-text-caption nds-font-normal nds-text-muted-foreground nds-border-default';
 
   badgeRow.append(badgeCategory, badgeType);
 
   topRow.append(badgeRow, createLanguageSwitcher());
 
   const h1 = document.createElement('h1');
-  h1.className = 'text-4xl font-bold tracking-tight text-foreground';
+  h1.className = 'nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground';
 
   const desc = document.createElement('p');
-  desc.className = 'text-muted-foreground max-w-3xl leading-relaxed';
+  desc.className = 'nds-text-muted-foreground nds-leading-relaxed';
+  desc.style.maxWidth = '48rem';
 
   const libRow = document.createElement('div');
-  libRow.className = 'flex flex-wrap items-center gap-3 pt-1';
+  libRow.className = 'nds-cluster';
+  libRow.dataset.spacing = 'sm';
+  libRow.dataset.align = 'center';
+  libRow.style.paddingTop = '0.25rem';
 
   const libBadge = document.createElement('span');
-  libBadge.className = 'inline-flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md text-xs font-mono border border-border/50 text-muted-foreground';
-  libBadge.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg> lucide`;
+  libBadge.className = 'nds-pill nds-bg-muted nds-text-caption nds-font-mono nds-border-default nds-text-muted-foreground';
+  libBadge.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg> lucide`;
 
   const iconsCount = document.createElement('span');
-  iconsCount.className = 'text-sm text-muted-foreground/70';
+  iconsCount.className = 'nds-text-body nds-text-muted-foreground';
+  iconsCount.style.opacity = '0.7';
 
   libRow.append(libBadge, iconsCount);
   header.append(topRow, h1, desc, libRow);
@@ -112,18 +129,24 @@ export function createIconsDocs(): HTMLElement {
   // ── Busca ──────────────────────────────────────────────────────────────────
 
   const searchWrapper = document.createElement('div');
-  searchWrapper.className = 'space-y-3';
+  searchWrapper.className = 'nds-stack';
+  searchWrapper.dataset.spacing = 'sm';
 
   const inputWrapper = document.createElement('div');
-  inputWrapper.className = 'relative';
-  inputWrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`;
+  inputWrapper.style.position = 'relative';
+  inputWrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 nds-text-muted-foreground pointer-events-none" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`;
 
   const searchInput = document.createElement('input');
   searchInput.type = 'search';
-  searchInput.className = 'flex h-9 w-full rounded-md border border-input bg-input px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring pl-9';
+  searchInput.className = 'nds-w-full nds-rounded-md nds-border-default nds-text-body nds-shadow-sm';
+  searchInput.style.background = 'var(--color-input)';
+  searchInput.style.paddingLeft = '2.25rem';
+  searchInput.style.paddingRight = '0.75rem';
+  searchInput.style.paddingBlock = '0.25rem';
+  searchInput.style.height = '2.25rem';
 
   const searchStatus = document.createElement('p');
-  searchStatus.className = 'text-sm text-muted-foreground';
+  searchStatus.className = 'nds-text-body nds-text-muted-foreground';
   searchStatus.setAttribute('aria-live', 'polite');
   searchStatus.setAttribute('aria-atomic', 'true');
 
@@ -133,41 +156,78 @@ export function createIconsDocs(): HTMLElement {
   // ── Empty state ────────────────────────────────────────────────────────────
 
   const emptyState = document.createElement('div');
-  emptyState.className = 'hidden flex-col items-center justify-center py-20 gap-3 text-muted-foreground';
+  emptyState.className = 'nds-hidden nds-stack nds-text-muted-foreground';
+  emptyState.dataset.spacing = 'sm';
+  emptyState.style.alignItems = 'center';
+  emptyState.style.justifyContent = 'center';
+  emptyState.style.paddingBlock = '5rem';
   emptyState.setAttribute('role', 'status');
-  emptyState.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 opacity-25" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`;
+  emptyState.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`;
 
   const emptyTitle = document.createElement('p');
-  emptyTitle.className = 'font-medium';
+  emptyTitle.className = 'nds-font-medium';
   const emptySubtitle = document.createElement('p');
-  emptySubtitle.className = 'text-sm opacity-70';
+  emptySubtitle.className = 'nds-text-body';
+  emptySubtitle.style.opacity = '0.7';
   emptyState.append(emptyTitle, emptySubtitle);
 
   // ── Grade de ícones ────────────────────────────────────────────────────────
 
   const grid = document.createElement('ul');
-  grid.className = 'grid gap-1 list-none p-0 m-0';
+  grid.className = 'nds-grid nds-list-none nds-p-0 nds-m-0';
+  grid.dataset.spacing = 'xs';
   grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(96px, 1fr))';
 
   ALL_ICON_NAMES.forEach((name) => {
     const li = document.createElement('li');
-    li.className = 'list-none';
+    li.className = 'nds-list-none';
     li.dataset.iconName = name;
 
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'group relative w-full flex flex-col items-center gap-2 p-3 rounded-lg border border-transparent hover:border-border hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors overflow-visible';
+    btn.className = 'group nds-w-full nds-stack nds-rounded-lg nds-cursor-pointer';
+    btn.dataset.spacing = 'sm';
+    btn.style.position = 'relative';
+    btn.style.alignItems = 'center';
+    btn.style.padding = '0.75rem';
+    btn.style.border = '1px solid transparent';
+    btn.style.background = 'transparent';
+    btn.style.overflow = 'visible';
+    btn.style.transition = 'background-color .2s, border-color .2s';
 
     const iconWrap = document.createElement('span');
-    iconWrap.className = 'h-6 w-6 flex items-center justify-center';
+    iconWrap.className = 'nds-icon-lg';
+    iconWrap.style.display = 'flex';
+    iconWrap.style.alignItems = 'center';
+    iconWrap.style.justifyContent = 'center';
     iconWrap.innerHTML = `${SVG_OPEN}${ICON_SVG_INNER[name]}</svg>`;
 
     const nameLabel = document.createElement('span');
-    nameLabel.className = 'text-[10px] text-muted-foreground text-center leading-tight break-all font-mono w-full line-clamp-2';
+    nameLabel.className = 'nds-text-muted-foreground nds-font-mono nds-w-full';
+    nameLabel.style.fontSize = '10px';
+    nameLabel.style.textAlign = 'center';
+    nameLabel.style.lineHeight = '1.2';
+    nameLabel.style.wordBreak = 'break-all';
+    nameLabel.style.display = '-webkit-box';
+    (nameLabel.style as unknown as Record<string, string>)['WebkitLineClamp'] = '2';
+    (nameLabel.style as unknown as Record<string, string>)['WebkitBoxOrient'] = 'vertical';
+    nameLabel.style.overflow = 'hidden';
     nameLabel.textContent = name;
 
     const tooltip = document.createElement('span');
-    tooltip.className = 'pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-neutral-900 px-2 py-1 text-[10px] text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity';
+    tooltip.className = 'nds-whitespace-nowrap nds-rounded';
+    tooltip.style.pointerEvents = 'none';
+    tooltip.style.position = 'absolute';
+    tooltip.style.top = '-2rem';
+    tooltip.style.left = '50%';
+    tooltip.style.transform = 'translateX(-50%)';
+    tooltip.style.background = 'rgb(23 23 23)';
+    tooltip.style.padding = '0.25rem 0.5rem';
+    tooltip.style.fontSize = '10px';
+    tooltip.style.color = '#fff';
+    tooltip.style.zIndex = '10';
+    tooltip.style.opacity = '0';
+    tooltip.style.transition = 'opacity .15s';
     tooltip.setAttribute('aria-hidden', 'true');
     tooltip.dataset.tooltipFor = name;
 
@@ -221,29 +281,36 @@ export function createIconsDocs(): HTMLElement {
   // ── Como usar ──────────────────────────────────────────────────────────────
 
   const howToUseSection = document.createElement('section');
-  howToUseSection.className = 'space-y-6 border-t border-border/50 pt-8';
+  howToUseSection.className = 'nds-stack';
+  howToUseSection.dataset.spacing = 'lg';
+  howToUseSection.style.borderTop = '1px solid color-mix(in srgb, var(--color-border) 50%, transparent)';
+  howToUseSection.style.paddingTop = '2rem';
 
   const howToUseTitle = document.createElement('h2');
-  howToUseTitle.className = 'text-xl font-semibold text-foreground';
+  howToUseTitle.className = 'nds-text-h3 nds-font-semibold nds-text-foreground';
 
   const howToUseGrid = document.createElement('div');
-  howToUseGrid.className = 'grid gap-4 md:grid-cols-2';
+  howToUseGrid.className = 'nds-grid';
+  howToUseGrid.dataset.spacing = 'md';
+  howToUseGrid.dataset.min = '18rem';
 
   const individualDiv = document.createElement('div');
-  individualDiv.className = 'space-y-2';
+  individualDiv.className = 'nds-stack';
+  individualDiv.dataset.spacing = 'sm';
   const individualTitle = document.createElement('p');
-  individualTitle.className = 'text-sm font-medium text-foreground';
+  individualTitle.className = 'nds-text-body nds-font-medium nds-text-foreground';
   const individualCode = document.createElement('pre');
-  individualCode.className = 'bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed';
-  individualCode.innerHTML = `<code>import { Search, Settings, User } from 'lucide';\n\ncreateIcons({ icons: { Search, Settings, User } });\n// &lt;i data-lucide="search" class="h-4 w-4" aria-hidden="true"&gt;&lt;/i&gt;</code>`;
+  individualCode.className = 'nds-bg-muted nds-rounded-lg nds-p-4 nds-text-caption nds-overflow-x nds-border-default nds-font-mono nds-leading-relaxed';
+  individualCode.innerHTML = `<code>import { Search, Settings, User } from 'lucide';\n\ncreateIcons({ icons: { Search, Settings, User } });\n// &lt;i data-lucide="search" class="" aria-hidden="true"&gt;&lt;/i&gt;</code>`;
   individualDiv.append(individualTitle, individualCode);
 
   const sizesDiv = document.createElement('div');
-  sizesDiv.className = 'space-y-2';
+  sizesDiv.className = 'nds-stack';
+  sizesDiv.dataset.spacing = 'sm';
   const sizesTitle = document.createElement('p');
-  sizesTitle.className = 'text-sm font-medium text-foreground';
+  sizesTitle.className = 'nds-text-body nds-font-medium nds-text-foreground';
   const sizesCode = document.createElement('pre');
-  sizesCode.className = 'bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed';
+  sizesCode.className = 'nds-bg-muted nds-rounded-lg nds-p-4 nds-text-caption nds-overflow-x nds-border-default nds-font-mono nds-leading-relaxed';
   sizesCode.innerHTML = `<code>h-3 w-3   // 12px — badges, captions\nh-4 w-4   // 16px — padrão em texto e botões\nh-5 w-5   // 20px — destaque em headers\nh-6 w-6   // 24px — standalone / ilustrativo</code>`;
   sizesDiv.append(sizesTitle, sizesCode);
   howToUseGrid.append(individualDiv, sizesDiv);
@@ -252,41 +319,57 @@ export function createIconsDocs(): HTMLElement {
   // ── Acessibilidade ─────────────────────────────────────────────────────────
 
   const a11ySection = document.createElement('section');
-  a11ySection.className = 'space-y-4 border-t border-border/50 pt-8';
+  a11ySection.className = 'nds-stack';
+  a11ySection.dataset.spacing = 'md';
+  a11ySection.style.borderTop = '1px solid color-mix(in srgb, var(--color-border) 50%, transparent)';
+  a11ySection.style.paddingTop = '2rem';
 
   const a11yTitle = document.createElement('h2');
-  a11yTitle.className = 'text-xl font-semibold text-foreground';
+  a11yTitle.className = 'nds-text-h3 nds-font-semibold nds-text-foreground';
 
   const a11yGrid = document.createElement('div');
-  a11yGrid.className = 'grid gap-3 md:grid-cols-2';
+  a11yGrid.className = 'nds-grid';
+  a11yGrid.dataset.spacing = 'sm';
+  a11yGrid.dataset.min = '18rem';
 
   const decorativeBox = document.createElement('div');
-  decorativeBox.className = 'rounded-lg border border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30 p-4 space-y-2';
+  decorativeBox.className = 'nds-box nds-stack nds-border-success-soft';
+  decorativeBox.dataset.padding = 'sm';
+  decorativeBox.dataset.spacing = 'sm';
+  decorativeBox.style.background = 'color-mix(in srgb, var(--color-success) 8%, transparent)';
   const decorativeTitle = document.createElement('p');
-  decorativeTitle.className = 'text-sm font-semibold text-green-700 dark:text-green-400';
+  decorativeTitle.className = 'nds-text-body nds-font-semibold nds-text-success';
   const decorativeCode = document.createElement('pre');
-  decorativeCode.className = 'text-xs font-mono overflow-x-auto leading-relaxed text-green-800 dark:text-green-300';
-  decorativeCode.innerHTML = `<code>&lt;button&gt;\n  &lt;i data-lucide="save" class="h-4 w-4" aria-hidden="true"&gt;&lt;/i&gt;\n  Salvar\n&lt;/button&gt;</code>`;
+  decorativeCode.className = 'nds-text-caption nds-font-mono nds-overflow-x nds-leading-relaxed nds-text-success';
+  decorativeCode.innerHTML = `<code>&lt;button&gt;\n  &lt;i data-lucide="save" class="" aria-hidden="true"&gt;&lt;/i&gt;\n  Salvar\n&lt;/button&gt;</code>`;
   decorativeBox.append(decorativeTitle, decorativeCode);
 
   const functionalBox = document.createElement('div');
-  functionalBox.className = 'rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/30 p-4 space-y-2';
+  functionalBox.className = 'nds-box nds-stack';
+  functionalBox.dataset.padding = 'sm';
+  functionalBox.dataset.spacing = 'sm';
+  functionalBox.style.border = '1px solid color-mix(in srgb, var(--color-info) 30%, transparent)';
+  functionalBox.style.background = 'color-mix(in srgb, var(--color-info) 8%, transparent)';
   const functionalTitle = document.createElement('p');
-  functionalTitle.className = 'text-sm font-semibold text-blue-700 dark:text-blue-400';
+  functionalTitle.className = 'nds-text-body nds-font-semibold nds-text-info';
   const functionalCode = document.createElement('pre');
-  functionalCode.className = 'text-xs font-mono overflow-x-auto leading-relaxed text-blue-800 dark:text-blue-300';
-  functionalCode.innerHTML = `<code>&lt;button\n  aria-label="Excluir produto"\n&gt;\n  &lt;i data-lucide="trash-2" class="h-4 w-4" aria-hidden="true"&gt;&lt;/i&gt;\n&lt;/button&gt;</code>`;
+  functionalCode.className = 'nds-text-caption nds-font-mono nds-overflow-x nds-leading-relaxed nds-text-info';
+  functionalCode.innerHTML = `<code>&lt;button\n  aria-label="Excluir produto"\n&gt;\n  &lt;i data-lucide="trash-2" class="" aria-hidden="true"&gt;&lt;/i&gt;\n&lt;/button&gt;</code>`;
   functionalBox.append(functionalTitle, functionalCode);
   a11yGrid.append(decorativeBox, functionalBox);
 
   const a11yList = document.createElement('ul');
-  a11yList.className = 'space-y-1.5 text-sm text-muted-foreground list-none p-0 m-0';
+  a11yList.className = 'nds-stack nds-text-body nds-text-muted-foreground nds-list-none nds-p-0 nds-m-0';
+  a11yList.dataset.spacing = 'xs';
   const a11yRules: HTMLSpanElement[] = [];
   for (let i = 1; i <= 4; i++) {
     const li = document.createElement('li');
-    li.className = 'flex gap-2 items-start list-none';
+    li.className = 'nds-cluster nds-list-none';
+    li.dataset.spacing = 'sm';
+    li.dataset.align = 'start';
     const check = document.createElement('span');
-    check.className = 'text-primary mt-0.5 shrink-0';
+    check.className = 'nds-text-primary nds-shrink-0';
+    check.style.marginTop = '0.125rem';
     check.textContent = '✓';
     const ruleText = document.createElement('span');
     li.append(check, ruleText);

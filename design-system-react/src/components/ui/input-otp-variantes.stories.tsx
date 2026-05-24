@@ -25,7 +25,7 @@ const meta = {
 } satisfies Meta<typeof InputOTP>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof InputOTP>;
 
 function findOtpInput(canvasElement: HTMLElement): HTMLInputElement {
   const input = canvasElement.querySelector(

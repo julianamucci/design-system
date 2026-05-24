@@ -24,7 +24,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -76,6 +76,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
+        { id: 'composicoes',  label: tContent('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -120,6 +121,12 @@
   let demoRadio = $state('bottom');
   let variantCheckbox = $state(true);
   let variantRadio = $state('system');
+
+  // Compositions interactive state
+  let compShowName = $state(true);
+  let compShowEmail = $state(true);
+  let compShowRole = $state(false);
+  let compTheme = $state('system');
 
   // ─── Code strings ────────────────────────────────────────────────────────────
 
@@ -513,6 +520,214 @@ interface DropdownMenuRadioGroupProps {
           <DropdownMenuItem>Editar</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  {/snippet}
+
+  <!-- ── Composições ────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="dropdown-menu"
+    items={[
+      {
+        name: $tStore('variants.compositions.withLabel.name'),
+        description: $tStore('variants.compositions.withLabel.description'),
+        useWhen: $tStore('variants.compositions.withLabel.use'),
+        code: `<DropdownMenu>
+  <DropdownMenuTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Conta</Button>
+    {/snippet}
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Conta</DropdownMenuLabel>
+    <DropdownMenuItem>Perfil</DropdownMenuItem>
+    <DropdownMenuItem>Configurações</DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuLabel>Suporte</DropdownMenuLabel>
+    <DropdownMenuItem>Documentação</DropdownMenuItem>
+    <DropdownMenuItem>Sair</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>`,
+        preview: compWithLabel,
+      },
+      {
+        name: $tStore('variants.compositions.withCheckboxItems.name'),
+        description: $tStore('variants.compositions.withCheckboxItems.description'),
+        useWhen: $tStore('variants.compositions.withCheckboxItems.use'),
+        code: `<DropdownMenu>
+  <DropdownMenuTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Colunas</Button>
+    {/snippet}
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+    <DropdownMenuCheckboxItem bind:checked={showName}>Nome</DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem bind:checked={showEmail}>E-mail</DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem bind:checked={showRole}>Cargo</DropdownMenuCheckboxItem>
+  </DropdownMenuContent>
+</DropdownMenu>`,
+        preview: compCheckbox,
+      },
+      {
+        name: $tStore('variants.compositions.withRadioGroup.name'),
+        description: $tStore('variants.compositions.withRadioGroup.description'),
+        useWhen: $tStore('variants.compositions.withRadioGroup.use'),
+        code: `<DropdownMenu>
+  <DropdownMenuTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Tema</Button>
+    {/snippet}
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+    <DropdownMenuRadioGroup bind:value={theme}>
+      <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
+    </DropdownMenuRadioGroup>
+  </DropdownMenuContent>
+</DropdownMenu>`,
+        preview: compRadio,
+      },
+      {
+        name: $tStore('variants.compositions.withShortcuts.name'),
+        description: $tStore('variants.compositions.withShortcuts.description'),
+        useWhen: $tStore('variants.compositions.withShortcuts.use'),
+        code: `<DropdownMenu>
+  <DropdownMenuTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Editar</Button>
+    {/snippet}
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem>
+      Desfazer
+      <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuItem>
+      Refazer
+      <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>
+      Copiar
+      <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuItem>
+      Colar
+      <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>`,
+        preview: compShortcuts,
+      },
+    ]}
+  />
+
+  {#snippet compWithLabel()}
+    <div style="contain: layout; min-height: 240px;">
+      <DropdownMenu defaultOpen={true}>
+        <DropdownMenuTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" size="sm" {...props}>Conta</Button>
+          {/snippet}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuLabel>Conta</DropdownMenuLabel>
+          <DropdownMenuItem>Perfil</DropdownMenuItem>
+          <DropdownMenuItem>Configurações</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>Suporte</DropdownMenuLabel>
+          <DropdownMenuItem>Documentação</DropdownMenuItem>
+          <DropdownMenuItem>Sair</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  {/snippet}
+
+  {#snippet compCheckbox()}
+    <div style="contain: layout; min-height: 200px;">
+      <DropdownMenu defaultOpen={true}>
+        <DropdownMenuTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" size="sm" {...props}>Colunas</Button>
+          {/snippet}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+          <DropdownMenuCheckboxItem
+            checked={compShowName}
+            onCheckedChange={(v) => (compShowName = v)}
+          >
+            Nome
+          </DropdownMenuCheckboxItem>
+          <DropdownMenuCheckboxItem
+            checked={compShowEmail}
+            onCheckedChange={(v) => (compShowEmail = v)}
+          >
+            E-mail
+          </DropdownMenuCheckboxItem>
+          <DropdownMenuCheckboxItem
+            checked={compShowRole}
+            onCheckedChange={(v) => (compShowRole = v)}
+          >
+            Cargo
+          </DropdownMenuCheckboxItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  {/snippet}
+
+  {#snippet compRadio()}
+    <div style="contain: layout; min-height: 200px;">
+      <DropdownMenu defaultOpen={true}>
+        <DropdownMenuTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" size="sm" {...props}>Tema</Button>
+          {/snippet}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+          <DropdownMenuRadioGroup bind:value={compTheme}>
+            <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  {/snippet}
+
+  {#snippet compShortcuts()}
+    <div style="contain: layout; min-height: 220px;">
+      <DropdownMenu defaultOpen={true}>
+        <DropdownMenuTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" size="sm" {...props}>Editar</Button>
+          {/snippet}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuItem>
+            Desfazer
+            <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Refazer
+            <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            Copiar
+            <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Colar
+            <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

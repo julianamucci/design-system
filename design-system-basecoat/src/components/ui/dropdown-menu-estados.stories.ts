@@ -26,7 +26,9 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
-  wrapper.className = 'w-full min-h-[180px] flex items-center justify-center';
+  wrapper.className = 'nds-cluster nds-w-full';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.minHeight = '180px';
   wrapper.appendChild(child);
   return wrapper;
 }
@@ -105,7 +107,9 @@ export const Controlado: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.style.contain = 'layout';
-    wrapper.className = 'flex flex-col gap-3 min-h-[180px]';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'md';
+    wrapper.style.minHeight = '180px';
 
     const externalState = { isOpen: false };
     const externalBtn = createButton({ variant: 'default', label: 'Open programmatically' });

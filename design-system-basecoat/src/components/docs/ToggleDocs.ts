@@ -16,6 +16,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -52,7 +53,7 @@ function priorityLabel(raw: string): string {
 
 type LucideIconNode = [string, Record<string, string>];
 
-function buildLucideSvg(icon: unknown, className = 'h-4 w-4'): SVGSVGElement {
+function buildLucideSvg(icon: unknown, className = 'nds-icon-sm'): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -72,9 +73,9 @@ function buildLucideSvg(icon: unknown, className = 'h-4 w-4'): SVGSVGElement {
   return svg;
 }
 
-function wrapIcon(icon: unknown, className = 'h-4 w-4'): HTMLSpanElement {
+function wrapIcon(icon: unknown, className = 'nds-icon-sm'): HTMLSpanElement {
   const span = document.createElement('span');
-  span.className = 'inline-flex';
+  span.style.display = 'inline-flex';
   span.appendChild(buildLucideSvg(icon, className));
   return span;
 }
@@ -122,7 +123,9 @@ function buildLabelToggle(opts: {
   fieldName?: string;
 }): HTMLButtonElement {
   const wrap = document.createElement('span');
-  wrap.className = 'inline-flex items-center gap-2';
+  wrap.className = 'nds-cluster';
+  wrap.dataset.spacing = 'xs';
+  wrap.style.display = 'inline-flex';
   wrap.appendChild(buildLucideSvg(opts.icon));
   const text = document.createElement('span');
   text.textContent = opts.labelText;
@@ -190,6 +193,7 @@ export function createToggleDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -240,7 +244,7 @@ export function createToggleDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -255,11 +259,14 @@ export function createToggleDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-col gap-4 items-start';
+            wrap.className = 'nds-stack';
+            wrap.dataset.spacing = 'md';
+            wrap.style.alignItems = 'flex-start';
 
             // 1) Toolbar de formatação (icon-only, default variant)
             const toolbar = document.createElement('div');
-            toolbar.className = 'flex items-center gap-1';
+            toolbar.className = 'nds-cluster';
+            toolbar.dataset.spacing = 'xs';
             toolbar.setAttribute('role', 'group');
             toolbar.setAttribute('aria-label', t('title'));
             toolbar.appendChild(buildIconToggle({ icon: Bold, ariaLabel: stripHtml(t('demonstration.labels.bold')), pressed: true, fieldName: 'bold' }));
@@ -347,17 +354,21 @@ export function createToggleDocs(): HTMLElement {
         const buildDoGroupSurrogate = () => {
           // Conjunto: mostra ToggleGroup-like (3 toggles relacionados)
           const group = document.createElement('div');
-          group.className = 'inline-flex items-center rounded-md border border-input';
+          group.className = 'nds-cluster nds-rounded-md nds-border-default';
+          group.dataset.spacing = 'xs';
+          group.style.display = 'inline-flex';
           group.setAttribute('role', 'group');
           group.setAttribute('aria-label', 'Alinhamento de texto');
           const a = buildIconToggle({ icon: AlignLeft, ariaLabel: 'Alinhar à esquerda', pressed: true });
-          a.classList.add('rounded-none', 'border-0');
+          a.style.borderRadius = '0';
+          a.style.border = '0';
           group.appendChild(a);
           return group;
         };
         const buildDontLoose = () => {
           const wrap = document.createElement('div');
-          wrap.className = 'flex items-center gap-3';
+          wrap.className = 'nds-cluster';
+          wrap.dataset.spacing = 'sm';
           wrap.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito' }));
           wrap.appendChild(buildIconToggle({ icon: Italic, ariaLabel: 'Itálico' }));
           return wrap;
@@ -445,7 +456,9 @@ t.setAttribute('aria-label', 'Itálico');`,
               description: stripHtml(t('variants.styles.withLabel')),
               code: `// Ícone + texto visível — não precisa de aria-label
 const wrap = document.createElement('span');
-wrap.className = 'inline-flex items-center gap-2';
+wrap.className = 'nds-cluster';
+wrap.dataset.spacing = 'xs';
+wrap.style.display = 'inline-flex';
 wrap.appendChild(iconEye); // aria-hidden="true"
 const span = document.createElement('span');
 span.textContent = 'Mostrar ocultos';
@@ -461,6 +474,156 @@ const t = createToggle({ variant: 'outline', children: wrap });`,
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'toggle',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.toolbar.name')),
+              description: stripHtml(t('variants.compositions.toolbar.description')),
+              useWhen: stripHtml(t('variants.compositions.toolbar.use')),
+              code: `const toolbar = document.createElement('div');
+toolbar.setAttribute('role', 'group');
+toolbar.setAttribute('aria-label', 'Formatação de texto');
+toolbar.className = 'nds-cluster nds-rounded-md nds-border-default nds-p-1';
+toolbar.dataset.spacing = 'xs';
+
+const bold = createToggle({ pressed: true, children: wrapIcon(Bold) });
+bold.setAttribute('aria-label', 'Negrito');
+toolbar.appendChild(bold);
+
+const italic = createToggle({ children: wrapIcon(Italic) });
+italic.setAttribute('aria-label', 'Itálico');
+toolbar.appendChild(italic);
+
+const underline = createToggle({ children: wrapIcon(Underline) });
+underline.setAttribute('aria-label', 'Sublinhado');
+toolbar.appendChild(underline);`,
+              previewFactory: () => {
+                const toolbar = document.createElement('div');
+                toolbar.setAttribute('role', 'group');
+                toolbar.setAttribute('aria-label', 'Formatação de texto');
+                toolbar.className = 'nds-cluster nds-rounded-md nds-border-default nds-p-1';
+toolbar.dataset.spacing = 'xs';
+                toolbar.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito', pressed: true }));
+                toolbar.appendChild(buildIconToggle({ icon: Italic, ariaLabel: 'Itálico' }));
+                toolbar.appendChild(buildIconToggle({ icon: Underline, ariaLabel: 'Sublinhado' }));
+                return toolbar;
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.filterWithLabel.name')),
+              description: stripHtml(t('variants.compositions.filterWithLabel.description')),
+              useWhen: stripHtml(t('variants.compositions.filterWithLabel.use')),
+              code: `const wrap = document.createElement('span');
+wrap.className = 'nds-cluster';
+wrap.dataset.spacing = 'xs';
+wrap.style.display = 'inline-flex';
+wrap.appendChild(buildLucideSvg(Eye)); // aria-hidden
+const text = document.createElement('span');
+text.textContent = 'Mostrar ocultos';
+wrap.appendChild(text);
+
+const toggle = createToggle({ variant: 'outline', children: wrap });`,
+              previewFactory: () => buildLabelToggle({
+                icon: Eye,
+                labelText: 'Mostrar ocultos',
+                variant: 'outline',
+              }),
+            },
+            {
+              name: stripHtml(t('variants.compositions.sizes.name')),
+              description: stripHtml(t('variants.compositions.sizes.description')),
+              useWhen: stripHtml(t('variants.compositions.sizes.use')),
+              code: `const row = document.createElement('div');
+row.className = 'nds-cluster';
+row.dataset.spacing = 'sm';
+
+const sm = createToggle({ variant: 'outline', size: 'sm', children: wrapIcon(Bold) });
+sm.setAttribute('aria-label', 'Negrito (sm)');
+row.appendChild(sm);
+
+const md = createToggle({ variant: 'outline', size: 'default', children: wrapIcon(Bold) });
+md.setAttribute('aria-label', 'Negrito (default)');
+row.appendChild(md);
+
+const lg = createToggle({ variant: 'outline', size: 'lg', children: wrapIcon(Bold) });
+lg.setAttribute('aria-label', 'Negrito (lg)');
+row.appendChild(lg);`,
+              previewFactory: () => {
+                const row = document.createElement('div');
+                row.className = 'nds-cluster';
+row.dataset.spacing = 'sm';
+                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (sm)', variant: 'outline', size: 'sm' }));
+                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (default)', variant: 'outline', size: 'default' }));
+                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (lg)', variant: 'outline', size: 'lg' }));
+                return row;
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.filterList.name')),
+              description: stripHtml(t('variants.compositions.filterList.description')),
+              useWhen: stripHtml(t('variants.compositions.filterList.use')),
+              code: `const wrapper = document.createElement('div');
+wrapper.className = 'nds-stack';
+wrapper.dataset.spacing = 'xs';
+wrapper.style.width = '18rem';
+
+const title = document.createElement('p');
+title.className = 'nds-text-body nds-font-semibold nds-mb-1';
+title.textContent = 'Filtros de exibição';
+wrapper.appendChild(title);
+
+const row = document.createElement('div');
+row.className = 'nds-cluster';
+row.dataset.spacing = 'xs';
+row.style.flexWrap = 'wrap';
+
+// Toggle 1 — Mostrar ocultos (Eye)
+const w1 = document.createElement('span');
+w1.className = 'nds-cluster nds-inline-block';
+w1.dataset.spacing = 'sm';
+w1.appendChild(buildLucideSvg(Eye));
+const t1 = document.createElement('span');
+t1.textContent = 'Mostrar ocultos';
+w1.appendChild(t1);
+row.appendChild(createToggle({ pressed: false, variant: 'outline', children: w1 }));
+
+// Toggle 2 — Visão compacta (List)
+const w2 = document.createElement('span');
+w2.className = 'nds-cluster nds-inline-block';
+w2.dataset.spacing = 'sm';
+w2.appendChild(buildLucideSvg(List));
+const t2 = document.createElement('span');
+t2.textContent = 'Visão compacta';
+w2.appendChild(t2);
+row.appendChild(createToggle({ pressed: true, variant: 'outline', children: w2 }));
+
+wrapper.appendChild(row);`,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack';
+wrapper.dataset.spacing = 'xs';
+wrapper.style.width = '18rem';
+                const title = document.createElement('p');
+                title.className = 'nds-text-body nds-font-semibold nds-mb-1';
+                title.textContent = 'Filtros de exibição';
+                wrapper.appendChild(title);
+                const row = document.createElement('div');
+                row.className = 'nds-cluster';
+row.dataset.spacing = 'xs';
+row.style.flexWrap = 'wrap';
+                row.appendChild(buildLabelToggle({ icon: Eye, labelText: 'Mostrar ocultos', variant: 'outline', pressed: false }));
+                row.appendChild(buildLabelToggle({ icon: List, labelText: 'Visão compacta', variant: 'outline', pressed: true }));
+                wrapper.appendChild(row);
+                return wrapper;
+              },
+            },
+          ],
+        });
 
       case 'estados':
         return createDocsStates({

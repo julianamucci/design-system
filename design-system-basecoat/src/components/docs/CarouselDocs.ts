@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -52,12 +53,18 @@ function priorityLabel(raw: string): string {
 function buildSlide(label: string, tone: 'muted' | 'primary' = 'muted'): HTMLElement {
   const card = createCard({
     className: tone === 'primary'
-      ? 'w-full aspect-video flex items-center justify-center bg-primary/10 border-primary/20'
-      : 'w-full aspect-video flex items-center justify-center bg-muted/50',
+      ? 'nds-w-full nds-cluster nds-bg-primary-soft'
+      : 'nds-w-full nds-cluster nds-bg-muted-soft',
   });
-  const content = createCardContent({ className: 'flex items-center justify-center' });
+  card.dataset.justify = 'center';
+  card.dataset.align = 'center';
+  card.style.aspectRatio = '16 / 9';
+  const content = createCardContent({ className: 'nds-cluster' });
+  content.dataset.justify = 'center';
+  content.dataset.align = 'center';
   const span = document.createElement('span');
-  span.className = 'text-3xl font-semibold text-foreground';
+  span.className = 'nds-font-semibold nds-text-foreground';
+  span.style.fontSize = '1.875rem';
   span.textContent = label;
   content.appendChild(span);
   card.appendChild(content);
@@ -70,7 +77,7 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 
 function buildCarouselPreview(): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-md';
+  wrap.className = 'nds-w-full nds-max-w-md';
   wrap.appendChild(createCarousel({ items: buildSlides(5) }));
   return wrap;
 }
@@ -123,6 +130,7 @@ export function createCarouselDocs(): HTMLElement {
       sections: [
         { id: 'importacao', labelKey: 'nav.import' },
         { id: 'variantes', labelKey: 'nav.variants' },
+        { id: 'composicoes', labelKey: 'nav.compositions' },
         { id: 'estados', labelKey: 'nav.states' },
         { id: 'propriedades', labelKey: 'nav.props' },
         { id: 'tokens', labelKey: 'nav.tokens' },
@@ -185,6 +193,7 @@ export function createCarouselDocs(): HTMLElement {
     'do-dont',
     'importacao',
     'variantes',
+    'composicoes',
     'estados',
     'propriedades',
     'tokens',
@@ -270,20 +279,26 @@ export function createCarouselDocs(): HTMLElement {
               dontCaption: stripHtml(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm';
+                wrap.className = 'nds-w-full nds-max-w-sm';
                 wrap.appendChild(createCarousel({ items: buildSlides(3) }));
                 return wrap;
               },
               dontPreviewFactory: () => {
                 // Don't: carrossel sem botões de navegação (apenas um slide visível).
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm';
+                wrap.className = 'nds-w-full nds-max-w-sm';
                 const fake = createCard({
-                  className: 'w-full aspect-video flex items-center justify-center bg-muted/50 overflow-hidden',
+                  className: 'nds-w-full nds-cluster nds-bg-muted-soft nds-overflow-hidden',
                 });
-                const content = createCardContent({ className: 'flex items-center justify-center' });
+                fake.dataset.justify = 'center';
+                fake.dataset.align = 'center';
+                fake.style.aspectRatio = '16 / 9';
+                const content = createCardContent({ className: 'nds-cluster' });
+                content.dataset.justify = 'center';
+                content.dataset.align = 'center';
                 const span = document.createElement('span');
-                span.className = 'text-3xl font-semibold text-foreground';
+                span.className = 'nds-font-semibold nds-text-foreground';
+                span.style.fontSize = '1.875rem';
                 span.textContent = 'Slide 1';
                 content.appendChild(span);
                 fake.appendChild(content);
@@ -298,7 +313,7 @@ export function createCarouselDocs(): HTMLElement {
               dontCaption: stripHtml(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm';
+                wrap.className = 'nds-w-full nds-max-w-sm';
                 wrap.appendChild(
                   createCarousel({ items: buildSlides(3), autoplay: true, autoplayInterval: 3500 }),
                 );
@@ -306,7 +321,7 @@ export function createCarouselDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm';
+                wrap.className = 'nds-w-full nds-max-w-sm';
                 wrap.appendChild(
                   createCarousel({ items: buildSlides(3), autoplay: true, autoplayInterval: 800 }),
                 );
@@ -357,7 +372,7 @@ const el = createCarousel({ items });`;
               code: codeHorizontal,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-md';
+                wrap.className = 'nds-w-full nds-max-w-md';
                 wrap.appendChild(createCarousel({ items: buildSlides(5) }));
                 return wrap;
               },
@@ -368,7 +383,7 @@ const el = createCarousel({ items });`;
               code: codeVertical,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-md';
+                wrap.className = 'nds-w-full nds-max-w-md';
                 wrap.appendChild(createCarousel({ items: buildSlides(4) }));
                 return wrap;
               },
@@ -379,7 +394,7 @@ const el = createCarousel({ items });`;
               code: codeSingle,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-md';
+                wrap.className = 'nds-w-full nds-max-w-md';
                 wrap.appendChild(createCarousel({ items: buildSlides(4) }));
                 return wrap;
               },
@@ -390,10 +405,227 @@ const el = createCarousel({ items });`;
               code: codeMulti,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-md';
+                wrap.className = 'nds-w-full nds-max-w-md';
                 wrap.appendChild(createCarousel({ items: buildSlides(5) }));
                 return wrap;
               },
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        // Dots preview builder
+        const buildDotsPreview = (): HTMLElement => {
+          const total = 5;
+          const wrap = document.createElement('div');
+          wrap.className = 'nds-w-full nds-max-w-md nds-stack';
+          wrap.dataset.spacing = 'sm';
+
+          const dotsRow = document.createElement('div');
+          dotsRow.className = 'nds-cluster';
+          dotsRow.dataset.spacing = 'sm';
+          dotsRow.dataset.justify = 'center';
+          dotsRow.setAttribute('aria-label', stripHtml(t('demonstration.labels.goToSlide')));
+
+          const dots: HTMLButtonElement[] = [];
+          const goToLabel = stripHtml(t('demonstration.labels.goToSlide'));
+          const ofLabel = stripHtml(t('demonstration.labels.of'));
+          for (let i = 0; i < total; i++) {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.setAttribute('aria-label', `${goToLabel} ${i + 1} ${ofLabel} ${total}`);
+            dot.className = 'nds-rounded-full';
+            dot.style.height = '0.5rem';
+            dot.style.width = '0.5rem';
+            dot.style.background = 'color-mix(in oklch, var(--muted-foreground) 30%, transparent)';
+            dot.style.transition = 'background-color 200ms';
+            dots.push(dot);
+            dotsRow.appendChild(dot);
+          }
+
+          const carousel = createCarousel({
+            items: buildSlides(total, stripHtml(t('demonstration.labels.slide'))),
+            onIndexChange: (index) => {
+              dots.forEach((d, i) => {
+                const active = i === index;
+                d.classList.toggle('bg-primary', active);
+                d.classList.toggle('bg-muted-foreground/30', !active);
+                d.setAttribute('aria-current', active ? 'true' : 'false');
+              });
+            },
+          });
+
+          dots[0].classList.remove('bg-muted-foreground/30');
+          dots[0].classList.add('nds-bg-primary');
+          dots[0].setAttribute('aria-current', 'true');
+
+          wrap.append(carousel, dotsRow);
+          return wrap;
+        };
+
+        // Gallery preview builder
+        const buildGalleryPreview = (): HTMLElement => {
+          const wrap = document.createElement('div');
+          wrap.className = 'nds-w-full nds-max-w-md';
+
+          const photos = [
+            { title: 'Foto 1', description: 'Paisagem ao amanhecer' },
+            { title: 'Foto 2', description: 'Detalhe arquitetônico' },
+            { title: 'Foto 3', description: 'Cidade à noite' },
+            { title: 'Foto 4', description: 'Praia vista do alto' },
+          ];
+
+          const items = photos.map((photo) => {
+            const card = createCard({ className: 'nds-w-full nds-overflow-hidden' });
+
+            const cover = document.createElement('div');
+            cover.className = 'nds-w-full nds-cluster';
+            cover.dataset.justify = 'center';
+            cover.dataset.align = 'center';
+            cover.style.aspectRatio = '16 / 9';
+            cover.style.background = 'linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))';
+            const coverLabel = document.createElement('span');
+            coverLabel.className = 'nds-font-semibold nds-text-foreground';
+            coverLabel.style.fontSize = '1.5rem';
+            coverLabel.textContent = photo.title;
+            cover.appendChild(coverLabel);
+
+            const body = document.createElement('div');
+            body.className = 'nds-p-4';
+            const heading = document.createElement('h3');
+            heading.className = 'nds-text-body nds-font-semibold nds-text-foreground';
+            heading.textContent = photo.title;
+            const desc = document.createElement('p');
+            desc.className = 'nds-text-caption nds-text-muted-foreground';
+            desc.textContent = photo.description;
+            body.append(heading, desc);
+
+            card.append(cover, body);
+            return card;
+          });
+
+          wrap.appendChild(createCarousel({ items }));
+          return wrap;
+        };
+
+        const buildAutoplayPreview = (): HTMLElement => {
+          const wrap = document.createElement('div');
+          wrap.className = 'nds-w-full nds-max-w-md';
+          wrap.appendChild(
+            createCarousel({
+              items: buildSlides(4, stripHtml(t('demonstration.labels.slide'))),
+              autoplay: true,
+              autoplayInterval: 4000,
+            }),
+          );
+          return wrap;
+        };
+
+        const buildMultiResponsivePreview = (): HTMLElement => {
+          const wrap = document.createElement('div');
+          wrap.className = 'nds-w-full';
+          wrap.style.maxWidth = '42rem';
+          const items = buildSlides(6, stripHtml(t('demonstration.labels.slide')));
+          items.forEach((it) => it.classList.add('md:basis-1/2', 'lg:basis-1/3'));
+          wrap.appendChild(createCarousel({ items }));
+          return wrap;
+        };
+
+        const codeWithDots = `// Dots controlados via onIndexChange
+const total = 5;
+const dotsRow = document.createElement('div');
+dotsRow.className = 'nds-cluster';
+dotsRow.dataset.spacing = 'sm';
+dotsRow.dataset.justify = 'center';
+dotsRow.setAttribute('aria-label', 'Ir para o slide');
+
+const dots = Array.from({ length: total }, (_, i) => {
+  const dot = document.createElement('button');
+  dot.type = 'button';
+  dot.setAttribute('aria-label', \`Ir para o slide \${i + 1} de \${total}\`);
+  dot.className = 'nds-rounded-full';
+  Object.assign(dot.style, { height: '0.5rem', width: '0.5rem', background: 'color-mix(in oklch, var(--muted-foreground) 30%, transparent)' });
+  dotsRow.appendChild(dot);
+  return dot;
+});
+
+const carousel = createCarousel({
+  items: buildSlides(total),
+  onIndexChange: (index) => {
+    dots.forEach((d, i) => {
+      d.classList.toggle('bg-primary', i === index);
+      d.classList.toggle('bg-muted-foreground/30', i !== index);
+      d.setAttribute('aria-current', i === index ? 'true' : 'false');
+    });
+  },
+});`;
+
+        const codeGallery = `// Galeria com capa + título + descrição
+const items = photos.map((photo) => {
+  const card = createCard({ className: 'nds-w-full nds-overflow-hidden' });
+
+  const cover = document.createElement('div');
+  cover.className = 'nds-w-full';
+  cover.style.aspectRatio = '16 / 9';
+  cover.style.background = 'linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))';
+  card.appendChild(cover);
+
+  const header = createCardHeader();
+  header.appendChild(createCardTitle({ text: photo.title, level: 3 }));
+  header.appendChild(createCardDescription({ text: photo.description }));
+  card.appendChild(header);
+
+  return card;
+});
+
+const carousel = createCarousel({ items });`;
+
+        const codeAutoplay = `// Autoplay com pausa no hover
+const carousel = createCarousel({
+  items: buildSlides(4),
+  autoplay: true,
+  autoplayInterval: 4000,
+});
+// Pausa automática ao mouseenter (built-in da factory).`;
+
+        const codeMultiResponsive = `// Aplica basis responsivo em cada slide
+const items = buildSlides(6);
+items.forEach((it) => it.classList.add('md:basis-1/2', 'lg:basis-1/3'));
+const carousel = createCarousel({ items });`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'carousel',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.withDots.name')),
+              description: stripHtml(t('variants.compositions.withDots.description')),
+              useWhen: stripHtml(t('variants.compositions.withDots.use')),
+              code: codeWithDots,
+              previewFactory: buildDotsPreview,
+            },
+            {
+              name: stripHtml(t('variants.compositions.gallery.name')),
+              description: stripHtml(t('variants.compositions.gallery.description')),
+              useWhen: stripHtml(t('variants.compositions.gallery.use')),
+              code: codeGallery,
+              previewFactory: buildGalleryPreview,
+            },
+            {
+              name: stripHtml(t('variants.compositions.autoplay.name')),
+              description: stripHtml(t('variants.compositions.autoplay.description')),
+              useWhen: stripHtml(t('variants.compositions.autoplay.use')),
+              code: codeAutoplay,
+              previewFactory: buildAutoplayPreview,
+            },
+            {
+              name: stripHtml(t('variants.compositions.multiResponsive.name')),
+              description: stripHtml(t('variants.compositions.multiResponsive.description')),
+              useWhen: stripHtml(t('variants.compositions.multiResponsive.use')),
+              code: codeMultiResponsive,
+              previewFactory: buildMultiResponsivePreview,
             },
           ],
         });

@@ -24,11 +24,13 @@ type Story = StoryObj;
 
 function withLabel(select: HTMLSelectElement, labelText: string, id: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2 w-80';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'sm';
+  wrap.style.width = '20rem';
 
   const label = document.createElement('label');
   label.htmlFor = id;
-  label.className = 'text-sm font-semibold';
+  label.className = 'nds-text-body nds-font-semibold';
   label.textContent = labelText;
 
   select.id = id;
@@ -167,11 +169,13 @@ export const DisabledItem: Story = {
 export const Invalid: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2 w-80';
+    wrap.className = 'nds-stack';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.width = '20rem';
 
     const label = document.createElement('label');
     label.htmlFor = 'st-invalid';
-    label.className = 'text-sm font-semibold';
+    label.className = 'nds-text-body nds-font-semibold';
     label.textContent = 'Estado';
 
     const select = createSelect({
@@ -181,11 +185,11 @@ export const Invalid: Story = {
     select.id = 'st-invalid';
     select.setAttribute('aria-invalid', 'true');
     select.setAttribute('aria-describedby', 'st-invalid-msg');
-    select.classList.add('border-destructive', 'ring-destructive/20');
+    select.classList.add('nds-border-destructive');
 
     const msg = document.createElement('p');
     msg.id = 'st-invalid-msg';
-    msg.className = 'text-sm text-destructive';
+    msg.className = 'nds-text-body nds-text-destructive';
     msg.textContent = 'Selecione um estado para continuar.';
 
     wrap.append(label, select, msg);

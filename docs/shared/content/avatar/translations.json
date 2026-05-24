@@ -6,9 +6,9 @@
     "description": "Representação visual de um usuário via foto, iniciais ou ícone genérico. Suporta agrupamento, tamanhos e indicador de status.",
     "seo": {
       "title": "Avatar — Display",
-      "description": "Documentação do Avatar: composição com imagem e fallback, tamanhos via className, agrupamento e indicador de status.",
-      "aiSummary": "Componente Avatar baseado em Radix com Avatar, AvatarImage e AvatarFallback; tamanhos via className (h-6, h-8, h-10, h-12), suporte a agrupamento e status.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, Tailwind CSS, WCAG 2.1",
+      "description": "Documentação do Avatar: composição com imagem e fallback, 5 tamanhos preset (sm/md/lg/xl/2xl), agrupamento e indicador de status.",
+      "aiSummary": "Componente Avatar com Avatar, AvatarImage e AvatarFallback; 5 tamanhos preset (sm/md/lg/xl/2xl) via prop size, suporte a agrupamento e indicador de status.",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -26,7 +26,7 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>Avatar</strong> — container com forma circular, define o tamanho e recorte. Aceita <code>className</code> para variar o diâmetro.",
+      "item1": "<strong>Avatar</strong> — container com forma circular, define o tamanho e recorte. Aceita a prop <code>size</code> para variar o diâmetro.",
       "item2": "<strong>AvatarImage</strong> — <code>&lt;img&gt;</code> que carrega a foto. Requer <code>alt</code> descritivo ou vazio se decorativo.",
       "item3": "<strong>AvatarFallback</strong> — conteúdo exibido quando a imagem falha ou demora a carregar. Pode ser iniciais ou ícone.",
       "item4": "<strong>Indicador de status (opcional)</strong> — elemento irmão posicionado absolutamente sobre o Avatar. Não é prop.",
@@ -40,7 +40,7 @@
         "item1": "Sempre inclua <code>AvatarFallback</code> — ele aparece enquanto a imagem carrega e quando ela falha.",
         "item2": "Defina <code>delayMs={600}</code> no fallback para evitar flash quando a imagem carrega rápido.",
         "item3": "Use iniciais como fallback (primeira letra do nome + primeira letra do sobrenome). Nunca mais de 2 letras.",
-        "item4": "O tamanho é controlado por <code>className</code> (<code>h-10 w-10</code> é o padrão do projeto) — não existe prop <code>size</code>."
+        "item4": "O tamanho é controlado pela prop <code>size</code> (presets <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, <code>2xl</code>). Default: <code>md</code> (32px)."
       },
       "scenarios": {
         "title": "Tabela de Cenários",
@@ -127,6 +127,34 @@
         "icon": "Com ícone genérico (ex: <code>User</code>) como fallback. Indica usuário anônimo ou placeholder.",
         "group": "Avatares agrupados com sobreposição via <code>-space-x-2</code> + <code>ring-2 ring-background</code>.",
         "withStatus": "Com indicador de status posicionado absolutamente. Sinaliza presença ou disponibilidade."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withImage": {
+          "name": "Com imagem",
+          "description": "Avatar com <code>AvatarImage</code> carregando a foto. O fallback fica oculto após o load completo; permanece visível durante o carregamento e em caso de falha.",
+          "use": "Foto de perfil de usuário identificado. Sempre forneça <code>alt</code> descritivo com o nome da pessoa."
+        },
+        "withInitials": {
+          "name": "Com iniciais",
+          "description": "Sem imagem — apenas <code>AvatarFallback</code> com 1–2 letras (geralmente iniciais do nome).",
+          "use": "Fallback padrão quando não há foto. Nunca mais de 2 letras; mantenha consistência (primeira do nome + primeira do sobrenome)."
+        },
+        "withIcon": {
+          "name": "Com ícone",
+          "description": "Fallback com ícone genérico (ex.: <code>User</code>) em vez de iniciais. Use <code>role=\"img\"</code> + <code>aria-label</code> no fallback para permitir descrição.",
+          "use": "Usuário anônimo, placeholder antes do login, ou contextos em que iniciais não fazem sentido."
+        },
+        "group": {
+          "name": "Agrupamento",
+          "description": "Vários avatares lado a lado com sobreposição. Aplique <code>ring</code> com cor de background para criar a borda de separação. O último item pode ser \"+N\" indicando contagem.",
+          "use": "Listas de participantes, comentadores, contribuidores. Marque o container com <code>role=\"group\"</code> e <code>aria-label</code>."
+        },
+        "withStatus": {
+          "name": "Com indicador de status",
+          "description": "Avatar com elemento irmão posicionado absolutamente em um wrapper <code>relative</code>. O indicador é um <code>&lt;span&gt;</code> circular pequeno com cor de status.",
+          "use": "Presença em chats, disponibilidade em listas. Use <code>role=\"status\"</code> + <code>aria-label</code> descritivo (\"online\", \"ausente\")."
+        }
       }
     },
     "states": {
@@ -169,7 +197,7 @@
         "default": "Padrão",
         "required": "Obrigatório",
         "description": "Descrição",
-        "className": "Classes Tailwind adicionais — use para ajustar tamanho (<code>h-8 w-8</code>, <code>h-10 w-10</code>) e forma.",
+        "className": "Classes CSS adicionais para customizações pontuais (forma, ring, border). Para tamanho, prefira a prop <code>size</code>.",
         "children": "Conteúdo do Avatar: AvatarImage e AvatarFallback.",
         "src": "URL da imagem a carregar. Formatos suportados: JPG, PNG, WebP, SVG.",
         "alt": "Texto alternativo para leitores de tela. Use descrição da pessoa ou vazio se decorativo.",
@@ -177,20 +205,20 @@
         "delayMs": "Atraso em milissegundos antes de exibir o fallback. Previne flash em imagens que carregam rápido."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Use tokens semânticos (<code>bg-muted</code>, <code>text-muted-foreground</code>) no fallback para respeitar o tema."
+      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Use tokens semânticos (<code>--muted</code>, <code>--muted-foreground</code>) no fallback para respeitar o tema."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Aplicação no tema",
         "part": "Parte do componente",
         "muted": "Fundo do AvatarFallback",
         "mutedForeground": "Texto do AvatarFallback (iniciais)",
         "background": "Cor do ring no agrupamento (<code>ring-background</code>)",
         "border": "Borda opcional do container",
         "primary": "Cor de fundo do indicador de status online",
-        "radius": "Border radius — Avatar sempre usa <code>rounded-full</code>",
+        "radius": "Border radius — Avatar sempre usa cantos totalmente arredondados (forma circular)",
         "ring": "Anel de foco ao receber foco via teclado"
       },
       "customizationTitle": "Como personalizar via tema:"
@@ -251,7 +279,7 @@
         "item3": { "action": "Renderizar sem AvatarImage", "result": "Fallback exibido imediatamente sem delay", "priority": "high" },
         "item4": { "action": "Renderizar com delayMs=600", "result": "Fallback aguarda 600ms antes de aparecer em conexões rápidas", "priority": "medium" },
         "item5": { "action": "Renderizar em grupo com -space-x-2", "result": "Avatares sobrepostos com ring-2 separando cada um", "priority": "medium" },
-        "item6": { "action": "Renderizar com tamanho via className", "result": "h-8 w-8, h-10 w-10, h-12 w-12 aplicam diâmetros corretos", "priority": "medium" }
+        "item6": { "action": "Renderizar com diferentes valores da prop size", "result": "Presets sm/md/lg/xl/2xl aplicam diâmetros corretos (24, 32, 40, 48, 64px)", "priority": "medium" }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -266,7 +294,7 @@
         "description": "Cada story é capturada automaticamente para visual regression.",
         "item1": { "story": "Playground — com imagem válida", "priority": "high" },
         "item2": { "story": "Fallback — iniciais e ícone", "priority": "high" },
-        "item3": { "story": "Tamanhos — h-6, h-8, h-10, h-12", "priority": "medium" },
+        "item3": { "story": "Tamanhos — sm, md, lg, xl, 2xl", "priority": "medium" },
         "item4": { "story": "Composições — grupo e com status", "priority": "medium" }
       }
     },
@@ -298,9 +326,9 @@
     "description": "Visual representation of a user via photo, initials, or generic icon. Supports grouping, sizes, and status indicator.",
     "seo": {
       "title": "Avatar — Display",
-      "description": "Documentation for Avatar: image and fallback composition, sizes via className, grouping, and status indicator.",
-      "aiSummary": "Radix-based Avatar component with Avatar, AvatarImage, and AvatarFallback; sizes via className (h-6, h-8, h-10, h-12), with grouping and status support.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, Tailwind CSS, WCAG 2.1",
+      "description": "Documentation for Avatar: image and fallback composition, 5 preset sizes (sm/md/lg/xl/2xl), grouping, and status indicator.",
+      "aiSummary": "Avatar component with Avatar, AvatarImage, and AvatarFallback; 5 preset sizes (sm/md/lg/xl/2xl) via the size prop, with grouping and status support.",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -332,7 +360,7 @@
         "item1": "Always include <code>AvatarFallback</code> — it appears while the image loads and when it fails.",
         "item2": "Set <code>delayMs={600}</code> on the fallback to prevent flash when the image loads quickly.",
         "item3": "Use initials as fallback (first letter of first name + first letter of last name). Never more than 2 letters.",
-        "item4": "Size is controlled via <code>className</code> (<code>h-8 w-8</code> is the project default) — there is no <code>size</code> prop."
+        "item4": "Size is controlled via the <code>size</code> prop (presets <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, <code>2xl</code>). Default: <code>md</code> (32px)."
       },
       "scenarios": {
         "title": "Scenario Table",
@@ -419,6 +447,34 @@
         "icon": "With a generic icon (e.g. <code>User</code>) as fallback. Indicates anonymous or placeholder user.",
         "group": "Avatars grouped with overlap via <code>-space-x-2</code> + <code>ring-2 ring-background</code>.",
         "withStatus": "With an absolutely positioned status indicator. Signals presence or availability."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withImage": {
+          "name": "With image",
+          "description": "Avatar with <code>AvatarImage</code> loading the photo. Fallback is hidden once the load completes; remains visible during loading and on failure.",
+          "use": "Identified user profile photo. Always provide descriptive <code>alt</code> with the person's name."
+        },
+        "withInitials": {
+          "name": "With initials",
+          "description": "No image — only <code>AvatarFallback</code> with 1–2 letters (typically initials of the name).",
+          "use": "Default fallback when there's no photo. Never more than 2 letters; stay consistent (first of name + first of surname)."
+        },
+        "withIcon": {
+          "name": "With icon",
+          "description": "Fallback with a generic icon (e.g., <code>User</code>) instead of initials. Use <code>role=\"img\"</code> + <code>aria-label</code> on the fallback to allow description.",
+          "use": "Anonymous user, pre-login placeholder, or contexts where initials don't make sense."
+        },
+        "group": {
+          "name": "Group",
+          "description": "Multiple avatars side by side with overlap. Apply <code>ring</code> with background color to create the separation border. Last item can be \"+N\" indicating count.",
+          "use": "Lists of participants, commenters, contributors. Mark the container with <code>role=\"group\"</code> and <code>aria-label</code>."
+        },
+        "withStatus": {
+          "name": "With status indicator",
+          "description": "Avatar with an absolutely positioned sibling element in a <code>relative</code> wrapper. The indicator is a small circular <code>&lt;span&gt;</code> with a status color.",
+          "use": "Presence in chats, availability in lists. Use <code>role=\"status\"</code> + descriptive <code>aria-label</code> (\"online\", \"away\")."
+        }
       }
     },
     "states": {
@@ -461,7 +517,7 @@
         "default": "Default",
         "required": "Required",
         "description": "Description",
-        "className": "Additional Tailwind classes — use to adjust size (<code>h-8 w-8</code>, <code>h-10 w-10</code>) and shape.",
+        "className": "Additional CSS classes for targeted customization (shape, ring, border). For size, prefer the <code>size</code> prop.",
         "children": "Avatar content: AvatarImage and AvatarFallback.",
         "src": "URL of the image to load. Supported formats: JPG, PNG, WebP, SVG.",
         "alt": "Alternative text for screen readers. Use a person description or empty string if decorative.",
@@ -469,20 +525,20 @@
         "delayMs": "Delay in milliseconds before showing the fallback. Prevents flash for fast-loading images."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. Use semantic tokens (<code>bg-muted</code>, <code>text-muted-foreground</code>) on the fallback to respect the theme."
+      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. Use semantic tokens (<code>--muted</code>, <code>--muted-foreground</code>) on the fallback to respect the theme."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": "Theme application",
         "part": "Component Part",
         "muted": "AvatarFallback background",
         "mutedForeground": "AvatarFallback text (initials)",
         "background": "Ring color in grouping (<code>ring-background</code>)",
         "border": "Optional container border",
         "primary": "Background color of the online status indicator",
-        "radius": "Border radius — Avatar always uses <code>rounded-full</code>",
+        "radius": "Border radius — Avatar always uses fully rounded corners (circular shape)",
         "ring": "Focus ring when receiving keyboard focus"
       },
       "customizationTitle": "How to customize via theme:"
@@ -543,7 +599,7 @@
         "item3": { "action": "Render without AvatarImage", "result": "Fallback shown immediately with no delay", "priority": "high" },
         "item4": { "action": "Render with delayMs=600", "result": "Fallback waits 600ms before appearing on fast connections", "priority": "medium" },
         "item5": { "action": "Render in a group with -space-x-2", "result": "Avatars overlap with ring-2 separating each one", "priority": "medium" },
-        "item6": { "action": "Render with size via className", "result": "h-8 w-8, h-10 w-10, h-12 w-12 apply correct diameters", "priority": "medium" }
+        "item6": { "action": "Render with different size prop values", "result": "Presets sm/md/lg/xl/2xl apply correct diameters (24, 32, 40, 48, 64px)", "priority": "medium" }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -558,7 +614,7 @@
         "description": "Each story is automatically captured for visual regression.",
         "item1": { "story": "Playground — with valid image", "priority": "high" },
         "item2": { "story": "Fallback — initials and icon", "priority": "high" },
-        "item3": { "story": "Sizes — h-6, h-8, h-10, h-12", "priority": "medium" },
+        "item3": { "story": "Sizes — sm, md, lg, xl, 2xl", "priority": "medium" },
         "item4": { "story": "Compositions — group and with status", "priority": "medium" }
       }
     },
@@ -590,9 +646,9 @@
     "description": "Representación visual de un usuario vía foto, iniciales o ícono genérico. Admite agrupación, tamaños e indicador de estado.",
     "seo": {
       "title": "Avatar — Display",
-      "description": "Documentación del Avatar: composición con imagen y fallback, tamaños vía className, agrupación e indicador de estado.",
-      "aiSummary": "Componente Avatar basado en Radix con Avatar, AvatarImage y AvatarFallback; tamaños vía className (h-6, h-8, h-10, h-12), soporte para agrupación y estado.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, Tailwind CSS, WCAG 2.1",
+      "description": "Documentación del Avatar: composición con imagen y fallback, 5 tamaños preset (sm/md/lg/xl/2xl), agrupación e indicador de estado.",
+      "aiSummary": "Componente Avatar con Avatar, AvatarImage y AvatarFallback; 5 tamaños preset (sm/md/lg/xl/2xl) vía la prop size, con soporte para agrupación e indicador de estado.",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -624,7 +680,7 @@
         "item1": "Incluye siempre <code>AvatarFallback</code> — aparece mientras la imagen carga y cuando falla.",
         "item2": "Define <code>delayMs={600}</code> en el fallback para evitar flash cuando la imagen carga rápido.",
         "item3": "Usa iniciales como fallback (primera letra del nombre + primera letra del apellido). Nunca más de 2 letras.",
-        "item4": "El tamaño se controla vía <code>className</code> (<code>h-8 w-8</code> es el predeterminado del proyecto) — no existe prop <code>size</code>."
+        "item4": "El tamaño se controla vía la prop <code>size</code> (presets <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, <code>2xl</code>). Default: <code>md</code> (32px)."
       },
       "scenarios": {
         "title": "Tabla de Escenarios",
@@ -711,6 +767,34 @@
         "icon": "Con ícono genérico (ej: <code>User</code>) como fallback. Indica usuario anónimo o placeholder.",
         "group": "Avatares agrupados con superposición vía <code>-space-x-2</code> + <code>ring-2 ring-background</code>.",
         "withStatus": "Con indicador de estado posicionado absolutamente. Señala presencia o disponibilidad."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withImage": {
+          "name": "Con imagen",
+          "description": "Avatar con <code>AvatarImage</code> cargando la foto. El fallback se oculta tras la carga; permanece visible durante el load y en caso de fallo.",
+          "use": "Foto de perfil de usuario identificado. Provee siempre <code>alt</code> descriptivo con el nombre de la persona."
+        },
+        "withInitials": {
+          "name": "Con iniciales",
+          "description": "Sin imagen — solo <code>AvatarFallback</code> con 1–2 letras (típicamente iniciales del nombre).",
+          "use": "Fallback predeterminado cuando no hay foto. Nunca más de 2 letras; mantén consistencia (primera del nombre + primera del apellido)."
+        },
+        "withIcon": {
+          "name": "Con ícono",
+          "description": "Fallback con ícono genérico (ej.: <code>User</code>) en vez de iniciales. Usa <code>role=\"img\"</code> + <code>aria-label</code> en el fallback para permitir descripción.",
+          "use": "Usuario anónimo, placeholder antes del login, o contextos donde iniciales no tienen sentido."
+        },
+        "group": {
+          "name": "Agrupación",
+          "description": "Varios avatares lado a lado con superposición. Aplica <code>ring</code> con color de fondo para crear el borde de separación. El último ítem puede ser \"+N\" indicando conteo.",
+          "use": "Listas de participantes, comentaristas, contribuidores. Marca el contenedor con <code>role=\"group\"</code> y <code>aria-label</code>."
+        },
+        "withStatus": {
+          "name": "Con indicador de estado",
+          "description": "Avatar con elemento hermano posicionado absolutamente en un wrapper <code>relative</code>. El indicador es un <code>&lt;span&gt;</code> circular pequeño con color de estado.",
+          "use": "Presencia en chats, disponibilidad en listas. Usa <code>role=\"status\"</code> + <code>aria-label</code> descriptivo (\"en línea\", \"ausente\")."
+        }
       }
     },
     "states": {
@@ -753,7 +837,7 @@
         "default": "Por defecto",
         "required": "Obligatorio",
         "description": "Descripción",
-        "className": "Clases Tailwind adicionales — usar para ajustar tamaño (<code>h-8 w-8</code>, <code>h-10 w-10</code>) y forma.",
+        "className": "Clases CSS adicionales para personalizaciones puntuales (forma, ring, border). Para tamaño, prefiere la prop <code>size</code>.",
         "children": "Contenido del Avatar: AvatarImage y AvatarFallback.",
         "src": "URL de la imagen a cargar. Formatos admitidos: JPG, PNG, WebP, SVG.",
         "alt": "Texto alternativo para lectores de pantalla. Usa descripción de la persona o vacío si es decorativo.",
@@ -761,20 +845,20 @@
         "delayMs": "Retraso en milisegundos antes de mostrar el fallback. Previene flash en imágenes que cargan rápido."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Usa tokens semánticos (<code>bg-muted</code>, <code>text-muted-foreground</code>) en el fallback para respetar el tema."
+      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Usa tokens semánticos (<code>--muted</code>, <code>--muted-foreground</code>) en el fallback para respetar el tema."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Aplicación en el tema",
         "part": "Parte del componente",
         "muted": "Fondo del AvatarFallback",
         "mutedForeground": "Texto del AvatarFallback (iniciales)",
         "background": "Color del ring en la agrupación (<code>ring-background</code>)",
         "border": "Borde opcional del contenedor",
         "primary": "Color de fondo del indicador de estado en línea",
-        "radius": "Border radius — Avatar siempre usa <code>rounded-full</code>",
+        "radius": "Border radius — Avatar siempre usa esquinas totalmente redondeadas (forma circular)",
         "ring": "Anillo de foco al recibir foco vía teclado"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
@@ -835,7 +919,7 @@
         "item3": { "action": "Renderizar sin AvatarImage", "result": "Fallback mostrado inmediatamente sin delay", "priority": "high" },
         "item4": { "action": "Renderizar con delayMs=600", "result": "Fallback espera 600ms antes de aparecer en conexiones rápidas", "priority": "medium" },
         "item5": { "action": "Renderizar en grupo con -space-x-2", "result": "Avatares superpuestos con ring-2 separando cada uno", "priority": "medium" },
-        "item6": { "action": "Renderizar con tamaño vía className", "result": "h-8 w-8, h-10 w-10, h-12 w-12 aplican diámetros correctos", "priority": "medium" }
+        "item6": { "action": "Renderizar con diferentes valores de la prop size", "result": "Presets sm/md/lg/xl/2xl aplican diámetros correctos (24, 32, 40, 48, 64px)", "priority": "medium" }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -850,7 +934,7 @@
         "description": "Cada story se captura automáticamente para regresión visual.",
         "item1": { "story": "Playground — con imagen válida", "priority": "high" },
         "item2": { "story": "Fallback — iniciales e ícono", "priority": "high" },
-        "item3": { "story": "Tamaños — h-6, h-8, h-10, h-12", "priority": "medium" },
+        "item3": { "story": "Tamaños — sm, md, lg, xl, 2xl", "priority": "medium" },
         "item4": { "story": "Composiciones — grupo y con estado", "priority": "medium" }
       }
     },

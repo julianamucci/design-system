@@ -28,7 +28,9 @@ type Story = StoryObj;
 export const ComInput: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-2 w-64';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.style.width = '16rem';
 
     const inputId = 'comp-input-telefone';
     const label = createLabel({ text: 'Telefone', htmlFor: inputId });
@@ -54,7 +56,8 @@ export const ComInput: Story = {
 export const ComCheckbox: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex items-center gap-2';
+    wrapper.className = 'nds-cluster';
+    wrapper.dataset.spacing = 'sm';
 
     const checkboxId = 'comp-checkbox-termos';
     const checkbox = createCheckbox({ id: checkboxId });
@@ -83,7 +86,9 @@ export const ComCheckbox: Story = {
 export const CampoObrigatorio: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col gap-2 w-64';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.style.width = '16rem';
 
     const inputId = 'comp-required-email';
     const label = createLabel({ htmlFor: inputId });
@@ -91,7 +96,8 @@ export const CampoObrigatorio: Story = {
     const labelText = document.createTextNode('Email profissional');
     const asterisk = document.createElement('span');
     asterisk.setAttribute('aria-hidden', 'true');
-    asterisk.className = 'text-destructive ml-0.5';
+    asterisk.className = 'nds-text-destructive';
+    asterisk.style.marginLeft = '0.125rem';
     asterisk.textContent = '*';
 
     label.append(labelText, asterisk);

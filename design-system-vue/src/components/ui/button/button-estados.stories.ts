@@ -3,7 +3,7 @@ import { fn, userEvent, within, expect } from 'storybook/test';
 import { Loader2 } from 'lucide-vue-next';
 import { Button } from './index';
 
-const meta = {
+const meta: Meta<any> = {
   title: 'UI/Button/Estados',
   component: Button,
   args: {
@@ -13,7 +13,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

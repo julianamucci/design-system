@@ -30,14 +30,15 @@ function makeFooter(cancelLabel: string, actionLabel: string): HTMLElement {
   const cancel = createButton({ variant: 'outline', label: cancelLabel });
   const action = createButton({ variant: 'default', label: actionLabel });
   const footer = document.createElement('div');
-  footer.className = 'flex gap-2';
+  footer.className = 'nds-cluster';
+  footer.dataset.spacing = 'sm';
   footer.append(cancel, action);
   return footer;
 }
 
 function makeBody(text: string): HTMLElement {
   const body = document.createElement('div');
-  body.className = 'text-sm text-muted-foreground';
+  body.className = 'nds-text-body nds-text-muted-foreground';
   body.textContent = text;
   return body;
 }

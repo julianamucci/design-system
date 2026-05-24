@@ -127,6 +127,29 @@
         "default": "Conteúdo livre — apenas <code>PopoverContent</code> com texto ou widgets.",
         "withTitle": "<code>PopoverHeader</code> com <code>PopoverTitle</code> e <code>PopoverDescription</code>.",
         "form": "Formulário inline — Inputs e botões dentro do <code>PopoverContent</code>."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "editProfile": {
+          "name": "Editar perfil",
+          "description": "Popover com formulário inline (<code>Nome</code> + <code>Email</code>) e botão de submit dentro do <code>PopoverContent</code>. Cada campo tem <code>Label</code> associado e valores pré-preenchidos para edição.",
+          "use": "Edição contextual de dados curtos a partir de um botão. Para formulários longos ou multi-etapa, prefira <code>Dialog</code>."
+        },
+        "tableFilter": {
+          "name": "Filtro de tabela",
+          "description": "Popover com checkboxes (<code>Ativo</code>, <code>Pendente</code>, <code>Arquivado</code>) e par de botões <code>Limpar</code> / <code>Aplicar</code> ao final. Disparado por um trigger \"Filtros\" próximo à tabela.",
+          "use": "Filtros contextuais em listas e tabelas onde múltiplas opções podem ser combinadas. Para uma única escolha exclusiva, prefira <code>Select</code> ou <code>RadioGroup</code>."
+        },
+        "colorPicker": {
+          "name": "Seletor de cor",
+          "description": "Popover com grid de swatches (botões redondos coloridos), cada um com <code>aria-label</code> descritivo da cor. Foco navega entre swatches via <kbd>Tab</kbd> e respeita anel de foco visível.",
+          "use": "Escolha rápida de uma cor de paleta restrita (até ~12 opções). Para escolha livre via valor HEX ou HSL, prefira um input dedicado com preview."
+        },
+        "quickSettings": {
+          "name": "Configurações rápidas",
+          "description": "Popover com lista de toggles (<code>Notificações</code>, <code>Modo escuro</code>, <code>Modo compacto</code>) em formato <code>Label</code> + checkbox alinhados. Cada linha controla uma preferência independente.",
+          "use": "Atalho para preferências booleanas independentes próximas ao ponto de uso. Para painéis maiores de configuração, prefira uma página ou <code>Dialog</code>."
+        }
       }
     },
     "states": {
@@ -459,6 +482,29 @@
         "default": "Free content — just <code>PopoverContent</code> with text or widgets.",
         "withTitle": "<code>PopoverHeader</code> with <code>PopoverTitle</code> and <code>PopoverDescription</code>.",
         "form": "Inline form — Inputs and buttons inside <code>PopoverContent</code>."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "editProfile": {
+          "name": "Edit profile",
+          "description": "Popover with inline form (<code>Name</code> + <code>Email</code>) and a submit button inside <code>PopoverContent</code>. Each field has an associated <code>Label</code> and pre-filled values for editing.",
+          "use": "Contextual editing of short data from a button. For longer or multi-step forms, prefer <code>Dialog</code>."
+        },
+        "tableFilter": {
+          "name": "Table filter",
+          "description": "Popover with checkboxes (<code>Active</code>, <code>Pending</code>, <code>Archived</code>) and a <code>Clear</code> / <code>Apply</code> button pair at the end. Triggered by a \"Filters\" button near the table.",
+          "use": "Contextual filters on lists and tables where multiple options can be combined. For a single exclusive choice, prefer <code>Select</code> or <code>RadioGroup</code>."
+        },
+        "colorPicker": {
+          "name": "Color picker",
+          "description": "Popover with a grid of swatches (round colored buttons), each with a descriptive <code>aria-label</code>. Focus moves between swatches via <kbd>Tab</kbd> and respects the visible focus ring.",
+          "use": "Quick choice from a constrained palette (up to ~12 options). For free HEX or HSL input, prefer a dedicated field with preview."
+        },
+        "quickSettings": {
+          "name": "Quick settings",
+          "description": "Popover with a list of toggles (<code>Notifications</code>, <code>Dark mode</code>, <code>Compact mode</code>) as aligned <code>Label</code> + checkbox rows. Each row controls an independent preference.",
+          "use": "Shortcut for independent boolean preferences close to the point of use. For larger settings panels, prefer a dedicated page or <code>Dialog</code>."
+        }
       }
     },
     "states": {
@@ -791,6 +837,29 @@
         "default": "Contenido libre — solo <code>PopoverContent</code> con texto o widgets.",
         "withTitle": "<code>PopoverHeader</code> con <code>PopoverTitle</code> y <code>PopoverDescription</code>.",
         "form": "Formulario inline — Inputs y botones dentro de <code>PopoverContent</code>."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "editProfile": {
+          "name": "Editar perfil",
+          "description": "Popover con formulario inline (<code>Nombre</code> + <code>Email</code>) y botón de submit dentro de <code>PopoverContent</code>. Cada campo tiene su <code>Label</code> asociado y valores precargados para edición.",
+          "use": "Edición contextual de datos cortos desde un botón. Para formularios largos o de varios pasos, prefiere <code>Dialog</code>."
+        },
+        "tableFilter": {
+          "name": "Filtro de tabla",
+          "description": "Popover con checkboxes (<code>Activo</code>, <code>Pendiente</code>, <code>Archivado</code>) y par de botones <code>Limpiar</code> / <code>Aplicar</code> al final. Disparado por un trigger \"Filtros\" cerca de la tabla.",
+          "use": "Filtros contextuales en listas y tablas donde se pueden combinar varias opciones. Para una única elección exclusiva, prefiere <code>Select</code> o <code>RadioGroup</code>."
+        },
+        "colorPicker": {
+          "name": "Selector de color",
+          "description": "Popover con grid de swatches (botones redondos coloreados), cada uno con <code>aria-label</code> descriptivo del color. El foco navega entre swatches con <kbd>Tab</kbd> y respeta el anillo de foco visible.",
+          "use": "Elección rápida de un color en una paleta acotada (hasta ~12 opciones). Para elección libre vía HEX o HSL, prefiere un input dedicado con preview."
+        },
+        "quickSettings": {
+          "name": "Configuración rápida",
+          "description": "Popover con lista de toggles (<code>Notificaciones</code>, <code>Modo oscuro</code>, <code>Modo compacto</code>) como filas <code>Label</code> + checkbox alineadas. Cada fila controla una preferencia independiente.",
+          "use": "Atajo para preferencias booleanas independientes cerca del punto de uso. Para paneles de configuración mayores, prefiere una página o <code>Dialog</code>."
+        }
       }
     },
     "states": {

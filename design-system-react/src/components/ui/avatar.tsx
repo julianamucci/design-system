@@ -36,10 +36,11 @@ function AvatarImage({ className, ...props }: AvatarPrimitive.Image.Props) {
   )
 }
 
+type AvatarFallbackProps = AvatarPrimitive.Fallback.Props & { delayMs?: number }
 function AvatarFallback({
   className,
   ...props
-}: AvatarPrimitive.Fallback.Props) {
+}: AvatarFallbackProps) {
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
@@ -47,7 +48,7 @@ function AvatarFallback({
         "flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs",
         className
       )}
-      {...props}
+      {...(props as AvatarPrimitive.Fallback.Props)}
     />
   )
 }

@@ -42,7 +42,7 @@ const meta = {
     disabled: false,
     autoFocus: false,
   },
-} satisfies Meta<typeof InputOTP>;
+} satisfies Meta<any>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

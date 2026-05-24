@@ -33,7 +33,7 @@ const meta = {
     orientation: "vertical",
     onValueChange: fn(),
   },
-} satisfies Meta<typeof RadioGroup>;
+} as Meta<typeof RadioGroup>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -47,7 +47,7 @@ export const Playground: Story = {
         value={value}
         onValueChange={(v) => {
           setValue(v);
-          args.onValueChange?.(v);
+          args.onValueChange?.(v, undefined as never);
         }}
         aria-label="Forma de pagamento"
       >

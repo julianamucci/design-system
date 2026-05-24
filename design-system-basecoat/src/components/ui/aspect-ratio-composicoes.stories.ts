@@ -24,9 +24,10 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function boxed(el: HTMLElement, maxWidth = 'max-w-xl'): HTMLElement {
+function boxed(el: HTMLElement, maxWidth = '36rem'): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = `w-full ${maxWidth}`;
+  wrap.className = 'nds-w-full';
+  wrap.style.maxWidth = maxWidth;
   wrap.appendChild(el);
   return wrap;
 }
@@ -37,7 +38,9 @@ function buildImage(src: string, alt: string, extraClass = ''): HTMLImageElement
   img.alt = alt;
   img.loading = 'lazy';
   img.decoding = 'async';
-  img.className = `object-cover w-full h-full rounded-md ${extraClass}`.trim();
+  img.className = `nds-w-full nds-rounded-md ${extraClass}`.trim();
+  img.style.objectFit = 'cover';
+  img.style.height = '100%';
   return img;
 }
 
@@ -69,7 +72,9 @@ export const ComIframe: Story = {
     iframe.src = 'https://www.openstreetmap.org/export/embed.html?bbox=-46.66,-23.57,-46.63,-23.54&layer=mapnik';
     iframe.title = 'Mapa do escritório em São Paulo';
     iframe.loading = 'lazy';
-    iframe.className = 'w-full h-full rounded-md border-0';
+    iframe.className = 'nds-w-full nds-rounded-md';
+    iframe.style.height = '100%';
+    iframe.style.border = '0';
     return boxed(createAspectRatio({ ratio: 16 / 9, content: iframe }));
   },
 
@@ -85,7 +90,10 @@ export const ComVideo: Story = {
     const video = document.createElement('video');
     video.controls = true;
     video.poster = 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=1200&q=80';
-    video.className = 'object-cover w-full h-full rounded-md bg-black';
+    video.className = 'nds-w-full nds-rounded-md';
+    video.style.objectFit = 'cover';
+    video.style.height = '100%';
+    video.style.background = 'black';
     video.setAttribute('aria-label', 'Vídeo demonstrativo com legendas');
 
     const track = document.createElement('track');
@@ -108,7 +116,9 @@ export const EmGrid: Story = {
   name: 'Grid de cards',
   render: () => {
     const grid = document.createElement('div');
-    grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full';
+    grid.className = 'nds-grid nds-w-full';
+    grid.dataset.min = '16rem';
+    grid.dataset.spacing = 'lg';
 
     const items = [
       {
@@ -132,22 +142,25 @@ export const EmGrid: Story = {
     ];
 
     items.forEach(item => {
-      const card = createCard({ className: 'overflow-hidden p-0 gap-0' });
+      const card = createCard({ className: 'nds-overflow-hidden' });
+      card.style.padding = '0';
+      card.style.gap = '0';
 
       const mediaWrap = document.createElement('div');
-      mediaWrap.className = 'w-full';
+      mediaWrap.className = 'nds-w-full';
       mediaWrap.appendChild(
         createAspectRatio({
           ratio: 4 / 3,
-          content: buildImage(item.src, item.alt, 'rounded-none'),
+          content: (() => { const im = buildImage(item.src, item.alt, ''); im.style.borderRadius = '0'; return im; })(),
         }),
       );
 
-      const header = createCardHeader({ className: 'p-4' });
-      header.appendChild(createCardTitle({ text: item.title, className: 'text-base' }));
+      const header = createCardHeader({ className: 'nds-p-4' });
+      header.appendChild(createCardTitle({ text: item.title, className: 'nds-text-h4' }));
       header.appendChild(createCardDescription({ text: item.desc }));
 
-      const content = createCardContent({ className: 'px-4 pb-4 text-sm text-muted-foreground' });
+      const content = createCardContent({ className: 'nds-px-4 nds-text-body nds-text-muted-foreground' });
+      content.style.paddingBottom = 'var(--spacing-4, 1rem)';
       content.textContent = 'Proporção 4/3 mantida em qualquer largura do card.';
 
       card.append(mediaWrap, header, content);
@@ -167,7 +180,9 @@ export const PlaceholderSkeleton: Story = {
   name: 'Placeholder (skeleton)',
   render: () => {
     const skeleton = document.createElement('div');
-    skeleton.className = 'w-full h-full rounded-md bg-muted animate-pulse';
+    skeleton.className = 'nds-w-full nds-rounded-md nds-bg-muted';
+    skeleton.style.height = '100%';
+    skeleton.style.animation = 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite';
     skeleton.setAttribute('aria-hidden', 'true');
     return boxed(createAspectRatio({ ratio: 16 / 9, content: skeleton }));
   },

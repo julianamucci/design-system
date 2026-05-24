@@ -119,6 +119,29 @@
         "default": "Sem borda — fundo transparente, hover <code>muted</code>. Aria-pressed aplica <code>bg-muted</code>.",
         "outline": "<code>variant=\"outline\"</code> — borda <code>input</code>, mesma lógica de pressed.",
         "withLabel": "Ícone + texto visível — útil para filtros (\"Mostrar ocultos\")."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "toolbar": {
+          "name": "Toolbar de formatação",
+          "description": "Grupo de Toggles icon-only (Bold, Italic, Underline) dentro de um container <code>role=\"group\"</code> com <code>aria-label</code>. Cada toggle mantém estado independente.",
+          "use": "Editores de texto rico, barras de ferramentas onde múltiplos formatos podem coexistir (negrito + itálico). Sempre forneça <code>aria-label</code> em cada toggle icon-only."
+        },
+        "filterWithLabel": {
+          "name": "Filtro com label",
+          "description": "Toggle com ícone + texto visível (ex.: <code>Eye</code> + \"Mostrar ocultos\"). Como o texto é descritivo, <code>aria-label</code> não é necessário — o leitor de tela usa o texto interno.",
+          "use": "Filtros de visualização, toggles de visibilidade, opções booleanas em controles de tabela/lista."
+        },
+        "sizes": {
+          "name": "Tamanhos",
+          "description": "Três tamanhos lado a lado (<code>sm</code>, <code>default</code>, <code>lg</code>) com alturas 32/36/40px. Define a densidade do controle.",
+          "use": "<code>sm</code> em listas densas, <code>default</code> em toolbars padrão, <code>lg</code> em ações destacadas (CTAs ou áreas de baixa densidade)."
+        },
+        "filterList": {
+          "name": "Lista de filtros",
+          "description": "Conjunto de Toggles outline empilhados/agrupados onde cada um representa uma escolha booleana isolada (não exclusiva).",
+          "use": "Filtros independentes em listas (Mostrar ocultos + Visão compacta podem ser combinados). Para escolha mutuamente exclusiva, prefira <code>ToggleGroup type=\"single\"</code>."
+        }
       }
     },
     "states": {
@@ -440,6 +463,29 @@
         "default": "No border — transparent background, <code>muted</code> hover. Aria-pressed applies <code>bg-muted</code>.",
         "outline": "<code>variant=\"outline\"</code> — <code>input</code> border, same pressed logic.",
         "withLabel": "Icon + visible text — useful for filters (\"Show hidden\")."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "toolbar": {
+          "name": "Formatting toolbar",
+          "description": "Group of icon-only Toggles (Bold, Italic, Underline) inside a container with <code>role=\"group\"</code> and <code>aria-label</code>. Each toggle keeps independent state.",
+          "use": "Rich text editors, toolbars where multiple formats can coexist (bold + italic). Always provide <code>aria-label</code> on each icon-only toggle."
+        },
+        "filterWithLabel": {
+          "name": "Filter with label",
+          "description": "Toggle with icon + visible text (e.g., <code>Eye</code> + \"Show hidden\"). Since the text is descriptive, <code>aria-label</code> isn't required — the screen reader uses the inner text.",
+          "use": "View filters, visibility toggles, boolean options in table/list controls."
+        },
+        "sizes": {
+          "name": "Sizes",
+          "description": "Three sizes side by side (<code>sm</code>, <code>default</code>, <code>lg</code>) with heights 32/36/40px. Defines the control density.",
+          "use": "<code>sm</code> in dense lists, <code>default</code> in standard toolbars, <code>lg</code> in highlighted actions (CTAs or low-density areas)."
+        },
+        "filterList": {
+          "name": "Filter list",
+          "description": "Set of outline Toggles stacked/grouped where each represents an isolated boolean choice (non-exclusive).",
+          "use": "Independent list filters (Show hidden + Compact view can combine). For mutually-exclusive choice, prefer <code>ToggleGroup type=\"single\"</code>."
+        }
       }
     },
     "states": {
@@ -761,6 +807,29 @@
         "default": "Sin borde — fondo transparente, hover <code>muted</code>. Aria-pressed aplica <code>bg-muted</code>.",
         "outline": "<code>variant=\"outline\"</code> — borde <code>input</code>, misma lógica de pressed.",
         "withLabel": "Icono + texto visible — útil para filtros (\"Mostrar ocultos\")."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "toolbar": {
+          "name": "Toolbar de formato",
+          "description": "Grupo de Toggles icon-only (Bold, Italic, Underline) dentro de un contenedor con <code>role=\"group\"</code> y <code>aria-label</code>. Cada toggle mantiene estado independiente.",
+          "use": "Editores de texto enriquecido, barras de herramientas donde múltiples formatos pueden coexistir (negrita + itálica). Provee siempre <code>aria-label</code> en cada toggle icon-only."
+        },
+        "filterWithLabel": {
+          "name": "Filtro con label",
+          "description": "Toggle con icono + texto visible (ej.: <code>Eye</code> + \"Mostrar ocultos\"). Como el texto es descriptivo, <code>aria-label</code> no es necesario — el lector de pantalla usa el texto interno.",
+          "use": "Filtros de visualización, toggles de visibilidad, opciones booleanas en controles de tabla/lista."
+        },
+        "sizes": {
+          "name": "Tamaños",
+          "description": "Tres tamaños lado a lado (<code>sm</code>, <code>default</code>, <code>lg</code>) con alturas 32/36/40px. Define la densidad del control.",
+          "use": "<code>sm</code> en listas densas, <code>default</code> en toolbars estándar, <code>lg</code> en acciones destacadas (CTAs o áreas de baja densidad)."
+        },
+        "filterList": {
+          "name": "Lista de filtros",
+          "description": "Conjunto de Toggles outline donde cada uno representa una elección booleana aislada (no exclusiva).",
+          "use": "Filtros independientes en listas (Mostrar ocultos + Vista compacta pueden combinarse). Para elección mutuamente exclusiva, prefiere <code>ToggleGroup type=\"single\"</code>."
+        }
       }
     },
     "states": {

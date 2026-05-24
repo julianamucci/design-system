@@ -49,7 +49,11 @@ function priorityLabel(raw: string): string {
 // Build a labelled panel with safe textContent.
 function panelContent(label: string, extraClass = ''): HTMLElement {
   const el = document.createElement('div');
-  el.className = `h-full w-full flex items-center justify-center p-4 text-sm font-medium ${extraClass}`;
+  el.className = `nds-cluster nds-w-full nds-text-body nds-font-medium ${extraClass}`;
+  el.dataset.align = 'center';
+  el.dataset.justify = 'center';
+  el.style.height = '100%';
+  el.style.padding = 'var(--spacing-4)';
   const span = document.createElement('span');
   span.textContent = label;
   el.appendChild(span);
@@ -60,7 +64,7 @@ function frame(child: HTMLElement, minHeight = '220px'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.contain = 'layout';
   wrap.style.minHeight = minHeight;
-  wrap.className = 'w-full border border-border rounded-md overflow-hidden bg-background';
+  wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
   wrap.appendChild(child);
   return wrap;
 }
@@ -69,7 +73,7 @@ function buildHorizontalDemo(): HTMLElement {
   const root = createResizablePanel({
     direction: 'horizontal',
     panels: [
-      { defaultSize: 30, minSize: 15, content: panelContent(t('demonstration.labels.sidebar'), 'bg-muted text-muted-foreground') },
+      { defaultSize: 30, minSize: 15, content: panelContent(t('demonstration.labels.sidebar'), 'nds-bg-muted nds-text-muted-foreground') },
       { defaultSize: 70, minSize: 30, content: panelContent(t('demonstration.labels.content')) },
     ],
   });
@@ -81,7 +85,7 @@ function buildVerticalDemo(): HTMLElement {
     direction: 'vertical',
     panels: [
       { defaultSize: 50, minSize: 20, content: panelContent(t('demonstration.labels.top')) },
-      { defaultSize: 50, minSize: 20, content: panelContent(t('demonstration.labels.bottom'), 'bg-muted text-muted-foreground') },
+      { defaultSize: 50, minSize: 20, content: panelContent(t('demonstration.labels.bottom'), 'nds-bg-muted nds-text-muted-foreground') },
     ],
   });
   return frame(root, '260px');
@@ -92,7 +96,7 @@ function buildNestedDemo(): HTMLElement {
     direction: 'vertical',
     panels: [
       { defaultSize: 60, minSize: 20, content: panelContent(t('demonstration.labels.top')) },
-      { defaultSize: 40, minSize: 20, content: panelContent(t('demonstration.labels.bottom'), 'bg-muted text-muted-foreground') },
+      { defaultSize: 40, minSize: 20, content: panelContent(t('demonstration.labels.bottom'), 'nds-bg-muted nds-text-muted-foreground') },
     ],
   });
   const innerWrap = document.createElement('div');
@@ -103,7 +107,7 @@ function buildNestedDemo(): HTMLElement {
   const root = createResizablePanel({
     direction: 'horizontal',
     panels: [
-      { defaultSize: 30, minSize: 15, content: panelContent(t('demonstration.labels.sidebar'), 'bg-muted text-muted-foreground') },
+      { defaultSize: 30, minSize: 15, content: panelContent(t('demonstration.labels.sidebar'), 'nds-bg-muted nds-text-muted-foreground') },
       { defaultSize: 70, minSize: 30, content: innerWrap },
     ],
   });
@@ -211,7 +215,8 @@ export function createResizableDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'w-full space-y-6';
+            wrap.className = 'nds-stack nds-w-full';
+            wrap.dataset.spacing = 'lg';
             wrap.append(buildHorizontalDemo(), buildVerticalDemo(), buildNestedDemo());
             return wrap;
           },
@@ -283,7 +288,7 @@ export function createResizableDocs(): HTMLElement {
                 const el = createResizablePanel({
                   direction: 'horizontal',
                   panels: [
-                    { defaultSize: 30, minSize: 20, content: panelContent('Sidebar', 'bg-muted text-muted-foreground') },
+                    { defaultSize: 30, minSize: 20, content: panelContent('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
                     { defaultSize: 70, minSize: 40, content: panelContent('Editor') },
                   ],
                 });
@@ -294,7 +299,7 @@ export function createResizableDocs(): HTMLElement {
                 const el = createResizablePanel({
                   direction: 'horizontal',
                   panels: [
-                    { defaultSize: 5,  content: panelContent('?', 'bg-muted text-muted-foreground text-xs') },
+                    { defaultSize: 5,  content: panelContent('?', 'nds-bg-muted nds-text-muted-foreground nds-text-caption') },
                     { defaultSize: 95, content: panelContent('Editor') },
                   ],
                 });
@@ -311,7 +316,7 @@ export function createResizableDocs(): HTMLElement {
                   direction: 'horizontal',
                   panels: [
                     { defaultSize: 40, minSize: 20, content: panelContent('Lista') },
-                    { defaultSize: 60, minSize: 30, content: panelContent('Detalhes', 'bg-muted text-muted-foreground') },
+                    { defaultSize: 60, minSize: 30, content: panelContent('Detalhes', 'nds-bg-muted nds-text-muted-foreground') },
                   ],
                 });
                 const handle = el.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
@@ -323,7 +328,7 @@ export function createResizableDocs(): HTMLElement {
                   direction: 'horizontal',
                   panels: [
                     { defaultSize: 40, minSize: 20, content: panelContent('Lista') },
-                    { defaultSize: 60, minSize: 30, content: panelContent('Detalhes', 'bg-muted text-muted-foreground') },
+                    { defaultSize: 60, minSize: 30, content: panelContent('Detalhes', 'nds-bg-muted nds-text-muted-foreground') },
                   ],
                 });
                 const handle = el.querySelector<HTMLElement>('[data-slot="resizable-handle"]');

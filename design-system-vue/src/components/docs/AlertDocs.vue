@@ -5,6 +5,7 @@ import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -17,6 +18,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -85,6 +87,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -197,6 +200,33 @@ const variantItems = computed(() => [
   { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess      },
   { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning      },
   { name: tContent('states.withoutTitle.label'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
+]);
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withIcon.name'),
+    description: tContent('variants.compositions.withIcon.description'),
+    useWhen: tContent('variants.compositions.withIcon.use'),
+    code: `<Alert>\n  <Info class="h-4 w-4" aria-hidden="true" />\n  <AlertTitle>Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
+  },
+  {
+    name: tContent('variants.compositions.withAction.name'),
+    description: tContent('variants.compositions.withAction.description'),
+    useWhen: tContent('variants.compositions.withAction.use'),
+    code: `<Alert>\n  <Info class="h-4 w-4" aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="flex items-center justify-between gap-4 mt-1">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+  },
+  {
+    name: tContent('variants.compositions.compact.name'),
+    description: tContent('variants.compositions.compact.description'),
+    useWhen: tContent('variants.compositions.compact.use'),
+    code: `<Alert variant="destructive">\n  <AlertCircle class="h-4 w-4" aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
+  },
+  {
+    name: tContent('variants.compositions.multipleTypes.name'),
+    description: tContent('variants.compositions.multipleTypes.description'),
+    useWhen: tContent('variants.compositions.multipleTypes.use'),
+    code: `<div class="space-y-3">\n  <Alert>\n    <Info class="h-4 w-4" aria-hidden="true" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle class="h-4 w-4" aria-hidden="true" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert class="bg-success/10 text-success border-success/30">\n    <CheckCircle2 class="h-4 w-4" aria-hidden="true" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert class="bg-warning/10 text-warning border-warning/30">\n    <TriangleAlert class="h-4 w-4" aria-hidden="true" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -449,6 +479,62 @@ const visualTestItems = computed(() => [
             </Alert>
           </template>
         </DocsVariants>
+
+        <!-- ── Composições ─────────────────────────────────────────────── -->
+        <DocsCompositions
+          :title="tContent('variants.compositionsTitle')"
+          :use-when-label="tNav('common.useWhen')"
+          component-slug="alert"
+          :items="compositionItems"
+        >
+          <template #variant-preview-0>
+            <Alert class="w-full">
+              <Info class="h-4 w-4" aria-hidden="true" />
+              <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
+              <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
+            </Alert>
+          </template>
+          <template #variant-preview-1>
+            <Alert class="w-full">
+              <Info class="h-4 w-4" aria-hidden="true" />
+              <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+              <AlertDescription class="flex items-center justify-between gap-4 mt-1">
+                <span>Salve seu trabalho para não perder as alterações.</span>
+                <Button size="sm" variant="outline">Salvar agora</Button>
+              </AlertDescription>
+            </Alert>
+          </template>
+          <template #variant-preview-2>
+            <Alert variant="destructive" class="w-full">
+              <AlertCircle class="h-4 w-4" aria-hidden="true" />
+              <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
+            </Alert>
+          </template>
+          <template #variant-preview-3>
+            <div class="space-y-3 w-full">
+              <Alert>
+                <Info class="h-4 w-4" aria-hidden="true" />
+                <AlertTitle>Informação</AlertTitle>
+                <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
+              </Alert>
+              <Alert variant="destructive">
+                <AlertCircle class="h-4 w-4" aria-hidden="true" />
+                <AlertTitle>Erro</AlertTitle>
+                <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
+              </Alert>
+              <Alert class="bg-success/10 text-success border-success/30">
+                <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+                <AlertTitle>Sucesso</AlertTitle>
+                <AlertDescription>Ação concluída com sucesso.</AlertDescription>
+              </Alert>
+              <Alert class="bg-warning/10 text-warning border-warning/30">
+                <TriangleAlert class="h-4 w-4" aria-hidden="true" />
+                <AlertTitle>Aviso</AlertTitle>
+                <AlertDescription>Aviso que requer atenção.</AlertDescription>
+              </Alert>
+            </div>
+          </template>
+        </DocsCompositions>
 
         <!-- ── Configurações (States) ──────────────────────────────────── -->
         <DocsStates

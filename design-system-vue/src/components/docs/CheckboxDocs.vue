@@ -5,6 +5,7 @@ import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
@@ -14,6 +15,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -85,6 +87,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')    },
       { id: 'variantes',    label: tNav('nav.variants')  },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')    },
       { id: 'propriedades', label: tNav('nav.props')     },
       { id: 'tokens',       label: tNav('nav.tokens')    },
@@ -185,6 +188,33 @@ const interfaceCode = `interface CheckboxProps {
   'onUpdate:checked'?: (value: boolean | 'indeterminate') => void;
 }`;
 
+// ─── Reactive state — Select All preview ──────────────────────────────────────
+
+const selectAllChild1 = ref(true);
+const selectAllChild2 = ref(false);
+const selectAllChild3 = ref(true);
+
+const selectAllValue = computed<boolean | 'indeterminate'>({
+  get() {
+    const all = selectAllChild1.value && selectAllChild2.value && selectAllChild3.value;
+    const none = !selectAllChild1.value && !selectAllChild2.value && !selectAllChild3.value;
+    if (all) return true;
+    if (none) return false;
+    return 'indeterminate';
+  },
+  set(v) {
+    const next = v === true;
+    selectAllChild1.value = next;
+    selectAllChild2.value = next;
+    selectAllChild3.value = next;
+  },
+});
+
+const inListEmail = ref(true);
+const inListPush = ref(false);
+const inListSms = ref(false);
+const inListNewsletter = ref(true);
+
 // ─── Computed data ────────────────────────────────────────────────────────────
 
 const anatomyItems = computed(() => [
@@ -199,6 +229,39 @@ const variantItems = computed(() => [
   { name: 'checked',         description: stripHtml(tContent('variants.items.checked')),         code: codeChecked         },
   { name: 'withLabel',       description: stripHtml(tContent('variants.items.withLabel')),       code: codeWithLabel       },
   { name: 'withDescription', description: stripHtml(tContent('variants.items.withDescription')), code: codeWithDescription },
+]);
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withLabel.name'),
+    description: stripHtml(tContent('variants.compositions.withLabel.description')),
+    useWhen: stripHtml(tContent('variants.compositions.withLabel.use')),
+    code: `<div class="flex items-center gap-2">\n  <Checkbox id="cb-tos" />\n  <Label for="cb-tos" class="text-sm font-medium leading-none cursor-pointer">\n    Aceito os termos e condições\n  </Label>\n</div>`,
+  },
+  {
+    name: tContent('variants.compositions.withDescription.name'),
+    description: stripHtml(tContent('variants.compositions.withDescription.description')),
+    useWhen: stripHtml(tContent('variants.compositions.withDescription.use')),
+    code: `<div class="flex gap-2 items-start">\n  <Checkbox id="cb-newsletter" class="mt-0.5" />\n  <div class="flex flex-col gap-1">\n    <Label for="cb-newsletter">Receber novidades por email</Label>\n    <p class="text-sm text-muted-foreground">\n      Enviaremos atualizações sobre novos recursos e melhorias do produto.\n    </p>\n  </div>\n</div>`,
+  },
+  {
+    name: tContent('variants.compositions.fieldset.name'),
+    description: stripHtml(tContent('variants.compositions.fieldset.description')),
+    useWhen: stripHtml(tContent('variants.compositions.fieldset.use')),
+    code: `<fieldset class="border rounded-lg p-4 space-y-3 w-72">\n  <legend class="text-sm font-semibold px-1">Notificações</legend>\n  <div class="flex items-center gap-2">\n    <Checkbox id="notif-email" />\n    <Label for="notif-email">Receber novidades por email</Label>\n  </div>\n  <div class="flex items-center gap-2">\n    <Checkbox id="notif-push" />\n    <Label for="notif-push">Receber notificações push</Label>\n  </div>\n  <div class="flex items-center gap-2">\n    <Checkbox id="notif-sms" />\n    <Label for="notif-sms">Alertas por SMS</Label>\n  </div>\n</fieldset>`,
+  },
+  {
+    name: tContent('variants.compositions.selectAll.name'),
+    description: stripHtml(tContent('variants.compositions.selectAll.description')),
+    useWhen: stripHtml(tContent('variants.compositions.selectAll.use')),
+    code: `<script setup lang="ts">\nimport { ref, computed } from 'vue';\nconst c1 = ref(true); const c2 = ref(false); const c3 = ref(true);\nconst all = computed<boolean | 'indeterminate'>({\n  get() {\n    const allChecked = c1.value && c2.value && c3.value;\n    const noneChecked = !c1.value && !c2.value && !c3.value;\n    if (allChecked) return true;\n    if (noneChecked) return false;\n    return 'indeterminate';\n  },\n  set(v) { const n = v === true; c1.value = n; c2.value = n; c3.value = n; },\n});\n<\/script>\n\n<template>\n  <div class="space-y-3 w-72">\n    <div class="flex items-center gap-2 pb-2 border-b">\n      <Checkbox id="cb-select-all" v-model:checked="all" />\n      <Label for="cb-select-all" class="text-sm font-semibold leading-none">\n        Selecionar todos os itens\n      </Label>\n    </div>\n    <div class="flex items-center gap-2 pl-2">\n      <Checkbox id="cb-item-1" v-model:checked="c1" />\n      <Label for="cb-item-1">Item 1</Label>\n    </div>\n    <!-- demais filhos -->\n  </div>\n<\/template>`,
+  },
+  {
+    name: tContent('variants.compositions.inList.name'),
+    description: stripHtml(tContent('variants.compositions.inList.description')),
+    useWhen: stripHtml(tContent('variants.compositions.inList.use')),
+    code: `<div class="space-y-2 w-80">\n  <p class="text-sm font-semibold mb-3">Preferências de contato</p>\n  <div class="flex items-center justify-between rounded-md border px-3 py-2">\n    <div class="flex items-center gap-2">\n      <Checkbox id="list-email" :checked="true" />\n      <Label for="list-email">Receber novidades por email</Label>\n    </div>\n  </div>\n  <!-- demais linhas -->\n</div>`,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -526,6 +589,111 @@ const visualTestItems = computed(() => [
         </div>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="checkbox"
+      :items="compositionItems"
+    >
+      <!-- 0: withLabel -->
+      <template #variant-preview-0>
+        <div class="flex items-center gap-2">
+          <Checkbox id="cb-tos" />
+          <Label for="cb-tos" class="text-sm font-medium leading-none cursor-pointer">
+            Aceito os termos e condições
+          </Label>
+        </div>
+      </template>
+
+      <!-- 1: withDescription -->
+      <template #variant-preview-1>
+        <div class="flex gap-2 items-start">
+          <Checkbox id="cb-newsletter" class="mt-0.5" />
+          <div class="flex flex-col gap-1">
+            <Label for="cb-newsletter">Receber novidades por email</Label>
+            <p class="text-sm text-muted-foreground">
+              Enviaremos atualizações sobre novos recursos e melhorias do produto.
+            </p>
+          </div>
+        </div>
+      </template>
+
+      <!-- 2: fieldset -->
+      <template #variant-preview-2>
+        <fieldset class="border rounded-lg p-4 space-y-3 w-72">
+          <legend class="text-sm font-semibold px-1">Notificações</legend>
+          <div class="flex items-center gap-2">
+            <Checkbox id="notif-email" />
+            <Label for="notif-email">Receber novidades por email</Label>
+          </div>
+          <div class="flex items-center gap-2">
+            <Checkbox id="notif-push" />
+            <Label for="notif-push">Receber notificações push</Label>
+          </div>
+          <div class="flex items-center gap-2">
+            <Checkbox id="notif-sms" />
+            <Label for="notif-sms">Alertas por SMS</Label>
+          </div>
+        </fieldset>
+      </template>
+
+      <!-- 3: selectAll -->
+      <template #variant-preview-3>
+        <div class="space-y-3 w-72">
+          <div class="flex items-center gap-2 pb-2 border-b">
+            <Checkbox id="cb-select-all" v-model:checked="selectAllValue" />
+            <Label for="cb-select-all" class="text-sm font-semibold leading-none">
+              Selecionar todos os itens
+            </Label>
+          </div>
+          <div class="flex items-center gap-2 pl-2">
+            <Checkbox id="cb-select-child-1" v-model:checked="selectAllChild1" />
+            <Label for="cb-select-child-1">Receber novidades por email</Label>
+          </div>
+          <div class="flex items-center gap-2 pl-2">
+            <Checkbox id="cb-select-child-2" v-model:checked="selectAllChild2" />
+            <Label for="cb-select-child-2">Receber notificações push</Label>
+          </div>
+          <div class="flex items-center gap-2 pl-2">
+            <Checkbox id="cb-select-child-3" v-model:checked="selectAllChild3" />
+            <Label for="cb-select-child-3">Alertas por SMS</Label>
+          </div>
+        </div>
+      </template>
+
+      <!-- 4: inList -->
+      <template #variant-preview-4>
+        <div class="space-y-2 w-80">
+          <p class="text-sm font-semibold mb-3">Preferências de contato</p>
+          <div class="flex items-center justify-between rounded-md border px-3 py-2">
+            <div class="flex items-center gap-2">
+              <Checkbox id="list-email" v-model:checked="inListEmail" />
+              <Label for="list-email">Receber novidades por email</Label>
+            </div>
+          </div>
+          <div class="flex items-center justify-between rounded-md border px-3 py-2">
+            <div class="flex items-center gap-2">
+              <Checkbox id="list-push" v-model:checked="inListPush" />
+              <Label for="list-push">Receber notificações push</Label>
+            </div>
+          </div>
+          <div class="flex items-center justify-between rounded-md border px-3 py-2">
+            <div class="flex items-center gap-2">
+              <Checkbox id="list-sms" v-model:checked="inListSms" />
+              <Label for="list-sms">Alertas por SMS</Label>
+            </div>
+          </div>
+          <div class="flex items-center justify-between rounded-md border px-3 py-2">
+            <div class="flex items-center gap-2">
+              <Checkbox id="list-newsletter" v-model:checked="inListNewsletter" />
+              <Label for="list-newsletter">Newsletter semanal</Label>
+            </div>
+          </div>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────────── -->
     <DocsStates

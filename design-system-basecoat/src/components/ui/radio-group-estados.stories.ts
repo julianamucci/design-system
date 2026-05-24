@@ -24,10 +24,11 @@ type Story = StoryObj;
 
 function withLegend(group: HTMLElement, labelText: string, id: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'xs';
   const legend = document.createElement('p');
   legend.id = id;
-  legend.className = 'text-sm font-semibold';
+  legend.className = 'nds-text-body nds-font-semibold';
   legend.textContent = labelText;
   group.setAttribute('role', 'radiogroup');
   group.setAttribute('aria-labelledby', id);
@@ -179,11 +180,12 @@ export const DisabledItem: Story = {
 export const Invalid: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col gap-2';
+    wrap.className = 'nds-stack';
+    wrap.dataset.spacing = 'xs';
 
     const legend = document.createElement('p');
     legend.id = 'rg-invalid-legend';
-    legend.className = 'text-sm font-semibold';
+    legend.className = 'nds-text-body nds-font-semibold';
     legend.textContent = 'Forma de pagamento';
 
     const group = createRadioGroup({
@@ -202,12 +204,13 @@ export const Invalid: Story = {
     // Estiliza visualmente todos os botões como inválidos
     group.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {
       btn.setAttribute('aria-invalid', 'true');
-      btn.classList.add('border-destructive', 'ring-destructive/20');
+      btn.classList.add('nds-border-destructive');
+      btn.style.boxShadow = '0 0 0 2px rgb(var(--destructive) / 0.2)';
     });
 
     const msg = document.createElement('p');
     msg.id = 'rg-invalid-msg';
-    msg.className = 'text-sm text-destructive';
+    msg.className = 'nds-text-body nds-text-destructive';
     msg.textContent = 'Selecione uma forma de pagamento para continuar.';
 
     wrap.append(legend, group, msg);

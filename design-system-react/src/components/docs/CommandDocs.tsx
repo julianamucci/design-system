@@ -29,7 +29,6 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
 import { cn } from "@/lib/utils";
 import { useActiveSection } from "@/lib/use-active-section";
 
@@ -45,6 +44,7 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -83,6 +83,7 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -778,6 +779,154 @@ interface CommandDialogProps
                 dialogTitle={labels.dialogTitle}
                 dialogDescription={labels.dialogDescription}
               />
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ──────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="command"
+        items={[
+          {
+            name: tContent("variants.compositions.withGroups.name"),
+            description: tContent("variants.compositions.withGroups.description"),
+            useWhen: tContent("variants.compositions.withGroups.use"),
+            code: `<Command>
+  <CommandInput placeholder="Buscar componente..." />
+  <CommandList>
+    <CommandEmpty>${labels.emptyMessage}</CommandEmpty>
+    <CommandGroup heading="Componentes">
+      <CommandItem value="button">Button</CommandItem>
+      <CommandItem value="input">Input</CommandItem>
+      <CommandItem value="badge">Badge</CommandItem>
+      <CommandItem value="separator">Separator</CommandItem>
+    </CommandGroup>
+    <CommandSeparator />
+    <CommandGroup heading="Utilitários">
+      <CommandItem value="cn">cn()</CommandItem>
+      <CommandItem value="clsx">clsx()</CommandItem>
+      <CommandItem value="twmerge">twMerge()</CommandItem>
+    </CommandGroup>
+  </CommandList>
+</Command>`,
+            preview: (
+              <div className="w-full max-w-xs rounded-md border shadow-md">
+                <Command>
+                  <CommandInput placeholder="Buscar componente..." />
+                  <CommandList>
+                    <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
+                    <CommandGroup heading="Componentes">
+                      <CommandItem value="button">Button</CommandItem>
+                      <CommandItem value="input">Input</CommandItem>
+                      <CommandItem value="badge">Badge</CommandItem>
+                      <CommandItem value="separator">Separator</CommandItem>
+                    </CommandGroup>
+                    <CommandSeparator />
+                    <CommandGroup heading="Utilitários">
+                      <CommandItem value="cn">cn()</CommandItem>
+                      <CommandItem value="clsx">clsx()</CommandItem>
+                      <CommandItem value="twmerge">twMerge()</CommandItem>
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withDisabled.name"),
+            description: tContent("variants.compositions.withDisabled.description"),
+            useWhen: tContent("variants.compositions.withDisabled.use"),
+            code: `<Command>
+  <CommandInput placeholder="Buscar..." />
+  <CommandList>
+    <CommandEmpty>${labels.emptyMessage}</CommandEmpty>
+    <CommandGroup heading="Componentes">
+      <CommandItem value="button">Button</CommandItem>
+      <CommandItem value="input" disabled>Input (em breve)</CommandItem>
+      <CommandItem value="badge">Badge</CommandItem>
+      <CommandItem value="select" disabled>Select (em breve)</CommandItem>
+    </CommandGroup>
+    <CommandSeparator />
+    <CommandGroup heading="Utilitários">
+      <CommandItem value="cn">cn()</CommandItem>
+      <CommandItem value="clsx" disabled>clsx() (depreciado)</CommandItem>
+    </CommandGroup>
+  </CommandList>
+</Command>`,
+            preview: (
+              <div className="w-full max-w-xs rounded-md border shadow-md">
+                <Command>
+                  <CommandInput placeholder="Buscar..." />
+                  <CommandList>
+                    <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
+                    <CommandGroup heading="Componentes">
+                      <CommandItem value="button">Button</CommandItem>
+                      <CommandItem value="input" disabled>Input (em breve)</CommandItem>
+                      <CommandItem value="badge">Badge</CommandItem>
+                      <CommandItem value="select" disabled>Select (em breve)</CommandItem>
+                    </CommandGroup>
+                    <CommandSeparator />
+                    <CommandGroup heading="Utilitários">
+                      <CommandItem value="cn">cn()</CommandItem>
+                      <CommandItem value="clsx" disabled>clsx() (depreciado)</CommandItem>
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </div>
+            ),
+          },
+          {
+            name: tContent("variants.compositions.longList.name"),
+            description: tContent("variants.compositions.longList.description"),
+            useWhen: tContent("variants.compositions.longList.use"),
+            code: `const items = [
+  "Accordion","Alert","AlertDialog","AspectRatio","Avatar",
+  "Badge","Breadcrumb","Button","Calendar","Card",
+  "Carousel","Chart","Checkbox","Collapsible","Command",
+  "ContextMenu","DataTable","DatePicker","Dialog","Drawer",
+  "DropdownMenu","Form","HoverCard","Input","InputOTP",
+  "Label","Menubar","NavigationMenu","Pagination","Popover",
+];
+
+<Command>
+  <CommandInput placeholder="Buscar componente..." />
+  <CommandList>
+    <CommandEmpty>${labels.emptyMessage}</CommandEmpty>
+    <CommandGroup heading="Componentes">
+      {items.map((label) => (
+        <CommandItem key={label} value={label.toLowerCase()}>
+          {label}
+        </CommandItem>
+      ))}
+    </CommandGroup>
+  </CommandList>
+</Command>`,
+            preview: (
+              <div className="w-full max-w-xs rounded-md border shadow-md">
+                <Command>
+                  <CommandInput placeholder="Buscar componente..." />
+                  <CommandList>
+                    <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
+                    <CommandGroup heading="Componentes">
+                      {[
+                        "Accordion","Alert","AlertDialog","AspectRatio","Avatar",
+                        "Badge","Breadcrumb","Button","Calendar","Card",
+                        "Carousel","Chart","Checkbox","Collapsible","Command",
+                        "ContextMenu","DataTable","DatePicker","Dialog","Drawer",
+                        "DropdownMenu","Form","HoverCard","Input","InputOTP",
+                        "Label","Menubar","NavigationMenu","Pagination","Popover",
+                      ].map((label) => (
+                        <CommandItem key={label} value={label.toLowerCase()}>
+                          {label}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </div>
             ),
           },
         ]}

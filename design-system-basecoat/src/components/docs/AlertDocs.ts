@@ -3,6 +3,7 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertIconType, type AlertVariant } from '@/components/ui/alert';
+import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import alertTranslations from '@shared/content/alert/translations.json';
 
@@ -14,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -94,8 +96,9 @@ export function createAlertDocs(): HTMLElement {
     ]},
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
-      { id: 'variantes',    labelKey: 'nav.variants' },
-      { id: 'estados',      labelKey: 'nav.states'   },
+      { id: 'variantes',    labelKey: 'nav.variants'     },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
+      { id: 'estados',      labelKey: 'nav.states'       },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
     ]},
@@ -145,7 +148,7 @@ export function createAlertDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -159,12 +162,13 @@ export function createAlertDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'w-full space-y-3';
+            wrap.className = 'nds-w-full nds-stack';
+            wrap.dataset.spacing = 'sm';
             wrap.append(
               buildAlert('default', '', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
               buildAlert('destructive', '', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
-              buildAlert('default', 'bg-success/10 text-success border-success/30', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
-              buildAlert('default', 'bg-warning/10 text-warning border-warning/30', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+              buildAlert('default', 'nds-alert-success', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
+              buildAlert('default', 'nds-alert-warning', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
             );
             return wrap;
           },
@@ -293,8 +297,8 @@ export function createAlertDocs(): HTMLElement {
       case 'variantes': {
         const codeDefault = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
         const codeDestructive = `const alert = createAlert({ variant: 'destructive' });\nalert.appendChild(createAlertIcon('error'));\nalert.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));\nalert.appendChild(createAlertDescription({ text: 'Não foi possível salvar. Verifique sua conexão e tente novamente.' }));`;
-        const codeSuccess = `const alert = createAlert({ variant: 'default', className: 'bg-success/10 text-success border-success/30' });\nalert.appendChild(createAlertIcon('success'));\nalert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));\nalert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));`;
-        const codeWarning = `const alert = createAlert({ variant: 'default', className: 'bg-warning/10 text-warning border-warning/30' });\nalert.appendChild(createAlertIcon('warning'));\nalert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));\nalert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));`;
+        const codeSuccess = `const alert = createAlert({ variant: 'default', className: 'nds-alert-success' });\nalert.appendChild(createAlertIcon('success'));\nalert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));\nalert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));`;
+        const codeWarning = `const alert = createAlert({ variant: 'default', className: 'nds-alert-warning' });\nalert.appendChild(createAlertIcon('warning'));\nalert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));\nalert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));`;
         const codeWithoutTitle = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
 
         return createDocsVariants({
@@ -304,35 +308,150 @@ export function createAlertDocs(): HTMLElement {
               name: 'default',
               description: stripHtml(t('variants.items.default')),
               code: codeDefault,
-              previewFactory: () => buildAlert('default', 'w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
+              previewFactory: () => buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
             },
             {
               name: 'destructive',
               description: stripHtml(t('variants.items.destructive')),
               code: codeDestructive,
-              previewFactory: () => buildAlert('destructive', 'w-full', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
+              previewFactory: () => buildAlert('destructive', 'nds-w-full', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
             },
             {
               name: 'success',
               description: stripHtml(t('variants.items.success')),
               code: codeSuccess,
-              previewFactory: () => buildAlert('default', 'w-full bg-success/10 text-success border-success/30', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
+              previewFactory: () => buildAlert('default', 'nds-w-full nds-alert-success', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
             },
             {
               name: 'warning',
               description: stripHtml(t('variants.items.warning')),
               code: codeWarning,
-              previewFactory: () => buildAlert('default', 'w-full bg-warning/10 text-warning border-warning/30', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+              previewFactory: () => buildAlert('default', 'nds-w-full nds-alert-warning', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
             },
             {
               name: t('states.withoutTitle.label'),
               description: t('states.withoutTitle.behavior'),
               code: codeWithoutTitle,
-              previewFactory: () => buildAlert('default', 'w-full', 'info', null, 'demonstration.labels.infoDesc'),
+              previewFactory: () => buildAlert('default', 'nds-w-full', 'info', null, 'demonstration.labels.infoDesc'),
             },
           ],
         });
       }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'alert',
+          items: [
+            {
+              name: t('variants.compositions.withIcon.name'),
+              description: t('variants.compositions.withIcon.description'),
+              useWhen: t('variants.compositions.withIcon.use'),
+              code:
+                `const alert = createAlert();\n` +
+                `alert.appendChild(createAlertIcon('info'));\n` +
+                `alert.appendChild(createAlertTitle({ text: 'Informação' }));\n` +
+                `alert.appendChild(createAlertDescription({ text: 'Ícone SVG posicionado automaticamente.' }));`,
+              previewFactory: () => buildAlert('default', 'nds-w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
+            },
+            {
+              name: t('variants.compositions.withAction.name'),
+              description: t('variants.compositions.withAction.description'),
+              useWhen: t('variants.compositions.withAction.use'),
+              code:
+                `const alert = createAlert();\n` +
+                `alert.appendChild(createAlertIcon('info'));\n` +
+                `alert.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos' }));\n` +
+                `\n` +
+                `const desc = document.createElement('div');\n` +
+                `desc.className = 'nds-cluster nds-alert-description nds-mt-1';\n` +
+                `const span = document.createElement('span');\n` +
+                `span.textContent = 'Salve seu trabalho para não perder as alterações.';\n` +
+                `desc.appendChild(span);\n` +
+                `desc.appendChild(createButton({ size: 'sm', variant: 'outline', label: 'Salvar agora' }));\n` +
+                `alert.appendChild(desc);`,
+              previewFactory: () => {
+                const el = createAlert({ className: 'nds-w-full' });
+                el.appendChild(createAlertIcon('info'));
+                el.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos' }));
+                const desc = document.createElement('div');
+                desc.className = 'nds-alert-description nds-cluster';
+                desc.dataset.align = 'center';
+                desc.dataset.justify = 'between';
+                desc.style.marginTop = 'var(--spacing-1)';
+                const span = document.createElement('span');
+                span.textContent = 'Salve seu trabalho para não perder as alterações.';
+                desc.appendChild(span);
+                desc.appendChild(createButton({ size: 'sm', variant: 'outline', label: 'Salvar agora' }));
+                el.appendChild(desc);
+                return el;
+              },
+            },
+            {
+              name: t('variants.compositions.compact.name'),
+              description: t('variants.compositions.compact.description'),
+              useWhen: t('variants.compositions.compact.use'),
+              code:
+                `const alert = createAlert({ variant: 'destructive' });\n` +
+                `alert.appendChild(createAlertIcon('error'));\n` +
+                `alert.appendChild(createAlertDescription({ text: 'Formulário incompleto.' }));`,
+              previewFactory: () => buildAlert('destructive', 'nds-w-full', 'error', null, 'demonstration.labels.errorDesc'),
+            },
+            {
+              name: t('variants.compositions.multipleTypes.name'),
+              description: t('variants.compositions.multipleTypes.description'),
+              useWhen: t('variants.compositions.multipleTypes.use'),
+              code:
+                `const wrapper = document.createElement('div');\n` +
+                `wrapper.className = 'nds-stack';\n` +
+                `\n` +
+                `const info = createAlert();\n` +
+                `info.appendChild(createAlertIcon('info'));\n` +
+                `info.appendChild(createAlertTitle({ text: 'Informação' }));\n` +
+                `info.appendChild(createAlertDescription({ text: 'Mensagem informativa e neutra.' }));\n` +
+                `\n` +
+                `const err = createAlert({ variant: 'destructive' });\n` +
+                `err.appendChild(createAlertIcon('error'));\n` +
+                `err.appendChild(createAlertTitle({ text: 'Erro' }));\n` +
+                `err.appendChild(createAlertDescription({ text: 'Erro crítico que bloqueia o fluxo.' }));\n` +
+                `\n` +
+                `const ok = createAlert({ className: 'nds-alert-success' });\n` +
+                `ok.appendChild(createAlertIcon('success'));\n` +
+                `ok.appendChild(createAlertTitle({ text: 'Sucesso' }));\n` +
+                `ok.appendChild(createAlertDescription({ text: 'Ação concluída com sucesso.' }));\n` +
+                `\n` +
+                `const warn = createAlert({ className: 'nds-alert-warning' });\n` +
+                `warn.appendChild(createAlertIcon('warning'));\n` +
+                `warn.appendChild(createAlertTitle({ text: 'Aviso' }));\n` +
+                `warn.appendChild(createAlertDescription({ text: 'Aviso que requer atenção.' }));\n` +
+                `\n` +
+                `wrapper.append(info, err, ok, warn);`,
+              previewFactory: () => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack nds-w-full';
+                const info = createAlert();
+                info.appendChild(createAlertIcon('info'));
+                info.appendChild(createAlertTitle({ text: 'Informação' }));
+                info.appendChild(createAlertDescription({ text: 'Mensagem informativa e neutra.' }));
+                const err = createAlert({ variant: 'destructive' });
+                err.appendChild(createAlertIcon('error'));
+                err.appendChild(createAlertTitle({ text: 'Erro' }));
+                err.appendChild(createAlertDescription({ text: 'Erro crítico que bloqueia o fluxo.' }));
+                const ok = createAlert({ className: 'nds-alert-success' });
+                ok.appendChild(createAlertIcon('success'));
+                ok.appendChild(createAlertTitle({ text: 'Sucesso' }));
+                ok.appendChild(createAlertDescription({ text: 'Ação concluída com sucesso.' }));
+                const warn = createAlert({ className: 'nds-alert-warning' });
+                warn.appendChild(createAlertIcon('warning'));
+                warn.appendChild(createAlertTitle({ text: 'Aviso' }));
+                warn.appendChild(createAlertDescription({ text: 'Aviso que requer atenção.' }));
+                wrapper.append(info, err, ok, warn);
+                return wrapper;
+              },
+            },
+          ],
+        });
 
       case 'estados':
         return createDocsStates({
@@ -425,14 +544,14 @@ export interface AlertTitleOptions {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--background',  value: 'bg-background',                                        description: t('tokens.table.background') },
-            { token: '--foreground',  value: 'text-foreground',                                      description: t('tokens.table.foreground') },
-            { token: '--border',      value: 'border',                                               description: t('tokens.table.border') },
-            { token: '--destructive', value: 'border-destructive/50',                                description: t('tokens.table.destructiveBorder') },
-            { token: '--destructive', value: 'text-destructive',                                     description: t('tokens.table.destructiveText') },
-            { token: '--success',     value: 'bg-success/10 text-success border-success/30',         description: t('tokens.table.success') },
-            { token: '--warning',     value: 'bg-warning/10 text-warning border-warning/30',         description: t('tokens.table.warning') },
-            { token: '--radius',      value: 'rounded-lg',                                           description: t('tokens.table.radius') },
+            { token: '--background',  value: 'hsl(var(--background))',         description: t('tokens.table.background') },
+            { token: '--foreground',  value: 'hsl(var(--foreground))',         description: t('tokens.table.foreground') },
+            { token: '--border',      value: 'hsl(var(--border))',             description: t('tokens.table.border') },
+            { token: '--destructive', value: 'hsl(var(--destructive) / 0.3)',  description: t('tokens.table.destructiveBorder') },
+            { token: '--destructive', value: 'hsl(var(--destructive))',        description: t('tokens.table.destructiveText') },
+            { token: '--success',     value: '.nds-alert-success',             description: t('tokens.table.success') },
+            { token: '--warning',     value: '.nds-alert-warning',             description: t('tokens.table.warning') },
+            { token: '--radius',      value: 'var(--radius-alert, 0.625rem)',  description: t('tokens.table.radius') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

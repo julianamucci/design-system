@@ -123,6 +123,29 @@
           "inputGroupText": "<strong>InputGroupText</strong> — Texto ou ícone decorativo dentro do addon.",
           "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adaptada para uso dentro do InputGroup."
         }
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withLabel": {
+          "name": "Com label",
+          "description": "Input associado a um <code>&lt;label&gt;</code> via <code>htmlFor</code>/<code>id</code>. Label fica acima do input em coluna; o clique no label foca o input.",
+          "use": "Padrão de todo formulário. Sempre forneça label visível — placeholder não substitui label."
+        },
+        "withHint": {
+          "name": "Com texto de apoio",
+          "description": "Input com label + parágrafo de hint abaixo (texto auxiliar explicando formato ou uso). Hint usa cor <code>--muted-foreground</code>.",
+          "use": "Quando o label sozinho não explica o formato esperado (ex.: política de senha, máscara de CPF, exemplos de input)."
+        },
+        "withError": {
+          "name": "Com mensagem de erro",
+          "description": "Input com <code>aria-invalid=\"true\"</code> + mensagem de erro abaixo na cor <code>--destructive</code>. <code>aria-describedby</code> aponta para o id da mensagem.",
+          "use": "Validação síncrona ou após submit. A mensagem deve explicar o problema E sugerir correção — nunca apenas \"campo inválido\"."
+        },
+        "withPrefix": {
+          "name": "Com prefixo",
+          "description": "Input dentro de um wrapper bordado contendo um span de prefixo (ex.: <code>https://</code>, <code>R$</code>) + input sem borda própria. Foco visual no wrapper inteiro via <code>focus-within</code>.",
+          "use": "URLs, valores monetários, identificadores com prefixo fixo (ex.: <code>@</code> para handles)."
+        }
       }
     },
     "states": {
@@ -452,6 +475,29 @@
           "inputGroupText": "<strong>InputGroupText</strong> — Decorative text or icon inside the addon.",
           "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adapted for use inside InputGroup."
         }
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withLabel": {
+          "name": "With label",
+          "description": "Input associated with a <code>&lt;label&gt;</code> via <code>htmlFor</code>/<code>id</code>. Label sits above the input; clicking the label focuses the input.",
+          "use": "Standard for every form. Always provide a visible label — placeholder is not a label substitute."
+        },
+        "withHint": {
+          "name": "With helper text",
+          "description": "Input with label + hint paragraph below (helper text explaining format or usage). Hint uses <code>--muted-foreground</code> color.",
+          "use": "When the label alone doesn't explain the expected format (e.g., password policy, ID mask, input examples)."
+        },
+        "withError": {
+          "name": "With error message",
+          "description": "Input with <code>aria-invalid=\"true\"</code> + error message below in <code>--destructive</code> color. <code>aria-describedby</code> points to the message id.",
+          "use": "Sync or post-submit validation. The message must explain the problem AND suggest a fix — never just \"invalid field\"."
+        },
+        "withPrefix": {
+          "name": "With prefix",
+          "description": "Input inside a bordered wrapper containing a prefix span (e.g., <code>https://</code>, <code>$</code>) + borderless input. Visual focus on the whole wrapper via <code>focus-within</code>.",
+          "use": "URLs, currency values, identifiers with a fixed prefix (e.g., <code>@</code> for handles)."
+        }
       }
     },
     "states": {
@@ -780,6 +826,29 @@
           "inputGroupButton": "<strong>InputGroupButton</strong> — Button adaptado con tamaño reducido para uso interno.",
           "inputGroupText": "<strong>InputGroupText</strong> — Texto o ícono decorativo dentro del addon.",
           "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adaptada para uso dentro del InputGroup."
+        }
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withLabel": {
+          "name": "Con label",
+          "description": "Input asociado a un <code>&lt;label&gt;</code> vía <code>htmlFor</code>/<code>id</code>. El label queda encima del input; el clic en el label enfoca el input.",
+          "use": "Estándar de todo formulario. Provee siempre un label visible — el placeholder no reemplaza al label."
+        },
+        "withHint": {
+          "name": "Con texto de apoyo",
+          "description": "Input con label + párrafo de hint debajo (texto auxiliar explicando formato o uso). El hint usa el color <code>--muted-foreground</code>.",
+          "use": "Cuando el label por sí solo no explica el formato esperado (ej.: política de contraseña, máscara de RUT, ejemplos)."
+        },
+        "withError": {
+          "name": "Con mensaje de error",
+          "description": "Input con <code>aria-invalid=\"true\"</code> + mensaje de error debajo en color <code>--destructive</code>. <code>aria-describedby</code> apunta al id del mensaje.",
+          "use": "Validación sincrónica o tras envío. El mensaje debe explicar el problema Y sugerir corrección — nunca solo \"campo inválido\"."
+        },
+        "withPrefix": {
+          "name": "Con prefijo",
+          "description": "Input dentro de un wrapper bordeado con span de prefijo (ej.: <code>https://</code>, <code>$</code>) + input sin borde propio. Foco visual en todo el wrapper vía <code>focus-within</code>.",
+          "use": "URLs, valores monetarios, identificadores con prefijo fijo (ej.: <code>@</code> para handles)."
         }
       }
     },

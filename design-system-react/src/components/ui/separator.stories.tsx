@@ -28,7 +28,7 @@ const meta = {
     orientation: "horizontal",
     decorative: true,
   },
-} satisfies Meta<typeof Separator>;
+} as Meta<typeof Separator>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

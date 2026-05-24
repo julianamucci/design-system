@@ -152,7 +152,6 @@ export const ManualActivation: Story = {
   render: () => (
     <Tabs
       defaultValue="overview"
-      activationMode="manual"
       className="w-full max-w-lg"
     >
       <TabsList aria-label="Seções do componente">

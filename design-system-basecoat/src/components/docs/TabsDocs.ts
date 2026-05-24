@@ -3,6 +3,7 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createTabs, type TabsItemDef } from '@/components/ui/tabs';
+import { createBadge } from '@/components/ui/badge';
 import uiTranslations from '@/i18n/ui.json';
 import tabsTranslations from '@shared/content/tabs/translations.json';
 
@@ -14,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -49,9 +51,61 @@ function priorityLabel(raw: string): string {
 // Helper: build a plain-text content panel safely (textContent — no XSS)
 function textPanel(text: string, extraClass = ''): HTMLElement {
   const div = document.createElement('div');
-  div.className = ['text-sm text-muted-foreground p-3 rounded-md border bg-card', extraClass].filter(Boolean).join(' ');
+  div.className = ['nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card', extraClass].filter(Boolean).join(' ');
   div.textContent = text;
   return div;
+}
+
+// SVG icon builders for composicoes (User / Settings / Shield from lucide).
+function svgIcon(builder: (svg: SVGSVGElement) => void): SVGSVGElement {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('class', 'nds-icon nds-shrink-0');
+  builder(svg);
+  return svg;
+}
+function appendChildNS(svg: SVGSVGElement, tag: string, attrs: Record<string, string>): void {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  svg.appendChild(el);
+}
+function iconUser(): SVGSVGElement {
+  return svgIcon((svg) => {
+    appendChildNS(svg, 'path', { d: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' });
+    appendChildNS(svg, 'circle', { cx: '12', cy: '7', r: '4' });
+  });
+}
+function iconSettings(): SVGSVGElement {
+  return svgIcon((svg) => {
+    appendChildNS(svg, 'path', { d: 'M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z' });
+    appendChildNS(svg, 'circle', { cx: '12', cy: '12', r: '3' });
+  });
+}
+function iconShield(): SVGSVGElement {
+  return svgIcon((svg) => {
+    appendChildNS(svg, 'path', { d: 'M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' });
+  });
+}
+
+function richPanel(title: string, description: string): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack';
+  wrap.dataset.spacing = 'sm';
+  const h = document.createElement('h3');
+  h.className = 'nds-text-body nds-font-semibold';
+  h.textContent = title;
+  const p = document.createElement('p');
+  p.className = 'nds-text-body nds-text-muted-foreground';
+  p.textContent = description;
+  wrap.append(h, p);
+  return wrap;
 }
 
 function buildDemoTabs(): HTMLElement {
@@ -65,7 +119,7 @@ function buildDemoTabs(): HTMLElement {
   const root = createTabs({
     defaultValue: 'overview',
     items,
-    class: 'w-full max-w-xl',
+    class: 'nds-w-full',
     onValueChange: (value) => {
       const idx = items.findIndex((i) => i.value === value);
       track('tab_change', {
@@ -125,6 +179,7 @@ export function createTabsDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -175,7 +230,7 @@ export function createTabsDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -255,7 +310,7 @@ export function createTabsDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'overview',
-                  class: 'w-full max-w-xs',
+                  class: 'nds-w-full nds-max-w-xs',
                   items: [
                     { value: 'overview',   label: 'Visão geral',  content: textPanel('Conteúdo.') },
                     { value: 'properties', label: 'Propriedades', content: textPanel('Conteúdo.') },
@@ -267,7 +322,7 @@ export function createTabsDocs(): HTMLElement {
               dontPreviewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'a',
-                  class: 'w-full max-w-xs',
+                  class: 'nds-w-full nds-max-w-xs',
                   items: [
                     { value: 'a', label: 'Aba 1', content: textPanel('Conteúdo.') },
                     { value: 'b', label: 'Aba 2', content: textPanel('Conteúdo.') },
@@ -285,7 +340,7 @@ export function createTabsDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'profile',
-                  class: 'w-full max-w-xs',
+                  class: 'nds-w-full nds-max-w-xs',
                   items: [
                     { value: 'profile',  label: 'Perfil',  content: textPanel('Conteúdo.') },
                     { value: 'account',  label: 'Conta',   content: textPanel('Conteúdo.') },
@@ -298,7 +353,7 @@ export function createTabsDocs(): HTMLElement {
               dontPreviewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'a',
-                  class: 'w-full max-w-xs',
+                  class: 'nds-w-full nds-max-w-xs',
                   items: [
                     { value: 'a', label: 'Aba A', content: textPanel('Conteúdo.') },
                     { value: 'b', label: 'Aba B', content: textPanel('Conteúdo.') },
@@ -334,15 +389,14 @@ export function createTabsDocs(): HTMLElement {
 // e ajustar o TabsList depois.
 const root = createTabs({ defaultValue: 'overview', items: [...] });
 const list = root.querySelector('[role="tablist"]');
-list?.classList.remove('bg-muted', 'rounded-lg');
-list?.classList.add('border-b', 'rounded-none', 'bg-transparent');`;
+list?.classList.add('nds-border-b', 'nds-bg-transparent'); list?.style.borderRadius = '0';`;
         const codeVertical =
 `// Basecoat: factory custom NÃO expõe orientation="vertical".
 // Para orientação vertical, envolver em flex e reaplicar o layout.
 const root = createTabs({ defaultValue: 'overview', items: [...] });
-root.classList.add('flex', 'gap-4');
+root.classList.add('nds-cluster');
 const list = root.querySelector('[role="tablist"]');
-list?.classList.add('flex-col', 'h-auto');
+list?.classList.add('nds-stack'); list?.style.height = 'auto';
 list?.setAttribute('aria-orientation', 'vertical');`;
 
         return createDocsVariants({
@@ -356,7 +410,7 @@ list?.setAttribute('aria-orientation', 'vertical');`;
               previewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'overview',
-                  class: 'w-full max-w-md',
+                  class: 'nds-w-full nds-max-w-md',
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
                     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
@@ -374,7 +428,7 @@ list?.setAttribute('aria-orientation', 'vertical');`;
               previewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'overview',
-                  class: 'w-full max-w-md',
+                  class: 'nds-w-full nds-max-w-md',
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
                     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
@@ -383,8 +437,7 @@ list?.setAttribute('aria-orientation', 'vertical');`;
                 });
                 const list = r.querySelector('[role="tablist"]') as HTMLElement | null;
                 if (list) {
-                  list.classList.remove('bg-muted', 'rounded-lg');
-                  list.classList.add('border-b', 'rounded-none', 'bg-transparent', 'w-full', 'justify-start');
+                  list.classList.add('nds-border-b', 'nds-bg-transparent', 'nds-w-full'); list.style.borderRadius = '0'; list.style.justifyContent = 'flex-start';
                   list.setAttribute('aria-label', t('demonstration.title'));
                 }
                 return r;
@@ -397,7 +450,7 @@ list?.setAttribute('aria-orientation', 'vertical');`;
               previewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'overview',
-                  class: 'w-full max-w-md flex gap-4',
+                  class: 'nds-w-full nds-max-w-md nds-cluster',
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
                     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
@@ -406,10 +459,210 @@ list?.setAttribute('aria-orientation', 'vertical');`;
                 });
                 const list = r.querySelector('[role="tablist"]') as HTMLElement | null;
                 if (list) {
-                  list.classList.remove('inline-flex', 'h-9', 'items-center', 'justify-center');
-                  list.classList.add('flex', 'flex-col', 'h-auto', 'items-stretch', 'shrink-0');
+                  list.classList.add('nds-stack', 'nds-shrink-0'); list.style.height = 'auto'; list.style.alignItems = 'stretch';
                   list.setAttribute('aria-label', t('demonstration.title'));
                   list.setAttribute('aria-orientation', 'vertical');
+                }
+                return r;
+              },
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        const codeIconTrigger =
+`const items = [
+  { value: 'profile',  label: 'Perfil',    content: panelEl },
+  { value: 'account',  label: 'Conta',     content: panelEl },
+  { value: 'security', label: 'Segurança', content: panelEl },
+];
+const root = createTabs({ defaultValue: 'profile', class: 'nds-w-full', items });
+// Substitui textContent do trigger por icon + label
+items.forEach((item) => {
+  const trigger = root.querySelector(\`[role="tab"][data-value="\${item.value}"]\`);
+  if (!trigger) return;
+  trigger.textContent = '';
+  const wrapper = document.createElement('span');
+  wrapper.className = 'nds-cluster';
+  wrapper.appendChild(iconFor(item.value));  // SVG aria-hidden="true"
+  const label = document.createElement('span');
+  label.textContent = item.label;
+  wrapper.appendChild(label);
+  trigger.appendChild(wrapper);
+});
+root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Configurações');`;
+
+        const codeBadgeTrigger =
+`const items = [
+  { value: 'inbox', label: 'Caixa de entrada', content: panelEl },
+  { value: 'spam',  label: 'Spam',             content: panelEl },
+  { value: 'trash', label: 'Lixeira',          content: panelEl },
+];
+const root = createTabs({ defaultValue: 'inbox', class: 'nds-w-full', items });
+const badgeMap = {
+  inbox: { text: '12', variant: 'default' as const },
+  spam:  { text: '3',  variant: 'destructive' as const },
+};
+Object.entries(badgeMap).forEach(([value, cfg]) => {
+  const trigger = root.querySelector(\`[role="tab"][data-value="\${value}"]\`);
+  if (!trigger) return;
+  const labelText = trigger.textContent ?? '';
+  trigger.textContent = '';
+  const wrapper = document.createElement('span');
+  wrapper.className = 'nds-cluster';
+  const labelEl = document.createElement('span');
+  labelEl.textContent = labelText;
+  wrapper.append(labelEl, createBadge({ text: cfg.text, variant: cfg.variant, className: 'text-[10px] h-4' }));
+  trigger.appendChild(wrapper);
+});
+root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de mensagem');`;
+
+        const codeVertical =
+`const root = createTabs({
+  defaultValue: 'profile',
+  class: 'nds-w-full nds-cluster',
+  items: [
+    { value: 'profile',  label: 'Perfil',    content: panelEl },
+    { value: 'account',  label: 'Conta',     content: panelEl },
+    { value: 'security', label: 'Segurança', content: panelEl },
+  ],
+});
+const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
+if (list) {
+  list.classList.add('nds-stack', 'nds-shrink-0'); list.style.height = 'auto'; list.style.alignItems = 'stretch'; list.style.minWidth = '10rem';
+  list.setAttribute('aria-orientation', 'vertical');
+  list.setAttribute('aria-label', 'Configurações');
+}`;
+
+        const codeLineSubNav =
+`const root = createTabs({
+  defaultValue: 'all',
+  class: 'nds-w-full',
+  items: [
+    { value: 'all',      label: 'Tudo',       content: panelEl },
+    { value: 'active',   label: 'Ativos',     content: panelEl },
+    { value: 'archived', label: 'Arquivados', content: panelEl },
+  ],
+});
+const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
+if (list) {
+  list.classList.add('nds-border-b', 'nds-bg-transparent', 'nds-w-full'); list.style.borderRadius = '0'; list.style.justifyContent = 'flex-start';
+  list.setAttribute('aria-label', 'Filtros de listagem');
+}`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'tabs',
+          items: [
+            {
+              name: t('variants.compositions.iconTrigger.name'),
+              description: t('variants.compositions.iconTrigger.description'),
+              useWhen: t('variants.compositions.iconTrigger.use'),
+              code: codeIconTrigger,
+              previewFactory: () => {
+                const items: TabsItemDef[] = [
+                  { value: 'profile',  label: 'Perfil',    content: richPanel('Perfil',    'Edite suas informações públicas.') },
+                  { value: 'account',  label: 'Conta',     content: richPanel('Conta',     'Email, idioma e preferências.') },
+                  { value: 'security', label: 'Segurança', content: richPanel('Segurança', 'Senha e autenticação em dois fatores.') },
+                ];
+                const iconMap: Record<string, () => SVGSVGElement> = {
+                  profile: iconUser,
+                  account: iconSettings,
+                  security: iconShield,
+                };
+                const r = createTabs({ defaultValue: 'profile', class: 'nds-w-full', items });
+                items.forEach((item) => {
+                  const trigger = r.querySelector<HTMLButtonElement>(`[role="tab"][data-value="${item.value}"]`);
+                  if (!trigger) return;
+                  trigger.textContent = '';
+                  const wrapper = document.createElement('span');
+                  wrapper.className = 'nds-cluster';
+                  wrapper.dataset.spacing = 'sm';
+                  wrapper.appendChild(iconMap[item.value]());
+                  const label = document.createElement('span');
+                  label.textContent = item.label;
+                  wrapper.appendChild(label);
+                  trigger.appendChild(wrapper);
+                });
+                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Configurações');
+                return r;
+              },
+            },
+            {
+              name: t('variants.compositions.badgeTrigger.name'),
+              description: t('variants.compositions.badgeTrigger.description'),
+              useWhen: t('variants.compositions.badgeTrigger.use'),
+              code: codeBadgeTrigger,
+              previewFactory: () => {
+                const items: TabsItemDef[] = [
+                  { value: 'inbox', label: 'Caixa de entrada', content: richPanel('Caixa de entrada', '12 mensagens não lidas.') },
+                  { value: 'spam',  label: 'Spam',             content: richPanel('Spam',             '3 mensagens marcadas como spam.') },
+                  { value: 'trash', label: 'Lixeira',          content: richPanel('Lixeira',          'Itens excluídos nos últimos 30 dias.') },
+                ];
+                const badgeMap: Record<string, { text: string; variant: 'default' | 'destructive' }> = {
+                  inbox: { text: '12', variant: 'default' },
+                  spam:  { text: '3',  variant: 'destructive' },
+                };
+                const r = createTabs({ defaultValue: 'inbox', class: 'nds-w-full', items });
+                items.forEach((item) => {
+                  const cfg = badgeMap[item.value];
+                  if (!cfg) return;
+                  const trigger = r.querySelector<HTMLButtonElement>(`[role="tab"][data-value="${item.value}"]`);
+                  if (!trigger) return;
+                  trigger.textContent = '';
+                  const wrapper = document.createElement('span');
+                  wrapper.className = 'nds-cluster';
+                  wrapper.dataset.spacing = 'sm';
+                  const labelEl = document.createElement('span');
+                  labelEl.textContent = item.label;
+                  const badge = createBadge({ text: cfg.text, variant: cfg.variant });
+                  Object.assign(badge.style, { fontSize: '10px', height: '1rem' });
+                  wrapper.append(labelEl, badge);
+                  trigger.appendChild(wrapper);
+                });
+                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de mensagem');
+                return r;
+              },
+            },
+            {
+              name: t('variants.compositions.vertical.name'),
+              description: t('variants.compositions.vertical.description'),
+              useWhen: t('variants.compositions.vertical.use'),
+              code: codeVertical,
+              previewFactory: () => {
+                const items: TabsItemDef[] = [
+                  { value: 'profile',  label: 'Perfil',    content: richPanel('Perfil',    'Edite suas informações públicas.') },
+                  { value: 'account',  label: 'Conta',     content: richPanel('Conta',     'Email, idioma e preferências.') },
+                  { value: 'security', label: 'Segurança', content: richPanel('Segurança', 'Senha e autenticação em dois fatores.') },
+                ];
+                const r = createTabs({ defaultValue: 'profile', class: 'nds-w-full nds-cluster', items });
+                const list = r.querySelector('[role="tablist"]') as HTMLElement | null;
+                if (list) {
+                  list.classList.add('nds-stack', 'nds-shrink-0'); list.style.height = 'auto'; list.style.alignItems = 'stretch'; list.style.minWidth = '10rem';
+                  list.setAttribute('aria-orientation', 'vertical');
+                  list.setAttribute('aria-label', 'Configurações');
+                }
+                return r;
+              },
+            },
+            {
+              name: t('variants.compositions.lineSubNav.name'),
+              description: t('variants.compositions.lineSubNav.description'),
+              useWhen: t('variants.compositions.lineSubNav.use'),
+              code: codeLineSubNav,
+              previewFactory: () => {
+                const items: TabsItemDef[] = [
+                  { value: 'all',      label: 'Tudo',       content: textPanel('Mostrando todos os itens.') },
+                  { value: 'active',   label: 'Ativos',     content: textPanel('Mostrando apenas ativos.') },
+                  { value: 'archived', label: 'Arquivados', content: textPanel('Mostrando apenas arquivados.') },
+                ];
+                const r = createTabs({ defaultValue: 'all', class: 'nds-w-full', items });
+                const list = r.querySelector('[role="tablist"]') as HTMLElement | null;
+                if (list) {
+                  list.classList.add('nds-border-b', 'nds-bg-transparent', 'nds-w-full'); list.style.borderRadius = '0'; list.style.justifyContent = 'flex-start';
+                  list.setAttribute('aria-label', 'Filtros de listagem');
                 }
                 return r;
               },

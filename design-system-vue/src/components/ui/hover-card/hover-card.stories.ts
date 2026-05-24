@@ -40,10 +40,10 @@ const meta = {
     openDelay: 100,
     closeDelay: 100,
   },
-} satisfies Meta<typeof HoverCard>;
+} satisfies Meta<any>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<Meta<any>>;
 
 export const Playground: Story = {
   argTypes: {
@@ -59,7 +59,6 @@ export const Playground: Story = {
     },
   },
   args: {
-    // @ts-expect-error - argTypes locais para preview do Content
     side: 'bottom',
     align: 'center',
   },

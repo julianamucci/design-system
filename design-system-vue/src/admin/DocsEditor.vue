@@ -133,7 +133,7 @@ function handleKeyDown(e: KeyboardEvent) {
 
 <script lang="ts">
 // ─── FieldEditor sub-component ───────────────────────────────────────────────
-import { defineComponent, h, ref, watch, onMounted, onBeforeUnmount, type PropType } from 'vue';
+import { defineComponent, h, ref as _ref, watch as _watch, onMounted as _onMounted, onBeforeUnmount as _onBeforeUnmount, type PropType } from 'vue';
 
 export const FieldEditor = defineComponent({
   name: 'FieldEditor',
@@ -148,10 +148,10 @@ export const FieldEditor = defineComponent({
     const isNested = () => typeof props.value === 'object' && props.value !== null && !Array.isArray(props.value);
     const label    = () => props.fieldKey.split('.').at(-1) ?? props.fieldKey;
 
-    const containerRef = ref<HTMLDivElement | null>(null);
-    const quillRef     = ref<Quill | null>(null);
+    const containerRef = _ref<HTMLDivElement | null>(null);
+    const quillRef     = _ref<Quill | null>(null);
 
-    onMounted(() => {
+    _onMounted(() => {
       if (!isHtml() || !containerRef.value) return;
 
       const quill = new Quill(containerRef.value, {
@@ -163,9 +163,9 @@ export const FieldEditor = defineComponent({
       quillRef.value = quill;
     });
 
-    onBeforeUnmount(() => quillRef.value?.off('text-change'));
+    _onBeforeUnmount(() => quillRef.value?.off('text-change'));
 
-    watch(() => props.value, (v) => {
+    _watch(() => props.value, (v) => {
       const q = quillRef.value;
       if (q && typeof v === 'string' && q.root.innerHTML !== v) q.root.innerHTML = v;
     });

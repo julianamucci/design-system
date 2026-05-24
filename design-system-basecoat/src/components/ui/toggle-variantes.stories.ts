@@ -25,14 +25,14 @@ type Story = StoryObj;
 
 type LucideIconNode = [string, Record<string, string>];
 
-function wrapIcon(icon: unknown, className = 'h-4 w-4'): HTMLSpanElement {
+function wrapIcon(icon: unknown, className = 'nds-icon-sm'): HTMLSpanElement {
   const span = document.createElement('span');
-  span.className = 'inline-flex';
+  span.style.display = 'inline-flex';
   span.appendChild(buildLucideSvg(icon, className));
   return span;
 }
 
-function buildLucideSvg(icon: unknown, className = 'h-4 w-4'): SVGSVGElement {
+function buildLucideSvg(icon: unknown, className = 'nds-icon-sm'): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -120,7 +120,9 @@ export const Outline: Story = {
 export const WithLabel: Story = {
   render: () => {
     const wrap = document.createElement('span');
-    wrap.className = 'inline-flex items-center gap-2';
+    wrap.className = 'nds-cluster';
+    wrap.dataset.spacing = 'sm';
+    wrap.style.display = 'inline-flex';
     wrap.appendChild(buildLucideSvg(Eye));
     const text = document.createElement('span');
     text.textContent = 'Mostrar ocultos';

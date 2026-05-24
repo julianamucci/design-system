@@ -1,6 +1,7 @@
-import { cn } from '@/lib/utils';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Tooltip — Vanilla factory standalone ───────────────────────────────────
+//
+// Visual: classe .nds-tooltip-content (zero Tailwind/basecoat-css).
+// Render via portal (body) com posicionamento absoluto via JS.
 
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
@@ -10,8 +11,6 @@ export type TooltipOptions = {
   side?: TooltipSide;
   class?: string;
 };
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 let _tooltipCounter = 0;
 const SHOW_DELAY = 300;
@@ -53,8 +52,6 @@ function positionTooltip(
   panel.style.left = `${left}px`;
 }
 
-// ─── createTooltip ────────────────────────────────────────────────────────────
-
 export function createTooltip(options: TooltipOptions): HTMLElement {
   const { trigger, content, side = 'top' } = options;
 
@@ -77,12 +74,9 @@ export function createTooltip(options: TooltipOptions): HTMLElement {
     panelEl = document.createElement('div');
     panelEl.id = tooltipId;
     panelEl.setAttribute('role', 'tooltip');
-    panelEl.className = cn(
-      'z-50 overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground',
-      options.class
-    );
+    panelEl.className = 'nds-tooltip-content';
+    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
     panelEl.dataset.slot = 'tooltip-content';
-    panelEl.style.position = 'absolute';
     panelEl.textContent = content;
 
     document.body.appendChild(panelEl);

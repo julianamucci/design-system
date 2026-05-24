@@ -10,7 +10,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -51,9 +51,10 @@
         { id: 'do-dont',      label: tNav('nav.doDont')        },
       ]},
       { label: tNav('nav.techRef'), sections: [
-        { id: 'importacao',   label: tNav('nav.import')   },
-        { id: 'variantes',    label: tNav('nav.variants') },
-        { id: 'estados',      label: tNav('nav.states')   },
+        { id: 'importacao',   label: tNav('nav.import')       },
+        { id: 'variantes',    label: tNav('nav.variants')     },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
+        { id: 'estados',      label: tNav('nav.states')       },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
       ]},
@@ -531,6 +532,154 @@ type ChartConfig = Record<string, {
     <div class="flex items-center justify-center h-[180px] w-[220px] text-xs text-muted-foreground text-center px-4">
       Pie chart não suportado nativamente em layerchart.<br />
       Use SVG puro ou biblioteca auxiliar.
+    </div>
+  {/snippet}
+
+  <!-- ── Composições ──────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="chart"
+    items={[
+      {
+        name: $tStore('variants.compositions.inCard.name'),
+        description: $tStore('variants.compositions.inCard.description'),
+        useWhen: $tStore('variants.compositions.inCard.use'),
+        code: `<Card class="w-full max-w-sm">
+  <CardHeader>
+    <CardTitle>Acessos mensais</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <ChartContainer config={singleConfig} class="h-[200px] w-full" aria-label="...">
+      <BarChart {data} x="month" y="value" series={[{ key: 'value', value: (d) => d.value, color: 'var(--color-value)', label: 'Acessos' }]} bandPadding={0.3}>
+        <ChartTooltip />
+      </BarChart>
+    </ChartContainer>
+  </CardContent>
+</Card>`,
+        preview: compInCard,
+      },
+      {
+        name: $tStore('variants.compositions.multiSeriesWithLegend.name'),
+        description: $tStore('variants.compositions.multiSeriesWithLegend.description'),
+        useWhen: $tStore('variants.compositions.multiSeriesWithLegend.use'),
+        code: `<ChartContainer config={multiConfig} class="h-[200px] w-full" aria-label="Gráfico multi-séries: Desktop e Mobile">
+  <BarChart {data} x="month" y="value" series={[
+    { key: 'value',  value: (d) => d.value,  color: 'var(--color-value)',  label: 'Desktop' },
+    { key: 'value2', value: (d) => d.value2, color: 'var(--color-value2)', label: 'Mobile'  },
+  ]} seriesLayout="group" bandPadding={0.3}>
+    <ChartTooltip />
+  </BarChart>
+</ChartContainer>`,
+        preview: compMultiSeries,
+      },
+      {
+        name: $tStore('variants.compositions.smallInline.name'),
+        description: $tStore('variants.compositions.smallInline.description'),
+        useWhen: $tStore('variants.compositions.smallInline.use'),
+        code: `<div class="flex items-center gap-4 rounded-md border p-4 w-fit">
+  <div>
+    <p class="text-xs text-muted-foreground">Acessos</p>
+    <p class="text-2xl font-semibold">1.224</p>
+  </div>
+  <ChartContainer config={singleConfig} class="h-[48px] w-[120px]" aria-label="Tendência de acessos">
+    <LineChart {data} x="month" y="value" series={[{ key: 'value', value: (d) => d.value, color: 'var(--color-value)' }]} />
+  </ChartContainer>
+</div>`,
+        preview: compSmallInline,
+      },
+      {
+        name: $tStore('variants.compositions.withEmptyState.name'),
+        description: $tStore('variants.compositions.withEmptyState.description'),
+        useWhen: $tStore('variants.compositions.withEmptyState.use'),
+        code: `{#if data.length === 0}
+  <div role="status" class="flex h-[200px] w-full items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground">
+    Nenhum dado disponível para o período selecionado.
+  </div>
+{:else}
+  <ChartContainer config={singleConfig} class="h-[200px] w-full" aria-label="...">
+    <!-- ... -->
+  </ChartContainer>
+{/if}`,
+        preview: compEmptyState,
+      },
+    ]}
+  />
+
+  {#snippet compInCard()}
+    <Card class="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle>Acessos mensais</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer
+          config={singleConfig}
+          class="h-[180px] w-full"
+          aria-label="Gráfico de barras: acessos mensais"
+        >
+          <BarChart
+            data={monthlyData}
+            x="month"
+            y="value"
+            series={[{ key: 'value', value: (d: any) => d.value, color: 'var(--color-value)', label: 'Acessos' }]}
+            bandPadding={0.3}
+          >
+            <ChartTooltip />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
+  {/snippet}
+
+  {#snippet compMultiSeries()}
+    <ChartContainer
+      config={multiConfig}
+      class="h-[200px] w-full max-w-md"
+      aria-label="Gráfico multi-séries: Desktop e Mobile"
+    >
+      <BarChart
+        data={multiSeriesData}
+        x="month"
+        y="value"
+        series={[
+          { key: 'value',  value: (d: any) => d.value,  color: 'var(--color-value)',  label: 'Desktop' },
+          { key: 'value2', value: (d: any) => d.value2, color: 'var(--color-value2)', label: 'Mobile'  },
+        ]}
+        seriesLayout="group"
+        bandPadding={0.3}
+      >
+        <ChartTooltip />
+      </BarChart>
+    </ChartContainer>
+  {/snippet}
+
+  {#snippet compSmallInline()}
+    <div class="flex items-center gap-4 rounded-md border p-4 w-fit">
+      <div>
+        <p class="text-xs text-muted-foreground">Acessos</p>
+        <p class="text-2xl font-semibold">1.224</p>
+      </div>
+      <ChartContainer
+        config={singleConfig}
+        class="h-[48px] w-[120px]"
+        aria-label="Tendência de acessos nos últimos 6 meses"
+      >
+        <LineChart
+          data={monthlyData}
+          x="month"
+          y="value"
+          series={[{ key: 'value', value: (d: any) => d.value, color: 'var(--color-value)' }]}
+        />
+      </ChartContainer>
+    </div>
+  {/snippet}
+
+  {#snippet compEmptyState()}
+    <div
+      role="status"
+      class="flex h-[200px] w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+    >
+      Nenhum dado disponível para o período selecionado.
     </div>
   {/snippet}
 

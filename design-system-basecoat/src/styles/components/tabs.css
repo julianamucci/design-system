@@ -1,0 +1,89 @@
+/*
+ * ─── nds-tabs ───────────────────────────────────────────────────────────────
+ * Componente de abas com lista de triggers + painéis de conteúdo.
+ *
+ * Estrutura:
+ *   <div class="nds-tabs" data-slot="tabs">
+ *     <div class="nds-tabs-list" role="tablist">
+ *       <button class="nds-tabs-trigger" role="tab" data-state="active|inactive">…</button>
+ *       …
+ *     </div>
+ *     <div class="nds-tabs-content" role="tabpanel" hidden|visible>…</div>
+ *   </div>
+ *
+ * Tokens: --muted (track), --background (active bg), --foreground (active fg),
+ *         --muted-foreground (inactive fg), --ring, --radius, --spacing-*
+ */
+
+.nds-tabs {
+  width: 100%;
+}
+
+/* ── List (track de triggers) ────────────────────────────────────────────── */
+.nds-tabs-list {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: var(--spacing-9, 2.25rem);          /* 36px — fora grid-8 (padrão shadcn) */
+  padding: var(--spacing-1, 0.25rem);          /* 4px interno */
+
+  background-color: hsl(var(--muted));
+  border-radius: var(--radius, 0.5rem);
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Trigger ─────────────────────────────────────────────────────────────── */
+.nds-tabs-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  gap: var(--spacing-1);
+
+  padding-inline: var(--spacing-3, 0.75rem);
+  padding-block: var(--spacing-1, 0.25rem);
+
+  background: transparent;
+  border: 0;
+  border-radius: calc(var(--radius, 0.5rem) - 0.125rem);
+  font-family: inherit;
+  font-size: 0.875rem;                          /* 14px */
+  font-weight: var(--font-weight-medium, 500);
+  color: inherit;
+  cursor: pointer;
+  outline: 0;
+  transition: background-color 150ms, color 150ms, box-shadow 150ms;
+}
+
+.nds-tabs-trigger:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring) / 0.5);
+}
+
+.nds-tabs-trigger[data-state="active"] {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+}
+
+.nds-tabs-trigger:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ── Content (painel) ────────────────────────────────────────────────────── */
+.nds-tabs-content {
+  margin-top: var(--spacing-2);                 /* 8px */
+  outline: 0;
+}
+
+.nds-tabs-content:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring) / 0.5);
+  border-radius: var(--radius, 0.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-tabs-trigger {
+    transition: none;
+  }
+}

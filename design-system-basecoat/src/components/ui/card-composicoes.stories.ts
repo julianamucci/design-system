@@ -32,7 +32,7 @@ type Story = StoryObj;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function buildProductCardWithFooter(): HTMLElement {
-  const card = createCard({ className: 'w-full max-w-sm' });
+  const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
 
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
@@ -40,11 +40,13 @@ function buildProductCardWithFooter(): HTMLElement {
 
   const content = createCardContent();
   const price = document.createElement('p');
-  price.className = 'text-lg font-semibold';
+  price.className = 'nds-text-h4 nds-font-semibold';
   price.textContent = 'R$ 1.299,00';
   content.appendChild(price);
 
-  const footer = createCardFooter({ className: 'justify-end gap-2' });
+  const footer = createCardFooter({ className: 'nds-cluster' });
+  footer.dataset.spacing = 'sm';
+  footer.dataset.justify = 'end';
   footer.appendChild(
     createButton({ variant: 'outline', label: 'Editar', ariaLabel: 'Editar produto Cadeira Gamer Pro' }),
   );
@@ -85,7 +87,7 @@ export const WithAction: Story = {
     },
   },
   render: () => {
-    const card = createCard({ className: 'w-full max-w-sm' });
+    const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
 
     const header = createCardHeader();
     header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 3 }));
@@ -104,7 +106,7 @@ export const WithAction: Story = {
 
     const content = createCardContent();
     const value = document.createElement('p');
-    value.className = 'text-2xl font-semibold';
+    value.className = 'nds-text-h3 nds-font-semibold';
     value.textContent = '8.742';
     content.appendChild(value);
 
@@ -130,12 +132,14 @@ export const WithImage: Story = {
     },
   },
   render: () => {
-    const card = createCard({ className: 'w-full max-w-sm' });
+    const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
 
     const img = document.createElement('img');
     img.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80';
     img.alt = 'Cadeira Gamer Pro';
-    img.className = 'w-full h-40 object-cover';
+    img.className = 'nds-w-full';
+    img.style.height = '10rem';
+    img.style.objectFit = 'cover';
 
     const header = createCardHeader();
     header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));

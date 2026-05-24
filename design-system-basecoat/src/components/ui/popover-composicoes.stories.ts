@@ -28,7 +28,9 @@ type Story = StoryObj;
 function wrap(child: HTMLElement): HTMLElement {
   const w = document.createElement('div');
   w.style.contain = 'layout';
-  w.className = 'w-full min-h-[300px] flex items-center justify-center';
+  w.className = 'nds-cluster nds-w-full';
+  w.dataset.justify = 'center';
+  w.style.minHeight = '300px';
   w.appendChild(child);
   return w;
 }
@@ -54,26 +56,29 @@ export const EditarPerfil: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
     const form = document.createElement('form');
-    form.className = 'space-y-3';
+    form.className = 'nds-stack';
+    form.dataset.spacing = 'sm';
     form.addEventListener('submit', (e) => e.preventDefault());
 
     const title = document.createElement('h4');
-    title.className = 'text-sm font-medium leading-none';
+    title.className = 'nds-text-body nds-font-medium nds-leading-none';
     title.textContent = 'Dados do perfil';
 
     const desc = document.createElement('p');
-    desc.className = 'text-xs text-muted-foreground';
+    desc.className = 'nds-text-caption nds-text-muted-foreground';
     desc.textContent = 'As mudanças são salvas ao confirmar.';
 
     const nameRow = document.createElement('div');
-    nameRow.className = 'space-y-1';
+    nameRow.className = 'nds-stack';
+    nameRow.dataset.spacing = 'xs';
     nameRow.append(
       createLabel({ text: 'Nome', htmlFor: 'pc-name' }),
       createInput({ id: 'pc-name', placeholder: 'Joana Silva', value: 'Joana Silva' }),
     );
 
     const emailRow = document.createElement('div');
-    emailRow.className = 'space-y-1';
+    emailRow.className = 'nds-stack';
+    emailRow.dataset.spacing = 'xs';
     emailRow.append(
       createLabel({ text: 'Email', htmlFor: 'pc-email' }),
       createInput({ id: 'pc-email', type: 'email', value: 'joana@example.com' }),
@@ -107,10 +112,11 @@ export const FiltroDeTabela: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Filtros' });
 
     const content = document.createElement('div');
-    content.className = 'space-y-2';
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'xs';
 
     const title = document.createElement('h4');
-    title.className = 'text-sm font-medium leading-none';
+    title.className = 'nds-text-body nds-font-medium nds-leading-none';
     title.textContent = 'Filtrar por status';
 
     content.appendChild(title);
@@ -118,11 +124,12 @@ export const FiltroDeTabela: Story = {
     const options = ['Ativo', 'Pendente', 'Arquivado'];
     for (const opt of options) {
       const row = document.createElement('label');
-      row.className = 'flex items-center gap-2 text-sm';
+      row.className = 'nds-cluster nds-text-body';
+      row.dataset.spacing = 'sm';
 
       const cb = document.createElement('input');
       cb.type = 'checkbox';
-      cb.className = 'h-4 w-4';
+      cb.className = 'nds-icon-sm';
       if (opt === 'Ativo') cb.checked = true;
 
       const text = document.createElement('span');
@@ -133,7 +140,10 @@ export const FiltroDeTabela: Story = {
     }
 
     const actions = document.createElement('div');
-    actions.className = 'flex justify-end gap-2 pt-2';
+    actions.className = 'nds-cluster';
+    actions.dataset.spacing = 'sm';
+    actions.dataset.justify = 'end';
+    actions.style.paddingTop = 'var(--spacing-2, 0.5rem)';
     const clear = createButton({ variant: 'ghost', size: 'sm', label: 'Limpar' });
     const apply = createButton({ variant: 'default', size: 'sm', label: 'Aplicar' });
     actions.append(clear, apply);
@@ -163,28 +173,35 @@ export const SeletorDeCor: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Cor' });
 
     const content = document.createElement('div');
-    content.className = 'space-y-2';
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'xs';
 
     const title = document.createElement('h4');
-    title.className = 'text-sm font-medium leading-none';
+    title.className = 'nds-text-body nds-font-medium nds-leading-none';
     title.textContent = 'Selecionar cor';
 
     const grid = document.createElement('div');
-    grid.className = 'grid grid-cols-6 gap-2';
+    grid.className = 'nds-grid';
+    grid.dataset.cols = '6';
+    grid.dataset.spacing = 'xs';
 
     const swatches = [
-      { name: 'Vermelho',  bg: 'bg-red-500'    },
-      { name: 'Laranja',   bg: 'bg-orange-500' },
-      { name: 'Amarelo',   bg: 'bg-yellow-500' },
-      { name: 'Verde',     bg: 'bg-green-500'  },
-      { name: 'Azul',      bg: 'bg-blue-500'   },
-      { name: 'Roxo',      bg: 'bg-purple-500' },
+      { name: 'Vermelho',  color: '#ef4444' },
+      { name: 'Laranja',   color: '#f97316' },
+      { name: 'Amarelo',   color: '#eab308' },
+      { name: 'Verde',     color: '#22c55e' },
+      { name: 'Azul',      color: '#3b82f6' },
+      { name: 'Roxo',      color: '#a855f7' },
     ];
 
     for (const s of swatches) {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = `h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring ${s.bg}`;
+      btn.className = 'nds-rounded-full';
+      btn.style.height = '1.5rem';
+      btn.style.width = '1.5rem';
+      btn.style.boxShadow = '0 0 0 1px rgb(0 0 0 / 0.1)';
+      btn.style.backgroundColor = s.color;
       btn.setAttribute('aria-label', s.name);
       grid.appendChild(btn);
     }
@@ -224,10 +241,11 @@ export const ConfiguracoesRapidas: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Configurações' });
 
     const content = document.createElement('div');
-    content.className = 'space-y-3';
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'sm';
 
     const title = document.createElement('h4');
-    title.className = 'text-sm font-medium leading-none';
+    title.className = 'nds-text-body nds-font-medium nds-leading-none';
     title.textContent = 'Preferências rápidas';
     content.appendChild(title);
 
@@ -239,15 +257,17 @@ export const ConfiguracoesRapidas: Story = {
 
     for (const t of toggles) {
       const row = document.createElement('div');
-      row.className = 'flex items-center justify-between gap-3';
+      row.className = 'nds-cluster';
+      row.dataset.spacing = 'sm';
+      row.dataset.justify = 'between';
 
       const label = createLabel({ text: t.label, htmlFor: t.id });
-      label.className = 'text-sm';
+      label.className = 'nds-text-body';
 
       const cb = document.createElement('input');
       cb.type = 'checkbox';
       cb.id = t.id;
-      cb.className = 'h-4 w-4';
+      cb.className = 'nds-icon-sm';
       cb.checked = t.checked;
 
       row.append(label, cb);

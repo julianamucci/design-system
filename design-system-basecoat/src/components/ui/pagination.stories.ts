@@ -49,7 +49,9 @@ export const Playground: Story = {
   render: (args) => {
     const container = document.createElement('div');
     container.style.contain = 'layout';
-    container.className = 'w-full min-h-[120px] flex items-center justify-center p-2';
+    container.className = 'nds-cluster nds-w-full nds-p-2';
+    container.dataset.justify = 'center';
+    container.style.minHeight = '120px';
 
     const nav = createPagination({
       total: args.total,

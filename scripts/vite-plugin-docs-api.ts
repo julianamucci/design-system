@@ -16,16 +16,29 @@
  *                                        Requer: ANTHROPIC_API_KEY no environment
  */
 
-import type { Plugin } from 'vite';
 import fs from 'node:fs';
 import path from 'node:path';
+import type { IncomingMessage, ServerResponse } from 'node:http';
+
+// Tipos mínimos de Vite inlined — evita exigir `vite` no tsconfig include
+// de cada stack consumidor.
+interface MinimalViteServer {
+  middlewares: { use: (handler: (req: IncomingMessage, res: ServerResponse, next: () => void) => void) => void };
+  moduleGraph: { invalidateAll: () => void };
+  ws: { send: (msg: { type: string }) => void };
+}
+interface MinimalVitePlugin {
+  name: string;
+  apply?: 'serve' | 'build';
+  configureServer?: (server: MinimalViteServer) => void;
+}
 
 interface DocsApiOptions {
   /** Caminho absoluto para docs/shared/content/. */
   sharedContentPath: string;
 }
 
-export function docsApiPlugin(options: DocsApiOptions): Plugin {
+export function docsApiPlugin(options: DocsApiOptions): MinimalVitePlugin {
   const { sharedContentPath } = options;
 
   return {

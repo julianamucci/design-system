@@ -5,6 +5,7 @@ export { default as DocsWhenToUse } from './DocsWhenToUse.svelte';
 export { default as DocsDoDont } from './DocsDoDont.svelte';
 export { default as DocsImport } from './DocsImport.svelte';
 export { default as DocsVariants } from './DocsVariants.svelte';
+export { default as DocsCompositions } from './DocsCompositions.svelte';
 export { default as DocsStates } from './DocsStates.svelte';
 export { default as DocsProps } from './DocsProps.svelte';
 export { default as DocsTokens } from './DocsTokens.svelte';

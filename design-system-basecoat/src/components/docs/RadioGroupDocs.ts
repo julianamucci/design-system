@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -59,27 +60,32 @@ function buildRadioGroupWithLegend(opts: {
   const { name, legendText, items, defaultValue, ariaInvalid, horizontal, idPrefix = name } = opts;
 
   const wrap = document.createElement('div');
-  wrap.className = 'flex flex-col gap-2';
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'sm';
 
   const legend = document.createElement('p');
   const legendId = `${idPrefix}-legend`;
   legend.id = legendId;
-  legend.className = 'text-sm font-semibold';
+  legend.className = 'nds-text-body nds-font-semibold';
   legend.textContent = legendText;
 
   const group = createRadioGroup({
     name,
     defaultValue,
     items,
-    ...(horizontal ? { class: 'grid-flow-col auto-cols-max gap-6' } : {}),
   });
+  if (horizontal) {
+    group.style.gridAutoFlow = 'column';
+    group.style.gridAutoColumns = 'max-content';
+    group.style.gap = '1.5rem';
+  }
   group.setAttribute('role', 'radiogroup');
   group.setAttribute('aria-labelledby', legendId);
   if (ariaInvalid) {
     group.setAttribute('aria-invalid', 'true');
     group.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {
       btn.setAttribute('aria-invalid', 'true');
-      btn.classList.add('border-destructive', 'ring-destructive/20');
+      btn.classList.add('nds-border-destructive', 'ring-destructive/20');
     });
   }
 
@@ -129,6 +135,7 @@ export function createRadioGroupDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
+      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -179,7 +186,7 @@ export function createRadioGroupDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -194,7 +201,8 @@ export function createRadioGroupDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'flex flex-col gap-6';
+            wrap.className = 'nds-stack';
+            wrap.dataset.spacing = 'lg';
 
             // Vertical — Forma de pagamento
             const payment = buildRadioGroupWithLegend({
@@ -414,7 +422,7 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
             {
               name: stripHtml(t('variants.items.horizontal')),
               description: stripHtml(t('variants.styles.horizontal')),
-              code: `createRadioGroup({ name: 'delivery', items, class: 'grid-flow-col auto-cols-max gap-6' });`,
+              code: `const g = createRadioGroup({ name: 'delivery', items });\ng.style.gridAutoFlow = 'column'; g.style.gridAutoColumns = 'max-content'; g.style.gap = '1.5rem';`,
               previewFactory: () =>
                 buildRadioGroupWithLegend({
                   name: 'v-horizontal',
@@ -434,10 +442,11 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
               code: `// Factory não expõe \`description\` por item — composição manual:\nconst group = createRadioGroup({ name: 'delivery', items });\n// percorra group.children e injete <p> de descrição ao lado do <label>`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col gap-2';
+                wrap.className = 'nds-stack';
+                wrap.dataset.spacing = 'sm';
                 const legend = document.createElement('p');
                 legend.id = 'v-desc-legend';
-                legend.className = 'text-sm font-semibold';
+                legend.className = 'nds-text-body nds-font-semibold';
                 legend.textContent = t('demonstration.labels.deliveryLabel');
 
                 const items = [
@@ -456,16 +465,16 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
                 items.forEach((item, idx) => {
                   const row = base.children[idx] as HTMLElement;
                   if (!row) return;
-                  row.classList.remove('items-center');
-                  row.classList.add('items-start');
+                  row.style.alignItems = 'flex-start';
                   const label = row.querySelector('label');
                   if (label) {
                     const tg = document.createElement('div');
-                    tg.className = 'flex flex-col gap-1';
+                    tg.className = 'nds-stack';
+                    tg.dataset.spacing = 'xs';
                     label.replaceWith(tg);
-                    label.className = 'text-sm font-medium leading-none cursor-pointer';
+                    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
                     const desc = document.createElement('p');
-                    desc.className = 'text-sm text-muted-foreground';
+                    desc.className = 'nds-text-body nds-text-muted-foreground';
                     desc.textContent = item.description;
                     tg.append(label, desc);
                   }
@@ -474,6 +483,293 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
                 wrap.append(legend, base);
                 return wrap;
               },
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
+        const buildVertical = () => {
+          const group = createRadioGroup({
+            name: 'payment',
+            items: [
+              { value: 'card', label: 'Cartão de crédito' },
+              { value: 'pix', label: 'Pix' },
+              { value: 'boleto', label: 'Boleto bancário' },
+            ],
+          });
+          const wrap = document.createElement('div');
+          wrap.className = 'nds-stack';
+          wrap.dataset.spacing = 'sm';
+          const legend = document.createElement('p');
+          legend.id = 'comp-payment-legend';
+          legend.className = 'nds-text-body nds-font-semibold';
+          legend.textContent = 'Forma de pagamento';
+          group.setAttribute('role', 'radiogroup');
+          group.setAttribute('aria-labelledby', 'comp-payment-legend');
+          wrap.append(legend, group);
+          return wrap;
+        };
+
+        const buildHorizontal = () => {
+          const group = createRadioGroup({
+            name: 'delivery',
+            items: [
+              { value: 'standard', label: 'Padrão (5 dias)' },
+              { value: 'express', label: 'Expressa (1 dia)' },
+              { value: 'pickup', label: 'Retirar na loja' },
+            ],
+          });
+          group.style.gridAutoFlow = 'column';
+          group.style.gridAutoColumns = 'max-content';
+          group.style.gap = '1.5rem';
+          const wrap = document.createElement('div');
+          wrap.className = 'nds-stack';
+          wrap.dataset.spacing = 'sm';
+          const legend = document.createElement('p');
+          legend.id = 'comp-delivery-legend';
+          legend.className = 'nds-text-body nds-font-semibold';
+          legend.textContent = 'Forma de entrega';
+          group.setAttribute('role', 'radiogroup');
+          group.setAttribute('aria-labelledby', 'comp-delivery-legend');
+          wrap.append(legend, group);
+          return wrap;
+        };
+
+        const buildWithDescription = () => {
+          const wrap = document.createElement('div');
+          wrap.className = 'nds-stack';
+          wrap.dataset.spacing = 'sm';
+          wrap.style.width = '20rem';
+          const legend = document.createElement('p');
+          legend.id = 'comp-desc-legend';
+          legend.className = 'nds-text-body nds-font-semibold';
+          legend.textContent = 'Forma de entrega';
+
+          const items = [
+            { value: 'standard', label: 'Padrão',          description: 'Entrega em 5 dias úteis — frete grátis acima de R$ 199.' },
+            { value: 'express',  label: 'Expressa',        description: 'Receba em 1 dia útil — taxa adicional de R$ 19,90.' },
+            { value: 'pickup',   label: 'Retirar na loja', description: 'Disponível em 2h — sem custo de frete.' },
+          ];
+
+          const base = createRadioGroup({
+            name: 'delivery-desc',
+            items: items.map(i => ({ value: i.value, label: i.label })),
+          });
+          base.setAttribute('role', 'radiogroup');
+          base.setAttribute('aria-labelledby', 'comp-desc-legend');
+
+          items.forEach((item, idx) => {
+            const row = base.children[idx] as HTMLElement;
+            if (!row) return;
+            row.style.alignItems = 'flex-start';
+            const label = row.querySelector('label');
+            if (label) {
+              const textGroup = document.createElement('div');
+              textGroup.className = 'nds-stack';
+              textGroup.dataset.spacing = 'xs';
+              label.replaceWith(textGroup);
+              label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+              const desc = document.createElement('p');
+              desc.className = 'nds-text-body nds-text-muted-foreground';
+              desc.textContent = item.description;
+              textGroup.append(label, desc);
+            }
+          });
+
+          wrap.append(legend, base);
+          return wrap;
+        };
+
+        const buildInForm = () => {
+          const form = document.createElement('form');
+          form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';
+          form.dataset.spacing = 'md';
+          form.style.width = '20rem';
+          form.noValidate = true;
+
+          const fs = document.createElement('fieldset');
+          fs.className = 'nds-stack nds-border-none nds-p-0 nds-m-0';
+          fs.dataset.spacing = 'sm';
+
+          const legend = document.createElement('legend');
+          legend.className = 'nds-text-body nds-font-semibold nds-mb-2';
+          legend.textContent = 'Forma de pagamento';
+          fs.appendChild(legend);
+
+          const group = createRadioGroup({
+            name: 'payment',
+            items: [
+              { value: 'card', label: 'Cartão de crédito' },
+              { value: 'pix', label: 'Pix' },
+              { value: 'boleto', label: 'Boleto bancário' },
+            ],
+          });
+          group.setAttribute('role', 'radiogroup');
+          fs.appendChild(group);
+          form.appendChild(fs);
+
+          const submit = document.createElement('button');
+          submit.type = 'submit';
+          submit.className = 'btn btn-primary';
+          submit.style.alignSelf = 'flex-end';
+          submit.textContent = 'Continuar';
+          form.appendChild(submit);
+
+          const out = document.createElement('p');
+          out.className = 'nds-text-body nds-text-muted-foreground';
+          out.dataset.testid = 'form-output';
+          form.appendChild(out);
+
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = new FormData(form);
+            out.textContent = `Selecionado: ${data.get('payment') ?? '(nenhum)'}`;
+          });
+
+          return form;
+        };
+
+        const codeVertical = `const group = createRadioGroup({
+  name: 'payment',
+  items: [
+    { value: 'card', label: 'Cartão de crédito' },
+    { value: 'pix', label: 'Pix' },
+    { value: 'boleto', label: 'Boleto bancário' },
+  ],
+});
+const wrap = document.createElement('div');
+wrap.className = 'nds-stack';
+const legend = document.createElement('p');
+legend.id = 'comp-payment-legend';
+legend.className = 'nds-text-body nds-font-semibold';
+legend.textContent = 'Forma de pagamento';
+group.setAttribute('role', 'radiogroup');
+group.setAttribute('aria-labelledby', 'comp-payment-legend');
+wrap.append(legend, group);`;
+
+        const codeHorizontal = `const group = createRadioGroup({
+  name: 'delivery',
+  items: [
+    { value: 'standard', label: 'Padrão (5 dias)' },
+    { value: 'express', label: 'Expressa (1 dia)' },
+    { value: 'pickup', label: 'Retirar na loja' },
+  ],
+});
+group.style.gridAutoFlow = 'column';
+group.style.gridAutoColumns = 'max-content';
+group.style.gap = '1.5rem';
+const wrap = document.createElement('div');
+wrap.className = 'nds-stack';
+const legend = document.createElement('p');
+legend.id = 'comp-delivery-legend';
+legend.className = 'nds-text-body nds-font-semibold';
+legend.textContent = 'Forma de entrega';
+group.setAttribute('role', 'radiogroup');
+group.setAttribute('aria-labelledby', 'comp-delivery-legend');
+wrap.append(legend, group);`;
+
+        const codeWithDescription = `const items = [
+  { value: 'standard', label: 'Padrão',          description: 'Entrega em 5 dias úteis — frete grátis acima de R$ 199.' },
+  { value: 'express',  label: 'Expressa',        description: 'Receba em 1 dia útil — taxa adicional de R$ 19,90.' },
+  { value: 'pickup',   label: 'Retirar na loja', description: 'Disponível em 2h — sem custo de frete.' },
+];
+
+const base = createRadioGroup({
+  name: 'delivery-desc',
+  items: items.map(i => ({ value: i.value, label: i.label })),
+});
+base.setAttribute('role', 'radiogroup');
+base.setAttribute('aria-labelledby', 'comp-desc-legend');
+
+items.forEach((item, idx) => {
+  const row = base.children[idx] as HTMLElement;
+  if (!row) return;
+  row.style.alignItems = 'flex-start';
+  const label = row.querySelector('label');
+  if (label) {
+    const textGroup = document.createElement('div');
+    textGroup.className = 'nds-stack';
+    label.replaceWith(textGroup);
+    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+    const desc = document.createElement('p');
+    desc.className = 'nds-text-body nds-text-muted-foreground';
+    desc.textContent = item.description;
+    textGroup.append(label, desc);
+  }
+});`;
+
+        const codeInForm = `const form = document.createElement('form');
+form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';
+
+const fs = document.createElement('fieldset');
+fs.className = 'nds-stack border-0 nds-p-0 nds-m-0';
+const legend = document.createElement('legend');
+legend.className = 'nds-text-body nds-font-semibold nds-mb-2';
+legend.textContent = 'Forma de pagamento';
+fs.appendChild(legend);
+
+const group = createRadioGroup({
+  name: 'payment',
+  items: [
+    { value: 'card', label: 'Cartão de crédito' },
+    { value: 'pix', label: 'Pix' },
+    { value: 'boleto', label: 'Boleto bancário' },
+  ],
+});
+group.setAttribute('role', 'radiogroup');
+fs.appendChild(group);
+form.appendChild(fs);
+
+const submit = document.createElement('button');
+submit.type = 'submit';
+submit.className = 'btn btn-primary self-end';
+submit.textContent = 'Continuar';
+form.appendChild(submit);
+
+const out = document.createElement('p');
+out.className = 'nds-text-body nds-text-muted-foreground';
+out.dataset.testid = 'form-output';
+form.appendChild(out);
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const data = new FormData(form);
+  out.textContent = \`Selecionado: \${data.get('payment') ?? '(nenhum)'}\`;
+});`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'radio-group',
+          items: [
+            {
+              name: t('variants.compositions.vertical.name'),
+              description: t('variants.compositions.vertical.description'),
+              useWhen: t('variants.compositions.vertical.use'),
+              code: codeVertical,
+              previewFactory: buildVertical,
+            },
+            {
+              name: t('variants.compositions.horizontal.name'),
+              description: t('variants.compositions.horizontal.description'),
+              useWhen: t('variants.compositions.horizontal.use'),
+              code: codeHorizontal,
+              previewFactory: buildHorizontal,
+            },
+            {
+              name: t('variants.compositions.withDescription.name'),
+              description: t('variants.compositions.withDescription.description'),
+              useWhen: t('variants.compositions.withDescription.use'),
+              code: codeWithDescription,
+              previewFactory: buildWithDescription,
+            },
+            {
+              name: t('variants.compositions.inForm.name'),
+              description: t('variants.compositions.inForm.description'),
+              useWhen: t('variants.compositions.inForm.use'),
+              code: codeInForm,
+              previewFactory: buildInForm,
             },
           ],
         });

@@ -15,6 +15,7 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
+  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -49,7 +50,7 @@ function priorityLabel(raw: string): string {
 
 function buildDemoCommand(placeholder: string, withGroups = true): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'w-full max-w-sm border rounded-md shadow-md';
+  wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md';
   wrap.appendChild(
     createCommand({
       placeholder,
@@ -114,6 +115,7 @@ export function createCommandDocs(): HTMLElement {
       sections: [
         { id: 'importacao',   labelKey: 'nav.import'   },
         { id: 'variantes',    labelKey: 'nav.variants' },
+        { id: 'composicoes',  labelKey: 'nav.compositions' },
         { id: 'estados',      labelKey: 'nav.states'   },
         { id: 'propriedades', labelKey: 'nav.props'    },
         { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -171,7 +173,7 @@ export function createCommandDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -240,7 +242,7 @@ export function createCommandDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm border rounded-md';
+                wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md';
                 wrap.appendChild(
                   createCommand({
                     placeholder: t('demonstration.labels.searchPlaceholder'),
@@ -255,7 +257,7 @@ export function createCommandDocs(): HTMLElement {
               dontPreviewFactory: () => {
                 // Empty state sem mensagem de feedback (sem CommandEmpty)
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full max-w-sm border rounded-md';
+                wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md';
                 const cmd = createCommand({
                   placeholder: t('demonstration.labels.searchPlaceholder'),
                   items: [
@@ -280,21 +282,29 @@ export function createCommandDocs(): HTMLElement {
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
                 const outer = document.createElement('div');
-                outer.className = 'flex flex-col items-start gap-2 p-2';
+                outer.className = 'nds-stack nds-p-2';
+                outer.dataset.spacing = 'xs';
+                outer.style.alignItems = 'flex-start';
                 const hint = document.createElement('div');
-                hint.className = 'flex items-center gap-2 text-sm text-muted-foreground border rounded px-3 py-1.5 w-full cursor-pointer';
+                hint.className = 'nds-cluster nds-w-full nds-text-body nds-text-muted-foreground nds-border-default nds-rounded nds-cursor-pointer';
+                hint.dataset.spacing = 'xs';
+                hint.style.padding = '0.375rem 0.75rem';
                 hint.innerHTML = `
-                  <span class="flex-1">${sanitizeHtml(t('demonstration.labels.openPalette'))}</span>
-                  <kbd class="inline-flex items-center justify-center rounded border border-border bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">${sanitizeHtml(t('demonstration.labels.shortcutKey'))}</kbd>
+                  <span class="nds-flex-1">${sanitizeHtml(t('demonstration.labels.openPalette'))}</span>
+                  <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display:inline-flex;align-items:center;justify-content:center;padding:0.125rem 0.375rem;">${sanitizeHtml(t('demonstration.labels.shortcutKey'))}</kbd>
                 `;
                 outer.appendChild(hint);
                 return outer;
               },
               dontPreviewFactory: () => {
                 const outer = document.createElement('div');
-                outer.className = 'flex flex-col items-start gap-2 p-2';
+                outer.className = 'nds-stack nds-p-2';
+                outer.dataset.spacing = 'xs';
+                outer.style.alignItems = 'flex-start';
                 const hint = document.createElement('div');
-                hint.className = 'flex items-center gap-2 text-sm text-muted-foreground border rounded px-3 py-1.5 w-full cursor-pointer';
+                hint.className = 'nds-cluster nds-w-full nds-text-body nds-text-muted-foreground nds-border-default nds-rounded nds-cursor-pointer';
+                hint.dataset.spacing = 'xs';
+                hint.style.padding = '0.375rem 0.75rem';
                 hint.textContent = t('demonstration.labels.openPalette');
                 // Sem dica de atalho
                 outer.appendChild(hint);
@@ -336,12 +346,18 @@ export function createCommandDocs(): HTMLElement {
               code: codeCombobox,
               previewFactory: () => {
                 const outer = document.createElement('div');
-                outer.className = 'flex flex-col items-start gap-2';
+                outer.className = 'nds-stack';
+                outer.dataset.spacing = 'xs';
+                outer.style.alignItems = 'flex-start';
                 const trigger = document.createElement('button');
-                trigger.className = 'flex items-center justify-between w-48 border rounded px-3 py-1.5 text-sm cursor-pointer bg-background';
-                trigger.innerHTML = `<span>${sanitizeHtml(t('demonstration.labels.selectPlaceholder'))}</span><span class="text-muted-foreground">▼</span>`;
+                trigger.className = 'nds-cluster nds-border-default nds-rounded nds-text-body nds-cursor-pointer nds-bg-background';
+                trigger.dataset.justify = 'between';
+                trigger.style.width = '12rem';
+                trigger.style.padding = '0.375rem 0.75rem';
+                trigger.innerHTML = `<span>${sanitizeHtml(t('demonstration.labels.selectPlaceholder'))}</span><span class="nds-text-muted-foreground">▼</span>`;
                 const popover = document.createElement('div');
-                popover.className = 'w-48 border rounded-md shadow-md mt-1';
+                popover.className = 'nds-border-default nds-rounded-md nds-shadow-md nds-mt-1';
+                popover.style.width = '12rem';
                 popover.appendChild(
                   createCommand({
                     placeholder: t('demonstration.labels.comboboxSearch'),
@@ -362,17 +378,21 @@ export function createCommandDocs(): HTMLElement {
               code: codePalette,
               previewFactory: () => {
                 const outer = document.createElement('div');
-                outer.className = 'flex flex-col items-start gap-2 p-2';
+                outer.className = 'nds-stack nds-p-2';
+                outer.dataset.spacing = 'xs';
+                outer.style.alignItems = 'flex-start';
                 const hint = document.createElement('div');
-                hint.className = 'flex items-center gap-2 text-sm text-muted-foreground border rounded px-3 py-1.5 w-full cursor-pointer';
+                hint.className = 'nds-cluster nds-w-full nds-text-body nds-text-muted-foreground nds-border-default nds-rounded nds-cursor-pointer';
+                hint.dataset.spacing = 'xs';
+                hint.style.padding = '0.375rem 0.75rem';
                 hint.innerHTML = `
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                  <span class="flex-1">${sanitizeHtml(t('demonstration.labels.openPalette'))}</span>
-                  <kbd class="inline-flex items-center justify-center rounded border border-border bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">${sanitizeHtml(t('demonstration.labels.shortcutKey'))}</kbd>
+                  <span class="nds-flex-1">${sanitizeHtml(t('demonstration.labels.openPalette'))}</span>
+                  <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display:inline-flex;align-items:center;justify-content:center;padding:0.125rem 0.375rem;">${sanitizeHtml(t('demonstration.labels.shortcutKey'))}</kbd>
                 `;
                 outer.appendChild(hint);
                 const dialog = document.createElement('div');
-                dialog.className = 'w-full max-w-sm border rounded-md shadow-md';
+                dialog.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md';
                 dialog.appendChild(
                   createCommand({
                     placeholder: t('demonstration.labels.dialogDescription'),
@@ -384,6 +404,151 @@ export function createCommandDocs(): HTMLElement {
                 );
                 outer.appendChild(dialog);
                 return outer;
+              },
+            },
+          ],
+        });
+      }
+
+      // ─── 6b. Composições ───────────────────────────────────────────────
+      case 'composicoes': {
+        const longListLabels = [
+          'Accordion','Alert','AlertDialog','AspectRatio','Avatar',
+          'Badge','Breadcrumb','Button','Calendar','Card',
+          'Carousel','Chart','Checkbox','Collapsible','Command',
+          'ContextMenu','DataTable','DatePicker','Dialog','Drawer',
+          'DropdownMenu','Form','HoverCard','Input','InputOTP',
+          'Label','Menubar','NavigationMenu','Pagination','Popover',
+        ];
+
+        const codeWithGroups = `const wrap = document.createElement('div');
+wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+wrap.style.width = '320px';
+wrap.appendChild(
+  createCommand({
+    placeholder: 'Buscar componente...',
+    items: [
+      { value: 'button',    label: 'Button',    group: 'Componentes' },
+      { value: 'input',     label: 'Input',     group: 'Componentes' },
+      { value: 'badge',     label: 'Badge',     group: 'Componentes' },
+      { value: 'separator', label: 'Separator', group: 'Componentes' },
+      { value: 'cn',        label: 'cn()',       group: 'Utilitários' },
+      { value: 'clsx',      label: 'clsx()',     group: 'Utilitários' },
+      { value: 'twmerge',   label: 'twMerge()',  group: 'Utilitários' },
+    ],
+  })
+);`;
+
+        const codeWithDisabled = `const wrap = document.createElement('div');
+wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+wrap.style.width = '320px';
+wrap.appendChild(
+  createCommand({
+    placeholder: 'Buscar...',
+    items: [
+      { value: 'button', label: 'Button',              group: 'Componentes' },
+      { value: 'input',  label: 'Input (em breve)',    group: 'Componentes', disabled: true },
+      { value: 'badge',  label: 'Badge',               group: 'Componentes' },
+      { value: 'select', label: 'Select (em breve)',   group: 'Componentes', disabled: true },
+      { value: 'cn',     label: 'cn()',                 group: 'Utilitários' },
+      { value: 'clsx',   label: 'clsx() (depreciado)', group: 'Utilitários', disabled: true },
+    ],
+  })
+);`;
+
+        const codeLongList = `const items = [
+  'Accordion','Alert','AlertDialog','AspectRatio','Avatar',
+  'Badge','Breadcrumb','Button','Calendar','Card',
+  'Carousel','Chart','Checkbox','Collapsible','Command',
+  // ... e assim por diante
+].map(label => ({ value: label.toLowerCase(), label, group: 'Componentes' }));
+
+const wrap = document.createElement('div');
+wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+wrap.style.width = '320px';
+wrap.appendChild(
+  createCommand({
+    placeholder: 'Buscar componente...',
+    items,
+  })
+);`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'command',
+          items: [
+            {
+              name: stripHtml(t('variants.compositions.withGroups.name')),
+              description: stripHtml(t('variants.compositions.withGroups.description')),
+              useWhen: stripHtml(t('variants.compositions.withGroups.use')),
+              code: codeWithGroups,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+wrap.style.width = '320px';
+                wrap.appendChild(
+                  createCommand({
+                    placeholder: t('demonstration.labels.searchPlaceholder'),
+                    items: [
+                      { value: 'button',    label: 'Button',    group: t('demonstration.labels.groupComponents') },
+                      { value: 'input',     label: 'Input',     group: t('demonstration.labels.groupComponents') },
+                      { value: 'badge',     label: 'Badge',     group: t('demonstration.labels.groupComponents') },
+                      { value: 'separator', label: 'Separator', group: t('demonstration.labels.groupComponents') },
+                      { value: 'cn',        label: 'cn()',       group: t('demonstration.labels.groupUtils') },
+                      { value: 'clsx',      label: 'clsx()',     group: t('demonstration.labels.groupUtils') },
+                      { value: 'twmerge',   label: 'twMerge()',  group: t('demonstration.labels.groupUtils') },
+                    ],
+                  })
+                );
+                return wrap;
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.withDisabled.name')),
+              description: stripHtml(t('variants.compositions.withDisabled.description')),
+              useWhen: stripHtml(t('variants.compositions.withDisabled.use')),
+              code: codeWithDisabled,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+wrap.style.width = '320px';
+                wrap.appendChild(
+                  createCommand({
+                    placeholder: t('demonstration.labels.searchPlaceholder'),
+                    items: [
+                      { value: 'button', label: 'Button',              group: t('demonstration.labels.groupComponents') },
+                      { value: 'input',  label: 'Input (em breve)',    group: t('demonstration.labels.groupComponents'), disabled: true },
+                      { value: 'badge',  label: 'Badge',               group: t('demonstration.labels.groupComponents') },
+                      { value: 'select', label: 'Select (em breve)',   group: t('demonstration.labels.groupComponents'), disabled: true },
+                      { value: 'cn',     label: 'cn()',                 group: t('demonstration.labels.groupUtils') },
+                      { value: 'clsx',   label: 'clsx() (depreciado)', group: t('demonstration.labels.groupUtils'), disabled: true },
+                    ],
+                  })
+                );
+                return wrap;
+              },
+            },
+            {
+              name: stripHtml(t('variants.compositions.longList.name')),
+              description: stripHtml(t('variants.compositions.longList.description')),
+              useWhen: stripHtml(t('variants.compositions.longList.use')),
+              code: codeLongList,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+wrap.style.width = '320px';
+                wrap.appendChild(
+                  createCommand({
+                    placeholder: t('demonstration.labels.searchPlaceholder'),
+                    items: longListLabels.map(label => ({
+                      value: label.toLowerCase(),
+                      label,
+                      group: t('demonstration.labels.groupComponents'),
+                    })),
+                  })
+                );
+                return wrap;
               },
             },
           ],

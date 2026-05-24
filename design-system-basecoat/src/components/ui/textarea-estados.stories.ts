@@ -22,11 +22,12 @@ type Story = StoryObj;
 
 function labeled(id: string, labelText: string, textarea: HTMLTextAreaElement): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex flex-col gap-1.5 w-full max-w-md';
+  wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+  wrapper.dataset.spacing = 'xs';
 
   const label = document.createElement('label');
   label.htmlFor = id;
-  label.className = 'text-sm font-medium text-foreground';
+  label.className = 'nds-text-body nds-font-medium nds-text-foreground';
   label.textContent = labelText;
 
   textarea.id = id;

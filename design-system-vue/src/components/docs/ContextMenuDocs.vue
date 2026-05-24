@@ -34,6 +34,7 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -102,6 +103,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -455,6 +457,107 @@ const visualTestItems = computed(() => [
 // ─── Demo state ───────────────────────────────────────────────────────────────
 const demoShowGrid = ref(true);
 const demoLayout   = ref('grid');
+
+// Composições — state
+const compShowGrid   = ref(true);
+const compShowRulers = ref(false);
+const compZoom       = ref('100');
+
+// Composições — código
+const codeCompositionCheckbox = `const showGrid = ref(true);
+const showRulers = ref(false);
+
+<ContextMenu>
+  <ContextMenuTrigger>Clique com o botão direito</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuGroup>
+      <ContextMenuLabel inset>Visualização</ContextMenuLabel>
+      <ContextMenuCheckboxItem :checked="showGrid" @update:checked="showGrid = $event">
+        Mostrar grade
+      </ContextMenuCheckboxItem>
+      <ContextMenuCheckboxItem :checked="showRulers" @update:checked="showRulers = $event">
+        Mostrar réguas
+      </ContextMenuCheckboxItem>
+    </ContextMenuGroup>
+  </ContextMenuContent>
+</ContextMenu>`;
+
+const codeCompositionRadio = `const zoom = ref('100');
+
+<ContextMenu>
+  <ContextMenuTrigger>Clique com o botão direito</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuGroup>
+      <ContextMenuLabel inset>Zoom</ContextMenuLabel>
+      <ContextMenuRadioGroup :model-value="zoom" @update:model-value="zoom = $event">
+        <ContextMenuRadioItem value="75">75%</ContextMenuRadioItem>
+        <ContextMenuRadioItem value="100">100%</ContextMenuRadioItem>
+        <ContextMenuRadioItem value="150">150%</ContextMenuRadioItem>
+      </ContextMenuRadioGroup>
+    </ContextMenuGroup>
+  </ContextMenuContent>
+</ContextMenu>`;
+
+const codeCompositionSubmenu = `<ContextMenu>
+  <ContextMenuTrigger>Clique com o botão direito</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem>Editar</ContextMenuItem>
+    <ContextMenuItem>Duplicar</ContextMenuItem>
+    <ContextMenuSub>
+      <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
+      <ContextMenuSubContent>
+        <ContextMenuItem>Por e-mail</ContextMenuItem>
+        <ContextMenuItem>Por link</ContextMenuItem>
+      </ContextMenuSubContent>
+    </ContextMenuSub>
+  </ContextMenuContent>
+</ContextMenu>`;
+
+const codeCompositionShortcuts = `<ContextMenu>
+  <ContextMenuTrigger>Clique com o botão direito</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem>
+      Editar
+      <ContextMenuShortcut>⌘E</ContextMenuShortcut>
+    </ContextMenuItem>
+    <ContextMenuItem>
+      Duplicar
+      <ContextMenuShortcut>⌘D</ContextMenuShortcut>
+    </ContextMenuItem>
+    <ContextMenuSeparator />
+    <ContextMenuItem variant="destructive">
+      Excluir
+      <ContextMenuShortcut>⌫</ContextMenuShortcut>
+    </ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>`;
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.withCheckbox.name'),
+    description: tContent('variants.compositions.withCheckbox.description'),
+    useWhen: tContent('variants.compositions.withCheckbox.use'),
+    code: codeCompositionCheckbox,
+  },
+  {
+    name: tContent('variants.compositions.withRadio.name'),
+    description: tContent('variants.compositions.withRadio.description'),
+    useWhen: tContent('variants.compositions.withRadio.use'),
+    code: codeCompositionRadio,
+  },
+  {
+    name: tContent('variants.compositions.withSubmenu.name'),
+    description: tContent('variants.compositions.withSubmenu.description'),
+    useWhen: tContent('variants.compositions.withSubmenu.use'),
+    code: codeCompositionSubmenu,
+  },
+  {
+    name: tContent('variants.compositions.withShortcuts.name'),
+    description: tContent('variants.compositions.withShortcuts.description'),
+    useWhen: tContent('variants.compositions.withShortcuts.use'),
+    code: codeCompositionShortcuts,
+  },
+]);
 </script>
 
 <template>
@@ -716,7 +819,7 @@ const demoLayout   = ref('grid');
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
           <ContextMenuContent class="w-48">
-            <ContextMenuRadioGroup :model-value="demoLayout" @update:model-value="demoLayout = $event">
+            <ContextMenuRadioGroup :model-value="demoLayout" @update:model-value="demoLayout = $event as string">
               <ContextMenuRadioItem value="grid">Grade</ContextMenuRadioItem>
               <ContextMenuRadioItem value="list">Lista</ContextMenuRadioItem>
             </ContextMenuRadioGroup>
@@ -757,6 +860,97 @@ const demoLayout   = ref('grid');
         </ContextMenu>
       </template>
     </DocsVariants>
+
+    <!-- ── Composições ──────────────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="context-menu"
+      :items="compositionItems"
+    >
+      <!-- withCheckbox -->
+      <template #variant-preview-0>
+        <ContextMenu>
+          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+            {{ tContent('demonstration.labels.triggerLabel') }}
+          </ContextMenuTrigger>
+          <ContextMenuContent class="w-52">
+            <ContextMenuGroup>
+              <ContextMenuLabel inset>Visualização</ContextMenuLabel>
+              <ContextMenuCheckboxItem :checked="compShowGrid" @update:checked="compShowGrid = $event">
+                Mostrar grade
+              </ContextMenuCheckboxItem>
+              <ContextMenuCheckboxItem :checked="compShowRulers" @update:checked="compShowRulers = $event">
+                Mostrar réguas
+              </ContextMenuCheckboxItem>
+            </ContextMenuGroup>
+          </ContextMenuContent>
+        </ContextMenu>
+      </template>
+
+      <!-- withRadio -->
+      <template #variant-preview-1>
+        <ContextMenu>
+          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+            {{ tContent('demonstration.labels.triggerLabel') }}
+          </ContextMenuTrigger>
+          <ContextMenuContent class="w-52">
+            <ContextMenuGroup>
+              <ContextMenuLabel inset>Zoom</ContextMenuLabel>
+              <ContextMenuRadioGroup :model-value="compZoom" @update:model-value="compZoom = $event as string">
+                <ContextMenuRadioItem value="75">75%</ContextMenuRadioItem>
+                <ContextMenuRadioItem value="100">100%</ContextMenuRadioItem>
+                <ContextMenuRadioItem value="150">150%</ContextMenuRadioItem>
+              </ContextMenuRadioGroup>
+            </ContextMenuGroup>
+          </ContextMenuContent>
+        </ContextMenu>
+      </template>
+
+      <!-- withSubmenu -->
+      <template #variant-preview-2>
+        <ContextMenu>
+          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+            {{ tContent('demonstration.labels.triggerLabel') }}
+          </ContextMenuTrigger>
+          <ContextMenuContent class="w-52">
+            <ContextMenuItem>{{ tContent('demonstration.labels.edit') }}</ContextMenuItem>
+            <ContextMenuItem>{{ tContent('demonstration.labels.duplicate') }}</ContextMenuItem>
+            <ContextMenuSub>
+              <ContextMenuSubTrigger>{{ tContent('demonstration.labels.share') }}</ContextMenuSubTrigger>
+              <ContextMenuSubContent class="w-40">
+                <ContextMenuItem>{{ tContent('demonstration.labels.shareEmail') }}</ContextMenuItem>
+                <ContextMenuItem>{{ tContent('demonstration.labels.shareLink') }}</ContextMenuItem>
+              </ContextMenuSubContent>
+            </ContextMenuSub>
+          </ContextMenuContent>
+        </ContextMenu>
+      </template>
+
+      <!-- withShortcuts -->
+      <template #variant-preview-3>
+        <ContextMenu>
+          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+            {{ tContent('demonstration.labels.triggerLabel') }}
+          </ContextMenuTrigger>
+          <ContextMenuContent class="w-52">
+            <ContextMenuItem>
+              {{ tContent('demonstration.labels.edit') }}
+              <ContextMenuShortcut>{{ tContent('demonstration.labels.editShortcut') }}</ContextMenuShortcut>
+            </ContextMenuItem>
+            <ContextMenuItem>
+              {{ tContent('demonstration.labels.duplicate') }}
+              <ContextMenuShortcut>⌘D</ContextMenuShortcut>
+            </ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem variant="destructive">
+              {{ tContent('demonstration.labels.delete') }}
+              <ContextMenuShortcut>{{ tContent('demonstration.labels.deleteShortcut') }}</ContextMenuShortcut>
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Estados ──────────────────────────────────────────────────────────── -->
     <DocsStates
