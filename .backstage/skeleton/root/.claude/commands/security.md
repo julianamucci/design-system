@@ -42,7 +42,7 @@ grep -rn "v-html" design-system-vue/src/
 grep -rn "{@html" design-system-svelte/src/
 
 # Basecoat
-grep -rn "innerHTML" design-system-basecoat/src/
+grep -rn "innerHTML" nortear-design-system/src/
 ```
 
 Para CADA ocorrência, verifique:
@@ -54,7 +54,7 @@ Para CADA ocorrência, verifique:
 ```bash
 grep -rn "href.*{" design-system-*/src/ --include="*.tsx" --include="*.vue" --include="*.svelte"
 grep -rn ":href" design-system-vue/src/
-grep -rn "el.href" design-system-basecoat/src/
+grep -rn "el.href" nortear-design-system/src/
 ```
 
 Para cada URL dinâmico:

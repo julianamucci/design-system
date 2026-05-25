@@ -46,7 +46,7 @@ Adicionalmente: `DocsPageLayout` (envolvendo tudo) e `DocsNav` (sidebar sticky) 
 design-system-react/src/components/docs/shared/sections/Docs*.tsx
 design-system-vue/src/components/docs/shared/sections/Docs*.vue
 design-system-svelte/src/components/docs/shared/sections/Docs*.svelte
-design-system-basecoat/src/components/docs/shared/sections/Docs*.ts
+nortear-design-system/src/components/docs/shared/sections/Docs*.ts
 ```
 
 ---
@@ -69,7 +69,7 @@ Use `AlertDocs` como referência de como cada container é consumido:
 - React: `design-system-react/src/components/docs/AlertDocs.tsx`
 - Vue: `design-system-vue/src/components/docs/AlertDocs.vue`
 - Svelte: `design-system-svelte/src/components/docs/AlertDocs.svelte`
-- Basecoat: `design-system-basecoat/src/components/docs/AlertDocs.ts`
+- Basecoat: `nortear-design-system/src/components/docs/AlertDocs.ts`
 
 Use os section containers existentes da stack como template para criar novos:
 - `design-system-{stack}/src/components/docs/shared/sections/DocsAnatomy.{ext}` — container com dados (lista numerada + structureCode)

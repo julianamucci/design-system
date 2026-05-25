@@ -51,7 +51,7 @@ grep -A 20 "cva(" design-system-svelte/src/components/ui/<slug>/*.ts 2>/dev/null
 grep -A 20 "cva(" design-system-svelte/src/components/ui/*.svelte 2>/dev/null
 
 # Basecoat
-grep -A 20 "cva(" design-system-basecoat/src/components/ui/<slug>/*.ts 2>/dev/null
+grep -A 20 "cva(" nortear-design-system/src/components/ui/<slug>/*.ts 2>/dev/null
 ```
 
 **Diferenças nas classes = bug.** Copie as classes do React para as outras stacks.

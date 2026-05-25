@@ -10,7 +10,7 @@ A estrutura principal divide-se em:
 - `design-system-react/`
 - `design-system-vue/`
 - `design-system-svelte/`
-- `design-system-basecoat/` (Vanilla JS/CSS)
+- `nortear-design-system/` (Vanilla JS/CSS)
 - `docs/shared/` (Documentação unificada, tokens, temas e guidelines)
 
 ## 2. Tecnologias e Ferramentas Base

@@ -18,7 +18,7 @@ Paths:
 - `design-system-react/src/components/ui/<slug>/`
 - `design-system-vue/src/components/ui/<slug>/`
 - `design-system-svelte/src/components/ui/<slug>/`
-- `design-system-basecoat/src/components/ui/`
+- `nortear-design-system/src/components/ui/`
 
 ---
 
@@ -64,7 +64,7 @@ Tabela completa: `docs/shared/guidelines/12-tokenizacao-dimensoes.md`.
 - `design-system-react/src/components/docs/shared/sections/Docs*.tsx`
 - `design-system-vue/src/components/docs/shared/sections/Docs*.vue`
 - `design-system-svelte/src/components/docs/shared/sections/Docs*.svelte`
-- `design-system-basecoat/src/components/docs/shared/sections/Docs*.ts`
+- `nortear-design-system/src/components/docs/shared/sections/Docs*.ts`
 
 15 obrigatórios: `DocsHeader`, `DocsDemonstration`, `DocsAnatomy`, `DocsWhenToUse`, `DocsDoDont`, `DocsImport`, `DocsVariants`, `DocsStates`, `DocsProps`, `DocsTokens`, `DocsAccessibility`, `DocsRelated`, `DocsNotes`, `DocsAnalytics`, `DocsTestes`.
 
@@ -115,7 +115,7 @@ Placeholder = bug bloqueante. Reescrever antes de qualquer outra correção.
 - `design-system-react/src/components/ui/<slug>*.stories.*`
 - `design-system-vue/src/components/ui/<slug>/<slug>*.stories.*`
 - `design-system-svelte/src/components/ui/<slug>/<slug>*.stories.*`
-- `design-system-basecoat/src/components/ui/<slug>*.stories.*`
+- `nortear-design-system/src/components/ui/<slug>*.stories.*`
 
 Categorias esperadas: Playground, Variantes, Tamanhos (se aplicável), Estados, Composições. Arquivo presente em uma stack mas ausente em outra = bug.
 

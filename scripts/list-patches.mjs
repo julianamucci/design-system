@@ -19,7 +19,7 @@ import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const STACKS = ['design-system-react', 'design-system-vue', 'design-system-svelte', 'design-system-basecoat'];
+const STACKS = ['design-system-react', 'design-system-vue', 'design-system-svelte', 'nortear-design-system'];
 const EXTS = new Set(['.ts', '.tsx', '.vue', '.svelte', '.js']);
 const SKIP = new Set(['node_modules', '.storybook-static', 'storybook-static', 'dist', '.turbo', '.next', '.svelte-kit']);
 

@@ -92,7 +92,7 @@ Patches múltiplos agrupados por propósito. Todos substituem classes Tailwind h
 
 Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, Lyra h-default=28px, Maia h-default=40px, etc.).
 
-**Basecoat usa abordagem diferente**: em vez de patch nos componentes (que usam classes `.btn`/`.input`/`.badge` do pacote `basecoat-css`), adicionamos um CSS override em `design-system-basecoat/src/styles/basecoat-theme-overrides.css` que redeclara as dimensões dos componentes upstream usando `height: var(--height-*)`. Importado depois de `basecoat-css` no `globals.css` para vencer a cascade dentro do mesmo `@layer components`. Ver seção #basecoat-theme-overrides abaixo.
+**Basecoat usa abordagem diferente**: em vez de patch nos componentes (que usam classes `.btn`/`.input`/`.badge` do pacote `basecoat-css`), adicionamos um CSS override em `nortear-design-system/src/styles/basecoat-theme-overrides.css` que redeclara as dimensões dos componentes upstream usando `height: var(--height-*)`. Importado depois de `basecoat-css` no `globals.css` para vencer a cascade dentro do mesmo `@layer components`. Ver seção #basecoat-theme-overrides abaixo.
 
 #### #button-dimension-tokens
 
@@ -131,8 +131,8 @@ Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, 
 
 #### #basecoat-theme-overrides + #basecoat-nova-parity
 
-- **Arquivo:** `design-system-basecoat/src/styles/basecoat-theme-overrides.css`
-- **Factory atualizada:** `design-system-basecoat/src/components/ui/button.ts` — tipo `ButtonSize` inclui `xs`/`icon-xs`, `btnClass` mapeia pra `btn-xs`/`btn-xs-icon`.
+- **Arquivo:** `nortear-design-system/src/styles/basecoat-theme-overrides.css`
+- **Factory atualizada:** `nortear-design-system/src/components/ui/button.ts` — tipo `ButtonSize` inclui `xs`/`icon-xs`, `btnClass` mapeia pra `btn-xs`/`btn-xs-icon`.
 
 **Duas responsabilidades combinadas:**
 
@@ -221,7 +221,7 @@ const alertVariants = cva(
 
 ### basecoat/alert — descrição como `<section>` para grid do basecoat-css
 
-- **Arquivo:** `design-system-basecoat/src/components/ui/alert.ts`
+- **Arquivo:** `nortear-design-system/src/components/ui/alert.ts`
 - **Categoria:** a11y (layout legível)
 - **Data:** 2026-04-18
 - **Upstream ref:** `basecoat-css` dist/basecoat.css L153–L184
@@ -294,7 +294,7 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
   - `design-system-react/src/components/ui/card.tsx` (Card root)
   - `design-system-vue/src/components/ui/card/Card.vue`
   - `design-system-svelte/src/components/ui/card/card.svelte`
-  - `design-system-basecoat/src/components/ui/card.ts` (`createCard`)
+  - `nortear-design-system/src/components/ui/card.ts` (`createCard`)
 - **Categoria:** bugfix
 - **Data:** 2026-04-22
 - **Upstream ref:** shadcn/ui — não há issue aberta (comportamento default do Tailwind `has-data-*`)
@@ -323,7 +323,7 @@ Gera CSS `.card:has(>[data-slot='card-footer']) { padding-bottom: 0 }` — combi
   - ~~`design-system-react/src/components/ui/avatar.tsx` (AvatarImage)~~ ✅ absorvido upstream (radix-nova → base-nova)
   - ~~`design-system-vue/src/components/ui/avatar/AvatarImage.vue`~~ ✅ absorvido upstream (reka-nova)
   - ~~`design-system-svelte/src/components/ui/avatar/avatar-image.svelte`~~ ✅ absorvido upstream (shadcn-svelte nova)
-  - `design-system-basecoat/src/components/ui/avatar.ts` (`createAvatarImage`) — PATCH ATIVO
+  - `nortear-design-system/src/components/ui/avatar.ts` (`createAvatarImage`) — PATCH ATIVO
 - **Categoria:** bugfix (distorção visual)
 - **Data original:** 2026-04-21
 - **Data resolução React:** 2026-04-21 (migração shadcn `new-york` → `radix-nova` → `base-nova`)

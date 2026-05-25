@@ -18,7 +18,7 @@ npm run dev            # sandbox de desenvolvimento — uso secundário
 ## Estrutura de Diretórios
 
 ```
-design-system-basecoat/
+nortear-design-system/
 ├── .storybook/
 │   ├── main.ts                  # @storybook/html-vite, addons, stories glob
 │   ├── preview.ts               # Parâmetros globais, decorators, toolbar

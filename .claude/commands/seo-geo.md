@@ -101,7 +101,7 @@ Dispare em paralelo no mesmo turno:
 - `Glob` de `design-system-react/src/components/docs/*<Slug>Docs.tsx`
 - `Glob` de `design-system-vue/src/components/docs/*<Slug>Docs.vue`
 - `Glob` de `design-system-svelte/src/components/docs/*<Slug>Docs.svelte`
-- `Glob` de `design-system-basecoat/src/components/docs/*<Slug>Docs.ts`
+- `Glob` de `nortear-design-system/src/components/docs/*<Slug>Docs.ts`
 
 Depois leia as docs pages encontradas (em paralelo) para verificar o `useSeoEffect`.
 

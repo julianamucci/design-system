@@ -48,7 +48,7 @@ Fluxo: `translations.json` + guidelines estruturais (08) → atualizar guideline
 1. `design-system-react/src/components/docs/{Slug}Docs.tsx` — implementação React (fonte primária)
 2. `design-system-vue/src/components/docs/{Slug}Docs.vue`
 3. `design-system-svelte/src/components/docs/{Slug}Docs.svelte`
-4. `design-system-basecoat/src/components/docs/{Slug}Docs.ts`
+4. `nortear-design-system/src/components/docs/{Slug}Docs.ts`
 5. `docs/shared/content/{slug}/translations.json` — estrutura de chaves e locales
 6. **Guideline de categoria** — leia o arquivo correspondente ao componente (ver tabela na seção `--from-content` acima). Usado para verificar se as props e variantes documentadas na docs page batem com as regras canônicas do projeto.
 
@@ -87,7 +87,7 @@ Fluxo: `translations.json` + guidelines estruturais (08) → atualizar guideline
 - `design-system-react/guidelines/11-documentacao-componentes.md`
 - `design-system-vue/guidelines/11-documentacao-componentes.md`
 - `design-system-svelte/guidelines/11-documentacao-componentes.md`
-- `design-system-basecoat/guidelines/11-documentacao-componentes.md`
+- `nortear-design-system/guidelines/11-documentacao-componentes.md`
 
 ---
 

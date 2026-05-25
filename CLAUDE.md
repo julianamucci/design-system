@@ -9,7 +9,7 @@ This is a **multi-stack design system monorepo**. The same design system is impl
 - `design-system-react/` — React 19 + `@base-ui/react` + Tailwind 4 — port **6006**
 - `design-system-vue/` — Vue 3 + `reka-ui` + Tailwind 4 — port **6007**
 - `design-system-svelte/` — Svelte 5 + `bits-ui` + Tailwind 4 — port **6008**
-- `design-system-basecoat/` — Vanilla TS factories + `basecoat-css` + Tailwind 4 — port **6009**
+- `nortear-design-system/` — Vanilla TS factories + `basecoat-css` + Tailwind 4 — port **6009**
 
 Shared (read by all stacks):
 - `docs/shared/content/<slug>/translations.json` — pt-BR/en/es content per component
