@@ -26,7 +26,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
   const card = createCard({ className: 'nds-cluster nds-p-4 nds-mt-2' });
 
   const inner = document.createElement('div');
-  inner.className = 'nds-stack w-full';
+  inner.className = 'nds-stack nds-w-full';
   inner.dataset.spacing = 'xl';
 
   for (const pair of props.pairs) {

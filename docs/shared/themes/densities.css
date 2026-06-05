@@ -14,6 +14,25 @@
  * Pode combinar com qualquer tema de cor (.tema-warm, .tema-cold) e com .dark.
  */
 
+/* ── Default — re-declara os valores de :root para garantir cascade
+ *    correto ao voltar de condensado/confortável. Mesmos números de tokens.css. */
+.densidade-default {
+  --spacing-base: 0.25rem;         /* 4px */
+
+  --height-badge: 1.25rem;         /* 20px */
+  --height-xs: 1.5rem;             /* 24px */
+  --height-sm: 1.75rem;            /* 28px */
+  --height-default: 2rem;          /* 32px */
+  --height-lg: 2.25rem;            /* 36px */
+  --height-xl: 2.5rem;             /* 40px */
+
+  --size-xs: 1.5rem;
+  --size-sm: 1.75rem;
+  --size-default: 2rem;
+  --size-lg: 2.25rem;
+  --size-xl: 2.5rem;
+}
+
 /* ── Condensado — interfaces densas, mais informação na tela ──────────────── */
 .densidade-condensado {
   --spacing-base: 0.20rem;        /* 3.2px (80% do padrão) */

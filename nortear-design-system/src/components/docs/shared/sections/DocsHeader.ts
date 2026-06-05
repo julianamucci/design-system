@@ -18,19 +18,15 @@ export function createDocsHeader(props: DocsHeaderProps): HTMLElement {
   // Padding-bottom via inline style — variável conforme viewport não é trivial em CSS puro
   header.style.paddingBottom = 'var(--spacing-6)';
 
-  // Linha superior: badges à esquerda + language switcher à direita
+  // Linha superior: badges à esquerda + language switcher à direita (spacer-start)
   const top = document.createElement('div');
   top.className = 'nds-cluster';
   top.dataset.spacing = 'sm';
-  top.dataset.justify = 'between';
-
-  const badges = document.createElement('div');
-  badges.className = 'nds-cluster';
-  badges.dataset.spacing = 'sm';
-  badges.appendChild(createBadge({ text: props.category, variant: 'secondary', className: 'nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium' }));
-  badges.appendChild(createBadge({ text: props.type, variant: 'outline', className: 'nds-text-muted-foreground nds-font-normal' }));
-  top.appendChild(badges);
-  top.appendChild(createLanguageSwitcher());
+  top.appendChild(createBadge({ text: props.category, variant: 'secondary', className: 'nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium' }));
+  top.appendChild(createBadge({ text: props.type, variant: 'outline', className: 'nds-text-muted-foreground nds-font-normal' }));
+  const switcher = createLanguageSwitcher();
+  switcher.classList.add('nds-spacer-start');
+  top.appendChild(switcher);
   header.appendChild(top);
 
   // Bloco de título + descrição

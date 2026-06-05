@@ -45,7 +45,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   const { wrapper: funcTableWrapper, table: funcTable } = createTable('nds-w-full nds-text-body');
 
   const funcThead = createTableHeader();
-  const funcHeaderRow = createTableRow('nds-border-b nds-border-default nds-bg-muted-soft');
+  const funcHeaderRow = createTableRow('nds-border-b nds-bg-muted-soft');
   funcHeaderRow.appendChild(createTableHead(props.functional.cols.action, 'nds-p-2 nds-font-semibold'));
   funcHeaderRow.appendChild(createTableHead(props.functional.cols.result, 'nds-p-2 nds-font-semibold'));
   funcHeaderRow.appendChild(createTableHead(props.functional.cols.priority, 'nds-p-2 nds-font-semibold'));
@@ -53,7 +53,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
 
   const funcTbody = createTableBody();
   props.functional.items.forEach(item => {
-    const row = createTableRow('nds-border-b nds-border-default nds-hover-bg-muted-faint');
+    const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
     row.appendChild(createTableCell(item.action, 'nds-p-2'));
     row.appendChild(createTableCell(item.result, 'nds-p-2 nds-text-muted-foreground'));
     const priorityCell = createTableCell('', 'nds-p-2 nds-font-medium');
@@ -93,7 +93,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
     criterionSpan.textContent = item.criterion;
     top.append(levelKbd, criterionSpan);
     const howP = document.createElement('p');
-    howP.className = 'nds-text-caption nds-text-muted-foreground';
+    howP.className = 'nds-text-body nds-text-muted-foreground';
     howP.textContent = item.how;
     card.append(top, howP);
     a11yGrid.appendChild(card);
@@ -114,14 +114,14 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   const { wrapper: visualTableWrapper, table: visualTable } = createTable('nds-w-full nds-text-body');
 
   const visualThead = createTableHeader();
-  const visualHeaderRow = createTableRow('nds-border-b nds-border-default nds-bg-muted-soft');
+  const visualHeaderRow = createTableRow('nds-border-b nds-bg-muted-soft');
   visualHeaderRow.appendChild(createTableHead(props.visual.cols.story, 'nds-p-2 nds-font-semibold'));
   visualHeaderRow.appendChild(createTableHead(props.visual.cols.priority, 'nds-p-2 nds-font-semibold'));
   visualThead.appendChild(visualHeaderRow);
 
   const visualTbody = createTableBody();
   props.visual.items.forEach(item => {
-    const row = createTableRow('nds-border-b nds-border-default nds-hover-bg-muted-faint');
+    const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
     row.appendChild(createTableCell(item.story, 'nds-p-2'));
     const priorityCell = createTableCell('', 'nds-p-2 nds-font-medium');
     priorityCell.appendChild(createBadge({ text: item.priority, className: priorityBadgeClass(item.priority) }));

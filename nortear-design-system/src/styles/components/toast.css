@@ -59,7 +59,7 @@
   pointer-events: auto;
   opacity: 0;
   transform: translateY(0.5rem);
-  transition: opacity 200ms, transform 200ms;
+  transition: opacity var(--duration-base), transform var(--duration-base);
 }
 
 .nds-toast[data-visible="true"] {
@@ -161,7 +161,7 @@
   padding: 0;
   color: hsl(var(--muted-foreground));
   cursor: pointer;
-  transition: color 150ms;
+  transition: color var(--duration-fast);
 }
 
 .nds-toast-close:hover {

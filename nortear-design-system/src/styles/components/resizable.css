@@ -39,7 +39,7 @@
 
   background-color: hsl(var(--border));
   outline: 0;
-  transition: background-color 150ms;
+  transition: background-color var(--duration-fast);
 }
 
 .nds-resizable[data-direction="horizontal"] > .nds-resizable-handle {

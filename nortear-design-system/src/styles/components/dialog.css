@@ -26,7 +26,7 @@
   z-index: 50;
   isolation: isolate;
   background-color: hsl(0 0% 0% / 0.1);
-  animation: nds-dialog-fade-in 100ms ease-out;
+  animation: nds-dialog-fade-in var(--duration-fast) var(--ease-entrance);
 }
 
 @supports (backdrop-filter: blur(4px)) {
@@ -36,7 +36,7 @@
 }
 
 .nds-dialog-overlay[data-state="closed"] {
-  animation: nds-dialog-fade-out 100ms ease-in;
+  animation: nds-dialog-fade-out var(--duration-fast) var(--ease-exit);
 }
 
 /* ── Content panel ───────────────────────────────────────────────────────── */
@@ -59,7 +59,7 @@
   color: hsl(var(--popover-foreground));
   box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);
   border-radius: 0;
-  animation: nds-dialog-zoom-in 100ms ease-out;
+  animation: nds-dialog-zoom-in var(--duration-fast) var(--ease-entrance);
 }
 
 @media (min-width: 40rem) {
@@ -69,7 +69,7 @@
 }
 
 .nds-dialog-content[data-state="closed"] {
-  animation: nds-dialog-zoom-out 100ms ease-in;
+  animation: nds-dialog-zoom-out var(--duration-fast) var(--ease-exit);
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
@@ -143,7 +143,7 @@
   padding: var(--spacing-1);
   cursor: pointer;
   opacity: 0.7;
-  transition: opacity 150ms, box-shadow 150ms;
+  transition: opacity var(--duration-fast), box-shadow var(--duration-fast);
 }
 
 .nds-dialog-close:hover {

@@ -1,0 +1,211 @@
+/*
+ * ─── nds-icon-search ─ Página de Foundations/Icons ───────────────────────────
+ * Componentes específicos da galeria Lucide na docs page de Icons.
+ */
+
+/* ── Campo de busca com ícone search à esquerda ──────────────────────────── */
+.nds-icon-search-wrap {
+  position: relative;
+}
+
+.nds-icon-search-svg {
+  position: absolute;
+  left: 0.75rem;                            /* 12px = ~spacing-3 */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1rem;                              /* 16px */
+  height: 1rem;
+  pointer-events: none;
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-icon-search-input {
+  width: 100%;
+  background-color: hsl(var(--input-background));
+  border: 1px solid hsl(var(--input));
+  border-radius: var(--radius-md, 0.5rem);
+  padding-inline: 2.25rem 0.75rem;          /* left 36px (para o ícone), right 12px */
+  padding-block: var(--spacing-1);          /* 4px */
+  height: 2.25rem;                          /* 36px */
+  font-family: var(--font-family, inherit);
+  font-size: 0.875rem;
+  color: hsl(var(--foreground));
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  outline: none;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.nds-icon-search-input:focus-visible {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+}
+
+/* ── Empty state quando busca não retorna nada ────────────────────────────── */
+.nds-icon-empty-state {
+  display: none;                            /* mostrado via .is-visible */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--spacing-20);         /* 80px */
+  color: hsl(var(--muted-foreground));
+  gap: var(--spacing-2);
+}
+.nds-icon-empty-state.is-visible {
+  display: flex;
+}
+.nds-icon-empty-state-svg {
+  width: 2.5rem;
+  height: 2.5rem;
+  opacity: 0.5;
+}
+
+/* ── Grade de ícones (auto-fill, mínimo 96px) ─────────────────────────────── */
+.nds-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: var(--spacing-1);                    /* 4px */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.nds-icon-grid.is-hidden {
+  display: none;
+}
+
+.nds-icon-grid-item {
+  list-style: none;
+}
+.nds-icon-grid-item.is-hidden {
+  display: none;
+}
+
+/* ── Botão individual do ícone — clicável, com hover/focus ─────────────────── */
+.nds-icon-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing-2);                    /* 8px */
+  padding: var(--spacing-3, 0.75rem);       /* 12px */
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg, 0.625rem);
+  cursor: pointer;
+  overflow: visible;
+  transition: background-color var(--duration-fast), border-color var(--duration-fast);
+  font-family: var(--font-family, inherit);
+}
+
+.nds-icon-tile:hover {
+  background-color: hsl(var(--muted) / 0.5);
+  border-color: hsl(var(--border));
+}
+
+.nds-icon-tile:focus-visible {
+  outline: none;
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+}
+
+.nds-icon-tile-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;                           /* 20px = nds-icon-lg */
+  height: 1.25rem;
+  color: hsl(var(--foreground) / 0.8);
+  transition: color var(--duration-fast);
+}
+/* Hover no tile destaca o ícone em primary */
+.nds-icon-tile:hover .nds-icon-tile-svg {
+  color: hsl(var(--primary));
+}
+
+.nds-icon-tile-name {
+  width: 100%;
+  font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+  font-size: 10px;
+  line-height: 1.2;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Divider de seção: borda superior + padding-top ───────────────────────── */
+.nds-docs-section-divider {
+  border-top: 1px solid hsl(var(--border) / 0.5);
+  padding-top: var(--spacing-8);              /* 32px */
+}
+
+/* ── Bloco de código padrão da docs page ───────────────────────────────────
+ * Consolidado: bg-muted, border-default, padding 16, caption (12px),
+ * mono font, overflow-x. Substitui o "amontoado" de 7 utilitários no className.
+ */
+.nds-docs-code {
+  display: block;
+  background-color: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-lg, 0.625rem);
+  padding: var(--spacing-4);                /* 16px */
+  font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+  font-size: 0.75rem;                       /* 12px */
+  line-height: 1.625;
+  color: hsl(var(--foreground));
+  overflow-x: auto;
+  margin: 0;
+}
+.nds-docs-code > code {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+}
+
+/* ── Callout (caixa decorativa pra exemplos do/dont nas docs) ───────────────
+ * Bg/border soft em uma cor semântica; conteúdo herda layout via nds-stack.
+ */
+.nds-docs-callout {
+  border-radius: var(--radius-lg, 0.625rem);
+  padding: var(--spacing-2);                /* 8px */
+  background-color: hsl(var(--muted) / 0.5);
+  border: 1px solid hsl(var(--border));
+}
+.nds-docs-callout[data-tone="success"] {
+  background-color: hsl(var(--success) / 0.08);
+  border-color: hsl(var(--success) / 0.3);
+}
+.nds-docs-callout[data-tone="info"] {
+  background-color: hsl(var(--info) / 0.08);
+  border-color: hsl(var(--info) / 0.3);
+}
+.nds-docs-callout[data-tone="warning"] {
+  background-color: hsl(var(--warning) / 0.08);
+  border-color: hsl(var(--warning) / 0.3);
+}
+.nds-docs-callout[data-tone="destructive"] {
+  background-color: hsl(var(--destructive) / 0.08);
+  border-color: hsl(var(--destructive) / 0.3);
+}
+
+/* ── Tooltip "Copiado" sobre o tile (estado on-hover ou pós-click) ────────── */
+.nds-icon-tile-tooltip {
+  position: absolute;
+  top: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: hsl(var(--foreground));
+  color: hsl(var(--background));
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm, 0.25rem);
+  font-size: 10px;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast);
+}

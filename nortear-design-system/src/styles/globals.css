@@ -23,6 +23,11 @@
 @import "./components/kbd.css";
 @import "./components/card.css";
 @import "./components/related-card.css";
+@import "./components/docs-nav.css";
+@import "./components/docs-demo.css";
+@import "./components/docs-icons.css";
+@import "./components/docs-swatches.css";
+@import "./components/language-switcher.css";
 @import "./components/accordion.css";
 @import "./components/alert-dialog.css";
 @import "./components/aspect-ratio.css";

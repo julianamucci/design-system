@@ -95,7 +95,7 @@
 
   function handleCopy(name: string) {
     navigator.clipboard
-      .writeText(`import { ${name} } from 'lucide-svelte';`)
+      .writeText(name)
       .then(() => {
         if (copiedTimer) clearTimeout(copiedTimer);
         copied = name;
@@ -109,7 +109,7 @@
   });
 </script>
 
-<div class="flex-1 h-full overflow-auto ds-docs">
+<div class="sb-unstyled flex-1 h-full overflow-auto ds-docs">
   <div class="p-8 max-w-6xl mx-auto space-y-8">
 
     <!-- ── Header ──────────────────────────────────────────────────────── -->
@@ -146,8 +146,68 @@
       </div>
     </header>
 
+    <!-- ── Como usar ────────────────────────────────────────────────────── -->
+    <section class="space-y-6 border-t border-border/50 pt-8">
+      <h2 class="text-xl font-semibold text-foreground">{$tStore('howToUse.title')}</h2>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="space-y-2">
+          <p class="text-sm font-medium text-foreground">{$tStore('howToUse.individual.title')}</p>
+          <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>{`import { Search, Settings, User } from 'lucide-svelte';
+
+<Search class="h-4 w-4" aria-hidden="true" />`}</code></pre>
+        </div>
+        <div class="space-y-2">
+          <p class="text-sm font-medium text-foreground">{$tStore('howToUse.sizes.title')}</p>
+          <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>{`h-3 w-3   // 12px — badges, captions
+h-4 w-4   // 16px — padrão em texto e botões
+h-5 w-5   // 20px — destaque em headers
+h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Acessibilidade ──────────────────────────────────────────────── -->
+    <section class="space-y-4 border-t border-border/50 pt-8">
+      <h2 class="text-xl font-semibold text-foreground">{$tStore('accessibility.title')}</h2>
+      <div class="grid gap-3 md:grid-cols-2">
+        <div class="space-y-2">
+          <p class="text-sm font-medium text-foreground">
+            {$tStore('accessibility.decorative.title')}
+          </p>
+          <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>{`<Button>
+  <Save class="h-4 w-4" aria-hidden="true" />
+  Salvar
+</Button>`}</code></pre>
+        </div>
+        <div class="space-y-2">
+          <p class="text-sm font-medium text-foreground">
+            {$tStore('accessibility.functional.title')}
+          </p>
+          <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>{`<Button
+  size="icon"
+  aria-label="Excluir produto"
+>
+  <Trash2 class="h-4 w-4" aria-hidden="true" />
+</Button>`}</code></pre>
+        </div>
+      </div>
+      <ul class="space-y-1.5 text-sm text-muted-foreground list-none p-0 m-0">
+        {#each ['rule1', 'rule2', 'rule3', 'rule4'] as rule}
+          <li class="flex gap-2 items-start list-none">
+            <span class="text-primary mt-0.5 shrink-0">✓</span>
+            <!-- eslint-disable svelte/no-at-html-tags -->
+            {@html $tStore(`accessibility.${rule}`)}
+          </li>
+        {/each}
+      </ul>
+    </section>
+
     <!-- ── Busca ────────────────────────────────────────────────────────── -->
-    <div class="space-y-3">
+    <section class="space-y-3 border-t border-border/50 pt-8">
+      <div class="space-y-1">
+        <h2 class="text-xl font-semibold text-foreground">{$tStore('search.title')}</h2>
+        <p class="text-sm text-muted-foreground">{$tStore('search.subtitle')}</p>
+      </div>
       <div class="relative">
         <!-- Search icon inlined -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -162,7 +222,7 @@
       <p class="text-sm text-muted-foreground" aria-live="polite" aria-atomic="true">
         {searchCountText}
       </p>
-    </div>
+    </section>
 
     <!-- ── Galeria ──────────────────────────────────────────────────────── -->
 
@@ -242,62 +302,6 @@
         </li>
       {/each}
     </ul>
-
-    <!-- ── Como usar ────────────────────────────────────────────────────── -->
-    <section class="space-y-6 border-t border-border/50 pt-8">
-      <h2 class="text-xl font-semibold text-foreground">{$tStore('howToUse.title')}</h2>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">{$tStore('howToUse.individual.title')}</p>
-          <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>{`import { Search, Settings, User } from 'lucide-svelte';
-
-<Search class="h-4 w-4" aria-hidden="true" />`}</code></pre>
-        </div>
-        <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">{$tStore('howToUse.sizes.title')}</p>
-          <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>{`h-3 w-3   // 12px — badges, captions
-h-4 w-4   // 16px — padrão em texto e botões
-h-5 w-5   // 20px — destaque em headers
-h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Acessibilidade ──────────────────────────────────────────────── -->
-    <section class="space-y-4 border-t border-border/50 pt-8">
-      <h2 class="text-xl font-semibold text-foreground">{$tStore('accessibility.title')}</h2>
-      <div class="grid gap-3 md:grid-cols-2">
-        <div class="rounded-lg border border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30 p-4 space-y-2">
-          <p class="text-sm font-semibold text-green-700 dark:text-green-400">
-            {$tStore('accessibility.decorative.title')}
-          </p>
-          <pre class="text-xs font-mono overflow-x-auto leading-relaxed text-green-800 dark:text-green-300"><code>{`<Button>
-  <Save class="h-4 w-4" aria-hidden="true" />
-  Salvar
-</Button>`}</code></pre>
-        </div>
-        <div class="rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/30 p-4 space-y-2">
-          <p class="text-sm font-semibold text-blue-700 dark:text-blue-400">
-            {$tStore('accessibility.functional.title')}
-          </p>
-          <pre class="text-xs font-mono overflow-x-auto leading-relaxed text-blue-800 dark:text-blue-300"><code>{`<Button
-  size="icon"
-  aria-label="Excluir produto"
->
-  <Trash2 class="h-4 w-4" aria-hidden="true" />
-</Button>`}</code></pre>
-        </div>
-      </div>
-      <ul class="space-y-1.5 text-sm text-muted-foreground list-none p-0 m-0">
-        {#each ['rule1', 'rule2', 'rule3', 'rule4'] as rule}
-          <li class="flex gap-2 items-start list-none">
-            <span class="text-primary mt-0.5 shrink-0">✓</span>
-            <!-- eslint-disable svelte/no-at-html-tags -->
-            {@html $tStore(`accessibility.${rule}`)}
-          </li>
-        {/each}
-      </ul>
-    </section>
 
   </div>
 </div>

@@ -31,6 +31,24 @@
 /* ── Sizing ────────────────────────────────────────────────────────────────── */
 .nds-w-full   { width: 100%; }
 .nds-w-auto   { width: auto; }
+.nds-w-xs     { width: 16rem; }                        /* 256px */
+.nds-w-sm     { width: 20rem; }                        /* 320px */
+.nds-w-md     { width: 24rem; }                        /* 384px */
+.nds-w-lg     { width: 32rem; }                        /* 512px */
+
+/* Square sizing (grid 8) — para elementos que precisam de width+height iguais */
+.nds-size-4   { width: 1rem;     height: 1rem;    }    /* 16px */
+.nds-size-6   { width: 1.5rem;   height: 1.5rem;  }    /* 24px */
+.nds-size-8   { width: 2rem;     height: 2rem;    }    /* 32px */
+.nds-size-10  { width: 2.5rem;   height: 2.5rem;  }    /* 40px */
+.nds-size-12  { width: 3rem;     height: 3rem;    }    /* 48px */
+.nds-size-16  { width: 4rem;     height: 4rem;    }    /* 64px */
+
+/* Flexbox spacer — empurra o elemento para o fim do eixo principal do pai
+ * (ex: dentro de .nds-cluster, manda o item para a direita).
+ * Substitui o padrão "wrap inner cluster + justify-between" quando há
+ * apenas um item à direita. */
+.nds-spacer-start { margin-inline-start: auto; }
 .nds-max-w-xs    { max-width: 20rem; }                 /* 320px */
 .nds-max-w-sm    { max-width: 24rem; }                 /* 384px — formulários */
 .nds-max-w-md    { max-width: 28rem; }                 /* 448px */

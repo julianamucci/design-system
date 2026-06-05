@@ -39,6 +39,7 @@
   box-shadow: 0 0 0 1px var(--card-ring);
 
   padding-block: var(--spacing-4);              /* 16px top/bottom */
+  padding-inline: var(--spacing-4);             /* 16px left/right */
   font-size: 0.875rem;                          /* 14px */
 }
 
@@ -46,10 +47,31 @@
 .nds-card[data-size="sm"] {
   gap: var(--spacing-2);                        /* 8px */
   padding-block: var(--spacing-2);
+  padding-inline: var(--spacing-2);             /* 8px left/right */
 }
 
 /* Imagem como primeiro filho — perde padding-top do card */
 .nds-card:has(> img:first-child) { padding-top: 0; }
+/* Imagem como último filho — perde padding-bottom do card */
+.nds-card:has(> img:last-child) { padding-bottom: 0; }
+
+/* Imagens rompem o padding-inline do card (full-bleed lateral),
+ * compensando com margin-inline negativa proporcional ao tamanho. */
+.nds-card > img:first-child,
+.nds-card > img:last-child,
+.nds-card .nds-card-img-first,
+.nds-card .nds-card-img-last {
+  margin-inline: calc(var(--spacing-4) * -1);
+  width: calc(100% + var(--spacing-4) * 2);
+  max-width: none;
+}
+.nds-card[data-size="sm"] > img:first-child,
+.nds-card[data-size="sm"] > img:last-child,
+.nds-card[data-size="sm"] .nds-card-img-first,
+.nds-card[data-size="sm"] .nds-card-img-last {
+  margin-inline: calc(var(--spacing-2) * -1);
+  width: calc(100% + var(--spacing-2) * 2);
+}
 
 /* Imagens com cantos arredondados conforme posição */
 .nds-card > img:first-child,
@@ -72,10 +94,7 @@
   grid-auto-rows: min-content;
   align-items: start;
   gap: var(--spacing-1);                        /* 4px */
-  padding-inline: var(--spacing-4);             /* 16px */
-}
-.nds-card[data-size="sm"] .nds-card-header {
-  padding-inline: var(--spacing-2);
+  /* padding-inline herdado do .nds-card */
 }
 
 /* Header com action → grid 2 colunas (texto / action) */
@@ -113,22 +132,23 @@
 
 /* ── Content ───────────────────────────────────────────────────────────────── */
 .nds-card-content {
-  padding-inline: var(--spacing-4);
-}
-.nds-card[data-size="sm"] .nds-card-content {
-  padding-inline: var(--spacing-2);
+  /* padding-inline herdado do .nds-card */
 }
 
 /* ── Footer ────────────────────────────────────────────────────────────────── */
+/* Footer "rompe" o padding-inline do card via margin negativa,
+ * permitindo bg-muted full-bleed até as bordas. */
 .nds-card-footer {
   display: flex;
   align-items: center;
   border-top: 1px solid hsl(var(--border));
   background-color: hsl(var(--muted) / 0.5);
   padding: var(--spacing-4);                    /* 16px */
+  margin-inline: calc(var(--spacing-4) * -1);   /* compensa padding-inline do card */
   border-bottom-left-radius: var(--radius-card, 0.625rem);
   border-bottom-right-radius: var(--radius-card, 0.625rem);
 }
 .nds-card[data-size="sm"] .nds-card-footer {
   padding: var(--spacing-2);
+  margin-inline: calc(var(--spacing-2) * -1);
 }

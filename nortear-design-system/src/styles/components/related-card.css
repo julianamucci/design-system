@@ -23,7 +23,7 @@
   cursor: pointer;
   outline: none;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  transition: background-color 150ms, color 150ms, border-color 150ms, box-shadow 150ms;
+  transition: background-color var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
 
 .nds-related-card:hover {

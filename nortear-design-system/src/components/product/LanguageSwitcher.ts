@@ -9,7 +9,7 @@ const LOCALE_DEFS: { value: Locale; label: string; ariaLabel: string }[] = [
 
 export function createLanguageSwitcher(): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'flex items-center gap-1 bg-muted/30 p-1 rounded-(--radius-input) border border-border/40';
+  wrap.className = 'nds-lang-switcher';
 
   const renderButtons = () => {
     wrap.replaceChildren();
@@ -17,13 +17,11 @@ export function createLanguageSwitcher(): HTMLElement {
     LOCALE_DEFS.forEach(({ value, label, ariaLabel }) => {
       const b = document.createElement('button');
       b.type = 'button';
+      b.className = 'nds-lang-switcher-button';
       b.dataset.locale = value;
       b.setAttribute('aria-label', ariaLabel);
       b.textContent = label;
       const active = value === current;
-      b.className = active
-        ? 'h-(--height-xs) px-2 text-[10px] font-bold rounded-(--radius-button) bg-secondary text-secondary-foreground transition-all'
-        : 'h-(--height-xs) px-2 text-[10px] font-bold rounded-(--radius-button) text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all';
       b.setAttribute('aria-pressed', String(active));
       b.addEventListener('click', () => {
         const prev = getLocale();

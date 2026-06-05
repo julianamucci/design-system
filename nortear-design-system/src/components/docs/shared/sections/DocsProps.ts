@@ -34,7 +34,7 @@ function buildTable(def: DocsPropsTableDef): DocumentFragment {
   const { wrapper: tableWrapper, table } = createTable('nds-w-full nds-text-body');
 
   const thead = createTableHeader();
-  const headerRow = createTableRow('nds-border-b nds-border-default nds-bg-muted-soft');
+  const headerRow = createTableRow('nds-border-b nds-bg-muted-soft');
   headerRow.appendChild(createTableHead(def.cols.prop, 'nds-p-2 nds-font-semibold'));
   headerRow.appendChild(createTableHead(def.cols.type, 'nds-p-2 nds-font-semibold'));
   headerRow.appendChild(createTableHead(def.cols.default, 'nds-p-2 nds-font-semibold'));
@@ -44,7 +44,7 @@ function buildTable(def: DocsPropsTableDef): DocumentFragment {
 
   const tbody = createTableBody();
   def.items.forEach(item => {
-    const row = createTableRow('nds-border-b nds-border-default nds-hover-bg-muted-faint');
+    const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
     row.appendChild(createTableCell(item.name, 'nds-p-2 nds-font-mono nds-font-bold nds-text-primary'));
     row.appendChild(createTableCell(item.type, 'nds-p-2 nds-font-mono nds-text-muted-foreground'));
     row.appendChild(createTableCell(item.defaultValue, 'nds-p-2 nds-text-muted-foreground'));

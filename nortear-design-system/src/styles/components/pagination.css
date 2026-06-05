@@ -60,7 +60,7 @@
   text-decoration: none;
   cursor: pointer;
   outline: 0;
-  transition: background-color 150ms, color 150ms;
+  transition: background-color var(--duration-fast), color var(--duration-fast);
 }
 
 .nds-pagination-link:hover {

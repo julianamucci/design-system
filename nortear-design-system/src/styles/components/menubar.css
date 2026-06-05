@@ -57,7 +57,7 @@
   color: inherit;
   cursor: default;
   outline: 0;
-  transition: background-color 100ms, color 100ms;
+  transition: background-color var(--duration-fast), color var(--duration-fast);
 }
 
 .nds-menubar-trigger:focus,
@@ -102,7 +102,7 @@
   cursor: pointer;
   user-select: none;
   outline: 0;
-  transition: background-color 100ms, color 100ms;
+  transition: background-color var(--duration-fast), color var(--duration-fast);
 }
 
 .nds-menubar-item:focus,

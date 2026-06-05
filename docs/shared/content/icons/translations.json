@@ -6,6 +6,8 @@
     "description": "Todos os ícones do Design System são fornecidos pela biblioteca Lucide — open-source, consistentes e acessíveis. Clique em qualquer ícone para copiar o statement de importação.",
     "iconsAvailable": "{count} ícones disponíveis",
     "search": {
+      "title": "Buscar ícones",
+      "subtitle": "Pesquise pelo nome do ícone e clique para copiar o identificador.",
       "placeholder": "Buscar ícone por nome… ex: arrow, user, settings",
       "results": "{count} resultado{plural} para “{query}”",
       "count": "{count} ícones",
@@ -46,6 +48,8 @@
     "description": "All Design System icons are provided by the Lucide library — open-source, consistent and accessible. Click any icon to copy its import statement.",
     "iconsAvailable": "{count} icons available",
     "search": {
+      "title": "Search icons",
+      "subtitle": "Search by icon name and click to copy the identifier.",
       "placeholder": "Search icon by name… e.g. arrow, user, settings",
       "results": "{count} result{plural} for “{query}”",
       "count": "{count} icons",
@@ -86,6 +90,8 @@
     "description": "Todos los íconos del Design System son proporcionados por la biblioteca Lucide — open-source, consistentes y accesibles. Haz clic en cualquier ícono para copiar su import.",
     "iconsAvailable": "{count} íconos disponibles",
     "search": {
+      "title": "Buscar íconos",
+      "subtitle": "Busca por el nombre del ícono y haz clic para copiar el identificador.",
       "placeholder": "Buscar ícono por nombre… ej: arrow, user, settings",
       "results": "{count} resultado{plural} para “{query}”",
       "count": "{count} íconos",

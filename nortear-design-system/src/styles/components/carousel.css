@@ -28,7 +28,7 @@
 /* ── Track (linha horizontal com todos os slides) ────────────────────────── */
 .nds-carousel-track {
   display: flex;
-  transition: transform 300ms ease-in-out;
+  transition: transform var(--duration-moderate) var(--ease-standard);
 }
 
 /* ── Slide ───────────────────────────────────────────────────────────────── */
@@ -58,7 +58,7 @@
   cursor: pointer;
   outline: 0;
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
-  transition: background-color 150ms, color 150ms, opacity 150ms;
+  transition: background-color var(--duration-fast), color var(--duration-fast), opacity var(--duration-fast);
 }
 
 .nds-carousel-button-prev { left: var(--spacing-2); }

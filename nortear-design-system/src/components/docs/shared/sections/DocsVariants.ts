@@ -49,7 +49,7 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
     const info = document.createElement('div');
     info.innerHTML = `
       <h3 class="nds-text-body nds-font-semibold nds-m-0">${sanitizeHtml(item.name)}</h3>
-      <p class="nds-text-caption nds-text-muted-foreground nds-mt-1 nds-leading-relaxed">${sanitizeHtml(item.description)}</p>`;
+      <p class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-leading-relaxed">${sanitizeHtml(item.description)}</p>`;
 
     const previewWrap = document.createElement('div');
     previewWrap.className = 'nds-cluster';

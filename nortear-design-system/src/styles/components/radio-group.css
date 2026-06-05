@@ -47,7 +47,7 @@
   cursor: pointer;
   outline: 0;
   padding: 0;
-  transition: border-color 150ms, box-shadow 150ms;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
 
 .nds-radio-item:focus-visible {

@@ -49,7 +49,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   const { wrapper: scenariosTableWrapper, table: scenariosTable } = createTable('nds-w-full nds-border-collapse nds-text-body');
 
   const scenariosThead = createTableHeader();
-  const scenariosHeaderRow = createTableRow('nds-border-b nds-border-default nds-bg-muted-soft nds-font-medium');
+  const scenariosHeaderRow = createTableRow('nds-border-b nds-bg-muted-soft nds-font-medium');
   scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.scenario, 'nds-p-2'));
   scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.use, 'nds-p-2'));
   scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.alternative, 'nds-p-2'));
@@ -57,7 +57,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
 
   const scenariosTbody = createTableBody();
   props.scenarios.items.forEach(item => {
-    const row = createTableRow('nds-border-b nds-border-default nds-hover-bg-muted-faint');
+    const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
     row.appendChild(createTableCell(item.s, 'nds-p-2'));
     row.appendChild(createTableCell(item.u, 'nds-p-2 nds-font-medium nds-text-primary'));
     row.appendChild(createTableCell(item.a, 'nds-p-2 nds-text-muted-foreground'));
@@ -85,7 +85,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
     const { wrapper: uxInnerTableWrapper, table: uxTable } = createTable('nds-w-full nds-border-collapse nds-text-body');
 
     const uxThead = createTableHeader();
-    const uxHeaderRow = createTableRow('nds-border-b nds-border-default nds-bg-muted-soft');
+    const uxHeaderRow = createTableRow('nds-border-b nds-bg-muted-soft');
     uxHeaderRow.appendChild(createTableHead(ux.cols.element, 'nds-p-2 nds-font-semibold'));
     if (ux.cols.rules) {
       uxHeaderRow.appendChild(createTableHead(ux.cols.rules, 'nds-p-2 nds-font-semibold'));
@@ -105,7 +105,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
 
     const uxTbody = createTableBody();
     ux.items.forEach(row => {
-      const tr = createTableRow('nds-border-b nds-border-default nds-hover-bg-muted-faint');
+      const tr = createTableRow('nds-border-b nds-hover-bg-muted-faint');
       tr.appendChild(createTableCell(row.element, 'nds-p-2 nds-font-medium'));
       if (ux.cols.rules) {
         tr.appendChild(createTableCell(row.rules ?? '', 'nds-p-2 nds-text-muted-foreground'));

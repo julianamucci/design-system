@@ -24,8 +24,8 @@ const componentCategories = [
     name: "Foundations",
     icon: Sparkles,
     items: [
-      { name: "Theme Colors", path: "theme-colors" },
-      { name: "Icons", path: "icons" }
+      { name: "Icons", path: "icons" },
+      { name: "Theme Colors", path: "theme-colors" }
     ]
   },
   {

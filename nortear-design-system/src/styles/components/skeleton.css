@@ -14,7 +14,7 @@
   display: block;
   background-color: hsl(var(--primary) / 0.1);
   border-radius: var(--radius, 0.5rem);
-  animation: nds-skeleton-pulse 1.5s ease-in-out infinite;
+  animation: nds-skeleton-pulse 1.5s var(--ease-standard) infinite;
 }
 
 @keyframes nds-skeleton-pulse {

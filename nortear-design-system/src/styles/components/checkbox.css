@@ -29,7 +29,7 @@
   border-radius: 0.25rem;                        /* 4px — radius-sm */
   cursor: pointer;
   outline: 0;
-  transition: background-color 150ms, border-color 150ms, box-shadow 150ms;
+  transition: background-color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
 
 .nds-checkbox:focus-visible {

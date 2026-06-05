@@ -5,10 +5,77 @@
  * Radius: base 10px; componentes seguem multiplicadores shadcn:
  *   button: 1×, card: 1.4×, badge: 2.6×, input: 1×, alert: 1×
  *
- * Valores de :root em tokens.css já refletem Default — este arquivo é só marker.
+ * Os valores em :root (tokens.css) refletem Default. Este arquivo RE-DECLARA
+ * os mesmos tokens dentro de `.tema-default` para garantir que, ao voltar de
+ * `.tema-warm` ou `.tema-cold` no preview do Storybook, o cascade do CSS reverta
+ * corretamente (sem essa re-declaração, browsers podem manter estado computado
+ * mesmo após a remoção da classe override).
  *
  * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
  */
 .tema-default {
-  /* Default é o padrão — herda todos os valores de :root em tokens.css */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 4%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 4%;
+
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 4%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 40%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 9%;
+
+  --destructive: 0 74% 42%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 142 85% 22%;
+  --success-foreground: 0 0% 100%;
+  --warning: 45 95% 36%;
+  --warning-foreground: 0 0% 100%;
+  --info: 221 83% 43%;
+  --info-foreground: 0 0% 100%;
+
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --input-background: 0 0% 100%;
+  --ring: 0 0% 45%;
+  --ring-offset-color: 0 0% 100%;
+}
+
+/* Dark mode — combina `.dark.tema-default` */
+.dark.tema-default {
+  --background: 0 0% 4%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 6%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 6%;
+  --popover-foreground: 0 0% 98%;
+
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 65%;
+  --accent: 0 0% 15%;
+  --accent-foreground: 0 0% 98%;
+
+  --destructive: 0 85% 70%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 142 71% 55%;
+  --success-foreground: 0 0% 0%;
+  --warning: 48 95% 60%;
+  --warning-foreground: 0 0% 0%;
+  --info: 221 83% 53%;
+  --info-foreground: 0 0% 100%;
+
+  --border: 0 0% 15%;
+  --input: 0 0% 20%;
+  --input-background: 0 0% 8%;
+  --ring: 0 0% 70%;
+  --ring-offset-color: 0 0% 4%;
 }

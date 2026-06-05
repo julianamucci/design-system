@@ -21,7 +21,7 @@ export function createDocsAnalytics(props: DocsAnalyticsProps): HTMLElement {
   const { wrapper: tableWrapper, table } = createTable('nds-w-full nds-text-body');
 
   const thead = createTableHeader();
-  const headerRow = createTableRow('nds-border-b nds-border-default nds-bg-muted-soft');
+  const headerRow = createTableRow('nds-border-b nds-bg-muted-soft');
   headerRow.appendChild(createTableHead(props.cols.event, 'nds-p-2 nds-font-semibold'));
   headerRow.appendChild(createTableHead(props.cols.trigger, 'nds-p-2 nds-font-semibold'));
   headerRow.appendChild(createTableHead(props.cols.payload, 'nds-p-2 nds-font-semibold'));
@@ -29,7 +29,7 @@ export function createDocsAnalytics(props: DocsAnalyticsProps): HTMLElement {
 
   const tbody = createTableBody();
   props.items.forEach(item => {
-    const row = createTableRow('nds-border-b nds-border-default nds-hover-bg-muted-faint');
+    const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
     row.appendChild(createTableCell(item.event, 'nds-p-2 nds-font-mono nds-text-primary'));
     row.appendChild(createTableCell(item.trigger, 'nds-p-2 nds-text-muted-foreground'));
     row.appendChild(createTableCell(item.payload, 'nds-p-2 nds-font-mono nds-text-caption nds-text-muted-foreground'));

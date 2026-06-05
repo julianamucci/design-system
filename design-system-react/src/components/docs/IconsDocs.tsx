@@ -59,7 +59,7 @@ export function IconsDocs() {
   // ─── Copiar ──────────────────────────────────────────────────────────────
   const handleCopy = useCallback((name: string) => {
     navigator.clipboard
-      .writeText(`import { ${name} } from 'lucide-react';`)
+      .writeText(name)
       .then(() => {
         setCopied(name);
         setTimeout(() => setCopied(null), 1500);
@@ -77,7 +77,7 @@ export function IconsDocs() {
     : t('search.count').replace('{count}', String(filteredNames.length));
 
   return (
-    <div className="flex-1 h-full overflow-auto ds-docs">
+    <div className="sb-unstyled flex-1 h-full overflow-auto ds-docs">
       <div className="p-8 max-w-6xl mx-auto space-y-8">
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
@@ -119,8 +119,62 @@ export function IconsDocs() {
           </div>
         </header>
 
+        {/* ── Como usar ────────────────────────────────────────────────────── */}
+        <section className="space-y-6 border-t border-border/50 pt-8">
+          <h2 className="text-xl font-semibold text-foreground">{t('howToUse.title')}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-foreground">{t('howToUse.individual.title')}</p>
+              <pre className="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed">
+                <code>{`import { Search, Settings, User } from 'lucide-react';\n\n<Search className="h-4 w-4" aria-hidden="true" />`}</code>
+              </pre>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-foreground">{t('howToUse.sizes.title')}</p>
+              <pre className="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed">
+                <code>{`h-3 w-3   // 12px — badges, captions\nh-4 w-4   // 16px — padrão em texto e botões\nh-5 w-5   // 20px — destaque em headers\nh-6 w-6   // 24px — standalone / ilustrativo`}</code>
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Acessibilidade ───────────────────────────────────────────────── */}
+        <section className="space-y-4 border-t border-border/50 pt-8">
+          <h2 className="text-xl font-semibold text-foreground">{t('accessibility.title')}</h2>
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-foreground">
+                {t('accessibility.decorative.title')}
+              </p>
+              <pre className="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed">
+                <code>{`<Button>\n  <Save className="h-4 w-4" aria-hidden="true" />\n  Salvar\n</Button>`}</code>
+              </pre>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-foreground">
+                {t('accessibility.functional.title')}
+              </p>
+              <pre className="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed">
+                <code>{`<Button\n  size="icon"\n  aria-label="Excluir produto"\n>\n  <Trash2 className="h-4 w-4" aria-hidden="true" />\n</Button>`}</code>
+              </pre>
+            </div>
+          </div>
+          <ul className="space-y-1.5 text-sm text-muted-foreground list-none p-0 m-0">
+            {(['rule1', 'rule2', 'rule3', 'rule4'] as const).map((rule) => (
+              <li key={rule} className="flex gap-2 items-start list-none">
+                <span className="text-primary mt-0.5 shrink-0">✓</span>
+                <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t(`accessibility.${rule}`)) }} />
+              </li>
+            ))}
+          </ul>
+        </section>
+
         {/* ── Busca ────────────────────────────────────────────────────────── */}
-        <div className="space-y-3">
+        <section className="space-y-3 border-t border-border/50 pt-8">
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold text-foreground">{t('search.title')}</h2>
+            <p className="text-sm text-muted-foreground">{t('search.subtitle')}</p>
+          </div>
           <div className="relative">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"
@@ -142,7 +196,7 @@ export function IconsDocs() {
           >
             {searchCountText}
           </p>
-        </div>
+        </section>
 
         {/* ── Galeria ──────────────────────────────────────────────────────── */}
         {filteredNames.length === 0 ? (
@@ -199,56 +253,6 @@ export function IconsDocs() {
             })}
           </ul>
         )}
-
-        {/* ── Como usar ────────────────────────────────────────────────────── */}
-        <section className="space-y-6 border-t border-border/50 pt-8">
-          <h2 className="text-xl font-semibold text-foreground">{t('howToUse.title')}</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-foreground">{t('howToUse.individual.title')}</p>
-              <pre className="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed">
-                <code>{`import { Search, Settings, User } from 'lucide-react';\n\n<Search className="h-4 w-4" aria-hidden="true" />`}</code>
-              </pre>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-foreground">{t('howToUse.sizes.title')}</p>
-              <pre className="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed">
-                <code>{`h-3 w-3   // 12px — badges, captions\nh-4 w-4   // 16px — padrão em texto e botões\nh-5 w-5   // 20px — destaque em headers\nh-6 w-6   // 24px — standalone / ilustrativo`}</code>
-              </pre>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Acessibilidade ───────────────────────────────────────────────── */}
-        <section className="space-y-4 border-t border-border/50 pt-8">
-          <h2 className="text-xl font-semibold text-foreground">{t('accessibility.title')}</h2>
-          <div className="grid gap-3 md:grid-cols-2">
-            <div className="rounded-lg border border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30 p-4 space-y-2">
-              <p className="text-sm font-semibold text-green-700 dark:text-green-400">
-                {t('accessibility.decorative.title')}
-              </p>
-              <pre className="text-xs font-mono overflow-x-auto leading-relaxed text-green-800 dark:text-green-300">
-                <code>{`<Button>\n  <Save className="h-4 w-4" aria-hidden="true" />\n  Salvar\n</Button>`}</code>
-              </pre>
-            </div>
-            <div className="rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/30 p-4 space-y-2">
-              <p className="text-sm font-semibold text-blue-700 dark:text-blue-400">
-                {t('accessibility.functional.title')}
-              </p>
-              <pre className="text-xs font-mono overflow-x-auto leading-relaxed text-blue-800 dark:text-blue-300">
-                <code>{`<Button\n  size="icon"\n  aria-label="Excluir produto"\n>\n  <Trash2 className="h-4 w-4" aria-hidden="true" />\n</Button>`}</code>
-              </pre>
-            </div>
-          </div>
-          <ul className="space-y-1.5 text-sm text-muted-foreground list-none p-0 m-0">
-            {(['rule1', 'rule2', 'rule3', 'rule4'] as const).map((rule) => (
-              <li key={rule} className="flex gap-2 items-start list-none">
-                <span className="text-primary mt-0.5 shrink-0">✓</span>
-                <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t(`accessibility.${rule}`)) }} />
-              </li>
-            ))}
-          </ul>
-        </section>
 
       </div>
     </div>

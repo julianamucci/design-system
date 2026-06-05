@@ -12,6 +12,11 @@
  * Combina com qualquer tema de cor, densidade e light/dark.
  */
 
+/* Default — re-declara para garantir cascade ao voltar de outra fonte */
+.fonte-default {
+  --font-family-active: 'Inter', sans-serif;
+}
+
 .fonte-lexend {
   --font-family-active: 'Lexend', sans-serif;
 }

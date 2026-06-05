@@ -1,250 +1,310 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { 
-  Palette,
-  ExternalLink,
-  Info,
-  Paintbrush,
-  Cloud,
-  Sun,
-  Copy,
-  Check,
-} from 'lucide-react';
-import { useTranslation } from "@/lib/i18n";
-import { LanguageSwitcher } from "@/components/product/LanguageSwitcher";
-import { sanitizeHtml } from "@/lib/sanitize-html";
-import colorsTranslations from "./content/colors/translations.json";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { LanguageSwitcher } from '@/components/product/LanguageSwitcher';
+import { Swatch } from '@/components/docs/shared/Swatch';
+import { useTranslation } from '@/lib/i18n';
+import { useSeoEffect } from '@/lib/use-seo';
+import { track } from '@/lib/analytics';
+import themeColorsTranslations from '@shared/content/theme-colors/translations.json';
 
-interface ColorItemProps {
-  name: string;
-  variable: string;
-  hex: string;
-  copyLabel?: string;
-}
+// ─── Definições estáticas ──────────────────────────────────────────────────────
 
-const ColorItem = ({ name, variable, hex, copyLabel = "Copiado!" }: ColorItemProps) => {
-  const [copied, setCopied] = React.useState(false);
+/** Grupos da paleta semântica e seus tokens (sem o prefixo `--`). */
+const PALETTE_GROUPS: Array<{ key: string; tokens: string[] }> = [
+  {
+    key: 'surface',
+    tokens: [
+      'background', 'foreground', 'card', 'card-foreground', 'popover',
+      'popover-foreground', 'muted', 'muted-foreground', 'accent', 'accent-foreground',
+    ],
+  },
+  {
+    key: 'brand',
+    tokens: ['primary', 'primary-foreground', 'secondary', 'secondary-foreground'],
+  },
+  {
+    key: 'feedback',
+    tokens: [
+      'destructive', 'destructive-foreground', 'success', 'success-foreground',
+      'warning', 'warning-foreground', 'info', 'info-foreground',
+    ],
+  },
+  {
+    key: 'structure',
+    tokens: ['border', 'input', 'input-background', 'ring'],
+  },
+  {
+    key: 'chart',
+    tokens: ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'],
+  },
+];
 
-  const copyHex = () => {
-    navigator.clipboard.writeText(hex);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+/** Tokens exibidos como mini-swatches nos cards de tema/modo. */
+const MINI_TOKENS = ['primary', 'secondary', 'accent', 'muted', 'destructive', 'success'];
 
-  return (
-    <div className="flex flex-col gap-2 group">
-      <div 
-        onClick={copyHex}
-        className="h-20 rounded-xl border border-border/50 shadow-sm cursor-pointer transition-all hover:scale-[1.02] hover:shadow-md flex items-end justify-end p-2 relative overflow-hidden"
-        style={{ backgroundColor: hex }}
-      >
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
-        <div className="bg-white/90 backdrop-blur-md rounded-md p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm flex items-center gap-1.5">
-           {copied ? (
-             <>
-               <Check className="size-3 text-green-600" />
-               <span className="text-[10px] font-bold text-green-600">{copyLabel}</span>
-             </>
-           ) : (
-             <Copy className="size-3 text-muted-foreground" />
-           )}
-        </div>
-      </div>
-      <div className="space-y-1">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-bold tracking-wide">{name}</span>
-          <span className="text-[10px] tabular-nums text-muted-foreground uppercase">{hex}</span>
-        </div>
-        <p className="text-[10px] font-mono text-muted-foreground truncate">{variable}</p>
-      </div>
-    </div>
-  );
-};
+const BRAND_THEMES: Array<{ key: string; className: string }> = [
+  { key: 'default', className: 'tema-default' },
+  { key: 'warm', className: 'tema-warm' },
+  { key: 'cold', className: 'tema-cold' },
+];
 
-const ColorGroup = ({ title, subtitle, colors, copyLabel }: { title: string, subtitle: string, colors: any[], copyLabel: string }) => (
-  <div className="space-y-4">
-    <div className="space-y-1">
-      <h3 className="font-semibold text-lg">{title}</h3>
-      <p className="text-sm text-muted-foreground">{subtitle}</p>
-    </div>
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-      {colors.map(color => <ColorItem key={color.variable} {...color} copyLabel={copyLabel} />)}
-    </div>
-  </div>
-);
+const MODES: Array<{ key: string; className: string }> = [
+  { key: 'light', className: '' },
+  { key: 'dark', className: 'dark' },
+];
+
+const DENSITY_ITEMS: Array<{ key: string; className: string }> = [
+  { key: 'condensado', className: 'densidade-condensado' },
+  { key: 'default', className: 'densidade-default' },
+  { key: 'confortavel', className: 'densidade-confortavel' },
+];
+
+const FONT_ITEMS: Array<{ key: string; className: string }> = [
+  { key: 'default', className: 'fonte-default' },
+  { key: 'lexend', className: 'fonte-lexend' },
+  { key: 'pt-serif', className: 'fonte-pt-serif' },
+  { key: 'lxgw-wenkai', className: 'fonte-lxgw-wenkai' },
+];
+
+// ─── Componente ──────────────────────────────────────────────────────────────
 
 export function ThemeColorsDocs() {
-  const { t } = useTranslation(colorsTranslations);
+  const { t, locale } = useTranslation(themeColorsTranslations);
+  const [tokenValues, setTokenValues] = useState<Record<string, string>>({});
+  const [temaAtivo, setTemaAtivo] = useState<string>('tema-default');
+  const [paginaDark, setPaginaDark] = useState<boolean>(false);
 
-  const nortearColors = [
-    { name: "Primary", variable: "--primary", hex: "#171717" },
-    { name: "Secondary", variable: "--secondary", hex: "#f5f5f5" },
-    { name: "Muted", variable: "--muted", hex: "#f5f5f5" },
-    { name: "Accent", variable: "--accent", hex: "#f5f5f5" },
-    { name: "Success", variable: "--success", hex: "#22c55e" },
-    { name: "Warning", variable: "--warning", hex: "#eab308" },
-    { name: "Error", variable: "--destructive", hex: "#ef4444" },
-    { name: "Info", variable: "--info", hex: "#3b82f6" },
-  ];
+  // ─── SEO ────────────────────────────────────────────────────────────────
+  useSeoEffect({
+    title: `${t('title')} — ${t('category')}`,
+    description: t('description'),
+    locale,
+    componentSlug: 'theme-colors',
+  });
 
-  const crystalColors = [
-    { name: "Primary", variable: "--primary (Crystal)", hex: "#7c3aed" },
-    { name: "Background", variable: "--background", hex: "#020617" },
-    { name: "Border", variable: "--border", hex: "#1e293b" },
-  ];
+  // ─── Analytics — page view ───────────────────────────────────────────────
+  useEffect(() => {
+    track('docs_page_view', {
+      component_name: 'theme-colors',
+      locale,
+      page_title: `${t('title')} · Design System`,
+    });
+  }, [locale, t]);
 
-  const industrialColors = [
-    { name: "Primary", variable: "--primary (Industrial)", hex: "#f59e0b" },
-    { name: "Background", variable: "--background", hex: "#000000" },
-    { name: "Border", variable: "--border", hex: "#262626" },
-  ];
+  // ─── Detecta tema/modo + relê valores HSL no <html> (reage à toolbar) ──────
+  useEffect(() => {
+    const read = () => {
+      const cl = document.documentElement.classList;
+      const tema = ['tema-default', 'tema-warm', 'tema-cold'].find((c) => cl.contains(c))
+        ?? 'tema-default';
+      setTemaAtivo(tema);
+      setPaginaDark(cl.contains('dark'));
 
-  const navItems = [
-    { id: "introducao", label: t("title") },
-    { id: "nortear", label: t("nortear.title") },
-    { id: "crystal", label: t("crystal.title") },
-    { id: "industrial", label: t("industrial.title") },
-  ];
+      // Relê os valores HSL resolvidos a cada mudança de classe do <html>.
+      const styles = getComputedStyle(document.documentElement);
+      const values: Record<string, string> = {};
+      PALETTE_GROUPS.forEach((group) => {
+        group.tokens.forEach((token) => {
+          values[token] = styles.getPropertyValue(`--${token}`).trim();
+        });
+      });
+      setTokenValues(values);
+    };
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  // ─── Fileira de mini-swatches (variante vertical) ─────────────────────────
+  const miniRow = (
+    <div className="flex flex-wrap gap-3">
+      {MINI_TOKENS.map((token) => (
+        <Swatch key={token} token={token} orientation="vertical" />
+      ))}
+    </div>
+  );
 
   return (
-    <div className="ds-docs flex-1 h-full overflow-auto bg-background scroll-smooth">
-      <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
-        
-        {/* --- Header --- */}
-        <header id="introducao" className="space-y-4 border-b pb-8 mb-12">
+    <div className="sb-unstyled flex-1 h-full overflow-auto ds-docs">
+      <div className="p-8 max-w-6xl mx-auto space-y-8">
+
+        {/* ── Header ──────────────────────────────────────────────────────── */}
+        <header className="space-y-4 pb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10">{t("category")}</Badge>
-              <Badge variant="outline">{t("title")}</Badge>
+              <Badge
+                variant="secondary"
+                className="bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
+              >
+                {t('category')}
+              </Badge>
+              <Badge
+                variant="outline"
+                className="text-muted-foreground font-normal px-2 py-0"
+              >
+                {t('type')}
+              </Badge>
             </div>
             <LanguageSwitcher />
           </div>
-          <div className="flex items-center gap-3">
-             <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
-             <Palette className="size-8 text-primary/20" />
-          </div>
-          <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
-            {t("description")}
+
+          <h1 className="text-4xl font-bold tracking-tight text-foreground">
+            {t('title')}
+          </h1>
+
+          <p className="text-muted-foreground max-w-3xl leading-relaxed">
+            {t('description')}
           </p>
         </header>
 
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
-          
-          {/* --- Conteúdo Principal --- */}
-          <div className="flex-1 min-w-0 space-y-20">
-            
-            {/* Tema Nortear */}
-            <section id="nortear" className="space-y-8">
-              <div className="flex items-center gap-2 text-xl font-semibold border-b pb-2">
-                <Paintbrush className="size-5 text-primary" />
-                <h2>{t("nortear.title")}</h2>
-              </div>
-              <ColorGroup 
-                title={t("nortear.title")} 
-                subtitle={t("nortear.subtitle")}
-                colors={nortearColors} 
-                copyLabel={t("copy")}
-              />
-            </section>
-
-            {/* Tema Crystal */}
-            <section id="crystal" className="space-y-8">
-              <div className="flex items-center gap-2 text-xl font-semibold border-b pb-2">
-                <Cloud className="size-5 text-[#7c3aed]" />
-                <h2>{t("crystal.title")}</h2>
-              </div>
-              <ColorGroup 
-                title={t("crystal.title")} 
-                subtitle={t("crystal.subtitle")}
-                colors={crystalColors} 
-                copyLabel={t("copy")}
-              />
-            </section>
-
-            {/* Tema Industrial */}
-            <section id="industrial" className="space-y-8">
-              <div className="flex items-center gap-2 text-xl font-semibold border-b pb-2">
-                <Sun className="size-5 text-[#f59e0b]" />
-                <h2>{t("industrial.title")}</h2>
-              </div>
-              <ColorGroup 
-                title={t("industrial.title")} 
-                subtitle={t("industrial.subtitle")}
-                colors={industrialColors} 
-                copyLabel={t("copy")}
-              />
-            </section>
-
-            {/* Guia de Uso */}
-            <section id="uso" className="pt-8 border-t">
-              <div className="bg-primary/5 p-6 rounded-2xl flex gap-4 border border-primary/10">
-                 <Info className="size-6 text-primary shrink-0" />
-                 <div className="space-y-4">
-                   <h4 className="font-semibold text-lg">{t("usage.title")}</h4>
-                   <p className="text-sm text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: sanitizeHtml(t("usage.content")) }} />
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="flex items-center gap-2 text-xs font-medium text-green-600">
-                        <Check className="size-3" /> {t("usage.do")}
-                      </div>
-                      <div className="flex items-center gap-2 text-xs font-medium text-red-400">
-                        <XCircle className="size-3" /> {t("usage.dont")}
-                      </div>
-                   </div>
-                 </div>
-              </div>
-            </section>
+        {/* ── Paleta semântica ─────────────────────────────────────────────── */}
+        <section className="space-y-6 border-t border-border/50 pt-8">
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold text-foreground">{t('palette.title')}</h2>
+            <p className="text-sm text-muted-foreground">{t('palette.subtitle')}</p>
           </div>
 
-          {/* --- Navegação Vertical --- */}
-          <aside className="hidden lg:block w-48 sticky top-8 h-fit self-start border-l pl-6 py-2">
-            <h5 className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mb-4">{t("onPage")}</h5>
-            <nav className="space-y-3">
-              {navItems.map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  className="block text-sm text-muted-foreground hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary/30 pl-3 -ml-[26px]"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-            <div className="mt-8 pt-6 border-t">
-               <Button
-                  variant="link"
-                  size="sm"
-                  nativeButton={false}
-                  className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
-                  render={<a href="#" className="flex items-center gap-1" />}
-               >
-                  Ver Variáveis HSL <ExternalLink className="size-3" />
-               </Button>
+          {PALETTE_GROUPS.map((group) => (
+            <div key={group.key} className="space-y-3">
+              <h3 className="text-sm font-medium text-foreground">{t(`palette.groups.${group.key}`)}</h3>
+              <ul
+                className="grid gap-2 list-none p-0 m-0"
+                style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))' }}
+              >
+                {group.tokens.map((token) => (
+                  <li key={token} className="list-none">
+                    <Swatch
+                      token={token}
+                      orientation="horizontal"
+                      value={tokenValues[token]}
+                      copyLabel={t('copy.tooltip')}
+                      copiedLabel={t('copy.copied')}
+                    />
+                  </li>
+                ))}
+              </ul>
             </div>
-          </aside>
+          ))}
+        </section>
 
-        </div>
+        {/* ── Temas de marca ───────────────────────────────────────────────── */}
+        <section className="space-y-4 border-t border-border/50 pt-8">
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold text-foreground">{t('brand.title')}</h2>
+            <p className="text-sm text-muted-foreground">{t('brand.subtitle')}</p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {BRAND_THEMES.map((theme) => (
+              <div
+                key={theme.key}
+                className={`${theme.className}${paginaDark ? ' dark' : ''} bg-background text-foreground rounded-lg border border-border/50 p-4`}
+              >
+                <span className="block text-sm font-medium text-foreground mb-3">
+                  {t(`brand.themes.${theme.key}`)}
+                </span>
+                {miniRow}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Light e Dark ─────────────────────────────────────────────────── */}
+        <section className="space-y-4 border-t border-border/50 pt-8">
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold text-foreground">{t('modes.title')}</h2>
+            <p className="text-sm text-muted-foreground">{t('modes.subtitle')}</p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {MODES.map((mode) => (
+              <div
+                key={mode.key}
+                className={`${temaAtivo}${mode.className ? ` ${mode.className}` : ''} bg-background text-foreground rounded-lg border border-border/50 p-4`}
+              >
+                <span className="block text-sm font-medium text-foreground mb-3">
+                  {t(`modes.${mode.key}`)}
+                </span>
+                {miniRow}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Densidade e Fontes ───────────────────────────────────────────── */}
+        <section className="space-y-6 border-t border-border/50 pt-8">
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold text-foreground">{t('axes.title')}</h2>
+            <p className="text-sm text-muted-foreground">{t('axes.subtitle')}</p>
+          </div>
+
+          {/* Densidade — tabela 3×3 dentro de cada escopo densidade-*. Os
+              paddings/alturas tokenizados da Table escalam com --spacing-base,
+              demonstrando o eixo sem a ambiguidade de "tamanho de botão". */}
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <h3 className="text-sm font-medium text-foreground">{t('axes.density.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('axes.density.subtitle')}</p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {DENSITY_ITEMS.map((item) => {
+                const dData = (themeColorsTranslations as Record<string, any>)[locale].axes.density as {
+                  tableCols: string[]; tableRows: string[][];
+                };
+                return (
+                  <div key={item.key} className="rounded-lg border border-border/50 p-4 space-y-3">
+                    <span className="block text-xs text-muted-foreground">
+                      {t(`axes.density.items.${item.key}`)}
+                    </span>
+                    <div className={item.className}>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            {dData.tableCols.map((col, i) => <TableHead key={i}>{col}</TableHead>)}
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {dData.tableRows.map((row, r) => (
+                            <TableRow key={r}>
+                              {row.map((val, c) => <TableCell key={c}>{val}</TableCell>)}
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Fontes */}
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <h3 className="text-sm font-medium text-foreground">{t('axes.fonts.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('axes.fonts.subtitle')}</p>
+            </div>
+            <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+              {FONT_ITEMS.map((item) => (
+                <div key={item.key} className="rounded-lg border border-border/50 p-4 space-y-3">
+                  <span className="block text-xs text-muted-foreground">
+                    {t(`axes.fonts.items.${item.key}`)}
+                  </span>
+                  <div className={item.className}>
+                    {/* font-family inline: o span precisa USAR var(--font-family-active)
+                        para o escopo .fonte-* deste card valer (caso contrário
+                        herda a fonte já resolvida do <body>). */}
+                    <span className="text-2xl text-foreground" style={{ fontFamily: 'var(--font-family-active)' }}>
+                      Aa Bb Cc 123
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
       </div>
     </div>
-  );
-}
-
-// Pequeno componente auxiliar para o X que não importei corretamente
-function XCircle({ className }: { className?: string }) {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width="24" 
-      height="24" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
-    </svg>
   );
 }

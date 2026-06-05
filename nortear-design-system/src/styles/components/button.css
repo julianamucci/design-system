@@ -44,7 +44,7 @@
   text-decoration: none;
   cursor: pointer;
   outline: none;
-  transition: background-color 150ms, color 150ms, border-color 150ms, box-shadow 150ms, opacity 150ms;
+  transition: background-color var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast), opacity var(--duration-fast);
   -webkit-user-select: none;
   user-select: none;
 }

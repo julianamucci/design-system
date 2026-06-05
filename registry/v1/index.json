@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "registry": "nortear",
+  "items": [
+    {
+      "name": "init",
+      "version": "1.0.0",
+      "registryDependencies": []
+    },
+    {
+      "name": "button",
+      "version": "1.0.0",
+      "registryDependencies": []
+    },
+    {
+      "name": "alert",
+      "version": "1.0.0",
+      "registryDependencies": []
+    }
+  ]
+}

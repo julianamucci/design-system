@@ -64,6 +64,8 @@
 .nds-border-success-soft { border: 1px solid hsl(var(--success) / 0.3); }
 .nds-border-destructive { border: 1px solid hsl(var(--destructive)); }
 .nds-border-destructive-soft { border: 1px solid hsl(var(--destructive) / 0.3); }
+.nds-border-info-soft    { border: 1px solid hsl(var(--info) / 0.3); }
+.nds-border-warning-soft { border: 1px solid hsl(var(--warning) / 0.3); }
 .nds-border-none        { border: 0; }
 
 /* Border-bottom isolado (divisor inferior) */

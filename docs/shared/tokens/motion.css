@@ -1,0 +1,89 @@
+/*
+ * ─── Motion Tokens ────────────────────────────────────────────────────────────
+ * Fonte única de durações, easings e offsets para qualquer animação do projeto
+ * (CSS ou JS). Importado por tokens.css; chega às 4 stacks via cascade.
+ *
+ * Regras:
+ *  - NUNCA hardcode `300ms` ou `cubic-bezier(0.2,0,0,1)` num componente.
+ *    Use `var(--duration-base)`, `var(--ease-standard)`, etc.
+ *  - Em JS/TS use o helper `lib/motion.ts` que lê estes tokens via
+ *    getComputedStyle, garantindo paridade entre CSS transitions e
+ *    animações orquestradas (Motion).
+ *  - Acessibilidade: o bloco @media abaixo zera todas as durações quando o
+ *    sistema operacional do usuário pede reduced motion (WCAG 2.3.3 / 2.3.1).
+ *    Componentes que precisem preservar transição mínima (ex: focus ring)
+ *    podem re-declarar com !important localmente, com justificativa.
+ *
+ * Convenção do número:
+ *   Durações em ms (não s) — alinha com a API do Motion `animate(..., { duration })`
+ *   que aceita segundos; o helper de stack divide por 1000.
+ */
+
+:root {
+  /* ── Durações ─────────────────────────────────────────────────────────────
+   * Escala approximadamente logarítmica. Pares vizinhos têm razão ~1.6 para o
+   * olho perceber a diferença sem que pareça arbitrário.
+   */
+  --duration-instant:  0ms;
+  --duration-fast:     120ms;    /* hover, focus rings, micro-feedback */
+  --duration-base:     200ms;    /* default — opacity, transform pequeno */
+  --duration-moderate: 320ms;    /* enter/exit de overlays (toast, popover) */
+  --duration-slow:     500ms;    /* layout changes, large transforms */
+  --duration-stately:  800ms;    /* mudanças de página, full-screen reveal */
+
+  /* ── Easings ──────────────────────────────────────────────────────────────
+   * Nomes semânticos. Quando precisar de spring (não cabe em cubic-bezier),
+   * use o helper de stack — ele expõe presets `springSnappy`, `springGentle`.
+   */
+  --ease-linear:   linear;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);     /* default — chega rápido, suaviza */
+  --ease-emphasis: cubic-bezier(0.3, 0, 0, 1);     /* mais dramático na chegada */
+  --ease-entrance: cubic-bezier(0, 0, 0, 1);       /* só easing-out — entrada */
+  --ease-exit:     cubic-bezier(0.3, 0, 1, 1);     /* só easing-in — saída */
+
+  /* ── Offsets de deslocamento ──────────────────────────────────────────────
+   * Para slides/nudges. Mesma escala dos tokens de spacing (múltiplos de 8 e
+   * divisores) para coerência visual com o resto do design system.
+   */
+  --motion-offset-xs: 0.25rem;   /* 4px  — pulse, shake */
+  --motion-offset-sm: 0.5rem;    /* 8px  — toast, tooltip drift */
+  --motion-offset-md: 1rem;      /* 16px — drawer pequeno, dropdown */
+  --motion-offset-lg: 2rem;      /* 32px — page slide, sheet */
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── *
+ * Zera durações quando o SO/usuário pede reduced motion. Componentes não
+ * precisam fazer nada — herdam automaticamente.
+ *
+ * Exceções:
+ *   - Animações FUNCIONAIS (foco, indicador de carregamento) podem precisar
+ *     manter alguma transição mínima. Re-declare local com !important e
+ *     comente o motivo.
+ *   - Animações de FEEDBACK (toast aparece) podem trocar slide → fade no
+ *     reduced-motion. Helper de stack expõe `prefersReducedMotion()` para isso.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant:  0ms;
+    --duration-fast:     0ms;
+    --duration-base:     0ms;
+    --duration-moderate: 0ms;
+    --duration-slow:     0ms;
+    --duration-stately:  0ms;
+  }
+}
+
+/* ── Override de Storybook ─────────────────────────────────────────────── *
+ * data-reduced-motion="true" no <html> força reduced motion no preview,
+ * mesmo em quem não tem a flag de SO ativada. Usado pelo decorator do
+ * preview.ts para validar comportamento durante revisão.
+ */
+[data-reduced-motion="true"],
+[data-reduced-motion="true"] *,
+[data-reduced-motion="true"] *::before,
+[data-reduced-motion="true"] *::after {
+  animation-duration: 0ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0ms !important;
+  scroll-behavior: auto !important;
+}

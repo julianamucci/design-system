@@ -26,7 +26,7 @@
   border-radius: 9999px;
   cursor: pointer;
   outline: 0;
-  transition: background-color 200ms;
+  transition: background-color var(--duration-base);
 }
 
 .nds-switch:focus-visible {
@@ -56,7 +56,7 @@
   pointer-events: none;
 
   transform: translateX(0);
-  transition: transform 200ms;
+  transition: transform var(--duration-base);
 }
 
 .nds-switch-thumb[data-state="checked"] {

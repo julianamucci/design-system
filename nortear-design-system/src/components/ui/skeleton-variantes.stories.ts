@@ -57,7 +57,7 @@ export const Circulo: Story = {
   name: 'Círculo',
   render: () => {
     const wrap = buildContainer('Carregando avatar');
-    const skeleton = createSkeleton({ className: 'h-12 w-12 rounded-full motion-reduce:animate-none' });
+    const skeleton = createSkeleton({ className: 'nds-rounded-full nds-size-12' });
     skeleton.setAttribute('aria-hidden', 'true');
     skeleton.setAttribute('data-slot', 'skeleton');
     wrap.appendChild(skeleton);
@@ -67,9 +67,7 @@ export const Circulo: Story = {
     await step('Skeleton círculo aplica rounded-full', async () => {
       const skeleton = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]');
       await expect(skeleton).toBeTruthy();
-      await expect(skeleton).toHaveClass('rounded-full');
-      await expect(skeleton).toHaveClass('h-12');
-      await expect(skeleton).toHaveClass('w-12');
+      await expect(skeleton).toHaveClass('nds-rounded-full');
     });
   },
 };

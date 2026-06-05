@@ -3,6 +3,9 @@ node_modules/
 .pnp
 .pnp.js
 
+# Sandbox de teste da CLI Nortear (gerado por mão, transitório)
+.nortear-cli-test/
+
 # Pipeline context cache (gerado por /pipeline, transitório)
 # Mas templates de audit-prompts são versionados (não-transitórios)
 .pipeline-context/*

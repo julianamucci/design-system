@@ -1,3 +1,9 @@
+/* ── Google Fonts (hoisted) ──────────────────────────────────────────────── */
+/* O @import url() vive em @shared/tokens/tokens.css, mas Tailwind v4 +
+ * Lightning CSS via Vite descartam @imports url() externos quando aninhados
+ * sob outro @import. Repetimos aqui no topo p/ garantir o carregamento das
+ * webfonts (Inter / Lexend / PT Serif / LXGW WenKai TC). Browser deduplica. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700;800&family=PT+Serif:wght@400;700&family=LXGW+WenKai+TC:wght@400;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -51,6 +57,11 @@
 
   /* Spacing base (Tailwind v4) — p-{n}, gap-{n}, m-{n} = n × --spacing */
   --spacing: var(--spacing-base);
+
+  /* Motion base — utilitários `transition-*`, `duration-*` e `ease-*` do
+   * Tailwind passam a herdar dos tokens do design system (motion.css). */
+  --default-transition-duration: var(--duration-fast);
+  --default-transition-timing-function: var(--ease-standard);
 
   /* Typography Mappings */
   --font-sans: var(--font-family);

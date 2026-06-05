@@ -31,7 +31,7 @@ type Story = StoryObj;
 
 export const ComCard: Story = {
   render: () => {
-    const card = createCard({ className: 'w-80' });
+    const card = createCard({ className: 'nds-w-sm' });
 
     const header = createCardHeader();
     const title = createCardTitle({ text: 'Acessos mensais', level: 3 });

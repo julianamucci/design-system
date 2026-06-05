@@ -1,0 +1,219 @@
+/*
+ * ─── nds-swatch ─ Página de Foundations/Cores e Temas ────────────────────────
+ * Componentes específicos da galeria de tokens de cor, temas, modos, densidade
+ * e fontes. Reaproveita .nds-docs-section-divider e .nds-icon-tile-tooltip de
+ * docs-icons.css. Nenhuma cor é hard-coded: tudo via hsl(var(--TOKEN)).
+ * Spacing: somente tokens on-grid (--spacing-2 = 8px, --spacing-4 = 16px).
+ * --spacing-3 (12px) NÃO existe no projeto (fora do grid de 8) — não usar.
+ */
+
+/* ── Sub-grupo dentro da paleta (Superfícies, Marca, etc.) ─────────────────── */
+.nds-swatch-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);                        /* 8px */
+}
+.nds-swatch-group-title {
+  font-size: 0.8125rem;                       /* 13px */
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Grade de swatches (auto-fill, mínimo 150px) ──────────────────────────── */
+.nds-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--spacing-2);                        /* 8px */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.nds-swatch-grid-item {
+  list-style: none;
+}
+
+/* ── Swatch clicável (horizontal): chip de cor + --token + valor HSL ──────── */
+/* Layout em linha — chip à esquerda, metadados à direita — espelhando as
+ * demais stacks. O token é aplicado via style.setProperty no JS sobre
+ * --swatch-color (variável, não cor literal). */
+.nds-swatch {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-2);                        /* 8px */
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid hsl(var(--border) / 0.5);
+  border-radius: var(--radius-lg, 0.625rem);
+  padding: var(--spacing-2);                    /* 8px */
+  cursor: pointer;
+  transition: border-color var(--duration-fast), background-color var(--duration-fast);
+  font-family: var(--font-family, inherit);
+}
+.nds-swatch:hover {
+  border-color: hsl(var(--border));
+  background-color: hsl(var(--muted) / 0.4);
+}
+.nds-swatch:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--background));
+}
+
+.nds-swatch-color {
+  width: 2.5rem;                                /* 40px */
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-md, 0.5rem);
+  background-color: hsl(var(--swatch-color));
+  border: 1px solid hsl(var(--border) / 0.5);
+}
+
+.nds-swatch-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;                                 /* permite truncamento */
+}
+.nds-swatch-token {
+  font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+  font-size: 0.75rem;                          /* 12px */
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nds-swatch-value {
+  font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+  font-size: 0.625rem;                         /* 10px */
+  color: hsl(var(--muted-foreground));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Cards de tema/modo: cada um isola seu próprio escopo de tokens ────────── */
+/* auto-fit + 1fr: com 3 cards (marca) vira 3 colunas iguais; com 2 (light/dark)
+ * vira 2 colunas iguais — espelhando o grid-cols-3 / grid-cols-2 das outras
+ * stacks sem precisar de breakpoints. */
+.nds-theme-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--spacing-4);                        /* 16px */
+}
+/* Wrapper transparente — apenas ocupa a célula do grid. A borda/padding/tema
+ * ficam no scope (único box visível), como nas demais stacks (div único). */
+.nds-theme-card {
+  display: flex;
+  flex-direction: column;
+}
+/* O scope aplica a classe de tema/modo; herda os tokens recalculados e pinta
+ * seu próprio background/foreground/border. */
+.nds-theme-card-scope {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);                        /* 8px */
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-lg, 0.625rem);
+  padding: var(--spacing-4);                    /* 16px */
+}
+.nds-theme-card-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+/* ── Fileira de mini-swatches (amostra compacta de uma paleta) ────────────── */
+.nds-miniswatch-row {
+  display: flex;
+  gap: var(--spacing-2);                        /* 8px */
+  flex-wrap: wrap;
+}
+.nds-miniswatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+.nds-miniswatch-chip {
+  width: 2rem;                                  /* 32px */
+  height: 2rem;
+  border-radius: var(--radius-md, 0.5rem);
+  background-color: hsl(var(--swatch-color));
+  border: 1px solid hsl(var(--border) / 0.6);
+}
+.nds-miniswatch-name {
+  font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+  font-size: 0.625rem;                          /* 10px */
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Grades de eixo: densidade (3 col) e fontes (4 col) ───────────────────── */
+/* Espelha grid-cols-3 / grid-cols-4 das demais stacks. auto-fit + min(100%, …)
+ * mantém o número de colunas no desktop e colapsa em telas estreitas — sem
+ * media query (regra do projeto). */
+.nds-axis-grid {
+  display: grid;
+  gap: var(--spacing-4);                        /* 16px */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+.nds-axis-grid[data-cols="4"] {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+}
+
+/* ── Amostras de densidade e fonte ────────────────────────────────────────── */
+.nds-axis-sample {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);                        /* 8px */
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-lg, 0.625rem);
+  padding: var(--spacing-4);                    /* 16px */
+}
+.nds-axis-sample-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+}
+/* Wrapper de demonstração de DENSIDADE. Recebe a classe densidade-* (que
+ * redefine --spacing-base no escopo). */
+.nds-axis-scope {
+  display: block;
+}
+
+/* Tabela específica das demonstrações de densidade. ESCOPADA a esta página
+ * (Cores e Temas) — NÃO usar em outras tabelas.
+ *
+ * Por quê uma classe própria: os tokens intermediários (--spacing-2, -10) têm
+ * o `var(--spacing-base)` substituído no :root no momento da computed-value e
+ * inheritam como um calc com a literal 0.25rem dentro. Então, mesmo quando um
+ * descendente recebe `.densidade-condensado { --spacing-base: 0.20rem }`, as
+ * regras `padding: var(--spacing-2)` continuam resolvendo com 0.25rem — não
+ * escalam. Escrevendo `calc(var(--spacing-base) * N)` DIRETO na propriedade,
+ * o `--spacing-base` é substituído no elemento de uso (a th/td dentro do
+ * escopo densidade-*), recomputando para a base escopada. */
+/* Especificidade dupla (.nds-table.nds-axis-density-table) é necessária porque
+ * table.css é importado DEPOIS de docs-swatches.css no globals.css; sem isso
+ * `.nds-table td` venceria por ordem de cascata em igualdade de specificity. */
+.nds-table.nds-axis-density-table th {
+  height: calc(var(--spacing-base) * 10);
+  padding-inline: calc(var(--spacing-base) * 2);
+}
+.nds-table.nds-axis-density-table td {
+  padding: calc(var(--spacing-base) * 2);
+}
+/* Texto de amostra das fontes — herda --font-family-active recalculado */
+.nds-font-sample {
+  font-family: var(--font-family-active, var(--font-family, inherit));
+  font-size: 1.75rem;                           /* 28px */
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  line-height: 1.2;
+}

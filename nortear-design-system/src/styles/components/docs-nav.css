@@ -1,0 +1,76 @@
+/*
+ * ─── nds-docs-nav ─────────────────────────────────────────────────────────────
+ * Navegação lateral dentro das docs pages — botões de sub-seção que rolam
+ * suavemente para anchors da página atual.
+ *
+ *   <div class="nds-docs-nav">
+ *     <div class="nds-docs-nav-group">
+ *       <p class="nds-docs-nav-label">Visão Geral</p>
+ *       <ul class="nds-docs-nav-list">
+ *         <li><button class="nds-docs-nav-button">Demonstração</button></li>
+ *       </ul>
+ *     </div>
+ *   </div>
+ */
+
+.nds-docs-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);                            /* 24px entre grupos */
+}
+
+.nds-docs-nav-group {
+  display: block;
+}
+
+.nds-docs-nav-label {
+  font-size: 0.75rem;                               /* text-xs */
+  font-weight: var(--font-weight-semi-bold, 600);
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--spacing-2) 0;                   /* mb-2 */
+  padding-inline: var(--spacing-2);                 /* px-2 */
+}
+
+.nds-docs-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);                            /* 4px */
+  padding: 0;
+  margin: 0;
+}
+
+.nds-docs-nav-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding-inline: var(--spacing-2);                 /* 8px */
+  padding-block: 6px;                                /* py-1.5 */
+  font-family: var(--font-family, inherit);
+  font-size: 0.875rem;                              /* text-sm */
+  line-height: 1.25;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-button, 0.625rem);
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  outline: none;
+  transition: background-color var(--duration-fast), color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.nds-docs-nav-button:hover {
+  background-color: hsl(var(--muted) / 0.5);
+  color: hsl(var(--foreground));
+}
+
+.nds-docs-nav-button:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+}
+
+.nds-docs-nav-button[aria-current="location"] {
+  background-color: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+  font-weight: var(--font-weight-medium, 500);
+}

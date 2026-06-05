@@ -1,0 +1,46 @@
+/*
+ * ─── nds-lang-switcher ────────────────────────────────────────────────────────
+ * Toggle group de 3 botões compactos (PT / EN / ES) usado no header das docs.
+ * Visual: segmented control com bg muted-soft, item ativo destacado.
+ */
+
+.nds-lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);                          /* 4px */
+  padding: var(--spacing-1);                      /* 4px */
+  background-color: hsl(var(--muted) / 0.3);
+  border: 1px solid hsl(var(--border) / 0.4);
+  border-radius: var(--radius-input, 0.5rem);
+}
+
+.nds-lang-switcher-button {
+  padding-inline: var(--spacing-2);               /* 8px */
+  padding-block: var(--spacing-0-5);              /* 2px */
+  font-family: var(--font-family, inherit);
+  font-size: 0.625rem;                            /* 10px — bem compacto */
+  font-weight: var(--font-weight-bold, 700);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  border: 0;
+  border-radius: var(--radius-button, 0.625rem);
+  cursor: pointer;
+  outline: none;
+  transition: background-color var(--duration-fast), color var(--duration-fast);
+}
+
+.nds-lang-switcher-button:hover {
+  background-color: hsl(var(--muted) / 0.5);
+  color: hsl(var(--foreground));
+}
+
+.nds-lang-switcher-button[aria-pressed="true"] {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+}
+
+.nds-lang-switcher-button:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+}

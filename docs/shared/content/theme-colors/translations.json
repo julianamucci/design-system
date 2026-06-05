@@ -1,0 +1,260 @@
+{
+  "pt-BR": {
+    "title": "Cores e Temas",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "A paleta do Design System é definida por tokens semânticos em HSL. Temas de marca, light/dark, densidade e fonte são aplicados via classes no <html>, recalculando os tokens automaticamente. Clique em qualquer swatch para copiar o token.",
+    "copy": {
+      "tooltip": "Clique para copiar",
+      "copied": "Copiado!"
+    },
+    "palette": {
+      "title": "Paleta semântica",
+      "subtitle": "Tokens de cor nomeados pelo papel, não pelo valor. Cada swatch mostra o nome do token e o valor HSL atual.",
+      "groups": {
+        "surface": "Superfícies",
+        "brand": "Marca / Interativo",
+        "feedback": "Feedback",
+        "structure": "Estrutura",
+        "chart": "Gráficos"
+      },
+      "cols": {
+        "token": "Token",
+        "value": "Valor (HSL)",
+        "usage": "Uso"
+      }
+    },
+    "brand": {
+      "title": "Temas de marca",
+      "subtitle": "Default, Warm e Cold reescrevem os tokens de cor. Trocar via toolbar do Storybook aplica a classe correspondente no <html>.",
+      "themes": {
+        "default": "Default — neutro, base shadcn",
+        "warm": "Warm — tint âmbar/terracota",
+        "cold": "Cold — tint azul/ciano"
+      }
+    },
+    "modes": {
+      "title": "Light e Dark",
+      "subtitle": "Cada token tem um valor para light (:root) e dark (.dark). O contraste é mantido em ambos para atender WCAG 2.1 AA.",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "axes": {
+      "title": "Densidade e Fontes",
+      "subtitle": "Além das cores, o tema controla densidade (escala de spacing/alturas) e família tipográfica — também via classe no <html>.",
+      "density": {
+        "title": "Densidade",
+        "subtitle": "Ajusta --spacing-base proporcionalmente, afetando paddings, gaps e alturas tokenizadas.",
+        "items": {
+          "condensado": "Condensado — ~80% (interfaces densas)",
+          "default": "Default — 4px base",
+          "confortavel": "Confortável — ~125% (mais respiro)"
+        },
+        "tableCols": [
+          "Nome",
+          "Cargo",
+          "Status"
+        ],
+        "tableRows": [
+          [
+            "Ana Lima",
+            "Editora",
+            "Ativo"
+          ],
+          [
+            "Luís Sá",
+            "Revisor",
+            "Pendente"
+          ],
+          [
+            "Marina Reis",
+            "Admin",
+            "Ativo"
+          ]
+        ]
+      },
+      "fonts": {
+        "title": "Fontes",
+        "subtitle": "Troca --font-family-active. Aplicada via classe .fonte-* no <html>.",
+        "items": {
+          "default": "Inter — padrão (sans humanista)",
+          "lexend": "Lexend — alta legibilidade",
+          "pt-serif": "PT Serif — serifada clássica",
+          "lxgw-wenkai": "LXGW WenKai TC — manuscrita"
+        }
+      }
+    }
+  },
+  "en": {
+    "title": "Colors & Themes",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "The Design System palette is defined by semantic HSL tokens. Brand themes, light/dark, density and font are applied via classes on <html>, recomputing tokens automatically. Click any swatch to copy the token.",
+    "copy": {
+      "tooltip": "Click to copy",
+      "copied": "Copied!"
+    },
+    "palette": {
+      "title": "Semantic palette",
+      "subtitle": "Color tokens named by role, not by value. Each swatch shows the token name and its current HSL value.",
+      "groups": {
+        "surface": "Surfaces",
+        "brand": "Brand / Interactive",
+        "feedback": "Feedback",
+        "structure": "Structure",
+        "chart": "Charts"
+      },
+      "cols": {
+        "token": "Token",
+        "value": "Value (HSL)",
+        "usage": "Usage"
+      }
+    },
+    "brand": {
+      "title": "Brand themes",
+      "subtitle": "Default, Warm and Cold rewrite the color tokens. Switching via the Storybook toolbar applies the matching class on <html>.",
+      "themes": {
+        "default": "Default — neutral, shadcn base",
+        "warm": "Warm — amber/terracotta tint",
+        "cold": "Cold — blue/cyan tint"
+      }
+    },
+    "modes": {
+      "title": "Light and Dark",
+      "subtitle": "Each token has a light (:root) and dark (.dark) value. Contrast is preserved in both to meet WCAG 2.1 AA.",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "axes": {
+      "title": "Density and Fonts",
+      "subtitle": "Beyond colors, the theme controls density (spacing/height scale) and typographic family — also via a class on <html>.",
+      "density": {
+        "title": "Density",
+        "subtitle": "Scales --spacing-base proportionally, affecting paddings, gaps and tokenized heights.",
+        "items": {
+          "condensado": "Condensed — ~80% (dense UIs)",
+          "default": "Default — 4px base",
+          "confortavel": "Comfortable — ~125% (more breathing room)"
+        },
+        "tableCols": [
+          "Name",
+          "Role",
+          "Status"
+        ],
+        "tableRows": [
+          [
+            "Ana Lima",
+            "Editor",
+            "Active"
+          ],
+          [
+            "Luís Sá",
+            "Reviewer",
+            "Pending"
+          ],
+          [
+            "Marina Reis",
+            "Admin",
+            "Active"
+          ]
+        ]
+      },
+      "fonts": {
+        "title": "Fonts",
+        "subtitle": "Swaps --font-family-active. Applied via the .fonte-* class on <html>.",
+        "items": {
+          "default": "Inter — default (humanist sans)",
+          "lexend": "Lexend — high legibility",
+          "pt-serif": "PT Serif — classic serif",
+          "lxgw-wenkai": "LXGW WenKai TC — handwritten"
+        }
+      }
+    }
+  },
+  "es": {
+    "title": "Colores y Temas",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "La paleta del Design System se define por tokens semánticos en HSL. Temas de marca, light/dark, densidad y fuente se aplican vía clases en <html>, recalculando los tokens automáticamente. Haz clic en cualquier swatch para copiar el token.",
+    "copy": {
+      "tooltip": "Haz clic para copiar",
+      "copied": "¡Copiado!"
+    },
+    "palette": {
+      "title": "Paleta semántica",
+      "subtitle": "Tokens de color nombrados por su rol, no por su valor. Cada swatch muestra el nombre del token y su valor HSL actual.",
+      "groups": {
+        "surface": "Superficies",
+        "brand": "Marca / Interactivo",
+        "feedback": "Feedback",
+        "structure": "Estructura",
+        "chart": "Gráficos"
+      },
+      "cols": {
+        "token": "Token",
+        "value": "Valor (HSL)",
+        "usage": "Uso"
+      }
+    },
+    "brand": {
+      "title": "Temas de marca",
+      "subtitle": "Default, Warm y Cold reescriben los tokens de color. Cambiar vía la toolbar de Storybook aplica la clase correspondiente en <html>.",
+      "themes": {
+        "default": "Default — neutro, base shadcn",
+        "warm": "Warm — tinte ámbar/terracota",
+        "cold": "Cold — tinte azul/cian"
+      }
+    },
+    "modes": {
+      "title": "Light y Dark",
+      "subtitle": "Cada token tiene un valor para light (:root) y dark (.dark). El contraste se mantiene en ambos para cumplir WCAG 2.1 AA.",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "axes": {
+      "title": "Densidad y Fuentes",
+      "subtitle": "Además de los colores, el tema controla densidad (escala de spacing/alturas) y familia tipográfica — también vía clase en <html>.",
+      "density": {
+        "title": "Densidad",
+        "subtitle": "Escala --spacing-base proporcionalmente, afectando paddings, gaps y alturas tokenizadas.",
+        "items": {
+          "condensado": "Condensado — ~80% (interfaces densas)",
+          "default": "Default — 4px base",
+          "confortavel": "Cómodo — ~125% (más espacio)"
+        },
+        "tableCols": [
+          "Nombre",
+          "Cargo",
+          "Estado"
+        ],
+        "tableRows": [
+          [
+            "Ana Lima",
+            "Editora",
+            "Activo"
+          ],
+          [
+            "Luís Sá",
+            "Revisor",
+            "Pendiente"
+          ],
+          [
+            "Marina Reis",
+            "Admin",
+            "Activo"
+          ]
+        ]
+      },
+      "fonts": {
+        "title": "Fuentes",
+        "subtitle": "Cambia --font-family-active. Aplicada vía la clase .fonte-* en <html>.",
+        "items": {
+          "default": "Inter — predeterminada (sans humanista)",
+          "lexend": "Lexend — alta legibilidad",
+          "pt-serif": "PT Serif — serif clásica",
+          "lxgw-wenkai": "LXGW WenKai TC — manuscrita"
+        }
+      }
+    }
+  }
+}

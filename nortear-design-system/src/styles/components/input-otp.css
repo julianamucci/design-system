@@ -41,7 +41,7 @@
   text-align: center;
   outline: 0;
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
-  transition: box-shadow 150ms, border-color 150ms;
+  transition: box-shadow var(--duration-fast), border-color var(--duration-fast);
 }
 
 /* Primeiro slot do grupo (mesmo após separator): borda esquerda + radius esquerdo */
