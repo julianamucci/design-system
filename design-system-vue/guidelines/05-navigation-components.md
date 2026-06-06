@@ -8,30 +8,19 @@
 
 **Quando usar**: páginas com hierarquia de 2 ou mais níveis. Não usar em páginas de nível único (home, login) onde não há hierarquia a representar.
 
-**Implementação**:
-```tsx
-<nav aria-label="Localização na página">
-  <Breadcrumb>
-    <BreadcrumbList>
-      <BreadcrumbItem>
-        <BreadcrumbLink href="/">Início</BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbSeparator>
-        <ChevronRight className="h-4 w-4" aria-hidden="true" />
-      </BreadcrumbSeparator>
-      <BreadcrumbItem>
-        <BreadcrumbLink href="/componentes">Componentes</BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbSeparator>
-        <ChevronRight className="h-4 w-4" aria-hidden="true" />
-      </BreadcrumbSeparator>
-      <BreadcrumbItem>
-        {/* Último item: página atual — não é link */}
-        <BreadcrumbPage aria-current="page">Button</BreadcrumbPage>
-      </BreadcrumbItem>
-    </BreadcrumbList>
-  </Breadcrumb>
-</nav>
+**API e exemplos**: `src/components/ui/breadcrumb/breadcrumb.vue` + stories + `BreadcrumbDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Estrutura de subcomponentes**:
+
+```
+nav[aria-label="Localização na página"]
+└── Breadcrumb
+    └── BreadcrumbList
+        ├── BreadcrumbItem
+        │   └── BreadcrumbLink
+        ├── BreadcrumbSeparator (ChevronRight, aria-hidden)
+        └── BreadcrumbItem
+            └── BreadcrumbPage (último item, aria-current="page")
 ```
 
 **Regras**:
@@ -44,7 +33,7 @@
 - `<nav aria-label="Localização na página">` envolvendo o componente — diferencia do `<nav>` da sidebar
 - `aria-current="page"` no `BreadcrumbPage` — anuncia ao leitor de tela que é a página atual
 - Ícones de separador com `aria-hidden="true"` — são decorativos e não devem ser lidos
-- O Shadcn/UI aplica `role="list"` e `role="listitem"` automaticamente no `BreadcrumbList`
+- `role="list"` e `role="listitem"` aplicados automaticamente no `BreadcrumbList`
 
 **Tema personalizado** (ver `03-sistema-design.md`):
 - Os links dentro do Breadcrumb devem herdar as variáveis de cor, hover e transição definidas para o componente Link no tema personalizado — garantir consistência visual entre todos os links da aplicação
@@ -55,65 +44,11 @@
 - O item atual deve refletir exatamente o `<h1>` da página
 
 **SEO** (ver `20-seo-geo.md`):
-O Breadcrumb é o único componente de navegação com impacto direto em rich snippets — o Google exibe o caminho de navegação nos resultados de busca quando o Schema.org `BreadcrumbList` está presente.
-
-```tsx
-// Injetar via useEffect junto com as demais metatags da página
-useEffect(() => {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Início",
-        "item": "https://exemplo.com/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Componentes",
-        "item": "https://exemplo.com/componentes"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Button"
-        // Sem "item" no último nível — é a página atual
-      }
-    ]
-  };
-
-  const script = document.createElement("script");
-  script.type = "application/ld+json";
-  script.id = "breadcrumb-schema";
-  script.textContent = JSON.stringify(schema);
-  document.head.appendChild(script);
-
-  return () => {
-    document.getElementById("breadcrumb-schema")?.remove();
-  };
-}, [currentPage]);
-```
+O Breadcrumb é o único componente de navegação com impacto direto em rich snippets — o Google exibe o caminho de navegação nos resultados quando o Schema.org `BreadcrumbList` está presente. Injetar o JSON-LD via `useSeoEffect` junto com as demais metatags. O último item deve omitir o campo `item` (é a página atual).
 
 **Analytics** (ver `21-analytics.md`):
 - Rastrear apenas os itens clicáveis — nunca o item atual (último)
 - Evento: `navigation_click` com `label` (texto do link) e `destination` (path)
-
-```tsx
-<BreadcrumbLink
-  href="/componentes"
-  onClick={() => track("navigation_click", {
-    component: "breadcrumb",
-    location: currentPage,
-    label: "Componentes",
-    destination: "/componentes"
-  })}
->
-  Componentes
-</BreadcrumbLink>
-```
 
 ---
 
@@ -123,26 +58,18 @@ useEffect(() => {
 
 **Quando usar**: aplicações com muitas ações organizáveis em categorias — editores, ferramentas, dashboards complexos. Não usar para navegação entre páginas (usar `NavigationMenu` ou `Sidebar`).
 
-**Implementação**:
-```tsx
-<Menubar aria-label="Menu principal">
-  <MenubarMenu>
-    <MenubarTrigger>Arquivo</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
-      <MenubarSeparator />
-      <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-  <MenubarMenu>
-    <MenubarTrigger>Editar</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-      <MenubarItem>Refazer <MenubarShortcut>⌘Y</MenubarShortcut></MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>
+**API e exemplos**: `src/components/ui/menubar/menubar.vue` + stories + `MenubarDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Estrutura de subcomponentes**:
+
+```
+Menubar[aria-label]
+└── MenubarMenu
+    ├── MenubarTrigger
+    └── MenubarContent
+        ├── MenubarItem
+        │   └── MenubarShortcut
+        └── MenubarSeparator
 ```
 
 **Regras**:
@@ -154,8 +81,8 @@ useEffect(() => {
 
 **Acessibilidade**:
 - `aria-label="Menu principal"` na `<Menubar>` — diferencia de outros elementos de navegação
-- O Shadcn/UI aplica `role="menubar"`, `role="menu"` e `role="menuitem"` automaticamente
-- Navegação por teclado — o Radix UI gerencia automaticamente:
+- `role="menubar"`, `role="menu"` e `role="menuitem"` aplicados automaticamente
+- Navegação por teclado gerenciada automaticamente:
 
 | Tecla | Ação |
 |-------|------|
@@ -166,7 +93,7 @@ useEffect(() => {
 | `Escape` | Fecha o menu, retorna foco ao trigger |
 | `Home` / `End` | Vai para o primeiro/último item do menu |
 
-- Atalhos de teclado documentados no `MenubarShortcut` são apenas visuais — a lógica do atalho deve ser implementada separadamente via `useEffect` + `addEventListener`
+- Atalhos no `MenubarShortcut` são apenas visuais — a lógica deve ser implementada separadamente via listener global de teclado
 
 **UX Writing** (ver `19-tom-de-voz.md`):
 - Triggers da barra: substantivos, sem verbo, sem ponto final. Ex: "Arquivo", "Editar", "Exibir"
@@ -176,26 +103,15 @@ useEffect(() => {
 **Analytics** (ver `21-analytics.md`):
 - Evento: `menu_item_click` com `label` (texto do item) e `menu` (nome do menu pai)
 
-```tsx
-<MenubarItem
-  onClick={() => track("menu_item_click", {
-    component: "menubar",
-    location: currentPage,
-    label: "Salvar",
-    menu: "Arquivo"
-  })}
->
-  Salvar
-</MenubarItem>
-```
-
 ---
 
 ## Navigation Menu
 
 **Propósito**: navegação horizontal top-level com suporte a submenus em painel expandido.
 
-**Quando usar**: navegação principal em layouts sem sidebar — portais, sites institucionais, landing pages. Para aplicações com sidebar persistente, usar a `Sidebar` em vez do `NavigationMenu`.
+**Quando usar**: navegação principal em layouts sem sidebar — portais, sites institucionais, landing pages. Para aplicações com sidebar persistente, usar a `Sidebar`.
+
+**API e exemplos**: `src/components/ui/navigation-menu/navigation-menu.vue` + stories + `NavigationMenuDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
 **Critério de decisão — Navigation Menu vs Sidebar**:
 
@@ -206,38 +122,16 @@ useEffect(() => {
 | Poucos itens (≤ 5) sem submenus | Links simples ou Tabs |
 | Hierarquia profunda com muitas categorias | Sidebar com Accordion |
 
-**Implementação**:
-```tsx
-<nav aria-label="Navegação principal">
-  <NavigationMenu>
-    <NavigationMenuList>
-      <NavigationMenuItem>
-        <NavigationMenuLink
-          href="/componentes"
-          aria-current={currentPage === "componentes" ? "page" : undefined}
-          className={navigationMenuTriggerStyle()}
-        >
-          Componentes
-        </NavigationMenuLink>
-      </NavigationMenuItem>
+**Estrutura de subcomponentes**:
 
-      {/* Item com submenu */}
-      <NavigationMenuItem>
-        <NavigationMenuTrigger>Design Tokens</NavigationMenuTrigger>
-        <NavigationMenuContent>
-          <ul className="grid gap-2 p-4 w-[300px]">
-            <li>
-              <NavigationMenuLink href="/tokens/cores">Cores</NavigationMenuLink>
-            </li>
-            <li>
-              <NavigationMenuLink href="/tokens/tipografia">Tipografia</NavigationMenuLink>
-            </li>
-          </ul>
-        </NavigationMenuContent>
-      </NavigationMenuItem>
-    </NavigationMenuList>
-  </NavigationMenu>
-</nav>
+```
+nav[aria-label="Navegação principal"]
+└── NavigationMenu
+    └── NavigationMenuList
+        └── NavigationMenuItem
+            ├── NavigationMenuLink (item simples)
+            ├── NavigationMenuTrigger (item com submenu)
+            └── NavigationMenuContent (painel do submenu)
 ```
 
 **Regras**:
@@ -248,8 +142,8 @@ useEffect(() => {
 **Acessibilidade**:
 - `<nav aria-label="Navegação principal">` envolvendo o componente
 - `aria-current="page"` no item da página ativa — obrigatório, atualizar dinamicamente
-- O Shadcn/UI aplica `role="navigation"`, `aria-expanded` e gerencia foco nos submenus automaticamente
-- Submenus fecham com `Escape` — comportamento nativo do Radix UI, não sobrescrever
+- `role="navigation"`, `aria-expanded` e gerenciamento de foco nos submenus aplicados automaticamente
+- Submenus fecham com `Escape` — comportamento nativo, não sobrescrever
 
 **UX Writing** (ver `19-tom-de-voz.md`):
 - Labels: substantivos ou frases nominais curtas, sem verbo, sem ponto final
@@ -259,21 +153,6 @@ useEffect(() => {
 **Analytics** (ver `21-analytics.md`):
 - Evento: `navigation_click` com `label` e `destination`
 
-```tsx
-<NavigationMenuLink
-  href="/componentes"
-  aria-current={currentPage === "componentes" ? "page" : undefined}
-  onClick={() => track("navigation_click", {
-    component: "navigation_menu",
-    location: currentPage,
-    label: "Componentes",
-    destination: "/componentes"
-  })}
->
-  Componentes
-</NavigationMenuLink>
-```
-
 ---
 
 ## Pagination
@@ -282,72 +161,29 @@ useEffect(() => {
 
 **Quando usar**: listas com mais de 10 itens onde carregar tudo de uma vez prejudicaria a performance ou a experiência. Abaixo de 10 itens, exibir tudo sem paginação.
 
-**Implementação**:
+**API e exemplos**: `src/components/ui/pagination/pagination.vue` + stories + `PaginationDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-> **Nota de arquitetura**: o `PaginationPrevious`, `PaginationNext` e `PaginationLink` do Shadcn/UI renderizam elementos `<a>` por padrão. Em SPAs com roteamento baseado em estado (sem URLs reais por página), use o padrão `asChild` para renderizar um `<button>` semanticamente correto.
+**Estrutura de subcomponentes**:
 
-```tsx
-<nav aria-label="Navegação de páginas">
-  <Pagination>
-    <PaginationContent>
-
-      {/* Anterior — desabilitado apenas na primeira página */}
-      <PaginationItem>
-        <PaginationPrevious asChild>
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            aria-label="Página anterior"
-            className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-          />
-        </PaginationPrevious>
-      </PaginationItem>
-
-      {/* Páginas numeradas */}
-      {pages.map((page) => (
-        <PaginationItem key={page}>
-          <PaginationLink asChild>
-            <button
-              onClick={() => handlePageChange(page)}
-              aria-label={`Ir para página ${page}`}
-              aria-current={page === currentPage ? "page" : undefined}
-              className={page === currentPage ? "font-medium border-primary" : ""}
-            >
-              {page}
-            </button>
-          </PaginationLink>
-        </PaginationItem>
-      ))}
-
-      {/* Ellipsis para muitas páginas */}
-      {showEllipsis && (
-        <PaginationItem>
-          <PaginationEllipsis aria-hidden="true" />
-        </PaginationItem>
-      )}
-
-      {/* Próxima — desabilitado apenas na última página */}
-      <PaginationItem>
-        <PaginationNext asChild>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            aria-label="Próxima página"
-            className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-          />
-        </PaginationNext>
-      </PaginationItem>
-
-    </PaginationContent>
-  </Pagination>
-</nav>
+```
+nav[aria-label="Navegação de páginas"]
+└── Pagination
+    └── PaginationContent
+        ├── PaginationItem
+        │   └── PaginationPrevious
+        ├── PaginationItem
+        │   └── PaginationLink (aria-current="page" no ativo)
+        ├── PaginationItem
+        │   └── PaginationEllipsis (aria-hidden)
+        └── PaginationItem
+            └── PaginationNext
 ```
 
-> **Alternativa com URLs reais**: se o projeto migrar para Next.js ou React Router com URLs por página, substituir `asChild + button` por `href` direto nas props — `<PaginationPrevious href={`/pagina/${currentPage - 1}`} />`. O `aria-disabled` funciona corretamente em `<a>` com `href` ausente, mas `disabled` só funciona em `<button>`.
+> **Nota de arquitetura**: `PaginationPrevious`, `PaginationNext` e `PaginationLink` renderizam elementos `<a>` por padrão. Em SPAs com roteamento baseado em estado (sem URLs reais por página), usar o padrão `asChild` para renderizar `<button>` semanticamente correto.
 
 **Regras**:
 - Sempre mostrar página atual e total (ex: "Página 3 de 12")
-- Usar ellipsis (`...`) quando houver mais de 7 páginas — exibir primeira, última e as adjacentes à atual
+- Usar ellipsis (`…`) quando houver mais de 7 páginas — exibir primeira, última e as adjacentes à atual
 - "Anterior" desabilitado apenas quando estiver na **primeira** página
 - "Próxima" desabilitado apenas quando estiver na **última** página
 - Todo o texto em português: "Anterior", "Próxima" — sem abreviações
@@ -369,18 +205,6 @@ useEffect(() => {
 - Evento: `page_change` com `page` (página de destino) e `total_pages`
 - Disparar ao confirmar a mudança, não ao clicar — evitar disparos em cliques rápidos
 
-```tsx
-const handlePageChange = (page: number) => {
-  track("page_change", {
-    component: "pagination",
-    location: currentSection,
-    page,
-    total_pages: totalPages
-  });
-  setCurrentPage(page);
-};
-```
-
 ---
 
 ## Stepper
@@ -388,6 +212,10 @@ const handlePageChange = (page: number) => {
 **Propósito**: guia visual de progresso em processos sequenciais com etapas definidas.
 
 **Quando usar**: fluxos com 3–7 etapas obrigatórias em ordem — onboarding, checkout, formulários multi-etapa, wizards de configuração. Para etapas opcionais ou em qualquer ordem, considerar `Tabs`.
+
+**API e exemplos**: `src/components/ui/stepper/stepper.vue` + stories + `StepperDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+> **Componente customizado**: o Stepper não faz parte do Reka UI oficial — é um componente criado especificamente para este projeto.
 
 **Critério de decisão — Stepper vs Tabs vs Accordion**:
 
@@ -397,72 +225,17 @@ const handlePageChange = (page: number) => {
 | Views paralelas sem ordem definida | Tabs |
 | Conteúdo que pode ser expandido independentemente | Accordion |
 
-**Implementação**:
+**Estrutura de subcomponentes**:
 
-> **Componente customizado**: o Stepper não faz parte do Shadcn/UI oficial — é um componente criado especificamente para este projeto. A API abaixo (`Stepper`, `StepperItem`, `StepperSeparator`, `Step`) refere-se à implementação local em `@/components/ui/stepper`. Verificar se o componente instalado suporta as props usadas, especialmente `aria-label` no `StepperItem` — se não houver suporte nativo, aplicar o atributo via `data-*` e usar CSS/JS para expô-lo, ou contribuir o suporte diretamente no componente.
-
-```tsx
-const steps: Step[] = [
-  { title: "Dados pessoais",   description: "Nome e contato" },
-  { title: "Endereço",         description: "Localização de entrega" },
-  { title: "Pagamento",        description: "Forma de pagamento" },
-  { title: "Confirmação",      description: "Revisão do pedido" },
-];
-
-{/* Container com anúncio de progresso para leitores de tela */}
-<div
-  role="group"
-  aria-label={`Etapa ${currentStep + 1} de ${steps.length}: ${steps[currentStep].title}`}
->
-  <Stepper steps={steps} currentStep={currentStep} orientation="horizontal">
-    {steps.map((step, index) => (
-      <React.Fragment key={index}>
-        <StepperItem step={index} />
-        {index < steps.length - 1 && (
-          <StepperSeparator aria-hidden="true" />
-        )}
-      </React.Fragment>
-    ))}
-  </Stepper>
-
-  {/* Anúncio complementar para leitores de tela — visualmente oculto */}
-  <p className="sr-only" aria-live="polite">
-    {`Etapa ${currentStep + 1} de ${steps.length}: ${steps[currentStep].title}`}
-  </p>
-
-  {/* Conteúdo da etapa atual */}
-  <div
-    role="region"
-    aria-label={`Conteúdo: ${steps[currentStep].title}`}
-  >
-    {renderStepContent(currentStep)}
-  </div>
-
-  {/* Botões de navegação */}
-  <div className="flex justify-end gap-2 mt-6">
-    <Button
-      variant="outline"
-      onClick={handlePrev}
-      disabled={currentStep === 0}
-      aria-label="Voltar para etapa anterior"
-    >
-      Anterior
-    </Button>
-    <Button
-      onClick={handleNext}
-      aria-label={
-        currentStep === steps.length - 1
-          ? "Finalizar processo"
-          : `Avançar para ${steps[currentStep + 1].title}`
-      }
-    >
-      {currentStep === steps.length - 1 ? "Finalizar" : "Próximo"}
-    </Button>
-  </div>
-</div>
 ```
-
-> **Estratégia de acessibilidade**: como o `StepperItem` pode não repassar `aria-label` internamente, o `role="group"` com `aria-label` dinâmico no container e o `<p aria-live="polite" className="sr-only">` garantem que o progresso seja anunciado ao leitor de tela em qualquer implementação do componente.
+div[role="group"][aria-label="Etapa N de M: <título>"]
+├── Stepper (steps, currentStep, orientation)
+│   └── StepperItem (step)
+│       └── StepperSeparator (aria-hidden)
+├── p.sr-only[aria-live="polite"]   (anúncio complementar)
+├── div[role="region"][aria-label]   (conteúdo da etapa)
+└── botões "Anterior" / "Próximo" / "Finalizar"
+```
 
 **Regras**:
 - 3–7 etapas — menos de 3 não justifica Stepper, mais de 7 sobrecarrega cognitivamente
@@ -493,41 +266,9 @@ const steps: Step[] = [
 - Botão final: sempre "Finalizar" — não "Concluir", "Enviar" ou "Confirmar"
 - Botão de retorno: sempre "Anterior" — não "Voltar" nem "← Anterior"
 
-**Importação**:
-```tsx
-import { Stepper, StepperItem, StepperSeparator, Step } from "@/components/ui/stepper";
-```
-
 **Analytics** (ver `21-analytics.md`):
 - Evento: `step_change` com `step` (índice de destino, base 0), `total_steps` e `direction` ("next" ou "prev")
 - Disparar ao confirmar a mudança de etapa — não ao clicar, pois pode haver validação bloqueando
-
-```tsx
-const handleNext = () => {
-  if (!validateCurrentStep()) return; // Validar antes de rastrear
-  track("step_change", {
-    component: "stepper",
-    location: currentPage,
-    step: currentStep + 1,
-    total_steps: steps.length,
-    direction: "next"
-  });
-  setCurrentStep((s) => s + 1);
-};
-
-const handlePrev = () => {
-  track("step_change", {
-    component: "stepper",
-    location: currentPage,
-    step: currentStep - 1,
-    total_steps: steps.length,
-    direction: "prev"
-  });
-  setCurrentStep((s) => s - 1);
-};
-```
-
-> **Nota**: o evento `step_change` não está no catálogo do `21-analytics.md` — adicionar ao catálogo e ao `EventName` do `lib/analytics.ts`.
 
 ---
 
@@ -536,6 +277,8 @@ const handlePrev = () => {
 **Propósito**: alterna entre views paralelas do mesmo nível hierárquico.
 
 **Quando usar**: conteúdos alternativos relacionados sem ordem obrigatória — detalhes de um produto, configurações por categoria, diferentes visualizações de um dado. Para sequências obrigatórias, usar `Stepper`. Para conteúdo expansível independentemente, usar `Accordion`.
+
+**API e exemplos**: `src/components/ui/tabs/tabs.vue` + stories + `TabsDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
 **Critério de decisão — Tabs vs Stepper vs Accordion**:
 
@@ -546,25 +289,13 @@ const handlePrev = () => {
 | Seções expansíveis independentemente | Accordion |
 | Muitas seções (> 6) | Accordion ou Sidebar |
 
-**Implementação**:
-```tsx
-<Tabs defaultValue="visao-geral" onValueChange={(value) => handleTabChange(value)}>
-  <TabsList aria-label="Seções do componente">
-    <TabsTrigger value="visao-geral">Visão geral</TabsTrigger>
-    <TabsTrigger value="propriedades">Propriedades</TabsTrigger>
-    <TabsTrigger value="exemplos">Exemplos</TabsTrigger>
-  </TabsList>
+**Estrutura de subcomponentes**:
 
-  <TabsContent value="visao-geral">
-    {/* Conteúdo da aba */}
-  </TabsContent>
-  <TabsContent value="propriedades">
-    {/* Conteúdo da aba */}
-  </TabsContent>
-  <TabsContent value="exemplos">
-    {/* Conteúdo da aba */}
-  </TabsContent>
-</Tabs>
+```
+Tabs (defaultValue, onValueChange)
+├── TabsList[aria-label]
+│   └── TabsTrigger (value)
+└── TabsContent (value)
 ```
 
 **Regras**:
@@ -575,8 +306,8 @@ const handlePrev = () => {
 
 **Acessibilidade**:
 - `aria-label` no `TabsList` descrevendo o que as tabs representam
-- O Shadcn/UI aplica `role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-selected` e `aria-controls` automaticamente — não sobrescrever
-- Navegação por teclado gerenciada automaticamente pelo Radix UI:
+- `role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-selected` e `aria-controls` aplicados automaticamente
+- Navegação por teclado gerenciada automaticamente:
 
 | Tecla | Ação |
 |-------|------|
@@ -596,19 +327,6 @@ const handlePrev = () => {
 **Analytics** (ver `21-analytics.md`):
 - Evento: `tab_change` com `label` (texto da tab), `index` (posição base 0) e `total` (total de tabs)
 - Não disparar na tab inicial — apenas nas mudanças subsequentes
-
-```tsx
-const handleTabChange = (value: string) => {
-  const index = tabs.findIndex((t) => t.value === value);
-  track("tab_change", {
-    component: "tabs",
-    location: currentPage,
-    label: tabs[index].label,
-    index,
-    total: tabs.length
-  });
-};
-```
 
 ---
 

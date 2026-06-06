@@ -6,106 +6,70 @@
 
 **Propósito**: manter proporções fixas de mídia independente do tamanho do container.
 
-**Quando usar**: sempre que exibir imagem, vídeo ou iframe com proporção conhecida.
+**API e exemplos**: `src/components/ui/aspect-ratio/aspect-ratio.vue` + stories + `AspectRatioDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
 **Ratios comuns**:
-- `16/9` — vídeos e banners paisagem
-- `1/1` — avatares e thumbnails quadrados
-- `4/3` — imagens de produto e cards de conteúdo
-- `3/4` — imagens de retrato
 
-**Implementação**:
-```tsx
-<AspectRatio ratio={16 / 9}>
-  <img
-    src="..."
-    alt="Descrição significativa do conteúdo da imagem"
-    className="object-cover w-full h-full rounded-md"
-  />
-</AspectRatio>
-```
+| Ratio | Uso |
+|-------|-----|
+| `16/9` | vídeos e banners paisagem |
+| `1/1` | avatares e thumbnails quadrados |
+| `4/3` | imagens de produto e cards de conteúdo |
+| `3/4` | imagens de retrato |
+
+**Regras**:
+- Sempre que exibir imagem, vídeo ou iframe com proporção conhecida
+- Não aplicar tokens de cor diretamente no AspectRatio — estilizar o elemento filho
+- Imagens dentro: usar `object-cover` para preencher sem distorcer
+- `rounded-md` no elemento filho, não no container
+- Usar `ImageWithFallback` (`/components/figma/ImageWithFallback`) para imagens
+- Nunca usar `user-scalable=no` no viewport — impede zoom em mobile
 
 **Acessibilidade**:
 - Todo conteúdo visual dentro do AspectRatio deve ter alternativa textual
 - Imagem informativa: `alt` descritivo do conteúdo, não da aparência
 - Imagem decorativa: `alt=""` — leitor de tela ignora
 - Vídeo: sempre incluir legendas e transcrição
-- Usar o componente `ImageWithFallback` do projeto para imagens (`/components/figma/ImageWithFallback.tsx`)
-- Nunca usar `user-scalable=no` no viewport — impede zoom em mobile
 
-**Tokens e estilo**:
-- Não aplicar tokens de cor diretamente no AspectRatio — estilizar o elemento filho
-- Imagens dentro: usar `object-cover` para preencher sem distorcer
-- `rounded-md` no elemento filho, não no container AspectRatio
-
-**Analytics**: AspectRatio é um container passivo — não dispara eventos.
+**Analytics**: container passivo — não dispara eventos.
 
 ---
 
 ## Card
 
-**Propósito**: agrupar conteúdo relacionado em um container visualmente delimitado.
+**Propósito**: agrupar conteúdo relacionado em um container visualmente delimitado. Não usar como decoração ou apenas para criar divisão visual (preferir `Separator` ou espaçamento).
 
-**Quando usar**: informações que formam uma unidade semântica — produto, perfil, artigo, métrica. Não usar como decoração ou apenas para criar divisão visual (preferir `Separator` ou espaçamento).
+**API e exemplos**: `src/components/ui/card/card.vue` + stories + `CardDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Estrutura obrigatória**:
-```tsx
-<Card className="bg-card text-card-foreground border-border">
-  <CardHeader>
-    <CardTitle>Título do Card</CardTitle>
-    <CardDescription className="text-muted-foreground">
-      Descrição complementar.
-    </CardDescription>
-  </CardHeader>
-  <CardContent>
-    {/* Conteúdo principal */}
-  </CardContent>
-  <CardFooter className="border-t border-border">
-    <div className="flex justify-end gap-2 w-full">
-      <Button variant="outline">Cancelar</Button>
-      <Button>Salvar</Button>
-    </div>
-  </CardFooter>
-</Card>
+**Estrutura de subcomponentes**:
+
+```
+Card
+├── CardHeader
+│   ├── CardTitle
+│   └── CardDescription
+├── CardContent
+└── CardFooter
 ```
 
 **Tokens obrigatórios** (ver `16-padroes-design-sistema.md`):
-- Fundo: `bg-card`
-- Texto: `text-card-foreground`
-- Borda: `border-border`
-- Texto secundário: `text-muted-foreground` na `CardDescription`
-- Divisor do footer: `border-t border-border`
+
+| Elemento | Token |
+|----------|-------|
+| Fundo | `bg-card` |
+| Texto | `text-card-foreground` |
+| Borda | `border-border` |
+| Texto secundário (CardDescription) | `text-muted-foreground` |
+| Divisor do footer | `border-t border-border` |
+
+**Regras**:
+- Quando o conteúdo forma unidade semântica — produto, perfil, artigo, métrica
+- Botões dentro do Card devem ter `aria-label` contextual incluindo o identificador do card
+- Card inteiramente clicável: usar `<a>` ou `role="button"` com `aria-label` descritivo no container, não apenas `cursor-pointer`
+- Imagens dentro: sempre com `alt` adequado
 
 **Acessibilidade**:
-- Botões dentro do Card (Editar, Excluir, Ver mais) devem ter `aria-label` contextual incluindo o identificador do card — nunca apenas "Excluir" (ver `11-acessibilidade.md` → "Premissa fundamental")
-- Usar o `CardTitle` como âncora de contexto via `aria-labelledby` ou incluir o título no `aria-label` do botão
-
-```tsx
-<Card>
-  <CardHeader>
-    <CardTitle id="product-card-42">Cadeira Gamer Pro</CardTitle>
-  </CardHeader>
-  <CardFooter>
-    <div className="flex justify-end gap-2 w-full">
-      <Button
-        variant="outline"
-        aria-label="Editar produto Cadeira Gamer Pro"
-      >
-        Editar
-      </Button>
-      <Button
-        variant="destructive"
-        aria-label="Excluir produto Cadeira Gamer Pro"
-      >
-        Excluir
-      </Button>
-    </div>
-  </CardFooter>
-</Card>
-```
-
-- Card inteiramente clicável: usar `<a>` ou `role="button"` com `aria-label` descritivo no container, não apenas `cursor-pointer`
-- Imagens dentro do card: sempre com `alt` adequado
+- Usar o `CardTitle` como âncora de contexto via `aria-labelledby` ou incluir o título no `aria-label` dos botões — nunca apenas "Excluir"
 
 **UX Writing** (ver `19-tom-de-voz.md`):
 - `CardTitle`: substantivo ou frase nominal, sem verbo, sem ponto final
@@ -114,7 +78,7 @@
 
 **Analytics** (ver `21-analytics.md`):
 - Rastrear o conteúdo interativo dentro do card — nunca o card em si
-- Card inteiramente clicável: `data-track="card_click"` com `data-track-label` idêntico ao `CardTitle` e idêntico ao `aria-label`
+- Card inteiramente clicável: `data-track="card_click"` com `data-track-label` idêntico ao `CardTitle` e ao `aria-label`
 - Botões dentro: `data-track="button_click"` com `data-track-label` contextual
 
 ---
@@ -125,20 +89,15 @@
 
 **Quando usar**: layouts onde o usuário precisa ajustar proporções — editor com preview, painel lateral com conteúdo, split view.
 
-**Implementação**:
-```tsx
-<ResizablePanelGroup direction="horizontal" className="min-h-[200px]">
-  <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
-    {/* Conteúdo painel esquerdo */}
-  </ResizablePanel>
-  <ResizableHandle
-    withHandle
-    aria-label="Redimensionar painéis — use as teclas de seta para ajustar"
-  />
-  <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
-    {/* Conteúdo painel direito */}
-  </ResizablePanel>
-</ResizablePanelGroup>
+**API e exemplos**: `src/components/ui/resizable/resizable.vue` + stories + `ResizableDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Estrutura de subcomponentes**:
+
+```
+ResizablePanelGroup (direction)
+├── ResizablePanel (defaultSize, minSize, maxSize)
+├── ResizableHandle (withHandle)
+└── ResizablePanel
 ```
 
 **Regras**:
@@ -147,11 +106,11 @@
 
 **Acessibilidade** — WCAG 2.5.7 (Dragging Movements, novo no WCAG 2.2):
 - Toda ação de arrastar deve ter alternativa por teclado
-- O `ResizableHandle` do Shadcn/UI aceita `Arrow keys` nativamente — manter e não sobrescrever
+- O `ResizableHandle` aceita `Arrow keys` nativamente — manter e não sobrescrever
 - `aria-label` descritivo no handle explicando a função e o atalho de teclado
 - O handle deve ser focável e anunciar ao leitor de tela que é um controle de redimensionamento
 
-**Analytics**: rastrear `panel_resize` com o tamanho final apenas quando o redimensionamento é dado de produto relevante (ex: editor com painéis). Usar o callback `onLayout` para capturar o tamanho final após o arrasto.
+**Analytics**: rastrear `panel_resize` com o tamanho final apenas quando o redimensionamento é dado de produto relevante. Usar o callback `onLayout` para capturar o tamanho final após o arrasto.
 
 ---
 
@@ -161,15 +120,7 @@
 
 **Quando usar**: listas longas em sidebars, conteúdo em overlays, tabelas com altura fixa. Não usar quando o scroll natural da página é suficiente.
 
-**Implementação obrigatória**:
-```tsx
-{/* Altura definida no container pai — obrigatório */}
-<div className="h-[400px]">
-  <ScrollArea className="h-full w-full">
-    {/* Conteúdo */}
-  </ScrollArea>
-</div>
-```
+**API e exemplos**: `src/components/ui/scroll-area/scroll-area.vue` + stories + `ScrollAreaDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
 **Regras**:
 - Sempre definir altura específica no container pai — sem isso, o ScrollArea não funciona
@@ -178,8 +129,8 @@
 - Tabelas dentro de ScrollArea: usar `overflow-x-auto` no wrapper da tabela, não outro ScrollArea
 
 **Acessibilidade**:
-- O ScrollArea do Shadcn/UI expõe atributos de rolagem corretamente para tecnologias assistivas
-- Para scroll horizontal: adicionar `tabIndex={0}` no ScrollArea para que usuários de teclado possam focar e rolar com teclas de direção
+- O ScrollArea expõe atributos de rolagem corretamente para tecnologias assistivas
+- Para scroll horizontal: adicionar `tabIndex={0}` para que usuários de teclado possam focar e rolar com teclas de direção
 - Garantir que o conteúdo dentro é navegável por Tab sem que o scroll quebre o fluxo visual
 - Em mobile: preferir scroll nativo da página quando possível — ScrollArea pode dificultar gestos de swipe
 
@@ -193,31 +144,18 @@
 
 **Quando usar**: separar grupos de itens em menus, dividir seções em formulários, delimitar áreas em layouts. Não usar apenas como decoração — para divisão puramente visual, usar bordas CSS ou espaçamento (`my-*`, `py-*`).
 
-**Implementação**:
-```tsx
-{/* Horizontal (padrão) */}
-<Separator className="my-4" />
+**API e exemplos**: `src/components/ui/separator/separator.vue` + stories + `SeparatorDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-{/* Vertical — em layouts flexbox horizontais */}
-<div className="flex items-center gap-4 h-8">
-  <span>Item A</span>
-  <Separator orientation="vertical" />
-  <span>Item B</span>
-</div>
-```
+**Props**:
 
-**Acessibilidade**:
-- O `Separator` do Shadcn/UI aplica `role="separator"` e `aria-orientation` automaticamente — não sobrescrever
+| Prop | Default | Função |
+|------|---------|--------|
+| `orientation` | `horizontal` | `horizontal` ou `vertical` |
+
+**Regras**:
+- O Separator aplica `role="separator"` e `aria-orientation` automaticamente — não sobrescrever
 - Separator semântico (divide conteúdo relacionado): manter o `role="separator"` padrão
-- Separator decorativo (apenas visual, sem significado): `aria-hidden="true"`
-
-```tsx
-{/* Semântico — leitores de tela anunciam a divisão */}
-<Separator />
-
-{/* Decorativo — ignorado por leitores de tela */}
-<Separator aria-hidden="true" />
-```
+- Separator decorativo (apenas visual, sem significado): adicionar `aria-hidden="true"`
 
 **Tokens**: o componente aplica `bg-border` automaticamente via CSS do tema. Não sobrescrever com valores hardcoded.
 
@@ -231,36 +169,20 @@
 
 **Quando usar**: aplicações com múltiplas seções ou hierarquias de navegação. Para navegação simples com poucos itens, considerar `NavigationMenu` ou `Tabs`.
 
-**Estrutura obrigatória** (gerenciada pelo `SidebarProvider` — nunca replicar manualmente):
-```tsx
-{/* SidebarProvider envolve todo o layout — colocar no root da aplicação (App.tsx) */}
-<SidebarProvider>
-  <nav aria-label="Navegação principal">
-    <Sidebar>
-      <SidebarHeader>
-        {/* Logo — altura igual à navbar */}
-      </SidebarHeader>
-      <SidebarContent>
-        <Accordion type="single" collapsible>
-          {/* Categorias */}
-        </Accordion>
-      </SidebarContent>
-      <SidebarFooter>
-        <ThemeSelector />
-      </SidebarFooter>
-    </Sidebar>
-  </nav>
+**API e exemplos**: `src/components/ui/sidebar/sidebar.vue` + stories + `SidebarDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  <SidebarInset className="flex-1 min-w-0">
-    {/* SidebarTrigger — toggle visível em mobile, oculto em desktop */}
-    <header className="flex h-14 items-center gap-4 border-b border-border px-4 lg:hidden">
-      <SidebarTrigger aria-label="Abrir navegação principal" />
-    </header>
-    <main id="main-content" tabIndex={-1}>
-      {renderCurrentPage()}
-    </main>
-  </SidebarInset>
-</SidebarProvider>
+**Estrutura de subcomponentes** (gerenciada pelo `SidebarProvider` — nunca replicar manualmente):
+
+```
+SidebarProvider (no root da aplicação)
+├── nav[aria-label="Navegação principal"]
+│   └── Sidebar
+│       ├── SidebarHeader  (logo — altura igual à navbar)
+│       ├── SidebarContent (categorias / Accordion)
+│       └── SidebarFooter
+└── SidebarInset
+    ├── SidebarTrigger     (toggle — visível em mobile)
+    └── main#main-content
 ```
 
 **Regras obrigatórias do projeto**:
@@ -276,29 +198,6 @@
 - Itens com ícone na sidebar colapsada: `aria-label` com o nome da seção — ícone sozinho não é acessível
 - Skip link na aplicação aponta para `#main-content`, pulando a sidebar
 
-```tsx
-{/* Item de navegação com estado ativo */}
-<SidebarMenuButton
-  isActive={currentPage === item.path}
-  aria-current={currentPage === item.path ? "page" : undefined}
-  onClick={() => navigateTo(item.path, item.name)}
->
-  <item.icon aria-hidden="true" />
-  <span>{item.name}</span>
-</SidebarMenuButton>
-
-{/* Toggle da sidebar */}
-<Button
-  variant="ghost"
-  size="icon"
-  onClick={toggleSidebar}
-  aria-expanded={sidebarOpen}
-  aria-label={sidebarOpen ? "Recolher navegação principal" : "Expandir navegação principal"}
->
-  <PanelLeft aria-hidden="true" />
-</Button>
-```
-
 **UX Writing** (ver `19-tom-de-voz.md`):
 - Labels de menu: substantivos ou frases nominais curtas, sem verbo, sem ponto final. Ex: "Componentes", "Design Tokens", "Visão geral"
 - `aria-label` do toggle: contextual e descritivo — não apenas "Menu"
@@ -306,25 +205,11 @@
 
 **Analytics** (ver `21-analytics.md`):
 - Clique em item de menu: `navigation_click` com `label` (nome da seção) e `destination` (path)
-- A função `navigateTo()` deve disparar `page_view` internamente — ver `11-acessibilidade.md` → "Anúncio de mudança de página"
+- A função de navegação deve disparar `page_view` internamente — ver `11-acessibilidade.md` → "Anúncio de mudança de página"
 - Não rastrear duplamente: `navigation_click` + `page_view` são eventos distintos com propósitos distintos
 
-```tsx
-<SidebarMenuButton
-  onClick={() => {
-    track("navigation_click", {
-      component: "sidebar",
-      location: "main_nav",
-      label: item.name,
-      destination: item.path
-    });
-    navigateTo(item.path, item.name);
-  }}
->
-```
-
 **SEO** (ver `20-seo-geo.md`):
-- A estrutura `<nav aria-label="Navegação principal">` é lida por crawlers e reforça a arquitetura de informação do produto
+- A estrutura `<nav aria-label="Navegação principal">` é lida por crawlers e reforça a arquitetura de informação
 - Os itens de menu refletem a hierarquia de conteúdo — manter nomes consistentes com os títulos das páginas que representam
 
 ---
