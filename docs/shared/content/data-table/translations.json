@@ -1,0 +1,1190 @@
+{
+  "pt-BR": {
+    "title": "DataTable",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Tabela avançada com ordenação, filtros, seleção, paginação, redimensionamento, reordenação, pin de colunas, edição inline e virtualização.",
+    "seo": {
+      "title": "DataTable — Display",
+      "description": "Documentação do DataTable: ordenação, filtros, seleção, paginação, resize, reorder, pin, edição inline e virtualização sobre TanStack Table.",
+      "aiSummary": "Componente DataTable construído sobre TanStack Table v8 (headless). Estende o Table primitivo com ordenação multi-coluna, filtro global e por coluna, seleção de linhas, paginação, redimensionamento, reordenação, fixação e edição inline. Suporta virtualização para datasets grandes.",
+      "aiEntities": "DataTable, TanStack Table, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "search": "Buscar fatura, cliente, método...",
+        "columns": "Colunas",
+        "invoice": "Fatura",
+        "customer": "Cliente",
+        "status": "Status",
+        "method": "Método",
+        "amount": "Valor",
+        "paid": "Pago",
+        "pending": "Pendente",
+        "canceled": "Cancelado",
+        "rowsPerPage": "Linhas por página",
+        "page": "Página",
+        "of": "de",
+        "noResults": "Sem resultados."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Toolbar</strong> — barra superior com filtro global (busca livre) e menu de visibilidade/fixação de colunas.",
+      "item2": "<strong>Container de tabela</strong> — wrapper rolável que delimita a área de scroll. Recebe altura máxima quando virtualizado.",
+      "item3": "<strong>Cabeçalho</strong> — célula clicável para ordenar, com handle de drag para reordenar e divisor lateral para redimensionar.",
+      "item4": "<strong>Linha de filtros</strong> — segunda linha do cabeçalho com input ou select por coluna filtrável.",
+      "item5": "<strong>Corpo</strong> — linhas renderizadas com seleção opcional (checkbox), edição inline opcional por célula e <code>data-state=\"selected\"</code> quando marcada.",
+      "item6": "<strong>Paginação</strong> — rodapé com contagem, seletor de tamanho e navegação. Desativada automaticamente quando virtualizado.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Defina <code>columns</code> uma única vez por escopo estável (módulo ou <code>useMemo</code>) — recriar a cada render zera o estado da tabela.",
+        "item2": "Use <code>enableRowSelection</code> apenas quando houver ação em lote — checkbox em cada linha sem ação confunde.",
+        "item3": "Para datasets &gt; 500 linhas, ative <code>virtualized</code> e desative paginação. Defina <code>maxHeight</code> para limitar a área de scroll.",
+        "item4": "Para edição inline, marque <code>meta.editable</code> nas colunas e implemente <code>onCellEdit</code> atualizando os dados externamente — o componente não mantém estado de dados.",
+        "item5": "Para colunas redimensionáveis, defina <code>size</code> inicial na column def — sem isso o cabeçalho usa largura automática.",
+        "item6": "Para filtros por coluna, use <code>meta.filter</code> com tipo <code>\"text\"</code> ou <code>\"select\"</code>. Selects exigem <code>options</code>."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Listagem com ordenação e busca", "u": "Sim", "a": "-" },
+        "item2": { "s": "Tabela simples sem interação", "u": "Não", "a": "Table" },
+        "item3": { "s": "Dataset grande (&gt; 1000 linhas)", "u": "Sim, com virtualização", "a": "-" },
+        "item4": { "s": "Comparação visual de tendências", "u": "Não", "a": "Chart" },
+        "item5": { "s": "Edição em massa estilo planilha", "u": "Sim, com edição inline", "a": "-" },
+        "item6": { "s": "Lista densa em mobile", "u": "Não", "a": "Lista de Card" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "columnHeader": {
+            "name": "Cabeçalho de coluna",
+            "format": "Substantivo curto · sem ponto final · capitalização na primeira palavra",
+            "good": "\"Fatura\", \"Status\", \"Valor\"",
+            "bad": "\"Número da fatura\", \"Status atual.\""
+          },
+          "filterPlaceholder": {
+            "name": "Placeholder do filtro",
+            "format": "Verbo no infinitivo + escopo · sem ponto final",
+            "good": "\"Buscar cliente\", \"Filtrar status\"",
+            "bad": "\"Digite aqui...\", \"Pesquisa\""
+          },
+          "emptyState": {
+            "name": "Estado vazio",
+            "format": "Frase completa · contextual ao recorte aplicado",
+            "good": "\"Nenhuma fatura encontrada.\"",
+            "bad": "\"Vazio.\", \"Sem dados\""
+          },
+          "selectionLabel": {
+            "name": "Label de seleção",
+            "format": "Número + escopo concreto · paralelo entre singular/plural",
+            "good": "\"3 de 12 linhas selecionadas.\"",
+            "bad": "\"3 itens.\", \"3 selecionados\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "Os dados exigem ordenação, filtragem ou seleção pelo usuário",
+        "item2": "O dataset é grande o suficiente para precisar de paginação ou virtualização",
+        "item3": "O usuário precisa esconder, reordenar ou fixar colunas",
+        "item4": "A edição célula a célula é o fluxo principal de uso (estilo planilha)"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A tabela é estática e cabe inteira na tela — use <code>Table</code>",
+        "item2": "O foco é comparação visual de tendências — use <code>Chart</code>",
+        "item3": "O conteúdo é uma lista vertical densa em mobile — use cards empilhados"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Filtro global com placeholder específico ao escopo da tabela.",
+        "dont": "Filtro global com placeholder genérico <code>\"Buscar...\"</code> que não orienta o usuário."
+      },
+      "pair2": {
+        "do": "Virtualização ativa para datasets grandes com altura máxima definida.",
+        "dont": "Paginação cliente em 5000 linhas — trava a renderização e perde contexto de scroll."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withMeta": "Com metadados de coluna (filtro e edição):"
+    },
+    "variants": {
+      "title": "Recursos",
+      "visualTitle": "Recursos Disponíveis",
+      "note": "O DataTable não tem variantes <code>cva</code>. Cada recurso é uma flag opcional na API. Combine livremente conforme a necessidade — paginação e virtualização são mutuamente exclusivas; as demais coexistem.",
+      "items": {
+        "globalFilter": "Filtro de busca livre que casa em todas as colunas. Sempre ativo por padrão; desligue com <code>enableGlobalFilter={false}</code>.",
+        "columnFilters": "Filtros por coluna com input ou select. Definidos via <code>meta.filter</code> na column def. Ative com <code>enableColumnFilters</code>.",
+        "selection": "Checkbox de seleção por linha + cabeçalho com tri-state (todas, algumas, nenhuma). Ative com <code>enableRowSelection</code>.",
+        "visibility": "Menu para esconder e exibir colunas. Disponível na toolbar por padrão; desligue com <code>enableColumnVisibility={false}</code>.",
+        "resize": "Handle lateral em cada cabeçalho para arrastar e ajustar largura. Ative com <code>enableColumnResizing</code> e defina <code>size</code> inicial na column def.",
+        "reorder": "Drag handle no cabeçalho para reordenar colunas. Ative com <code>enableColumnOrdering</code>.",
+        "pin": "Fixar coluna à esquerda ou direita via menu de colunas. Use posição <code>sticky</code>. Ative com <code>enableColumnPinning</code>.",
+        "pagination": "Rodapé com contagem, seletor de tamanho e navegação por página. Ativa por padrão; tamanhos via <code>pageSizeOptions</code>.",
+        "edit": "Edição inline célula a célula. Marque <code>meta.editable</code> na column def e implemente <code>onCellEdit</code> para persistir o valor.",
+        "virtual": "Virtualização de linhas para datasets grandes. Renderiza apenas o intervalo visível. Ative com <code>virtualized</code> e defina <code>maxHeight</code>."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "selectionWithActions": {
+          "name": "Seleção em lote com ações",
+          "description": "Ative seleção de linhas e use o callback <code>onTableReady</code> para acessar <code>table.getSelectedRowModel()</code> e disparar ações em massa (exportar, excluir, marcar como pago) numa toolbar acima ou via menu contextual.",
+          "use": "Listas administrativas onde o usuário precisa aplicar a mesma ação a várias linhas — operações em lote são o caso de uso clássico de seleção."
+        },
+        "editableSheet": {
+          "name": "Modo planilha (edição inline)",
+          "description": "Combine edição inline em várias colunas, sem paginação e com filtro por coluna para criar uma experiência próxima de planilha. O componente não mantém estado dos dados — o <code>onCellEdit</code> atualiza o array fonte externamente.",
+          "use": "Cadastros densos, conferência de dados linha a linha, ajustes operacionais (preços, estoque, status) em que abrir um modal por edição seria custoso."
+        },
+        "virtualizedLog": {
+          "name": "Log virtualizado",
+          "description": "Para datasets que crescem indefinidamente (logs, métricas, eventos), ative virtualização com altura máxima e desligue paginação. A virtualização renderiza apenas o intervalo visível, mantendo o scroll responsivo a milhares de linhas.",
+          "use": "Inspeção de logs, debug de eventos, listas de auditoria — qualquer cenário em que paginar interrompe o contexto temporal das linhas."
+        },
+        "pinnedKey": {
+          "name": "Coluna-chave fixada",
+          "description": "Fixe a coluna-chave (ID, nome, código) à esquerda enquanto o usuário rola horizontalmente entre muitas colunas de dados. A coluna fixa permanece visível com posição <code>sticky</code>.",
+          "use": "Tabelas largas com muitas métricas onde o usuário precisa de uma referência visual constante (linha de produto, conta, pessoa) durante o scroll horizontal."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "empty": {
+        "label": "Vazio",
+        "trigger": "<code>data</code> é um array vazio ou os filtros não retornam linhas",
+        "behavior": "Corpo exibe uma linha única com a mensagem de <code>emptyMessage</code> (default: \"Sem resultados.\"). Toolbar e paginação continuam visíveis para permitir limpar filtros."
+      },
+      "sorted": {
+        "label": "Ordenado",
+        "trigger": "Usuário clica no cabeçalho de uma coluna ordenável",
+        "behavior": "Cabeçalho exibe seta ascendente ou descendente; o segundo clique inverte; o terceiro remove a ordenação. Aplica <code>aria-sort</code>."
+      },
+      "filtered": {
+        "label": "Filtrado",
+        "trigger": "Filtro global preenchido ou filtro por coluna ativo",
+        "behavior": "Apenas as linhas que casam permanecem. A contagem de linhas e a paginação refletem o resultado filtrado."
+      },
+      "selected": {
+        "label": "Selecionado",
+        "trigger": "Checkbox de linha marcado",
+        "behavior": "Linha recebe <code>data-state=\"selected\"</code> com fundo destacado. Cabeçalho mostra tri-state quando há seleção parcial."
+      },
+      "editing": {
+        "label": "Em edição",
+        "trigger": "Clique numa célula com <code>meta.editable</code>",
+        "behavior": "Célula vira input editável com foco automático. <kbd>Enter</kbd> confirma, <kbd>Esc</kbd> cancela. O componente notifica via <code>onCellEdit</code>; o caller persiste."
+      },
+      "resizing": {
+        "label": "Redimensionando",
+        "trigger": "Arrastar o handle lateral de um cabeçalho",
+        "behavior": "Largura da coluna acompanha o mouse em tempo real. Outras colunas mantêm largura. Estado persiste no <code>columnSizing</code>."
+      },
+      "virtualized": {
+        "label": "Virtualizado",
+        "trigger": "Prop <code>virtualized</code> ativa",
+        "behavior": "Apenas as linhas dentro do viewport (mais overscan) são renderizadas. Linhas de padding fictícias preservam a altura total para scroll natural."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "containerTitle": "DataTable",
+      "tooltipTitle": "Coluna (meta)",
+      "legendTitle": "Tipos",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "columns": "Definição das colunas no formato <code>ColumnDef</code> do TanStack Table. Inclui <code>accessorKey</code>, <code>header</code>, <code>cell</code>, <code>size</code> e <code>meta</code>.",
+        "data": "Array de dados que alimenta as linhas. O DataTable não muta o array — para edição inline, atualize-o externamente via <code>onCellEdit</code>.",
+        "enableGlobalFilter": "Mostra o campo de busca livre na toolbar. Filtra em todas as colunas pesquisáveis.",
+        "globalFilterPlaceholder": "Texto do placeholder do filtro global. Use frase contextual ao escopo da tabela.",
+        "enableRowSelection": "Adiciona coluna de checkbox como primeira coluna. Cabeçalho mostra tri-state quando há seleção parcial.",
+        "enableColumnVisibility": "Mostra o botão de colunas na toolbar. Permite esconder e exibir colunas via menu.",
+        "enableColumnFilters": "Renderiza segunda linha no cabeçalho com inputs ou selects por coluna conforme <code>meta.filter</code>.",
+        "enableColumnResizing": "Adiciona handle lateral em cada cabeçalho para arrastar a largura. Defina <code>size</code> inicial na column def.",
+        "enableColumnOrdering": "Adiciona drag handle no cabeçalho para reordenar colunas via arrastar e soltar.",
+        "enableColumnPinning": "Adiciona botão de pin no menu de colunas para fixar à esquerda ou direita.",
+        "enablePagination": "Mostra rodapé de paginação com contagem, seletor de tamanho e navegação por página.",
+        "virtualized": "Ativa virtualização de linhas. Desativa automaticamente a paginação. Use para datasets grandes.",
+        "virtualRowHeight": "Altura estimada de cada linha em px para o virtualizador. Default 36.",
+        "maxHeight": "Altura máxima do container quando virtualizado. Ex.: <code>\"480px\"</code>.",
+        "pageSize": "Número inicial de linhas por página.",
+        "pageSizeOptions": "Opções disponíveis no seletor de tamanho. Default: <code>[10, 20, 50, 100]</code>.",
+        "emptyMessage": "Texto exibido quando não há linhas. Contextualize ao recorte da tabela.",
+        "onCellEdit": "Callback chamado ao confirmar edição inline. Assinatura: <code>(rowIndex, columnId, value) =&gt; void</code>.",
+        "onTableReady": "Callback que recebe a instância da tabela. Use para acessar API headless (linhas selecionadas, estado de filtros).",
+        "metaFilter": "Configuração de filtro por coluna. Use <code>{ type: \"text\" }</code> para input livre ou <code>{ type: \"select\", options: [...] }</code> para select.",
+        "metaEditable": "Marca a coluna como editável inline. A célula vira input ao clicar; o valor é notificado via <code>onCellEdit</code>."
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "Para recursos não cobertos pela API (agrupamento, expansão, sub-rows, server-side), use <code>onTableReady</code> para acessar a instância e configure os modelos correspondentes do TanStack Table externamente. O componente é uma camada visual sobre a engine headless — qualquer configuração suportada pela engine pode ser combinada."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Uso no componente",
+        "part": "Parte do componente",
+        "border": "<code>border-input</code>",
+        "borderPart": "Bordas de cabeçalho, separadores de linha, handle de resize.",
+        "muted": "<code>bg-muted/50</code>",
+        "mutedPart": "Hover da linha, fundo do cabeçalho de paginação.",
+        "mutedForeground": "<code>text-muted-foreground</code>",
+        "mutedForegroundPart": "Labels secundários (contagem de linhas, mensagem vazia, placeholder).",
+        "primary": "<code>text-primary</code>",
+        "primaryPart": "Indicador de ordenação ativa, hover do handle de resize, ícone de pin ativo.",
+        "background": "<code>bg-background</code>",
+        "backgroundPart": "Fundo das células fixadas (pinned). Cobre o conteúdo durante scroll horizontal.",
+        "ring": "<code>ring-ring/50</code>",
+        "ringPart": "Foco visível em botões de ordenação, edição, paginação e filtros."
+      },
+      "customizationTitle": "Como personalizar via tema:",
+      "note": "O DataTable usa os mesmos tokens do <code>Table</code> primitivo. Para personalizar, sobrescreva os tokens em <code>themes/*.css</code>; mudanças refletem em todos os recursos do componente."
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "O DataTable atende WCAG 2.1 AA via tabela semântica do <code>Table</code> primitivo, <code>aria-label</code> em todos os botões interativos (ordenação, filtro, paginação, resize), tri-state no checkbox de cabeçalho e foco visível em todas as ações.",
+      "item1": "<strong>Tabela semântica</strong> — usa <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th&gt;</code> e <code>&lt;td&gt;</code> do primitivo Table. Cabeçalhos têm <code>scope=\"col\"</code> implícito quando renderizados.",
+      "item2": "<strong>Botões com aria-label contextual</strong> — \"Ordenar por <em>nome da coluna</em>\", \"Filtrar <em>nome</em>\", \"Selecionar linha\", \"Próxima página\". Sem ícones decorativos isolados sem texto acessível.",
+      "item3": "<strong>Tri-state na seleção</strong> — checkbox do cabeçalho usa <code>indeterminate</code> quando há seleção parcial. Marca todas, desmarca todas ou estado misto, conforme estado real.",
+      "item4": "<strong>Foco visível</strong> — todos os botões e inputs usam <code>focus-visible:ring-ring/50</code>. Ordem de tabulação segue a leitura natural: toolbar → cabeçalhos → linhas → paginação.",
+      "item5": "<strong>Estado vazio anunciado</strong> — quando não há resultados, o corpo exibe uma linha com a mensagem em vez de tabela vazia silenciosa. Leitores de tela anunciam o conteúdo.",
+      "item6": "<strong>Atributos de ordenação</strong> — coluna ordenada recebe indicador visual de seta. O cabeçalho ordenável é um <code>&lt;button&gt;</code> nativo com role implícito, navegável por <kbd>Tab</kbd> e ativável por <kbd>Enter</kbd> ou <kbd>Espaço</kbd>.",
+      "keyboard": {
+        "tab": "Navega entre os elementos interativos: filtro global, menu de colunas, cabeçalhos ordenáveis, linhas selecionáveis, células editáveis e controles de paginação.",
+        "enter": "Ativa a ação do elemento focado: alterna ordenação, marca/desmarca seleção, abre edição inline ou avança página.",
+        "space": "Marca/desmarca checkbox de seleção e alterna ordenação no cabeçalho focado.",
+        "escape": "Durante edição inline, cancela e restaura o valor original. Fecha menus abertos.",
+        "arrowKeys": "Dentro de selects e menus, navega entre opções. Não navega entre células — use <kbd>Tab</kbd> para isso."
+      },
+      "aria": {
+        "ariaLabelSort": "<code>aria-label=\"Ordenar por <em>coluna</em>\"</code> no botão do cabeçalho ordenável.",
+        "ariaLabelFilter": "<code>aria-label=\"Filtrar <em>coluna</em>\"</code> nos inputs e selects de filtro por coluna.",
+        "ariaLabelSelect": "<code>aria-label=\"Selecionar linha\"</code> e <code>aria-label=\"Selecionar todas as linhas\"</code> nos checkboxes de seleção.",
+        "ariaLabelPaging": "<code>aria-label</code> em \"Primeira página\", \"Página anterior\", \"Próxima página\", \"Última página\".",
+        "ariaLabelResize": "<code>role=\"separator\"</code> + <code>aria-orientation=\"vertical\"</code> no handle de redimensionamento com label da coluna."
+      },
+      "screenReader": {
+        "onFocus": "Cabeçalho ordenável: leitor anuncia o nome da coluna e a indicação \"Ordenar por…\". Após ativar, anuncia direção e total de resultados.",
+        "onSelect": "Ao marcar uma linha, leitor anuncia novo total: \"3 de 12 linhas selecionadas\".",
+        "onEdit": "Ao entrar em edição inline, leitor anuncia o nome da coluna e o valor atual. Confirma com Enter; cancela com Escape.",
+        "onEmpty": "Estado vazio é anunciado como uma linha única com a mensagem (\"Sem resultados.\") em vez de tabela silenciosa.",
+        "onPaging": "Leitor anuncia a página atual e o total ao navegar."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "table": "Camada visual semântica usada internamente — escolha o Table quando a interação não é necessária.",
+      "chart": "Para comparação visual de tendências — quando o foco é leitura agregada e não detalhe linha a linha.",
+      "pagination": "Componente standalone de paginação — útil quando você precisa controlar a UI de paginação separadamente da tabela.",
+      "checkbox": "Usado internamente para seleção de linhas; pode ser composto fora da tabela para ações em lote.",
+      "input": "Usado internamente para filtros de coluna e edição inline; pode ser composto fora para barras de busca avulsas.",
+      "dropdownMenu": "Usado internamente para o menu de colunas; pode hospedar ações em massa adicionais."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "<strong>Lib upstream</strong>: o DataTable é construído sobre <strong>TanStack Table v8</strong> (headless) + <strong>TanStack Virtual</strong>. Cada stack usa o adapter oficial correspondente.",
+      "tip2": "<strong>Headless</strong>: a engine não renderiza nada — apenas calcula estado de ordenação, filtro, seleção e paginação. O DataTable injeta isso no <code>Table</code> primitivo do design system, mantendo tokens e a11y.",
+      "tip3": "<strong>Estado interno</strong>: ordenação, filtros, seleção, visibilidade, ordem, pinning e tamanho de colunas vivem no componente. Para persistir entre montagens, use <code>onTableReady</code> e copie o estado para fora.",
+      "tip4": "<strong>Dataset não mutado</strong>: o array de <code>data</code> nunca é modificado. Para edição inline, o caller é responsável por atualizar o array via <code>onCellEdit</code>.",
+      "tip5": "<strong>Virtualização e paginação</strong>: são mutuamente exclusivas. Ativar virtualização desliga paginação automaticamente — usar paginação cliente em datasets virtualizados não faria sentido.",
+      "tip6": "<strong>Performance</strong>: ative <code>table-fixed</code> ao usar resize, reorder ou virtualização — força layout O(1) por coluna. Sem isso, datasets grandes podem travar o browser."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "O DataTable é uma camada de UI — não dispara eventos de produto por padrão. Acompanhe interações específicas (ordenação, exportação, edição confirmada) via <code>onTableReady</code> ou wrappers no caller.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name: 'data-table', locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name: 'data-table', locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada interação do DataTable.",
+        "item1": { "action": "Filtro global preenchido", "result": "Apenas linhas que casam com o termo permanecem visíveis; contagem e paginação refletem o total filtrado", "priority": "high" },
+        "item2": { "action": "Filtro por coluna preenchido", "result": "Apenas linhas que casam com o valor permanecem; outros filtros continuam aplicados em conjunto", "priority": "high" },
+        "item3": { "action": "Clique em cabeçalho ordenável", "result": "Linhas reordenam ascendente; segundo clique inverte; terceiro remove ordenação", "priority": "high" },
+        "item4": { "action": "Checkbox do cabeçalho", "result": "Marca todas da página atual; com seleção parcial, exibe tri-state; segundo clique desmarca tudo", "priority": "high" },
+        "item5": { "action": "Edição inline confirmada", "result": "Célula sai do modo edição e exibe novo valor; onCellEdit é chamado com (rowIndex, columnId, value)", "priority": "high" },
+        "item6": { "action": "Drag de cabeçalho para reordenar", "result": "Colunas reordenam; estado persiste no columnOrder; linhas refletem nova ordem", "priority": "medium" },
+        "item7": { "action": "Virtualizado com 1000 linhas", "result": "Apenas linhas visíveis no viewport (mais overscan) são renderizadas; scroll mantém posição correta", "priority": "high" },
+        "item8": { "action": "Navegação de paginação", "result": "Botões avançam, retrocedem e saltam para primeira/última página; desabilitam corretamente nos extremos", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": { "criterion": "Tabela semântica com thead/tbody/th/td", "level": "AA", "how": "Inspecionar HTML — DataTable usa o primitivo Table" },
+        "item2": { "criterion": "Botões de ordenação têm aria-label contextual com nome da coluna", "level": "AA", "how": "axe-playwright + inspecionar atributo em cada <button> do cabeçalho" },
+        "item3": { "criterion": "Checkboxes têm aria-label distinguindo cabeçalho e linha", "level": "AA", "how": "Inspecionar aria-label em todos os checkboxes" },
+        "item4": { "criterion": "Sem violações axe-core nos estados padrão, filtrado e selecionado", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": { "story": "Playground — estado padrão com seleção", "priority": "high" },
+        "item2": { "story": "Com filtros por coluna preenchidos", "priority": "high" },
+        "item3": { "story": "Colunas redimensionadas e reordenadas", "priority": "medium" },
+        "item4": { "story": "Edição inline em progresso", "priority": "medium" },
+        "item5": { "story": "Virtualizado com scroll no meio", "priority": "high" },
+        "item6": { "story": "Estado vazio", "priority": "high" }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Recursos",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "DataTable",
+    "category": "Display",
+    "type": "Component",
+    "description": "Advanced table with sorting, filtering, selection, pagination, resizing, reordering, column pinning, inline edit, and virtualization.",
+    "seo": {
+      "title": "DataTable — Display",
+      "description": "DataTable documentation: sorting, filtering, selection, pagination, resize, reorder, pin, inline edit, and virtualization on TanStack Table.",
+      "aiSummary": "DataTable component built on TanStack Table v8 (headless). Extends the Table primitive with multi-column sorting, global and per-column filtering, row selection, pagination, resizing, reordering, pinning, and inline editing. Supports virtualization for large datasets.",
+      "aiEntities": "DataTable, TanStack Table, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "search": "Search invoice, customer, method...",
+        "columns": "Columns",
+        "invoice": "Invoice",
+        "customer": "Customer",
+        "status": "Status",
+        "method": "Method",
+        "amount": "Amount",
+        "paid": "Paid",
+        "pending": "Pending",
+        "canceled": "Canceled",
+        "rowsPerPage": "Rows per page",
+        "page": "Page",
+        "of": "of",
+        "noResults": "No results."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Toolbar</strong> — top bar with global filter (free text search) and column visibility/pin menu.",
+      "item2": "<strong>Table container</strong> — scrollable wrapper that delimits the scroll area. Receives max height when virtualized.",
+      "item3": "<strong>Header</strong> — clickable cell for sorting, with drag handle for reordering and side divider for resizing.",
+      "item4": "<strong>Filter row</strong> — second header row with input or select per filterable column.",
+      "item5": "<strong>Body</strong> — rendered rows with optional selection (checkbox), optional per-cell inline editing and <code>data-state=\"selected\"</code> when marked.",
+      "item6": "<strong>Pagination</strong> — footer with count, page-size selector, and navigation. Automatically disabled when virtualized.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Search...\"\n/>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Define <code>columns</code> once in a stable scope (module or <code>useMemo</code>) — recreating on each render resets table state.",
+        "item2": "Use <code>enableRowSelection</code> only when there is a bulk action — a checkbox on every row without an action is confusing.",
+        "item3": "For datasets &gt; 500 rows, enable <code>virtualized</code> and disable pagination. Set <code>maxHeight</code> to bound the scroll area.",
+        "item4": "For inline editing, mark <code>meta.editable</code> on columns and implement <code>onCellEdit</code> to update the data externally — the component does not hold data state.",
+        "item5": "For resizable columns, set initial <code>size</code> in the column def — without it the header uses auto width.",
+        "item6": "For per-column filters, use <code>meta.filter</code> with type <code>\"text\"</code> or <code>\"select\"</code>. Selects require <code>options</code>."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": { "s": "Listing with sorting and search", "u": "Yes", "a": "-" },
+        "item2": { "s": "Simple non-interactive table", "u": "No", "a": "Table" },
+        "item3": { "s": "Large dataset (&gt; 1000 rows)", "u": "Yes, with virtualization", "a": "-" },
+        "item4": { "s": "Visual trend comparison", "u": "No", "a": "Chart" },
+        "item5": { "s": "Spreadsheet-style bulk editing", "u": "Yes, with inline edit", "a": "-" },
+        "item6": { "s": "Dense list on mobile", "u": "No", "a": "Card list" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "columnHeader": {
+            "name": "Column header",
+            "format": "Short noun · no period · capitalize the first word",
+            "good": "\"Invoice\", \"Status\", \"Amount\"",
+            "bad": "\"Invoice number\", \"Current status.\""
+          },
+          "filterPlaceholder": {
+            "name": "Filter placeholder",
+            "format": "Imperative verb + scope · no period",
+            "good": "\"Search customer\", \"Filter status\"",
+            "bad": "\"Type here...\", \"Search\""
+          },
+          "emptyState": {
+            "name": "Empty state",
+            "format": "Complete sentence · contextual to the applied filter",
+            "good": "\"No invoices found.\"",
+            "bad": "\"Empty.\", \"No data\""
+          },
+          "selectionLabel": {
+            "name": "Selection label",
+            "format": "Number + concrete scope · parallel singular/plural",
+            "good": "\"3 of 12 rows selected.\"",
+            "bad": "\"3 items.\", \"3 selected\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "Data needs sorting, filtering, or selection by the user",
+        "item2": "The dataset is large enough to need pagination or virtualization",
+        "item3": "The user needs to hide, reorder, or pin columns",
+        "item4": "Per-cell editing is the main flow (spreadsheet style)"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The table is static and fits on screen — use <code>Table</code>",
+        "item2": "The focus is visual trend comparison — use <code>Chart</code>",
+        "item3": "The content is a dense vertical list on mobile — use stacked cards"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Global filter with a placeholder specific to the table scope.",
+        "dont": "Global filter with generic placeholder <code>\"Search...\"</code> that gives no orientation."
+      },
+      "pair2": {
+        "do": "Virtualization enabled for large datasets with a defined max height.",
+        "dont": "Client-side pagination over 5000 rows — freezes rendering and loses scroll context."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withMeta": "With column metadata (filter and edit):"
+    },
+    "variants": {
+      "title": "Features",
+      "visualTitle": "Available Features",
+      "note": "DataTable has no <code>cva</code> variants. Each feature is an optional flag on the API. Combine freely as needed — pagination and virtualization are mutually exclusive; the others coexist.",
+      "items": {
+        "globalFilter": "Free-text filter that matches across all columns. On by default; disable with <code>enableGlobalFilter={false}</code>.",
+        "columnFilters": "Per-column filters with input or select. Defined via <code>meta.filter</code> on the column def. Enable with <code>enableColumnFilters</code>.",
+        "selection": "Row selection checkbox + header tri-state (all, some, none). Enable with <code>enableRowSelection</code>.",
+        "visibility": "Menu to hide and show columns. Available in the toolbar by default; disable with <code>enableColumnVisibility={false}</code>.",
+        "resize": "Side handle on each header to drag and adjust width. Enable with <code>enableColumnResizing</code> and set initial <code>size</code> on the column def.",
+        "reorder": "Drag handle on the header to reorder columns. Enable with <code>enableColumnOrdering</code>.",
+        "pin": "Pin column to the left or right via the columns menu. Uses <code>sticky</code> positioning. Enable with <code>enableColumnPinning</code>.",
+        "pagination": "Footer with count, page-size selector, and page navigation. On by default; sizes via <code>pageSizeOptions</code>.",
+        "edit": "Per-cell inline editing. Mark <code>meta.editable</code> on the column def and implement <code>onCellEdit</code> to persist the value.",
+        "virtual": "Row virtualization for large datasets. Renders only the visible range. Enable with <code>virtualized</code> and set <code>maxHeight</code>."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "selectionWithActions": {
+          "name": "Bulk selection with actions",
+          "description": "Enable row selection and use the <code>onTableReady</code> callback to access <code>table.getSelectedRowModel()</code> and dispatch bulk actions (export, delete, mark as paid) in a toolbar above or via a context menu.",
+          "use": "Admin lists where the user needs to apply the same action to multiple rows — bulk operations are the classic use case for selection."
+        },
+        "editableSheet": {
+          "name": "Spreadsheet mode (inline edit)",
+          "description": "Combine inline editing on several columns, no pagination, and per-column filters to create a spreadsheet-like experience. The component does not hold data state — <code>onCellEdit</code> updates the source array externally.",
+          "use": "Dense data entry, row-by-row reconciliation, operational adjustments (prices, stock, status) where opening a modal per edit would be costly."
+        },
+        "virtualizedLog": {
+          "name": "Virtualized log",
+          "description": "For datasets that grow indefinitely (logs, metrics, events), enable virtualization with a max height and disable pagination. Virtualization renders only the visible range, keeping scroll responsive across thousands of rows.",
+          "use": "Log inspection, event debugging, audit lists — any case where paginating breaks the temporal context of rows."
+        },
+        "pinnedKey": {
+          "name": "Pinned key column",
+          "description": "Pin the key column (ID, name, code) to the left while the user scrolls horizontally across many data columns. The pinned column stays visible via <code>sticky</code> positioning.",
+          "use": "Wide tables with many metrics where the user needs a constant visual reference (product line, account, person) during horizontal scroll."
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "empty": {
+        "label": "Empty",
+        "trigger": "<code>data</code> is an empty array or filters return no rows",
+        "behavior": "Body shows a single row with the <code>emptyMessage</code> (default: \"No results.\"). Toolbar and pagination remain visible so the user can clear filters."
+      },
+      "sorted": {
+        "label": "Sorted",
+        "trigger": "User clicks the header of a sortable column",
+        "behavior": "Header shows an ascending or descending arrow; the second click flips; the third clears the sort. Applies <code>aria-sort</code>."
+      },
+      "filtered": {
+        "label": "Filtered",
+        "trigger": "Global filter filled or per-column filter active",
+        "behavior": "Only matching rows remain. Row count and pagination reflect the filtered result."
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "Row checkbox checked",
+        "behavior": "Row receives <code>data-state=\"selected\"</code> with highlighted background. Header shows tri-state when there is partial selection."
+      },
+      "editing": {
+        "label": "Editing",
+        "trigger": "Click on a cell with <code>meta.editable</code>",
+        "behavior": "Cell becomes an input with auto focus. <kbd>Enter</kbd> confirms; <kbd>Esc</kbd> cancels. The component notifies via <code>onCellEdit</code>; the caller persists."
+      },
+      "resizing": {
+        "label": "Resizing",
+        "trigger": "Drag the side handle of a header",
+        "behavior": "Column width follows the mouse in real time. Other columns keep their width. State persists in <code>columnSizing</code>."
+      },
+      "virtualized": {
+        "label": "Virtualized",
+        "trigger": "<code>virtualized</code> prop active",
+        "behavior": "Only rows in the viewport (plus overscan) are rendered. Phantom padding rows preserve total height for natural scroll."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript interface",
+      "containerTitle": "DataTable",
+      "tooltipTitle": "Column (meta)",
+      "legendTitle": "Types",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "columns": "Column definitions in TanStack Table's <code>ColumnDef</code> format. Includes <code>accessorKey</code>, <code>header</code>, <code>cell</code>, <code>size</code>, and <code>meta</code>.",
+        "data": "Array of records that feeds the rows. DataTable does not mutate the array — for inline edit, update it externally via <code>onCellEdit</code>.",
+        "enableGlobalFilter": "Shows the free-text search field in the toolbar. Matches across all searchable columns.",
+        "globalFilterPlaceholder": "Placeholder text for the global filter. Use a phrase contextual to the table scope.",
+        "enableRowSelection": "Adds a checkbox column as the first column. Header shows tri-state when selection is partial.",
+        "enableColumnVisibility": "Shows the columns button on the toolbar. Allows hiding and showing columns via menu.",
+        "enableColumnFilters": "Renders a second header row with inputs or selects per column based on <code>meta.filter</code>.",
+        "enableColumnResizing": "Adds a side handle on each header to drag the width. Set initial <code>size</code> on the column def.",
+        "enableColumnOrdering": "Adds a drag handle on the header to reorder columns by drag-and-drop.",
+        "enableColumnPinning": "Adds a pin button in the columns menu to pin to the left or right.",
+        "enablePagination": "Shows a pagination footer with count, page-size selector, and page navigation.",
+        "virtualized": "Enables row virtualization. Automatically disables pagination. Use for large datasets.",
+        "virtualRowHeight": "Estimated height of each row in px for the virtualizer. Default 36.",
+        "maxHeight": "Maximum container height when virtualized. e.g. <code>\"480px\"</code>.",
+        "pageSize": "Initial number of rows per page.",
+        "pageSizeOptions": "Options available in the size selector. Default: <code>[10, 20, 50, 100]</code>.",
+        "emptyMessage": "Text shown when there are no rows. Contextualize to the table scope.",
+        "onCellEdit": "Callback fired on inline-edit confirm. Signature: <code>(rowIndex, columnId, value) =&gt; void</code>.",
+        "onTableReady": "Callback that receives the table instance. Use to access the headless API (selected rows, filter state).",
+        "metaFilter": "Per-column filter configuration. Use <code>{ type: \"text\" }</code> for a free input or <code>{ type: \"select\", options: [...] }</code> for a select.",
+        "metaEditable": "Marks the column as inline-editable. The cell becomes an input on click; the value is notified via <code>onCellEdit</code>."
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "For features not covered by the API (grouping, expansion, sub-rows, server-side), use <code>onTableReady</code> to access the instance and configure the corresponding TanStack Table models externally. The component is a visual layer over the headless engine — any configuration supported by the engine can be combined."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "CSS Token",
+        "class": "Use in the component",
+        "part": "Component part",
+        "border": "<code>border-input</code>",
+        "borderPart": "Header borders, row separators, resize handle.",
+        "muted": "<code>bg-muted/50</code>",
+        "mutedPart": "Row hover, pagination footer background.",
+        "mutedForeground": "<code>text-muted-foreground</code>",
+        "mutedForegroundPart": "Secondary labels (row count, empty message, placeholder).",
+        "primary": "<code>text-primary</code>",
+        "primaryPart": "Active sort indicator, resize handle hover, active pin icon.",
+        "background": "<code>bg-background</code>",
+        "backgroundPart": "Background for pinned cells. Covers content during horizontal scroll.",
+        "ring": "<code>ring-ring/50</code>",
+        "ringPart": "Visible focus on sort, edit, pagination, and filter controls."
+      },
+      "customizationTitle": "How to customize via theme:",
+      "note": "DataTable uses the same tokens as the <code>Table</code> primitive. To customize, override the tokens in <code>themes/*.css</code>; changes reflect across every feature of the component."
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "DataTable meets WCAG 2.1 AA via the semantic table from the <code>Table</code> primitive, <code>aria-label</code> on every interactive button (sort, filter, pagination, resize), checkbox tri-state on the header, and visible focus on all actions.",
+      "item1": "<strong>Semantic table</strong> — uses <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th&gt;</code>, and <code>&lt;td&gt;</code> from the primitive Table. Headers have implicit <code>scope=\"col\"</code> when rendered.",
+      "item2": "<strong>Contextual aria-label buttons</strong> — \"Sort by <em>column name</em>\", \"Filter <em>name</em>\", \"Select row\", \"Next page\". No decorative-only icons without accessible text.",
+      "item3": "<strong>Selection tri-state</strong> — header checkbox uses <code>indeterminate</code> when selection is partial. Marks all, clears all, or mixed state matches the real state.",
+      "item4": "<strong>Visible focus</strong> — every button and input uses <code>focus-visible:ring-ring/50</code>. Tab order follows natural reading: toolbar → headers → rows → pagination.",
+      "item5": "<strong>Announced empty state</strong> — when there are no results, the body shows a single row with the message instead of a silent empty table. Screen readers announce the content.",
+      "item6": "<strong>Sort attributes</strong> — sorted column shows an arrow indicator. The sortable header is a native <code>&lt;button&gt;</code> with implicit role, navigable via <kbd>Tab</kbd> and activated by <kbd>Enter</kbd> or <kbd>Space</kbd>.",
+      "keyboard": {
+        "tab": "Navigates between interactive elements: global filter, columns menu, sortable headers, selectable rows, editable cells, and pagination controls.",
+        "enter": "Activates the focused element: toggles sort, marks/unmarks selection, opens inline edit, or advances page.",
+        "space": "Marks/unmarks selection checkbox and toggles sort on the focused header.",
+        "escape": "During inline edit, cancels and restores the original value. Closes open menus.",
+        "arrowKeys": "Inside selects and menus, navigates between options. Does not navigate between cells — use <kbd>Tab</kbd> for that."
+      },
+      "aria": {
+        "ariaLabelSort": "<code>aria-label=\"Sort by <em>column</em>\"</code> on the sortable header button.",
+        "ariaLabelFilter": "<code>aria-label=\"Filter <em>column</em>\"</code> on per-column filter inputs and selects.",
+        "ariaLabelSelect": "<code>aria-label=\"Select row\"</code> and <code>aria-label=\"Select all rows\"</code> on selection checkboxes.",
+        "ariaLabelPaging": "<code>aria-label</code> on \"First page\", \"Previous page\", \"Next page\", \"Last page\".",
+        "ariaLabelResize": "<code>role=\"separator\"</code> + <code>aria-orientation=\"vertical\"</code> on the resize handle with the column label."
+      },
+      "screenReader": {
+        "onFocus": "Sortable header: reader announces the column name and the \"Sort by…\" hint. Once activated, announces direction and total results.",
+        "onSelect": "On row check, reader announces new total: \"3 of 12 rows selected\".",
+        "onEdit": "On inline-edit entry, reader announces the column name and current value. Enter confirms; Escape cancels.",
+        "onEmpty": "Empty state is announced as a single row with the message (\"No results.\") instead of a silent empty table.",
+        "onPaging": "Reader announces the current page and total on navigation."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "table": "Visual semantic layer used internally — pick Table when no interaction is needed.",
+      "chart": "For visual trend comparison — when the focus is aggregated reading rather than row-by-row detail.",
+      "pagination": "Standalone pagination component — useful when you need to control pagination UI separately from the table.",
+      "checkbox": "Used internally for row selection; can be composed outside the table for bulk actions.",
+      "input": "Used internally for column filters and inline editing; can be composed outside for standalone search bars.",
+      "dropdownMenu": "Used internally for the columns menu; can host additional bulk actions."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "<strong>Upstream lib</strong>: DataTable is built on <strong>TanStack Table v8</strong> (headless) + <strong>TanStack Virtual</strong>. Each stack uses the corresponding official adapter.",
+      "tip2": "<strong>Headless</strong>: the engine does not render anything — it only computes sort, filter, selection, and pagination state. DataTable injects that into the design-system <code>Table</code> primitive, preserving tokens and a11y.",
+      "tip3": "<strong>Internal state</strong>: sort, filters, selection, visibility, order, pinning, and column sizing live inside the component. To persist across mounts, use <code>onTableReady</code> and copy state out.",
+      "tip4": "<strong>Dataset not mutated</strong>: the <code>data</code> array is never modified. For inline edit, the caller is responsible for updating the array via <code>onCellEdit</code>.",
+      "tip5": "<strong>Virtualization vs pagination</strong>: they are mutually exclusive. Enabling virtualization automatically disables pagination — client-side pagination on virtualized data would not make sense.",
+      "tip6": "<strong>Performance</strong>: enable <code>table-fixed</code> when using resize, reorder, or virtualization — it forces O(1) per-column layout. Without it, large datasets can freeze the browser."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "DataTable is a UI layer — it does not emit product events by default. Track specific interactions (sort, export, confirmed edit) via <code>onTableReady</code> or wrappers in the caller.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "When opening the docs page or switching language",
+        "pageViewPayload": "{ component_name: 'data-table', locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "When scrolling to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name: 'data-table', locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "When switching language in the LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each DataTable interaction.",
+        "item1": { "action": "Global filter filled", "result": "Only rows that match the term remain visible; count and pagination reflect the filtered total", "priority": "high" },
+        "item2": { "action": "Per-column filter filled", "result": "Only rows that match remain; other filters keep applying jointly", "priority": "high" },
+        "item3": { "action": "Click on sortable header", "result": "Rows reorder ascending; second click flips; third clears sort", "priority": "high" },
+        "item4": { "action": "Header checkbox", "result": "Marks all on the current page; with partial selection shows tri-state; second click clears all", "priority": "high" },
+        "item5": { "action": "Inline edit confirmed", "result": "Cell exits edit mode and shows new value; onCellEdit is called with (rowIndex, columnId, value)", "priority": "high" },
+        "item6": { "action": "Header drag to reorder", "result": "Columns reorder; state persists in columnOrder; rows reflect the new order", "priority": "medium" },
+        "item7": { "action": "Virtualized with 1000 rows", "result": "Only rows visible in the viewport (plus overscan) are rendered; scroll keeps correct position", "priority": "high" },
+        "item8": { "action": "Pagination navigation", "result": "Buttons advance, go back, and jump to first/last; disable correctly at extremes", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": { "criterion": "Semantic table with thead/tbody/th/td", "level": "AA", "how": "Inspect HTML — DataTable uses the Table primitive" },
+        "item2": { "criterion": "Sort buttons have contextual aria-label with column name", "level": "AA", "how": "axe-playwright + inspect attribute on each header <button>" },
+        "item3": { "criterion": "Checkboxes have aria-label distinguishing header and row", "level": "AA", "how": "Inspect aria-label on every checkbox" },
+        "item4": { "criterion": "No axe-core violations in default, filtered, and selected states", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is captured automatically for visual regression.",
+        "item1": { "story": "Playground — default state with selection", "priority": "high" },
+        "item2": { "story": "With per-column filters filled", "priority": "high" },
+        "item3": { "story": "Resized and reordered columns", "priority": "medium" },
+        "item4": { "story": "Inline edit in progress", "priority": "medium" },
+        "item5": { "story": "Virtualized scrolled to middle", "priority": "high" },
+        "item6": { "story": "Empty state", "priority": "high" }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Features",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "DataTable",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Tabla avanzada con orden, filtros, selección, paginación, redimensionamiento, reordenamiento, pin de columnas, edición inline y virtualización.",
+    "seo": {
+      "title": "DataTable — Display",
+      "description": "Documentación de DataTable: orden, filtros, selección, paginación, resize, reorder, pin, edición inline y virtualización sobre TanStack Table.",
+      "aiSummary": "Componente DataTable construido sobre TanStack Table v8 (headless). Extiende el primitivo Table con orden multi-columna, filtro global y por columna, selección de filas, paginación, redimensionamiento, reordenamiento, fijación y edición inline. Soporta virtualización para datasets grandes.",
+      "aiEntities": "DataTable, TanStack Table, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
+      "aiIntent": "informational"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "search": "Buscar factura, cliente, método...",
+        "columns": "Columnas",
+        "invoice": "Factura",
+        "customer": "Cliente",
+        "status": "Estado",
+        "method": "Método",
+        "amount": "Importe",
+        "paid": "Pagado",
+        "pending": "Pendiente",
+        "canceled": "Cancelado",
+        "rowsPerPage": "Filas por página",
+        "page": "Página",
+        "of": "de",
+        "noResults": "Sin resultados."
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Toolbar</strong> — barra superior con filtro global (búsqueda libre) y menú de visibilidad/pin de columnas.",
+      "item2": "<strong>Container de tabla</strong> — wrapper desplazable que delimita el área de scroll. Recibe altura máxima cuando está virtualizado.",
+      "item3": "<strong>Cabecera</strong> — celda clicable para ordenar, con handle de drag para reordenar y divisor lateral para redimensionar.",
+      "item4": "<strong>Fila de filtros</strong> — segunda fila de la cabecera con input o select por columna filtrable.",
+      "item5": "<strong>Cuerpo</strong> — filas renderizadas con selección opcional (checkbox), edición inline opcional por celda y <code>data-state=\"selected\"</code> cuando está marcada.",
+      "item6": "<strong>Paginación</strong> — pie con conteo, selector de tamaño y navegación. Se desactiva automáticamente cuando está virtualizado.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Define <code>columns</code> una sola vez en un scope estable (módulo o <code>useMemo</code>) — recrearlo en cada render reinicia el estado de la tabla.",
+        "item2": "Usa <code>enableRowSelection</code> solo cuando haya acción en lote — checkbox en cada fila sin acción confunde.",
+        "item3": "Para datasets &gt; 500 filas, activa <code>virtualized</code> y desactiva paginación. Define <code>maxHeight</code> para limitar el área de scroll.",
+        "item4": "Para edición inline, marca <code>meta.editable</code> en las columnas e implementa <code>onCellEdit</code> actualizando los datos externamente — el componente no mantiene estado de datos.",
+        "item5": "Para columnas redimensionables, define <code>size</code> inicial en la column def — sin eso la cabecera usa ancho automático.",
+        "item6": "Para filtros por columna, usa <code>meta.filter</code> con tipo <code>\"text\"</code> o <code>\"select\"</code>. Los selects requieren <code>options</code>."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": { "s": "Listado con orden y búsqueda", "u": "Sí", "a": "-" },
+        "item2": { "s": "Tabla simple sin interacción", "u": "No", "a": "Table" },
+        "item3": { "s": "Dataset grande (&gt; 1000 filas)", "u": "Sí, con virtualización", "a": "-" },
+        "item4": { "s": "Comparación visual de tendencias", "u": "No", "a": "Chart" },
+        "item5": { "s": "Edición en masa estilo planilla", "u": "Sí, con edición inline", "a": "-" },
+        "item6": { "s": "Lista densa en mobile", "u": "No", "a": "Lista de Card" }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "columnHeader": {
+            "name": "Cabecera de columna",
+            "format": "Sustantivo corto · sin punto final · capitalización en la primera palabra",
+            "good": "\"Factura\", \"Estado\", \"Importe\"",
+            "bad": "\"Número de factura\", \"Estado actual.\""
+          },
+          "filterPlaceholder": {
+            "name": "Placeholder del filtro",
+            "format": "Verbo en infinitivo + alcance · sin punto final",
+            "good": "\"Buscar cliente\", \"Filtrar estado\"",
+            "bad": "\"Escribe aquí...\", \"Búsqueda\""
+          },
+          "emptyState": {
+            "name": "Estado vacío",
+            "format": "Frase completa · contextual al recorte aplicado",
+            "good": "\"No se encontraron facturas.\"",
+            "bad": "\"Vacío.\", \"Sin datos\""
+          },
+          "selectionLabel": {
+            "name": "Label de selección",
+            "format": "Número + alcance concreto · paralelo singular/plural",
+            "good": "\"3 de 12 filas seleccionadas.\"",
+            "bad": "\"3 ítems.\", \"3 seleccionados\""
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "Los datos requieren orden, filtrado o selección por parte del usuario",
+        "item2": "El dataset es grande y necesita paginación o virtualización",
+        "item3": "El usuario necesita ocultar, reordenar o fijar columnas",
+        "item4": "La edición celda a celda es el flujo principal (estilo planilla)"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La tabla es estática y cabe entera en pantalla — usa <code>Table</code>",
+        "item2": "El foco es comparación visual de tendencias — usa <code>Chart</code>",
+        "item3": "El contenido es una lista vertical densa en mobile — usa cards apilados"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Filtro global con placeholder específico al alcance de la tabla.",
+        "dont": "Filtro global con placeholder genérico <code>\"Buscar...\"</code> que no orienta al usuario."
+      },
+      "pair2": {
+        "do": "Virtualización activa para datasets grandes con altura máxima definida.",
+        "dont": "Paginación cliente en 5000 filas — bloquea el renderizado y pierde el contexto del scroll."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withMeta": "Con metadatos de columna (filtro y edición):"
+    },
+    "variants": {
+      "title": "Recursos",
+      "visualTitle": "Recursos Disponibles",
+      "note": "DataTable no tiene variantes <code>cva</code>. Cada recurso es una flag opcional en la API. Combínalas libremente según la necesidad — paginación y virtualización son mutuamente excluyentes; las demás coexisten.",
+      "items": {
+        "globalFilter": "Filtro de búsqueda libre que coincide en todas las columnas. Activo por defecto; desactiva con <code>enableGlobalFilter={false}</code>.",
+        "columnFilters": "Filtros por columna con input o select. Definidos vía <code>meta.filter</code> en la column def. Activa con <code>enableColumnFilters</code>.",
+        "selection": "Checkbox de selección por fila + cabecera con tri-state (todas, algunas, ninguna). Activa con <code>enableRowSelection</code>.",
+        "visibility": "Menú para ocultar y mostrar columnas. Disponible en la toolbar por defecto; desactiva con <code>enableColumnVisibility={false}</code>.",
+        "resize": "Handle lateral en cada cabecera para arrastrar y ajustar ancho. Activa con <code>enableColumnResizing</code> y define <code>size</code> inicial en la column def.",
+        "reorder": "Drag handle en la cabecera para reordenar columnas. Activa con <code>enableColumnOrdering</code>.",
+        "pin": "Fija columna a la izquierda o derecha vía el menú de columnas. Usa posición <code>sticky</code>. Activa con <code>enableColumnPinning</code>.",
+        "pagination": "Pie con conteo, selector de tamaño y navegación por página. Activa por defecto; tamaños vía <code>pageSizeOptions</code>.",
+        "edit": "Edición inline celda a celda. Marca <code>meta.editable</code> en la column def e implementa <code>onCellEdit</code> para persistir el valor.",
+        "virtual": "Virtualización de filas para datasets grandes. Renderiza solo el rango visible. Activa con <code>virtualized</code> y define <code>maxHeight</code>."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "selectionWithActions": {
+          "name": "Selección en lote con acciones",
+          "description": "Activa selección de filas y usa el callback <code>onTableReady</code> para acceder a <code>table.getSelectedRowModel()</code> y disparar acciones en masa (exportar, eliminar, marcar como pagado) en una toolbar superior o vía menú contextual.",
+          "use": "Listas administrativas donde el usuario necesita aplicar la misma acción a varias filas — las operaciones en lote son el caso clásico de selección."
+        },
+        "editableSheet": {
+          "name": "Modo planilla (edición inline)",
+          "description": "Combina edición inline en varias columnas, sin paginación y con filtro por columna para crear una experiencia tipo planilla. El componente no mantiene estado de datos — el <code>onCellEdit</code> actualiza el array fuente externamente.",
+          "use": "Cargas densas, revisión de datos fila por fila, ajustes operativos (precios, stock, estado) donde abrir un modal por edición sería costoso."
+        },
+        "virtualizedLog": {
+          "name": "Log virtualizado",
+          "description": "Para datasets que crecen indefinidamente (logs, métricas, eventos), activa virtualización con altura máxima y desactiva paginación. La virtualización renderiza solo el rango visible, manteniendo el scroll responsivo en miles de filas.",
+          "use": "Inspección de logs, debug de eventos, listas de auditoría — cualquier caso donde paginar interrumpe el contexto temporal de las filas."
+        },
+        "pinnedKey": {
+          "name": "Columna-clave fijada",
+          "description": "Fija la columna-clave (ID, nombre, código) a la izquierda mientras el usuario hace scroll horizontal entre muchas columnas de datos. La columna fija permanece visible con posición <code>sticky</code>.",
+          "use": "Tablas anchas con muchas métricas donde el usuario necesita una referencia visual constante (línea de producto, cuenta, persona) durante el scroll horizontal."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "empty": {
+        "label": "Vacío",
+        "trigger": "<code>data</code> es un array vacío o los filtros no devuelven filas",
+        "behavior": "El cuerpo muestra una sola fila con el mensaje de <code>emptyMessage</code> (default: \"Sin resultados.\"). La toolbar y la paginación siguen visibles para permitir limpiar filtros."
+      },
+      "sorted": {
+        "label": "Ordenado",
+        "trigger": "El usuario hace clic en la cabecera de una columna ordenable",
+        "behavior": "La cabecera muestra flecha ascendente o descendente; el segundo clic invierte; el tercero quita el orden. Aplica <code>aria-sort</code>."
+      },
+      "filtered": {
+        "label": "Filtrado",
+        "trigger": "Filtro global completado o filtro por columna activo",
+        "behavior": "Solo quedan las filas que coinciden. El conteo y la paginación reflejan el resultado filtrado."
+      },
+      "selected": {
+        "label": "Seleccionado",
+        "trigger": "Checkbox de fila marcado",
+        "behavior": "La fila recibe <code>data-state=\"selected\"</code> con fondo destacado. La cabecera muestra tri-state cuando hay selección parcial."
+      },
+      "editing": {
+        "label": "En edición",
+        "trigger": "Clic en una celda con <code>meta.editable</code>",
+        "behavior": "La celda pasa a input con foco automático. <kbd>Enter</kbd> confirma; <kbd>Esc</kbd> cancela. El componente notifica vía <code>onCellEdit</code>; el caller persiste."
+      },
+      "resizing": {
+        "label": "Redimensionando",
+        "trigger": "Arrastrar el handle lateral de una cabecera",
+        "behavior": "El ancho de columna sigue al mouse en tiempo real. Las demás columnas mantienen su ancho. El estado persiste en <code>columnSizing</code>."
+      },
+      "virtualized": {
+        "label": "Virtualizado",
+        "trigger": "Prop <code>virtualized</code> activa",
+        "behavior": "Solo se renderizan las filas dentro del viewport (más overscan). Filas de padding ficticias preservan la altura total para un scroll natural."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interface TypeScript",
+      "containerTitle": "DataTable",
+      "tooltipTitle": "Columna (meta)",
+      "legendTitle": "Tipos",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Default",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "columns": "Definición de columnas en formato <code>ColumnDef</code> de TanStack Table. Incluye <code>accessorKey</code>, <code>header</code>, <code>cell</code>, <code>size</code> y <code>meta</code>.",
+        "data": "Array de datos que alimenta las filas. DataTable no muta el array — para edición inline, actualízalo externamente vía <code>onCellEdit</code>.",
+        "enableGlobalFilter": "Muestra el campo de búsqueda libre en la toolbar. Filtra en todas las columnas indexables.",
+        "globalFilterPlaceholder": "Texto del placeholder del filtro global. Usa una frase contextual al alcance de la tabla.",
+        "enableRowSelection": "Agrega una columna de checkbox como primera columna. La cabecera muestra tri-state cuando hay selección parcial.",
+        "enableColumnVisibility": "Muestra el botón de columnas en la toolbar. Permite ocultar y mostrar columnas vía menú.",
+        "enableColumnFilters": "Renderiza una segunda fila en la cabecera con inputs o selects por columna según <code>meta.filter</code>.",
+        "enableColumnResizing": "Agrega un handle lateral en cada cabecera para arrastrar el ancho. Define <code>size</code> inicial en la column def.",
+        "enableColumnOrdering": "Agrega un drag handle en la cabecera para reordenar columnas vía drag-and-drop.",
+        "enableColumnPinning": "Agrega un botón de pin en el menú de columnas para fijar a la izquierda o derecha.",
+        "enablePagination": "Muestra un pie de paginación con conteo, selector de tamaño y navegación por página.",
+        "virtualized": "Activa virtualización de filas. Desactiva automáticamente la paginación. Úsalo para datasets grandes.",
+        "virtualRowHeight": "Altura estimada de cada fila en px para el virtualizador. Default 36.",
+        "maxHeight": "Altura máxima del container cuando está virtualizado. Ej.: <code>\"480px\"</code>.",
+        "pageSize": "Número inicial de filas por página.",
+        "pageSizeOptions": "Opciones disponibles en el selector de tamaño. Default: <code>[10, 20, 50, 100]</code>.",
+        "emptyMessage": "Texto mostrado cuando no hay filas. Contextualiza al alcance de la tabla.",
+        "onCellEdit": "Callback llamado al confirmar edición inline. Firma: <code>(rowIndex, columnId, value) =&gt; void</code>.",
+        "onTableReady": "Callback que recibe la instancia de la tabla. Úsalo para acceder a la API headless (filas seleccionadas, estado de filtros).",
+        "metaFilter": "Configuración de filtro por columna. Usa <code>{ type: \"text\" }</code> para input libre o <code>{ type: \"select\", options: [...] }</code> para select.",
+        "metaEditable": "Marca la columna como editable inline. La celda pasa a input al hacer clic; el valor se notifica vía <code>onCellEdit</code>."
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "Para recursos no cubiertos por la API (agrupamiento, expansión, sub-rows, server-side), usa <code>onTableReady</code> para acceder a la instancia y configura los modelos correspondientes de TanStack Table externamente. El componente es una capa visual sobre la engine headless — cualquier configuración soportada por la engine puede combinarse."
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token CSS",
+        "class": "Uso en el componente",
+        "part": "Parte del componente",
+        "border": "<code>border-input</code>",
+        "borderPart": "Bordes de cabecera, separadores de fila, handle de resize.",
+        "muted": "<code>bg-muted/50</code>",
+        "mutedPart": "Hover de fila, fondo del pie de paginación.",
+        "mutedForeground": "<code>text-muted-foreground</code>",
+        "mutedForegroundPart": "Labels secundarios (conteo de filas, mensaje vacío, placeholder).",
+        "primary": "<code>text-primary</code>",
+        "primaryPart": "Indicador de orden activo, hover del handle de resize, ícono de pin activo.",
+        "background": "<code>bg-background</code>",
+        "backgroundPart": "Fondo de las celdas fijadas (pinned). Cubre el contenido durante el scroll horizontal.",
+        "ring": "<code>ring-ring/50</code>",
+        "ringPart": "Foco visible en botones de orden, edición, paginación y filtros."
+      },
+      "customizationTitle": "Cómo personalizar vía tema:",
+      "note": "DataTable usa los mismos tokens que el primitivo <code>Table</code>. Para personalizar, sobrescribe los tokens en <code>themes/*.css</code>; los cambios se reflejan en todos los recursos del componente."
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "DataTable cumple WCAG 2.1 AA gracias a la tabla semántica del primitivo <code>Table</code>, <code>aria-label</code> en todos los botones interactivos (orden, filtro, paginación, resize), tri-state en el checkbox de cabecera y foco visible en todas las acciones.",
+      "item1": "<strong>Tabla semántica</strong> — usa <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th&gt;</code> y <code>&lt;td&gt;</code> del primitivo Table. Las cabeceras tienen <code>scope=\"col\"</code> implícito cuando se renderizan.",
+      "item2": "<strong>Botones con aria-label contextual</strong> — \"Ordenar por <em>nombre de columna</em>\", \"Filtrar <em>nombre</em>\", \"Seleccionar fila\", \"Página siguiente\". Sin íconos decorativos aislados sin texto accesible.",
+      "item3": "<strong>Tri-state en la selección</strong> — el checkbox de cabecera usa <code>indeterminate</code> cuando la selección es parcial. Marca todas, desmarca todas o estado mixto, según el estado real.",
+      "item4": "<strong>Foco visible</strong> — todos los botones e inputs usan <code>focus-visible:ring-ring/50</code>. El orden de tabulación sigue la lectura natural: toolbar → cabeceras → filas → paginación.",
+      "item5": "<strong>Estado vacío anunciado</strong> — cuando no hay resultados, el cuerpo muestra una fila con el mensaje en vez de tabla vacía silenciosa. Los lectores de pantalla anuncian el contenido.",
+      "item6": "<strong>Atributos de orden</strong> — la columna ordenada recibe un indicador visual de flecha. La cabecera ordenable es un <code>&lt;button&gt;</code> nativo con role implícito, navegable por <kbd>Tab</kbd> y activable por <kbd>Enter</kbd> o <kbd>Espacio</kbd>.",
+      "keyboard": {
+        "tab": "Navega entre los elementos interactivos: filtro global, menú de columnas, cabeceras ordenables, filas seleccionables, celdas editables y controles de paginación.",
+        "enter": "Activa la acción del elemento enfocado: alterna orden, marca/desmarca selección, abre edición inline o avanza página.",
+        "space": "Marca/desmarca checkbox de selección y alterna orden en la cabecera enfocada.",
+        "escape": "Durante edición inline, cancela y restaura el valor original. Cierra menús abiertos.",
+        "arrowKeys": "Dentro de selects y menús, navega entre opciones. No navega entre celdas — usa <kbd>Tab</kbd> para eso."
+      },
+      "aria": {
+        "ariaLabelSort": "<code>aria-label=\"Ordenar por <em>columna</em>\"</code> en el botón de la cabecera ordenable.",
+        "ariaLabelFilter": "<code>aria-label=\"Filtrar <em>columna</em>\"</code> en los inputs y selects de filtro por columna.",
+        "ariaLabelSelect": "<code>aria-label=\"Seleccionar fila\"</code> y <code>aria-label=\"Seleccionar todas las filas\"</code> en los checkboxes de selección.",
+        "ariaLabelPaging": "<code>aria-label</code> en \"Primera página\", \"Página anterior\", \"Página siguiente\", \"Última página\".",
+        "ariaLabelResize": "<code>role=\"separator\"</code> + <code>aria-orientation=\"vertical\"</code> en el handle de redimensionamiento con el label de la columna."
+      },
+      "screenReader": {
+        "onFocus": "Cabecera ordenable: el lector anuncia el nombre de la columna y la pista \"Ordenar por…\". Tras activar, anuncia dirección y total de resultados.",
+        "onSelect": "Al marcar una fila, el lector anuncia el nuevo total: \"3 de 12 filas seleccionadas\".",
+        "onEdit": "Al entrar en edición inline, el lector anuncia el nombre de la columna y el valor actual. Enter confirma; Escape cancela.",
+        "onEmpty": "El estado vacío se anuncia como una sola fila con el mensaje (\"Sin resultados.\") en vez de tabla silenciosa.",
+        "onPaging": "El lector anuncia la página actual y el total al navegar."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Suele usarse con",
+      "table": "Capa visual semántica usada internamente — elige Table cuando no necesitas interacción.",
+      "chart": "Para comparación visual de tendencias — cuando el foco es lectura agregada y no detalle fila por fila.",
+      "pagination": "Componente standalone de paginación — útil cuando necesitas controlar la UI de paginación separada de la tabla.",
+      "checkbox": "Usado internamente para selección de filas; puedes componerlo fuera de la tabla para acciones en lote.",
+      "input": "Usado internamente para filtros de columna y edición inline; puedes componerlo fuera para barras de búsqueda sueltas.",
+      "dropdownMenu": "Usado internamente para el menú de columnas; puede alojar acciones en masa adicionales."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "<strong>Lib upstream</strong>: DataTable está construido sobre <strong>TanStack Table v8</strong> (headless) + <strong>TanStack Virtual</strong>. Cada stack usa el adapter oficial correspondiente.",
+      "tip2": "<strong>Headless</strong>: la engine no renderiza nada — solo calcula estado de orden, filtro, selección y paginación. DataTable lo inyecta en el primitivo <code>Table</code> del design system, manteniendo tokens y a11y.",
+      "tip3": "<strong>Estado interno</strong>: orden, filtros, selección, visibilidad, orden, pinning y tamaño de columnas viven en el componente. Para persistir entre montajes, usa <code>onTableReady</code> y copia el estado hacia fuera.",
+      "tip4": "<strong>Dataset no mutado</strong>: el array <code>data</code> nunca se modifica. Para edición inline, el caller es responsable de actualizar el array vía <code>onCellEdit</code>.",
+      "tip5": "<strong>Virtualización y paginación</strong>: son mutuamente excluyentes. Activar virtualización desactiva paginación automáticamente — usar paginación cliente en datasets virtualizados no tendría sentido.",
+      "tip6": "<strong>Performance</strong>: activa <code>table-fixed</code> al usar resize, reorder o virtualización — fuerza layout O(1) por columna. Sin eso, datasets grandes pueden bloquear el browser."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "DataTable es una capa de UI — no emite eventos de producto por defecto. Rastrea interacciones específicas (orden, exportación, edición confirmada) vía <code>onTableReady</code> o wrappers en el caller.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload Adicional",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name: 'data-table', locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll hasta una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name: 'data-table', locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en el LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Qué debe ocurrir para cada interacción de DataTable.",
+        "item1": { "action": "Filtro global completado", "result": "Solo permanecen visibles las filas que coinciden; el conteo y la paginación reflejan el total filtrado", "priority": "high" },
+        "item2": { "action": "Filtro por columna completado", "result": "Solo permanecen las filas que coinciden; otros filtros siguen aplicándose en conjunto", "priority": "high" },
+        "item3": { "action": "Clic en cabecera ordenable", "result": "Las filas se reordenan ascendentemente; el segundo clic invierte; el tercero quita el orden", "priority": "high" },
+        "item4": { "action": "Checkbox de cabecera", "result": "Marca todas las de la página actual; con selección parcial muestra tri-state; el segundo clic desmarca todo", "priority": "high" },
+        "item5": { "action": "Edición inline confirmada", "result": "La celda sale del modo edición y muestra el nuevo valor; onCellEdit se llama con (rowIndex, columnId, value)", "priority": "high" },
+        "item6": { "action": "Arrastrar cabecera para reordenar", "result": "Las columnas se reordenan; el estado persiste en columnOrder; las filas reflejan el nuevo orden", "priority": "medium" },
+        "item7": { "action": "Virtualizado con 1000 filas", "result": "Solo se renderizan las filas visibles en el viewport (más overscan); el scroll mantiene la posición correcta", "priority": "high" },
+        "item8": { "action": "Navegación de paginación", "result": "Los botones avanzan, retroceden y saltan a la primera/última; se desactivan correctamente en los extremos", "priority": "medium" }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": { "criterion": "Tabla semántica con thead/tbody/th/td", "level": "AA", "how": "Inspeccionar HTML — DataTable usa el primitivo Table" },
+        "item2": { "criterion": "Botones de orden tienen aria-label contextual con el nombre de la columna", "level": "AA", "how": "axe-playwright + inspeccionar atributo en cada <button> de cabecera" },
+        "item3": { "criterion": "Los checkboxes tienen aria-label distinguiendo cabecera y fila", "level": "AA", "how": "Inspeccionar aria-label en todos los checkboxes" },
+        "item4": { "criterion": "Sin violaciones axe-core en estados default, filtrado y seleccionado", "level": "AA", "how": "axe-playwright en el test-runner de Storybook" }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": { "story": "Playground — estado default con selección", "priority": "high" },
+        "item2": { "story": "Con filtros por columna completados", "priority": "high" },
+        "item3": { "story": "Columnas redimensionadas y reordenadas", "priority": "medium" },
+        "item4": { "story": "Edición inline en progreso", "priority": "medium" },
+        "item5": { "story": "Virtualizado con scroll a la mitad", "priority": "high" },
+        "item6": { "story": "Estado vacío", "priority": "high" }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Recursos",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
