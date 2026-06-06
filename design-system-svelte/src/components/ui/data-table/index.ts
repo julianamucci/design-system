@@ -11,8 +11,12 @@ declare module '@tanstack/table-core' {
   interface ColumnMeta<TData extends RowData, TValue> {
     filter?: { type: 'text' | 'select'; options?: string[]; placeholder?: string };
     editable?: boolean;
-    /** Svelte-only: formata o valor da célula como string. Para markup rico, use `cell` na ColumnDef. */
+    /** Svelte-only: formata o valor da célula como string. */
     format?: (value: TValue, row: TData) => string;
+    /** Svelte-only: envolve o valor da célula em <Badge> com a variant retornada. */
+    badgeVariant?: (value: TValue, row: TData) => 'default' | 'secondary' | 'destructive' | 'outline';
+    /** Svelte-only: classes Tailwind extras aplicadas no <td> de cada célula da coluna. */
+    cellClass?: string;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface TableMeta<TData extends RowData> {

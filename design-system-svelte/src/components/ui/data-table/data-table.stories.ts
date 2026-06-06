@@ -30,16 +30,30 @@ const invoices: Invoice[] = [
 
 const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
+const statusVariant: Record<Invoice['status'], 'default' | 'secondary' | 'destructive'> = {
+  Pago: 'default',
+  Pendente: 'secondary',
+  Cancelado: 'destructive',
+};
+
 const baseColumns: DataTableColumn<Invoice>[] = [
   { accessorKey: 'id', header: 'Fatura', size: 110 },
   { accessorKey: 'customer', header: 'Cliente', size: 200 },
-  { accessorKey: 'status', header: 'Status', size: 140 },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    size: 140,
+    meta: { badgeVariant: (v) => statusVariant[v as Invoice['status']] ?? 'default' },
+  },
   { accessorKey: 'method', header: 'Método', size: 200 },
   {
     accessorKey: 'amount',
     header: 'Valor',
     size: 130,
-    meta: { format: (v) => currency.format(Number(v)) },
+    meta: {
+      format: (v) => currency.format(Number(v)),
+      cellClass: 'font-medium tabular-nums',
+    },
   },
 ];
 
@@ -94,7 +108,10 @@ const filterableColumns: DataTableColumn<Invoice>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
-    meta: { filter: { type: 'select', options: ['Pago', 'Pendente', 'Cancelado'] } },
+    meta: {
+      filter: { type: 'select', options: ['Pago', 'Pendente', 'Cancelado'] },
+      badgeVariant: (v) => statusVariant[v as Invoice['status']] ?? 'default',
+    },
   },
   {
     accessorKey: 'method',
@@ -109,7 +126,10 @@ const filterableColumns: DataTableColumn<Invoice>[] = [
   {
     accessorKey: 'amount',
     header: 'Valor',
-    meta: { format: (v) => currency.format(Number(v)) },
+    meta: {
+      format: (v) => currency.format(Number(v)),
+      cellClass: 'font-medium tabular-nums',
+    },
   },
 ];
 
@@ -145,12 +165,20 @@ export const ReordenavelEFixavel: Story = {
 const editableColumns: DataTableColumn<Invoice>[] = [
   { accessorKey: 'id', header: 'Fatura' },
   { accessorKey: 'customer', header: 'Cliente', meta: { editable: true } },
-  { accessorKey: 'status', header: 'Status' },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    meta: { badgeVariant: (v) => statusVariant[v as Invoice['status']] ?? 'default' },
+  },
   { accessorKey: 'method', header: 'Método', meta: { editable: true } },
   {
     accessorKey: 'amount',
     header: 'Valor',
-    meta: { editable: true, format: (v) => currency.format(Number(v)) },
+    meta: {
+      editable: true,
+      format: (v) => currency.format(Number(v)),
+      cellClass: 'font-medium tabular-nums',
+    },
   },
 ];
 
