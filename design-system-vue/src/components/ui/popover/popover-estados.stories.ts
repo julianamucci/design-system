@@ -8,6 +8,7 @@ import {
   PopoverTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Popover/Estados',
@@ -95,7 +96,7 @@ export const Aberto: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
   },
@@ -137,7 +138,7 @@ export const Controlado: Story = {
     await step('Click no toggle externo abre o Popover', async () => {
       const toggle = canvas.getByRole('button', { name: /Toggle externo/i });
       await userEvent.click(toggle);
-      const dialog = await body.findByRole('dialog', {}, { timeout: 2000 });
+      const dialog = await waitForPortal('dialog', { timeout: 2000 });
       await expect(dialog).toBeVisible();
     });
 
@@ -180,7 +181,7 @@ export const Modal: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
   },
 };

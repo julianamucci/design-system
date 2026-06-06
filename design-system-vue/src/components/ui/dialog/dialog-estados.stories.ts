@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Dialog/Estados',
@@ -112,7 +113,7 @@ export const Open: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('aria-modal', 'true');
   },
@@ -148,7 +149,7 @@ export const WithCloseButtonHidden: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     // Deve haver Mais tarde, Atualizar agora, mas NÃO o Close (sr-only="Close")
     const closeBtn = body.queryByRole('button', { name: /^Close$/i });
@@ -199,7 +200,7 @@ export const Controlled: Story = {
     await step('Clique no trigger externo abre o diálogo', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await expect(dialog).toBeVisible();
     });
 

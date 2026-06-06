@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Sheet/Composições',
@@ -94,7 +95,7 @@ export const AdvancedFilters: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const apply = await body.findByRole('button', { name: /Aplicar filtros/i });
     await expect(apply).toBeVisible();
@@ -142,7 +143,7 @@ export const ProfileEdit: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const nameInput = await body.findByLabelText(/Nome/i);
     await expect(nameInput).toBeVisible();
@@ -177,7 +178,7 @@ export const SecondaryNavigation: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
     await expect(content).toHaveAttribute('data-side', 'left');
@@ -219,7 +220,7 @@ export const LongFormScroll: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const save = await body.findByRole('button', { name: /Salvar preferências/i });
     await expect(save).toBeVisible();

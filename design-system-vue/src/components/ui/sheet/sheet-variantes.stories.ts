@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Sheet/Variantes',
@@ -80,7 +81,7 @@ export const Right: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
     await expect(content).not.toBeNull();
@@ -109,7 +110,7 @@ export const Left: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
     await expect(content).toHaveAttribute('data-side', 'left');
@@ -137,7 +138,7 @@ export const Top: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
     await expect(content).toHaveAttribute('data-side', 'top');
@@ -171,7 +172,7 @@ export const Bottom: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
     await expect(content).toHaveAttribute('data-side', 'bottom');

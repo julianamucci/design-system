@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import DropdownMenuDocs from '@/components/docs/DropdownMenuDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/DropdownMenu',
@@ -99,7 +100,7 @@ export const Playground: Story = {
     await step('2. Click no trigger abre o menu com role=menu', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir menu/i });
       await userEvent.click(trigger);
-      const menu = await body.findByRole('menu');
+      const menu = await waitForPortal('menu');
       await expect(menu).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });

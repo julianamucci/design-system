@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './index';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Select/Estados',
@@ -97,7 +98,7 @@ export const Aberto: Story = {
     await step('Click no trigger abre o listbox', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
       await userEvent.click(trigger);
-      const listbox = await body.findByRole('listbox', {}, { timeout: 2000 });
+      const listbox = await waitForPortal('listbox', { timeout: 2000 });
       await expect(listbox).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });

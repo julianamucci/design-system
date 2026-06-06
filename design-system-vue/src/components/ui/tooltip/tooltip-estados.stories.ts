@@ -9,6 +9,7 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-vue-next';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Tooltip/Estados',
@@ -93,7 +94,7 @@ export const Aberto: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip');
+    const tip = await waitForPortal('tooltip');
     await expect(tip).toBeVisible();
   },
 };
@@ -128,7 +129,7 @@ export const ComFoco: Story = {
     await step('Tab foca o trigger e abre o Tooltip', async () => {
       const trigger = canvas.getByRole('button', { name: /Salvar/i });
       trigger.focus();
-      const tip = await body.findByRole('tooltip', {}, { timeout: 2000 });
+      const tip = await waitForPortal('tooltip', { timeout: 2000 });
       await expect(tip).toBeVisible();
     });
 
@@ -181,7 +182,7 @@ export const Controlado: Story = {
     await step('Click no toggle externo abre o Tooltip', async () => {
       const toggle = canvas.getByRole('button', { name: /Toggle externo/i });
       await userEvent.click(toggle);
-      const tip = await body.findByRole('tooltip', {}, { timeout: 2000 });
+      const tip = await waitForPortal('tooltip', { timeout: 2000 });
       await expect(tip).toBeVisible();
     });
 

@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/DropdownMenu/Estados',
@@ -93,7 +94,7 @@ export const Aberto: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
   },
 };
@@ -130,7 +131,7 @@ export const Controlado: Story = {
     await step('Click no toggle externo abre o menu', async () => {
       const toggle = canvas.getByRole('button', { name: /Toggle externo/i });
       await userEvent.click(toggle);
-      const menu = await body.findByRole('menu');
+      const menu = await waitForPortal('menu');
       await expect(menu).toBeVisible();
     });
 
@@ -170,9 +171,9 @@ export const ItemDesabilitado: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
-    const disabled = await body.findByRole('menuitem', { name: /Arquivar/i });
+    const disabled = await waitForPortal('menuitem', { name: /Arquivar/i });
     await expect(disabled).toHaveAttribute('aria-disabled', 'true');
   },
 };

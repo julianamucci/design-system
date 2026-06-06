@@ -12,6 +12,7 @@ import {
   DrawerTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Drawer/Estados',
@@ -108,7 +109,7 @@ export const Aberto: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('aria-modal', 'true');
   },
@@ -151,7 +152,7 @@ export const Controlado: Story = {
     await step('Click no trigger externo abre o drawer', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await expect(dialog).toBeVisible();
     });
 
@@ -199,7 +200,7 @@ export const NaoDismissible: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     // Botão Aceitar e Recusar visíveis
     await expect(body.getByRole('button', { name: /Aceitar/i })).toBeVisible();

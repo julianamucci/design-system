@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import DrawerDocs from '@/components/docs/DrawerDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Drawer',
@@ -122,7 +123,7 @@ export const Playground: Story = {
     await step('2. Click no trigger abre o drawer com role=dialog e aria-modal', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir drawer/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAttribute('aria-modal', 'true');
       await expect(dialog).toHaveAccessibleName(/Editar perfil/i);
@@ -142,7 +143,7 @@ export const Playground: Story = {
     await step('5. Reabrir e fechar via DrawerClose', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir drawer/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       const cancel = within(dialog as HTMLElement).getByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
       await waitForClose();

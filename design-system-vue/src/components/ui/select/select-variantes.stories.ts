@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from './index';
 import { Globe } from 'lucide-vue-next';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Select/Variantes',
@@ -79,7 +80,7 @@ export const Default: Story = {
     });
     await step('Abre dropdown com 4 opções', async () => {
       await userEvent.click(canvas.getByRole('combobox'));
-      const listbox = await body.findByRole('listbox', {}, { timeout: 2000 });
+      const listbox = await waitForPortal('listbox', { timeout: 2000 });
       await expect(listbox).toBeVisible();
       const options = await body.findAllByRole('option');
       await expect(options).toHaveLength(4);
@@ -127,7 +128,7 @@ export const WithGroups: Story = {
     const body = within(document.body);
     await step('Abre dropdown e renderiza labels dos grupos', async () => {
       await userEvent.click(canvas.getByRole('combobox'));
-      const listbox = await body.findByRole('listbox', {}, { timeout: 2000 });
+      const listbox = await waitForPortal('listbox', { timeout: 2000 });
       await expect(listbox).toBeVisible();
       await expect(body.getByText(/Sudeste/i)).toBeVisible();
       await expect(body.getByText(/^Sul$/i)).toBeVisible();
@@ -177,7 +178,7 @@ export const WithIcon: Story = {
     });
     await step('Itens renderizam ícone + texto', async () => {
       await userEvent.click(canvas.getByRole('combobox'));
-      const listbox = await body.findByRole('listbox', {}, { timeout: 2000 });
+      const listbox = await waitForPortal('listbox', { timeout: 2000 });
       await expect(listbox).toBeVisible();
       await expect(body.getByRole('option', { name: /Português \(BR\)/i })).toBeVisible();
     });

@@ -16,6 +16,7 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from './index';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Menubar/Composições',
@@ -84,7 +85,7 @@ export const ComShortcuts: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     await expect(body.getByText('⌘Z')).toBeVisible();
     await expect(body.getByText('⌘C')).toBeVisible();
@@ -124,9 +125,9 @@ export const ComSubmenu: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
-    const subTrigger = await body.findByRole('menuitem', { name: /Exportar como/i });
+    const subTrigger = await waitForPortal('menuitem', { name: /Exportar como/i });
     await expect(subTrigger).toHaveAttribute('aria-haspopup', 'menu');
   },
 };

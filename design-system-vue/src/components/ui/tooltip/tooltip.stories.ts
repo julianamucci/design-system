@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-vue-next';
 import TooltipDocs from '@/components/docs/TooltipDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Tooltip',
@@ -102,7 +103,7 @@ export const Playground: Story = {
     await step('2. Hover no trigger abre o Tooltip (role=tooltip)', async () => {
       const trigger = canvas.getByRole('button', { name: /Salvar/i });
       await userEvent.hover(trigger);
-      const tip = await body.findByRole('tooltip', {}, { timeout: 2000 });
+      const tip = await waitForPortal('tooltip', { timeout: 2000 });
       await expect(tip).toBeVisible();
     });
 

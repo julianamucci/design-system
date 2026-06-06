@@ -16,6 +16,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from './index';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/DropdownMenu/Composições',
@@ -81,7 +82,7 @@ export const ComLabel: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     await expect(body.getAllByRole('menuitem').length).toBe(4);
   },
@@ -115,7 +116,7 @@ export const ComCheckboxItems: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const checkboxes = await body.findAllByRole('menuitemcheckbox');
     await expect(checkboxes.length).toBe(3);
@@ -152,7 +153,7 @@ export const ComRadioGroup: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const radios = await body.findAllByRole('menuitemradio');
     await expect(radios.length).toBe(3);
@@ -189,9 +190,9 @@ export const ComSubmenu: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
-    const subTrigger = await body.findByRole('menuitem', { name: /Exportar como/i });
+    const subTrigger = await waitForPortal('menuitem', { name: /Exportar como/i });
     await expect(subTrigger).toHaveAttribute('aria-haspopup', 'menu');
   },
 };
@@ -233,7 +234,7 @@ export const ComShortcuts: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     await expect(body.getByText('⌘Z')).toBeVisible();
     await expect(body.getByText('⌘S')).toBeVisible();

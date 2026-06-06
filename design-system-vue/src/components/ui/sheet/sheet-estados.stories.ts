@@ -12,6 +12,7 @@ import {
   SheetTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Sheet/Estados',
@@ -117,7 +118,7 @@ export const Open: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('aria-modal', 'true');
   },
@@ -153,7 +154,7 @@ export const WithCloseButtonHidden: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const closeBtn = body.queryByRole('button', { name: /^Close$/i });
     await expect(closeBtn).not.toBeInTheDocument();
@@ -203,7 +204,7 @@ export const Controlled: Story = {
     await step('Clique no trigger externo abre o sheet', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await expect(dialog).toBeVisible();
     });
 

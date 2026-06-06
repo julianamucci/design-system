@@ -7,6 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from './index';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/DropdownMenu/Variantes',
@@ -57,7 +58,7 @@ export const Default: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const items = await body.findAllByRole('menuitem');
     await expect(items.length).toBe(3);
@@ -90,9 +91,9 @@ export const Destructive: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
-    const destructive = await body.findByRole('menuitem', { name: /Excluir conta/i });
+    const destructive = await waitForPortal('menuitem', { name: /Excluir conta/i });
     await expect(destructive).toHaveAttribute('data-variant', 'destructive');
   },
 };

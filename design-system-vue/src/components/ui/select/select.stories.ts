@@ -11,6 +11,7 @@ import {
 } from './index';
 import SelectDocs from '@/components/docs/SelectDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Select',
@@ -101,13 +102,13 @@ export const Playground: Story = {
     await step('Click no trigger abre o Content (role=listbox)', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
       await userEvent.click(trigger);
-      const listbox = await body.findByRole('listbox', {}, { timeout: 2000 });
+      const listbox = await waitForPortal('listbox', { timeout: 2000 });
       await expect(listbox).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Selecionar item fecha dropdown e atualiza valor', async () => {
-      const option = await body.findByRole('option', { name: /Rio de Janeiro/i });
+      const option = await waitForPortal('option', { name: /Rio de Janeiro/i });
       await userEvent.click(option);
       await waitFor(
         () => {

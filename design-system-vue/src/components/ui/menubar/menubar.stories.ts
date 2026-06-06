@@ -17,6 +17,7 @@ import {
 } from './index';
 import MenubarDocs from '@/components/docs/MenubarDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Menubar',
@@ -155,7 +156,7 @@ export const Playground: Story = {
     await step('3. Click no Trigger abre Content', async () => {
       const trigger = canvas.getByRole('menuitem', { name: /Arquivo/i });
       await userEvent.click(trigger);
-      const menu = await body.findByRole('menu');
+      const menu = await waitForPortal('menu');
       await expect(menu).toBeVisible();
     });
 

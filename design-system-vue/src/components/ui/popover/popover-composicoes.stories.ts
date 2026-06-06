@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Popover/Composições',
@@ -82,7 +83,7 @@ export const EditarPerfil: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByLabelText(/Nome/i)).toBeVisible();
   },
@@ -128,7 +129,7 @@ export const SeletorDeDimensoes: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByLabelText(/Largura/i)).toBeVisible();
   },
@@ -181,7 +182,7 @@ export const ConfiguracoesRapidas: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByText(/Preferências/i)).toBeVisible();
   },
@@ -231,7 +232,7 @@ export const SeletorDeCor: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByLabelText(/Cor #0ea5e9/i)).toBeVisible();
   },

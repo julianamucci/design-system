@@ -7,6 +7,7 @@ import {
 } from './index';
 import HoverCardDocs from '@/components/docs/HoverCardDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/HoverCard',
@@ -113,7 +114,7 @@ export const Playground: Story = {
     await step('2. Hover no trigger abre o Content (role=dialog)', async () => {
       const trigger = canvas.getByRole('link', { name: /@joana/i });
       await userEvent.hover(trigger);
-      const dialog = await body.findByRole('dialog', {}, { timeout: 2000 });
+      const dialog = await waitForPortal('dialog', { timeout: 2000 });
       await expect(dialog).toBeVisible();
     });
 

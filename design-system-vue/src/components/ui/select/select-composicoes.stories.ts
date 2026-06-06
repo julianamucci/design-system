@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from './index';
 import { Label } from '@/components/ui/label';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Select/Composições',
@@ -117,7 +118,7 @@ export const Controlado: Story = {
     });
     await step('Selecionar item atualiza valor exposto', async () => {
       await userEvent.click(canvas.getByRole('combobox'));
-      const option = await body.findByRole('option', { name: /São Paulo/i });
+      const option = await waitForPortal('option', { name: /São Paulo/i });
       await userEvent.click(option);
       await expect(canvas.getByText(/sp/i)).toBeVisible();
     });
@@ -198,7 +199,7 @@ export const ComSeparator: Story = {
     const body = within(document.body);
     await step('Abre dropdown e mostra ambos os grupos', async () => {
       await userEvent.click(canvas.getByRole('combobox'));
-      const listbox = await body.findByRole('listbox', {}, { timeout: 2000 });
+      const listbox = await waitForPortal('listbox', { timeout: 2000 });
       await expect(listbox).toBeVisible();
       await expect(body.getByText(/Sudeste/i)).toBeVisible();
       await expect(body.getByText(/^Sul$/i)).toBeVisible();

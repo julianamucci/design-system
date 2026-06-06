@@ -11,6 +11,7 @@ import {
   DrawerTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Drawer/Variantes',
@@ -46,7 +47,7 @@ const sharedComponents = {
 
 async function expectDirection(expected: string) {
   const body = within(document.body);
-  const dialog = await body.findByRole('dialog');
+  const dialog = await waitForPortal('dialog');
   await expect(dialog).toBeVisible();
   const content = document.querySelector('[data-slot="drawer-content"]') as HTMLElement | null;
   await expect(content).not.toBeNull();

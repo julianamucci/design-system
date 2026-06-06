@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import PopoverDocs from '@/components/docs/PopoverDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Popover',
@@ -130,7 +131,7 @@ export const Playground: Story = {
     await step('2. Click no trigger abre o Content (role=dialog)', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir popover/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog', {}, { timeout: 2000 });
+      const dialog = await waitForPortal('dialog', { timeout: 2000 });
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
     });

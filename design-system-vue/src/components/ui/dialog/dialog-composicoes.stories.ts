@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Dialog/Composições',
@@ -81,7 +82,7 @@ export const ConfirmEmail: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const action = await body.findByRole('button', { name: /Enviar confirmação/i });
     await expect(action).toBeVisible();
@@ -129,7 +130,7 @@ export const ProfileEdit: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const nameInput = await body.findByLabelText(/Nome/i);
     await expect(nameInput).toBeVisible();
@@ -160,7 +161,7 @@ export const MediaPreview: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
   },
 };

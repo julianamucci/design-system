@@ -5,6 +5,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from './index';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/HoverCard/Composições',
@@ -60,7 +61,7 @@ export const PerfilDeUsuario: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByText(/Joana Silva/i)).toBeVisible();
   },
@@ -98,7 +99,7 @@ export const PreviewDeLink: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByText(/design-system.dev/i)).toBeVisible();
   },
@@ -138,7 +139,7 @@ export const DefinicaoDeTermo: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
   },
 };
@@ -176,7 +177,7 @@ export const MetricaExplicada: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByText(/CSAT/i)).toBeVisible();
   },

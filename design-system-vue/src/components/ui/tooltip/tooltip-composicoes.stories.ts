@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { Save, Trash2, Share2, Copy, Pencil } from 'lucide-vue-next';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Tooltip/Composições',
@@ -67,7 +68,7 @@ export const BotaoIconOnly: Story = {
     const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /Salvar/i });
     await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
-    const tip = await body.findByRole('tooltip');
+    const tip = await waitForPortal('tooltip');
     await expect(tip).toBeVisible();
   },
 };
@@ -176,7 +177,7 @@ export const AtalhoDeTeclado: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip');
+    const tip = await waitForPortal('tooltip');
     await expect(tip).toBeVisible();
     await expect(body.getByText('Ctrl')).toBeVisible();
     await expect(body.getByText('S')).toBeVisible();

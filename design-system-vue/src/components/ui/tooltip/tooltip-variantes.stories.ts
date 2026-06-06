@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { Save } from 'lucide-vue-next';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Tooltip/Variantes',
@@ -64,7 +65,7 @@ export const Default: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip');
+    const tip = await waitForPortal('tooltip');
     await expect(tip).toBeVisible();
   },
 };
@@ -99,7 +100,7 @@ export const ComAtalho: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip');
+    const tip = await waitForPortal('tooltip');
     await expect(tip).toBeVisible();
   },
 };
@@ -132,7 +133,7 @@ export const TextoLongo: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip');
+    const tip = await waitForPortal('tooltip');
     await expect(tip).toBeVisible();
   },
 };
