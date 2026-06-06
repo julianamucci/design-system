@@ -1,15 +1,12 @@
-/* basecoat-css pré-compilado (CDN bundle vendored localmente — package exports
- * não expõe basecoat.cdn.min.css, e basecoat.css upstream exige Tailwind). */
-@import "./vendor/basecoat.css";
+/* Tailwind v4 pré-compilado vendored — usado por app.ts, docs pages e stories.
+ * Componentes .nds-* não dependem do Tailwind (são standalone). */
+@import "./vendor/tailwind.css";
 
 /* ── Tokens e temas compartilhados entre todos os stacks ─────────────────── */
 @import "@shared/tokens/tokens.css";
 @import "@shared/themes/index.css";
 
-/* ── Overrides do basecoat-css para respeitar tokens de densidade (7 temas) ── */
-@import "./basecoat-theme-overrides.css";
-
-/* ── Componentes standalone .nds-* (sem Tailwind, sem basecoat-css) ─────── */
+/* ── Componentes standalone .nds-* ───────────────────────────────────────── */
 @import "./components/layout.css";
 @import "./components/typography.css";
 @import "./components/colors.css";
