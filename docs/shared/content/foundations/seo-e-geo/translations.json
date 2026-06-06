@@ -5,7 +5,7 @@
     "type": "Discoverability",
     "description": "Otimização para buscadores tradicionais e para LLMs (ChatGPT, Gemini, Claude, Perplexity). useSeoEffect detecta contexto iframe, escreve meta tags no documento pai e gera JSON-LD, hreflang e Open Graph automaticamente.",
     "seo": {
-      "title": "SEO + GEO — Design System",
+      "title": "SEO + GEO",
       "description": "Como o sistema otimiza para buscadores e LLMs: hook useSeoEffect, metadados obrigatórios, tags ai:*, JSON-LD TechArticle e hreflang trilíngue.",
       "aiSummary": "Página técnica sobre SEO e GEO (Generative Engine Optimization). Documenta o hook useSeoEffect/applySeo, a detecção de contexto iframe que escreve meta tags no manager do Storybook, o sufixo automático '· Design System' no title, limites de descrição (155 chars), as tags GEO ai:summary/ai:entities/ai:intent para LLMs, geração automática de JSON-LD TechArticle e SoftwareSourceCode, hreflang trilíngue e Open Graph.",
       "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
@@ -136,7 +136,7 @@
     "type": "Discoverability",
     "description": "Optimization for traditional search engines and LLMs (ChatGPT, Gemini, Claude, Perplexity). useSeoEffect detects iframe context, writes meta tags to the parent document and auto-generates JSON-LD, hreflang and Open Graph.",
     "seo": {
-      "title": "SEO + GEO — Design System",
+      "title": "SEO + GEO",
       "description": "How the system optimizes for engines and LLMs: useSeoEffect hook, required metadata, ai:* tags, JSON-LD TechArticle and trilingual hreflang.",
       "aiSummary": "Technical page about SEO and GEO (Generative Engine Optimization). Documents the useSeoEffect/applySeo hook, iframe-context detection that writes meta tags into the Storybook manager, automatic '· Design System' suffix on title, description limits (155 chars), GEO ai:summary/ai:entities/ai:intent tags for LLMs, automatic JSON-LD TechArticle and SoftwareSourceCode generation, trilingual hreflang and Open Graph.",
       "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
@@ -267,7 +267,7 @@
     "type": "Discoverability",
     "description": "Optimización para buscadores tradicionales y para LLMs (ChatGPT, Gemini, Claude, Perplexity). useSeoEffect detecta el contexto iframe, escribe meta tags en el documento padre y genera JSON-LD, hreflang y Open Graph automáticamente.",
     "seo": {
-      "title": "SEO + GEO — Design System",
+      "title": "SEO + GEO",
       "description": "Cómo el sistema optimiza para buscadores y LLMs: hook useSeoEffect, metadatos obligatorios, tags ai:*, JSON-LD TechArticle y hreflang trilingüe.",
       "aiSummary": "Página técnica sobre SEO y GEO (Generative Engine Optimization). Documenta el hook useSeoEffect/applySeo, la detección de contexto iframe que escribe meta tags en el manager de Storybook, el sufijo automático '· Design System' en title, límites de descripción (155 chars), las tags GEO ai:summary/ai:entities/ai:intent para LLMs, generación automática de JSON-LD TechArticle y SoftwareSourceCode, hreflang trilingüe y Open Graph.",
       "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",

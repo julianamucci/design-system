@@ -5,7 +5,7 @@
     "type": "Conteúdo",
     "description": "O produto soa como um <strong>colega experiente que explica com clareza</strong> — direto, técnico mas acessível, prescritivo sem ser impositivo. Esta página define a personalidade, formalidade e padrões de frase usados em toda a UI e documentação.",
     "seo": {
-      "title": "Tom de Voz — Design System",
+      "title": "Tom de Voz",
       "description": "Personalidade, formalidade, regras de escrita por elemento, terminologia e padrões para textos de UI e translations.",
       "aiSummary": "Página de fundamentos de Tom de Voz. Define personalidade (amigável, claro, instrucional, neutro), tratamento por idioma, regras por elemento de UI, termos aprovados e padrões específicos de translations.json.",
       "aiEntities": "tom de voz, UX writing, microcopy, terminologia, translations",
@@ -30,9 +30,21 @@
         "tone": "Tom"
       },
       "rows": [
-        ["pt-BR", "<code>você</code> (informal direto)", "Semi-formal, sem 'tu' ou 'o usuário'"],
-        ["en", "Impessoal (<code>use</code>, <code>avoid</code>)", "Direto, prescritivo no infinitivo"],
-        ["es", "<code>tú</code> em UI, <code>usted</code> em docs", "Informal próximo, sem coloquialismos"]
+        [
+          "pt-BR",
+          "<code>você</code> (informal direto)",
+          "Semi-formal, sem 'tu' ou 'o usuário'"
+        ],
+        [
+          "en",
+          "Impessoal (<code>use</code>, <code>avoid</code>)",
+          "Direto, prescritivo no infinitivo"
+        ],
+        [
+          "es",
+          "<code>tú</code> em UI, <code>usted</code> em docs",
+          "Informal próximo, sem coloquialismos"
+        ]
       ]
     },
     "elementRules": {
@@ -57,14 +69,38 @@
           "avoid": "Evite"
         },
         "rows": [
-          ["Salvar", "Gravar, registrar, guardar"],
-          ["Adicionar / Criar", "Inserir, incluir, cadastrar"],
-          ["Excluir", "Deletar, apagar"],
-          ["Cancelar", "Abortar, sair sem salvar"],
-          ["Enviar", "Submeter, fazer upload"],
-          ["Editar / Configurar", "Modificar, ajustar"],
-          ["Desabilitado", "Bloqueado, inativo"],
-          ["Carregando", "Loading, aguarde"]
+          [
+            "Salvar",
+            "Gravar, registrar, guardar"
+          ],
+          [
+            "Adicionar / Criar",
+            "Inserir, incluir, cadastrar"
+          ],
+          [
+            "Excluir",
+            "Deletar, apagar"
+          ],
+          [
+            "Cancelar",
+            "Abortar, sair sem salvar"
+          ],
+          [
+            "Enviar",
+            "Submeter, fazer upload"
+          ],
+          [
+            "Editar / Configurar",
+            "Modificar, ajustar"
+          ],
+          [
+            "Desabilitado",
+            "Bloqueado, inativo"
+          ],
+          [
+            "Carregando",
+            "Loading, aguarde"
+          ]
         ]
       }
     },
@@ -77,13 +113,41 @@
         "avoid": "Evitar"
       },
       "rows": [
-        ["Column header", "Status", "Está ativo?"],
-        ["Button label", "Salvar alterações", "Clique para salvar"],
-        ["Error message", "Email inválido. Use o formato nome@dominio.com", "Erro de validação: email"],
-        ["Empty state", "Nenhum item ainda. Adicione o primeiro para começar.", "Ops! Parece que não há nada aqui..."],
-        ["Tooltip", "Atalho: <kbd>Ctrl</kbd>+<kbd>S</kbd>", "Clique aqui para salvar o documento atual"],
-        ["Toast de sucesso", "Alterações salvas.", "Ótimo! Suas alterações foram salvas com sucesso!"],
-        ["Dialog title", "Excluir conta", "Tem certeza?"]
+        [
+          "Column header",
+          "Status",
+          "Está ativo?"
+        ],
+        [
+          "Button label",
+          "Salvar alterações",
+          "Clique para salvar"
+        ],
+        [
+          "Error message",
+          "Email inválido. Use o formato nome@dominio.com",
+          "Erro de validação: email"
+        ],
+        [
+          "Empty state",
+          "Nenhum item ainda. Adicione o primeiro para começar.",
+          "Ops! Parece que não há nada aqui..."
+        ],
+        [
+          "Tooltip",
+          "Atalho: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
+          "Clique aqui para salvar o documento atual"
+        ],
+        [
+          "Toast de sucesso",
+          "Alterações salvas.",
+          "Ótimo! Suas alterações foram salvas com sucesso!"
+        ],
+        [
+          "Dialog title",
+          "Excluir conta",
+          "Tem certeza?"
+        ]
       ]
     },
     "writing": {
@@ -125,7 +189,7 @@
     "type": "Content",
     "description": "The product sounds like an <strong>experienced colleague who explains clearly</strong> — direct, technical yet accessible, prescriptive without being imperious. This page defines the personality, formality, and sentence patterns used across UI and documentation.",
     "seo": {
-      "title": "Tone of Voice — Design System",
+      "title": "Tone of Voice",
       "description": "Personality, formality, per-element writing rules, terminology, and patterns for UI text and translations.",
       "aiSummary": "Tone of Voice foundations page. Defines personality (friendly, clear, instructional, neutral), per-language address, rules by UI element, approved terms, and specific patterns for translations.json.",
       "aiEntities": "tone of voice, UX writing, microcopy, terminology, translations",
@@ -150,9 +214,21 @@
         "tone": "Tone"
       },
       "rows": [
-        ["pt-BR", "<code>você</code> (informal, direct)", "Semi-formal, no 'tu' or 'the user'"],
-        ["en", "Impersonal (<code>use</code>, <code>avoid</code>)", "Direct, prescriptive in the infinitive"],
-        ["es", "<code>tú</code> in UI, <code>usted</code> in docs", "Close-informal, no colloquialisms"]
+        [
+          "pt-BR",
+          "<code>você</code> (informal, direct)",
+          "Semi-formal, no 'tu' or 'the user'"
+        ],
+        [
+          "en",
+          "Impersonal (<code>use</code>, <code>avoid</code>)",
+          "Direct, prescriptive in the infinitive"
+        ],
+        [
+          "es",
+          "<code>tú</code> in UI, <code>usted</code> in docs",
+          "Close-informal, no colloquialisms"
+        ]
       ]
     },
     "elementRules": {
@@ -177,14 +253,38 @@
           "avoid": "Avoid"
         },
         "rows": [
-          ["Save", "Store, persist, keep"],
-          ["Add / Create", "Insert, register"],
-          ["Delete", "Erase, wipe"],
-          ["Cancel", "Abort, exit without saving"],
-          ["Send / Upload", "Submit, transmit"],
-          ["Edit / Configure", "Modify, tweak"],
-          ["Disabled", "Blocked, inactive"],
-          ["Loading", "Wait, please hold"]
+          [
+            "Save",
+            "Store, persist, keep"
+          ],
+          [
+            "Add / Create",
+            "Insert, register"
+          ],
+          [
+            "Delete",
+            "Erase, wipe"
+          ],
+          [
+            "Cancel",
+            "Abort, exit without saving"
+          ],
+          [
+            "Send / Upload",
+            "Submit, transmit"
+          ],
+          [
+            "Edit / Configure",
+            "Modify, tweak"
+          ],
+          [
+            "Disabled",
+            "Blocked, inactive"
+          ],
+          [
+            "Loading",
+            "Wait, please hold"
+          ]
         ]
       }
     },
@@ -197,13 +297,41 @@
         "avoid": "Avoid"
       },
       "rows": [
-        ["Column header", "Status", "Is it active?"],
-        ["Button label", "Save changes", "Click to save"],
-        ["Error message", "Invalid email. Use the format name@domain.com", "Validation error: email"],
-        ["Empty state", "No items yet. Add the first one to get started.", "Oops! Looks like there's nothing here..."],
-        ["Tooltip", "Shortcut: <kbd>Ctrl</kbd>+<kbd>S</kbd>", "Click here to save the current document"],
-        ["Success toast", "Changes saved.", "Great! Your changes were saved successfully!"],
-        ["Dialog title", "Delete account", "Are you sure?"]
+        [
+          "Column header",
+          "Status",
+          "Is it active?"
+        ],
+        [
+          "Button label",
+          "Save changes",
+          "Click to save"
+        ],
+        [
+          "Error message",
+          "Invalid email. Use the format name@domain.com",
+          "Validation error: email"
+        ],
+        [
+          "Empty state",
+          "No items yet. Add the first one to get started.",
+          "Oops! Looks like there's nothing here..."
+        ],
+        [
+          "Tooltip",
+          "Shortcut: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
+          "Click here to save the current document"
+        ],
+        [
+          "Success toast",
+          "Changes saved.",
+          "Great! Your changes were saved successfully!"
+        ],
+        [
+          "Dialog title",
+          "Delete account",
+          "Are you sure?"
+        ]
       ]
     },
     "writing": {
@@ -245,7 +373,7 @@
     "type": "Contenido",
     "description": "El producto suena como un <strong>colega experimentado que explica con claridad</strong> — directo, técnico pero accesible, prescriptivo sin ser impositivo. Esta página define la personalidad, formalidad y patrones de frase usados en toda la UI y la documentación.",
     "seo": {
-      "title": "Tono de Voz — Design System",
+      "title": "Tono de Voz",
       "description": "Personalidad, formalidad, reglas de escritura por elemento, terminología y patrones para textos de UI y translations.",
       "aiSummary": "Página de fundamentos de Tono de Voz. Define personalidad (amigable, claro, instruccional, neutro), tratamiento por idioma, reglas por elemento de UI, términos aprobados y patrones específicos de translations.json.",
       "aiEntities": "tono de voz, UX writing, microcopy, terminología, translations",
@@ -270,9 +398,21 @@
         "tone": "Tono"
       },
       "rows": [
-        ["pt-BR", "<code>você</code> (informal directo)", "Semi-formal, sin 'tu' ni 'el usuario'"],
-        ["en", "Impersonal (<code>use</code>, <code>avoid</code>)", "Directo, prescriptivo en infinitivo"],
-        ["es", "<code>tú</code> en UI, <code>usted</code> en docs", "Cercano-informal, sin coloquialismos"]
+        [
+          "pt-BR",
+          "<code>você</code> (informal directo)",
+          "Semi-formal, sin 'tu' ni 'el usuario'"
+        ],
+        [
+          "en",
+          "Impersonal (<code>use</code>, <code>avoid</code>)",
+          "Directo, prescriptivo en infinitivo"
+        ],
+        [
+          "es",
+          "<code>tú</code> en UI, <code>usted</code> en docs",
+          "Cercano-informal, sin coloquialismos"
+        ]
       ]
     },
     "elementRules": {
@@ -297,14 +437,38 @@
           "avoid": "Evita"
         },
         "rows": [
-          ["Guardar", "Grabar, registrar"],
-          ["Agregar / Crear", "Insertar, incluir"],
-          ["Eliminar", "Borrar, suprimir"],
-          ["Cancelar", "Abortar, salir sin guardar"],
-          ["Enviar", "Submeter, hacer upload"],
-          ["Editar / Configurar", "Modificar, ajustar"],
-          ["Deshabilitado", "Bloqueado, inactivo"],
-          ["Cargando", "Loading, espera"]
+          [
+            "Guardar",
+            "Grabar, registrar"
+          ],
+          [
+            "Agregar / Crear",
+            "Insertar, incluir"
+          ],
+          [
+            "Eliminar",
+            "Borrar, suprimir"
+          ],
+          [
+            "Cancelar",
+            "Abortar, salir sin guardar"
+          ],
+          [
+            "Enviar",
+            "Submeter, hacer upload"
+          ],
+          [
+            "Editar / Configurar",
+            "Modificar, ajustar"
+          ],
+          [
+            "Deshabilitado",
+            "Bloqueado, inactivo"
+          ],
+          [
+            "Cargando",
+            "Loading, espera"
+          ]
         ]
       }
     },
@@ -317,13 +481,41 @@
         "avoid": "Evitar"
       },
       "rows": [
-        ["Column header", "Estado", "¿Está activo?"],
-        ["Button label", "Guardar cambios", "Haz clic para guardar"],
-        ["Error message", "Email inválido. Usa el formato nombre@dominio.com", "Error de validación: email"],
-        ["Empty state", "Aún no hay elementos. Agrega el primero para comenzar.", "¡Vaya! Parece que no hay nada aquí..."],
-        ["Tooltip", "Atajo: <kbd>Ctrl</kbd>+<kbd>S</kbd>", "Haz clic aquí para guardar el documento actual"],
-        ["Toast de éxito", "Cambios guardados.", "¡Genial! ¡Tus cambios fueron guardados con éxito!"],
-        ["Dialog title", "Eliminar cuenta", "¿Estás seguro?"]
+        [
+          "Column header",
+          "Estado",
+          "¿Está activo?"
+        ],
+        [
+          "Button label",
+          "Guardar cambios",
+          "Haz clic para guardar"
+        ],
+        [
+          "Error message",
+          "Email inválido. Usa el formato nombre@dominio.com",
+          "Error de validación: email"
+        ],
+        [
+          "Empty state",
+          "Aún no hay elementos. Agrega el primero para comenzar.",
+          "¡Vaya! Parece que no hay nada aquí..."
+        ],
+        [
+          "Tooltip",
+          "Atajo: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
+          "Haz clic aquí para guardar el documento actual"
+        ],
+        [
+          "Toast de éxito",
+          "Cambios guardados.",
+          "¡Genial! ¡Tus cambios fueron guardados con éxito!"
+        ],
+        [
+          "Dialog title",
+          "Eliminar cuenta",
+          "¿Estás seguro?"
+        ]
       ]
     },
     "writing": {

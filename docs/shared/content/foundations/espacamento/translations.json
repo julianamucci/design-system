@@ -5,7 +5,7 @@
     "type": "Tokens",
     "description": "Todo o espaçamento do sistema é construído sobre uma base de 4px e ancorado num grid de 8. Tokens <code>--spacing-*</code> alimentam o Tailwind via <code>@theme inline</code>, então <code>p-4</code>, <code>gap-2</code> e <code>m-6</code> seguem automaticamente a densidade ativa do tema.",
     "seo": {
-      "title": "Espaçamento — Design System",
+      "title": "Espaçamento",
       "description": "Sistema 8-grid com base de 4px, tokens --spacing-* completos, gaps por contexto e regra de off-grid como bug a corrigir.",
       "aiSummary": "Página de fundamentos de Espaçamento. Documenta o grid de 8, a base --spacing-base de 4px, a escala completa --spacing-0 a --spacing-24, recomendações de uso por intervalo e a regra de off-grid.",
       "aiEntities": "espaçamento, grid 8, spacing-base, Tailwind, gap, padding, margin, densidade, off-grid",
@@ -26,18 +26,78 @@
         "use": "Uso típico"
       },
       "rows": {
-        "px": { "token": "--spacing-px", "value": "1px", "tw": "p-px", "use": "Hairline, bordas finíssimas" },
-        "half": { "token": "--spacing-0-5", "value": "2px", "tw": "p-0.5", "use": "Separadores muito finos" },
-        "1": { "token": "--spacing-1", "value": "4px", "tw": "p-1", "use": "Gap entre ícone e texto adjacente" },
-        "2": { "token": "--spacing-2", "value": "8px", "tw": "p-2 / gap-2", "use": "Base do grid — badges, chips, botões em grupo" },
-        "4": { "token": "--spacing-4", "value": "16px", "tw": "p-4 / gap-4", "use": "Padding interno padrão de componentes" },
-        "6": { "token": "--spacing-6", "value": "24px", "tw": "p-6 / gap-6", "use": "Padding de card, gap entre cards" },
-        "8": { "token": "--spacing-8", "value": "32px", "tw": "p-8", "use": "Padding de container de página" },
-        "10": { "token": "--spacing-10", "value": "40px", "tw": "p-10", "use": "Gap entre subseções" },
-        "12": { "token": "--spacing-12", "value": "48px", "tw": "space-y-12", "use": "Gap entre seções principais de docs" },
-        "16": { "token": "--spacing-16", "value": "64px", "tw": "py-16", "use": "Padding vertical de seções de landing" },
-        "20": { "token": "--spacing-20", "value": "80px", "tw": "py-20", "use": "Section gap em layouts editoriais" },
-        "24": { "token": "--spacing-24", "value": "96px", "tw": "py-24", "use": "Hero section, separação de áreas maiores" }
+        "1": {
+          "token": "--spacing-1",
+          "value": "4px",
+          "tw": "p-1",
+          "use": "Gap entre ícone e texto adjacente"
+        },
+        "2": {
+          "token": "--spacing-2",
+          "value": "8px",
+          "tw": "p-2 / gap-2",
+          "use": "Base do grid — badges, chips, botões em grupo"
+        },
+        "4": {
+          "token": "--spacing-4",
+          "value": "16px",
+          "tw": "p-4 / gap-4",
+          "use": "Padding interno padrão de componentes"
+        },
+        "6": {
+          "token": "--spacing-6",
+          "value": "24px",
+          "tw": "p-6 / gap-6",
+          "use": "Padding de card, gap entre cards"
+        },
+        "8": {
+          "token": "--spacing-8",
+          "value": "32px",
+          "tw": "p-8",
+          "use": "Padding de container de página"
+        },
+        "10": {
+          "token": "--spacing-10",
+          "value": "40px",
+          "tw": "p-10",
+          "use": "Gap entre subseções"
+        },
+        "12": {
+          "token": "--spacing-12",
+          "value": "48px",
+          "tw": "space-y-12",
+          "use": "Gap entre seções principais de docs"
+        },
+        "16": {
+          "token": "--spacing-16",
+          "value": "64px",
+          "tw": "py-16",
+          "use": "Padding vertical de seções de landing"
+        },
+        "20": {
+          "token": "--spacing-20",
+          "value": "80px",
+          "tw": "py-20",
+          "use": "Section gap em layouts editoriais"
+        },
+        "24": {
+          "token": "--spacing-24",
+          "value": "96px",
+          "tw": "py-24",
+          "use": "Hero section, separação de áreas maiores"
+        },
+        "px": {
+          "token": "--spacing-px",
+          "value": "1px",
+          "tw": "p-px",
+          "use": "Hairline, bordas finíssimas"
+        },
+        "half": {
+          "token": "--spacing-0-5",
+          "value": "2px",
+          "tw": "p-0.5",
+          "use": "Separadores muito finos"
+        }
       }
     },
     "usage": {
@@ -85,7 +145,7 @@
     "type": "Tokens",
     "description": "All system spacing is built on a 4px base and anchored on an 8-grid. <code>--spacing-*</code> tokens feed Tailwind via <code>@theme inline</code>, so <code>p-4</code>, <code>gap-2</code> and <code>m-6</code> follow the active theme density automatically.",
     "seo": {
-      "title": "Spacing — Design System",
+      "title": "Spacing",
       "description": "8-grid system with 4px base, full --spacing-* token scale, gaps by context and off-grid as a bug to fix.",
       "aiSummary": "Spacing foundations page. Documents the 8-grid, the --spacing-base 4px, the full --spacing-0 to --spacing-24 scale, usage guidance by range and the off-grid rule.",
       "aiEntities": "spacing, 8-grid, spacing-base, Tailwind, gap, padding, margin, density, off-grid",
@@ -106,18 +166,78 @@
         "use": "Typical use"
       },
       "rows": {
-        "px": { "token": "--spacing-px", "value": "1px", "tw": "p-px", "use": "Hairline, very thin borders" },
-        "half": { "token": "--spacing-0-5", "value": "2px", "tw": "p-0.5", "use": "Very thin separators" },
-        "1": { "token": "--spacing-1", "value": "4px", "tw": "p-1", "use": "Gap between icon and adjacent text" },
-        "2": { "token": "--spacing-2", "value": "8px", "tw": "p-2 / gap-2", "use": "Grid base — badges, chips, button groups" },
-        "4": { "token": "--spacing-4", "value": "16px", "tw": "p-4 / gap-4", "use": "Default inner padding of components" },
-        "6": { "token": "--spacing-6", "value": "24px", "tw": "p-6 / gap-6", "use": "Card padding, gap between cards" },
-        "8": { "token": "--spacing-8", "value": "32px", "tw": "p-8", "use": "Page container padding" },
-        "10": { "token": "--spacing-10", "value": "40px", "tw": "p-10", "use": "Gap between subsections" },
-        "12": { "token": "--spacing-12", "value": "48px", "tw": "space-y-12", "use": "Gap between main docs sections" },
-        "16": { "token": "--spacing-16", "value": "64px", "tw": "py-16", "use": "Vertical padding for landing sections" },
-        "20": { "token": "--spacing-20", "value": "80px", "tw": "py-20", "use": "Section gap in editorial layouts" },
-        "24": { "token": "--spacing-24", "value": "96px", "tw": "py-24", "use": "Hero section, larger area separation" }
+        "1": {
+          "token": "--spacing-1",
+          "value": "4px",
+          "tw": "p-1",
+          "use": "Gap between icon and adjacent text"
+        },
+        "2": {
+          "token": "--spacing-2",
+          "value": "8px",
+          "tw": "p-2 / gap-2",
+          "use": "Grid base — badges, chips, button groups"
+        },
+        "4": {
+          "token": "--spacing-4",
+          "value": "16px",
+          "tw": "p-4 / gap-4",
+          "use": "Default inner padding of components"
+        },
+        "6": {
+          "token": "--spacing-6",
+          "value": "24px",
+          "tw": "p-6 / gap-6",
+          "use": "Card padding, gap between cards"
+        },
+        "8": {
+          "token": "--spacing-8",
+          "value": "32px",
+          "tw": "p-8",
+          "use": "Page container padding"
+        },
+        "10": {
+          "token": "--spacing-10",
+          "value": "40px",
+          "tw": "p-10",
+          "use": "Gap between subsections"
+        },
+        "12": {
+          "token": "--spacing-12",
+          "value": "48px",
+          "tw": "space-y-12",
+          "use": "Gap between main docs sections"
+        },
+        "16": {
+          "token": "--spacing-16",
+          "value": "64px",
+          "tw": "py-16",
+          "use": "Vertical padding for landing sections"
+        },
+        "20": {
+          "token": "--spacing-20",
+          "value": "80px",
+          "tw": "py-20",
+          "use": "Section gap in editorial layouts"
+        },
+        "24": {
+          "token": "--spacing-24",
+          "value": "96px",
+          "tw": "py-24",
+          "use": "Hero section, larger area separation"
+        },
+        "px": {
+          "token": "--spacing-px",
+          "value": "1px",
+          "tw": "p-px",
+          "use": "Hairline, very thin borders"
+        },
+        "half": {
+          "token": "--spacing-0-5",
+          "value": "2px",
+          "tw": "p-0.5",
+          "use": "Very thin separators"
+        }
       }
     },
     "usage": {
@@ -165,7 +285,7 @@
     "type": "Tokens",
     "description": "Todo el espaciado del sistema se construye sobre una base de 4px y anclado en un grid de 8. Los tokens <code>--spacing-*</code> alimentan Tailwind vía <code>@theme inline</code>, entonces <code>p-4</code>, <code>gap-2</code> y <code>m-6</code> siguen automáticamente la densidad activa del tema.",
     "seo": {
-      "title": "Espaciado — Design System",
+      "title": "Espaciado",
       "description": "Sistema 8-grid con base de 4px, tokens --spacing-* completos, gaps por contexto y regla de off-grid como bug a corregir.",
       "aiSummary": "Página de fundamentos de Espaciado. Documenta el grid de 8, la base --spacing-base de 4px, la escala completa --spacing-0 a --spacing-24, recomendaciones de uso por intervalo y la regla de off-grid.",
       "aiEntities": "espaciado, grid 8, spacing-base, Tailwind, gap, padding, margin, densidad, off-grid",
@@ -186,18 +306,78 @@
         "use": "Uso típico"
       },
       "rows": {
-        "px": { "token": "--spacing-px", "value": "1px", "tw": "p-px", "use": "Hairline, bordes muy finos" },
-        "half": { "token": "--spacing-0-5", "value": "2px", "tw": "p-0.5", "use": "Separadores muy finos" },
-        "1": { "token": "--spacing-1", "value": "4px", "tw": "p-1", "use": "Gap entre icono y texto adyacente" },
-        "2": { "token": "--spacing-2", "value": "8px", "tw": "p-2 / gap-2", "use": "Base del grid — badges, chips, grupos de botones" },
-        "4": { "token": "--spacing-4", "value": "16px", "tw": "p-4 / gap-4", "use": "Padding interno por defecto de componentes" },
-        "6": { "token": "--spacing-6", "value": "24px", "tw": "p-6 / gap-6", "use": "Padding de card, gap entre cards" },
-        "8": { "token": "--spacing-8", "value": "32px", "tw": "p-8", "use": "Padding de contenedor de página" },
-        "10": { "token": "--spacing-10", "value": "40px", "tw": "p-10", "use": "Gap entre subsecciones" },
-        "12": { "token": "--spacing-12", "value": "48px", "tw": "space-y-12", "use": "Gap entre secciones principales de docs" },
-        "16": { "token": "--spacing-16", "value": "64px", "tw": "py-16", "use": "Padding vertical de secciones de landing" },
-        "20": { "token": "--spacing-20", "value": "80px", "tw": "py-20", "use": "Section gap en layouts editoriales" },
-        "24": { "token": "--spacing-24", "value": "96px", "tw": "py-24", "use": "Hero section, separación de áreas mayores" }
+        "1": {
+          "token": "--spacing-1",
+          "value": "4px",
+          "tw": "p-1",
+          "use": "Gap entre icono y texto adyacente"
+        },
+        "2": {
+          "token": "--spacing-2",
+          "value": "8px",
+          "tw": "p-2 / gap-2",
+          "use": "Base del grid — badges, chips, grupos de botones"
+        },
+        "4": {
+          "token": "--spacing-4",
+          "value": "16px",
+          "tw": "p-4 / gap-4",
+          "use": "Padding interno por defecto de componentes"
+        },
+        "6": {
+          "token": "--spacing-6",
+          "value": "24px",
+          "tw": "p-6 / gap-6",
+          "use": "Padding de card, gap entre cards"
+        },
+        "8": {
+          "token": "--spacing-8",
+          "value": "32px",
+          "tw": "p-8",
+          "use": "Padding de contenedor de página"
+        },
+        "10": {
+          "token": "--spacing-10",
+          "value": "40px",
+          "tw": "p-10",
+          "use": "Gap entre subsecciones"
+        },
+        "12": {
+          "token": "--spacing-12",
+          "value": "48px",
+          "tw": "space-y-12",
+          "use": "Gap entre secciones principales de docs"
+        },
+        "16": {
+          "token": "--spacing-16",
+          "value": "64px",
+          "tw": "py-16",
+          "use": "Padding vertical de secciones de landing"
+        },
+        "20": {
+          "token": "--spacing-20",
+          "value": "80px",
+          "tw": "py-20",
+          "use": "Section gap en layouts editoriales"
+        },
+        "24": {
+          "token": "--spacing-24",
+          "value": "96px",
+          "tw": "py-24",
+          "use": "Hero section, separación de áreas mayores"
+        },
+        "px": {
+          "token": "--spacing-px",
+          "value": "1px",
+          "tw": "p-px",
+          "use": "Hairline, bordes muy finos"
+        },
+        "half": {
+          "token": "--spacing-0-5",
+          "value": "2px",
+          "tw": "p-0.5",
+          "use": "Separadores muy finos"
+        }
       }
     },
     "usage": {

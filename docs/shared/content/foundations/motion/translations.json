@@ -5,7 +5,7 @@
     "type": "Tokens",
     "description": "Motion serve à função, nunca à decoração. O Design System usa durações breves, easings semânticos e respeita <code>prefers-reduced-motion</code> globalmente. Cada animação tem um propósito: confirmar uma ação, orientar o foco ou suavizar uma transição de contexto.",
     "seo": {
-      "title": "Motion — Design System",
+      "title": "Motion",
       "description": "Tokens de duração e easing, princípios de animação funcional e suporte global a prefers-reduced-motion.",
       "aiSummary": "Página de fundamentos de Motion. Documenta tokens --transition-fast/normal/slow, easings ease-out/in/in-out/spring, tipos de uso por contexto, suporte a prefers-reduced-motion e anti-padrões.",
       "aiEntities": "motion, animação, transition, duration, easing, prefers-reduced-motion, acessibilidade",
@@ -66,12 +66,36 @@
         "easing": "Easing"
       },
       "rows": [
-        ["Hover / focus em primitivos", "150ms", "ease-out"],
-        ["Toggle de estado (switch, checkbox)", "150ms", "ease-out"],
-        ["Abertura de dropdown / popover", "200–300ms", "ease-out"],
-        ["Entrada de Dialog / Sheet", "300–500ms", "ease-out"],
-        ["Saída de overlays", "200ms", "ease-in"],
-        ["Feedback de ação (toast, badge pulse)", "300ms", "spring suave"]
+        [
+          "Hover / focus em primitivos",
+          "150ms",
+          "ease-out"
+        ],
+        [
+          "Toggle de estado (switch, checkbox)",
+          "150ms",
+          "ease-out"
+        ],
+        [
+          "Abertura de dropdown / popover",
+          "200–300ms",
+          "ease-out"
+        ],
+        [
+          "Entrada de Dialog / Sheet",
+          "300–500ms",
+          "ease-out"
+        ],
+        [
+          "Saída de overlays",
+          "200ms",
+          "ease-in"
+        ],
+        [
+          "Feedback de ação (toast, badge pulse)",
+          "300ms",
+          "spring suave"
+        ]
       ]
     },
     "reducedMotion": {
@@ -110,7 +134,7 @@
     "type": "Tokens",
     "description": "Motion serves function, never decoration. The Design System uses brief durations, semantic easings, and respects <code>prefers-reduced-motion</code> globally. Every animation has a purpose: confirm an action, guide focus, or smooth a context change.",
     "seo": {
-      "title": "Motion — Design System",
+      "title": "Motion",
       "description": "Duration and easing tokens, principles of functional animation, and global prefers-reduced-motion support.",
       "aiSummary": "Motion foundations page. Documents --transition-fast/normal/slow tokens, ease-out/in/in-out/spring easings, usage types by context, prefers-reduced-motion support, and anti-patterns.",
       "aiEntities": "motion, animation, transition, duration, easing, prefers-reduced-motion, accessibility",
@@ -171,12 +195,36 @@
         "easing": "Easing"
       },
       "rows": [
-        ["Hover / focus on primitives", "150ms", "ease-out"],
-        ["State toggle (switch, checkbox)", "150ms", "ease-out"],
-        ["Dropdown / popover open", "200–300ms", "ease-out"],
-        ["Dialog / Sheet entry", "300–500ms", "ease-out"],
-        ["Overlay exit", "200ms", "ease-in"],
-        ["Action feedback (toast, badge pulse)", "300ms", "soft spring"]
+        [
+          "Hover / focus on primitives",
+          "150ms",
+          "ease-out"
+        ],
+        [
+          "State toggle (switch, checkbox)",
+          "150ms",
+          "ease-out"
+        ],
+        [
+          "Dropdown / popover open",
+          "200–300ms",
+          "ease-out"
+        ],
+        [
+          "Dialog / Sheet entry",
+          "300–500ms",
+          "ease-out"
+        ],
+        [
+          "Overlay exit",
+          "200ms",
+          "ease-in"
+        ],
+        [
+          "Action feedback (toast, badge pulse)",
+          "300ms",
+          "soft spring"
+        ]
       ]
     },
     "reducedMotion": {
@@ -215,7 +263,7 @@
     "type": "Tokens",
     "description": "Motion sirve a la función, nunca a la decoración. El Design System usa duraciones breves, easings semánticos y respeta <code>prefers-reduced-motion</code> globalmente. Cada animación tiene un propósito: confirmar una acción, guiar el foco o suavizar un cambio de contexto.",
     "seo": {
-      "title": "Motion — Design System",
+      "title": "Motion",
       "description": "Tokens de duración y easing, principios de animación funcional y soporte global a prefers-reduced-motion.",
       "aiSummary": "Página de fundamentos de Motion. Documenta tokens --transition-fast/normal/slow, easings ease-out/in/in-out/spring, tipos de uso por contexto, soporte a prefers-reduced-motion y antipatrones.",
       "aiEntities": "motion, animación, transition, duration, easing, prefers-reduced-motion, accesibilidad",
@@ -276,12 +324,36 @@
         "easing": "Easing"
       },
       "rows": [
-        ["Hover / focus en primitivos", "150ms", "ease-out"],
-        ["Toggle de estado (switch, checkbox)", "150ms", "ease-out"],
-        ["Apertura de dropdown / popover", "200–300ms", "ease-out"],
-        ["Entrada de Dialog / Sheet", "300–500ms", "ease-out"],
-        ["Salida de overlays", "200ms", "ease-in"],
-        ["Feedback de acción (toast, badge pulse)", "300ms", "spring suave"]
+        [
+          "Hover / focus en primitivos",
+          "150ms",
+          "ease-out"
+        ],
+        [
+          "Toggle de estado (switch, checkbox)",
+          "150ms",
+          "ease-out"
+        ],
+        [
+          "Apertura de dropdown / popover",
+          "200–300ms",
+          "ease-out"
+        ],
+        [
+          "Entrada de Dialog / Sheet",
+          "300–500ms",
+          "ease-out"
+        ],
+        [
+          "Salida de overlays",
+          "200ms",
+          "ease-in"
+        ],
+        [
+          "Feedback de acción (toast, badge pulse)",
+          "300ms",
+          "spring suave"
+        ]
       ]
     },
     "reducedMotion": {

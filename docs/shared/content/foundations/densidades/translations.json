@@ -5,7 +5,7 @@
     "type": "Tokens",
     "description": "A densidade controla quanto respiro a interface tem. Três níveis — <strong>Condensado</strong>, <strong>Default</strong> e <strong>Confortável</strong> — alteram <code>--spacing-base</code> e as alturas tokenizadas proporcionalmente, sem mexer em proporções fundamentais como radius, contraste ou tamanho de ícone.",
     "seo": {
-      "title": "Densidades — Design System",
+      "title": "Densidades",
       "description": "Três níveis de densidade (condensado, default, confortável) que escalam spacing e alturas proporcionalmente via classe no html.",
       "aiSummary": "Página de fundamentos de Densidades. Documenta os três níveis aplicados via classe no html, tokens afetados (--spacing-base, --height-*), quando usar cada um e regras de acessibilidade.",
       "aiEntities": "densidade, density, spacing, height, condensado, confortavel, WCAG 2.5.8",
@@ -21,9 +21,24 @@
         "heightDefault": "Altura default"
       },
       "rows": [
-        ["Condensado", "densidade-condensado", "3.2px (~80%)", "28px"],
-        ["Default", "densidade-default (ou nenhuma)", "4px (100%)", "32px"],
-        ["Confortável", "densidade-confortavel", "5px (~125%)", "40px"]
+        [
+          "Condensado",
+          "densidade-condensado",
+          "3.2px (~80%)",
+          "28px"
+        ],
+        [
+          "Default",
+          "densidade-default (ou nenhuma)",
+          "4px (100%)",
+          "32px"
+        ],
+        [
+          "Confortável",
+          "densidade-confortavel",
+          "5px (~125%)",
+          "40px"
+        ]
       ]
     },
     "tokens": {
@@ -66,9 +81,21 @@
         "examples": "Exemplos"
       },
       "rows": [
-        ["Condensado", "Telas data-heavy onde caber mais informação é crítico", "DataTable, dashboards de monitoramento, planilhas, terminais admin"],
-        ["Default", "Fluxo padrão de produto, equilíbrio entre densidade e respiro", "Formulários, settings, listas, maioria das telas SaaS"],
-        ["Confortável", "Produtos consumer ou mobile-first onde o toque precisa de área generosa", "Apps mobile, fluxos onboarding, telas para usuários menos técnicos"]
+        [
+          "Condensado",
+          "Telas data-heavy onde caber mais informação é crítico",
+          "DataTable, dashboards de monitoramento, planilhas, terminais admin"
+        ],
+        [
+          "Default",
+          "Fluxo padrão de produto, equilíbrio entre densidade e respiro",
+          "Formulários, settings, listas, maioria das telas SaaS"
+        ],
+        [
+          "Confortável",
+          "Produtos consumer ou mobile-first onde o toque precisa de área generosa",
+          "Apps mobile, fluxos onboarding, telas para usuários menos técnicos"
+        ]
       ]
     },
     "rules": {
@@ -96,7 +123,7 @@
     "type": "Tokens",
     "description": "Density controls how much breathing room the interface has. Three levels — <strong>Condensed</strong>, <strong>Default</strong>, and <strong>Comfortable</strong> — scale <code>--spacing-base</code> and tokenized heights proportionally, without touching fundamental proportions like radius, contrast, or icon size.",
     "seo": {
-      "title": "Densities — Design System",
+      "title": "Densities",
       "description": "Three density levels (condensed, default, comfortable) that scale spacing and heights proportionally via an html class.",
       "aiSummary": "Density foundations page. Documents the three levels applied via class on html, affected tokens (--spacing-base, --height-*), when to use each, and accessibility rules.",
       "aiEntities": "density, spacing, height, condensed, comfortable, WCAG 2.5.8",
@@ -112,9 +139,24 @@
         "heightDefault": "Default height"
       },
       "rows": [
-        ["Condensed", "densidade-condensado", "3.2px (~80%)", "28px"],
-        ["Default", "densidade-default (or none)", "4px (100%)", "32px"],
-        ["Comfortable", "densidade-confortavel", "5px (~125%)", "40px"]
+        [
+          "Condensed",
+          "densidade-condensado",
+          "3.2px (~80%)",
+          "28px"
+        ],
+        [
+          "Default",
+          "densidade-default (or none)",
+          "4px (100%)",
+          "32px"
+        ],
+        [
+          "Comfortable",
+          "densidade-confortavel",
+          "5px (~125%)",
+          "40px"
+        ]
       ]
     },
     "tokens": {
@@ -157,9 +199,21 @@
         "examples": "Examples"
       },
       "rows": [
-        ["Condensed", "Data-heavy screens where fitting more on screen is critical", "DataTable, monitoring dashboards, spreadsheets, admin terminals"],
-        ["Default", "Standard product flow, balanced density and breathing room", "Forms, settings, lists, most SaaS screens"],
-        ["Comfortable", "Consumer or mobile-first products where touch needs generous area", "Mobile apps, onboarding flows, screens for less technical users"]
+        [
+          "Condensed",
+          "Data-heavy screens where fitting more on screen is critical",
+          "DataTable, monitoring dashboards, spreadsheets, admin terminals"
+        ],
+        [
+          "Default",
+          "Standard product flow, balanced density and breathing room",
+          "Forms, settings, lists, most SaaS screens"
+        ],
+        [
+          "Comfortable",
+          "Consumer or mobile-first products where touch needs generous area",
+          "Mobile apps, onboarding flows, screens for less technical users"
+        ]
       ]
     },
     "rules": {
@@ -187,7 +241,7 @@
     "type": "Tokens",
     "description": "La densidad controla cuánto respiro tiene la interfaz. Tres niveles — <strong>Condensado</strong>, <strong>Default</strong> y <strong>Cómodo</strong> — escalan <code>--spacing-base</code> y las alturas tokenizadas proporcionalmente, sin tocar proporciones fundamentales como radius, contraste o tamaño de icono.",
     "seo": {
-      "title": "Densidades — Design System",
+      "title": "Densidades",
       "description": "Tres niveles de densidad (condensado, default, cómodo) que escalan spacing y alturas proporcionalmente vía clase en el html.",
       "aiSummary": "Página de fundamentos de Densidades. Documenta los tres niveles aplicados vía clase en html, tokens afectados (--spacing-base, --height-*), cuándo usar cada uno y reglas de accesibilidad.",
       "aiEntities": "densidad, density, spacing, height, condensado, comodo, WCAG 2.5.8",
@@ -203,9 +257,24 @@
         "heightDefault": "Altura default"
       },
       "rows": [
-        ["Condensado", "densidade-condensado", "3.2px (~80%)", "28px"],
-        ["Default", "densidade-default (o ninguna)", "4px (100%)", "32px"],
-        ["Cómodo", "densidade-confortavel", "5px (~125%)", "40px"]
+        [
+          "Condensado",
+          "densidade-condensado",
+          "3.2px (~80%)",
+          "28px"
+        ],
+        [
+          "Default",
+          "densidade-default (o ninguna)",
+          "4px (100%)",
+          "32px"
+        ],
+        [
+          "Cómodo",
+          "densidade-confortavel",
+          "5px (~125%)",
+          "40px"
+        ]
       ]
     },
     "tokens": {
@@ -248,9 +317,21 @@
         "examples": "Ejemplos"
       },
       "rows": [
-        ["Condensado", "Pantallas data-heavy donde caber más información es crítico", "DataTable, dashboards de monitoreo, planillas, terminales admin"],
-        ["Default", "Flujo estándar de producto, equilibrio entre densidad y respiro", "Formularios, settings, listas, la mayoría de pantallas SaaS"],
-        ["Cómodo", "Productos consumer o mobile-first donde el toque necesita área generosa", "Apps mobile, flujos de onboarding, pantallas para usuarios menos técnicos"]
+        [
+          "Condensado",
+          "Pantallas data-heavy donde caber más información es crítico",
+          "DataTable, dashboards de monitoreo, planillas, terminales admin"
+        ],
+        [
+          "Default",
+          "Flujo estándar de producto, equilibrio entre densidad y respiro",
+          "Formularios, settings, listas, la mayoría de pantallas SaaS"
+        ],
+        [
+          "Cómodo",
+          "Productos consumer o mobile-first donde el toque necesita área generosa",
+          "Apps mobile, flujos de onboarding, pantallas para usuarios menos técnicos"
+        ]
       ]
     },
     "rules": {

@@ -5,7 +5,7 @@
     "type": "Visão Geral",
     "description": "Um sistema de design multi-stack: a mesma linguagem visual implementada em React, Vue, Svelte e Vanilla TS, compartilhando conteúdo, temas e guidelines a partir de uma fonte única de verdade.",
     "seo": {
-      "title": "Sobre — Design System",
+      "title": "Sobre",
       "description": "Design System multi-stack com React, Vue, Svelte e Vanilla TS sobre tokens compartilhados, primitives headless e WCAG 2.1 AA por padrão.",
       "aiSummary": "Página de visão geral do Design System. Explica o propósito, os 4 stacks suportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + basecoat), a arquitetura de conteúdo compartilhado e os princípios fundamentais.",
       "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Tailwind, Storybook, tokens semânticos, WCAG, multi-stack",
@@ -112,7 +112,7 @@
     "type": "Overview",
     "description": "A multi-stack design system: one visual language implemented in React, Vue, Svelte and Vanilla TS, sharing content, themes and guidelines from a single source of truth.",
     "seo": {
-      "title": "About — Design System",
+      "title": "About",
       "description": "Multi-stack Design System with React, Vue, Svelte and Vanilla TS over shared tokens, headless primitives and WCAG 2.1 AA by default.",
       "aiSummary": "Overview page of the Design System. Explains the purpose, the 4 supported stacks (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + basecoat), the shared content architecture and the core principles.",
       "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Tailwind, Storybook, semantic tokens, WCAG, multi-stack",
@@ -219,7 +219,7 @@
     "type": "Visión General",
     "description": "Un sistema de diseño multi-stack: el mismo lenguaje visual implementado en React, Vue, Svelte y Vanilla TS, compartiendo contenido, temas y guidelines desde una fuente única de verdad.",
     "seo": {
-      "title": "Sobre — Design System",
+      "title": "Sobre",
       "description": "Design System multi-stack con React, Vue, Svelte y Vanilla TS sobre tokens compartidos, primitives headless y WCAG 2.1 AA por defecto.",
       "aiSummary": "Página de visión general del Design System. Explica el propósito, los 4 stacks soportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + basecoat), la arquitectura de contenido compartido y los principios fundamentales.",
       "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Tailwind, Storybook, tokens semánticos, WCAG, multi-stack",

@@ -5,7 +5,7 @@
     "type": "Tokens",
     "description": "O sistema de elevação combina <strong>sombra</strong> e <strong>radius</strong> para comunicar profundidade e contexto. Cinco níveis cobrem todos os containers do produto — do plano da página até o tooltip flutuante. Bordas sutis garantem definição mesmo em fundos claros.",
     "seo": {
-      "title": "Elevação, Bordas e Sombras — Design System",
+      "title": "Elevação, Bordas e Sombras",
       "description": "Cinco níveis de elevação, tokens --elevation-* e --radius-*, combinações típicas e regras de uso para borders e shadows.",
       "aiSummary": "Página de fundamentos de Elevação. Documenta cinco níveis (plano, card, dropdown, dialog, tooltip), tokens de shadow e radius, bordas e combinações típicas por componente.",
       "aiEntities": "elevação, sombra, shadow, radius, borda, border, profundidade, surface",
@@ -56,10 +56,26 @@
         "dark": "Dark"
       },
       "rows": [
-        ["--elevation-sm", "0 1px 2px rgba(0,0,0,.1)", "0 1px 2px rgba(0,0,0,.3)"],
-        ["--elevation-md", "0 4px 6px -1px rgba(0,0,0,.1)", "0 4px 6px -1px rgba(0,0,0,.3)"],
-        ["--elevation-lg", "0 10px 15px -3px rgba(0,0,0,.1)", "0 10px 15px -3px rgba(0,0,0,.3)"],
-        ["--elevation-xl", "0 20px 25px -5px rgba(0,0,0,.1)", "0 20px 25px -5px rgba(0,0,0,.3)"]
+        [
+          "--elevation-sm",
+          "0 1px 2px rgba(0,0,0,.1)",
+          "0 1px 2px rgba(0,0,0,.3)"
+        ],
+        [
+          "--elevation-md",
+          "0 4px 6px -1px rgba(0,0,0,.1)",
+          "0 4px 6px -1px rgba(0,0,0,.3)"
+        ],
+        [
+          "--elevation-lg",
+          "0 10px 15px -3px rgba(0,0,0,.1)",
+          "0 10px 15px -3px rgba(0,0,0,.3)"
+        ],
+        [
+          "--elevation-xl",
+          "0 20px 25px -5px rgba(0,0,0,.1)",
+          "0 20px 25px -5px rgba(0,0,0,.3)"
+        ]
       ]
     },
     "radius": {
@@ -123,13 +139,48 @@
         "border": "Border"
       },
       "rows": [
-        ["Card", "radius-card (14px)", "elevation-sm", "border"],
-        ["Button", "radius-button (10px)", "—", "transparent / border"],
-        ["Input", "radius-input (10px)", "—", "input"],
-        ["Tooltip", "radius (10px)", "elevation-md", "—"],
-        ["Dropdown / Popover", "radius (10px)", "elevation-md", "border"],
-        ["Dialog / Sheet", "radius-card (14px)", "elevation-xl", "—"],
-        ["Badge", "radius-badge (26px)", "—", "transparent"]
+        [
+          "Card",
+          "radius-card (14px)",
+          "elevation-sm",
+          "border"
+        ],
+        [
+          "Button",
+          "radius-button (10px)",
+          "—",
+          "transparent / border"
+        ],
+        [
+          "Input",
+          "radius-input (10px)",
+          "—",
+          "input"
+        ],
+        [
+          "Tooltip",
+          "radius (10px)",
+          "elevation-md",
+          "—"
+        ],
+        [
+          "Dropdown / Popover",
+          "radius (10px)",
+          "elevation-md",
+          "border"
+        ],
+        [
+          "Dialog / Sheet",
+          "radius-card (14px)",
+          "elevation-xl",
+          "—"
+        ],
+        [
+          "Badge",
+          "radius-badge (26px)",
+          "—",
+          "transparent"
+        ]
       ]
     },
     "rules": {
@@ -158,7 +209,7 @@
     "type": "Tokens",
     "description": "The elevation system combines <strong>shadow</strong> and <strong>radius</strong> to communicate depth and context. Five levels cover every container in the product — from the page plane to the floating tooltip. Subtle borders provide definition even on light backgrounds.",
     "seo": {
-      "title": "Elevation, Borders & Shadows — Design System",
+      "title": "Elevation, Borders & Shadows",
       "description": "Five elevation levels, --elevation-* and --radius-* tokens, typical combinations, and usage rules for borders and shadows.",
       "aiSummary": "Elevation foundations page. Documents five levels (plane, card, dropdown, dialog, tooltip), shadow and radius tokens, borders, and typical per-component combinations.",
       "aiEntities": "elevation, shadow, radius, border, depth, surface",
@@ -209,10 +260,26 @@
         "dark": "Dark"
       },
       "rows": [
-        ["--elevation-sm", "0 1px 2px rgba(0,0,0,.1)", "0 1px 2px rgba(0,0,0,.3)"],
-        ["--elevation-md", "0 4px 6px -1px rgba(0,0,0,.1)", "0 4px 6px -1px rgba(0,0,0,.3)"],
-        ["--elevation-lg", "0 10px 15px -3px rgba(0,0,0,.1)", "0 10px 15px -3px rgba(0,0,0,.3)"],
-        ["--elevation-xl", "0 20px 25px -5px rgba(0,0,0,.1)", "0 20px 25px -5px rgba(0,0,0,.3)"]
+        [
+          "--elevation-sm",
+          "0 1px 2px rgba(0,0,0,.1)",
+          "0 1px 2px rgba(0,0,0,.3)"
+        ],
+        [
+          "--elevation-md",
+          "0 4px 6px -1px rgba(0,0,0,.1)",
+          "0 4px 6px -1px rgba(0,0,0,.3)"
+        ],
+        [
+          "--elevation-lg",
+          "0 10px 15px -3px rgba(0,0,0,.1)",
+          "0 10px 15px -3px rgba(0,0,0,.3)"
+        ],
+        [
+          "--elevation-xl",
+          "0 20px 25px -5px rgba(0,0,0,.1)",
+          "0 20px 25px -5px rgba(0,0,0,.3)"
+        ]
       ]
     },
     "radius": {
@@ -276,13 +343,48 @@
         "border": "Border"
       },
       "rows": [
-        ["Card", "radius-card (14px)", "elevation-sm", "border"],
-        ["Button", "radius-button (10px)", "—", "transparent / border"],
-        ["Input", "radius-input (10px)", "—", "input"],
-        ["Tooltip", "radius (10px)", "elevation-md", "—"],
-        ["Dropdown / Popover", "radius (10px)", "elevation-md", "border"],
-        ["Dialog / Sheet", "radius-card (14px)", "elevation-xl", "—"],
-        ["Badge", "radius-badge (26px)", "—", "transparent"]
+        [
+          "Card",
+          "radius-card (14px)",
+          "elevation-sm",
+          "border"
+        ],
+        [
+          "Button",
+          "radius-button (10px)",
+          "—",
+          "transparent / border"
+        ],
+        [
+          "Input",
+          "radius-input (10px)",
+          "—",
+          "input"
+        ],
+        [
+          "Tooltip",
+          "radius (10px)",
+          "elevation-md",
+          "—"
+        ],
+        [
+          "Dropdown / Popover",
+          "radius (10px)",
+          "elevation-md",
+          "border"
+        ],
+        [
+          "Dialog / Sheet",
+          "radius-card (14px)",
+          "elevation-xl",
+          "—"
+        ],
+        [
+          "Badge",
+          "radius-badge (26px)",
+          "—",
+          "transparent"
+        ]
       ]
     },
     "rules": {
@@ -311,7 +413,7 @@
     "type": "Tokens",
     "description": "El sistema de elevación combina <strong>sombra</strong> y <strong>radius</strong> para comunicar profundidad y contexto. Cinco niveles cubren todos los contenedores del producto — desde el plano de página hasta el tooltip flotante. Los bordes sutiles aseguran definición incluso sobre fondos claros.",
     "seo": {
-      "title": "Elevación, Bordes y Sombras — Design System",
+      "title": "Elevación, Bordes y Sombras",
       "description": "Cinco niveles de elevación, tokens --elevation-* y --radius-*, combinaciones típicas y reglas de uso para borders y shadows.",
       "aiSummary": "Página de fundamentos de Elevación. Documenta cinco niveles (plano, card, dropdown, dialog, tooltip), tokens de shadow y radius, bordes y combinaciones típicas por componente.",
       "aiEntities": "elevación, sombra, shadow, radius, borde, border, profundidad, surface",
@@ -362,10 +464,26 @@
         "dark": "Dark"
       },
       "rows": [
-        ["--elevation-sm", "0 1px 2px rgba(0,0,0,.1)", "0 1px 2px rgba(0,0,0,.3)"],
-        ["--elevation-md", "0 4px 6px -1px rgba(0,0,0,.1)", "0 4px 6px -1px rgba(0,0,0,.3)"],
-        ["--elevation-lg", "0 10px 15px -3px rgba(0,0,0,.1)", "0 10px 15px -3px rgba(0,0,0,.3)"],
-        ["--elevation-xl", "0 20px 25px -5px rgba(0,0,0,.1)", "0 20px 25px -5px rgba(0,0,0,.3)"]
+        [
+          "--elevation-sm",
+          "0 1px 2px rgba(0,0,0,.1)",
+          "0 1px 2px rgba(0,0,0,.3)"
+        ],
+        [
+          "--elevation-md",
+          "0 4px 6px -1px rgba(0,0,0,.1)",
+          "0 4px 6px -1px rgba(0,0,0,.3)"
+        ],
+        [
+          "--elevation-lg",
+          "0 10px 15px -3px rgba(0,0,0,.1)",
+          "0 10px 15px -3px rgba(0,0,0,.3)"
+        ],
+        [
+          "--elevation-xl",
+          "0 20px 25px -5px rgba(0,0,0,.1)",
+          "0 20px 25px -5px rgba(0,0,0,.3)"
+        ]
       ]
     },
     "radius": {
@@ -429,13 +547,48 @@
         "border": "Border"
       },
       "rows": [
-        ["Card", "radius-card (14px)", "elevation-sm", "border"],
-        ["Button", "radius-button (10px)", "—", "transparent / border"],
-        ["Input", "radius-input (10px)", "—", "input"],
-        ["Tooltip", "radius (10px)", "elevation-md", "—"],
-        ["Dropdown / Popover", "radius (10px)", "elevation-md", "border"],
-        ["Dialog / Sheet", "radius-card (14px)", "elevation-xl", "—"],
-        ["Badge", "radius-badge (26px)", "—", "transparent"]
+        [
+          "Card",
+          "radius-card (14px)",
+          "elevation-sm",
+          "border"
+        ],
+        [
+          "Button",
+          "radius-button (10px)",
+          "—",
+          "transparent / border"
+        ],
+        [
+          "Input",
+          "radius-input (10px)",
+          "—",
+          "input"
+        ],
+        [
+          "Tooltip",
+          "radius (10px)",
+          "elevation-md",
+          "—"
+        ],
+        [
+          "Dropdown / Popover",
+          "radius (10px)",
+          "elevation-md",
+          "border"
+        ],
+        [
+          "Dialog / Sheet",
+          "radius-card (14px)",
+          "elevation-xl",
+          "—"
+        ],
+        [
+          "Badge",
+          "radius-badge (26px)",
+          "—",
+          "transparent"
+        ]
       ]
     },
     "rules": {

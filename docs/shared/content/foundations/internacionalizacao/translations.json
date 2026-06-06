@@ -5,7 +5,7 @@
     "type": "Content",
     "description": "Três idiomas obrigatórios — pt-BR, en e es — alimentados por um único arquivo translations.json por componente. O hook useTranslation faz lookup por dot-path e aceita overrides por stack para divergências de API.",
     "seo": {
-      "title": "i18n — Design System",
+      "title": "i18n",
       "description": "Sistema de internacionalização do Design System: três idiomas, hook useTranslation, estrutura translations.json e overrides por stack.",
       "aiSummary": "Página técnica sobre i18n. Documenta os três idiomas suportados (pt-BR primário, en, es), o hook useTranslation com lookup por dot-path, a estrutura de translations.json compartilhado, convenção de chaves API-neutras, mecanismo de override por stack e o componente LanguageSwitcher.",
       "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale",
@@ -98,7 +98,7 @@
     "type": "Content",
     "description": "Three mandatory languages — pt-BR, en and es — fed by a single translations.json per component. The useTranslation hook does dot-path lookup and accepts per-stack overrides for API divergences.",
     "seo": {
-      "title": "i18n — Design System",
+      "title": "i18n",
       "description": "Design System internationalization: three languages, useTranslation hook, translations.json structure and per-stack overrides.",
       "aiSummary": "Technical page about i18n. Documents the three supported languages (pt-BR primary, en, es), the useTranslation hook with dot-path lookup, shared translations.json structure, API-neutral key convention, per-stack override mechanism and the LanguageSwitcher component.",
       "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale",
@@ -191,7 +191,7 @@
     "type": "Content",
     "description": "Tres idiomas obligatorios — pt-BR, en y es — alimentados por un único translations.json por componente. El hook useTranslation hace lookup por dot-path y acepta overrides por stack para divergencias de API.",
     "seo": {
-      "title": "i18n — Design System",
+      "title": "i18n",
       "description": "Sistema de internacionalización del Design System: tres idiomas, hook useTranslation, estructura translations.json y overrides por stack.",
       "aiSummary": "Página técnica sobre i18n. Documenta los tres idiomas soportados (pt-BR primario, en, es), el hook useTranslation con lookup por dot-path, la estructura del translations.json compartido, convención de claves API-neutras, mecanismo de override por stack y el componente LanguageSwitcher.",
       "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale",

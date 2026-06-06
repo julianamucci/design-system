@@ -5,7 +5,7 @@
     "type": "Theming",
     "description": "Temas, modos light/dark, densidade e família tipográfica são controlados por classes no <html>. Trocar a classe recalcula todos os tokens semânticos em cascata — sem JavaScript, sem re-render forçado.",
     "seo": {
-      "title": "Sistema de Temas — Design System",
+      "title": "Sistema de Temas",
       "description": "Como temas funcionam: classes no <html>, tokens semânticos compartilhados, toolbar do Storybook, padrão MutationObserver e criação de novos temas.",
       "aiSummary": "Página técnica sobre theming. Explica o padrão de classes no elemento <html> (tema, modo, densidade, fonte), localização dos arquivos de tema em docs/shared/themes, toolbar do Storybook como mecanismo de troca, padrão MutationObserver para componentes reativos e procedimento para criar tema novo.",
       "aiEntities": "tema, theming, CSS custom properties, tokens semânticos, dark mode, density, MutationObserver, Storybook globals, --background, --foreground, --primary",
@@ -121,7 +121,7 @@
     "type": "Theming",
     "description": "Themes, light/dark modes, density and typographic family are controlled by classes on <html>. Switching the class recomputes every semantic token in cascade — no JavaScript, no forced re-render.",
     "seo": {
-      "title": "Theme System — Design System",
+      "title": "Theme System",
       "description": "How theming works: classes on <html>, shared semantic tokens, Storybook toolbar, MutationObserver pattern and how to author a new theme.",
       "aiSummary": "Technical page about theming. Explains the class-on-<html> pattern (brand, mode, density, font), location of theme files in docs/shared/themes, Storybook toolbar as the switch mechanism, MutationObserver pattern for reactive components and the procedure to author a new theme.",
       "aiEntities": "theme, theming, CSS custom properties, semantic tokens, dark mode, density, MutationObserver, Storybook globals, --background, --foreground, --primary",
@@ -237,7 +237,7 @@
     "type": "Theming",
     "description": "Temas, modos light/dark, densidad y familia tipográfica se controlan por clases en <html>. Cambiar la clase recalcula todos los tokens semánticos en cascada — sin JavaScript, sin re-render forzado.",
     "seo": {
-      "title": "Sistema de Temas — Design System",
+      "title": "Sistema de Temas",
       "description": "Cómo funciona el theming: clases en <html>, tokens semánticos compartidos, toolbar de Storybook, patrón MutationObserver y creación de temas nuevos.",
       "aiSummary": "Página técnica sobre theming. Explica el patrón de clases en <html> (tema, modo, densidad, fuente), ubicación de los archivos de tema en docs/shared/themes, toolbar de Storybook como mecanismo de cambio, patrón MutationObserver para componentes reactivos y procedimiento para crear un tema nuevo.",
       "aiEntities": "tema, theming, CSS custom properties, tokens semánticos, dark mode, densidad, MutationObserver, Storybook globals, --background, --foreground, --primary",

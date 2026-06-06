@@ -5,7 +5,7 @@
     "type": "Princípios",
     "description": "Acessibilidade não é uma camada opcional — é critério de aceite. Todo componente do sistema atende WCAG 2.1 AA por padrão e é validado com <code>axe-playwright</code> via <code>test-storybook</code>. Esta página documenta os compromissos e padrões que todo componente deve seguir.",
     "seo": {
-      "title": "Acessibilidade — Design System",
+      "title": "Acessibilidade",
       "description": "Compromisso WCAG 2.1 AA: contraste, navegação por teclado, focus visible, ARIA patterns e testes automatizados por componente.",
       "aiSummary": "Página de fundamentos de Acessibilidade. Documenta compromisso WCAG 2.1 AA, contraste 4.5:1, navegação por teclado, focus visible, padrões ARIA, suporte a leitores de tela e estratégia de testes.",
       "aiEntities": "acessibilidade, WCAG, contraste, teclado, focus visible, ARIA, leitor de tela, axe-playwright, VoiceOver, NVDA",
@@ -24,10 +24,26 @@
         "criteria": "Critério WCAG"
       },
       "rows": {
-        "normal": { "kind": "Texto normal (< 24px)", "ratio": "4.5:1", "criteria": "1.4.3 Contrast (Minimum)" },
-        "large": { "kind": "Texto grande (≥ 24px ou ≥ 18.66px bold)", "ratio": "3:1", "criteria": "1.4.3 Contrast (Minimum)" },
-        "graphics": { "kind": "Elementos gráficos e ícones", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" },
-        "ui": { "kind": "Bordas de componentes UI ativos", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" }
+        "normal": {
+          "kind": "Texto normal (< 24px)",
+          "ratio": "4.5:1",
+          "criteria": "1.4.3 Contrast (Minimum)"
+        },
+        "large": {
+          "kind": "Texto grande (≥ 24px ou ≥ 18.66px bold)",
+          "ratio": "3:1",
+          "criteria": "1.4.3 Contrast (Minimum)"
+        },
+        "graphics": {
+          "kind": "Elementos gráficos e ícones",
+          "ratio": "3:1",
+          "criteria": "1.4.11 Non-text Contrast"
+        },
+        "ui": {
+          "kind": "Bordas de componentes UI ativos",
+          "ratio": "3:1",
+          "criteria": "1.4.11 Non-text Contrast"
+        }
       },
       "note": "Tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> e <code>--info</code> são calibrados para atingir 4.5:1 contra o background do tema em light e dark. Use sempre <code>text-foreground</code> ou <code>text-muted-foreground</code> para corpo de texto em containers coloridos."
     },
@@ -119,7 +135,7 @@
     "type": "Principles",
     "description": "Accessibility is not an optional layer — it is an acceptance criterion. Every system component meets WCAG 2.1 AA by default and is validated with <code>axe-playwright</code> via <code>test-storybook</code>. This page documents the commitments and patterns every component must follow.",
     "seo": {
-      "title": "Accessibility — Design System",
+      "title": "Accessibility",
       "description": "WCAG 2.1 AA commitment: contrast, keyboard navigation, focus visible, ARIA patterns and automated per-component tests.",
       "aiSummary": "Accessibility foundations page. Documents WCAG 2.1 AA commitment, 4.5:1 contrast, keyboard navigation, focus visible, ARIA patterns, screen reader support and testing strategy.",
       "aiEntities": "accessibility, WCAG, contrast, keyboard, focus visible, ARIA, screen reader, axe-playwright, VoiceOver, NVDA",
@@ -138,10 +154,26 @@
         "criteria": "WCAG criterion"
       },
       "rows": {
-        "normal": { "kind": "Normal text (< 24px)", "ratio": "4.5:1", "criteria": "1.4.3 Contrast (Minimum)" },
-        "large": { "kind": "Large text (≥ 24px or ≥ 18.66px bold)", "ratio": "3:1", "criteria": "1.4.3 Contrast (Minimum)" },
-        "graphics": { "kind": "Graphics and icons", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" },
-        "ui": { "kind": "Active UI component borders", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" }
+        "normal": {
+          "kind": "Normal text (< 24px)",
+          "ratio": "4.5:1",
+          "criteria": "1.4.3 Contrast (Minimum)"
+        },
+        "large": {
+          "kind": "Large text (≥ 24px or ≥ 18.66px bold)",
+          "ratio": "3:1",
+          "criteria": "1.4.3 Contrast (Minimum)"
+        },
+        "graphics": {
+          "kind": "Graphics and icons",
+          "ratio": "3:1",
+          "criteria": "1.4.11 Non-text Contrast"
+        },
+        "ui": {
+          "kind": "Active UI component borders",
+          "ratio": "3:1",
+          "criteria": "1.4.11 Non-text Contrast"
+        }
       },
       "note": "Tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> and <code>--info</code> are calibrated to reach 4.5:1 against the theme background in both light and dark. Always use <code>text-foreground</code> or <code>text-muted-foreground</code> for body text inside colored containers."
     },
@@ -233,7 +265,7 @@
     "type": "Principios",
     "description": "La accesibilidad no es una capa opcional — es criterio de aceptación. Todo componente del sistema cumple WCAG 2.1 AA por defecto y se valida con <code>axe-playwright</code> vía <code>test-storybook</code>. Esta página documenta los compromisos y patrones que todo componente debe seguir.",
     "seo": {
-      "title": "Accesibilidad — Design System",
+      "title": "Accesibilidad",
       "description": "Compromiso WCAG 2.1 AA: contraste, navegación por teclado, focus visible, patrones ARIA y tests automatizados por componente.",
       "aiSummary": "Página de fundamentos de Accesibilidad. Documenta compromiso WCAG 2.1 AA, contraste 4.5:1, navegación por teclado, focus visible, patrones ARIA, soporte a lectores de pantalla y estrategia de tests.",
       "aiEntities": "accesibilidad, WCAG, contraste, teclado, focus visible, ARIA, lector de pantalla, axe-playwright, VoiceOver, NVDA",
@@ -252,10 +284,26 @@
         "criteria": "Criterio WCAG"
       },
       "rows": {
-        "normal": { "kind": "Texto normal (< 24px)", "ratio": "4.5:1", "criteria": "1.4.3 Contrast (Minimum)" },
-        "large": { "kind": "Texto grande (≥ 24px o ≥ 18.66px bold)", "ratio": "3:1", "criteria": "1.4.3 Contrast (Minimum)" },
-        "graphics": { "kind": "Elementos gráficos e iconos", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" },
-        "ui": { "kind": "Bordes de componentes UI activos", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" }
+        "normal": {
+          "kind": "Texto normal (< 24px)",
+          "ratio": "4.5:1",
+          "criteria": "1.4.3 Contrast (Minimum)"
+        },
+        "large": {
+          "kind": "Texto grande (≥ 24px o ≥ 18.66px bold)",
+          "ratio": "3:1",
+          "criteria": "1.4.3 Contrast (Minimum)"
+        },
+        "graphics": {
+          "kind": "Elementos gráficos e iconos",
+          "ratio": "3:1",
+          "criteria": "1.4.11 Non-text Contrast"
+        },
+        "ui": {
+          "kind": "Bordes de componentes UI activos",
+          "ratio": "3:1",
+          "criteria": "1.4.11 Non-text Contrast"
+        }
       },
       "note": "Los tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> y <code>--info</code> se calibran para alcanzar 4.5:1 contra el background del tema en light y dark. Usa siempre <code>text-foreground</code> o <code>text-muted-foreground</code> para cuerpo de texto en contenedores coloreados."
     },

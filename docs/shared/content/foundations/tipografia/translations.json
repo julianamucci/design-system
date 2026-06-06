@@ -5,7 +5,7 @@
     "type": "Tokens",
     "description": "A tipografia do sistema é definida por uma família ativa trocável (Inter por padrão), uma escala de tamanhos tokenizada e pesos semânticos. Tudo é controlado por variáveis CSS no <code>:root</code> e aplicado via elementos HTML padrão — não use classes Tailwind de tamanho de fonte sem motivo.",
     "seo": {
-      "title": "Tipografia — Design System",
+      "title": "Tipografia",
       "description": "Famílias, escala de tamanhos, pesos e line-heights tokenizados do Design System. Hierarquia semântica de h1 a h6 mais regras de uso.",
       "aiSummary": "Página de fundamentos de Tipografia. Documenta família ativa --font-family-active, escala --text-h1 a --text-label, pesos 400/500/600/800, line-heights e regras de hierarquia semântica.",
       "aiEntities": "Tipografia, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, hierarquia semântica, WCAG",
@@ -52,12 +52,42 @@
         "use": "Uso"
       },
       "rows": {
-        "h1": { "token": "--text-h1", "value": "48px", "element": "h1", "use": "Título principal da página (raro fora do header)" },
-        "h2": { "token": "--text-h2", "value": "30px", "element": "h2", "use": "Seções de primeiro nível" },
-        "h3": { "token": "--text-h3", "value": "20px", "element": "h3", "use": "Subseções dentro de uma seção" },
-        "h4": { "token": "--text-h4", "value": "16px", "element": "h4", "use": "Agrupamentos menores e títulos de card" },
-        "p": { "token": "--text-p", "value": "14px", "element": "p", "use": "Texto corrido" },
-        "label": { "token": "--text-label", "value": "12px", "element": "label", "use": "Rótulos de formulário, metadados" }
+        "h1": {
+          "token": "--text-h1",
+          "value": "48px",
+          "element": "h1",
+          "use": "Título principal da página (raro fora do header)"
+        },
+        "h2": {
+          "token": "--text-h2",
+          "value": "30px",
+          "element": "h2",
+          "use": "Seções de primeiro nível"
+        },
+        "h3": {
+          "token": "--text-h3",
+          "value": "20px",
+          "element": "h3",
+          "use": "Subseções dentro de uma seção"
+        },
+        "h4": {
+          "token": "--text-h4",
+          "value": "16px",
+          "element": "h4",
+          "use": "Agrupamentos menores e títulos de card"
+        },
+        "p": {
+          "token": "--text-p",
+          "value": "14px",
+          "element": "p",
+          "use": "Texto corrido"
+        },
+        "label": {
+          "token": "--text-label",
+          "value": "12px",
+          "element": "label",
+          "use": "Rótulos de formulário, metadados"
+        }
       }
     },
     "weights": {
@@ -69,10 +99,26 @@
         "use": "Quando usar"
       },
       "rows": {
-        "regular": { "token": "--font-weight-regular", "value": "400", "use": "Texto corrido, parágrafos, descrições" },
-        "medium": { "token": "--font-weight-medium", "value": "500", "use": "Labels, breadcrumb, h4" },
-        "semibold": { "token": "--font-weight-semi-bold", "value": "600", "use": "Títulos h2 e h3, botões em destaque" },
-        "extraBold": { "token": "--font-weight-extra-bold", "value": "800", "use": "h1 — exclusivamente o título de página" }
+        "regular": {
+          "token": "--font-weight-regular",
+          "value": "400",
+          "use": "Texto corrido, parágrafos, descrições"
+        },
+        "medium": {
+          "token": "--font-weight-medium",
+          "value": "500",
+          "use": "Labels, breadcrumb, h4"
+        },
+        "semibold": {
+          "token": "--font-weight-semi-bold",
+          "value": "600",
+          "use": "Títulos h2 e h3, botões em destaque"
+        },
+        "extraBold": {
+          "token": "--font-weight-extra-bold",
+          "value": "800",
+          "use": "h1 — exclusivamente o título de página"
+        }
       }
     },
     "lineHeights": {
@@ -84,10 +130,26 @@
         "use": "Quando usar"
       },
       "rows": {
-        "tight": { "token": "--line-height-tight", "value": "1.2", "use": "Títulos h1 e h2 — evita altura excessiva" },
-        "normal": { "token": "--line-height-normal", "value": "1.5", "use": "Texto corrido — padrão WCAG 1.4.12" },
-        "relaxed": { "token": "--line-height-relaxed", "value": "1.75", "use": "Blocos editoriais longos" },
-        "loose": { "token": "--line-height-loose", "value": "2", "use": "Listas com tipos densos, contextos asiáticos" }
+        "tight": {
+          "token": "--line-height-tight",
+          "value": "1.2",
+          "use": "Títulos h1 e h2 — evita altura excessiva"
+        },
+        "normal": {
+          "token": "--line-height-normal",
+          "value": "1.5",
+          "use": "Texto corrido — padrão WCAG 1.4.12"
+        },
+        "relaxed": {
+          "token": "--line-height-relaxed",
+          "value": "1.75",
+          "use": "Blocos editoriais longos"
+        },
+        "loose": {
+          "token": "--line-height-loose",
+          "value": "2",
+          "use": "Listas com tipos densos, contextos asiáticos"
+        }
       }
     },
     "hierarchy": {
@@ -116,7 +178,7 @@
     "type": "Tokens",
     "description": "The system's typography is defined by a swappable active family (Inter by default), a tokenized size scale and semantic weights. Everything is controlled by CSS variables in <code>:root</code> and applied via standard HTML elements — don't use Tailwind font-size classes without a reason.",
     "seo": {
-      "title": "Typography — Design System",
+      "title": "Typography",
       "description": "Families, size scale, weights and tokenized line-heights of the Design System. Semantic hierarchy from h1 to h6 plus usage rules.",
       "aiSummary": "Typography foundations page. Documents active family --font-family-active, --text-h1 to --text-label scale, 400/500/600/800 weights, line-heights and semantic hierarchy rules.",
       "aiEntities": "Typography, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, semantic hierarchy, WCAG",
@@ -163,12 +225,42 @@
         "use": "Usage"
       },
       "rows": {
-        "h1": { "token": "--text-h1", "value": "48px", "element": "h1", "use": "Main page title (rare outside the header)" },
-        "h2": { "token": "--text-h2", "value": "30px", "element": "h2", "use": "First-level sections" },
-        "h3": { "token": "--text-h3", "value": "20px", "element": "h3", "use": "Subsections within a section" },
-        "h4": { "token": "--text-h4", "value": "16px", "element": "h4", "use": "Smaller groupings and card titles" },
-        "p": { "token": "--text-p", "value": "14px", "element": "p", "use": "Body text" },
-        "label": { "token": "--text-label", "value": "12px", "element": "label", "use": "Form labels, metadata" }
+        "h1": {
+          "token": "--text-h1",
+          "value": "48px",
+          "element": "h1",
+          "use": "Main page title (rare outside the header)"
+        },
+        "h2": {
+          "token": "--text-h2",
+          "value": "30px",
+          "element": "h2",
+          "use": "First-level sections"
+        },
+        "h3": {
+          "token": "--text-h3",
+          "value": "20px",
+          "element": "h3",
+          "use": "Subsections within a section"
+        },
+        "h4": {
+          "token": "--text-h4",
+          "value": "16px",
+          "element": "h4",
+          "use": "Smaller groupings and card titles"
+        },
+        "p": {
+          "token": "--text-p",
+          "value": "14px",
+          "element": "p",
+          "use": "Body text"
+        },
+        "label": {
+          "token": "--text-label",
+          "value": "12px",
+          "element": "label",
+          "use": "Form labels, metadata"
+        }
       }
     },
     "weights": {
@@ -180,10 +272,26 @@
         "use": "When to use"
       },
       "rows": {
-        "regular": { "token": "--font-weight-regular", "value": "400", "use": "Body text, paragraphs, descriptions" },
-        "medium": { "token": "--font-weight-medium", "value": "500", "use": "Labels, breadcrumb, h4" },
-        "semibold": { "token": "--font-weight-semi-bold", "value": "600", "use": "h2 and h3 titles, emphasized buttons" },
-        "extraBold": { "token": "--font-weight-extra-bold", "value": "800", "use": "h1 — exclusively the page title" }
+        "regular": {
+          "token": "--font-weight-regular",
+          "value": "400",
+          "use": "Body text, paragraphs, descriptions"
+        },
+        "medium": {
+          "token": "--font-weight-medium",
+          "value": "500",
+          "use": "Labels, breadcrumb, h4"
+        },
+        "semibold": {
+          "token": "--font-weight-semi-bold",
+          "value": "600",
+          "use": "h2 and h3 titles, emphasized buttons"
+        },
+        "extraBold": {
+          "token": "--font-weight-extra-bold",
+          "value": "800",
+          "use": "h1 — exclusively the page title"
+        }
       }
     },
     "lineHeights": {
@@ -195,10 +303,26 @@
         "use": "When to use"
       },
       "rows": {
-        "tight": { "token": "--line-height-tight", "value": "1.2", "use": "h1 and h2 titles — avoids excessive height" },
-        "normal": { "token": "--line-height-normal", "value": "1.5", "use": "Body text — WCAG 1.4.12 baseline" },
-        "relaxed": { "token": "--line-height-relaxed", "value": "1.75", "use": "Long editorial blocks" },
-        "loose": { "token": "--line-height-loose", "value": "2", "use": "Lists with dense glyphs, Asian contexts" }
+        "tight": {
+          "token": "--line-height-tight",
+          "value": "1.2",
+          "use": "h1 and h2 titles — avoids excessive height"
+        },
+        "normal": {
+          "token": "--line-height-normal",
+          "value": "1.5",
+          "use": "Body text — WCAG 1.4.12 baseline"
+        },
+        "relaxed": {
+          "token": "--line-height-relaxed",
+          "value": "1.75",
+          "use": "Long editorial blocks"
+        },
+        "loose": {
+          "token": "--line-height-loose",
+          "value": "2",
+          "use": "Lists with dense glyphs, Asian contexts"
+        }
       }
     },
     "hierarchy": {
@@ -227,7 +351,7 @@
     "type": "Tokens",
     "description": "La tipografía del sistema se define por una familia activa intercambiable (Inter por defecto), una escala de tamaños tokenizada y pesos semánticos. Todo se controla por variables CSS en <code>:root</code> y se aplica vía elementos HTML estándar — no uses clases Tailwind de tamaño de fuente sin motivo.",
     "seo": {
-      "title": "Tipografía — Design System",
+      "title": "Tipografía",
       "description": "Familias, escala de tamaños, pesos y line-heights tokenizados del Design System. Jerarquía semántica de h1 a h6 más reglas de uso.",
       "aiSummary": "Página de fundamentos de Tipografía. Documenta familia activa --font-family-active, escala --text-h1 a --text-label, pesos 400/500/600/800, line-heights y reglas de jerarquía semántica.",
       "aiEntities": "Tipografía, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, jerarquía semántica, WCAG",
@@ -274,12 +398,42 @@
         "use": "Uso"
       },
       "rows": {
-        "h1": { "token": "--text-h1", "value": "48px", "element": "h1", "use": "Título principal de la página (raro fuera del header)" },
-        "h2": { "token": "--text-h2", "value": "30px", "element": "h2", "use": "Secciones de primer nivel" },
-        "h3": { "token": "--text-h3", "value": "20px", "element": "h3", "use": "Subsecciones dentro de una sección" },
-        "h4": { "token": "--text-h4", "value": "16px", "element": "h4", "use": "Agrupaciones menores y títulos de card" },
-        "p": { "token": "--text-p", "value": "14px", "element": "p", "use": "Texto corrido" },
-        "label": { "token": "--text-label", "value": "12px", "element": "label", "use": "Etiquetas de formulario, metadatos" }
+        "h1": {
+          "token": "--text-h1",
+          "value": "48px",
+          "element": "h1",
+          "use": "Título principal de la página (raro fuera del header)"
+        },
+        "h2": {
+          "token": "--text-h2",
+          "value": "30px",
+          "element": "h2",
+          "use": "Secciones de primer nivel"
+        },
+        "h3": {
+          "token": "--text-h3",
+          "value": "20px",
+          "element": "h3",
+          "use": "Subsecciones dentro de una sección"
+        },
+        "h4": {
+          "token": "--text-h4",
+          "value": "16px",
+          "element": "h4",
+          "use": "Agrupaciones menores y títulos de card"
+        },
+        "p": {
+          "token": "--text-p",
+          "value": "14px",
+          "element": "p",
+          "use": "Texto corrido"
+        },
+        "label": {
+          "token": "--text-label",
+          "value": "12px",
+          "element": "label",
+          "use": "Etiquetas de formulario, metadatos"
+        }
       }
     },
     "weights": {
@@ -291,10 +445,26 @@
         "use": "Cuándo usar"
       },
       "rows": {
-        "regular": { "token": "--font-weight-regular", "value": "400", "use": "Texto corrido, párrafos, descripciones" },
-        "medium": { "token": "--font-weight-medium", "value": "500", "use": "Etiquetas, breadcrumb, h4" },
-        "semibold": { "token": "--font-weight-semi-bold", "value": "600", "use": "Títulos h2 y h3, botones destacados" },
-        "extraBold": { "token": "--font-weight-extra-bold", "value": "800", "use": "h1 — exclusivamente el título de página" }
+        "regular": {
+          "token": "--font-weight-regular",
+          "value": "400",
+          "use": "Texto corrido, párrafos, descripciones"
+        },
+        "medium": {
+          "token": "--font-weight-medium",
+          "value": "500",
+          "use": "Etiquetas, breadcrumb, h4"
+        },
+        "semibold": {
+          "token": "--font-weight-semi-bold",
+          "value": "600",
+          "use": "Títulos h2 y h3, botones destacados"
+        },
+        "extraBold": {
+          "token": "--font-weight-extra-bold",
+          "value": "800",
+          "use": "h1 — exclusivamente el título de página"
+        }
       }
     },
     "lineHeights": {
@@ -306,10 +476,26 @@
         "use": "Cuándo usar"
       },
       "rows": {
-        "tight": { "token": "--line-height-tight", "value": "1.2", "use": "Títulos h1 y h2 — evita altura excesiva" },
-        "normal": { "token": "--line-height-normal", "value": "1.5", "use": "Texto corrido — base WCAG 1.4.12" },
-        "relaxed": { "token": "--line-height-relaxed", "value": "1.75", "use": "Bloques editoriales largos" },
-        "loose": { "token": "--line-height-loose", "value": "2", "use": "Listas con tipos densos, contextos asiáticos" }
+        "tight": {
+          "token": "--line-height-tight",
+          "value": "1.2",
+          "use": "Títulos h1 y h2 — evita altura excesiva"
+        },
+        "normal": {
+          "token": "--line-height-normal",
+          "value": "1.5",
+          "use": "Texto corrido — base WCAG 1.4.12"
+        },
+        "relaxed": {
+          "token": "--line-height-relaxed",
+          "value": "1.75",
+          "use": "Bloques editoriales largos"
+        },
+        "loose": {
+          "token": "--line-height-loose",
+          "value": "2",
+          "use": "Listas con tipos densos, contextos asiáticos"
+        }
       }
     },
     "hierarchy": {
