@@ -1,0 +1,242 @@
+{
+  "pt-BR": {
+    "title": "Espaçamento e Grid",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "Todo o espaçamento do sistema é construído sobre uma base de 4px e ancorado num grid de 8. Tokens <code>--spacing-*</code> alimentam o Tailwind via <code>@theme inline</code>, então <code>p-4</code>, <code>gap-2</code> e <code>m-6</code> seguem automaticamente a densidade ativa do tema.",
+    "seo": {
+      "title": "Espaçamento — Design System",
+      "description": "Sistema 8-grid com base de 4px, tokens --spacing-* completos, gaps por contexto e regra de off-grid como bug a corrigir.",
+      "aiSummary": "Página de fundamentos de Espaçamento. Documenta o grid de 8, a base --spacing-base de 4px, a escala completa --spacing-0 a --spacing-24, recomendações de uso por intervalo e a regra de off-grid.",
+      "aiEntities": "espaçamento, grid 8, spacing-base, Tailwind, gap, padding, margin, densidade, off-grid",
+      "aiIntent": "informational"
+    },
+    "philosophy": {
+      "title": "Filosofia 8-grid",
+      "body": "A unidade visual do sistema é 8px. Tokens válidos são múltiplos (8, 16, 24, 32...) ou divisores limpos (4, 2, 1px). Valores fora do grid (10, 12, 14, 20, 28, 36, 44, 56...) <strong>não devem existir</strong> como tokens — se aparecerem em CSS, são bug a ser corrigido.",
+      "base": "<code>--spacing-base</code> = <code>0.25rem</code> (4px). As classes Tailwind <code>p-{n}</code>, <code>gap-{n}</code>, <code>m-{n}</code> e <code>space-{n}</code> calculam <code>n × --spacing-base</code>, então todas acompanham a densidade do tema (condensado/confortável) automaticamente."
+    },
+    "scale": {
+      "title": "Escala de tokens",
+      "subtitle": "Use estes tokens em CSS standalone quando precisar de um valor nomeado. Em componentes React/Vue/Svelte, prefira a classe Tailwind equivalente.",
+      "cols": {
+        "token": "Token",
+        "value": "Valor (px)",
+        "tw": "Tailwind",
+        "use": "Uso típico"
+      },
+      "rows": {
+        "px": { "token": "--spacing-px", "value": "1px", "tw": "p-px", "use": "Hairline, bordas finíssimas" },
+        "half": { "token": "--spacing-0-5", "value": "2px", "tw": "p-0.5", "use": "Separadores muito finos" },
+        "1": { "token": "--spacing-1", "value": "4px", "tw": "p-1", "use": "Gap entre ícone e texto adjacente" },
+        "2": { "token": "--spacing-2", "value": "8px", "tw": "p-2 / gap-2", "use": "Base do grid — badges, chips, botões em grupo" },
+        "4": { "token": "--spacing-4", "value": "16px", "tw": "p-4 / gap-4", "use": "Padding interno padrão de componentes" },
+        "6": { "token": "--spacing-6", "value": "24px", "tw": "p-6 / gap-6", "use": "Padding de card, gap entre cards" },
+        "8": { "token": "--spacing-8", "value": "32px", "tw": "p-8", "use": "Padding de container de página" },
+        "10": { "token": "--spacing-10", "value": "40px", "tw": "p-10", "use": "Gap entre subseções" },
+        "12": { "token": "--spacing-12", "value": "48px", "tw": "space-y-12", "use": "Gap entre seções principais de docs" },
+        "16": { "token": "--spacing-16", "value": "64px", "tw": "py-16", "use": "Padding vertical de seções de landing" },
+        "20": { "token": "--spacing-20", "value": "80px", "tw": "py-20", "use": "Section gap em layouts editoriais" },
+        "24": { "token": "--spacing-24", "value": "96px", "tw": "py-24", "use": "Hero section, separação de áreas maiores" }
+      }
+    },
+    "usage": {
+      "title": "Quando usar cada escala",
+      "subtitle": "Faixas de uso recomendadas. Não há regra absoluta — o contexto manda — mas começar pelo padrão da faixa evita decisões arbitrárias.",
+      "ranges": {
+        "tiny": "<strong>1–2</strong> (4–8px): separadores entre ícone e texto, hairlines, badges compactos.",
+        "small": "<strong>3–4</strong> (12–16px): padding inline de inputs e botões, gap entre itens de uma toolbar.",
+        "medium": "<strong>6–8</strong> (24–32px): gap entre cards, padding interno de containers, padding de página.",
+        "large": "<strong>10–16</strong> (40–64px): padding vertical de seção de landing, gap entre blocos principais.",
+        "huge": "<strong>20–24</strong> (80–96px): hero sections, separação de áreas distintas em layouts editoriais."
+      }
+    },
+    "application": {
+      "title": "Aplicações",
+      "subtitle": "Onde cada token aparece — direta ou indiretamente — no código.",
+      "items": {
+        "padding": "<strong>Padding</strong> (<code>p-*</code>, <code>px-*</code>, <code>py-*</code>): espaço interno de containers e componentes.",
+        "gap": "<strong>Gap</strong> (<code>gap-*</code>, <code>gap-x-*</code>, <code>gap-y-*</code>): espaço entre filhos diretos de flex/grid.",
+        "margin": "<strong>Margin</strong> (<code>m-*</code>, <code>mt-*</code>, <code>mb-*</code>): espaço externo. Prefira gap quando possível.",
+        "spaceY": "<strong>space-y / space-x</strong> (<code>space-y-*</code>): espaço entre filhos sem usar flex. Padrão em containers de docs (<code>space-y-12</code>)."
+      }
+    },
+    "offGrid": {
+      "title": "Off-grid é bug",
+      "subtitle": "Valores ímpares ou fora dos múltiplos/divisores de 8 quebram a coerência visual e devem ser corrigidos.",
+      "rules": {
+        "react": "Em React, Vue e Svelte: use classes Tailwind padrão (<code>p-1</code>, <code>p-2</code>, <code>p-4</code>, <code>p-6</code>, <code>p-8</code>) — todas no grid.",
+        "nortear": "No stack Nortear, qualquer valor de px hardcoded fora do grid (3, 5, 7, 9, 10, 11, 13, 14...) é considerado bug — substitua pelo token correspondente.",
+        "arbitrary": "Evite arbitrary values do Tailwind (<code>p-[13px]</code>, <code>gap-[7px]</code>) — só fazem sentido para casos extraordinários, sempre justificados em PR.",
+        "density": "Confira o resultado nas três densidades (condensado, default, confortável). Se algo quebra em uma delas, provavelmente é um valor hardcoded escapando do token."
+      }
+    },
+    "nav": {
+      "philosophy": "Filosofia",
+      "scale": "Escala",
+      "usage": "Quando usar",
+      "application": "Aplicações",
+      "offGrid": "Off-grid"
+    }
+  },
+  "en": {
+    "title": "Spacing & Grid",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "All system spacing is built on a 4px base and anchored on an 8-grid. <code>--spacing-*</code> tokens feed Tailwind via <code>@theme inline</code>, so <code>p-4</code>, <code>gap-2</code> and <code>m-6</code> follow the active theme density automatically.",
+    "seo": {
+      "title": "Spacing — Design System",
+      "description": "8-grid system with 4px base, full --spacing-* token scale, gaps by context and off-grid as a bug to fix.",
+      "aiSummary": "Spacing foundations page. Documents the 8-grid, the --spacing-base 4px, the full --spacing-0 to --spacing-24 scale, usage guidance by range and the off-grid rule.",
+      "aiEntities": "spacing, 8-grid, spacing-base, Tailwind, gap, padding, margin, density, off-grid",
+      "aiIntent": "informational"
+    },
+    "philosophy": {
+      "title": "8-grid philosophy",
+      "body": "The system's visual unit is 8px. Valid tokens are multiples (8, 16, 24, 32...) or clean divisors (4, 2, 1px). Values outside the grid (10, 12, 14, 20, 28, 36, 44, 56...) <strong>should not exist</strong> as tokens — if they appear in CSS, they are bugs to fix.",
+      "base": "<code>--spacing-base</code> = <code>0.25rem</code> (4px). Tailwind classes <code>p-{n}</code>, <code>gap-{n}</code>, <code>m-{n}</code> and <code>space-{n}</code> compute <code>n × --spacing-base</code>, so they all track the theme density (condensed/comfortable) automatically."
+    },
+    "scale": {
+      "title": "Token scale",
+      "subtitle": "Use these tokens in standalone CSS when you need a named value. In React/Vue/Svelte components, prefer the matching Tailwind class.",
+      "cols": {
+        "token": "Token",
+        "value": "Value (px)",
+        "tw": "Tailwind",
+        "use": "Typical use"
+      },
+      "rows": {
+        "px": { "token": "--spacing-px", "value": "1px", "tw": "p-px", "use": "Hairline, very thin borders" },
+        "half": { "token": "--spacing-0-5", "value": "2px", "tw": "p-0.5", "use": "Very thin separators" },
+        "1": { "token": "--spacing-1", "value": "4px", "tw": "p-1", "use": "Gap between icon and adjacent text" },
+        "2": { "token": "--spacing-2", "value": "8px", "tw": "p-2 / gap-2", "use": "Grid base — badges, chips, button groups" },
+        "4": { "token": "--spacing-4", "value": "16px", "tw": "p-4 / gap-4", "use": "Default inner padding of components" },
+        "6": { "token": "--spacing-6", "value": "24px", "tw": "p-6 / gap-6", "use": "Card padding, gap between cards" },
+        "8": { "token": "--spacing-8", "value": "32px", "tw": "p-8", "use": "Page container padding" },
+        "10": { "token": "--spacing-10", "value": "40px", "tw": "p-10", "use": "Gap between subsections" },
+        "12": { "token": "--spacing-12", "value": "48px", "tw": "space-y-12", "use": "Gap between main docs sections" },
+        "16": { "token": "--spacing-16", "value": "64px", "tw": "py-16", "use": "Vertical padding for landing sections" },
+        "20": { "token": "--spacing-20", "value": "80px", "tw": "py-20", "use": "Section gap in editorial layouts" },
+        "24": { "token": "--spacing-24", "value": "96px", "tw": "py-24", "use": "Hero section, larger area separation" }
+      }
+    },
+    "usage": {
+      "title": "When to use each scale",
+      "subtitle": "Recommended usage ranges. There is no absolute rule — context wins — but starting from the range default avoids arbitrary decisions.",
+      "ranges": {
+        "tiny": "<strong>1–2</strong> (4–8px): separators between icon and text, hairlines, compact badges.",
+        "small": "<strong>3–4</strong> (12–16px): inline padding for inputs and buttons, gap between toolbar items.",
+        "medium": "<strong>6–8</strong> (24–32px): gap between cards, container inner padding, page padding.",
+        "large": "<strong>10–16</strong> (40–64px): landing section vertical padding, gap between main blocks.",
+        "huge": "<strong>20–24</strong> (80–96px): hero sections, separating distinct areas in editorial layouts."
+      }
+    },
+    "application": {
+      "title": "Applications",
+      "subtitle": "Where each token shows up — directly or indirectly — in code.",
+      "items": {
+        "padding": "<strong>Padding</strong> (<code>p-*</code>, <code>px-*</code>, <code>py-*</code>): inner space of containers and components.",
+        "gap": "<strong>Gap</strong> (<code>gap-*</code>, <code>gap-x-*</code>, <code>gap-y-*</code>): space between direct children of flex/grid.",
+        "margin": "<strong>Margin</strong> (<code>m-*</code>, <code>mt-*</code>, <code>mb-*</code>): outer space. Prefer gap when possible.",
+        "spaceY": "<strong>space-y / space-x</strong> (<code>space-y-*</code>): space between children without using flex. Standard in docs containers (<code>space-y-12</code>)."
+      }
+    },
+    "offGrid": {
+      "title": "Off-grid is a bug",
+      "subtitle": "Odd values or values outside multiples/divisors of 8 break visual coherence and must be fixed.",
+      "rules": {
+        "react": "In React, Vue and Svelte: use standard Tailwind classes (<code>p-1</code>, <code>p-2</code>, <code>p-4</code>, <code>p-6</code>, <code>p-8</code>) — all on grid.",
+        "nortear": "In the Nortear stack, any hardcoded px value outside the grid (3, 5, 7, 9, 10, 11, 13, 14...) is considered a bug — replace it with the matching token.",
+        "arbitrary": "Avoid Tailwind arbitrary values (<code>p-[13px]</code>, <code>gap-[7px]</code>) — they only make sense for exceptional cases, always justified in the PR.",
+        "density": "Check the result across all three densities (condensed, default, comfortable). If something breaks in one of them, it's probably a hardcoded value escaping the token."
+      }
+    },
+    "nav": {
+      "philosophy": "Philosophy",
+      "scale": "Scale",
+      "usage": "When to use",
+      "application": "Applications",
+      "offGrid": "Off-grid"
+    }
+  },
+  "es": {
+    "title": "Espaciado y Grid",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "Todo el espaciado del sistema se construye sobre una base de 4px y anclado en un grid de 8. Los tokens <code>--spacing-*</code> alimentan Tailwind vía <code>@theme inline</code>, entonces <code>p-4</code>, <code>gap-2</code> y <code>m-6</code> siguen automáticamente la densidad activa del tema.",
+    "seo": {
+      "title": "Espaciado — Design System",
+      "description": "Sistema 8-grid con base de 4px, tokens --spacing-* completos, gaps por contexto y regla de off-grid como bug a corregir.",
+      "aiSummary": "Página de fundamentos de Espaciado. Documenta el grid de 8, la base --spacing-base de 4px, la escala completa --spacing-0 a --spacing-24, recomendaciones de uso por intervalo y la regla de off-grid.",
+      "aiEntities": "espaciado, grid 8, spacing-base, Tailwind, gap, padding, margin, densidad, off-grid",
+      "aiIntent": "informational"
+    },
+    "philosophy": {
+      "title": "Filosofía 8-grid",
+      "body": "La unidad visual del sistema es 8px. Tokens válidos son múltiplos (8, 16, 24, 32...) o divisores limpios (4, 2, 1px). Valores fuera del grid (10, 12, 14, 20, 28, 36, 44, 56...) <strong>no deben existir</strong> como tokens — si aparecen en CSS, son bugs a corregir.",
+      "base": "<code>--spacing-base</code> = <code>0.25rem</code> (4px). Las clases Tailwind <code>p-{n}</code>, <code>gap-{n}</code>, <code>m-{n}</code> y <code>space-{n}</code> calculan <code>n × --spacing-base</code>, entonces todas acompañan la densidad del tema (condensado/cómodo) automáticamente."
+    },
+    "scale": {
+      "title": "Escala de tokens",
+      "subtitle": "Usa estos tokens en CSS standalone cuando necesites un valor nombrado. En componentes React/Vue/Svelte, prefiere la clase Tailwind equivalente.",
+      "cols": {
+        "token": "Token",
+        "value": "Valor (px)",
+        "tw": "Tailwind",
+        "use": "Uso típico"
+      },
+      "rows": {
+        "px": { "token": "--spacing-px", "value": "1px", "tw": "p-px", "use": "Hairline, bordes muy finos" },
+        "half": { "token": "--spacing-0-5", "value": "2px", "tw": "p-0.5", "use": "Separadores muy finos" },
+        "1": { "token": "--spacing-1", "value": "4px", "tw": "p-1", "use": "Gap entre icono y texto adyacente" },
+        "2": { "token": "--spacing-2", "value": "8px", "tw": "p-2 / gap-2", "use": "Base del grid — badges, chips, grupos de botones" },
+        "4": { "token": "--spacing-4", "value": "16px", "tw": "p-4 / gap-4", "use": "Padding interno por defecto de componentes" },
+        "6": { "token": "--spacing-6", "value": "24px", "tw": "p-6 / gap-6", "use": "Padding de card, gap entre cards" },
+        "8": { "token": "--spacing-8", "value": "32px", "tw": "p-8", "use": "Padding de contenedor de página" },
+        "10": { "token": "--spacing-10", "value": "40px", "tw": "p-10", "use": "Gap entre subsecciones" },
+        "12": { "token": "--spacing-12", "value": "48px", "tw": "space-y-12", "use": "Gap entre secciones principales de docs" },
+        "16": { "token": "--spacing-16", "value": "64px", "tw": "py-16", "use": "Padding vertical de secciones de landing" },
+        "20": { "token": "--spacing-20", "value": "80px", "tw": "py-20", "use": "Section gap en layouts editoriales" },
+        "24": { "token": "--spacing-24", "value": "96px", "tw": "py-24", "use": "Hero section, separación de áreas mayores" }
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar cada escala",
+      "subtitle": "Rangos de uso recomendados. No hay regla absoluta — el contexto manda — pero empezar por el default del rango evita decisiones arbitrarias.",
+      "ranges": {
+        "tiny": "<strong>1–2</strong> (4–8px): separadores entre icono y texto, hairlines, badges compactos.",
+        "small": "<strong>3–4</strong> (12–16px): padding inline de inputs y botones, gap entre items de una toolbar.",
+        "medium": "<strong>6–8</strong> (24–32px): gap entre cards, padding interno de contenedores, padding de página.",
+        "large": "<strong>10–16</strong> (40–64px): padding vertical de sección de landing, gap entre bloques principales.",
+        "huge": "<strong>20–24</strong> (80–96px): hero sections, separación de áreas distintas en layouts editoriales."
+      }
+    },
+    "application": {
+      "title": "Aplicaciones",
+      "subtitle": "Dónde aparece cada token — directa o indirectamente — en el código.",
+      "items": {
+        "padding": "<strong>Padding</strong> (<code>p-*</code>, <code>px-*</code>, <code>py-*</code>): espacio interno de contenedores y componentes.",
+        "gap": "<strong>Gap</strong> (<code>gap-*</code>, <code>gap-x-*</code>, <code>gap-y-*</code>): espacio entre hijos directos de flex/grid.",
+        "margin": "<strong>Margin</strong> (<code>m-*</code>, <code>mt-*</code>, <code>mb-*</code>): espacio externo. Prefiere gap cuando sea posible.",
+        "spaceY": "<strong>space-y / space-x</strong> (<code>space-y-*</code>): espacio entre hijos sin usar flex. Estándar en contenedores de docs (<code>space-y-12</code>)."
+      }
+    },
+    "offGrid": {
+      "title": "Off-grid es bug",
+      "subtitle": "Valores impares o fuera de los múltiplos/divisores de 8 rompen la coherencia visual y deben corregirse.",
+      "rules": {
+        "react": "En React, Vue y Svelte: usa clases Tailwind estándar (<code>p-1</code>, <code>p-2</code>, <code>p-4</code>, <code>p-6</code>, <code>p-8</code>) — todas en el grid.",
+        "nortear": "En el stack Nortear, cualquier valor de px hardcodeado fuera del grid (3, 5, 7, 9, 10, 11, 13, 14...) se considera bug — sustituye por el token correspondiente.",
+        "arbitrary": "Evita arbitrary values de Tailwind (<code>p-[13px]</code>, <code>gap-[7px]</code>) — solo tienen sentido para casos extraordinarios, siempre justificados en PR.",
+        "density": "Verifica el resultado en las tres densidades (condensado, default, cómodo). Si algo se rompe en una de ellas, probablemente es un valor hardcodeado escapando del token."
+      }
+    },
+    "nav": {
+      "philosophy": "Filosofía",
+      "scale": "Escala",
+      "usage": "Cuándo usar",
+      "application": "Aplicaciones",
+      "offGrid": "Off-grid"
+    }
+  }
+}

@@ -1,0 +1,335 @@
+{
+  "pt-BR": {
+    "title": "Tipografia",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "A tipografia do sistema é definida por uma família ativa trocável (Inter por padrão), uma escala de tamanhos tokenizada e pesos semânticos. Tudo é controlado por variáveis CSS no <code>:root</code> e aplicado via elementos HTML padrão — não use classes Tailwind de tamanho de fonte sem motivo.",
+    "seo": {
+      "title": "Tipografia — Design System",
+      "description": "Famílias, escala de tamanhos, pesos e line-heights tokenizados do Design System. Hierarquia semântica de h1 a h6 mais regras de uso.",
+      "aiSummary": "Página de fundamentos de Tipografia. Documenta família ativa --font-family-active, escala --text-h1 a --text-label, pesos 400/500/600/800, line-heights e regras de hierarquia semântica.",
+      "aiEntities": "Tipografia, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, hierarquia semântica, WCAG",
+      "aiIntent": "informational"
+    },
+    "families": {
+      "title": "Famílias",
+      "subtitle": "<code>--font-family-active</code> é trocado pelas classes <code>.fonte-*</code> no <code>&lt;html&gt;</code>. <code>--font-family</code> sempre aponta para a ativa, mantendo o cascade.",
+      "cols": {
+        "name": "Família",
+        "token": "Token / classe",
+        "use": "Uso"
+      },
+      "rows": {
+        "inter": {
+          "name": "Inter",
+          "token": "default (sem classe)",
+          "use": "Sans humanista, padrão do sistema"
+        },
+        "lexend": {
+          "name": "Lexend",
+          "token": ".fonte-lexend",
+          "use": "Alta legibilidade, textos longos"
+        },
+        "ptSerif": {
+          "name": "PT Serif",
+          "token": ".fonte-pt-serif",
+          "use": "Serifada clássica, conteúdo editorial"
+        },
+        "lxgw": {
+          "name": "LXGW WenKai TC",
+          "token": ".fonte-lxgw-wenkai",
+          "use": "Manuscrita, demos e contexto narrativo"
+        }
+      }
+    },
+    "scale": {
+      "title": "Escala de tamanhos",
+      "subtitle": "Tokens semânticos amarrados aos elementos HTML padrão. Aplicados automaticamente em <code>@layer base</code>.",
+      "cols": {
+        "token": "Token",
+        "value": "Valor",
+        "element": "Elemento",
+        "use": "Uso"
+      },
+      "rows": {
+        "h1": { "token": "--text-h1", "value": "48px", "element": "h1", "use": "Título principal da página (raro fora do header)" },
+        "h2": { "token": "--text-h2", "value": "30px", "element": "h2", "use": "Seções de primeiro nível" },
+        "h3": { "token": "--text-h3", "value": "20px", "element": "h3", "use": "Subseções dentro de uma seção" },
+        "h4": { "token": "--text-h4", "value": "16px", "element": "h4", "use": "Agrupamentos menores e títulos de card" },
+        "p": { "token": "--text-p", "value": "14px", "element": "p", "use": "Texto corrido" },
+        "label": { "token": "--text-label", "value": "12px", "element": "label", "use": "Rótulos de formulário, metadados" }
+      }
+    },
+    "weights": {
+      "title": "Pesos",
+      "subtitle": "Quatro pesos semânticos cobrem os usos do sistema.",
+      "cols": {
+        "token": "Token",
+        "value": "Valor",
+        "use": "Quando usar"
+      },
+      "rows": {
+        "regular": { "token": "--font-weight-regular", "value": "400", "use": "Texto corrido, parágrafos, descrições" },
+        "medium": { "token": "--font-weight-medium", "value": "500", "use": "Labels, breadcrumb, h4" },
+        "semibold": { "token": "--font-weight-semi-bold", "value": "600", "use": "Títulos h2 e h3, botões em destaque" },
+        "extraBold": { "token": "--font-weight-extra-bold", "value": "800", "use": "h1 — exclusivamente o título de página" }
+      }
+    },
+    "lineHeights": {
+      "title": "Line-heights",
+      "subtitle": "Quatro alturas de linha cobrem desde títulos compactos até listas espaçadas.",
+      "cols": {
+        "token": "Token",
+        "value": "Valor",
+        "use": "Quando usar"
+      },
+      "rows": {
+        "tight": { "token": "--line-height-tight", "value": "1.2", "use": "Títulos h1 e h2 — evita altura excessiva" },
+        "normal": { "token": "--line-height-normal", "value": "1.5", "use": "Texto corrido — padrão WCAG 1.4.12" },
+        "relaxed": { "token": "--line-height-relaxed", "value": "1.75", "use": "Blocos editoriais longos" },
+        "loose": { "token": "--line-height-loose", "value": "2", "use": "Listas com tipos densos, contextos asiáticos" }
+      }
+    },
+    "hierarchy": {
+      "title": "Hierarquia semântica",
+      "subtitle": "Estrutura de cabeçalhos consistente é exigência de WCAG 2.4.6 (Headings and Labels).",
+      "rules": {
+        "h1": "Apenas um <code>&lt;h1&gt;</code> por página — o título principal vindo do header da docs.",
+        "h2": "<code>&lt;h2&gt;</code> abre seções de primeiro nível (Demonstração, Variantes, Props, etc.).",
+        "h3": "<code>&lt;h3&gt;</code> abre subseções dentro de uma seção (uma variante específica, um grupo de tokens).",
+        "skip": "Nunca pule níveis (h2 → h4). Sempre desça um por vez.",
+        "noTailwind": "Nunca use classes Tailwind de tamanho (<code>text-2xl</code>, <code>text-sm</code>) em texto de produto — use o elemento correto.",
+        "minSize": "Nunca use <code>text-[9px]</code> ou <code>text-[10px]</code> em corpo: WCAG 1.4.4 (Resize Text) exige que o texto permaneça legível em 200% de zoom."
+      }
+    },
+    "nav": {
+      "families": "Famílias",
+      "scale": "Escala",
+      "weights": "Pesos",
+      "lineHeights": "Line-heights",
+      "hierarchy": "Hierarquia"
+    }
+  },
+  "en": {
+    "title": "Typography",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "The system's typography is defined by a swappable active family (Inter by default), a tokenized size scale and semantic weights. Everything is controlled by CSS variables in <code>:root</code> and applied via standard HTML elements — don't use Tailwind font-size classes without a reason.",
+    "seo": {
+      "title": "Typography — Design System",
+      "description": "Families, size scale, weights and tokenized line-heights of the Design System. Semantic hierarchy from h1 to h6 plus usage rules.",
+      "aiSummary": "Typography foundations page. Documents active family --font-family-active, --text-h1 to --text-label scale, 400/500/600/800 weights, line-heights and semantic hierarchy rules.",
+      "aiEntities": "Typography, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, semantic hierarchy, WCAG",
+      "aiIntent": "informational"
+    },
+    "families": {
+      "title": "Families",
+      "subtitle": "<code>--font-family-active</code> is swapped by <code>.fonte-*</code> classes on <code>&lt;html&gt;</code>. <code>--font-family</code> always points to the active one, preserving the cascade.",
+      "cols": {
+        "name": "Family",
+        "token": "Token / class",
+        "use": "Usage"
+      },
+      "rows": {
+        "inter": {
+          "name": "Inter",
+          "token": "default (no class)",
+          "use": "Humanist sans, system default"
+        },
+        "lexend": {
+          "name": "Lexend",
+          "token": ".fonte-lexend",
+          "use": "High legibility, long-form text"
+        },
+        "ptSerif": {
+          "name": "PT Serif",
+          "token": ".fonte-pt-serif",
+          "use": "Classic serif, editorial content"
+        },
+        "lxgw": {
+          "name": "LXGW WenKai TC",
+          "token": ".fonte-lxgw-wenkai",
+          "use": "Handwritten, demos and narrative context"
+        }
+      }
+    },
+    "scale": {
+      "title": "Size scale",
+      "subtitle": "Semantic tokens tied to standard HTML elements. Applied automatically in <code>@layer base</code>.",
+      "cols": {
+        "token": "Token",
+        "value": "Value",
+        "element": "Element",
+        "use": "Usage"
+      },
+      "rows": {
+        "h1": { "token": "--text-h1", "value": "48px", "element": "h1", "use": "Main page title (rare outside the header)" },
+        "h2": { "token": "--text-h2", "value": "30px", "element": "h2", "use": "First-level sections" },
+        "h3": { "token": "--text-h3", "value": "20px", "element": "h3", "use": "Subsections within a section" },
+        "h4": { "token": "--text-h4", "value": "16px", "element": "h4", "use": "Smaller groupings and card titles" },
+        "p": { "token": "--text-p", "value": "14px", "element": "p", "use": "Body text" },
+        "label": { "token": "--text-label", "value": "12px", "element": "label", "use": "Form labels, metadata" }
+      }
+    },
+    "weights": {
+      "title": "Weights",
+      "subtitle": "Four semantic weights cover the system's needs.",
+      "cols": {
+        "token": "Token",
+        "value": "Value",
+        "use": "When to use"
+      },
+      "rows": {
+        "regular": { "token": "--font-weight-regular", "value": "400", "use": "Body text, paragraphs, descriptions" },
+        "medium": { "token": "--font-weight-medium", "value": "500", "use": "Labels, breadcrumb, h4" },
+        "semibold": { "token": "--font-weight-semi-bold", "value": "600", "use": "h2 and h3 titles, emphasized buttons" },
+        "extraBold": { "token": "--font-weight-extra-bold", "value": "800", "use": "h1 — exclusively the page title" }
+      }
+    },
+    "lineHeights": {
+      "title": "Line-heights",
+      "subtitle": "Four line-heights cover everything from compact titles to spaced lists.",
+      "cols": {
+        "token": "Token",
+        "value": "Value",
+        "use": "When to use"
+      },
+      "rows": {
+        "tight": { "token": "--line-height-tight", "value": "1.2", "use": "h1 and h2 titles — avoids excessive height" },
+        "normal": { "token": "--line-height-normal", "value": "1.5", "use": "Body text — WCAG 1.4.12 baseline" },
+        "relaxed": { "token": "--line-height-relaxed", "value": "1.75", "use": "Long editorial blocks" },
+        "loose": { "token": "--line-height-loose", "value": "2", "use": "Lists with dense glyphs, Asian contexts" }
+      }
+    },
+    "hierarchy": {
+      "title": "Semantic hierarchy",
+      "subtitle": "Consistent heading structure is required by WCAG 2.4.6 (Headings and Labels).",
+      "rules": {
+        "h1": "Only one <code>&lt;h1&gt;</code> per page — the main title coming from the docs header.",
+        "h2": "<code>&lt;h2&gt;</code> opens first-level sections (Demo, Variants, Props, etc.).",
+        "h3": "<code>&lt;h3&gt;</code> opens subsections within a section (a specific variant, a token group).",
+        "skip": "Never skip levels (h2 → h4). Always go down one step at a time.",
+        "noTailwind": "Never use Tailwind size classes (<code>text-2xl</code>, <code>text-sm</code>) in product text — use the right element.",
+        "minSize": "Never use <code>text-[9px]</code> or <code>text-[10px]</code> for body: WCAG 1.4.4 (Resize Text) requires text to remain legible at 200% zoom."
+      }
+    },
+    "nav": {
+      "families": "Families",
+      "scale": "Scale",
+      "weights": "Weights",
+      "lineHeights": "Line-heights",
+      "hierarchy": "Hierarchy"
+    }
+  },
+  "es": {
+    "title": "Tipografía",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "La tipografía del sistema se define por una familia activa intercambiable (Inter por defecto), una escala de tamaños tokenizada y pesos semánticos. Todo se controla por variables CSS en <code>:root</code> y se aplica vía elementos HTML estándar — no uses clases Tailwind de tamaño de fuente sin motivo.",
+    "seo": {
+      "title": "Tipografía — Design System",
+      "description": "Familias, escala de tamaños, pesos y line-heights tokenizados del Design System. Jerarquía semántica de h1 a h6 más reglas de uso.",
+      "aiSummary": "Página de fundamentos de Tipografía. Documenta familia activa --font-family-active, escala --text-h1 a --text-label, pesos 400/500/600/800, line-heights y reglas de jerarquía semántica.",
+      "aiEntities": "Tipografía, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, jerarquía semántica, WCAG",
+      "aiIntent": "informational"
+    },
+    "families": {
+      "title": "Familias",
+      "subtitle": "<code>--font-family-active</code> se cambia con las clases <code>.fonte-*</code> en <code>&lt;html&gt;</code>. <code>--font-family</code> siempre apunta a la activa, manteniendo el cascade.",
+      "cols": {
+        "name": "Familia",
+        "token": "Token / clase",
+        "use": "Uso"
+      },
+      "rows": {
+        "inter": {
+          "name": "Inter",
+          "token": "default (sin clase)",
+          "use": "Sans humanista, por defecto del sistema"
+        },
+        "lexend": {
+          "name": "Lexend",
+          "token": ".fonte-lexend",
+          "use": "Alta legibilidad, textos largos"
+        },
+        "ptSerif": {
+          "name": "PT Serif",
+          "token": ".fonte-pt-serif",
+          "use": "Serif clásica, contenido editorial"
+        },
+        "lxgw": {
+          "name": "LXGW WenKai TC",
+          "token": ".fonte-lxgw-wenkai",
+          "use": "Manuscrita, demos y contexto narrativo"
+        }
+      }
+    },
+    "scale": {
+      "title": "Escala de tamaños",
+      "subtitle": "Tokens semánticos atados a los elementos HTML estándar. Aplicados automáticamente en <code>@layer base</code>.",
+      "cols": {
+        "token": "Token",
+        "value": "Valor",
+        "element": "Elemento",
+        "use": "Uso"
+      },
+      "rows": {
+        "h1": { "token": "--text-h1", "value": "48px", "element": "h1", "use": "Título principal de la página (raro fuera del header)" },
+        "h2": { "token": "--text-h2", "value": "30px", "element": "h2", "use": "Secciones de primer nivel" },
+        "h3": { "token": "--text-h3", "value": "20px", "element": "h3", "use": "Subsecciones dentro de una sección" },
+        "h4": { "token": "--text-h4", "value": "16px", "element": "h4", "use": "Agrupaciones menores y títulos de card" },
+        "p": { "token": "--text-p", "value": "14px", "element": "p", "use": "Texto corrido" },
+        "label": { "token": "--text-label", "value": "12px", "element": "label", "use": "Etiquetas de formulario, metadatos" }
+      }
+    },
+    "weights": {
+      "title": "Pesos",
+      "subtitle": "Cuatro pesos semánticos cubren los usos del sistema.",
+      "cols": {
+        "token": "Token",
+        "value": "Valor",
+        "use": "Cuándo usar"
+      },
+      "rows": {
+        "regular": { "token": "--font-weight-regular", "value": "400", "use": "Texto corrido, párrafos, descripciones" },
+        "medium": { "token": "--font-weight-medium", "value": "500", "use": "Etiquetas, breadcrumb, h4" },
+        "semibold": { "token": "--font-weight-semi-bold", "value": "600", "use": "Títulos h2 y h3, botones destacados" },
+        "extraBold": { "token": "--font-weight-extra-bold", "value": "800", "use": "h1 — exclusivamente el título de página" }
+      }
+    },
+    "lineHeights": {
+      "title": "Line-heights",
+      "subtitle": "Cuatro alturas de línea cubren desde títulos compactos hasta listas espaciadas.",
+      "cols": {
+        "token": "Token",
+        "value": "Valor",
+        "use": "Cuándo usar"
+      },
+      "rows": {
+        "tight": { "token": "--line-height-tight", "value": "1.2", "use": "Títulos h1 y h2 — evita altura excesiva" },
+        "normal": { "token": "--line-height-normal", "value": "1.5", "use": "Texto corrido — base WCAG 1.4.12" },
+        "relaxed": { "token": "--line-height-relaxed", "value": "1.75", "use": "Bloques editoriales largos" },
+        "loose": { "token": "--line-height-loose", "value": "2", "use": "Listas con tipos densos, contextos asiáticos" }
+      }
+    },
+    "hierarchy": {
+      "title": "Jerarquía semántica",
+      "subtitle": "Estructura de encabezados consistente es exigencia de WCAG 2.4.6 (Headings and Labels).",
+      "rules": {
+        "h1": "Solo un <code>&lt;h1&gt;</code> por página — el título principal viene del header de la docs.",
+        "h2": "<code>&lt;h2&gt;</code> abre secciones de primer nivel (Demostración, Variantes, Props, etc.).",
+        "h3": "<code>&lt;h3&gt;</code> abre subsecciones dentro de una sección (una variante específica, un grupo de tokens).",
+        "skip": "Nunca saltes niveles (h2 → h4). Siempre baja uno por uno.",
+        "noTailwind": "Nunca uses clases Tailwind de tamaño (<code>text-2xl</code>, <code>text-sm</code>) en texto de producto — usa el elemento correcto.",
+        "minSize": "Nunca uses <code>text-[9px]</code> o <code>text-[10px]</code> en cuerpo: WCAG 1.4.4 (Resize Text) exige que el texto permanezca legible al 200% de zoom."
+      }
+    },
+    "nav": {
+      "families": "Familias",
+      "scale": "Escala",
+      "weights": "Pesos",
+      "lineHeights": "Line-heights",
+      "hierarchy": "Jerarquía"
+    }
+  }
+}

@@ -1,0 +1,323 @@
+{
+  "pt-BR": {
+    "title": "Sobre o Design System",
+    "category": "Foundations",
+    "type": "Visão Geral",
+    "description": "Um sistema de design multi-stack: a mesma linguagem visual implementada em React, Vue, Svelte e Vanilla TS, compartilhando conteúdo, temas e guidelines a partir de uma fonte única de verdade.",
+    "seo": {
+      "title": "Sobre — Design System",
+      "description": "Design System multi-stack com React, Vue, Svelte e Vanilla TS sobre tokens compartilhados, primitives headless e WCAG 2.1 AA por padrão.",
+      "aiSummary": "Página de visão geral do Design System. Explica o propósito, os 4 stacks suportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + basecoat), a arquitetura de conteúdo compartilhado e os princípios fundamentais.",
+      "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Tailwind, Storybook, tokens semânticos, WCAG, multi-stack",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "O que é",
+      "body": "É um conjunto coeso de primitives, padrões e tokens que padroniza a interface de produtos digitais em quatro frameworks distintos. Cada stack mantém a API idiomática da sua biblioteca base, mas todas leem o mesmo <code>translations.json</code>, as mesmas guidelines e os mesmos tokens visuais.",
+      "audience": "Voltado para times de produto que precisam entregar consistência entre web apps em múltiplas tecnologias sem manter forks visuais paralelos."
+    },
+    "stacks": {
+      "title": "Os quatro stacks",
+      "subtitle": "Cada implementação é um pacote npm independente em sua própria pasta, com Storybook próprio rodando em uma porta dedicada.",
+      "cols": {
+        "stack": "Stack",
+        "base": "UI Base",
+        "port": "Porta",
+        "when": "Quando escolher"
+      },
+      "rows": {
+        "react": {
+          "name": "React",
+          "base": "base-ui + Tailwind 4",
+          "port": "6006",
+          "when": "Aplicações React 19 com necessidade de SSR via Next/Remix"
+        },
+        "vue": {
+          "name": "Vue",
+          "base": "reka-ui + Tailwind 4",
+          "port": "6007",
+          "when": "Aplicações Vue 3 com Composition API e Nuxt"
+        },
+        "svelte": {
+          "name": "Svelte",
+          "base": "bits-ui + Tailwind 4",
+          "port": "6008",
+          "when": "Aplicações Svelte 5 com runes e SvelteKit"
+        },
+        "nortear": {
+          "name": "Nortear",
+          "base": "basecoat-css + Vanilla TS",
+          "port": "6009",
+          "when": "Sites estáticos, micro-frontends ou bases legadas sem framework"
+        }
+      }
+    },
+    "principles": {
+      "title": "Princípios",
+      "subtitle": "Decisões que orientam o que entra e o que fica de fora do sistema.",
+      "items": {
+        "consistency": {
+          "title": "Consistência visual entre stacks",
+          "body": "O mesmo componente renderiza o mesmo pixel em React, Vue, Svelte e Nortear. Auditores deterministas comparam markup e estilos."
+        },
+        "a11y": {
+          "title": "Acessibilidade primeiro",
+          "body": "WCAG 2.1 AA é piso, não meta. Cada primitive é validado com <code>axe-playwright</code> via <code>test-storybook</code>."
+        },
+        "headless": {
+          "title": "API headless",
+          "body": "Comportamento de teclado, foco e ARIA vem das libs base (base-ui, reka-ui, bits-ui). O sistema veste essas primitives com tokens visuais."
+        },
+        "multistack": {
+          "title": "Multi-stack desde o dia zero",
+          "body": "Conteúdo descritivo em <code>docs/shared/content</code> é API-neutro. Snippets de código por stack ficam em chaves separadas (<code>structureCode</code>, etc.)."
+        },
+        "tokens": {
+          "title": "Tokens compartilhados",
+          "body": "Cores, spacing, tipografia e radius vivem em <code>docs/shared/themes</code> e <code>docs/shared/tokens</code>. Cada stack importa via <code>@shared/tokens/tokens.css</code>."
+        },
+        "performance": {
+          "title": "Performance medida",
+          "body": "Bundle size, Largest Contentful Paint e Cumulative Layout Shift são auditados por componente. Animações respeitam <code>prefers-reduced-motion</code>."
+        }
+      }
+    },
+    "architecture": {
+      "title": "Arquitetura de pastas",
+      "subtitle": "Tudo que é compartilhado vive em <code>docs/shared/</code>. Tudo que é específico de stack vive em <code>design-system-&lt;stack&gt;/</code>.",
+      "items": {
+        "content": "<code>docs/shared/content/&lt;slug&gt;/translations.json</code> — conteúdo pt-BR / en / es por componente",
+        "themes": "<code>docs/shared/themes/</code> — temas de marca, densidades e fontes em CSS variables",
+        "tokens": "<code>docs/shared/tokens/tokens.css</code> — fonte única de tokens semânticos",
+        "guidelines": "<code>docs/shared/guidelines/</code> — regras cross-stack (acessibilidade, padrões, tom de voz)",
+        "primitives": "<code>design-system-&lt;stack&gt;/src/components/ui/</code> — implementação do primitive por stack",
+        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — páginas de documentação geradas via HOC <code>withAutoDocsTab</code>"
+      }
+    },
+    "links": {
+      "title": "Como navegar",
+      "subtitle": "Cada stack tem seu próprio Storybook. Use a tabela acima para escolher a porta correta de acordo com o framework do seu projeto."
+    },
+    "nav": {
+      "overview": "Visão geral",
+      "stacks": "Stacks",
+      "principles": "Princípios",
+      "architecture": "Arquitetura",
+      "links": "Como navegar"
+    }
+  },
+  "en": {
+    "title": "About the Design System",
+    "category": "Foundations",
+    "type": "Overview",
+    "description": "A multi-stack design system: one visual language implemented in React, Vue, Svelte and Vanilla TS, sharing content, themes and guidelines from a single source of truth.",
+    "seo": {
+      "title": "About — Design System",
+      "description": "Multi-stack Design System with React, Vue, Svelte and Vanilla TS over shared tokens, headless primitives and WCAG 2.1 AA by default.",
+      "aiSummary": "Overview page of the Design System. Explains the purpose, the 4 supported stacks (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + basecoat), the shared content architecture and the core principles.",
+      "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Tailwind, Storybook, semantic tokens, WCAG, multi-stack",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "What it is",
+      "body": "A cohesive set of primitives, patterns and tokens that standardizes the interface of digital products across four distinct frameworks. Each stack keeps the idiomatic API of its underlying library, but they all read the same <code>translations.json</code>, the same guidelines and the same visual tokens.",
+      "audience": "Built for product teams shipping consistency across web apps in multiple technologies without maintaining parallel visual forks."
+    },
+    "stacks": {
+      "title": "The four stacks",
+      "subtitle": "Each implementation is an independent npm package in its own folder, with its own Storybook running on a dedicated port.",
+      "cols": {
+        "stack": "Stack",
+        "base": "Base UI",
+        "port": "Port",
+        "when": "When to pick"
+      },
+      "rows": {
+        "react": {
+          "name": "React",
+          "base": "base-ui + Tailwind 4",
+          "port": "6006",
+          "when": "React 19 apps needing SSR via Next/Remix"
+        },
+        "vue": {
+          "name": "Vue",
+          "base": "reka-ui + Tailwind 4",
+          "port": "6007",
+          "when": "Vue 3 apps with Composition API and Nuxt"
+        },
+        "svelte": {
+          "name": "Svelte",
+          "base": "bits-ui + Tailwind 4",
+          "port": "6008",
+          "when": "Svelte 5 apps with runes and SvelteKit"
+        },
+        "nortear": {
+          "name": "Nortear",
+          "base": "basecoat-css + Vanilla TS",
+          "port": "6009",
+          "when": "Static sites, micro-frontends or legacy bases without a framework"
+        }
+      }
+    },
+    "principles": {
+      "title": "Principles",
+      "subtitle": "Decisions that drive what makes it into the system and what stays out.",
+      "items": {
+        "consistency": {
+          "title": "Visual consistency across stacks",
+          "body": "The same component renders the same pixels in React, Vue, Svelte and Nortear. Deterministic auditors compare markup and styles."
+        },
+        "a11y": {
+          "title": "Accessibility first",
+          "body": "WCAG 2.1 AA is the floor, not the goal. Every primitive is validated with <code>axe-playwright</code> via <code>test-storybook</code>."
+        },
+        "headless": {
+          "title": "Headless API",
+          "body": "Keyboard, focus and ARIA behavior come from base libraries (base-ui, reka-ui, bits-ui). The system dresses these primitives with visual tokens."
+        },
+        "multistack": {
+          "title": "Multi-stack from day zero",
+          "body": "Descriptive content in <code>docs/shared/content</code> is API-neutral. Stack-specific code snippets live in separate keys (<code>structureCode</code>, etc.)."
+        },
+        "tokens": {
+          "title": "Shared tokens",
+          "body": "Colors, spacing, typography and radius live in <code>docs/shared/themes</code> and <code>docs/shared/tokens</code>. Each stack imports via <code>@shared/tokens/tokens.css</code>."
+        },
+        "performance": {
+          "title": "Measured performance",
+          "body": "Bundle size, Largest Contentful Paint and Cumulative Layout Shift are audited per component. Animations respect <code>prefers-reduced-motion</code>."
+        }
+      }
+    },
+    "architecture": {
+      "title": "Folder architecture",
+      "subtitle": "Everything shared lives in <code>docs/shared/</code>. Everything stack-specific lives in <code>design-system-&lt;stack&gt;/</code>.",
+      "items": {
+        "content": "<code>docs/shared/content/&lt;slug&gt;/translations.json</code> — pt-BR / en / es content per component",
+        "themes": "<code>docs/shared/themes/</code> — brand themes, densities and fonts as CSS variables",
+        "tokens": "<code>docs/shared/tokens/tokens.css</code> — single source for semantic tokens",
+        "guidelines": "<code>docs/shared/guidelines/</code> — cross-stack rules (accessibility, patterns, tone of voice)",
+        "primitives": "<code>design-system-&lt;stack&gt;/src/components/ui/</code> — primitive implementation per stack",
+        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — documentation pages generated via the <code>withAutoDocsTab</code> HOC"
+      }
+    },
+    "links": {
+      "title": "How to navigate",
+      "subtitle": "Each stack has its own Storybook. Use the table above to pick the right port based on your project's framework."
+    },
+    "nav": {
+      "overview": "Overview",
+      "stacks": "Stacks",
+      "principles": "Principles",
+      "architecture": "Architecture",
+      "links": "How to navigate"
+    }
+  },
+  "es": {
+    "title": "Sobre el Design System",
+    "category": "Foundations",
+    "type": "Visión General",
+    "description": "Un sistema de diseño multi-stack: el mismo lenguaje visual implementado en React, Vue, Svelte y Vanilla TS, compartiendo contenido, temas y guidelines desde una fuente única de verdad.",
+    "seo": {
+      "title": "Sobre — Design System",
+      "description": "Design System multi-stack con React, Vue, Svelte y Vanilla TS sobre tokens compartidos, primitives headless y WCAG 2.1 AA por defecto.",
+      "aiSummary": "Página de visión general del Design System. Explica el propósito, los 4 stacks soportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + basecoat), la arquitectura de contenido compartido y los principios fundamentales.",
+      "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Tailwind, Storybook, tokens semánticos, WCAG, multi-stack",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Qué es",
+      "body": "Un conjunto cohesivo de primitives, patrones y tokens que estandariza la interfaz de productos digitales en cuatro frameworks distintos. Cada stack mantiene la API idiomática de su biblioteca base, pero todas leen el mismo <code>translations.json</code>, las mismas guidelines y los mismos tokens visuales.",
+      "audience": "Dirigido a equipos de producto que necesitan entregar consistencia entre web apps en múltiples tecnologías sin mantener forks visuales paralelos."
+    },
+    "stacks": {
+      "title": "Los cuatro stacks",
+      "subtitle": "Cada implementación es un paquete npm independiente en su propia carpeta, con Storybook propio corriendo en un puerto dedicado.",
+      "cols": {
+        "stack": "Stack",
+        "base": "UI Base",
+        "port": "Puerto",
+        "when": "Cuándo elegir"
+      },
+      "rows": {
+        "react": {
+          "name": "React",
+          "base": "base-ui + Tailwind 4",
+          "port": "6006",
+          "when": "Aplicaciones React 19 con necesidad de SSR vía Next/Remix"
+        },
+        "vue": {
+          "name": "Vue",
+          "base": "reka-ui + Tailwind 4",
+          "port": "6007",
+          "when": "Aplicaciones Vue 3 con Composition API y Nuxt"
+        },
+        "svelte": {
+          "name": "Svelte",
+          "base": "bits-ui + Tailwind 4",
+          "port": "6008",
+          "when": "Aplicaciones Svelte 5 con runes y SvelteKit"
+        },
+        "nortear": {
+          "name": "Nortear",
+          "base": "basecoat-css + Vanilla TS",
+          "port": "6009",
+          "when": "Sitios estáticos, micro-frontends o bases legadas sin framework"
+        }
+      }
+    },
+    "principles": {
+      "title": "Principios",
+      "subtitle": "Decisiones que orientan lo que entra y lo que queda fuera del sistema.",
+      "items": {
+        "consistency": {
+          "title": "Consistencia visual entre stacks",
+          "body": "El mismo componente renderiza el mismo pixel en React, Vue, Svelte y Nortear. Auditores deterministas comparan markup y estilos."
+        },
+        "a11y": {
+          "title": "Accesibilidad primero",
+          "body": "WCAG 2.1 AA es piso, no meta. Cada primitive se valida con <code>axe-playwright</code> vía <code>test-storybook</code>."
+        },
+        "headless": {
+          "title": "API headless",
+          "body": "Comportamiento de teclado, foco y ARIA viene de las libs base (base-ui, reka-ui, bits-ui). El sistema viste esas primitives con tokens visuales."
+        },
+        "multistack": {
+          "title": "Multi-stack desde el día cero",
+          "body": "Contenido descriptivo en <code>docs/shared/content</code> es API-neutro. Snippets de código por stack viven en claves separadas (<code>structureCode</code>, etc.)."
+        },
+        "tokens": {
+          "title": "Tokens compartidos",
+          "body": "Colores, spacing, tipografía y radius viven en <code>docs/shared/themes</code> y <code>docs/shared/tokens</code>. Cada stack importa vía <code>@shared/tokens/tokens.css</code>."
+        },
+        "performance": {
+          "title": "Performance medida",
+          "body": "Bundle size, Largest Contentful Paint y Cumulative Layout Shift se auditan por componente. Animaciones respetan <code>prefers-reduced-motion</code>."
+        }
+      }
+    },
+    "architecture": {
+      "title": "Arquitectura de carpetas",
+      "subtitle": "Todo lo compartido vive en <code>docs/shared/</code>. Todo lo específico de stack vive en <code>design-system-&lt;stack&gt;/</code>.",
+      "items": {
+        "content": "<code>docs/shared/content/&lt;slug&gt;/translations.json</code> — contenido pt-BR / en / es por componente",
+        "themes": "<code>docs/shared/themes/</code> — temas de marca, densidades y fuentes en CSS variables",
+        "tokens": "<code>docs/shared/tokens/tokens.css</code> — fuente única de tokens semánticos",
+        "guidelines": "<code>docs/shared/guidelines/</code> — reglas cross-stack (accesibilidad, patrones, tono de voz)",
+        "primitives": "<code>design-system-&lt;stack&gt;/src/components/ui/</code> — implementación del primitive por stack",
+        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — páginas de documentación generadas vía HOC <code>withAutoDocsTab</code>"
+      }
+    },
+    "links": {
+      "title": "Cómo navegar",
+      "subtitle": "Cada stack tiene su propio Storybook. Usa la tabla de arriba para elegir el puerto correcto según el framework de tu proyecto."
+    },
+    "nav": {
+      "overview": "Visión general",
+      "stacks": "Stacks",
+      "principles": "Principios",
+      "architecture": "Arquitectura",
+      "links": "Cómo navegar"
+    }
+  }
+}

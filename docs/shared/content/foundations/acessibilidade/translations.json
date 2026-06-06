@@ -1,0 +1,344 @@
+{
+  "pt-BR": {
+    "title": "Acessibilidade",
+    "category": "Foundations",
+    "type": "Princípios",
+    "description": "Acessibilidade não é uma camada opcional — é critério de aceite. Todo componente do sistema atende WCAG 2.1 AA por padrão e é validado com <code>axe-playwright</code> via <code>test-storybook</code>. Esta página documenta os compromissos e padrões que todo componente deve seguir.",
+    "seo": {
+      "title": "Acessibilidade — Design System",
+      "description": "Compromisso WCAG 2.1 AA: contraste, navegação por teclado, focus visible, ARIA patterns e testes automatizados por componente.",
+      "aiSummary": "Página de fundamentos de Acessibilidade. Documenta compromisso WCAG 2.1 AA, contraste 4.5:1, navegação por teclado, focus visible, padrões ARIA, suporte a leitores de tela e estratégia de testes.",
+      "aiEntities": "acessibilidade, WCAG, contraste, teclado, focus visible, ARIA, leitor de tela, axe-playwright, VoiceOver, NVDA",
+      "aiIntent": "informational"
+    },
+    "commitment": {
+      "title": "Compromisso",
+      "body": "Todos os primitives (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) atendem WCAG 2.1 AA. O critério é parte do <em>Definition of Done</em>: nenhum componente é considerado pronto sem axe verde, ordem de tabulação correta e suporte a leitor de tela."
+    },
+    "contrast": {
+      "title": "Contraste",
+      "subtitle": "Razão mínima de contraste por tipo de conteúdo, conforme WCAG 1.4.3 e 1.4.11.",
+      "cols": {
+        "kind": "Tipo",
+        "ratio": "Razão",
+        "criteria": "Critério WCAG"
+      },
+      "rows": {
+        "normal": { "kind": "Texto normal (< 24px)", "ratio": "4.5:1", "criteria": "1.4.3 Contrast (Minimum)" },
+        "large": { "kind": "Texto grande (≥ 24px ou ≥ 18.66px bold)", "ratio": "3:1", "criteria": "1.4.3 Contrast (Minimum)" },
+        "graphics": { "kind": "Elementos gráficos e ícones", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" },
+        "ui": { "kind": "Bordas de componentes UI ativos", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" }
+      },
+      "note": "Tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> e <code>--info</code> são calibrados para atingir 4.5:1 contra o background do tema em light e dark. Use sempre <code>text-foreground</code> ou <code>text-muted-foreground</code> para corpo de texto em containers coloridos."
+    },
+    "keyboard": {
+      "title": "Navegação por teclado",
+      "subtitle": "Toda funcionalidade deve ser operável apenas com teclado (WCAG 2.1.1).",
+      "keys": {
+        "tab": "<kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — move o foco para o próximo / anterior elemento focável.",
+        "enter": "<kbd>Enter</kbd> — ativa botões e links; envia formulários.",
+        "space": "<kbd>Space</kbd> — ativa botões; marca checkboxes; abre selects.",
+        "escape": "<kbd>Esc</kbd> — fecha popovers, dialogs, dropdowns; retorna o foco ao trigger.",
+        "arrows": "<kbd>Arrow</kbd> — navega entre opções em radio group, select, menu, tabs, carousel.",
+        "homeEnd": "<kbd>Home</kbd> / <kbd>End</kbd> — primeiro / último item em listas, datepickers e tabelas."
+      },
+      "note": "Cada página de docs de componente lista as teclas específicas suportadas na seção <em>Acessibilidade</em>. Comportamentos de teclado herdados das libs base (base-ui / reka-ui / bits-ui) seguem as práticas do W3C ARIA Authoring Practices Guide."
+    },
+    "focus": {
+      "title": "Focus visible",
+      "subtitle": "Indicador de foco visual é obrigatório em qualquer elemento interativo (WCAG 2.4.7).",
+      "rules": {
+        "ring": "Use <code>focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2</code>. O token <code>--ring</code> sempre tem 100% de opacidade.",
+        "noOutlineNone": "Nunca aplique <code>outline: none</code> sem um substituto visível imediatamente. Remover o anel de foco sem fallback é falha WCAG 2.4.7 e quebra navegação por teclado.",
+        "visibleOnly": "<code>:focus-visible</code> mostra o anel só quando o usuário navega por teclado — o clique de mouse não dispara, evitando o anel após cliques.",
+        "contrast": "O contraste do anel de foco contra o background adjacente deve ser ≥ 3:1 (WCAG 1.4.11)."
+      }
+    },
+    "aria": {
+      "title": "Padrões ARIA",
+      "subtitle": "Atributos comuns aplicados pelas libs base — não reimplemente manualmente.",
+      "items": {
+        "label": "<code>aria-label</code> — rótulo acessível quando não há texto visível (ícones, botões de fechar).",
+        "labelledby": "<code>aria-labelledby</code> — referência a um elemento que rotula o atual (modal title rotula o dialog).",
+        "describedby": "<code>aria-describedby</code> — descrição complementar (texto de ajuda em input).",
+        "expanded": "<code>aria-expanded</code> — estado aberto/fechado de accordion, dropdown, combobox.",
+        "selected": "<code>aria-selected</code> — item selecionado em tabs, listbox, combobox.",
+        "checked": "<code>aria-checked</code> — estado de checkbox, switch, radio.",
+        "sort": "<code>aria-sort</code> — coluna ordenada em DataTable (<code>ascending</code> / <code>descending</code> / <code>none</code>).",
+        "current": "<code>aria-current</code> — item atual em breadcrumb e navegação.",
+        "role": "<code>role=</code> — usado só quando o elemento HTML semântico não cabe; prefira <code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;section&gt;</code>."
+      }
+    },
+    "screenReaders": {
+      "title": "Leitores de tela",
+      "subtitle": "Padrões testados com VoiceOver (macOS/iOS) e NVDA (Windows).",
+      "rules": {
+        "srOnly": "<code>.sr-only</code> — texto disponível apenas para leitores de tela. Use para contexto extra que sai do fluxo visual.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — ícones decorativos (lucide), separadores visuais e elementos puramente estéticos.",
+        "live": "<code>aria-live=\"polite\"</code> — toasts e mudanças não-críticas. <code>assertive</code> só para erros bloqueantes.",
+        "noEmoji": "Emojis em texto vazam para o leitor de tela como descrição literal. Use ícones SVG com <code>aria-hidden</code> + label textual."
+      }
+    },
+    "testing": {
+      "title": "Testes",
+      "subtitle": "Combinação de automação determinística e verificação manual.",
+      "automated": {
+        "title": "Automatizado",
+        "body": "<code>npm run test-storybook</code> roda <code>axe-playwright</code> em cada story. Erros de contraste, ARIA inválido e ordem de tabulação inconsistente quebram o CI."
+      },
+      "manual": {
+        "title": "Manual",
+        "body": "Navegação por teclado sem mouse + verificação com VoiceOver (Cmd+F5) ou NVDA. Componentes com interação complexa (Combobox, Carousel, DataTable) devem ser revalidados manualmente a cada PR."
+      }
+    },
+    "specialCare": {
+      "title": "Componentes com cuidado extra",
+      "subtitle": "Casos onde acessibilidade exige atenção além do padrão herdado das libs base.",
+      "items": {
+        "chart": "<strong>Chart</strong> — exige texto alternativo descrevendo a tendência (<code>aria-label</code> no SVG) e tabela equivalente para leitores de tela.",
+        "dataTable": "<strong>DataTable</strong> — <code>aria-sort</code> nas colunas, <code>scope</code> em <code>th</code>, e caption descritivo.",
+        "carousel": "<strong>Carousel</strong> — <code>aria-roledescription=\"carousel\"</code>, controles pausáveis, e indicadores com <code>aria-current</code>.",
+        "dialog": "<strong>Dialog</strong> — focus trap, retorno do foco ao trigger no fechamento, e <code>aria-modal=\"true\"</code>.",
+        "form": "<strong>Form</strong> — cada input deve ter <code>&lt;label&gt;</code> associado, erros vinculados via <code>aria-describedby</code> e <code>aria-invalid</code>."
+      }
+    },
+    "nav": {
+      "commitment": "Compromisso",
+      "contrast": "Contraste",
+      "keyboard": "Teclado",
+      "focus": "Focus visible",
+      "aria": "Padrões ARIA",
+      "screenReaders": "Leitores de tela",
+      "testing": "Testes",
+      "specialCare": "Cuidado extra"
+    }
+  },
+  "en": {
+    "title": "Accessibility",
+    "category": "Foundations",
+    "type": "Principles",
+    "description": "Accessibility is not an optional layer — it is an acceptance criterion. Every system component meets WCAG 2.1 AA by default and is validated with <code>axe-playwright</code> via <code>test-storybook</code>. This page documents the commitments and patterns every component must follow.",
+    "seo": {
+      "title": "Accessibility — Design System",
+      "description": "WCAG 2.1 AA commitment: contrast, keyboard navigation, focus visible, ARIA patterns and automated per-component tests.",
+      "aiSummary": "Accessibility foundations page. Documents WCAG 2.1 AA commitment, 4.5:1 contrast, keyboard navigation, focus visible, ARIA patterns, screen reader support and testing strategy.",
+      "aiEntities": "accessibility, WCAG, contrast, keyboard, focus visible, ARIA, screen reader, axe-playwright, VoiceOver, NVDA",
+      "aiIntent": "informational"
+    },
+    "commitment": {
+      "title": "Commitment",
+      "body": "Every primitive (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) meets WCAG 2.1 AA. The criterion is part of the <em>Definition of Done</em>: no component is considered ready without green axe, correct tab order and screen reader support."
+    },
+    "contrast": {
+      "title": "Contrast",
+      "subtitle": "Minimum contrast ratio per content type, per WCAG 1.4.3 and 1.4.11.",
+      "cols": {
+        "kind": "Kind",
+        "ratio": "Ratio",
+        "criteria": "WCAG criterion"
+      },
+      "rows": {
+        "normal": { "kind": "Normal text (< 24px)", "ratio": "4.5:1", "criteria": "1.4.3 Contrast (Minimum)" },
+        "large": { "kind": "Large text (≥ 24px or ≥ 18.66px bold)", "ratio": "3:1", "criteria": "1.4.3 Contrast (Minimum)" },
+        "graphics": { "kind": "Graphics and icons", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" },
+        "ui": { "kind": "Active UI component borders", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" }
+      },
+      "note": "Tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> and <code>--info</code> are calibrated to reach 4.5:1 against the theme background in both light and dark. Always use <code>text-foreground</code> or <code>text-muted-foreground</code> for body text inside colored containers."
+    },
+    "keyboard": {
+      "title": "Keyboard navigation",
+      "subtitle": "All functionality must be operable with the keyboard alone (WCAG 2.1.1).",
+      "keys": {
+        "tab": "<kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — moves focus to the next / previous focusable element.",
+        "enter": "<kbd>Enter</kbd> — activates buttons and links; submits forms.",
+        "space": "<kbd>Space</kbd> — activates buttons; toggles checkboxes; opens selects.",
+        "escape": "<kbd>Esc</kbd> — closes popovers, dialogs, dropdowns; returns focus to the trigger.",
+        "arrows": "<kbd>Arrow</kbd> — navigates options in radio group, select, menu, tabs, carousel.",
+        "homeEnd": "<kbd>Home</kbd> / <kbd>End</kbd> — first / last item in lists, datepickers and tables."
+      },
+      "note": "Every component docs page lists the specific keys supported in the <em>Accessibility</em> section. Keyboard behavior inherited from the base libraries (base-ui / reka-ui / bits-ui) follows the W3C ARIA Authoring Practices Guide."
+    },
+    "focus": {
+      "title": "Focus visible",
+      "subtitle": "A visual focus indicator is mandatory on every interactive element (WCAG 2.4.7).",
+      "rules": {
+        "ring": "Use <code>focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2</code>. The <code>--ring</code> token always has 100% opacity.",
+        "noOutlineNone": "Never apply <code>outline: none</code> without an immediately visible replacement. Removing the focus ring without a fallback is a WCAG 2.4.7 failure and breaks keyboard navigation.",
+        "visibleOnly": "<code>:focus-visible</code> shows the ring only when the user navigates by keyboard — mouse clicks don't trigger it, avoiding the ring after clicks.",
+        "contrast": "The focus ring contrast against the adjacent background must be ≥ 3:1 (WCAG 1.4.11)."
+      }
+    },
+    "aria": {
+      "title": "ARIA patterns",
+      "subtitle": "Common attributes applied by the base libraries — don't reimplement them by hand.",
+      "items": {
+        "label": "<code>aria-label</code> — accessible name when no visible text is present (icons, close buttons).",
+        "labelledby": "<code>aria-labelledby</code> — reference to an element that labels this one (modal title labels the dialog).",
+        "describedby": "<code>aria-describedby</code> — supplementary description (help text on inputs).",
+        "expanded": "<code>aria-expanded</code> — open/closed state of accordion, dropdown, combobox.",
+        "selected": "<code>aria-selected</code> — selected item in tabs, listbox, combobox.",
+        "checked": "<code>aria-checked</code> — state of checkbox, switch, radio.",
+        "sort": "<code>aria-sort</code> — sorted column in DataTable (<code>ascending</code> / <code>descending</code> / <code>none</code>).",
+        "current": "<code>aria-current</code> — current item in breadcrumb and navigation.",
+        "role": "<code>role=</code> — only when the semantic HTML element doesn't fit; prefer <code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;section&gt;</code>."
+      }
+    },
+    "screenReaders": {
+      "title": "Screen readers",
+      "subtitle": "Patterns tested with VoiceOver (macOS/iOS) and NVDA (Windows).",
+      "rules": {
+        "srOnly": "<code>.sr-only</code> — text available only to screen readers. Use for extra context outside the visual flow.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — decorative icons (lucide), visual separators and purely aesthetic elements.",
+        "live": "<code>aria-live=\"polite\"</code> — toasts and non-critical changes. <code>assertive</code> only for blocking errors.",
+        "noEmoji": "Emojis in text leak to the screen reader as literal description. Use SVG icons with <code>aria-hidden</code> + a textual label."
+      }
+    },
+    "testing": {
+      "title": "Testing",
+      "subtitle": "Combination of deterministic automation and manual verification.",
+      "automated": {
+        "title": "Automated",
+        "body": "<code>npm run test-storybook</code> runs <code>axe-playwright</code> on every story. Contrast errors, invalid ARIA and inconsistent tab order break CI."
+      },
+      "manual": {
+        "title": "Manual",
+        "body": "Keyboard-only navigation + verification with VoiceOver (Cmd+F5) or NVDA. Components with complex interaction (Combobox, Carousel, DataTable) must be revalidated manually on every PR."
+      }
+    },
+    "specialCare": {
+      "title": "Components needing extra care",
+      "subtitle": "Cases where accessibility demands attention beyond what the base libraries provide.",
+      "items": {
+        "chart": "<strong>Chart</strong> — needs alternative text describing the trend (<code>aria-label</code> on the SVG) and an equivalent table for screen readers.",
+        "dataTable": "<strong>DataTable</strong> — <code>aria-sort</code> on columns, <code>scope</code> on <code>th</code>, and a descriptive caption.",
+        "carousel": "<strong>Carousel</strong> — <code>aria-roledescription=\"carousel\"</code>, pausable controls, and indicators with <code>aria-current</code>.",
+        "dialog": "<strong>Dialog</strong> — focus trap, focus return to the trigger on close, and <code>aria-modal=\"true\"</code>.",
+        "form": "<strong>Form</strong> — every input must have an associated <code>&lt;label&gt;</code>, errors linked via <code>aria-describedby</code> and <code>aria-invalid</code>."
+      }
+    },
+    "nav": {
+      "commitment": "Commitment",
+      "contrast": "Contrast",
+      "keyboard": "Keyboard",
+      "focus": "Focus visible",
+      "aria": "ARIA patterns",
+      "screenReaders": "Screen readers",
+      "testing": "Testing",
+      "specialCare": "Extra care"
+    }
+  },
+  "es": {
+    "title": "Accesibilidad",
+    "category": "Foundations",
+    "type": "Principios",
+    "description": "La accesibilidad no es una capa opcional — es criterio de aceptación. Todo componente del sistema cumple WCAG 2.1 AA por defecto y se valida con <code>axe-playwright</code> vía <code>test-storybook</code>. Esta página documenta los compromisos y patrones que todo componente debe seguir.",
+    "seo": {
+      "title": "Accesibilidad — Design System",
+      "description": "Compromiso WCAG 2.1 AA: contraste, navegación por teclado, focus visible, patrones ARIA y tests automatizados por componente.",
+      "aiSummary": "Página de fundamentos de Accesibilidad. Documenta compromiso WCAG 2.1 AA, contraste 4.5:1, navegación por teclado, focus visible, patrones ARIA, soporte a lectores de pantalla y estrategia de tests.",
+      "aiEntities": "accesibilidad, WCAG, contraste, teclado, focus visible, ARIA, lector de pantalla, axe-playwright, VoiceOver, NVDA",
+      "aiIntent": "informational"
+    },
+    "commitment": {
+      "title": "Compromiso",
+      "body": "Todos los primitives (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) cumplen WCAG 2.1 AA. El criterio es parte del <em>Definition of Done</em>: ningún componente se considera listo sin axe verde, orden de tabulación correcto y soporte a lector de pantalla."
+    },
+    "contrast": {
+      "title": "Contraste",
+      "subtitle": "Razón mínima de contraste por tipo de contenido, según WCAG 1.4.3 y 1.4.11.",
+      "cols": {
+        "kind": "Tipo",
+        "ratio": "Razón",
+        "criteria": "Criterio WCAG"
+      },
+      "rows": {
+        "normal": { "kind": "Texto normal (< 24px)", "ratio": "4.5:1", "criteria": "1.4.3 Contrast (Minimum)" },
+        "large": { "kind": "Texto grande (≥ 24px o ≥ 18.66px bold)", "ratio": "3:1", "criteria": "1.4.3 Contrast (Minimum)" },
+        "graphics": { "kind": "Elementos gráficos e iconos", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" },
+        "ui": { "kind": "Bordes de componentes UI activos", "ratio": "3:1", "criteria": "1.4.11 Non-text Contrast" }
+      },
+      "note": "Los tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> y <code>--info</code> se calibran para alcanzar 4.5:1 contra el background del tema en light y dark. Usa siempre <code>text-foreground</code> o <code>text-muted-foreground</code> para cuerpo de texto en contenedores coloreados."
+    },
+    "keyboard": {
+      "title": "Navegación por teclado",
+      "subtitle": "Toda funcionalidad debe ser operable solo con teclado (WCAG 2.1.1).",
+      "keys": {
+        "tab": "<kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — mueve el foco al siguiente / anterior elemento focalizable.",
+        "enter": "<kbd>Enter</kbd> — activa botones y enlaces; envía formularios.",
+        "space": "<kbd>Space</kbd> — activa botones; marca checkboxes; abre selects.",
+        "escape": "<kbd>Esc</kbd> — cierra popovers, dialogs, dropdowns; devuelve el foco al trigger.",
+        "arrows": "<kbd>Arrow</kbd> — navega entre opciones en radio group, select, menu, tabs, carousel.",
+        "homeEnd": "<kbd>Home</kbd> / <kbd>End</kbd> — primer / último item en listas, datepickers y tablas."
+      },
+      "note": "Cada página de docs de componente lista las teclas específicas soportadas en la sección <em>Accesibilidad</em>. Comportamientos de teclado heredados de las libs base (base-ui / reka-ui / bits-ui) siguen las prácticas del W3C ARIA Authoring Practices Guide."
+    },
+    "focus": {
+      "title": "Focus visible",
+      "subtitle": "Indicador de foco visual es obligatorio en cualquier elemento interactivo (WCAG 2.4.7).",
+      "rules": {
+        "ring": "Usa <code>focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2</code>. El token <code>--ring</code> siempre tiene 100% de opacidad.",
+        "noOutlineNone": "Nunca apliques <code>outline: none</code> sin un sustituto visible inmediato. Quitar el anillo de foco sin fallback es falla WCAG 2.4.7 y rompe navegación por teclado.",
+        "visibleOnly": "<code>:focus-visible</code> muestra el anillo solo cuando el usuario navega por teclado — el clic de ratón no lo dispara, evitando el anillo tras clics.",
+        "contrast": "El contraste del anillo de foco contra el background adyacente debe ser ≥ 3:1 (WCAG 1.4.11)."
+      }
+    },
+    "aria": {
+      "title": "Patrones ARIA",
+      "subtitle": "Atributos comunes aplicados por las libs base — no los reimplementes manualmente.",
+      "items": {
+        "label": "<code>aria-label</code> — etiqueta accesible cuando no hay texto visible (iconos, botones de cerrar).",
+        "labelledby": "<code>aria-labelledby</code> — referencia a un elemento que etiqueta al actual (modal title etiqueta el dialog).",
+        "describedby": "<code>aria-describedby</code> — descripción complementaria (texto de ayuda en input).",
+        "expanded": "<code>aria-expanded</code> — estado abierto/cerrado de accordion, dropdown, combobox.",
+        "selected": "<code>aria-selected</code> — item seleccionado en tabs, listbox, combobox.",
+        "checked": "<code>aria-checked</code> — estado de checkbox, switch, radio.",
+        "sort": "<code>aria-sort</code> — columna ordenada en DataTable (<code>ascending</code> / <code>descending</code> / <code>none</code>).",
+        "current": "<code>aria-current</code> — item actual en breadcrumb y navegación.",
+        "role": "<code>role=</code> — solo cuando el elemento HTML semántico no cabe; prefiere <code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;section&gt;</code>."
+      }
+    },
+    "screenReaders": {
+      "title": "Lectores de pantalla",
+      "subtitle": "Patrones probados con VoiceOver (macOS/iOS) y NVDA (Windows).",
+      "rules": {
+        "srOnly": "<code>.sr-only</code> — texto disponible solo para lectores de pantalla. Úsalo para contexto extra fuera del flujo visual.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — iconos decorativos (lucide), separadores visuales y elementos puramente estéticos.",
+        "live": "<code>aria-live=\"polite\"</code> — toasts y cambios no críticos. <code>assertive</code> solo para errores bloqueantes.",
+        "noEmoji": "Los emojis en texto se filtran al lector de pantalla como descripción literal. Usa iconos SVG con <code>aria-hidden</code> + label textual."
+      }
+    },
+    "testing": {
+      "title": "Tests",
+      "subtitle": "Combinación de automatización determinista y verificación manual.",
+      "automated": {
+        "title": "Automatizado",
+        "body": "<code>npm run test-storybook</code> ejecuta <code>axe-playwright</code> en cada story. Errores de contraste, ARIA inválido y orden de tabulación inconsistente rompen el CI."
+      },
+      "manual": {
+        "title": "Manual",
+        "body": "Navegación por teclado sin ratón + verificación con VoiceOver (Cmd+F5) o NVDA. Componentes con interacción compleja (Combobox, Carousel, DataTable) deben ser revalidados manualmente en cada PR."
+      }
+    },
+    "specialCare": {
+      "title": "Componentes con cuidado extra",
+      "subtitle": "Casos donde la accesibilidad exige atención más allá de lo que aportan las libs base.",
+      "items": {
+        "chart": "<strong>Chart</strong> — exige texto alternativo describiendo la tendencia (<code>aria-label</code> en el SVG) y tabla equivalente para lectores de pantalla.",
+        "dataTable": "<strong>DataTable</strong> — <code>aria-sort</code> en las columnas, <code>scope</code> en <code>th</code>, y caption descriptivo.",
+        "carousel": "<strong>Carousel</strong> — <code>aria-roledescription=\"carousel\"</code>, controles pausables e indicadores con <code>aria-current</code>.",
+        "dialog": "<strong>Dialog</strong> — focus trap, retorno del foco al trigger al cerrar, y <code>aria-modal=\"true\"</code>.",
+        "form": "<strong>Form</strong> — cada input debe tener <code>&lt;label&gt;</code> asociado, errores vinculados vía <code>aria-describedby</code> y <code>aria-invalid</code>."
+      }
+    },
+    "nav": {
+      "commitment": "Compromiso",
+      "contrast": "Contraste",
+      "keyboard": "Teclado",
+      "focus": "Focus visible",
+      "aria": "Patrones ARIA",
+      "screenReaders": "Lectores de pantalla",
+      "testing": "Tests",
+      "specialCare": "Cuidado extra"
+    }
+  }
+}
