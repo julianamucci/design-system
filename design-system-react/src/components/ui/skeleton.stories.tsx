@@ -29,7 +29,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <div aria-busy="true" aria-label="Carregando exemplo">
+    <div role="status" aria-busy="true" aria-label="Carregando exemplo">
       <Skeleton {...args} aria-hidden="true" />
     </div>
   ),

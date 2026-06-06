@@ -53,6 +53,7 @@ export const CardDePerfil: Story = {
   },
   render: () => (
     <div
+      role="status"
       aria-busy="true"
       aria-label="Carregando card de perfil"
       className="flex items-center gap-4 w-80 p-4 border rounded-md"
@@ -89,6 +90,7 @@ export const ListaComAvatar: Story = {
   },
   render: () => (
     <div
+      role="status"
       aria-busy="true"
       aria-label="Carregando lista de pedidos"
       className="w-96 space-y-4"
@@ -128,6 +130,7 @@ export const ImagemEmAspectRatio: Story = {
   },
   render: () => (
     <div
+      role="status"
       aria-busy="true"
       aria-label="Carregando imagem"
       className="w-80"
@@ -156,6 +159,7 @@ export const Paragrafo: Story = {
   },
   render: () => (
     <div
+      role="status"
       aria-busy="true"
       aria-label="Carregando parágrafo"
       className="w-80 space-y-2"

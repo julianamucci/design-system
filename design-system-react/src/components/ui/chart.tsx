@@ -173,6 +173,16 @@ export function ChartContainer({
     return () => observer.disconnect();
   }, []);
 
+  // Deriva um aria-label do título do option caso o consumidor não tenha fornecido um.
+  const derivedLabel = React.useMemo(() => {
+    const t = (option as { title?: { text?: string } | { text?: string }[] }).title;
+    if (!t) return undefined;
+    if (Array.isArray(t)) return t[0]?.text;
+    return t.text;
+  }, [option]);
+  const ariaLabel =
+    (rest as { 'aria-label'?: string })['aria-label'] ?? derivedLabel ?? 'Gráfico';
+
   return (
     <div
       data-slot="chart"
@@ -180,6 +190,7 @@ export function ChartContainer({
       className={cn('w-full', className)}
       style={{ minHeight: 200, ...style }}
       {...rest}
+      aria-label={ariaLabel}
     >
       <ReactECharts
         key={themeKey}

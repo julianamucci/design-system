@@ -25,8 +25,8 @@ function ResizablePanelGroup({
   )
 }
 
-function ResizablePanel({ ...props }: ResizablePrimitive.PanelProps) {
-  return <ResizablePrimitive.Panel data-slot="resizable-panel" {...props} />
+function ResizablePanel({ tabIndex = 0, ...props }: ResizablePrimitive.PanelProps & { tabIndex?: number }) {
+  return <ResizablePrimitive.Panel data-slot="resizable-panel" tabIndex={tabIndex} {...props} />
 }
 
 function ResizableHandle({

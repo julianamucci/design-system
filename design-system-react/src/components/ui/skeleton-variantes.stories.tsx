@@ -31,7 +31,7 @@ export const Retangulo: Story = {
     },
   },
   render: () => (
-    <div aria-busy="true" aria-label="Carregando bloco" className="w-64">
+    <div role="status" aria-busy="true" aria-label="Carregando bloco" className="w-64">
       <Skeleton className="h-20 w-full motion-reduce:animate-none" aria-hidden="true" />
     </div>
   ),
@@ -58,7 +58,7 @@ export const Circulo: Story = {
     },
   },
   render: () => (
-    <div aria-busy="true" aria-label="Carregando avatar">
+    <div role="status" aria-busy="true" aria-label="Carregando avatar">
       <Skeleton className="h-12 w-12 rounded-full motion-reduce:animate-none" aria-hidden="true" />
     </div>
   ),
@@ -85,7 +85,7 @@ export const LinhaDeTexto: Story = {
     },
   },
   render: () => (
-    <div aria-busy="true" aria-label="Carregando texto">
+    <div role="status" aria-busy="true" aria-label="Carregando texto">
       <Skeleton className="h-4 w-[200px] motion-reduce:animate-none" aria-hidden="true" />
     </div>
   ),

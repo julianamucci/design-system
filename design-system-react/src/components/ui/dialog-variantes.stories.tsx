@@ -175,7 +175,7 @@ export const WithScrollContent: Story = {
               Leia atentamente as condições antes de aceitar.
             </DialogDescription>
           </DialogHeader>
-          <div className="max-h-[40vh] overflow-y-auto pr-2 text-sm text-muted-foreground space-y-3">
+          <div tabIndex={0} role="region" aria-label="Conteúdo rolável" className="max-h-[40vh] overflow-y-auto pr-2 text-sm text-muted-foreground space-y-3">
             {Array.from({ length: 12 }).map((_, i) => (
               <p key={i}>
                 Cláusula {i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing

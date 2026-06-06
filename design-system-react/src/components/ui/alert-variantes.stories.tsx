@@ -68,10 +68,10 @@ export const Success: Story = {
 
 export const Warning: Story = {
   render: () => (
-    <Alert className="bg-warning/10 text-warning border-warning/30">
+    <Alert className="bg-warning/10 border-warning/30 text-foreground [&_svg]:text-warning">
       <TriangleAlert aria-hidden="true" className="h-4 w-4" />
-      <AlertTitle>Assinatura expirando</AlertTitle>
-      <AlertDescription>
+      <AlertTitle className="text-foreground">Assinatura expirando</AlertTitle>
+      <AlertDescription className="text-muted-foreground">
         Sua assinatura expira em 3 dias. Renove para evitar interrupções.
       </AlertDescription>
     </Alert>
