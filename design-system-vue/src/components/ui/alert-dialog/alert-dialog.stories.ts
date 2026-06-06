@@ -18,7 +18,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/AlertDialog',
   component: AlertDialog,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     docs: { page: withAutoDocsTab(AlertDialogDocs) },
   },

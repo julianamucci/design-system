@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 const meta = {
   title: 'UI/Dialog/Estados',
   component: Dialog,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

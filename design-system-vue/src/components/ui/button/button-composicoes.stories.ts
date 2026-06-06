@@ -6,6 +6,7 @@ import { Button } from './index';
 const meta: Meta<any> = {
   title: 'UI/Button/Composições',
   component: Button,
+  tags: ['form'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

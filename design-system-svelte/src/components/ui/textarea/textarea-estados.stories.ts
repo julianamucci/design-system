@@ -6,6 +6,7 @@ import TextareaStory from './TextareaStory.svelte';
 const meta = {
   title: 'UI/Textarea/Estados',
   component: TextareaStory,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

@@ -6,6 +6,7 @@ import { User } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Avatar/Composições',
   component: Avatar,
+  tags: ['display'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

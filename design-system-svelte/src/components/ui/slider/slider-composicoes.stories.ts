@@ -7,6 +7,7 @@ import SliderFormStory from './SliderFormStory.svelte';
 const meta = {
   title: 'UI/Slider/Composições',
   component: SliderStory,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

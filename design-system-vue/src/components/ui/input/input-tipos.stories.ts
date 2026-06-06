@@ -5,6 +5,7 @@ import { Input } from './index';
 const meta = {
   title: 'UI/Input/Tipos',
   component: Input,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Separator',
   component: SeparatorStory,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'centered',
     docs: {

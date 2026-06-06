@@ -7,6 +7,7 @@ import BadgeStory from './BadgeStory.svelte';
 const meta = {
   title: 'UI/Badge/Composições',
   component: Badge,
+  tags: ['feedback'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

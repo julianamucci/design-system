@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/ScrollArea',
   component: ScrollArea,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',
     docs: {

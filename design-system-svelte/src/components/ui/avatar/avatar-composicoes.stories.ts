@@ -7,6 +7,7 @@ import AvatarStory from './AvatarStory.svelte';
 const meta = {
   title: 'UI/Avatar/Composições',
   component: Avatar,
+  tags: ['display'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

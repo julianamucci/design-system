@@ -14,6 +14,7 @@ import { Globe } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Select/Variantes',
   component: Select,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 const meta = {
   title: 'UI/Sheet/Estados',
   component: Sheet,
+  tags: ['disclosure'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

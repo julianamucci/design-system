@@ -7,6 +7,7 @@ import { Code2, Eye, Settings2, User, Shield } from 'lucide-vue-next';
 const meta: Meta<any> = {
   title: 'UI/Tabs/Composições',
   component: Tabs,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

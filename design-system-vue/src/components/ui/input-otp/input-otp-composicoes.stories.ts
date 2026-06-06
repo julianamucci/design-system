@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 const meta = {
   title: 'UI/InputOTP/Composições',
   component: InputOTP,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

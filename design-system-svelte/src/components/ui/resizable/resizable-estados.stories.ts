@@ -6,6 +6,7 @@ import ResizableStory from './ResizableStory.svelte';
 const meta = {
   title: 'UI/Resizable/Estados',
   component: ResizableStory,
+  tags: ['layout'],
   parameters: {
     layout: 'padded',
     controls: { disable: true },

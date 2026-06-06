@@ -11,6 +11,7 @@ const meta = {
   },
   title: 'UI/Alert/Composições',
   component: Alert,
+  tags: ['feedback'],
 } satisfies Meta<typeof Alert>;
 
 export default meta;

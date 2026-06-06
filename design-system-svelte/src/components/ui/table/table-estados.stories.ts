@@ -9,6 +9,7 @@ import TableEstadoCarregando from './TableEstadoCarregando.svelte';
 const meta = {
   title: 'UI/Table/Estados',
   component: Table,
+  tags: ['tables'],
   parameters: {
     controls: { disable: true },
   },

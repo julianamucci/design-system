@@ -13,6 +13,7 @@ import {
 const meta = {
   title: 'UI/Menubar/Estados',
   component: Menubar,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

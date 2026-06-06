@@ -17,7 +17,7 @@ import {
 const meta = {
   title: 'UI/Command',
   component: Command,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
     docs: {

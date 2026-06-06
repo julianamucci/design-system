@@ -7,6 +7,7 @@ import SidebarStory from './SidebarStory.svelte';
 const meta = {
   title: 'UI/Sidebar/Variantes',
   component: SidebarStory,
+  tags: ['layout'],
   parameters: {
     layout: 'fullscreen',
     controls: { disable: true },

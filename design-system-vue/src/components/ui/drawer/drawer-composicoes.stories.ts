@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label';
 const meta = {
   title: 'UI/Drawer/Composições',
   component: Drawer,
+  tags: ['disclosure'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

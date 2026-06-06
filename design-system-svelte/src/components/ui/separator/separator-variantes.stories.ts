@@ -6,6 +6,7 @@ import SeparatorStory from './SeparatorStory.svelte';
 const meta = {
   title: 'UI/Separator/Variantes',
   component: SeparatorStory,
+  tags: ['layout'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

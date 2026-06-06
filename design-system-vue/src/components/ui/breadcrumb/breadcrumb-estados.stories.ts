@@ -14,6 +14,7 @@ import { SlashIcon } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Breadcrumb/Estados',
   component: Breadcrumb,
+  tags: ['navigation'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

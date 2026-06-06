@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 const meta = {
   title: 'UI/Carousel/Composições',
   component: Carousel,
+  tags: ['display'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

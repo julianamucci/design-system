@@ -6,6 +6,7 @@ import NavigationMenuStory from './NavigationMenuStory.svelte';
 const meta = {
   title: 'UI/NavigationMenu/Estados',
   component: NavigationMenuStory,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

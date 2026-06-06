@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/NavigationMenu',
   component: NavigationMenuStory,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'centered',
     docs: {

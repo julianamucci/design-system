@@ -21,7 +21,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Menubar',
   component: Menubar,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     docs: {
       page: withAutoDocsTab(MenubarDocs),

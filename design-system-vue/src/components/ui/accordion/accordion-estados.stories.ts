@@ -9,6 +9,7 @@ import {
 
 const meta = {
   title: 'UI/Accordion/Estados',
+  tags: ['disclosure'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

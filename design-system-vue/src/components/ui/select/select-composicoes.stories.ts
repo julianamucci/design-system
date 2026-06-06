@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label';
 const meta = {
   title: 'UI/Select/Composições',
   component: Select,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

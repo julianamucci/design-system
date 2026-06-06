@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const meta = {
   title: 'UI/Table/Estados',
   component: Table,
+  tags: ['tables'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

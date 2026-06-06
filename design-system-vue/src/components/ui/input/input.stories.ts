@@ -7,7 +7,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Input',
   component: Input,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(InputDocs) },
     layout: 'centered',

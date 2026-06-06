@@ -13,6 +13,7 @@ import { Save } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Tooltip/Variantes',
   component: Tooltip,
+  tags: ['overlay'],
   decorators: [
     (story) => ({
       components: { TooltipProvider, story },

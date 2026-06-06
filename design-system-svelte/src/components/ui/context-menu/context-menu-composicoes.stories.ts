@@ -7,6 +7,7 @@ import ContextMenuComposicaoStory from './ContextMenuComposicaoStory.svelte';
 const meta = {
   title: 'UI/ContextMenu/Composições',
   component: ContextMenu,
+  tags: ['overlay'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

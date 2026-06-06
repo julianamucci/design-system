@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Popover',
   component: PopoverStory,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
     docs: {

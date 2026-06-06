@@ -7,6 +7,7 @@ import CheckboxStory from './CheckboxStory.svelte';
 const meta = {
   title: 'UI/Checkbox/Estados',
   component: Checkbox,
+  tags: ['form'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

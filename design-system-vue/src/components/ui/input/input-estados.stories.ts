@@ -5,6 +5,7 @@ import { Input } from './index';
 const meta = {
   title: 'UI/Input/Estados',
   component: Input,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

@@ -14,6 +14,7 @@ import {
 const meta = {
   title: 'UI/Pagination/Composições',
   component: Pagination,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

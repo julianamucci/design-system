@@ -32,7 +32,7 @@ import {
 const meta = {
   title: 'UI/Sidebar',
   component: Sidebar,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'fullscreen',
     docs: {

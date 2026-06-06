@@ -7,7 +7,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta: Meta<any> = {
   title: 'UI/Button',
   component: Button,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(ButtonDocs) },
   },

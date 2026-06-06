@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 const meta = {
   title: 'UI/Sonner/Composicoes',
   component: Toaster,
+  tags: ['feedback'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

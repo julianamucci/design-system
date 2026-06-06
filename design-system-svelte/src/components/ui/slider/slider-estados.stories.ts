@@ -6,6 +6,7 @@ import SliderStory from './SliderStory.svelte';
 const meta = {
   title: 'UI/Slider/Estados',
   component: SliderStory,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

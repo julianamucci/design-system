@@ -15,6 +15,7 @@ const meta = {
       description: {
         component:
           'Composições reais do Dialog em fluxos de produto: confirmar email, edição de perfil e pré-visualização de mídia.',
+  tags: ['overlay'],
       },
     },
   },

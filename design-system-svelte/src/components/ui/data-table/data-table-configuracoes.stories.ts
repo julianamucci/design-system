@@ -5,6 +5,7 @@ import { invoices, baseColumns, type Invoice } from './data-table.fixtures';
 const meta = {
   title: 'UI/DataTable/Configurações',
   component: DataTable,
+  tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
 } satisfies Meta<typeof DataTable>;
 

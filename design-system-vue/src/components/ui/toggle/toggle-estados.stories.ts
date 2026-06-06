@@ -6,6 +6,7 @@ import { Bold, Underline } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Toggle/Estados',
   component: Toggle,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

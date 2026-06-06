@@ -7,6 +7,7 @@ import AspectRatioGridStory from './AspectRatioGridStory.svelte';
 const meta = {
   title: 'UI/AspectRatio/Composições',
   component: AspectRatioStory,
+  tags: ['layout'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

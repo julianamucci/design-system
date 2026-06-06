@@ -7,6 +7,7 @@ import CalendarStory from './CalendarStory.svelte';
 const meta = {
   title: 'UI/Calendar/Modos',
   component: Calendar,
+  tags: ['form'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

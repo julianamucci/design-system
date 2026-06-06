@@ -6,6 +6,7 @@ import SonnerToastStory from './SonnerToastStory.svelte';
 const meta = {
   title: 'UI/Sonner/Tipos',
   component: SonnerToastStory,
+  tags: ['feedback'],
   parameters: {
     layout: 'padded',
     controls: { disable: true },

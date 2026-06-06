@@ -9,6 +9,7 @@ import {
 const meta = {
   title: 'UI/HoverCard/Variantes',
   component: HoverCard,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

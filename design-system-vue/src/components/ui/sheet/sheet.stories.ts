@@ -17,7 +17,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Sheet',
   component: Sheet,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'disclosure'],
   parameters: {
     docs: { page: withAutoDocsTab(SheetDocs) },
   },

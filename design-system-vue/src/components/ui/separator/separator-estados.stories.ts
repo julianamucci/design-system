@@ -5,6 +5,7 @@ import { Separator } from './index';
 const meta: Meta<any> = {
   title: 'UI/Separator/Estados',
   component: Separator,
+  tags: ['layout'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

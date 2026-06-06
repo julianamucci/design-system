@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Resizable',
   component: PaneGroup,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',
     docs: {

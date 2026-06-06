@@ -7,6 +7,7 @@ import SelectStory from './SelectStory.svelte';
 const meta = {
   title: 'UI/Select/Composições',
   component: Select,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

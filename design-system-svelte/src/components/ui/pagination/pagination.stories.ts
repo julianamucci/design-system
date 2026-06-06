@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Pagination',
   component: PaginationStory,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'centered',
     docs: {

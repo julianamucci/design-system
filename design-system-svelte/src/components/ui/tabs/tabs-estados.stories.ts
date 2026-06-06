@@ -6,6 +6,7 @@ import TabsStory from './TabsStory.svelte';
 const meta = {
   title: 'UI/Tabs/Estados',
   component: TabsStory,
+  tags: ['navigation'],
   parameters: {
     controls: { disable: true },
   },

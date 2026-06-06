@@ -6,6 +6,7 @@ import InputOTPStory from './InputOTPStory.svelte';
 const meta = {
   title: 'UI/InputOTP/Composições',
   component: InputOTPStory,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

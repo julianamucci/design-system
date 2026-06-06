@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 const meta = {
   title: 'UI/Carousel/Configurações',
   component: Carousel,
+  tags: ['display'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -6,6 +6,7 @@ import MenubarStory from './MenubarStory.svelte';
 const meta = {
   title: 'UI/Menubar/Composições',
   component: MenubarStory,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

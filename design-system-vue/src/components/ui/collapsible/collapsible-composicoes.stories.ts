@@ -6,6 +6,7 @@ import { ChevronDown, Filter, Settings } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Collapsible/Composições',
   component: Collapsible,
+  tags: ['disclosure'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -6,6 +6,7 @@ import { AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next';
 const meta = {
   title: 'UI/ToggleGroup/Estados',
   component: ToggleGroup,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

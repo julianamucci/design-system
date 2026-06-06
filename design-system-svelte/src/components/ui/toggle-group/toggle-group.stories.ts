@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/ToggleGroup',
   component: ToggleGroup,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(ToggleGroupDocs) },
     layout: 'centered',

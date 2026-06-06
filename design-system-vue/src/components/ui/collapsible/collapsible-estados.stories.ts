@@ -7,6 +7,7 @@ import { ChevronDown } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Collapsible/Estados',
   component: Collapsible,
+  tags: ['disclosure'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

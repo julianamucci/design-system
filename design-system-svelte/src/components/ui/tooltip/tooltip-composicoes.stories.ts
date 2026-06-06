@@ -6,6 +6,7 @@ import TooltipStory from './TooltipStory.svelte';
 const meta = {
   title: 'UI/Tooltip/Composições',
   component: TooltipStory,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

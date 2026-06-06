@@ -6,6 +6,7 @@ import DialogStory from './DialogStory.svelte';
 const meta = {
   title: 'UI/Dialog/Estados',
   component: DialogStory,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

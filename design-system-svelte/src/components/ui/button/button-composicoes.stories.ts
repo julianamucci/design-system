@@ -12,6 +12,7 @@ const meta = {
   },
   title: 'UI/Button/Composições',
   component: Button,
+  tags: ['form'],
 } satisfies Meta<typeof Button>;
 
 export default meta;

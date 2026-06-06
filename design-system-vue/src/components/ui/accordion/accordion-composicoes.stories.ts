@@ -11,6 +11,7 @@ import { Info, AlertTriangle, CheckCircle } from 'lucide-vue-next';
 
 const meta = {
   title: 'UI/Accordion/Composições',
+  tags: ['disclosure'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -6,6 +6,7 @@ import { Check, Bell } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Badge/Composições',
   component: Badge,
+  tags: ['feedback'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

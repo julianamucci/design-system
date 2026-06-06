@@ -6,6 +6,7 @@ import PopoverStory from './PopoverStory.svelte';
 const meta = {
   title: 'UI/Popover/Variantes',
   component: PopoverStory,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

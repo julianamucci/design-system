@@ -5,6 +5,7 @@ import { AspectRatio } from './index';
 const meta = {
   title: 'UI/AspectRatio/Composições',
   component: AspectRatio,
+  tags: ['layout'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

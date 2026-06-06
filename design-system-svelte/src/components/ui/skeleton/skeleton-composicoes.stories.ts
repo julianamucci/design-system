@@ -6,6 +6,7 @@ import SkeletonComposicaoStory from './SkeletonComposicaoStory.svelte';
 const meta = {
   title: 'UI/Skeleton/Composições',
   component: SkeletonComposicaoStory,
+  tags: ['feedback'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

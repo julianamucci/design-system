@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Slider',
   component: Slider,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',
     docs: {

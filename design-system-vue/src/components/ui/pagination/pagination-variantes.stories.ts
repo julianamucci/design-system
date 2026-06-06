@@ -12,6 +12,7 @@ import {
 const meta = {
   title: 'UI/Pagination/Variantes',
   component: Pagination,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

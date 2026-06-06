@@ -20,6 +20,7 @@ import {
 const meta = {
   title: 'UI/DropdownMenu/Composições',
   component: DropdownMenu,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

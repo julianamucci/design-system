@@ -11,6 +11,7 @@ const meta = {
   },
   title: 'UI/Accordion/Estados',
   component: Accordion,
+  tags: ['disclosure'],
 } satisfies Meta<typeof Accordion>;
 
 export default meta;

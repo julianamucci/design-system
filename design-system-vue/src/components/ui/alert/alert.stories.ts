@@ -8,7 +8,7 @@ import { Info } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Alert',
   component: Alert,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'feedback'],
   parameters: {
     docs: { page: withAutoDocsTab(AlertDocs) },
   },

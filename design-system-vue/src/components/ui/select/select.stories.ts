@@ -15,7 +15,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Select',
   component: Select,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',
     docs: {

@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Sidebar',
   component: Sidebar,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'fullscreen',
     docs: { page: withAutoDocsTab(SidebarDocs) },

@@ -6,6 +6,7 @@ import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next'
 const meta = {
   title: 'UI/Alert/Variantes',
   component: Alert,
+  tags: ['feedback'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

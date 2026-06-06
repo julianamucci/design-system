@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta: Meta<Record<string, unknown>> = {
   title: 'UI/DataTable',
   component: DataTable as never,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(DataTableDocs) },

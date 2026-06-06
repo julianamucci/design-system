@@ -12,6 +12,7 @@ import {
 const meta = {
   title: 'UI/InputOTP/Variantes',
   component: InputOTP,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

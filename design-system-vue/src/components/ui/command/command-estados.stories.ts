@@ -12,6 +12,7 @@ import {
 const meta = {
   title: 'UI/Command/Estados',
   component: Command,
+  tags: ['overlay'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

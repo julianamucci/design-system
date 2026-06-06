@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 const meta = {
   title: 'UI/DropdownMenu/Estados',
   component: DropdownMenu,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

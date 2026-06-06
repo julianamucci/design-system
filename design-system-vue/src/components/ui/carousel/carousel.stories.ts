@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Carousel',
   component: Carousel,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'display'],
   parameters: {
     layout: 'centered',
     docs: { page: withAutoDocsTab(CarouselDocs) },

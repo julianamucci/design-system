@@ -18,6 +18,7 @@ import { Label } from '@/components/ui/label';
 const meta = {
   title: 'UI/Dialog/Variantes',
   component: Dialog,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

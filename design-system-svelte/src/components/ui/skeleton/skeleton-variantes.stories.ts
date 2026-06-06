@@ -6,6 +6,7 @@ import SkeletonStory from './SkeletonStory.svelte';
 const meta = {
   title: 'UI/Skeleton/Variantes',
   component: SkeletonStory,
+  tags: ['feedback'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

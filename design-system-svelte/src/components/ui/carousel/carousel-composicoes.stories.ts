@@ -7,6 +7,7 @@ import CarouselStory from './CarouselStory.svelte';
 const meta = {
   title: 'UI/Carousel/Composições',
   component: Carousel,
+  tags: ['display'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

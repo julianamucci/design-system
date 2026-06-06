@@ -7,6 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 const meta = {
   title: 'UI/Label/Composições',
   component: Label,
+  tags: ['form'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

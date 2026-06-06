@@ -13,7 +13,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/InputOTP',
   component: InputOTP,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: {
       page: withAutoDocsTab(InputOTPDocs),

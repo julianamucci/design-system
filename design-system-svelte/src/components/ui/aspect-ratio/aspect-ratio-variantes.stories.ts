@@ -6,6 +6,7 @@ import AspectRatioStory from './AspectRatioStory.svelte';
 const meta = {
   title: 'UI/AspectRatio/Variantes',
   component: AspectRatioStory,
+  tags: ['layout'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

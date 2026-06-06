@@ -6,6 +6,7 @@ import { Progress } from './index';
 const meta = {
   title: 'UI/Progress/Composições',
   component: Progress,
+  tags: ['feedback'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

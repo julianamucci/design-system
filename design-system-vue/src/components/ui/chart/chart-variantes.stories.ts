@@ -18,6 +18,7 @@ const pieData = [
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
   title: 'UI/Chart/Variantes',
+  tags: ['display'],
 };
 export default meta;
 type Story = StoryObj;

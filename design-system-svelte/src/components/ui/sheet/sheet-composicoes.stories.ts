@@ -7,6 +7,7 @@ import { track } from '@/lib/analytics';
 const meta = {
   title: 'UI/Sheet/Composições',
   component: SheetStory,
+  tags: ['disclosure'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

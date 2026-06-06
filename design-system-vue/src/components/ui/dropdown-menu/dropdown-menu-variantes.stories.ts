@@ -11,6 +11,7 @@ import {
 const meta = {
   title: 'UI/DropdownMenu/Variantes',
   component: DropdownMenu,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

@@ -14,7 +14,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Tooltip',
   component: Tooltip,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   decorators: [
     (story) => ({
       components: { TooltipProvider, story },

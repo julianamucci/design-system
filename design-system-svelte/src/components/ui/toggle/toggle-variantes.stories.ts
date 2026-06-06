@@ -6,6 +6,7 @@ import ToggleStory from './ToggleStory.svelte';
 const meta = {
   title: 'UI/Toggle/Variantes',
   component: ToggleStory,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

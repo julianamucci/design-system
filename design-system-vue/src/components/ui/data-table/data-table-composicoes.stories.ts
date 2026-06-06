@@ -13,6 +13,7 @@ import {
 const meta: Meta<Record<string, unknown>> = {
   title: 'UI/DataTable/Composições',
   component: DataTable as never,
+  tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
 };
 

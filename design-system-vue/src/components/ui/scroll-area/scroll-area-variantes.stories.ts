@@ -5,6 +5,7 @@ import { ScrollArea, ScrollBar } from './index';
 const meta = {
   title: 'UI/ScrollArea/Variantes',
   component: ScrollArea,
+  tags: ['layout'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

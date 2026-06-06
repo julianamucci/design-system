@@ -14,6 +14,7 @@ const meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
   title: 'UI/Chart/Estados',
   component: ChartContainer,
+  tags: ['display'],
 } satisfies Meta<typeof ChartContainer>;
 export default meta;
 type Story = StoryObj<typeof meta>;

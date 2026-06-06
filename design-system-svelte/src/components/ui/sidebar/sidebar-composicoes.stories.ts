@@ -9,6 +9,7 @@ import SidebarSkeletonStory from './SidebarSkeletonStory.svelte';
 const meta = {
   title: 'UI/Sidebar/Composições',
   component: SidebarNavGroupsStory,
+  tags: ['layout'],
   parameters: {
     layout: 'fullscreen',
     controls: { disable: true },

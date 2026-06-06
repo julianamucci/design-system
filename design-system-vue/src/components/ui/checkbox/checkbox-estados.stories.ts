@@ -5,6 +5,7 @@ import { Checkbox } from './index';
 const meta = {
   title: 'UI/Checkbox/Estados',
   component: Checkbox,
+  tags: ['form'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

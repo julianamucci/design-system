@@ -6,6 +6,7 @@ import SheetStory from './SheetStory.svelte';
 const meta = {
   title: 'UI/Sheet/Variantes',
   component: SheetStory,
+  tags: ['disclosure'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

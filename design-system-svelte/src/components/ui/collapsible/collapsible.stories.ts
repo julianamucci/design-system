@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Collapsible',
   component: Collapsible,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'disclosure'],
   parameters: {
     layout: 'centered',
     docs: { page: withAutoDocsTab(CollapsibleDocs) },

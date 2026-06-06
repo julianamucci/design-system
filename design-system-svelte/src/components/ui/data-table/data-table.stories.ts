@@ -8,7 +8,7 @@ import { invoices, baseColumns } from './data-table.fixtures';
 const meta = {
   title: 'UI/DataTable',
   component: DataTable,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(DataTableDocs) },

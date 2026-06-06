@@ -6,6 +6,7 @@ import ToggleGroupStory from './ToggleGroupStory.svelte';
 const meta = {
   title: 'UI/ToggleGroup/Variantes',
   component: ToggleGroupStory,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

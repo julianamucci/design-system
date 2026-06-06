@@ -11,7 +11,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/HoverCard',
   component: HoverCard,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     docs: {
       page: withAutoDocsTab(HoverCardDocs),

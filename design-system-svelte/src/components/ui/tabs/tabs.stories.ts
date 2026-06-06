@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Tabs',
   component: Tabs,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     docs: { page: withAutoDocsTab(TabsDocs) },
   },

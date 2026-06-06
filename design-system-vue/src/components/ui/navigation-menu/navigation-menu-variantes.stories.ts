@@ -12,6 +12,7 @@ import {
 const meta = {
   title: 'UI/NavigationMenu/Variantes',
   component: NavigationMenu,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

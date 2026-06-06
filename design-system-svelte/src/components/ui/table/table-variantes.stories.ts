@@ -10,6 +10,7 @@ import TableVarianteComAcoes from './TableVarianteComAcoes.svelte';
 const meta = {
   title: 'UI/Table/Variantes',
   component: Table,
+  tags: ['tables'],
   parameters: {
     controls: { disable: true },
   },

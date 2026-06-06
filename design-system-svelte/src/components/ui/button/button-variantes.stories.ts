@@ -11,6 +11,7 @@ const meta = {
   },
   title: 'UI/Button/Variantes',
   component: Button,
+  tags: ['form'],
 } satisfies Meta<typeof Button>;
 
 export default meta;

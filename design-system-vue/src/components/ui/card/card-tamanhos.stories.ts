@@ -11,6 +11,7 @@ import {
 const meta = {
   title: 'UI/Card/Tamanhos',
   component: Card,
+  tags: ['layout'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

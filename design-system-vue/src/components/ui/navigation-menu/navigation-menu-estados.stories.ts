@@ -12,6 +12,7 @@ import {
 const meta = {
   title: 'UI/NavigationMenu/Estados',
   component: NavigationMenu,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

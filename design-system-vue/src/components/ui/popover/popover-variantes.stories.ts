@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 const meta = {
   title: 'UI/Popover/Variantes',
   component: Popover,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

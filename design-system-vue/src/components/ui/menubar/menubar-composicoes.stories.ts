@@ -20,6 +20,7 @@ import {
 const meta = {
   title: 'UI/Menubar/Composições',
   component: Menubar,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

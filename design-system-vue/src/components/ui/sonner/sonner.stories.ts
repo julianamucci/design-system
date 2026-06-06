@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Sonner',
   component: Toaster,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'feedback'],
   parameters: {
     docs: { page: withAutoDocsTab(SonnerDocs) },
   },

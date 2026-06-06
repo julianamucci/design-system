@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Breadcrumb',
   component: Breadcrumb,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     docs: {
       page: withAutoDocsTab(BreadcrumbDocs),

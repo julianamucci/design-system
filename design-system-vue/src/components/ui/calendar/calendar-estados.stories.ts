@@ -8,6 +8,7 @@ import { RangeCalendar } from '@/components/ui/range-calendar';
 const meta = {
   title: 'UI/Calendar/Estados',
   component: Calendar,
+  tags: ['form'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

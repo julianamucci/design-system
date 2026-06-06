@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 const meta: Meta<any> = {
   title: 'UI/Tabs/Estados',
   component: Tabs,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

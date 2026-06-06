@@ -20,6 +20,7 @@ import { SlashIcon } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Breadcrumb/Composições',
   component: Breadcrumb,
+  tags: ['navigation'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

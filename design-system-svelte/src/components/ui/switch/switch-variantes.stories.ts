@@ -6,6 +6,7 @@ import SwitchStory from './SwitchStory.svelte';
 const meta = {
   title: 'UI/Switch/Variantes',
   component: SwitchStory,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

@@ -6,6 +6,7 @@ import DrawerStory from './DrawerStory.svelte';
 const meta = {
   title: 'UI/Drawer/Estados',
   component: DrawerStory,
+  tags: ['disclosure'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

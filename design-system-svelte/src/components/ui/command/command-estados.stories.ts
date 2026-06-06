@@ -9,6 +9,7 @@ import CommandEstadoDisabledStory from './CommandEstadoDisabledStory.svelte';
 const meta = {
   title: 'UI/Command/Estados',
   component: Command.Root,
+  tags: ['overlay'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

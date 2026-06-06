@@ -6,6 +6,7 @@ import { Button } from './index';
 const meta: Meta<any> = {
   title: 'UI/Button/Estados',
   component: Button,
+  tags: ['form'],
   args: {
     onClick: fn(),
   } as never,

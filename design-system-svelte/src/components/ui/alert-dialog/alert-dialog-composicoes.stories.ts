@@ -7,6 +7,7 @@ import AlertDialogStory from './AlertDialogStory.svelte';
 const meta = {
   title: 'UI/AlertDialog/Composições',
   component: AlertDialog,
+  tags: ['overlay'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

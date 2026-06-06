@@ -17,7 +17,7 @@ const chartData = [
 const meta = {
   title: 'UI/Chart',
   component: ChartContainer,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'display'],
   parameters: {
     layout: 'centered',
     docs: { page: withAutoDocsTab(ChartDocs) },

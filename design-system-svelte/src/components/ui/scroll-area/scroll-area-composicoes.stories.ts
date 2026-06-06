@@ -6,6 +6,7 @@ import ScrollAreaStory from './ScrollAreaStory.svelte';
 const meta = {
   title: 'UI/ScrollArea/Composições',
   component: ScrollAreaStory,
+  tags: ['layout'],
   parameters: {
     layout: 'padded',
     controls: { disable: true },

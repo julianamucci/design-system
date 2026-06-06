@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 const meta = {
   title: 'UI/Switch/Composições',
   component: Switch,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

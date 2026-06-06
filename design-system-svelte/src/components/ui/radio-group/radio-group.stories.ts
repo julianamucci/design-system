@@ -9,7 +9,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/RadioGroup',
   component: RadioGroup,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(RadioGroupDocs) },
     layout: 'centered',

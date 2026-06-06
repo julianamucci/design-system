@@ -5,6 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from './index';
 const meta = {
   title: 'UI/Avatar/Tamanhos',
   component: Avatar,
+  tags: ['display'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -6,6 +6,7 @@ import { invoices, baseColumns, currency, statusVariant, type Invoice } from './
 const meta = {
   title: 'UI/DataTable/Composições',
   component: DataTable,
+  tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
 } satisfies Meta<typeof DataTable>;
 

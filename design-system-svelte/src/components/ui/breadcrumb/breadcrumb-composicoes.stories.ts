@@ -7,6 +7,7 @@ import BreadcrumbStory from './BreadcrumbStory.svelte';
 const meta = {
   title: 'UI/Breadcrumb/Composições',
   component: Breadcrumb,
+  tags: ['navigation'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

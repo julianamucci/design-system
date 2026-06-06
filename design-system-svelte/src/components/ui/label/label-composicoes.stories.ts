@@ -14,6 +14,7 @@ import LabelCampoObrigatorioStory from './LabelCampoObrigatorioStory.svelte';
 const meta = {
   title: 'UI/Label/Composições',
   component: LabelWithInputStory,
+  tags: ['form'],
   parameters: {
     controls: { disable: true },
     layout: 'centered',

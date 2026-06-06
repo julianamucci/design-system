@@ -21,6 +21,7 @@ import { LayoutDashboard, Blocks, Palette, Settings, User } from 'lucide-vue-nex
 const meta = {
   title: 'UI/Sidebar/Variantes',
   component: Sidebar,
+  tags: ['layout'],
   parameters: {
     layout: 'fullscreen',
     controls: { disable: true },

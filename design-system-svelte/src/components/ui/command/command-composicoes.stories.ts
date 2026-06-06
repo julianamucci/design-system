@@ -10,6 +10,7 @@ import CommandComposicaoPaletteStory from './CommandComposicaoPaletteStory.svelt
 const meta = {
   title: 'UI/Command/Composições',
   component: Command,
+  tags: ['overlay'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

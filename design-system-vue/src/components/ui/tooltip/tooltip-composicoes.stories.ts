@@ -13,6 +13,7 @@ import { Save, Trash2, Share2, Copy, Pencil } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Tooltip/Composições',
   component: Tooltip,
+  tags: ['overlay'],
   decorators: [
     (story) => ({
       components: { TooltipProvider, story },

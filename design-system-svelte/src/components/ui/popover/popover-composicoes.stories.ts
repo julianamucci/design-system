@@ -7,6 +7,7 @@ import { track } from '@/lib/analytics';
 const meta = {
   title: 'UI/Popover/Composições',
   component: PopoverStory,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 const meta = {
   title: 'UI/AlertDialog/Estados',
   component: AlertDialog,
+  tags: ['overlay'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

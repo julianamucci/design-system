@@ -6,6 +6,7 @@ import { Bold, Italic, Underline, List, Eye, LayoutGrid } from 'lucide-vue-next'
 const meta = {
   title: 'UI/Toggle/Composições',
   component: Toggle,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

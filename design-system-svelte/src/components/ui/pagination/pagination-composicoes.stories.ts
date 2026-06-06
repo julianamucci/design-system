@@ -6,6 +6,7 @@ import PaginationStory from './PaginationStory.svelte';
 const meta = {
   title: 'UI/Pagination/Composições',
   component: PaginationStory,
+  tags: ['navigation'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

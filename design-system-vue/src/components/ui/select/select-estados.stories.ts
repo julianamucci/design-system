@@ -11,6 +11,7 @@ import {
 const meta = {
   title: 'UI/Select/Estados',
   component: Select,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

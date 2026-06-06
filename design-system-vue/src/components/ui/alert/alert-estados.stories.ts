@@ -6,6 +6,7 @@ import { Info } from 'lucide-vue-next';
 const meta = {
   title: 'UI/Alert/Estados',
   component: Alert,
+  tags: ['feedback'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

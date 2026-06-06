@@ -32,6 +32,7 @@ import {
 const meta = {
   title: 'UI/Sidebar/Composições',
   component: Sidebar,
+  tags: ['layout'],
   parameters: {
     layout: 'fullscreen',
     controls: { disable: true },

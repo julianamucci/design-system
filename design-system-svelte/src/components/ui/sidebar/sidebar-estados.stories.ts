@@ -9,6 +9,7 @@ import SidebarFixedStory from './SidebarFixedStory.svelte';
 const meta = {
   title: 'UI/Sidebar/Estados',
   component: SidebarStory,
+  tags: ['layout'],
   parameters: {
     layout: 'fullscreen',
     controls: { disable: true },

@@ -14,6 +14,7 @@ import {
 const meta = {
   title: 'UI/ContextMenu/Estados',
   component: ContextMenu,
+  tags: ['overlay'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

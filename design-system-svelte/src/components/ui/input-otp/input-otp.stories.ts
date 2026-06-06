@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/InputOTP',
   component: InputOTPStory,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',
     docs: {

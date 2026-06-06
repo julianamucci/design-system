@@ -6,6 +6,7 @@ import ProgressStory from './ProgressStory.svelte';
 const meta = {
   title: 'UI/Progress/Composições',
   component: ProgressStory,
+  tags: ['feedback'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

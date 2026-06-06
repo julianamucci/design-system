@@ -15,7 +15,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Popover',
   component: Popover,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     docs: {
       page: withAutoDocsTab(PopoverDocs),

@@ -7,6 +7,7 @@ import RadioGroupStory from './RadioGroupStory.svelte';
 const meta = {
   title: 'UI/RadioGroup/Variantes',
   component: RadioGroup,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

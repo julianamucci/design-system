@@ -6,6 +6,7 @@ import HoverCardStory from './HoverCardStory.svelte';
 const meta = {
   title: 'UI/HoverCard/Composições',
   component: HoverCardStory,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

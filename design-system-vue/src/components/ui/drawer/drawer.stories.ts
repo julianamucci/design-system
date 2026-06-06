@@ -17,7 +17,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const meta = {
   title: 'UI/Drawer',
   component: Drawer,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'disclosure'],
   parameters: {
     docs: {
       page: withAutoDocsTab(DrawerDocs),

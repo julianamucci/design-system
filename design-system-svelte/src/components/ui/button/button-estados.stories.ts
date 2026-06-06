@@ -11,6 +11,7 @@ const meta = {
   },
   title: 'UI/Button/Estados',
   component: Button,
+  tags: ['form'],
   args: {
     onclick: fn(),
   } as never,

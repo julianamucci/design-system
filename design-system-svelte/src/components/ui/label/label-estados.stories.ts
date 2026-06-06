@@ -20,6 +20,7 @@ import LabelDisabledGroupStory from './LabelDisabledGroupStory.svelte';
 const meta = {
   title: 'UI/Label/Estados',
   component: LabelStory,
+  tags: ['form'],
   parameters: {
     controls: { disable: true },
     layout: 'centered',

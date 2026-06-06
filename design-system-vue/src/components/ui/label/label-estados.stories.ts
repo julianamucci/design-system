@@ -5,6 +5,7 @@ import { Label } from './index';
 const meta = {
   title: 'UI/Label/Estados',
   component: Label,
+  tags: ['form'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -6,6 +6,7 @@ import DropdownMenuStory from './DropdownMenuStory.svelte';
 const meta = {
   title: 'UI/DropdownMenu/Variantes',
   component: DropdownMenuStory,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

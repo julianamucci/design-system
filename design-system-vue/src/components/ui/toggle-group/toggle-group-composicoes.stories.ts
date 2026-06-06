@@ -10,6 +10,7 @@ import {
 const meta = {
   title: 'UI/ToggleGroup/Composições',
   component: ToggleGroup,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

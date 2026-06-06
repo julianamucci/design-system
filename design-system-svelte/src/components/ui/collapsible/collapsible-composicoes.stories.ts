@@ -8,6 +8,7 @@ import CollapsibleComIconeStory from './CollapsibleComIconeStory.svelte';
 const meta = {
   title: 'UI/Collapsible/Composições',
   component: Collapsible,
+  tags: ['disclosure'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

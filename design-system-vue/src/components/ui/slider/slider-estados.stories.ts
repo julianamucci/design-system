@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 const meta = {
   title: 'UI/Slider/Estados',
   component: Slider,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

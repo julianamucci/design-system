@@ -7,6 +7,7 @@ import InputStory from './InputStory.svelte';
 const meta = {
   title: 'UI/Input/Tipos',
   component: InputStory,
+  tags: ['form'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label';
 const meta = {
   title: 'UI/Sheet/Composições',
   component: Sheet,
+  tags: ['disclosure'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },

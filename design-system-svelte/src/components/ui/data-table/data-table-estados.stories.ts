@@ -5,6 +5,7 @@ import { baseColumns } from './data-table.fixtures';
 const meta = {
   title: 'UI/DataTable/Estados',
   component: DataTable,
+  tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
 } satisfies Meta<typeof DataTable>;
 

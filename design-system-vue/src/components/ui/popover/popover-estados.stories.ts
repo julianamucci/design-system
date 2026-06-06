@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 const meta = {
   title: 'UI/Popover/Estados',
   component: Popover,
+  tags: ['overlay'],
   parameters: {
     layout: 'centered',
     controls: { disable: true },
