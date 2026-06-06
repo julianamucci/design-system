@@ -34,7 +34,7 @@ const preview: Preview = {
     options: {
       storySort: {
         order: [
-          'Foundations',
+          'Foundations', ['Sobre', 'Comece por Aqui', 'Cores e Temas', 'Tipografia', 'Espaçamento', 'Elevação, Bordas e Sombras', 'Icons', 'Motion', 'Densidades', 'Acessibilidade', 'Tom de Voz', 'Sistema de Temas', 'Internacionalização', 'Analytics', 'SEO e GEO', 'Divergências Cross-Stack'],
           'UI', ['*', ['Docs', 'Playground', 'Variantes', 'Tamanhos', 'Composições', 'Estados', '*']],
           '*',
         ],

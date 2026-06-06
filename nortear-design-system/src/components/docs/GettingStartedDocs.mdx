@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { createElement, useEffect, useRef } from 'react';
+import { createGettingStartedDocs } from './GettingStartedDocs';
+
+<Meta
+  title="Foundations/Comece por Aqui"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export function GettingStartedDocsPage() {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!ref.current) return;
+    const el = createGettingStartedDocs();
+    ref.current.appendChild(el);
+    return () => {
+      if (ref.current) ref.current.innerHTML = '';
+    };
+  }, []);
+  return createElement('div', { ref, style: { flex: 1, width: '100%', height: '100%' } });
+}
+
+<GettingStartedDocsPage />

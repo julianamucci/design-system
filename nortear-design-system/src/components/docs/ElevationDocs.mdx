@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { createElement, useEffect, useRef } from 'react';
+import { createElevationDocs } from './ElevationDocs';
+
+<Meta
+  title="Foundations/Elevação, Bordas e Sombras"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export function ElevationDocsPage() {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!ref.current) return;
+    const el = createElevationDocs();
+    ref.current.appendChild(el);
+    return () => {
+      if (ref.current) ref.current.innerHTML = '';
+    };
+  }, []);
+  return createElement('div', { ref, style: { flex: 1, width: '100%', height: '100%' } });
+}
+
+<ElevationDocsPage />
