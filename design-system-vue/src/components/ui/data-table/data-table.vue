@@ -643,6 +643,11 @@ watch(
               v-for="header in table.getHeaderGroups()[0]?.headers ?? []"
               :key="`f-${header.id}`"
               :style="pinStyle(header.column)"
+              :aria-label="
+                header.column.getCanFilter() && header.column.columnDef.meta?.filter
+                  ? undefined
+                  : 'Sem filtro disponível'
+              "
               :class="
                 cn(
                   'py-1.5',
@@ -678,6 +683,7 @@ watch(
                   @update:model-value="(v) => header.column.setFilterValue(v)"
                 />
               </template>
+              <span v-else class="sr-only">Sem filtro</span>
             </TableHead>
           </TableRow>
         </TableHeader>

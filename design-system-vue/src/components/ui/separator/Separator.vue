@@ -25,6 +25,8 @@ const delegatedProps = reactiveOmit(props, 'class')
   <Separator
     data-slot="separator"
     v-bind="delegatedProps"
+    :aria-hidden="props.decorative ? 'true' : undefined"
+    :aria-orientation="!props.decorative ? props.orientation : undefined"
     :class="
       cn(
         'shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:self-stretch',

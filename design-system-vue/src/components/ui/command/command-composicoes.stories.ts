@@ -174,6 +174,7 @@ export const ComoCombobox: Story = {
           <Button
             variant="outline"
             role="combobox"
+            aria-label="Selecionar item"
             :aria-expanded="open"
             class="w-56 justify-between"
           >

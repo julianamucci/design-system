@@ -25,13 +25,7 @@ const props = defineProps<ToasterProps>()
       '--border-radius': 'var(--radius)',
     }"
     v-bind="props"
-    :toast-options="{
-      ...(props.toastOptions ?? {}),
-      classes: {
-        toast: 'rounded-2xl',
-        ...(props.toastOptions?.classes ?? {}),
-      },
-    }"
+    :toast-options="props.toastOptions ?? {}"
   >
     <template #success-icon>
       <CircleCheckIcon class="size-4" />

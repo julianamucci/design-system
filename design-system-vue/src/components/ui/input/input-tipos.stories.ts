@@ -84,7 +84,7 @@ export const Numero: Story = {
 export const Arquivo: Story = {
   render: () => ({
     components: { Input },
-    template: '<div class="w-64"><Input type="file" /></div>',
+    template: '<div class="w-64"><label for="arquivo-input" class="block text-sm font-medium mb-1">Anexar arquivo</label><Input id="arquivo-input" type="file" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     await step('Input type=file está renderizado', async () => {

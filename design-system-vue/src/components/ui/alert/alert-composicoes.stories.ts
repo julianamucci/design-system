@@ -75,10 +75,10 @@ export const MultiplosTipos: Story = {
           <AlertTitle>Sucesso</AlertTitle>
           <AlertDescription>Ação concluída com sucesso.</AlertDescription>
         </Alert>
-        <Alert class="bg-warning/10 text-warning border-warning/30">
+        <Alert class="bg-warning/10 border-warning/30 text-foreground [&>svg]:text-warning">
           <TriangleAlert class="h-4 w-4" aria-hidden="true" />
           <AlertTitle>Aviso</AlertTitle>
-          <AlertDescription>Aviso que requer atenção.</AlertDescription>
+          <AlertDescription class="text-foreground">Aviso que requer atenção.</AlertDescription>
         </Alert>
       </div>
     `,

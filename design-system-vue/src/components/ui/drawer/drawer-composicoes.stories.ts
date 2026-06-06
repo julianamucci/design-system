@@ -152,7 +152,7 @@ export const ComScroll: Story = {
               <DrawerTitle>Termos de serviço</DrawerTitle>
               <DrawerDescription>Leia atentamente os termos antes de aceitar.</DrawerDescription>
             </DrawerHeader>
-            <div class="space-y-3 text-sm text-muted-foreground max-h-72 overflow-y-auto px-4">
+            <div tabindex="0" role="region" aria-label="Conteúdo dos termos" class="space-y-3 text-sm text-muted-foreground max-h-72 overflow-y-auto px-4">
               <p v-for="i in 12" :key="i">
                 Parágrafo {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation

@@ -40,6 +40,7 @@ export const Playground: Story = {
     },
     template: `
       <div
+        role="status"
         aria-busy="true"
         aria-label="Carregando conteúdo de exemplo"
         class="w-[320px] space-y-3"

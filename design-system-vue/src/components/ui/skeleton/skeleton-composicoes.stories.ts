@@ -28,6 +28,7 @@ export const CardDePerfil: Story = {
     components: { Skeleton },
     template: `
       <div
+        role="status"
         aria-busy="true"
         aria-label="Carregando card de perfil"
         class="flex items-center gap-4 w-[320px] rounded-md border p-4"
@@ -67,6 +68,7 @@ export const ListaComAvatar: Story = {
     components: { Skeleton },
     template: `
       <ul
+        role="list"
         aria-busy="true"
         aria-label="Carregando lista de pedidos"
         class="space-y-3 w-[360px] m-0 p-0 list-none"
@@ -103,6 +105,7 @@ export const ImagemEmAspectRatio: Story = {
     components: { Skeleton, AspectRatio },
     template: `
       <div
+        role="status"
         aria-busy="true"
         aria-label="Carregando imagem em proporção 16:9"
         class="w-[480px]"
@@ -134,6 +137,7 @@ export const Paragrafo: Story = {
     components: { Skeleton },
     template: `
       <div
+        role="status"
         aria-busy="true"
         aria-label="Carregando parágrafo de texto"
         class="space-y-2 w-[360px]"

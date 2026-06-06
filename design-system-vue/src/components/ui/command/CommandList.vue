@@ -19,8 +19,6 @@ const forwarded = useForwardProps(delegatedProps)
     :aria-label="($attrs['aria-label'] as string) || 'Resultados'"
     :class="cn('no-scrollbar max-h-72 scroll-py-1 outline-none overflow-x-hidden overflow-y-auto', props.class)"
   >
-    <div role="presentation">
-      <slot />
-    </div>
+    <slot />
   </ListboxContent>
 </template>

@@ -3,7 +3,7 @@
   baseado em @unovis/vue. API agora é declarativa: `<ChartContainer :option="..." />`.
 -->
 <script setup lang="ts">
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
+import { computed, onMounted, onBeforeUnmount, ref, useAttrs } from 'vue';
 import VChart from 'vue-echarts';
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
@@ -87,10 +87,16 @@ onBeforeUnmount(() => observer?.disconnect());
 
 const containerClass = computed(() => cn('w-full', props.class));
 const rendererName = computed(() => props.renderer ?? 'svg');
+
+const attrs = useAttrs();
+const accessibleLabel = computed(
+  () => (attrs['aria-label'] as string | undefined) ?? (attrs['aria-labelledby'] as string | undefined),
+);
+const containerRole = computed(() => (accessibleLabel.value ? 'img' : undefined));
 </script>
 
 <template>
-  <div data-slot="chart" role="img" :class="containerClass" :style="{ minHeight: '200px' }">
+  <div data-slot="chart" :role="containerRole" :class="containerClass" :style="{ minHeight: '200px' }">
     <VChart
       :key="themeKey"
       :option="option"
