@@ -1,0 +1,17 @@
+{/* Unattached docs page — sem componente atrelado (Meta sem prop "of") */}
+import { Meta } from '@storybook/addon-docs/blocks';
+import { SeoGeoDocs } from './SeoGeoDocs';
+
+<Meta
+  title="Foundations/SEO e GEO"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+<SeoGeoDocs />

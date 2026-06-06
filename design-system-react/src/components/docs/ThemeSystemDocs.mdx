@@ -1,0 +1,17 @@
+{/* Unattached docs page — sem componente atrelado (Meta sem prop "of") */}
+import { Meta } from '@storybook/addon-docs/blocks';
+import { ThemeSystemDocs } from './ThemeSystemDocs';
+
+<Meta
+  title="Foundations/Sistema de Temas"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+<ThemeSystemDocs />

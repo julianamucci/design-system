@@ -1,0 +1,17 @@
+{/* Unattached docs page — sem componente atrelado (Meta sem prop "of") */}
+import { Meta } from '@storybook/addon-docs/blocks';
+import { AccessibilityDocs } from './AccessibilityDocs';
+
+<Meta
+  title="Foundations/Acessibilidade"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+<AccessibilityDocs />

@@ -1,0 +1,17 @@
+{/* Unattached docs page — sem componente atrelado (Meta sem prop "of") */}
+import { Meta } from '@storybook/addon-docs/blocks';
+import { GettingStartedDocs } from './GettingStartedDocs';
+
+<Meta
+  title="Foundations/Comece por Aqui"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+<GettingStartedDocs />
