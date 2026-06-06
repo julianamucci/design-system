@@ -3,12 +3,12 @@
     "title": "Chart",
     "category": "Display",
     "type": "Componente",
-    "description": "Visualização de dados quantitativos via gráficos integrados ao sistema de design por tokens de cor. Baseado em Recharts (React/Vue) ou SVG puro (Basecoat).",
+    "description": "Visualização declarativa de dados via objeto de configuração único. Tipos bar, line, area e pie com tokens de cor do design system.",
     "seo": {
       "title": "Chart — Display",
-      "description": "Documentação do Chart: gráficos bar, line, area, pie e radar via Recharts, integração de tema por tokens e acessibilidade WCAG com aria-label.",
-      "aiSummary": "Componente Chart com ChartContainer, ChartTooltipContent e ChartLegendContent. Recharts em React/Vue, SVG puro no Basecoat. Tokens --chart-1 a --chart-5 para cores de séries.",
-      "aiEntities": "Chart, Recharts, ChartContainer, ChartConfig, ChartTooltip, ChartLegend, SVG, WCAG 2.1, aria-label, accessibilityLayer",
+      "description": "Documentação do Chart: gráficos bar, line, area e pie via objeto declarativo, tema reativo por tokens e acessibilidade WCAG.",
+      "aiSummary": "Componente Chart com ChartContainer e helpers buildBarOption/buildLineOption/buildAreaOption/buildPieOption. API declarativa baseada em Apache ECharts. Tokens --chart-1 a --chart-5 para cores de séries.",
+      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.1, aria-label, decal pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -24,23 +24,23 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>ChartContainer</strong> — wrapper obrigatório que injeta tokens de cor via CSS e provê contexto do <code>ChartConfig</code>.",
-      "item2": "<strong>ChartTooltip + ChartTooltipContent</strong> — tooltip estilizado com o tema do design system; exibe valores ao passar o mouse.",
-      "item3": "<strong>ChartLegend + ChartLegendContent</strong> — legenda das séries com cor e label; obrigatória em gráficos multi-séries.",
-      "item4": "<strong>ChartStyle</strong> — injeção de variáveis CSS <code>--color-[key]</code> geradas a partir do <code>ChartConfig</code>; renderizado automaticamente pelo <code>ChartContainer</code>.",
-      "structureLabel": "Estrutura básica (React):",
-      "structureCode": "<ChartContainer config={chartConfig} aria-label=\"...\">\n  <BarChart data={data}>\n    <ChartTooltip content={<ChartTooltipContent />} />\n    <ChartLegend content={<ChartLegendContent />} />\n    <Bar dataKey=\"desktop\" fill=\"var(--color-desktop)\" />\n  </BarChart>\n</ChartContainer>"
+      "item1": "<strong>Container</strong> — wrapper que recebe a configuração e injeta o tema do design system (cores, tipografia, eixos).",
+      "item2": "<strong>Objeto de configuração</strong> — descrição declarativa única: séries, eixos, tooltip, legenda e animação em um objeto.",
+      "item3": "<strong>Builders auxiliares</strong> — funções que montam o objeto para os casos típicos (bar, line, area, pie) a partir de dados simples.",
+      "item4": "<strong>Tema reativo</strong> — cores e tipografia recalculam quando a classe do <code>&lt;html&gt;</code> muda (tema, dark mode, densidade, fonte).",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Vendas trimestrais\"\n/>"
     },
     "usage": {
       "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
-        "item1": "Use <code>ChartContainer</code> sempre — sem ele os tokens de cor não são aplicados ao gráfico.",
-        "item2": "Defina <code>ChartConfig</code> com chaves que correspondam exatamente aos <code>dataKey</code> dos dados.",
-        "item3": "Inclua <code>aria-label</code> descritivo no <code>ChartContainer</code> para leitores de tela.",
-        "item4": "Em gráficos multi-séries, exiba sempre a legenda — nunca diferencie séries somente por cor.",
-        "item5": "Adicione <code>accessibilityLayer</code> no componente Recharts raiz para navegação por teclado.",
-        "item6": "Para gráficos complexos, inclua <code>&lt;p className=\"sr-only\"&gt;</code> com resumo textual dos dados principais."
+        "item1": "Forneça sempre <code>aria-label</code> descritivo no container — descreve o tipo e o propósito do gráfico.",
+        "item2": "Use os builders auxiliares para casos comuns; passe o objeto direto quando precisar de customização avançada.",
+        "item3": "Em gráficos multi-séries, a legenda aparece automaticamente — nunca diferencie séries somente por cor.",
+        "item4": "Para gráficos com muitos pontos ou dados críticos, adicione resumo textual <code>sr-only</code> com pico, mínimo e tendência.",
+        "item5": "Defina altura explícita via classe (ex.: <code>h-[300px] w-full</code>) — sem altura o container colapsa.",
+        "item6": "Use o renderer SVG (padrão) para relatórios e print; canvas só para datasets grandes ou animações pesadas."
       },
       "scenarios": {
         "title": "Tabela de Cenários",
@@ -52,9 +52,9 @@
         "item1": { "s": "Comparar valores entre categorias", "u": "Sim, tipo bar", "a": "-" },
         "item2": { "s": "Mostrar tendência ao longo do tempo", "u": "Sim, tipo line ou area", "a": "-" },
         "item3": { "s": "Dados tabulares detalhados", "u": "Não", "a": "Table ou DataTable" },
-        "item4": { "s": "Proporção entre partes de um todo", "u": "Sim, tipo pie ou radial-bar", "a": "-" },
-        "item5": { "s": "Comparação multivariada", "u": "Sim, tipo radar", "a": "-" },
-        "item6": { "s": "Dados precisos que exigem ordenação", "u": "Não", "a": "DataTable" }
+        "item4": { "s": "Proporção entre partes de um todo", "u": "Sim, tipo pie", "a": "-" },
+        "item5": { "s": "Volume acumulado com ênfase", "u": "Sim, tipo area", "a": "-" },
+        "item6": { "s": "Dados que exigem ordenação e filtros", "u": "Não", "a": "DataTable" }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -106,31 +106,29 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "ChartConfig com labels descritivos + legenda visível em gráficos multi-séries.",
+        "do": "Multi-séries com legenda automática e <code>aria-label</code> que nomeia cada série.",
         "dont": "Diferenciar séries somente por cor sem legenda ou label acessível."
       },
       "pair2": {
-        "do": "aria-label descritivo no ChartContainer e resumo sr-only para dados complexos.",
-        "dont": "ChartContainer sem aria-label — gráfico fica inacessível para leitores de tela."
+        "do": "<code>aria-label</code> descritivo no container e resumo <code>sr-only</code> para dados críticos.",
+        "dont": "Container sem <code>aria-label</code> — gráfico fica inacessível para leitores de tela."
       }
     },
     "import": {
       "title": "Importação",
-      "basic": "Import básico (React):",
-      "withRecharts": "Com primitivos Recharts:",
-      "basecoat": "Basecoat (vanilla):"
+      "basic": "Import básico:",
+      "withBuilders": "Com builders auxiliares:",
+      "basecoat": "Vanilla TypeScript (Nortear):"
     },
     "variants": {
       "title": "Tipos de Gráfico",
       "visualTitle": "Tipos Disponíveis",
-      "note": "O Chart não tem variantes <code>cva</code>. O tipo de gráfico é determinado pelo primitivo Recharts usado dentro do <code>ChartContainer</code>. No Basecoat, apenas <code>bar</code> e <code>line</code> são suportados via prop <code>type</code>.",
+      "note": "O Chart não tem variantes <code>cva</code>. O tipo de gráfico vem do builder usado (<code>buildBarOption</code>, <code>buildLineOption</code>, <code>buildAreaOption</code>, <code>buildPieOption</code>) ou do campo <code>series.type</code> dentro do objeto de configuração.",
       "items": {
-        "bar": "Comparação entre categorias discretas. Use <code>BarChart</code> + <code>Bar</code> do Recharts. Mais claro para dados não contínuos.",
-        "line": "Tendência contínua ao longo do tempo. Use <code>LineChart</code> + <code>Line</code>. Ideal para séries temporais.",
-        "area": "Tendência com ênfase no volume acumulado. Use <code>AreaChart</code> + <code>Area</code>. Variante visual do line.",
-        "pie": "Proporção de partes em relação ao todo. Use <code>PieChart</code> + <code>Pie</code>. Limite a 5–6 fatias para legibilidade.",
-        "radar": "Comparação multivariada em escala radial. Use <code>RadarChart</code> + <code>Radar</code>. Indicado para perfis e métricas.",
-        "radialBar": "Progresso ou proporção em arco radial. Use <code>RadialBarChart</code> + <code>RadialBar</code>. Alternativa visual ao pie."
+        "bar": "Comparação entre categorias discretas. Use <code>buildBarOption({ data })</code>. Mais claro para dados não contínuos.",
+        "line": "Tendência contínua ao longo do tempo. Use <code>buildLineOption({ data })</code>. Ideal para séries temporais.",
+        "area": "Tendência com ênfase no volume acumulado. Use <code>buildAreaOption({ data })</code>. Variante visual do line.",
+        "pie": "Proporção de partes em relação ao todo. Use <code>buildPieOption({ data })</code>. Limite a 5–6 fatias para legibilidade."
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -141,17 +139,17 @@
         },
         "multiSeriesWithLegend": {
           "name": "Multi-séries com legenda",
-          "description": "Duas séries comparativas com legenda obrigatória — cada série usa um token <code>--chart-*</code> distinto e o <code>aria-label</code> descreve as séries por nome, não apenas por cor.",
-          "use": "Comparações entre categorias (ex.: Desktop vs Mobile). Sempre que houver mais de uma série, forneça legenda visível e <code>aria-label</code> nominando as séries (WCAG 1.4.1)."
+          "description": "Duas ou mais séries comparativas com legenda automática — cada série usa um token <code>--chart-*</code> distinto e o <code>aria-label</code> descreve as séries por nome, não apenas por cor.",
+          "use": "Comparações entre categorias (ex.: Desktop vs Mobile). Sempre que houver mais de uma série, a legenda aparece sozinha e o <code>aria-label</code> deve nominar as séries (WCAG 1.4.1)."
         },
         "smallInline": {
           "name": "Mini gráfico inline",
-          "description": "Versão compacta sem eixos, com altura reduzida e largura limitada — usada como indicador de tendência ao lado de um número ou KPI.",
+          "description": "Versão compacta sem eixos visíveis, altura reduzida e largura limitada — usada como indicador de tendência ao lado de um número ou KPI. Configure passando objeto customizado que oculta eixos e grid.",
           "use": "Cartões de métrica com indicador de tendência, listas densas, células de tabela em que o sparkline complementa o valor numérico principal."
         },
         "withEmptyState": {
           "name": "Com estado vazio",
-          "description": "Quando <code>data=[]</code>, o gráfico não renderiza barras ou linhas. Substitua o canvas por uma mensagem completa orientando a próxima ação (filtro, intervalo, fonte de dados).",
+          "description": "Quando o array de séries está vazio, o container exibe a mensagem padrão \"No data\" do ECharts. Para customizar, substitua o container por uma mensagem completa orientando a próxima ação.",
           "use": "Páginas filtráveis em que o recorte pode ficar sem dados. A mensagem substitui o gráfico no mesmo container para preservar o layout."
         }
       }
@@ -165,8 +163,8 @@
       },
       "empty": {
         "label": "Vazio",
-        "trigger": "Array de dados vazio (<code>data={[]}</code>)",
-        "behavior": "Exibir mensagem de estado vazio no lugar do gráfico. Recharts renderiza container sem barras ou linhas."
+        "trigger": "Array de séries vazio ou data vazio",
+        "behavior": "Container exibe \"No data\" automaticamente. Pode ser substituído por mensagem customizada com orientação para próxima ação."
       },
       "loading": {
         "label": "Carregando",
@@ -175,44 +173,39 @@
       },
       "singleSeries": {
         "label": "Série única",
-        "trigger": "ChartConfig com uma única chave",
-        "behavior": "Legenda opcional. Tooltip exibe o valor direto. Cor via <code>--chart-1</code>."
+        "trigger": "Apenas uma série na configuração",
+        "behavior": "Legenda oculta por padrão. Tooltip exibe o valor direto. Cor via <code>--chart-1</code>."
       },
       "multiSeries": {
         "label": "Multi-séries",
-        "trigger": "ChartConfig com múltiplas chaves",
-        "behavior": "Legenda obrigatória. Cada série usa um token de cor distinto (<code>--chart-1</code> a <code>--chart-5</code>)."
+        "trigger": "Mais de uma série na configuração",
+        "behavior": "Legenda visível por padrão. Cada série usa um token de cor distinto (<code>--chart-1</code> a <code>--chart-5</code>) na ordem em que aparece."
       }
     },
     "props": {
       "title": "Propriedades",
       "interface": "Interface TypeScript",
       "containerTitle": "ChartContainer",
-      "tooltipTitle": "ChartTooltipContent",
-      "legendTitle": "ChartLegendContent",
+      "tooltipTitle": "Helpers (builders)",
+      "legendTitle": "Tipos de Dados",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
         "default": "Padrão",
         "required": "Obrigatório",
         "description": "Descrição",
-        "config": "Mapeamento de chaves de dados para cor, label e ícone. Chaves devem corresponder aos <code>dataKey</code> dos dados.",
-        "id": "ID único do gráfico. Gerado automaticamente se omitido — necessário apenas para múltiplos gráficos na mesma página.",
-        "className": "Classes Tailwind adicionais para o container. Use para definir altura: <code>className=\"h-[300px] w-full\"</code>.",
-        "children": "Componente Recharts raiz (<code>BarChart</code>, <code>LineChart</code>, etc.) com os primitivos de dados.",
-        "initialDimension": "Dimensão inicial do <code>ResponsiveContainer</code>. Padrão: <code>{ width: 320, height: 200 }</code>.",
-        "indicator": "Estilo do indicador no tooltip: <code>\"dot\"</code> (círculo), <code>\"line\"</code> (linha vertical), <code>\"dashed\"</code> (tracejado).",
-        "hideLabel": "Oculta o label de categoria no tooltip.",
-        "hideIndicator": "Oculta o indicador de cor no tooltip.",
-        "nameKey": "Chave do <code>ChartConfig</code> usada para resolver o nome da série no tooltip e na legenda.",
-        "labelKey": "Chave usada para resolver o label do eixo X no tooltip.",
-        "formatter": "Função de renderização customizada para o conteúdo do tooltip.",
-        "labelFormatter": "Função de formatação do label principal no tooltip.",
-        "hideIcon": "Oculta o ícone de cor na legenda.",
-        "verticalAlign": "Posição vertical da legenda: <code>\"top\"</code> ou <code>\"bottom\"</code>."
+        "option": "Objeto de configuração declarativa do gráfico — descreve séries, eixos, tooltip, legenda, animação. Para casos comuns use os builders auxiliares.",
+        "renderer": "Tecnologia de renderização. <code>\"svg\"</code> (padrão) é melhor para print, exportação e poucos elementos; <code>\"canvas\"</code> para datasets grandes ou animações pesadas.",
+        "className": "Classes adicionais para o container. Use para definir altura explícita: <code>className=\"h-[300px] w-full\"</code>.",
+        "ariaLabel": "Descrição textual do gráfico para leitores de tela. Obrigatório — sem ele o gráfico não é acessível.",
+        "data": "Dataset simples (1 série) no formato <code>{ label, value }[]</code>. Usado pelos builders quando não há multi-série.",
+        "xAxis": "Rótulos do eixo X (categoria) ou timestamps quando há multi-série. Tamanho deve casar com o comprimento de cada série.",
+        "series": "Multi-série: array de <code>{ name, data, color? }</code>. Cada item gera uma série independente com cor automática do tema.",
+        "title": "Título opcional renderizado dentro do gráfico, acima dos eixos.",
+        "showLegend": "Força mostrar ou esconder a legenda. Default: <code>true</code> se houver mais de uma série."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "Todos os subcomponentes aceitam <code>className</code>. Para cores customizadas por série, use <code>theme</code> no <code>ChartConfig</code> em vez de <code>color</code> — aplica valores distintos por modo claro/escuro automaticamente."
+      "extensibility": "Para chart types não cobertos pelos builders (scatter, radar, heatmap, candlestick, sankey...), construa o objeto de configuração diretamente. A biblioteca de visualização aceita o objeto completo via <code>option</code>; cores e tipografia continuam vindo do tema do design system automaticamente."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -220,49 +213,50 @@
         "token": "Token CSS",
         "class": "Uso no componente",
         "part": "Parte do componente",
-        "chart1": "Primeira série de dados",
-        "chart2": "Segunda série de dados",
-        "chart3": "Terceira série de dados",
-        "chart4": "Quarta série de dados",
-        "chart5": "Quinta série de dados",
-        "primary": "Destaque e elementos interativos",
-        "secondary": "Séries ou elementos secundários",
-        "muted": "Fundo de tooltip cursor e radial-bar background",
+        "chart1": "Primeira série",
+        "chart2": "Segunda série",
+        "chart3": "Terceira série",
+        "chart4": "Quarta série",
+        "chart5": "Quinta série",
+        "primary": "Cor do indicador de hover (<code>axisPointer</code>)",
+        "secondary": "Reservado para customizações de tema",
+        "muted": "Reservado para customizações de fundo",
         "mutedForeground": "Texto dos ticks de eixo e labels secundários",
-        "border": "Grade cartesiana e borda de tooltip",
-        "background": "Fundo do tooltip",
-        "foreground": "Valores numéricos no tooltip"
+        "border": "Linhas de grade e bordas de eixo",
+        "background": "Reservado (fundo do container — transparente por padrão)",
+        "foreground": "Texto do tooltip e do título",
+        "card": "Fundo do tooltip"
       },
       "customizationTitle": "Como personalizar via tema:",
-      "note": "Dentro do gráfico, use sempre <code>var(--color-[key])</code> — ex: <code>var(--color-desktop)</code>. Essas variáveis são geradas pelo <code>ChartStyle</code> a partir do <code>ChartConfig</code>. Não use <code>var(--chart-1)</code> diretamente nos elementos SVG."
+      "note": "As cores das séries vêm automaticamente dos tokens <code>--chart-1</code> a <code>--chart-5</code> na ordem de declaração. Para sobrescrever pontualmente, passe <code>color</code> no item de <code>series</code>. Para mudar a paleta global, edite os tokens em <code>themes/*.css</code>; o gráfico re-aplica as cores no próximo render."
     },
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "O Chart atende WCAG 2.1 AA via <code>aria-label</code> no container, <code>accessibilityLayer</code> do Recharts para navegação por teclado e texto alternativo <code>sr-only</code> para dados complexos. Cumpre 1.4.1 (cor não é o único indicador) com legenda obrigatória em multi-séries.",
-      "item1": "<strong>aria-label no ChartContainer</strong> — descreve o tipo e o propósito do gráfico. Ex: <code>aria-label=\"Gráfico de barras: acessos mensais por dispositivo\"</code>.",
-      "item2": "<strong>accessibilityLayer</strong> — prop obrigatória no componente Recharts raiz. Ativa navegação por Arrow keys entre pontos de dados e anuncia valores ao leitor de tela.",
-      "item3": "<strong>Texto alternativo sr-only</strong> — para gráficos complexos, inclua <code>&lt;p className=\"sr-only\"&gt;</code> com resumo dos dados principais e pico/mínimo identificável.",
-      "item4": "<strong>Legenda obrigatória em multi-séries</strong> — nunca diferencie séries apenas por cor (WCAG 1.4.1). Use <code>ChartLegendContent</code> com labels descritivos.",
-      "item5": "<strong>Contraste</strong> — tokens <code>--chart-1</code> a <code>--chart-5</code> atendem contraste mínimo 3:1 para elementos gráficos (WCAG 1.4.11). Texto de eixos usa <code>--muted-foreground</code> com 4.5:1 mínimo.",
-      "item6": "<strong>Reduced motion</strong> — desative animações com <code>isAnimationActive={false}</code> ao detectar <code>prefers-reduced-motion: reduce</code>.",
+      "summary": "O Chart atende WCAG 2.1 AA via <code>aria-label</code> obrigatório no container, descrição automática gerada por <code>aria.enabled</code> no objeto de configuração, padrões visuais (<code>decal</code>) para usuários com daltonismo e respeito a <code>prefers-reduced-motion</code> via tokens de duração.",
+      "item1": "<strong>aria-label no container</strong> — descreve o tipo e o propósito do gráfico. Ex.: <code>aria-label=\"Gráfico de barras: acessos mensais por dispositivo\"</code>.",
+      "item2": "<strong>Descrição automática</strong> — a flag <code>aria.enabled</code> no objeto de configuração gera texto alternativo descrevendo a estrutura do gráfico para leitores de tela.",
+      "item3": "<strong>Padrões para daltonismo</strong> — <code>aria.decal.show</code> adiciona padrões visuais sobrepostos às séries; complemento à cor para distinguir multi-séries (WCAG 1.4.1).",
+      "item4": "<strong>Texto alternativo sr-only</strong> — para gráficos críticos ou com muitos pontos, inclua <code>&lt;p className=\"sr-only\"&gt;</code> com resumo dos dados principais e identificação de pico/mínimo.",
+      "item5": "<strong>Legenda automática em multi-séries</strong> — nunca diferencie séries apenas por cor (WCAG 1.4.1). A legenda aparece automaticamente; use nomes descritivos em <code>series.name</code>.",
+      "item6": "<strong>Contraste</strong> — tokens <code>--chart-1</code> a <code>--chart-5</code> atendem contraste mínimo 3:1 para elementos gráficos (WCAG 1.4.11). Texto de eixos usa <code>--muted-foreground</code> com 4.5:1 mínimo.",
       "keyboard": {
-        "tab": "Entra no gráfico e foca no elemento com accessibilityLayer ativo.",
-        "arrowRight": "Move para o próximo ponto de dados (com accessibilityLayer).",
-        "arrowLeft": "Move para o ponto de dados anterior (com accessibilityLayer).",
+        "tab": "Foca o container do gráfico — leitor de tela anuncia o <code>aria-label</code> e a descrição gerada.",
+        "arrowRight": "Sem navegação granular por padrão entre pontos de dados. Para datasets críticos, forneça resumo textual <code>sr-only</code>.",
+        "arrowLeft": "Sem navegação granular por padrão entre pontos de dados. Para datasets críticos, forneça resumo textual <code>sr-only</code>.",
         "noOtherKeys": "Gráficos são elementos de leitura — não há ativação ou edição por teclado."
       },
       "aria": {
-        "ariaLabel": "<code>aria-label</code> — obrigatório no <code>ChartContainer</code>. Descreve o gráfico para leitores de tela.",
-        "accessibilityLayer": "<code>accessibilityLayer</code> — prop do componente Recharts raiz. Ativa ARIA em pontos de dados.",
+        "ariaLabel": "<code>aria-label</code> — obrigatório no container. Descreve o gráfico para leitores de tela.",
+        "autoDescription": "<code>aria.enabled</code> no objeto de configuração — gera descrição textual automática da estrutura do gráfico.",
         "srOnly": "<code>&lt;p className=\"sr-only\"&gt;</code> — resumo textual para gráficos com muitos pontos ou dados críticos.",
-        "ariaHidden": "<code>aria-hidden=\"true\"</code> — em ícones decorativos dentro de tooltips e legendas."
+        "ariaHidden": "<code>role=\"img\"</code> no container — sinaliza que o conteúdo é gráfico para leitores que listam landmarks."
       },
       "screenReader": {
-        "onFocus": "Ao focar o ChartContainer: leitor anuncia o aria-label descritivo do gráfico.",
-        "onDataPoint": "Com accessibilityLayer: leitor anuncia o valor e a categoria ao navegar por Arrow keys.",
-        "srOnlyText": "Parágrafo sr-only lido em sequência antes do gráfico — resume os dados principais.",
-        "icons": "Ícones de legenda e tooltip têm aria-hidden — a cor e o label já descrevem a série."
+        "onFocus": "Ao focar o container: leitor anuncia o <code>aria-label</code> descritivo e o resumo gerado pela descrição automática.",
+        "onDataPoint": "Sem leitura granular por ponto. Para datasets críticos, forneça resumo <code>sr-only</code> em separado.",
+        "srOnlyText": "Parágrafo <code>sr-only</code> é lido em sequência antes do gráfico — resume os dados principais e ressalta pico/mínimo.",
+        "icons": "Ícones de legenda e tooltip são puramente decorativos — a cor e o label já descrevem a série."
       }
     },
     "related": {
@@ -275,15 +269,15 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "Recharts é uma dependência peer — instale separadamente: <code>npm install recharts</code>. O Chart do design system é uma camada sobre o Recharts, não um substituto.",
-      "tip2": "As chaves do <code>ChartConfig</code> devem corresponder exatamente aos campos <code>dataKey</code> nos arrays de dados. Divergência faz os tokens de cor não serem aplicados.",
-      "tip3": "No Basecoat, apenas os tipos <code>bar</code> e <code>line</code> são suportados via prop <code>type</code>. A API é simplificada: <code>createChart({ data, type, height, colors })</code>.",
-      "tip4": "Vue usa <code>@unovis/vue</code> — API diferente do React. <code>ChartCrosshair</code> e <code>ChartTooltip</code> são importados de <code>@unovis/vue</code>, não do design system.",
-      "tip5": "Para altura responsiva, defina <code>className=\"h-[300px] w-full\"</code> no <code>ChartContainer</code>. Evite <code>height</code> em porcentagem — o ResponsiveContainer exige altura absoluta no pai."
+      "tip1": "<strong>Lib upstream</strong>: o componente é um wrapper sobre Apache ECharts. Instale separadamente: <code>npm install echarts</code> (e o wrapper específico da stack quando aplicável).",
+      "tip2": "<strong>API declarativa</strong>: você passa um único objeto de configuração descrevendo todo o gráfico (séries, eixos, tooltip, legenda) em vez de compor JSX. Isso unifica a API entre as 4 stacks do design system.",
+      "tip3": "<strong>Tree-shake</strong>: apenas os tipos de chart usados são incluídos no bundle. Os builders auxiliares cobrem bar, line, area e pie. Para outros tipos (scatter, radar, heatmap...), registre o módulo extra antes de usar.",
+      "tip4": "<strong>Renderer</strong>: SVG é o padrão e melhor para print, exportação e poucos elementos. Canvas é melhor para datasets grandes (>10.000 pontos) ou animações pesadas.",
+      "tip5": "<strong>Tema reativo</strong>: o container observa mudanças na classe do <code>&lt;html&gt;</code> e re-aplica o tema. Trocar tema de marca, dark mode, densidade ou fonte recolore o gráfico automaticamente, sem reload."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "O Chart é passivo — não dispara eventos por padrão. Rastreie interações específicas (hover de tooltip, clique em legenda) via callbacks do Recharts quando relevante para o produto.",
+      "description": "O Chart é passivo — não dispara eventos por padrão. Rastreie interações específicas (hover de tooltip, clique em legenda) via callbacks da biblioteca quando relevante para o produto.",
       "table": {
         "event": "Evento",
         "trigger": "Gatilho",
@@ -304,18 +298,18 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Chart.",
-        "item1": { "action": "Estado vazio: data=[]", "result": "Container renderiza sem barras ou linhas; mensagem de estado vazio visível", "priority": "high" },
+        "item1": { "action": "Estado vazio: séries vazias", "result": "Container renderiza com mensagem \"No data\" padrão; nenhuma barra ou linha visível", "priority": "high" },
         "item2": { "action": "Tipo bar com dados válidos", "result": "Barras renderizadas com cores dos tokens --chart-*; altura proporcional aos valores", "priority": "high" },
-        "item3": { "action": "Tipo line com dados válidos", "result": "Path SVG renderizado conectando os pontos; cor via var(--color-[key])", "priority": "high" },
+        "item3": { "action": "Tipo line com dados válidos", "result": "Path renderizado conectando os pontos; cor do token --chart-1 da primeira série", "priority": "high" },
         "item4": { "action": "Hover sobre ponto de dado", "result": "Tooltip exibe label da categoria e valor formatado com indicador de cor", "priority": "high" },
-        "item5": { "action": "ChartLegend com multi-séries", "result": "Legenda exibe cor + label de cada série conforme ChartConfig", "priority": "medium" },
-        "item6": { "action": "Estado loading (Skeleton)", "result": "Skeleton com mesmas dimensões do container; nenhum dado parcial visível", "priority": "medium" }
+        "item5": { "action": "Multi-séries", "result": "Legenda exibe cor + label de cada série; cada série usa token de cor distinto", "priority": "medium" },
+        "item6": { "action": "Troca de tema do <html>", "result": "Cores e tipografia recalculam automaticamente; gráfico não pisca nem requer reload", "priority": "medium" }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "aria-label presente e descritivo no ChartContainer", "level": "AA", "how": "Inspecionar atributo aria-label no div[data-slot=chart]" },
-        "item2": { "criterion": "accessibilityLayer ativo no componente Recharts raiz", "level": "AA", "how": "Navegação por Arrow keys entre pontos de dados" },
+        "item1": { "criterion": "aria-label presente e descritivo no container", "level": "AA", "how": "Inspecionar atributo aria-label no div[data-slot=chart]" },
+        "item2": { "criterion": "role=\"img\" no container para leitores de tela", "level": "AA", "how": "Inspecionar atributo role no div[data-slot=chart]" },
         "item3": { "criterion": "Contraste mínimo 3:1 nos elementos gráficos", "level": "AA", "how": "axe-core / Lighthouse com tokens --chart-1 a --chart-5" },
         "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
       },
@@ -324,7 +318,7 @@
         "description": "Cada story é capturada automaticamente para visual regression.",
         "item1": { "story": "Bar chart — série única, dados completos", "priority": "high" },
         "item2": { "story": "Line chart — multi-séries com legenda", "priority": "high" },
-        "item3": { "story": "Estado vazio — data=[]", "priority": "high" },
+        "item3": { "story": "Estado vazio — séries vazias", "priority": "high" },
         "item4": { "story": "Dark mode — bar e line com tokens de tema", "priority": "medium" }
       }
     },
@@ -353,12 +347,12 @@
     "title": "Chart",
     "category": "Display",
     "type": "Component",
-    "description": "Quantitative data visualization via charts integrated to the design system through color tokens. Built on Recharts (React/Vue) or plain SVG (Basecoat).",
+    "description": "Declarative data visualization via a single configuration object. Bar, line, area, and pie types with design-system color tokens.",
     "seo": {
       "title": "Chart — Display",
-      "description": "Chart documentation: bar, line, area, pie and radar via Recharts, theme integration through tokens, and WCAG accessibility with aria-label.",
-      "aiSummary": "Chart component with ChartContainer, ChartTooltipContent, and ChartLegendContent. Recharts in React/Vue, plain SVG in Basecoat. Tokens --chart-1 to --chart-5 for series colors.",
-      "aiEntities": "Chart, Recharts, ChartContainer, ChartConfig, ChartTooltip, ChartLegend, SVG, WCAG 2.1, aria-label, accessibilityLayer",
+      "description": "Chart documentation: bar, line, area, and pie via declarative object, reactive theme through tokens, and WCAG accessibility.",
+      "aiSummary": "Chart component with ChartContainer and buildBarOption/buildLineOption/buildAreaOption/buildPieOption helpers. Declarative API built on Apache ECharts. Tokens --chart-1 to --chart-5 for series colors.",
+      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.1, aria-label, decal pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -374,23 +368,23 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>ChartContainer</strong> — required wrapper that injects color tokens via CSS and provides the <code>ChartConfig</code> context.",
-      "item2": "<strong>ChartTooltip + ChartTooltipContent</strong> — design system–themed tooltip; displays values on hover.",
-      "item3": "<strong>ChartLegend + ChartLegendContent</strong> — series legend with color and label; required for multi-series charts.",
-      "item4": "<strong>ChartStyle</strong> — injects <code>--color-[key]</code> CSS variables generated from <code>ChartConfig</code>; rendered automatically by <code>ChartContainer</code>.",
-      "structureLabel": "Basic structure (React):",
-      "structureCode": "<ChartContainer config={chartConfig} aria-label=\"...\">\n  <BarChart data={data}>\n    <ChartTooltip content={<ChartTooltipContent />} />\n    <ChartLegend content={<ChartLegendContent />} />\n    <Bar dataKey=\"desktop\" fill=\"var(--color-desktop)\" />\n  </BarChart>\n</ChartContainer>"
+      "item1": "<strong>Container</strong> — wrapper that receives the configuration and injects the design-system theme (colors, typography, axes).",
+      "item2": "<strong>Configuration object</strong> — single declarative description: series, axes, tooltip, legend, and animation in one object.",
+      "item3": "<strong>Auxiliary builders</strong> — functions that assemble the object for typical cases (bar, line, area, pie) from simple data.",
+      "item4": "<strong>Reactive theme</strong> — colors and typography recompute when the <code>&lt;html&gt;</code> class changes (theme, dark mode, density, font).",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Feb', 'Mar'],\n    series: [{ name: 'Sales', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Quarterly sales\"\n/>"
     },
     "usage": {
       "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
-        "item1": "Always use <code>ChartContainer</code> — without it, color tokens are not applied to the chart.",
-        "item2": "Define <code>ChartConfig</code> with keys that match exactly the <code>dataKey</code> fields in the data.",
-        "item3": "Include a descriptive <code>aria-label</code> on <code>ChartContainer</code> for screen readers.",
-        "item4": "In multi-series charts, always show the legend — never differentiate series by color alone.",
-        "item5": "Add <code>accessibilityLayer</code> to the root Recharts component to enable keyboard navigation.",
-        "item6": "For complex charts, include a <code>&lt;p className=\"sr-only\"&gt;</code> with a textual summary of the main data points."
+        "item1": "Always provide a descriptive <code>aria-label</code> on the container — describes the chart type and purpose.",
+        "item2": "Use the auxiliary builders for typical cases; pass the configuration object directly when you need advanced customization.",
+        "item3": "In multi-series charts the legend appears automatically — never differentiate series by color alone.",
+        "item4": "For charts with many points or critical data, add an <code>sr-only</code> textual summary with peak, minimum, and trend.",
+        "item5": "Set an explicit height via class (e.g. <code>h-[300px] w-full</code>) — without it the container collapses.",
+        "item6": "Use the SVG renderer (default) for reports and print; canvas only for large datasets or heavy animations."
       },
       "scenarios": {
         "title": "Scenario Table",
@@ -402,8 +396,8 @@
         "item1": { "s": "Compare values across categories", "u": "Yes, bar type", "a": "-" },
         "item2": { "s": "Show trend over time", "u": "Yes, line or area type", "a": "-" },
         "item3": { "s": "Detailed tabular data", "u": "No", "a": "Table or DataTable" },
-        "item4": { "s": "Proportion of parts to whole", "u": "Yes, pie or radial-bar type", "a": "-" },
-        "item5": { "s": "Multivariate comparison", "u": "Yes, radar type", "a": "-" },
+        "item4": { "s": "Proportion of parts to whole", "u": "Yes, pie type", "a": "-" },
+        "item5": { "s": "Cumulative volume with emphasis", "u": "Yes, area type", "a": "-" },
         "item6": { "s": "Data requiring sorting and filtering", "u": "No", "a": "DataTable" }
       },
       "uxWriting": {
@@ -456,31 +450,29 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "ChartConfig with descriptive labels + visible legend in multi-series charts.",
+        "do": "Multi-series with automatic legend and <code>aria-label</code> naming each series.",
         "dont": "Differentiate series by color alone without a legend or accessible label."
       },
       "pair2": {
-        "do": "Descriptive aria-label on ChartContainer and sr-only summary for complex data.",
-        "dont": "ChartContainer without aria-label — chart becomes inaccessible to screen readers."
+        "do": "Descriptive <code>aria-label</code> on the container and <code>sr-only</code> summary for critical data.",
+        "dont": "Container without <code>aria-label</code> — chart becomes inaccessible to screen readers."
       }
     },
     "import": {
       "title": "Import",
-      "basic": "Basic import (React):",
-      "withRecharts": "With Recharts primitives:",
-      "basecoat": "Basecoat (vanilla):"
+      "basic": "Basic import:",
+      "withBuilders": "With auxiliary builders:",
+      "basecoat": "Vanilla TypeScript (Nortear):"
     },
     "variants": {
       "title": "Chart Types",
       "visualTitle": "Available Types",
-      "note": "Chart has no <code>cva</code> variants. The chart type is determined by the Recharts primitive used inside <code>ChartContainer</code>. In Basecoat, only <code>bar</code> and <code>line</code> are supported via the <code>type</code> prop.",
+      "note": "Chart has no <code>cva</code> variants. The chart type comes from the builder you use (<code>buildBarOption</code>, <code>buildLineOption</code>, <code>buildAreaOption</code>, <code>buildPieOption</code>) or from the <code>series.type</code> field inside the configuration object.",
       "items": {
-        "bar": "Comparison across discrete categories. Use <code>BarChart</code> + <code>Bar</code> from Recharts. Best for non-continuous data.",
-        "line": "Continuous trend over time. Use <code>LineChart</code> + <code>Line</code>. Ideal for time series.",
-        "area": "Trend with emphasis on cumulative volume. Use <code>AreaChart</code> + <code>Area</code>. Visual variant of line.",
-        "pie": "Proportion of parts relative to a whole. Use <code>PieChart</code> + <code>Pie</code>. Limit to 5–6 slices for readability.",
-        "radar": "Multivariate comparison on a radial scale. Use <code>RadarChart</code> + <code>Radar</code>. Suitable for profiles and metrics.",
-        "radialBar": "Progress or proportion in a radial arc. Use <code>RadialBarChart</code> + <code>RadialBar</code>. Visual alternative to pie."
+        "bar": "Comparison across discrete categories. Use <code>buildBarOption({ data })</code>. Best for non-continuous data.",
+        "line": "Continuous trend over time. Use <code>buildLineOption({ data })</code>. Ideal for time series.",
+        "area": "Trend with emphasis on cumulative volume. Use <code>buildAreaOption({ data })</code>. Visual variant of line.",
+        "pie": "Proportion of parts relative to a whole. Use <code>buildPieOption({ data })</code>. Limit to 5–6 slices for readability."
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -491,17 +483,17 @@
         },
         "multiSeriesWithLegend": {
           "name": "Multi-series with legend",
-          "description": "Two comparative series with a required legend — each series uses a distinct <code>--chart-*</code> token, and the <code>aria-label</code> names the series, not just their color.",
-          "use": "Cross-category comparisons (e.g. Desktop vs Mobile). Whenever there is more than one series, provide a visible legend and an <code>aria-label</code> that names them (WCAG 1.4.1)."
+          "description": "Two or more comparative series with an automatic legend — each series uses a distinct <code>--chart-*</code> token and the <code>aria-label</code> names them, not just their color.",
+          "use": "Cross-category comparisons (e.g. Desktop vs Mobile). Whenever there is more than one series, the legend appears automatically and the <code>aria-label</code> should name them (WCAG 1.4.1)."
         },
         "smallInline": {
           "name": "Small inline chart",
-          "description": "Compact version without axes, reduced height and constrained width — used as a trend indicator next to a headline number or KPI.",
+          "description": "Compact version without visible axes, reduced height, and constrained width — used as a trend indicator next to a headline number or KPI. Configure by passing a custom object that hides axes and grid.",
           "use": "Metric cards with a trend indicator, dense lists, table cells where a sparkline complements the main numeric value."
         },
         "withEmptyState": {
           "name": "With empty state",
-          "description": "When <code>data=[]</code>, the chart does not render bars or lines. Replace the canvas with a complete sentence guiding the next action (filter, range, data source).",
+          "description": "When the series array is empty, the container shows the default \"No data\" message. To customize, replace the container with a complete sentence guiding the next action.",
           "use": "Filterable pages where the current selection may have no data. The message replaces the chart inside the same container to preserve the layout."
         }
       }
@@ -515,8 +507,8 @@
       },
       "empty": {
         "label": "Empty",
-        "trigger": "Empty data array (<code>data={[]}</code>)",
-        "behavior": "Display empty state message in place of the chart. Recharts renders the container without bars or lines."
+        "trigger": "Empty series array or empty data",
+        "behavior": "Container shows \"No data\" automatically. Can be replaced by a custom message with next-action guidance."
       },
       "loading": {
         "label": "Loading",
@@ -525,44 +517,39 @@
       },
       "singleSeries": {
         "label": "Single series",
-        "trigger": "ChartConfig with one key",
-        "behavior": "Legend is optional. Tooltip displays the value directly. Color via <code>--chart-1</code>."
+        "trigger": "Only one series in the configuration",
+        "behavior": "Legend hidden by default. Tooltip displays the value directly. Color via <code>--chart-1</code>."
       },
       "multiSeries": {
         "label": "Multi-series",
-        "trigger": "ChartConfig with multiple keys",
-        "behavior": "Legend is required. Each series uses a distinct color token (<code>--chart-1</code> to <code>--chart-5</code>)."
+        "trigger": "More than one series in the configuration",
+        "behavior": "Legend visible by default. Each series uses a distinct color token (<code>--chart-1</code> to <code>--chart-5</code>) in the order it appears."
       }
     },
     "props": {
       "title": "Properties",
       "interface": "TypeScript Interface",
       "containerTitle": "ChartContainer",
-      "tooltipTitle": "ChartTooltipContent",
-      "legendTitle": "ChartLegendContent",
+      "tooltipTitle": "Helpers (builders)",
+      "legendTitle": "Data Types",
       "table": {
         "prop": "Property",
         "type": "Type",
         "default": "Default",
         "required": "Required",
         "description": "Description",
-        "config": "Maps data keys to color, label, and icon. Keys must match the <code>dataKey</code> fields in data arrays.",
-        "id": "Unique chart ID. Auto-generated if omitted — only needed when multiple charts exist on the same page.",
-        "className": "Additional Tailwind classes for the container. Use to set height: <code>className=\"h-[300px] w-full\"</code>.",
-        "children": "Root Recharts component (<code>BarChart</code>, <code>LineChart</code>, etc.) with data primitives.",
-        "initialDimension": "Initial dimension of the <code>ResponsiveContainer</code>. Default: <code>{ width: 320, height: 200 }</code>.",
-        "indicator": "Tooltip indicator style: <code>\"dot\"</code> (circle), <code>\"line\"</code> (vertical line), <code>\"dashed\"</code> (dashed).",
-        "hideLabel": "Hides the category label in the tooltip.",
-        "hideIndicator": "Hides the color indicator in the tooltip.",
-        "nameKey": "<code>ChartConfig</code> key used to resolve the series name in tooltip and legend.",
-        "labelKey": "Key used to resolve the X-axis label in the tooltip.",
-        "formatter": "Custom render function for tooltip content.",
-        "labelFormatter": "Formatting function for the main tooltip label.",
-        "hideIcon": "Hides the color icon in the legend.",
-        "verticalAlign": "Vertical position of the legend: <code>\"top\"</code> or <code>\"bottom\"</code>."
+        "option": "Declarative chart configuration object — describes series, axes, tooltip, legend, animation. For typical cases use the auxiliary builders.",
+        "renderer": "Rendering technology. <code>\"svg\"</code> (default) is better for print, export, and few elements; <code>\"canvas\"</code> for large datasets or heavy animations.",
+        "className": "Additional classes for the container. Use to set explicit height: <code>className=\"h-[300px] w-full\"</code>.",
+        "ariaLabel": "Textual description of the chart for screen readers. Required — without it the chart is not accessible.",
+        "data": "Simple dataset (1 series) in the format <code>{ label, value }[]</code>. Used by builders when there is no multi-series.",
+        "xAxis": "X-axis labels (category) or timestamps when there are multiple series. Length must match the length of each series.",
+        "series": "Multi-series: array of <code>{ name, data, color? }</code>. Each item generates an independent series with automatic theme color.",
+        "title": "Optional title rendered inside the chart, above the axes.",
+        "showLegend": "Forces show or hide of the legend. Default: <code>true</code> if there is more than one series."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "All subcomponents accept <code>className</code>. For per-series custom colors, use <code>theme</code> in <code>ChartConfig</code> instead of <code>color</code> — it applies distinct values for light and dark modes automatically."
+      "extensibility": "For chart types not covered by the builders (scatter, radar, heatmap, candlestick, sankey...), build the configuration object directly. The visualization library accepts the full object via <code>option</code>; colors and typography still come from the design-system theme automatically."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -570,49 +557,50 @@
         "token": "CSS Token",
         "class": "Usage in component",
         "part": "Component part",
-        "chart1": "First data series",
-        "chart2": "Second data series",
-        "chart3": "Third data series",
-        "chart4": "Fourth data series",
-        "chart5": "Fifth data series",
-        "primary": "Highlights and interactive elements",
-        "secondary": "Secondary series or elements",
-        "muted": "Tooltip cursor background and radial-bar background",
+        "chart1": "First series",
+        "chart2": "Second series",
+        "chart3": "Third series",
+        "chart4": "Fourth series",
+        "chart5": "Fifth series",
+        "primary": "Hover indicator color (<code>axisPointer</code>)",
+        "secondary": "Reserved for theme customizations",
+        "muted": "Reserved for background customizations",
         "mutedForeground": "Axis tick text and secondary labels",
-        "border": "Cartesian grid and tooltip border",
-        "background": "Tooltip background",
-        "foreground": "Numeric values in tooltip"
+        "border": "Grid lines and axis borders",
+        "background": "Reserved (container background — transparent by default)",
+        "foreground": "Tooltip text and title",
+        "card": "Tooltip background"
       },
       "customizationTitle": "How to customize via theme:",
-      "note": "Inside the chart, always use <code>var(--color-[key])</code> — e.g. <code>var(--color-desktop)</code>. These variables are generated by <code>ChartStyle</code> from <code>ChartConfig</code>. Do not use <code>var(--chart-1)</code> directly on SVG elements."
+      "note": "Series colors come automatically from tokens <code>--chart-1</code> to <code>--chart-5</code> in declaration order. To override a single series, pass <code>color</code> on the series item. To change the global palette, edit the tokens in <code>themes/*.css</code>; the chart re-applies the colors on the next render."
     },
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "Chart meets WCAG 2.1 AA via <code>aria-label</code> on the container, Recharts <code>accessibilityLayer</code> for keyboard navigation, and <code>sr-only</code> alternative text for complex data. Meets 1.4.1 (color not the only indicator) with mandatory legend in multi-series charts.",
-      "item1": "<strong>aria-label on ChartContainer</strong> — describes the chart type and purpose. E.g.: <code>aria-label=\"Bar chart: monthly visits by device\"</code>.",
-      "item2": "<strong>accessibilityLayer</strong> — required prop on the root Recharts component. Enables Arrow key navigation between data points and announces values to screen readers.",
-      "item3": "<strong>sr-only alternative text</strong> — for complex charts, include a <code>&lt;p className=\"sr-only\"&gt;</code> with a summary of main data and identifiable peaks/minimums.",
-      "item4": "<strong>Mandatory legend in multi-series</strong> — never differentiate series by color alone (WCAG 1.4.1). Use <code>ChartLegendContent</code> with descriptive labels.",
-      "item5": "<strong>Contrast</strong> — tokens <code>--chart-1</code> to <code>--chart-5</code> meet minimum 3:1 contrast for graphical elements (WCAG 1.4.11). Axis text uses <code>--muted-foreground</code> with a 4.5:1 minimum.",
-      "item6": "<strong>Reduced motion</strong> — disable animations with <code>isAnimationActive={false}</code> when <code>prefers-reduced-motion: reduce</code> is detected.",
+      "summary": "Chart meets WCAG 2.1 AA via required <code>aria-label</code> on the container, automatic description generated by <code>aria.enabled</code> in the configuration object, visual patterns (<code>decal</code>) for color-blind users, and respect for <code>prefers-reduced-motion</code> via duration tokens.",
+      "item1": "<strong>aria-label on container</strong> — describes the chart type and purpose. E.g.: <code>aria-label=\"Bar chart: monthly visits by device\"</code>.",
+      "item2": "<strong>Automatic description</strong> — the <code>aria.enabled</code> flag in the configuration object generates alternative text describing the chart structure for screen readers.",
+      "item3": "<strong>Patterns for color blindness</strong> — <code>aria.decal.show</code> adds visual patterns over series; complements color to distinguish multi-series (WCAG 1.4.1).",
+      "item4": "<strong>sr-only alternative text</strong> — for critical or many-point charts, include a <code>&lt;p className=\"sr-only\"&gt;</code> with a summary of main data and identifiable peaks/minimums.",
+      "item5": "<strong>Automatic legend in multi-series</strong> — never differentiate series by color alone (WCAG 1.4.1). The legend appears automatically; use descriptive names in <code>series.name</code>.",
+      "item6": "<strong>Contrast</strong> — tokens <code>--chart-1</code> to <code>--chart-5</code> meet minimum 3:1 contrast for graphical elements (WCAG 1.4.11). Axis text uses <code>--muted-foreground</code> with a 4.5:1 minimum.",
       "keyboard": {
-        "tab": "Enters the chart and focuses the element with active accessibilityLayer.",
-        "arrowRight": "Moves to the next data point (with accessibilityLayer).",
-        "arrowLeft": "Moves to the previous data point (with accessibilityLayer).",
+        "tab": "Focuses the chart container — screen reader announces the <code>aria-label</code> and the generated description.",
+        "arrowRight": "No granular point-by-point navigation by default. For critical datasets, provide an <code>sr-only</code> textual summary.",
+        "arrowLeft": "No granular point-by-point navigation by default. For critical datasets, provide an <code>sr-only</code> textual summary.",
         "noOtherKeys": "Charts are read-only elements — there is no keyboard activation or editing."
       },
       "aria": {
-        "ariaLabel": "<code>aria-label</code> — required on <code>ChartContainer</code>. Describes the chart to screen readers.",
-        "accessibilityLayer": "<code>accessibilityLayer</code> — prop on root Recharts component. Activates ARIA on data points.",
+        "ariaLabel": "<code>aria-label</code> — required on the container. Describes the chart to screen readers.",
+        "autoDescription": "<code>aria.enabled</code> in the configuration object — generates automatic textual description of the chart structure.",
         "srOnly": "<code>&lt;p className=\"sr-only\"&gt;</code> — textual summary for charts with many points or critical data.",
-        "ariaHidden": "<code>aria-hidden=\"true\"</code> — on decorative icons inside tooltips and legends."
+        "ariaHidden": "<code>role=\"img\"</code> on the container — signals to readers that listing landmarks that the content is a graphic."
       },
       "screenReader": {
-        "onFocus": "On ChartContainer focus: reader announces the descriptive aria-label of the chart.",
-        "onDataPoint": "With accessibilityLayer: reader announces the value and category when navigating via Arrow keys.",
-        "srOnlyText": "sr-only paragraph is read in sequence before the chart — summarizes the main data.",
-        "icons": "Legend and tooltip icons have aria-hidden — the color and label already describe the series."
+        "onFocus": "On container focus: reader announces the descriptive <code>aria-label</code> and the summary generated by the automatic description.",
+        "onDataPoint": "No granular per-point reading. For critical datasets, provide a separate <code>sr-only</code> summary.",
+        "srOnlyText": "<code>sr-only</code> paragraph is read in sequence before the chart — summarizes the main data and highlights peak/minimum.",
+        "icons": "Legend and tooltip icons are purely decorative — the color and label already describe the series."
       }
     },
     "related": {
@@ -625,15 +613,15 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "Recharts is a peer dependency — install separately: <code>npm install recharts</code>. The design system Chart is a layer on top of Recharts, not a replacement.",
-      "tip2": "<code>ChartConfig</code> keys must match exactly the <code>dataKey</code> fields in data arrays. Mismatches prevent color tokens from being applied.",
-      "tip3": "In Basecoat, only <code>bar</code> and <code>line</code> types are supported via the <code>type</code> prop. The API is simplified: <code>createChart({ data, type, height, colors })</code>.",
-      "tip4": "Vue uses <code>@unovis/vue</code> — a different API from React. <code>ChartCrosshair</code> and <code>ChartTooltip</code> are imported from <code>@unovis/vue</code>, not from the design system.",
-      "tip5": "For responsive height, set <code>className=\"h-[300px] w-full\"</code> on <code>ChartContainer</code>. Avoid percentage heights — ResponsiveContainer requires an absolute height on the parent."
+      "tip1": "<strong>Upstream lib</strong>: the component is a wrapper over Apache ECharts. Install separately: <code>npm install echarts</code> (plus the stack-specific wrapper where applicable).",
+      "tip2": "<strong>Declarative API</strong>: you pass a single configuration object describing the whole chart (series, axes, tooltip, legend) instead of composing JSX. This unifies the API across the 4 design-system stacks.",
+      "tip3": "<strong>Tree-shake</strong>: only the chart types you use are bundled. The auxiliary builders cover bar, line, area, and pie. For other types (scatter, radar, heatmap...), register the extra module before using it.",
+      "tip4": "<strong>Renderer</strong>: SVG is the default and better for print, export, and few elements. Canvas is better for large datasets (>10,000 points) or heavy animations.",
+      "tip5": "<strong>Reactive theme</strong>: the container observes changes on the <code>&lt;html&gt;</code> class and re-applies the theme. Switching brand theme, dark mode, density, or font recolors the chart automatically without reload."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Chart is passive — no events are fired by default. Track specific interactions (tooltip hover, legend click) via Recharts callbacks when product-relevant.",
+      "description": "Chart is passive — no events are fired by default. Track specific interactions (tooltip hover, legend click) via library callbacks when product-relevant.",
       "table": {
         "event": "Event",
         "trigger": "Trigger",
@@ -654,18 +642,18 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Chart configuration.",
-        "item1": { "action": "Empty state: data=[]", "result": "Container renders without bars or lines; empty state message visible", "priority": "high" },
+        "item1": { "action": "Empty state: empty series", "result": "Container renders with the default \"No data\" message; no bars or lines visible", "priority": "high" },
         "item2": { "action": "Bar type with valid data", "result": "Bars rendered with --chart-* token colors; height proportional to values", "priority": "high" },
-        "item3": { "action": "Line type with valid data", "result": "SVG path rendered connecting data points; color via var(--color-[key])", "priority": "high" },
+        "item3": { "action": "Line type with valid data", "result": "Path rendered connecting data points; color from --chart-1 token of the first series", "priority": "high" },
         "item4": { "action": "Hover over data point", "result": "Tooltip displays category label and formatted value with color indicator", "priority": "high" },
-        "item5": { "action": "ChartLegend with multi-series", "result": "Legend displays color + label for each series per ChartConfig", "priority": "medium" },
-        "item6": { "action": "Loading state (Skeleton)", "result": "Skeleton with same dimensions as container; no partial data visible", "priority": "medium" }
+        "item5": { "action": "Multi-series", "result": "Legend displays color + label for each series; each series uses a distinct color token", "priority": "medium" },
+        "item6": { "action": "Theme change on <html>", "result": "Colors and typography recompute automatically; chart does not flash nor require reload", "priority": "medium" }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "aria-label present and descriptive on ChartContainer", "level": "AA", "how": "Inspect aria-label attribute on div[data-slot=chart]" },
-        "item2": { "criterion": "accessibilityLayer active on root Recharts component", "level": "AA", "how": "Arrow key navigation between data points" },
+        "item1": { "criterion": "aria-label present and descriptive on the container", "level": "AA", "how": "Inspect aria-label attribute on div[data-slot=chart]" },
+        "item2": { "criterion": "role=\"img\" on the container for screen readers", "level": "AA", "how": "Inspect role attribute on div[data-slot=chart]" },
         "item3": { "criterion": "Minimum 3:1 contrast on graphical elements", "level": "AA", "how": "axe-core / Lighthouse with --chart-1 to --chart-5 tokens" },
         "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
       },
@@ -674,7 +662,7 @@
         "description": "Each story is automatically captured for visual regression.",
         "item1": { "story": "Bar chart — single series, complete data", "priority": "high" },
         "item2": { "story": "Line chart — multi-series with legend", "priority": "high" },
-        "item3": { "story": "Empty state — data=[]", "priority": "high" },
+        "item3": { "story": "Empty state — empty series", "priority": "high" },
         "item4": { "story": "Dark mode — bar and line with theme tokens", "priority": "medium" }
       }
     },
@@ -703,12 +691,12 @@
     "title": "Chart",
     "category": "Display",
     "type": "Componente",
-    "description": "Visualización de datos cuantitativos mediante gráficos integrados al sistema de diseño por tokens de color. Basado en Recharts (React/Vue) o SVG puro (Basecoat).",
+    "description": "Visualización declarativa de datos mediante un objeto de configuración único. Tipos bar, line, area y pie con tokens de color del design system.",
     "seo": {
       "title": "Chart — Display",
-      "description": "Documentación del Chart: gráficos bar, line, area, pie y radar vía Recharts, integración de tema por tokens y accesibilidad WCAG con aria-label.",
-      "aiSummary": "Componente Chart con ChartContainer, ChartTooltipContent y ChartLegendContent. Recharts en React/Vue, SVG puro en Basecoat. Tokens --chart-1 a --chart-5 para colores de series.",
-      "aiEntities": "Chart, Recharts, ChartContainer, ChartConfig, ChartTooltip, ChartLegend, SVG, WCAG 2.1, aria-label, accessibilityLayer",
+      "description": "Documentación de Chart: gráficos bar, line, area y pie mediante objeto declarativo, tema reactivo por tokens y accesibilidad WCAG.",
+      "aiSummary": "Componente Chart con ChartContainer y helpers buildBarOption/buildLineOption/buildAreaOption/buildPieOption. API declarativa basada en Apache ECharts. Tokens --chart-1 a --chart-5 para colores de series.",
+      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.1, aria-label, decal pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -724,23 +712,23 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>ChartContainer</strong> — wrapper obligatorio que inyecta tokens de color vía CSS y provee el contexto del <code>ChartConfig</code>.",
-      "item2": "<strong>ChartTooltip + ChartTooltipContent</strong> — tooltip estilizado con el tema del sistema de diseño; muestra valores al pasar el cursor.",
-      "item3": "<strong>ChartLegend + ChartLegendContent</strong> — leyenda de las series con color y label; obligatoria en gráficos multi-series.",
-      "item4": "<strong>ChartStyle</strong> — inyecta variables CSS <code>--color-[key]</code> generadas desde el <code>ChartConfig</code>; renderizado automáticamente por <code>ChartContainer</code>.",
-      "structureLabel": "Estructura básica (React):",
-      "structureCode": "<ChartContainer config={chartConfig} aria-label=\"...\">\n  <BarChart data={data}>\n    <ChartTooltip content={<ChartTooltipContent />} />\n    <ChartLegend content={<ChartLegendContent />} />\n    <Bar dataKey=\"desktop\" fill=\"var(--color-desktop)\" />\n  </BarChart>\n</ChartContainer>"
+      "item1": "<strong>Container</strong> — wrapper que recibe la configuración e inyecta el tema del design system (colores, tipografía, ejes).",
+      "item2": "<strong>Objeto de configuración</strong> — descripción declarativa única: series, ejes, tooltip, leyenda y animación en un objeto.",
+      "item3": "<strong>Builders auxiliares</strong> — funciones que arman el objeto para los casos típicos (bar, line, area, pie) a partir de datos simples.",
+      "item4": "<strong>Tema reactivo</strong> — colores y tipografía se recalculan cuando la clase del <code>&lt;html&gt;</code> cambia (tema, dark mode, densidad, fuente).",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Ene', 'Feb', 'Mar'],\n    series: [{ name: 'Ventas', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Ventas trimestrales\"\n/>"
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
       "guidelines": {
-        "title": "Guías Obligatorias",
-        "item1": "Usa siempre <code>ChartContainer</code> — sin él, los tokens de color no se aplican al gráfico.",
-        "item2": "Define <code>ChartConfig</code> con claves que correspondan exactamente a los campos <code>dataKey</code> en los datos.",
-        "item3": "Incluye <code>aria-label</code> descriptivo en el <code>ChartContainer</code> para lectores de pantalla.",
-        "item4": "En gráficos multi-series, muestra siempre la leyenda — nunca diferencies series solo por color.",
-        "item5": "Agrega <code>accessibilityLayer</code> al componente Recharts raíz para habilitar navegación por teclado.",
-        "item6": "Para gráficos complejos, incluye <code>&lt;p className=\"sr-only\"&gt;</code> con un resumen textual de los datos principales."
+        "title": "Guidelines Obligatorias",
+        "item1": "Proporciona siempre un <code>aria-label</code> descriptivo en el container — describe el tipo y propósito del gráfico.",
+        "item2": "Usa los builders auxiliares para casos comunes; pasa el objeto de configuración directo cuando necesites customización avanzada.",
+        "item3": "En gráficos multi-series la leyenda aparece automáticamente — nunca diferencies series solo por color.",
+        "item4": "Para gráficos con muchos puntos o datos críticos, agrega un resumen textual <code>sr-only</code> con pico, mínimo y tendencia.",
+        "item5": "Define altura explícita vía clase (ej.: <code>h-[300px] w-full</code>) — sin altura el container colapsa.",
+        "item6": "Usa el renderer SVG (default) para reportes y print; canvas solo para datasets grandes o animaciones pesadas."
       },
       "scenarios": {
         "title": "Tabla de Escenarios",
@@ -752,9 +740,9 @@
         "item1": { "s": "Comparar valores entre categorías", "u": "Sí, tipo bar", "a": "-" },
         "item2": { "s": "Mostrar tendencia en el tiempo", "u": "Sí, tipo line o area", "a": "-" },
         "item3": { "s": "Datos tabulares detallados", "u": "No", "a": "Table o DataTable" },
-        "item4": { "s": "Proporción entre partes del total", "u": "Sí, tipo pie o radial-bar", "a": "-" },
-        "item5": { "s": "Comparación multivariada", "u": "Sí, tipo radar", "a": "-" },
-        "item6": { "s": "Datos que requieren ordenación y filtros", "u": "No", "a": "DataTable" }
+        "item4": { "s": "Proporción entre partes de un todo", "u": "Sí, tipo pie", "a": "-" },
+        "item5": { "s": "Volumen acumulado con énfasis", "u": "Sí, tipo area", "a": "-" },
+        "item6": { "s": "Datos que requieren orden y filtros", "u": "No", "a": "DataTable" }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -770,89 +758,87 @@
             "bad": "\"Valor total de ingresos en dólares\", \"Mes del año\""
           },
           "tooltipValue": {
-            "name": "Valor en tooltip",
+            "name": "Valor en el tooltip",
             "format": "Número formateado + unidad · sin texto explicativo redundante",
             "good": "\"1.240 visitas\", \"$3.500\"",
-            "bad": "\"El total de visitas fue de 1240\""
+            "bad": "\"El total de visitas fue 1240\""
           },
           "legendLabel": {
             "name": "Label de leyenda",
             "format": "Sustantivo o frase nominal · máx. 3 palabras · sin punto final",
             "good": "\"Desktop\", \"Mobile\", \"Ingresos netos\"",
-            "bad": "\"Visitas realizadas desde un dispositivo de escritorio\""
+            "bad": "\"Visitas hechas desde dispositivo desktop\""
           },
           "emptyState": {
             "name": "Estado vacío",
-            "format": "Frase completa · orienta hacia la próxima acción cuando está disponible",
+            "format": "Frase completa · orientación para la próxima acción cuando esté disponible",
             "good": "\"No hay datos disponibles para el período seleccionado.\"",
             "bad": "\"Sin datos.\", \"Vacío.\""
           }
         }
       },
       "do": {
-        "title": "Úsalo cuando",
-        "item1": "Los datos cuantitativos necesitan representación visual comparativa",
-        "item2": "Las tendencias en el tiempo deben comunicarse de forma rápida",
+        "title": "Usa cuando",
+        "item1": "Datos cuantitativos necesitan representación visual comparativa",
+        "item2": "Tendencias en el tiempo necesitan comunicarse rápidamente",
         "item3": "El usuario necesita identificar patrones en múltiples series",
-        "item4": "Las proporciones entre categorías necesitan ser visualizadas"
+        "item4": "Proporciones entre categorías necesitan visualizarse"
       },
       "dont": {
         "title": "No uses cuando",
         "item1": "Los datos requieren lectura precisa por valor — usa <code>Table</code>",
-        "item2": "Hay solo 1 o 2 puntos de datos — usa un indicador numérico simple",
-        "item3": "Los datos requieren filtrado y ordenación interactivos — usa <code>DataTable</code>"
+        "item2": "Solo hay 1 o 2 puntos de datos — usa un indicador numérico simple",
+        "item3": "Los datos requieren filtrado y orden interactivos — usa <code>DataTable</code>"
       }
     },
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "ChartConfig con labels descriptivos + leyenda visible en gráficos multi-series.",
+        "do": "Multi-series con leyenda automática y <code>aria-label</code> que nombra cada serie.",
         "dont": "Diferenciar series solo por color sin leyenda ni label accesible."
       },
       "pair2": {
-        "do": "aria-label descriptivo en ChartContainer y resumen sr-only para datos complejos.",
-        "dont": "ChartContainer sin aria-label — el gráfico queda inaccesible para lectores de pantalla."
+        "do": "<code>aria-label</code> descriptivo en el container y resumen <code>sr-only</code> para datos críticos.",
+        "dont": "Container sin <code>aria-label</code> — el gráfico queda inaccesible para lectores de pantalla."
       }
     },
     "import": {
       "title": "Importación",
-      "basic": "Import básico (React):",
-      "withRecharts": "Con primitivos Recharts:",
-      "basecoat": "Basecoat (vanilla):"
+      "basic": "Import básico:",
+      "withBuilders": "Con builders auxiliares:",
+      "basecoat": "Vanilla TypeScript (Nortear):"
     },
     "variants": {
       "title": "Tipos de Gráfico",
       "visualTitle": "Tipos Disponibles",
-      "note": "Chart no tiene variantes <code>cva</code>. El tipo de gráfico lo determina el primitivo Recharts usado dentro del <code>ChartContainer</code>. En Basecoat, solo <code>bar</code> y <code>line</code> están soportados vía la prop <code>type</code>.",
+      "note": "Chart no tiene variantes <code>cva</code>. El tipo de gráfico viene del builder que uses (<code>buildBarOption</code>, <code>buildLineOption</code>, <code>buildAreaOption</code>, <code>buildPieOption</code>) o del campo <code>series.type</code> dentro del objeto de configuración.",
       "items": {
-        "bar": "Comparación entre categorías discretas. Usa <code>BarChart</code> + <code>Bar</code> de Recharts. Más claro para datos no continuos.",
-        "line": "Tendencia continua en el tiempo. Usa <code>LineChart</code> + <code>Line</code>. Ideal para series temporales.",
-        "area": "Tendencia con énfasis en el volumen acumulado. Usa <code>AreaChart</code> + <code>Area</code>. Variante visual del tipo line.",
-        "pie": "Proporción de partes respecto al total. Usa <code>PieChart</code> + <code>Pie</code>. Limita a 5–6 segmentos para legibilidad.",
-        "radar": "Comparación multivariada en escala radial. Usa <code>RadarChart</code> + <code>Radar</code>. Indicado para perfiles y métricas.",
-        "radialBar": "Progreso o proporción en arco radial. Usa <code>RadialBarChart</code> + <code>RadialBar</code>. Alternativa visual al pie."
+        "bar": "Comparación entre categorías discretas. Usa <code>buildBarOption({ data })</code>. Más claro para datos no continuos.",
+        "line": "Tendencia continua en el tiempo. Usa <code>buildLineOption({ data })</code>. Ideal para series temporales.",
+        "area": "Tendencia con énfasis en el volumen acumulado. Usa <code>buildAreaOption({ data })</code>. Variante visual del line.",
+        "pie": "Proporción de partes en relación al todo. Usa <code>buildPieOption({ data })</code>. Limita a 5–6 secciones para legibilidad."
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
         "inCard": {
           "name": "Chart dentro de Card",
-          "description": "Gráfico envuelto por <code>Card</code> con título y descripción en <code>CardHeader</code> y el gráfico en <code>CardContent</code>. Patrón recomendado para resaltar contexto y rango temporal.",
-          "use": "Dashboards e informes donde el gráfico necesita un título visible, descripción del rango temporal y un marco semántico para agruparse con otros KPI."
+          "description": "Gráfico envuelto por <code>Card</code> con título y descripción en <code>CardHeader</code> y el gráfico en <code>CardContent</code>. Patrón recomendado para resaltar contexto y atribución temporal de los datos.",
+          "use": "Dashboards y reportes donde el gráfico necesita título visible, descripción del recorte temporal y marco semántico para agrupar con otros KPIs."
         },
         "multiSeriesWithLegend": {
           "name": "Multi-series con leyenda",
-          "description": "Dos series comparativas con leyenda obligatoria — cada serie usa un token <code>--chart-*</code> distinto y el <code>aria-label</code> describe las series por nombre, no solo por color.",
-          "use": "Comparaciones entre categorías (p.ej. Desktop vs Mobile). Siempre que haya más de una serie, muestra leyenda visible y un <code>aria-label</code> que las nombre (WCAG 1.4.1)."
+          "description": "Dos o más series comparativas con leyenda automática — cada serie usa un token <code>--chart-*</code> distinto y el <code>aria-label</code> describe las series por nombre, no solo por color.",
+          "use": "Comparaciones entre categorías (ej.: Desktop vs Mobile). Siempre que haya más de una serie, la leyenda aparece sola y el <code>aria-label</code> debe nombrarlas (WCAG 1.4.1)."
         },
         "smallInline": {
           "name": "Mini gráfico inline",
-          "description": "Versión compacta sin ejes, con altura reducida y ancho limitado — usada como indicador de tendencia junto a un número o KPI.",
+          "description": "Versión compacta sin ejes visibles, altura reducida y ancho limitado — usada como indicador de tendencia junto a un número o KPI. Configura pasando un objeto custom que oculta ejes y grid.",
           "use": "Tarjetas de métrica con indicador de tendencia, listas densas, celdas de tabla donde el sparkline complementa el valor numérico principal."
         },
         "withEmptyState": {
           "name": "Con estado vacío",
-          "description": "Cuando <code>data=[]</code>, el gráfico no renderiza barras ni líneas. Sustituye el canvas por un mensaje completo que oriente la próxima acción (filtro, rango, fuente de datos).",
-          "use": "Páginas filtrables donde el recorte puede quedar sin datos. El mensaje reemplaza el gráfico dentro del mismo contenedor para preservar el layout."
+          "description": "Cuando el array de series está vacío, el container muestra el mensaje \"No data\" por defecto. Para customizar, reemplaza el container con un mensaje completo que oriente la próxima acción.",
+          "use": "Páginas filtrables donde el recorte puede quedar sin datos. El mensaje reemplaza el gráfico en el mismo container para preservar el layout."
         }
       }
     },
@@ -865,54 +851,49 @@
       },
       "empty": {
         "label": "Vacío",
-        "trigger": "Array de datos vacío (<code>data={[]}</code>)",
-        "behavior": "Mostrar mensaje de estado vacío en lugar del gráfico. Recharts renderiza el contenedor sin barras ni líneas."
+        "trigger": "Array de series vacío o data vacío",
+        "behavior": "Container muestra \"No data\" automáticamente. Puede ser reemplazado por mensaje custom con orientación de próxima acción."
       },
       "loading": {
         "label": "Cargando",
         "trigger": "Datos aún no disponibles",
-        "behavior": "Reemplazar el gráfico con un <code>Skeleton</code> con las mismas dimensiones del contenedor."
+        "behavior": "Reemplaza el gráfico por <code>Skeleton</code> con las mismas dimensiones del container."
       },
       "singleSeries": {
         "label": "Serie única",
-        "trigger": "ChartConfig con una sola clave",
-        "behavior": "Leyenda opcional. El tooltip muestra el valor directamente. Color vía <code>--chart-1</code>."
+        "trigger": "Solo una serie en la configuración",
+        "behavior": "Leyenda oculta por defecto. Tooltip muestra el valor directo. Color vía <code>--chart-1</code>."
       },
       "multiSeries": {
         "label": "Multi-series",
-        "trigger": "ChartConfig con múltiples claves",
-        "behavior": "Leyenda obligatoria. Cada serie usa un token de color distinto (<code>--chart-1</code> a <code>--chart-5</code>)."
+        "trigger": "Más de una serie en la configuración",
+        "behavior": "Leyenda visible por defecto. Cada serie usa un token de color distinto (<code>--chart-1</code> a <code>--chart-5</code>) en el orden en que aparece."
       }
     },
     "props": {
       "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "containerTitle": "ChartContainer",
-      "tooltipTitle": "ChartTooltipContent",
-      "legendTitle": "ChartLegendContent",
+      "tooltipTitle": "Helpers (builders)",
+      "legendTitle": "Tipos de Datos",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
         "default": "Por defecto",
         "required": "Obligatorio",
         "description": "Descripción",
-        "config": "Mapea claves de datos a color, label e ícono. Las claves deben coincidir con los campos <code>dataKey</code> de los datos.",
-        "id": "ID único del gráfico. Generado automáticamente si se omite — necesario solo cuando hay múltiples gráficos en la misma página.",
-        "className": "Clases Tailwind adicionales para el contenedor. Úsalo para definir altura: <code>className=\"h-[300px] w-full\"</code>.",
-        "children": "Componente Recharts raíz (<code>BarChart</code>, <code>LineChart</code>, etc.) con los primitivos de datos.",
-        "initialDimension": "Dimensión inicial del <code>ResponsiveContainer</code>. Por defecto: <code>{ width: 320, height: 200 }</code>.",
-        "indicator": "Estilo del indicador en el tooltip: <code>\"dot\"</code> (círculo), <code>\"line\"</code> (línea vertical), <code>\"dashed\"</code> (discontinuo).",
-        "hideLabel": "Oculta el label de categoría en el tooltip.",
-        "hideIndicator": "Oculta el indicador de color en el tooltip.",
-        "nameKey": "Clave del <code>ChartConfig</code> para resolver el nombre de la serie en tooltip y leyenda.",
-        "labelKey": "Clave usada para resolver el label del eje X en el tooltip.",
-        "formatter": "Función de renderizado personalizado para el contenido del tooltip.",
-        "labelFormatter": "Función de formateo del label principal en el tooltip.",
-        "hideIcon": "Oculta el ícono de color en la leyenda.",
-        "verticalAlign": "Posición vertical de la leyenda: <code>\"top\"</code> o <code>\"bottom\"</code>."
+        "option": "Objeto de configuración declarativa del gráfico — describe series, ejes, tooltip, leyenda, animación. Para casos comunes usa los builders auxiliares.",
+        "renderer": "Tecnología de renderizado. <code>\"svg\"</code> (default) es mejor para print, exportación y pocos elementos; <code>\"canvas\"</code> para datasets grandes o animaciones pesadas.",
+        "className": "Clases adicionales para el container. Usa para definir altura explícita: <code>className=\"h-[300px] w-full\"</code>.",
+        "ariaLabel": "Descripción textual del gráfico para lectores de pantalla. Obligatorio — sin él el gráfico no es accesible.",
+        "data": "Dataset simple (1 serie) en formato <code>{ label, value }[]</code>. Usado por los builders cuando no hay multi-series.",
+        "xAxis": "Etiquetas del eje X (categoría) o timestamps cuando hay multi-series. Longitud debe coincidir con la de cada serie.",
+        "series": "Multi-series: array de <code>{ name, data, color? }</code>. Cada item genera una serie independiente con color automático del tema.",
+        "title": "Título opcional renderizado dentro del gráfico, encima de los ejes.",
+        "showLegend": "Fuerza mostrar u ocultar la leyenda. Default: <code>true</code> si hay más de una serie."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "Todos los subcomponentes aceptan <code>className</code>. Para colores personalizados por serie, usa <code>theme</code> en <code>ChartConfig</code> en lugar de <code>color</code> — aplica valores distintos para modo claro y oscuro automáticamente."
+      "extensibility": "Para tipos de chart no cubiertos por los builders (scatter, radar, heatmap, candlestick, sankey...), construye el objeto de configuración directamente. La librería de visualización acepta el objeto completo vía <code>option</code>; colores y tipografía siguen viniendo del tema del design system automáticamente."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -920,70 +901,71 @@
         "token": "Token CSS",
         "class": "Uso en el componente",
         "part": "Parte del componente",
-        "chart1": "Primera serie de datos",
-        "chart2": "Segunda serie de datos",
-        "chart3": "Tercera serie de datos",
-        "chart4": "Cuarta serie de datos",
-        "chart5": "Quinta serie de datos",
-        "primary": "Destacados y elementos interactivos",
-        "secondary": "Series o elementos secundarios",
-        "muted": "Fondo del cursor del tooltip y background de radial-bar",
-        "mutedForeground": "Texto de los ticks de eje y labels secundarios",
-        "border": "Cuadrícula cartesiana y borde de tooltip",
-        "background": "Fondo del tooltip",
-        "foreground": "Valores numéricos en el tooltip"
+        "chart1": "Primera serie",
+        "chart2": "Segunda serie",
+        "chart3": "Tercera serie",
+        "chart4": "Cuarta serie",
+        "chart5": "Quinta serie",
+        "primary": "Color del indicador de hover (<code>axisPointer</code>)",
+        "secondary": "Reservado para customizaciones de tema",
+        "muted": "Reservado para customizaciones de fondo",
+        "mutedForeground": "Texto de ticks de eje y labels secundarios",
+        "border": "Líneas de grid y bordes de eje",
+        "background": "Reservado (fondo del container — transparente por defecto)",
+        "foreground": "Texto del tooltip y título",
+        "card": "Fondo del tooltip"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "note": "Dentro del gráfico, usa siempre <code>var(--color-[key])</code> — ej: <code>var(--color-desktop)</code>. Estas variables las genera <code>ChartStyle</code> a partir del <code>ChartConfig</code>. No uses <code>var(--chart-1)</code> directamente en los elementos SVG."
+      "note": "Los colores de las series vienen automáticamente de los tokens <code>--chart-1</code> a <code>--chart-5</code> en orden de declaración. Para sobrescribir puntualmente, pasa <code>color</code> en el item de <code>series</code>. Para cambiar la paleta global, edita los tokens en <code>themes/*.css</code>; el gráfico re-aplica los colores en el próximo render."
     },
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "Chart cumple WCAG 2.1 AA vía <code>aria-label</code> en el contenedor, <code>accessibilityLayer</code> de Recharts para navegación por teclado y texto alternativo <code>sr-only</code> para datos complejos. Cumple 1.4.1 (el color no es el único indicador) con leyenda obligatoria en gráficos multi-series.",
-      "item1": "<strong>aria-label en ChartContainer</strong> — describe el tipo y propósito del gráfico. Ej: <code>aria-label=\"Gráfico de barras: visitas mensuales por dispositivo\"</code>.",
-      "item2": "<strong>accessibilityLayer</strong> — prop obligatoria en el componente Recharts raíz. Habilita navegación por Arrow keys entre puntos de datos y anuncia valores al lector de pantalla.",
-      "item3": "<strong>Texto alternativo sr-only</strong> — para gráficos complejos, incluye un <code>&lt;p className=\"sr-only\"&gt;</code> con resumen de los datos principales y pico/mínimo identificable.",
-      "item4": "<strong>Leyenda obligatoria en multi-series</strong> — nunca diferencies series solo por color (WCAG 1.4.1). Usa <code>ChartLegendContent</code> con labels descriptivos.",
-      "item5": "<strong>Contraste</strong> — los tokens <code>--chart-1</code> a <code>--chart-5</code> cumplen contraste mínimo 3:1 para elementos gráficos (WCAG 1.4.11). El texto de ejes usa <code>--muted-foreground</code> con mínimo 4.5:1.",
-      "item6": "<strong>Reduced motion</strong> — desactiva animaciones con <code>isAnimationActive={false}</code> al detectar <code>prefers-reduced-motion: reduce</code>.",
+      "summary": "Chart cumple WCAG 2.1 AA vía <code>aria-label</code> obligatorio en el container, descripción automática generada por <code>aria.enabled</code> en el objeto de configuración, patrones visuales (<code>decal</code>) para usuarios con daltonismo y respeto a <code>prefers-reduced-motion</code> vía tokens de duración.",
+      "item1": "<strong>aria-label en el container</strong> — describe el tipo y propósito del gráfico. Ej.: <code>aria-label=\"Gráfico de barras: visitas mensuales por dispositivo\"</code>.",
+      "item2": "<strong>Descripción automática</strong> — la flag <code>aria.enabled</code> en el objeto de configuración genera texto alternativo describiendo la estructura del gráfico para lectores de pantalla.",
+      "item3": "<strong>Patrones para daltonismo</strong> — <code>aria.decal.show</code> agrega patrones visuales sobre las series; complemento al color para distinguir multi-series (WCAG 1.4.1).",
+      "item4": "<strong>Texto alternativo sr-only</strong> — para gráficos críticos o con muchos puntos, incluye <code>&lt;p className=\"sr-only\"&gt;</code> con resumen de los datos principales e identificación de pico/mínimo.",
+      "item5": "<strong>Leyenda automática en multi-series</strong> — nunca diferencies series solo por color (WCAG 1.4.1). La leyenda aparece automáticamente; usa nombres descriptivos en <code>series.name</code>.",
+      "item6": "<strong>Contraste</strong> — tokens <code>--chart-1</code> a <code>--chart-5</code> cumplen contraste mínimo 3:1 para elementos gráficos (WCAG 1.4.11). Texto de ejes usa <code>--muted-foreground</code> con 4.5:1 mínimo.",
       "keyboard": {
-        "tab": "Entra al gráfico y enfoca el elemento con accessibilityLayer activo.",
-        "arrowRight": "Avanza al siguiente punto de datos (con accessibilityLayer).",
-        "arrowLeft": "Retrocede al punto de datos anterior (con accessibilityLayer).",
-        "noOtherKeys": "Los gráficos son elementos de solo lectura — no hay activación ni edición por teclado."
+        "tab": "Enfoca el container del gráfico — lector de pantalla anuncia el <code>aria-label</code> y la descripción generada.",
+        "arrowRight": "Sin navegación granular por defecto entre puntos. Para datasets críticos, proporciona resumen textual <code>sr-only</code>.",
+        "arrowLeft": "Sin navegación granular por defecto entre puntos. Para datasets críticos, proporciona resumen textual <code>sr-only</code>.",
+        "noOtherKeys": "Los gráficos son elementos de lectura — no hay activación ni edición por teclado."
       },
       "aria": {
-        "ariaLabel": "<code>aria-label</code> — obligatorio en <code>ChartContainer</code>. Describe el gráfico al lector de pantalla.",
-        "accessibilityLayer": "<code>accessibilityLayer</code> — prop del componente Recharts raíz. Activa ARIA en los puntos de datos.",
+        "ariaLabel": "<code>aria-label</code> — obligatorio en el container. Describe el gráfico para lectores de pantalla.",
+        "autoDescription": "<code>aria.enabled</code> en el objeto de configuración — genera descripción textual automática de la estructura del gráfico.",
         "srOnly": "<code>&lt;p className=\"sr-only\"&gt;</code> — resumen textual para gráficos con muchos puntos o datos críticos.",
-        "ariaHidden": "<code>aria-hidden=\"true\"</code> — en íconos decorativos dentro de tooltips y leyendas."
+        "ariaHidden": "<code>role=\"img\"</code> en el container — señala a lectores que listan landmarks que el contenido es gráfico."
       },
       "screenReader": {
-        "onFocus": "Al enfocar el ChartContainer: el lector anuncia el aria-label descriptivo del gráfico.",
-        "onDataPoint": "Con accessibilityLayer: el lector anuncia el valor y la categoría al navegar con Arrow keys.",
-        "srOnlyText": "El párrafo sr-only se lee en secuencia antes del gráfico — resume los datos principales.",
-        "icons": "Los íconos de leyenda y tooltip tienen aria-hidden — el color y el label ya describen la serie."
+        "onFocus": "Al enfocar el container: lector anuncia el <code>aria-label</code> descriptivo y el resumen generado por la descripción automática.",
+        "onDataPoint": "Sin lectura granular por punto. Para datasets críticos, proporciona resumen <code>sr-only</code> separado.",
+        "srOnlyText": "Párrafo <code>sr-only</code> es leído en secuencia antes del gráfico — resume los datos principales y resalta pico/mínimo.",
+        "icons": "Íconos de leyenda y tooltip son puramente decorativos — el color y label ya describen la serie."
       }
     },
     "related": {
       "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
-      "usedWith": "Se usa frecuentemente con",
+      "usedWith": "Suele usarse con",
       "table": "Alternativa accesible para datos tabulares que requieren lectura precisa por valor.",
-      "card": "Contenedor semántico para agrupar gráficos con título, descripción y pie de página.",
-      "dataTable": "Para datos que requieren filtrado, ordenación y exportación interactivos."
+      "card": "Container semántico para agrupar gráficos con título, descripción y pie.",
+      "dataTable": "Para datos que requieren filtrado, orden y exportación interactivos."
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "Recharts es una dependencia peer — instálala por separado: <code>npm install recharts</code>. El Chart del sistema de diseño es una capa sobre Recharts, no un reemplazo.",
-      "tip2": "Las claves de <code>ChartConfig</code> deben coincidir exactamente con los campos <code>dataKey</code> en los arrays de datos. Una discrepancia impide que los tokens de color se apliquen.",
-      "tip3": "En Basecoat, solo los tipos <code>bar</code> y <code>line</code> están soportados vía la prop <code>type</code>. La API es simplificada: <code>createChart({ data, type, height, colors })</code>.",
-      "tip4": "Vue usa <code>@unovis/vue</code> — API diferente a la de React. <code>ChartCrosshair</code> y <code>ChartTooltip</code> se importan desde <code>@unovis/vue</code>, no del sistema de diseño.",
-      "tip5": "Para altura responsiva, define <code>className=\"h-[300px] w-full\"</code> en el <code>ChartContainer</code>. Evita alturas en porcentaje — ResponsiveContainer requiere una altura absoluta en el padre."
+      "tip1": "<strong>Lib upstream</strong>: el componente es un wrapper sobre Apache ECharts. Instálalo aparte: <code>npm install echarts</code> (y el wrapper específico de la stack cuando aplique).",
+      "tip2": "<strong>API declarativa</strong>: pasas un único objeto de configuración describiendo todo el gráfico (series, ejes, tooltip, leyenda) en vez de componer JSX. Esto unifica la API entre las 4 stacks del design system.",
+      "tip3": "<strong>Tree-shake</strong>: solo los tipos de chart que usas entran al bundle. Los builders auxiliares cubren bar, line, area y pie. Para otros tipos (scatter, radar, heatmap...), registra el módulo extra antes de usarlo.",
+      "tip4": "<strong>Renderer</strong>: SVG es el default y mejor para print, exportación y pocos elementos. Canvas es mejor para datasets grandes (>10.000 puntos) o animaciones pesadas.",
+      "tip5": "<strong>Tema reactivo</strong>: el container observa cambios en la clase del <code>&lt;html&gt;</code> y re-aplica el tema. Cambiar tema de marca, dark mode, densidad o fuente recolorea el gráfico automáticamente, sin reload."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Chart es pasivo — no dispara eventos por defecto. Rastrea interacciones específicas (hover de tooltip, clic en leyenda) vía callbacks de Recharts cuando sea relevante para el producto.",
+      "description": "Chart es pasivo — no dispara eventos por defecto. Rastrea interacciones específicas (hover de tooltip, click en leyenda) vía callbacks de la librería cuando sea relevante para el producto.",
       "table": {
         "event": "Evento",
         "trigger": "Disparador",
@@ -992,7 +974,7 @@
         "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
         "pageViewPayload": "{ component_name: 'chart', locale, page_title }",
         "sectionViewed": "docs_section_viewed",
-        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedTrigger": "Al scrollear a una sección (IntersectionObserver)",
         "sectionViewedPayload": "{ section_id, component_name: 'chart', locale }",
         "langSwitch": "language_switched",
         "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
@@ -1003,28 +985,28 @@
       "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
-        "description": "Lo que debe ocurrir para cada configuración del Chart.",
-        "item1": { "action": "Estado vacío: data=[]", "result": "Contenedor renderiza sin barras ni líneas; mensaje de estado vacío visible", "priority": "high" },
+        "description": "Qué debe pasar para cada configuración de Chart.",
+        "item1": { "action": "Estado vacío: series vacías", "result": "Container renderiza con mensaje \"No data\" por defecto; ninguna barra o línea visible", "priority": "high" },
         "item2": { "action": "Tipo bar con datos válidos", "result": "Barras renderizadas con colores de tokens --chart-*; altura proporcional a los valores", "priority": "high" },
-        "item3": { "action": "Tipo line con datos válidos", "result": "Path SVG renderizado conectando los puntos; color vía var(--color-[key])", "priority": "high" },
-        "item4": { "action": "Hover sobre punto de dato", "result": "Tooltip muestra label de categoría y valor formateado con indicador de color", "priority": "high" },
-        "item5": { "action": "ChartLegend con multi-series", "result": "Leyenda muestra color + label de cada serie según ChartConfig", "priority": "medium" },
-        "item6": { "action": "Estado loading (Skeleton)", "result": "Skeleton con mismas dimensiones del contenedor; ningún dato parcial visible", "priority": "medium" }
+        "item3": { "action": "Tipo line con datos válidos", "result": "Path renderizado conectando los puntos; color del token --chart-1 de la primera serie", "priority": "high" },
+        "item4": { "action": "Hover sobre punto de datos", "result": "Tooltip muestra label de categoría y valor formateado con indicador de color", "priority": "high" },
+        "item5": { "action": "Multi-series", "result": "Leyenda muestra color + label de cada serie; cada serie usa token de color distinto", "priority": "medium" },
+        "item6": { "action": "Cambio de tema en <html>", "result": "Colores y tipografía se recalculan automáticamente; el gráfico no parpadea ni requiere reload", "priority": "medium" }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "aria-label presente y descriptivo en ChartContainer", "level": "AA", "how": "Inspeccionar atributo aria-label en div[data-slot=chart]" },
-        "item2": { "criterion": "accessibilityLayer activo en el componente Recharts raíz", "level": "AA", "how": "Navegación por Arrow keys entre puntos de datos" },
+        "item1": { "criterion": "aria-label presente y descriptivo en el container", "level": "AA", "how": "Inspeccionar atributo aria-label en div[data-slot=chart]" },
+        "item2": { "criterion": "role=\"img\" en el container para lectores de pantalla", "level": "AA", "how": "Inspeccionar atributo role en div[data-slot=chart]" },
         "item3": { "criterion": "Contraste mínimo 3:1 en elementos gráficos", "level": "AA", "how": "axe-core / Lighthouse con tokens --chart-1 a --chart-5" },
-        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item4": { "criterion": "Sin violaciones axe-core en estado por defecto", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
         "item1": { "story": "Bar chart — serie única, datos completos", "priority": "high" },
         "item2": { "story": "Line chart — multi-series con leyenda", "priority": "high" },
-        "item3": { "story": "Estado vacío — data=[]", "priority": "high" },
+        "item3": { "story": "Estado vacío — series vacías", "priority": "high" },
         "item4": { "story": "Dark mode — bar y line con tokens de tema", "priority": "medium" }
       }
     },
