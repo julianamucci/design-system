@@ -35,11 +35,12 @@
       bind:indeterminate
       {disabled}
       aria-invalid={ariaInvalid || undefined}
+      aria-labelledby="{id}-label"
       aria-describedby="{id}-description"
       class="mt-0.5"
     />
     <div class="flex flex-col gap-1">
-      <Label for={id} class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium leading-none">
+      <Label id="{id}-label" for={id} class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium leading-none">
         {labelText}
       </Label>
       <p id="{id}-description" class="text-sm text-muted-foreground">{descriptionText}</p>
@@ -53,8 +54,9 @@
       bind:indeterminate
       {disabled}
       aria-invalid={ariaInvalid || undefined}
+      aria-labelledby="{id}-label"
     />
-    <Label for={id} class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium leading-none">
+    <Label id="{id}-label" for={id} class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium leading-none">
       {labelText}
     </Label>
   </div>
@@ -65,5 +67,6 @@
     bind:indeterminate
     {disabled}
     aria-invalid={ariaInvalid || undefined}
+    aria-label={labelText}
   />
 {/if}

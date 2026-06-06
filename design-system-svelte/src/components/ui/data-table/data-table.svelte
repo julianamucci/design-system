@@ -109,6 +109,8 @@
   let columnPinning = $state<ColumnPinningState>({ left: [], right: [] });
   let columnSizing = $state<ColumnSizingState>({});
   let draggedColumnId = $state<string | null>(null);
+  // eslint-disable-next-line svelte/state_referenced_locally
+  let pagination = $state<{ pageIndex: number; pageSize: number }>({ pageIndex: 0, pageSize });
 
   function apply<T>(prev: T, updater: Updater<T>): T {
     return typeof updater === 'function' ? (updater as (old: T) => T)(prev) : updater;
@@ -157,6 +159,7 @@
         columnOrder,
         columnPinning,
         columnSizing,
+        pagination,
       },
       enableRowSelection,
       enableColumnResizing,
@@ -174,6 +177,7 @@
       onColumnOrderChange: (u) => (columnOrder = apply(columnOrder, u)),
       onColumnPinningChange: (u) => (columnPinning = apply(columnPinning, u)),
       onColumnSizingChange: (u) => (columnSizing = apply(columnSizing, u)),
+      onPaginationChange: (u) => (pagination = apply(pagination, u)),
       getCoreRowModel: getCoreRowModel(),
       getSortedRowModel: getSortedRowModel(),
       getFilteredRowModel: getFilteredRowModel(),
@@ -206,6 +210,7 @@
         columnOrder,
         columnPinning,
         columnSizing,
+        pagination,
       },
     }));
   });

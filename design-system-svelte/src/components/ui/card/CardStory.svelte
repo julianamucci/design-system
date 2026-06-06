@@ -181,7 +181,7 @@
       <CardTitle class="text-2xl font-semibold tabular-nums">{metricValue}</CardTitle>
     </CardHeader>
     <CardContent>
-      <p class="text-xs text-emerald-600 dark:text-emerald-400">{metricTrend}</p>
+      <p class="text-xs text-emerald-700 dark:text-emerald-300">{metricTrend}</p>
     </CardContent>
   </Card>
 {/if}

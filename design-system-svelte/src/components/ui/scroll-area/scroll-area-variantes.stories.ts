@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
 
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 
 const meta = {
@@ -35,10 +35,12 @@ export const Vertical: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Scrollbar vertical presente', async () => {
-      const scrollbar = canvasElement.querySelector(
-        '[data-slot="scroll-area-scrollbar"][data-orientation="vertical"]'
-      );
-      await expect(scrollbar).toBeInTheDocument();
+      await waitFor(() => {
+        const scrollbar = canvasElement.querySelector(
+          '[data-slot="scroll-area-scrollbar"][data-orientation="vertical"]'
+        );
+        expect(scrollbar).toBeInTheDocument();
+      });
     });
     await step('Scrollbar horizontal ausente', async () => {
       const horizontal = canvasElement.querySelector(
@@ -62,10 +64,12 @@ export const Horizontal: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Scrollbar horizontal presente', async () => {
-      const scrollbar = canvasElement.querySelector(
-        '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]'
-      );
-      await expect(scrollbar).toBeInTheDocument();
+      await waitFor(() => {
+        const scrollbar = canvasElement.querySelector(
+          '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]'
+        );
+        expect(scrollbar).toBeInTheDocument();
+      });
     });
     await step('Conteúdo em flex w-max', async () => {
       const inner = canvasElement.querySelector('.flex.w-max');
@@ -87,16 +91,20 @@ export const Both: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Scrollbar vertical presente', async () => {
-      const v = canvasElement.querySelector(
-        '[data-slot="scroll-area-scrollbar"][data-orientation="vertical"]'
-      );
-      await expect(v).toBeInTheDocument();
+      await waitFor(() => {
+        const v = canvasElement.querySelector(
+          '[data-slot="scroll-area-scrollbar"][data-orientation="vertical"]'
+        );
+        expect(v).toBeInTheDocument();
+      });
     });
     await step('Scrollbar horizontal presente', async () => {
-      const h = canvasElement.querySelector(
-        '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]'
-      );
-      await expect(h).toBeInTheDocument();
+      await waitFor(() => {
+        const h = canvasElement.querySelector(
+          '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]'
+        );
+        expect(h).toBeInTheDocument();
+      });
     });
   },
 };

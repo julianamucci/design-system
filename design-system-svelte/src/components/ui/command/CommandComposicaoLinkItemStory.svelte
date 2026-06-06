@@ -7,8 +7,8 @@
 
 <div class="w-full max-w-sm rounded-xl border shadow-md">
   <Command.Root>
-    <Command.Input placeholder="Buscar recurso..." />
-    <Command.List>
+    <Command.Input placeholder="Buscar recurso..." aria-controls="cmd-link-listbox" />
+    <Command.List id="cmd-link-listbox">
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Documentação">
         <Command.LinkItem href="/docs/button" value="docs-button">

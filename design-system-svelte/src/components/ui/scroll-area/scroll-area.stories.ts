@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
 
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { ScrollArea } from './index';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 import ScrollAreaDocs from '@/components/docs/ScrollAreaDocs.svelte';
@@ -74,8 +74,10 @@ export const Playground: Story = {
     });
 
     await step('Scrollbar renderizada', async () => {
-      const scrollbar = canvasElement.querySelector('[data-slot="scroll-area-scrollbar"]');
-      await expect(scrollbar).toBeInTheDocument();
+      await waitFor(() => {
+        const scrollbar = canvasElement.querySelector('[data-slot="scroll-area-scrollbar"]');
+        expect(scrollbar).toBeInTheDocument();
+      });
     });
 
     await step('Conteúdo interno visível (primeiro item)', async () => {

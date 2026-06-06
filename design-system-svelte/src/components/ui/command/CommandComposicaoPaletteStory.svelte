@@ -43,8 +43,8 @@
   </Button>
 
   <Command.Dialog bind:open title="Command Palette" description="Busque por um comando ou ação...">
-    <Command.Input placeholder="Buscar comando ou ação..." />
-    <Command.List>
+    <Command.Input placeholder="Buscar comando ou ação..." aria-controls="cmd-palette-listbox" />
+    <Command.List id="cmd-palette-listbox">
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Páginas">
         <Command.Item value="dashboard" onselect={() => handleSelect('dashboard')}>

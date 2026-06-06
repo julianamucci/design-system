@@ -31,7 +31,7 @@ export const Selected: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Célula selecionada renderiza com data-selected', async () => {
-      const selected = canvasElement.querySelector('[data-selected="true"]');
+      const selected = canvasElement.querySelector('[data-selected]');
       await expect(selected).toBeInTheDocument();
     });
   },

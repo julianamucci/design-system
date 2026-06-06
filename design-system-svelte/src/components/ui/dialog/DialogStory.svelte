@@ -73,7 +73,7 @@
           </label>
         </form>
       {:else if variant === 'withScrollContent'}
-        <div class="max-h-[40vh] overflow-y-auto pr-2 text-sm text-muted-foreground space-y-2">
+        <div class="max-h-[40vh] overflow-y-auto pr-2 text-sm text-muted-foreground space-y-2" tabindex="0" role="region" aria-label="Conteúdo rolável">
           {#each Array.from({ length: 14 }) as _, i}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Dialog quando o body excede a altura disponível em viewport.</p>
           {/each}

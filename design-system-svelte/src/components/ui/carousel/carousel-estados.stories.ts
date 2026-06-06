@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
 
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
 
@@ -42,12 +42,12 @@ export const PrimeiroSlide: Story = {
 
     await step('Botão "Item anterior" inicia desabilitado', async () => {
       const prev = canvas.getByRole('button', { name: /Item anterior/i });
-      await expect(prev).toBeDisabled();
+      await waitFor(() => expect(prev).toBeDisabled());
     });
 
     await step('Botão "Próximo item" está habilitado', async () => {
       const next = canvas.getByRole('button', { name: /Próximo item/i });
-      await expect(next).not.toBeDisabled();
+      await waitFor(() => expect(next).not.toBeDisabled());
     });
   },
 };
@@ -70,12 +70,12 @@ export const UltimoSlide: Story = {
 
     await step('Botão "Próximo item" desabilitado no último slide', async () => {
       const next = canvas.getByRole('button', { name: /Próximo item/i });
-      await expect(next).toBeDisabled();
+      await waitFor(() => expect(next).toBeDisabled());
     });
 
     await step('Botão "Item anterior" está habilitado', async () => {
       const prev = canvas.getByRole('button', { name: /Item anterior/i });
-      await expect(prev).not.toBeDisabled();
+      await waitFor(() => expect(prev).not.toBeDisabled());
     });
   },
 };

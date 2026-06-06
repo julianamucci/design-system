@@ -81,7 +81,7 @@ export const Number: Story = {
 export const File: Story = {
   render: () => ({
     Component: InputStory,
-    props: { type: 'file' },
+    props: { type: 'file', 'aria-label': 'Selecionar arquivo' },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

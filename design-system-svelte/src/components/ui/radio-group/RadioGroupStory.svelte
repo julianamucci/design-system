@@ -52,6 +52,7 @@
   {orientation}
   {name}
   aria-label={ariaLabel}
+  aria-orientation={orientation}
   aria-invalid={ariaInvalid || undefined}
   class={containerClass}
 >

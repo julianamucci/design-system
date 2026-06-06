@@ -55,7 +55,7 @@ export const Playground: Story = {
     });
 
     await step('Célula selecionada tem aria-selected="true"', async () => {
-      const selected = canvasElement.querySelector('[data-selected="true"]');
+      const selected = canvasElement.querySelector('[data-selected]');
       await expect(selected).toBeInTheDocument();
     });
   },

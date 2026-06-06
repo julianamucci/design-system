@@ -6,6 +6,7 @@
     checked?: boolean;
     disabled?: boolean;
     ariaInvalid?: boolean;
+    ariaLabel?: string;
     size?: 'default' | 'sm';
     withLabel?: boolean;
     withDescription?: boolean;
@@ -19,6 +20,7 @@
     checked = $bindable(false),
     disabled = false,
     ariaInvalid = false,
+    ariaLabel = 'Alternar',
     size = 'default',
     withLabel = true,
     withDescription = false,
@@ -32,7 +34,7 @@
 {#if withDescription}
   <div class="flex items-center justify-between w-80 gap-4">
     <div class="flex flex-col gap-0.5">
-      <Label for={id} class="text-sm font-medium leading-none">
+      <Label id="{id}-label" for={id} class="text-sm font-medium leading-none">
         {labelText}
       </Label>
       <p id="{id}-description" class="text-sm text-muted-foreground">{descriptionText}</p>
@@ -44,6 +46,7 @@
       {size}
       {name}
       aria-invalid={ariaInvalid || undefined}
+      aria-labelledby="{id}-label"
       aria-describedby="{id}-description"
     />
   </div>
@@ -56,8 +59,9 @@
       {size}
       {name}
       aria-invalid={ariaInvalid || undefined}
+      aria-labelledby="{id}-label"
     />
-    <Label for={id} class="text-sm font-medium leading-none">
+    <Label id="{id}-label" for={id} class="text-sm font-medium leading-none">
       {labelText}
     </Label>
   </div>
@@ -69,5 +73,6 @@
     {size}
     {name}
     aria-invalid={ariaInvalid || undefined}
+    aria-label={ariaLabel}
   />
 {/if}

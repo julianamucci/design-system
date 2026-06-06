@@ -4,8 +4,8 @@
 
 <div class="w-full max-w-sm rounded-xl border shadow-md">
   <Command.Root>
-    <Command.Input placeholder="Buscar ação..." />
-    <Command.List>
+    <Command.Input placeholder="Buscar ação..." aria-controls="cmd-shortcuts-listbox" />
+    <Command.List id="cmd-shortcuts-listbox">
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Ações">
         <Command.Item value="new-file">

@@ -12,6 +12,7 @@
 
 {#if variant === 'cardDePerfil'}
   <div
+    role="status"
     aria-busy="true"
     aria-label="Carregando perfil"
     class="flex items-center gap-4 w-80 rounded-md border p-4"
@@ -35,13 +36,13 @@
     {/each}
   </ul>
 {:else if variant === 'imagemEmAspectRatio'}
-  <div aria-busy="true" aria-label="Carregando imagem" class="w-80">
+  <div role="status" aria-busy="true" aria-label="Carregando imagem" class="w-80">
     <div class="relative w-full" style="aspect-ratio: 16 / 9;">
       <Skeleton class="absolute inset-0 h-full w-full motion-reduce:animate-none" aria-hidden="true" />
     </div>
   </div>
 {:else if variant === 'paragrafo'}
-  <div aria-busy="true" aria-label="Carregando parágrafo" class="space-y-2 w-80">
+  <div role="status" aria-busy="true" aria-label="Carregando parágrafo" class="space-y-2 w-80">
     <Skeleton class="h-3 w-full motion-reduce:animate-none" aria-hidden="true" />
     <Skeleton class="h-3 w-[90%] motion-reduce:animate-none" aria-hidden="true" />
     <Skeleton class="h-3 w-[75%] motion-reduce:animate-none" aria-hidden="true" />

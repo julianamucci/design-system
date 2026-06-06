@@ -16,8 +16,8 @@
 
 <div class="w-full max-w-sm rounded-xl border shadow-md">
   <Command.Root {...rest}>
-    <Command.Input {placeholder} />
-    <Command.List>
+    <Command.Input {placeholder} aria-controls="command-story-listbox" />
+    <Command.List id="command-story-listbox">
       <Command.Empty>{emptyMessage}</Command.Empty>
       <Command.Group heading="Componentes">
         <Command.Item value="button">Button</Command.Item>

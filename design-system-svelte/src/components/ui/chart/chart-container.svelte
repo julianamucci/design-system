@@ -25,6 +25,7 @@
     option,
     class: className,
     renderer = 'svg',
+    'aria-label': ariaLabel = 'Gráfico',
     ...restProps
   }: HTMLAttributes<HTMLDivElement> & {
     option: echarts.EChartsCoreOption;
@@ -112,6 +113,7 @@
   bind:this={containerEl}
   data-slot="chart"
   role="img"
+  aria-label={ariaLabel}
   class={cn('w-full', className)}
   style="min-height: 200px;"
   {...restProps}

@@ -5,11 +5,11 @@
 
 <div class="w-full max-w-sm rounded-xl border shadow-md">
   <Command.Root>
-    <Command.Input placeholder="Buscar componente..." />
-    <Command.List>
+    <Command.Input placeholder="Buscar componente..." aria-controls="cmd-loading-listbox" />
+    <Command.List id="cmd-loading-listbox">
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Loading>
-        <div class="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground" role="progressbar" aria-label="Carregando resultados">
+        <div class="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground">
           <Loader2 class="size-4 animate-spin" aria-hidden="true" />
           <span>Carregando resultados...</span>
         </div>

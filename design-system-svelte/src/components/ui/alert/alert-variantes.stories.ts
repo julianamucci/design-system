@@ -60,7 +60,7 @@ export const Success: Story = {
       description: 'Suas informações foram salvas com sucesso.',
       showIcon: true,
       icon: 'success',
-      class: 'bg-success/10 text-success border-success/30',
+      class: 'bg-success/10 text-foreground border-success/30 [&_svg]:text-success',
     },
   }),
 
@@ -78,7 +78,7 @@ export const Warning: Story = {
       description: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.',
       showIcon: true,
       icon: 'warning',
-      class: 'bg-warning/10 text-warning border-warning/30',
+      class: 'bg-warning/10 text-foreground border-warning/30 [&_svg]:text-warning',
     },
   }),
 

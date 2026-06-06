@@ -62,6 +62,8 @@ get along, so we shut typescript up by casting `value` to `never`.
 	bind:value={value as never}
 	bind:ref
 	{orientation}
+	aria-orientation={orientation}
+	role="toolbar"
 	data-slot="toggle-group"
 	data-variant={variant}
 	data-size={size}

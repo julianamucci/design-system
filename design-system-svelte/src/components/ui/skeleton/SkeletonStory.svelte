@@ -8,6 +8,6 @@
   let { class: classProp = 'h-4 w-[250px]' }: Props = $props();
 </script>
 
-<div aria-busy="true" aria-label="Carregando conteúdo">
+<div role="status" aria-busy="true" aria-label="Carregando conteúdo">
   <Skeleton class={`${classProp} motion-reduce:animate-none`} aria-hidden="true" />
 </div>

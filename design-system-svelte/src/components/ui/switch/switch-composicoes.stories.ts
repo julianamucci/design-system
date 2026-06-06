@@ -27,6 +27,7 @@ export const SemLabel: Story = {
     checked: false,
     withLabel: false,
     id: 'comp-no-label',
+    ariaLabel: 'Ativar modo escuro',
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

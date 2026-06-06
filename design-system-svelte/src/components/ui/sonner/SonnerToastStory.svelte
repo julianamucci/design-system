@@ -51,5 +51,5 @@
 </script>
 
 <div style="contain: layout" class="relative min-h-24 w-full">
-  <Toaster position="top-right" richColors />
+  <Toaster position="top-right" />
 </div>

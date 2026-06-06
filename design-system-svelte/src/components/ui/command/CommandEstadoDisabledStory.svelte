@@ -4,8 +4,8 @@
 
 <div class="w-full max-w-sm rounded-xl border shadow-md">
   <Command.Root>
-    <Command.Input placeholder="Buscar componente..." />
-    <Command.List>
+    <Command.Input placeholder="Buscar componente..." aria-controls="cmd-disabled-listbox" />
+    <Command.List id="cmd-disabled-listbox">
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Componentes">
         <Command.Item value="button">Button</Command.Item>

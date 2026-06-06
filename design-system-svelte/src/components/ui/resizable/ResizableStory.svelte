@@ -40,7 +40,7 @@
       <Pane defaultSize={30} minSize={20} maxSize={50} class="flex items-center justify-center bg-muted/40">
         <span class="text-sm text-muted-foreground">{sidebarLabel}</span>
       </Pane>
-      <Handle {withHandle} aria-label={ariaLabel} />
+      <Handle {withHandle} aria-label={ariaLabel} aria-orientation="vertical" />
       <Pane defaultSize={70} minSize={50} maxSize={80} class="flex items-center justify-center">
         <span class="text-sm text-foreground">{contentLabel}</span>
       </Pane>
@@ -52,7 +52,7 @@
       <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center bg-muted/40">
         <span class="text-sm text-muted-foreground">{topLabel}</span>
       </Pane>
-      <Handle {withHandle} aria-label={ariaLabel} />
+      <Handle {withHandle} aria-label={ariaLabel} aria-orientation="horizontal" />
       <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center">
         <span class="text-sm text-foreground">{bottomLabel}</span>
       </Pane>
@@ -64,13 +64,13 @@
       <Pane defaultSize={30} minSize={20} maxSize={50} class="flex items-center justify-center bg-muted/40">
         <span class="text-sm text-muted-foreground">{sidebarLabel}</span>
       </Pane>
-      <Handle {withHandle} aria-label={ariaLabel} />
+      <Handle {withHandle} aria-label={ariaLabel} aria-orientation="vertical" />
       <Pane defaultSize={70} minSize={40}>
         <PaneGroup direction="vertical" class="h-full">
           <Pane defaultSize={60} minSize={20} class="flex items-center justify-center">
             <span class="text-sm text-foreground">{topLabel}</span>
           </Pane>
-          <Handle {withHandle} aria-label={ariaLabel} />
+          <Handle {withHandle} aria-label={ariaLabel} aria-orientation="horizontal" />
           <Pane defaultSize={40} minSize={20} class="flex items-center justify-center bg-muted/40">
             <span class="text-sm text-muted-foreground">{bottomLabel}</span>
           </Pane>
