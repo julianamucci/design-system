@@ -1,0 +1,461 @@
+{
+  "pt-BR": {
+    "title": "Elevação, Bordas e Sombras",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "O sistema de elevação combina <strong>sombra</strong> e <strong>radius</strong> para comunicar profundidade e contexto. Cinco níveis cobrem todos os containers do produto — do plano da página até o tooltip flutuante. Bordas sutis garantem definição mesmo em fundos claros.",
+    "seo": {
+      "title": "Elevação, Bordas e Sombras — Design System",
+      "description": "Cinco níveis de elevação, tokens --elevation-* e --radius-*, combinações típicas e regras de uso para borders e shadows.",
+      "aiSummary": "Página de fundamentos de Elevação. Documenta cinco níveis (plano, card, dropdown, dialog, tooltip), tokens de shadow e radius, bordas e combinações típicas por componente.",
+      "aiEntities": "elevação, sombra, shadow, radius, borda, border, profundidade, surface",
+      "aiIntent": "informational"
+    },
+    "elevation": {
+      "title": "Sistema de elevação",
+      "subtitle": "Cinco níveis nomeados pelo papel, não pelo valor. Use o nível apropriado ao contexto de UI, não à intensidade visual desejada.",
+      "cols": {
+        "level": "Nível",
+        "token": "Token",
+        "usage": "Uso típico"
+      },
+      "items": {
+        "plano": {
+          "level": "0 — Plano",
+          "token": "—",
+          "usage": "Fundo da página, conteúdo embutido sem container"
+        },
+        "card": {
+          "level": "1 — Card",
+          "token": "--elevation-sm",
+          "usage": "Card, Tile, item de lista em superfície elevada"
+        },
+        "dropdown": {
+          "level": "2 — Dropdown",
+          "token": "--elevation-md",
+          "usage": "Dropdown, Popover, Select aberto, ComboBox"
+        },
+        "dialog": {
+          "level": "3 — Dialog",
+          "token": "--elevation-lg",
+          "usage": "Dialog, Sheet, Drawer, Sidebar overlay"
+        },
+        "tooltip": {
+          "level": "4 — Tooltip",
+          "token": "--elevation-xl",
+          "usage": "Tooltip, Toast, HoverCard — flutuam acima de tudo"
+        }
+      }
+    },
+    "shadows": {
+      "title": "Tokens de sombra",
+      "subtitle": "Quatro tokens cobrem toda a escala. No tema dark, as sombras ficam mais opacas para preservar contraste sobre fundo escuro.",
+      "cols": {
+        "token": "Token",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "rows": [
+        ["--elevation-sm", "0 1px 2px rgba(0,0,0,.1)", "0 1px 2px rgba(0,0,0,.3)"],
+        ["--elevation-md", "0 4px 6px -1px rgba(0,0,0,.1)", "0 4px 6px -1px rgba(0,0,0,.3)"],
+        ["--elevation-lg", "0 10px 15px -3px rgba(0,0,0,.1)", "0 10px 15px -3px rgba(0,0,0,.3)"],
+        ["--elevation-xl", "0 20px 25px -5px rgba(0,0,0,.1)", "0 20px 25px -5px rgba(0,0,0,.3)"]
+      ]
+    },
+    "radius": {
+      "title": "Tokens de radius",
+      "subtitle": "O radius base é <code>0.625rem</code> (10px). Cada componente consome um token semântico calculado a partir do base — temas de marca podem aplicar multiplicadores diferentes (ex: Warm com radius mais arredondado).",
+      "cols": {
+        "token": "Token",
+        "value": "Valor",
+        "usage": "Uso"
+      },
+      "items": {
+        "base": {
+          "token": "--radius",
+          "value": "10px",
+          "usage": "Base global — referência dos demais"
+        },
+        "button": {
+          "token": "--radius-button",
+          "value": "10px (1×)",
+          "usage": "Button, Toggle, Tab trigger"
+        },
+        "input": {
+          "token": "--radius-input",
+          "value": "10px (1×)",
+          "usage": "Input, Textarea, Select trigger"
+        },
+        "card": {
+          "token": "--radius-card",
+          "value": "14px (1.4×)",
+          "usage": "Card, Dialog, Sheet, Popover"
+        },
+        "badge": {
+          "token": "--radius-badge",
+          "value": "26px (2.6×)",
+          "usage": "Badge, Chip — formato pill"
+        },
+        "full": {
+          "token": "rounded-full",
+          "value": "9999px",
+          "usage": "Avatar, ícone-botão circular"
+        }
+      }
+    },
+    "borders": {
+      "title": "Bordas",
+      "subtitle": "Bordas garantem definição quando a sombra sozinha não basta — especialmente em containers feedback (Alert, Badge) ou em temas com baixo contraste.",
+      "items": {
+        "default": "<code>--border</code> — borda padrão para Card, divisores, separadores",
+        "input": "<code>--input</code> — borda específica de inputs (mesma cor, semântica distinta)",
+        "subtle": "<code>border-border/60</code> — divisores sutis dentro de containers",
+        "width": "<code>--border-width-default: 1px</code> — espessura única para todo o sistema"
+      }
+    },
+    "combinations": {
+      "title": "Combinações típicas",
+      "subtitle": "Cada componente combina radius + shadow + border de forma consistente. Seguir essas combinações mantém o produto coeso.",
+      "cols": {
+        "component": "Componente",
+        "radius": "Radius",
+        "shadow": "Shadow",
+        "border": "Border"
+      },
+      "rows": [
+        ["Card", "radius-card (14px)", "elevation-sm", "border"],
+        ["Button", "radius-button (10px)", "—", "transparent / border"],
+        ["Input", "radius-input (10px)", "—", "input"],
+        ["Tooltip", "radius (10px)", "elevation-md", "—"],
+        ["Dropdown / Popover", "radius (10px)", "elevation-md", "border"],
+        ["Dialog / Sheet", "radius-card (14px)", "elevation-xl", "—"],
+        ["Badge", "radius-badge (26px)", "—", "transparent"]
+      ]
+    },
+    "rules": {
+      "title": "Regras",
+      "subtitle": "Princípios que mantêm o sistema de elevação previsível.",
+      "items": {
+        "purpose": "Use elevação para indicar <strong>flutuação real</strong> — overlays e elementos que entram acima do conteúdo. Não use para hierarquia visual decorativa.",
+        "feedback": "Em containers de feedback (Alert, Badge), <strong>nunca shadow sem borda</strong> — a borda dá definição quando a cor de fundo é sutil.",
+        "context": "Mantenha radius consistente por contexto. Botões usam <code>radius-button</code>; cards usam <code>radius-card</code>. Não misture na mesma família.",
+        "stack": "Respeite a ordem de elevação: tooltip nunca aparece abaixo de dropdown; dialog nunca abaixo de card.",
+        "darkMode": "No dark mode, sombras ficam mais opacas — não tente compensar com border extra."
+      }
+    },
+    "nav": {
+      "elevation": "Elevação",
+      "shadows": "Sombras",
+      "radius": "Radius",
+      "borders": "Bordas",
+      "combinations": "Combinações",
+      "rules": "Regras"
+    }
+  },
+  "en": {
+    "title": "Elevation, Borders & Shadows",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "The elevation system combines <strong>shadow</strong> and <strong>radius</strong> to communicate depth and context. Five levels cover every container in the product — from the page plane to the floating tooltip. Subtle borders provide definition even on light backgrounds.",
+    "seo": {
+      "title": "Elevation, Borders & Shadows — Design System",
+      "description": "Five elevation levels, --elevation-* and --radius-* tokens, typical combinations, and usage rules for borders and shadows.",
+      "aiSummary": "Elevation foundations page. Documents five levels (plane, card, dropdown, dialog, tooltip), shadow and radius tokens, borders, and typical per-component combinations.",
+      "aiEntities": "elevation, shadow, radius, border, depth, surface",
+      "aiIntent": "informational"
+    },
+    "elevation": {
+      "title": "Elevation system",
+      "subtitle": "Five levels named by role, not by value. Pick the level by UI context, not by desired visual intensity.",
+      "cols": {
+        "level": "Level",
+        "token": "Token",
+        "usage": "Typical usage"
+      },
+      "items": {
+        "plano": {
+          "level": "0 — Plane",
+          "token": "—",
+          "usage": "Page background, inline content with no container"
+        },
+        "card": {
+          "level": "1 — Card",
+          "token": "--elevation-sm",
+          "usage": "Card, Tile, list item on raised surface"
+        },
+        "dropdown": {
+          "level": "2 — Dropdown",
+          "token": "--elevation-md",
+          "usage": "Dropdown, Popover, open Select, ComboBox"
+        },
+        "dialog": {
+          "level": "3 — Dialog",
+          "token": "--elevation-lg",
+          "usage": "Dialog, Sheet, Drawer, Sidebar overlay"
+        },
+        "tooltip": {
+          "level": "4 — Tooltip",
+          "token": "--elevation-xl",
+          "usage": "Tooltip, Toast, HoverCard — float above everything"
+        }
+      }
+    },
+    "shadows": {
+      "title": "Shadow tokens",
+      "subtitle": "Four tokens cover the full scale. In dark mode, shadows become more opaque to preserve contrast on dark backgrounds.",
+      "cols": {
+        "token": "Token",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "rows": [
+        ["--elevation-sm", "0 1px 2px rgba(0,0,0,.1)", "0 1px 2px rgba(0,0,0,.3)"],
+        ["--elevation-md", "0 4px 6px -1px rgba(0,0,0,.1)", "0 4px 6px -1px rgba(0,0,0,.3)"],
+        ["--elevation-lg", "0 10px 15px -3px rgba(0,0,0,.1)", "0 10px 15px -3px rgba(0,0,0,.3)"],
+        ["--elevation-xl", "0 20px 25px -5px rgba(0,0,0,.1)", "0 20px 25px -5px rgba(0,0,0,.3)"]
+      ]
+    },
+    "radius": {
+      "title": "Radius tokens",
+      "subtitle": "The base radius is <code>0.625rem</code> (10px). Each component consumes a semantic token derived from the base — brand themes may apply different multipliers (e.g., Warm with more rounded corners).",
+      "cols": {
+        "token": "Token",
+        "value": "Value",
+        "usage": "Usage"
+      },
+      "items": {
+        "base": {
+          "token": "--radius",
+          "value": "10px",
+          "usage": "Global base — reference for the rest"
+        },
+        "button": {
+          "token": "--radius-button",
+          "value": "10px (1×)",
+          "usage": "Button, Toggle, Tab trigger"
+        },
+        "input": {
+          "token": "--radius-input",
+          "value": "10px (1×)",
+          "usage": "Input, Textarea, Select trigger"
+        },
+        "card": {
+          "token": "--radius-card",
+          "value": "14px (1.4×)",
+          "usage": "Card, Dialog, Sheet, Popover"
+        },
+        "badge": {
+          "token": "--radius-badge",
+          "value": "26px (2.6×)",
+          "usage": "Badge, Chip — pill shape"
+        },
+        "full": {
+          "token": "rounded-full",
+          "value": "9999px",
+          "usage": "Avatar, circular icon button"
+        }
+      }
+    },
+    "borders": {
+      "title": "Borders",
+      "subtitle": "Borders provide definition when shadow alone is not enough — especially on feedback containers (Alert, Badge) or low-contrast themes.",
+      "items": {
+        "default": "<code>--border</code> — default border for Card, dividers, separators",
+        "input": "<code>--input</code> — input-specific border (same color, distinct semantic)",
+        "subtle": "<code>border-border/60</code> — subtle dividers inside containers",
+        "width": "<code>--border-width-default: 1px</code> — single thickness across the system"
+      }
+    },
+    "combinations": {
+      "title": "Typical combinations",
+      "subtitle": "Each component pairs radius + shadow + border consistently. Sticking to these combinations keeps the product cohesive.",
+      "cols": {
+        "component": "Component",
+        "radius": "Radius",
+        "shadow": "Shadow",
+        "border": "Border"
+      },
+      "rows": [
+        ["Card", "radius-card (14px)", "elevation-sm", "border"],
+        ["Button", "radius-button (10px)", "—", "transparent / border"],
+        ["Input", "radius-input (10px)", "—", "input"],
+        ["Tooltip", "radius (10px)", "elevation-md", "—"],
+        ["Dropdown / Popover", "radius (10px)", "elevation-md", "border"],
+        ["Dialog / Sheet", "radius-card (14px)", "elevation-xl", "—"],
+        ["Badge", "radius-badge (26px)", "—", "transparent"]
+      ]
+    },
+    "rules": {
+      "title": "Rules",
+      "subtitle": "Principles that keep the elevation system predictable.",
+      "items": {
+        "purpose": "Use elevation to signal <strong>actual floating</strong> — overlays and elements above the content. Don't use it for decorative visual hierarchy.",
+        "feedback": "On feedback containers (Alert, Badge), <strong>never use shadow without border</strong> — the border provides definition when the background color is subtle.",
+        "context": "Keep radius consistent by context. Buttons use <code>radius-button</code>; cards use <code>radius-card</code>. Don't mix within the same family.",
+        "stack": "Respect the elevation order: tooltip never appears below dropdown; dialog never below card.",
+        "darkMode": "In dark mode, shadows are more opaque — don't compensate with extra border."
+      }
+    },
+    "nav": {
+      "elevation": "Elevation",
+      "shadows": "Shadows",
+      "radius": "Radius",
+      "borders": "Borders",
+      "combinations": "Combinations",
+      "rules": "Rules"
+    }
+  },
+  "es": {
+    "title": "Elevación, Bordes y Sombras",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "El sistema de elevación combina <strong>sombra</strong> y <strong>radius</strong> para comunicar profundidad y contexto. Cinco niveles cubren todos los contenedores del producto — desde el plano de página hasta el tooltip flotante. Los bordes sutiles aseguran definición incluso sobre fondos claros.",
+    "seo": {
+      "title": "Elevación, Bordes y Sombras — Design System",
+      "description": "Cinco niveles de elevación, tokens --elevation-* y --radius-*, combinaciones típicas y reglas de uso para borders y shadows.",
+      "aiSummary": "Página de fundamentos de Elevación. Documenta cinco niveles (plano, card, dropdown, dialog, tooltip), tokens de shadow y radius, bordes y combinaciones típicas por componente.",
+      "aiEntities": "elevación, sombra, shadow, radius, borde, border, profundidad, surface",
+      "aiIntent": "informational"
+    },
+    "elevation": {
+      "title": "Sistema de elevación",
+      "subtitle": "Cinco niveles nombrados por su rol, no por su valor. Elige el nivel según el contexto de UI, no según la intensidad visual deseada.",
+      "cols": {
+        "level": "Nivel",
+        "token": "Token",
+        "usage": "Uso típico"
+      },
+      "items": {
+        "plano": {
+          "level": "0 — Plano",
+          "token": "—",
+          "usage": "Fondo de página, contenido embebido sin contenedor"
+        },
+        "card": {
+          "level": "1 — Card",
+          "token": "--elevation-sm",
+          "usage": "Card, Tile, ítem de lista sobre superficie elevada"
+        },
+        "dropdown": {
+          "level": "2 — Dropdown",
+          "token": "--elevation-md",
+          "usage": "Dropdown, Popover, Select abierto, ComboBox"
+        },
+        "dialog": {
+          "level": "3 — Dialog",
+          "token": "--elevation-lg",
+          "usage": "Dialog, Sheet, Drawer, Sidebar overlay"
+        },
+        "tooltip": {
+          "level": "4 — Tooltip",
+          "token": "--elevation-xl",
+          "usage": "Tooltip, Toast, HoverCard — flotan sobre todo"
+        }
+      }
+    },
+    "shadows": {
+      "title": "Tokens de sombra",
+      "subtitle": "Cuatro tokens cubren toda la escala. En el tema dark, las sombras se vuelven más opacas para preservar contraste sobre fondos oscuros.",
+      "cols": {
+        "token": "Token",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "rows": [
+        ["--elevation-sm", "0 1px 2px rgba(0,0,0,.1)", "0 1px 2px rgba(0,0,0,.3)"],
+        ["--elevation-md", "0 4px 6px -1px rgba(0,0,0,.1)", "0 4px 6px -1px rgba(0,0,0,.3)"],
+        ["--elevation-lg", "0 10px 15px -3px rgba(0,0,0,.1)", "0 10px 15px -3px rgba(0,0,0,.3)"],
+        ["--elevation-xl", "0 20px 25px -5px rgba(0,0,0,.1)", "0 20px 25px -5px rgba(0,0,0,.3)"]
+      ]
+    },
+    "radius": {
+      "title": "Tokens de radius",
+      "subtitle": "El radius base es <code>0.625rem</code> (10px). Cada componente consume un token semántico calculado a partir del base — los temas de marca pueden aplicar multiplicadores distintos (ej: Warm con esquinas más redondeadas).",
+      "cols": {
+        "token": "Token",
+        "value": "Valor",
+        "usage": "Uso"
+      },
+      "items": {
+        "base": {
+          "token": "--radius",
+          "value": "10px",
+          "usage": "Base global — referencia para el resto"
+        },
+        "button": {
+          "token": "--radius-button",
+          "value": "10px (1×)",
+          "usage": "Button, Toggle, Tab trigger"
+        },
+        "input": {
+          "token": "--radius-input",
+          "value": "10px (1×)",
+          "usage": "Input, Textarea, Select trigger"
+        },
+        "card": {
+          "token": "--radius-card",
+          "value": "14px (1.4×)",
+          "usage": "Card, Dialog, Sheet, Popover"
+        },
+        "badge": {
+          "token": "--radius-badge",
+          "value": "26px (2.6×)",
+          "usage": "Badge, Chip — formato pill"
+        },
+        "full": {
+          "token": "rounded-full",
+          "value": "9999px",
+          "usage": "Avatar, botón de icono circular"
+        }
+      }
+    },
+    "borders": {
+      "title": "Bordes",
+      "subtitle": "Los bordes dan definición cuando la sombra sola no basta — especialmente en contenedores de feedback (Alert, Badge) o en temas con bajo contraste.",
+      "items": {
+        "default": "<code>--border</code> — borde por defecto para Card, divisores, separadores",
+        "input": "<code>--input</code> — borde específico de inputs (mismo color, semántica distinta)",
+        "subtle": "<code>border-border/60</code> — divisores sutiles dentro de contenedores",
+        "width": "<code>--border-width-default: 1px</code> — grosor único para todo el sistema"
+      }
+    },
+    "combinations": {
+      "title": "Combinaciones típicas",
+      "subtitle": "Cada componente combina radius + shadow + border de forma consistente. Seguir estas combinaciones mantiene el producto cohesivo.",
+      "cols": {
+        "component": "Componente",
+        "radius": "Radius",
+        "shadow": "Shadow",
+        "border": "Border"
+      },
+      "rows": [
+        ["Card", "radius-card (14px)", "elevation-sm", "border"],
+        ["Button", "radius-button (10px)", "—", "transparent / border"],
+        ["Input", "radius-input (10px)", "—", "input"],
+        ["Tooltip", "radius (10px)", "elevation-md", "—"],
+        ["Dropdown / Popover", "radius (10px)", "elevation-md", "border"],
+        ["Dialog / Sheet", "radius-card (14px)", "elevation-xl", "—"],
+        ["Badge", "radius-badge (26px)", "—", "transparent"]
+      ]
+    },
+    "rules": {
+      "title": "Reglas",
+      "subtitle": "Principios que mantienen el sistema de elevación predecible.",
+      "items": {
+        "purpose": "Usa elevación para indicar <strong>flotación real</strong> — overlays y elementos que aparecen sobre el contenido. No la uses para jerarquía visual decorativa.",
+        "feedback": "En contenedores de feedback (Alert, Badge), <strong>nunca uses shadow sin borde</strong> — el borde da definición cuando el color de fondo es sutil.",
+        "context": "Mantén el radius consistente por contexto. Los botones usan <code>radius-button</code>; las cards usan <code>radius-card</code>. No los mezcles en la misma familia.",
+        "stack": "Respeta el orden de elevación: tooltip nunca aparece debajo de dropdown; dialog nunca debajo de card.",
+        "darkMode": "En dark mode, las sombras son más opacas — no compenses con borde extra."
+      }
+    },
+    "nav": {
+      "elevation": "Elevación",
+      "shadows": "Sombras",
+      "radius": "Radius",
+      "borders": "Bordes",
+      "combinations": "Combinaciones",
+      "rules": "Reglas"
+    }
+  }
+}

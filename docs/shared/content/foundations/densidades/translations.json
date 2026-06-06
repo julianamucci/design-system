@@ -1,0 +1,275 @@
+{
+  "pt-BR": {
+    "title": "Densidades",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "A densidade controla quanto respiro a interface tem. Três níveis — <strong>Condensado</strong>, <strong>Default</strong> e <strong>Confortável</strong> — alteram <code>--spacing-base</code> e as alturas tokenizadas proporcionalmente, sem mexer em proporções fundamentais como radius, contraste ou tamanho de ícone.",
+    "seo": {
+      "title": "Densidades — Design System",
+      "description": "Três níveis de densidade (condensado, default, confortável) que escalam spacing e alturas proporcionalmente via classe no html.",
+      "aiSummary": "Página de fundamentos de Densidades. Documenta os três níveis aplicados via classe no html, tokens afetados (--spacing-base, --height-*), quando usar cada um e regras de acessibilidade.",
+      "aiEntities": "densidade, density, spacing, height, condensado, confortavel, WCAG 2.5.8",
+      "aiIntent": "informational"
+    },
+    "levels": {
+      "title": "Os três níveis",
+      "subtitle": "Aplicados via classe no <code>&lt;html&gt;</code>. A toolbar do Storybook permite alternar em tempo real para preview.",
+      "cols": {
+        "name": "Nível",
+        "class": "Classe",
+        "spacingBase": "Spacing base",
+        "heightDefault": "Altura default"
+      },
+      "rows": [
+        ["Condensado", "densidade-condensado", "3.2px (~80%)", "28px"],
+        ["Default", "densidade-default (ou nenhuma)", "4px (100%)", "32px"],
+        ["Confortável", "densidade-confortavel", "5px (~125%)", "40px"]
+      ]
+    },
+    "tokens": {
+      "title": "Tokens afetados",
+      "subtitle": "A densidade só altera <strong>spacing</strong> e <strong>alturas interativas</strong>. Tipografia, cor, radius e ícones permanecem constantes para garantir hierarquia visual estável.",
+      "affected": {
+        "title": "Afetado pela densidade",
+        "items": {
+          "spacing": "<code>--spacing-base</code> e toda a escala <code>--spacing-*</code> (consumida por Tailwind <code>p-*</code>, <code>m-*</code>, <code>gap-*</code>)",
+          "heights": "<code>--height-*</code> — alturas de Button, Input, Select, Toggle, Badge",
+          "sizes": "<code>--size-*</code> — tamanhos quadrados (icon buttons, avatares pequenos)"
+        }
+      },
+      "unaffected": {
+        "title": "Não afetado pela densidade",
+        "items": {
+          "radius": "Tokens de radius — <code>--radius</code>, <code>--radius-card</code>, etc.",
+          "colors": "Cores e contraste — proporção foreground/background é fixa",
+          "icons": "Tamanho de ícones dentro de primitivos — segue a escala tipográfica",
+          "typography": "Font-size e line-height base — densidade não tipografa"
+        }
+      }
+    },
+    "application": {
+      "title": "Como aplicar",
+      "subtitle": "A classe vive no <code>&lt;html&gt;</code> e se combina com tema de marca e modo light/dark sem conflito.",
+      "items": {
+        "html": "Adicione a classe no elemento raiz: <code>&lt;html class=\"densidade-condensado\"&gt;</code>",
+        "combine": "Pode combinar com qualquer tema: <code>&lt;html class=\"tema-warm dark densidade-confortavel\"&gt;</code>",
+        "toolbar": "No Storybook, use o toolbar global <code>densidade</code> para alternar e ver o efeito imediato em todas as stories",
+        "default": "Sem classe = densidade Default (4px base). A classe <code>densidade-default</code> existe apenas para reset explícito ao voltar de outro nível"
+      }
+    },
+    "whenToUse": {
+      "title": "Quando usar cada densidade",
+      "subtitle": "A escolha do nível depende do contexto de uso e do dispositivo predominante.",
+      "cols": {
+        "level": "Nível",
+        "context": "Contexto ideal",
+        "examples": "Exemplos"
+      },
+      "rows": [
+        ["Condensado", "Telas data-heavy onde caber mais informação é crítico", "DataTable, dashboards de monitoramento, planilhas, terminais admin"],
+        ["Default", "Fluxo padrão de produto, equilíbrio entre densidade e respiro", "Formulários, settings, listas, maioria das telas SaaS"],
+        ["Confortável", "Produtos consumer ou mobile-first onde o toque precisa de área generosa", "Apps mobile, fluxos onboarding, telas para usuários menos técnicos"]
+      ]
+    },
+    "rules": {
+      "title": "Regras críticas",
+      "subtitle": "Princípios que mantêm a densidade previsível e acessível.",
+      "items": {
+        "scope": "A densidade <strong>NÃO altera proporções fundamentais</strong> — radius, contraste e sizing de ícones permanecem iguais entre níveis. Só espaçamento e altura mudam.",
+        "global": "Aplique no <code>&lt;html&gt;</code>, nunca em containers locais. Densidade é uma decisão de produto, não de componente isolado.",
+        "wcag": "Em Condensado, verifique alvos de toque ≥24×24px (<strong>WCAG 2.5.8 AA</strong>). Botões pequenos podem ficar abaixo do mínimo em densidade reduzida.",
+        "spacing": "Use tokens da escala <code>--spacing-*</code> em CSS standalone. Valores literais (<code>padding: 12px</code>) ignoram a densidade.",
+        "test": "Teste cada componente novo nos três níveis. Componentes que quebram em Condensado normalmente têm padding hardcoded."
+      }
+    },
+    "nav": {
+      "levels": "Níveis",
+      "tokens": "Tokens",
+      "application": "Como aplicar",
+      "whenToUse": "Quando usar",
+      "rules": "Regras"
+    }
+  },
+  "en": {
+    "title": "Densities",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "Density controls how much breathing room the interface has. Three levels — <strong>Condensed</strong>, <strong>Default</strong>, and <strong>Comfortable</strong> — scale <code>--spacing-base</code> and tokenized heights proportionally, without touching fundamental proportions like radius, contrast, or icon size.",
+    "seo": {
+      "title": "Densities — Design System",
+      "description": "Three density levels (condensed, default, comfortable) that scale spacing and heights proportionally via an html class.",
+      "aiSummary": "Density foundations page. Documents the three levels applied via class on html, affected tokens (--spacing-base, --height-*), when to use each, and accessibility rules.",
+      "aiEntities": "density, spacing, height, condensed, comfortable, WCAG 2.5.8",
+      "aiIntent": "informational"
+    },
+    "levels": {
+      "title": "The three levels",
+      "subtitle": "Applied via a class on <code>&lt;html&gt;</code>. The Storybook toolbar lets you switch in real time for preview.",
+      "cols": {
+        "name": "Level",
+        "class": "Class",
+        "spacingBase": "Spacing base",
+        "heightDefault": "Default height"
+      },
+      "rows": [
+        ["Condensed", "densidade-condensado", "3.2px (~80%)", "28px"],
+        ["Default", "densidade-default (or none)", "4px (100%)", "32px"],
+        ["Comfortable", "densidade-confortavel", "5px (~125%)", "40px"]
+      ]
+    },
+    "tokens": {
+      "title": "Affected tokens",
+      "subtitle": "Density only changes <strong>spacing</strong> and <strong>interactive heights</strong>. Typography, color, radius, and icons stay constant to preserve stable visual hierarchy.",
+      "affected": {
+        "title": "Affected by density",
+        "items": {
+          "spacing": "<code>--spacing-base</code> and the full <code>--spacing-*</code> scale (consumed by Tailwind <code>p-*</code>, <code>m-*</code>, <code>gap-*</code>)",
+          "heights": "<code>--height-*</code> — Button, Input, Select, Toggle, Badge heights",
+          "sizes": "<code>--size-*</code> — square sizes (icon buttons, small avatars)"
+        }
+      },
+      "unaffected": {
+        "title": "Not affected by density",
+        "items": {
+          "radius": "Radius tokens — <code>--radius</code>, <code>--radius-card</code>, etc.",
+          "colors": "Colors and contrast — foreground/background ratio is fixed",
+          "icons": "Icon size inside primitives — follows the typography scale",
+          "typography": "Base font-size and line-height — density isn't typographic"
+        }
+      }
+    },
+    "application": {
+      "title": "How to apply",
+      "subtitle": "The class lives on <code>&lt;html&gt;</code> and combines with brand theme and light/dark mode without conflict.",
+      "items": {
+        "html": "Add the class on the root element: <code>&lt;html class=\"densidade-condensado\"&gt;</code>",
+        "combine": "Combines with any theme: <code>&lt;html class=\"tema-warm dark densidade-confortavel\"&gt;</code>",
+        "toolbar": "In Storybook, use the global <code>densidade</code> toolbar to switch and see the effect across every story",
+        "default": "No class = Default density (4px base). The <code>densidade-default</code> class exists only for explicit reset when returning from another level"
+      }
+    },
+    "whenToUse": {
+      "title": "When to use each density",
+      "subtitle": "The choice depends on the usage context and the primary device.",
+      "cols": {
+        "level": "Level",
+        "context": "Ideal context",
+        "examples": "Examples"
+      },
+      "rows": [
+        ["Condensed", "Data-heavy screens where fitting more on screen is critical", "DataTable, monitoring dashboards, spreadsheets, admin terminals"],
+        ["Default", "Standard product flow, balanced density and breathing room", "Forms, settings, lists, most SaaS screens"],
+        ["Comfortable", "Consumer or mobile-first products where touch needs generous area", "Mobile apps, onboarding flows, screens for less technical users"]
+      ]
+    },
+    "rules": {
+      "title": "Critical rules",
+      "subtitle": "Principles that keep density predictable and accessible.",
+      "items": {
+        "scope": "Density <strong>DOES NOT change fundamental proportions</strong> — radius, contrast, and icon sizing stay the same across levels. Only spacing and height shift.",
+        "global": "Apply it on <code>&lt;html&gt;</code>, never on local containers. Density is a product decision, not a per-component one.",
+        "wcag": "In Condensed, check touch targets ≥24×24px (<strong>WCAG 2.5.8 AA</strong>). Small buttons can fall below the minimum at reduced density.",
+        "spacing": "Use <code>--spacing-*</code> scale tokens in standalone CSS. Literal values (<code>padding: 12px</code>) ignore density.",
+        "test": "Test every new component at all three levels. Components that break in Condensed usually have hardcoded padding."
+      }
+    },
+    "nav": {
+      "levels": "Levels",
+      "tokens": "Tokens",
+      "application": "How to apply",
+      "whenToUse": "When to use",
+      "rules": "Rules"
+    }
+  },
+  "es": {
+    "title": "Densidades",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "La densidad controla cuánto respiro tiene la interfaz. Tres niveles — <strong>Condensado</strong>, <strong>Default</strong> y <strong>Cómodo</strong> — escalan <code>--spacing-base</code> y las alturas tokenizadas proporcionalmente, sin tocar proporciones fundamentales como radius, contraste o tamaño de icono.",
+    "seo": {
+      "title": "Densidades — Design System",
+      "description": "Tres niveles de densidad (condensado, default, cómodo) que escalan spacing y alturas proporcionalmente vía clase en el html.",
+      "aiSummary": "Página de fundamentos de Densidades. Documenta los tres niveles aplicados vía clase en html, tokens afectados (--spacing-base, --height-*), cuándo usar cada uno y reglas de accesibilidad.",
+      "aiEntities": "densidad, density, spacing, height, condensado, comodo, WCAG 2.5.8",
+      "aiIntent": "informational"
+    },
+    "levels": {
+      "title": "Los tres niveles",
+      "subtitle": "Se aplican vía clase en <code>&lt;html&gt;</code>. La toolbar de Storybook permite alternar en tiempo real para preview.",
+      "cols": {
+        "name": "Nivel",
+        "class": "Clase",
+        "spacingBase": "Spacing base",
+        "heightDefault": "Altura default"
+      },
+      "rows": [
+        ["Condensado", "densidade-condensado", "3.2px (~80%)", "28px"],
+        ["Default", "densidade-default (o ninguna)", "4px (100%)", "32px"],
+        ["Cómodo", "densidade-confortavel", "5px (~125%)", "40px"]
+      ]
+    },
+    "tokens": {
+      "title": "Tokens afectados",
+      "subtitle": "La densidad solo cambia <strong>spacing</strong> y <strong>alturas interactivas</strong>. Tipografía, color, radius e iconos permanecen constantes para preservar jerarquía visual estable.",
+      "affected": {
+        "title": "Afectado por la densidad",
+        "items": {
+          "spacing": "<code>--spacing-base</code> y toda la escala <code>--spacing-*</code> (consumida por Tailwind <code>p-*</code>, <code>m-*</code>, <code>gap-*</code>)",
+          "heights": "<code>--height-*</code> — alturas de Button, Input, Select, Toggle, Badge",
+          "sizes": "<code>--size-*</code> — tamaños cuadrados (icon buttons, avatares pequeños)"
+        }
+      },
+      "unaffected": {
+        "title": "No afectado por la densidad",
+        "items": {
+          "radius": "Tokens de radius — <code>--radius</code>, <code>--radius-card</code>, etc.",
+          "colors": "Colores y contraste — la proporción foreground/background es fija",
+          "icons": "Tamaño de iconos dentro de primitivos — sigue la escala tipográfica",
+          "typography": "Font-size y line-height base — la densidad no es tipográfica"
+        }
+      }
+    },
+    "application": {
+      "title": "Cómo aplicar",
+      "subtitle": "La clase vive en <code>&lt;html&gt;</code> y se combina con tema de marca y modo light/dark sin conflicto.",
+      "items": {
+        "html": "Agrega la clase en el elemento raíz: <code>&lt;html class=\"densidade-condensado\"&gt;</code>",
+        "combine": "Se combina con cualquier tema: <code>&lt;html class=\"tema-warm dark densidade-confortavel\"&gt;</code>",
+        "toolbar": "En Storybook, usa el toolbar global <code>densidade</code> para alternar y ver el efecto inmediato en todas las stories",
+        "default": "Sin clase = densidad Default (4px base). La clase <code>densidade-default</code> existe solo para reset explícito al volver desde otro nivel"
+      }
+    },
+    "whenToUse": {
+      "title": "Cuándo usar cada densidad",
+      "subtitle": "La elección depende del contexto de uso y del dispositivo predominante.",
+      "cols": {
+        "level": "Nivel",
+        "context": "Contexto ideal",
+        "examples": "Ejemplos"
+      },
+      "rows": [
+        ["Condensado", "Pantallas data-heavy donde caber más información es crítico", "DataTable, dashboards de monitoreo, planillas, terminales admin"],
+        ["Default", "Flujo estándar de producto, equilibrio entre densidad y respiro", "Formularios, settings, listas, la mayoría de pantallas SaaS"],
+        ["Cómodo", "Productos consumer o mobile-first donde el toque necesita área generosa", "Apps mobile, flujos de onboarding, pantallas para usuarios menos técnicos"]
+      ]
+    },
+    "rules": {
+      "title": "Reglas críticas",
+      "subtitle": "Principios que mantienen la densidad predecible y accesible.",
+      "items": {
+        "scope": "La densidad <strong>NO cambia proporciones fundamentales</strong> — radius, contraste y tamaño de iconos permanecen iguales entre niveles. Solo cambian spacing y altura.",
+        "global": "Aplícala en <code>&lt;html&gt;</code>, nunca en contenedores locales. La densidad es una decisión de producto, no de componente aislado.",
+        "wcag": "En Condensado, verifica que los targets táctiles sean ≥24×24px (<strong>WCAG 2.5.8 AA</strong>). Botones pequeños pueden quedar bajo el mínimo en densidad reducida.",
+        "spacing": "Usa tokens de la escala <code>--spacing-*</code> en CSS standalone. Valores literales (<code>padding: 12px</code>) ignoran la densidad.",
+        "test": "Prueba cada componente nuevo en los tres niveles. Los componentes que se rompen en Condensado normalmente tienen padding hardcodeado."
+      }
+    },
+    "nav": {
+      "levels": "Niveles",
+      "tokens": "Tokens",
+      "application": "Cómo aplicar",
+      "whenToUse": "Cuándo usar",
+      "rules": "Reglas"
+    }
+  }
+}

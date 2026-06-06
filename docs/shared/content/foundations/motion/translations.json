@@ -1,0 +1,317 @@
+{
+  "pt-BR": {
+    "title": "Motion e Animação",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "Motion serve à função, nunca à decoração. O Design System usa durações breves, easings semânticos e respeita <code>prefers-reduced-motion</code> globalmente. Cada animação tem um propósito: confirmar uma ação, orientar o foco ou suavizar uma transição de contexto.",
+    "seo": {
+      "title": "Motion — Design System",
+      "description": "Tokens de duração e easing, princípios de animação funcional e suporte global a prefers-reduced-motion.",
+      "aiSummary": "Página de fundamentos de Motion. Documenta tokens --transition-fast/normal/slow, easings ease-out/in/in-out/spring, tipos de uso por contexto, suporte a prefers-reduced-motion e anti-padrões.",
+      "aiEntities": "motion, animação, transition, duration, easing, prefers-reduced-motion, acessibilidade",
+      "aiIntent": "informational"
+    },
+    "principles": {
+      "title": "Princípios",
+      "subtitle": "Quatro regras que governam toda animação no sistema.",
+      "items": {
+        "function": "Motion serve à função. Animação sem propósito vira ruído visual.",
+        "brief": "Duração breve. Micro-interações ≤150ms; transições maiores ≤500ms.",
+        "natural": "Easings naturais. Entrada com <code>ease-out</code>, saída com <code>ease-in</code>, transições contínuas com <code>ease-in-out</code>.",
+        "respect": "Respeite a preferência. <code>prefers-reduced-motion</code> desliga animações não-essenciais."
+      }
+    },
+    "durations": {
+      "title": "Durações",
+      "subtitle": "Três tokens cobrem todas as transições do sistema. Use o valor nomeado, nunca números mágicos no CSS.",
+      "cols": {
+        "token": "Token",
+        "value": "Valor",
+        "usage": "Quando usar"
+      },
+      "items": {
+        "fast": {
+          "token": "--transition-fast",
+          "value": "150ms",
+          "usage": "Hover, focus, toggle, mudança de cor, ícone trocando"
+        },
+        "normal": {
+          "token": "--transition-normal",
+          "value": "300ms",
+          "usage": "Abertura de dropdown, accordion, tabs, fade de tooltip"
+        },
+        "slow": {
+          "token": "--transition-slow",
+          "value": "500ms",
+          "usage": "Entrada de Dialog/Sheet, transições de página, slide de Drawer"
+        }
+      }
+    },
+    "easings": {
+      "title": "Easings",
+      "subtitle": "O token padrão é <code>--transition-timing</code> com curva <code>cubic-bezier(0.4, 0, 0.2, 1)</code> — equivalente a <code>ease-in-out</code>. Combine com a duração apropriada.",
+      "items": {
+        "out": "<strong>ease-out</strong> — elementos entrando ou aparecendo. Inicia rápido, desacelera.",
+        "in": "<strong>ease-in</strong> — elementos saindo ou desaparecendo. Inicia lento, acelera.",
+        "inOut": "<strong>ease-in-out</strong> — transições contínuas entre estados. Padrão do sistema.",
+        "spring": "<strong>spring</strong> — apenas em interações lúdicas (drag, swipe). Use com moderação."
+      }
+    },
+    "usage": {
+      "title": "Tipos de uso",
+      "subtitle": "Cada interação tem uma duração e curva esperadas. Seguir essa convenção mantém o ritmo do produto consistente.",
+      "cols": {
+        "context": "Contexto",
+        "duration": "Duração",
+        "easing": "Easing"
+      },
+      "rows": [
+        ["Hover / focus em primitivos", "150ms", "ease-out"],
+        ["Toggle de estado (switch, checkbox)", "150ms", "ease-out"],
+        ["Abertura de dropdown / popover", "200–300ms", "ease-out"],
+        ["Entrada de Dialog / Sheet", "300–500ms", "ease-out"],
+        ["Saída de overlays", "200ms", "ease-in"],
+        ["Feedback de ação (toast, badge pulse)", "300ms", "spring suave"]
+      ]
+    },
+    "reducedMotion": {
+      "title": "Reduced motion",
+      "subtitle": "Usuários com sensibilidade vestibular configuram o sistema para reduzir animação. O Design System honra essa preferência globalmente.",
+      "rules": {
+        "global": "O arquivo <code>motion.css</code> aplica <code>animation-duration: 0.01ms</code> e <code>transition-duration: 0.01ms</code> dentro de <code>@media (prefers-reduced-motion: reduce)</code>.",
+        "primitives": "Carousel, Embla e componentes baseados em scroll automaticamente desabilitam autoplay quando a preferência está ativa.",
+        "custom": "Em motion custom (CSS ou JS), use <code>motion-reduce:animate-none</code> e <code>motion-reduce:transition-none</code> do Tailwind para opt-out granular.",
+        "essential": "Animações essenciais à compreensão (ex: indicador de loading) podem permanecer, mas devem ser sutis."
+      }
+    },
+    "antipatterns": {
+      "title": "Anti-padrões",
+      "subtitle": "Padrões a evitar — comprometem performance, acessibilidade ou clareza.",
+      "items": {
+        "parallax": "Parallax sem opt-out — quebra <code>prefers-reduced-motion</code> e gera enjoo.",
+        "infinite": "Loaders animados sem fim claro — passam ansiedade em vez de informar progresso.",
+        "focus": "Motion no foco principal da tarefa — distrai do conteúdo crítico.",
+        "long": "Durações longas em micro-interações — fazem o produto parecer lento.",
+        "bounce": "Bounce excessivo em entradas — vira ruído, não orientação."
+      }
+    },
+    "nav": {
+      "principles": "Princípios",
+      "durations": "Durações",
+      "easings": "Easings",
+      "usage": "Tipos de uso",
+      "reducedMotion": "Reduced motion",
+      "antipatterns": "Anti-padrões"
+    }
+  },
+  "en": {
+    "title": "Motion & Animation",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "Motion serves function, never decoration. The Design System uses brief durations, semantic easings, and respects <code>prefers-reduced-motion</code> globally. Every animation has a purpose: confirm an action, guide focus, or smooth a context change.",
+    "seo": {
+      "title": "Motion — Design System",
+      "description": "Duration and easing tokens, principles of functional animation, and global prefers-reduced-motion support.",
+      "aiSummary": "Motion foundations page. Documents --transition-fast/normal/slow tokens, ease-out/in/in-out/spring easings, usage types by context, prefers-reduced-motion support, and anti-patterns.",
+      "aiEntities": "motion, animation, transition, duration, easing, prefers-reduced-motion, accessibility",
+      "aiIntent": "informational"
+    },
+    "principles": {
+      "title": "Principles",
+      "subtitle": "Four rules govern every animation in the system.",
+      "items": {
+        "function": "Motion serves function. Animation without purpose becomes visual noise.",
+        "brief": "Keep it brief. Micro-interactions ≤150ms; larger transitions ≤500ms.",
+        "natural": "Natural easings. Enter with <code>ease-out</code>, exit with <code>ease-in</code>, continuous transitions with <code>ease-in-out</code>.",
+        "respect": "Respect the preference. <code>prefers-reduced-motion</code> disables non-essential animations."
+      }
+    },
+    "durations": {
+      "title": "Durations",
+      "subtitle": "Three tokens cover every transition in the system. Use the named value, never magic numbers in CSS.",
+      "cols": {
+        "token": "Token",
+        "value": "Value",
+        "usage": "When to use"
+      },
+      "items": {
+        "fast": {
+          "token": "--transition-fast",
+          "value": "150ms",
+          "usage": "Hover, focus, toggle, color change, icon swap"
+        },
+        "normal": {
+          "token": "--transition-normal",
+          "value": "300ms",
+          "usage": "Dropdown opening, accordion, tabs, tooltip fade"
+        },
+        "slow": {
+          "token": "--transition-slow",
+          "value": "500ms",
+          "usage": "Dialog/Sheet entry, page transitions, Drawer slide"
+        }
+      }
+    },
+    "easings": {
+      "title": "Easings",
+      "subtitle": "The default token is <code>--transition-timing</code> with curve <code>cubic-bezier(0.4, 0, 0.2, 1)</code> — equivalent to <code>ease-in-out</code>. Pair it with the appropriate duration.",
+      "items": {
+        "out": "<strong>ease-out</strong> — elements entering or appearing. Starts fast, decelerates.",
+        "in": "<strong>ease-in</strong> — elements exiting or disappearing. Starts slow, accelerates.",
+        "inOut": "<strong>ease-in-out</strong> — continuous transitions between states. System default.",
+        "spring": "<strong>spring</strong> — only in playful interactions (drag, swipe). Use sparingly."
+      }
+    },
+    "usage": {
+      "title": "Usage types",
+      "subtitle": "Every interaction has an expected duration and curve. Following this convention keeps the product's rhythm consistent.",
+      "cols": {
+        "context": "Context",
+        "duration": "Duration",
+        "easing": "Easing"
+      },
+      "rows": [
+        ["Hover / focus on primitives", "150ms", "ease-out"],
+        ["State toggle (switch, checkbox)", "150ms", "ease-out"],
+        ["Dropdown / popover open", "200–300ms", "ease-out"],
+        ["Dialog / Sheet entry", "300–500ms", "ease-out"],
+        ["Overlay exit", "200ms", "ease-in"],
+        ["Action feedback (toast, badge pulse)", "300ms", "soft spring"]
+      ]
+    },
+    "reducedMotion": {
+      "title": "Reduced motion",
+      "subtitle": "Users with vestibular sensitivity configure their system to reduce motion. The Design System honors that preference globally.",
+      "rules": {
+        "global": "The <code>motion.css</code> file applies <code>animation-duration: 0.01ms</code> and <code>transition-duration: 0.01ms</code> inside <code>@media (prefers-reduced-motion: reduce)</code>.",
+        "primitives": "Carousel, Embla, and scroll-based components disable autoplay automatically when the preference is active.",
+        "custom": "In custom motion (CSS or JS), use Tailwind's <code>motion-reduce:animate-none</code> and <code>motion-reduce:transition-none</code> for granular opt-out.",
+        "essential": "Animations essential to comprehension (e.g., loading indicators) may stay, but should remain subtle."
+      }
+    },
+    "antipatterns": {
+      "title": "Anti-patterns",
+      "subtitle": "Patterns to avoid — they hurt performance, accessibility, or clarity.",
+      "items": {
+        "parallax": "Parallax without opt-out — breaks <code>prefers-reduced-motion</code> and causes nausea.",
+        "infinite": "Loaders with no clear endpoint — convey anxiety instead of progress.",
+        "focus": "Motion on the main focus of a task — distracts from critical content.",
+        "long": "Long durations on micro-interactions — make the product feel slow.",
+        "bounce": "Excessive bounce on entry — becomes noise, not guidance."
+      }
+    },
+    "nav": {
+      "principles": "Principles",
+      "durations": "Durations",
+      "easings": "Easings",
+      "usage": "Usage types",
+      "reducedMotion": "Reduced motion",
+      "antipatterns": "Anti-patterns"
+    }
+  },
+  "es": {
+    "title": "Motion y Animación",
+    "category": "Foundations",
+    "type": "Tokens",
+    "description": "Motion sirve a la función, nunca a la decoración. El Design System usa duraciones breves, easings semánticos y respeta <code>prefers-reduced-motion</code> globalmente. Cada animación tiene un propósito: confirmar una acción, guiar el foco o suavizar un cambio de contexto.",
+    "seo": {
+      "title": "Motion — Design System",
+      "description": "Tokens de duración y easing, principios de animación funcional y soporte global a prefers-reduced-motion.",
+      "aiSummary": "Página de fundamentos de Motion. Documenta tokens --transition-fast/normal/slow, easings ease-out/in/in-out/spring, tipos de uso por contexto, soporte a prefers-reduced-motion y antipatrones.",
+      "aiEntities": "motion, animación, transition, duration, easing, prefers-reduced-motion, accesibilidad",
+      "aiIntent": "informational"
+    },
+    "principles": {
+      "title": "Principios",
+      "subtitle": "Cuatro reglas gobiernan toda animación del sistema.",
+      "items": {
+        "function": "Motion sirve a la función. Animación sin propósito se vuelve ruido visual.",
+        "brief": "Duración breve. Microinteracciones ≤150ms; transiciones mayores ≤500ms.",
+        "natural": "Easings naturales. Entrada con <code>ease-out</code>, salida con <code>ease-in</code>, transiciones continuas con <code>ease-in-out</code>.",
+        "respect": "Respeta la preferencia. <code>prefers-reduced-motion</code> desactiva animaciones no esenciales."
+      }
+    },
+    "durations": {
+      "title": "Duraciones",
+      "subtitle": "Tres tokens cubren todas las transiciones del sistema. Usa el valor nombrado, nunca números mágicos en CSS.",
+      "cols": {
+        "token": "Token",
+        "value": "Valor",
+        "usage": "Cuándo usar"
+      },
+      "items": {
+        "fast": {
+          "token": "--transition-fast",
+          "value": "150ms",
+          "usage": "Hover, focus, toggle, cambio de color, swap de icono"
+        },
+        "normal": {
+          "token": "--transition-normal",
+          "value": "300ms",
+          "usage": "Apertura de dropdown, accordion, tabs, fade de tooltip"
+        },
+        "slow": {
+          "token": "--transition-slow",
+          "value": "500ms",
+          "usage": "Entrada de Dialog/Sheet, transiciones de página, slide de Drawer"
+        }
+      }
+    },
+    "easings": {
+      "title": "Easings",
+      "subtitle": "El token por defecto es <code>--transition-timing</code> con curva <code>cubic-bezier(0.4, 0, 0.2, 1)</code> — equivalente a <code>ease-in-out</code>. Combínalo con la duración apropiada.",
+      "items": {
+        "out": "<strong>ease-out</strong> — elementos entrando o apareciendo. Inicia rápido, desacelera.",
+        "in": "<strong>ease-in</strong> — elementos saliendo o desapareciendo. Inicia lento, acelera.",
+        "inOut": "<strong>ease-in-out</strong> — transiciones continuas entre estados. Por defecto del sistema.",
+        "spring": "<strong>spring</strong> — solo en interacciones lúdicas (drag, swipe). Úsalo con moderación."
+      }
+    },
+    "usage": {
+      "title": "Tipos de uso",
+      "subtitle": "Cada interacción tiene una duración y curva esperadas. Seguir esta convención mantiene el ritmo del producto consistente.",
+      "cols": {
+        "context": "Contexto",
+        "duration": "Duración",
+        "easing": "Easing"
+      },
+      "rows": [
+        ["Hover / focus en primitivos", "150ms", "ease-out"],
+        ["Toggle de estado (switch, checkbox)", "150ms", "ease-out"],
+        ["Apertura de dropdown / popover", "200–300ms", "ease-out"],
+        ["Entrada de Dialog / Sheet", "300–500ms", "ease-out"],
+        ["Salida de overlays", "200ms", "ease-in"],
+        ["Feedback de acción (toast, badge pulse)", "300ms", "spring suave"]
+      ]
+    },
+    "reducedMotion": {
+      "title": "Reduced motion",
+      "subtitle": "Las personas con sensibilidad vestibular configuran el sistema para reducir el movimiento. El Design System respeta esa preferencia globalmente.",
+      "rules": {
+        "global": "El archivo <code>motion.css</code> aplica <code>animation-duration: 0.01ms</code> y <code>transition-duration: 0.01ms</code> dentro de <code>@media (prefers-reduced-motion: reduce)</code>.",
+        "primitives": "Carousel, Embla y componentes basados en scroll desactivan autoplay automáticamente cuando la preferencia está activa.",
+        "custom": "En motion personalizado (CSS o JS), usa <code>motion-reduce:animate-none</code> y <code>motion-reduce:transition-none</code> de Tailwind para opt-out granular.",
+        "essential": "Animaciones esenciales para la comprensión (ej: indicador de loading) pueden permanecer, pero deben ser sutiles."
+      }
+    },
+    "antipatterns": {
+      "title": "Antipatrones",
+      "subtitle": "Patrones a evitar — comprometen performance, accesibilidad o claridad.",
+      "items": {
+        "parallax": "Parallax sin opt-out — rompe <code>prefers-reduced-motion</code> y genera mareo.",
+        "infinite": "Loaders animados sin fin claro — transmiten ansiedad en lugar de progreso.",
+        "focus": "Motion en el foco principal de la tarea — distrae del contenido crítico.",
+        "long": "Duraciones largas en microinteracciones — hacen sentir lento al producto.",
+        "bounce": "Bounce excesivo en entradas — se vuelve ruido, no orientación."
+      }
+    },
+    "nav": {
+      "principles": "Principios",
+      "durations": "Duraciones",
+      "easings": "Easings",
+      "usage": "Tipos de uso",
+      "reducedMotion": "Reduced motion",
+      "antipatterns": "Antipatrones"
+    }
+  }
+}

@@ -1,0 +1,362 @@
+{
+  "pt-BR": {
+    "title": "Tom de Voz",
+    "category": "Foundations",
+    "type": "Conteúdo",
+    "description": "O produto soa como um <strong>colega experiente que explica com clareza</strong> — direto, técnico mas acessível, prescritivo sem ser impositivo. Esta página define a personalidade, formalidade e padrões de frase usados em toda a UI e documentação.",
+    "seo": {
+      "title": "Tom de Voz — Design System",
+      "description": "Personalidade, formalidade, regras de escrita por elemento, terminologia e padrões para textos de UI e translations.",
+      "aiSummary": "Página de fundamentos de Tom de Voz. Define personalidade (amigável, claro, instrucional, neutro), tratamento por idioma, regras por elemento de UI, termos aprovados e padrões específicos de translations.json.",
+      "aiEntities": "tom de voz, UX writing, microcopy, terminologia, translations",
+      "aiIntent": "informational"
+    },
+    "principles": {
+      "title": "Princípios",
+      "subtitle": "Quatro atributos centrais governam toda escrita do sistema.",
+      "items": {
+        "friendly": "<strong>Amigável</strong> — próximo e acessível, sem distância artificial. Não é informal demais nem íntimo.",
+        "clear": "<strong>Claro</strong> — direto, sem ambiguidade, compreensível na primeira leitura. Não é simplório.",
+        "instructional": "<strong>Instrucional</strong> — guia para a próxima ação, antecipa dúvidas. Não é impositivo nem detalhista em excesso.",
+        "neutral": "<strong>Neutro regionalmente</strong> — sem gírias ou expressões locais. Compreensível para qualquer falante."
+      }
+    },
+    "person": {
+      "title": "Pessoa e formalidade",
+      "subtitle": "Cada idioma tem sua convenção de tratamento. Nenhum deles é tradução literal — cada um soa natural na sua língua.",
+      "cols": {
+        "lang": "Idioma",
+        "person": "Tratamento",
+        "tone": "Tom"
+      },
+      "rows": [
+        ["pt-BR", "<code>você</code> (informal direto)", "Semi-formal, sem 'tu' ou 'o usuário'"],
+        ["en", "Impessoal (<code>use</code>, <code>avoid</code>)", "Direto, prescritivo no infinitivo"],
+        ["es", "<code>tú</code> em UI, <code>usted</code> em docs", "Informal próximo, sem coloquialismos"]
+      ]
+    },
+    "elementRules": {
+      "title": "Regras por elemento",
+      "subtitle": "Cada tipo de texto tem uma estrutura esperada. Seguir essas regras mantém consistência entre componentes.",
+      "items": {
+        "title": "<strong>Títulos</strong> — substantivos curtos, sem ponto final. Ex: <code>Excluir relatório</code>.",
+        "description": "<strong>Descrições</strong> — frase completa com ponto. Em labels curtos, sem ponto.",
+        "error": "<strong>Mensagens de erro</strong> — objetivas e prescritivas: <em>o que está errado + o que fazer</em>.",
+        "cta": "<strong>CTAs</strong> — verbo no infinitivo + escopo. Ex: <code>Salvar alterações</code>, não <code>Clique aqui</code>.",
+        "placeholder": "<strong>Placeholders</strong> — exemplo real do formato, não instrução. Ex: <code>ex: joao@empresa.com</code>.",
+        "empty": "<strong>Empty states</strong> — reconhece a ausência + sugere próxima ação, sem drama."
+      }
+    },
+    "terms": {
+      "title": "Termos técnicos",
+      "subtitle": "Termos como <code>slot</code>, <code>prop</code>, <code>token</code>, <code>focus ring</code>, <code>hover</code> são mantidos em inglês nos três idiomas. Eles são nomenclatura técnica reconhecida — traduzir gera confusão.",
+      "approved": {
+        "title": "Termos aprovados (UI em pt-BR)",
+        "cols": {
+          "use": "Use",
+          "avoid": "Evite"
+        },
+        "rows": [
+          ["Salvar", "Gravar, registrar, guardar"],
+          ["Adicionar / Criar", "Inserir, incluir, cadastrar"],
+          ["Excluir", "Deletar, apagar"],
+          ["Cancelar", "Abortar, sair sem salvar"],
+          ["Enviar", "Submeter, fazer upload"],
+          ["Editar / Configurar", "Modificar, ajustar"],
+          ["Desabilitado", "Bloqueado, inativo"],
+          ["Carregando", "Loading, aguarde"]
+        ]
+      }
+    },
+    "examples": {
+      "title": "Exemplos por componente",
+      "subtitle": "Comparações de texto correto e a evitar para cada tipo de componente que carrega UX writing.",
+      "cols": {
+        "context": "Contexto",
+        "correct": "Correto",
+        "avoid": "Evitar"
+      },
+      "rows": [
+        ["Column header", "Status", "Está ativo?"],
+        ["Button label", "Salvar alterações", "Clique para salvar"],
+        ["Error message", "Email inválido. Use o formato nome@dominio.com", "Erro de validação: email"],
+        ["Empty state", "Nenhum item ainda. Adicione o primeiro para começar.", "Ops! Parece que não há nada aqui..."],
+        ["Tooltip", "Atalho: <kbd>Ctrl</kbd>+<kbd>S</kbd>", "Clique aqui para salvar o documento atual"],
+        ["Toast de sucesso", "Alterações salvas.", "Ótimo! Suas alterações foram salvas com sucesso!"],
+        ["Dialog title", "Excluir conta", "Tem certeza?"]
+      ]
+    },
+    "writing": {
+      "title": "Regras específicas para translations",
+      "subtitle": "O conteúdo das docs pages vive em <code>translations.json</code>. Algumas regras evitam bugs visuais e quebras de renderização.",
+      "items": {
+        "noEmoji": "<strong>Sem emojis</strong> em strings — ícones e símbolos vêm do código JSX/template. Emoji em string + ícone em JSX = duplicação visual.",
+        "html": "<strong>HTML permitido</strong>: <code>&lt;strong&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;kbd&gt;</code>. Renderizados via <code>sanitize-html</code>.",
+        "noStack": "<strong>Sem referências de stack</strong> — não cite React/Vue/Svelte em texto descritivo. Cada stack consome o JSON standalone.",
+        "stackAgnostic": "<strong>Texto descritivo neutro de API</strong> — diga 'callback de mudança', não 'onChange' ou '@update:modelValue'. Snippets de código (chaves <code>*Code</code>) são stack-specific.",
+        "natural": "<strong>Cada idioma soa natural</strong> — não traduza palavra a palavra. Português pode usar 'você'; inglês prefere voz impessoal; espanhol equilibra formal/informal."
+      }
+    },
+    "avoid": {
+      "title": "Palavras e padrões a evitar",
+      "subtitle": "Padrões recorrentes que comprometem clareza ou tom.",
+      "items": {
+        "slang": "Gírias e coloquialismos: 'trampo', 'tá', 'bacana', 'massa'",
+        "urgency": "Falsa urgência: 'agora', 'imediatamente' — use apenas quando real",
+        "weak": "Verbos fracos em CTA: 'Clique aqui', 'Saiba mais', 'Veja'",
+        "super": "Superlativos: 'melhor', 'incrível', 'perfeito'",
+        "polite": "'Por favor' e 'atenção!' — adicionam ruído sem informação",
+        "blame": "Culpar o usuário: 'Você digitou errado' — descreva o que aconteceu, não quem errou"
+      }
+    },
+    "nav": {
+      "principles": "Princípios",
+      "person": "Pessoa",
+      "elementRules": "Regras por elemento",
+      "terms": "Termos",
+      "examples": "Exemplos",
+      "writing": "Translations",
+      "avoid": "Evitar"
+    }
+  },
+  "en": {
+    "title": "Tone of Voice",
+    "category": "Foundations",
+    "type": "Content",
+    "description": "The product sounds like an <strong>experienced colleague who explains clearly</strong> — direct, technical yet accessible, prescriptive without being imperious. This page defines the personality, formality, and sentence patterns used across UI and documentation.",
+    "seo": {
+      "title": "Tone of Voice — Design System",
+      "description": "Personality, formality, per-element writing rules, terminology, and patterns for UI text and translations.",
+      "aiSummary": "Tone of Voice foundations page. Defines personality (friendly, clear, instructional, neutral), per-language address, rules by UI element, approved terms, and specific patterns for translations.json.",
+      "aiEntities": "tone of voice, UX writing, microcopy, terminology, translations",
+      "aiIntent": "informational"
+    },
+    "principles": {
+      "title": "Principles",
+      "subtitle": "Four core attributes govern every piece of writing in the system.",
+      "items": {
+        "friendly": "<strong>Friendly</strong> — close and approachable, without artificial distance. Not overly informal or intimate.",
+        "clear": "<strong>Clear</strong> — direct, unambiguous, understandable on first read. Not simplistic.",
+        "instructional": "<strong>Instructional</strong> — guides toward the next action, anticipates questions. Not bossy or overly detailed.",
+        "neutral": "<strong>Regionally neutral</strong> — no slang or local expressions. Understandable to any speaker."
+      }
+    },
+    "person": {
+      "title": "Person and formality",
+      "subtitle": "Each language has its own address convention. None is a literal translation — each sounds natural in its own tongue.",
+      "cols": {
+        "lang": "Language",
+        "person": "Address",
+        "tone": "Tone"
+      },
+      "rows": [
+        ["pt-BR", "<code>você</code> (informal, direct)", "Semi-formal, no 'tu' or 'the user'"],
+        ["en", "Impersonal (<code>use</code>, <code>avoid</code>)", "Direct, prescriptive in the infinitive"],
+        ["es", "<code>tú</code> in UI, <code>usted</code> in docs", "Close-informal, no colloquialisms"]
+      ]
+    },
+    "elementRules": {
+      "title": "Rules per element",
+      "subtitle": "Each text type has an expected structure. Following these rules keeps components consistent.",
+      "items": {
+        "title": "<strong>Titles</strong> — short nouns, no period. Example: <code>Delete report</code>.",
+        "description": "<strong>Descriptions</strong> — full sentence with a period. On short labels, no period.",
+        "error": "<strong>Error messages</strong> — objective and prescriptive: <em>what's wrong + what to do</em>.",
+        "cta": "<strong>CTAs</strong> — infinitive verb + scope. Example: <code>Save changes</code>, not <code>Click here</code>.",
+        "placeholder": "<strong>Placeholders</strong> — real format example, not an instruction. Example: <code>e.g., john@company.com</code>.",
+        "empty": "<strong>Empty states</strong> — acknowledge the absence + suggest the next action, no drama."
+      }
+    },
+    "terms": {
+      "title": "Technical terms",
+      "subtitle": "Terms like <code>slot</code>, <code>prop</code>, <code>token</code>, <code>focus ring</code>, <code>hover</code> stay in English across all three languages. They are recognized technical nomenclature — translating them creates confusion.",
+      "approved": {
+        "title": "Approved terms (English UI)",
+        "cols": {
+          "use": "Use",
+          "avoid": "Avoid"
+        },
+        "rows": [
+          ["Save", "Store, persist, keep"],
+          ["Add / Create", "Insert, register"],
+          ["Delete", "Erase, wipe"],
+          ["Cancel", "Abort, exit without saving"],
+          ["Send / Upload", "Submit, transmit"],
+          ["Edit / Configure", "Modify, tweak"],
+          ["Disabled", "Blocked, inactive"],
+          ["Loading", "Wait, please hold"]
+        ]
+      }
+    },
+    "examples": {
+      "title": "Examples per component",
+      "subtitle": "Correct vs. avoid text comparisons for each component type that carries UX writing.",
+      "cols": {
+        "context": "Context",
+        "correct": "Correct",
+        "avoid": "Avoid"
+      },
+      "rows": [
+        ["Column header", "Status", "Is it active?"],
+        ["Button label", "Save changes", "Click to save"],
+        ["Error message", "Invalid email. Use the format name@domain.com", "Validation error: email"],
+        ["Empty state", "No items yet. Add the first one to get started.", "Oops! Looks like there's nothing here..."],
+        ["Tooltip", "Shortcut: <kbd>Ctrl</kbd>+<kbd>S</kbd>", "Click here to save the current document"],
+        ["Success toast", "Changes saved.", "Great! Your changes were saved successfully!"],
+        ["Dialog title", "Delete account", "Are you sure?"]
+      ]
+    },
+    "writing": {
+      "title": "Specific rules for translations",
+      "subtitle": "Docs page content lives in <code>translations.json</code>. A few rules prevent visual bugs and rendering issues.",
+      "items": {
+        "noEmoji": "<strong>No emojis</strong> in strings — icons and symbols come from JSX/template code. Emoji in string + icon in JSX = visual duplication.",
+        "html": "<strong>Allowed HTML</strong>: <code>&lt;strong&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;kbd&gt;</code>. Rendered via <code>sanitize-html</code>.",
+        "noStack": "<strong>No stack references</strong> — don't cite React/Vue/Svelte in descriptive text. Each stack consumes the JSON standalone.",
+        "stackAgnostic": "<strong>API-neutral descriptive text</strong> — say 'change callback', not 'onChange' or '@update:modelValue'. Code snippets (keys ending in <code>*Code</code>) are stack-specific.",
+        "natural": "<strong>Each language sounds natural</strong> — don't translate word for word. Portuguese can use 'você'; English prefers impersonal voice; Spanish balances formal/informal."
+      }
+    },
+    "avoid": {
+      "title": "Words and patterns to avoid",
+      "subtitle": "Recurring patterns that compromise clarity or tone.",
+      "items": {
+        "slang": "Slang and colloquialisms: 'gonna', 'wanna', 'awesome', 'cool'",
+        "urgency": "False urgency: 'now', 'immediately' — use only when real",
+        "weak": "Weak verbs in CTA: 'Click here', 'Learn more', 'See'",
+        "super": "Superlatives: 'best', 'amazing', 'perfect'",
+        "polite": "'Please' and 'Warning!' — add noise without information",
+        "blame": "Blaming the user: 'You typed it wrong' — describe what happened, not who erred"
+      }
+    },
+    "nav": {
+      "principles": "Principles",
+      "person": "Person",
+      "elementRules": "Element rules",
+      "terms": "Terms",
+      "examples": "Examples",
+      "writing": "Translations",
+      "avoid": "Avoid"
+    }
+  },
+  "es": {
+    "title": "Tono de Voz",
+    "category": "Foundations",
+    "type": "Contenido",
+    "description": "El producto suena como un <strong>colega experimentado que explica con claridad</strong> — directo, técnico pero accesible, prescriptivo sin ser impositivo. Esta página define la personalidad, formalidad y patrones de frase usados en toda la UI y la documentación.",
+    "seo": {
+      "title": "Tono de Voz — Design System",
+      "description": "Personalidad, formalidad, reglas de escritura por elemento, terminología y patrones para textos de UI y translations.",
+      "aiSummary": "Página de fundamentos de Tono de Voz. Define personalidad (amigable, claro, instruccional, neutro), tratamiento por idioma, reglas por elemento de UI, términos aprobados y patrones específicos de translations.json.",
+      "aiEntities": "tono de voz, UX writing, microcopy, terminología, translations",
+      "aiIntent": "informational"
+    },
+    "principles": {
+      "title": "Principios",
+      "subtitle": "Cuatro atributos centrales gobiernan toda la escritura del sistema.",
+      "items": {
+        "friendly": "<strong>Amigable</strong> — cercano y accesible, sin distancia artificial. No es informal en exceso ni íntimo.",
+        "clear": "<strong>Claro</strong> — directo, sin ambigüedad, comprensible en la primera lectura. No es simplista.",
+        "instructional": "<strong>Instruccional</strong> — guía hacia la próxima acción, anticipa dudas. No es impositivo ni excesivamente detallado.",
+        "neutral": "<strong>Regionalmente neutro</strong> — sin jerga ni expresiones locales. Comprensible para cualquier hablante."
+      }
+    },
+    "person": {
+      "title": "Persona y formalidad",
+      "subtitle": "Cada idioma tiene su propia convención de tratamiento. Ninguno es traducción literal — cada uno suena natural en su lengua.",
+      "cols": {
+        "lang": "Idioma",
+        "person": "Tratamiento",
+        "tone": "Tono"
+      },
+      "rows": [
+        ["pt-BR", "<code>você</code> (informal directo)", "Semi-formal, sin 'tu' ni 'el usuario'"],
+        ["en", "Impersonal (<code>use</code>, <code>avoid</code>)", "Directo, prescriptivo en infinitivo"],
+        ["es", "<code>tú</code> en UI, <code>usted</code> en docs", "Cercano-informal, sin coloquialismos"]
+      ]
+    },
+    "elementRules": {
+      "title": "Reglas por elemento",
+      "subtitle": "Cada tipo de texto tiene una estructura esperada. Seguir estas reglas mantiene la consistencia entre componentes.",
+      "items": {
+        "title": "<strong>Títulos</strong> — sustantivos cortos, sin punto final. Ej: <code>Eliminar informe</code>.",
+        "description": "<strong>Descripciones</strong> — frase completa con punto. En labels cortos, sin punto.",
+        "error": "<strong>Mensajes de error</strong> — objetivos y prescriptivos: <em>qué está mal + qué hacer</em>.",
+        "cta": "<strong>CTAs</strong> — verbo en infinitivo + alcance. Ej: <code>Guardar cambios</code>, no <code>Haz clic aquí</code>.",
+        "placeholder": "<strong>Placeholders</strong> — ejemplo real del formato, no una instrucción. Ej: <code>ej: juan@empresa.com</code>.",
+        "empty": "<strong>Empty states</strong> — reconoce la ausencia + sugiere la próxima acción, sin drama."
+      }
+    },
+    "terms": {
+      "title": "Términos técnicos",
+      "subtitle": "Términos como <code>slot</code>, <code>prop</code>, <code>token</code>, <code>focus ring</code>, <code>hover</code> se mantienen en inglés en los tres idiomas. Son nomenclatura técnica reconocida — traducirlos genera confusión.",
+      "approved": {
+        "title": "Términos aprobados (UI en español)",
+        "cols": {
+          "use": "Usa",
+          "avoid": "Evita"
+        },
+        "rows": [
+          ["Guardar", "Grabar, registrar"],
+          ["Agregar / Crear", "Insertar, incluir"],
+          ["Eliminar", "Borrar, suprimir"],
+          ["Cancelar", "Abortar, salir sin guardar"],
+          ["Enviar", "Submeter, hacer upload"],
+          ["Editar / Configurar", "Modificar, ajustar"],
+          ["Deshabilitado", "Bloqueado, inactivo"],
+          ["Cargando", "Loading, espera"]
+        ]
+      }
+    },
+    "examples": {
+      "title": "Ejemplos por componente",
+      "subtitle": "Comparaciones de texto correcto y a evitar para cada tipo de componente que lleva UX writing.",
+      "cols": {
+        "context": "Contexto",
+        "correct": "Correcto",
+        "avoid": "Evitar"
+      },
+      "rows": [
+        ["Column header", "Estado", "¿Está activo?"],
+        ["Button label", "Guardar cambios", "Haz clic para guardar"],
+        ["Error message", "Email inválido. Usa el formato nombre@dominio.com", "Error de validación: email"],
+        ["Empty state", "Aún no hay elementos. Agrega el primero para comenzar.", "¡Vaya! Parece que no hay nada aquí..."],
+        ["Tooltip", "Atajo: <kbd>Ctrl</kbd>+<kbd>S</kbd>", "Haz clic aquí para guardar el documento actual"],
+        ["Toast de éxito", "Cambios guardados.", "¡Genial! ¡Tus cambios fueron guardados con éxito!"],
+        ["Dialog title", "Eliminar cuenta", "¿Estás seguro?"]
+      ]
+    },
+    "writing": {
+      "title": "Reglas específicas para translations",
+      "subtitle": "El contenido de las docs pages vive en <code>translations.json</code>. Algunas reglas evitan bugs visuales y problemas de renderizado.",
+      "items": {
+        "noEmoji": "<strong>Sin emojis</strong> en strings — los iconos y símbolos vienen del código JSX/template. Emoji en string + icono en JSX = duplicación visual.",
+        "html": "<strong>HTML permitido</strong>: <code>&lt;strong&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;kbd&gt;</code>. Renderizados vía <code>sanitize-html</code>.",
+        "noStack": "<strong>Sin referencias de stack</strong> — no cites React/Vue/Svelte en texto descriptivo. Cada stack consume el JSON standalone.",
+        "stackAgnostic": "<strong>Texto descriptivo neutro de API</strong> — di 'callback de cambio', no 'onChange' o '@update:modelValue'. Los snippets de código (claves <code>*Code</code>) son stack-specific.",
+        "natural": "<strong>Cada idioma suena natural</strong> — no traduzcas palabra por palabra. El portugués usa 'você'; el inglés prefiere voz impersonal; el español equilibra formal/informal."
+      }
+    },
+    "avoid": {
+      "title": "Palabras y patrones a evitar",
+      "subtitle": "Patrones recurrentes que comprometen claridad o tono.",
+      "items": {
+        "slang": "Jerga y coloquialismos: 'chévere', 'guay', 'bacán', 'pana'",
+        "urgency": "Falsa urgencia: 'ahora', 'inmediatamente' — usa solo cuando sea real",
+        "weak": "Verbos débiles en CTA: 'Haz clic aquí', 'Saber más', 'Ver'",
+        "super": "Superlativos: 'mejor', 'increíble', 'perfecto'",
+        "polite": "'Por favor' y '¡atención!' — agregan ruido sin información",
+        "blame": "Culpar al usuario: 'Lo escribiste mal' — describe qué pasó, no quién erró"
+      }
+    },
+    "nav": {
+      "principles": "Principios",
+      "person": "Persona",
+      "elementRules": "Reglas por elemento",
+      "terms": "Términos",
+      "examples": "Ejemplos",
+      "writing": "Translations",
+      "avoid": "Evitar"
+    }
+  }
+}
