@@ -152,7 +152,7 @@ export const Galeria: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Galeria renderizada com slides', async () => {
-      await expect(canvas.getByText('Foto 1')).toBeVisible();
+      await expect(canvas.getAllByText('Foto 1').length).toBeGreaterThan(0);
       await expect(canvas.getByRole('button', { name: /next slide/i })).toBeVisible();
     });
   },

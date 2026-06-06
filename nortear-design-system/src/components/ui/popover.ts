@@ -88,7 +88,9 @@ export function createPopover(options: PopoverOptions): HTMLElement {
   wrapper.appendChild(trigger);
 
   trigger.setAttribute('aria-expanded', 'false');
-  trigger.setAttribute('aria-controls', contentId);
+  trigger.setAttribute('aria-haspopup', 'dialog');
+  // aria-controls is set only when the popover is open (otherwise it
+  // references a non-existent element, which fails axe aria-valid-attr-value).
 
   function open(): void {
     panelEl = document.createElement('div');
@@ -109,6 +111,7 @@ export function createPopover(options: PopoverOptions): HTMLElement {
     positionFloating(trigger, panelEl, side, align);
 
     trigger.setAttribute('aria-expanded', 'true');
+    trigger.setAttribute('aria-controls', contentId);
     isOpen = true;
 
     document.addEventListener('keydown', handleKeydown);
@@ -122,6 +125,7 @@ export function createPopover(options: PopoverOptions): HTMLElement {
     panelEl?.remove();
     panelEl = null;
     trigger.setAttribute('aria-expanded', 'false');
+    trigger.removeAttribute('aria-controls');
     isOpen = false;
 
     document.removeEventListener('keydown', handleKeydown);

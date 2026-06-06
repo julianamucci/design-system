@@ -99,9 +99,8 @@ export const DisabledItem: Story = {
     await step('Item desabilitado tem pointer-events-none e opacidade reduzida', async () => {
       const disabledItem = canvas.getByText('Input (disabled)').closest('[data-slot="command-item"]');
       await expect(disabledItem).not.toBeNull();
-      // O item desabilitado deve conter as classes corretas
-      await expect(disabledItem?.classList.contains('pointer-events-none') ||
-        disabledItem?.classList.contains('opacity-50')).toBe(true);
+      // O item desabilitado deve ter aria-disabled
+      await expect(disabledItem?.getAttribute('aria-disabled')).toBe('true');
     });
   },
 };

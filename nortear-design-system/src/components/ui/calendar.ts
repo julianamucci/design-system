@@ -164,7 +164,8 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
           btn.className = 'nds-calendar-day';
           btn.textContent = String(dayCount);
           btn.setAttribute('aria-label', dayButtonLabelFmt.format(date));
-          if (isSelected) btn.setAttribute('aria-selected', 'true');
+          btn.setAttribute('aria-pressed', String(isSelected));
+          if (isSelected) btn.dataset.selected = 'true';
           if (isTodayDate) btn.dataset.today = 'true';
           if (isDisabled) btn.disabled = true;
 

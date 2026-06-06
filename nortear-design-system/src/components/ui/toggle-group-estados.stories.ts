@@ -137,7 +137,7 @@ export const Disabled: Story = {
     });
     await step('Clique não muda estado', async () => {
       const center = canvas.getByRole('button', { name: 'Centralizar' });
-      await userEvent.click(center);
+      await userEvent.click(center, { pointerEventsCheck: 0 });
       await expect(center).toHaveAttribute('aria-pressed', 'false');
     });
   },

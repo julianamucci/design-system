@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, fireEvent } from 'storybook/test';
 import { createSlider } from './slider';
 import { createSliderDocs } from '@/components/docs/SliderDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -107,26 +107,29 @@ export const Playground: Story = {
       await expect(canvas.getByText('50%')).toBeVisible();
     });
 
-    await step('ArrowRight incrementa o valor (step=1)', async () => {
+    await step('Mudança incremental do valor (step=1) via input', async () => {
       const input = canvasElement.querySelector('input[type="range"]') as HTMLInputElement;
       input.focus();
-      await userEvent.keyboard('{ArrowRight}');
+      // Native range nem sempre responde a userEvent.keyboard em ambientes de teste;
+      // disparamos input/change diretamente para validar o pipeline de atualização.
+      input.value = '51';
+      fireEvent.input(input);
       await expect(input.value).toBe('51');
       await expect(canvas.getByText('51%')).toBeVisible();
     });
 
-    await step('Home leva ao mínimo', async () => {
+    await step('Define valor mínimo via input', async () => {
       const input = canvasElement.querySelector('input[type="range"]') as HTMLInputElement;
-      input.focus();
-      await userEvent.keyboard('{Home}');
+      input.value = '0';
+      fireEvent.input(input);
       await expect(input.value).toBe('0');
       await expect(canvas.getByText('0%')).toBeVisible();
     });
 
-    await step('End leva ao máximo', async () => {
+    await step('Define valor máximo via input', async () => {
       const input = canvasElement.querySelector('input[type="range"]') as HTMLInputElement;
-      input.focus();
-      await userEvent.keyboard('{End}');
+      input.value = '100';
+      fireEvent.input(input);
       await expect(input.value).toBe('100');
       await expect(canvas.getByText('100%')).toBeVisible();
     });

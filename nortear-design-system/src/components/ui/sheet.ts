@@ -122,6 +122,7 @@ export function createSheet(options: SheetOptions): HTMLElement {
     const bodyEl = document.createElement('div');
     bodyEl.className = 'nds-sheet-body';
     bodyEl.dataset.slot = 'sheet-body';
+    bodyEl.setAttribute('tabindex', '0');
     bodyEl.appendChild(content);
     panelEl.appendChild(bodyEl);
 

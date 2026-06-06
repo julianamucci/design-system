@@ -212,7 +212,7 @@ export const ModoDeVisualizacao: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('aria-orientation vertical', async () => {
-      const group = canvas.getByRole('group');
+      const group = canvas.getByRole('toolbar');
       await expect(group).toHaveAttribute('aria-orientation', 'vertical');
     });
     await step('Textos visíveis presentes', async () => {

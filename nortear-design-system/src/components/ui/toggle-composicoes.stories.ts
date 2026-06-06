@@ -180,9 +180,9 @@ export const Tamanhos: Story = {
     await step('Três tamanhos presentes', async () => {
       const btns = canvas.getAllByRole('button');
       await expect(btns).toHaveLength(3);
-      await expect(btns[0].className).toMatch(/h-8/);
-      await expect(btns[1].className).toMatch(/h-9/);
-      await expect(btns[2].className).toMatch(/h-10/);
+      await expect(btns[0].dataset.size).toBe('sm');
+      await expect(btns[1].dataset.size).toBeUndefined();
+      await expect(btns[2].dataset.size).toBe('lg');
     });
   },
 };

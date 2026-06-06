@@ -194,7 +194,7 @@ export const WithDescription: Story = {
     });
 
     await step('Descrição está presente no toast', async () => {
-      const desc = canvasElement.querySelector('.text-muted-foreground');
+      const desc = canvasElement.querySelector('.nds-text-muted-foreground');
       await expect(desc).toBeTruthy();
     });
   },

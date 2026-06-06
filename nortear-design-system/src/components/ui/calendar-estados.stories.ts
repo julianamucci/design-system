@@ -54,7 +54,7 @@ export const Selected: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const grid = canvas.getByRole('grid');
-    const selected = grid.querySelector('[aria-selected="true"]');
+    const selected = grid.querySelector('.nds-calendar-day[aria-pressed="true"]');
     await expect(selected).not.toBeNull();
     await expect(selected).toHaveTextContent('12');
   },
@@ -100,8 +100,8 @@ export const Today: Story = {
     const canvas = within(canvasElement);
     const grid = canvas.getByRole('grid');
     await expect(grid).toBeInTheDocument();
-    // Sem aria-selected por padrão (nenhuma data passada via value).
-    const selected = grid.querySelector('[aria-selected="true"]');
+    // Sem dia marcado por padrão (nenhuma data passada via value).
+    const selected = grid.querySelector('.nds-calendar-day[aria-pressed="true"]');
     await expect(selected).toBeNull();
   },
 };

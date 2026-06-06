@@ -95,7 +95,8 @@ export const AdvancedFilters: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialogs = await body.findAllByRole('dialog');
+    const dialog = dialogs[dialogs.length - 1];
     await expect(dialog).toHaveAccessibleName(/Filtros avançados/i);
     await expect(within(dialog).getByText(/Categoria/i)).toBeVisible();
   },
@@ -138,7 +139,8 @@ export const SecondaryNavigation: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialogs = await body.findAllByRole('dialog');
+    const dialog = dialogs[dialogs.length - 1];
     await expect(within(dialog).getByRole('navigation')).toBeVisible();
     await expect(within(dialog).getByRole('link', { name: 'Dashboard' })).toBeVisible();
   },
@@ -191,7 +193,8 @@ export const MobileBottomPanel: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialogs = await body.findAllByRole('dialog');
+    const dialog = dialogs[dialogs.length - 1];
     await expect(dialog).toHaveAccessibleName(/Ações rápidas/i);
   },
 };

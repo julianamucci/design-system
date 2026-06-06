@@ -163,6 +163,9 @@ export function createMenubar(menus: MenubarMenu[], options?: { class?: string }
   document.addEventListener('click', (e) => {
     if (openMenu && !root.contains(e.target as Node)) closeAll();
   });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && openMenu) closeAll();
+  });
 
   return root;
 }

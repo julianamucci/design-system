@@ -49,8 +49,8 @@ export const Playground: Story = {
       await expect(next).toBeInTheDocument();
     });
 
-    await step('Célula selecionada com aria-selected="true"', async () => {
-      const selected = canvasElement.querySelector('[aria-selected="true"]');
+    await step('Célula selecionada com aria-pressed="true"', async () => {
+      const selected = canvasElement.querySelector('.nds-calendar-day[aria-pressed="true"]');
       await expect(selected).not.toBeNull();
       await expect(selected).toHaveTextContent('12');
     });

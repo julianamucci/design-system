@@ -29,12 +29,12 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Novo')).toBeVisible();
-    const el = canvasElement.querySelector('.badge');
+    const el = canvasElement.querySelector('.nds-badge');
     await expect(el).not.toBeNull();
-    // Default não aplica modificador — apenas .badge.
-    await expect(el?.classList.contains('badge-secondary')).toBe(false);
-    await expect(el?.classList.contains('badge-destructive')).toBe(false);
-    await expect(el?.classList.contains('badge-outline')).toBe(false);
+    // Default não aplica modificador — apenas .nds-badge.
+    await expect(el?.classList.contains('nds-badge-secondary')).toBe(false);
+    await expect(el?.classList.contains('nds-badge-destructive')).toBe(false);
+    await expect(el?.classList.contains('nds-badge-outline')).toBe(false);
   },
 };
 
@@ -43,7 +43,7 @@ export const Secondary: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Beta')).toBeVisible();
-    const el = canvasElement.querySelector('.badge-secondary');
+    const el = canvasElement.querySelector('.nds-badge-secondary');
     await expect(el).not.toBeNull();
   },
 };
@@ -53,7 +53,7 @@ export const Destructive: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Urgente')).toBeVisible();
-    const el = canvasElement.querySelector('.badge-destructive');
+    const el = canvasElement.querySelector('.nds-badge-destructive');
     await expect(el).not.toBeNull();
   },
 };
@@ -63,7 +63,7 @@ export const Outline: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Rascunho')).toBeVisible();
-    const el = canvasElement.querySelector('.badge-outline');
+    const el = canvasElement.querySelector('.nds-badge-outline');
     await expect(el).not.toBeNull();
   },
 };

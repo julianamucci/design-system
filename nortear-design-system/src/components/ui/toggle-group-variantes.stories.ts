@@ -102,7 +102,7 @@ export const Single: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Grupo tem aria-label', async () => {
-      const group = canvas.getByRole('group');
+      const group = canvas.getByRole('toolbar');
       await expect(group).toHaveAttribute('aria-label', 'Alinhamento do texto');
     });
     await step('Apenas um pressionado inicialmente', async () => {
@@ -199,11 +199,11 @@ export const Vertical: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('aria-orientation é vertical', async () => {
-      const group = canvas.getByRole('group');
+      const group = canvas.getByRole('toolbar');
       await expect(group).toHaveAttribute('aria-orientation', 'vertical');
     });
     await step('Container tem classe flex-col', async () => {
-      const group = canvas.getByRole('group');
+      const group = canvas.getByRole('toolbar');
       await expect(group.className).toMatch(/flex-col/);
     });
   },

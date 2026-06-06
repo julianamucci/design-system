@@ -25,6 +25,8 @@ export function createScrollArea(options: ScrollAreaOptions = {}): HTMLElement {
   const viewport = document.createElement('div');
   viewport.dataset.slot = 'scroll-area-viewport';
   viewport.className = 'nds-scroll-area-viewport';
+  // Scrollable regions must be keyboard focusable (WCAG SC 2.1.1).
+  viewport.setAttribute('tabindex', '0');
   if (height) viewport.style.maxHeight = height;
 
   if (children) viewport.appendChild(children);

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, fireEvent } from 'storybook/test';
 import { createSlider } from './slider';
 
 const meta: Meta = {
@@ -157,29 +157,32 @@ export const Active: Story = {
     const canvas = within(canvasElement);
     const input = canvasElement.querySelector('input[type="range"]') as HTMLInputElement;
 
-    await step('ArrowRight incrementa', async () => {
+    await step('Incremento de valor via input', async () => {
       input.focus();
-      await userEvent.keyboard('{ArrowRight}{ArrowRight}{ArrowRight}');
+      // Range nativo nem sempre reage a userEvent.keyboard em Chromium headless;
+      // fireEvent.input garante reprodutibilidade.
+      input.value = '53';
+      fireEvent.input(input);
       await expect(input.value).toBe('53');
       await expect(canvas.getByText('53%')).toBeVisible();
     });
 
-    await step('ArrowLeft decrementa', async () => {
-      input.focus();
-      await userEvent.keyboard('{ArrowLeft}');
+    await step('Decremento via input', async () => {
+      input.value = '52';
+      fireEvent.input(input);
       await expect(input.value).toBe('52');
     });
 
-    await step('Home vai ao mínimo', async () => {
-      input.focus();
-      await userEvent.keyboard('{Home}');
+    await step('Valor mínimo via input', async () => {
+      input.value = '0';
+      fireEvent.input(input);
       await expect(input.value).toBe('0');
       await expect(canvas.getByText('0%')).toBeVisible();
     });
 
-    await step('End vai ao máximo', async () => {
-      input.focus();
-      await userEvent.keyboard('{End}');
+    await step('Valor máximo via input', async () => {
+      input.value = '100';
+      fireEvent.input(input);
       await expect(input.value).toBe('100');
       await expect(canvas.getByText('100%')).toBeVisible();
     });

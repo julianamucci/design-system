@@ -48,6 +48,8 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
     const rowEl = document.createElement('div');
     rowEl.className = 'nds-radio-row';
 
+    const labelId = `${name}-${item.value}-label`;
+
     const itemBtn = document.createElement('button');
     itemBtn.type = 'button';
     itemBtn.dataset.slot = 'radio-group-item';
@@ -55,6 +57,7 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
     itemBtn.className = 'nds-radio-item';
     itemBtn.setAttribute('role', 'radio');
     itemBtn.setAttribute('aria-checked', String(item.value === defaultValue));
+    itemBtn.setAttribute('aria-labelledby', labelId);
     if (item.disabled) itemBtn.disabled = true;
 
     const indicatorSpan = document.createElement('span');
@@ -77,13 +80,24 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
     nativeInput.disabled = item.disabled ?? false;
     nativeInput.setAttribute('aria-hidden', 'true');
     nativeInput.tabIndex = -1;
-    itemBtn.appendChild(nativeInput);
+    // Hidden native input — kept as sibling (not nested inside the button)
+    // to satisfy WCAG/axe nested-interactive rule.
+    nativeInput.style.position = 'absolute';
+    nativeInput.style.width = '1px';
+    nativeInput.style.height = '1px';
+    nativeInput.style.padding = '0';
+    nativeInput.style.margin = '-1px';
+    nativeInput.style.overflow = 'hidden';
+    nativeInput.style.clip = 'rect(0,0,0,0)';
+    nativeInput.style.whiteSpace = 'nowrap';
+    nativeInput.style.border = '0';
 
     const labelEl = document.createElement('label');
+    labelEl.id = labelId;
     labelEl.className = 'nds-radio-label';
     labelEl.textContent = item.label;
 
-    rowEl.append(itemBtn, labelEl);
+    rowEl.append(itemBtn, labelEl, nativeInput);
     fieldset.appendChild(rowEl);
 
     if (!item.disabled) {

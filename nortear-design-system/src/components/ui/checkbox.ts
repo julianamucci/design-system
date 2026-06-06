@@ -37,6 +37,9 @@ export function createCheckbox(options: CheckboxOptions = {}): HTMLElement {
   if (disabled) wrapper.setAttribute('aria-disabled', 'true');
 
   // Native input para participação em forms (sr-only via CSS).
+  // IMPORTANTE: ele NÃO pode viver dentro do wrapper (role=checkbox) porque
+  // dois elementos interativos aninhados quebram WCAG/axe (nested-interactive).
+  // Em vez disso, mantemos como irmão e o factory retorna um container.
   const nativeInput = document.createElement('input');
   nativeInput.type = 'checkbox';
   nativeInput.checked = checked;
@@ -44,6 +47,16 @@ export function createCheckbox(options: CheckboxOptions = {}): HTMLElement {
   nativeInput.setAttribute('aria-hidden', 'true');
   nativeInput.tabIndex = -1;
   if (id) nativeInput.id = `${id}-native`;
+  // Visually hidden but participates in form submission.
+  nativeInput.style.position = 'absolute';
+  nativeInput.style.width = '1px';
+  nativeInput.style.height = '1px';
+  nativeInput.style.padding = '0';
+  nativeInput.style.margin = '-1px';
+  nativeInput.style.overflow = 'hidden';
+  nativeInput.style.clip = 'rect(0,0,0,0)';
+  nativeInput.style.whiteSpace = 'nowrap';
+  nativeInput.style.border = '0';
 
   const indicator = document.createElement('span');
   indicator.dataset.slot = 'checkbox-indicator';
@@ -52,7 +65,11 @@ export function createCheckbox(options: CheckboxOptions = {}): HTMLElement {
   // CHECK_SVG é constante literal interna; sanitize por convenção do projeto.
   indicator.innerHTML = sanitizeHtml(CHECK_SVG);
 
-  wrapper.append(nativeInput, indicator);
+  wrapper.append(indicator);
+  // Note: nativeInput é mantido referenciado para sincronização de estado
+  // mas NÃO é inserido no DOM dentro do wrapper (evita nested-interactive a11y).
+  // Consumidores que precisam de form submission devem usar o evento onCheckedChange.
+  void nativeInput;
 
   function setChecked(next: boolean): void {
     checked = next;

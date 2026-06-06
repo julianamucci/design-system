@@ -158,6 +158,7 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
  */
 export function createChart(opts: ChartOptions = {}): HTMLElement {
   const el = document.createElement('div');
+  el.dataset.slot = 'chart';
   el.className = ['nds-chart', opts.class].filter(Boolean).join(' ');
   el.style.width = '100%';
   el.style.height = `${opts.height ?? 200}px`;
@@ -167,7 +168,7 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
     (!opts.data || opts.data.length === 0) &&
     (!opts.series || opts.series.length === 0);
   if (isEmpty) {
-    const empty = document.createElement('div');
+    const empty = document.createElement('p');
     empty.className = 'nds-chart-empty';
     empty.textContent = 'Sem dados para exibir';
     el.appendChild(empty);

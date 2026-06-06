@@ -111,7 +111,7 @@ export const Outline: Story = {
     await step('Toggle outline presente', async () => {
       const btn = canvas.getByRole('button');
       await expect(btn).toBeInTheDocument();
-      await expect(btn.className).toMatch(/border/);
+      await expect(btn.dataset.variant).toBe('outline');
     });
   },
 };

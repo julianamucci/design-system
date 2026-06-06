@@ -129,7 +129,7 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
 
     await step('Grupo presente com aria-label', async () => {
-      const group = canvas.getByRole('group');
+      const group = canvas.getByRole('toolbar');
       await expect(group).toBeInTheDocument();
       await expect(group).toHaveAttribute('aria-label');
     });

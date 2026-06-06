@@ -63,6 +63,8 @@ export const ComCheckbox: Story = {
     const checkboxId = 'comp-checkbox-termos';
     const checkbox = createCheckbox({ id: checkboxId });
     const label = createLabel({ text: 'Aceito os termos de uso', htmlFor: checkboxId });
+    label.id = `${checkboxId}-label`;
+    checkbox.setAttribute('aria-labelledby', `${checkboxId}-label`);
 
     wrapper.append(checkbox, label);
     return wrapper;

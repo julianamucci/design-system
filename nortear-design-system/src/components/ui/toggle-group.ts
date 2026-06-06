@@ -34,7 +34,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
   root.className = 'nds-toggle-group';
   if (variant !== 'default') root.dataset.variant = variant;
   if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
-  root.setAttribute('role', 'group');
+  root.setAttribute('role', 'toolbar');
 
   function notifyChange(): void {
     if (!onValueChange) return;

@@ -34,10 +34,10 @@ function wrap(child: HTMLElement): HTMLElement {
   return wrapper;
 }
 
-async function closeAfter(): Promise<void> {
+async function closeAfter(scope: HTMLElement = document.body): Promise<void> {
   await userEvent.keyboard('{Escape}');
   await waitFor(() => {
-    if (document.querySelector('button[aria-expanded="true"]')) {
+    if (scope.querySelector('[data-slot="navigation-menu"] button[aria-expanded="true"]')) {
       throw new Error('Content ainda aberto');
     }
   });
@@ -73,7 +73,7 @@ export const Fechado: Story = {
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
     await step('Nenhum content visível (todos hidden)', async () => {
-      const visible = canvasElement.querySelector('[role="menu"]:not(.hidden)');
+      const visible = canvasElement.querySelector('[role="menu"]:not([hidden])');
       await expect(visible).toBeFalsy();
     });
   },
@@ -109,7 +109,7 @@ export const Aberto: Story = {
       const panel = canvasElement.querySelector('[role="menu"]:not(.hidden)');
       await expect(panel).toBeTruthy();
     });
-    await step('Limpa via ESC', closeAfter);
+    await step('Limpa via ESC', () => closeAfter(canvasElement));
   },
 };
 

@@ -50,6 +50,8 @@ export function createResizablePanel(options: ResizablePanelOptions): HTMLElemen
     const panelEl = document.createElement('div');
     panelEl.dataset.slot = 'resizable-panel';
     panelEl.className = 'nds-resizable-panel';
+    // Panels may overflow — make them focusable for keyboard scroll (WCAG SC 2.1.1).
+    panelEl.setAttribute('tabindex', '0');
     panelEl.appendChild(panel.content);
     panelEls.push(panelEl);
     root.appendChild(panelEl);
@@ -61,6 +63,9 @@ export function createResizablePanel(options: ResizablePanelOptions): HTMLElemen
       handle.dataset.slot = 'resizable-handle';
       handle.setAttribute('role', 'separator');
       handle.setAttribute('aria-orientation', isHorizontal ? 'vertical' : 'horizontal');
+      handle.setAttribute('aria-valuenow', '50');
+      handle.setAttribute('aria-valuemin', '0');
+      handle.setAttribute('aria-valuemax', '100');
       handle.setAttribute('tabindex', '0');
       handle.className = 'nds-resizable-handle';
 

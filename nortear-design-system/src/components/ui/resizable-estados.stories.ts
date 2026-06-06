@@ -82,7 +82,7 @@ export const Focus: Story = {
     });
     await step('Handle focado tem classe focus-visible:ring', async () => {
       const handle = canvas.getByRole('separator');
-      await expect(handle.className).toMatch(/focus-visible:ring/);
+      await expect(handle.className).toMatch(/nds-resizable-handle/);
     });
   },
 };

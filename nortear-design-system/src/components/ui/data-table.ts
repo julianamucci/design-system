@@ -568,7 +568,7 @@ export function createDataTable<TData extends RowData>(
           if (enableColumnResizing && col.getCanResize()) {
             const handle = document.createElement('div');
             handle.className = 'nds-data-table-resize-handle';
-            if (col.getIsResizing()) handle.classList.add('is-resizing');
+            try { if (col.getIsResizing()) handle.classList.add('is-resizing'); } catch { /* state not ready */ }
             handle.setAttribute('role', 'separator');
             handle.setAttribute('aria-orientation', 'vertical');
             handle.setAttribute('aria-label', L.resize(lbl));
@@ -594,6 +594,14 @@ export function createDataTable<TData extends RowData>(
         const th = document.createElement('th');
         Object.assign(th.style, pinStyle(col));
         const meta = col.columnDef.meta?.filter;
+        if (!col.getCanFilter() || !meta) {
+          // axe empty-table-header — colunas sem filtro recebem texto sr-only.
+          const lblForA11y = headerLabel(col.columnDef, col.id);
+          const sr = document.createElement('span');
+          sr.className = 'nds-sr-only';
+          sr.textContent = `Sem filtro para ${lblForA11y || 'esta coluna'}`;
+          th.appendChild(sr);
+        }
         if (col.getCanFilter() && meta) {
           const lbl = headerLabel(col.columnDef, col.id);
           if (meta.type === 'select') {

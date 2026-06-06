@@ -27,6 +27,9 @@ export function createCommand(options: CommandOptions): HTMLElement {
   root.className = 'nds-command';
   if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
 
+  const _cmdId = `cmd-${Math.random().toString(36).slice(2, 8)}`;
+  const _listboxId = `${_cmdId}-listbox`;
+
   // Search input wrapper
   const inputWrapper = document.createElement('div');
   inputWrapper.className = 'nds-command-input-wrapper';
@@ -60,13 +63,18 @@ export function createCommand(options: CommandOptions): HTMLElement {
   input.setAttribute('role', 'combobox');
   input.setAttribute('aria-autocomplete', 'list');
   input.setAttribute('aria-expanded', 'true');
+  input.setAttribute('aria-controls', _listboxId);
+  input.setAttribute('aria-label', placeholder || 'Buscar');
   inputWrapper.appendChild(input);
   root.appendChild(inputWrapper);
 
   // List
   const list = document.createElement('div');
   list.className = 'nds-command-list';
+  list.id = _listboxId;
   list.setAttribute('role', 'listbox');
+  list.setAttribute('aria-label', placeholder || 'Resultados');
+  list.setAttribute('tabindex', '0');
   root.appendChild(list);
 
   let activeIndex = -1;
@@ -93,12 +101,16 @@ export function createCommand(options: CommandOptions): HTMLElement {
     );
 
     if (filtered.length === 0) {
+      // listbox vazio violaria aria-required-children — promovemos para region.
+      list.setAttribute('role', 'region');
       const empty = document.createElement('p');
       empty.className = 'nds-command-empty';
       empty.textContent = 'No results found.';
       list.appendChild(empty);
       return;
     }
+    // Restaura role original caso filtre depois.
+    list.setAttribute('role', 'listbox');
 
     const grouped = groupItems(filtered);
 

@@ -97,7 +97,11 @@ function buildBase(defaultOpen: boolean, collapsible?: 'offcanvas' | 'icon' | 'n
   inner.appendChild(content);
 
   const footer = createSidebarFooter();
-  footer.appendChild(createSidebarMenuItem({ label: 'Perfil', icon: makeIcon(icons.user), href: '#' }));
+  const footerMenu = document.createElement('ul');
+  footerMenu.setAttribute('data-sidebar', 'menu');
+  footerMenu.className = 'nds-sidebar-menu';
+  footerMenu.appendChild(createSidebarMenuItem({ label: 'Perfil', icon: makeIcon(icons.user), href: '#' }));
+  footer.appendChild(footerMenu);
   inner.appendChild(footer);
 
   const inset = document.createElement('div');

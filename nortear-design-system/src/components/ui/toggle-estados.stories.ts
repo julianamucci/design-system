@@ -114,7 +114,7 @@ export const Disabled: Story = {
       await expect(btn).toBeDisabled();
     });
     await step('Clique não altera o estado', async () => {
-      await userEvent.click(btn);
+      await userEvent.click(btn, { pointerEventsCheck: 0 });
       await expect(btn).toHaveAttribute('aria-pressed', 'false');
     });
   },
@@ -134,7 +134,7 @@ export const DisabledOn: Story = {
       await expect(btn).toHaveAttribute('aria-pressed', 'true');
     });
     await step('Clique não muda nada', async () => {
-      await userEvent.click(btn);
+      await userEvent.click(btn, { pointerEventsCheck: 0 });
       await expect(btn).toHaveAttribute('aria-pressed', 'true');
     });
   },

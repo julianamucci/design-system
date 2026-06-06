@@ -155,8 +155,9 @@ export const WithDescription: Story = {
       items: items.map((i) => ({ value: i.value, label: i.label })),
     });
 
+    const baseRows = Array.from(base.children) as HTMLElement[];
     items.forEach((item, idx) => {
-      const row = base.children[idx] as HTMLElement;
+      const row = baseRows[idx];
       if (!row) return;
       row.style.alignItems = 'flex-start';
 

@@ -45,8 +45,8 @@ export const Playground: Story = {
       await expect(canvas.getByText(args.label)).toBeVisible();
     });
 
-    await step('Container recebe a classe base .badge', async () => {
-      const el = canvasElement.querySelector('.badge');
+    await step('Container recebe a classe base .nds-badge', async () => {
+      const el = canvasElement.querySelector('.nds-badge');
       await expect(el).not.toBeNull();
     });
   },

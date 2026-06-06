@@ -64,10 +64,17 @@ function buildCheckboxWithLabel(args: CheckboxArgs): HTMLElement {
   });
 
   if (args.label) {
+    const labelId = `${id}-label`;
+    cb.setAttribute('aria-labelledby', labelId);
     const label = document.createElement('label');
+    label.id = labelId;
     label.htmlFor = id;
     label.textContent = args.label;
     label.className = 'nds-text-body nds-font-medium nds-leading-none ' + (args.disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
+    label.addEventListener('click', (e) => {
+      e.preventDefault();
+      cb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
     if (args.disabled) { label.style.opacity = '0.7'; label.style.cursor = 'not-allowed'; }
     wrapper.append(cb, label);
   } else {

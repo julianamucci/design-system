@@ -79,7 +79,9 @@ export const ComCard: Story = {
     });
 
     await step('SVG do gráfico está presente', async () => {
-      const svg = canvasElement.querySelector('svg[role="img"]');
+      // echarts renderiza SVG sem role=img — buscamos por tag.
+      await new Promise((r) => setTimeout(r, 100));
+      const svg = canvasElement.querySelector('svg');
       await expect(svg).not.toBeNull();
     });
   },

@@ -131,6 +131,7 @@ export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}
   span.dataset.slot = 'breadcrumb-ellipsis';
   span.setAttribute('role', 'presentation');
   span.setAttribute('aria-hidden', 'true');
+  span.setAttribute('aria-label', label);
   span.className = 'nds-breadcrumb-ellipsis';
   if (className) span.classList.add(...className.split(' ').filter(Boolean));
 

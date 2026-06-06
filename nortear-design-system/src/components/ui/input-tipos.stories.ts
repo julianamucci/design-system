@@ -63,7 +63,20 @@ export const Numero: Story = {
 };
 
 export const Arquivo: Story = {
-  render: () => createInput({ type: 'file' }),
+  render: () => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'xs';
+    const id = 'input-file-arquivo';
+    const label = document.createElement('label');
+    label.htmlFor = id;
+    label.textContent = 'Anexar arquivo';
+    label.className = 'nds-text-body nds-font-medium';
+    const input = createInput({ type: 'file' });
+    (input as HTMLInputElement).id = id;
+    wrapper.append(label, input);
+    return wrapper;
+  },
   play: async ({ canvasElement, step }) => {
     await step('Input do tipo file renderizado', async () => {
       const input = canvasElement.querySelector('input[type="file"]') as HTMLInputElement;

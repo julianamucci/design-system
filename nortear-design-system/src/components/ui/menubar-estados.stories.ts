@@ -37,7 +37,7 @@ function wrap(child: HTMLElement): HTMLElement {
 async function closeAfter(): Promise<void> {
   await userEvent.keyboard('{Escape}');
   await waitFor(() => {
-    if (document.querySelector('button[aria-expanded="true"]')) {
+    if (document.querySelector('[data-slot="menubar"] button[aria-expanded="true"]')) {
       throw new Error('menu ainda aberto');
     }
   });

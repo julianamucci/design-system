@@ -87,8 +87,8 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const _canvas = within(canvasElement);
 
-    await step('Renderiza um divisor com bg-border', async () => {
-      const separator = canvasElement.querySelector<HTMLElement>('.bg-border');
+    await step('Renderiza um divisor com .nds-separator', async () => {
+      const separator = canvasElement.querySelector<HTMLElement>('.nds-separator');
       await expect(separator).toBeTruthy();
     });
 

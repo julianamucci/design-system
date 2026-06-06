@@ -33,7 +33,10 @@ export const ComLabel: Story = {
     const cb = createCheckbox({ id });
 
     const label = document.createElement('label');
+    label.id = `${id}-label`;
+    cb.setAttribute('aria-labelledby', `${id}-label`);
     label.htmlFor = id;
+    label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
     label.textContent = 'Aceito os termos e condições';
     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
@@ -76,7 +79,10 @@ export const ComDescricao: Story = {
     textGroup.dataset.spacing = 'xs';
 
     const label = document.createElement('label');
+    label.id = `${id}-label`;
+    cb.setAttribute('aria-labelledby', `${id}-label`);
     label.htmlFor = id;
+    label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
     label.textContent = 'Receber novidades por email';
     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
@@ -133,7 +139,10 @@ export const EmGrupoFieldset: Story = {
 
       const cb = createCheckbox({ id });
       const label = document.createElement('label');
+      label.id = `${id}-label`;
+      cb.setAttribute('aria-labelledby', `${id}-label`);
       label.htmlFor = id;
+      label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
       label.textContent = labelText;
       label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
@@ -190,7 +199,10 @@ export const SelecionarTodos: Story = {
 
     const cbAll = createCheckbox({ id: 'cb-select-all' });
     const labelAll = document.createElement('label');
+    labelAll.id = 'cb-select-all-label';
+    cbAll.setAttribute('aria-labelledby', 'cb-select-all-label');
     labelAll.htmlFor = 'cb-select-all';
+    labelAll.addEventListener('click', (e) => { e.preventDefault(); cbAll.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
     labelAll.textContent = 'Selecionar todos os itens';
     labelAll.className = 'nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer';
     allRow.append(cbAll, labelAll);
@@ -211,7 +223,10 @@ export const SelecionarTodos: Story = {
       const cb = createCheckbox({ id });
       childCheckboxes.push(cb);
       const label = document.createElement('label');
+      label.id = `${id}-label`;
+      cb.setAttribute('aria-labelledby', `${id}-label`);
       label.htmlFor = id;
+      label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
       label.textContent = labelText;
       label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
       row.append(cb, label);
@@ -285,7 +300,10 @@ export const NaListaDeItens: Story = {
 
       const cb = createCheckbox({ id, checked });
       const label = document.createElement('label');
+      label.id = `${id}-label`;
+      cb.setAttribute('aria-labelledby', `${id}-label`);
       label.htmlFor = id;
+      label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
       label.textContent = labelText;
       label.className = 'nds-text-body nds-font-medium nds-cursor-pointer';
 

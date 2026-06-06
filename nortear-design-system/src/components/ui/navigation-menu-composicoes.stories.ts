@@ -37,7 +37,7 @@ function wrap(child: HTMLElement, minHeight = 280): HTMLElement {
 async function closeAfter(): Promise<void> {
   await userEvent.keyboard('{Escape}');
   await waitFor(() => {
-    if (document.querySelector('button[aria-expanded="true"]')) {
+    if (document.querySelector('[data-slot="navigation-menu"] button[aria-expanded="true"]')) {
       throw new Error('Content ainda aberto');
     }
   });

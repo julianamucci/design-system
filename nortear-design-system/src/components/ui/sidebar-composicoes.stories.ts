@@ -283,7 +283,11 @@ export const ComSubMenu: Story = {
     inner.appendChild(content);
 
     const footer = createSidebarFooter();
-    footer.appendChild(createSidebarMenuItem({ label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' }));
+    const footerMenu = document.createElement('ul');
+    footerMenu.className = 'nds-sidebar-menu';
+    footerMenu.setAttribute('data-sidebar', 'menu');
+    footerMenu.appendChild(createSidebarMenuItem({ label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' }));
+    footer.appendChild(footerMenu);
     inner.appendChild(footer);
 
     const inset = document.createElement('div');
@@ -383,7 +387,11 @@ export const ComBusca: Story = {
     inner.appendChild(content);
 
     const footer = createSidebarFooter();
-    footer.appendChild(createSidebarMenuItem({ label: 'Perfil', icon: makeIcon(ICON_USER), href: '#' }));
+    const footerMenu = document.createElement('ul');
+    footerMenu.className = 'nds-sidebar-menu';
+    footerMenu.setAttribute('data-sidebar', 'menu');
+    footerMenu.appendChild(createSidebarMenuItem({ label: 'Perfil', icon: makeIcon(ICON_USER), href: '#' }));
+    footer.appendChild(footerMenu);
     inner.appendChild(footer);
 
     const inset = document.createElement('div');

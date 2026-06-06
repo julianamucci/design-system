@@ -192,6 +192,8 @@ export function createSidebarMenuItem(options: SidebarMenuItemOptions): HTMLElem
 
   btn.className = 'nds-sidebar-menu-button';
   btn.setAttribute('data-sidebar', 'menu-button');
+  // Ensure accessible name is always present (label may be hidden when collapsed).
+  btn.setAttribute('aria-label', options.label);
 
   if (isLink && btn instanceof HTMLAnchorElement) btn.href = options.href!;
   if (options.active) btn.setAttribute('data-active', 'true');

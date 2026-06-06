@@ -161,7 +161,8 @@ export const Controlled: Story = {
     await step('Clique no trigger externo abre o painel', async () => {
       const trigger = canvas.getByRole('button', { name: /Open programmatically/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog');
+      const dialogs = await body.findAllByRole('dialog');
+      const dialog = dialogs[dialogs.length - 1];
       await expect(dialog).toBeVisible();
     });
 

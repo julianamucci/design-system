@@ -28,10 +28,17 @@ function wrapWithLabel(cb: HTMLElement, labelText: string, id: string, disabled 
   wrapper.className = 'nds-cluster';
   wrapper.dataset.spacing = 'sm';
   cb.id = id;
+  const labelId = `${id}-label`;
+  cb.setAttribute('aria-labelledby', labelId);
   const label = document.createElement('label');
+  label.id = labelId;
   label.htmlFor = id;
   label.textContent = labelText;
   label.className = 'nds-text-body nds-font-medium nds-leading-none ' + (disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
+  label.addEventListener('click', (e) => {
+    e.preventDefault();
+    cb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  });
   if (disabled) { label.style.opacity = '0.7'; label.style.cursor = 'not-allowed'; }
   wrapper.append(cb, label);
   return wrapper;
@@ -157,7 +164,10 @@ export const Error: Story = {
     cb.setAttribute('aria-describedby', 'cb-error-msg');
 
     const label = document.createElement('label');
+    label.id = `${id}-label`;
+    cb.setAttribute('aria-labelledby', `${id}-label`);
     label.htmlFor = id;
+    label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
     label.textContent = 'Aceito os termos e condições';
     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 

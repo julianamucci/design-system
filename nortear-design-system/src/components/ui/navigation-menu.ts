@@ -170,6 +170,13 @@ export function createNavigationMenu(
   document.addEventListener('click', (e) => {
     if (openItem && !nav.contains(e.target as Node)) closeAll();
   });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && openItem) {
+      const triggerToFocus = openItem.trigger;
+      closeAll();
+      triggerToFocus.focus();
+    }
+  });
 
   nav.appendChild(ul);
   return nav;
