@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, waitFor } from 'storybook/test';
 import HoverCardStory from './HoverCardStory.svelte';
@@ -26,7 +27,7 @@ const waitForOpen = async (root: HTMLElement) => {
   const body = within(document.body);
   await waitFor(
     async () => {
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       expect(dialog).toBeInTheDocument();
     },
     { timeout: 2000 }
@@ -45,7 +46,7 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     await waitForOpen(canvasElement);
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toHaveAttribute('data-state', 'open');
   },
 };
@@ -62,7 +63,7 @@ export const ComDelayCurto: Story = {
   play: async ({ canvasElement }) => {
     await waitForOpen(canvasElement);
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
   },
 };

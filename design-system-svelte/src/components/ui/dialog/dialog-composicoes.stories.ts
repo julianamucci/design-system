@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect } from 'storybook/test';
 import DialogConfirmEmailStory from './DialogConfirmEmailStory.svelte';
@@ -57,7 +58,7 @@ export const ConfirmEmail: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAccessibleName(/Confirmar novo email/i);
     const action = await body.findByRole('button', { name: /Enviar confirmação/i });
@@ -90,7 +91,7 @@ export const ProfileEdit: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const nameInput = await body.findByLabelText(/Nome completo/i);
     await expect(nameInput).toBeVisible();
@@ -116,7 +117,7 @@ export const MediaPreview: Story = {
   }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const image = await body.findByRole('img', { name: /pôr-do-sol/i });
     await expect(image).toBeVisible();

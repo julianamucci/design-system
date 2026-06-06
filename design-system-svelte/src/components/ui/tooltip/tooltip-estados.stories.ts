@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
@@ -67,7 +68,7 @@ export const Aberto: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip', {}, { timeout: 2000 });
+    const tip = await waitForPortal('tooltip', { timeout: 2000 });
     await expect(tip).toBeVisible();
   },
 };
@@ -87,7 +88,7 @@ export const FocoTeclado: Story = {
     const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /salvar/i });
     trigger.focus();
-    const tip = await body.findByRole('tooltip', {}, { timeout: 1500 });
+    const tip = await waitForPortal('tooltip', { timeout: 1500 });
     await expect(tip).toBeVisible();
   },
 };
@@ -104,7 +105,7 @@ export const Controlado: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip', {}, { timeout: 2000 });
+    const tip = await waitForPortal('tooltip', { timeout: 2000 });
     await expect(tip).toBeVisible();
 
     await userEvent.keyboard('{Escape}');

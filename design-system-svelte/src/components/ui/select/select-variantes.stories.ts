@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect } from 'storybook/test';
 import { Select } from './index';
@@ -71,7 +72,7 @@ export const WithGroups: Story = {
     await step('Abrir dropdown exibe cabeçalhos de grupo', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar região/i });
       await userEvent.click(trigger);
-      await body.findByRole('listbox');
+      await waitForPortal('listbox');
       await expect(body.getByText('Sudeste')).toBeVisible();
       await expect(body.getByText('Sul')).toBeVisible();
     });
@@ -100,7 +101,7 @@ export const WithIcon: Story = {
     await step('Cada item possui ícone inline', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
       await userEvent.click(trigger);
-      const listbox = await body.findByRole('listbox');
+      const listbox = await waitForPortal('listbox');
       const icons = listbox.querySelectorAll('svg.lucide-map-pin');
       await expect(icons.length).toBeGreaterThanOrEqual(1);
     });

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { Select } from './index';
@@ -71,13 +72,13 @@ export const Playground: Story = {
     await step('Clicar no trigger abre o listbox em portal', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
       await userEvent.click(trigger);
-      const listbox = await body.findByRole('listbox');
+      const listbox = await waitForPortal('listbox');
       await expect(listbox).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Selecionar item atualiza valor e fecha dropdown', async () => {
-      const option = await body.findByRole('option', { name: /Rio de Janeiro/i });
+      const option = await waitForPortal('option', { name: /Rio de Janeiro/i });
       await userEvent.click(option);
       await waitFor(async () => {
         await expect(body.queryByRole('listbox')).not.toBeInTheDocument();
@@ -88,7 +89,7 @@ export const Playground: Story = {
     await step('Escape fecha o dropdown sem alterar seleção', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
       await userEvent.click(trigger);
-      await body.findByRole('listbox');
+      await waitForPortal('listbox');
       await userEvent.keyboard('{Escape}');
       await waitFor(async () => {
         await expect(body.queryByRole('listbox')).not.toBeInTheDocument();

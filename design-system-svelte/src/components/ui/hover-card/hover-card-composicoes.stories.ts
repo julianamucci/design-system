@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, waitFor } from 'storybook/test';
 import HoverCardStory from './HoverCardStory.svelte';
@@ -32,7 +33,7 @@ const waitOpen = async () => {
   const body = within(document.body);
   await waitFor(
     async () => {
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       expect(dialog).toBeVisible();
     },
     { timeout: 2000 }

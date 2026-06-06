@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
@@ -26,7 +27,7 @@ const waitOpen = async () => {
   const body = within(document.body);
   await waitFor(
     async () => {
-      const tip = await body.findByRole('tooltip');
+      const tip = await waitForPortal('tooltip');
       expect(tip).toBeVisible();
     },
     { timeout: 2000 }

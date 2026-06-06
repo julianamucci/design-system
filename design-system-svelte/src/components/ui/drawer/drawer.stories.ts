@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
@@ -72,18 +73,18 @@ export const Playground: Story = {
       const trigger = canvas.getByRole('button', { name: /Abrir drawer/i });
       await expect(trigger).toBeInTheDocument();
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAttribute('aria-modal', 'true');
     });
 
     await step('2. Aplica data-vaul-drawer-direction=bottom', async () => {
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await expect(dialog).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
     });
 
     await step('3. Foco move para dentro do drawer (focus trap)', async () => {
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await waitFor(() => {
         if (!dialog.contains(document.activeElement)) throw new Error('focus not trapped');
       });

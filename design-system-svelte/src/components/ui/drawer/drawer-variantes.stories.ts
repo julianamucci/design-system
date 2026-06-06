@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
@@ -24,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 async function expectOpen(direction: string) {
   const body = within(document.body);
-  const dialog = await body.findByRole('dialog');
+  const dialog = await waitForPortal('dialog');
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAttribute('data-vaul-drawer-direction', direction);
 }

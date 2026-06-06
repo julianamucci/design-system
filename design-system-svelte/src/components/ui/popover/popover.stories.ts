@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
@@ -93,7 +94,7 @@ export const Playground: Story = {
       const trigger = canvas.getByRole('button', { name: /Abrir popover/i });
       await expect(trigger).toBeInTheDocument();
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
     });
@@ -112,7 +113,7 @@ export const Playground: Story = {
     await step('3. Reabrir e fechar via clique fora', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir popover/i });
       await userEvent.click(trigger);
-      await body.findByRole('dialog');
+      await waitForPortal('dialog');
       await userEvent.click(document.body);
       await waitForClose();
     });

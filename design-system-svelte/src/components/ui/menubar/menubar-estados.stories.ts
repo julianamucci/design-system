@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect } from 'storybook/test';
 import MenubarStory from './MenubarStory.svelte';
@@ -57,7 +58,7 @@ export const Aberto: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
   },
 };
@@ -77,7 +78,7 @@ export const ItemDesabilitado: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     const disabledItem = menu.querySelector('[data-disabled]');
     await expect(disabledItem).not.toBeNull();
   },
@@ -98,7 +99,7 @@ export const CheckboxChecked: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     const checkboxes = within(menu).getAllByRole('menuitemcheckbox');
     const checked = checkboxes.find((c) => c.getAttribute('aria-checked') === 'true');
     await expect(checked).toBeTruthy();

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import HoverCardStory from './HoverCardStory.svelte';
@@ -52,7 +53,7 @@ export const Aberto: Story = {
   },
   play: async ({ canvasElement }) => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog', {}, { timeout: 2000 });
+    const dialog = await waitForPortal('dialog', { timeout: 2000 });
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('data-state', 'open');
   },
@@ -69,7 +70,7 @@ export const Controlado: Story = {
   },
   play: async ({ canvasElement }) => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog', {}, { timeout: 2000 });
+    const dialog = await waitForPortal('dialog', { timeout: 2000 });
     await expect(dialog).toBeVisible();
 
     await userEvent.keyboard('{Escape}');

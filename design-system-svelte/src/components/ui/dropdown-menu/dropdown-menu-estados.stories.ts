@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
@@ -73,7 +74,7 @@ export const Aberto: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
   },
 };
@@ -98,7 +99,7 @@ export const Controlado: Story = {
     await step('Click no trigger abre menu controlado', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(trigger);
-      const menu = await body.findByRole('menu');
+      const menu = await waitForPortal('menu');
       await expect(menu).toBeVisible();
     });
 
@@ -125,7 +126,7 @@ export const ItemDesabilitado: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const menu = await body.findByRole('menu');
+    const menu = await waitForPortal('menu');
     const disabledItem = menu.querySelector('[data-disabled]');
     await expect(disabledItem).not.toBeNull();
   },

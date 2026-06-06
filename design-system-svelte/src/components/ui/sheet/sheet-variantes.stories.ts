@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
@@ -24,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 async function expectOpen(side: string) {
   const body = within(document.body);
-  const dialog = await body.findByRole('dialog');
+  const dialog = await waitForPortal('dialog');
   await expect(dialog).toBeVisible();
   const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
   await expect(content).toHaveAttribute('data-side', side);

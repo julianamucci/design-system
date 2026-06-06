@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
@@ -96,7 +97,7 @@ export const Playground: Story = {
     await step('2. Click abre o menu (role=menu)', async () => {
       const trigger = canvas.getByRole('button', { name: /Mais ações/i });
       await userEvent.click(trigger);
-      const menu = await body.findByRole('menu');
+      const menu = await waitForPortal('menu');
       await expect(menu).toBeVisible();
     });
 

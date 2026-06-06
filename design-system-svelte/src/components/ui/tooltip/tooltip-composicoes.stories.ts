@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
@@ -33,7 +34,7 @@ const waitOpen = async () => {
   const body = within(document.body);
   await waitFor(
     async () => {
-      const tip = await body.findByRole('tooltip');
+      const tip = await waitForPortal('tooltip');
       expect(tip).toBeVisible();
     },
     { timeout: 2000 }
@@ -70,7 +71,7 @@ export const SideTop: Story = {
   play: async () => {
     await waitOpen();
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip');
+    const tip = await waitForPortal('tooltip');
     await expect(tip).toHaveAttribute('data-side', 'top');
   },
 };
@@ -88,7 +89,7 @@ export const SideBottom: Story = {
   play: async () => {
     await waitOpen();
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip');
+    const tip = await waitForPortal('tooltip');
     await expect(tip).toHaveAttribute('data-side', 'bottom');
   },
 };
@@ -106,7 +107,7 @@ export const SideLeft: Story = {
   play: async () => {
     await waitOpen();
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip');
+    const tip = await waitForPortal('tooltip');
     await expect(tip).toHaveAttribute('data-side', 'left');
   },
 };
@@ -124,7 +125,7 @@ export const SideRight: Story = {
   play: async () => {
     await waitOpen();
     const body = within(document.body);
-    const tip = await body.findByRole('tooltip');
+    const tip = await waitForPortal('tooltip');
     await expect(tip).toHaveAttribute('data-side', 'right');
   },
 };

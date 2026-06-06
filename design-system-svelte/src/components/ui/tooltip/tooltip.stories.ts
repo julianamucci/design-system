@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
@@ -93,7 +94,7 @@ export const Playground: Story = {
     await step('2. Foco abre o tooltip (WCAG 1.4.13)', async () => {
       const trigger = canvas.getByRole('button', { name: /salvar/i });
       trigger.focus();
-      const tip = await body.findByRole('tooltip', {}, { timeout: 2000 });
+      const tip = await waitForPortal('tooltip', { timeout: 2000 });
       await expect(tip).toBeVisible();
     });
 

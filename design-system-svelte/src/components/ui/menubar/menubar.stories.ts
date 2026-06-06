@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import MenubarStory from './MenubarStory.svelte';
@@ -80,7 +81,7 @@ export const Playground: Story = {
     await step('3. Click no Trigger abre o menu (role=menu)', async () => {
       const trigger = canvas.getByRole('menuitem', { name: /Arquivo/i });
       await userEvent.click(trigger);
-      const menu = await body.findByRole('menu');
+      const menu = await waitForPortal('menu');
       await expect(menu).toBeVisible();
     });
 

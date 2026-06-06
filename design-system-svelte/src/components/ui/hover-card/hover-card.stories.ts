@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import HoverCardStory from './HoverCardStory.svelte';
@@ -92,7 +93,7 @@ export const Playground: Story = {
       const trigger = canvas.getByRole('link', { name: /@joana/i });
       trigger.focus();
       await userEvent.hover(trigger);
-      const dialog = await body.findByRole('dialog', {}, { timeout: 2000 });
+      const dialog = await waitForPortal('dialog', { timeout: 2000 });
       await expect(dialog).toBeVisible();
     });
 

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
@@ -24,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 async function expectMenuOpen() {
   const body = within(document.body);
-  const menu = await body.findByRole('menu');
+  const menu = await waitForPortal('menu');
   await expect(menu).toBeVisible();
   return menu;
 }

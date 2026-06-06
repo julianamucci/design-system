@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Select } from './index';
@@ -62,7 +63,7 @@ export const Open: Story = {
     await step('Clicar abre o listbox', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
       await userEvent.click(trigger);
-      await body.findByRole('listbox');
+      await waitForPortal('listbox');
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
   },
