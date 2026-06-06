@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Drawer,
   DrawerClose,
@@ -42,7 +43,7 @@ const wrapperStyle: React.CSSProperties = {
 async function assertSemanticStructure(step: (label: string, fn: () => Promise<void>) => Promise<unknown>) {
   const body = within(document.body);
   await step("Drawer com role=dialog, Title e Description", async () => {
-    const dialog = await waitFor(() => body.findByRole("dialog"));
+    const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute("aria-modal", "true");
     await expect(dialog).toHaveAccessibleName();

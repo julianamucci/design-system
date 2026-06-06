@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, expect } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -65,9 +66,9 @@ export const Destrutiva: Story = {
   ),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole("alertdialog");
+    const dialog = await waitForPortal("alertdialog");
     await expect(dialog).toBeVisible();
-    const action = await body.findByRole("button", { name: /Excluir conta/i });
+    const action = await waitForPortal("button", { name: /Excluir conta/i });
     await expect(action).toHaveClass("bg-destructive");
   },
 };
@@ -102,9 +103,9 @@ export const Neutra: Story = {
   ),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole("alertdialog");
+    const dialog = await waitForPortal("alertdialog");
     await expect(dialog).toBeVisible();
-    const action = await body.findByRole("button", { name: /^Publicar$/i });
+    const action = await waitForPortal("button", { name: /^Publicar$/i });
     await expect(action).toBeVisible();
   },
 };

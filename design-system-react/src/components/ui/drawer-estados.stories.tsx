@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Drawer,
   DrawerClose,
@@ -111,7 +112,7 @@ export const Aberto: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Drawer aberto com role=dialog e aria-modal=true", async () => {
-      const dialog = await waitFor(() => body.findByRole("dialog"));
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAttribute("aria-modal", "true");
       await expect(dialog).toHaveAccessibleName();
@@ -165,7 +166,7 @@ export const Controlado: Story = {
     await step("Botão externo abre o drawer", async () => {
       const openBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
       await userEvent.click(openBtn);
-      const dialog = await body.findByRole("dialog");
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
     });
 
@@ -213,7 +214,7 @@ export const NaoDismissible: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Drawer permanece aberto após ESC", async () => {
-      const dialog = await waitFor(() => body.findByRole("dialog"));
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
       await userEvent.keyboard("{Escape}");
       // Aguarda um tick para garantir que ESC não fechou

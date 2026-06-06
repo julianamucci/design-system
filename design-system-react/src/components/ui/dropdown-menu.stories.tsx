@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,7 +85,7 @@ export const Playground: Story = {
     await step("1. Abre ao clicar no trigger", async () => {
       const trigger = canvas.getByRole("button", { name: /Abrir menu/i });
       await userEvent.click(trigger);
-      const menu = await body.findByRole("menu");
+      const menu = await waitForPortal("menu");
       await expect(menu).toBeVisible();
     });
 

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, screen, within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Select,
   SelectContent,
@@ -122,7 +123,7 @@ export const Open: Story = {
       await waitFor(async () => {
         await expect(trigger).toHaveAttribute("aria-expanded", "true");
       });
-      const listbox = await screen.findByRole("listbox");
+      const listbox = await waitForPortal("listbox");
       await expect(listbox).toBeVisible();
     });
   },

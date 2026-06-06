@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 const meta = {
@@ -77,7 +78,7 @@ export const PerfilDeUsuario: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Estrutura semântica: dialog + link acessível", async () => {
-      const dialog = await waitFor(() => body.findByRole("dialog"));
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
       // Link permanece acessível (alternativa por click)
       const link = within(document.body).getByRole("link", { name: /@joana/i });
@@ -135,7 +136,7 @@ export const PreviewDeLink: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Dialog acessível e link com href válido", async () => {
-      const dialog = await waitFor(() => body.findByRole("dialog"));
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
       const link = within(document.body).getByRole("link", { name: /example\.com/i });
       await expect(link).toHaveAttribute("href", "https://example.com");
@@ -184,7 +185,7 @@ export const DefinicaoDeTermo: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Dialog renderizado para termo técnico", async () => {
-      const dialog = await waitFor(() => body.findByRole("dialog"));
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
       // texto descritivo presente (contraste herdado de bg-popover/text-popover-foreground)
       await expect(dialog.textContent).toMatch(/Web Content Accessibility/i);
@@ -234,7 +235,7 @@ export const MetricaExplicada: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Dialog explicativo + botão com aria-label acessível", async () => {
-      const dialog = await waitFor(() => body.findByRole("dialog"));
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
       const trigger = within(document.body).getByRole("button", {
         name: /Como o NPS é calculado/i,

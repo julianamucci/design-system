@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import { useState } from "react";
 import {
   Command,
@@ -331,7 +332,7 @@ export const CommandPalette: Story = {
     await step("clicar no botão abre o dialog", async () => {
       const btn = canvas.getByRole("button", { name: /Abrir command palette/i });
       await userEvent.click(btn);
-      const dialog = await body.findByRole("dialog");
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
     });
 

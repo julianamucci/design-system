@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 const meta = {
@@ -67,7 +68,7 @@ export const Default: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Content tem role=dialog", async () => {
-      const dialog = await waitFor(() => body.findByRole("dialog"));
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
     });
   },
@@ -107,7 +108,7 @@ export const ComDelayCurto: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Content tem role=dialog", async () => {
-      const dialog = await waitFor(() => body.findByRole("dialog"));
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
     });
   },

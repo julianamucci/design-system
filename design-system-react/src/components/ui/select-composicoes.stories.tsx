@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn, userEvent, screen, within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import { useState } from "react";
 import {
   Select,
@@ -76,7 +77,7 @@ export const Controlled: Story = {
     });
     await step("Selecionar Rio de Janeiro atualiza estado controlado", async () => {
       await userEvent.click(trigger);
-      const option = await screen.findByRole("option", { name: "Rio de Janeiro" });
+      const option = await waitForPortal("option", { name: "Rio de Janeiro" });
       await userEvent.click(option);
       const output = canvas.getByTestId("ctrl-output");
       await waitFor(async () => {
@@ -147,7 +148,7 @@ export const EmFormulario: Story = {
 
     await step("Selecionar opção habilita o botão", async () => {
       await userEvent.click(trigger);
-      const option = await screen.findByRole("option", { name: "São Paulo" });
+      const option = await waitForPortal("option", { name: "São Paulo" });
       await userEvent.click(option);
       await waitFor(async () => {
         await expect(submitBtn).toBeEnabled();

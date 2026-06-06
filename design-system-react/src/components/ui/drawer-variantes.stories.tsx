@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Drawer,
   DrawerClose,
@@ -78,7 +79,7 @@ function makeStory(
     play: async ({ step }) => {
       const body = within(document.body);
       await step(`Drawer renderiza com data-vaul-drawer-direction=${direction}`, async () => {
-        const dialog = await waitFor(() => body.findByRole("dialog"));
+        const dialog = await waitForPortal("dialog");
         await expect(dialog).toBeVisible();
         const content = document.querySelector(
           "[data-slot='drawer-content']"

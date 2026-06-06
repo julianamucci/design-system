@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,7 +59,7 @@ export const Default: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Items renderizam com data-variant=default", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const items = document.querySelectorAll(
         "[data-slot='dropdown-menu-item']"
       );
@@ -94,7 +95,7 @@ export const Destructive: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Item renderiza com data-variant=destructive", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const item = document.querySelector(
         "[data-slot='dropdown-menu-item']"
       ) as HTMLElement | null;

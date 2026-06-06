@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, screen, within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import { MailIcon, PhoneIcon, MessageCircleIcon } from "lucide-react";
 import {
   Select,
@@ -63,7 +64,7 @@ export const Default: Story = {
     });
     await step("Abre listbox em portal ao clicar", async () => {
       await userEvent.click(trigger);
-      const listbox = await screen.findByRole("listbox");
+      const listbox = await waitForPortal("listbox");
       await expect(listbox).toBeVisible();
       const options = await screen.findAllByRole("option");
       await expect(options).toHaveLength(4);
@@ -108,12 +109,12 @@ export const WithGroups: Story = {
     const trigger = canvas.getByRole("combobox");
     await step("Abre dropdown e exibe cabeçalhos de grupo", async () => {
       await userEvent.click(trigger);
-      await screen.findByRole("listbox");
+      await waitForPortal("listbox");
       await expect(await screen.findByText("Sudeste")).toBeVisible();
       await expect(await screen.findByText("Sul")).toBeVisible();
     });
     await step("Selecionar item de um grupo atualiza valor", async () => {
-      const option = await screen.findByRole("option", { name: "Santa Catarina" });
+      const option = await waitForPortal("option", { name: "Santa Catarina" });
       await userEvent.click(option);
       await waitFor(async () => {
         await expect(trigger).toHaveTextContent(/Santa Catarina/);
@@ -156,7 +157,7 @@ export const WithIcon: Story = {
     const trigger = canvas.getByRole("combobox");
     await step("Abre e exibe opções com ícones", async () => {
       await userEvent.click(trigger);
-      await screen.findByRole("listbox");
+      await waitForPortal("listbox");
       const options = await screen.findAllByRole("option");
       await expect(options).toHaveLength(3);
       // ícone svg dentro do primeiro item

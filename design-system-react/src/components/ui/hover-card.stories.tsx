@@ -1,6 +1,7 @@
 import type * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import { HoverCardDocs } from "@/components/docs/HoverCardDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -103,7 +104,7 @@ export const Playground: Story = {
       trigger.focus();
       await waitFor(
         async () => {
-          const dialog = await body.findByRole("dialog");
+          const dialog = await waitForPortal("dialog");
           await expect(dialog).toBeVisible();
         },
         { timeout: 2000 }

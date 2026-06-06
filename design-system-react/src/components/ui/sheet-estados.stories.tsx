@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { userEvent, within, expect } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Sheet,
   SheetClose,
@@ -129,7 +130,7 @@ export const Open: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole("dialog");
+    const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAccessibleName();
     await expect(dialog).toHaveAccessibleDescription();
@@ -171,7 +172,7 @@ export const WithCloseButtonHidden: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole("dialog");
+    const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
     const closeBtn = within(dialog).queryByRole("button", { name: /^Close$/i });
     await expect(closeBtn).toBeNull();
@@ -226,7 +227,7 @@ export const Controlled: Story = {
         name: /Open programmatically/i,
       });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole("dialog");
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
     });
 

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -74,7 +75,7 @@ export const ComShortcuts: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("3 shortcuts renderizados ao lado dos items", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const shortcuts = document.querySelectorAll(
         "[data-slot='menubar-shortcut']"
       );
@@ -114,7 +115,7 @@ export const ComSubmenu: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("SubTrigger renderizado", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const subTrigger = document.querySelector(
         "[data-slot='menubar-sub-trigger']"
       ) as HTMLElement | null;
@@ -170,7 +171,7 @@ export const ComCheckboxItems: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("3 itens com role=menuitemcheckbox", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const checkboxes = body.getAllByRole("menuitemcheckbox");
       await expect(checkboxes.length).toBe(3);
       const checked = checkboxes.filter(
@@ -215,7 +216,7 @@ export const ComRadioGroup: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("RadioItems com role=menuitemradio e exatamente um checked", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const radios = body.getAllByRole("menuitemradio");
       await expect(radios.length).toBe(3);
       const checked = radios.filter(
@@ -317,7 +318,7 @@ export const EditorCompleto: Story = {
       await expect(triggers.length).toBeGreaterThanOrEqual(4);
     });
     await step("Menu Arquivo aberto com submenu", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const subTrigger = document.querySelector(
         "[data-slot='menubar-sub-trigger']"
       );

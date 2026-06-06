@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, waitFor, screen } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Tooltip,
   TooltipContent,
@@ -159,7 +160,7 @@ export const ComAtalhoTeclado: Story = {
   ),
   play: async ({ step }) => {
     await step("Tooltip aberto contém kbd elements", async () => {
-      const tip = await screen.findByRole("tooltip", {}, { timeout: 5000 });
+      const tip = await waitForPortal("tooltip", { timeout: 5000 });
       await expect(tip).toBeVisible();
       const kbds = tip.querySelectorAll("kbd");
       await expect(kbds.length).toBeGreaterThanOrEqual(2);

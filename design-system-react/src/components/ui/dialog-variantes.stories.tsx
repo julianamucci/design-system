@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, expect } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Dialog,
   DialogClose,
@@ -89,7 +90,7 @@ export const Default: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    await expect(await body.findByRole("dialog")).toBeInTheDocument();
+    await expect(await waitForPortal("dialog")).toBeInTheDocument();
   },
 };
 
@@ -276,7 +277,7 @@ export const WithDestructiveAction: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    const action = await body.findByRole("button", { name: /^Remover item$/i });
+    const action = await waitForPortal("button", { name: /^Remover item$/i });
     await expect(action).toHaveClass("bg-destructive");
   },
 };
@@ -316,6 +317,6 @@ export const CustomCloseInFooter: Story = {
   },
   play: async () => {
     const body = within(document.body);
-    await expect(await body.findByRole("dialog")).toBeInTheDocument();
+    await expect(await waitForPortal("dialog")).toBeInTheDocument();
   },
 };

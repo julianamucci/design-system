@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import { Button } from "./button";
 
@@ -107,7 +108,7 @@ export const Aberto: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Content aberto com role=dialog", async () => {
-      const dialog = await waitFor(() => body.findByRole("dialog"));
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
     });
   },
@@ -161,7 +162,7 @@ export const Controlado: Story = {
     await step("Botão externo abre o HoverCard", async () => {
       const openBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
       await userEvent.click(openBtn);
-      const dialog = await waitFor(() => body.findByRole("dialog"));
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
     });
 

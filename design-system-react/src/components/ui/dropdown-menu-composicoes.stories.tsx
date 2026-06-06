@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -73,7 +74,7 @@ export const ComLabel: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("Menu com Label e Separator", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const labels = document.querySelectorAll(
         "[data-slot='dropdown-menu-label']"
       );
@@ -137,7 +138,7 @@ export const ComCheckboxItems: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("3 itens com role=menuitemcheckbox", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const checkboxes = body.getAllByRole("menuitemcheckbox");
       await expect(checkboxes.length).toBe(3);
       // Pelo menos um marcado, pelo menos um desmarcado
@@ -185,7 +186,7 @@ export const ComRadioGroup: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("RadioItems com role=menuitemradio e apenas um checked", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const radios = body.getAllByRole("menuitemradio");
       await expect(radios.length).toBe(3);
       const checked = radios.filter(
@@ -229,7 +230,7 @@ export const ComSubmenu: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("SubTrigger renderizado no menu principal", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const subTrigger = document.querySelector(
         "[data-slot='dropdown-menu-sub-trigger']"
       ) as HTMLElement | null;
@@ -274,7 +275,7 @@ export const ComShortcuts: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step("3 shortcuts renderizados ao lado dos items", async () => {
-      await waitFor(() => body.findByRole("menu"));
+      await waitForPortal("menu");
       const shortcuts = document.querySelectorAll(
         "[data-slot='dropdown-menu-shortcut']"
       );

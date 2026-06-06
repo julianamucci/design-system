@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -109,7 +110,7 @@ export const Open: Story = {
   ),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole("alertdialog");
+    const dialog = await waitForPortal("alertdialog");
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAccessibleName(/Excluir item/i);
   },
@@ -156,7 +157,7 @@ export const Confirmed: Story = {
     const body = within(document.body);
 
     await step("Diálogo está aberto", async () => {
-      const dialog = await body.findByRole("alertdialog");
+      const dialog = await waitForPortal("alertdialog");
       await expect(dialog).toBeVisible();
     });
 
@@ -204,7 +205,7 @@ export const Cancelled: Story = {
     const body = within(document.body);
 
     await step("Cancel é clicado e diálogo fecha", async () => {
-      const cancel = await body.findByRole("button", { name: /Cancelar/i });
+      const cancel = await waitForPortal("button", { name: /Cancelar/i });
       await userEvent.click(cancel);
       await waitFor(
         () => {
@@ -270,7 +271,7 @@ export const Controlled: Story = {
         name: /Abrir via estado externo/i,
       });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole("alertdialog");
+      const dialog = await waitForPortal("alertdialog");
       await expect(dialog).toBeVisible();
     });
 

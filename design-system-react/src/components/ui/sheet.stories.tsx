@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Sheet,
   SheetClose,
@@ -125,14 +126,14 @@ export const Playground: Story = {
       const trigger = canvas.getByRole("button", { name: /Abrir filtros/i });
       await expect(trigger).toBeInTheDocument();
       await userEvent.click(trigger);
-      const dialog = await body.findByRole("dialog");
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAccessibleName();
       await expect(dialog).toHaveAccessibleDescription();
     });
 
     await step("2. Focus trap — foco entra no sheet ao abrir", async () => {
-      const dialog = await body.findByRole("dialog");
+      const dialog = await waitForPortal("dialog");
       await waitFor(() => {
         if (!dialog.contains(document.activeElement)) {
           throw new Error("focus did not move into sheet");
@@ -157,7 +158,7 @@ export const Playground: Story = {
     await step("5. Reabrir e fechar via clique no overlay", async () => {
       const trigger = canvas.getByRole("button", { name: /Abrir filtros/i });
       await userEvent.click(trigger);
-      await body.findByRole("dialog");
+      await waitForPortal("dialog");
       const overlay = document.querySelector<HTMLElement>(
         '[data-slot="sheet-overlay"]'
       );
@@ -169,7 +170,7 @@ export const Playground: Story = {
     await step("6. Reabrir e fechar via botão Close (X)", async () => {
       const trigger = canvas.getByRole("button", { name: /Abrir filtros/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole("dialog");
+      const dialog = await waitForPortal("dialog");
       const closeBtn = within(dialog).getByRole("button", { name: /close/i });
       await userEvent.click(closeBtn);
       await waitForClose();

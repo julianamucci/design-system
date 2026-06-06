@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -77,17 +78,17 @@ export const Playground: Story = {
     await step("Diálogo abre ao clicar no trigger", async () => {
       const trigger = canvas.getByRole("button", { name: /Excluir conta/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole("alertdialog");
+      const dialog = await waitForPortal("alertdialog");
       await expect(dialog).toBeVisible();
     });
 
     await step("Diálogo tem role alertdialog", async () => {
-      const dialog = await body.findByRole("alertdialog");
+      const dialog = await waitForPortal("alertdialog");
       await expect(dialog).toHaveAttribute("role", "alertdialog");
     });
 
     await step("Título e descrição são acessíveis", async () => {
-      const dialog = await body.findByRole("alertdialog");
+      const dialog = await waitForPortal("alertdialog");
       await expect(dialog).toHaveAccessibleName(/Excluir sua conta/i);
       await expect(dialog).toHaveAccessibleDescription(/permanente/i);
     });

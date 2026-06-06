@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn, userEvent, screen, within, expect, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import { useState } from "react";
 import {
   Select,
@@ -91,12 +92,12 @@ export const Playground: Story = {
 
     await step("Listbox visível em portal (document.body)", async () => {
       // Portal: usar screen, não within(canvasElement)
-      const listbox = await screen.findByRole("listbox");
+      const listbox = await waitForPortal("listbox");
       await expect(listbox).toBeVisible();
     });
 
     await step("Selecionar item atualiza SelectValue e fecha dropdown", async () => {
-      const option = await screen.findByRole("option", { name: "Rio de Janeiro" });
+      const option = await waitForPortal("option", { name: "Rio de Janeiro" });
       await userEvent.click(option);
       await expect(args.onValueChange).toHaveBeenCalledWith("rj");
       await waitFor(async () => {

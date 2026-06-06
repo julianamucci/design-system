@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Drawer,
   DrawerClose,
@@ -101,7 +102,7 @@ export const Playground: Story = {
     await step("1. Abre ao clicar no trigger", async () => {
       const trigger = canvas.getByRole("button", { name: /Abrir Drawer/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole("dialog");
+      const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAttribute("aria-modal", "true");
       await expect(dialog).toHaveAccessibleName();

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor, screen } from "storybook/test";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Tooltip,
   TooltipContent,
@@ -101,7 +102,7 @@ export const Aberto: Story = {
   ),
   play: async ({ step }) => {
     await step("Tooltip com role=tooltip e aria-describedby", async () => {
-      const tip = await screen.findByRole("tooltip", {}, { timeout: 5000 });
+      const tip = await waitForPortal("tooltip", { timeout: 5000 });
       await expect(tip).toBeVisible();
       // trigger deve ter aria-describedby
       const trigger = screen.getByRole("button", { name: /Salvar/i });
@@ -192,7 +193,7 @@ export const Controlado: Story = {
     await step("Botão externo abre o Tooltip", async () => {
       const openBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
       await userEvent.click(openBtn);
-      const tip = await screen.findByRole("tooltip", {}, { timeout: 5000 });
+      const tip = await waitForPortal("tooltip", { timeout: 5000 });
       await expect(tip).toBeInTheDocument();
     });
 
