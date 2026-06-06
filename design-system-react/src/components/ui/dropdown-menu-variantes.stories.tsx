@@ -10,6 +10,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/DropdownMenu/Variantes",
+  tags: ["overlay"],
   component: DropdownMenu,
   parameters: {
     layout: "centered",

@@ -6,6 +6,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/Alert/Composições",
+  tags: ["feedback"],
   component: Alert,
   parameters: {
     controls: { disable: true },

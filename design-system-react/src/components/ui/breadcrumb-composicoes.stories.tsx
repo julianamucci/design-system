@@ -19,6 +19,7 @@ import {
 
 const meta = {
   title: "UI/Breadcrumb/Composições",
+  tags: ["navigation"],
   component: Breadcrumb,
   parameters: {
     layout: "padded",

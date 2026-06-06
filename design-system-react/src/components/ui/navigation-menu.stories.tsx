@@ -20,7 +20,7 @@ type PlaygroundArgs = {
 const meta = {
   title: "UI/NavigationMenu",
   component: NavigationMenu,
-  tags: ["autodocs"],
+  tags: ["autodocs", "navigation"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(NavigationMenuDocs) },

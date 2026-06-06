@@ -25,7 +25,7 @@ type PlaygroundArgs = {
 const meta = {
   title: "UI/Pagination",
   component: Pagination as never,
-  tags: ["autodocs"],
+  tags: ["autodocs", "navigation"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(PaginationDocs) },

@@ -17,7 +17,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Card",
   component: Card,
-  tags: ["autodocs"],
+  tags: ["autodocs", "layout"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(CardDocs) },

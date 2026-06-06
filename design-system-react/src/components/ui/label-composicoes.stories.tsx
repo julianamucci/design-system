@@ -6,6 +6,7 @@ import { Checkbox } from "./checkbox";
 
 const meta = {
   title: "UI/Label/Composições",
+  tags: ["form"],
   component: Label,
   parameters: {
     layout: "centered",

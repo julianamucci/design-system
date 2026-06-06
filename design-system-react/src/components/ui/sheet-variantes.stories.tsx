@@ -17,6 +17,7 @@ import sheetTranslations from "@shared/content/sheet/translations.json";
 
 const meta = {
   title: "UI/Sheet/Variantes",
+  tags: ["disclosure"],
   component: Sheet,
   parameters: {
     layout: "centered",

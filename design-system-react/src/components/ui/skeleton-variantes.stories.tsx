@@ -4,6 +4,7 @@ import { Skeleton } from "./skeleton";
 
 const meta = {
   title: "UI/Skeleton/Variantes",
+  tags: ["feedback"],
   component: Skeleton,
   parameters: {
     layout: "centered",

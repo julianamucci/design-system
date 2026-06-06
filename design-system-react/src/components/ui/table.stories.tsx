@@ -28,7 +28,7 @@ const invoices = [
 const meta = {
   title: "UI/Table",
   component: Table,
-  tags: ["autodocs"],
+  tags: ["autodocs", "tables"],
   parameters: {
     layout: "padded",
     docs: { page: withAutoDocsTab(TableDocs) },

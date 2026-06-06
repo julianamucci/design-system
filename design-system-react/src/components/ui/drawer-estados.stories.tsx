@@ -15,6 +15,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/Drawer/Estados",
+  tags: ["disclosure"],
   component: Drawer,
   parameters: {
     layout: "centered",

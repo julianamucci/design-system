@@ -20,7 +20,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Dialog",
   component: Dialog,
-  tags: ["autodocs"],
+  tags: ["autodocs", "overlay"],
   parameters: {
     docs: { page: withAutoDocsTab(DialogDocs) },
   },

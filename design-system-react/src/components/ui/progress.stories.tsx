@@ -8,7 +8,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Progress",
   component: Progress,
-  tags: ["autodocs"],
+  tags: ["autodocs", "feedback"],
   parameters: {
     layout: "padded",
     docs: { page: withAutoDocsTab(ProgressDocs) },

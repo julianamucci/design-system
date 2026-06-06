@@ -10,7 +10,7 @@ const DEMO_IMAGE =
 const meta = {
   title: "UI/Avatar",
   component: Avatar,
-  tags: ["autodocs"],
+  tags: ["autodocs", "display"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(AvatarDocs) },

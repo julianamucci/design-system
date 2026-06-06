@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 
 const meta: Meta = {
   title: "UI/Tabs/Variantes",
+  tags: ["navigation"],
   component: Tabs,
   parameters: {
     layout: "padded",

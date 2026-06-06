@@ -9,6 +9,7 @@ import {
 
 const meta = {
   title: "UI/InputOTP/Estados",
+  tags: ["form"],
   component: InputOTP,
   parameters: {
     layout: "centered",

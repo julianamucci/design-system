@@ -20,7 +20,7 @@ import { LayoutIcon, TypeIcon, MinusIcon, SearchIcon } from "lucide-react";
 const meta = {
   title: "UI/Command",
   component: Command,
-  tags: ["autodocs"],
+  tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(CommandDocs) },

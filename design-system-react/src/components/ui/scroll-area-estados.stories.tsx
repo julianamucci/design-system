@@ -4,6 +4,7 @@ import { ScrollArea } from "./scroll-area";
 
 const meta = {
   title: "UI/ScrollArea/Estados",
+  tags: ["layout"],
   component: ScrollArea,
   parameters: {
     layout: "centered",

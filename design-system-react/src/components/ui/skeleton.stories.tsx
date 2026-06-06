@@ -7,7 +7,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Skeleton",
   component: Skeleton,
-  tags: ["autodocs"],
+  tags: ["autodocs", "feedback"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(SkeletonDocs) },

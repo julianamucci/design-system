@@ -8,7 +8,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Toggle",
   component: Toggle,
-  tags: ["autodocs"],
+  tags: ["autodocs", "form"],
   parameters: {
     docs: { page: withAutoDocsTab(ToggleDocs) },
   },

@@ -15,6 +15,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/Select/Composicoes",
+  tags: ["form"],
   component: Select,
   parameters: {
     layout: "centered",

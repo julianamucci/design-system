@@ -15,7 +15,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/DropdownMenu",
   component: DropdownMenu,
-  tags: ["autodocs"],
+  tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(DropdownMenuDocs) },

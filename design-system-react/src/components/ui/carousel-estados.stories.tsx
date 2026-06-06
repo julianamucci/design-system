@@ -11,6 +11,7 @@ import { Card, CardContent } from "./card";
 
 const meta = {
   title: "UI/Carousel/Estados",
+  tags: ["display"],
   component: Carousel,
   parameters: {
     layout: "centered",

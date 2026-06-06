@@ -19,7 +19,7 @@ type PlaygroundArgs = {
 const meta = {
   title: "UI/Resizable",
   component: ResizablePanelGroup,
-  tags: ["autodocs"],
+  tags: ["autodocs", "layout"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(ResizableDocs) },

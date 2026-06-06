@@ -17,6 +17,7 @@ import { track } from "@/lib/analytics";
 
 const meta = {
   title: "UI/Dialog/Composições",
+  tags: ["overlay"],
   component: Dialog,
   parameters: {
     layout: "centered",

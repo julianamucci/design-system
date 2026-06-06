@@ -5,6 +5,7 @@ import { Label } from "./label";
 
 const meta = {
   title: "UI/RadioGroup/Estados",
+  tags: ["form"],
   component: RadioGroup,
   parameters: {
     layout: "centered",

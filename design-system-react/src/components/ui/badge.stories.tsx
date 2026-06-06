@@ -7,7 +7,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Badge",
   component: Badge,
-  tags: ["autodocs"],
+  tags: ["autodocs", "feedback"],
   parameters: {
     docs: { page: withAutoDocsTab(BadgeDocs) },
   },

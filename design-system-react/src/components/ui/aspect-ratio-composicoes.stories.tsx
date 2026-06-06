@@ -12,6 +12,7 @@ const SQUARE_SRC =
 
 const meta = {
   title: "UI/AspectRatio/Composições",
+  tags: ["layout"],
   component: AspectRatio,
   parameters: {
     layout: "centered",

@@ -11,6 +11,7 @@ import { Save, Trash2, Share2, Bold, Italic, Underline } from "lucide-react";
 
 const meta = {
   title: "UI/Tooltip/Composições",
+  tags: ["overlay"],
   component: Tooltip,
   decorators: [
     (Story) => (

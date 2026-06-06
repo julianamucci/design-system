@@ -9,7 +9,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Calendar",
   component: Calendar,
-  tags: ["autodocs"],
+  tags: ["autodocs", "form"],
   parameters: {
     docs: { page: withAutoDocsTab(CalendarDocs) },
   },

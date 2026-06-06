@@ -13,6 +13,7 @@ import {
 
 const meta = {
   title: "UI/Breadcrumb/Estados",
+  tags: ["navigation"],
   component: Breadcrumb,
   parameters: {
     layout: "padded",

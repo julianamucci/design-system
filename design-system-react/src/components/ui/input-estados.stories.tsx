@@ -4,6 +4,7 @@ import { Input } from "./input";
 
 const meta = {
   title: "UI/Input/Estados",
+  tags: ["form"],
   component: Input,
   parameters: {
     layout: "centered",

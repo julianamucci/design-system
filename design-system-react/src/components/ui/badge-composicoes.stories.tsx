@@ -5,6 +5,7 @@ import { Badge } from "./badge";
 
 const meta = {
   title: "UI/Badge/Composições",
+  tags: ["feedback"],
   component: Badge,
   parameters: {
     layout: "centered",

@@ -11,6 +11,7 @@ import {
 
 const meta: Meta = {
   title: "UI/Accordion/Composições",
+  tags: ["disclosure"],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

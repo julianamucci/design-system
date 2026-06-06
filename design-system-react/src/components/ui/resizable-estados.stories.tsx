@@ -8,6 +8,7 @@ import {
 
 const meta = {
   title: "UI/Resizable/Estados",
+  tags: ["layout"],
   component: ResizablePanelGroup,
   parameters: {
     layout: "centered",

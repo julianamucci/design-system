@@ -18,6 +18,7 @@ import dialogTranslations from "@shared/content/dialog/translations.json";
 
 const meta = {
   title: "UI/Dialog/Estados",
+  tags: ["overlay"],
   component: Dialog,
   parameters: {
     layout: "centered",

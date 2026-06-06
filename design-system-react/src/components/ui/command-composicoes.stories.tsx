@@ -30,6 +30,7 @@ import { cn } from "@/lib/utils";
 
 const meta = {
   title: "UI/Command/Composições",
+  tags: ["overlay"],
   component: Command,
   parameters: {
     layout: "centered",

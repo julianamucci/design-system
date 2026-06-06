@@ -15,6 +15,7 @@ import {
 
 const meta = {
   title: "UI/ContextMenu/Estados",
+  tags: ["overlay"],
   component: ContextMenu,
   parameters: {
     layout: "centered",

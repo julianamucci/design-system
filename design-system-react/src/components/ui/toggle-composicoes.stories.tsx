@@ -6,6 +6,7 @@ import { Toggle } from "./toggle";
 
 const meta = {
   title: "UI/Toggle/Composições",
+  tags: ["form"],
   component: Toggle,
   parameters: {
     layout: "centered",

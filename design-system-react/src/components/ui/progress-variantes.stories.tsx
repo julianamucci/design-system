@@ -11,6 +11,7 @@ import {
 
 const meta = {
   title: "UI/Progress/Variantes",
+  tags: ["feedback"],
   component: Progress,
   parameters: {
     layout: "padded",

@@ -19,6 +19,7 @@ import dialogTranslations from "@shared/content/dialog/translations.json";
 
 const meta = {
   title: "UI/Dialog/Variantes",
+  tags: ["overlay"],
   component: Dialog,
   parameters: {
     layout: "centered",

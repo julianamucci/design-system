@@ -9,7 +9,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Sonner",
   component: Toaster,
-  tags: ["autodocs"],
+  tags: ["autodocs", "feedback"],
   parameters: {
     docs: { page: withAutoDocsTab(SonnerDocs) },
     // Sonner com richColors usa paletas da lib externa que podem não atingir 4.5:1.

@@ -14,6 +14,7 @@ import { Label } from "./label";
 
 const meta = {
   title: "UI/Popover/Composições",
+  tags: ["overlay"],
   component: Popover,
   parameters: {
     layout: "centered",

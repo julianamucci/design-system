@@ -11,6 +11,7 @@ import {
 
 const meta = {
   title: "UI/Menubar/Estados",
+  tags: ["navigation"],
   component: Menubar,
   parameters: {
     layout: "centered",

@@ -5,6 +5,7 @@ import { Alert, AlertTitle, AlertDescription } from "./alert";
 
 const meta = {
   title: "UI/Alert/Variantes",
+  tags: ["feedback"],
   component: Alert,
   parameters: {
     controls: { disable: true },

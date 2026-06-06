@@ -7,6 +7,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/Textarea/Composições",
+  tags: ["form"],
   component: Textarea,
   parameters: {
     layout: "centered",

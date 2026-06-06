@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const meta = {
   title: "UI/Table/Estados",
+  tags: ["tables"],
   component: Table,
   parameters: {
     layout: "padded",

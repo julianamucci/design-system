@@ -12,6 +12,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/Card/Estados",
+  tags: ["layout"],
   component: Card,
   parameters: {
     layout: "centered",

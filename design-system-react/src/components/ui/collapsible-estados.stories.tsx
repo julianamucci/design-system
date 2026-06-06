@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 const meta = {
   title: "UI/Collapsible/Estados",
+  tags: ["disclosure"],
   component: Collapsible,
   parameters: {
     layout: "centered",

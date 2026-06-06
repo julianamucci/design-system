@@ -7,6 +7,7 @@ const IMG_MARIA =
 
 const meta = {
   title: "UI/Avatar/Tamanhos",
+  tags: ["display"],
   component: Avatar,
   parameters: {
     layout: "centered",

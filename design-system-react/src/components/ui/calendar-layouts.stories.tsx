@@ -6,6 +6,7 @@ import { Calendar } from "./calendar";
 
 const meta = {
   title: "UI/Calendar/Layouts",
+  tags: ["form"],
   component: Calendar,
   parameters: {
     layout: "padded",

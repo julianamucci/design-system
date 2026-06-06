@@ -4,6 +4,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/Button/Variantes",
+  tags: ["form"],
   component: Button,
   parameters: {
     controls: { disable: true },

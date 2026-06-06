@@ -142,6 +142,7 @@ function SidebarLoadingPreview() {
 
 const meta = {
   title: "UI/Sidebar/Estados",
+  tags: ["layout"],
   component: Sidebar,
   parameters: {
     layout: "fullscreen",

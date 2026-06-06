@@ -6,6 +6,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/HoverCard/Estados",
+  tags: ["overlay"],
   component: HoverCard,
   parameters: {
     layout: "centered",

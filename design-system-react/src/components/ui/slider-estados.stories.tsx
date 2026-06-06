@@ -5,6 +5,7 @@ import { Slider } from "./slider";
 
 const meta = {
   title: "UI/Slider/Estados",
+  tags: ["form"],
   component: Slider,
   parameters: {
     layout: "padded",

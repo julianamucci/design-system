@@ -14,6 +14,7 @@ const PORTRAIT_SRC =
 
 const meta = {
   title: "UI/AspectRatio/Variantes",
+  tags: ["layout"],
   component: AspectRatio,
   parameters: {
     layout: "centered",

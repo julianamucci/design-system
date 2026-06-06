@@ -10,6 +10,7 @@ import {
 
 const meta: Meta = {
   title: "UI/Accordion/Modos",
+  tags: ["disclosure"],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

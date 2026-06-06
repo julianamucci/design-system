@@ -8,7 +8,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Switch",
   component: Switch,
-  tags: ["autodocs"],
+  tags: ["autodocs", "form"],
   parameters: {
     docs: { page: withAutoDocsTab(SwitchDocs) },
   },

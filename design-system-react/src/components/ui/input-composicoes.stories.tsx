@@ -12,6 +12,7 @@ import {
 
 const meta = {
   title: "UI/Input/Composições",
+  tags: ["form"],
   component: InputGroup,
   parameters: {
     layout: "centered",

@@ -14,7 +14,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Collapsible",
   component: Collapsible,
-  tags: ["autodocs"],
+  tags: ["autodocs", "disclosure"],
   parameters: {
     docs: { page: withAutoDocsTab(CollapsibleDocs) },
     layout: "centered",

@@ -5,6 +5,7 @@ import { Separator } from "./separator";
 
 const meta = {
   title: "UI/ScrollArea/Composições",
+  tags: ["layout"],
   component: ScrollArea,
   parameters: {
     layout: "centered",

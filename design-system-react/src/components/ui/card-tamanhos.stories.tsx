@@ -10,6 +10,7 @@ import {
 
 const meta = {
   title: "UI/Card/Tamanhos",
+  tags: ["layout"],
   component: Card,
   parameters: {
     layout: "centered",

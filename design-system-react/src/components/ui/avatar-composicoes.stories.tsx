@@ -12,6 +12,7 @@ const IMG_THIRD =
 
 const meta = {
   title: "UI/Avatar/Composições",
+  tags: ["display"],
   component: Avatar,
   parameters: {
     layout: "centered",

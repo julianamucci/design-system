@@ -11,7 +11,7 @@ const LANDSCAPE_SRC =
 const meta = {
   title: "UI/AspectRatio",
   component: AspectRatio,
-  tags: ["autodocs"],
+  tags: ["autodocs", "layout"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(AspectRatioDocs) },

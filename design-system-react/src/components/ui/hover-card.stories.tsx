@@ -18,7 +18,7 @@ const HoverCardForArgs = HoverCard as unknown as React.ComponentType<HoverCardPl
 const meta = {
   title: "UI/HoverCard",
   component: HoverCardForArgs,
-  tags: ["autodocs"],
+  tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(HoverCardDocs) },

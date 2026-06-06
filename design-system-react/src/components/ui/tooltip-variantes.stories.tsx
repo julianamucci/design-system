@@ -11,6 +11,7 @@ import { Save } from "lucide-react";
 
 const meta = {
   title: "UI/Tooltip/Variantes",
+  tags: ["overlay"],
   component: Tooltip,
   decorators: [
     (Story) => (

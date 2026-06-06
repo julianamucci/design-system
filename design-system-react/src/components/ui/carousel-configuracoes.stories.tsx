@@ -12,6 +12,7 @@ import { Card, CardContent } from "./card";
 
 const meta = {
   title: "UI/Carousel/Configurações",
+  tags: ["display"],
   component: Carousel,
   parameters: {
     layout: "centered",

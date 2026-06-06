@@ -6,6 +6,7 @@ import { Label } from "./label";
 
 const meta = {
   title: "UI/Slider/Composições",
+  tags: ["form"],
   component: Slider,
   parameters: {
     layout: "padded",

@@ -11,6 +11,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/DropdownMenu/Estados",
+  tags: ["overlay"],
   component: DropdownMenu,
   parameters: {
     layout: "centered",

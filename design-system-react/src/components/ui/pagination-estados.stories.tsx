@@ -11,6 +11,7 @@ import {
 
 const meta = {
   title: "UI/Pagination/Estados",
+  tags: ["navigation"],
   component: Pagination,
   parameters: {
     layout: "centered",

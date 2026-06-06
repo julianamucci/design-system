@@ -19,6 +19,7 @@ import {
 
 const meta = {
   title: "UI/Menubar/Composições",
+  tags: ["navigation"],
   component: Menubar,
   parameters: {
     layout: "centered",

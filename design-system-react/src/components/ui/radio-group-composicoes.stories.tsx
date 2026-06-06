@@ -7,6 +7,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/RadioGroup/Composicoes",
+  tags: ["form"],
   component: RadioGroup,
   parameters: {
     layout: "centered",

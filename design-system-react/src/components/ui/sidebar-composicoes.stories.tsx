@@ -295,6 +295,7 @@ function SidebarWithSearch() {
 
 const meta = {
   title: "UI/Sidebar/Composições",
+  tags: ["layout"],
   component: Sidebar,
   parameters: {
     layout: "fullscreen",

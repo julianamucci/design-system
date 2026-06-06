@@ -4,6 +4,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 const meta = {
   title: "UI/HoverCard/Composições",
+  tags: ["overlay"],
   component: HoverCard,
   parameters: {
     layout: "centered",

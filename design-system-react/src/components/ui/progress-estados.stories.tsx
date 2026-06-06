@@ -4,6 +4,7 @@ import { Progress } from "./progress";
 
 const meta = {
   title: "UI/Progress/Estados",
+  tags: ["feedback"],
   component: Progress,
   parameters: {
     layout: "padded",

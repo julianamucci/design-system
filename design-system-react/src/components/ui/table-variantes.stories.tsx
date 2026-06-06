@@ -27,6 +27,7 @@ const invoices = [
 
 const meta = {
   title: "UI/Table/Variantes",
+  tags: ["tables"],
   component: Table,
   parameters: {
     layout: "padded",

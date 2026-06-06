@@ -11,6 +11,7 @@ const IMG_BROKEN = "https://example.invalid/broken-avatar.jpg";
 
 const meta = {
   title: "UI/Avatar/Estados",
+  tags: ["display"],
   component: Avatar,
   parameters: {
     layout: "centered",

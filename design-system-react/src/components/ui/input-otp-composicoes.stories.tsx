@@ -11,6 +11,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/InputOTP/Composições",
+  tags: ["form"],
   component: InputOTP,
   parameters: {
     layout: "centered",

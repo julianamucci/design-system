@@ -4,6 +4,7 @@ import { Separator } from "./separator";
 
 const meta = {
   title: "UI/Separator/Estados",
+  tags: ["layout"],
   component: Separator,
   parameters: {
     layout: "centered",

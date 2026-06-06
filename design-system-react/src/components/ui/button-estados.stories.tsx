@@ -5,6 +5,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/Button/Estados",
+  tags: ["form"],
   component: Button,
   args: {
     onClick: fn(),

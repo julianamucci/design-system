@@ -20,6 +20,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/DropdownMenu/Composições",
+  tags: ["overlay"],
   component: DropdownMenu,
   parameters: {
     layout: "centered",

@@ -13,6 +13,7 @@ import {
 
 const meta = {
   title: "UI/Select/Variantes",
+  tags: ["form"],
   component: Select,
   parameters: {
     layout: "centered",

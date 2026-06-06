@@ -22,6 +22,7 @@ import {
 
 const meta = {
   title: "UI/ContextMenu/Composições",
+  tags: ["overlay"],
   component: ContextMenu,
   parameters: {
     layout: "centered",

@@ -22,6 +22,7 @@ const DEMO_IMAGE_AVATAR =
 
 const meta = {
   title: "UI/Card/Composições",
+  tags: ["layout"],
   component: Card,
   parameters: {
     layout: "centered",

@@ -13,6 +13,7 @@ import { LayoutIcon, TypeIcon, MinusIcon } from "lucide-react";
 
 const meta = {
   title: "UI/Command/Estados",
+  tags: ["overlay"],
   component: Command,
   parameters: {
     layout: "centered",

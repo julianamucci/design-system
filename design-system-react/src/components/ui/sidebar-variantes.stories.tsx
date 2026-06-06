@@ -103,6 +103,7 @@ function SidebarPreview({ variant, collapsible = "offcanvas", side = "left" }: S
 
 const meta = {
   title: "UI/Sidebar/Variantes",
+  tags: ["layout"],
   component: Sidebar,
   parameters: {
     layout: "fullscreen",

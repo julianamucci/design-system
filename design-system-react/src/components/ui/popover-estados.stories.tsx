@@ -13,6 +13,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/Popover/Estados",
+  tags: ["overlay"],
   component: Popover,
   parameters: {
     layout: "centered",

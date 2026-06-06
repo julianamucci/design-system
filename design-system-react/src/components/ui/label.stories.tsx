@@ -8,7 +8,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Label",
   component: Label,
-  tags: ["autodocs"],
+  tags: ["autodocs", "form"],
   parameters: {
     layout: "centered",
     docs: { page: withAutoDocsTab(LabelDocs) },

@@ -5,6 +5,7 @@ import { Button } from "./button";
 
 const meta = {
   title: "UI/Button/Tamanhos",
+  tags: ["form"],
   component: Button,
   parameters: {
     controls: { disable: true },

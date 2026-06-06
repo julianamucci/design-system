@@ -10,6 +10,7 @@ import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 
 const meta = {
   title: "UI/ToggleGroup/Composições",
+  tags: ["form"],
   component: ToggleGroup,
   parameters: {
     layout: "centered",

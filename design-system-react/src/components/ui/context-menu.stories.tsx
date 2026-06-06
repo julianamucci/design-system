@@ -17,7 +17,7 @@ import {
 const meta = {
   title: "UI/ContextMenu",
   component: ContextMenu,
-  tags: ["autodocs"],
+  tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",
     docs: {

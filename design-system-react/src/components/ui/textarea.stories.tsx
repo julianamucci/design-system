@@ -9,7 +9,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 const meta = {
   title: "UI/Textarea",
   component: Textarea,
-  tags: ["autodocs"],
+  tags: ["autodocs", "form"],
   parameters: {
     docs: { page: withAutoDocsTab(TextareaDocs) },
   },

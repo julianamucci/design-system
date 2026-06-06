@@ -17,6 +17,7 @@ import { track } from "@/lib/analytics";
 
 const meta = {
   title: "UI/Sheet/Composições",
+  tags: ["disclosure"],
   component: Sheet,
   parameters: {
     layout: "centered",

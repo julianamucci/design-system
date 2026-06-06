@@ -5,6 +5,7 @@ import { Label } from "./label";
 
 const meta = {
   title: "UI/Switch/Estados",
+  tags: ["form"],
   component: Switch,
   parameters: {
     layout: "centered",

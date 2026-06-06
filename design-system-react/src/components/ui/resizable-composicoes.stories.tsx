@@ -8,6 +8,7 @@ import {
 
 const meta = {
   title: "UI/Resizable/Composições",
+  tags: ["layout"],
   component: ResizablePanelGroup,
   parameters: {
     layout: "centered",

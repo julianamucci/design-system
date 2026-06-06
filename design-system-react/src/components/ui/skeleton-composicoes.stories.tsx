@@ -5,6 +5,7 @@ import { AspectRatio } from "./aspect-ratio";
 
 const meta = {
   title: "UI/Skeleton/Composições",
+  tags: ["feedback"],
   component: Skeleton,
   parameters: {
     layout: "centered",

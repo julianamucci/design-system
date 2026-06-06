@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 
 const meta = {
   title: "UI/Carousel/Composições",
+  tags: ["display"],
   component: Carousel,
   parameters: {
     layout: "centered",

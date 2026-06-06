@@ -5,6 +5,7 @@ import { Alert, AlertTitle, AlertDescription } from "./alert";
 
 const meta = {
   title: "UI/Alert/Estados",
+  tags: ["feedback"],
   component: Alert,
 } satisfies Meta<typeof Alert>;
 
