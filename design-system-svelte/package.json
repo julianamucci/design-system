@@ -14,7 +14,8 @@
     "test-storybook": "test-storybook --url http://127.0.0.1:6008",
     "test-storybook:component": "test-storybook --url http://127.0.0.1:6008",
     "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npx http-server storybook-static --port 6008 --silent\" \"npx wait-on tcp:6008 && npm run test-storybook\"",
-    "chromatic": "npx chromatic"
+    "chromatic": "npx chromatic",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@tanstack/svelte-virtual": "^3.13.28",
@@ -61,6 +62,7 @@
     "http-server": "^14.1.1",
     "mode-watcher": "^1.1.0",
     "paneforge": "^1.0.2",
+    "patch-package": "^8.0.1",
     "playwright": "^1.59.1",
     "storybook": "^10.4.0",
     "svelte-sonner": "^1.1.0",

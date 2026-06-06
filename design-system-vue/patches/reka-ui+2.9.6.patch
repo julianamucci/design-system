@@ -1,0 +1,26 @@
+diff --git a/node_modules/reka-ui/dist/NavigationMenu/NavigationMenuTrigger.cjs b/node_modules/reka-ui/dist/NavigationMenu/NavigationMenuTrigger.cjs
+index 32a784b..8f6948e 100644
+--- a/node_modules/reka-ui/dist/NavigationMenu/NavigationMenuTrigger.cjs
++++ b/node_modules/reka-ui/dist/NavigationMenu/NavigationMenuTrigger.cjs
+@@ -133,7 +133,7 @@ var NavigationMenuTrigger_vue_vue_type_script_setup_true_lang_default = /* @__PU
+ 			}), open.value ? ((0, vue.openBlock)(), (0, vue.createElementBlock)(vue.Fragment, { key: 0 }, [(0, vue.createVNode)((0, vue.unref)(require_VisuallyHidden_VisuallyHidden.VisuallyHidden_default), {
+ 				ref: setFocusProxyRef,
+ 				"aria-hidden": "true",
+-				tabindex: 0,
++				tabindex: -1,
+ 				onFocus: handleVisuallyHiddenFocus
+ 			}), (0, vue.unref)(menuContext).viewport ? ((0, vue.openBlock)(), (0, vue.createElementBlock)("span", {
+ 				key: 0,
+diff --git a/node_modules/reka-ui/dist/NavigationMenu/NavigationMenuTrigger.js b/node_modules/reka-ui/dist/NavigationMenu/NavigationMenuTrigger.js
+index 9f06816..68a53e7 100644
+--- a/node_modules/reka-ui/dist/NavigationMenu/NavigationMenuTrigger.js
++++ b/node_modules/reka-ui/dist/NavigationMenu/NavigationMenuTrigger.js
+@@ -132,7 +132,7 @@ var NavigationMenuTrigger_vue_vue_type_script_setup_true_lang_default = /* @__PU
+ 			}), open.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createVNode(unref(VisuallyHidden_default), {
+ 				ref: setFocusProxyRef,
+ 				"aria-hidden": "true",
+-				tabindex: 0,
++				tabindex: -1,
+ 				onFocus: handleVisuallyHiddenFocus
+ 			}), unref(menuContext).viewport ? (openBlock(), createElementBlock("span", {
+ 				key: 0,

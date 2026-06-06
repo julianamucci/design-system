@@ -1,0 +1,13 @@
+diff --git a/node_modules/svelte-sonner/dist/Toast.svelte b/node_modules/svelte-sonner/dist/Toast.svelte
+index 1111111..2222222 100644
+--- a/node_modules/svelte-sonner/dist/Toast.svelte
++++ b/node_modules/svelte-sonner/dist/Toast.svelte
+@@ -331,7 +331,7 @@
+
+ <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+ <li
+-	tabindex={0}
++	tabindex={-1}
+ 	bind:this={toastRef}
+ 	class={cn(
+ 		restProps.class,

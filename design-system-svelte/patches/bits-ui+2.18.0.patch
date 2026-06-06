@@ -1,0 +1,26 @@
+diff --git a/node_modules/bits-ui/dist/bits/navigation-menu/navigation-menu.svelte.js b/node_modules/bits-ui/dist/bits/navigation-menu/navigation-menu.svelte.js
+index 1111111..2222222 100644
+--- a/node_modules/bits-ui/dist/bits/navigation-menu/navigation-menu.svelte.js
++++ b/node_modules/bits-ui/dist/bits/navigation-menu/navigation-menu.svelte.js
+@@ -404,7 +404,7 @@
+     }));
+     focusProxyProps = $derived.by(() => ({
+         id: this.focusProxyId.current,
+-        tabindex: 0,
++        tabindex: -1,
+         onfocus: this.focusProxyOnFocus,
+         ...this.focusProxyAttachment,
+     }));
+diff --git a/node_modules/bits-ui/dist/bits/navigation-menu/navigation-menu.svelte.d.ts b/node_modules/bits-ui/dist/bits/navigation-menu/navigation-menu.svelte.d.ts
+index 1111111..2222222 100644
+--- a/node_modules/bits-ui/dist/bits/navigation-menu/navigation-menu.svelte.d.ts
++++ b/node_modules/bits-ui/dist/bits/navigation-menu/navigation-menu.svelte.d.ts
+@@ -191,7 +191,7 @@
+     };
+     readonly focusProxyProps: {
+         readonly id: string;
+-        readonly tabindex: 0;
++        readonly tabindex: -1;
+         readonly onfocus: FocusEventHandler<HTMLElement>;
+     };
+ }

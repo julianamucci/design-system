@@ -1,0 +1,28 @@
+diff --git a/node_modules/@base-ui/react/esm/utils/FocusGuard.js b/node_modules/@base-ui/react/esm/utils/FocusGuard.js
+index 831f386..1b5ea86 100644
+--- a/node_modules/@base-ui/react/esm/utils/FocusGuard.js
++++ b/node_modules/@base-ui/react/esm/utils/FocusGuard.js
+@@ -20,7 +20,8 @@ export const FocusGuard = /*#__PURE__*/React.forwardRef(function FocusGuard(prop
+     }
+   }, []);
+   const restProps = {
+-    tabIndex: 0,
++    // PATCH: a11y — tabIndex -1 evita violação axe `aria-hidden-focus` no FocusGuard com aria-hidden=true. Mantém o guard no DOM (não tab-stop, mas ainda receptor de focus programático). Ver PATCHES.md#base-ui-focus-guard-tabindex
++    tabIndex: -1,
+     // Role is only for VoiceOver
+     role
+   };
+diff --git a/node_modules/@base-ui/react/utils/FocusGuard.js b/node_modules/@base-ui/react/utils/FocusGuard.js
+index 3b22513..e04af5a 100644
+--- a/node_modules/@base-ui/react/utils/FocusGuard.js
++++ b/node_modules/@base-ui/react/utils/FocusGuard.js
+@@ -25,7 +25,8 @@ const FocusGuard = exports.FocusGuard = /*#__PURE__*/React.forwardRef(function F
+     }
+   }, []);
+   const restProps = {
+-    tabIndex: 0,
++    // PATCH: a11y — tabIndex -1 evita violação axe `aria-hidden-focus` no FocusGuard com aria-hidden=true. Mantém o guard no DOM (não tab-stop, mas ainda receptor de focus programático). Ver PATCHES.md#base-ui-focus-guard-tabindex
++    tabIndex: -1,
+     // Role is only for VoiceOver
+     role
+   };

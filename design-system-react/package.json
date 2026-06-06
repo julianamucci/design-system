@@ -17,7 +17,8 @@
     "test-storybook": "test-storybook --url http://127.0.0.1:6006",
     "test-storybook:component": "test-storybook --url http://127.0.0.1:6006",
     "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npx http-server storybook-static --port 6006 --silent\" \"npx wait-on tcp:6006 && npm run test-storybook\"",
-    "chromatic": "npx chromatic"
+    "chromatic": "npx chromatic",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
@@ -78,6 +79,7 @@
     "eslint-plugin-storybook": "^10.4.0",
     "globals": "^17.4.0",
     "http-server": "^14.1.1",
+    "patch-package": "^8.0.1",
     "playwright": "^1.59.1",
     "postcss": "^8.5.9",
     "storybook": "^10.4.0",
