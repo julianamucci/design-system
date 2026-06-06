@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test": "vitest run",
     "storybook": "storybook dev -p 6008",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook --url http://127.0.0.1:6008",
