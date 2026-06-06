@@ -54,6 +54,7 @@
 @import "./components/dialog.css";
 @import "./components/sheet.css";
 @import "./components/table.css";
+@import "./components/data-table.css";
 @import "./components/select.css";
 @import "./components/slider.css";
 @import "./components/command.css";
