@@ -35,6 +35,7 @@ const { filterState } = useCommand()
         v-model="filterState.search"
         data-slot="command-input"
         auto-focus
+        :aria-label="($attrs['aria-label'] as string) || ($attrs.placeholder as string) || 'Buscar'"
         :class="cn('w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50', props.class)"
       />
       <InputGroupAddon>

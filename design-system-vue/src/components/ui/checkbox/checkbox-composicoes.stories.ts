@@ -258,7 +258,7 @@ export const EmFormulario: Story = {
           />
         </div>
         <div class="flex items-start gap-2">
-          <Checkbox id="form-terms" name="terms" value="accepted" required class="mt-0.5" />
+          <Checkbox id="form-terms" value="accepted" required class="mt-0.5" />
           <div class="space-y-1">
             <label for="form-terms" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               Aceito os termos e condições

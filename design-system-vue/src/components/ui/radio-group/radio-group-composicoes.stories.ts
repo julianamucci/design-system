@@ -115,7 +115,7 @@ export const EmFormulario: Story = {
 
         <fieldset class="space-y-2">
           <legend class="text-sm font-medium mb-1">Forma de pagamento</legend>
-          <RadioGroup name="payment" aria-label="Forma de pagamento" required class="grid gap-2">
+          <RadioGroup aria-label="Forma de pagamento" required class="grid gap-2">
             <div class="flex items-center gap-2">
               <RadioGroupItem value="cartao" id="form-cartao" />
               <Label :for="'form-cartao'">Cartão de crédito</Label>

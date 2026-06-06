@@ -105,9 +105,9 @@ export const ComCheckboxItems: Story = {
           <DropdownMenuContent side="bottom" align="start">
             <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuCheckboxItem :checked="showStatus" @update:checked="(v) => showStatus = v">Status</DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem :checked="showActivity" @update:checked="(v) => showActivity = v">Atividade</DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem :checked="showPanel" @update:checked="(v) => showPanel = v">Painel</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem v-model="showStatus">Status</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem v-model="showActivity">Atividade</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem v-model="showPanel">Painel</DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

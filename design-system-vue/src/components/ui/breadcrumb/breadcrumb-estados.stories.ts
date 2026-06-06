@@ -46,7 +46,7 @@ export const Simple: Story = {
     },
     setup() {
       const onNavigate = (args as { onNavigate: (payload: unknown) => void }).onNavigate;
-      const handleClick = (label: string) => (e: Event) => {
+      const handleClick = (label: string, e: Event) => {
         e.preventDefault();
         onNavigate({ event: 'navigation_click', label });
       };
@@ -56,11 +56,11 @@ export const Simple: Story = {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="#" @click="handleClick('Início')">Início</BreadcrumbLink>
+            <BreadcrumbLink href="#" @click="(e) => handleClick('Início', e)">Início</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="#" @click="handleClick('Componentes')">Componentes</BreadcrumbLink>
+            <BreadcrumbLink href="#" @click="(e) => handleClick('Componentes', e)">Componentes</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
