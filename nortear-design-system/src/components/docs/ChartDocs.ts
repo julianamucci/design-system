@@ -162,7 +162,7 @@ export function createChartDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add chart',
+      installNote: 'npm install echarts',
     });
     headerSlot.replaceChildren(header);
   }
@@ -300,7 +300,6 @@ export function createChartDocs(): HTMLElement {
                     data: chartData,
                     type: 'bar',
                     height: 160,
-                    colors: ['#60a5fa', '#34d399', '#f59e0b', '#f87171', '#a78bfa', '#fb923c'],
                   }),
                 );
                 return wrap;
@@ -336,7 +335,7 @@ export function createChartDocs(): HTMLElement {
           title: t('import.title'),
           description: t('import.basecoat'),
           code: `import { createChart } from '@/components/ui/chart';`,
-          secondaryDescription: t('import.withRecharts'),
+          secondaryDescription: t('import.withBuilders'),
           secondaryCode: `// Basecoat — uso básico
 const el = createChart({
   data: [

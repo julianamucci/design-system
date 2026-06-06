@@ -1,129 +1,42 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
-import { expect } from 'storybook/test';
-import { ChartContainer, ChartLegendContent, ChartTooltipContent, type ChartConfig } from './index';
-import { VisXYContainer, VisGroupedBar, VisAxis, VisCrosshair } from '@unovis/vue';
-import { Card } from '@/components/ui/card';
+import { expect, waitFor } from 'storybook/test';
+import { h } from 'vue';
+import { ChartContainer, buildBarOption } from './index';
 
 const chartData = [
-  { month: 'Jan', desktop: 186, mobile: 80 },
-  { month: 'Feb', desktop: 305, mobile: 200 },
-  { month: 'Mar', desktop: 237, mobile: 120 },
-  { month: 'Apr', desktop: 73,  mobile: 190 },
-  { month: 'May', desktop: 209, mobile: 130 },
-  { month: 'Jun', desktop: 214, mobile: 140 },
+  { label: 'Jan', value: 186 }, { label: 'Feb', value: 305 },
+  { label: 'Mar', value: 237 }, { label: 'Apr', value: 73 },
 ];
 
-const multiConfig: ChartConfig = {
-  desktop: { label: 'Desktop', color: 'var(--chart-1)' },
-  mobile:  { label: 'Mobile',  color: 'var(--chart-2)' },
+const meta: Meta = {
+  parameters: { controls: { disable: true }, actions: { disable: true } },
+  title: 'UI/Chart/Composições',
 };
-
-const meta = {
-  title: 'UI/Chart/Composicoes',
-  component: ChartContainer,
-  parameters: {
-    controls: { disable: true },
-    actions: { disable: true },
-    layout: 'centered',
-  },
-} satisfies Meta<any>;
-
 export default meta;
-type Story = StoryObj<Meta<any>>;
+type Story = StoryObj;
+
+async function expectRendered(el: HTMLElement) {
+  await waitFor(() => {
+    const n = el.querySelector('[data-slot=chart] svg, [data-slot=chart] canvas');
+    expect(n).not.toBeNull();
+  }, { timeout: 2000 });
+}
 
 export const ComCard: Story = {
-  render: () => ({
-    components: { ChartContainer, ChartLegendContent, VisXYContainer, VisGroupedBar, VisAxis, Card },
-    setup() {
-      const data = chartData;
-      const config = multiConfig;
-      const xTicks = data.map(d => d.month);
-      const barX = (_d: typeof chartData[number], i: number) => i;
-      const barDesktop = (d: typeof chartData[number]) => d.desktop;
-      const barMobile = (d: typeof chartData[number]) => d.mobile;
-      return { data, config, xTicks, barX, barDesktop, barMobile };
-    },
-    template: `
-      <Card class="p-6 w-[520px]">
-        <h3 class="text-sm font-semibold mb-1">Acessos mensais</h3>
-        <p class="text-xs text-muted-foreground mb-4">Desktop vs Mobile — Jan a Jun</p>
-        <ChartContainer
-          :config="config"
-          class="h-[280px] w-full"
-          aria-label="Bar chart dentro de Card: acessos mensais por dispositivo"
-        >
-          <template #default>
-            <VisXYContainer :data="data" :height="280">
-              <VisGroupedBar
-                :x="barX"
-                :y="[barDesktop, barMobile]"
-                :color="['var(--chart-1)', 'var(--chart-2)']"
-              />
-              <VisAxis type="x" :tick-format="(i) => xTicks[i]" />
-            </VisXYContainer>
-          </template>
-        </ChartContainer>
-        <ChartLegendContent :config="config" class="mt-3" />
-      </Card>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
-  },
+  render: () => h('div', { class: 'rounded-lg border border-border bg-card p-6 shadow-sm w-[480px]' }, [
+    h('h3', { class: 'text-sm font-medium mb-1' }, 'Acessos por mês'),
+    h('p', { class: 'text-xs text-muted-foreground mb-4' }, 'Janeiro — Abril'),
+    h(ChartContainer, { option: buildBarOption({ data: chartData }), class: 'h-[200px] w-full' }),
+  ]),
+  parameters: { docs: { description: { story: 'Chart dentro de Card — composição padrão para dashboards.' } } },
+  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };
 
-export const TooltipCustom: Story = {
-  render: () => ({
-    components: { ChartContainer, ChartLegendContent, VisXYContainer, VisGroupedBar, VisAxis, VisCrosshair },
-    setup() {
-      const data = chartData;
-      const config = multiConfig;
-      const xTicks = data.map(d => d.month);
-      const barX = (_d: typeof chartData[number], i: number) => i;
-      const barDesktop = (d: typeof chartData[number]) => d.desktop;
-      const barMobile = (d: typeof chartData[number]) => d.mobile;
-
-      const tooltipTemplate = (d: typeof chartData[number]) => {
-        return `<div class="rounded-lg border bg-background p-2 shadow-sm text-xs">
-          <div class="font-semibold mb-1">${xTicks[data.indexOf(d)]}</div>
-          <div class="flex items-center gap-2">
-            <span class="inline-block w-2 h-2 rounded-sm" style="background:var(--chart-1)"></span>
-            Desktop: <strong>${d.desktop}</strong>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="inline-block w-2 h-2 rounded-sm" style="background:var(--chart-2)"></span>
-            Mobile: <strong>${d.mobile}</strong>
-          </div>
-        </div>`;
-      };
-
-      return { data, config, xTicks, barX, barDesktop, barMobile, tooltipTemplate };
-    },
-    template: `
-      <div class="flex flex-col gap-4 w-[480px]">
-        <ChartContainer
-          :config="config"
-          :cursor="true"
-          class="h-[300px] w-full"
-          aria-label="Bar chart com tooltip customizado: acessos mensais"
-        >
-          <template #default>
-            <VisXYContainer :data="data" :height="300">
-              <VisGroupedBar
-                :x="barX"
-                :y="[barDesktop, barMobile]"
-                :color="['var(--chart-1)', 'var(--chart-2)']"
-              />
-              <VisAxis type="x" :tick-format="(i) => xTicks[i]" />
-              <VisCrosshair color="var(--border)" :template="tooltipTemplate" />
-            </VisXYContainer>
-          </template>
-        </ChartContainer>
-        <ChartLegendContent :config="config" />
-      </div>
-    `,
+export const TituloEmbutido: Story = {
+  render: () => h(ChartContainer, {
+    option: buildBarOption({ data: chartData, title: 'Vendas mensais' }),
+    class: 'h-[260px] w-[480px]',
   }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
-  },
+  parameters: { docs: { description: { story: 'Título no option — útil sem wrapper de card.' } } },
+  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };

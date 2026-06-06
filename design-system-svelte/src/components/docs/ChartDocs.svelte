@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { BarChart, LineChart } from 'layerchart';
-  import { ChartContainer, ChartTooltip, type ChartConfig } from '@/components/ui/chart';
+  import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption } from '@/components/ui/chart';
   import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -108,14 +107,22 @@
     value2: [120, 198, 145, 220, 175, 310][i],
   }));
 
-  const singleConfig: ChartConfig = {
-    value: { label: 'Acessos', color: 'var(--chart-1)' },
-  };
+  // Para a API ECharts: xAxis + series.
+  const xMonths = monthlyData.map(d => d.month);
+  const singleSeries = [{ name: 'Vendas', data: monthlyData.map(d => d.value) }];
+  const multiSeries = [
+    { name: 'Vendas',     data: monthlyData.map(d => d.value) },
+    { name: 'Devoluções', data: multiSeriesData.map(d => d.value2 ?? 0) },
+  ];
+  const pieData = [
+    { label: 'Desktop', value: 1224 },
+    { label: 'Mobile',  value: 860 },
+    { label: 'Tablet',  value: 320 },
+  ];
 
-  const multiConfig: ChartConfig = {
-    value:  { label: 'Desktop', color: 'var(--chart-1)' },
-    value2: { label: 'Mobile',  color: 'var(--chart-2)' },
-  };
+  
+
+  
 
   // ─── Demo state ──────────────────────────────────────────────────────────────
   type DemoType = 'bar' | 'line';
@@ -123,85 +130,69 @@
 
   // ─── Code strings ────────────────────────────────────────────────────────────
 
-  const codeImportBasic = `import { ChartContainer, ChartTooltip } from '@/components/ui/chart';
-import { BarChart, LineChart } from 'layerchart';`;
+  const codeImportBasic = `import { ChartContainer } from '@/components/ui/chart';`;
 
-  const codeImportSecondary = `// ChartConfig — mapeie chaves de dados para config visual
-import type { ChartConfig } from '@/components/ui/chart';
+  const codeImportSecondary = `import {
+  ChartContainer,
+  buildBarOption,
+  buildLineOption,
+  buildAreaOption,
+  buildPieOption,
+} from '@/components/ui/chart';`;
 
-const chartConfig = {
-  desktop: { label: 'Desktop', color: 'hsl(var(--chart-1))' },
-  mobile:  { label: 'Mobile',  color: 'hsl(var(--chart-2))' },
-} satisfies ChartConfig;`;
+  const codeBar = `<ChartContainer
+  option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
+  class="h-[240px] w-full"
+  aria-label="Gráfico de barras: acessos mensais"
+/>`;
 
-  const codePie = `<!-- layerchart não inclui PieChart — use uma lib SVG auxiliar
-     ou SVG puro para gráficos de pizza na stack Svelte. -->
-<ChartContainer config={chartConfig} aria-label="Gráfico de pizza">
-  <!-- PieChart via svelte-path-utils ou similar -->
-</ChartContainer>`;
+  const codeLine = `<ChartContainer
+  option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
+  class="h-[240px] w-full"
+  aria-label="Gráfico de linhas: tendência mensal"
+/>`;
 
-  const codeBar = `<ChartContainer config={chartConfig} aria-label="Gráfico de barras: acessos mensais">
-  <BarChart
-    {data}
-    x="month"
-    y="value"
-    series={[{ key: 'value', value: (d) => d.value, color: 'var(--color-value)' }]}
-    bandPadding={0.3}
-  >
-    <ChartTooltip />
-  </BarChart>
-</ChartContainer>`;
+  const codeArea = `<ChartContainer
+  option={buildAreaOption({ xAxis: xMonths, series: multiSeries })}
+  class="h-[240px] w-full"
+  aria-label="Gráfico de área: volume mensal"
+/>`;
 
-  const codeLine = `<ChartContainer config={chartConfig} aria-label="Gráfico de linhas: acessos mensais">
-  <LineChart
-    {data}
-    x="month"
-    y="value"
-    series={[{ key: 'value', value: (d) => d.value, color: 'var(--color-value)' }]}
-  >
-    <ChartTooltip />
-  </LineChart>
-</ChartContainer>`;
+  const codePie = `<ChartContainer
+  option={buildPieOption({ data: pieData })}
+  class="h-[280px] w-full"
+  aria-label="Gráfico de pizza: distribuição por dispositivo"
+/>`;
 
-  const codeMulti = `const chartConfig = {
-  value:  { label: 'Desktop', color: 'var(--chart-1)' },
-  value2: { label: 'Mobile',  color: 'var(--chart-2)' },
-};
+  const codeMulti = `<ChartContainer
+  option={buildBarOption({ xAxis: xMonths, series: multiSeries, title: 'Vendas' })}
+  class="h-[280px] w-full"
+  aria-label="Gráfico multi-séries: Vendas por categoria"
+/>`;
 
-<ChartContainer config={chartConfig} aria-label="Gráfico multi-séries">
-  <BarChart
-    {data}
-    x="month"
-    y="value"
-    series={[
-      { key: 'value',  value: (d) => d.value,  color: 'var(--color-value)'  },
-      { key: 'value2', value: (d) => d.value2, color: 'var(--color-value2)' },
-    ]}
-    seriesLayout="group"
-    bandPadding={0.3}
-  >
-    <ChartTooltip />
-  </BarChart>
-</ChartContainer>`;
-
-  const interfaceCode = `// ChartContainer
+  const interfaceCode = `// ChartContainer (Svelte 5)
 interface ChartContainerProps {
-  config: ChartConfig;
-  id?: string;
+  option: EChartsCoreOption;
   class?: string;
-  children?: Snippet;
+  renderer?: 'svg' | 'canvas';
 }
 
-// ChartConfig
-type ChartConfig = Record<string, {
-  label?: string;
-  icon?: Component;
-  color?: string;    // OU
-  theme?: Record<'light' | 'dark', string>;
-}>;
+// Builders auxiliares — montam o option a partir de dados simples.
+export interface ChartDataPoint { label: string; value: number }
+export interface ChartSeries     { name: string; data: number[]; color?: string }
 
-// ChartTooltip (chip de layerchart)
-// Sem props obrigatórias — consome contexto do ChartContainer`;
+interface OptionsBase {
+  data?: ChartDataPoint[];
+  xAxis?: Array<string | number>;
+  series?: ChartSeries[];
+  title?: string;
+  showLegend?: boolean;
+}
+
+declare function buildBarOption(o: OptionsBase): EChartsCoreOption;
+declare function buildLineOption(o: OptionsBase): EChartsCoreOption;
+declare function buildAreaOption(o: OptionsBase): EChartsCoreOption;
+declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
 
   const codeTokens = `/* Em globals.css — personalizar as cores das séries */
 :root {
@@ -220,7 +211,7 @@ type ChartConfig = Record<string, {
       description={$tStore('description')}
       category={$tStore('category')}
       type={$tStore('type')}
-      installNote="Svelte: layerchart + ChartContainer customizado"
+      installNote="npm install echarts"
     />
   {/snippet}
 
@@ -253,31 +244,10 @@ type ChartConfig = Record<string, {
           </button>
         </div>
         <ChartContainer
-          config={singleConfig}
+          option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
           class="h-[220px] w-full max-w-[400px]"
           aria-label={$tStore('demonstration.labels.chartTitle')}
-        >
-          {#if demoType === 'bar'}
-            <BarChart
-              data={monthlyData}
-              x="month"
-              y="value"
-              series={[{ key: 'value', value: (d: any) => d.value, color: 'var(--color-value)', label: $tStore('demonstration.labels.tooltipLabel') }]}
-              bandPadding={0.3}
-            >
-              <ChartTooltip />
-            </BarChart>
-          {:else}
-            <LineChart
-              data={monthlyData}
-              x="month"
-              y="value"
-              series={[{ key: 'value', value: (d: any) => d.value, color: 'var(--color-value)', label: $tStore('demonstration.labels.tooltipLabel') }]}
-            >
-              <ChartTooltip />
-            </LineChart>
-          {/if}
-        </ChartContainer>
+         />
       </div>
     {/snippet}
   </DocsDemonstration>
@@ -292,7 +262,7 @@ type ChartConfig = Record<string, {
       $tStore('anatomy.item4'),
     ]}
     structureLabel={$tStore('anatomy.structureLabel')}
-    structureCode={`<ChartContainer config={chartConfig} aria-label="...">\n  <BarChart {data} x="month" y="value" series={[...]}>\n    <ChartTooltip />\n  </BarChart>\n</ChartContainer>`}
+    structureCode={`<ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} aria-label="..." />`}
   />
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
@@ -384,74 +354,30 @@ type ChartConfig = Record<string, {
 
   {#snippet doPair1()}
     <ChartContainer
-      config={multiConfig}
+      option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
       class="h-[140px] w-full"
       aria-label="Gráfico multi-séries com legenda: Desktop e Mobile"
-    >
-      <BarChart
-        data={multiSeriesData}
-        x="month"
-        y="value"
-        series={[
-          { key: 'value',  value: (d: any) => d.value,  color: 'var(--color-value)',  label: 'Desktop' },
-          { key: 'value2', value: (d: any) => d.value2, color: 'var(--color-value2)', label: 'Mobile'  },
-        ]}
-        seriesLayout="group"
-        bandPadding={0.3}
-      >
-        <ChartTooltip />
-      </BarChart>
-    </ChartContainer>
+     />
   {/snippet}
   {#snippet dontPair1()}
     <ChartContainer
-      config={multiConfig}
+      option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
       class="h-[140px] w-full"
       aria-label="Gráfico multi-séries sem legenda"
-    >
-      <BarChart
-        data={multiSeriesData}
-        x="month"
-        y="value"
-        series={[
-          { key: 'value',  value: (d: any) => d.value,  color: 'var(--color-value)'  },
-          { key: 'value2', value: (d: any) => d.value2, color: 'var(--color-value2)' },
-        ]}
-        seriesLayout="group"
-        bandPadding={0.3}
-      />
-    </ChartContainer>
+     />
   {/snippet}
   {#snippet doPair2()}
     <ChartContainer
-      config={singleConfig}
+      option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
       class="h-[140px] w-full"
       aria-label="Gráfico de barras: acessos mensais por dispositivo — com aria-label descritivo"
-    >
-      <BarChart
-        data={monthlyData}
-        x="month"
-        y="value"
-        series={[{ key: 'value', value: (d: any) => d.value, color: 'var(--color-value)', label: 'Acessos' }]}
-        bandPadding={0.3}
-      >
-        <ChartTooltip />
-      </BarChart>
-    </ChartContainer>
+     />
   {/snippet}
   {#snippet dontPair2()}
     <ChartContainer
-      config={singleConfig}
+      option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
       class="h-[140px] w-full"
-    >
-      <BarChart
-        data={monthlyData}
-        x="month"
-        y="value"
-        series={[{ key: 'value', value: (d: any) => d.value, color: 'var(--color-value)' }]}
-        bandPadding={0.3}
-      />
-    </ChartContainer>
+     />
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
@@ -467,72 +393,40 @@ type ChartConfig = Record<string, {
     title={$tStore('variants.title')}
     note={$tStore('variants.note')}
     items={[
-      { name: 'Bar',   description: stripHtml($tStore('variants.items.bar')),        code: codeBar,   preview: variantBar   },
-      { name: 'Linha', description: stripHtml($tStore('variants.items.line')),       code: codeLine,  preview: variantLine  },
-      { name: 'Multi', description: stripHtml($tStore('variants.items.multiSeries')), code: codeMulti, preview: variantMulti },
-      { name: 'Pie',   description: stripHtml($tStore('variants.items.pie')),        code: codePie,   preview: variantPie   },
+      { name: 'Bar',   description: stripHtml($tStore('variants.items.bar')),  code: codeBar,  preview: variantBar  },
+      { name: 'Linha', description: stripHtml($tStore('variants.items.line')), code: codeLine, preview: variantLine },
+      { name: 'Area',  description: stripHtml($tStore('variants.items.area')), code: codeArea, preview: variantArea },
+      { name: 'Pie',   description: stripHtml($tStore('variants.items.pie')),  code: codePie,  preview: variantPie  },
     ]}
   />
 
   {#snippet variantBar()}
     <ChartContainer
-      config={singleConfig}
+      option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
       class="h-[180px] w-[300px]"
       aria-label="Gráfico de barras: acessos mensais"
-    >
-      <BarChart
-        data={monthlyData}
-        x="month"
-        y="value"
-        series={[{ key: 'value', value: (d: any) => d.value, color: 'var(--color-value)', label: 'Acessos' }]}
-        bandPadding={0.3}
-      >
-        <ChartTooltip />
-      </BarChart>
-    </ChartContainer>
+    />
   {/snippet}
   {#snippet variantLine()}
     <ChartContainer
-      config={singleConfig}
+      option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
       class="h-[180px] w-[300px]"
       aria-label="Gráfico de linhas: acessos mensais"
-    >
-      <LineChart
-        data={monthlyData}
-        x="month"
-        y="value"
-        series={[{ key: 'value', value: (d: any) => d.value, color: 'var(--color-value)', label: 'Acessos' }]}
-      >
-        <ChartTooltip />
-      </LineChart>
-    </ChartContainer>
+    />
   {/snippet}
-  {#snippet variantMulti()}
+  {#snippet variantArea()}
     <ChartContainer
-      config={multiConfig}
-      class="h-[180px] w-[320px]"
-      aria-label="Gráfico multi-séries: Desktop e Mobile"
-    >
-      <BarChart
-        data={multiSeriesData}
-        x="month"
-        y="value"
-        series={[
-          { key: 'value',  value: (d: any) => d.value,  color: 'var(--color-value)',  label: 'Desktop' },
-          { key: 'value2', value: (d: any) => d.value2, color: 'var(--color-value2)', label: 'Mobile'  },
-        ]}
-        seriesLayout="group"
-        bandPadding={0.3}
-      >
-        <ChartTooltip />
-      </BarChart>
-    </ChartContainer>
+      option={buildAreaOption({ xAxis: xMonths, series: multiSeries })}
+      class="h-[180px] w-[300px]"
+      aria-label="Gráfico de área: volume mensal"
+    />
   {/snippet}
   {#snippet variantPie()}
-    <div class="flex items-center justify-center h-[180px] w-[220px] text-xs text-muted-foreground text-center px-4">
-      Pie chart não suportado nativamente em layerchart.<br />
-      Use SVG puro ou biblioteca auxiliar.
-    </div>
+    <ChartContainer
+      option={buildPieOption({ data: pieData })}
+      class="h-[200px] w-[220px]"
+      aria-label="Gráfico de pizza: distribuição por dispositivo"
+    />
   {/snippet}
 
   <!-- ── Composições ──────────────────────────────────────────────── -->
@@ -550,11 +444,7 @@ type ChartConfig = Record<string, {
     <CardTitle>Acessos mensais</CardTitle>
   </CardHeader>
   <CardContent>
-    <ChartContainer config={singleConfig} class="h-[200px] w-full" aria-label="...">
-      <BarChart {data} x="month" y="value" series={[{ key: 'value', value: (d) => d.value, color: 'var(--color-value)', label: 'Acessos' }]} bandPadding={0.3}>
-        <ChartTooltip />
-      </BarChart>
-    </ChartContainer>
+    <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="h-[200px] w-full" aria-label="..." />
   </CardContent>
 </Card>`,
         preview: compInCard,
@@ -563,14 +453,7 @@ type ChartConfig = Record<string, {
         name: $tStore('variants.compositions.multiSeriesWithLegend.name'),
         description: $tStore('variants.compositions.multiSeriesWithLegend.description'),
         useWhen: $tStore('variants.compositions.multiSeriesWithLegend.use'),
-        code: `<ChartContainer config={multiConfig} class="h-[200px] w-full" aria-label="Gráfico multi-séries: Desktop e Mobile">
-  <BarChart {data} x="month" y="value" series={[
-    { key: 'value',  value: (d) => d.value,  color: 'var(--color-value)',  label: 'Desktop' },
-    { key: 'value2', value: (d) => d.value2, color: 'var(--color-value2)', label: 'Mobile'  },
-  ]} seriesLayout="group" bandPadding={0.3}>
-    <ChartTooltip />
-  </BarChart>
-</ChartContainer>`,
+        code: `<ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="h-[200px] w-full" aria-label="Gráfico multi-séries: Desktop e Mobile" />`,
         preview: compMultiSeries,
       },
       {
@@ -582,9 +465,7 @@ type ChartConfig = Record<string, {
     <p class="text-xs text-muted-foreground">Acessos</p>
     <p class="text-2xl font-semibold">1.224</p>
   </div>
-  <ChartContainer config={singleConfig} class="h-[48px] w-[120px]" aria-label="Tendência de acessos">
-    <LineChart {data} x="month" y="value" series={[{ key: 'value', value: (d) => d.value, color: 'var(--color-value)' }]} />
-  </ChartContainer>
+  <ChartContainer option={buildLineOption({ xAxis: xMonths, series: multiSeries })} class="h-[48px] w-[120px]" aria-label="Tendência de acessos" />
 </div>`,
         preview: compSmallInline,
       },
@@ -597,9 +478,7 @@ type ChartConfig = Record<string, {
     Nenhum dado disponível para o período selecionado.
   </div>
 {:else}
-  <ChartContainer config={singleConfig} class="h-[200px] w-full" aria-label="...">
-    <!-- ... -->
-  </ChartContainer>
+  <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="h-[200px] w-full" aria-label="..." />
 {/if}`,
         preview: compEmptyState,
       },
@@ -613,44 +492,20 @@ type ChartConfig = Record<string, {
       </CardHeader>
       <CardContent>
         <ChartContainer
-          config={singleConfig}
+          option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
           class="h-[180px] w-full"
           aria-label="Gráfico de barras: acessos mensais"
-        >
-          <BarChart
-            data={monthlyData}
-            x="month"
-            y="value"
-            series={[{ key: 'value', value: (d: any) => d.value, color: 'var(--color-value)', label: 'Acessos' }]}
-            bandPadding={0.3}
-          >
-            <ChartTooltip />
-          </BarChart>
-        </ChartContainer>
+         />
       </CardContent>
     </Card>
   {/snippet}
 
   {#snippet compMultiSeries()}
     <ChartContainer
-      config={multiConfig}
+      option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
       class="h-[200px] w-full max-w-md"
       aria-label="Gráfico multi-séries: Desktop e Mobile"
-    >
-      <BarChart
-        data={multiSeriesData}
-        x="month"
-        y="value"
-        series={[
-          { key: 'value',  value: (d: any) => d.value,  color: 'var(--color-value)',  label: 'Desktop' },
-          { key: 'value2', value: (d: any) => d.value2, color: 'var(--color-value2)', label: 'Mobile'  },
-        ]}
-        seriesLayout="group"
-        bandPadding={0.3}
-      >
-        <ChartTooltip />
-      </BarChart>
-    </ChartContainer>
+     />
   {/snippet}
 
   {#snippet compSmallInline()}
@@ -660,17 +515,10 @@ type ChartConfig = Record<string, {
         <p class="text-2xl font-semibold">1.224</p>
       </div>
       <ChartContainer
-        config={singleConfig}
+        option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
         class="h-[48px] w-[120px]"
         aria-label="Tendência de acessos nos últimos 6 meses"
-      >
-        <LineChart
-          data={monthlyData}
-          x="month"
-          y="value"
-          series={[{ key: 'value', value: (d: any) => d.value, color: 'var(--color-value)' }]}
-        />
-      </ChartContainer>
+       />
     </div>
   {/snippet}
 
@@ -713,29 +561,10 @@ type ChartConfig = Record<string, {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'config',   type: 'ChartConfig',  defaultValue: '—',   required: 'Sim', description: stripHtml($tStore('props.table.config'))   },
-          { name: 'id',       type: 'string',        defaultValue: 'auto', required: 'Não', description: stripHtml($tStore('props.table.id'))       },
-          { name: 'class',    type: 'string',        defaultValue: '—',   required: 'Não', description: stripHtml($tStore('props.table.className')) },
-          { name: 'children', type: 'Snippet',       defaultValue: '—',   required: 'Sim', description: $tStore('props.table.children')            },
-        ],
-      },
-      {
-        title: $tStore('props.tooltipTitle'),
-        cols: {
-          prop: $tStore('props.table.prop'),
-          type: $tStore('props.table.type'),
-          default: $tStore('props.table.default'),
-          required: $tStore('props.table.required'),
-          description: $tStore('props.table.description'),
-        },
-        items: [
-          { name: 'indicator',      type: '"dot" | "line" | "dashed"', defaultValue: '"dot"',  required: 'Não', description: stripHtml($tStore('props.table.indicator'))      },
-          { name: 'hideLabel',      type: 'boolean',                   defaultValue: 'false',  required: 'Não', description: $tStore('props.table.hideLabel')                 },
-          { name: 'hideIndicator',  type: 'boolean',                   defaultValue: 'false',  required: 'Não', description: $tStore('props.table.hideIndicator')             },
-          { name: 'nameKey',        type: 'string',                    defaultValue: '—',      required: 'Não', description: stripHtml($tStore('props.table.nameKey'))        },
-          { name: 'labelKey',       type: 'string',                    defaultValue: '—',      required: 'Não', description: $tStore('props.table.labelKey')                  },
-          { name: 'formatter',      type: 'Snippet',                   defaultValue: '—',      required: 'Não', description: $tStore('props.table.formatter')                 },
-          { name: 'labelFormatter', type: 'function | null',           defaultValue: '—',      required: 'Não', description: $tStore('props.table.labelFormatter')            },
+          { name: 'option',     type: 'EChartsCoreOption', defaultValue: '—',     required: 'Sim', description: stripHtml($tStore('props.table.option'))    },
+          { name: 'renderer',   type: '"svg" | "canvas"',  defaultValue: '"svg"', required: 'Não', description: stripHtml($tStore('props.table.renderer'))  },
+          { name: 'class',      type: 'string',            defaultValue: '—',     required: 'Não', description: stripHtml($tStore('props.table.className')) },
+          { name: 'aria-label', type: 'string',            defaultValue: '—',     required: 'Sim', description: stripHtml($tStore('props.table.ariaLabel')) },
         ],
       },
       {
@@ -748,9 +577,11 @@ type ChartConfig = Record<string, {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'hideIcon',      type: 'boolean',          defaultValue: 'false',    required: 'Não', description: $tStore('props.table.hideIcon')      },
-          { name: 'nameKey',       type: 'string',           defaultValue: '—',        required: 'Não', description: stripHtml($tStore('props.table.nameKey'))  },
-          { name: 'verticalAlign', type: '"top" | "bottom"', defaultValue: '"bottom"', required: 'Não', description: $tStore('props.table.verticalAlign')  },
+          { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: stripHtml($tStore('props.table.data'))       },
+          { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: stripHtml($tStore('props.table.xAxis'))      },
+          { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.series')) },
+          { name: 'title',      type: 'string',                                       defaultValue: '—',    required: 'Não', description: stripHtml($tStore('props.table.title'))      },
+          { name: 'showLegend', type: 'boolean',                                      defaultValue: 'auto', required: 'Não', description: stripHtml($tStore('props.table.showLegend')) },
         ],
       },
     ]}
@@ -768,17 +599,16 @@ type ChartConfig = Record<string, {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--chart-1',          value: 'var(--color-[key])',        description: $tStore('tokens.table.chart1')         },
-      { token: '--chart-2',          value: 'var(--color-[key])',        description: $tStore('tokens.table.chart2')         },
-      { token: '--chart-3',          value: 'var(--color-[key])',        description: $tStore('tokens.table.chart3')         },
-      { token: '--chart-4',          value: 'var(--color-[key])',        description: $tStore('tokens.table.chart4')         },
-      { token: '--chart-5',          value: 'var(--color-[key])',        description: $tStore('tokens.table.chart5')         },
-      { token: '--primary',          value: 'var(--primary)',            description: $tStore('tokens.table.primary')        },
-      { token: '--muted',            value: 'bg-muted',                  description: $tStore('tokens.table.muted')          },
-      { token: '--muted-foreground', value: 'text-muted-foreground',     description: $tStore('tokens.table.mutedForeground') },
-      { token: '--border',           value: 'border-border',             description: $tStore('tokens.table.border')         },
-      { token: '--background',       value: 'bg-background',             description: $tStore('tokens.table.background')     },
-      { token: '--foreground',       value: 'text-foreground',           description: $tStore('tokens.table.foreground')     },
+      { token: '--chart-1',          value: 'color série 1',  description: $tStore('tokens.table.chart1')         },
+      { token: '--chart-2',          value: 'color série 2',  description: $tStore('tokens.table.chart2')         },
+      { token: '--chart-3',          value: 'color série 3',  description: $tStore('tokens.table.chart3')         },
+      { token: '--chart-4',          value: 'color série 4',  description: $tStore('tokens.table.chart4')         },
+      { token: '--chart-5',          value: 'color série 5',  description: $tStore('tokens.table.chart5')         },
+      { token: '--primary',          value: 'axisPointer',    description: $tStore('tokens.table.primary')        },
+      { token: '--muted-foreground', value: 'axisLabel',      description: $tStore('tokens.table.mutedForeground') },
+      { token: '--border',           value: 'axisLine + grid', description: $tStore('tokens.table.border')        },
+      { token: '--foreground',       value: 'title + tooltip', description: $tStore('tokens.table.foreground')    },
+      { token: '--card',             value: 'tooltip bg',     description: $tStore('tokens.table.card')           },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeTokens}

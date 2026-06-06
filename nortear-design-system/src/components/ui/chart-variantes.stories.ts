@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { createChart } from './chart';
 
 // ─── Shared data ──────────────────────────────────────────────────────────────
@@ -11,6 +11,12 @@ const chartData = [
   { label: 'Apr', value: 73 },
   { label: 'May', value: 209 },
   { label: 'Jun', value: 214 },
+];
+
+const pieData = [
+  { label: 'Desktop', value: 580 },
+  { label: 'Mobile',  value: 420 },
+  { label: 'Tablet',  value: 180 },
 ];
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -26,19 +32,21 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// Helper: aguarda echarts terminar a init (deferida via MutationObserver).
+async function expectChartRendered(canvasElement: HTMLElement): Promise<void> {
+  await waitFor(() => {
+    const renderedNode = canvasElement.querySelector('.nds-chart svg, .nds-chart canvas');
+    expect(renderedNode).not.toBeNull();
+  }, { timeout: 2000 });
+}
+
 // ─── Bar ──────────────────────────────────────────────────────────────────────
 
 export const Bar: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(
-      createChart({
-        data: chartData,
-        type: 'bar',
-        height: 200,
-      }),
-    );
+    wrap.appendChild(createChart({ data: chartData, type: 'bar', height: 200 }));
     return wrap;
   },
   parameters: {
@@ -49,15 +57,7 @@ export const Bar: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('SVG de bar chart está presente', async () => {
-      const svg = canvasElement.querySelector('svg[role="img"]');
-      await expect(svg).not.toBeNull();
-    });
-
-    await step('Barras (rect) renderizadas para cada ponto de dado', async () => {
-      const rects = canvasElement.querySelectorAll('rect[role="graphics-symbol"]');
-      await expect(rects.length).toBe(chartData.length);
-    });
+    await step('Chart renderizado', () => expectChartRendered(canvasElement));
   },
 };
 
@@ -67,36 +67,59 @@ export const Linha: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(
-      createChart({
-        data: chartData,
-        type: 'line',
-        height: 200,
-      }),
-    );
+    wrap.appendChild(createChart({ data: chartData, type: 'line', height: 200 }));
     return wrap;
   },
   parameters: {
     docs: {
       description: {
-        story: 'Tipo line — tendência contínua ao longo do tempo. Inclui área preenchida e pontos de dados.',
+        story: 'Tipo line — tendência contínua ao longo do tempo. Linha suave com pontos por dado.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('SVG de line chart está presente', async () => {
-      const svg = canvasElement.querySelector('svg[role="img"]');
-      await expect(svg).not.toBeNull();
-    });
+    await step('Chart renderizado', () => expectChartRendered(canvasElement));
+  },
+};
 
-    await step('Pontos (circle) renderizados para cada ponto de dado', async () => {
-      const circles = canvasElement.querySelectorAll('circle[role="graphics-symbol"]');
-      await expect(circles.length).toBe(chartData.length);
-    });
+// ─── Área ─────────────────────────────────────────────────────────────────────
 
-    await step('Path da linha está presente', async () => {
-      const path = canvasElement.querySelector('path[stroke]');
-      await expect(path).not.toBeNull();
-    });
+export const Area: Story = {
+  render: () => {
+    const wrap = document.createElement('div');
+    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.appendChild(createChart({ data: chartData, type: 'area', height: 200 }));
+    return wrap;
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Tipo area — linha com região preenchida embaixo. Para enfatizar volume/magnitude ao longo do tempo.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Chart renderizado', () => expectChartRendered(canvasElement));
+  },
+};
+
+// ─── Pie ──────────────────────────────────────────────────────────────────────
+
+export const Pie: Story = {
+  render: () => {
+    const wrap = document.createElement('div');
+    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.appendChild(createChart({ data: pieData, type: 'pie', height: 240 }));
+    return wrap;
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Tipo pie (donut) — composição de um total dividido em categorias. Use para até ~6 segmentos.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Chart renderizado', () => expectChartRendered(canvasElement));
   },
 };

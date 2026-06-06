@@ -37,7 +37,6 @@ export const CoresPersonalizadas: Story = {
         data: chartData,
         type: 'bar',
         height: 200,
-        colors: ['#6366f1', '#8b5cf6', '#a855f7', '#c084fc', '#d946ef', '#e879f9'],
       }),
     );
     return wrap;

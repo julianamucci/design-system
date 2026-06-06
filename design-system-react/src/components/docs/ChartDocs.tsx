@@ -1,25 +1,10 @@
 import { useCallback, useEffect, useMemo } from "react";
 import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  PieChart,
-  Pie,
-  Cell,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-} from "recharts";
-import {
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-  type ChartConfig,
+  buildBarOption,
+  buildLineOption,
+  buildAreaOption,
+  buildPieOption,
 } from "@/components/ui/chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslation } from "@/lib/i18n";
@@ -61,35 +46,22 @@ const priorityKeyMap: Record<string, string> = {
 
 // ─── Chart data / config ──────────────────────────────────────────────────────
 
-const chartData = [
-  { month: "Jan", desktop: 186, mobile: 80 },
-  { month: "Feb", desktop: 305, mobile: 200 },
-  { month: "Mar", desktop: 237, mobile: 120 },
-  { month: "Apr", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "Jun", desktop: 214, mobile: 140 },
+// ECharts API: dado simples (label/value) ou xAxis + series.
+
+const xMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+const singleSeries = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
+
+const multiSeries = [
+  { name: 'Desktop', data: [186, 305, 237, 73, 209, 214] },
+  { name: 'Mobile',  data: [80, 200, 120, 190, 130, 140] },
 ];
-
-const chartConfig = {
-  desktop: { label: "Desktop", color: "hsl(var(--primary))" },
-  mobile: { label: "Mobile", color: "hsl(var(--secondary))" },
-} satisfies ChartConfig;
-
-const singleConfig = {
-  desktop: { label: "Desktop", color: "hsl(var(--chart-1))" },
-} satisfies ChartConfig;
 
 const pieData = [
-  { name: "Desktop", value: 1224 },
-  { name: "Mobile", value: 860 },
-  { name: "Tablet", value: 320 },
+  { label: 'Desktop', value: 1224 },
+  { label: 'Mobile',  value: 860 },
+  { label: 'Tablet',  value: 320 },
 ];
-
-const pieConfig = {
-  desktop: { label: "Desktop", color: "hsl(var(--chart-1))" },
-  mobile: { label: "Mobile", color: "hsl(var(--chart-2))" },
-  tablet: { label: "Tablet", color: "hsl(var(--chart-3))" },
-} satisfies ChartConfig;
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
@@ -174,86 +146,51 @@ export function ChartDocs() {
 
   // ─── Code strings ─────────────────────────────────────────────────────────
 
-  const codeImportBasic = `import {
+  const codeImportBasic = `import { ChartContainer } from "@/components/ui/chart";`;
+
+  const codeImportWithBuilders = `import {
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-  type ChartConfig,
+  buildBarOption,
+  buildLineOption,
+  buildAreaOption,
+  buildPieOption,
 } from "@/components/ui/chart";`;
 
-  const codeImportWithRecharts = `import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
-import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from "recharts";`;
-
-  const codeBar = `const chartConfig = {
-  desktop: { label: "Desktop", color: "hsl(var(--primary))" },
-  mobile: { label: "Mobile", color: "hsl(var(--secondary))" },
-} satisfies ChartConfig;
+  const codeBar = `const xMonths = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
+const series = [
+  { name: "Desktop", data: [186, 305, 237, 73, 209, 214] },
+  { name: "Mobile",  data: [80, 200, 120, 190, 130, 140] },
+];
 
 <ChartContainer
-  config={chartConfig}
+  option={buildBarOption({ xAxis: xMonths, series })}
   className="h-[300px] w-full"
   aria-label="Gráfico de barras: acessos mensais"
->
-  <BarChart data={chartData} accessibilityLayer>
-    <CartesianGrid vertical={false} />
-    <XAxis dataKey="month" tickLine={false} axisLine={false} />
-    <YAxis tickLine={false} axisLine={false} />
-    <ChartTooltip content={<ChartTooltipContent />} />
-    <ChartLegend content={<ChartLegendContent />} />
-    <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-    <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-  </BarChart>
-</ChartContainer>`;
+/>`;
 
-  const codeLine = `<ChartContainer config={chartConfig} className="h-[300px] w-full"
-  aria-label="Gráfico de linhas: tendência mensal">
-  <LineChart data={chartData} accessibilityLayer>
-    <CartesianGrid vertical={false} />
-    <XAxis dataKey="month" tickLine={false} axisLine={false} />
-    <YAxis tickLine={false} axisLine={false} />
-    <ChartTooltip content={<ChartTooltipContent />} />
-    <ChartLegend content={<ChartLegendContent />} />
-    <Line dataKey="desktop" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
-    <Line dataKey="mobile" stroke="var(--color-mobile)" strokeWidth={2} dot={false} />
-  </LineChart>
-</ChartContainer>`;
+  const codeLine = `<ChartContainer
+  option={buildLineOption({ xAxis: xMonths, series })}
+  className="h-[300px] w-full"
+  aria-label="Gráfico de linhas: tendência mensal"
+/>`;
 
-  const codeArea = `<ChartContainer config={chartConfig} className="h-[300px] w-full"
-  aria-label="Gráfico de área: volume mensal">
-  <AreaChart data={chartData} accessibilityLayer>
-    <CartesianGrid vertical={false} />
-    <XAxis dataKey="month" tickLine={false} axisLine={false} />
-    <YAxis tickLine={false} axisLine={false} />
-    <ChartTooltip content={<ChartTooltipContent />} />
-    <ChartLegend content={<ChartLegendContent />} />
-    <Area dataKey="desktop" stroke="var(--color-desktop)"
-      fill="var(--color-desktop)" fillOpacity={0.2} strokeWidth={2} />
-    <Area dataKey="mobile" stroke="var(--color-mobile)"
-      fill="var(--color-mobile)" fillOpacity={0.2} strokeWidth={2} />
-  </AreaChart>
-</ChartContainer>`;
+  const codeArea = `<ChartContainer
+  option={buildAreaOption({ xAxis: xMonths, series })}
+  className="h-[300px] w-full"
+  aria-label="Gráfico de área: volume mensal"
+/>`;
 
-  const codePie = `<ChartContainer config={pieConfig} className="h-[300px] w-full"
-  aria-label="Gráfico de pizza: distribuição por dispositivo">
-  <PieChart accessibilityLayer>
-    <ChartTooltip content={<ChartTooltipContent />} />
-    <Pie data={pieData} dataKey="value" nameKey="name"
-      cx="50%" cy="50%" outerRadius={100} label>
-      {pieData.map((_, i) => (
-        <Cell key={i} fill={\`hsl(var(--chart-\${i + 1}))\`} />
-      ))}
-    </Pie>
-  </PieChart>
-</ChartContainer>`;
+  const codePie = `const pieData = [
+  { label: "Desktop", value: 580 },
+  { label: "Mobile",  value: 420 },
+  { label: "Tablet",  value: 180 },
+];
+
+<ChartContainer
+  option={buildPieOption({ data: pieData })}
+  className="h-[300px] w-full"
+  aria-label="Gráfico de pizza: distribuição por dispositivo"
+/>`;
 
   const codeTokens = `/* Personalização de tokens no tema */
 :root {
@@ -271,37 +208,26 @@ import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from "recharts";`;
 
   const interfaceCode = `// ChartContainer
 interface ChartContainerProps extends React.ComponentProps<"div"> {
-  config: ChartConfig;
-  children: React.ComponentProps<typeof ResponsiveContainer>["children"];
-  id?: string;
-  initialDimension?: { width: number; height: number };
+  option: EChartsCoreOption;
+  renderer?: "svg" | "canvas";
 }
 
-// ChartConfig
-type ChartConfig = Record<string, {
-  label?: React.ReactNode;
-  icon?: React.ComponentType;
-  color?: string;
-  theme?: Record<"light" | "dark", string>;
-}>;
+// Builders auxiliares — montam o option para os tipos comuns.
+export interface ChartDataPoint { label: string; value: number }
+export interface ChartSeries     { name: string; data: number[]; color?: string }
 
-// ChartTooltipContent
-interface ChartTooltipContentProps {
-  indicator?: "dot" | "line" | "dashed";
-  hideLabel?: boolean;
-  hideIndicator?: boolean;
-  nameKey?: string;
-  labelKey?: string;
-  formatter?: function;
-  labelFormatter?: function;
+interface OptionsBase {
+  data?: ChartDataPoint[];      // 1 série, formato simples
+  xAxis?: Array<string | number>;
+  series?: ChartSeries[];        // multi-série
+  title?: string;
+  showLegend?: boolean;
 }
 
-// ChartLegendContent
-interface ChartLegendContentProps {
-  hideIcon?: boolean;
-  nameKey?: string;
-  verticalAlign?: "top" | "bottom";
-}`;
+declare function buildBarOption(o: OptionsBase): EChartsCoreOption;
+declare function buildLineOption(o: OptionsBase): EChartsCoreOption;
+declare function buildAreaOption(o: OptionsBase): EChartsCoreOption;
+declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
 
   return (
     <DocsPageLayout
@@ -314,7 +240,7 @@ interface ChartLegendContentProps {
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add chart"
+          installNote="npm install echarts echarts-for-react"
         />
       }
     >
@@ -322,20 +248,10 @@ interface ChartLegendContentProps {
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="flex w-full items-center justify-center">
           <ChartContainer
-            config={chartConfig}
+            option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
             className="h-[300px] w-full max-w-xl"
             aria-label="Gráfico de barras: acessos mensais por dispositivo"
-          >
-            <BarChart data={chartData} accessibilityLayer>
-              <CartesianGrid vertical={false} />
-              <XAxis dataKey="month" tickLine={false} axisLine={false} />
-              <YAxis tickLine={false} axisLine={false} />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <ChartLegend content={<ChartLegendContent />} />
-              <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-              <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-            </BarChart>
-          </ChartContainer>
+          />
         </div>
       </DocsDemonstration>
 
@@ -445,33 +361,17 @@ interface ChartLegendContentProps {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <ChartContainer
-                config={chartConfig}
+                option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
                 className="h-[200px] w-full"
                 aria-label="Gráfico multi-séries com legenda"
-              >
-                <BarChart data={chartData} accessibilityLayer>
-                  <CartesianGrid vertical={false} />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} tickFormatter={(v) => v.slice(0, 3)} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <ChartLegend content={<ChartLegendContent />} />
-                  <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                  <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-                </BarChart>
-              </ChartContainer>
+              />
             ),
             dontPreview: (
               <ChartContainer
-                config={chartConfig}
+                option={buildBarOption({ xAxis: xMonths, series: multiSeries, showLegend: false })}
                 className="h-[200px] w-full"
                 aria-label="Gráfico multi-séries sem legenda"
-              >
-                <BarChart data={chartData} accessibilityLayer>
-                  <CartesianGrid vertical={false} />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} tickFormatter={(v) => v.slice(0, 3)} />
-                  <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                  <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-                </BarChart>
-              </ChartContainer>
+              />
             ),
             doCaption: tContent("doDont.pair1.do"),
             dontCaption: tContent("doDont.pair1.dont"),
@@ -481,29 +381,16 @@ interface ChartLegendContentProps {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <ChartContainer
-                config={singleConfig}
+                option={buildBarOption({ xAxis: xMonths, series: singleSeries })}
                 className="h-[200px] w-full"
                 aria-label="Gráfico de barras: acessos mensais desktop"
-              >
-                <BarChart data={chartData} accessibilityLayer>
-                  <CartesianGrid vertical={false} />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} tickFormatter={(v) => v.slice(0, 3)} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                </BarChart>
-              </ChartContainer>
+              />
             ),
             dontPreview: (
               <ChartContainer
-                config={singleConfig}
+                option={buildBarOption({ xAxis: xMonths, series: singleSeries })}
                 className="h-[200px] w-full"
-              >
-                <BarChart data={chartData} accessibilityLayer>
-                  <CartesianGrid vertical={false} />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} tickFormatter={(v) => v.slice(0, 3)} />
-                  <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                </BarChart>
-              </ChartContainer>
+              />
             ),
             doCaption: tContent("doDont.pair2.do"),
             dontCaption: tContent("doDont.pair2.dont"),
@@ -516,8 +403,8 @@ interface ChartLegendContentProps {
         title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
-        secondaryDescription={tContent("import.withRecharts")}
-        secondaryCode={codeImportWithRecharts}
+        secondaryDescription={tContent("import.withBuilders")}
+        secondaryCode={codeImportWithBuilders}
       />
 
       {/* ── Variantes (Tipos) ─────────────────────────────────────── */}
@@ -531,20 +418,10 @@ interface ChartLegendContentProps {
             code: codeBar,
             preview: (
               <ChartContainer
-                config={chartConfig}
+                option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
                 className="h-[250px] w-full"
                 aria-label="Gráfico de barras: acessos mensais"
-              >
-                <BarChart data={chartData} accessibilityLayer>
-                  <CartesianGrid vertical={false} />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} />
-                  <YAxis tickLine={false} axisLine={false} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <ChartLegend content={<ChartLegendContent />} />
-                  <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                  <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-                </BarChart>
-              </ChartContainer>
+               />
             ),
           },
           {
@@ -553,20 +430,10 @@ interface ChartLegendContentProps {
             code: codeLine,
             preview: (
               <ChartContainer
-                config={chartConfig}
+                option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
                 className="h-[250px] w-full"
                 aria-label="Gráfico de linhas: tendência mensal"
-              >
-                <LineChart data={chartData} accessibilityLayer>
-                  <CartesianGrid vertical={false} />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} />
-                  <YAxis tickLine={false} axisLine={false} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <ChartLegend content={<ChartLegendContent />} />
-                  <Line dataKey="desktop" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
-                  <Line dataKey="mobile" stroke="var(--color-mobile)" strokeWidth={2} dot={false} />
-                </LineChart>
-              </ChartContainer>
+               />
             ),
           },
           {
@@ -575,20 +442,10 @@ interface ChartLegendContentProps {
             code: codeArea,
             preview: (
               <ChartContainer
-                config={chartConfig}
+                option={buildAreaOption({ xAxis: xMonths, series: multiSeries })}
                 className="h-[250px] w-full"
                 aria-label="Gráfico de área: volume mensal"
-              >
-                <AreaChart data={chartData} accessibilityLayer>
-                  <CartesianGrid vertical={false} />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} />
-                  <YAxis tickLine={false} axisLine={false} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <ChartLegend content={<ChartLegendContent />} />
-                  <Area dataKey="desktop" stroke="var(--color-desktop)" fill="var(--color-desktop)" fillOpacity={0.2} strokeWidth={2} />
-                  <Area dataKey="mobile" stroke="var(--color-mobile)" fill="var(--color-mobile)" fillOpacity={0.2} strokeWidth={2} />
-                </AreaChart>
-              </ChartContainer>
+               />
             ),
           },
           {
@@ -597,19 +454,10 @@ interface ChartLegendContentProps {
             code: codePie,
             preview: (
               <ChartContainer
-                config={pieConfig}
+                option={buildPieOption({ data: pieData })}
                 className="h-[250px] w-full max-w-sm mx-auto"
                 aria-label="Gráfico de pizza: distribuição por dispositivo"
-              >
-                <PieChart accessibilityLayer>
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label>
-                    {pieData.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={`hsl(var(--chart-${index + 1}))`} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ChartContainer>
+               />
             ),
           },
         ]}
@@ -631,17 +479,10 @@ interface ChartLegendContentProps {
   </CardHeader>
   <CardContent>
     <ChartContainer
-      config={chartConfig}
+      option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
       className="h-[200px] w-full"
       aria-label="Gráfico de barras: acessos mensais por dispositivo"
-    >
-      <BarChart data={chartData} accessibilityLayer>
-        <CartesianGrid vertical={false} />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-      </BarChart>
-    </ChartContainer>
+     />
   </CardContent>
 </Card>`,
             preview: (
@@ -651,17 +492,10 @@ interface ChartLegendContentProps {
                 </CardHeader>
                 <CardContent>
                   <ChartContainer
-                    config={chartConfig}
+                    option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
                     className="h-[200px] w-full"
                     aria-label="Gráfico de barras: acessos mensais por dispositivo"
-                  >
-                    <BarChart data={chartData} accessibilityLayer>
-                      <CartesianGrid vertical={false} />
-                      <XAxis dataKey="month" tickLine={false} axisLine={false} tickFormatter={(v) => v.slice(0, 3)} />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                    </BarChart>
-                  </ChartContainer>
+                   />
                 </CardContent>
               </Card>
             ),
@@ -671,34 +505,16 @@ interface ChartLegendContentProps {
             description: tContent("variants.compositions.multiSeriesWithLegend.description"),
             useWhen: tContent("variants.compositions.multiSeriesWithLegend.use"),
             code: `<ChartContainer
-  config={chartConfig}
+  option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
   className="h-[240px] w-full"
   aria-label="Gráfico multi-séries: Desktop e Mobile"
->
-  <BarChart data={chartData} accessibilityLayer>
-    <CartesianGrid vertical={false} />
-    <XAxis dataKey="month" tickLine={false} axisLine={false} />
-    <ChartTooltip content={<ChartTooltipContent />} />
-    <ChartLegend content={<ChartLegendContent />} />
-    <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-    <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-  </BarChart>
-</ChartContainer>`,
+ />`,
             preview: (
               <ChartContainer
-                config={chartConfig}
+                option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
                 className="h-[240px] w-full"
                 aria-label="Gráfico multi-séries: Desktop e Mobile"
-              >
-                <BarChart data={chartData} accessibilityLayer>
-                  <CartesianGrid vertical={false} />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} tickFormatter={(v) => v.slice(0, 3)} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <ChartLegend content={<ChartLegendContent />} />
-                  <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                  <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-                </BarChart>
-              </ChartContainer>
+               />
             ),
           },
           {
@@ -711,14 +527,10 @@ interface ChartLegendContentProps {
     <p className="text-2xl font-semibold">1.224</p>
   </div>
   <ChartContainer
-    config={singleConfig}
+    option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
     className="h-[48px] w-[120px]"
     aria-label="Tendência de acessos nos últimos 6 meses"
-  >
-    <LineChart data={chartData} accessibilityLayer>
-      <Line dataKey="desktop" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
-    </LineChart>
-  </ChartContainer>
+   />
 </div>`,
             preview: (
               <div className="flex items-center gap-4 rounded-md border p-4 w-fit">
@@ -727,14 +539,10 @@ interface ChartLegendContentProps {
                   <p className="text-2xl font-semibold">1.224</p>
                 </div>
                 <ChartContainer
-                  config={singleConfig}
+                  option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
                   className="h-[48px] w-[120px]"
                   aria-label="Tendência de acessos nos últimos 6 meses"
-                >
-                  <LineChart data={chartData} accessibilityLayer>
-                    <Line dataKey="desktop" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
-                  </LineChart>
-                </ChartContainer>
+                 />
               </div>
             ),
           },
@@ -750,11 +558,7 @@ interface ChartLegendContentProps {
     Nenhum dado disponível para o período selecionado.
   </div>
 ) : (
-  <ChartContainer config={chartConfig} className="h-[200px] w-full" aria-label="...">
-    <BarChart data={data} accessibilityLayer>
-      {/* ... */}
-    </BarChart>
-  </ChartContainer>
+  <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} className="h-[200px] w-full" aria-label="..." />
 )}`,
             preview: (
               <div
@@ -815,18 +619,18 @@ interface ChartLegendContentProps {
             },
             items: [
               {
-                name: "config",
-                type: "ChartConfig",
+                name: "option",
+                type: "EChartsCoreOption",
                 defaultValue: "—",
                 required: "Sim",
-                description: stripHtml(tContent("props.table.config")),
+                description: stripHtml(tContent("props.table.option")),
               },
               {
-                name: "id",
-                type: "string",
-                defaultValue: "auto",
+                name: "renderer",
+                type: '"svg" | "canvas"',
+                defaultValue: '"svg"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.id")),
+                description: stripHtml(tContent("props.table.renderer")),
               },
               {
                 name: "className",
@@ -836,79 +640,11 @@ interface ChartLegendContentProps {
                 description: stripHtml(tContent("props.table.className")),
               },
               {
-                name: "children",
-                type: "React.ReactNode",
+                name: "aria-label",
+                type: "string",
                 defaultValue: "—",
                 required: "Sim",
-                description: stripHtml(tContent("props.table.children")),
-              },
-              {
-                name: "initialDimension",
-                type: "{ width: number; height: number }",
-                defaultValue: "{ width: 320, height: 200 }",
-                required: "Não",
-                description: stripHtml(tContent("props.table.initialDimension")),
-              },
-            ],
-          },
-          {
-            title: tContent("props.tooltipTitle"),
-            cols: {
-              prop: tContent("props.table.prop"),
-              type: tContent("props.table.type"),
-              default: tContent("props.table.default"),
-              required: tContent("props.table.required"),
-              description: tContent("props.table.description"),
-            },
-            items: [
-              {
-                name: "indicator",
-                type: '"dot" | "line" | "dashed"',
-                defaultValue: '"dot"',
-                required: "Não",
-                description: stripHtml(tContent("props.table.indicator")),
-              },
-              {
-                name: "hideLabel",
-                type: "boolean",
-                defaultValue: "false",
-                required: "Não",
-                description: stripHtml(tContent("props.table.hideLabel")),
-              },
-              {
-                name: "hideIndicator",
-                type: "boolean",
-                defaultValue: "false",
-                required: "Não",
-                description: stripHtml(tContent("props.table.hideIndicator")),
-              },
-              {
-                name: "nameKey",
-                type: "string",
-                defaultValue: "—",
-                required: "Não",
-                description: stripHtml(tContent("props.table.nameKey")),
-              },
-              {
-                name: "labelKey",
-                type: "string",
-                defaultValue: "—",
-                required: "Não",
-                description: stripHtml(tContent("props.table.labelKey")),
-              },
-              {
-                name: "formatter",
-                type: "function",
-                defaultValue: "—",
-                required: "Não",
-                description: stripHtml(tContent("props.table.formatter")),
-              },
-              {
-                name: "labelFormatter",
-                type: "function",
-                defaultValue: "—",
-                required: "Não",
-                description: stripHtml(tContent("props.table.labelFormatter")),
+                description: stripHtml(tContent("props.table.ariaLabel")),
               },
             ],
           },
@@ -923,25 +659,39 @@ interface ChartLegendContentProps {
             },
             items: [
               {
-                name: "hideIcon",
-                type: "boolean",
-                defaultValue: "false",
+                name: "data",
+                type: "{ label: string; value: number }[]",
+                defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.hideIcon")),
+                description: stripHtml(tContent("props.table.data")),
               },
               {
-                name: "nameKey",
+                name: "xAxis",
+                type: "(string | number)[]",
+                defaultValue: "—",
+                required: "Não",
+                description: stripHtml(tContent("props.table.xAxis")),
+              },
+              {
+                name: "series",
+                type: "{ name: string; data: number[]; color?: string }[]",
+                defaultValue: "—",
+                required: "Não",
+                description: stripHtml(tContent("props.table.series")),
+              },
+              {
+                name: "title",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.nameKey")),
+                description: stripHtml(tContent("props.table.title")),
               },
               {
-                name: "verticalAlign",
-                type: '"top" | "bottom"',
-                defaultValue: '"bottom"',
+                name: "showLegend",
+                type: "boolean",
+                defaultValue: "auto",
                 required: "Não",
-                description: stripHtml(tContent("props.table.verticalAlign")),
+                description: stripHtml(tContent("props.table.showLegend")),
               },
             ],
           },
@@ -960,18 +710,16 @@ interface ChartLegendContentProps {
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--chart-1",          value: "--color-[key]",       description: tContent("tokens.table.chart1") },
-          { token: "--chart-2",          value: "--color-[key]",       description: tContent("tokens.table.chart2") },
-          { token: "--chart-3",          value: "--color-[key]",       description: tContent("tokens.table.chart3") },
-          { token: "--chart-4",          value: "--color-[key]",       description: tContent("tokens.table.chart4") },
-          { token: "--chart-5",          value: "--color-[key]",       description: tContent("tokens.table.chart5") },
-          { token: "--primary",          value: "color in ChartConfig", description: tContent("tokens.table.primary") },
-          { token: "--secondary",        value: "color in ChartConfig", description: tContent("tokens.table.secondary") },
-          { token: "--muted",            value: "fill-muted",          description: tContent("tokens.table.muted") },
-          { token: "--muted-foreground", value: "fill-muted-foreground", description: tContent("tokens.table.mutedForeground") },
-          { token: "--border",           value: "stroke-border",       description: tContent("tokens.table.border") },
-          { token: "--background",       value: "bg-background",       description: tContent("tokens.table.background") },
-          { token: "--foreground",       value: "text-foreground",     description: tContent("tokens.table.foreground") },
+          { token: "--chart-1",          value: "color série 1",  description: tContent("tokens.table.chart1") },
+          { token: "--chart-2",          value: "color série 2",  description: tContent("tokens.table.chart2") },
+          { token: "--chart-3",          value: "color série 3",  description: tContent("tokens.table.chart3") },
+          { token: "--chart-4",          value: "color série 4",  description: tContent("tokens.table.chart4") },
+          { token: "--chart-5",          value: "color série 5",  description: tContent("tokens.table.chart5") },
+          { token: "--primary",          value: "axisPointer",    description: tContent("tokens.table.primary") },
+          { token: "--muted-foreground", value: "axisLabel",      description: tContent("tokens.table.mutedForeground") },
+          { token: "--border",           value: "axisLine + grid", description: tContent("tokens.table.border") },
+          { token: "--foreground",       value: "title + tooltip", description: tContent("tokens.table.foreground") },
+          { token: "--card",             value: "tooltip bg",     description: tContent("tokens.table.card") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeTokens}

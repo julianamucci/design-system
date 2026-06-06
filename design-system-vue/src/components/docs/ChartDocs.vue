@@ -4,8 +4,8 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { ChartContainer, ChartLegendContent, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
-import { VisXYContainer, VisGroupedBar, VisLine, VisArea, VisAxis, VisCrosshair, VisTooltip, VisDonut } from '@unovis/vue';
+import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption } from '@/components/ui/chart';
+
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -133,78 +133,38 @@ const chartData = [
   { month: 'Jun', desktop: 214, mobile: 140 },
 ];
 
-const chartConfig = {
-  desktop: { label: 'Desktop', color: 'var(--chart-1)' },
-  mobile:  { label: 'Mobile',  color: 'var(--chart-2)' },
-} satisfies ChartConfig;
-
-const barX = (_d: typeof chartData[number], i: number) => i;
-const barDesktop = (d: typeof chartData[number]) => d.desktop;
-const barMobile = (d: typeof chartData[number]) => d.mobile;
-const lineX = (_d: typeof chartData[number], i: number) => i;
-const lineY = (d: typeof chartData[number]) => d.desktop;
-const areaX = (_d: typeof chartData[number], i: number) => i;
-const areaY = (d: typeof chartData[number]) => d.desktop;
-const xTicks = chartData.map(d => d.month);
+// API ECharts: xAxis (labels) + series (dados alinhados).
+const xMonths = chartData.map(d => d.month);
+const singleSeries = [{ name: 'Desktop', data: chartData.map(d => d.desktop) }];
+const multiSeries = [
+  { name: 'Desktop', data: chartData.map(d => d.desktop) },
+  { name: 'Mobile',  data: chartData.map(d => d.mobile) },
+];
+const pieData = [
+  { label: 'Desktop', value: 1224 },
+  { label: 'Mobile',  value: 860 },
+  { label: 'Tablet',  value: 320 },
+];
 
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
-const codeImportBasic = `import {
+const codeImportBasic = `import { ChartContainer } from "@/components/ui/chart";`;
+
+const codeImportSecondary = `import {
   ChartContainer,
-  ChartLegendContent,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
-import {
-  VisXYContainer,
-  VisGroupedBar,
-  VisAxis,
-  VisCrosshair,
-  VisTooltip,
-} from "@unovis/vue";`;
+  buildBarOption,
+  buildLineOption,
+  buildAreaOption,
+  buildPieOption,
+} from "@/components/ui/chart";`;
 
-const codeImportSecondary = `// ChartCrosshair e VisTooltip são de @unovis/vue
-// ChartContainer provê contexto + tokens CSS
-// Nota: Vue usa @unovis/vue, não Recharts`;
+const codeBarChart = `<ChartContainer :option="buildBarOption({ xAxis: xMonths, series: multiSeries })" class="h-[300px] w-full" />`;
 
-const codeBarChart = `<ChartContainer :config="chartConfig" class="h-[300px] w-full">
-  <template #default="{ id }">
-    <VisXYContainer :data="chartData" :height="300">
-      <VisGroupedBar
-        :x="(_, i) => i"
-        :y="[(d) => d.desktop, (d) => d.mobile]"
-        :color="['var(--color-desktop)', 'var(--color-mobile)']"
-      />
-      <VisAxis type="x" :tick-format="(i) => chartData[i]?.month" />
-    </VisXYContainer>
-  </template>
-</ChartContainer>`;
+const codeLineChart = `<ChartContainer :option="buildLineOption({ xAxis: xMonths, series: multiSeries })" class="h-[300px] w-full" />`;
 
-const codeLineChart = `<ChartContainer :config="chartConfig" class="h-[300px] w-full">
-  <template #default>
-    <VisXYContainer :data="chartData" :height="300">
-      <VisLine :x="(_, i) => i" :y="(d) => d.desktop" color="var(--color-desktop)" />
-      <VisAxis type="x" :tick-format="(i) => chartData[i]?.month" />
-    </VisXYContainer>
-  </template>
-</ChartContainer>`;
+const codeAreaChart = `<ChartContainer :option="buildAreaOption({ xAxis: xMonths, series: multiSeries })" class="h-[300px] w-full" />`;
 
-const codeAreaChart = `<ChartContainer :config="chartConfig" class="h-[300px] w-full">
-  <template #default>
-    <VisXYContainer :data="chartData" :height="300">
-      <VisArea :x="(_, i) => i" :y="(d) => d.desktop" color="var(--color-desktop)" />
-      <VisAxis type="x" :tick-format="(i) => chartData[i]?.month" />
-    </VisXYContainer>
-  </template>
-</ChartContainer>`;
-
-const codePieChart = `<ChartContainer :config="chartConfig" class="h-[300px] w-full">
-  <template #default>
-    <VisXYContainer :data="pieData" :height="300">
-      <VisDonut :value="(d) => d.value" color="var(--color-desktop)" />
-    </VisXYContainer>
-  </template>
-</ChartContainer>`;
+const codePieChart = `<ChartContainer :option="buildPieOption({ data: pieData })" class="h-[300px] w-full" />`;
 
 const codeCustomizationTokens = `/* Em globals.css — personalizar tokens de cor das séries */
 :root {
@@ -223,24 +183,29 @@ const codeCustomizationTokens = `/* Em globals.css — personalizar tokens de co
   --chart-5: 0 84% 68%;
 }`;
 
-const interfaceCode = `// ChartConfig — mapeamento de chaves para cor/label
-type ChartConfig = {
-  [key: string]: {
-    label?: string | Component;
-    icon?: string | Component;
-  } & (
-    | { color?: string; theme?: never }
-    | { color?: never; theme: Record<'light' | 'dark', string> }
-  );
-};
-
-// ChartContainer props (Vue)
+const interfaceCode = `// ChartContainer props (Vue)
 interface ChartContainerProps {
-  config: ChartConfig;
-  id?: string;
+  option: EChartsCoreOption;
   class?: string;
-  cursor?: boolean;
-}`;
+  renderer?: 'svg' | 'canvas';
+}
+
+// Builders auxiliares — montam o option a partir de dados simples.
+export interface ChartDataPoint { label: string; value: number }
+export interface ChartSeries     { name: string; data: number[]; color?: string }
+
+interface OptionsBase {
+  data?: ChartDataPoint[];
+  xAxis?: Array<string | number>;
+  series?: ChartSeries[];
+  title?: string;
+  showLegend?: boolean;
+}
+
+declare function buildBarOption(o: OptionsBase): EChartsCoreOption;
+declare function buildLineOption(o: OptionsBase): EChartsCoreOption;
+declare function buildAreaOption(o: OptionsBase): EChartsCoreOption;
+declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
 
 // ─── Computed data ────────────────────────────────────────────────────────────
 
@@ -266,37 +231,18 @@ const codeCompInCard = `<Card class="w-full max-w-sm">
   </CardHeader>
   <CardContent>
     <ChartContainer
-      :config="chartConfig"
+      :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
       class="h-[200px] w-full"
       aria-label="Gráfico de barras: acessos mensais por dispositivo"
-    >
-      <template #default>
-        <VisXYContainer :data="chartData" :height="200">
-          <VisGroupedBar :x="barX" :y="[barDesktop]" :color="['var(--chart-1)']" />
-          <VisAxis type="x" :tick-format="(i) => xTicks[i]" />
-        </VisXYContainer>
-      </template>
-    </ChartContainer>
+     />
   </CardContent>
 </Card>`;
 
 const codeCompMultiSeries = `<ChartContainer
-  :config="chartConfig"
+  :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
   class="h-[240px] w-full"
   aria-label="Gráfico multi-séries: Desktop e Mobile"
->
-  <template #default>
-    <VisXYContainer :data="chartData" :height="240">
-      <VisGroupedBar
-        :x="barX"
-        :y="[barDesktop, barMobile]"
-        :color="['var(--chart-1)', 'var(--chart-2)']"
-      />
-      <VisAxis type="x" :tick-format="(i) => xTicks[i]" />
-    </VisXYContainer>
-  </template>
-</ChartContainer>
-<ChartLegendContent :config="chartConfig" />`;
+/>`;
 
 const codeCompSmallInline = `<div class="flex items-center gap-4 rounded-md border p-4 w-fit">
   <div>
@@ -304,16 +250,10 @@ const codeCompSmallInline = `<div class="flex items-center gap-4 rounded-md bord
     <p class="text-2xl font-semibold">1.224</p>
   </div>
   <ChartContainer
-    :config="{ desktop: { label: 'Desktop', color: 'var(--chart-1)' } }"
+    :option="buildLineOption({ xAxis: xMonths, series: multiSeries })"
     class="h-[48px] w-[120px]"
     aria-label="Tendência de acessos nos últimos 6 meses"
-  >
-    <template #default>
-      <VisXYContainer :data="chartData" :height="48">
-        <VisLine :x="lineX" :y="lineY" color="var(--chart-1)" />
-      </VisXYContainer>
-    </template>
-  </ChartContainer>
+   />
 </div>`;
 
 const codeCompEmpty = `<div
@@ -323,9 +263,7 @@ const codeCompEmpty = `<div
 >
   Nenhum dado disponível para o período selecionado.
 </div>
-<ChartContainer v-else :config="chartConfig" class="h-[200px] w-full" aria-label="...">
-  <!-- ... -->
-</ChartContainer>`;
+<ChartContainer v-else :option="buildBarOption({ xAxis: xMonths, series: multiSeries })" class="h-[200px] w-full" aria-label="..." />`;
 
 const compositionItems = computed(() => [
   {
@@ -370,39 +308,31 @@ const propCols = computed(() => ({
 }));
 
 const containerPropItems = computed(() => [
-  { name: 'config',           type: 'ChartConfig',    defaultValue: '—',               required: 'Sim', description: stripHtml(tContent('props.table.config'))           },
-  { name: 'id',               type: 'string',         defaultValue: 'auto',            required: 'Não', description: stripHtml(tContent('props.table.id'))               },
-  { name: 'class',            type: 'string',         defaultValue: '—',               required: 'Não', description: stripHtml(tContent('props.table.className'))        },
-  { name: 'cursor',           type: 'boolean',        defaultValue: 'false',           required: 'Não', description: 'Exibe linha vertical do crosshair no hover.'       },
-]);
-
-const tooltipPropItems = computed(() => [
-  { name: 'indicator',    type: '"dot" | "line" | "dashed"', defaultValue: '"dot"',  required: 'Não', description: stripHtml(tContent('props.table.indicator'))    },
-  { name: 'hideLabel',    type: 'boolean',                   defaultValue: 'false',  required: 'Não', description: stripHtml(tContent('props.table.hideLabel'))    },
-  { name: 'hideIndicator',type: 'boolean',                   defaultValue: 'false',  required: 'Não', description: stripHtml(tContent('props.table.hideIndicator'))},
-  { name: 'nameKey',      type: 'string',                    defaultValue: '—',      required: 'Não', description: stripHtml(tContent('props.table.nameKey'))      },
-  { name: 'labelKey',     type: 'string',                    defaultValue: '—',      required: 'Não', description: stripHtml(tContent('props.table.labelKey'))     },
+  { name: 'option',     type: 'EChartsCoreOption', defaultValue: '—',     required: 'Sim', description: stripHtml(tContent('props.table.option'))    },
+  { name: 'renderer',   type: '"svg" | "canvas"',  defaultValue: '"svg"', required: 'Não', description: stripHtml(tContent('props.table.renderer'))  },
+  { name: 'class',      type: 'string',            defaultValue: '—',     required: 'Não', description: stripHtml(tContent('props.table.className')) },
+  { name: 'aria-label', type: 'string',            defaultValue: '—',     required: 'Sim', description: stripHtml(tContent('props.table.ariaLabel')) },
 ]);
 
 const legendPropItems = computed(() => [
-  { name: 'hideIcon',      type: 'boolean',              defaultValue: 'false',    required: 'Não', description: stripHtml(tContent('props.table.hideIcon'))      },
-  { name: 'nameKey',       type: 'string',               defaultValue: '—',        required: 'Não', description: stripHtml(tContent('props.table.nameKey'))       },
-  { name: 'verticalAlign', type: '"top" | "bottom"',     defaultValue: '"bottom"', required: 'Não', description: stripHtml(tContent('props.table.verticalAlign')) },
+  { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: stripHtml(tContent('props.table.data'))       },
+  { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: stripHtml(tContent('props.table.xAxis'))      },
+  { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.series')) },
+  { name: 'title',      type: 'string',                                       defaultValue: '—',    required: 'Não', description: stripHtml(tContent('props.table.title'))      },
+  { name: 'showLegend', type: 'boolean',                                      defaultValue: 'auto', required: 'Não', description: stripHtml(tContent('props.table.showLegend')) },
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--chart-1',           value: 'var(--color-[key])', description: tContent('tokens.table.chart1')         },
-  { token: '--chart-2',           value: 'var(--color-[key])', description: tContent('tokens.table.chart2')         },
-  { token: '--chart-3',           value: 'var(--color-[key])', description: tContent('tokens.table.chart3')         },
-  { token: '--chart-4',           value: 'var(--color-[key])', description: tContent('tokens.table.chart4')         },
-  { token: '--chart-5',           value: 'var(--color-[key])', description: tContent('tokens.table.chart5')         },
-  { token: '--primary',           value: 'bg-primary',         description: tContent('tokens.table.primary')        },
-  { token: '--secondary',         value: 'bg-secondary',       description: tContent('tokens.table.secondary')      },
-  { token: '--muted',             value: 'bg-muted',           description: tContent('tokens.table.muted')          },
-  { token: '--muted-foreground',  value: 'text-muted-foreground', description: tContent('tokens.table.mutedForeground') },
-  { token: '--border',            value: 'border',             description: tContent('tokens.table.border')         },
-  { token: '--background',        value: 'bg-background',      description: tContent('tokens.table.background')     },
-  { token: '--foreground',        value: 'text-foreground',    description: tContent('tokens.table.foreground')     },
+  { token: '--chart-1',          value: 'color série 1',    description: tContent('tokens.table.chart1')          },
+  { token: '--chart-2',          value: 'color série 2',    description: tContent('tokens.table.chart2')          },
+  { token: '--chart-3',          value: 'color série 3',    description: tContent('tokens.table.chart3')          },
+  { token: '--chart-4',          value: 'color série 4',    description: tContent('tokens.table.chart4')          },
+  { token: '--chart-5',          value: 'color série 5',    description: tContent('tokens.table.chart5')          },
+  { token: '--primary',          value: 'axisPointer',      description: tContent('tokens.table.primary')         },
+  { token: '--muted-foreground', value: 'axisLabel',        description: tContent('tokens.table.mutedForeground') },
+  { token: '--border',           value: 'axisLine + grid',  description: tContent('tokens.table.border')          },
+  { token: '--foreground',       value: 'title + tooltip',  description: tContent('tokens.table.foreground')      },
+  { token: '--card',             value: 'tooltip bg',       description: tContent('tokens.table.card')            },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -478,7 +408,7 @@ const visualTestItems = computed(() => [
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="@unovis/vue + componentes de @/components/ui/chart"
+        install-note="npm install echarts vue-echarts"
       />
     </template>
 
@@ -486,22 +416,11 @@ const visualTestItems = computed(() => [
     <DocsDemonstration :title="tContent('demonstration.title')" component-slug="chart">
       <div class="flex flex-col items-center justify-center w-full py-8 gap-4">
         <ChartContainer
-          :config="chartConfig"
+          :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
           class="h-[240px] w-full max-w-lg"
           :aria-label="tContent('demonstration.labels.chartTitle')"
-        >
-          <template #default>
-            <VisXYContainer :data="chartData" :height="240">
-              <VisGroupedBar
-                :x="barX"
-                :y="[barDesktop, barMobile]"
-                :color="['var(--chart-1)', 'var(--chart-2)']"
-              />
-              <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
-            </VisXYContainer>
-          </template>
-        </ChartContainer>
-        <ChartLegendContent :config="chartConfig" />
+         />
+
       </div>
     </DocsDemonstration>
 
@@ -574,42 +493,20 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <div class="flex flex-col items-center justify-center py-6 px-4 gap-3">
           <ChartContainer
-            :config="chartConfig"
+            :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[120px] w-full max-w-xs"
             aria-label="Bar chart com legenda"
-          >
-            <template #default>
-              <VisXYContainer :data="chartData" :height="120">
-                <VisGroupedBar
-                  :x="barX"
-                  :y="[barDesktop, barMobile]"
-                  :color="['var(--chart-1)', 'var(--chart-2)']"
-                />
-                <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
-              </VisXYContainer>
-            </template>
-          </ChartContainer>
-          <ChartLegendContent :config="chartConfig" />
+           />
+
         </div>
       </template>
       <!-- Pair 1: DON'T — sem legenda -->
       <template #dont-preview-0>
         <div class="flex flex-col items-center justify-center py-6 px-4 gap-3">
           <ChartContainer
-            :config="chartConfig"
+            :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[120px] w-full max-w-xs"
-          >
-            <template #default>
-              <VisXYContainer :data="chartData" :height="120">
-                <VisGroupedBar
-                  :x="barX"
-                  :y="[barDesktop, barMobile]"
-                  :color="['var(--chart-1)', 'var(--chart-2)']"
-                />
-                <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
-              </VisXYContainer>
-            </template>
-          </ChartContainer>
+           />
           <p class="text-xs text-muted-foreground italic">Sem legenda — séries indistinguíveis</p>
         </div>
       </template>
@@ -640,7 +537,7 @@ const visualTestItems = computed(() => [
       :title="tContent('import.title')"
       :description="tContent('import.basic')"
       :code="codeImportBasic"
-      :secondary-description="tContent('import.withRecharts')"
+      :secondary-description="tContent('import.withBuilders')"
       :secondary-code="codeImportSecondary"
     />
 
@@ -650,79 +547,40 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <div class="py-6 px-4 flex flex-col gap-3">
           <ChartContainer
-            :config="{ desktop: { label: 'Desktop', color: 'var(--chart-1)' } }"
+            :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[180px] w-full"
             aria-label="Bar chart"
-          >
-            <template #default>
-              <VisXYContainer :data="chartData" :height="180">
-                <VisGroupedBar
-                  :x="barX"
-                  :y="[barDesktop]"
-                  :color="['var(--chart-1)']"
-                />
-                <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
-              </VisXYContainer>
-            </template>
-          </ChartContainer>
+           />
         </div>
       </template>
       <!-- Line chart -->
       <template #variant-preview-1>
         <div class="py-6 px-4 flex flex-col gap-3">
           <ChartContainer
-            :config="{ desktop: { label: 'Desktop', color: 'var(--chart-1)' } }"
+            :option="buildLineOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[180px] w-full"
             aria-label="Line chart"
-          >
-            <template #default>
-              <VisXYContainer :data="chartData" :height="180">
-                <VisLine
-                  :x="lineX"
-                  :y="lineY"
-                  color="var(--chart-1)"
-                />
-                <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
-              </VisXYContainer>
-            </template>
-          </ChartContainer>
+           />
         </div>
       </template>
       <!-- Area chart -->
       <template #variant-preview-2>
         <div class="py-6 px-4 flex flex-col gap-3">
           <ChartContainer
-            :config="{ desktop: { label: 'Desktop', color: 'var(--chart-1)' } }"
+            :option="buildAreaOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[180px] w-full"
             aria-label="Area chart"
-          >
-            <template #default>
-              <VisXYContainer :data="chartData" :height="180">
-                <VisArea
-                  :x="areaX"
-                  :y="areaY"
-                  color="var(--chart-1)"
-                />
-                <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
-              </VisXYContainer>
-            </template>
-          </ChartContainer>
+           />
         </div>
       </template>
       <!-- Pie chart -->
       <template #variant-preview-3>
         <div class="py-6 px-4 flex flex-col gap-3">
           <ChartContainer
-            :config="{ desktop: { label: 'Desktop', color: 'var(--chart-1)' }, mobile: { label: 'Mobile', color: 'var(--chart-2)' } }"
+            :option="buildPieOption({ data: pieData })"
             class="h-[180px] w-[260px]"
             aria-label="Pie chart"
-          >
-            <template #default>
-              <VisXYContainer :data="[{ value: 60 }, { value: 40 }]" :height="180">
-                <VisDonut :value="(d: any) => d.value" :color-accessor="(_: any, i: number) => i === 0 ? 'var(--chart-1)' : 'var(--chart-2)'" />
-              </VisXYContainer>
-            </template>
-          </ChartContainer>
+           />
         </div>
       </template>
     </DocsVariants>
@@ -741,21 +599,10 @@ const visualTestItems = computed(() => [
           </CardHeader>
           <CardContent>
             <ChartContainer
-              :config="chartConfig"
+              :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
               class="h-[200px] w-full"
               aria-label="Gráfico de barras: acessos mensais por dispositivo"
-            >
-              <template #default>
-                <VisXYContainer :data="chartData" :height="200">
-                  <VisGroupedBar
-                    :x="barX"
-                    :y="[barDesktop]"
-                    :color="['var(--chart-1)']"
-                  />
-                  <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
-                </VisXYContainer>
-              </template>
-            </ChartContainer>
+             />
           </CardContent>
         </Card>
       </template>
@@ -763,22 +610,11 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <div class="flex flex-col items-center gap-3 w-full">
           <ChartContainer
-            :config="chartConfig"
+            :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[200px] w-full max-w-md"
             aria-label="Gráfico multi-séries: Desktop e Mobile"
-          >
-            <template #default>
-              <VisXYContainer :data="chartData" :height="200">
-                <VisGroupedBar
-                  :x="barX"
-                  :y="[barDesktop, barMobile]"
-                  :color="['var(--chart-1)', 'var(--chart-2)']"
-                />
-                <VisAxis type="x" :tick-format="(i: number) => xTicks[i]" />
-              </VisXYContainer>
-            </template>
-          </ChartContainer>
-          <ChartLegendContent :config="chartConfig" />
+           />
+
         </div>
       </template>
 
@@ -789,16 +625,10 @@ const visualTestItems = computed(() => [
             <p class="text-2xl font-semibold">1.224</p>
           </div>
           <ChartContainer
-            :config="{ desktop: { label: 'Desktop', color: 'var(--chart-1)' } }"
+            :option="buildLineOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[48px] w-[120px]"
             aria-label="Tendência de acessos nos últimos 6 meses"
-          >
-            <template #default>
-              <VisXYContainer :data="chartData" :height="48">
-                <VisLine :x="lineX" :y="lineY" color="var(--chart-1)" />
-              </VisXYContainer>
-            </template>
-          </ChartContainer>
+           />
         </div>
       </template>
 
@@ -824,7 +654,6 @@ const visualTestItems = computed(() => [
       :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.containerTitle'), cols: propCols, items: containerPropItems },
-        { title: tContent('props.tooltipTitle'),   cols: propCols, items: tooltipPropItems   },
         { title: tContent('props.legendTitle'),    cols: propCols, items: legendPropItems    },
       ]"
       :interface-code="interfaceCode"

@@ -1,33 +1,31 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-
-import { within, expect } from 'storybook/test';
-import { ChartContainer } from '@/components/ui/chart';
-import ChartStory from './ChartStory.svelte';
+import { expect, waitFor } from 'storybook/test';
+import { ChartContainer, buildBarOption } from './index';
 import ChartDocs from '@/components/docs/ChartDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+const chartData = [
+  { label: 'Jan', value: 186 }, { label: 'Feb', value: 305 },
+  { label: 'Mar', value: 237 }, { label: 'Apr', value: 73 },
+  { label: 'May', value: 209 }, { label: 'Jun', value: 214 },
+];
 
 const meta = {
   title: 'UI/Chart',
   component: ChartContainer,
   tags: ['autodocs'],
   parameters: {
-    docs: { page: withAutoDocsTab(ChartDocs) },
     layout: 'centered',
+    docs: { page: withAutoDocsTab(ChartDocs) },
   },
   argTypes: {
-    type: {
-      control: 'select',
-      options: ['bar', 'line'],
-      description: 'Tipo de gráfico renderizado dentro do ChartContainer',
-    },
-    multiSeries: {
-      control: 'boolean',
-      description: 'Exibe múltiplas séries de dados',
-    },
+    class: { control: 'text', description: 'Classes Tailwind (use h-[300px] w-[500px]).' },
+    renderer: { control: 'select', options: ['svg', 'canvas'] },
   },
   args: {
-    type: 'bar',
-    multiSeries: false,
+    class: 'h-[300px] w-[500px]',
+    renderer: 'svg' as const,
+    option: buildBarOption({ data: chartData, title: 'Acessos mensais' }),
   },
 } satisfies Meta<typeof ChartContainer>;
 
@@ -35,26 +33,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  render: (args) => ({
-    Component: ChartStory,
-    props: {
-      type: (args as any).type ?? 'bar',
-      multiSeries: (args as any).multiSeries ?? false,
-      ariaLabel: 'Gráfico de acessos mensais',
-      class: 'h-[220px] w-[340px]',
-    },
-  }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step('ChartContainer renderiza com data-slot="chart"', async () => {
-      const chart = canvasElement.querySelector('[data-slot="chart"]');
-      await expect(chart).toBeInTheDocument();
-    });
-
-    await step('SVG está presente dentro do container', async () => {
-      const svg = canvasElement.querySelector('[data-slot="chart"] svg');
-      await expect(svg).toBeInTheDocument();
+    await step('ECharts renderiza SVG ou canvas', async () => {
+      await waitFor(() => {
+        const node = canvasElement.querySelector('[data-slot=chart] svg, [data-slot=chart] canvas');
+        expect(node).not.toBeNull();
+      }, { timeout: 2000 });
     });
   },
 };

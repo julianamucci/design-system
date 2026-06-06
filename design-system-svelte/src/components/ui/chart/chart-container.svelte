@@ -1,80 +1,118 @@
+<!--
+  ChartContainer Svelte 5 — wrapper de vanilla echarts.
+  API: <ChartContainer option={buildBarOption({...})} class="h-64" />
+-->
 <script lang="ts">
-	import { cn, type WithElementRef } from "@/lib/utils.js";
-	import type { HTMLAttributes } from "svelte/elements";
-	import ChartStyle from "./chart-style.svelte";
-	import { setChartContext, type ChartConfig } from "./chart-utils.js";
+  import { onMount } from 'svelte';
+  import type { HTMLAttributes } from 'svelte/elements';
+  import { cn } from '@/lib/utils.js';
+  import * as echarts from 'echarts/core';
+  import { BarChart, LineChart, PieChart } from 'echarts/charts';
+  import {
+    TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
+  } from 'echarts/components';
+  import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 
-	const uid = $props.id();
+  echarts.use([
+    BarChart, LineChart, PieChart,
+    TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
+    SVGRenderer, CanvasRenderer,
+  ]);
 
-	let {
-		ref = $bindable(null),
-		id = uid,
-		class: className,
-		children,
-		config,
-		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLElement>> & {
-		config: ChartConfig;
-	} = $props();
+  const THEME_NAME = 'nortear';
 
-	const chartId = $derived(`chart-${id || uid.replace(/:/g, "")}`);
+  let {
+    option,
+    class: className,
+    renderer = 'svg',
+    ...restProps
+  }: HTMLAttributes<HTMLDivElement> & {
+    option: echarts.EChartsCoreOption;
+    class?: string;
+    renderer?: 'svg' | 'canvas';
+  } = $props();
 
-	setChartContext({
-		get config() {
-			return config;
-		},
-	});
+  let containerEl: HTMLDivElement;
+
+  function hsl(token: string, alpha = 1): string {
+    if (typeof document === 'undefined') return 'transparent';
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(`--${token}`).trim();
+    if (!raw) return 'transparent';
+    return alpha === 1 ? `hsl(${raw})` : `hsla(${raw} / ${alpha})`;
+  }
+  function cssToken(name: string): string {
+    if (typeof document === 'undefined') return '';
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function buildTheme() {
+    const fontFamily = cssToken('--font-family-active') || cssToken('--font-family') || 'sans-serif';
+    const fg = hsl('foreground');
+    const muted = hsl('muted-foreground');
+    const card = hsl('card');
+    const border = hsl('border');
+    const axisStyle = {
+      axisLine: { show: true, lineStyle: { color: hsl('border', 0.6) } },
+      axisTick: { show: true, lineStyle: { color: hsl('border', 0.6) } },
+      axisLabel: { show: true, color: muted },
+      splitLine: { show: true, lineStyle: { color: hsl('border', 0.3) } },
+      splitArea: { show: false, areaStyle: { color: ['transparent'] } },
+    };
+    return {
+      color: [hsl('chart-1'), hsl('chart-2'), hsl('chart-3'), hsl('chart-4'), hsl('chart-5')],
+      backgroundColor: 'transparent',
+      textStyle: { color: fg, fontFamily },
+      title: { textStyle: { color: fg, fontFamily, fontWeight: 600 } },
+      legend: { textStyle: { color: muted } },
+      tooltip: { backgroundColor: card, borderColor: border, textStyle: { color: fg } },
+      axisPointer: { lineStyle: { color: hsl('primary', 0.5) } },
+      categoryAxis: axisStyle,
+      valueAxis: axisStyle,
+      logAxis: axisStyle,
+      timeAxis: axisStyle,
+      line: { itemStyle: { borderWidth: 2 }, lineStyle: { width: 2 } },
+      bar: { itemStyle: { barBorderColor: card, barBorderWidth: 1 } },
+    };
+  }
+
+  function applyTheme() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    echarts.registerTheme(THEME_NAME, buildTheme() as any);
+  }
+
+  onMount(() => {
+    applyTheme();
+    const chart = echarts.init(containerEl, THEME_NAME, { renderer });
+    chart.setOption(option);
+
+    const ro = new ResizeObserver(() => chart.resize());
+    ro.observe(containerEl);
+
+    const observer = new MutationObserver(() => {
+      applyTheme();
+      chart.setOption(option, { notMerge: false, lazyUpdate: true });
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    return () => {
+      ro.disconnect();
+      observer.disconnect();
+      chart.dispose();
+    };
+  });
+
+  $effect(() => {
+    if (!containerEl) return;
+    const inst = echarts.getInstanceByDom(containerEl);
+    inst?.setOption(option, { notMerge: false, lazyUpdate: true });
+  });
 </script>
 
 <div
-	bind:this={ref}
-	data-chart={chartId}
-	data-slot="chart"
-	class={cn(
-		"flex aspect-video justify-center overflow-visible text-xs",
-		// Overrides
-		//
-		// Stroke around dots/marks when hovering
-		"[&_.lc-highlight-point]:stroke-transparent",
-		// override the default stroke color of lines
-		"[&_.lc-line]:stroke-border/50",
-
-		// by default, layerchart shows a line intersecting the point when hovering, this hides that
-		"[&_.lc-highlight-line]:stroke-0",
-
-		// by default, when you hover a point on a stacked series chart, it will drop the opacity
-		// of the other series, this overrides that
-		"[&_.lc-area-path]:opacity-100 [&_.lc-highlight-line]:opacity-100 [&_.lc-highlight-point]:opacity-100 [&_.lc-spline-path]:opacity-100 [&_.lc-text]:text-xs [&_.lc-text-svg]:overflow-visible",
-
-		// We don't want the little tick lines between the axis labels and the chart, so we remove
-		// the stroke. The alternative is to manually disable `tickMarks` on the x/y axis of every
-		// chart.
-		"[&_.lc-axis-tick]:stroke-0",
-
-		// We don't want to display the rule on the x/y axis, as there is already going to be
-		// a grid line there and rule ends up overlapping the marks because it is rendered after
-		// the marks
-		"[&_.lc-rule-x-line:not(.lc-grid-x-rule)]:stroke-0 [&_.lc-rule-y-line:not(.lc-grid-y-rule)]:stroke-0",
-		"[&_.lc-grid-x-radial-line]:stroke-border [&_.lc-grid-x-radial-circle]:stroke-border",
-		"[&_.lc-grid-y-radial-line]:stroke-border [&_.lc-grid-y-radial-circle]:stroke-border",
-
-		// Legend adjustments
-		"[&_.lc-legend-swatch-button]:items-center [&_.lc-legend-swatch-button]:gap-1.5",
-		"[&_.lc-legend-swatch-group]:items-center [&_.lc-legend-swatch-group]:gap-4",
-		"[&_.lc-legend-swatch]:size-2.5 [&_.lc-legend-swatch]:rounded-[2px]",
-
-		// Labels
-		"[&_.lc-labels-text:not([fill])]:fill-foreground [&_text]:stroke-transparent",
-
-		// Tick labels on th x/y axes
-		"[&_.lc-axis-tick-label]:fill-muted-foreground [&_.lc-axis-tick-label]:font-normal",
-		"[&_.lc-tooltip-rects-g]:fill-transparent",
-		"[&_.lc-layout-svg-g]:fill-transparent",
-		"[&_.lc-root-container]:w-full",
-		className
-	)}
-	{...restProps}
->
-	<ChartStyle id={chartId} {config} />
-	{@render children?.()}
-</div>
+  bind:this={containerEl}
+  data-slot="chart"
+  role="img"
+  class={cn('w-full', className)}
+  style="min-height: 200px;"
+  {...restProps}
+></div>

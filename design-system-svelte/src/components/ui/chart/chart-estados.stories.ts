@@ -1,63 +1,43 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { expect, waitFor } from 'storybook/test';
+import { ChartContainer, buildBarOption } from './index';
 
-import { within, expect } from 'storybook/test';
-import { ChartContainer } from '@/components/ui/chart';
-import ChartStory from './ChartStory.svelte';
+const xMonths = ['Jan', 'Feb', 'Mar', 'Apr'];
+const singleSeries = [{ name: 'Vendas', data: [186, 305, 237, 73] }];
+const multipleSeries = [
+  { name: 'Vendas',     data: [186, 305, 237, 73] },
+  { name: 'Devoluções', data: [10, 25, 18, 7] },
+  { name: 'Trocas',     data: [4, 12, 8, 3] },
+];
 
 const meta = {
+  parameters: { controls: { disable: true }, actions: { disable: true } },
   title: 'UI/Chart/Estados',
   component: ChartContainer,
-  parameters: {
-    controls: { disable: true },
-    actions: { disable: true },
-    layout: 'centered',
-  },
 } satisfies Meta<typeof ChartContainer>;
-
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Vazio: Story = {
-  render: () => ({
-    Component: ChartStory,
-    props: {
-      type: 'bar',
-      ariaLabel: 'Gráfico de barras: sem dados disponíveis',
-      class: 'h-[220px] w-[340px]',
-      data: [],
-    },
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
+async function expectRendered(el: HTMLElement) {
+  await waitFor(() => {
+    const n = el.querySelector('[data-slot=chart] svg, [data-slot=chart] canvas');
+    expect(n).not.toBeNull();
+  }, { timeout: 2000 });
+}
 
-    await step('ChartContainer renderizado mesmo sem dados', async () => {
-      const chart = canvasElement.querySelector('[data-slot="chart"]');
-      await expect(chart).toBeInTheDocument();
-    });
-  },
+export const Vazio: Story = {
+  args: { option: buildBarOption({ data: [] }), class: 'h-[200px] w-[480px]' },
+  parameters: { docs: { description: { story: '"No data" automático do ECharts quando series vazia.' } } },
 };
 
 export const UmaSerie: Story = {
-  render: () => ({
-    Component: ChartStory,
-    props: {
-      type: 'bar',
-      ariaLabel: 'Gráfico de barras: série única de acessos',
-      class: 'h-[220px] w-[340px]',
-      multiSeries: false,
-    },
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
+  args: { option: buildBarOption({ xAxis: xMonths, series: singleSeries }), class: 'h-[240px] w-[480px]' },
+  parameters: { docs: { description: { story: 'Uma série — legenda oculta por default.' } } },
+  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
+};
 
-    await step('ChartContainer com data-slot="chart" presente', async () => {
-      const chart = canvasElement.querySelector('[data-slot="chart"]');
-      await expect(chart).toBeInTheDocument();
-    });
-
-    await step('SVG renderizado', async () => {
-      const svg = canvasElement.querySelector('[data-slot="chart"] svg');
-      await expect(svg).toBeInTheDocument();
-    });
-  },
+export const MultiplasSeries: Story = {
+  args: { option: buildBarOption({ xAxis: xMonths, series: multipleSeries }), class: 'h-[280px] w-[500px]' },
+  parameters: { docs: { description: { story: 'Múltiplas séries — legenda automática.' } } },
+  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };

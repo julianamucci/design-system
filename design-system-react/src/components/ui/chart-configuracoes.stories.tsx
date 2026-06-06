@@ -1,120 +1,73 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { expect } from "storybook/test";
-import {
-  BarChart,
-  Bar,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-} from "recharts";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-  type ChartConfig,
-} from "./chart";
+import type { Meta, StoryObj } from '@storybook/react';
+import { expect, waitFor } from 'storybook/test';
+import { ChartContainer, buildBarOption } from './chart';
 
-const chartData = [
-  { month: "Jan", desktop: 186, mobile: 80 },
-  { month: "Feb", desktop: 305, mobile: 200 },
-  { month: "Mar", desktop: 237, mobile: 120 },
-  { month: "Apr", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "Jun", desktop: 214, mobile: 140 },
+const singleSeries = [
+  { label: 'Jan', value: 186 },
+  { label: 'Feb', value: 305 },
+  { label: 'Mar', value: 237 },
+  { label: 'Apr', value: 73 },
 ];
 
-const chartConfig = {
-  desktop: { label: "Desktop", color: "hsl(var(--primary))" },
-  mobile: { label: "Mobile", color: "hsl(var(--secondary))" },
-} satisfies ChartConfig;
+const xMonths = ['Jan', 'Feb', 'Mar', 'Apr'];
+const multiSeries = [
+  { name: 'Desktop', data: [186, 305, 237, 73] },
+  { name: 'Mobile',  data: [80, 200, 120, 190] },
+  { name: 'Tablet',  data: [40, 90, 60, 100] },
+];
 
-const meta = {
-  title: "UI/Chart/Configurações",
-  component: ChartContainer,
-  parameters: {
-    layout: "centered",
-    controls: { disable: true },
-    actions: { disable: true },
-    docs: {
-      description: {
-        component:
-          "Configurações de tooltip, legenda e multi-séries no ChartContainer.",
-      },
-    },
-  },
-} satisfies Meta<typeof ChartContainer>;
-
+const meta: Meta = {
+  parameters: { controls: { disable: true }, actions: { disable: true } },
+  title: 'UI/Chart/Configurações',
+};
 export default meta;
-type Story = StoryObj<typeof ChartContainer>;
+type Story = StoryObj;
+
+async function expectChartRendered(canvasElement: HTMLElement) {
+  await waitFor(() => {
+    const node = canvasElement.querySelector('[data-slot=chart] svg, [data-slot=chart] canvas');
+    expect(node).not.toBeNull();
+  }, { timeout: 2000 });
+}
 
 export const ComTooltip: Story = {
   render: () => (
-    <ChartContainer
-      config={chartConfig}
-      className="h-[300px] w-[500px]"
-      aria-label="Gráfico de barras com tooltip: acessos mensais"
-    >
-      <BarChart data={chartData} accessibilityLayer>
-        <CartesianGrid vertical={false} />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} />
-        <YAxis tickLine={false} axisLine={false} />
-        <ChartTooltip
-          content={<ChartTooltipContent indicator="dot" />}
-        />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-      </BarChart>
-    </ChartContainer>
+    <ChartContainer option={buildBarOption({ data: singleSeries })} className="h-[240px] w-[480px]" />
   ),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  parameters: {
+    docs: { description: { story: 'Tooltip nativo do ECharts — passe o mouse sobre uma barra.' } },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Chart renderizado', () => expectChartRendered(canvasElement));
   },
 };
 
 export const ComLegenda: Story = {
   render: () => (
     <ChartContainer
-      config={chartConfig}
-      className="h-[300px] w-[500px]"
-      aria-label="Gráfico de barras com legenda: acessos mensais"
-    >
-      <BarChart data={chartData} accessibilityLayer>
-        <CartesianGrid vertical={false} />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} />
-        <YAxis tickLine={false} axisLine={false} />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-      </BarChart>
-    </ChartContainer>
+      option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
+      className="h-[260px] w-[480px]"
+    />
   ),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  parameters: {
+    docs: { description: { story: 'Legenda aparece automaticamente quando há >1 série. Clique pra toggle séries.' } },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Chart renderizado', () => expectChartRendered(canvasElement));
   },
 };
 
 export const MultiSeries: Story = {
   render: () => (
     <ChartContainer
-      config={chartConfig}
-      className="h-[300px] w-[500px]"
-      aria-label="Gráfico multi-séries: desktop e mobile por mês"
-    >
-      <BarChart data={chartData} accessibilityLayer>
-        <CartesianGrid vertical={false} />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} />
-        <YAxis tickLine={false} axisLine={false} />
-        <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-      </BarChart>
-    </ChartContainer>
+      option={buildBarOption({ xAxis: xMonths, series: multiSeries, title: 'Acessos por dispositivo' })}
+      className="h-[280px] w-[500px]"
+    />
   ),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  parameters: {
+    docs: { description: { story: 'Multi-série com título — caso típico de dashboard analítico.' } },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Chart renderizado', () => expectChartRendered(canvasElement));
   },
 };

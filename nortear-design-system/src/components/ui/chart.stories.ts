@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
-import { within, expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { createChart } from './chart';
 import { createChartDocs } from '@/components/docs/ChartDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -18,7 +18,7 @@ const chartData = [
 // ─── Args type ────────────────────────────────────────────────────────────────
 
 type ChartArgs = {
-  type: 'bar' | 'line';
+  type: 'bar' | 'line' | 'area' | 'pie';
   height: number;
 };
 
@@ -35,12 +35,12 @@ const meta: Meta<ChartArgs> = {
   argTypes: {
     type: {
       control: 'select',
-      options: ['bar', 'line'],
-      description: 'Tipo do gráfico. Apenas bar e line são suportados no Basecoat.',
+      options: ['bar', 'line', 'area', 'pie'],
+      description: 'Tipo do gráfico (bar / line / area / pie).',
     },
     height: {
       control: { type: 'range', min: 100, max: 400, step: 10 },
-      description: 'Altura do SVG em pixels.',
+      description: 'Altura do container em pixels.',
     },
   },
   args: {
@@ -68,21 +68,16 @@ export const Playground: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step('Container do gráfico está presente no DOM', async () => {
-      const chart = canvasElement.querySelector('[data-slot="chart"]');
-      await expect(chart).not.toBeNull();
+    await step('Container .nds-chart presente no DOM', async () => {
+      const container = canvasElement.querySelector('.nds-chart');
+      await expect(container).not.toBeNull();
     });
 
-    await step('SVG acessível está presente', async () => {
-      const svg = canvasElement.querySelector('svg[role="img"]');
-      await expect(svg).not.toBeNull();
-    });
-
-    await step('SVG tem aria-label definido', async () => {
-      const svg = canvasElement.querySelector('svg[role="img"]');
-      await expect(svg?.getAttribute('aria-label')).toBeTruthy();
+    await step('ECharts terminou de renderizar (svg ou canvas dentro)', async () => {
+      await waitFor(() => {
+        const rendered = canvasElement.querySelector('.nds-chart svg, .nds-chart canvas');
+        expect(rendered).not.toBeNull();
+      }, { timeout: 2000 });
     });
   },
 };

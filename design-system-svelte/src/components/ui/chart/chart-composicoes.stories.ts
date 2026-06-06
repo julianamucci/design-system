@@ -1,33 +1,38 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
+import { expect, waitFor } from 'storybook/test';
+import { ChartContainer, buildBarOption } from './index';
 
-import { expect } from 'storybook/test';
-import { ChartContainer } from '@/components/ui/chart';
-import ChartComCardStory from './ChartComCardStory.svelte';
+const chartData = [
+  { label: 'Jan', value: 186 }, { label: 'Feb', value: 305 },
+  { label: 'Mar', value: 237 }, { label: 'Apr', value: 73 },
+];
 
 const meta = {
+  parameters: { controls: { disable: true }, actions: { disable: true } },
   title: 'UI/Chart/Composições',
   component: ChartContainer,
-  parameters: {
-    controls: { disable: true },
-    actions: { disable: true },
-    layout: 'centered',
-  },
 } satisfies Meta<typeof ChartContainer>;
-
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComCard: Story = {
-  render: () => ({
-    Component: ChartComCardStory,
-    props: {},
-  }),
-  play: async ({ canvasElement, step }) => {
-    await step('Card e ChartContainer renderizados', async () => {
-      const chart = canvasElement.querySelector('[data-slot="chart"]');
-      await expect(chart).toBeInTheDocument();
-      const card = canvasElement.querySelector('[data-slot="card"]');
-      await expect(card).toBeInTheDocument();
-    });
+async function expectRendered(el: HTMLElement) {
+  await waitFor(() => {
+    const n = el.querySelector('[data-slot=chart] svg, [data-slot=chart] canvas');
+    expect(n).not.toBeNull();
+  }, { timeout: 2000 });
+}
+
+export const ChartIsolado: Story = {
+  args: { option: buildBarOption({ data: chartData }), class: 'h-[240px] w-[480px]' },
+  parameters: { docs: { description: { story: 'Chart sem wrapper — use diretamente em layouts simples.' } } },
+  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
+};
+
+export const TituloEmbutido: Story = {
+  args: {
+    option: buildBarOption({ data: chartData, title: 'Vendas mensais' }),
+    class: 'h-[280px] w-[480px]',
   },
+  parameters: { docs: { description: { story: 'Título no option — útil quando o chart é stand-alone.' } } },
+  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };

@@ -1,149 +1,47 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
-import { expect } from 'storybook/test';
-import { ChartContainer, ChartLegendContent, ChartTooltipContent, type ChartConfig } from './index';
-import { VisXYContainer, VisGroupedBar, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/vue';
+import { expect, waitFor } from 'storybook/test';
+import { h } from 'vue';
+import { ChartContainer, buildBarOption } from './index';
 
-const chartData = [
-  { month: 'Jan', desktop: 186, mobile: 80 },
-  { month: 'Feb', desktop: 305, mobile: 200 },
-  { month: 'Mar', desktop: 237, mobile: 120 },
-  { month: 'Apr', desktop: 73,  mobile: 190 },
-  { month: 'May', desktop: 209, mobile: 130 },
-  { month: 'Jun', desktop: 214, mobile: 140 },
+const xMonths = ['Jan', 'Feb', 'Mar', 'Apr'];
+const singleSeries = [{ name: 'Vendas', data: [186, 305, 237, 73] }];
+const multiSeries = [
+  { name: 'Desktop', data: [186, 305, 237, 73] },
+  { name: 'Mobile',  data: [80, 200, 120, 190] },
+  { name: 'Tablet',  data: [40, 90, 60, 100] },
 ];
 
-const singleConfig: ChartConfig = {
-  desktop: { label: 'Desktop', color: 'var(--chart-1)' },
+const meta: Meta = {
+  parameters: { controls: { disable: true }, actions: { disable: true } },
+  title: 'UI/Chart/Configurações',
 };
-
-const multiConfig: ChartConfig = {
-  desktop: { label: 'Desktop', color: 'var(--chart-1)' },
-  mobile:  { label: 'Mobile',  color: 'var(--chart-2)' },
-};
-
-const meta = {
-  title: 'UI/Chart/Configuracoes',
-  component: ChartContainer,
-  parameters: {
-    controls: { disable: true },
-    actions: { disable: true },
-    layout: 'centered',
-  },
-} satisfies Meta<any>;
-
 export default meta;
-type Story = StoryObj<Meta<any>>;
+type Story = StoryObj;
+
+async function expectRendered(el: HTMLElement) {
+  await waitFor(() => {
+    const n = el.querySelector('[data-slot=chart] svg, [data-slot=chart] canvas');
+    expect(n).not.toBeNull();
+  }, { timeout: 2000 });
+}
 
 export const ComTooltip: Story = {
-  render: () => ({
-    components: { ChartContainer, VisXYContainer, VisGroupedBar, VisAxis, VisCrosshair, VisTooltip, ChartTooltipContent },
-    setup() {
-      const data = chartData;
-      const config = singleConfig;
-      const xTicks = data.map(d => d.month);
-      const barX = (_d: typeof chartData[number], i: number) => i;
-      const barDesktop = (d: typeof chartData[number]) => d.desktop;
-      return { data, config, xTicks, barX, barDesktop };
-    },
-    template: `
-      <div class="w-[480px]">
-        <ChartContainer
-          :config="config"
-          :cursor="true"
-          class="h-[300px] w-full"
-          aria-label="Bar chart com tooltip: acessos desktop"
-        >
-          <template #default>
-            <VisXYContainer :data="data" :height="300">
-              <VisGroupedBar
-                :x="barX"
-                :y="[barDesktop]"
-                :color="['var(--chart-1)']"
-              />
-              <VisAxis type="x" :tick-format="(i) => xTicks[i]" />
-              <VisCrosshair color="var(--border)" />
-            </VisXYContainer>
-          </template>
-        </ChartContainer>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
-  },
+  render: () => h(ChartContainer, { option: buildBarOption({ xAxis: xMonths, series: singleSeries }), class: 'h-[240px] w-[480px]' }),
+  parameters: { docs: { description: { story: 'Tooltip nativo do ECharts — passe o mouse.' } } },
+  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };
 
 export const ComLegenda: Story = {
-  render: () => ({
-    components: { ChartContainer, ChartLegendContent, VisXYContainer, VisGroupedBar, VisAxis },
-    setup() {
-      const data = chartData;
-      const config = multiConfig;
-      const xTicks = data.map(d => d.month);
-      const barX = (_d: typeof chartData[number], i: number) => i;
-      const barDesktop = (d: typeof chartData[number]) => d.desktop;
-      const barMobile = (d: typeof chartData[number]) => d.mobile;
-      return { data, config, xTicks, barX, barDesktop, barMobile };
-    },
-    template: `
-      <div class="flex flex-col gap-4 w-[480px]">
-        <ChartContainer
-          :config="config"
-          class="h-[280px] w-full"
-          aria-label="Bar chart com legenda: acessos mensais por dispositivo"
-        >
-          <template #default>
-            <VisXYContainer :data="data" :height="280">
-              <VisGroupedBar
-                :x="barX"
-                :y="[barDesktop, barMobile]"
-                :color="['var(--chart-1)', 'var(--chart-2)']"
-              />
-              <VisAxis type="x" :tick-format="(i) => xTicks[i]" />
-            </VisXYContainer>
-          </template>
-        </ChartContainer>
-        <ChartLegendContent :config="config" />
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
-  },
+  render: () => h(ChartContainer, { option: buildBarOption({ xAxis: xMonths, series: multiSeries }), class: 'h-[260px] w-[480px]' }),
+  parameters: { docs: { description: { story: 'Legenda automática quando há >1 série.' } } },
+  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };
 
 export const MultiSeries: Story = {
-  render: () => ({
-    components: { ChartContainer, ChartLegendContent, VisXYContainer, VisLine, VisAxis },
-    setup() {
-      const data = chartData;
-      const config = multiConfig;
-      const xTicks = data.map(d => d.month);
-      const lineX = (_d: typeof chartData[number], i: number) => i;
-      const lineDesktop = (d: typeof chartData[number]) => d.desktop;
-      const lineMobile = (d: typeof chartData[number]) => d.mobile;
-      return { data, config, xTicks, lineX, lineDesktop, lineMobile };
-    },
-    template: `
-      <div class="flex flex-col gap-4 w-[480px]">
-        <ChartContainer
-          :config="config"
-          class="h-[300px] w-full"
-          aria-label="Line chart multi-séries: desktop e mobile por mês"
-        >
-          <template #default>
-            <VisXYContainer :data="data" :height="300">
-              <VisLine :x="lineX" :y="lineDesktop" color="var(--chart-1)" />
-              <VisLine :x="lineX" :y="lineMobile"  color="var(--chart-2)" />
-              <VisAxis type="x" :tick-format="(i) => xTicks[i]" />
-            </VisXYContainer>
-          </template>
-        </ChartContainer>
-        <ChartLegendContent :config="config" />
-      </div>
-    `,
+  render: () => h(ChartContainer, {
+    option: buildBarOption({ xAxis: xMonths, series: multiSeries, title: 'Acessos por dispositivo' }),
+    class: 'h-[280px] w-[500px]',
   }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
-  },
+  parameters: { docs: { description: { story: 'Multi-série com título — caso típico de dashboard.' } } },
+  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };
