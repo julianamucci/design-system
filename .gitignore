@@ -20,6 +20,9 @@ dist/
 build/
 storybook-static/
 
+# TypeScript build artifacts
+*.tsbuildinfo
+
 # Environment
 .env
 .env.local
