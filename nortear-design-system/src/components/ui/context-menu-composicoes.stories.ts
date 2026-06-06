@@ -5,6 +5,7 @@ import { createContextMenu } from './context-menu';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['overlay'],
   title: 'UI/ContextMenu/Composicoes',
   parameters: {
     controls: { disable: true },

@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/RadioGroup/Variantes',
   parameters: {
     actions: { disable: true },

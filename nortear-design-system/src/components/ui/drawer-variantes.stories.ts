@@ -5,6 +5,7 @@ import { createSheet, type SheetSide } from './sheet';
 import { createButton } from './button';
 
 const meta: Meta = {
+  tags: ['disclosure'],
   title: 'UI/Drawer/Variantes',
   parameters: {
     actions: { disable: true },

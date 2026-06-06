@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createSwitch } from './switch';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Switch/Variantes',
   parameters: {
     actions: { disable: true },

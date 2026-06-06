@@ -13,7 +13,7 @@ type BadgeArgs = {
 
 const meta: Meta<BadgeArgs> = {
   title: 'UI/Badge',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'feedback'],
   parameters: {
     docs: { page: withAutoDocsTab(createBadgeDocs) },
   },

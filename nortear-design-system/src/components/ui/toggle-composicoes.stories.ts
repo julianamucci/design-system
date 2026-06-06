@@ -4,6 +4,7 @@ import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Eye, List 
 import { createToggle, type ToggleOptions, type ToggleVariant } from './toggle';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Toggle/Composições',
   parameters: {
     actions: { disable: true },

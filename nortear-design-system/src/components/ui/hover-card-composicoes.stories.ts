@@ -3,6 +3,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import { createHoverCard } from './hover-card';
 
 const meta: Meta = {
+  tags: ['overlay'],
   title: 'UI/HoverCard/Composições',
   parameters: {
     actions: { disable: true },

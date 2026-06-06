@@ -4,6 +4,7 @@ import { createHoverCard } from './hover-card';
 import { createButton } from './button';
 
 const meta: Meta = {
+  tags: ['overlay'],
   title: 'UI/HoverCard/Estados',
   parameters: {
     actions: { disable: true },

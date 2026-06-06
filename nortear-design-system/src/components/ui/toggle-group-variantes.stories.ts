@@ -13,6 +13,7 @@ import {
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/ToggleGroup/Variantes',
   parameters: {
     actions: { disable: true },

@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createSelect } from './select';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Select/Variantes',
   parameters: {
     actions: { disable: true },

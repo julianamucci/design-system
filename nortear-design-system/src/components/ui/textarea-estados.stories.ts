@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Textarea/Estados',
   parameters: {
     actions: { disable: true },

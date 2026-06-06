@@ -4,6 +4,7 @@ import { createDropdownMenu } from './dropdown-menu';
 import { createButton } from './button';
 
 const meta: Meta = {
+  tags: ['overlay'],
   title: 'UI/DropdownMenu/Estados',
   parameters: {
     actions: { disable: true },

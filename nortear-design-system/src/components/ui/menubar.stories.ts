@@ -15,7 +15,7 @@ type MenubarArgs = {
 
 const meta: Meta<MenubarArgs> = {
   title: 'UI/Menubar',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createMenubarDocs) },

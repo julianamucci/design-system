@@ -27,7 +27,7 @@ type ChartArgs = {
 const meta: Meta<ChartArgs> = {
   title: 'UI/Chart',
   component: createChart as unknown as Meta<ChartArgs>['component'],
-  tags: ['autodocs'],
+  tags: ['autodocs', 'display'],
   parameters: {
     docs: { page: withAutoDocsTab(createChartDocs) },
     layout: 'centered',

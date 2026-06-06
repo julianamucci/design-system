@@ -16,6 +16,7 @@ import { within, expect } from 'storybook/test';
 // novas stories poderão ser adicionadas replicando as das stacks React/Vue/Svelte.
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Calendar/Layouts',
   parameters: {
     controls: { disable: true },

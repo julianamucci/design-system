@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createInputOTP } from './input-otp';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/InputOTP/Variantes',
   parameters: {
     actions: { disable: true },

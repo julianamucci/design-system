@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
 
 const meta: Meta = {
+  tags: ['navigation'],
   title: 'UI/NavigationMenu/Variantes',
   parameters: {
     actions: { disable: true },

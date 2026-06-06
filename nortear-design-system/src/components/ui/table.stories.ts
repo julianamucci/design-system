@@ -17,7 +17,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta = {
   title: 'UI/Table',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createTableDocs) },

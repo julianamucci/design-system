@@ -3,6 +3,7 @@ import { within, expect, userEvent } from 'storybook/test';
 import { createCheckbox } from './checkbox';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Checkbox/Estados',
   parameters: {
     controls: { disable: true },

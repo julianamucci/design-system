@@ -3,6 +3,7 @@ import { expect } from 'storybook/test';
 import { createSkeleton } from './skeleton';
 
 const meta: Meta = {
+  tags: ['feedback'],
   title: 'UI/Skeleton/Variantes',
   parameters: {
     actions: { disable: true },

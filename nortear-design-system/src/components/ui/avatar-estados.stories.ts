@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createAvatar, createAvatarFallback, createAvatarImage, createAvatarRoot } from './avatar';
 
 const meta: Meta = {
+  tags: ['display'],
   title: 'UI/Avatar/Estados',
   parameters: {
     controls: { disable: true },

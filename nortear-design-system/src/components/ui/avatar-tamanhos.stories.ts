@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createAvatar, type AvatarSize } from './avatar';
 
 const meta: Meta = {
+  tags: ['display'],
   title: 'UI/Avatar/Tamanhos',
   parameters: {
     controls: { disable: true },

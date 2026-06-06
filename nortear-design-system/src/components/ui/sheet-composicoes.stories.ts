@@ -6,6 +6,7 @@ import { createButton } from './button';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['disclosure'],
   title: 'UI/Sheet/Composições',
   parameters: {
     actions: { disable: true },

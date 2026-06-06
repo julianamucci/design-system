@@ -3,6 +3,7 @@ import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription 
 import { within, expect } from 'storybook/test';
 
 const meta: Meta = {
+  tags: ['feedback'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -13,6 +13,7 @@ import {
 import { createButton } from '@/components/ui/button';
 
 const meta: Meta = {
+  tags: ['tables'],
   title: 'UI/Table/Variantes',
   parameters: {
     actions: { disable: true },

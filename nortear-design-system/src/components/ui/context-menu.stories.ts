@@ -16,7 +16,7 @@ type ContextMenuArgs = {
 
 const meta: Meta<ContextMenuArgs> = {
   title: 'UI/ContextMenu',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
     docs: { page: withAutoDocsTab(createContextMenuDocs) },

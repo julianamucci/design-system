@@ -41,7 +41,7 @@ type ToggleArgs = {
 
 const meta: Meta<ToggleArgs> = {
   title: 'UI/Toggle',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createToggleDocs) },
   },

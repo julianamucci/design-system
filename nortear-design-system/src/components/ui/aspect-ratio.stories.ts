@@ -14,7 +14,7 @@ type AspectRatioArgs = {
 
 const meta: Meta<AspectRatioArgs> = {
   title: 'UI/AspectRatio',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createAspectRatioDocs) },

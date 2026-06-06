@@ -3,6 +3,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createButton, createButtonIcon, btnClass } from './button';
 
 const meta: Meta = {
+  tags: ['form'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

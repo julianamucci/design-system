@@ -15,7 +15,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta = {
   title: 'UI/Breadcrumb',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     docs: { page: withAutoDocsTab(createBreadcrumbDocs) },
   },

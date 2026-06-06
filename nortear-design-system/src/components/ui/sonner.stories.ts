@@ -15,7 +15,7 @@ type SonnerArgs = {
 
 const meta: Meta<SonnerArgs> = {
   title: 'UI/Sonner',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'feedback'],
   parameters: {
     docs: { page: withAutoDocsTab(createSonnerDocs) },
   },

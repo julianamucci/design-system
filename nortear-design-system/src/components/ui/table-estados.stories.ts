@@ -11,6 +11,7 @@ import {
 } from './table';
 
 const meta: Meta = {
+  tags: ['tables'],
   title: 'UI/Table/Estados',
   parameters: {
     actions: { disable: true },

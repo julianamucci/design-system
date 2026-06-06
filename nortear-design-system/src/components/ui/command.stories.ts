@@ -13,7 +13,7 @@ type CommandArgs = {
 
 const meta: Meta<CommandArgs> = {
   title: 'UI/Command',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     docs: { page: withAutoDocsTab(createCommandDocs) },
   },

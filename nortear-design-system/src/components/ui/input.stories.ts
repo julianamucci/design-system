@@ -16,7 +16,7 @@ type InputArgs = {
 
 const meta: Meta<InputArgs> = {
   title: 'UI/Input',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createInputDocs) },
   },

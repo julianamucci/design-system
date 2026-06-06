@@ -5,6 +5,7 @@ import { createBadge } from './badge';
 import { User, Settings, Shield } from 'lucide';
 
 const meta: Meta = {
+  tags: ['navigation'],
   title: 'UI/Tabs/Composições',
   parameters: {
     actions: { disable: true },

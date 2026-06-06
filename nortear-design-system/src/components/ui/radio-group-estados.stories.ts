@@ -3,6 +3,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/RadioGroup/Estados',
   parameters: {
     actions: { disable: true },

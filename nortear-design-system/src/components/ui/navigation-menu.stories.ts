@@ -15,7 +15,7 @@ type NavigationMenuArgs = {
 
 const meta: Meta<NavigationMenuArgs> = {
   title: 'UI/NavigationMenu',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createNavigationMenuDocs) },

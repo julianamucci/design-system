@@ -15,7 +15,7 @@ type HoverCardArgs = {
 
 const meta: Meta<HoverCardArgs> = {
   title: 'UI/HoverCard',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createHoverCardDocs) },

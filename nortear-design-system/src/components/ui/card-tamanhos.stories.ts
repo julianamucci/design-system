@@ -9,6 +9,7 @@ import {
 } from './card';
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/Card/Tamanhos',
   parameters: {
     controls: { disable: true },

@@ -6,6 +6,7 @@ import { sanitizeHtml } from '@/lib/sanitize-html';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['feedback'],
   title: 'UI/Sonner/Tipos',
   parameters: {
     actions: { disable: true },

@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createSlider } from './slider';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Slider/Composições',
   parameters: {
     actions: { disable: true },

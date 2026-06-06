@@ -15,7 +15,7 @@ type SelectArgs = {
 
 const meta: Meta<SelectArgs> = {
   title: 'UI/Select',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createSelectDocs) },
   },

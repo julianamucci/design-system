@@ -37,7 +37,7 @@ type CarouselArgs = {
 
 const meta: Meta<CarouselArgs> = {
   title: 'UI/Carousel',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'display'],
   parameters: {
     layout: 'centered',
     docs: { page: withAutoDocsTab(createCarouselDocs) },

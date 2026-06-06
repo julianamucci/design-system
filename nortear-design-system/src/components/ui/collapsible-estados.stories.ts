@@ -3,6 +3,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createCollapsible } from './collapsible';
 
 const meta: Meta = {
+  tags: ['disclosure'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

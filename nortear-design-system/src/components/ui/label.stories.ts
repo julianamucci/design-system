@@ -13,7 +13,7 @@ type LabelArgs = {
 
 const meta: Meta<LabelArgs> = {
   title: 'UI/Label',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createLabelDocs) },
   },

@@ -15,7 +15,7 @@ type SwitchArgs = {
 
 const meta: Meta<SwitchArgs> = {
   title: 'UI/Switch',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createSwitchDocs) },
   },

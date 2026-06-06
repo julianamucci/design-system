@@ -5,6 +5,7 @@ import { createLabel } from './label';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Label/Estados',
   parameters: {
     actions: { disable: true },

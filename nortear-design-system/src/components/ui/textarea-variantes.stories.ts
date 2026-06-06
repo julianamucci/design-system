@@ -3,6 +3,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Textarea/Variantes',
   parameters: {
     actions: { disable: true },

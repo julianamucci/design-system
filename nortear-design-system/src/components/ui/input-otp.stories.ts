@@ -14,7 +14,7 @@ type InputOTPArgs = {
 
 const meta: Meta<InputOTPArgs> = {
   title: 'UI/InputOTP',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createInputOTPDocs) },

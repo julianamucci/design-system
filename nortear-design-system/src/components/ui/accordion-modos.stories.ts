@@ -4,6 +4,7 @@ import { createAccordion, type AccordionOptions } from './accordion';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 
 const meta: Meta = {
+  tags: ['disclosure'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

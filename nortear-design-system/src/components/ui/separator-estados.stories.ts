@@ -3,6 +3,7 @@ import { expect } from 'storybook/test';
 import { createSeparator } from './separator';
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/Separator/Estados',
   parameters: {
     actions: { disable: true },

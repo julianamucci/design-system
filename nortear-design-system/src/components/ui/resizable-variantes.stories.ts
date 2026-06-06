@@ -3,6 +3,7 @@ import { expect } from 'storybook/test';
 import { createResizablePanel } from './resizable';
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/Resizable/Variantes',
   parameters: {
     actions: { disable: true },

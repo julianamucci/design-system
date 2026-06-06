@@ -15,7 +15,7 @@ type CheckboxArgs = {
 
 const meta: Meta<CheckboxArgs> = {
   title: 'UI/Checkbox',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createCheckboxDocs) },
   },

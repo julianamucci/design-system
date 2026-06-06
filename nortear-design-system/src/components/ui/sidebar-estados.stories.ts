@@ -15,6 +15,7 @@ import {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/Sidebar/Estados',
   parameters: {
     actions: { disable: true },

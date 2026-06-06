@@ -13,7 +13,7 @@ type CollapsibleArgs = {
 
 const meta: Meta<CollapsibleArgs> = {
   title: 'UI/Collapsible',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'disclosure'],
   parameters: {
     docs: { page: withAutoDocsTab(createCollapsibleDocs) },
   },

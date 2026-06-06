@@ -18,7 +18,7 @@ type FormArgs = {
 
 const meta: Meta<FormArgs> = {
   title: 'UI/Form',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createFormDocs) },
   },

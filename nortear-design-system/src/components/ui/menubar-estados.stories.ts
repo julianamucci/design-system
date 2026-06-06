@@ -3,6 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
 
 const meta: Meta = {
+  tags: ['navigation'],
   title: 'UI/Menubar/Estados',
   parameters: {
     actions: { disable: true },

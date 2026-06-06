@@ -28,6 +28,7 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['display'],
   title: 'UI/Carousel/Estados',
   parameters: {
     controls: { disable: true },

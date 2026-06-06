@@ -11,6 +11,7 @@ import {
 import { createButton } from '@/components/ui/button';
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/Card/Estados',
   parameters: {
     controls: { disable: true },

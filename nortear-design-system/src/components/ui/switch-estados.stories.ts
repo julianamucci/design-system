@@ -3,6 +3,7 @@ import { within, expect, userEvent } from 'storybook/test';
 import { createSwitch } from './switch';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Switch/Estados',
   parameters: {
     actions: { disable: true },

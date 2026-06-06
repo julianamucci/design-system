@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createInput } from './input';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Input/Composições',
   parameters: {
     actions: { disable: true },

@@ -3,6 +3,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createSlider } from './slider';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Slider/Estados',
   parameters: {
     actions: { disable: true },

@@ -3,6 +3,7 @@ import { createAspectRatio } from './aspect-ratio';
 import { within, expect } from 'storybook/test';
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/AspectRatio/Variantes',
   parameters: {
     controls: { disable: true },

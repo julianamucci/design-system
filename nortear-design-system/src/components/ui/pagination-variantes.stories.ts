@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createPagination } from './pagination';
 
 const meta: Meta = {
+  tags: ['navigation'],
   title: 'UI/Pagination/Variantes',
   parameters: {
     actions: { disable: true },

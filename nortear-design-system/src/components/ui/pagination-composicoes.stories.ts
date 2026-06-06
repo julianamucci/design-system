@@ -3,6 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPagination } from './pagination';
 
 const meta: Meta = {
+  tags: ['navigation'],
   title: 'UI/Pagination/Composições',
   parameters: {
     actions: { disable: true },

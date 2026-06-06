@@ -12,7 +12,7 @@ type SkeletonArgs = {
 
 const meta: Meta<SkeletonArgs> = {
   title: 'UI/Skeleton',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'feedback'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createSkeletonDocs) },

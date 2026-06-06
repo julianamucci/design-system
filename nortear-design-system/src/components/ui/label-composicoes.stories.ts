@@ -7,6 +7,7 @@ import { createCheckbox } from './checkbox';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Label/Composições',
   parameters: {
     actions: { disable: true },

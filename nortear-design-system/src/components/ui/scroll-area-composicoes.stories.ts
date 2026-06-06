@@ -5,6 +5,7 @@ import { createCard, createCardHeader, createCardTitle, createCardDescription, c
 import { createBadge } from './badge';
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/ScrollArea/Composições',
   parameters: {
     actions: { disable: true },

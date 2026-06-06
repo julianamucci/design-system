@@ -4,6 +4,7 @@ import { AlignLeft, AlignCenter, AlignRight } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/ToggleGroup/Estados',
   parameters: {
     actions: { disable: true },

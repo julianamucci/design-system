@@ -23,7 +23,7 @@ type CardArgs = {
 
 const meta: Meta<CardArgs> = {
   title: 'UI/Card',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     docs: { page: withAutoDocsTab(createCardDocs) },
   },

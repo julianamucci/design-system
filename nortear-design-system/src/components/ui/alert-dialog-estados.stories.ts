@@ -6,6 +6,7 @@ import { createButton } from './button';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['overlay'],
   title: 'UI/AlertDialog/Estados',
   parameters: {
     controls: { disable: true },

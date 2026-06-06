@@ -4,6 +4,7 @@ import { Bold, Italic, Eye } from 'lucide';
 import { createToggle } from './toggle';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Toggle/Variantes',
   parameters: {
     actions: { disable: true },

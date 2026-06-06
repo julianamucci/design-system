@@ -5,6 +5,7 @@ import { createChart } from './chart';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['display'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

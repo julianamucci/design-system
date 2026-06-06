@@ -15,7 +15,7 @@ type AvatarArgs = {
 
 const meta: Meta<AvatarArgs> = {
   title: 'UI/Avatar',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'display'],
   parameters: {
     docs: { page: withAutoDocsTab(createAvatarDocs) },
   },

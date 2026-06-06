@@ -5,6 +5,7 @@ import { createCommand } from './command';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['overlay'],
   title: 'UI/Command/Composições',
   parameters: {
     controls: { disable: true },

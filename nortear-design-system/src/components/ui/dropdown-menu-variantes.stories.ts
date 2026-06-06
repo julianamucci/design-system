@@ -4,6 +4,7 @@ import { createDropdownMenu } from './dropdown-menu';
 import { createButton } from './button';
 
 const meta: Meta = {
+  tags: ['overlay'],
   title: 'UI/DropdownMenu/Variantes',
   parameters: {
     actions: { disable: true },

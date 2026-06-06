@@ -4,6 +4,7 @@ import { createInputOTP } from './input-otp';
 import { createButton } from './button';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/InputOTP/Composições',
   parameters: {
     actions: { disable: true },

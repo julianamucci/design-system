@@ -3,6 +3,7 @@ import { expect, within } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
 
 const meta: Meta = {
+  tags: ['navigation'],
   title: 'UI/Tabs/Variantes',
   parameters: {
     actions: { disable: true },

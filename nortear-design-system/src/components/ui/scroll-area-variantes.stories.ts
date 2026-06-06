@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createScrollArea } from './scroll-area';
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/ScrollArea/Variantes',
   parameters: {
     actions: { disable: true },

@@ -16,6 +16,7 @@ import {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/Sidebar/Composições',
   parameters: {
     actions: { disable: true },

@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createCheckbox } from './checkbox';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Checkbox/Composições',
   parameters: {
     controls: { disable: true },

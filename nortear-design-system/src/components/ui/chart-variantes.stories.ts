@@ -22,6 +22,7 @@ const pieData = [
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['display'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

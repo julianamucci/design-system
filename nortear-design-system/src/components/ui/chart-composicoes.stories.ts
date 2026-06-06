@@ -17,6 +17,7 @@ const chartData = [
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['display'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

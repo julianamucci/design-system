@@ -4,6 +4,7 @@ import { Check, Bell } from 'lucide';
 import { createBadge, type BadgeVariant } from './badge';
 
 const meta: Meta = {
+  tags: ['feedback'],
   title: 'UI/Badge/Composições',
   parameters: {
     controls: { disable: true },

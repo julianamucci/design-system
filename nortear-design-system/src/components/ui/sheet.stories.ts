@@ -18,7 +18,7 @@ type SheetArgs = {
 
 const meta: Meta<SheetArgs> = {
   title: 'UI/Sheet',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'disclosure'],
   parameters: {
     layout: 'centered',
     docs: { page: withAutoDocsTab(createSheetDocs) },

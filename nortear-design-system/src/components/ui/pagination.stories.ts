@@ -14,7 +14,7 @@ type PaginationArgs = {
 
 const meta: Meta<PaginationArgs> = {
   title: 'UI/Pagination',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createPaginationDocs) },

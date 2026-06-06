@@ -4,6 +4,7 @@ import { createCard, createCardContent, createCardHeader, createCardTitle, creat
 import { within, expect } from 'storybook/test';
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/AspectRatio/Composições',
   parameters: {
     controls: { disable: true },

@@ -18,7 +18,7 @@ type AlertDialogArgs = {
 
 const meta: Meta<AlertDialogArgs> = {
   title: 'UI/AlertDialog',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     docs: { page: withAutoDocsTab(createAlertDialogDocs) },
   },

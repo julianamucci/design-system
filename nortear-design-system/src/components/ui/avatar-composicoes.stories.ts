@@ -4,6 +4,7 @@ import { User } from 'lucide';
 import { createAvatar, createAvatarFallback, createAvatarImage, createAvatarRoot } from './avatar';
 
 const meta: Meta = {
+  tags: ['display'],
   title: 'UI/Avatar/Composições',
   parameters: {
     controls: { disable: true },

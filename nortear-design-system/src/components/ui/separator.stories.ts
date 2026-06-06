@@ -13,7 +13,7 @@ type SeparatorArgs = {
 
 const meta: Meta<SeparatorArgs> = {
   title: 'UI/Separator',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createSeparatorDocs) },

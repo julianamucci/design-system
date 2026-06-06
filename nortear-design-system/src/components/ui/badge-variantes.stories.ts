@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createBadge } from './badge';
 
 const meta: Meta = {
+  tags: ['feedback'],
   title: 'UI/Badge/Variantes',
   parameters: {
     controls: { disable: true },

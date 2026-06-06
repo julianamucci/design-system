@@ -51,7 +51,7 @@ type ToggleGroupArgs = {
 
 const meta: Meta<ToggleGroupArgs> = {
   title: 'UI/ToggleGroup',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createToggleGroupDocs) },
   },

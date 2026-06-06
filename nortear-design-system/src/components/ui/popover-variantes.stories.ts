@@ -6,6 +6,7 @@ import { createInput } from './input';
 import { createLabel } from './label';
 
 const meta: Meta = {
+  tags: ['overlay'],
   title: 'UI/Popover/Variantes',
   parameters: {
     actions: { disable: true },

@@ -9,7 +9,7 @@ import { type Invoice, invoices, baseColumns } from './data-table.fixtures';
 
 const meta: Meta = {
   title: 'UI/DataTable',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createDataTableDocs) },

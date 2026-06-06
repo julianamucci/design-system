@@ -4,6 +4,7 @@ import { Bold } from 'lucide';
 import { createToggle } from './toggle';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Toggle/Estados',
   parameters: {
     actions: { disable: true },

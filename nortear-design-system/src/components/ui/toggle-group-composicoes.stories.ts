@@ -14,6 +14,7 @@ import {
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/ToggleGroup/Composições',
   parameters: {
     actions: { disable: true },

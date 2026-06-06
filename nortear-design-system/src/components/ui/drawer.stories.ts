@@ -21,7 +21,7 @@ type DrawerArgs = {
 
 const meta: Meta<DrawerArgs> = {
   title: 'UI/Drawer',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'disclosure'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createDrawerDocs) },

@@ -17,7 +17,7 @@ type ResizableArgs = {
 
 const meta: Meta<ResizableArgs> = {
   title: 'UI/Resizable',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createResizableDocs) },

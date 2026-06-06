@@ -17,6 +17,7 @@ import { createCalendar } from './calendar';
 //  - RangeWithMiddle → requer mode="range", ausente no Basecoat.
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Calendar/Estados',
   parameters: {
     controls: { disable: true },

@@ -13,6 +13,7 @@ import { within, expect } from 'storybook/test';
 // referência de comportamento esperado para quando forem adicionadas.
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Calendar/Modos',
   parameters: {
     controls: { disable: true },

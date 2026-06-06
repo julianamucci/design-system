@@ -13,7 +13,7 @@ type AccordionArgs = {
 
 const meta: Meta<AccordionArgs> = {
   title: 'UI/Accordion',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'disclosure'],
   parameters: {
     docs: { page: withAutoDocsTab(createAccordionDocs) },
   },

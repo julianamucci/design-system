@@ -5,6 +5,7 @@ import { createBadge } from './badge';
 import { Info, AlertTriangle, CheckCircle2 } from 'lucide';
 
 const meta: Meta = {
+  tags: ['disclosure'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

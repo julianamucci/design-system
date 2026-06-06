@@ -15,7 +15,7 @@ type ScrollAreaArgs = {
 
 const meta: Meta<ScrollAreaArgs> = {
   title: 'UI/ScrollArea',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createScrollAreaDocs) },

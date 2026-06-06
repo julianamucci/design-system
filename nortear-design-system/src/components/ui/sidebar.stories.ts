@@ -27,7 +27,7 @@ type SidebarArgs = {
 
 const meta: Meta<SidebarArgs> = {
   title: 'UI/Sidebar',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'fullscreen',
     docs: { page: withAutoDocsTab(createSidebarDocs) },

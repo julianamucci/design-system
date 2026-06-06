@@ -4,6 +4,7 @@ import { createTooltip } from './tooltip';
 import { createButton, createButtonIcon } from './button';
 
 const meta: Meta = {
+  tags: ['overlay'],
   title: 'UI/Tooltip/Composições',
   parameters: {
     actions: { disable: true },

@@ -16,7 +16,7 @@ type ButtonArgs = {
 
 const meta: Meta<ButtonArgs> = {
   title: 'UI/Button',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     docs: { page: withAutoDocsTab(createButtonDocs) },
   },

@@ -14,7 +14,7 @@ type AlertArgs = {
 
 const meta: Meta<AlertArgs> = {
   title: 'UI/Alert',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'feedback'],
   parameters: {
     docs: { page: withAutoDocsTab(createAlertDocs) },
   },

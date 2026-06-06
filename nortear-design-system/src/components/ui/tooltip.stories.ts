@@ -16,7 +16,7 @@ type TooltipArgs = {
 
 const meta: Meta<TooltipArgs> = {
   title: 'UI/Tooltip',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createTooltipDocs) },

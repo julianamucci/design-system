@@ -4,6 +4,7 @@ import { createTextarea } from './textarea';
 import { createButton } from './button';
 
 const meta: Meta = {
+  tags: ['form'],
   title: 'UI/Textarea/Composições',
   parameters: {
     actions: { disable: true },

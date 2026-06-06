@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta: Meta = {
   title: 'UI/Calendar',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',
     docs: { page: withAutoDocsTab(createCalendarDocs) },

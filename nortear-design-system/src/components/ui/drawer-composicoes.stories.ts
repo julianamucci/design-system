@@ -4,6 +4,7 @@ import { createDrawer } from './drawer';
 import { createButton } from './button';
 
 const meta: Meta = {
+  tags: ['disclosure'],
   title: 'UI/Drawer/Composições',
   parameters: {
     actions: { disable: true },

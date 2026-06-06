@@ -4,6 +4,7 @@ import { createCollapsible } from './collapsible';
 import { ChevronDown, Filter, Settings } from 'lucide';
 
 const meta: Meta = {
+  tags: ['disclosure'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -14,6 +14,7 @@ import {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/Sidebar/Variantes',
   parameters: {
     actions: { disable: true },

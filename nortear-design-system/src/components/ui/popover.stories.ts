@@ -18,7 +18,7 @@ type PopoverArgs = {
 
 const meta: Meta<PopoverArgs> = {
   title: 'UI/Popover',
-  tags: ['autodocs'],
+  tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',
     docs: { page: withAutoDocsTab(createPopoverDocs) },

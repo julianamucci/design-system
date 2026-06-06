@@ -4,6 +4,7 @@ import { createPopover } from './popover';
 import { createButton } from './button';
 
 const meta: Meta = {
+  tags: ['overlay'],
   title: 'UI/Popover/Estados',
   parameters: {
     actions: { disable: true },

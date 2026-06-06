@@ -11,6 +11,7 @@ import {
 } from './breadcrumb';
 
 const meta: Meta = {
+  tags: ['navigation'],
   title: 'UI/Breadcrumb/Estados',
   parameters: {
     controls: { disable: true },

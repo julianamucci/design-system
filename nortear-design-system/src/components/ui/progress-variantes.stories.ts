@@ -3,6 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createProgress } from './progress';
 
 const meta: Meta = {
+  tags: ['feedback'],
   title: 'UI/Progress/Variantes',
   parameters: {
     actions: { disable: true },
