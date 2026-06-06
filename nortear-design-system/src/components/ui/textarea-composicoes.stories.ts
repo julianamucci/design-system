@@ -99,7 +99,7 @@ export const ComLabel: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',
-      class: 'resize-y min-h-[120px]',
+      class: 'resize-y',
     });
     return createTextareaField({
       labelText: 'Descrição',
@@ -120,7 +120,7 @@ export const ComTextoDeApoio: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',
-      class: 'resize-y min-h-[120px]',
+      class: 'resize-y',
     });
     return createTextareaField({
       labelText: 'Descrição',
@@ -142,7 +142,7 @@ export const ComContadorAcessivel: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto em até 500 caracteres...',
-      class: 'resize-y min-h-[120px]',
+      class: 'resize-y',
     });
     return createTextareaField({
       labelText: 'Descrição',
@@ -172,7 +172,7 @@ export const ComMensagemDeErro: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',
-      class: 'resize-y min-h-[120px]',
+      class: 'resize-y',
     });
     textarea.setAttribute('aria-invalid', 'true');
     return createTextareaField({
@@ -203,7 +203,7 @@ export const EmFormulario: Story = {
     const textarea = createTextarea({
       name: 'feedback',
       placeholder: 'O que poderíamos melhorar?',
-      class: 'resize-y min-h-[120px]',
+      class: 'resize-y',
     });
 
     const field = createTextareaField({

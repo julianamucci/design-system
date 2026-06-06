@@ -100,8 +100,9 @@ export const Playground: Story = {
       disabled: args.disabled,
       value: args.value || undefined,
       rows: args.rows > 0 ? args.rows : undefined,
-      class: `${resizeClass} min-h-[120px]`,
+      class: resizeClass,
     });
+    textarea.style.minHeight = '120px';
 
     if (args.readOnly) textarea.readOnly = true;
     if (args.ariaInvalid) textarea.setAttribute('aria-invalid', 'true');

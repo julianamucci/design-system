@@ -55,10 +55,11 @@ export const Horizontal: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Lista é horizontal (flex-row no <ul>)', async () => {
+    await step('Lista é horizontal (sem aria-orientation=vertical)', async () => {
       const ul = canvasElement.querySelector('ul[role="menubar"]');
       await expect(ul).toBeTruthy();
-      await expect(ul).toHaveClass(/items-center/);
+      await expect(ul).toHaveClass('nds-navigation-menu-list');
+      await expect(ul?.getAttribute('aria-orientation')).not.toBe('vertical');
     });
     await step('Renderiza 3 items', async () => {
       const items = canvas.getAllByRole('menuitem');
@@ -93,10 +94,10 @@ export const Vertical: Story = {
     return wrap(nav, 260);
   },
   play: async ({ canvasElement, step }) => {
-    await step('Lista vertical (flex-col + aria-orientation)', async () => {
+    await step('Lista vertical (nds-stack + aria-orientation)', async () => {
       const ul = canvasElement.querySelector('ul[role="menubar"]');
       await expect(ul).toHaveAttribute('aria-orientation', 'vertical');
-      await expect(ul).toHaveClass(/flex-col/);
+      await expect(ul).toHaveClass('nds-stack');
     });
   },
 };

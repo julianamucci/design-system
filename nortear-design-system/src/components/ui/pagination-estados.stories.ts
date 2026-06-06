@@ -84,14 +84,13 @@ export const DisabledFirst: Story = {
       }),
     ),
   play: async ({ canvasElement, step }) => {
-    await step('Previous tem pointer-events-none + opacity-50', async () => {
+    await step('Previous está desabilitado (aria-disabled=true)', async () => {
       const prev = canvasElement.querySelector('a[aria-label="Go to previous page"]');
-      await expect(prev).toHaveClass(/pointer-events-none/);
-      await expect(prev).toHaveClass(/opacity-50/);
+      await expect(prev).toHaveAttribute('aria-disabled', 'true');
     });
     await step('Next continua habilitado', async () => {
       const next = canvasElement.querySelector('a[aria-label="Go to next page"]');
-      await expect(next).not.toHaveClass(/pointer-events-none/);
+      await expect(next).not.toHaveAttribute('aria-disabled', 'true');
     });
   },
 };
@@ -108,14 +107,13 @@ export const DisabledLast: Story = {
       }),
     ),
   play: async ({ canvasElement, step }) => {
-    await step('Next tem pointer-events-none + opacity-50', async () => {
+    await step('Next está desabilitado (aria-disabled=true)', async () => {
       const next = canvasElement.querySelector('a[aria-label="Go to next page"]');
-      await expect(next).toHaveClass(/pointer-events-none/);
-      await expect(next).toHaveClass(/opacity-50/);
+      await expect(next).toHaveAttribute('aria-disabled', 'true');
     });
     await step('Previous continua habilitado', async () => {
       const prev = canvasElement.querySelector('a[aria-label="Go to previous page"]');
-      await expect(prev).not.toHaveClass(/pointer-events-none/);
+      await expect(prev).not.toHaveAttribute('aria-disabled', 'true');
     });
   },
 };
@@ -137,9 +135,10 @@ export const Focus: Story = {
       const focused = document.activeElement as HTMLElement | null;
       await expect(focused?.tagName).toBe('A');
     });
-    await step('Links têm classe focus-visible:ring-1', async () => {
+    await step('Primeiro link recebe foco via Tab', async () => {
       const links = canvas.getAllByRole('link');
-      await expect(links[0]).toHaveClass(/focus-visible:ring-1/);
+      await expect(links[0]).toHaveClass('nds-pagination-link');
+      await expect(document.activeElement).toBe(links[0]);
     });
   },
 };

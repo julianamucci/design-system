@@ -43,8 +43,9 @@ function buildLabeled(opts: {
   const textarea = createTextarea({
     id: opts.id,
     placeholder: opts.placeholder,
-    class: `${opts.resizeClass} min-h-[120px]`,
+    class: opts.resizeClass,
   });
+  textarea.style.minHeight = '120px';
 
   if (opts.maxLength !== undefined) textarea.maxLength = opts.maxLength;
 

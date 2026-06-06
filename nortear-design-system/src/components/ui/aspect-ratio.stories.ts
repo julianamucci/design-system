@@ -63,25 +63,16 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
 
-    await step('Wrapper aplica padding-bottom calculado a partir do ratio', async () => {
-      const wrappers = canvasElement.querySelectorAll<HTMLElement>('div.relative.w-full');
-      const ratioWrapper = Array.from(wrappers).find((el) => el.style.paddingBottom);
+    await step('Wrapper aplica CSS custom property --ratio', async () => {
+      const ratioWrapper = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]');
       await expect(ratioWrapper).toBeTruthy();
-      const expected = `${(1 / args.ratio) * 100}%`;
-      await expect(ratioWrapper!.style.paddingBottom).toBe(expected);
+      await expect(ratioWrapper!.style.getPropertyValue('--ratio')).toBe(String(args.ratio));
     });
 
-    await step('Inner container usa absolute inset-0', async () => {
-      const inner = canvasElement.querySelector('.absolute.inset-0');
-      await expect(inner).toBeInTheDocument();
-    });
-
-    await step('Imagem filha tem alt e preenche o container', async () => {
+    await step('Imagem filha tem alt e está visível no container', async () => {
       const img = await canvas.findByRole('img', { name: args.alt });
       await expect(img).toHaveAttribute('alt', args.alt);
-      await expect(img).toHaveClass('object-cover');
-      await expect(img).toHaveClass('w-full');
-      await expect(img).toHaveClass('h-full');
+      await expect(img).toBeVisible();
     });
   },
 };

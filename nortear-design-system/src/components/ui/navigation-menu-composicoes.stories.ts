@@ -151,7 +151,8 @@ export const MegaMenuGrid: Story = {
         }
       });
       const panel = canvasElement.querySelector<HTMLElement>('[role="menu"]:not(.hidden)');
-      await expect(panel).toHaveClass(/grid-cols-2/);
+      await expect(panel).toHaveClass('nds-grid');
+      await expect(panel).toHaveAttribute('data-cols', '2');
       const links = panel?.querySelectorAll('a[role="menuitem"]') ?? [];
       await expect(links.length).toBe(6);
     });

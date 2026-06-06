@@ -84,20 +84,16 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
 
-    await step('Root tem data-slot="scroll-area" e classes base', async () => {
+    await step('Root tem data-slot="scroll-area" e classe base', async () => {
       const root = canvasElement.querySelector('[data-slot="scroll-area"]') as HTMLElement | null;
       await expect(root).toBeTruthy();
-      await expect(root).toHaveClass('relative');
-      await expect(root).toHaveClass('overflow-hidden');
-      await expect(root).toHaveClass('scrollbar');
+      await expect(root).toHaveClass('nds-scroll-area');
     });
 
-    await step('Viewport tem data-slot e overflow-auto', async () => {
+    await step('Viewport tem data-slot e classe base', async () => {
       const viewport = canvasElement.querySelector('[data-slot="scroll-area-viewport"]') as HTMLElement | null;
       await expect(viewport).toBeTruthy();
-      await expect(viewport).toHaveClass('overflow-auto');
-      await expect(viewport).toHaveClass('h-full');
-      await expect(viewport).toHaveClass('w-full');
+      await expect(viewport).toHaveClass('nds-scroll-area-viewport');
     });
 
     await step('Altura do root é aplicada via style inline', async () => {

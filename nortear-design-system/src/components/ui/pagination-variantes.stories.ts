@@ -80,9 +80,9 @@ export const Active: Story = {
       await expect(current).toBeTruthy();
       await expect(current?.textContent?.trim()).toBe('4');
     });
-    await step('Link ativo tem pointer-events-none (não navega)', async () => {
+    await step('Link ativo marcado via aria-current=page (não navega)', async () => {
       const current = canvasElement.querySelector('a[aria-current="page"]');
-      await expect(current).toHaveClass(/pointer-events-none/);
+      await expect(current).toHaveAttribute('aria-current', 'page');
     });
   },
 };

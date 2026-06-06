@@ -140,7 +140,7 @@ export const Ativo: Story = {
     });
     await step('Link ativo recebe bg-accent', async () => {
       const current = canvasElement.querySelector('a[aria-current="page"]');
-      await expect(current).toHaveClass(/bg-accent/);
+      await expect(current).toHaveClass('nds-bg-accent');
     });
   },
 };

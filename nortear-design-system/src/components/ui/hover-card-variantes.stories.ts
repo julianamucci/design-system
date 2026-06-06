@@ -143,7 +143,7 @@ export const ComDelayCurto: Story = {
     await step('Content aparece após delay curto', async () => {
       await waitForOpen();
       const dialog = await body.findByRole('dialog');
-      await expect(dialog).toHaveClass(/w-72/);
+      await expect(dialog).toHaveClass('nds-hover-card-content');
     });
     await step('Cleanup', async () => {
       await closeAfter();

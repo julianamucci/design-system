@@ -115,7 +115,7 @@ export const UltimaPagina: Story = {
     });
     await step('Next está desabilitado', async () => {
       const next = canvasElement.querySelector('a[aria-label="Go to next page"]');
-      await expect(next).toHaveClass(/pointer-events-none/);
+      await expect(next).toHaveAttribute('aria-disabled', 'true');
     });
   },
 };

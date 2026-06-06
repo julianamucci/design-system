@@ -22,8 +22,36 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// Aceita pseudo-classes Tailwind (motion-reduce:, w-[…], h-[…]) e converte em styles inline
+// quando possível para evitar InvalidCharacterError no classList.add.
 function makeSkeleton(className: string): HTMLElement {
-  const skeleton = createSkeleton({ className });
+  const tokens = className.split(' ').filter(Boolean);
+  const safeClasses: string[] = [];
+  const styles: Record<string, string> = {};
+  const rounded: string[] = [];
+  for (const t of tokens) {
+    if (t.includes(':') || t.includes('[')) continue; // skip variant/arbitrary tokens
+    const mH = /^h-(\d+)$/.exec(t);
+    const mW = /^w-(\d+)$/.exec(t);
+    if (mH) {
+      styles.height = `${parseInt(mH[1], 10) * 0.25}rem`;
+      continue;
+    }
+    if (mW) {
+      styles.width = `${parseInt(mW[1], 10) * 0.25}rem`;
+      continue;
+    }
+    if (t === 'w-full') styles.width = '100%';
+    else if (t === 'h-full') styles.height = '100%';
+    else if (t === 'rounded-full') rounded.push('nds-rounded-full');
+    else if (t === 'rounded-md') rounded.push('nds-rounded-md');
+    else if (t === 'absolute') styles.position = 'absolute';
+    else if (t === 'inset-0') {
+      styles.inset = '0';
+    } else safeClasses.push(t);
+  }
+  const skeleton = createSkeleton({ className: [...safeClasses, ...rounded].join(' ') });
+  Object.assign(skeleton.style, styles);
   skeleton.setAttribute('aria-hidden', 'true');
   skeleton.setAttribute('data-slot', 'skeleton');
   return skeleton;
@@ -65,7 +93,7 @@ export const CardDePerfil: Story = {
     await step('Card de perfil tem 1 avatar circular + 2 linhas', async () => {
       const skeletons = canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]');
       await expect(skeletons.length).toBe(3);
-      await expect(skeletons[0]).toHaveClass('rounded-full');
+      await expect(skeletons[0]).toHaveClass('nds-rounded-full');
     });
     await step('Container pai expõe aria-busy', async () => {
       const container = canvasElement.querySelector<HTMLElement>('[aria-busy="true"]');
@@ -130,11 +158,11 @@ export const ImagemEmAspectRatio: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Skeleton ocupa h-full w-full do AspectRatio', async () => {
+    await step('Skeleton ocupa h-full w-full do AspectRatio (via style)', async () => {
       const skeleton = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]');
       await expect(skeleton).toBeTruthy();
-      await expect(skeleton).toHaveClass('h-full');
-      await expect(skeleton).toHaveClass('w-full');
+      await expect(skeleton!.style.height).toBe('100%');
+      await expect(skeleton!.style.width).toBe('100%');
     });
   },
 };

@@ -38,18 +38,17 @@ export const Retangulo: Story = {
   name: 'Retângulo',
   render: () => {
     const wrap = buildContainer('Carregando bloco retangular');
-    const skeleton = createSkeleton({ className: 'h-24 w-full motion-reduce:animate-none' });
+    const skeleton = createSkeleton({ height: '6rem', width: '100%' });
     skeleton.setAttribute('aria-hidden', 'true');
     skeleton.setAttribute('data-slot', 'skeleton');
     wrap.appendChild(skeleton);
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Skeleton retângulo aplica rounded-md (padrão)', async () => {
+    await step('Skeleton retângulo renderiza com classe base nds-skeleton', async () => {
       const skeleton = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]');
       await expect(skeleton).toBeTruthy();
-      await expect(skeleton).toHaveClass('rounded-md');
-      await expect(skeleton).toHaveClass('animate-pulse');
+      await expect(skeleton).toHaveClass('nds-skeleton');
     });
   },
 };
@@ -78,14 +77,9 @@ export const LinhaDeTexto: Story = {
   render: () => {
     const wrap = buildContainer('Carregando linhas de texto');
 
-    const lines = [
-      'h-4 w-[250px] motion-reduce:animate-none',
-      'h-4 w-[200px] motion-reduce:animate-none',
-      'h-4 w-[160px] motion-reduce:animate-none',
-    ];
-
-    lines.forEach((cls) => {
-      const skeleton = createSkeleton({ className: cls });
+    const widths = ['250px', '200px', '160px'];
+    widths.forEach((w) => {
+      const skeleton = createSkeleton({ height: '1rem', width: w });
       skeleton.setAttribute('aria-hidden', 'true');
       skeleton.setAttribute('data-slot', 'skeleton');
       wrap.appendChild(skeleton);
@@ -94,10 +88,10 @@ export const LinhaDeTexto: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Linhas de texto com altura fixa h-4', async () => {
+    await step('Linhas de texto: três skeletons renderizados', async () => {
       const skeletons = canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]');
       await expect(skeletons.length).toBe(3);
-      await expect(skeletons[0]).toHaveClass('h-4');
+      await expect(skeletons[0]).toHaveClass('nds-skeleton');
     });
   },
 };

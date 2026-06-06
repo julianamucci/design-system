@@ -137,7 +137,7 @@ export const ItemDesabilitado: Story = {
       const items = document.querySelectorAll('[role="menu"]:not(.hidden) [role="menuitem"]');
       const disabled = Array.from(items).find((el) => /compartilhar/i.test(el.textContent || ''));
       await expect(disabled?.getAttribute('tabindex')).toBe('-1');
-      await expect(disabled).toHaveClass(/opacity-50/);
+      await expect(disabled).toHaveAttribute('aria-disabled', 'true');
     });
     await step('Limpa via ESC', closeAfter);
   },

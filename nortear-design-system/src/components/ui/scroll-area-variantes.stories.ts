@@ -109,7 +109,7 @@ export const Vertical: Story = {
     await expect(root).toBeTruthy();
     await expect(root!.style.height).toBe('240px');
     const viewport = canvasElement.querySelector('[data-slot="scroll-area-viewport"]') as HTMLElement | null;
-    await expect(viewport).toHaveClass('overflow-auto');
+    await expect(viewport).toHaveClass('nds-scroll-area-viewport');
     await expect(canvas.getAllByText(/Item \d+/).length).toBe(30);
   },
 };

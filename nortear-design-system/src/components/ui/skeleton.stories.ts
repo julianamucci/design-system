@@ -25,7 +25,7 @@ const meta: Meta<SkeletonArgs> = {
     },
   },
   args: {
-    className: 'h-4 w-[250px] motion-reduce:animate-none',
+    className: 'nds-skeleton-line',
   },
 };
 
@@ -52,10 +52,10 @@ export const Playground: Story = {
   play: async ({ canvasElement, step }) => {
     const _canvas = within(canvasElement);
 
-    await step('Renderiza um Skeleton com animate-pulse', async () => {
+    await step('Renderiza um Skeleton com classe nds-skeleton', async () => {
       const skeleton = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]');
       await expect(skeleton).toBeTruthy();
-      await expect(skeleton).toHaveClass('animate-pulse');
+      await expect(skeleton).toHaveClass('nds-skeleton');
     });
 
     await step('Skeleton recebe aria-hidden=true', async () => {

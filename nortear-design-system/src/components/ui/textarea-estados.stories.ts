@@ -44,7 +44,7 @@ export const Padrao: Story = {
     'Descrição',
     createTextarea({
       placeholder: 'ex: Descreva o produto...',
-      class: 'resize-y min-h-[120px]',
+      class: 'resize-y',
     }),
   ),
   play: async ({ canvasElement, step }) => {
@@ -69,7 +69,7 @@ export const Filled: Story = {
     createTextarea({
       placeholder: 'Conte um pouco sobre você...',
       value: 'Designer multidisciplinar com 8 anos de experiência em produtos digitais. Apaixonado por sistemas de design escaláveis.',
-      class: 'resize-y min-h-[120px]',
+      class: 'resize-y',
     }),
   ),
   play: async ({ canvasElement, step }) => {
@@ -88,7 +88,7 @@ export const Desabilitado: Story = {
     createTextarea({
       placeholder: 'Não disponível',
       disabled: true,
-      class: 'resize-y min-h-[120px]',
+      class: 'resize-y',
     }),
   ),
   play: async ({ canvasElement, step }) => {
@@ -104,7 +104,7 @@ export const SomenteLeitura: Story = {
   render: () => {
     const ta = createTextarea({
       value: 'Este conteúdo é somente leitura — pode ser selecionado mas não editado.',
-      class: 'resize-y min-h-[120px]',
+      class: 'resize-y',
     });
     ta.readOnly = true;
     return labeled('est-readonly', 'Termos', ta);
@@ -122,7 +122,7 @@ export const Invalido: Story = {
   render: () => {
     const ta = createTextarea({
       placeholder: 'ex: Descreva o produto...',
-      class: 'resize-y min-h-[120px]',
+      class: 'resize-y',
     });
     ta.setAttribute('aria-invalid', 'true');
     return labeled('est-invalid', 'Descrição', ta);
