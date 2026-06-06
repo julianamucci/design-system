@@ -1,0 +1,350 @@
+{
+  "pt-BR": {
+    "title": "Sistema de Temas",
+    "category": "Foundations",
+    "type": "Theming",
+    "description": "Temas, modos light/dark, densidade e família tipográfica são controlados por classes no <html>. Trocar a classe recalcula todos os tokens semânticos em cascata — sem JavaScript, sem re-render forçado.",
+    "seo": {
+      "title": "Sistema de Temas — Design System",
+      "description": "Como temas funcionam: classes no <html>, tokens semânticos compartilhados, toolbar do Storybook, padrão MutationObserver e criação de novos temas.",
+      "aiSummary": "Página técnica sobre theming. Explica o padrão de classes no elemento <html> (tema, modo, densidade, fonte), localização dos arquivos de tema em docs/shared/themes, toolbar do Storybook como mecanismo de troca, padrão MutationObserver para componentes reativos e procedimento para criar tema novo.",
+      "aiEntities": "tema, theming, CSS custom properties, tokens semânticos, dark mode, density, MutationObserver, Storybook globals, --background, --foreground, --primary",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Como funciona",
+      "body": "O sistema aplica até quatro classes em paralelo no elemento <code>&lt;html&gt;</code>: <code>tema-default | tema-warm | tema-cold</code> (marca), <code>dark</code> (modo escuro), <code>densidade-condensado | densidade-confortavel</code> (densidade) e <code>fonte-lexend | fonte-pt-serif | fonte-lxgw-wenkai</code> (tipografia). Cada classe redefine um subconjunto de tokens CSS — o resto da árvore lê os tokens via <code>var(--token)</code> e se atualiza sem reflow extra.",
+      "audience": "Devs que vão criar um tema novo, integrar o sistema em um produto com white-label ou debugar inconsistência de tokens."
+    },
+    "toolbar": {
+      "title": "Toolbar do Storybook",
+      "subtitle": "Quatro globals (<code>brand</code>, <code>mode</code>, <code>densidade</code>, <code>fonte</code>) controlam as classes em tempo real. A troca é instantânea em todas as iframes abertas.",
+      "items": {
+        "brand": {
+          "name": "brand",
+          "values": "default · warm · cold",
+          "applies": "Classe <code>tema-*</code> no <code>&lt;html&gt;</code>"
+        },
+        "mode": {
+          "name": "mode",
+          "values": "light · dark",
+          "applies": "Classe <code>dark</code> (light remove a classe)"
+        },
+        "densidade": {
+          "name": "densidade",
+          "values": "default · condensado · confortavel",
+          "applies": "Classe <code>densidade-*</code> — redefine <code>--spacing-base</code>"
+        },
+        "fonte": {
+          "name": "fonte",
+          "values": "default · lexend · pt-serif · lxgw-wenkai",
+          "applies": "Classe <code>fonte-*</code> — redefine <code>--font-family-active</code>"
+        }
+      }
+    },
+    "tokens": {
+      "title": "Tokens semânticos por grupo",
+      "subtitle": "Todos definidos em HSL para permitir alpha via <code>hsl(var(--token) / 0.5)</code>.",
+      "groups": {
+        "surface": {
+          "name": "Superfícies",
+          "tokens": "--background, --foreground, --card, --card-foreground, --popover, --popover-foreground, --muted, --muted-foreground"
+        },
+        "brand": {
+          "name": "Marca / Interativo",
+          "tokens": "--primary, --primary-foreground, --secondary, --secondary-foreground, --accent, --accent-foreground"
+        },
+        "feedback": {
+          "name": "Feedback",
+          "tokens": "--destructive, --destructive-foreground, --success, --warning, --info"
+        },
+        "structure": {
+          "name": "Estrutura",
+          "tokens": "--border, --input, --ring, --radius"
+        },
+        "chart": {
+          "name": "Gráficos",
+          "tokens": "--chart-1 a --chart-5 (paleta categórica)"
+        }
+      }
+    },
+    "createTheme": {
+      "title": "Criar um tema novo",
+      "subtitle": "Tema é só CSS — nenhum código TS precisa mudar.",
+      "steps": {
+        "file": {
+          "step": "1. Crie o arquivo",
+          "body": "Adicione <code>docs/shared/themes/&lt;nome&gt;.css</code> com um seletor <code>.tema-&lt;nome&gt;</code> contendo todos os tokens da paleta semântica (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc)."
+        },
+        "dark": {
+          "step": "2. Cubra dark mode",
+          "body": "Inclua um bloco <code>.tema-&lt;nome&gt;.dark</code> reescrevendo os mesmos tokens com valores escuros. Mantenha contraste WCAG AA (4.5:1 para texto)."
+        },
+        "import": {
+          "step": "3. Importe nos stacks",
+          "body": "Adicione um <code>@import</code> em <code>src/styles/globals.css</code> de cada stack. O CSS é compartilhado — uma definição alimenta os quatro."
+        },
+        "register": {
+          "step": "4. Registre na toolbar",
+          "body": "Adicione o nome em <code>globalTypes.brand.toolbar.items</code> em <code>.storybook/preview.ts</code>. O listener <code>GLOBALS_UPDATED</code> aplica a classe automaticamente."
+        }
+      }
+    },
+    "reactive": {
+      "title": "Componentes reativos a tema",
+      "subtitle": "Quando um componente lê tokens em runtime (Chart, DataTable, Editor com canvas), ele precisa observar mudanças na classe do <code>&lt;html&gt;</code>.",
+      "body": "O padrão é um <code>MutationObserver</code> no <code>document.documentElement</code> escutando <code>attributes</code> com <code>attributeFilter: ['class']</code>. Quando a classe muda, o componente relê os tokens via <code>getComputedStyle(root)</code> e re-renderiza. Esse padrão está encapsulado em hooks como <code>useThemeTokens()</code> e <code>useChartColors()</code>.",
+      "warning": "Sem o observer, gráficos e canvas ficam com cores do tema anterior até o próximo unmount."
+    },
+    "crossStack": {
+      "title": "Compartilhamento cross-stack",
+      "items": {
+        "source": "Temas vivem em <code>docs/shared/themes/</code> — uma única fonte para os quatro stacks.",
+        "imports": "Cada <code>src/styles/globals.css</code> faz <code>@import</code> dos arquivos compartilhados.",
+        "tokens": "Tokens dimensionais (radius, spacing) vivem em <code>docs/shared/tokens/tokens.css</code>.",
+        "fonts": "Famílias tipográficas e suas variantes ficam em <code>docs/shared/themes/fonts.css</code>."
+      }
+    },
+    "rules": {
+      "title": "Regras",
+      "items": {
+        "noHardcode": "Nunca use valor hex direto em componente — sempre via <code>var(--token)</code>.",
+        "noInlineDark": "Nunca aplique <code>dark:</code> manualmente em primitive — o token já comuta no <code>.dark</code>.",
+        "channelListener": "Toolbar de tema precisa de listener <code>GLOBALS_UPDATED</code> module-level — decorator + <code>useEffect</code> não reverte pro Default.",
+        "noFixedHeight": "Tokens dimensionais nunca aplicam altura fixa em primitives — usar <code>padding-block</code> + <code>line-height</code> para respeitar WCAG 1.4.4."
+      }
+    }
+  },
+  "en": {
+    "title": "Theme System",
+    "category": "Foundations",
+    "type": "Theming",
+    "description": "Themes, light/dark modes, density and typographic family are controlled by classes on <html>. Switching the class recomputes every semantic token in cascade — no JavaScript, no forced re-render.",
+    "seo": {
+      "title": "Theme System — Design System",
+      "description": "How theming works: classes on <html>, shared semantic tokens, Storybook toolbar, MutationObserver pattern and how to author a new theme.",
+      "aiSummary": "Technical page about theming. Explains the class-on-<html> pattern (brand, mode, density, font), location of theme files in docs/shared/themes, Storybook toolbar as the switch mechanism, MutationObserver pattern for reactive components and the procedure to author a new theme.",
+      "aiEntities": "theme, theming, CSS custom properties, semantic tokens, dark mode, density, MutationObserver, Storybook globals, --background, --foreground, --primary",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "How it works",
+      "body": "The system applies up to four classes in parallel on the <code>&lt;html&gt;</code> element: <code>tema-default | tema-warm | tema-cold</code> (brand), <code>dark</code> (dark mode), <code>densidade-condensado | densidade-confortavel</code> (density) and <code>fonte-lexend | fonte-pt-serif | fonte-lxgw-wenkai</code> (typography). Each class redefines a subset of CSS tokens — the rest of the tree reads them via <code>var(--token)</code> and updates with no extra reflow.",
+      "audience": "Devs authoring a new theme, integrating the system into a white-label product or debugging token inconsistencies."
+    },
+    "toolbar": {
+      "title": "Storybook toolbar",
+      "subtitle": "Four globals (<code>brand</code>, <code>mode</code>, <code>densidade</code>, <code>fonte</code>) drive the classes in real time. Switching is instant across every open iframe.",
+      "items": {
+        "brand": {
+          "name": "brand",
+          "values": "default · warm · cold",
+          "applies": "<code>tema-*</code> class on <code>&lt;html&gt;</code>"
+        },
+        "mode": {
+          "name": "mode",
+          "values": "light · dark",
+          "applies": "<code>dark</code> class (light removes the class)"
+        },
+        "densidade": {
+          "name": "densidade",
+          "values": "default · condensado · confortavel",
+          "applies": "<code>densidade-*</code> class — redefines <code>--spacing-base</code>"
+        },
+        "fonte": {
+          "name": "fonte",
+          "values": "default · lexend · pt-serif · lxgw-wenkai",
+          "applies": "<code>fonte-*</code> class — redefines <code>--font-family-active</code>"
+        }
+      }
+    },
+    "tokens": {
+      "title": "Semantic tokens by group",
+      "subtitle": "All defined in HSL to enable alpha via <code>hsl(var(--token) / 0.5)</code>.",
+      "groups": {
+        "surface": {
+          "name": "Surfaces",
+          "tokens": "--background, --foreground, --card, --card-foreground, --popover, --popover-foreground, --muted, --muted-foreground"
+        },
+        "brand": {
+          "name": "Brand / Interactive",
+          "tokens": "--primary, --primary-foreground, --secondary, --secondary-foreground, --accent, --accent-foreground"
+        },
+        "feedback": {
+          "name": "Feedback",
+          "tokens": "--destructive, --destructive-foreground, --success, --warning, --info"
+        },
+        "structure": {
+          "name": "Structure",
+          "tokens": "--border, --input, --ring, --radius"
+        },
+        "chart": {
+          "name": "Charts",
+          "tokens": "--chart-1 through --chart-5 (categorical palette)"
+        }
+      }
+    },
+    "createTheme": {
+      "title": "Author a new theme",
+      "subtitle": "A theme is just CSS — no TS needs to change.",
+      "steps": {
+        "file": {
+          "step": "1. Create the file",
+          "body": "Add <code>docs/shared/themes/&lt;name&gt;.css</code> with a <code>.tema-&lt;name&gt;</code> selector containing every token in the semantic palette (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc)."
+        },
+        "dark": {
+          "step": "2. Cover dark mode",
+          "body": "Include a <code>.tema-&lt;name&gt;.dark</code> block rewriting the same tokens with dark values. Keep WCAG AA contrast (4.5:1 for text)."
+        },
+        "import": {
+          "step": "3. Import in the stacks",
+          "body": "Add an <code>@import</code> in <code>src/styles/globals.css</code> of each stack. CSS is shared — one definition feeds all four."
+        },
+        "register": {
+          "step": "4. Register in the toolbar",
+          "body": "Append the name to <code>globalTypes.brand.toolbar.items</code> in <code>.storybook/preview.ts</code>. The <code>GLOBALS_UPDATED</code> listener applies the class automatically."
+        }
+      }
+    },
+    "reactive": {
+      "title": "Theme-reactive components",
+      "subtitle": "When a component reads tokens at runtime (Chart, DataTable, canvas editors), it must observe class changes on <code>&lt;html&gt;</code>.",
+      "body": "The pattern is a <code>MutationObserver</code> on <code>document.documentElement</code> listening to <code>attributes</code> with <code>attributeFilter: ['class']</code>. When the class changes, the component re-reads tokens via <code>getComputedStyle(root)</code> and re-renders. The pattern is encapsulated in hooks such as <code>useThemeTokens()</code> and <code>useChartColors()</code>.",
+      "warning": "Without the observer, charts and canvases keep the previous theme colors until the next unmount."
+    },
+    "crossStack": {
+      "title": "Cross-stack sharing",
+      "items": {
+        "source": "Themes live in <code>docs/shared/themes/</code> — single source for the four stacks.",
+        "imports": "Each <code>src/styles/globals.css</code> <code>@import</code>s the shared files.",
+        "tokens": "Dimensional tokens (radius, spacing) live in <code>docs/shared/tokens/tokens.css</code>.",
+        "fonts": "Typographic families and their variants live in <code>docs/shared/themes/fonts.css</code>."
+      }
+    },
+    "rules": {
+      "title": "Rules",
+      "items": {
+        "noHardcode": "Never use a raw hex value in a component — always via <code>var(--token)</code>.",
+        "noInlineDark": "Never apply <code>dark:</code> manually in a primitive — the token already toggles inside <code>.dark</code>.",
+        "channelListener": "Theme toolbar needs a module-level <code>GLOBALS_UPDATED</code> listener — decorator + <code>useEffect</code> won't revert to Default.",
+        "noFixedHeight": "Dimensional tokens never apply a fixed height in primitives — use <code>padding-block</code> + <code>line-height</code> to honor WCAG 1.4.4."
+      }
+    }
+  },
+  "es": {
+    "title": "Sistema de Temas",
+    "category": "Foundations",
+    "type": "Theming",
+    "description": "Temas, modos light/dark, densidad y familia tipográfica se controlan por clases en <html>. Cambiar la clase recalcula todos los tokens semánticos en cascada — sin JavaScript, sin re-render forzado.",
+    "seo": {
+      "title": "Sistema de Temas — Design System",
+      "description": "Cómo funciona el theming: clases en <html>, tokens semánticos compartidos, toolbar de Storybook, patrón MutationObserver y creación de temas nuevos.",
+      "aiSummary": "Página técnica sobre theming. Explica el patrón de clases en <html> (tema, modo, densidad, fuente), ubicación de los archivos de tema en docs/shared/themes, toolbar de Storybook como mecanismo de cambio, patrón MutationObserver para componentes reactivos y procedimiento para crear un tema nuevo.",
+      "aiEntities": "tema, theming, CSS custom properties, tokens semánticos, dark mode, densidad, MutationObserver, Storybook globals, --background, --foreground, --primary",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Cómo funciona",
+      "body": "El sistema aplica hasta cuatro clases en paralelo en el elemento <code>&lt;html&gt;</code>: <code>tema-default | tema-warm | tema-cold</code> (marca), <code>dark</code> (modo oscuro), <code>densidade-condensado | densidade-confortavel</code> (densidad) y <code>fonte-lexend | fonte-pt-serif | fonte-lxgw-wenkai</code> (tipografía). Cada clase redefine un subconjunto de tokens CSS — el resto del árbol los lee vía <code>var(--token)</code> y se actualiza sin reflow extra.",
+      "audience": "Devs que van a crear un tema nuevo, integrar el sistema en un producto white-label o depurar inconsistencias de tokens."
+    },
+    "toolbar": {
+      "title": "Toolbar de Storybook",
+      "subtitle": "Cuatro globals (<code>brand</code>, <code>mode</code>, <code>densidade</code>, <code>fonte</code>) controlan las clases en tiempo real. El cambio es instantáneo en todos los iframes abiertos.",
+      "items": {
+        "brand": {
+          "name": "brand",
+          "values": "default · warm · cold",
+          "applies": "Clase <code>tema-*</code> en <code>&lt;html&gt;</code>"
+        },
+        "mode": {
+          "name": "mode",
+          "values": "light · dark",
+          "applies": "Clase <code>dark</code> (light remueve la clase)"
+        },
+        "densidade": {
+          "name": "densidade",
+          "values": "default · condensado · confortavel",
+          "applies": "Clase <code>densidade-*</code> — redefine <code>--spacing-base</code>"
+        },
+        "fonte": {
+          "name": "fonte",
+          "values": "default · lexend · pt-serif · lxgw-wenkai",
+          "applies": "Clase <code>fonte-*</code> — redefine <code>--font-family-active</code>"
+        }
+      }
+    },
+    "tokens": {
+      "title": "Tokens semánticos por grupo",
+      "subtitle": "Todos definidos en HSL para permitir alpha vía <code>hsl(var(--token) / 0.5)</code>.",
+      "groups": {
+        "surface": {
+          "name": "Superficies",
+          "tokens": "--background, --foreground, --card, --card-foreground, --popover, --popover-foreground, --muted, --muted-foreground"
+        },
+        "brand": {
+          "name": "Marca / Interactivo",
+          "tokens": "--primary, --primary-foreground, --secondary, --secondary-foreground, --accent, --accent-foreground"
+        },
+        "feedback": {
+          "name": "Feedback",
+          "tokens": "--destructive, --destructive-foreground, --success, --warning, --info"
+        },
+        "structure": {
+          "name": "Estructura",
+          "tokens": "--border, --input, --ring, --radius"
+        },
+        "chart": {
+          "name": "Gráficos",
+          "tokens": "--chart-1 a --chart-5 (paleta categórica)"
+        }
+      }
+    },
+    "createTheme": {
+      "title": "Crear un tema nuevo",
+      "subtitle": "Un tema es solo CSS — ningún código TS necesita cambiar.",
+      "steps": {
+        "file": {
+          "step": "1. Crea el archivo",
+          "body": "Agrega <code>docs/shared/themes/&lt;nombre&gt;.css</code> con un selector <code>.tema-&lt;nombre&gt;</code> que contenga todos los tokens de la paleta semántica (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc)."
+        },
+        "dark": {
+          "step": "2. Cubre dark mode",
+          "body": "Incluye un bloque <code>.tema-&lt;nombre&gt;.dark</code> reescribiendo los mismos tokens con valores oscuros. Mantén contraste WCAG AA (4.5:1 para texto)."
+        },
+        "import": {
+          "step": "3. Importa en los stacks",
+          "body": "Agrega un <code>@import</code> en <code>src/styles/globals.css</code> de cada stack. El CSS es compartido — una definición alimenta los cuatro."
+        },
+        "register": {
+          "step": "4. Regístralo en la toolbar",
+          "body": "Agrega el nombre en <code>globalTypes.brand.toolbar.items</code> en <code>.storybook/preview.ts</code>. El listener <code>GLOBALS_UPDATED</code> aplica la clase automáticamente."
+        }
+      }
+    },
+    "reactive": {
+      "title": "Componentes reactivos al tema",
+      "subtitle": "Cuando un componente lee tokens en runtime (Chart, DataTable, editores con canvas), debe observar cambios de clase en <code>&lt;html&gt;</code>.",
+      "body": "El patrón es un <code>MutationObserver</code> en <code>document.documentElement</code> escuchando <code>attributes</code> con <code>attributeFilter: ['class']</code>. Cuando la clase cambia, el componente relee los tokens vía <code>getComputedStyle(root)</code> y re-renderiza. Este patrón está encapsulado en hooks como <code>useThemeTokens()</code> y <code>useChartColors()</code>.",
+      "warning": "Sin el observer, gráficos y canvas quedan con los colores del tema anterior hasta el próximo unmount."
+    },
+    "crossStack": {
+      "title": "Compartir cross-stack",
+      "items": {
+        "source": "Los temas viven en <code>docs/shared/themes/</code> — fuente única para los cuatro stacks.",
+        "imports": "Cada <code>src/styles/globals.css</code> hace <code>@import</code> de los archivos compartidos.",
+        "tokens": "Tokens dimensionales (radius, spacing) viven en <code>docs/shared/tokens/tokens.css</code>.",
+        "fonts": "Familias tipográficas y sus variantes están en <code>docs/shared/themes/fonts.css</code>."
+      }
+    },
+    "rules": {
+      "title": "Reglas",
+      "items": {
+        "noHardcode": "Nunca uses un valor hex directo en un componente — siempre vía <code>var(--token)</code>.",
+        "noInlineDark": "Nunca apliques <code>dark:</code> manualmente en un primitive — el token ya conmuta dentro de <code>.dark</code>.",
+        "channelListener": "La toolbar de tema necesita un listener <code>GLOBALS_UPDATED</code> module-level — decorator + <code>useEffect</code> no revierte al Default.",
+        "noFixedHeight": "Tokens dimensionales nunca aplican altura fija en primitives — usar <code>padding-block</code> + <code>line-height</code> para cumplir WCAG 1.4.4."
+      }
+    }
+  }
+}

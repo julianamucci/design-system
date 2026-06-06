@@ -1,0 +1,281 @@
+{
+  "pt-BR": {
+    "title": "Internacionalização (i18n)",
+    "category": "Foundations",
+    "type": "Content",
+    "description": "Três idiomas obrigatórios — pt-BR, en e es — alimentados por um único arquivo translations.json por componente. O hook useTranslation faz lookup por dot-path e aceita overrides por stack para divergências de API.",
+    "seo": {
+      "title": "i18n — Design System",
+      "description": "Sistema de internacionalização do Design System: três idiomas, hook useTranslation, estrutura translations.json e overrides por stack.",
+      "aiSummary": "Página técnica sobre i18n. Documenta os três idiomas suportados (pt-BR primário, en, es), o hook useTranslation com lookup por dot-path, a estrutura de translations.json compartilhado, convenção de chaves API-neutras, mecanismo de override por stack e o componente LanguageSwitcher.",
+      "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Visão geral",
+      "body": "Cada componente possui um único <code>translations.json</code> em <code>docs/shared/content/&lt;slug&gt;/</code>, com chaves idênticas nos três idiomas. Os quatro stacks consomem o mesmo arquivo via hook <code>useTranslation(translations, overrides?)</code> (ou função equivalente no Nortear).",
+      "audience": "Devs que vão criar uma docs page nova ou adicionar conteúdo a uma existente."
+    },
+    "languages": {
+      "title": "Idiomas suportados",
+      "subtitle": "pt-BR é o idioma primário e a referência de revisão. en e es são derivados.",
+      "cols": {
+        "code": "Código",
+        "name": "Idioma",
+        "role": "Papel"
+      },
+      "rows": {
+        "pt": {
+          "code": "pt-BR",
+          "name": "Português (Brasil)",
+          "role": "Primário — fonte da verdade conceitual"
+        },
+        "en": {
+          "code": "en",
+          "name": "English",
+          "role": "Tradução — alvo principal de SEO global"
+        },
+        "es": {
+          "code": "es",
+          "name": "Español",
+          "role": "Tradução — alvo LATAM"
+        }
+      }
+    },
+    "structure": {
+      "title": "Estrutura do translations.json",
+      "subtitle": "Objeto raiz com os três códigos de idioma. As chaves dentro de cada idioma devem ser idênticas — o auditor falha se houver assimetria.",
+      "shape": "{\n  \"pt-BR\": { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"en\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"es\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } }\n}",
+      "required": "Toda página deve ter no mínimo: <code>title</code>, <code>category</code>, <code>type</code>, <code>description</code> e <code>seo.{title,description,aiSummary,aiEntities,aiIntent}</code>."
+    },
+    "hook": {
+      "title": "useTranslation",
+      "subtitle": "Hook compartilhado pelos quatro stacks. Recebe o objeto de traduções e retorna a função <code>t(path)</code>.",
+      "items": {
+        "lookup": {
+          "title": "Lookup por dot-path",
+          "body": "Chaves aninhadas são acessadas via string com pontos. <code>t('props.table.required')</code> equivale a <code>translations[locale].props.table.required</code>."
+        },
+        "fallback": {
+          "title": "Fallback transparente",
+          "body": "Quando o locale ativo não tem a chave, o hook retorna o valor de pt-BR. Quando nem isso existe, retorna a própria chave (útil para flagrar erros em dev)."
+        },
+        "memoization": {
+          "title": "Memoização",
+          "body": "O retorno de <code>useTranslation</code> é estável por locale + objeto de overrides — pode ser usado como dependência de <code>useEffect</code> sem disparar loops."
+        }
+      }
+    },
+    "overrides": {
+      "title": "Overrides por stack",
+      "subtitle": "Segundo argumento de <code>useTranslation</code>. Permite reescrever chaves específicas quando a API da lib base diverge entre stacks.",
+      "explanation": "O conteúdo descritivo é API-neutro, mas nomes literais de prop (<code>multiple</code> vs <code>type=\"single\"</code>) variam. Override é aplicado no call site da docs page, não no JSON compartilhado.",
+      "scope": "Override aceita uma chave <code>\"*\"</code> para valores globais (válidos em todos os idiomas) e chaves por idioma para descrições traduzíveis. Apenas chaves consumidas via <code>t()</code> sofrem override — listas iteradas diretamente em <code>translations[locale].props.items</code> precisam de um <code>useMemo</code> local que troque o item."
+    },
+    "switcher": {
+      "title": "LanguageSwitcher",
+      "subtitle": "Componente em <code>src/components/product/LanguageSwitcher.*</code> presente nos quatro stacks. Persiste a escolha em <code>localStorage</code> e dispara o evento de analytics <code>language_switched</code>.",
+      "body": "Está visível em todas as docs pages no header. A troca remonta a árvore consumidora do hook, atualizando textos sem reload."
+    },
+    "vueWarning": {
+      "title": "Regra crítica no stack Vue",
+      "body": "Em docs pages Vue, o locale vem <strong>sempre</strong> de <code>useTranslation()</code> — nunca de <code>useLocaleStore</code> ou de qualquer store Pinia. Misturar fontes de locale causa crash em runtime (referência circular durante hydration)."
+    },
+    "rules": {
+      "title": "Regras de conteúdo",
+      "items": {
+        "parity": "Os três idiomas devem ter exatamente as mesmas chaves. Auditor falha em assimetria.",
+        "noEmojis": "Sem emojis ou glyphs (✓/✗) em strings — ícones vêm do código da docs page e duplicam visualmente.",
+        "apiNeutral": "Texto descritivo é API-neutro (\"modo múltiplo\", \"callback de mudança\"). Literais de prop só em chaves <code>*Code</code>.",
+        "noStackName": "Nunca mencionar outro stack pelo nome (\"In React, …\") — cada docs é consumida standalone.",
+        "seoTitle": "<code>seo.title</code> não inclui o sufixo \"· Design System\" — o hook <code>useSeoEffect</code> adiciona."
+      }
+    }
+  },
+  "en": {
+    "title": "Internationalization (i18n)",
+    "category": "Foundations",
+    "type": "Content",
+    "description": "Three mandatory languages — pt-BR, en and es — fed by a single translations.json per component. The useTranslation hook does dot-path lookup and accepts per-stack overrides for API divergences.",
+    "seo": {
+      "title": "i18n — Design System",
+      "description": "Design System internationalization: three languages, useTranslation hook, translations.json structure and per-stack overrides.",
+      "aiSummary": "Technical page about i18n. Documents the three supported languages (pt-BR primary, en, es), the useTranslation hook with dot-path lookup, shared translations.json structure, API-neutral key convention, per-stack override mechanism and the LanguageSwitcher component.",
+      "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Overview",
+      "body": "Each component has a single <code>translations.json</code> at <code>docs/shared/content/&lt;slug&gt;/</code>, with identical keys across the three languages. All four stacks consume the same file via the <code>useTranslation(translations, overrides?)</code> hook (or equivalent function in Nortear).",
+      "audience": "Devs creating a new docs page or adding content to an existing one."
+    },
+    "languages": {
+      "title": "Supported languages",
+      "subtitle": "pt-BR is the primary language and the review reference. en and es are derived.",
+      "cols": {
+        "code": "Code",
+        "name": "Language",
+        "role": "Role"
+      },
+      "rows": {
+        "pt": {
+          "code": "pt-BR",
+          "name": "Portuguese (Brazil)",
+          "role": "Primary — conceptual source of truth"
+        },
+        "en": {
+          "code": "en",
+          "name": "English",
+          "role": "Translation — main global SEO target"
+        },
+        "es": {
+          "code": "es",
+          "name": "Spanish",
+          "role": "Translation — LATAM target"
+        }
+      }
+    },
+    "structure": {
+      "title": "translations.json structure",
+      "subtitle": "Root object with the three language codes. Keys inside each language must be identical — the auditor fails on asymmetry.",
+      "shape": "{\n  \"pt-BR\": { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"en\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"es\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } }\n}",
+      "required": "Every page must have at minimum: <code>title</code>, <code>category</code>, <code>type</code>, <code>description</code> and <code>seo.{title,description,aiSummary,aiEntities,aiIntent}</code>."
+    },
+    "hook": {
+      "title": "useTranslation",
+      "subtitle": "Hook shared by all four stacks. Receives the translations object and returns the <code>t(path)</code> function.",
+      "items": {
+        "lookup": {
+          "title": "Dot-path lookup",
+          "body": "Nested keys are accessed via dotted strings. <code>t('props.table.required')</code> resolves to <code>translations[locale].props.table.required</code>."
+        },
+        "fallback": {
+          "title": "Transparent fallback",
+          "body": "When the active locale lacks a key, the hook returns the pt-BR value. When even that is missing, it returns the key itself (handy to surface errors in dev)."
+        },
+        "memoization": {
+          "title": "Memoization",
+          "body": "The <code>useTranslation</code> return is stable per locale + overrides object — safe to use as a <code>useEffect</code> dependency without firing loops."
+        }
+      }
+    },
+    "overrides": {
+      "title": "Per-stack overrides",
+      "subtitle": "Second argument of <code>useTranslation</code>. Lets you rewrite specific keys when the base lib API diverges between stacks.",
+      "explanation": "Descriptive content is API-neutral, but literal prop names (<code>multiple</code> vs <code>type=\"single\"</code>) vary. Overrides happen at the docs page call site, not in the shared JSON.",
+      "scope": "Override accepts a <code>\"*\"</code> key for global values (valid across languages) and per-language keys for translatable descriptions. Only keys consumed via <code>t()</code> are overridden — lists iterated directly from <code>translations[locale].props.items</code> need a local <code>useMemo</code> that swaps the entry."
+    },
+    "switcher": {
+      "title": "LanguageSwitcher",
+      "subtitle": "Component at <code>src/components/product/LanguageSwitcher.*</code>, present in all four stacks. Persists the choice in <code>localStorage</code> and fires the <code>language_switched</code> analytics event.",
+      "body": "It is visible on every docs page in the header. Switching remounts the hook consumer tree, updating texts without a reload."
+    },
+    "vueWarning": {
+      "title": "Critical rule in the Vue stack",
+      "body": "In Vue docs pages, the locale <strong>always</strong> comes from <code>useTranslation()</code> — never from <code>useLocaleStore</code> or any Pinia store. Mixing locale sources causes a runtime crash (circular reference during hydration)."
+    },
+    "rules": {
+      "title": "Content rules",
+      "items": {
+        "parity": "The three languages must have exactly the same keys. The auditor fails on asymmetry.",
+        "noEmojis": "No emojis or glyphs (✓/✗) in strings — icons come from the docs page code and would render twice.",
+        "apiNeutral": "Descriptive text is API-neutral (\"multiple mode\", \"change callback\"). Prop literals only in <code>*Code</code> keys.",
+        "noStackName": "Never mention another stack by name (\"In React, …\") — each doc is consumed standalone.",
+        "seoTitle": "<code>seo.title</code> does not include the \"· Design System\" suffix — the <code>useSeoEffect</code> hook appends it."
+      }
+    }
+  },
+  "es": {
+    "title": "Internacionalización (i18n)",
+    "category": "Foundations",
+    "type": "Content",
+    "description": "Tres idiomas obligatorios — pt-BR, en y es — alimentados por un único translations.json por componente. El hook useTranslation hace lookup por dot-path y acepta overrides por stack para divergencias de API.",
+    "seo": {
+      "title": "i18n — Design System",
+      "description": "Sistema de internacionalización del Design System: tres idiomas, hook useTranslation, estructura translations.json y overrides por stack.",
+      "aiSummary": "Página técnica sobre i18n. Documenta los tres idiomas soportados (pt-BR primario, en, es), el hook useTranslation con lookup por dot-path, la estructura del translations.json compartido, convención de claves API-neutras, mecanismo de override por stack y el componente LanguageSwitcher.",
+      "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Visión general",
+      "body": "Cada componente tiene un único <code>translations.json</code> en <code>docs/shared/content/&lt;slug&gt;/</code>, con claves idénticas en los tres idiomas. Los cuatro stacks consumen el mismo archivo vía el hook <code>useTranslation(translations, overrides?)</code> (o función equivalente en Nortear).",
+      "audience": "Devs que van a crear una docs page nueva o agregar contenido a una existente."
+    },
+    "languages": {
+      "title": "Idiomas soportados",
+      "subtitle": "pt-BR es el idioma primario y la referencia de revisión. en y es son derivados.",
+      "cols": {
+        "code": "Código",
+        "name": "Idioma",
+        "role": "Rol"
+      },
+      "rows": {
+        "pt": {
+          "code": "pt-BR",
+          "name": "Portugués (Brasil)",
+          "role": "Primario — fuente de verdad conceptual"
+        },
+        "en": {
+          "code": "en",
+          "name": "English",
+          "role": "Traducción — objetivo principal de SEO global"
+        },
+        "es": {
+          "code": "es",
+          "name": "Español",
+          "role": "Traducción — objetivo LATAM"
+        }
+      }
+    },
+    "structure": {
+      "title": "Estructura del translations.json",
+      "subtitle": "Objeto raíz con los tres códigos de idioma. Las claves dentro de cada idioma deben ser idénticas — el auditor falla en caso de asimetría.",
+      "shape": "{\n  \"pt-BR\": { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"en\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"es\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } }\n}",
+      "required": "Toda página debe tener como mínimo: <code>title</code>, <code>category</code>, <code>type</code>, <code>description</code> y <code>seo.{title,description,aiSummary,aiEntities,aiIntent}</code>."
+    },
+    "hook": {
+      "title": "useTranslation",
+      "subtitle": "Hook compartido por los cuatro stacks. Recibe el objeto de traducciones y devuelve la función <code>t(path)</code>.",
+      "items": {
+        "lookup": {
+          "title": "Lookup por dot-path",
+          "body": "Las claves anidadas se acceden vía string con puntos. <code>t('props.table.required')</code> equivale a <code>translations[locale].props.table.required</code>."
+        },
+        "fallback": {
+          "title": "Fallback transparente",
+          "body": "Cuando el locale activo no tiene la clave, el hook devuelve el valor de pt-BR. Cuando ni eso existe, devuelve la propia clave (útil para detectar errores en dev)."
+        },
+        "memoization": {
+          "title": "Memoización",
+          "body": "El retorno de <code>useTranslation</code> es estable por locale + objeto de overrides — puede usarse como dependencia de <code>useEffect</code> sin disparar loops."
+        }
+      }
+    },
+    "overrides": {
+      "title": "Overrides por stack",
+      "subtitle": "Segundo argumento de <code>useTranslation</code>. Permite reescribir claves específicas cuando la API de la lib base diverge entre stacks.",
+      "explanation": "El contenido descriptivo es API-neutro, pero los nombres literales de prop (<code>multiple</code> vs <code>type=\"single\"</code>) varían. El override se aplica en el call site de la docs page, no en el JSON compartido.",
+      "scope": "El override acepta una clave <code>\"*\"</code> para valores globales (válidos en todos los idiomas) y claves por idioma para descripciones traducibles. Solo las claves consumidas vía <code>t()</code> sufren override — listas iteradas directamente desde <code>translations[locale].props.items</code> necesitan un <code>useMemo</code> local que cambie la entrada."
+    },
+    "switcher": {
+      "title": "LanguageSwitcher",
+      "subtitle": "Componente en <code>src/components/product/LanguageSwitcher.*</code>, presente en los cuatro stacks. Persiste la elección en <code>localStorage</code> y dispara el evento de analytics <code>language_switched</code>.",
+      "body": "Está visible en todas las docs pages en el header. El cambio remonta el árbol consumidor del hook, actualizando textos sin reload."
+    },
+    "vueWarning": {
+      "title": "Regla crítica en el stack Vue",
+      "body": "En docs pages Vue, el locale viene <strong>siempre</strong> de <code>useTranslation()</code> — nunca de <code>useLocaleStore</code> ni de ningún store Pinia. Mezclar fuentes de locale provoca crash en runtime (referencia circular durante hydration)."
+    },
+    "rules": {
+      "title": "Reglas de contenido",
+      "items": {
+        "parity": "Los tres idiomas deben tener exactamente las mismas claves. El auditor falla en caso de asimetría.",
+        "noEmojis": "Sin emojis ni glyphs (✓/✗) en strings — los íconos vienen del código de la docs page y se duplicarían visualmente.",
+        "apiNeutral": "El texto descriptivo es API-neutro (\"modo múltiple\", \"callback de cambio\"). Literales de prop solo en claves <code>*Code</code>.",
+        "noStackName": "Nunca menciones otro stack por nombre (\"In React, …\") — cada doc se consume standalone.",
+        "seoTitle": "<code>seo.title</code> no incluye el sufijo \"· Design System\" — el hook <code>useSeoEffect</code> lo agrega."
+      }
+    }
+  }
+}

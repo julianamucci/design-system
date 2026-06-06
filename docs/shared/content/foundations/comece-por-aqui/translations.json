@@ -1,0 +1,386 @@
+{
+  "pt-BR": {
+    "title": "Comece por Aqui",
+    "category": "Foundations",
+    "type": "Setup",
+    "description": "Guia rápido para clonar o monorepo, instalar dependências e abrir o Storybook do stack escolhido. Tudo o que você precisa para ver o sistema rodando em menos de cinco minutos.",
+    "seo": {
+      "title": "Comece por Aqui — Setup do Design System",
+      "description": "Pré-requisitos, instalação, scripts essenciais e estrutura de pastas do Design System multi-stack (React, Vue, Svelte, Nortear).",
+      "aiSummary": "Página de onboarding técnico. Lista pré-requisitos (Node 18+, npm, git), passos de clone e install por stack, scripts essenciais (storybook, build, lint, test-storybook) e mapa de pastas do monorepo.",
+      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, basecoat, setup, instalação, scripts",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Antes de começar",
+      "body": "O repositório é um <strong>monorepo multi-stack</strong>: quatro pacotes npm independentes (React, Vue, Svelte e Nortear) compartilham conteúdo, temas e guidelines a partir de <code>docs/shared/</code>. Cada stack tem seu próprio Storybook em uma porta dedicada — você pode rodar todos em paralelo.",
+      "audience": "Para devs que vão consumir, contribuir ou portar componentes do sistema para um produto novo."
+    },
+    "prerequisites": {
+      "title": "Pré-requisitos",
+      "subtitle": "Confira as versões mínimas antes do primeiro clone.",
+      "cols": {
+        "tool": "Ferramenta",
+        "version": "Versão mínima",
+        "why": "Por quê"
+      },
+      "rows": {
+        "node": {
+          "tool": "Node.js",
+          "version": "18.0+",
+          "why": "Vite 5, Tailwind 4 e Storybook 10 exigem Node moderno."
+        },
+        "npm": {
+          "tool": "npm",
+          "version": "9+",
+          "why": "Workspaces e <code>npm ci</code> determinístico. <code>pnpm</code> e <code>yarn</code> não são suportados oficialmente."
+        },
+        "git": {
+          "tool": "git",
+          "version": "2.30+",
+          "why": "Hooks de pre-commit usam <code>git diff</code> em modo porcelana."
+        }
+      }
+    },
+    "install": {
+      "title": "Instalação",
+      "subtitle": "Cada stack é um pacote independente. Instale apenas o que vai usar.",
+      "cloneTitle": "1. Clone o repositório",
+      "cloneCode": "git clone https://github.com/sua-org/design-system.git\ncd design-system",
+      "installTitle": "2. Instale o stack desejado",
+      "installNote": "Entre na pasta do stack e rode <code>npm install</code>. Não rode na raiz — não há workspace agregador.",
+      "installCode": "cd design-system-react   # ou design-system-vue / design-system-svelte / nortear-design-system\nnpm install"
+    },
+    "scripts": {
+      "title": "Scripts essenciais",
+      "subtitle": "Todos os stacks expõem os mesmos comandos.",
+      "cols": {
+        "command": "Comando",
+        "purpose": "O que faz",
+        "ports": "Portas / observação"
+      },
+      "rows": {
+        "storybook": {
+          "command": "npm run storybook",
+          "purpose": "Sobe o Storybook em modo dev. É a interface principal — não use <code>App.tsx</code>/<code>main.ts</code>.",
+          "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009"
+        },
+        "build": {
+          "command": "npm run build",
+          "purpose": "Typecheck + build de produção via Vite.",
+          "ports": "Saída em <code>dist/</code>."
+        },
+        "lint": {
+          "command": "npm run lint",
+          "purpose": "ESLint + regras específicas do stack.",
+          "ports": "Roda em CI."
+        },
+        "testStorybook": {
+          "command": "npm run test-storybook",
+          "purpose": "axe-playwright + play functions em cada story.",
+          "ports": "Storybook precisa estar rodando em outra aba."
+        },
+        "chromatic": {
+          "command": "npm run chromatic",
+          "purpose": "Snapshot visual cross-browser.",
+          "ports": "Exige <code>CHROMATIC_PROJECT_TOKEN</code>."
+        }
+      }
+    },
+    "structure": {
+      "title": "Mapa de pastas",
+      "subtitle": "Onde mora cada coisa no monorepo.",
+      "items": {
+        "shared": {
+          "path": "docs/shared/",
+          "body": "Fonte única de verdade: conteúdo (<code>content/</code>), temas (<code>themes/</code>), guidelines e referências para skills."
+        },
+        "stack": {
+          "path": "design-system-&lt;stack&gt;/",
+          "body": "Pacote npm independente: stories, docs pages, primitives e build próprio."
+        },
+        "primitives": {
+          "path": "src/components/ui/",
+          "body": "Os primitives (Button, Dialog, Input…). Um arquivo por componente, espelhado em todos os stacks."
+        },
+        "docs": {
+          "path": "src/components/docs/",
+          "body": "Páginas de documentação consumidas pelo Storybook via HOC <code>withAutoDocsTab</code>."
+        },
+        "stories": {
+          "path": "src/components/ui/*.stories.*",
+          "body": "Playground + variantes + estados + composições. Ordem do sidebar controlada por <code>storySort</code>."
+        },
+        "lib": {
+          "path": "src/lib/",
+          "body": "Hooks compartilhados: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>."
+        }
+      }
+    },
+    "next": {
+      "title": "Próximos passos",
+      "items": {
+        "foundations": "Explore as <strong>Foundations</strong> — cores, tipografia, spacing e motion antes de mergulhar em componentes.",
+        "button": "Abra <strong>Button</strong> no Storybook — é a porta de entrada didática: cobre variantes, estados, props e analytics.",
+        "guidelines": "Leia as <strong>guidelines</strong> em <code>docs/shared/guidelines/</code> — regras transversais (a11y, segurança, tom de voz).",
+        "pipeline": "Se for contribuir, use a skill <code>pipeline</code> — orquestra auditorias deterministas por componente."
+      }
+    }
+  },
+  "en": {
+    "title": "Start Here",
+    "category": "Foundations",
+    "type": "Setup",
+    "description": "Quick guide to clone the monorepo, install dependencies and open Storybook in your stack of choice. Everything you need to see the system running in under five minutes.",
+    "seo": {
+      "title": "Start Here — Design System Setup",
+      "description": "Prerequisites, install, essential scripts and folder map of the multi-stack Design System (React, Vue, Svelte, Nortear).",
+      "aiSummary": "Technical onboarding page. Lists prerequisites (Node 18+, npm, git), per-stack clone and install steps, essential scripts (storybook, build, lint, test-storybook) and monorepo folder map.",
+      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, basecoat, setup, install, scripts",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Before you start",
+      "body": "The repo is a <strong>multi-stack monorepo</strong>: four independent npm packages (React, Vue, Svelte and Nortear) share content, themes and guidelines from <code>docs/shared/</code>. Each stack has its own Storybook on a dedicated port — you can run them all in parallel.",
+      "audience": "For devs who will consume, contribute to or port components from the system into a new product."
+    },
+    "prerequisites": {
+      "title": "Prerequisites",
+      "subtitle": "Check minimum versions before the first clone.",
+      "cols": {
+        "tool": "Tool",
+        "version": "Min version",
+        "why": "Why"
+      },
+      "rows": {
+        "node": {
+          "tool": "Node.js",
+          "version": "18.0+",
+          "why": "Vite 5, Tailwind 4 and Storybook 10 require modern Node."
+        },
+        "npm": {
+          "tool": "npm",
+          "version": "9+",
+          "why": "Workspaces and deterministic <code>npm ci</code>. <code>pnpm</code> and <code>yarn</code> are not officially supported."
+        },
+        "git": {
+          "tool": "git",
+          "version": "2.30+",
+          "why": "Pre-commit hooks use porcelain <code>git diff</code>."
+        }
+      }
+    },
+    "install": {
+      "title": "Install",
+      "subtitle": "Each stack is an independent package. Install only the one you need.",
+      "cloneTitle": "1. Clone the repo",
+      "cloneCode": "git clone https://github.com/your-org/design-system.git\ncd design-system",
+      "installTitle": "2. Install the desired stack",
+      "installNote": "Enter the stack folder and run <code>npm install</code>. Do not run it at the root — there is no aggregator workspace.",
+      "installCode": "cd design-system-react   # or design-system-vue / design-system-svelte / nortear-design-system\nnpm install"
+    },
+    "scripts": {
+      "title": "Essential scripts",
+      "subtitle": "All stacks expose the same commands.",
+      "cols": {
+        "command": "Command",
+        "purpose": "What it does",
+        "ports": "Ports / note"
+      },
+      "rows": {
+        "storybook": {
+          "command": "npm run storybook",
+          "purpose": "Starts Storybook in dev mode. It is the main interface — do not use <code>App.tsx</code>/<code>main.ts</code>.",
+          "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009"
+        },
+        "build": {
+          "command": "npm run build",
+          "purpose": "Typecheck + production build via Vite.",
+          "ports": "Output in <code>dist/</code>."
+        },
+        "lint": {
+          "command": "npm run lint",
+          "purpose": "ESLint + stack-specific rules.",
+          "ports": "Runs in CI."
+        },
+        "testStorybook": {
+          "command": "npm run test-storybook",
+          "purpose": "axe-playwright + play functions on every story.",
+          "ports": "Storybook must be running in another tab."
+        },
+        "chromatic": {
+          "command": "npm run chromatic",
+          "purpose": "Cross-browser visual snapshot.",
+          "ports": "Requires <code>CHROMATIC_PROJECT_TOKEN</code>."
+        }
+      }
+    },
+    "structure": {
+      "title": "Folder map",
+      "subtitle": "Where everything lives in the monorepo.",
+      "items": {
+        "shared": {
+          "path": "docs/shared/",
+          "body": "Single source of truth: content (<code>content/</code>), themes (<code>themes/</code>), guidelines and skill refs."
+        },
+        "stack": {
+          "path": "design-system-&lt;stack&gt;/",
+          "body": "Independent npm package: own stories, docs pages, primitives and build."
+        },
+        "primitives": {
+          "path": "src/components/ui/",
+          "body": "Primitives (Button, Dialog, Input…). One file per component, mirrored across all stacks."
+        },
+        "docs": {
+          "path": "src/components/docs/",
+          "body": "Documentation pages consumed by Storybook via the <code>withAutoDocsTab</code> HOC."
+        },
+        "stories": {
+          "path": "src/components/ui/*.stories.*",
+          "body": "Playground + variants + states + compositions. Sidebar order controlled by <code>storySort</code>."
+        },
+        "lib": {
+          "path": "src/lib/",
+          "body": "Shared hooks: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>."
+        }
+      }
+    },
+    "next": {
+      "title": "Next steps",
+      "items": {
+        "foundations": "Explore the <strong>Foundations</strong> — colors, typography, spacing and motion before diving into components.",
+        "button": "Open <strong>Button</strong> in Storybook — it is the didactic entry point: covers variants, states, props and analytics.",
+        "guidelines": "Read the <strong>guidelines</strong> in <code>docs/shared/guidelines/</code> — cross-cutting rules (a11y, security, tone of voice).",
+        "pipeline": "If you will contribute, use the <code>pipeline</code> skill — orchestrates deterministic audits per component."
+      }
+    }
+  },
+  "es": {
+    "title": "Empieza Aquí",
+    "category": "Foundations",
+    "type": "Setup",
+    "description": "Guía rápida para clonar el monorepo, instalar dependencias y abrir Storybook del stack elegido. Todo lo que necesitas para ver el sistema funcionando en menos de cinco minutos.",
+    "seo": {
+      "title": "Empieza Aquí — Setup del Design System",
+      "description": "Requisitos, instalación, scripts esenciales y estructura de carpetas del Design System multi-stack (React, Vue, Svelte, Nortear).",
+      "aiSummary": "Página de onboarding técnico. Lista requisitos (Node 18+, npm, git), pasos de clon e instalación por stack, scripts esenciales (storybook, build, lint, test-storybook) y mapa de carpetas del monorepo.",
+      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, basecoat, setup, instalación, scripts",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Antes de empezar",
+      "body": "El repositorio es un <strong>monorepo multi-stack</strong>: cuatro paquetes npm independientes (React, Vue, Svelte y Nortear) comparten contenido, temas y guidelines desde <code>docs/shared/</code>. Cada stack tiene su propio Storybook en un puerto dedicado — puedes ejecutarlos todos en paralelo.",
+      "audience": "Para devs que van a consumir, contribuir o portar componentes del sistema a un producto nuevo."
+    },
+    "prerequisites": {
+      "title": "Requisitos",
+      "subtitle": "Revisa las versiones mínimas antes del primer clon.",
+      "cols": {
+        "tool": "Herramienta",
+        "version": "Versión mínima",
+        "why": "Por qué"
+      },
+      "rows": {
+        "node": {
+          "tool": "Node.js",
+          "version": "18.0+",
+          "why": "Vite 5, Tailwind 4 y Storybook 10 requieren Node moderno."
+        },
+        "npm": {
+          "tool": "npm",
+          "version": "9+",
+          "why": "Workspaces y <code>npm ci</code> determinista. <code>pnpm</code> y <code>yarn</code> no están soportados oficialmente."
+        },
+        "git": {
+          "tool": "git",
+          "version": "2.30+",
+          "why": "Hooks de pre-commit usan <code>git diff</code> en modo porcelana."
+        }
+      }
+    },
+    "install": {
+      "title": "Instalación",
+      "subtitle": "Cada stack es un paquete independiente. Instala solo el que vas a usar.",
+      "cloneTitle": "1. Clona el repositorio",
+      "cloneCode": "git clone https://github.com/tu-org/design-system.git\ncd design-system",
+      "installTitle": "2. Instala el stack deseado",
+      "installNote": "Entra en la carpeta del stack y ejecuta <code>npm install</code>. No lo ejecutes en la raíz — no hay workspace agregador.",
+      "installCode": "cd design-system-react   # o design-system-vue / design-system-svelte / nortear-design-system\nnpm install"
+    },
+    "scripts": {
+      "title": "Scripts esenciales",
+      "subtitle": "Todos los stacks exponen los mismos comandos.",
+      "cols": {
+        "command": "Comando",
+        "purpose": "Qué hace",
+        "ports": "Puertos / nota"
+      },
+      "rows": {
+        "storybook": {
+          "command": "npm run storybook",
+          "purpose": "Levanta Storybook en modo dev. Es la interfaz principal — no uses <code>App.tsx</code>/<code>main.ts</code>.",
+          "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009"
+        },
+        "build": {
+          "command": "npm run build",
+          "purpose": "Typecheck + build de producción vía Vite.",
+          "ports": "Salida en <code>dist/</code>."
+        },
+        "lint": {
+          "command": "npm run lint",
+          "purpose": "ESLint + reglas específicas del stack.",
+          "ports": "Se ejecuta en CI."
+        },
+        "testStorybook": {
+          "command": "npm run test-storybook",
+          "purpose": "axe-playwright + play functions en cada story.",
+          "ports": "Storybook debe estar corriendo en otra pestaña."
+        },
+        "chromatic": {
+          "command": "npm run chromatic",
+          "purpose": "Snapshot visual cross-browser.",
+          "ports": "Requiere <code>CHROMATIC_PROJECT_TOKEN</code>."
+        }
+      }
+    },
+    "structure": {
+      "title": "Mapa de carpetas",
+      "subtitle": "Dónde vive cada cosa en el monorepo.",
+      "items": {
+        "shared": {
+          "path": "docs/shared/",
+          "body": "Fuente única de verdad: contenido (<code>content/</code>), temas (<code>themes/</code>), guidelines y referencias para skills."
+        },
+        "stack": {
+          "path": "design-system-&lt;stack&gt;/",
+          "body": "Paquete npm independiente: stories, docs pages, primitives y build propios."
+        },
+        "primitives": {
+          "path": "src/components/ui/",
+          "body": "Los primitives (Button, Dialog, Input…). Un archivo por componente, espejado en todos los stacks."
+        },
+        "docs": {
+          "path": "src/components/docs/",
+          "body": "Páginas de documentación consumidas por Storybook vía el HOC <code>withAutoDocsTab</code>."
+        },
+        "stories": {
+          "path": "src/components/ui/*.stories.*",
+          "body": "Playground + variantes + estados + composiciones. Orden del sidebar vía <code>storySort</code>."
+        },
+        "lib": {
+          "path": "src/lib/",
+          "body": "Hooks compartidos: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>."
+        }
+      }
+    },
+    "next": {
+      "title": "Próximos pasos",
+      "items": {
+        "foundations": "Explora las <strong>Foundations</strong> — colores, tipografía, spacing y motion antes de entrar en componentes.",
+        "button": "Abre <strong>Button</strong> en Storybook — es la puerta de entrada didáctica: cubre variantes, estados, props y analytics.",
+        "guidelines": "Lee las <strong>guidelines</strong> en <code>docs/shared/guidelines/</code> — reglas transversales (a11y, seguridad, tono de voz).",
+        "pipeline": "Si vas a contribuir, usa la skill <code>pipeline</code> — orquesta auditorías deterministas por componente."
+      }
+    }
+  }
+}

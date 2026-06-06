@@ -1,0 +1,557 @@
+{
+  "pt-BR": {
+    "title": "Catálogo de Eventos Analytics",
+    "category": "Foundations",
+    "type": "Analytics",
+    "description": "Convenção de nomenclatura, payload base, eventos universais de docs pages e catálogo de eventos por componente. GA4 vive no manager do Storybook; o iframe não dispara nada diretamente.",
+    "seo": {
+      "title": "Catálogo de Eventos Analytics",
+      "description": "Referência completa de eventos: convenção [objeto]_[ação], payload base com component/variant/location e catálogo de eventos por componente.",
+      "aiSummary": "Página técnica que cataloga eventos de analytics. Documenta o Measurement ID GA4, a localização do script no manager-head.html, a função track() em src/lib/analytics.ts, três eventos universais de docs pages, convenção de nomenclatura snake_case, payload base e tabela de eventos por componente.",
+      "aiEntities": "GA4, Google Analytics, gtag, track, manager-head, send_page_view, docs_page_view, docs_section_viewed, language_switched, button_click, snake_case",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Arquitetura",
+      "body": "GA4 carrega uma única vez no <code>manager-head.html</code> do Storybook com <code>send_page_view:false</code>. O iframe da story não tem GA4 — quando um componente precisa rastrear, chama <code>track(event, params)</code> de <code>src/lib/analytics.ts</code>, que executa <code>window.top.gtag(...)</code>. Sem isso, todo evento seria atribuído a <code>/iframe.html</code>.",
+      "audience": "Devs instrumentando docs pages, autores de componente com analytics opcional e times de produto consumindo o sistema."
+    },
+    "setup": {
+      "title": "Setup",
+      "cols": {
+        "key": "Item",
+        "value": "Valor"
+      },
+      "rows": {
+        "id": {
+          "key": "Measurement ID",
+          "value": "<code>G-K0BQWVR1RG</code>"
+        },
+        "script": {
+          "key": "Script GA4",
+          "value": "<code>.storybook/manager-head.html</code> (nunca no iframe)"
+        },
+        "pageview": {
+          "key": "Page view automático",
+          "value": "<code>send_page_view: false</code> — disparado manualmente por <code>useSeoEffect</code>"
+        },
+        "helper": {
+          "key": "Helper",
+          "value": "<code>track(event, params)</code> em <code>src/lib/analytics.ts</code>"
+        }
+      }
+    },
+    "naming": {
+      "title": "Convenção de nomenclatura",
+      "subtitle": "Formato <code>[objeto]_[ação]</code>, sempre em inglês, snake_case, verbo no passado, máximo 3 palavras.",
+      "rules": {
+        "language": "Sempre em inglês — nunca em pt-BR ou es.",
+        "case": "snake_case — nunca camelCase, PascalCase ou kebab-case.",
+        "tense": "Verbo no passado (<code>click</code>, <code>submit</code>, <code>open</code>) — nunca infinitivo.",
+        "singular": "Objeto sempre no singular (<code>button</code>, não <code>buttons</code>).",
+        "noAbbreviation": "Sem abreviações: <code>navigation</code> e não <code>nav</code>, <code>dropdown</code> e não <code>dd</code>.",
+        "limit": "Máximo 3 palavras (<code>form_field_error</code> é o limite)."
+      }
+    },
+    "payload": {
+      "title": "Payload base",
+      "subtitle": "Toda chamada de <code>track()</code> deve incluir as três propriedades globais. Propriedades específicas vêm conforme o componente.",
+      "cols": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "required": "Obrigatório",
+        "desc": "Descrição"
+      },
+      "rows": {
+        "component": {
+          "prop": "component",
+          "type": "string",
+          "required": "sim",
+          "desc": "Nome do componente em snake_case (<code>button</code>, <code>dialog</code>, <code>select</code>)."
+        },
+        "variant": {
+          "prop": "variant",
+          "type": "string",
+          "required": "não",
+          "desc": "Variante ativa (<code>default</code>, <code>outline</code>, <code>destructive</code>)."
+        },
+        "location": {
+          "prop": "location",
+          "type": "string",
+          "required": "sim",
+          "desc": "Página ou seção onde o componente está (<code>header</code>, <code>checkout_form</code>)."
+        },
+        "label": {
+          "prop": "label",
+          "type": "string",
+          "required": "não",
+          "desc": "Texto visível do elemento, quando relevante."
+        },
+        "value": {
+          "prop": "value",
+          "type": "string",
+          "required": "não",
+          "desc": "Valor selecionado ou inserido (sanitizado)."
+        }
+      }
+    },
+    "docsEvents": {
+      "title": "Eventos universais de docs pages",
+      "subtitle": "Disparados por todas as docs pages — não precisam de instrumentação manual.",
+      "items": {
+        "pageView": {
+          "name": "docs_page_view",
+          "fire": "Quando uma docs page monta (disparado por <code>useSeoEffect</code> após o set de meta).",
+          "payload": "<code>{ page_title, page_location, page_path, language }</code>"
+        },
+        "sectionViewed": {
+          "name": "docs_section_viewed",
+          "fire": "Após 2s de visibilidade contínua de uma seção. Suprime falsos positivos durante scroll programático.",
+          "payload": "<code>{ section, page, dwell_ms }</code>"
+        },
+        "languageSwitched": {
+          "name": "language_switched",
+          "fire": "Quando o usuário troca o idioma via LanguageSwitcher.",
+          "payload": "<code>{ from, to, page }</code>"
+        }
+      }
+    },
+    "componentEvents": {
+      "title": "Catálogo por componente",
+      "subtitle": "Eventos esperados nos componentes mais comuns. A docs page (ou o produto consumidor) chama <code>track()</code> — o primitive nunca.",
+      "cols": {
+        "event": "Evento",
+        "component": "Componente",
+        "when": "Quando dispara",
+        "extras": "Propriedades extras"
+      },
+      "rows": {
+        "buttonClick": {
+          "event": "button_click",
+          "component": "Button",
+          "when": "No <code>onClick</code>.",
+          "extras": "<code>label</code>"
+        },
+        "navClick": {
+          "event": "navigation_click",
+          "component": "NavigationMenu, Breadcrumb",
+          "when": "Ao clicar em um item de navegação.",
+          "extras": "<code>label, href</code>"
+        },
+        "formSubmit": {
+          "event": "form_submit",
+          "component": "Form",
+          "when": "Após validação bem-sucedida.",
+          "extras": "<code>form_id, fields_filled</code>"
+        },
+        "dialogOpen": {
+          "event": "dialog_open",
+          "component": "Dialog, AlertDialog, Drawer",
+          "when": "Quando o overlay abre.",
+          "extras": "<code>trigger</code>"
+        },
+        "slideChange": {
+          "event": "slide_change",
+          "component": "Carousel",
+          "when": "Ao avançar/retroceder slide.",
+          "extras": "<code>index, total, direction</code>"
+        },
+        "tabChange": {
+          "event": "tab_change",
+          "component": "Tabs",
+          "when": "Ao trocar de aba.",
+          "extras": "<code>value</code>"
+        },
+        "searchSubmit": {
+          "event": "search_submit",
+          "component": "Command, Input[type=search]",
+          "when": "No <code>Enter</code> ou clique em buscar.",
+          "extras": "<code>query_length</code> (não envie a query crua)"
+        }
+      }
+    },
+    "antiPatterns": {
+      "title": "Anti-padrões",
+      "items": {
+        "inPrimitive": "<strong>Nunca</strong> chamar <code>track()</code> dentro de um UI primitive. Tracking é responsabilidade da camada de produto (docs page ou feature).",
+        "sensitive": "Não rastreie dados sensíveis: e-mail, CPF, telefone, ID interno, query crua de busca. Use <code>query_length</code> ou <code>has_value</code>.",
+        "nonEnglish": "Sem nomes em português ou em camelCase. Auditor falha em <code>botaoClicado</code>.",
+        "directGtag": "Nunca chame <code>gtag()</code> diretamente. Sempre via <code>track()</code> — garante <code>window.top</code> e sanitização."
+      }
+    },
+    "privacy": {
+      "title": "Privacidade e fallback",
+      "body": "Quando GA4 não carrega (ad blocker, SSR, ambiente de testes), <code>track()</code> é um no-op silencioso. Nenhum erro é lançado. Nenhum dado é bufferizado em <code>localStorage</code>. Toda instrumentação deve assumir que GA4 pode estar ausente e jamais bloquear UX nesse fluxo."
+    }
+  },
+  "en": {
+    "title": "Analytics Event Catalog",
+    "category": "Foundations",
+    "type": "Analytics",
+    "description": "Naming convention, base payload, universal docs page events and per-component event catalog. GA4 lives in the Storybook manager; the iframe never fires anything directly.",
+    "seo": {
+      "title": "Analytics Event Catalog",
+      "description": "Full event reference: [object]_[action] convention, base payload with component/variant/location and per-component event catalog.",
+      "aiSummary": "Technical page cataloging analytics events. Documents the GA4 Measurement ID, the script location in manager-head.html, the track() helper in src/lib/analytics.ts, three universal docs page events, snake_case naming convention, base payload and a per-component event table.",
+      "aiEntities": "GA4, Google Analytics, gtag, track, manager-head, send_page_view, docs_page_view, docs_section_viewed, language_switched, button_click, snake_case",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Architecture",
+      "body": "GA4 loads once in Storybook's <code>manager-head.html</code> with <code>send_page_view:false</code>. The story iframe has no GA4 — when a component needs to track, it calls <code>track(event, params)</code> from <code>src/lib/analytics.ts</code>, which runs <code>window.top.gtag(...)</code>. Without this, every event would be attributed to <code>/iframe.html</code>.",
+      "audience": "Devs instrumenting docs pages, component authors with optional analytics and product teams consuming the system."
+    },
+    "setup": {
+      "title": "Setup",
+      "cols": {
+        "key": "Item",
+        "value": "Value"
+      },
+      "rows": {
+        "id": {
+          "key": "Measurement ID",
+          "value": "<code>G-K0BQWVR1RG</code>"
+        },
+        "script": {
+          "key": "GA4 script",
+          "value": "<code>.storybook/manager-head.html</code> (never in the iframe)"
+        },
+        "pageview": {
+          "key": "Automatic page view",
+          "value": "<code>send_page_view: false</code> — fired manually by <code>useSeoEffect</code>"
+        },
+        "helper": {
+          "key": "Helper",
+          "value": "<code>track(event, params)</code> in <code>src/lib/analytics.ts</code>"
+        }
+      }
+    },
+    "naming": {
+      "title": "Naming convention",
+      "subtitle": "Format <code>[object]_[action]</code>, always in English, snake_case, past-tense verb, maximum 3 words.",
+      "rules": {
+        "language": "Always English — never pt-BR or es.",
+        "case": "snake_case — never camelCase, PascalCase or kebab-case.",
+        "tense": "Past-tense verb (<code>click</code>, <code>submit</code>, <code>open</code>) — never infinitive.",
+        "singular": "Object always singular (<code>button</code>, not <code>buttons</code>).",
+        "noAbbreviation": "No abbreviations: <code>navigation</code> not <code>nav</code>, <code>dropdown</code> not <code>dd</code>.",
+        "limit": "Max 3 words (<code>form_field_error</code> is the cap)."
+      }
+    },
+    "payload": {
+      "title": "Base payload",
+      "subtitle": "Every <code>track()</code> call must include the three global properties. Component-specific properties are added as needed.",
+      "cols": {
+        "prop": "Property",
+        "type": "Type",
+        "required": "Required",
+        "desc": "Description"
+      },
+      "rows": {
+        "component": {
+          "prop": "component",
+          "type": "string",
+          "required": "yes",
+          "desc": "Component name in snake_case (<code>button</code>, <code>dialog</code>, <code>select</code>)."
+        },
+        "variant": {
+          "prop": "variant",
+          "type": "string",
+          "required": "no",
+          "desc": "Active variant (<code>default</code>, <code>outline</code>, <code>destructive</code>)."
+        },
+        "location": {
+          "prop": "location",
+          "type": "string",
+          "required": "yes",
+          "desc": "Page or section where the component sits (<code>header</code>, <code>checkout_form</code>)."
+        },
+        "label": {
+          "prop": "label",
+          "type": "string",
+          "required": "no",
+          "desc": "Visible element text, when relevant."
+        },
+        "value": {
+          "prop": "value",
+          "type": "string",
+          "required": "no",
+          "desc": "Selected or entered value (sanitized)."
+        }
+      }
+    },
+    "docsEvents": {
+      "title": "Universal docs page events",
+      "subtitle": "Fired by every docs page — no manual instrumentation required.",
+      "items": {
+        "pageView": {
+          "name": "docs_page_view",
+          "fire": "When a docs page mounts (fired by <code>useSeoEffect</code> after setting meta).",
+          "payload": "<code>{ page_title, page_location, page_path, language }</code>"
+        },
+        "sectionViewed": {
+          "name": "docs_section_viewed",
+          "fire": "After 2s of continuous visibility of a section. Suppresses false positives during programmatic scroll.",
+          "payload": "<code>{ section, page, dwell_ms }</code>"
+        },
+        "languageSwitched": {
+          "name": "language_switched",
+          "fire": "When the user switches language via LanguageSwitcher.",
+          "payload": "<code>{ from, to, page }</code>"
+        }
+      }
+    },
+    "componentEvents": {
+      "title": "Per-component catalog",
+      "subtitle": "Expected events for the most common components. The docs page (or consuming product) calls <code>track()</code> — the primitive never does.",
+      "cols": {
+        "event": "Event",
+        "component": "Component",
+        "when": "When it fires",
+        "extras": "Extra properties"
+      },
+      "rows": {
+        "buttonClick": {
+          "event": "button_click",
+          "component": "Button",
+          "when": "On <code>onClick</code>.",
+          "extras": "<code>label</code>"
+        },
+        "navClick": {
+          "event": "navigation_click",
+          "component": "NavigationMenu, Breadcrumb",
+          "when": "When a nav item is clicked.",
+          "extras": "<code>label, href</code>"
+        },
+        "formSubmit": {
+          "event": "form_submit",
+          "component": "Form",
+          "when": "After successful validation.",
+          "extras": "<code>form_id, fields_filled</code>"
+        },
+        "dialogOpen": {
+          "event": "dialog_open",
+          "component": "Dialog, AlertDialog, Drawer",
+          "when": "When the overlay opens.",
+          "extras": "<code>trigger</code>"
+        },
+        "slideChange": {
+          "event": "slide_change",
+          "component": "Carousel",
+          "when": "On slide forward/back.",
+          "extras": "<code>index, total, direction</code>"
+        },
+        "tabChange": {
+          "event": "tab_change",
+          "component": "Tabs",
+          "when": "On tab switch.",
+          "extras": "<code>value</code>"
+        },
+        "searchSubmit": {
+          "event": "search_submit",
+          "component": "Command, Input[type=search]",
+          "when": "On <code>Enter</code> or search click.",
+          "extras": "<code>query_length</code> (never send raw query)"
+        }
+      }
+    },
+    "antiPatterns": {
+      "title": "Anti-patterns",
+      "items": {
+        "inPrimitive": "<strong>Never</strong> call <code>track()</code> inside a UI primitive. Tracking is the product layer's job (docs page or feature).",
+        "sensitive": "Don't track sensitive data: email, national ID, phone, internal IDs, raw search query. Use <code>query_length</code> or <code>has_value</code>.",
+        "nonEnglish": "No Portuguese names or camelCase. The auditor fails on <code>botaoClicado</code>.",
+        "directGtag": "Never call <code>gtag()</code> directly. Always via <code>track()</code> — it guarantees <code>window.top</code> and sanitization."
+      }
+    },
+    "privacy": {
+      "title": "Privacy and fallback",
+      "body": "When GA4 fails to load (ad blocker, SSR, test environment), <code>track()</code> is a silent no-op. No error is thrown. No data is buffered in <code>localStorage</code>. All instrumentation must assume GA4 may be absent and must never block UX in that path."
+    }
+  },
+  "es": {
+    "title": "Catálogo de Eventos Analytics",
+    "category": "Foundations",
+    "type": "Analytics",
+    "description": "Convención de nomenclatura, payload base, eventos universales de docs pages y catálogo de eventos por componente. GA4 vive en el manager de Storybook; el iframe nunca dispara nada directamente.",
+    "seo": {
+      "title": "Catálogo de Eventos Analytics",
+      "description": "Referencia completa de eventos: convención [objeto]_[acción], payload base con component/variant/location y catálogo por componente.",
+      "aiSummary": "Página técnica que cataloga eventos de analytics. Documenta el Measurement ID GA4, la ubicación del script en manager-head.html, la función track() en src/lib/analytics.ts, tres eventos universales de docs pages, convención snake_case, payload base y tabla de eventos por componente.",
+      "aiEntities": "GA4, Google Analytics, gtag, track, manager-head, send_page_view, docs_page_view, docs_section_viewed, language_switched, button_click, snake_case",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Arquitectura",
+      "body": "GA4 se carga una sola vez en el <code>manager-head.html</code> de Storybook con <code>send_page_view:false</code>. El iframe de la story no tiene GA4 — cuando un componente necesita rastrear, llama a <code>track(event, params)</code> de <code>src/lib/analytics.ts</code>, que ejecuta <code>window.top.gtag(...)</code>. Sin esto, todo evento sería atribuido a <code>/iframe.html</code>.",
+      "audience": "Devs instrumentando docs pages, autores de componentes con analytics opcional y equipos de producto consumiendo el sistema."
+    },
+    "setup": {
+      "title": "Setup",
+      "cols": {
+        "key": "Item",
+        "value": "Valor"
+      },
+      "rows": {
+        "id": {
+          "key": "Measurement ID",
+          "value": "<code>G-K0BQWVR1RG</code>"
+        },
+        "script": {
+          "key": "Script GA4",
+          "value": "<code>.storybook/manager-head.html</code> (nunca en el iframe)"
+        },
+        "pageview": {
+          "key": "Page view automático",
+          "value": "<code>send_page_view: false</code> — disparado manualmente por <code>useSeoEffect</code>"
+        },
+        "helper": {
+          "key": "Helper",
+          "value": "<code>track(event, params)</code> en <code>src/lib/analytics.ts</code>"
+        }
+      }
+    },
+    "naming": {
+      "title": "Convención de nomenclatura",
+      "subtitle": "Formato <code>[objeto]_[acción]</code>, siempre en inglés, snake_case, verbo en pasado, máximo 3 palabras.",
+      "rules": {
+        "language": "Siempre en inglés — nunca pt-BR ni es.",
+        "case": "snake_case — nunca camelCase, PascalCase ni kebab-case.",
+        "tense": "Verbo en pasado (<code>click</code>, <code>submit</code>, <code>open</code>) — nunca infinitivo.",
+        "singular": "Objeto siempre en singular (<code>button</code>, no <code>buttons</code>).",
+        "noAbbreviation": "Sin abreviaciones: <code>navigation</code> y no <code>nav</code>, <code>dropdown</code> y no <code>dd</code>.",
+        "limit": "Máximo 3 palabras (<code>form_field_error</code> es el límite)."
+      }
+    },
+    "payload": {
+      "title": "Payload base",
+      "subtitle": "Toda llamada de <code>track()</code> debe incluir las tres propiedades globales. Las propiedades específicas se agregan según el componente.",
+      "cols": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "required": "Obligatorio",
+        "desc": "Descripción"
+      },
+      "rows": {
+        "component": {
+          "prop": "component",
+          "type": "string",
+          "required": "sí",
+          "desc": "Nombre del componente en snake_case (<code>button</code>, <code>dialog</code>, <code>select</code>)."
+        },
+        "variant": {
+          "prop": "variant",
+          "type": "string",
+          "required": "no",
+          "desc": "Variante activa (<code>default</code>, <code>outline</code>, <code>destructive</code>)."
+        },
+        "location": {
+          "prop": "location",
+          "type": "string",
+          "required": "sí",
+          "desc": "Página o sección donde está el componente (<code>header</code>, <code>checkout_form</code>)."
+        },
+        "label": {
+          "prop": "label",
+          "type": "string",
+          "required": "no",
+          "desc": "Texto visible del elemento, cuando sea relevante."
+        },
+        "value": {
+          "prop": "value",
+          "type": "string",
+          "required": "no",
+          "desc": "Valor seleccionado o ingresado (sanitizado)."
+        }
+      }
+    },
+    "docsEvents": {
+      "title": "Eventos universales de docs pages",
+      "subtitle": "Disparados por todas las docs pages — no requieren instrumentación manual.",
+      "items": {
+        "pageView": {
+          "name": "docs_page_view",
+          "fire": "Cuando una docs page monta (disparado por <code>useSeoEffect</code> tras setear meta).",
+          "payload": "<code>{ page_title, page_location, page_path, language }</code>"
+        },
+        "sectionViewed": {
+          "name": "docs_section_viewed",
+          "fire": "Tras 2s de visibilidad continua de una sección. Suprime falsos positivos durante scroll programático.",
+          "payload": "<code>{ section, page, dwell_ms }</code>"
+        },
+        "languageSwitched": {
+          "name": "language_switched",
+          "fire": "Cuando el usuario cambia el idioma vía LanguageSwitcher.",
+          "payload": "<code>{ from, to, page }</code>"
+        }
+      }
+    },
+    "componentEvents": {
+      "title": "Catálogo por componente",
+      "subtitle": "Eventos esperados en los componentes más comunes. La docs page (o el producto consumidor) llama a <code>track()</code> — el primitive nunca lo hace.",
+      "cols": {
+        "event": "Evento",
+        "component": "Componente",
+        "when": "Cuándo dispara",
+        "extras": "Propiedades extras"
+      },
+      "rows": {
+        "buttonClick": {
+          "event": "button_click",
+          "component": "Button",
+          "when": "En <code>onClick</code>.",
+          "extras": "<code>label</code>"
+        },
+        "navClick": {
+          "event": "navigation_click",
+          "component": "NavigationMenu, Breadcrumb",
+          "when": "Al hacer clic en un ítem de navegación.",
+          "extras": "<code>label, href</code>"
+        },
+        "formSubmit": {
+          "event": "form_submit",
+          "component": "Form",
+          "when": "Tras validación exitosa.",
+          "extras": "<code>form_id, fields_filled</code>"
+        },
+        "dialogOpen": {
+          "event": "dialog_open",
+          "component": "Dialog, AlertDialog, Drawer",
+          "when": "Cuando el overlay abre.",
+          "extras": "<code>trigger</code>"
+        },
+        "slideChange": {
+          "event": "slide_change",
+          "component": "Carousel",
+          "when": "Al avanzar/retroceder slide.",
+          "extras": "<code>index, total, direction</code>"
+        },
+        "tabChange": {
+          "event": "tab_change",
+          "component": "Tabs",
+          "when": "Al cambiar de pestaña.",
+          "extras": "<code>value</code>"
+        },
+        "searchSubmit": {
+          "event": "search_submit",
+          "component": "Command, Input[type=search]",
+          "when": "En <code>Enter</code> o clic en buscar.",
+          "extras": "<code>query_length</code> (nunca envíes la query cruda)"
+        }
+      }
+    },
+    "antiPatterns": {
+      "title": "Anti-patrones",
+      "items": {
+        "inPrimitive": "<strong>Nunca</strong> llames a <code>track()</code> dentro de un UI primitive. El tracking es responsabilidad de la capa de producto (docs page o feature).",
+        "sensitive": "No rastrees datos sensibles: e-mail, DNI, teléfono, ID interno, query cruda de búsqueda. Usa <code>query_length</code> o <code>has_value</code>.",
+        "nonEnglish": "Sin nombres en portugués ni camelCase. El auditor falla en <code>botaoClicado</code>.",
+        "directGtag": "Nunca llames a <code>gtag()</code> directamente. Siempre vía <code>track()</code> — garantiza <code>window.top</code> y sanitización."
+      }
+    },
+    "privacy": {
+      "title": "Privacidad y fallback",
+      "body": "Cuando GA4 no carga (ad blocker, SSR, entorno de tests), <code>track()</code> es un no-op silencioso. No se lanza ningún error. No se bufferiza nada en <code>localStorage</code>. Toda instrumentación debe asumir que GA4 puede estar ausente y nunca bloquear UX en ese flujo."
+    }
+  }
+}

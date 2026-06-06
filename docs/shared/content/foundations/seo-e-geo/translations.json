@@ -1,0 +1,395 @@
+{
+  "pt-BR": {
+    "title": "SEO + GEO",
+    "category": "Foundations",
+    "type": "Discoverability",
+    "description": "Otimização para buscadores tradicionais e para LLMs (ChatGPT, Gemini, Claude, Perplexity). useSeoEffect detecta contexto iframe, escreve meta tags no documento pai e gera JSON-LD, hreflang e Open Graph automaticamente.",
+    "seo": {
+      "title": "SEO + GEO — Design System",
+      "description": "Como o sistema otimiza para buscadores e LLMs: hook useSeoEffect, metadados obrigatórios, tags ai:*, JSON-LD TechArticle e hreflang trilíngue.",
+      "aiSummary": "Página técnica sobre SEO e GEO (Generative Engine Optimization). Documenta o hook useSeoEffect/applySeo, a detecção de contexto iframe que escreve meta tags no manager do Storybook, o sufixo automático '· Design System' no title, limites de descrição (155 chars), as tags GEO ai:summary/ai:entities/ai:intent para LLMs, geração automática de JSON-LD TechArticle e SoftwareSourceCode, hreflang trilíngue e Open Graph.",
+      "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Por que duas siglas",
+      "body": "<strong>SEO</strong> otimiza para buscadores baseados em link (Google, Bing). <strong>GEO</strong> — Generative Engine Optimization — otimiza para LLMs que respondem perguntas extraindo conteúdo da web (ChatGPT, Gemini, Claude, Perplexity). Os dois compartilham metadados básicos, mas GEO exige resumos densos e listas explícitas de entidades para que o modelo cite a fonte corretamente.",
+      "audience": "Devs criando docs pages e revisores de conteúdo conferindo descobertibilidade."
+    },
+    "hook": {
+      "title": "useSeoEffect / applySeo",
+      "subtitle": "Hook obrigatório em todo <code>*Docs.*</code>. Centraliza title, description, hreflang, og:*, ai:* e JSON-LD em uma única chamada.",
+      "items": {
+        "iframe": {
+          "title": "Detecção de iframe",
+          "body": "Quando a docs page roda dentro do Storybook, <code>window !== window.top</code>. O hook detecta isso e escreve as meta tags no <code>document</code> do <strong>manager</strong>, não no iframe — só o pai é indexável."
+        },
+        "title": {
+          "title": "Title com sufixo automático",
+          "body": "O hook compõe <code>${title} · Design System</code>. Por isso <code>seo.title</code> no JSON <strong>nunca</strong> deve incluir o sufixo — duplicaria."
+        },
+        "pageView": {
+          "title": "Page view disparado aqui",
+          "body": "Depois de aplicar os metadados, o hook chama <code>track('docs_page_view', …)</code>. É a única forma confiável de associar o page view ao path correto (o iframe daria <code>/iframe.html</code>)."
+        }
+      }
+    },
+    "metaTags": {
+      "title": "Meta tags geradas",
+      "subtitle": "Para cada locale ativo, o hook gera o conjunto abaixo no <code>&lt;head&gt;</code> do manager.",
+      "cols": {
+        "tag": "Tag",
+        "source": "Vem de",
+        "limit": "Limite / regra"
+      },
+      "rows": {
+        "title": {
+          "tag": "&lt;title&gt;",
+          "source": "<code>seo.title</code>",
+          "limit": "≤60 chars (após sufixo)"
+        },
+        "description": {
+          "tag": "&lt;meta name=\"description\"&gt;",
+          "source": "<code>seo.description</code>",
+          "limit": "≤155 chars, orientada a benefício"
+        },
+        "ogTitle": {
+          "tag": "&lt;meta property=\"og:title\"&gt;",
+          "source": "<code>seo.title</code>",
+          "limit": "Mesma string do title."
+        },
+        "ogDescription": {
+          "tag": "&lt;meta property=\"og:description\"&gt;",
+          "source": "<code>seo.description</code>",
+          "limit": "Mesma string da description."
+        },
+        "ogType": {
+          "tag": "&lt;meta property=\"og:type\"&gt;",
+          "source": "Fixo",
+          "limit": "<code>article</code>"
+        },
+        "ogLocale": {
+          "tag": "&lt;meta property=\"og:locale\"&gt;",
+          "source": "Locale ativo",
+          "limit": "<code>pt_BR</code>, <code>en_US</code>, <code>es_ES</code>"
+        },
+        "hreflang": {
+          "tag": "&lt;link rel=\"alternate\" hreflang=\"…\"&gt;",
+          "source": "<code>componentSlug</code> + locale",
+          "limit": "Três links: <code>?lang=pt-BR</code>, <code>?lang=en</code>, <code>?lang=es</code>"
+        },
+        "aiSummary": {
+          "tag": "&lt;meta name=\"ai:summary\"&gt;",
+          "source": "<code>seo.aiSummary</code>",
+          "limit": "≤500 chars, denso e completo"
+        },
+        "aiEntities": {
+          "tag": "&lt;meta name=\"ai:entities\"&gt;",
+          "source": "<code>seo.aiEntities</code>",
+          "limit": "Lista separada por vírgula"
+        },
+        "aiIntent": {
+          "tag": "&lt;meta name=\"ai:intent\"&gt;",
+          "source": "<code>seo.aiIntent</code>",
+          "limit": "<code>informational</code> | <code>transactional</code> | <code>navigational</code>"
+        }
+      }
+    },
+    "jsonld": {
+      "title": "JSON-LD",
+      "subtitle": "Dois schemas são injetados em cada docs page.",
+      "items": {
+        "techArticle": {
+          "type": "TechArticle",
+          "body": "Schema.org para artigos técnicos. Inclui <code>headline</code>, <code>description</code>, <code>inLanguage</code>, <code>dateModified</code>, <code>author</code> e <code>about</code> (lista de entidades). É o que o Google e o Bing usam para rich snippets."
+        },
+        "softwareSourceCode": {
+          "type": "SoftwareSourceCode",
+          "body": "Aplicado a páginas de componente. Inclui <code>programmingLanguage</code> (TypeScript), <code>codeRepository</code> e <code>runtimePlatform</code>. Aumenta a chance de aparecer em respostas de LLMs para queries de \"como implementar X\"."
+        }
+      }
+    },
+    "writing": {
+      "title": "Regras de escrita",
+      "items": {
+        "description": "<code>description</code> ≤155 chars, orientada a benefício (não lista de features). \"Bordas, sombras e elevação\" ≠ \"hierarquia visual para destacar conteúdo crítico\".",
+        "aiSummary": "<code>aiSummary</code> denso e auto-suficiente — um leitor (humano ou LLM) deve entender o componente sem abrir a página. Inclua propósito, casos de uso e principais variações.",
+        "aiEntities": "<code>aiEntities</code> lista substantivos próprios e termos técnicos relevantes separados por vírgula. Inclua nomes de libs base, padrões WCAG citados e tokens centrais.",
+        "aiIntent": "<code>aiIntent</code> reflete o que o usuário típico quer fazer na página — quase toda docs do sistema é <code>informational</code>."
+      }
+    },
+    "rules": {
+      "title": "Regras críticas",
+      "items": {
+        "always": "<code>useSeoEffect</code> é obrigatório em <strong>todo</strong> <code>*Docs.*</code>. Sem ele, a página não aparece em buscadores nem em LLMs.",
+        "noInline": "Nunca escreva <code>&lt;meta&gt;</code> inline em JSX/template — o iframe não é indexado.",
+        "noSuffix": "<code>seo.title</code> não inclui \"· Design System\" — duplica.",
+        "locale": "Locale é dependência reativa do hook — quando o usuário troca idioma, os metadados se atualizam.",
+        "slug": "<code>componentSlug</code> é obrigatório — é a base do canonical URL e dos três hreflang.",
+        "sanitize": "Conteúdo dinâmico em <code>aiSummary</code> passa por <code>sanitize-html</code> antes de virar atributo de meta."
+      }
+    }
+  },
+  "en": {
+    "title": "SEO + GEO",
+    "category": "Foundations",
+    "type": "Discoverability",
+    "description": "Optimization for traditional search engines and LLMs (ChatGPT, Gemini, Claude, Perplexity). useSeoEffect detects iframe context, writes meta tags to the parent document and auto-generates JSON-LD, hreflang and Open Graph.",
+    "seo": {
+      "title": "SEO + GEO — Design System",
+      "description": "How the system optimizes for engines and LLMs: useSeoEffect hook, required metadata, ai:* tags, JSON-LD TechArticle and trilingual hreflang.",
+      "aiSummary": "Technical page about SEO and GEO (Generative Engine Optimization). Documents the useSeoEffect/applySeo hook, iframe-context detection that writes meta tags into the Storybook manager, automatic '· Design System' suffix on title, description limits (155 chars), GEO ai:summary/ai:entities/ai:intent tags for LLMs, automatic JSON-LD TechArticle and SoftwareSourceCode generation, trilingual hreflang and Open Graph.",
+      "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Why two acronyms",
+      "body": "<strong>SEO</strong> targets link-based search engines (Google, Bing). <strong>GEO</strong> — Generative Engine Optimization — targets LLMs that answer questions by extracting web content (ChatGPT, Gemini, Claude, Perplexity). Both share basic metadata, but GEO demands dense summaries and explicit entity lists so the model can cite the source accurately.",
+      "audience": "Devs authoring docs pages and reviewers checking discoverability."
+    },
+    "hook": {
+      "title": "useSeoEffect / applySeo",
+      "subtitle": "Mandatory hook in every <code>*Docs.*</code>. Centralizes title, description, hreflang, og:*, ai:* and JSON-LD in a single call.",
+      "items": {
+        "iframe": {
+          "title": "Iframe detection",
+          "body": "When the docs page runs inside Storybook, <code>window !== window.top</code>. The hook detects this and writes meta tags into the <strong>manager</strong> document, not the iframe — only the parent is indexable."
+        },
+        "title": {
+          "title": "Title with automatic suffix",
+          "body": "The hook composes <code>${title} · Design System</code>. So <code>seo.title</code> in the JSON must <strong>never</strong> include the suffix — it would duplicate."
+        },
+        "pageView": {
+          "title": "Page view fires here",
+          "body": "After applying metadata, the hook calls <code>track('docs_page_view', …)</code>. This is the only reliable way to attribute the page view to the right path (the iframe would give <code>/iframe.html</code>)."
+        }
+      }
+    },
+    "metaTags": {
+      "title": "Generated meta tags",
+      "subtitle": "For each active locale, the hook emits the set below into the manager's <code>&lt;head&gt;</code>.",
+      "cols": {
+        "tag": "Tag",
+        "source": "Source",
+        "limit": "Limit / rule"
+      },
+      "rows": {
+        "title": {
+          "tag": "&lt;title&gt;",
+          "source": "<code>seo.title</code>",
+          "limit": "≤60 chars (after suffix)"
+        },
+        "description": {
+          "tag": "&lt;meta name=\"description\"&gt;",
+          "source": "<code>seo.description</code>",
+          "limit": "≤155 chars, benefit-oriented"
+        },
+        "ogTitle": {
+          "tag": "&lt;meta property=\"og:title\"&gt;",
+          "source": "<code>seo.title</code>",
+          "limit": "Same as title."
+        },
+        "ogDescription": {
+          "tag": "&lt;meta property=\"og:description\"&gt;",
+          "source": "<code>seo.description</code>",
+          "limit": "Same as description."
+        },
+        "ogType": {
+          "tag": "&lt;meta property=\"og:type\"&gt;",
+          "source": "Fixed",
+          "limit": "<code>article</code>"
+        },
+        "ogLocale": {
+          "tag": "&lt;meta property=\"og:locale\"&gt;",
+          "source": "Active locale",
+          "limit": "<code>pt_BR</code>, <code>en_US</code>, <code>es_ES</code>"
+        },
+        "hreflang": {
+          "tag": "&lt;link rel=\"alternate\" hreflang=\"…\"&gt;",
+          "source": "<code>componentSlug</code> + locale",
+          "limit": "Three links: <code>?lang=pt-BR</code>, <code>?lang=en</code>, <code>?lang=es</code>"
+        },
+        "aiSummary": {
+          "tag": "&lt;meta name=\"ai:summary\"&gt;",
+          "source": "<code>seo.aiSummary</code>",
+          "limit": "≤500 chars, dense and complete"
+        },
+        "aiEntities": {
+          "tag": "&lt;meta name=\"ai:entities\"&gt;",
+          "source": "<code>seo.aiEntities</code>",
+          "limit": "Comma-separated list"
+        },
+        "aiIntent": {
+          "tag": "&lt;meta name=\"ai:intent\"&gt;",
+          "source": "<code>seo.aiIntent</code>",
+          "limit": "<code>informational</code> | <code>transactional</code> | <code>navigational</code>"
+        }
+      }
+    },
+    "jsonld": {
+      "title": "JSON-LD",
+      "subtitle": "Two schemas are injected on every docs page.",
+      "items": {
+        "techArticle": {
+          "type": "TechArticle",
+          "body": "Schema.org for technical articles. Includes <code>headline</code>, <code>description</code>, <code>inLanguage</code>, <code>dateModified</code>, <code>author</code> and <code>about</code> (entity list). This is what Google and Bing use for rich snippets."
+        },
+        "softwareSourceCode": {
+          "type": "SoftwareSourceCode",
+          "body": "Applied to component pages. Includes <code>programmingLanguage</code> (TypeScript), <code>codeRepository</code> and <code>runtimePlatform</code>. Improves the chance of appearing in LLM answers to \"how to implement X\" queries."
+        }
+      }
+    },
+    "writing": {
+      "title": "Writing rules",
+      "items": {
+        "description": "<code>description</code> ≤155 chars, benefit-oriented (not a feature list). \"Borders, shadows and elevation\" ≠ \"visual hierarchy to surface critical content\".",
+        "aiSummary": "<code>aiSummary</code> dense and self-sufficient — a reader (human or LLM) must understand the component without opening the page. Include purpose, use cases and main variations.",
+        "aiEntities": "<code>aiEntities</code> lists proper nouns and relevant technical terms separated by commas. Include base lib names, WCAG patterns cited and core tokens.",
+        "aiIntent": "<code>aiIntent</code> reflects what the typical user wants to do — almost every doc in the system is <code>informational</code>."
+      }
+    },
+    "rules": {
+      "title": "Critical rules",
+      "items": {
+        "always": "<code>useSeoEffect</code> is mandatory in <strong>every</strong> <code>*Docs.*</code>. Without it, the page won't show up in engines or LLMs.",
+        "noInline": "Never write inline <code>&lt;meta&gt;</code> tags in JSX/template — the iframe is not indexed.",
+        "noSuffix": "<code>seo.title</code> must not include \"· Design System\" — it duplicates.",
+        "locale": "Locale is a reactive dependency of the hook — when the user switches language, metadata updates.",
+        "slug": "<code>componentSlug</code> is mandatory — it is the base for the canonical URL and the three hreflangs.",
+        "sanitize": "Dynamic content in <code>aiSummary</code> passes through <code>sanitize-html</code> before becoming a meta attribute."
+      }
+    }
+  },
+  "es": {
+    "title": "SEO + GEO",
+    "category": "Foundations",
+    "type": "Discoverability",
+    "description": "Optimización para buscadores tradicionales y para LLMs (ChatGPT, Gemini, Claude, Perplexity). useSeoEffect detecta el contexto iframe, escribe meta tags en el documento padre y genera JSON-LD, hreflang y Open Graph automáticamente.",
+    "seo": {
+      "title": "SEO + GEO — Design System",
+      "description": "Cómo el sistema optimiza para buscadores y LLMs: hook useSeoEffect, metadatos obligatorios, tags ai:*, JSON-LD TechArticle y hreflang trilingüe.",
+      "aiSummary": "Página técnica sobre SEO y GEO (Generative Engine Optimization). Documenta el hook useSeoEffect/applySeo, la detección de contexto iframe que escribe meta tags en el manager de Storybook, el sufijo automático '· Design System' en title, límites de descripción (155 chars), las tags GEO ai:summary/ai:entities/ai:intent para LLMs, generación automática de JSON-LD TechArticle y SoftwareSourceCode, hreflang trilingüe y Open Graph.",
+      "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
+      "aiIntent": "informational"
+    },
+    "intro": {
+      "title": "Por qué dos siglas",
+      "body": "<strong>SEO</strong> apunta a buscadores basados en enlaces (Google, Bing). <strong>GEO</strong> — Generative Engine Optimization — apunta a LLMs que responden preguntas extrayendo contenido web (ChatGPT, Gemini, Claude, Perplexity). Ambos comparten metadatos básicos, pero GEO exige resúmenes densos y listas explícitas de entidades para que el modelo cite la fuente correctamente.",
+      "audience": "Devs creando docs pages y revisores de contenido verificando descubribilidad."
+    },
+    "hook": {
+      "title": "useSeoEffect / applySeo",
+      "subtitle": "Hook obligatorio en todo <code>*Docs.*</code>. Centraliza title, description, hreflang, og:*, ai:* y JSON-LD en una sola llamada.",
+      "items": {
+        "iframe": {
+          "title": "Detección de iframe",
+          "body": "Cuando la docs page corre dentro de Storybook, <code>window !== window.top</code>. El hook detecta esto y escribe las meta tags en el documento del <strong>manager</strong>, no en el iframe — solo el padre es indexable."
+        },
+        "title": {
+          "title": "Title con sufijo automático",
+          "body": "El hook compone <code>${title} · Design System</code>. Por eso <code>seo.title</code> en el JSON <strong>nunca</strong> debe incluir el sufijo — se duplicaría."
+        },
+        "pageView": {
+          "title": "Page view se dispara aquí",
+          "body": "Tras aplicar los metadatos, el hook llama <code>track('docs_page_view', …)</code>. Es la única forma fiable de asociar el page view al path correcto (el iframe daría <code>/iframe.html</code>)."
+        }
+      }
+    },
+    "metaTags": {
+      "title": "Meta tags generadas",
+      "subtitle": "Para cada locale activo, el hook emite el conjunto siguiente en el <code>&lt;head&gt;</code> del manager.",
+      "cols": {
+        "tag": "Tag",
+        "source": "Origen",
+        "limit": "Límite / regla"
+      },
+      "rows": {
+        "title": {
+          "tag": "&lt;title&gt;",
+          "source": "<code>seo.title</code>",
+          "limit": "≤60 chars (tras sufijo)"
+        },
+        "description": {
+          "tag": "&lt;meta name=\"description\"&gt;",
+          "source": "<code>seo.description</code>",
+          "limit": "≤155 chars, orientada a beneficio"
+        },
+        "ogTitle": {
+          "tag": "&lt;meta property=\"og:title\"&gt;",
+          "source": "<code>seo.title</code>",
+          "limit": "Misma string que title."
+        },
+        "ogDescription": {
+          "tag": "&lt;meta property=\"og:description\"&gt;",
+          "source": "<code>seo.description</code>",
+          "limit": "Misma string que description."
+        },
+        "ogType": {
+          "tag": "&lt;meta property=\"og:type\"&gt;",
+          "source": "Fijo",
+          "limit": "<code>article</code>"
+        },
+        "ogLocale": {
+          "tag": "&lt;meta property=\"og:locale\"&gt;",
+          "source": "Locale activo",
+          "limit": "<code>pt_BR</code>, <code>en_US</code>, <code>es_ES</code>"
+        },
+        "hreflang": {
+          "tag": "&lt;link rel=\"alternate\" hreflang=\"…\"&gt;",
+          "source": "<code>componentSlug</code> + locale",
+          "limit": "Tres links: <code>?lang=pt-BR</code>, <code>?lang=en</code>, <code>?lang=es</code>"
+        },
+        "aiSummary": {
+          "tag": "&lt;meta name=\"ai:summary\"&gt;",
+          "source": "<code>seo.aiSummary</code>",
+          "limit": "≤500 chars, denso y completo"
+        },
+        "aiEntities": {
+          "tag": "&lt;meta name=\"ai:entities\"&gt;",
+          "source": "<code>seo.aiEntities</code>",
+          "limit": "Lista separada por coma"
+        },
+        "aiIntent": {
+          "tag": "&lt;meta name=\"ai:intent\"&gt;",
+          "source": "<code>seo.aiIntent</code>",
+          "limit": "<code>informational</code> | <code>transactional</code> | <code>navigational</code>"
+        }
+      }
+    },
+    "jsonld": {
+      "title": "JSON-LD",
+      "subtitle": "Dos esquemas se inyectan en cada docs page.",
+      "items": {
+        "techArticle": {
+          "type": "TechArticle",
+          "body": "Schema.org para artículos técnicos. Incluye <code>headline</code>, <code>description</code>, <code>inLanguage</code>, <code>dateModified</code>, <code>author</code> y <code>about</code> (lista de entidades). Es lo que Google y Bing usan para rich snippets."
+        },
+        "softwareSourceCode": {
+          "type": "SoftwareSourceCode",
+          "body": "Aplicado a páginas de componente. Incluye <code>programmingLanguage</code> (TypeScript), <code>codeRepository</code> y <code>runtimePlatform</code>. Aumenta la probabilidad de aparecer en respuestas de LLMs a queries de \"cómo implementar X\"."
+        }
+      }
+    },
+    "writing": {
+      "title": "Reglas de escritura",
+      "items": {
+        "description": "<code>description</code> ≤155 chars, orientada a beneficio (no lista de features). \"Bordes, sombras y elevación\" ≠ \"jerarquía visual para destacar contenido crítico\".",
+        "aiSummary": "<code>aiSummary</code> denso y auto-suficiente — un lector (humano o LLM) debe entender el componente sin abrir la página. Incluye propósito, casos de uso y variaciones principales.",
+        "aiEntities": "<code>aiEntities</code> lista sustantivos propios y términos técnicos relevantes separados por coma. Incluye nombres de libs base, patrones WCAG citados y tokens centrales.",
+        "aiIntent": "<code>aiIntent</code> refleja lo que el usuario típico quiere hacer — casi toda doc del sistema es <code>informational</code>."
+      }
+    },
+    "rules": {
+      "title": "Reglas críticas",
+      "items": {
+        "always": "<code>useSeoEffect</code> es obligatorio en <strong>todo</strong> <code>*Docs.*</code>. Sin él, la página no aparece en buscadores ni en LLMs.",
+        "noInline": "Nunca escribas <code>&lt;meta&gt;</code> inline en JSX/template — el iframe no se indexa.",
+        "noSuffix": "<code>seo.title</code> no debe incluir \"· Design System\" — se duplica.",
+        "locale": "Locale es dependencia reactiva del hook — cuando el usuario cambia idioma, los metadatos se actualizan.",
+        "slug": "<code>componentSlug</code> es obligatorio — es la base del canonical URL y de los tres hreflang.",
+        "sanitize": "El contenido dinámico en <code>aiSummary</code> pasa por <code>sanitize-html</code> antes de convertirse en atributo de meta."
+      }
+    }
+  }
+}
