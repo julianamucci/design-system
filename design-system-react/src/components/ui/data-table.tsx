@@ -408,6 +408,15 @@ function DataTable<TData>({
                   return (
                     <TableHead
                       key={header.id}
+                      aria-sort={
+                        sortDir === "asc"
+                          ? "ascending"
+                          : sortDir === "desc"
+                            ? "descending"
+                            : canSort
+                              ? "none"
+                              : undefined
+                      }
                       style={{
                         width: enableColumnResizing
                           ? header.getSize()

@@ -29,6 +29,7 @@
   } from 'lucide-svelte';
 
   import { cn } from '@/lib/utils';
+  import { Badge } from '@/components/ui/badge';
   import { Checkbox } from '@/components/ui/checkbox';
   import { Input } from '@/components/ui/input';
   import { Button } from '@/components/ui/button';
@@ -381,6 +382,13 @@
                 {@const label = headerLabel(header.column)}
                 {@const isDraggable = enableColumnOrdering && header.column.id !== '__select__'}
                 <TableHead
+                  aria-sort={sortDir === 'asc'
+                    ? 'ascending'
+                    : sortDir === 'desc'
+                      ? 'descending'
+                      : canSort
+                        ? 'none'
+                        : undefined}
                   style={[
                     enableColumnResizing ? `width: ${header.getSize()}px;` : '',
                     pinStyle(header.column),
@@ -492,7 +500,10 @@
                       enableColumnResizing ? `width: ${cell.column.getSize()}px;` : '',
                       pinStyle(cell.column),
                     ].join(' ')}
-                    class={cn(cell.column.getIsPinned() && 'bg-background')}
+                    class={cn(
+                      cell.column.getIsPinned() && 'bg-background',
+                      cell.column.columnDef.meta?.cellClass,
+                    )}
                   >
                     {#if colId === '__select__'}
                       <Checkbox
@@ -508,6 +519,10 @@
                         columnId={colId}
                         onCommit={(value) => onCellEdit?.(row.index, colId, value)}
                       />
+                    {:else if cell.column.columnDef.meta?.badgeVariant}
+                      {@const value = cell.getValue()}
+                      {@const variant = cell.column.columnDef.meta.badgeVariant(value, row.original)}
+                      <Badge {variant}>{String(value ?? '')}</Badge>
                     {:else if cell.column.columnDef.meta?.format}
                       {cell.column.columnDef.meta.format(cell.getValue(), row.original)}
                     {:else}

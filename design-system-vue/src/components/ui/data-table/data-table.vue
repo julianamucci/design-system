@@ -534,6 +534,15 @@ watch(
             <TableHead
               v-for="header in headerGroup.headers"
               :key="header.id"
+              :aria-sort="
+                header.column.getIsSorted() === 'asc'
+                  ? 'ascending'
+                  : header.column.getIsSorted() === 'desc'
+                    ? 'descending'
+                    : header.column.getCanSort()
+                      ? 'none'
+                      : undefined
+              "
               :style="{
                 width: enableColumnResizing ? `${header.getSize()}px` : undefined,
                 ...pinStyle(header.column),
