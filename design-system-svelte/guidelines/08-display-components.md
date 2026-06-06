@@ -127,3 +127,101 @@
 - `aria-label` descritivo no container do chart
 - Alternativa textual obrigatória (tabela de dados ou descrição no `aria-describedby`)
 - Cores: nunca o único diferenciador — usar padrões (pattern, labels, legenda)
+
+---
+
+## DataTable
+
+**Propósito**: tabela avançada para datasets que exigem interação — ordenação, filtros, seleção, paginação, redimensionamento, reordenação, fixação, edição inline e virtualização.
+
+**Stack**: construída sobre **`@tanstack/table-core`** (engine headless v8) + **`@tanstack/svelte-virtual`**. Não usa o adapter `@tanstack/svelte-table` (incompatível com Svelte 5); um wrapper local em `data-table.svelte` consome `createTable` direto e expõe state via runes (`$state`).
+
+**Implementação básica**:
+```svelte
+<script lang="ts">
+  import { DataTable } from '$lib/components/ui/data-table';
+  import type { DataTableColumn } from '$lib/components/ui/data-table';
+
+  type Invoice = { id: string; customer: string; status: 'Pago' | 'Pendente'; amount: number };
+
+  const invoices: Invoice[] = [/* ... */];
+
+  const statusVariant = {
+    Pago: 'default',
+    Pendente: 'secondary',
+  } as const;
+
+  const columns: DataTableColumn<Invoice>[] = [
+    { accessorKey: 'id', header: 'Fatura', size: 110 },
+    { accessorKey: 'customer', header: 'Cliente' },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      meta: { badgeVariant: (v) => statusVariant[v as Invoice['status']] ?? 'default' },
+    },
+    {
+      accessorKey: 'amount',
+      header: 'Valor',
+      meta: {
+        format: (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+        cellClass: 'font-medium tabular-nums',
+      },
+    },
+  ];
+</script>
+
+<DataTable {columns} data={invoices} enableRowSelection />
+```
+
+**Flags principais**: `enableGlobalFilter` (default `true`), `enableColumnVisibility` (default `true`), `enableColumnFilters`, `enableRowSelection`, `enableColumnResizing`, `enableColumnOrdering`, `enableColumnPinning`, `enablePagination` (default `true`), `virtualized` (desliga paginação).
+
+**Estende `ColumnMeta` (Svelte-only)**:
+- `filter?: { type: 'text' | 'select'; options?: string[] }` — input/select por coluna
+- `editable?: boolean` — clique entra em edição inline
+- `format?: (value, row) => string` — formata texto (sem JSX/snippet)
+- `badgeVariant?: (value, row) => 'default' | 'secondary' | 'destructive' | 'outline'` — envolve a célula em `<Badge>` com a variant retornada (substitui o cell renderer de outras stacks, que esperam Snippet/JSX)
+- `cellClass?: string` — classes Tailwind extras no `<td>`
+
+**Edição inline** — marque `meta.editable` e use `onCellEdit`. O componente **não muta** o array `data`:
+```svelte
+<script lang="ts">
+  let data = $state<Invoice[]>(invoices);
+
+  function handleEdit(rowIndex: number, columnId: string, value: unknown) {
+    data = data.map((row, i) => (i === rowIndex ? { ...row, [columnId]: value } : row));
+  }
+</script>
+
+<DataTable
+  columns={editableColumns}
+  {data}
+  onCellEdit={handleEdit}
+/>
+```
+
+`Enter` confirma; `Esc` cancela.
+
+**Virtualização** — para datasets &gt; 500 linhas:
+```svelte
+<DataTable
+  {columns}
+  data={bigData}
+  virtualized
+  maxHeight="400px"
+  virtualRowHeight={36}
+  enableColumnVisibility={false}
+/>
+```
+
+**Regras**:
+- Defina `columns` no top-level do `<script>` ou em `$derived` — recriar em cada update zera o estado
+- Selects de filtro recebem `filterFn: 'equals'` automaticamente
+- Aplica `table-fixed` em `enableColumnResizing`, `enableColumnOrdering` ou `virtualized` — evita travamento em datasets grandes
+- Para markup rico (ícones, links), use `meta.badgeVariant` ou `meta.cellClass`. `cell` Snippet ainda não é suportado pelo wrapper local
+
+**Acessibilidade**:
+- Tabela semântica via `<Table>` primitive
+- `aria-sort` no `<th>` ordenável (`ascending` / `descending` / `none`)
+- `aria-label` contextual em todos os botões: "Ordenar por <em>coluna</em>", "Filtrar <em>coluna</em>", "Selecionar linha", "Próxima página"
+- Checkbox de cabeçalho usa `indeterminate` em seleção parcial
+- Handle de resize: `role="separator"` + `aria-orientation="vertical"`

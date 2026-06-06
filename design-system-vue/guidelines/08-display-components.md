@@ -527,6 +527,194 @@ const table = useReactTable({
 
 ---
 
+## DataTable
+
+**Propósito**: tabela avançada para datasets que exigem interação — ordenação, filtros, seleção, paginação, redimensionamento, reordenação, fixação, edição inline e virtualização. Construída sobre **`@tanstack/vue-table` v8** (headless) + **`@tanstack/vue-virtual`**, encapsulando a engine numa camada visual que reusa o primitivo `Table` do design system.
+
+> Use `Table` quando os dados são estáticos e cabem na tela. Use `DataTable` quando o usuário precisa explorar, filtrar ou editar.
+
+**Estrutura de subcomponentes**:
+```
+DataTable
+├── Toolbar
+│   ├── GlobalFilter (Input com ícone Search)
+│   └── DropdownMenu (visibilidade + pin de colunas)
+├── Container rolável (overflow-y quando virtualizado)
+│   └── Table (primitive)
+│       ├── TableHeader
+│       │   ├── Row de cabeçalhos (drag, sort, resize handle)
+│       │   └── Row de filtros por coluna (opcional)
+│       └── TableBody
+│           ├── Linhas de padding (apenas quando virtualizado)
+│           └── Linhas reais (com seleção/edição opcionais)
+└── DataTablePagination (rodapé)
+```
+
+**Implementação básica**:
+```vue
+<script setup lang="ts">
+import { DataTable, type DataTableColumn } from "@/components/ui/data-table";
+import { Badge } from "@/components/ui/badge";
+import { h } from "vue";
+
+type Invoice = { id: string; customer: string; status: "Pago" | "Pendente"; amount: number };
+
+const invoices: Invoice[] = [/* ... */];
+
+const columns: DataTableColumn<Invoice>[] = [
+  { accessorKey: "id", header: "Fatura", size: 110 },
+  { accessorKey: "customer", header: "Cliente" },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => h(Badge, null, () => row.original.status),
+  },
+  {
+    accessorKey: "amount",
+    header: "Valor",
+    cell: ({ row }) =>
+      h(
+        "span",
+        { class: "font-medium tabular-nums" },
+        row.original.amount.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+      ),
+  },
+];
+</script>
+
+<template>
+  <DataTable :columns="columns" :data="invoices" enable-row-selection />
+</template>
+```
+
+**Flags (cada recurso é opcional)**:
+
+| Flag | Default | Função |
+|---|---|---|
+| `enableGlobalFilter` | `true` | Filtro de busca livre na toolbar |
+| `enableColumnVisibility` | `true` | Menu "Colunas" na toolbar |
+| `enableColumnFilters` | `false` | 2ª linha do header com input/select por coluna |
+| `enableRowSelection` | `false` | Checkbox por linha + tri-state no cabeçalho |
+| `enableColumnResizing` | `false` | Handle lateral em cada cabeçalho |
+| `enableColumnOrdering` | `false` | Drag handle no cabeçalho para reordenar |
+| `enableColumnPinning` | `false` | Pin esquerda/direita via menu de colunas |
+| `enablePagination` | `true` | Rodapé com contagem + nav (≠ `virtualized`) |
+| `virtualized` | `false` | TanStack Virtual; desliga paginação |
+
+**Filtros por coluna** — use `meta.filter` na column def:
+```ts
+const columns: DataTableColumn<Invoice>[] = [
+  { accessorKey: "customer", header: "Cliente", meta: { filter: { type: "text" } } },
+  {
+    accessorKey: "status",
+    header: "Status",
+    meta: {
+      filter: {
+        type: "select",
+        options: ["Pago", "Pendente", "Cancelado"],
+      },
+    },
+  },
+];
+```
+```vue
+<DataTable :columns="columns" :data="invoices" enable-column-filters />
+```
+
+Tipos suportados:
+- `{ type: "text" }` — Input livre (matcher: `includesString`)
+- `{ type: "select", options: string[] }` — `<select>` com matcher `equals`
+
+**Edição inline** — marque `meta.editable` e implemente `@cell-edit`. O componente **não muta** o array `data` — o caller atualiza externamente:
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+
+const data = ref<Invoice[]>(invoices);
+
+const editableColumns: DataTableColumn<Invoice>[] = [
+  { accessorKey: "id", header: "Fatura" },
+  { accessorKey: "customer", header: "Cliente", meta: { editable: true } },
+  { accessorKey: "amount", header: "Valor", meta: { editable: true } },
+];
+
+function handleEdit(rowIndex: number, columnId: string, value: unknown) {
+  data.value = data.value.map((row, i) =>
+    i === rowIndex ? { ...row, [columnId]: value } : row
+  );
+}
+</script>
+
+<template>
+  <DataTable
+    :columns="editableColumns"
+    :data="data"
+    @cell-edit="handleEdit"
+  />
+</template>
+```
+
+Clique entra em edição (Input com foco); `Enter` confirma; `Esc` cancela.
+
+**Virtualização** — para datasets &gt; 500 linhas. Define `max-height` para limitar a área de scroll:
+```vue
+<DataTable
+  :columns="columns"
+  :data="bigData"
+  virtualized
+  max-height="400px"
+  :virtual-row-height="36"
+  :enable-column-visibility="false"
+/>
+```
+
+Quando `virtualized` está ativa, paginação é desativada automaticamente. Apenas linhas no viewport (mais overscan) são renderizadas; linhas de padding fictícias preservam altura total para scroll natural.
+
+**Acesso à instância da tabela** — para composições (ações em lote, exportação) emita `@table-ready`:
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import type { Table as TanstackTable } from "@tanstack/vue-table";
+
+const table = ref<TanstackTable<Invoice> | null>(null);
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    enable-row-selection
+    @table-ready="(t) => (table = t)"
+  />
+
+  <Button
+    :disabled="!table?.getFilteredSelectedRowModel().rows.length"
+    @click="exportRows(table!.getFilteredSelectedRowModel().rows.map(r => r.original))"
+  >
+    Exportar selecionados
+  </Button>
+</template>
+```
+
+**Regras**:
+- Defina `columns` numa referência estável (módulo ou `computed`) — recriar a cada render zera o estado da tabela.
+- `enableRowSelection` apenas quando houver ação em lote — checkbox sem ação confunde.
+- Para resize/reorder, defina `size` inicial na column def — sem isso o cabeçalho usa largura automática.
+- Selects de filtro recebem `filterFn: "equals"` automaticamente quando `meta.filter.type === "select"`.
+- O componente aplica `table-fixed` ao usar `enableColumnResizing`, `enableColumnOrdering` ou `virtualized` — força layout O(1) por coluna e evita travamentos em datasets grandes.
+
+**Acessibilidade** (ver `11-acessibilidade.md`):
+- Tabela semântica via primitive `Table` — `<th>`, `<tr>`, `<td>` reais
+- `aria-sort="ascending|descending|none"` no `<th>` ordenável — anunciado pelo leitor de tela
+- `aria-label` contextual em todos os botões: "Ordenar por <em>coluna</em>", "Filtrar <em>coluna</em>", "Selecionar linha", "Próxima página"
+- Checkbox de cabeçalho usa `indeterminate` quando há seleção parcial (tri-state)
+- Handle de resize tem `role="separator"` + `aria-orientation="vertical"`
+- Estado vazio é uma linha com mensagem — nunca tabela vazia silenciosa
+
+**Analytics**: passivo por padrão. Para rastrear interações (sort, filter, edit confirmado), consuma a instância via `@table-ready` e instrumentaliza no caller.
+
+---
+
 ## Regras transversais de Display Components
 
 **Acessibilidade transversal** (ver `11-acessibilidade.md`):
@@ -544,3 +732,4 @@ const table = useReactTable({
 | Avatar clicável | `button_click` ou `navigation_click` | Ao clicar |
 | Chart | — | Passivo, sem eventos padrão |
 | Table | — | Passivo; ações internas rastreadas pelos componentes de ação |
+| DataTable | — | Passivo; rastreio de sort/filter/edit feito no caller via `@table-ready` |

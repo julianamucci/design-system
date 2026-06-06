@@ -144,3 +144,136 @@ export function createChart(canvasId: string, ariaLabel: string): HTMLElement {
 ```
 
 **Acessibilidade**: sempre incluir alternativa textual (tabela ou `aria-describedby` com resumo dos dados).
+
+---
+
+## DataTable
+
+**Propósito**: tabela avançada para datasets que exigem interação — ordenação, filtros, seleção, paginação, redimensionamento, reordenação, fixação, edição inline e virtualização.
+
+**Stack**: factory `createDataTable<TData>(opts)` em `src/components/ui/data-table.ts` sobre **`@tanstack/table-core`** v8 (engine headless) + **`@tanstack/virtual-core`**. Renderiza HTML semântico via DOM nativo reusando o factory `createTable` do design system para preservar tokens 8-grid e a11y.
+
+**Implementação básica**:
+```ts
+import { createDataTable, type DataTableColumn } from '@/components/ui/data-table';
+
+interface Invoice {
+  id: string;
+  customer: string;
+  status: 'Pago' | 'Pendente' | 'Cancelado';
+  amount: number;
+}
+
+const invoices: Invoice[] = [/* ... */];
+
+const columns: DataTableColumn<Invoice>[] = [
+  { accessorKey: 'id', header: 'Fatura', size: 110 },
+  { accessorKey: 'customer', header: 'Cliente' },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    meta: {
+      renderCell: ({ value }) => {
+        const badge = createBadge({
+          children: String(value),
+          variant: value === 'Cancelado' ? 'destructive' : value === 'Pendente' ? 'secondary' : 'default',
+        });
+        return badge;
+      },
+    },
+  },
+  {
+    accessorKey: 'amount',
+    header: 'Valor',
+    meta: {
+      renderCell: ({ value }) => {
+        const span = document.createElement('span');
+        span.className = 'nds-font-medium nds-tabular-nums';
+        span.textContent = Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        return span;
+      },
+    },
+  },
+];
+
+const table = createDataTable<Invoice>({
+  columns,
+  data: invoices,
+  enableRowSelection: true,
+  globalFilterPlaceholder: 'Buscar fatura, cliente, método...',
+});
+
+document.querySelector('#app')!.appendChild(table);
+```
+
+**Flags principais** (todas opcionais): `enableGlobalFilter` (default `true`), `enableColumnVisibility` (default `true`), `enableColumnFilters`, `enableRowSelection`, `enableColumnResizing`, `enableColumnOrdering`, `enableColumnPinning`, `enablePagination` (default `true`), `virtualized` (desliga paginação).
+
+**ColumnMeta (Nortear)**:
+- `filter?: { type: 'text' | 'select'; options?: string[] }` — input/select por coluna
+- `editable?: boolean` — clique entra em edição inline
+- `renderCell?: (ctx) => HTMLElement | string` — DOM nativo para markup rico (badges, ícones, links). Sem JSX/snippets na stack vanilla
+- `cellClass?: string` — classes extras no `<td>`
+
+**Edição inline** — marque `meta.editable` e use `onCellEdit`. O componente **não muta** o array `data`:
+```ts
+let data: Invoice[] = [...invoices];
+
+const table = createDataTable<Invoice>({
+  columns: editableColumns,
+  get data() { return data; },
+  onCellEdit: (rowIndex, columnId, value) => {
+    data = data.map((row, i) =>
+      i === rowIndex ? { ...row, [columnId]: value } : row
+    );
+    // re-render externamente se necessário — engine notifica via subscription
+  },
+});
+```
+
+`Enter` confirma; `Esc` cancela.
+
+**i18n das labels** — passe via opção `labels` para suportar locale switch:
+```ts
+const table = createDataTable<Invoice>({
+  columns,
+  data: invoices,
+  labels: {
+    columns: t('demonstration.labels.columns'),
+    rowsPerPage: t('demonstration.labels.rowsPerPage'),
+    page: t('demonstration.labels.page'),
+    pageOf: t('demonstration.labels.of'),
+    firstPage: t('demonstration.labels.firstPage'),
+    prevPage: t('demonstration.labels.prevPage'),
+    nextPage: t('demonstration.labels.nextPage'),
+    lastPage: t('demonstration.labels.lastPage'),
+  },
+});
+```
+
+Sem `labels`, o factory usa defaults em pt-BR (`'Primeira página'`, `'Página anterior'` etc.).
+
+**Virtualização** — para datasets &gt; 500 linhas:
+```ts
+const table = createDataTable<Invoice>({
+  columns,
+  data: bigData,
+  virtualized: true,
+  maxHeight: '400px',
+  virtualRowHeight: 36,
+  enableColumnVisibility: false,
+});
+```
+
+**Regras**:
+- Defina `columns` em escopo de módulo ou memoize — recriar zera o estado da engine
+- Selects de filtro recebem `filterFn: 'equals'` automaticamente
+- Tokens 8-grid obrigatórios em CSS — `--spacing-1/2/4/6/8/10/24`. Off-grid (3, 5, 7, 9) são bugs
+- Estilos em `src/styles/components/data-table.css` registrado em `globals.css` — classes `.nds-data-table-*`
+- Para markup rico, use `meta.renderCell` retornando `HTMLElement` (preferido) ou `string` (escape automático)
+
+**Acessibilidade**:
+- HTML semântico real (`<table>`, `<thead>`, `<tbody>`, `<th scope="col">`, `<td>`)
+- `aria-sort` setado no `<th>` ordenável (`ascending` / `descending` / `none`)
+- `aria-label` contextual em todos os botões via `labels.sortBy(col)`, `labels.filter(col)`, etc.
+- Checkbox de cabeçalho com `indeterminate` em seleção parcial
+- Handle de resize: `role="separator"` + `aria-orientation="vertical"`
