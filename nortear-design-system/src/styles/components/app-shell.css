@@ -1,0 +1,505 @@
+/*
+ * ─── nds-app-shell ───────────────────────────────────────────────────────────
+ * Classes semânticas (NÃO utilities) usadas exclusivamente pelo sandbox de
+ * desenvolvimento (`src/app.ts`) e pelo editor admin de docs
+ * (`src/admin/DocsEditor.ts`). Não são consumidas por stories nem por docs
+ * pages — não vazam para o produto final do design system.
+ *
+ * Princípio: cada elemento da shell recebe 1–3 classes. Estados são expostos
+ * via atributos `data-active`, `data-dirty`, etc. (não classes condicionais).
+ *
+ * Tokens: --background, --foreground, --border, --sidebar, --muted, --primary,
+ *         --destructive, --warning, --spacing-*, --radius
+ */
+
+
+/* ── App shell (sandbox) ────────────────────────────────────────────────── */
+
+.nds-app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-family);
+}
+
+.nds-app-main {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.nds-app-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  height: 3.5rem;                         /* 56px — alinhado ao header da sidebar */
+  padding-inline: var(--spacing-4);
+  border-bottom: 1px solid hsl(var(--border));
+  background-color: hsl(var(--background));
+}
+
+.nds-app-header-title {
+  flex: 1 1 auto;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-app-content {
+  flex: 1 1 0%;
+  overflow-y: auto;
+}
+
+
+/* ── Sidebar ────────────────────────────────────────────────────────────── */
+
+.nds-app-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 16rem;                           /* 256px */
+  border-right: 1px solid hsl(var(--border));
+  background-color: hsl(var(--sidebar));
+  color: hsl(var(--sidebar-foreground));
+}
+
+.nds-app-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  height: 3.5rem;
+  padding-inline: var(--spacing-4);
+  border-bottom: 1px solid hsl(var(--border));
+  font-weight: var(--font-weight-semi-bold, 600);
+}
+
+.nds-app-sidebar-logo {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+  background-color: hsl(var(--primary));
+}
+
+.nds-app-sidebar-tag {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  font-weight: 400;
+}
+
+.nds-app-sidebar-nav {
+  flex: 1 1 0%;
+  overflow-y: auto;
+  padding: var(--spacing-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.nds-app-nav-group-title {
+  margin: 0 0 var(--spacing-1);
+  padding-inline: var(--spacing-2);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-semi-bold, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-app-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  width: 100%;
+  padding: var(--spacing-1) var(--spacing-2);
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius, 0.375rem);
+  color: hsl(var(--sidebar-foreground));
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.nds-app-nav-item:hover {
+  background-color: hsl(var(--sidebar-accent) / 0.5);
+}
+
+.nds-app-nav-item[data-active="true"] {
+  background-color: hsl(var(--sidebar-accent));
+  color: hsl(var(--sidebar-accent-foreground));
+  font-weight: var(--font-weight-medium, 500);
+}
+
+
+/* ── Home page (sandbox) ────────────────────────────────────────────────── */
+
+.nds-app-home {
+  max-width: 42rem;
+  padding: var(--spacing-8);
+}
+
+.nds-app-home-title {
+  margin: 0 0 var(--spacing-2);
+  font-size: 1.875rem;
+  font-weight: var(--font-weight-extra-bold, 800);
+  letter-spacing: var(--letter-spacing-tight, -0.02em);
+}
+
+.nds-app-home-lead {
+  margin: 0 0 var(--spacing-6);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-app-home-link {
+  color: inherit;
+  text-decoration: underline;
+}
+.nds-app-home-link:hover {
+  color: hsl(var(--foreground));
+}
+
+.nds-app-home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--spacing-2);
+}
+
+.nds-app-home-card {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-4);
+  text-align: left;
+  font: inherit;
+  background: transparent;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+.nds-app-home-card:hover {
+  background-color: hsl(var(--muted) / 0.5);
+}
+.nds-app-home-card-title {
+  margin: 0 0 var(--spacing-0-5);
+  font-weight: var(--font-weight-medium, 500);
+}
+.nds-app-home-card-desc {
+  margin: 0;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+
+/* ── Loading spinner ────────────────────────────────────────────────────── */
+
+.nds-app-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16rem;
+}
+
+.nds-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid hsl(var(--primary));
+  border-top-color: transparent;
+  border-radius: 9999px;
+  animation: nds-spin 1s linear infinite;
+}
+.nds-spinner[data-size="sm"] { width: 1.25rem; height: 1.25rem; }
+
+@keyframes nds-spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ── Locale switcher (sandbox header) ───────────────────────────────────── */
+
+.nds-app-locale-switcher {
+  display: flex;
+  gap: var(--spacing-1);
+}
+
+.nds-app-locale-btn {
+  padding: var(--spacing-1) var(--spacing-2);
+  font: inherit;
+  font-size: 0.75rem;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius, 0.375rem);
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+.nds-app-locale-btn:hover {
+  background-color: hsl(var(--muted));
+}
+.nds-app-locale-btn[data-active="true"] {
+  font-weight: var(--font-weight-extra-bold, 800);
+}
+
+
+/* ── Icon button (header/toolbar action) ────────────────────────────────── */
+
+.nds-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem;                      /* 6px — alinha o glyph dentro do hit-area */
+  font: inherit;
+  font-size: 1rem;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius, 0.375rem);
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+.nds-icon-button:hover {
+  background-color: hsl(var(--muted));
+}
+
+
+/* ── Admin editor ───────────────────────────────────────────────────────── */
+
+.nds-admin {
+  display: flex;
+  height: 100vh;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-family);
+}
+
+.nds-admin-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 14rem;                           /* 224px */
+  flex-shrink: 0;
+  border-right: 1px solid hsl(var(--border));
+}
+
+.nds-admin-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  height: 3.5rem;
+  padding-inline: var(--spacing-4);
+  border-bottom: 1px solid hsl(var(--border));
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-semi-bold, 600);
+}
+
+.nds-admin-dirty-dot {
+  margin-left: auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: hsl(var(--warning));
+}
+
+.nds-admin-component-list {
+  flex: 1 1 0%;
+  overflow-y: auto;
+  padding-block: var(--spacing-2);
+}
+
+.nds-admin-component-list-empty {
+  margin: 0;
+  padding-inline: var(--spacing-4);
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-admin-comp-btn {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-4);
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms;
+}
+.nds-admin-comp-btn:hover {
+  background-color: hsl(var(--muted) / 0.5);
+  color: hsl(var(--foreground));
+}
+.nds-admin-comp-btn[data-active="true"] {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.nds-admin-locale-switcher {
+  display: flex;
+  gap: var(--spacing-1);
+  padding: var(--spacing-2);
+  border-top: 1px solid hsl(var(--border));
+}
+
+.nds-admin-locale-btn {
+  flex: 1 1 0%;
+  padding-block: var(--spacing-1);
+  font: inherit;
+  font-size: 0.75rem;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border: 0;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms;
+}
+.nds-admin-locale-btn:hover {
+  background-color: hsl(var(--muted) / 0.8);
+}
+.nds-admin-locale-btn[data-active="true"] {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.nds-admin-main {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.nds-admin-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  height: 3.5rem;
+  padding-inline: var(--spacing-6);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.nds-admin-title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-semi-bold, 600);
+}
+
+.nds-admin-locale-label,
+.nds-admin-dirty-label,
+.nds-admin-shortcut-hint {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-admin-dirty-label {
+  color: hsl(var(--warning));
+}
+
+.nds-admin-error {
+  font-size: 0.75rem;
+  color: hsl(var(--destructive));
+}
+
+.nds-admin-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-left: auto;
+}
+
+.nds-admin-save-btn {
+  padding: 0.375rem var(--spacing-4);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: 0;
+  border-radius: var(--radius, 0.375rem);
+  cursor: pointer;
+  transition: opacity 150ms;
+}
+.nds-admin-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nds-admin-fields {
+  flex: 1 1 0%;
+  overflow-y: auto;
+  padding: var(--spacing-6);
+}
+
+.nds-admin-fields-wrapper {
+  max-width: 42rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+
+/* ── Admin form fields ──────────────────────────────────────────────────── */
+
+.nds-admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.nds-admin-field-label {
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-admin-field-input {
+  width: 100%;
+  padding: 0.375rem var(--spacing-2);
+  font: inherit;
+  font-size: 0.875rem;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius, 0.375rem);
+}
+.nds-admin-field-input:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -1px;
+}
+
+.nds-admin-field-editor {
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius, 0.375rem);
+}
+.nds-admin-field-editor .ql-editor {
+  min-height: 5rem;
+  color: hsl(var(--foreground));
+}
+
+.nds-admin-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+.nds-admin-field-group[data-nested="true"] {
+  padding-left: var(--spacing-4);
+  border-left: 1px solid hsl(var(--border));
+}
+
+.nds-admin-field-group-title {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-semi-bold, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: hsl(var(--muted-foreground));
+}
+
+
+/* ── Utility: hidden helper for app/admin (already in utilities.css as
+ *    .nds-hidden — reused here) */

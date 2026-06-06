@@ -29,10 +29,11 @@ function renderField(
 
   if (isNested) {
     const wrapper = document.createElement('div');
-    wrapper.className = `space-y-3${depth > 0 ? ' pl-4 border-l border-border' : ''}`;
+    wrapper.className = 'nds-admin-field-group';
+    if (depth > 0) wrapper.dataset['nested'] = 'true';
 
     const heading = document.createElement('p');
-    heading.className = 'text-xs font-semibold uppercase tracking-wide text-muted-foreground';
+    heading.className = 'nds-admin-field-group-title';
     heading.textContent = label;
     wrapper.appendChild(heading);
 
@@ -45,15 +46,14 @@ function renderField(
     container.appendChild(wrapper);
   } else if (isHtml) {
     const wrapper = document.createElement('div');
-    wrapper.className = 'space-y-1';
+    wrapper.className = 'nds-admin-field';
 
     const lbl = document.createElement('label');
-    lbl.className = 'text-xs font-medium text-muted-foreground';
+    lbl.className = 'nds-admin-field-label';
     lbl.textContent = label;
 
     const editorDiv = document.createElement('div');
-    editorDiv.className =
-      'rounded-md border border-border bg-background [&_.ql-editor]:min-h-[80px] [&_.ql-editor]:text-foreground';
+    editorDiv.className = 'nds-admin-field-editor';
 
     wrapper.appendChild(lbl);
     wrapper.appendChild(editorDiv);
@@ -71,17 +71,16 @@ function renderField(
     cleanups.push(() => quill.off('text-change', handler));
   } else if (!Array.isArray(value)) {
     const wrapper = document.createElement('div');
-    wrapper.className = 'space-y-1';
+    wrapper.className = 'nds-admin-field';
 
     const lbl = document.createElement('label');
-    lbl.className = 'text-xs font-medium text-muted-foreground';
+    lbl.className = 'nds-admin-field-label';
     lbl.textContent = label;
 
     const input = document.createElement('input');
     input.type = 'text';
     input.value = String(value ?? '');
-    input.className =
-      'w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring';
+    input.className = 'nds-admin-field-input';
 
     const inputHandler = (e: Event) =>
       onchange(fieldKey, (e.target as HTMLInputElement).value);
@@ -103,37 +102,34 @@ export function createDocsEditor(root: HTMLElement): () => void {
   let fieldCleanups: (() => void)[] = [];
 
   // ── Build skeleton ────────────────────────────────────────────────────────
-  root.className = 'flex h-screen bg-background text-foreground font-sans';
+  root.className = 'nds-admin';
   root.innerHTML = `
-    <aside id="de-sidebar" class="w-56 shrink-0 border-r border-border flex flex-col">
-      <div class="flex h-14 items-center gap-2 border-b border-border px-4">
-        <span class="font-semibold text-sm">Docs Editor</span>
-        <span id="de-dirty-dot" class="ml-auto h-2 w-2 rounded-full bg-warning hidden" title="Não salvo"></span>
+    <aside class="nds-admin-sidebar">
+      <div class="nds-admin-sidebar-header">
+        <span>Docs Editor</span>
+        <span id="de-dirty-dot" class="nds-admin-dirty-dot nds-hidden" title="Não salvo"></span>
       </div>
-      <nav id="de-component-list" class="flex-1 overflow-y-auto py-2">
-        <p class="px-4 text-xs text-muted-foreground">Carregando...</p>
+      <nav id="de-component-list" class="nds-admin-component-list">
+        <p class="nds-admin-component-list-empty">Carregando...</p>
       </nav>
-      <div class="border-t border-border p-3 flex gap-1" id="de-locale-switcher"></div>
+      <div class="nds-admin-locale-switcher" id="de-locale-switcher"></div>
     </aside>
 
-    <div class="flex flex-1 flex-col overflow-hidden">
-      <header class="flex h-14 items-center gap-3 border-b border-border px-6">
-        <h1 id="de-title" class="text-sm font-semibold">button</h1>
-        <span id="de-locale-label" class="text-xs text-muted-foreground"></span>
-        <span id="de-error" class="text-xs text-destructive hidden"></span>
-        <div class="ml-auto flex items-center gap-2">
-          <span id="de-dirty-label" class="text-xs text-warning hidden">Alterações não salvas</span>
-          <button id="de-save-btn" disabled
-            class="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-opacity disabled:opacity-50">
-            Salvar
-          </button>
-          <span class="text-xs text-muted-foreground">Ctrl+S</span>
+    <div class="nds-admin-main">
+      <header class="nds-admin-header">
+        <h1 id="de-title" class="nds-admin-title">button</h1>
+        <span id="de-locale-label" class="nds-admin-locale-label"></span>
+        <span id="de-error" class="nds-admin-error nds-hidden"></span>
+        <div class="nds-admin-actions">
+          <span id="de-dirty-label" class="nds-admin-dirty-label nds-hidden">Alterações não salvas</span>
+          <button id="de-save-btn" class="nds-admin-save-btn" disabled>Salvar</button>
+          <span class="nds-admin-shortcut-hint">Ctrl+S</span>
         </div>
       </header>
 
-      <main id="de-fields" class="flex-1 overflow-y-auto p-6">
-        <div class="flex h-32 items-center justify-center">
-          <div class="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+      <main id="de-fields" class="nds-admin-fields">
+        <div class="nds-app-loading">
+          <div class="nds-spinner" data-size="sm"></div>
         </div>
       </main>
     </div>
@@ -154,7 +150,7 @@ export function createDocsEditor(root: HTMLElement): () => void {
   LOCALES.forEach((l) => {
     const btn = document.createElement('button');
     btn.dataset['locale'] = l;
-    btn.className = 'de-locale-btn flex-1 rounded py-1 text-xs transition-colors bg-muted text-muted-foreground hover:bg-muted/80';
+    btn.className = 'nds-admin-locale-btn de-locale-btn';
     btn.textContent = LOCALE_LABELS[l];
     btn.addEventListener('click', () => store.setLocale(l));
     elLocaleSwitcher.appendChild(btn);
@@ -163,10 +159,7 @@ export function createDocsEditor(root: HTMLElement): () => void {
   // ── Render ────────────────────────────────────────────────────────────────
   function renderLocaleButtons(activeLocale: string) {
     root.querySelectorAll<HTMLButtonElement>('.de-locale-btn').forEach((btn) => {
-      const isActive = btn.dataset['locale'] === activeLocale;
-      btn.className = `de-locale-btn flex-1 rounded py-1 text-xs transition-colors ${
-        isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
-      }`;
+      btn.dataset['active'] = String(btn.dataset['locale'] === activeLocale);
     });
   }
 
@@ -176,7 +169,7 @@ export function createDocsEditor(root: HTMLElement): () => void {
     elFields.innerHTML = '';
 
     const wrapper = document.createElement('div');
-    wrapper.className = 'max-w-2xl space-y-6';
+    wrapper.className = 'nds-admin-fields-wrapper';
     elFields.appendChild(wrapper);
 
     for (const [key, value] of Object.entries(localeData)) {
@@ -193,24 +186,24 @@ export function createDocsEditor(root: HTMLElement): () => void {
 
     elTitle.textContent = component;
     elLocaleLabel.textContent = LOCALE_LABELS[locale];
-    elDirtyDot.classList.toggle('hidden', !dirty);
-    elDirtyLabel.classList.toggle('hidden', !dirty);
+    elDirtyDot.classList.toggle('nds-hidden', !dirty);
+    elDirtyLabel.classList.toggle('nds-hidden', !dirty);
     elSaveBtn.disabled = saving || !dirty;
     elSaveBtn.textContent = saving ? 'Salvando...' : 'Salvar';
 
     if (error) {
       elError.textContent = `Erro: ${error}`;
-      elError.classList.remove('hidden');
+      elError.classList.remove('nds-hidden');
     } else {
-      elError.classList.add('hidden');
+      elError.classList.add('nds-hidden');
     }
 
     renderLocaleButtons(locale);
 
     if (loading) {
       elFields.innerHTML = `
-        <div class="flex h-32 items-center justify-center">
-          <div class="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+        <div class="nds-app-loading">
+          <div class="nds-spinner" data-size="sm"></div>
         </div>`;
     } else {
       renderFields(localeData);
@@ -238,11 +231,8 @@ export function createDocsEditor(root: HTMLElement): () => void {
     elComponentList.innerHTML = '';
     components.forEach((comp) => {
       const btn = document.createElement('button');
-      btn.className = `de-comp-btn w-full px-4 py-2 text-left text-sm transition-colors ${
-        activeComp === comp
-          ? 'bg-muted font-medium text-foreground'
-          : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-      }`;
+      btn.className = 'nds-admin-comp-btn';
+      btn.dataset['active'] = String(activeComp === comp);
       btn.textContent = comp;
       btn.addEventListener('click', () => {
         activeComp = comp;

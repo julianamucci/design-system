@@ -44,25 +44,21 @@ function renderSidebar(root: HTMLElement): void {
   }, {} as Record<string, typeof items>);
 
   root.innerHTML = `
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 border-r border-border bg-sidebar flex flex-col md:relative">
-      <div class="flex h-14 items-center gap-2 border-b border-border px-4">
-        <div class="h-6 w-6 rounded bg-primary"></div>
-        <span class="font-semibold text-sidebar-foreground">Design System</span>
-        <span class="ml-auto text-xs text-muted-foreground">Vanilla JS</span>
+    <aside class="nds-app-sidebar">
+      <div class="nds-app-sidebar-header">
+        <div class="nds-app-sidebar-logo"></div>
+        <span>Design System</span>
+        <span class="nds-app-sidebar-tag">Vanilla JS</span>
       </div>
-      <nav class="flex-1 overflow-y-auto px-2 py-3 space-y-4">
+      <nav class="nds-app-sidebar-nav">
         ${Object.entries(groups).map(([groupName, groupItems]) => `
           <div>
-            <p class="mb-1 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              ${groupName}
-            </p>
+            <p class="nds-app-nav-group-title">${groupName}</p>
             ${groupItems.map(item => `
               <button
                 data-nav="${item.id ?? ''}"
-                class="ds-nav-item flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors
-                  ${activeComponent === item.id
-                    ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
-                    : 'text-sidebar-foreground hover:bg-sidebar-accent/50'}"
+                data-active="${activeComponent === item.id}"
+                class="nds-app-nav-item ds-nav-item"
               >
                 ${item.label}
               </button>
@@ -83,17 +79,17 @@ function renderSidebar(root: HTMLElement): void {
 
 function renderHome(container: HTMLElement): void {
   container.innerHTML = `
-    <div class="p-8 max-w-2xl">
-      <h1 class="text-3xl font-bold tracking-tight mb-2">Design System</h1>
-      <p class="text-muted-foreground mb-6">
+    <div class="nds-app-home">
+      <h1 class="nds-app-home-title">Design System</h1>
+      <p class="nds-app-home-lead">
         Biblioteca de componentes em <strong>Vanilla JS</strong> usando
         <a href="https://basecoatui.com" target="_blank" rel="noopener noreferrer"
-           class="underline hover:text-foreground">Basecoat UI</a> e Tailwind CSS.
+           class="nds-app-home-link">Basecoat UI</a>.
       </p>
-      <div class="grid gap-3 sm:grid-cols-2">
-        <button data-nav="alert" class="ds-home-nav rounded-lg border border-border p-4 text-left hover:bg-muted/50 transition-colors">
-          <p class="font-medium">Alert</p>
-          <p class="text-sm text-muted-foreground">Feedback visual para o usuário</p>
+      <div class="nds-app-home-grid">
+        <button data-nav="alert" class="nds-app-home-card ds-home-nav">
+          <p class="nds-app-home-card-title">Alert</p>
+          <p class="nds-app-home-card-desc">Feedback visual para o usuário</p>
         </button>
       </div>
     </div>
@@ -130,8 +126,8 @@ async function navigateTo(id: string | null): Promise<void> {
   }
 
   contentEl.innerHTML = `
-    <div class="flex h-64 items-center justify-center">
-      <div class="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+    <div class="nds-app-loading">
+      <div class="nds-spinner"></div>
     </div>
   `;
 
@@ -164,24 +160,24 @@ export function createApp(root: HTMLElement): void {
       window.matchMedia('(prefers-color-scheme: dark)').matches);
   document.documentElement.classList.toggle('dark', isDark);
 
-  root.className = 'flex h-screen overflow-hidden bg-background text-foreground font-sans';
+  root.className = 'nds-app';
   root.innerHTML = `
     <div id="ds-sidebar-slot"></div>
-    <div class="flex flex-1 flex-col overflow-hidden">
-      <header class="flex h-14 items-center gap-3 border-b border-border bg-background px-4">
-        <span id="ds-header-title" class="flex-1 text-sm text-muted-foreground">Início</span>
-        <div id="ds-locale-switcher" class="flex gap-1">
+    <div class="nds-app-main">
+      <header class="nds-app-header">
+        <span id="ds-header-title" class="nds-app-header-title">Início</span>
+        <div id="ds-locale-switcher" class="nds-app-locale-switcher">
           ${(['pt-BR', 'en', 'es'] as Locale[]).map((l) => `
-            <button data-locale="${l}" class="ds-locale-btn px-2 py-1 text-xs rounded hover:bg-muted transition-colors ${getLocale() === l ? 'font-bold' : ''}">
+            <button data-locale="${l}" data-active="${getLocale() === l}" class="nds-app-locale-btn ds-locale-btn">
               ${l === 'pt-BR' ? 'PT' : l === 'en' ? 'EN' : 'ES'}
             </button>
           `).join('')}
         </div>
-        <button id="ds-dark-toggle" class="p-1.5 rounded-md hover:bg-muted transition-colors" aria-label="Toggle dark mode">
+        <button id="ds-dark-toggle" class="nds-icon-button" aria-label="Toggle dark mode">
           ${isDark ? '☀️' : '🌙'}
         </button>
       </header>
-      <main id="ds-content" class="flex-1 overflow-y-auto"></main>
+      <main id="ds-content" class="nds-app-content"></main>
     </div>
   `;
 
@@ -207,7 +203,7 @@ export function createApp(root: HTMLElement): void {
       track('language_switched', { previous_language: prev, new_language: next });
       // Update active state
       root.querySelectorAll<HTMLButtonElement>('.ds-locale-btn').forEach((b) => {
-        b.classList.toggle('font-bold', b.dataset['locale'] === next);
+        b.dataset['active'] = String(b.dataset['locale'] === next);
       });
     });
   });

@@ -1,7 +1,3 @@
-/* Tailwind v4 pré-compilado vendored — usado por app.ts, docs pages e stories.
- * Componentes .nds-* não dependem do Tailwind (são standalone). */
-@import "./vendor/tailwind.css";
-
 /* ── Tokens e temas compartilhados entre todos os stacks ─────────────────── */
 @import "@shared/tokens/tokens.css";
 @import "@shared/themes/index.css";
@@ -14,6 +10,7 @@
 @import "./components/code.css";
 @import "./components/utilities.css";
 @import "./components/spacing.css";
+@import "./components/app-shell.css";
 @import "./components/button.css";
 @import "./components/alert.css";
 @import "./components/badge.css";
