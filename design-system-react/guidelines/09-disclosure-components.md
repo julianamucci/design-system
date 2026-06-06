@@ -4,11 +4,9 @@
 
 ## Accordion
 
-> **Use, não recrie.** O componente está implementado em [`src/components/ui/accordion.tsx`](../src/components/ui/accordion.tsx). API canônica vem do código; stories em [`accordion.stories.tsx`](../src/components/ui/accordion.stories.tsx) e variantes em `accordion-modos`, `accordion-estados`, `accordion-composicoes` são a referência de uso. Em caso de divergência entre esta guideline e o código, **o código vence**.
+**Propósito**: exibição de múltiplas seções de conteúdo colapsáveis e relacionadas entre si, onde o usuário expande apenas o que precisa. Use em FAQ, documentação com seções, especificações de produto, configurações agrupadas. Para uma única seção isolada, usar `Collapsible`. Para alternância entre views paralelas, usar `Tabs`.
 
-**Propósito**: exibição de múltiplas seções de conteúdo colapsáveis e relacionadas entre si, onde o usuário expande apenas o que precisa.
-
-**Quando usar**: FAQ, documentação com seções, especificações de produto, configurações agrupadas. Para uma única seção isolada, usar `Collapsible`. Para alternância entre views paralelas, usar `Tabs`.
+**API e exemplos**: `src/components/ui/accordion.tsx` + stories + `AccordionDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras. Em caso de divergência entre esta guideline e o código, **o código vence**.
 
 **Critério de decisão — Accordion vs Collapsible vs Tabs vs Stepper**:
 
@@ -27,13 +25,6 @@ Accordion (multiple?, defaultValue?, value?, onValueChange?)
 └── AccordionItem (value — obrigatório, único)
     ├── AccordionTrigger  (título — chevron aplicado automaticamente)
     └── AccordionContent  (conteúdo expansível)
-```
-
-**Import**:
-```tsx
-import {
-  Accordion, AccordionItem, AccordionTrigger, AccordionContent,
-} from "@/components/ui/accordion"
 ```
 
 **Props essenciais** (decisões de design — para a tabela completa veja `AccordionDocs.tsx`):
@@ -70,24 +61,9 @@ import {
 - `AccordionContent`: resposta objetiva, máximo 3–4 linhas — conteúdo longo sugere que o item deveria ser uma página própria
 
 **Analytics** (ver `21-analytics.md`):
-
-Dispare eventos no consumidor via `onValueChange` — não monkey-patch `onClick` no trigger:
-
-```tsx
-<Accordion
-  onValueChange={(open) => {
-    track(open.length > prevOpen.length ? "accordion_expand" : "accordion_collapse", {
-      component: "accordion",
-      location: "faq_page",
-      value: open[open.length - 1] ?? prev,
-    })
-  }}
->
-  {/* items */}
-</Accordion>
-```
-
-> No modo single o array tem 0 ou 1 elemento; no modo multiple pode ter N. Compare o tamanho antes/depois para detectar expand vs collapse.
+- Dispare eventos no consumidor via `onValueChange` — não monkey-patch `onClick` no trigger.
+- Eventos: `accordion_expand` / `accordion_collapse` com `label` e `value`.
+- No modo single o array tem 0 ou 1 elemento; no modo multiple pode ter N. Compare o tamanho antes/depois para detectar expand vs collapse.
 
 **Testes**:
 - **Especificação**: [`docs/shared/content/accordion/translations.json`](../../docs/shared/content/accordion/translations.json) → `testes.{functional,accessibility,visual}` (cada item tem `priority` e a `story` que cobre)
@@ -99,11 +75,9 @@ Dispare eventos no consumidor via `onValueChange` — não monkey-patch `onClick
 
 ## Collapsible
 
-> **Use, não recrie.** O componente está implementado em [`src/components/ui/collapsible.tsx`](../src/components/ui/collapsible.tsx). API canônica vem do código; stories em [`collapsible.stories.tsx`](../src/components/ui/collapsible.stories.tsx) e variantes em `collapsible-estados`, `collapsible-composicoes` são a referência de uso. Em caso de divergência entre esta guideline e o código, **o código vence**.
+**Propósito**: mostrar ou ocultar uma única seção de conteúdo de forma independente, controlada por um trigger explícito. Use em "ver mais", filtros avançados opcionais, detalhes secundários, configurações raramente acessadas. Para múltiplas seções relacionadas, usar `Accordion`.
 
-**Propósito**: mostrar ou ocultar uma única seção de conteúdo de forma independente, controlada por um trigger explícito.
-
-**Quando usar**: seção de "ver mais", filtros avançados opcionais, detalhes secundários, configurações raramente acessadas. Para múltiplas seções relacionadas, usar `Accordion`.
+**API e exemplos**: `src/components/ui/collapsible.tsx` + stories + `CollapsibleDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras. Em caso de divergência entre esta guideline e o código, **o código vence**.
 
 **Critério de decisão — Collapsible vs Accordion**:
 
@@ -119,13 +93,6 @@ Dispare eventos no consumidor via `onValueChange` — não monkey-patch `onClick
 Collapsible (open?, onOpenChange?, defaultOpen?)
 ├── CollapsibleTrigger (renderiza <button>; usar render={<Button />} para reuso do Button)
 └── CollapsibleContent (conteúdo expansível)
-```
-
-**Import**:
-```tsx
-import {
-  Collapsible, CollapsibleTrigger, CollapsibleContent,
-} from "@/components/ui/collapsible"
 ```
 
 **Props essenciais**:
@@ -158,21 +125,8 @@ import {
 - Header da seção (texto irmão do trigger): substantivo ou frase nominal — "Filtros avançados", "Informações técnicas"
 
 **Analytics** (ver `21-analytics.md`):
-
-```tsx
-<Collapsible
-  onOpenChange={(open) => {
-    track("collapsible_toggle", {
-      component: "collapsible",
-      location: "search_page",
-      label: "Filtros avançados",
-      value: open ? "open" : "closed",
-    })
-  }}
-/>
-```
-
-> Rastreie `collapsible_toggle` apenas quando a seção tem importância na jornada — não rastreie colapsáveis decorativos ou de baixo valor de negócio.
+- Evento `collapsible_toggle` via `onOpenChange`, com `label` e `value` ("open" / "closed").
+- Rastreie apenas quando a seção tem importância na jornada — não rastreie colapsáveis decorativos ou de baixo valor de negócio.
 
 **Testes**:
 - **Especificação**: [`docs/shared/content/collapsible/translations.json`](../../docs/shared/content/collapsible/translations.json) → `testes.{functional,accessibility,visual}`
