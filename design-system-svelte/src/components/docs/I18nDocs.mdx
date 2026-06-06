@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { createElement, useEffect, useRef } from 'react';
+import { mount, unmount } from 'svelte';
+import I18nDocs from './I18nDocs.svelte';
+
+<Meta
+  title="Foundations/Internacionalização"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export function I18nDocsPage() {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!ref.current) return;
+    const app = mount(I18nDocs, { target: ref.current });
+    return () => {
+      try { unmount(app); } catch {}
+      if (ref.current) ref.current.innerHTML = '';
+    };
+  }, []);
+  return createElement('div', { ref, style: { flex: 1, height: '100%' } });
+}
+
+<I18nDocsPage />
