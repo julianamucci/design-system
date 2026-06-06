@@ -344,7 +344,7 @@ export function createNavigationMenuDocs(): HTMLElement {
 nav.setAttribute('aria-label', 'Navegação principal');`;
 
         const codeVertical = `// DIVERGÊNCIA IDIOMÁTICA:
-// O factory Basecoat fixa orientação horizontal — para vertical,
+// O factory Nortear fixa orientação horizontal — para vertical,
 // aplicamos estilos inline e nds-stack manualmente.
 const nav = createNavigationMenu([
   { label: 'Início',      href: '/' },
@@ -379,7 +379,7 @@ if (ul) { ul.classList.add('nds-stack'); ul.style.alignItems = 'stretch'; }`;
               name: t('variants.items.vertical'),
               description:
                 stripHtml(t('variants.styles.vertical')) +
-                ' (Não suportado nativamente pelo factory Basecoat — composição manual.)',
+                ' (Não suportado nativamente pelo factory Nortear — composição manual.)',
               code: codeVertical,
               previewFactory: () => {
                 const wrap = document.createElement('div');
@@ -698,12 +698,12 @@ export function createNavigationMenu(
               items: [
                 { name: 'items',         type: 'NavigationMenuItem[]',                defaultValue: '—',          required: 'Sim', description: 'Lista de items (label + href ou children) renderizados na barra.' },
                 { name: 'options.class', type: 'string',                              defaultValue: '—',          required: 'Não', description: 'Classes adicionais no Root <nav>.' },
-                { name: 'value',         type: 'string',                              defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.value.description'))         + ' NOTA: factory Basecoat não tem controle externo nativo.' },
-                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.onValueChange.description')) + ' NOTA: factory Basecoat não emite (use child.onClick manual).' },
-                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.defaultValue.description'))  + ' NOTA: factory Basecoat sempre inicia fechado.' },
-                { name: 'delayDuration',     type: 'number',                          defaultValue: '200',        required: 'Não', description: stripHtml(t('props.table.delayDuration.description'))     + ' NOTA: factory Basecoat abre apenas em click; hover delay não implementado.' },
-                { name: 'skipDelayDuration', type: 'number',                          defaultValue: '300',        required: 'Não', description: stripHtml(t('props.table.skipDelayDuration.description')) + ' NOTA: factory Basecoat não implementa.' },
-                { name: 'orientation',       type: "'horizontal' | 'vertical'",        defaultValue: "'horizontal'", required: 'Não', description: stripHtml(t('props.table.orientation.description'))       + ' NOTA: factory Basecoat fixa horizontal; vertical via composição manual.' },
+                { name: 'value',         type: 'string',                              defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.value.description'))         + ' NOTA: factory Nortear não tem controle externo nativo.' },
+                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.onValueChange.description')) + ' NOTA: factory Nortear não emite (use child.onClick manual).' },
+                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.defaultValue.description'))  + ' NOTA: factory Nortear sempre inicia fechado.' },
+                { name: 'delayDuration',     type: 'number',                          defaultValue: '200',        required: 'Não', description: stripHtml(t('props.table.delayDuration.description'))     + ' NOTA: factory Nortear abre apenas em click; hover delay não implementado.' },
+                { name: 'skipDelayDuration', type: 'number',                          defaultValue: '300',        required: 'Não', description: stripHtml(t('props.table.skipDelayDuration.description')) + ' NOTA: factory Nortear não implementa.' },
+                { name: 'orientation',       type: "'horizontal' | 'vertical'",        defaultValue: "'horizontal'", required: 'Não', description: stripHtml(t('props.table.orientation.description'))       + ' NOTA: factory Nortear fixa horizontal; vertical via composição manual.' },
               ],
             },
           ],
@@ -711,7 +711,7 @@ export function createNavigationMenu(
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes:
             t('props.extensibilityCode') +
-            '\n\n// NOTA Basecoat: o factory custom NÃO possui Viewport compartilhado nem\n// NavigationMenuIndicator. Cada Content abre em <div> próprio relativo ao\n// Trigger (semelhante a um DropdownMenu). Para Viewport animado e indicador,\n// utilize as stacks React/Vue/Svelte que possuem base-ui/reka-ui/bits-ui.',
+            '\n\n// NOTA Nortear: o factory custom NÃO possui Viewport compartilhado nem\n// NavigationMenuIndicator. Cada Content abre em <div> próprio relativo ao\n// Trigger (semelhante a um DropdownMenu). Para Viewport animado e indicador,\n// utilize as stacks React/Vue/Svelte que possuem base-ui/reka-ui/bits-ui.',
         });
       }
 

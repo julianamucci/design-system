@@ -109,7 +109,7 @@ function richPanel(title: string, description: string): HTMLElement {
 }
 
 function buildDemoTabs(): HTMLElement {
-  // Factory custom Basecoat NÃO suporta props `variant` nem `orientation` nem `activationMode`.
+  // Factory custom Nortear NÃO suporta props `variant` nem `orientation` nem `activationMode`.
   // Documentamos em 3 camadas (notes, props divergence, composicoes).
   const items: TabsItemDef[] = [
     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
@@ -384,14 +384,14 @@ export function createTabsDocs(): HTMLElement {
   ],
 });`;
         const codeLine =
-`// Basecoat: factory custom NÃO expõe variant="line".
+`// Nortear: factory custom NÃO expõe variant="line".
 // Para visual minimalista, aplicar classes utilitárias via .class
 // e ajustar o TabsList depois.
 const root = createTabs({ defaultValue: 'overview', items: [...] });
 const list = root.querySelector('[role="tablist"]');
 list?.classList.add('nds-border-b', 'nds-bg-transparent'); list?.style.borderRadius = '0';`;
         const codeVertical =
-`// Basecoat: factory custom NÃO expõe orientation="vertical".
+`// Nortear: factory custom NÃO expõe orientation="vertical".
 // Para orientação vertical, envolver em flex e reaplicar o layout.
 const root = createTabs({ defaultValue: 'overview', items: [...] });
 root.classList.add('nds-cluster');
@@ -423,7 +423,7 @@ list?.setAttribute('aria-orientation', 'vertical');`;
             },
             {
               name: t('variants.items.line'),
-              description: stripHtml(t('variants.styles.line')) + ' — Basecoat: aplicar via .class manualmente (factory não expõe variant).',
+              description: stripHtml(t('variants.styles.line')) + ' — Nortear: aplicar via .class manualmente (factory não expõe variant).',
               code: codeLine,
               previewFactory: () => {
                 const r = createTabs({
@@ -445,7 +445,7 @@ list?.setAttribute('aria-orientation', 'vertical');`;
             },
             {
               name: t('variants.items.vertical'),
-              description: stripHtml(t('variants.styles.vertical')) + ' — Basecoat: aplicar via .class manualmente (factory não expõe orientation).',
+              description: stripHtml(t('variants.styles.vertical')) + ' — Nortear: aplicar via .class manualmente (factory não expõe orientation).',
               code: codeVertical,
               previewFactory: () => {
                 const r = createTabs({
@@ -717,7 +717,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
           description: t('props.table.description'),
         };
 
-        const DIVERGENCE = ' (Basecoat: não suportado pela factory custom — aplicar via .class manualmente)';
+        const DIVERGENCE = ' (Nortear: não suportado pela factory custom — aplicar via .class manualmente)';
 
         return createDocsProps({
           title: t('props.title'),
@@ -732,7 +732,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
                 { name: 'class',        type: 'string',                       defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.className.description')) },
                 { name: 'value',        type: 'string',                       defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.value.description')) + DIVERGENCE },
                 { name: 'orientation',  type: '"horizontal" | "vertical"',    defaultValue: '"horizontal"', required: 'Não', description: stripHtml(t('props.table.orientation.description')) + DIVERGENCE },
-                { name: 'activationMode', type: '"automatic" | "manual"',     defaultValue: '"automatic"', required: 'Não', description: stripHtml(t('props.table.activationMode.description')) + ' Basecoat: apenas "automatic" implementado.' },
+                { name: 'activationMode', type: '"automatic" | "manual"',     defaultValue: '"automatic"', required: 'Não', description: stripHtml(t('props.table.activationMode.description')) + ' Nortear: apenas "automatic" implementado.' },
                 { name: 'variant',      type: '"default" | "line"',           defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant.description')) + DIVERGENCE },
               ],
             },
@@ -749,7 +749,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: 'Basecoat usa factory custom. Para variantes "line" e "vertical", aplicar classes utilitárias no elemento [role="tablist"] após criar o componente — ver seção Variantes.',
+          extensibilityNotes: 'Nortear usa factory custom. Para variantes "line" e "vertical", aplicar classes utilitárias no elemento [role="tablist"] após criar o componente — ver seção Variantes.',
         });
       }
 
@@ -820,8 +820,8 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
             { title: '', content: t('notes.item2') },
             { title: '', content: t('notes.item3') },
             { title: '', content: t('notes.item4') },
-            // Divergência idiomática Basecoat (3ª camada — ver também DocsProps e composicoes story)
-            { title: '', content: 'Basecoat: factory custom NÃO expõe props variant, orientation ou activationMode="manual". Para visual line/vertical, aplicar utility classes no elemento [role="tablist"] após criar (ver Variantes e tabs-composicoes.stories.ts).' },
+            // Divergência idiomática Nortear (3ª camada — ver também DocsProps e composicoes story)
+            { title: '', content: 'Nortear: factory custom NÃO expõe props variant, orientation ou activationMode="manual". Para visual line/vertical, aplicar utility classes no elemento [role="tablist"] após criar (ver Variantes e tabs-composicoes.stories.ts).' },
           ],
         });
 

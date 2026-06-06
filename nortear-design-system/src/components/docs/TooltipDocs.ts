@@ -605,7 +605,7 @@ createTooltip({
       }
 
       case 'propriedades': {
-        const interfaceCode = `// createTooltip(options) — factory custom Basecoat
+        const interfaceCode = `// createTooltip(options) — factory custom Nortear
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
 export type TooltipOptions = {
@@ -634,14 +634,14 @@ export function createTooltip(options: TooltipOptions): HTMLElement;`;
               items: [
                 { name: 'trigger', type: 'HTMLElement',                         defaultValue: '—',     required: 'Sim', description: 'Elemento que ativa o tooltip por hover ou foco. aria-describedby é setado automaticamente.' },
                 { name: 'content', type: 'string',                              defaultValue: '—',     required: 'Sim', description: 'Texto do tooltip. Renderizado via textContent (sem HTML).' },
-                { name: 'side',    type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'top'", required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Basecoat NÃO faz auto-flip por colisão.' },
+                { name: 'side',    type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'top'", required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Nortear NÃO faz auto-flip por colisão.' },
                 { name: 'class',   type: 'string',                              defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.className.description')) },
-                { name: 'delay',        type: 'number',                       defaultValue: '300',   required: 'Não', description: stripHtml(t('props.table.delay.description')) + ' NOTA: factory Basecoat usa SHOW_DELAY interno fixo de 300 ms; não é configurável via prop nem via Provider compartilhado.' },
-                { name: 'align',        type: "'start' | 'center' | 'end'",   defaultValue: "'center'", required: 'Não', description: stripHtml(t('props.table.align.description')) + ' NOTA: factory Basecoat só aplica center implícito; align não é suportado.' },
-                { name: 'sideOffset',   type: 'number',                       defaultValue: '6',     required: 'Não', description: stripHtml(t('props.table.sideOffset.description')) + ' NOTA: factory Basecoat usa gap fixo (6px).' },
-                { name: 'open',         type: 'boolean',                      defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.open.description')) + ' NOTA: factory Basecoat é uncontrolled-only.' },
-                { name: 'defaultOpen',  type: 'boolean',                      defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.defaultOpen.description')) + ' NOTA: não suportado pela factory Basecoat.' },
-                { name: 'onOpenChange', type: '(open: boolean) => void',      defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) + ' NOTA: não exposto pela factory Basecoat.' },
+                { name: 'delay',        type: 'number',                       defaultValue: '300',   required: 'Não', description: stripHtml(t('props.table.delay.description')) + ' NOTA: factory Nortear usa SHOW_DELAY interno fixo de 300 ms; não é configurável via prop nem via Provider compartilhado.' },
+                { name: 'align',        type: "'start' | 'center' | 'end'",   defaultValue: "'center'", required: 'Não', description: stripHtml(t('props.table.align.description')) + ' NOTA: factory Nortear só aplica center implícito; align não é suportado.' },
+                { name: 'sideOffset',   type: 'number',                       defaultValue: '6',     required: 'Não', description: stripHtml(t('props.table.sideOffset.description')) + ' NOTA: factory Nortear usa gap fixo (6px).' },
+                { name: 'open',         type: 'boolean',                      defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.open.description')) + ' NOTA: factory Nortear é uncontrolled-only.' },
+                { name: 'defaultOpen',  type: 'boolean',                      defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.defaultOpen.description')) + ' NOTA: não suportado pela factory Nortear.' },
+                { name: 'onOpenChange', type: '(open: boolean) => void',      defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) + ' NOTA: não exposto pela factory Nortear.' },
               ],
             },
           ],
@@ -678,7 +678,7 @@ export function createTooltip(options: TooltipOptions): HTMLElement;`;
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',       description: stripHtml(t('accessibility.keyboard.tab'))      },
-            { key: 'Esc',       description: stripHtml(t('accessibility.keyboard.escape'))   + ' NOTA: factory Basecoat não implementa Escape — apenas blur fecha.' },
+            { key: 'Esc',       description: stripHtml(t('accessibility.keyboard.escape'))   + ' NOTA: factory Nortear não implementa Escape — apenas blur fecha.' },
             { key: 'Shift+Tab', description: stripHtml(t('accessibility.keyboard.shiftTab')) },
           ],
         });
@@ -696,10 +696,10 @@ export function createTooltip(options: TooltipOptions): HTMLElement;`;
 
       case 'notas': {
         const extraNote = getLocale() === 'en'
-          ? '<strong>Basecoat divergences</strong>: custom factory has no TooltipProvider — delay is per-instance and fixed at 300ms. No auto-flip on collision, no Arrow, no Escape handler, no align/sideOffset/open/onOpenChange props. Content is plain text (no <code>&lt;kbd&gt;</code> children).'
+          ? '<strong>Nortear divergences</strong>: custom factory has no TooltipProvider — delay is per-instance and fixed at 300ms. No auto-flip on collision, no Arrow, no Escape handler, no align/sideOffset/open/onOpenChange props. Content is plain text (no <code>&lt;kbd&gt;</code> children).'
           : getLocale() === 'es'
-          ? '<strong>Divergencias Basecoat</strong>: la factory custom no tiene TooltipProvider — el delay es por instancia y fijo en 300 ms. Sin auto-flip por colisión, sin Arrow, sin handler de Escape, sin props align/sideOffset/open/onOpenChange. Content es texto plano (sin children <code>&lt;kbd&gt;</code>).'
-          : '<strong>Divergências Basecoat</strong>: a factory custom não possui TooltipProvider — o delay é por instância e fixo em 300ms. Sem auto-flip por colisão, sem Arrow, sem handler de Escape, sem props align/sideOffset/open/onOpenChange. Content é texto plano (sem children <code>&lt;kbd&gt;</code>).';
+          ? '<strong>Divergencias Nortear</strong>: la factory custom no tiene TooltipProvider — el delay es por instancia y fijo en 300 ms. Sin auto-flip por colisión, sin Arrow, sin handler de Escape, sin props align/sideOffset/open/onOpenChange. Content es texto plano (sin children <code>&lt;kbd&gt;</code>).'
+          : '<strong>Divergências Nortear</strong>: a factory custom não possui TooltipProvider — o delay é por instância e fixo em 300ms. Sem auto-flip por colisão, sem Arrow, sem handler de Escape, sem props align/sideOffset/open/onOpenChange. Content é texto plano (sem children <code>&lt;kbd&gt;</code>).';
 
         return createDocsNotes({
           title: t('notes.title'),

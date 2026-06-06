@@ -1,8 +1,8 @@
-# Regras Gerais Obrigatórias (Basecoat — Vanilla TypeScript)
+# Regras Gerais Obrigatórias (Nortear — Vanilla TypeScript)
 
 * **SEU PAPEL**: Manter a consistência do projeto seguindo ESTRITAMENTE o que está definido nas guidelines. NUNCA invente seções, estruturas ou padrões que não estejam documentados. SEMPRE consulte as guidelines antes de criar ou modificar qualquer componente.
 * **É OBRIGATÓRIO que funções de criação de componentes sigam o padrão `createNomeComponente(options): HTMLElement`**
-* **É OBRIGATÓRIO usar os estilos do arquivo `./styles/globals.css` via classes Tailwind**
+* **É OBRIGATÓRIO usar as classes `.nds-*` definidas em `./styles/components/*.css` (CSS standalone, sem Tailwind)**
 * **É OBRIGATÓRIO usar APENAS ícones da biblioteca `lucide` (vanilla) para TODOS os ícones do projeto**
 * **É OBRIGATÓRIO que todos os dialogs/modais usem as variáveis `--card` para background e `--card-foreground` para foreground**
 * **É OBRIGATÓRIO que todos os componentes interativos tenham `focus-visible` com 2px de espessura (ring-2)**
@@ -12,7 +12,7 @@
 * Sistema de espaçamento baseado em múltiplos de 8px
 * Use diretrizes WCAG 2.2 AA para acessibilidade
 * **TIPOGRAFIA**: Use APENAS a fonte sistema definida no CSS para todos os textos
-* **NÃO use classes de tamanho de fonte ou altura de linha do Tailwind** (ex: text-2xl, leading-none) — a tipografia está definida no CSS base
+* **Use classes tipográficas `.nds-text-*` / `.nds-leading-*`** — nunca valores arbitrários nem classes utilitárias de outro framework; a tipografia está definida no CSS base
 * Mantenha arquivos pequenos e coloque funções auxiliares em arquivos separados
 * Use `cn()` de `@/lib/utils` para composição de classes condicionais
 

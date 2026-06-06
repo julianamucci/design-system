@@ -1,4 +1,4 @@
-# Rules — Design System Basecoat (Vanilla TypeScript)
+# Rules — Design System Nortear (Vanilla TypeScript)
 
 Estas regras se aplicam a **todas** as interações neste projeto, sem exceção. Consulte os arquivos de referência listados em cada seção para detalhes de implementação.
 
@@ -7,10 +7,10 @@ Estas regras se aplicam a **todas** as interações neste projeto, sem exceção
 ## 1. Stack obrigatória
 
 - **Componentes**: funções TypeScript que criam/retornam `HTMLElement` — padrão `createNomeComponente(options): HTMLElement`
-- **Estilos**: Tailwind CSS 4 via classes aplicadas em `.className` — nunca estilos inline arbitrários (exceto CSS custom properties dinâmicas)
+- **Estilos**: CSS standalone via classes `.nds-*` definidas em `src/styles/components/*.css` (sem Tailwind) — nunca estilos inline arbitrários (exceto CSS custom properties dinâmicas)
 - **Ícones**: exclusivamente `lucide` (pacote vanilla) — `import { icons } from 'lucide'` — zero exceções
 - **Formulários**: HTML nativo + Zod para validação de schema — sem biblioteca de formulários
-- **Tipografia**: fonte do sistema definida no CSS base — não usar classes Tailwind de tamanho ou line-height (`text-2xl`, `leading-none`)
+- **Tipografia**: fonte do sistema definida no CSS base — usar classes `.nds-text-*` / `.nds-leading-*` (sem valores arbitrários ou classes utilitárias de outro framework)
 - **Utilitários**: `cn()` de `@/lib/utils` para composição de classes
 
 ---

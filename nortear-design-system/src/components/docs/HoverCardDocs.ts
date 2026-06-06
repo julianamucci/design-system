@@ -425,7 +425,7 @@ content.textContent = 'Joana Silva · Designer';
 
 createHoverCard({ trigger, content, side: 'bottom', align: 'start' });`;
 
-        const codeWithDelay = `// Basecoat factory: delays internos fixos (SHOW_DELAY=300ms, HIDE_DELAY=150ms).
+        const codeWithDelay = `// Nortear factory: delays internos fixos (SHOW_DELAY=300ms, HIDE_DELAY=150ms).
 // Para customizar, ajuste constantes no fonte de hover-card.ts ou
 // implemente wrapper com setTimeout próprio antes de chamar createHoverCard.
 const trigger = document.createElement('a');
@@ -686,7 +686,7 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
                 { name: 'align',        type: "'start' | 'center' | 'end'",               defaultValue: "'center'",  required: 'Não', description: stripHtml(t('props.table.align.description')) },
                 { name: 'onOpenChange', type: '(open: boolean) => void',                  defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) },
                 { name: 'class',        type: 'string',                                   defaultValue: '—',         required: 'Não', description: 'Classes adicionais aplicadas ao painel flutuante.' },
-                { name: 'openDelay',    type: 'number',                                   defaultValue: '300',       required: 'Não', description: stripHtml(t('props.table.openDelay.description')) + ' NOTA: factory Basecoat usa constante interna SHOW_DELAY (não-prop).' },
+                { name: 'openDelay',    type: 'number',                                   defaultValue: '300',       required: 'Não', description: stripHtml(t('props.table.openDelay.description')) + ' NOTA: factory Nortear usa constante interna SHOW_DELAY (não-prop).' },
               ],
             },
           ],

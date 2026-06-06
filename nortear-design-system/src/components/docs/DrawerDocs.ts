@@ -500,7 +500,7 @@ const drawer = createDrawer({
   footer,
 });`;
 
-        const codeRightPanel = `// Em basecoat, direction != 'bottom' usa createSheet
+        const codeRightPanel = `// No Nortear, direction != 'bottom' usa createSheet
 import { createSheet } from '@/components/ui/sheet';
 
 const trigger = createButton({ variant: 'outline', label: 'Abrir filtros' });
@@ -693,7 +693,7 @@ export function createDrawer(options: DrawerOptions): HTMLElement;`;
                 { name: 'footer',       type: 'HTMLElement',                 defaultValue: '—',     required: 'Não', description: 'Container das ações.' },
                 { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: t('props.table.onOpenChange.description') },
                 { name: 'class',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao painel.' },
-                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.open.description')) + ' (controlado externamente via .click() no trigger no Basecoat).' },
+                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.open.description')) + ' (controlado externamente via .click() no trigger no Nortear).' },
                 { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.defaultOpen.description')) },
                 { name: 'direction',    type: "'bottom' | 'top' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: stripHtml(t('props.table.direction.description')) + ' NOTA: createDrawer fixa bottom; outras direções via createSheet.' },
                 { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: stripHtml(t('props.table.modal.description')) },

@@ -606,7 +606,7 @@ createSheet({
       }
 
       case 'propriedades': {
-        const interfaceCode = `// createSheet(options) — factory custom Basecoat
+        const interfaceCode = `// createSheet(options) — factory custom Nortear
 export type SheetSide = 'top' | 'bottom' | 'left' | 'right';
 
 export type SheetOptions = {
@@ -645,8 +645,8 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
                 { name: 'footer',          type: 'HTMLElement',                                       defaultValue: '—',       required: 'Não', description: 'Container das ações (Cancelar + ação primária).' },
                 { name: 'onOpenChange',    type: '(open: boolean) => void',                           defaultValue: '—',       required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) },
                 { name: 'class',           type: 'string',                                            defaultValue: '—',       required: 'Não', description: stripHtml(t('props.table.className.description')) },
-                { name: 'open',            type: 'boolean',                                           defaultValue: '—',       required: 'Não', description: 'NÃO SUPORTADO pela factory Basecoat — estado é interno (uncontrolled). Use onOpenChange para observar mudanças.' },
-                { name: 'defaultOpen',     type: 'boolean',                                           defaultValue: 'false',   required: 'Não', description: 'NÃO SUPORTADO pela factory Basecoat — para abrir programaticamente, chame `trigger.click()`.' },
+                { name: 'open',            type: 'boolean',                                           defaultValue: '—',       required: 'Não', description: 'NÃO SUPORTADO pela factory Nortear — estado é interno (uncontrolled). Use onOpenChange para observar mudanças.' },
+                { name: 'defaultOpen',     type: 'boolean',                                           defaultValue: 'false',   required: 'Não', description: 'NÃO SUPORTADO pela factory Nortear — para abrir programaticamente, chame `trigger.click()`.' },
                 { name: 'showCloseButton', type: 'boolean',                                           defaultValue: 'true',    required: 'Não', description: 'NÃO SUPORTADO como prop — o botão X é sempre exibido. Esconda via CSS no `class` se necessário.' },
               ],
             },
@@ -711,8 +711,8 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
             { title: '', content: sanitizeHtml(t('notes.item2')) },
             { title: '', content: sanitizeHtml(t('notes.item3')) },
             { title: '', content: sanitizeHtml(t('notes.item4')) },
-            // Divergência idiomática Basecoat — camada 1 (notes) do padrão 3-layer.
-            { title: '', content: sanitizeHtml('<strong>Divergência Basecoat</strong>: a factory <code>createSheet</code> não expõe props <code>open</code>/<code>defaultOpen</code>/<code>showCloseButton</code>. Para abertura programática, mantenha referência ao <code>trigger</code> e chame <code>trigger.click()</code>. O X embutido sempre é renderizado.') },
+            // Divergência idiomática Nortear — camada 1 (notes) do padrão 3-layer.
+            { title: '', content: sanitizeHtml('<strong>Divergência Nortear</strong>: a factory <code>createSheet</code> não expõe props <code>open</code>/<code>defaultOpen</code>/<code>showCloseButton</code>. Para abertura programática, mantenha referência ao <code>trigger</code> e chame <code>trigger.click()</code>. O X embutido sempre é renderizado.') },
           ],
         });
 

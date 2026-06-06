@@ -55,7 +55,7 @@ function priorityLabel(raw: string): string {
  * - <span aria-live="polite"> que mostra o valor textualmente
  * - aria-label OBRIGATÓRIO no nativeInput (também aplicado, em adição ao labelledby)
  *
- * NOTA Basecoat: o factory custom é wrapper de <input type="range"> nativo —
+ * NOTA Nortear: o factory custom é wrapper de <input type="range"> nativo —
  * portanto ARIA (role="slider", aria-valuenow/min/max, navegação Arrow/Home/End/PgUp/PgDn)
  * é provido pelo browser. Não há suporte nativo a range (2 thumbs) nem orientação vertical
  * acessível — divergências documentadas em notes/DocsProps/composições.
@@ -408,7 +408,7 @@ export function createSliderDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: 'Importação do factory custom (Basecoat):',
+          description: 'Importação do factory custom (Nortear):',
           code: `import { createSlider, type SliderOptions } from '@/components/ui/slider';`,
           secondaryDescription: 'Uso básico:',
           secondaryCode: `const slider = createSlider({
@@ -541,7 +541,7 @@ input.setAttribute('aria-label', 'Volume');`,
                 note.style.maxWidth = '12rem';
                 note.style.textAlign = 'center';
                 note.textContent =
-                  'Variante "vertical" não suportada de forma acessível no Basecoat — use a versão horizontal.';
+                  'Variante "vertical" não suportada de forma acessível no Nortear — use a versão horizontal.';
                 wrap.appendChild(note);
                 return wrap;
               },
@@ -771,7 +771,7 @@ const slider = createSlider({ min: 0, max: 100, value: 60,
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createSlider(options) — Basecoat
+        const interfaceCode = `// createSlider(options) — Nortear
 export type SliderOptions = {
   min?: number;          // default 0
   max?: number;          // default 100
@@ -794,21 +794,21 @@ export type SliderOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: 'createSlider(options) — Basecoat',
+              title: 'createSlider(options) — Nortear',
               cols: propsCols,
               items: [
-                { name: 'value',         type: 'number',                       defaultValue: 'min',     required: 'Não', description: 'Valor inicial. NOTA Basecoat: é `number` (não `number[]` como nas libs upstream) — sem suporte a range.' },
-                { name: 'onValueChange', type: '(value: number) => void',      defaultValue: '—',       required: 'Não', description: 'Callback disparado durante o arrasto e em cada tecla. NOTA Basecoat: não existe `onValueCommitted` separado — debounce ou ouça `change` no input nativo.' },
+                { name: 'value',         type: 'number',                       defaultValue: 'min',     required: 'Não', description: 'Valor inicial. NOTA Nortear: é `number` (não `number[]` como nas libs upstream) — sem suporte a range.' },
+                { name: 'onValueChange', type: '(value: number) => void',      defaultValue: '—',       required: 'Não', description: 'Callback disparado durante o arrasto e em cada tecla. NOTA Nortear: não existe `onValueCommitted` separado — debounce ou ouça `change` no input nativo.' },
                 { name: 'min',           type: 'number',                       defaultValue: '0',       required: 'Não', description: stripHtml(t('props.table.min.description')) },
                 { name: 'max',           type: 'number',                       defaultValue: '100',     required: 'Não', description: stripHtml(t('props.table.max.description')) },
                 { name: 'step',          type: 'number',                       defaultValue: '1',       required: 'Não', description: stripHtml(t('props.table.step.description')) },
                 { name: 'disabled',      type: 'boolean',                      defaultValue: 'false',   required: 'Não', description: stripHtml(t('props.table.disabled.description')) },
-                { name: 'class',         type: 'string',                       defaultValue: '—',      required: 'Não', description: 'Classes Tailwind adicionais no `<div>` raiz.' },
+                { name: 'class',         type: 'string',                       defaultValue: '—',      required: 'Não', description: 'Classes .nds-* adicionais no `<div>` raiz.' },
               ],
             },
           ],
           interfaceCode,
-          extensibilityTitle: 'Divergências da factory custom (Basecoat)',
+          extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
             'O factory custom é um wrapper de <input type="range"> nativo e diverge das libs upstream nos seguintes pontos: (1) Sem suporte a range (2 thumbs) — `value` é `number`, não `number[]`. Componha 2 sliders adjacentes para selecionar min/max. (2) Sem prop `orientation` — <input type="range"> nativo não suporta orientação vertical acessível; use horizontal. (3) Sem prop `defaultValue` — use `value` (não-controlado por padrão). (4) Sem `onValueCommitted` — `onValueChange` dispara em cada tecla/passo do arrasto; debounce manualmente para evitar spam de analytics. (5) aria-label NÃO é prop — aplique manualmente no <input type="range"> interno após criação. Em todos os outros pontos (role="slider", aria-valuenow/min/max, navegação Arrow/Home/End/PgUp/PgDn) o comportamento é equivalente — provido pelo browser via input nativo.',
         });
@@ -883,7 +883,7 @@ export type SliderOptions = {
             {
               title: '',
               content: sanitizeHtml(
-                '<strong>Divergências Basecoat</strong> — o factory é wrapper de <code>&lt;input type="range"&gt;</code> nativo. Não suporta <strong>range (2 thumbs)</strong> nem <strong>orientação vertical</strong> acessível; <code>value</code> é <code>number</code> (não array). Não há <code>onValueCommitted</code> — use debounce sobre <code>onValueChange</code> para analytics. <code>aria-label</code> precisa ser aplicado manualmente no <code>&lt;input&gt;</code> interno.',
+                '<strong>Divergências Nortear</strong> — o factory é wrapper de <code>&lt;input type="range"&gt;</code> nativo. Não suporta <strong>range (2 thumbs)</strong> nem <strong>orientação vertical</strong> acessível; <code>value</code> é <code>number</code> (não array). Não há <code>onValueCommitted</code> — use debounce sobre <code>onValueChange</code> para analytics. <code>aria-label</code> precisa ser aplicado manualmente no <code>&lt;input&gt;</code> interno.',
               ),
             },
           ],
@@ -898,7 +898,7 @@ export type SliderOptions = {
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: 'slider_change',        trigger: stripHtml(t('analytics.table.slider_change.trigger')) + ' (Basecoat: debounce manual sobre onValueChange)', payload: stripHtml(t('analytics.table.slider_change.payload')) },
+            { event: 'slider_change',        trigger: stripHtml(t('analytics.table.slider_change.trigger')) + ' (Nortear: debounce manual sobre onValueChange)', payload: stripHtml(t('analytics.table.slider_change.payload')) },
             { event: 'docs_page_view',      trigger: 'Carregamento da docs page',  payload: '{ component_name, locale, page_title }' },
             { event: 'docs_section_viewed', trigger: 'Seção visível no viewport',  payload: '{ section_id, component_name, locale }' },
           ],

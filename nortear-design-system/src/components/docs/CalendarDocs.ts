@@ -443,7 +443,7 @@ const el = createCalendar({
         });
 
       case 'propriedades': {
-        const interfaceCode = `// Basecoat — implementação vanilla própria
+        const interfaceCode = `// Nortear — implementação vanilla própria
 export type CalendarOptions = {
   value?: Date;
   onSelect?: (date: Date) => void;
@@ -504,7 +504,7 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes:
-            'A implementação vanilla do Basecoat é minimalista — não usa react-day-picker. Funcionalidades como mode="multiple"/"range", captionLayout="dropdown", showOutsideDays, numberOfMonths, showWeekNumber, classNames por slot e locale dinâmico não estão expostas pela factory atual. Para estes cenários, envolva a factory ou consuma diretamente a stack React/Vue/Svelte.',
+            'A implementação vanilla do Nortear é minimalista — não usa react-day-picker. Funcionalidades como mode="multiple"/"range", captionLayout="dropdown", showOutsideDays, numberOfMonths, showWeekNumber, classNames por slot e locale dinâmico não estão expostas pela factory atual. Para estes cenários, envolva a factory ou consuma diretamente a stack React/Vue/Svelte.',
         });
       }
 

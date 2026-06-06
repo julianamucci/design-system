@@ -412,7 +412,7 @@ export function createTextareaDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: 'Importação do factory custom (Basecoat):',
+          description: 'Importação do factory custom (Nortear):',
           code: `import { createTextarea, type TextareaOptions } from '@/components/ui/textarea';`,
           secondaryDescription: 'Uso básico com label + contador acessível:',
           secondaryCode: `const id = 'description';
@@ -803,7 +803,7 @@ form.dataset.spacing = 'md';
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createTextarea(options) — Basecoat
+        const interfaceCode = `// createTextarea(options) — Nortear
 export type TextareaOptions = {
   placeholder?: string;
   disabled?: boolean;
@@ -826,7 +826,7 @@ export type TextareaOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: 'createTextarea(options) — Basecoat',
+              title: 'createTextarea(options) — Nortear',
               cols: propsCols,
               items: [
                 {
@@ -882,9 +882,9 @@ export type TextareaOptions = {
             },
           ],
           interfaceCode,
-          extensibilityTitle: 'Divergências da factory custom (Basecoat)',
+          extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
-            'O factory Basecoat é um wrapper enxuto de `<textarea>` HTML nativo e diverge das libs upstream nos seguintes pontos: ' +
+            'O factory Nortear é um wrapper enxuto de `<textarea>` HTML nativo e diverge das libs upstream nos seguintes pontos: ' +
             '(1) Não há prop `onChange` — escute `addEventListener("input"|"change", ...)` diretamente no elemento retornado. ' +
             '(2) Não há prop `readOnly` no factory — atribua `textarea.readOnly = true` após criar. ' +
             '(3) Não há prop `maxLength` no factory — atribua `textarea.maxLength = 500` após criar. ' +
@@ -956,8 +956,8 @@ export type TextareaOptions = {
             { title: '', content: sanitizeHtml(t('notes.item2')) },
             { title: '', content: sanitizeHtml(t('notes.item3')) },
             { title: '', content: sanitizeHtml(t('notes.item4')) },
-            // Divergência idiomática Basecoat
-            { title: '', content: sanitizeHtml('<strong>Basecoat</strong> — o factory custom é um wrapper enxuto de <code>&lt;textarea&gt;</code> e <em>não</em> expõe props <code>onChange</code>, <code>readOnly</code>, <code>maxLength</code> nem <code>aria-invalid</code>. Aplique todos via API DOM nativa após a criação (<code>addEventListener</code>, <code>textarea.readOnly = true</code>, <code>textarea.maxLength = 500</code>, <code>setAttribute</code>). Para contador acessível, escute o evento <code>input</code> e atualize um <code>&lt;span&gt;</code> com <code>aria-live=&quot;polite&quot;</code> + <code>aria-label</code>.') },
+            // Divergência idiomática Nortear
+            { title: '', content: sanitizeHtml('<strong>Nortear</strong> — o factory custom é um wrapper enxuto de <code>&lt;textarea&gt;</code> e <em>não</em> expõe props <code>onChange</code>, <code>readOnly</code>, <code>maxLength</code> nem <code>aria-invalid</code>. Aplique todos via API DOM nativa após a criação (<code>addEventListener</code>, <code>textarea.readOnly = true</code>, <code>textarea.maxLength = 500</code>, <code>setAttribute</code>). Para contador acessível, escute o evento <code>input</code> e atualize um <code>&lt;span&gt;</code> com <code>aria-live=&quot;polite&quot;</code> + <code>aria-label</code>.') },
           ],
         });
 

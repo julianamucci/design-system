@@ -400,7 +400,7 @@ export function createToggleDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: 'Importação do factory custom (Basecoat):',
+          description: 'Importação do factory custom (Nortear):',
           code: `import { createToggle, type ToggleOptions } from '@/components/ui/toggle';`,
           secondaryDescription: 'Uso básico (icon-only — aria-label OBRIGATÓRIO):',
           secondaryCode: `const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -670,7 +670,7 @@ export type ToggleOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: 'createToggle(options) — Basecoat',
+              title: 'createToggle(options) — Nortear',
               cols: propsCols,
               items: [
                 {
@@ -679,7 +679,7 @@ export type ToggleOptions = {
                   defaultValue: 'false',
                   required: 'Não',
                   description: stripHtml(t('props.table.pressed.description')) +
-                    ' Nota: no Basecoat, `pressed` define apenas o estado inicial — o factory é não-controlado.',
+                    ' Nota: no Nortear, `pressed` define apenas o estado inicial — o factory é não-controlado.',
                 },
                 {
                   name: 'disabled',
@@ -695,7 +695,7 @@ export type ToggleOptions = {
                   required: 'Não',
                   description:
                     stripHtml(t('props.table.onPressedChange.description')) +
-                    ' Nota: no Basecoat o nome do callback é `onClick` (recebe o novo valor), enquanto React/Vue/Svelte usam `onPressedChange`.',
+                    ' Nota: no Nortear o nome do callback é `onClick` (recebe o novo valor), enquanto React/Vue/Svelte usam `onPressedChange`.',
                 },
                 {
                   name: 'variant',
@@ -716,7 +716,7 @@ export type ToggleOptions = {
                   type: 'string',
                   defaultValue: '—',
                   required: 'Não',
-                  description: 'Classes Tailwind adicionais no `<button>` raiz.',
+                  description: 'Classes .nds-* adicionais no `<button>` raiz.',
                 },
                 {
                   name: 'children',
@@ -736,7 +736,7 @@ export type ToggleOptions = {
             },
           ],
           interfaceCode,
-          extensibilityTitle: 'Divergências da factory custom (Basecoat)',
+          extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
             'O factory custom diverge das libs upstream nos seguintes pontos: (1) o callback de mudança chama-se `onClick` (não `onPressedChange`). (2) É não-controlado: `pressed` define apenas o valor inicial — o estado vive internamente. (3) Não há prop `defaultPressed` separada — use `pressed` como inicial. (4) `aria-label` não é prop do options; aplique via `setAttribute` no `<button>` retornado. (5) O factory já aplica `aria-pressed` e `data-state` automaticamente no click — não duplique a lógica externamente.',
         });
@@ -802,8 +802,8 @@ export type ToggleOptions = {
             { title: '', content: sanitizeHtml(t('notes.item2')) },
             { title: '', content: sanitizeHtml(t('notes.item3')) },
             { title: '', content: sanitizeHtml(t('notes.item4')) },
-            // Divergência idiomática Basecoat
-            { title: '', content: sanitizeHtml('<strong>Basecoat</strong> — o factory custom expõe o callback como <code>onClick(pressed)</code> em vez de <code>onPressedChange</code>; é não-controlado (<code>pressed</code> é só estado inicial); <code>aria-label</code> não é prop do options — aplique via <code>setAttribute</code> no <code>&lt;button&gt;</code> retornado. O factory já gerencia <code>aria-pressed</code> e <code>data-state</code> automaticamente.') },
+            // Divergência idiomática Nortear
+            { title: '', content: sanitizeHtml('<strong>Nortear</strong> — o factory custom expõe o callback como <code>onClick(pressed)</code> em vez de <code>onPressedChange</code>; é não-controlado (<code>pressed</code> é só estado inicial); <code>aria-label</code> não é prop do options — aplique via <code>setAttribute</code> no <code>&lt;button&gt;</code> retornado. O factory já gerencia <code>aria-pressed</code> e <code>data-state</code> automaticamente.') },
           ],
         });
 

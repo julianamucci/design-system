@@ -379,7 +379,7 @@ export function createRadioGroupDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: 'Importação do factory custom (Basecoat):',
+          description: 'Importação do factory custom (Nortear):',
           code: `import { createRadioGroup, type RadioGroupOptions, type RadioGroupItem } from '@/components/ui/radio-group';`,
           secondaryDescription: 'Uso básico:',
           secondaryCode: `const group = createRadioGroup({
@@ -821,19 +821,19 @@ export type RadioGroupOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: 'createRadioGroup(options) — Basecoat',
+              title: 'createRadioGroup(options) — Nortear',
               cols: propsCols,
               items: [
-                { name: 'name',          type: 'string',                            defaultValue: '—',      required: 'Sim', description: stripHtml(t('props.table.name.description')) + ' Obrigatório no Basecoat (não-controlado, participa do `FormData`).' },
+                { name: 'name',          type: 'string',                            defaultValue: '—',      required: 'Sim', description: stripHtml(t('props.table.name.description')) + ' Obrigatório no Nortear (não-controlado, participa do `FormData`).' },
                 { name: 'items',         type: 'RadioGroupItem[]',                  defaultValue: '—',      required: 'Sim', description: 'Lista de itens. Cada item: { value, label, disabled? }.' },
                 { name: 'defaultValue',  type: 'string',                            defaultValue: '—',      required: 'Não', description: stripHtml(t('props.table.defaultValue.description')) + ' Não há prop `value` controlada — o factory é não-controlado.' },
                 { name: 'onValueChange', type: '(value: string) => void',           defaultValue: '—',      required: 'Não', description: stripHtml(t('props.table.onValueChange.description')) },
-                { name: 'class',         type: 'string',                            defaultValue: '—',      required: 'Não', description: 'Classes Tailwind adicionais no `<fieldset>` raiz.' },
+                { name: 'class',         type: 'string',                            defaultValue: '—',      required: 'Não', description: 'Classes .nds-* adicionais no `<fieldset>` raiz.' },
               ],
             },
           ],
           interfaceCode,
-          extensibilityTitle: 'Divergências da factory custom (Basecoat)',
+          extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
             'O factory custom diverge das libs upstream nos seguintes pontos: (1) é estritamente não-controlado — não aceita prop `value`; use `defaultValue` + `onValueChange`. (2) Não expõe prop `disabled` no grupo — desabilite item-a-item via `items[i].disabled`. (3) Não expõe prop `orientation` — aplique `grid-flow-col auto-cols-max gap-6` via `class` para layout horizontal. (4) Não expõe campo `description` por item — componha o layout manualmente. Em todos os outros pontos (ARIA, navegação por setas, role) o comportamento é equivalente às libs upstream.',
         });

@@ -527,14 +527,14 @@ export interface ScrollAreaOptions {
                 { name: 'height',   type: 'string',      defaultValue: '—', required: 'Não', description: 'Altura do root e maxHeight do viewport. Sem ela o ScrollArea NÃO rola — o conteúdo expande naturalmente.' },
                 { name: 'width',    type: 'string',      defaultValue: '—', required: 'Não', description: 'Largura do root. Útil para scroll horizontal.' },
                 { name: 'children', type: 'HTMLElement', defaultValue: '—', required: 'Não', description: 'Conteúdo renderizado dentro do viewport (data-slot="scroll-area-viewport").' },
-                { name: 'class',    type: 'string',      defaultValue: '—', required: 'Não', description: 'Classes Tailwind extras no root <code>relative overflow-hidden scrollbar</code>.' },
+                { name: 'class',    type: 'string',      defaultValue: '—', required: 'Não', description: 'Classes .nds-* extras no root <code>nds-relative nds-overflow-hidden nds-scrollbar</code>.' },
               ],
             },
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes:
-            'Divergência da API React: a factory Basecoat NÃO expõe type, scrollHideDelay nem um subcomponente ScrollBar. ' +
+            'Divergência da API React: a factory Nortear NÃO expõe type, scrollHideDelay nem um subcomponente ScrollBar. ' +
             'A estilização usa a scrollbar nativa do navegador via classe utilitária ".scrollbar" — orientation, hover/auto/always e delays seguem o comportamento padrão da plataforma.',
         });
       }
@@ -606,7 +606,7 @@ export interface ScrollAreaOptions {
             { title: '', content: t('notes.item3') },
             { title: '', content: t('notes.item4') },
             { title: '', content:
-              '<strong>Divergência Basecoat</strong> — a factory <code>createScrollArea</code> é um wrapper minimal: '
+              '<strong>Divergência Nortear</strong> — a factory <code>createScrollArea</code> é um wrapper minimal: '
               + 'apenas root <code>relative overflow-hidden scrollbar</code> + viewport <code>overflow-auto</code>. '
               + 'Não há subcomponente <code>ScrollBar</code>, nem props <code>type</code>/<code>scrollHideDelay</code>/<code>orientation</code> — '
               + 'a barra é a nativa do navegador, estilizada via CSS utilitário.' },

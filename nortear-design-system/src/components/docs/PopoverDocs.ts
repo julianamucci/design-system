@@ -778,7 +778,7 @@ createPopover({ trigger, content });`;
       }
 
       case 'propriedades': {
-        const interfaceCode = `// createPopover(options) — factory custom Basecoat
+        const interfaceCode = `// createPopover(options) — factory custom Nortear
 export type PopoverSide = 'top' | 'bottom' | 'left' | 'right';
 export type PopoverAlign = 'start' | 'center' | 'end';
 
@@ -810,13 +810,13 @@ export function createPopover(options: PopoverOptions): HTMLElement;`;
               items: [
                 { name: 'trigger',      type: 'HTMLElement',                         defaultValue: '—',         required: 'Sim', description: 'Elemento que abre o popover ao clicar (geralmente Button).' },
                 { name: 'content',      type: 'HTMLElement | string',                defaultValue: '—',         required: 'Sim', description: 'Conteúdo do painel. String é renderizada via textContent.' },
-                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'",  required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Basecoat não faz auto-flip por colisão.' },
+                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'",  required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Nortear não faz auto-flip por colisão.' },
                 { name: 'align',        type: "'start' | 'center' | 'end'",          defaultValue: "'center'",  required: 'Não', description: stripHtml(t('props.table.align.description')) },
                 { name: 'onOpenChange', type: '(open: boolean) => void',             defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) },
                 { name: 'class',        type: 'string',                              defaultValue: '—',         required: 'Não', description: 'Classes adicionais aplicadas ao painel flutuante.' },
-                { name: 'open',         type: 'boolean',                             defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.open.description')) + ' NOTA: factory Basecoat só suporta estado uncontrolled — observe via onOpenChange.' },
-                { name: 'modal',        type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: stripHtml(t('props.table.modal.description')) + ' NOTA: factory Basecoat não implementa focus trap nem scroll lock.' },
-                { name: 'sideOffset',   type: 'number',                              defaultValue: '8',         required: 'Não', description: stripHtml(t('props.table.sideOffset.description')) + ' NOTA: factory Basecoat usa gap fixo (8px).' },
+                { name: 'open',         type: 'boolean',                             defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.open.description')) + ' NOTA: factory Nortear só suporta estado uncontrolled — observe via onOpenChange.' },
+                { name: 'modal',        type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: stripHtml(t('props.table.modal.description')) + ' NOTA: factory Nortear não implementa focus trap nem scroll lock.' },
+                { name: 'sideOffset',   type: 'number',                              defaultValue: '8',         required: 'Não', description: stripHtml(t('props.table.sideOffset.description')) + ' NOTA: factory Nortear usa gap fixo (8px).' },
               ],
             },
           ],

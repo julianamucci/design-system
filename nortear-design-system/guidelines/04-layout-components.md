@@ -1,4 +1,4 @@
-# Layout Components (Basecoat — Vanilla TypeScript)
+# Layout Components (Nortear — Vanilla TypeScript)
 
 ---
 
@@ -21,7 +21,7 @@ AspectRatio
 - O container é `position: relative` com `padding-bottom` calculado por `(1 / ratio) * 100%`
 - O child fica em `position: absolute; inset: 0` e ocupa 100% do container
 - Não definir altura fixa no container — a razão é controlada por padding
-- Tokens: usar utilitários Tailwind (`object-cover`, `w-full`, `h-full`); margens externas via classes 8-grid (`--spacing-*`)
+- Tokens: usar utilitários `.nds-*` (`nds-object-cover`, `nds-w-full`, `nds-h-full`) quando disponíveis em `styles/components/utilities.css`; caso contrário, aplicar CSS inline com tokens (`width: 100%`, `height: 100%`, `object-fit: cover`). Margens externas via classes 8-grid (`--spacing-*`)
 
 **Acessibilidade**:
 - Imagem informativa: `alt` descritivo

@@ -350,7 +350,7 @@ const el = createCarousel({
   items: [slide1, slide2, slide3, slide4, slide5],
 });`;
 
-        const codeVertical = `// A implementação Basecoat usa orientação horizontal.
+        const codeVertical = `// A implementação Nortear usa orientação horizontal.
 // Para slides verticais, envolva cada item em um container de altura fixa
 // e use translateY customizado ou uma extensão do componente.
 const el = createCarousel({ items: slides });`;

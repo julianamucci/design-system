@@ -404,7 +404,7 @@ export function createSwitchDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: 'Importação do factory custom (Basecoat):',
+          description: 'Importação do factory custom (Nortear):',
           code: `import { createSwitch, type SwitchOptions } from '@/components/ui/switch';`,
           secondaryDescription: 'Uso básico:',
           secondaryCode: `const sw = createSwitch({
@@ -454,7 +454,7 @@ const sw = createSwitch({ id: 'marketing' });`,
             {
               name: stripHtml(t('variants.items.sm')),
               description: stripHtml(t('variants.styles.sm')) +
-                ' Nota: o factory Basecoat não expõe prop `size` — aplicamos as classes do tamanho `sm` via `class` (`h-4 w-7` + thumb `h-3 w-3`).',
+                ' Nota: o factory Nortear não expõe prop `size` — aplicamos as classes do tamanho `sm` via `class` (`h-4 w-7` + thumb `h-3 w-3`).',
               code: `// Factory não expõe prop \`size\` — aplicamos as dimensões via class:
 const sw = createSwitch({
   id: 'sm-switch',
@@ -638,7 +638,7 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
               description: t('variants.compositions.inForm.description'),
               useWhen: t('variants.compositions.inForm.use'),
               code:
-                `// Divergência Basecoat: factory não expõe prop \`name\`.\n` +
+                `// Divergência Nortear: factory não expõe prop \`name\`.\n` +
                 `// Sincronize o estado em um <input type="hidden"> via onCheckedChange.\n` +
                 `const form = document.createElement('form');\n` +
                 `form.className = 'nds-stack';\n` +
@@ -738,7 +738,7 @@ export type SwitchOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: 'createSwitch(options) — Basecoat',
+              title: 'createSwitch(options) — Nortear',
               cols: propsCols,
               items: [
                 {
@@ -747,7 +747,7 @@ export type SwitchOptions = {
                   defaultValue: 'false',
                   required: 'Não',
                   description: stripHtml(t('props.table.checked.description')) +
-                    ' Nota: no Basecoat, `checked` define apenas o estado inicial — o factory é não-controlado.',
+                    ' Nota: no Nortear, `checked` define apenas o estado inicial — o factory é não-controlado.',
                 },
                 {
                   name: 'disabled',
@@ -775,7 +775,7 @@ export type SwitchOptions = {
                   type: 'string',
                   defaultValue: '—',
                   required: 'Não',
-                  description: 'Classes Tailwind adicionais no `<button role="switch">`.',
+                  description: 'Classes .nds-* adicionais no `<button role="switch">`.',
                 },
                 {
                   name: 'aria-label',
@@ -788,7 +788,7 @@ export type SwitchOptions = {
             },
           ],
           interfaceCode,
-          extensibilityTitle: 'Divergências da factory custom (Basecoat)',
+          extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
             'O factory custom diverge das libs upstream nos seguintes pontos: (1) não expõe prop `size` — para o tamanho `sm`, aplique classes utilitárias via `class` (`h-4 w-7`) e ajuste o thumb (`h-3 w-3`). (2) Não expõe prop `defaultChecked` — use `checked` como estado inicial. (3) Não expõe prop `name` — para envio em formulário, sincronize o estado para um `<input type="hidden" name="...">` via `onCheckedChange`. (4) É não-controlado: o estado vive internamente; passe `checked` apenas como valor inicial e ouça `onCheckedChange` para reagir a mudanças.',
         });
@@ -855,8 +855,8 @@ export type SwitchOptions = {
             { title: '', content: sanitizeHtml(t('notes.item2')) },
             { title: '', content: sanitizeHtml(t('notes.item3')) },
             { title: '', content: sanitizeHtml(t('notes.item4')) },
-            // Divergência idiomática Basecoat
-            { title: '', content: sanitizeHtml('<strong>Basecoat</strong> — o factory custom não expõe prop <code>size</code>; o tamanho <code>sm</code> é alcançado via <code>class</code> (<code>h-4 w-7</code>) + ajuste do thumb. Também não há prop <code>name</code>; sincronize o estado em um <code>&lt;input type="hidden"&gt;</code> para envio em formulário.') },
+            // Divergência idiomática Nortear
+            { title: '', content: sanitizeHtml('<strong>Nortear</strong> — o factory custom não expõe prop <code>size</code>; o tamanho <code>sm</code> é alcançado via <code>class</code> (<code>h-4 w-7</code>) + ajuste do thumb. Também não há prop <code>name</code>; sincronize o estado em um <code>&lt;input type="hidden"&gt;</code> para envio em formulário.') },
           ],
         });
 

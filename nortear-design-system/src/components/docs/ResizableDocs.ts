@@ -458,8 +458,8 @@ export function createResizablePanel(
                 { name: 'direction',   type: t('props.table.direction.type'),   defaultValue: "'horizontal'", required: t('props.table.direction.required'),   description: stripHtml(t('props.table.direction.description')) },
                 { name: 'panels',      type: 'ResizablePanel[]',                defaultValue: '—',            required: 'Sim',                                  description: 'Lista de painéis renderizados em ordem; handles inseridos automaticamente entre painéis adjacentes.' },
                 { name: 'class',       type: 'string',                          defaultValue: '—',            required: 'Não',                                  description: 'Classes adicionais no Root <div data-slot="resizable">.' },
-                { name: 'autoSaveId',  type: 'string',                          defaultValue: '—',            required: 'Não',                                  description: stripHtml(t('props.table.id.description')) + ' NOTA: factory Basecoat NÃO persiste tamanhos em localStorage; argType para paridade com react-resizable-panels.' },
-                { name: 'onLayout',    type: '(sizes: number[]) => void',       defaultValue: '—',            required: 'Não',                                  description: stripHtml(t('props.table.onLayout.description')) + ' NOTA: factory Basecoat NÃO emite callback; consumidor deve observar mutações de width/height ou implementar wrapper.' },
+                { name: 'autoSaveId',  type: 'string',                          defaultValue: '—',            required: 'Não',                                  description: stripHtml(t('props.table.id.description')) + ' NOTA: factory Nortear NÃO persiste tamanhos em localStorage; argType para paridade com react-resizable-panels.' },
+                { name: 'onLayout',    type: '(sizes: number[]) => void',       defaultValue: '—',            required: 'Não',                                  description: stripHtml(t('props.table.onLayout.description')) + ' NOTA: factory Nortear NÃO emite callback; consumidor deve observar mutações de width/height ou implementar wrapper.' },
               ],
             },
             {
@@ -469,8 +469,8 @@ export function createResizablePanel(
                 { name: 'content',     type: 'HTMLElement', defaultValue: '—',  required: 'Sim',                                   description: 'Elemento renderizado dentro do painel — consumidor define background e overflow.' },
                 { name: 'defaultSize', type: 'number',      defaultValue: '—',  required: t('props.table.defaultSize.required'),   description: stripHtml(t('props.table.defaultSize.description')) + ' Quando omitido, tamanho é distribuído igualmente entre os painéis.' },
                 { name: 'minSize',     type: 'number',      defaultValue: '10', required: t('props.table.minSize.required'),       description: stripHtml(t('props.table.minSize.description')) },
-                { name: 'maxSize',     type: 'number',      defaultValue: '100',required: t('props.table.maxSize.required'),       description: stripHtml(t('props.table.maxSize.description')) + ' NOTA: factory Basecoat ainda NÃO aplica maxSize — apenas minSize é respeitado.' },
-                { name: 'id',          type: 'string',      defaultValue: '—',  required: 'Não',                                   description: stripHtml(t('props.table.id.description')) + ' NOTA: factory Basecoat não usa id (sem persistência).' },
+                { name: 'maxSize',     type: 'number',      defaultValue: '100',required: t('props.table.maxSize.required'),       description: stripHtml(t('props.table.maxSize.description')) + ' NOTA: factory Nortear ainda NÃO aplica maxSize — apenas minSize é respeitado.' },
+                { name: 'id',          type: 'string',      defaultValue: '—',  required: 'Não',                                   description: stripHtml(t('props.table.id.description')) + ' NOTA: factory Nortear não usa id (sem persistência).' },
               ],
             },
             {
@@ -481,7 +481,7 @@ export function createResizablePanel(
                 { name: 'aria-orientation', type: '"horizontal"|"vertical"', defaultValue: 'derivado', required: 'Auto', description: 'Derivado de direction: handle de PanelGroup horizontal recebe aria-orientation="vertical".' },
                 { name: 'tabindex',         type: 'number',                defaultValue: '0',            required: 'Auto', description: 'Handle é focável; setas ajustam tamanho (WCAG 2.5.7).' },
                 { name: 'aria-label',       type: 'string',                defaultValue: '—',            required: 'Sim*', description: '*OBRIGATÓRIO pelo consumidor — a factory NÃO aplica aria-label; defina via handle.setAttribute("aria-label", ...) após criar.' },
-                { name: 'withHandle',       type: 'boolean',               defaultValue: 'true',         required: 'Auto', description: stripHtml(t('props.table.withHandle.description')) + ' NOTA: factory Basecoat SEMPRE exibe o grip visual; não há opção para ocultar.' },
+                { name: 'withHandle',       type: 'boolean',               defaultValue: 'true',         required: 'Auto', description: stripHtml(t('props.table.withHandle.description')) + ' NOTA: factory Nortear SEMPRE exibe o grip visual; não há opção para ocultar.' },
               ],
             },
           ],
@@ -489,7 +489,7 @@ export function createResizablePanel(
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes:
             t('props.extensibilityCode') +
-            '\n\n// NOTA Basecoat: a factory custom NÃO suporta autoSaveId, id por painel,\n// onLayout, maxSize, nem ResizableHandle.withHandle=false. Para persistência\n// de tamanhos ou callbacks, envolva manualmente em listeners de MutationObserver\n// sobre style.width/height ou use as stacks React (react-resizable-panels),\n// Vue (reka-ui Splitter) ou Svelte (paneforge).',
+            '\n\n// NOTA Nortear: a factory custom NÃO suporta autoSaveId, id por painel,\n// onLayout, maxSize, nem ResizableHandle.withHandle=false. Para persistência\n// de tamanhos ou callbacks, envolva manualmente em listeners de MutationObserver\n// sobre style.width/height ou use as stacks React (react-resizable-panels),\n// Vue (reka-ui Splitter) ou Svelte (paneforge).',
         });
       }
 
@@ -564,7 +564,7 @@ export function createResizablePanel(
             },
             {
               event: '—',
-              trigger: 'NOTA Basecoat: factory NÃO emite onLayout. Consumidor deve disparar track() manualmente em mouseup/keyup observando style.width/height.',
+              trigger: 'NOTA Nortear: factory NÃO emite onLayout. Consumidor deve disparar track() manualmente em mouseup/keyup observando style.width/height.',
               payload: '—',
             },
           ],

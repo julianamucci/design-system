@@ -1,4 +1,4 @@
-# Overlay Components (Basecoat — Vanilla TypeScript)
+# Overlay Components (Nortear — Vanilla TypeScript)
 
 ---
 

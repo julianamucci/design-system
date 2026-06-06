@@ -78,7 +78,7 @@ function buildWithSeparator(): HTMLElement {
 }
 
 function buildAlphanumeric(): HTMLElement {
-  // Divergência idiomática: factory Basecoat suporta apenas dígitos.
+  // Divergência idiomática: factory Nortear suporta apenas dígitos.
   // Renderiza fallback numérico com nota inline.
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-stack';
@@ -87,7 +87,7 @@ function buildAlphanumeric(): HTMLElement {
   const note = document.createElement('p');
   note.className = 'nds-text-muted-foreground nds-italic';
   note.style.fontSize = '10px';
-  note.textContent = 'Basecoat: apenas dígitos (fallback)';
+  note.textContent = 'Nortear: apenas dígitos (fallback)';
   wrapper.append(otp, note);
   return wrapper;
 }
@@ -320,7 +320,7 @@ export function createInputOTPDocs(): HTMLElement {
         const codeSep = `// separator: array de índices ANTES dos quais inserir o divisor visual.
 const otp = createInputOTP({ length: 6, separator: [3] });`;
         const codeAlpha = `// DIVERGÊNCIA IDIOMÁTICA:
-// O factory Basecoat aceita apenas dígitos (inputMode=numeric, paste filtra \\D).
+// O factory Nortear aceita apenas dígitos (inputMode=numeric, paste filtra \\D).
 // 'pattern' alfanumérico não é suportado — use as stacks React/Vue/Svelte
 // ou estenda o factory custom em src/components/ui/input-otp.ts.
 const otp = createInputOTP({ length: 6 });`;
@@ -350,7 +350,7 @@ const otp = createInputOTP({ length: 6 });`;
               name: t('variants.items.alphanumeric'),
               description:
                 stripHtml(t('variants.styles.alphanumeric')) +
-                ' (Não suportado pelo factory Basecoat — fallback numérico.)',
+                ' (Não suportado pelo factory Nortear — fallback numérico.)',
               code: codeAlpha,
               previewFactory: () => buildAlphanumeric(),
             },
@@ -598,7 +598,7 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes:
             t('props.extensibilityCode') +
-            '\n\n// NOTA Basecoat: props pattern, value, onChange e autoFocus do contrato\n// React/Vue/Svelte não existem no factory custom. Use onValueChange/onComplete\n// e ajuste o filtro de paste para suportar alfanumérico.',
+            '\n\n// NOTA Nortear: props pattern, value, onChange e autoFocus do contrato\n// React/Vue/Svelte não existem no factory custom. Use onValueChange/onComplete\n// e ajuste o filtro de paste para suportar alfanumérico.',
         });
       }
 

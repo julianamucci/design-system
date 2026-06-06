@@ -1,4 +1,4 @@
-# Sistema de Design — Tema Padrão (Basecoat)
+# Sistema de Design — Tema Padrão (Nortear)
 
 ## Organização CSS com @layer
 
@@ -50,7 +50,7 @@ canvas.style.color = `hsl(var(--chart-1))`;
 
 ## Tokens de superfície — uso obrigatório
 
-| Contexto | Classes Tailwind |
+| Contexto | Classes `.nds-*` |
 |----------|-----------------|
 | Painéis de conteúdo (Dialog, Sheet, Drawer, Card) | `bg-card text-card-foreground` |
 | Menus e overlays flutuantes (Dropdown, Popover, Tooltip) | `bg-popover text-popover-foreground` |

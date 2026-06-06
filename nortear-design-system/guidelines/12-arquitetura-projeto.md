@@ -1,4 +1,4 @@
-# Arquitetura do Projeto — Design System Basecoat (Storybook-Centric)
+# Arquitetura do Projeto — Design System Nortear (Storybook-Centric)
 
 > **Referência primária:** Leia `STORYBOOK-ARCHITECTURE.md` antes de qualquer tarefa de documentação ou stories.
 
@@ -56,7 +56,7 @@ nortear-design-system/
 │   │   └── ui.json              # Traduções da UI chrome
 │   │
 │   └── styles/
-│       ├── globals.css          # Tailwind + tokens CSS
+│       ├── globals.css          # Tokens + componentes .nds-*
 │       └── storybook-docs.css   # Overrides para Docs tab
 │
 ├── chromatic.config.json
@@ -117,7 +117,7 @@ export const Playground: StoryObj<NovoComponenteOptions> = {
 
 ## Diferença fundamental: render em Storybook HTML
 
-Em Basecoat, o `render` de cada story retorna um `HTMLElement` (não JSX ou template):
+Em Nortear, o `render` de cada story retorna um `HTMLElement` (não JSX ou template):
 
 ```ts
 // ✅ CORRETO — retorna HTMLElement

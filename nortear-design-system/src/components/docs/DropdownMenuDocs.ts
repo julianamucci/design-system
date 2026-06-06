@@ -464,7 +464,7 @@ const menu = createDropdownMenu({
               name: t('variants.compositions.withCheckboxItems.name'),
               description: stripHtml(t('variants.compositions.withCheckboxItems.description')),
               useWhen: stripHtml(t('variants.compositions.withCheckboxItems.use')),
-              code: `// Basecoat: factory padrão não tem checkbox-item; monte manualmente.
+              code: `// Nortear: factory padrão não tem checkbox-item; monte manualmente.
 const li = document.createElement('li');
 li.setAttribute('role', 'menuitemcheckbox');
 li.setAttribute('aria-checked', 'true');
@@ -489,7 +489,7 @@ li.addEventListener('click', () => {
               name: t('variants.compositions.withRadioGroup.name'),
               description: stripHtml(t('variants.compositions.withRadioGroup.description')),
               useWhen: stripHtml(t('variants.compositions.withRadioGroup.use')),
-              code: `// Basecoat: monte radio-items manualmente; gerencie exclusividade no click.
+              code: `// Nortear: monte radio-items manualmente; gerencie exclusividade no click.
 function makeRadio(label, checked, group) {
   const li = document.createElement('li');
   li.setAttribute('role', 'menuitemradio');
@@ -515,7 +515,7 @@ function makeRadio(label, checked, group) {
               name: t('variants.compositions.withShortcuts.name'),
               description: stripHtml(t('variants.compositions.withShortcuts.description')),
               useWhen: stripHtml(t('variants.compositions.withShortcuts.use')),
-              code: `// Basecoat: factory padrão não exibe shortcut. Adicione um <span aria-hidden>
+              code: `// Nortear: factory padrão não exibe shortcut. Adicione um <span aria-hidden>
 function makeItem(label, shortcut) {
   const li = document.createElement('li');
   li.setAttribute('role', 'menuitem');
@@ -607,10 +607,10 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement;`;
                 { name: 'items',        type: 'DropdownMenuItemDef[]',       defaultValue: '—',     required: 'Sim', description: 'Lista de itens, separadores e labels do menu.' },
                 { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) },
                 { name: 'class',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao painel.' },
-                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.open.description')) + ' (controle externo via .click() no trigger no Basecoat).' },
-                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.defaultOpen.description')) + ' NOTA: factory Basecoat não tem prop nativa.' },
+                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.open.description')) + ' (controle externo via .click() no trigger no Nortear).' },
+                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.defaultOpen.description')) + ' NOTA: factory Nortear não tem prop nativa.' },
                 { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: stripHtml(t('props.table.modal.description')) },
-                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Basecoat fixa bottom-start.' },
+                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Nortear fixa bottom-start.' },
                 { name: 'align',        type: "'start' | 'center' | 'end'",  defaultValue: "'start'", required: 'Não', description: stripHtml(t('props.table.align.description')) },
               ],
             },

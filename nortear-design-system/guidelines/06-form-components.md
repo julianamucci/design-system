@@ -1,4 +1,4 @@
-# Form Components (Basecoat — Vanilla TypeScript)
+# Form Components (Nortear — Vanilla TypeScript)
 
 ---
 

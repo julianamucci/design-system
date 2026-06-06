@@ -1,4 +1,4 @@
-# Navigation Components (Basecoat — Vanilla TypeScript)
+# Navigation Components (Nortear — Vanilla TypeScript)
 
 ---
 

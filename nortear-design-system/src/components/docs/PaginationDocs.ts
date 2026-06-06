@@ -586,7 +586,7 @@ export type PaginationOptions = {
   current: number;                        // página atualmente ativa (1-based)
   onPageChange: (page: number) => void;   // callback ao clicar em página/Prev/Next
   showPrevNext?: boolean;                 // exibe Previous e Next (default true)
-  class?: string;                         // classes Tailwind extras no <nav>
+  class?: string;                         // classes .nds-* extras no <nav>
 };
 
 export function createPagination(options: PaginationOptions): HTMLElement;`;
@@ -610,7 +610,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
                 { name: 'current',       type: 'number',                  defaultValue: '—',     required: 'Sim', description: 'Página atual (1-based). Recebe aria-current="page".' },
                 { name: 'onPageChange',  type: '(page: number) => void',  defaultValue: '—',     required: 'Sim', description: 'Callback disparado ao clicar em página, Previous ou Next.' },
                 { name: 'showPrevNext',  type: 'boolean',                 defaultValue: 'true',  required: 'Não', description: 'Exibe controles Previous/Next nas extremidades.' },
-                { name: 'class',         type: 'string',                  defaultValue: '—',     required: 'Não', description: 'Classes Tailwind extras no <nav>.' },
+                { name: 'class',         type: 'string',                  defaultValue: '—',     required: 'Não', description: 'Classes .nds-* extras no <nav>.' },
               ],
             },
           ],

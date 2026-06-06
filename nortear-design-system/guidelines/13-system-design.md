@@ -1,4 +1,4 @@
-# System Design — Arquitetura de Software (Basecoat)
+# System Design — Arquitetura de Software (Nortear)
 
 ## Visão Geral
 
@@ -14,7 +14,7 @@
 Browser
 ├── TypeScript (linguagem tipada)
 ├── HTML/DOM API (criação de elementos)
-├── Tailwind CSS 4.0 (classes utilitárias)
+├── CSS standalone (`.nds-*`) — sem Tailwind
 ├── lucide (ícones vanilla)
 ├── Zod (validação de schema)
 └── @storybook/html-vite (documentação)
@@ -193,7 +193,7 @@ container.appendChild(span);
 |---------|---------|-------|
 | Framework | Vanilla TypeScript | Zero overhead, máxima interoperabilidade |
 | Storybook | @storybook/html-vite | Suporte nativo a HTML puro |
-| Styling | Tailwind CSS 4.0 | Consistência com outros stacks |
+| Styling | CSS standalone (`.nds-*`) | Independência total de frameworks CSS |
 | State | data-* attributes + Custom Events | Sem dependências externas |
 | Forms | HTML nativo + Zod | Validação tipada sem dependência de framework |
 | Icons | lucide (vanilla) | Leve, tree-shakeable |

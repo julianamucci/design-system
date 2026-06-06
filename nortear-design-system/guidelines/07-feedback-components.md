@@ -1,4 +1,4 @@
-# Feedback Components (Basecoat — Vanilla TypeScript)
+# Feedback Components (Nortear — Vanilla TypeScript)
 
 ---
 
@@ -124,7 +124,7 @@ div (animate-pulse, bg-muted, rounded-md)
 **Regras**:
 - Dimensões devem aproximar o conteúdo real (evita layout shift)
 - Usar `bg-muted` + `animate-pulse` (não criar gradientes customizados)
-- `motion-reduce`: respeitar `prefers-reduced-motion` (já incluído em `animate-pulse` no Tailwind)
+- `motion-reduce`: respeitar `prefers-reduced-motion` — usar `.nds-animate-pulse` ou keyframe próprio que zere a animação dentro de `@media (prefers-reduced-motion: reduce)`
 - Para listas, repetir Skeleton com o mesmo shape do item real
 
 **Acessibilidade**:

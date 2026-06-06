@@ -1,8 +1,8 @@
-# Documentação de Componentes Basecoat (Vanilla TS) — Regras Obrigatórias
+# Documentação de Componentes Nortear (Vanilla TS) — Regras Obrigatórias
 
 ## Princípio Fundamental: Use os Section Containers
 
-Todas as docs pages Basecoat **DEVEM usar as factory functions** em `src/components/docs/shared/sections/`. Cada seção é uma função `createDocsXxx(props): HTMLElement` que encapsula o layout, o wrapper card, os headings, os grids e a semântica. A docs page é apenas o **orquestrador** — constrói o DOM chamando essas factories e passando dados + **factory functions de preview**.
+Todas as docs pages Nortear **DEVEM usar as factory functions** em `src/components/docs/shared/sections/`. Cada seção é uma função `createDocsXxx(props): HTMLElement` que encapsula o layout, o wrapper card, os headings, os grids e a semântica. A docs page é apenas o **orquestrador** — constrói o DOM chamando essas factories e passando dados + **factory functions de preview**.
 
 ```ts
 import { createDocsHeader }        from '@/components/docs/shared/sections/DocsHeader';
@@ -26,11 +26,11 @@ import { createDocsTestes }        from '@/components/docs/shared/sections/DocsT
 
 ---
 
-## Regras Basecoat-Específicas
+## Regras Nortear-Específicas
 
 ### Factory functions de preview
 
-Em Basecoat não há slots/snippets. Previews são passados como **factory functions** `() => HTMLElement`:
+Em Nortear não há slots/snippets. Previews são passados como **factory functions** `() => HTMLElement`:
 
 ```ts
 {
@@ -56,7 +56,7 @@ parameters: {
 
 ### i18n reativo
 
-Basecoat não tem reatividade automática. A docs page:
+Nortear não tem reatividade automática. A docs page:
 1. Lê o locale inicial de `getCurrentLocale()`
 2. Renderiza tudo com `translations[locale]`
 3. Registra listener no locale store para re-renderizar o root quando mudar
@@ -520,8 +520,8 @@ Componentes como **AspectRatio** usam a factory `createAspectRatio({ ratio, cont
 3. **`createDocsWhenToUse`** — **omitir `uxWriting`**: AspectRatio não tem texto visível próprio. Passar apenas `guidelines`, `scenarios` (5 linhas) e `do`/`dont` (4 items cada).
 4. **`createDocsVariants`** — renderizar como "Ratios Canônicos", não variantes `cva()`. `items` com 5 entradas fixas (`16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`, `21 / 9`). Cada `previewFactory` chama `createAspectRatio({ ratio, content: imgEl })`. `variants.note` no JSON deixa explícito que são padrões canônicos.
 5. **`createDocsStates`** — 3 linhas descrevendo **ownership transfer** ao filho: `Conteúdo carregado` / `Conteúdo ausente` / `Conteúdo falhou`. `states.note` explica que o componente é stateless.
-6. **`createDocsProps`** — 1 tabela única com 4 linhas: `ratio` (number, default 1), `content` (`HTMLElement`, obrigatório — **não existe** `asChild` no Basecoat), `className` (string), e opcionalmente demais atributos HTML. Documentar a diferença frente às demais stacks (`content` em vez de `children`).
-7. **`createDocsTokens`** — Basecoat AspectRatio não usa tokens próprios. Documentar apenas os tokens aplicáveis **quando usado como placeholder**: `--radius` → `rounded-md`, `--border` → `border`, `--muted` → `bg-muted`. `tokens.note` no JSON explica que sem `content` o container é transparente. `customizationCode` instrui a aplicar classes no elemento passado como `content`, nunca no wrapper.
+6. **`createDocsProps`** — 1 tabela única com 4 linhas: `ratio` (number, default 1), `content` (`HTMLElement`, obrigatório — **não existe** `asChild` no Nortear), `className` (string), e opcionalmente demais atributos HTML. Documentar a diferença frente às demais stacks (`content` em vez de `children`).
+7. **`createDocsTokens`** — Nortear AspectRatio não usa tokens próprios. Documentar apenas os tokens aplicáveis **quando usado como placeholder**: `--radius` → `nds-rounded-md`, `--border` → `nds-border`, `--muted` → `nds-bg-muted`. `tokens.note` no JSON explica que sem `content` o container é transparente. `customizationCode` instrui a aplicar classes no elemento passado como `content`, nunca no wrapper.
 8. **`createDocsAccessibility`** — `keyboardItems` com linha `{ key: "—", description: "sem tab stops próprios" }` + nota sobre foco delegado ao filho. Foca em `data-slot="aspect-ratio"` e `alt`/`title` do elemento `content`.
 9. **`createDocsAnalytics`** — tabela com **uma única linha passiva**: `{ event: '—', trigger: stripHtml(t('analytics.note')), payload: '—' }`. Não listar `docs_page_view`/`docs_section_viewed` aqui.
 10. **Stories** — criar apenas `.stories.ts`, `-variantes` e `-composicoes`. **Omitir** `-tamanhos` (sem `size`) e `-estados` (stateless). Previews chamam `createAspectRatio({ ratio, content })` onde `content` é criado via `document.createElement('img')` com `alt`, `loading="lazy"`, `decoding="async"` e classes `rounded-md object-cover w-full h-full`.
@@ -544,9 +544,9 @@ Componentes como **Avatar** usam as factories vanilla-TS `createAvatar`, `create
 11. **`AvatarFallback` obrigatório** — toda composição com `createAvatarImage` deve incluir `createAvatarFallback` irmão. Sem ele, erro de `src` deixa o container vazio. Documentar em par Do/Don't e em `notes`.
 12. **Iniciais canônicas** — 2 letras maiúsculas: primeira do nome + primeira do sobrenome. Regra em `usage.uxWriting.table.initials`.
 
-### Componentes de Visualização de Dados (padrão Chart) — Basecoat
+### Componentes de Visualização de Dados (padrão Chart) — Nortear
 
-Componentes como **Chart** no Basecoat usam a factory `createChart({ data, type, height, colors })` de `./chart` — API simplificada, **sem Recharts**. Apenas os tipos **`bar`** e **`line`** são suportados via prop `type`. O gráfico é SVG puro renderizado pela factory sem dependências externas. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
+Componentes como **Chart** no Nortear usam a factory `createChart({ data, type, height, colors })` de `./chart` — API simplificada, **sem Recharts**. Apenas os tipos **`bar`** e **`line`** são suportados via prop `type`. O gráfico é SVG puro renderizado pela factory sem dependências externas. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
 
 **Seções a renderizar (15 seções canônicas):**
 
@@ -568,9 +568,9 @@ Componentes como **Chart** no Basecoat usam a factory `createChart({ data, type,
 | Analytics | `createDocsAnalytics` | `analytics.title`, `analytics.description`, `analytics.table.*` |
 | Testes | `createDocsTestes` | `testes.title`, `testes.functional.*`, `testes.accessibility.*`, `testes.visual.*` |
 
-**Regras específicas do Chart Basecoat:**
+**Regras específicas do Chart Nortear:**
 
-1. **Apenas `bar` e `line`** — a factory `createChart` suporta apenas `type: 'bar' | 'line'`. `DocsVariants` deve renderizar apenas 2 cards (`bar`, `line`). Os tipos `area`, `pie`, `radar`, `radialBar` aparecem na seção de tipos mas com nota explícita de que não são suportados no Basecoat — exibir `variants.note` via `element.innerHTML = sanitizeHtml(t('variants.note'))` acima dos cards.
+1. **Apenas `bar` e `line`** — a factory `createChart` suporta apenas `type: 'bar' | 'line'`. `DocsVariants` deve renderizar apenas 2 cards (`bar`, `line`). Os tipos `area`, `pie`, `radar`, `radialBar` aparecem na seção de tipos mas com nota explícita de que não são suportados no Nortear — exibir `variants.note` via `element.innerHTML = sanitizeHtml(t('variants.note'))` acima dos cards.
 
 2. **API simplificada** — a factory expõe apenas `createChart({ data, type, height, colors })`. `DocsProps` usa **1 tabela** (não 3 como no React), documentando apenas as props da factory:
    - `data`: array de pontos `{label, value}` ou `{label, values: number[]}`
@@ -587,19 +587,19 @@ Componentes como **Chart** no Basecoat usam a factory `createChart({ data, type,
 
 4. **`createDocsDemonstration`** — `demoFactory` deve retornar um container com toggle entre `bar` e `line` (2 botões) usando `labels.bar` e `labels.line`. Dados hardcoded com 6 meses e `labels.chartTitle` como título.
 
-5. **SVG puro — sem Recharts** — previews nas factories não usam Recharts. A factory `createChart` gera SVG puro. Não incluir dependências de `recharts` no Basecoat.
+5. **SVG puro — sem Recharts** — previews nas factories não usam Recharts. A factory `createChart` gera SVG puro. Não incluir dependências de `recharts` no Nortear.
 
 6. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`. Estado `loading` usa `Skeleton` (factory `createSkeleton`) com as mesmas dimensões do container.
 
-7. **`createDocsAccessibility`** — `keyboardItems` com 4 entradas. No Basecoat, `accessibilityLayer` não existe — acessibilidade por teclado é implementada com `tabIndex`, `aria-label`, `role="img"` e `<title>` SVG.
+7. **`createDocsAccessibility`** — `keyboardItems` com 4 entradas. No Nortear, `accessibilityLayer` não existe — acessibilidade por teclado é implementada com `tabIndex`, `aria-label`, `role="img"` e `<title>` SVG.
 
-8. **`notes.tip3`** — nota crítica: "No Basecoat, apenas os tipos `bar` e `line` são suportados via prop `type`. A API é simplificada: `createChart({ data, type, height, colors })`." Esta nota já existe em `notes.tip3` e deve ser renderizada de forma destacada (borda diferente ou ícone de aviso no callout).
+8. **`notes.tip3`** — nota crítica: "No Nortear, apenas os tipos `bar` e `line` são suportados via prop `type`. A API é simplificada: `createChart({ data, type, height, colors })`." Esta nota já existe em `notes.tip3` e deve ser renderizada de forma destacada (borda diferente ou ícone de aviso no callout).
 
 9. **`createDocsTestes`** — `functional` (6 items — apenas itens 1–3 para `bar`/`line` são diretamente testáveis; itens 4–6 podem ter notas de adaptação), `accessibility` (4 items com `{criterion, level, how}`), `visual` (4 items com `{story, priority}`).
 
 10. **`sanitizeHtml` obrigatório** — todo `innerHTML` com conteúdo do translations.json usa `sanitizeHtml()`. Os campos de tokens, notas e acessibilidade contêm `<code>` inline que devem ser sanitizados.
 
-11. **Stories Basecoat** — criar 4 arquivos: `chart.stories.ts` (Playground + `withAutoDocsTab(createChartDocs)`), `chart-tipos.stories.ts` (Bar, Line — apenas 2 tipos), `chart-composicoes.stories.ts` (WithColors, SingleSeries, MultiSeries), `chart-estados.stories.ts` (Empty, Loading). Não criar `-variantes` nem `-tamanhos`. Previews chamam `createChart({...})` e fazem `render: () => el`.
+11. **Stories Nortear** — criar 4 arquivos: `chart.stories.ts` (Playground + `withAutoDocsTab(createChartDocs)`), `chart-tipos.stories.ts` (Bar, Line — apenas 2 tipos), `chart-composicoes.stories.ts` (WithColors, SingleSeries, MultiSeries), `chart-estados.stories.ts` (Empty, Loading). Não criar `-variantes` nem `-tamanhos`. Previews chamam `createChart({...})` e fazem `render: () => el`.
 
 12. **SEO — descrições longas** — o `translations.json` gerado tem descrições SEO acima de 155 chars nos 3 idiomas. Usar as descrições como estão; gap a ser corrigido pelo ux-writer.
 
@@ -608,7 +608,7 @@ Componentes como **Chart** no Basecoat usam a factory `createChart({ data, type,
 ## Proibições
 
 - ❌ **NUNCA** reimplemente inline o HTML de uma seção — use a factory do container
-- ❌ **NUNCA** copie classes Tailwind dos containers para blocos `innerHTML`
+- ❌ **NUNCA** copie classes `.nds-*` dos containers para blocos `innerHTML` sem necessidade — herde via composição
 - ❌ **NUNCA** use `<pre><code>` em blocos de código (exceto `structureCode` em `DocsAnatomy`)
 - ❌ **NUNCA** itere pares Do/Don't em um único grid — deixe `createDocsDoDont` fazer o split
 - ❌ **NUNCA** recrie variantes com divs/classes manuais — use sempre a factory do componente real

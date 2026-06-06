@@ -49,7 +49,7 @@ function priorityLabel(raw: string): string {
 }
 
 /**
- * Constrói um <select> nativo (factory custom Basecoat = wrapper de <select>)
+ * Constrói um <select> nativo (factory custom Nortear = wrapper de <select>)
  * com label associado via `for/id`. Usa createElement + textContent — sem XSS.
  */
 function buildLabeledSelect(opts: {
@@ -471,7 +471,7 @@ export function createSelectDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: 'Importação do factory custom (Basecoat):',
+          description: 'Importação do factory custom (Nortear):',
           code: `import { createSelect, type SelectOptions, type SelectItem } from '@/components/ui/select';`,
           secondaryDescription: 'Uso básico:',
           secondaryCode: `const select = createSelect({
@@ -544,7 +544,7 @@ select.name = 'state';`,
               name: stripHtml(t('variants.items.withIcon')),
               description:
                 stripHtml(t('variants.styles.withIcon')) +
-                ' NOTA: o factory `createSelect` (Basecoat) é um wrapper do `<select>` nativo — o HTML não permite ícones inline em `<option>`. Para essa variante, recomendamos `Combobox` ou um componente custom.',
+                ' NOTA: o factory `createSelect` (Nortear) é um wrapper do `<select>` nativo — o HTML não permite ícones inline em `<option>`. Para essa variante, recomendamos `Combobox` ou um componente custom.',
               code: `// Indisponível com <select> nativo — use Combobox ou implementação custom.`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
@@ -769,7 +769,7 @@ form.addEventListener('submit', (e) => {
           },
           items: [
             { label: t('states.items.default'),  trigger: '—',                                   behavior: stripHtml(t('states.descriptions.default'))  },
-            { label: t('states.items.open'),     trigger: 'Click ou Enter no trigger',           behavior: stripHtml(t('states.descriptions.open')) + ' (no Basecoat o popup nativo é controlado pelo navegador).' },
+            { label: t('states.items.open'),     trigger: 'Click ou Enter no trigger',           behavior: stripHtml(t('states.descriptions.open')) + ' (no Nortear o popup nativo é controlado pelo navegador).' },
             { label: t('states.items.selected'), trigger: 'Usuário escolhe uma opção',           behavior: stripHtml(t('states.descriptions.selected')) },
             { label: t('states.items.hover'),    trigger: 'pointer sobre item',                  behavior: stripHtml(t('states.descriptions.hover'))    },
             { label: t('states.items.focus'),    trigger: 'Tab até o trigger',                   behavior: stripHtml(t('states.descriptions.focus'))    },
@@ -807,7 +807,7 @@ export type SelectOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: 'createSelect(options) — Basecoat',
+              title: 'createSelect(options) — Nortear',
               cols: propsCols,
               items: [
                 { name: 'items',         type: 'SelectItem[]',                  defaultValue: '—',          required: 'Sim', description: 'Lista plana de opções. Cada item: { value, label, disabled? }.' },
@@ -815,12 +815,12 @@ export type SelectOptions = {
                 { name: 'defaultValue',  type: 'string',                        defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.defaultValue.description')) + ' Não há prop `value` controlada — o factory é não-controlado.' },
                 { name: 'disabled',      type: 'boolean',                       defaultValue: 'false',      required: 'Não', description: stripHtml(t('props.table.disabled.description')) },
                 { name: 'onValueChange', type: '(value: string) => void',       defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.onValueChange.description')) },
-                { name: 'class',         type: 'string',                        defaultValue: '—',          required: 'Não', description: 'Classes Tailwind adicionais no `<select>` raiz.' },
+                { name: 'class',         type: 'string',                        defaultValue: '—',          required: 'Não', description: 'Classes .nds-* adicionais no `<select>` raiz.' },
               ],
             },
           ],
           interfaceCode,
-          extensibilityTitle: 'Divergências da factory custom (Basecoat)',
+          extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
             'O factory custom é um **wrapper fino do `<select>` HTML nativo** — diverge das libs upstream em vários pontos: (1) é estritamente não-controlado (sem prop `value`); use `defaultValue` + `onValueChange`. (2) Não suporta agrupamento via API — para grupos, monte `<select>` + `<optgroup>` manualmente. (3) Não suporta ícones em `<option>` (limitação do HTML nativo). (4) Não há prop `name` no factory — atribua via `select.name = "..."` no DOM retornado. (5) Não há prop `size` (default/sm) — aplique via `class` do tema. (6) O dropdown é o nativo do navegador: role/aria-expanded/listbox/option são gerenciados automaticamente, **não** documentados via atributos manuais. (7) Sem portal, sem type-ahead customizado (o navegador já oferece) e sem Check icon de seleção (use o highlight nativo do `<option>`).',
         });
@@ -890,8 +890,8 @@ export type SelectOptions = {
           title: t('notes.title'),
           items: [
             { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2') + ' <strong>Basecoat</strong>: o factory é um wrapper de <code>&lt;select&gt;</code> nativo — não há portal customizado; o dropdown é o popup nativo do navegador.') },
-            { title: '', content: sanitizeHtml(t('notes.item3') + ' <strong>Basecoat</strong>: type-ahead é gerenciado pelo próprio <code>&lt;select&gt;</code> do navegador.') },
+            { title: '', content: sanitizeHtml(t('notes.item2') + ' <strong>Nortear</strong>: o factory é um wrapper de <code>&lt;select&gt;</code> nativo — não há portal customizado; o dropdown é o popup nativo do navegador.') },
+            { title: '', content: sanitizeHtml(t('notes.item3') + ' <strong>Nortear</strong>: type-ahead é gerenciado pelo próprio <code>&lt;select&gt;</code> do navegador.') },
             { title: '', content: sanitizeHtml(t('notes.item4')) },
           ],
         });

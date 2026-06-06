@@ -326,7 +326,7 @@ export function createMenubarDocs(): HTMLElement {
                 wrap.dataset.spacing = 'xs';
                 wrap.style.alignItems = 'center';
                 const note = document.createElement('p');
-                note.textContent = 'Submenu aninhado em submenu (não-suportado pelo factory Basecoat).';
+                note.textContent = 'Submenu aninhado em submenu (não-suportado pelo factory Nortear).';
                 wrap.appendChild(note);
                 return wrap;
               },
@@ -353,8 +353,8 @@ export function createMenubarDocs(): HTMLElement {
 ]);`;
 
         const codeDestructive = `// DIVERGÊNCIA IDIOMÁTICA:
-// O factory Basecoat não tem prop \`variant\` — o item destructive
-// é montado manualmente via classes Tailwind no <div role="menuitem">.
+// O factory Nortear não tem prop \`variant\` — o item destructive
+// é montado manualmente via classes .nds-* no <div role="menuitem">.
 const bar = createMenubar([{ label: 'Arquivo', items: [{ type: 'item', label: 'Novo' }] }]);
 const panel = bar.querySelector('[role="menu"]');
 const li = document.createElement('div');
@@ -396,7 +396,7 @@ panel.appendChild(li);`;
               name: t('variants.items.destructive'),
               description:
                 stripHtml(t('variants.styles.destructive')) +
-                ' (Não suportado nativamente pelo factory Basecoat — composição manual.)',
+                ' (Não suportado nativamente pelo factory Nortear — composição manual.)',
               code: codeDestructive,
               previewFactory: () => {
                 const li = document.createElement('div');
@@ -495,7 +495,7 @@ panel.appendChild(li);`;
   },
 ]);`;
 
-        const codeWithCheckbox = `// O factory Basecoat não tem CheckboxItem nativo.
+        const codeWithCheckbox = `// O factory Nortear não tem CheckboxItem nativo.
 // Compor manualmente com role="menuitemcheckbox" sobre o panel:
 const bar = createMenubar([{ label: 'Exibir', items: [{ type: 'label', label: 'Painéis' }] }]);
 const panel = bar.querySelector('[role="menu"]');
@@ -689,12 +689,12 @@ export function createMenubar(
               items: [
                 { name: 'menus',         type: 'MenubarMenu[]',                       defaultValue: '—',    required: 'Sim', description: 'Lista de menus (label + items) renderizados na barra.' },
                 { name: 'options.class', type: 'string',                              defaultValue: '—',    required: 'Não', description: 'Classes adicionais no Root.' },
-                { name: 'value',         type: 'string',                              defaultValue: '—',    required: 'Não', description: stripHtml(t('props.table.value.description'))         + ' NOTA: factory Basecoat não tem controle externo nativo.' },
-                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',    required: 'Não', description: stripHtml(t('props.table.onValueChange.description')) + ' NOTA: factory Basecoat não emite (use item.onClick).' },
-                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',    required: 'Não', description: stripHtml(t('props.table.defaultValue.description'))  + ' NOTA: factory Basecoat sempre inicia fechado.' },
-                { name: 'loop',          type: 'boolean',                             defaultValue: 'true', required: 'Não', description: stripHtml(t('props.table.loop.description'))          + ' NOTA: factory Basecoat não implementa loop (setas Esquerda/Direita não navegam).' },
-                { name: 'side',          type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Basecoat fixa bottom-start.' },
-                { name: 'align',         type: "'start' | 'center' | 'end'",          defaultValue: "'start'",  required: 'Não', description: stripHtml(t('props.table.align.description')) + ' NOTA: factory Basecoat fixa start.' },
+                { name: 'value',         type: 'string',                              defaultValue: '—',    required: 'Não', description: stripHtml(t('props.table.value.description'))         + ' NOTA: factory Nortear não tem controle externo nativo.' },
+                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',    required: 'Não', description: stripHtml(t('props.table.onValueChange.description')) + ' NOTA: factory Nortear não emite (use item.onClick).' },
+                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',    required: 'Não', description: stripHtml(t('props.table.defaultValue.description'))  + ' NOTA: factory Nortear sempre inicia fechado.' },
+                { name: 'loop',          type: 'boolean',                             defaultValue: 'true', required: 'Não', description: stripHtml(t('props.table.loop.description'))          + ' NOTA: factory Nortear não implementa loop (setas Esquerda/Direita não navegam).' },
+                { name: 'side',          type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Nortear fixa bottom-start.' },
+                { name: 'align',         type: "'start' | 'center' | 'end'",          defaultValue: "'start'",  required: 'Não', description: stripHtml(t('props.table.align.description')) + ' NOTA: factory Nortear fixa start.' },
               ],
             },
           ],
@@ -702,7 +702,7 @@ export function createMenubar(
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes:
             t('props.extensibilityCode') +
-            '\n\n// NOTA Basecoat: o factory custom não possui MenubarSub/SubTrigger/SubContent.\n// Para hierarquia, prefira reorganizar os menus em estrutura plana, ou utilize\n// as stacks React/Vue/Svelte que possuem submenu via base-ui/reka-ui/bits-ui.',
+            '\n\n// NOTA Nortear: o factory custom não possui MenubarSub/SubTrigger/SubContent.\n// Para hierarquia, prefira reorganizar os menus em estrutura plana, ou utilize\n// as stacks React/Vue/Svelte que possuem submenu via base-ui/reka-ui/bits-ui.',
         });
       }
 

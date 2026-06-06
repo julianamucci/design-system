@@ -45,7 +45,7 @@ function priorityLabel(raw: string): string {
 
 /**
  * Builds a Progress element and sets `aria-label` (REQUIRED — factory does not).
- * The custom Basecoat factory accepts only `value`, `max`, `className`.
+ * The custom Nortear factory accepts only `value`, `max`, `className`.
  */
 function buildProgress(opts: {
   value: number;
@@ -393,7 +393,7 @@ export function createProgressDocs(): HTMLElement {
           `const bar = createProgress({ value: 42 });\n` +
           `bar.setAttribute('aria-label', 'Progresso do upload');`;
         const codeIndeterminate =
-          `// DIVERGÊNCIA Basecoat: factory não suporta value=null nativamente.\n` +
+          `// DIVERGÊNCIA Nortear: factory não suporta value=null nativamente.\n` +
           `// Remova aria-valuenow e anime o indicador via classe utilitária.\n` +
           `const bar = createProgress({ value: 0 });\n` +
           `bar.setAttribute('aria-label', 'Processando…');\n` +
@@ -402,7 +402,7 @@ export function createProgressDocs(): HTMLElement {
           `ind.style.width = '33.3333%';\n` +
           `ind.classList.add('animate-indeterminate');`;
         const codeWithLabel =
-          `// DIVERGÊNCIA Basecoat: factory não expõe ProgressLabel/ProgressValue.\n` +
+          `// DIVERGÊNCIA Nortear: factory não expõe ProgressLabel/ProgressValue.\n` +
           `// Componha manualmente com DOM nativo acima da barra.\n` +
           `const wrap = document.createElement('div');\n` +
           `const row = document.createElement('div');\n` +
@@ -488,7 +488,7 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
                   type: 'number',
                   defaultValue: '0',
                   required: 'Não',
-                  description: 'Valor atual de 0 a max. Factory Basecoat não aceita null — para indeterminate, ver Notas.',
+                  description: 'Valor atual de 0 a max. Factory Nortear não aceita null — para indeterminate, ver Notas.',
                 },
                 {
                   name: 'max',
@@ -529,7 +529,7 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--primary',            value: 'bg-primary/20', description: 'Fundo da trilha (Basecoat factory usa primary/20 ao invés de bg-muted)' },
+            { token: '--primary',            value: 'bg-primary/20', description: 'Fundo da trilha (Nortear factory usa primary/20 ao invés de bg-muted)' },
             { token: '--primary',            value: t('tokens.table.primary.class'),           description: t('tokens.table.primary.part') },
             { token: '--primary-foreground', value: t('tokens.table.primaryForeground.class'), description: t('tokens.table.primaryForeground.part') },
             { token: '--foreground',         value: t('tokens.table.foreground.class'),        description: t('tokens.table.foreground.part') },
@@ -579,9 +579,9 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
             { title: '', content: sanitizeHtml(t('notes.item2')) },
             { title: '', content: sanitizeHtml(t('notes.item3')) },
             { title: '', content: sanitizeHtml(t('notes.item4')) },
-            // Basecoat-specific divergences
-            { title: '', content: 'DIVERGÊNCIA Basecoat: a factory custom <code>createProgress</code> não aceita <code>value=null</code> nem expõe os subcomponentes <code>ProgressLabel</code>, <code>ProgressValue</code> e <code>ProgressTrack</code>. Componha manualmente Label/Value via DOM nativo e simule indeterminate removendo <code>aria-valuenow</code> + adicionando <code>animate-indeterminate</code> no indicador.' },
-            { title: '', content: 'DIVERGÊNCIA Basecoat: <code>aria-label</code> não é parâmetro da factory — a aplicação deve setá-lo via <code>el.setAttribute(\'aria-label\', ...)</code> imediatamente após <code>createProgress(...)</code>. A factory também não aceita <code>min</code> nem <code>getAriaValueText</code>.' },
+            // Nortear-specific divergences
+            { title: '', content: 'DIVERGÊNCIA Nortear: a factory custom <code>createProgress</code> não aceita <code>value=null</code> nem expõe os subcomponentes <code>ProgressLabel</code>, <code>ProgressValue</code> e <code>ProgressTrack</code>. Componha manualmente Label/Value via DOM nativo e simule indeterminate removendo <code>aria-valuenow</code> + adicionando <code>animate-indeterminate</code> no indicador.' },
+            { title: '', content: 'DIVERGÊNCIA Nortear: <code>aria-label</code> não é parâmetro da factory — a aplicação deve setá-lo via <code>el.setAttribute(\'aria-label\', ...)</code> imediatamente após <code>createProgress(...)</code>. A factory também não aceita <code>min</code> nem <code>getAriaValueText</code>.' },
             { title: '', content: 'Animação <code>animate-indeterminate</code> requer keyframes <code>@keyframes progress-indeterminate</code> definidos no CSS global (ver seção Tokens — Customização).' },
           ],
         });

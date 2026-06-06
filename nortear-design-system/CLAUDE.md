@@ -1,10 +1,10 @@
-# Design System Basecoat (Vanilla TS) — Guidelines
+# Design System Nortear (Vanilla TS) — Guidelines
 
 Siga estritamente as regras em `guidelines/RULES.md` antes de qualquer tarefa.
 
 **Componentes existentes têm prioridade absoluta sobre código inline.** Antes de usar `document.createElement()` diretamente, verifique se existe uma factory em `./components/ui/` que atenda ao caso (`createButton`, `createCard`, `createTable`, etc.). Se existir, use-a — sem exceção.
 
-**Stack**: Vanilla TypeScript + HTML/CSS + Tailwind CSS 4 + lucide (vanilla) + Zod.
+**Stack**: Vanilla TypeScript + CSS standalone (`.nds-*`) + lucide (vanilla) + Zod.
 
 **Arquitetura**: `guidelines/12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md` (Storybook é a interface principal).
 

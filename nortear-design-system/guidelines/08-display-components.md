@@ -1,4 +1,4 @@
-# Display Components (Basecoat — Vanilla TypeScript)
+# Display Components (Nortear — Vanilla TypeScript)
 
 ---
 

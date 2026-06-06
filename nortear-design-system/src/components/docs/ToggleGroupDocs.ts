@@ -129,7 +129,7 @@ function buildToggleGroupDemo(opts: {
   orientation?: 'horizontal' | 'vertical';
   location?: string;
 }): HTMLElement {
-  // Basecoat: o factory createToggle usa `textContent` quando `children` é string.
+  // Nortear: o factory createToggle usa `textContent` quando `children` é string.
   // Para renderizar SVG, passamos um placeholder e injetamos o SVG via DOM API após criar.
   const groupItems: ToggleGroupItem[] = opts.items.map((it) => ({
     value: it.value,
@@ -160,7 +160,7 @@ function buildToggleGroupDemo(opts: {
   const orientation = opts.orientation ?? 'horizontal';
   root.setAttribute('aria-orientation', orientation);
   if (orientation === 'vertical') {
-    // Basecoat: factory não expõe orientation — aplicar utility classes manualmente
+    // Nortear: factory não expõe orientation — aplicar utility classes manualmente
     root.classList.remove('flex-row');
     root.classList.add('nds-stack');
   }
@@ -491,7 +491,7 @@ export function createToggleGroupDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: 'Importação do factory custom (Basecoat):',
+          description: 'Importação do factory custom (Nortear):',
           code: `import { createToggleGroup, type ToggleGroupItem } from '@/components/ui/toggle-group';`,
           secondaryDescription: 'Uso básico (icon-only — aria-label OBRIGATÓRIO no grupo e em cada item):',
           secondaryCode: `const group = createToggleGroup({
@@ -514,7 +514,7 @@ group.querySelectorAll('[data-slot="toggle"]').forEach((btn, i) => {
         });
 
       case 'variantes': {
-        const DIVERGENCE = ' (Basecoat: factory não expõe esta prop — aplicar manualmente via setAttribute/classList).';
+        const DIVERGENCE = ' (Nortear: factory não expõe esta prop — aplicar manualmente via setAttribute/classList).';
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -578,7 +578,7 @@ group.setAttribute('aria-label', 'Formatação');`,
             {
               name: stripHtml(t('variants.items.vertical')),
               description: stripHtml(t('variants.styles.vertical')) + DIVERGENCE,
-              code: `// Basecoat: factory NÃO expõe orientation. Aplicar manualmente:
+              code: `// Nortear: factory NÃO expõe orientation. Aplicar manualmente:
 const group = createToggleGroup({
   type: 'single',
   variant: 'outline',
@@ -707,7 +707,7 @@ injectIconsAndText(group, [
 ]);
 group.setAttribute('aria-label', 'Modo de visualização');
 group.setAttribute('aria-orientation', 'vertical');
-// Divergência Basecoat: factory não expõe orientation
+// Divergência Nortear: factory não expõe orientation
 group.classList.remove('flex-row');
 group.classList.add('nds-stack');`,
               previewFactory: () => {
@@ -852,7 +852,7 @@ wrapper.appendChild(group);`,
       }
 
       case 'propriedades': {
-        const interfaceCode = `// createToggleGroup(options) — Basecoat factory custom
+        const interfaceCode = `// createToggleGroup(options) — Nortear factory custom
 export type ToggleGroupItem = {
   value: string;
   label?: string;
@@ -879,13 +879,13 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
           description: t('props.table.description'),
         };
 
-        const DIVERGENCE = ' (Basecoat: NÃO suportado pela factory custom — aplicar manualmente).';
+        const DIVERGENCE = ' (Nortear: NÃO suportado pela factory custom — aplicar manualmente).';
 
         return createDocsProps({
           title: t('props.title'),
           tables: [
             {
-              title: 'createToggleGroup(options) — Basecoat',
+              title: 'createToggleGroup(options) — Nortear',
               cols: propsCols,
               items: [
                 {
@@ -907,7 +907,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
                   type: 'string | string[]',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.defaultValue.description')) + ' Basecoat: factory é não-controlado — não há prop `value`.',
+                  description: stripHtml(t('props.table.defaultValue.description')) + ' Nortear: factory é não-controlado — não há prop `value`.',
                 },
                 {
                   name: 'onValueChange',
@@ -928,7 +928,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
                   type: 'string',
                   defaultValue: '—',
                   required: 'Não',
-                  description: 'Classes Tailwind adicionais no elemento raiz.',
+                  description: 'Classes .nds-* adicionais no elemento raiz.',
                 },
                 {
                   name: 'value',
@@ -987,9 +987,9 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
             },
           ],
           interfaceCode,
-          extensibilityTitle: 'Divergências da factory custom (Basecoat)',
+          extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
-            'A factory Basecoat diverge das libs upstream nos seguintes pontos: (1) é não-controlada — não há prop `value`, apenas `defaultValue`. (2) Não expõe `orientation`, `size`, `spacing`, nem `disabled` no grupo — aplicar via `class`/`setAttribute` ou usar `item.disabled`. (3) `children` é uma string HTML literal — para evitar XSS, NUNCA interpolar dados dinâmicos; gere o SVG via `document.createElementNS` e use `svg.outerHTML`. (4) `aria-label` no grupo e em items icon-only NÃO é prop — aplicar via `setAttribute` no elemento retornado e nos botões `[data-slot="toggle"]`. (5) Não há roving tabindex automático — todos items recebem `tabindex=0` herdado do `<button>`; para roving real, ouvir teclas ArrowLeft/Right e mover foco manualmente.',
+            'A factory Nortear diverge das libs upstream nos seguintes pontos: (1) é não-controlada — não há prop `value`, apenas `defaultValue`. (2) Não expõe `orientation`, `size`, `spacing`, nem `disabled` no grupo — aplicar via `class`/`setAttribute` ou usar `item.disabled`. (3) `children` é uma string HTML literal — para evitar XSS, NUNCA interpolar dados dinâmicos; gere o SVG via `document.createElementNS` e use `svg.outerHTML`. (4) `aria-label` no grupo e em items icon-only NÃO é prop — aplicar via `setAttribute` no elemento retornado e nos botões `[data-slot="toggle"]`. (5) Não há roving tabindex automático — todos items recebem `tabindex=0` herdado do `<button>`; para roving real, ouvir teclas ArrowLeft/Right e mover foco manualmente.',
         });
       }
 
@@ -1060,7 +1060,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
             { title: '', content: sanitizeHtml(t('notes.item3')) },
             { title: '', content: sanitizeHtml(t('notes.item4')) },
             // 3ª camada de divergência (notes + DocsProps + composicoes)
-            { title: '', content: sanitizeHtml('<strong>Basecoat</strong> — a factory custom <code>createToggleGroup</code> é <strong>não-controlada</strong> (sem prop <code>value</code>); não expõe <code>orientation</code>, <code>size</code>, <code>spacing</code> nem <code>disabled</code> no grupo — aplicar via <code>setAttribute</code>/<code>classList</code>/<code>item.disabled</code>. <code>aria-label</code> no grupo e em items icon-only é OBRIGATÓRIO e deve ser aplicado manualmente via <code>setAttribute</code>. <code>children</code> é string HTML literal — gere o SVG via <code>createElementNS</code> e use <code>outerHTML</code>, NUNCA interpole dados dinâmicos.') },
+            { title: '', content: sanitizeHtml('<strong>Nortear</strong> — a factory custom <code>createToggleGroup</code> é <strong>não-controlada</strong> (sem prop <code>value</code>); não expõe <code>orientation</code>, <code>size</code>, <code>spacing</code> nem <code>disabled</code> no grupo — aplicar via <code>setAttribute</code>/<code>classList</code>/<code>item.disabled</code>. <code>aria-label</code> no grupo e em items icon-only é OBRIGATÓRIO e deve ser aplicado manualmente via <code>setAttribute</code>. <code>children</code> é string HTML literal — gere o SVG via <code>createElementNS</code> e use <code>outerHTML</code>, NUNCA interpole dados dinâmicos.') },
           ],
         });
 

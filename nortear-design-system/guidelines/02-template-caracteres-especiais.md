@@ -1,4 +1,4 @@
-# Caracteres Especiais — Template Literals e innerHTML (Basecoat)
+# Caracteres Especiais — Template Literals e innerHTML (Nortear)
 
 ## Regra
 

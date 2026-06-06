@@ -790,7 +790,7 @@ export type CheckboxOptions = {
           ],
           interfaceCode,
           extensibilityTitle: 'Nota sobre o estado indeterminate',
-          extensibilityNotes: 'O Basecoat não suporta estado indeterminate. Use createCheckbox() apenas para checked/unchecked/disabled. O estado indeterminate está disponível exclusivamente no Svelte via prop bindable.',
+          extensibilityNotes: 'O Nortear não suporta estado indeterminate. Use createCheckbox() apenas para checked/unchecked/disabled. O estado indeterminate está disponível exclusivamente no Svelte via prop bindable.',
         });
       }
 

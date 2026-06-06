@@ -627,7 +627,7 @@ export type InputOptions = {
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: 'O Input Basecoat aceita todos os atributos HTML nativos do input via setAttribute() após a criação. Use a prop class para customizações pontuais com tokens do projeto.',
+          extensibilityNotes: 'O Input Nortear aceita todos os atributos HTML nativos do input via setAttribute() após a criação. Use a prop class para customizações pontuais com tokens do projeto.',
         });
       }
 

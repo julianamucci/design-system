@@ -1,4 +1,4 @@
-# Disclosure Components (Basecoat — Vanilla TypeScript)
+# Disclosure Components (Nortear — Vanilla TypeScript)
 
 ---
 

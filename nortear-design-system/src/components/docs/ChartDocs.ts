@@ -336,7 +336,7 @@ export function createChartDocs(): HTMLElement {
           description: t('import.basecoat'),
           code: `import { createChart } from '@/components/ui/chart';`,
           secondaryDescription: t('import.withBuilders'),
-          secondaryCode: `// Basecoat — uso básico
+          secondaryCode: `// Nortear — uso básico
 const el = createChart({
   data: [
     { label: 'Jan', value: 186 },
@@ -402,7 +402,7 @@ card.appendChild(content);`;
 });
 chart.setAttribute('aria-label', 'Gráfico multi-séries: Desktop e Mobile');
 
-// Legenda manual (Basecoat não inclui legenda automática)
+// Legenda manual (Nortear não inclui legenda automática)
 const legend = document.createElement('div');
 legend.className = 'nds-cluster nds-text-caption nds-text-muted-foreground nds-mt-2';
 legend.dataset.spacing = 'md';
@@ -580,7 +580,7 @@ export type ChartDataPoint = {
 export type ChartOptions = {
   /** Dados do gráfico. Array de pares label/value. */
   data: ChartDataPoint[];
-  /** Tipo do gráfico. Apenas 'bar' e 'line' são suportados no Basecoat. */
+  /** Tipo do gráfico. Apenas 'bar' e 'line' são suportados no Nortear. */
   type?: 'bar' | 'line';
   /** Altura do SVG em pixels. */
   height?: number;

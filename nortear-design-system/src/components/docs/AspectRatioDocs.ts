@@ -464,7 +464,7 @@ export interface AspectRatioOptions {
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes:
             stripHtml(t('props.extensibility')) +
-            ' Nota Basecoat: a factory aceita content: HTMLElement em vez de children e não suporta asChild.',
+            ' Nota Nortear: a factory aceita content: HTMLElement em vez de children e não suporta asChild.',
         });
       }
 
