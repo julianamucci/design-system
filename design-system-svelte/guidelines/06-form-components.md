@@ -6,58 +6,31 @@
 
 **Propósito**: elemento de ação primária — dispara submissões, confirmações, navegações e qualquer ação do usuário.
 
-**Variantes**: `default`, `destructive`, `outline`, `secondary`, `ghost`, `link`
+**API e exemplos**: `src/components/ui/button/button.svelte` + stories + `ButtonDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Tamanhos**: `default`, `sm`, `lg`, `icon`
+**Variantes** (cva):
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import { Button } from '$lib/components/ui/button';
-  import { Trash2, Plus, Loader2 } from 'lucide-svelte';
-  import { track } from '$lib/analytics';
+| Variante | Uso |
+|---|---|
+| `default` | Ação primária |
+| `destructive` | Ação destrutiva (excluir, remover) |
+| `outline` | Ação secundária com ênfase |
+| `secondary` | Ação secundária |
+| `ghost` | Ação terciária / itens de toolbar |
+| `link` | Aparência de link |
 
-  let enviando = $state(false);
-</script>
+**Tamanhos**: `default`, `sm`, `lg`, `icon`.
 
-<!-- Botão simples -->
-<Button variant="default" onclick={handleSalvar}>Salvar</Button>
-
-<!-- Botão de submit em form -->
-<Button type="submit" disabled={enviando}>
-  {#if enviando}
-    <Loader2 class="h-4 w-4 mr-2 animate-spin" aria-hidden="true" />
-    Salvando...
-  {:else}
-    Salvar
-  {/if}
-</Button>
-
-<!-- Botão icon-only — aria-label obrigatório -->
-<Button size="icon" aria-label="Excluir produto Cadeira Gamer Pro">
-  <Trash2 class="h-4 w-4" aria-hidden="true" />
-</Button>
-
-<!-- Com analytics -->
-<Button
-  onclick={() => {
-    track('button_click', {
-      component: 'button',
-      variant: 'default',
-      location: 'checkout_form',
-      label: 'Finalizar compra'
-    });
-    handleCheckout();
-  }}
->
-  Finalizar compra
-</Button>
-```
+**Regras**:
+- Botão icon-only: `aria-label` obrigatório e contextual (verbo + objeto + identificador)
+- Ícones internos: sempre `aria-hidden="true"`
+- Em submit, refletir estado de loading com `disabled` e ícone `Loader2 animate-spin`
 
 **Acessibilidade**:
-- `aria-label` **contextual** em botões ambíguos — verbo + objeto + identificador
-- Ícones dentro do botão: sempre `aria-hidden="true"`
-- Botão icon-only: `aria-label` obrigatório
+- `aria-label` contextual em botões ambíguos
+- Estado de foco visível garantido pelos tokens — não suprimir `focus-visible`
+
+**Analytics**: `track('button_click', { component, variant, location, label })` no `onclick`.
 
 ---
 
@@ -65,49 +38,24 @@
 
 **Propósito**: formulários com validação tipada, error handling e UX de acessibilidade.
 
-**Stack obrigatória**: `superforms` (sveltekit-superforms) + `Zod`
+**Stack obrigatória**: `sveltekit-superforms` + `Zod` (via `zodClient`).
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import { superForm } from 'sveltekit-superforms';
-  import { zodClient } from 'sveltekit-superforms/adapters';
-  import { z } from 'zod';
-  import { Button } from '$lib/components/ui/button';
-  import { Input } from '$lib/components/ui/input';
-  import { Label } from '$lib/components/ui/label';
+**API e exemplos**: `src/components/ui/form/` + stories + `FormDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  const schema = z.object({
-    email: z.string().email('E-mail inválido'),
-    nome: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
-  });
+**Estrutura**:
 
-  const { form, errors, enhance } = superForm(
-    { email: '', nome: '' },
-    { validators: zodClient(schema) }
-  );
-</script>
-
-<form use:enhance>
-  <div class="space-y-2">
-    <Label for="email">E-mail</Label>
-    <Input
-      id="email"
-      type="email"
-      bind:value={$form.email}
-      aria-describedby={$errors.email ? 'email-error' : undefined}
-      aria-invalid={!!$errors.email}
-    />
-    {#if $errors.email}
-      <p id="email-error" class="text-destructive" role="alert">
-        {$errors.email}
-      </p>
-    {/if}
-  </div>
-
-  <Button type="submit">Enviar</Button>
-</form>
 ```
+<form use:enhance>
+└── Field group
+    ├── Label (for="<id>")
+    ├── Input (id, aria-describedby, aria-invalid)
+    └── Mensagem de erro (id, role="alert")
+```
+
+**Regras**:
+- Schema Zod é a fonte de verdade — mensagens em pt-BR
+- Cada campo associa `Label[for]` ao `Input[id]`
+- Mensagens de erro têm `id` referenciado por `aria-describedby` do campo
 
 **Acessibilidade**:
 - `aria-describedby` apontando para o ID da mensagem de erro
@@ -118,99 +66,72 @@
 
 ## Input
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import { Input } from '$lib/components/ui/input';
-  import { Label } from '$lib/components/ui/label';
-</script>
+**Propósito**: campo de texto de linha única.
 
-<div class="space-y-2">
-  <Label for="nome">Nome completo</Label>
-  <Input
-    id="nome"
-    type="text"
-    placeholder="ex: Ana Paula Silva"
-    class="bg-input border-input"
-  />
-</div>
-```
+**API e exemplos**: `src/components/ui/input/input.svelte` + stories + `InputDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
 **Regras**:
 - `Label` sempre associado via `for`/`id`
-- Placeholder: exemplo real — nunca instrução ("ex: ana@empresa.com")
+- Placeholder: exemplo real — nunca instrução (ex: "ex: ana@empresa.com", não "Digite seu e-mail")
 - Tokens obrigatórios: `bg-input border-input`
+- Nunca altura fixa — usar `padding-block` + `line-height` (WCAG 1.4.4)
 
 ---
 
 ## Select
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '$lib/components/ui/select';
-</script>
+**Propósito**: seleção de opção entre lista curta sem busca.
 
-<Select>
-  <SelectTrigger aria-label="Selecione uma categoria">
-    <SelectValue placeholder="Selecione..." />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectItem value="layout">Layout</SelectItem>
-    <SelectItem value="form">Formulário</SelectItem>
-  </SelectContent>
-</Select>
+**API e exemplos**: `src/components/ui/select/select.svelte` + stories + `SelectDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Estrutura**:
+
+```
+Select
+├── SelectTrigger (aria-label)
+│   └── SelectValue (placeholder)
+└── SelectContent
+    └── SelectItem (value)
 ```
 
-**Atenção**: Select nativo do Bits UI não possui busca integrada. Para busca: usar **Combobox** (Command + Popover). Ver `10-overlay-components.md`.
+**Atenção**: Select do Bits UI não possui busca integrada. Para busca: usar **Command (Combobox)** em `10-overlay-components.md`.
 
 ---
 
 ## Checkbox
 
-```svelte
-<script lang="ts">
-  import { Checkbox } from '$lib/components/ui/checkbox';
-  import { Label } from '$lib/components/ui/label';
-</script>
+**Propósito**: seleção binária de uma opção.
 
-<div class="flex items-center space-x-2">
-  <Checkbox id="termos" />
-  <Label for="termos">Aceito os termos de uso</Label>
-</div>
-```
+**API e exemplos**: `src/components/ui/checkbox/checkbox.svelte` + stories + `CheckboxDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Regras**:
+- Sempre acompanhado de `Label[for]`
+- Estado indeterminado (`indeterminate`) permitido em headers de seleção em lote
 
 ---
 
 ## Switch
 
-```svelte
-<script lang="ts">
-  import { Switch } from '$lib/components/ui/switch';
-  import { Label } from '$lib/components/ui/label';
-</script>
+**Propósito**: alternar configuração binária com efeito imediato.
 
-<div class="flex items-center space-x-2">
-  <Switch id="notificacoes" />
-  <Label for="notificacoes">Receber notificações</Label>
-</div>
-```
+**API e exemplos**: `src/components/ui/switch/switch.svelte` + stories + `SwitchDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Regras**:
+- Usar Switch para ação imediata (ligar/desligar); usar Checkbox para seleção que será confirmada
+- Sempre acompanhado de `Label[for]`
 
 ---
 
 ## Textarea
 
-```svelte
-<script lang="ts">
-  import { Textarea } from '$lib/components/ui/textarea';
-  import { Label } from '$lib/components/ui/label';
-</script>
+**Propósito**: campo de texto multi-linha.
 
-<div class="space-y-2">
-  <Label for="mensagem">Mensagem</Label>
-  <Textarea id="mensagem" placeholder="ex: Descreva seu problema detalhadamente" rows={4} />
-</div>
-```
+**API e exemplos**: `src/components/ui/textarea/textarea.svelte` + stories + `TextareaDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Regras**:
+- `Label[for]` obrigatório
+- Definir `rows` inicial razoável (3-5) e permitir expansão pelo usuário
+- Placeholder: exemplo real, nunca instrução
 
 ---
 
@@ -218,17 +139,9 @@
 
 **Propósito**: seletor de data interativo.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import { Calendar } from '$lib/components/ui/calendar';
-  import type { DateValue } from '@internationalized/date';
+**API e exemplos**: `src/components/ui/calendar/calendar.svelte` + stories + `CalendarDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  let dataSelecionada: DateValue | undefined = $state(undefined);
-</script>
-
-<Calendar bind:value={dataSelecionada} />
-```
+**Stack**: `@internationalized/date` (tipos `DateValue`).
 
 **Acessibilidade**: navegação completa por teclado (Arrow, Page Up/Down, Home/End) gerenciada automaticamente pelo Bits UI.
 
@@ -236,17 +149,12 @@
 
 ## Slider
 
-```svelte
-<script lang="ts">
-  import { Slider } from '$lib/components/ui/slider';
-  let valor = $state([50]);
-</script>
+**Propósito**: seleção de valor numérico em intervalo contínuo.
 
-<Slider
-  bind:value={valor}
-  min={0}
-  max={100}
-  step={1}
-  aria-label="Ajustar volume"
-/>
-```
+**API e exemplos**: `src/components/ui/slider/slider.svelte` + stories + `SliderDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Props relevantes**: `value` (array), `min`, `max`, `step`.
+
+**Acessibilidade**:
+- `aria-label` obrigatório descrevendo a grandeza ajustada
+- Bits UI aplica `aria-valuenow`, `aria-valuemin`, `aria-valuemax` no thumb

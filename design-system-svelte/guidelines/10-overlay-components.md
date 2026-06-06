@@ -24,53 +24,28 @@ Todos esses comportamentos são gerenciados automaticamente pelo **Bits UI** —
 
 ### Triggers com `asChild` / builder pattern
 
-Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger customizado:
-
-```svelte
-<DialogTrigger asChild let:builder>
-  <Button builders={[builder]}>Abrir dialog</Button>
-</DialogTrigger>
-```
+Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger customizado: o trigger declara `asChild let:builder` e o elemento alvo (`Button`, `a`, etc.) recebe `builders={[builder]}`. Consultar `src/components/ui/<componente>/` para os exemplos canônicos.
 
 ---
 
 ## Alert Dialog
 
-**Propósito**: modal de confirmação para ações críticas ou irreversíveis. Sem botão X — exige resposta explícita.
+**Propósito**: modal de confirmação para ações críticas ou irreversíveis — excluir conta, remover dados permanentemente, cancelar assinatura. Sem botão X — exige resposta explícita.
 
-**Quando usar**: excluir conta, remover dados permanentemente, cancelar assinatura.
+**API e exemplos**: `src/components/ui/alert-dialog/alert-dialog.svelte` + stories + `AlertDialogDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import {
-    AlertDialog, AlertDialogAction, AlertDialogCancel,
-    AlertDialogContent, AlertDialogDescription,
-    AlertDialogFooter, AlertDialogHeader,
-    AlertDialogTitle, AlertDialogTrigger
-  } from '$lib/components/ui/alert-dialog';
-  import { Button } from '$lib/components/ui/button';
-</script>
+**Estrutura**:
 
-<AlertDialog>
-  <AlertDialogTrigger asChild let:builder>
-    <Button builders={[builder]} variant="destructive">Excluir conta</Button>
-  </AlertDialogTrigger>
-  <AlertDialogContent class="bg-card text-card-foreground">
-    <AlertDialogHeader>
-      <AlertDialogTitle>Excluir conta permanentemente?</AlertDialogTitle>
-      <AlertDialogDescription>
-        Esta ação não pode ser desfeita. Todos os seus dados serão removidos permanentemente dos nossos servidores.
-      </AlertDialogDescription>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-        Excluir conta
-      </AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>
+```
+AlertDialog
+├── AlertDialogTrigger (asChild → Button)
+└── AlertDialogContent (bg-card text-card-foreground)
+    ├── AlertDialogHeader
+    │   ├── AlertDialogTitle
+    │   └── AlertDialogDescription
+    └── AlertDialogFooter
+        ├── AlertDialogCancel
+        └── AlertDialogAction (bg-destructive em ações destrutivas)
 ```
 
 **Regras de UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
@@ -79,29 +54,7 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 - Botão destrutivo: repete o verbo do título — "Excluir conta"
 - Botão cancelar: sempre "Cancelar" — à esquerda
 
-**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
-```svelte
-<script lang="ts">
-  import { track } from '$lib/analytics';
-</script>
-
-<AlertDialog onOpenChange={(open) => {
-  if (open) track('dialog_open', { component: 'alert_dialog', trigger: 'button' });
-}}>
-  <AlertDialogTrigger asChild let:builder>
-    <Button builders={[builder]} variant="destructive">Excluir conta</Button>
-  </AlertDialogTrigger>
-  <AlertDialogContent>
-    <!-- ... -->
-    <AlertDialogFooter>
-      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction onclick={() => track('dialog_confirm', { component: 'alert_dialog' })}>
-        Excluir conta
-      </AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>
-```
+**Analytics**: `track('dialog_open', { component: 'alert_dialog', trigger })` em `onOpenChange(true)` e `track('dialog_confirm', { component: 'alert_dialog' })` no `AlertDialogAction`. Ver `../../docs/shared/guidelines/07-analytics.md`.
 
 ---
 
@@ -109,45 +62,27 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 
 **Propósito**: modal para formulários, edição, criação ou visualização de conteúdo.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import {
-    Dialog, DialogContent, DialogDescription,
-    DialogFooter, DialogHeader, DialogTitle, DialogTrigger
-  } from '$lib/components/ui/dialog';
-  import { Button } from '$lib/components/ui/button';
-</script>
+**API e exemplos**: `src/components/ui/dialog/dialog.svelte` + stories + `DialogDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-<Dialog>
-  <DialogTrigger asChild let:builder>
-    <Button builders={[builder]}>Editar perfil</Button>
-  </DialogTrigger>
-  <DialogContent class="bg-card text-card-foreground sm:max-w-[425px]">
-    <DialogHeader>
-      <DialogTitle>Editar perfil</DialogTitle>
-      <DialogDescription>
-        Atualize suas informações pessoais. Clique em Salvar quando terminar.
-      </DialogDescription>
-    </DialogHeader>
-    <!-- Conteúdo do dialog (form) -->
-    <DialogFooter>
-      <Button variant="outline">Cancelar</Button>
-      <Button type="submit">Salvar alterações</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+**Estrutura**:
+
+```
+Dialog
+├── DialogTrigger (asChild → Button)
+└── DialogContent (bg-card text-card-foreground)
+    ├── DialogHeader
+    │   ├── DialogTitle (obrigatório)
+    │   └── DialogDescription (obrigatório)
+    ├── (conteúdo — ex.: form)
+    └── DialogFooter
+        ├── Button variant="outline" (Cancelar)
+        └── Button type="submit"
 ```
 
-**Obrigatório**: `DialogTitle` e `DialogDescription` em todo Dialog.
+**Regras**:
+- `DialogTitle` e `DialogDescription` **obrigatórios** em todo Dialog
 
-**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
-```svelte
-<Dialog onOpenChange={(open) => {
-  if (open) track('dialog_open', { component: 'dialog', trigger: 'button' });
-  else track('dialog_close', { component: 'dialog' });
-}}>
-```
+**Analytics**: `track('dialog_open' | 'dialog_close', { component: 'dialog', trigger })` em `onOpenChange`.
 
 ---
 
@@ -155,38 +90,26 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 
 **Propósito**: painel deslizante a partir de uma borda da tela — mobile-first.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import {
-    Drawer, DrawerClose, DrawerContent, DrawerDescription,
-    DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger
-  } from '$lib/components/ui/drawer';
-  import { Button } from '$lib/components/ui/button';
-</script>
+**API e exemplos**: `src/components/ui/drawer/drawer.svelte` + stories + `DrawerDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-<!-- direction é prop do <Drawer>, não do <DrawerContent> -->
-<Drawer direction="bottom">
-  <DrawerTrigger asChild let:builder>
-    <Button builders={[builder]}>Abrir drawer</Button>
-  </DrawerTrigger>
-  <DrawerContent class="bg-card text-card-foreground">
-    <DrawerHeader>
-      <DrawerTitle>Filtrar resultados</DrawerTitle>
-      <DrawerDescription>Selecione os filtros desejados.</DrawerDescription>
-    </DrawerHeader>
-    <!-- Conteúdo -->
-    <DrawerFooter>
-      <Button>Aplicar filtros</Button>
-      <DrawerClose asChild let:builder>
-        <Button builders={[builder]} variant="outline">Cancelar</Button>
-      </DrawerClose>
-    </DrawerFooter>
-  </DrawerContent>
-</Drawer>
+**Estrutura**:
+
+```
+Drawer (direction: top | bottom | left | right)
+├── DrawerTrigger (asChild → Button)
+└── DrawerContent (bg-card text-card-foreground)
+    ├── DrawerHeader
+    │   ├── DrawerTitle
+    │   └── DrawerDescription
+    ├── (conteúdo)
+    └── DrawerFooter
+        ├── Button (ação primária)
+        └── DrawerClose (asChild → Button variant="outline")
 ```
 
-**Atenção**: `direction` é prop de `<Drawer>` — não de `<DrawerContent>`.
+**Regras**:
+- `direction` é prop de `<Drawer>` — **não** de `<DrawerContent>`
+- `DrawerTitle` e `DrawerDescription` obrigatórios
 
 ---
 
@@ -194,33 +117,23 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 
 **Propósito**: menu contextual de ações para um elemento.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import {
-    DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-    DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger
-  } from '$lib/components/ui/dropdown-menu';
-  import { Button } from '$lib/components/ui/button';
-  import { MoreHorizontal } from 'lucide-svelte';
-</script>
+**API e exemplos**: `src/components/ui/dropdown-menu/dropdown-menu.svelte` + stories + `DropdownMenuDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-<DropdownMenu>
-  <DropdownMenuTrigger asChild let:builder>
-    <Button builders={[builder]} variant="ghost" size="icon" aria-label="Opções do produto Cadeira Gamer Pro">
-      <MoreHorizontal class="h-4 w-4" aria-hidden="true" />
-    </Button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent align="end">
-    <DropdownMenuLabel>Ações</DropdownMenuLabel>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem>Editar</DropdownMenuItem>
-    <DropdownMenuItem class="text-destructive focus:text-destructive">
-      Excluir
-    </DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>
+**Estrutura**:
+
 ```
+DropdownMenu
+├── DropdownMenuTrigger (asChild → Button icon, aria-label contextual)
+└── DropdownMenuContent (align)
+    ├── DropdownMenuLabel
+    ├── DropdownMenuSeparator
+    ├── DropdownMenuItem
+    └── DropdownMenuItem (text-destructive em ações destrutivas)
+```
+
+**Regras**:
+- Trigger icon-only requer `aria-label` contextual
+- Itens destrutivos usam `text-destructive focus:text-destructive`
 
 ---
 
@@ -228,21 +141,15 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 
 **Propósito**: painel flutuante para controles auxiliares (datepicker, filtro avançado, seletor de cor).
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover';
-  import { Button } from '$lib/components/ui/button';
-</script>
+**API e exemplos**: `src/components/ui/popover/popover.svelte` + stories + `PopoverDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-<Popover>
-  <PopoverTrigger asChild let:builder>
-    <Button builders={[builder]} variant="outline">Filtros avançados</Button>
-  </PopoverTrigger>
-  <PopoverContent class="w-80" align="start">
-    <!-- Conteúdo do popover -->
-  </PopoverContent>
-</Popover>
+**Estrutura**:
+
+```
+Popover
+├── PopoverTrigger (asChild → Button)
+└── PopoverContent (align)
+    └── (conteúdo)
 ```
 
 ---
@@ -251,31 +158,22 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 
 **Propósito**: painel lateral persistente (sidebar ou formulário de edição).
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import {
-    Sheet, SheetContent, SheetDescription,
-    SheetHeader, SheetTitle, SheetTrigger
-  } from '$lib/components/ui/sheet';
-  import { Button } from '$lib/components/ui/button';
-</script>
+**API e exemplos**: `src/components/ui/sheet/sheet.svelte` + stories + `SheetDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-<Sheet>
-  <SheetTrigger asChild let:builder>
-    <Button builders={[builder]}>Configurações</Button>
-  </SheetTrigger>
-  <SheetContent class="bg-card text-card-foreground" side="right">
-    <SheetHeader>
-      <SheetTitle>Configurações</SheetTitle>
-      <SheetDescription>Gerencie suas preferências do sistema.</SheetDescription>
-    </SheetHeader>
-    <!-- Conteúdo -->
-  </SheetContent>
-</Sheet>
+**Estrutura**:
+
+```
+Sheet
+├── SheetTrigger (asChild → Button)
+└── SheetContent (side: left | right | top | bottom, bg-card text-card-foreground)
+    ├── SheetHeader
+    │   ├── SheetTitle (obrigatório)
+    │   └── SheetDescription (obrigatório)
+    └── (conteúdo)
 ```
 
-**Obrigatório**: `SheetTitle` e `SheetDescription` em todo Sheet.
+**Regras**:
+- `SheetTitle` e `SheetDescription` **obrigatórios** em todo Sheet
 
 ---
 
@@ -283,26 +181,15 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 
 **Propósito**: informação contextual breve que aparece ao hover/focus em um elemento.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '$lib/components/ui/tooltip';
-  import { Button } from '$lib/components/ui/button';
-  import { Settings } from 'lucide-svelte';
-</script>
+**API e exemplos**: `src/components/ui/tooltip/tooltip.svelte` + stories + `TooltipDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-<TooltipProvider>
-  <Tooltip>
-    <TooltipTrigger asChild let:builder>
-      <Button builders={[builder]} variant="ghost" size="icon" aria-label="Configurações da conta">
-        <Settings class="h-4 w-4" aria-hidden="true" />
-      </Button>
-    </TooltipTrigger>
-    <TooltipContent>
-      <p>Configurações</p>
-    </TooltipContent>
-  </Tooltip>
-</TooltipProvider>
+**Estrutura**:
+
+```
+TooltipProvider (root do app)
+└── Tooltip
+    ├── TooltipTrigger (asChild → Button com aria-label)
+    └── TooltipContent
 ```
 
 **Regras**:
@@ -316,62 +203,25 @@ Bits UI usa um padrão de builder para passar props de acessibilidade ao trigger
 
 **Propósito**: busca e seleção de items em lista — substitui Select quando busca é necessária.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '$lib/components/ui/command';
-  import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover';
-  import { Button } from '$lib/components/ui/button';
-  import { Check, ChevronsUpDown } from 'lucide-svelte';
-  import { cn } from '$lib/utils';
+**API e exemplos**: `src/components/ui/command/command.svelte` + stories + `CommandDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  let aberto = $state(false);
-  let valorSelecionado = $state('');
+**Estrutura** (combobox = Popover + Command):
 
-  const opcoes = [
-    { value: 'react', label: 'React' },
-    { value: 'vue', label: 'Vue' },
-    { value: 'svelte', label: 'Svelte' },
-  ];
-</script>
-
-<Popover bind:open={aberto}>
-  <PopoverTrigger asChild let:builder>
-    <Button
-      builders={[builder]}
-      variant="outline"
-      role="combobox"
-      aria-expanded={aberto}
-      class="w-[200px] justify-between"
-    >
-      {valorSelecionado || 'Selecione um framework...'}
-      <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
-    </Button>
-  </PopoverTrigger>
-  <PopoverContent class="w-[200px] p-0">
-    <Command>
-      <CommandInput placeholder="Buscar framework..." />
-      <CommandList>
-        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
-        <CommandGroup>
-          {#each opcoes as opcao (opcao.value)}
-            <CommandItem
-              value={opcao.value}
-              onSelect={(currentValue) => {
-                valorSelecionado = currentValue === valorSelecionado ? '' : currentValue;
-                aberto = false;
-              }}
-            >
-              <Check
-                class={cn('mr-2 h-4 w-4', valorSelecionado === opcao.value ? 'opacity-100' : 'opacity-0')}
-                aria-hidden="true"
-              />
-              {opcao.label}
-            </CommandItem>
-          {/each}
-        </CommandGroup>
-      </CommandList>
-    </Command>
-  </PopoverContent>
-</Popover>
 ```
+Popover (bind:open)
+├── PopoverTrigger (asChild → Button role="combobox" aria-expanded)
+└── PopoverContent
+    └── Command
+        ├── CommandInput (placeholder de busca)
+        └── CommandList
+            ├── CommandEmpty
+            └── CommandGroup
+                └── CommandItem (value, onSelect)
+                    ├── Check (opacity-100 quando selecionado)
+                    └── (label)
+```
+
+**Regras**:
+- Trigger declara `role="combobox"` e `aria-expanded={aberto}`
+- Indicador de seleção: `Check` com `opacity-100` no item ativo, `opacity-0` nos demais (mantém layout estável)
+- Empty state obrigatório (`CommandEmpty`) — nunca lista vazia silenciosa

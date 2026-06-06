@@ -4,35 +4,21 @@
 
 ## Breadcrumb
 
-**Propósito**: indica a posição do usuário dentro da hierarquia de navegação e permite retornar a níveis anteriores.
+**Propósito**: indica a posição do usuário dentro da hierarquia de navegação e permite retornar a níveis anteriores — usar em páginas com hierarquia de 2 ou mais níveis.
 
-**Quando usar**: páginas com hierarquia de 2 ou mais níveis.
+**API e exemplos**: `src/components/ui/breadcrumb/breadcrumb.svelte` + stories + `BreadcrumbDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import {
-    Breadcrumb, BreadcrumbItem, BreadcrumbLink,
-    BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator
-  } from '$lib/components/ui/breadcrumb';
-  import { ChevronRight } from 'lucide-svelte';
-</script>
+**Estrutura**:
 
+```
 <nav aria-label="Localização na página">
-  <Breadcrumb>
-    <BreadcrumbList>
-      <BreadcrumbItem>
-        <BreadcrumbLink href="/">Início</BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbSeparator>
-        <ChevronRight class="h-4 w-4" aria-hidden="true" />
-      </BreadcrumbSeparator>
-      <BreadcrumbItem>
-        <BreadcrumbPage aria-current="page">Button</BreadcrumbPage>
-      </BreadcrumbItem>
-    </BreadcrumbList>
-  </Breadcrumb>
-</nav>
+└── Breadcrumb
+    └── BreadcrumbList
+        ├── BreadcrumbItem
+        │   └── BreadcrumbLink
+        ├── BreadcrumbSeparator (ChevronRight aria-hidden)
+        └── BreadcrumbItem
+            └── BreadcrumbPage (último item, aria-current="page")
 ```
 
 **Regras**:
@@ -50,54 +36,37 @@
 
 **Propósito**: barra de menus horizontais, estilo aplicativo desktop (File, Edit, View).
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import {
-    Menubar, MenubarContent, MenubarItem, MenubarMenu,
-    MenubarSeparator, MenubarShortcut, MenubarTrigger
-  } from '$lib/components/ui/menubar';
-</script>
+**API e exemplos**: `src/components/ui/menubar/menubar.svelte` + stories + `MenubarDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-<Menubar>
-  <MenubarMenu>
-    <MenubarTrigger>Arquivo</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Novo<MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-      <MenubarSeparator />
-      <MenubarItem>Sair</MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>
+**Estrutura**:
+
+```
+Menubar
+└── MenubarMenu
+    ├── MenubarTrigger
+    └── MenubarContent
+        ├── MenubarItem
+        │   └── MenubarShortcut
+        └── MenubarSeparator
 ```
 
 ---
 
 ## Navigation Menu
 
-**Propósito**: menu de navegação horizontal para sites com múltiplas seções de nível superior.
+**Propósito**: menu de navegação horizontal para sites com múltiplas seções de nível superior. Para apps, preferir Sidebar.
 
-**Quando usar**: navegação principal de sites (não de apps). Para apps, preferir Sidebar.
+**API e exemplos**: `src/components/ui/navigation-menu/navigation-menu.svelte` + stories + `NavigationMenuDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import {
-    NavigationMenu, NavigationMenuContent, NavigationMenuItem,
-    NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger
-  } from '$lib/components/ui/navigation-menu';
-</script>
+**Estrutura**:
 
-<NavigationMenu>
-  <NavigationMenuList>
-    <NavigationMenuItem>
-      <NavigationMenuTrigger>Componentes</NavigationMenuTrigger>
-      <NavigationMenuContent>
-        <NavigationMenuLink href="/button">Button</NavigationMenuLink>
-      </NavigationMenuContent>
-    </NavigationMenuItem>
-  </NavigationMenuList>
-</NavigationMenu>
+```
+NavigationMenu
+└── NavigationMenuList
+    └── NavigationMenuItem
+        ├── NavigationMenuTrigger
+        └── NavigationMenuContent
+            └── NavigationMenuLink
 ```
 
 ---
@@ -106,35 +75,17 @@
 
 **Propósito**: navegar entre páginas de uma lista paginada.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import {
-    Pagination, PaginationContent, PaginationItem,
-    PaginationLink, PaginationNext, PaginationPrevious
-  } from '$lib/components/ui/pagination';
+**API e exemplos**: `src/components/ui/pagination/pagination.svelte` + stories + `PaginationDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  let paginaAtual = $state(1);
-</script>
+**Estrutura**:
 
+```
 <nav aria-label="Paginação dos resultados">
-  <Pagination>
-    <PaginationContent>
-      <PaginationItem>
-        <PaginationPrevious
-          onclick={() => paginaAtual = Math.max(1, paginaAtual - 1)}
-          aria-disabled={paginaAtual === 1}
-        />
-      </PaginationItem>
-      <PaginationItem>
-        <PaginationLink aria-current={paginaAtual === 1 ? 'page' : undefined}>1</PaginationLink>
-      </PaginationItem>
-      <PaginationItem>
-        <PaginationNext onclick={() => paginaAtual++} />
-      </PaginationItem>
-    </PaginationContent>
-  </Pagination>
-</nav>
+└── Pagination
+    └── PaginationContent
+        ├── PaginationItem → PaginationPrevious
+        ├── PaginationItem → PaginationLink (aria-current="page" no atual)
+        └── PaginationItem → PaginationNext
 ```
 
 **Acessibilidade**:
@@ -148,24 +99,17 @@
 
 **Propósito**: organizar conteúdo em seções alternáveis sem navegar para outra página.
 
-**Implementação**:
-```svelte
-<script lang="ts">
-  import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
-</script>
+**API e exemplos**: `src/components/ui/tabs/tabs.svelte` + stories + `TabsDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-<Tabs defaultValue="geral">
-  <TabsList>
-    <TabsTrigger value="geral">Geral</TabsTrigger>
-    <TabsTrigger value="avancado">Avançado</TabsTrigger>
-  </TabsList>
-  <TabsContent value="geral">
-    <!-- Conteúdo da aba Geral -->
-  </TabsContent>
-  <TabsContent value="avancado">
-    <!-- Conteúdo da aba Avançado -->
-  </TabsContent>
-</Tabs>
+**Estrutura**:
+
+```
+Tabs (defaultValue)
+├── TabsList
+│   ├── TabsTrigger (value)
+│   └── TabsTrigger (value)
+├── TabsContent (value)
+└── TabsContent (value)
 ```
 
 **Acessibilidade**:
