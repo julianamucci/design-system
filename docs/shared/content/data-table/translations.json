@@ -6,9 +6,9 @@
     "description": "Tabela avançada com ordenação, filtros, seleção, paginação, redimensionamento, reordenação, pin de colunas, edição inline e virtualização.",
     "seo": {
       "title": "DataTable — Display",
-      "description": "Documentação do DataTable: ordenação, filtros, seleção, paginação, resize, reorder, pin, edição inline e virtualização sobre TanStack Table.",
+      "description": "Transforme listas estáticas em ferramentas exploráveis: ordene, filtre, selecione e edite milhares de linhas com performance e acessibilidade WCAG.",
       "aiSummary": "Componente DataTable construído sobre TanStack Table v8 (headless). Estende o Table primitivo com ordenação multi-coluna, filtro global e por coluna, seleção de linhas, paginação, redimensionamento, reordenação, fixação e edição inline. Suporta virtualização para datasets grandes.",
-      "aiEntities": "DataTable, TanStack Table, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
+      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -27,6 +27,10 @@
         "rowsPerPage": "Linhas por página",
         "page": "Página",
         "of": "de",
+        "firstPage": "Primeira página",
+        "prevPage": "Página anterior",
+        "nextPage": "Próxima página",
+        "lastPage": "Última página",
         "noResults": "Sem resultados."
       }
     },
@@ -402,9 +406,9 @@
     "description": "Advanced table with sorting, filtering, selection, pagination, resizing, reordering, column pinning, inline edit, and virtualization.",
     "seo": {
       "title": "DataTable — Display",
-      "description": "DataTable documentation: sorting, filtering, selection, pagination, resize, reorder, pin, inline edit, and virtualization on TanStack Table.",
+      "description": "Turn static lists into explorable tools: sort, filter, select, and edit thousands of rows with performance and WCAG-grade accessibility.",
       "aiSummary": "DataTable component built on TanStack Table v8 (headless). Extends the Table primitive with multi-column sorting, global and per-column filtering, row selection, pagination, resizing, reordering, pinning, and inline editing. Supports virtualization for large datasets.",
-      "aiEntities": "DataTable, TanStack Table, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
+      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -423,6 +427,10 @@
         "rowsPerPage": "Rows per page",
         "page": "Page",
         "of": "of",
+        "firstPage": "First page",
+        "prevPage": "Previous page",
+        "nextPage": "Next page",
+        "lastPage": "Last page",
         "noResults": "No results."
       }
     },
@@ -798,9 +806,9 @@
     "description": "Tabla avanzada con orden, filtros, selección, paginación, redimensionamiento, reordenamiento, pin de columnas, edición inline y virtualización.",
     "seo": {
       "title": "DataTable — Display",
-      "description": "Documentación de DataTable: orden, filtros, selección, paginación, resize, reorder, pin, edición inline y virtualización sobre TanStack Table.",
+      "description": "Convierte listas estáticas en herramientas explorables: ordena, filtra, selecciona y edita miles de filas con performance y accesibilidad WCAG.",
       "aiSummary": "Componente DataTable construido sobre TanStack Table v8 (headless). Extiende el primitivo Table con orden multi-columna, filtro global y por columna, selección de filas, paginación, redimensionamiento, reordenamiento, fijación y edición inline. Soporta virtualización para datasets grandes.",
-      "aiEntities": "DataTable, TanStack Table, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
+      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -819,6 +827,10 @@
         "rowsPerPage": "Filas por página",
         "page": "Página",
         "of": "de",
+        "firstPage": "Primera página",
+        "prevPage": "Página anterior",
+        "nextPage": "Página siguiente",
+        "lastPage": "Última página",
         "noResults": "Sin resultados."
       }
     },
