@@ -69,7 +69,7 @@ export const Default: Story = {
   ),
   play: async ({ step }) => {
     await step("Tooltip tem role=tooltip", async () => {
-      const tip = await waitFor(() => screen.findByRole("tooltip"));
+      const tip = await screen.findByRole("tooltip", {}, { timeout: 5000 });
       await expect(tip).toBeVisible();
       await expect(tip.textContent).toMatch(/Salvar/i);
     });
@@ -105,7 +105,7 @@ export const ComAtalho: Story = {
   ),
   play: async ({ step }) => {
     await step("Tooltip contém kbd elements", async () => {
-      const tip = await waitFor(() => screen.findByRole("tooltip"));
+      const tip = await screen.findByRole("tooltip", {}, { timeout: 5000 });
       await expect(tip).toBeVisible();
       const kbds = tip.querySelectorAll("kbd");
       await expect(kbds.length).toBeGreaterThanOrEqual(2);
@@ -140,7 +140,7 @@ export const TextoLongo: Story = {
   ),
   play: async ({ step }) => {
     await step("Tooltip aberto com texto longo", async () => {
-      const tip = await waitFor(() => screen.findByRole("tooltip"));
+      const tip = await screen.findByRole("tooltip", {}, { timeout: 5000 });
       await expect(tip).toBeVisible();
       await expect(tip.textContent).toMatch(/link público/i);
     });
