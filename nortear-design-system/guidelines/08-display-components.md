@@ -4,114 +4,81 @@
 
 ## Avatar
 
-**Propósito**: representação visual de um usuário (foto ou iniciais).
+**Propósito**: representação visual de um usuário (foto ou iniciais como fallback).
 
-**Implementação**:
-```ts
-export interface AvatarOptions {
-  src?: string;
-  alt?: string;
-  fallback: string; // iniciais ou texto curto
-  size?: 'sm' | 'default' | 'lg'; // sm=6, default=10, lg=16 (unidades em rem * 4)
-}
+**API e exemplos**: `src/components/ui/avatar.ts` + stories + `AvatarDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-export function createAvatar({ src, alt, fallback, size = 'default' }: AvatarOptions): HTMLSpanElement {
-  const sizeClass = { sm: 'h-6 w-6', default: 'h-10 w-10', lg: 'h-16 w-16' }[size];
+**Estrutura**:
 
-  const wrapper = document.createElement('span');
-  wrapper.className = cn('relative flex shrink-0 overflow-hidden rounded-full', sizeClass);
-
-  if (src) {
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = alt ?? fallback;
-    img.className = 'aspect-square h-full w-full object-cover';
-    img.addEventListener('error', () => {
-      img.replaceWith(createFallback());
-    });
-    wrapper.appendChild(img);
-  } else {
-    wrapper.appendChild(createFallback());
-  }
-
-  function createFallback(): HTMLSpanElement {
-    const fb = document.createElement('span');
-    fb.className = 'flex h-full w-full items-center justify-center rounded-full bg-muted text-muted-foreground font-medium';
-    fb.textContent = fallback;
-    if (!src && alt) fb.setAttribute('aria-label', alt);
-    return fb;
-  }
-
-  return wrapper;
-}
 ```
+span wrapper (relative, rounded-full, overflow-hidden)
+├── img (quando src + onload OK)
+└── fallback (span com iniciais, bg-muted)
+```
+
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `src` | — | URL da imagem |
+| `alt` | — | Texto alternativo |
+| `fallback` | — | Iniciais (obrigatório) |
+| `size` | `default` | `sm` (24px), `default` (40px), `lg` (64px) |
+
+**Regras**:
+- Sempre `rounded-full` + `overflow-hidden`
+- Tamanhos múltiplos de 8 (8-grid): 24, 40, 64
+- Fallback obrigatório mesmo quando `src` existe — exibido se a imagem falhar (`onerror`)
+- Imagem em `object-cover` para preservar proporção
+- Tokens: `bg-muted text-muted-foreground` no fallback
+
+**Acessibilidade**:
+- `alt` descritivo na `<img>` (nome do usuário)
+- Fallback decorativo: `aria-label` com nome quando apenas iniciais visíveis
 
 ---
 
 ## Table
 
-**Propósito**: dados tabulares com linhas e colunas.
+**Propósito**: dados tabulares estáticos com linhas e colunas. Para tabelas com ordenação, filtros, paginação ou edição inline, usar **DataTable**.
 
-**Implementação**:
-```ts
-export interface TableOptions {
-  caption: string;
-  captionHidden?: boolean;
-  headers: string[];
-  rows: string[][];
-}
+**API e exemplos**: `src/components/ui/table.ts` + stories + `TableDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-export function createTable({ caption, captionHidden = false, headers, rows }: TableOptions): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'relative w-full overflow-auto';
+**Estrutura**:
 
-  const table = document.createElement('table');
-  table.className = 'w-full caption-bottom text-sm';
-
-  // Caption obrigatório
-  const captionEl = document.createElement('caption');
-  captionEl.textContent = caption;
-  if (captionHidden) captionEl.className = 'sr-only';
-  table.appendChild(captionEl);
-
-  // Header
-  const thead = document.createElement('thead');
-  const headerRow = document.createElement('tr');
-  headerRow.className = '[&_tr]:border-b';
-  headers.forEach((header) => {
-    const th = document.createElement('th');
-    th.scope = 'col'; // scope="col" obrigatório
-    th.className = 'h-10 px-2 text-left align-middle font-medium text-muted-foreground';
-    th.textContent = header;
-    headerRow.appendChild(th);
-  });
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
-
-  // Body
-  const tbody = document.createElement('tbody');
-  tbody.className = '[&_tr:last-child]:border-0';
-  rows.forEach((row) => {
-    const tr = document.createElement('tr');
-    tr.className = 'border-b border-border transition-colors hover:bg-muted/50';
-    row.forEach((cell) => {
-      const td = document.createElement('td');
-      td.className = 'p-2 align-middle';
-      td.textContent = cell;
-      tr.appendChild(td);
-    });
-    tbody.appendChild(tr);
-  });
-  table.appendChild(tbody);
-
-  wrapper.appendChild(table);
-  return wrapper;
-}
+```
+div wrapper (overflow-auto)
+└── table
+    ├── caption (obrigatório, sr-only se captionHidden)
+    ├── thead
+    │   └── tr
+    │       └── th scope="col" (texto da coluna)
+    └── tbody
+        └── tr (hover:bg-muted/50, border-b)
+            └── td
 ```
 
-**Acessibilidade obrigatória**:
-- `caption` obrigatório (pode ser `sr-only` via `captionHidden: true`)
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `caption` | — | Descrição da tabela (obrigatório) |
+| `captionHidden` | `false` | Aplica `sr-only` no caption |
+| `headers` | — | Cabeçalhos das colunas |
+| `rows` | — | Array de arrays (células) |
+
+**Regras**:
+- `<caption>` obrigatório (pode ser `sr-only` via `captionHidden: true`)
 - `scope="col"` em todo `<th>` de coluna
+- Padding em `--spacing-2` por célula; cabeçalho com altura em `--spacing-10`
+- Wrapper com `overflow-auto` para responsividade horizontal
+- Última linha sem border-bottom (`[&_tr:last-child]:border-0`)
+- Tokens: `text-muted-foreground` no cabeçalho; corpo em `text-foreground`
+
+**Acessibilidade**:
+- `<caption>` obrigatório
+- `scope="col"` em headers de coluna; `scope="row"` se houver headers de linha
+- Para tabelas de layout, prefira CSS Grid — `<table>` é apenas para dados
 
 ---
 
@@ -123,27 +90,31 @@ Ver `07-feedback-components.md`.
 
 ## Chart
 
-**Propósito**: visualização de dados numéricos.
+**Propósito**: visualização de dados numéricos (linhas, barras, pizza). Stack: `<canvas>` com biblioteca de charts do projeto (Chart.js).
 
-**Stack**: usar `canvas` com a biblioteca de charts do projeto (ex: Chart.js).
+**API e exemplos**: `src/components/ui/chart.ts` + stories + `ChartDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-```ts
-export function createChart(canvasId: string, ariaLabel: string): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'relative';
-  wrapper.setAttribute('aria-label', ariaLabel);
+**Estrutura**:
 
-  const canvas = document.createElement('canvas');
-  canvas.id = canvasId;
-  canvas.setAttribute('role', 'img');
-  canvas.setAttribute('aria-label', ariaLabel);
-
-  wrapper.appendChild(canvas);
-  return wrapper;
-}
+```
+div wrapper (relative, aria-label contextual)
+└── canvas (role="img", aria-label, id único)
 ```
 
-**Acessibilidade**: sempre incluir alternativa textual (tabela ou `aria-describedby` com resumo dos dados).
+**Regras**:
+- Canvas com `role="img"` + `aria-label` descritivo dos dados
+- Sempre incluir alternativa textual — `<table>` oculto via `sr-only` ou `aria-describedby` apontando a um resumo
+- Cores via tokens semânticos (`--chart-1` … `--chart-5`); nunca cor literal
+- Não usar cor como único diferenciador entre séries — adicionar pattern/dash/marker
+- Tooltip do chart deve respeitar tokens `bg-popover text-popover-foreground`
+- Altura mínima de `--spacing-48` (192px); largura responsiva
+
+**Acessibilidade**:
+- Alternativa textual obrigatória (tabela oculta ou resumo descritivo)
+- `aria-label` no canvas com sumário ("Vendas mensais de janeiro a dezembro de 2025")
+- Contraste 3:1 entre séries adjacentes
+
+**Analytics**: emitir `chart_interaction` com `{ chart_type, action }` (hover, click, legend toggle).
 
 ---
 

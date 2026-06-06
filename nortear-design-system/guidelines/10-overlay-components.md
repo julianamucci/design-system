@@ -7,254 +7,146 @@
 ### Tokens de fundo por tipo
 
 | Tipo de overlay | Token correto | Uso |
-|-----------------|---------------|-----|
+|---|---|---|
 | Painel de conteúdo (modal, lateral) | `bg-card text-card-foreground` | Dialog, Sheet, Drawer |
 | Menu e overlay flutuante | `bg-popover text-popover-foreground` | Dropdown, Popover, Tooltip |
 
 ### Comportamento de teclado — implementar manualmente
 
-Em Vanilla TS, os comportamentos de teclado devem ser implementados explicitamente:
+Em Vanilla TS, os comportamentos de teclado são implementados explicitamente em cada factory:
 
-```ts
-// Fechar com Escape
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeActiveOverlay();
-});
+- **Escape**: fecha o overlay ativo (event listener em `document`)
+- **Focus trap**: dentro de Dialog/Sheet, Tab e Shift+Tab circulam apenas entre elementos focáveis do overlay
+- **Restaurar foco**: ao fechar, devolver o foco ao elemento que abriu o overlay
+- **Click fora**: backdrop fecha overlay; Tooltip não fecha por click
 
-// Focus trap dentro de Dialog
-function trapFocus(container: HTMLElement) {
-  const focusable = container.querySelectorAll<HTMLElement>(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  );
-  const first = focusable[0];
-  const last = focusable[focusable.length - 1];
+### Z-index padrão
 
-  container.addEventListener('keydown', (e) => {
-    if (e.key !== 'Tab') return;
-    if (e.shiftKey) {
-      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-    } else {
-      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-    }
-  });
-}
-```
+| Camada | Z-index |
+|---|---|
+| Dropdown / Popover / Tooltip | `50` |
+| Backdrop de Dialog/Sheet | `50` |
+| Dialog/Sheet painel | `50` |
+| Toast | `50` (acima de overlays não-modais) |
 
 ---
 
 ## Dialog
 
-**Propósito**: modal para formulários, edição ou confirmações.
+**Propósito**: modal para formulários, edição ou confirmações que exigem atenção exclusiva do usuário.
 
-**Implementação**:
-```ts
-export interface DialogOptions {
-  title: string;
-  description: string;
-  content: HTMLElement;
-  footer?: HTMLElement;
-  onClose?: () => void;
-}
+**API e exemplos**: `src/components/ui/dialog.ts` + stories + `DialogDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-export function createDialog({ title, description, content, footer, onClose }: DialogOptions): {
-  dialog: HTMLElement;
-  open: () => void;
-  close: () => void;
-} {
-  const titleId = `dialog-title-${Math.random().toString(36).slice(2)}`;
-  const descId = `dialog-desc-${Math.random().toString(36).slice(2)}`;
+**Estrutura**:
 
-  // Backdrop
-  const backdrop = document.createElement('div');
-  backdrop.className = 'fixed inset-0 z-50 bg-black/80 hidden';
-  backdrop.setAttribute('aria-hidden', 'true');
-
-  // Dialog
-  const dialog = document.createElement('div');
-  dialog.setAttribute('role', 'dialog');
-  dialog.setAttribute('aria-modal', 'true');
-  dialog.setAttribute('aria-labelledby', titleId);
-  dialog.setAttribute('aria-describedby', descId);
-  dialog.className = cn(
-    'fixed left-[50%] top-[50%] z-50 hidden',
-    'translate-x-[-50%] translate-y-[-50%]',
-    'w-full max-w-lg rounded-lg border border-border',
-    'bg-card text-card-foreground shadow-lg p-6'
-  );
-
-  const titleEl = document.createElement('h2');
-  titleEl.id = titleId;
-  titleEl.className = 'text-lg font-semibold leading-none tracking-tight';
-  titleEl.textContent = title;
-
-  const descEl = document.createElement('p');
-  descEl.id = descId;
-  descEl.className = 'text-sm text-muted-foreground mt-1.5';
-  descEl.textContent = description;
-
-  // Close button
-  const closeBtn = document.createElement('button');
-  closeBtn.type = 'button';
-  closeBtn.className = cn(
-    'absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100',
-    'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-  );
-  closeBtn.setAttribute('aria-label', 'Fechar dialog');
-  closeBtn.textContent = '✕';
-  closeBtn.addEventListener('click', close);
-
-  dialog.append(closeBtn, titleEl, descEl, content);
-  if (footer) dialog.appendChild(footer);
-  document.body.append(backdrop, dialog);
-
-  function open() {
-    backdrop.classList.remove('hidden');
-    dialog.classList.remove('hidden');
-    trapFocus(dialog);
-    closeBtn.focus();
-    document.addEventListener('keydown', handleEscape);
-  }
-
-  function close() {
-    backdrop.classList.add('hidden');
-    dialog.classList.add('hidden');
-    document.removeEventListener('keydown', handleEscape);
-    onClose?.();
-  }
-
-  function handleEscape(e: KeyboardEvent) {
-    if (e.key === 'Escape') close();
-  }
-
-  backdrop.addEventListener('click', close);
-
-  return { dialog, open, close };
-}
+```
+backdrop (fixed inset-0, bg-black/80)
+dialog (role="dialog", aria-modal, aria-labelledby, aria-describedby)
+├── close button (absolute top-right, aria-label="Fechar dialog")
+├── h2 title (id referenciado por aria-labelledby)
+├── p description (id referenciado por aria-describedby)
+├── content
+└── footer (opcional)
 ```
 
-**Obrigatório**: `role="dialog"` + `aria-modal="true"` + `aria-labelledby` + `aria-describedby`.
+**Opts da factory**:
 
-**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
+| Nome | Default | Função |
+|---|---|---|
+| `title` | — | Título (obrigatório) |
+| `description` | — | Descrição (obrigatório, vinculada via `aria-describedby`) |
+| `content` | — | Corpo |
+| `footer` | — | Rodapé com ações |
+| `onClose` | — | Callback ao fechar |
 
-Adicione chamadas de `track` nas funções `open` e `close`:
+**Regras**:
+- `role="dialog"` + `aria-modal="true"` + `aria-labelledby` + `aria-describedby` (todos obrigatórios)
+- Backdrop opaco em `bg-black/80`; click fecha
+- Escape fecha; Tab/Shift+Tab faz focus trap
+- Foco inicial: close button ou primeiro elemento focável
+- Ao fechar: restaurar foco ao trigger original
+- Painel: `bg-card text-card-foreground`, `rounded-lg`, padding em `--spacing-6`
+- Largura máxima `max-w-lg`; centralizado via `translate-x-[-50%] translate-y-[-50%]`
+- Não aninhar Dialogs — usar fluxo sequencial
 
-```ts
-import { track } from '@/lib/analytics';
+**Acessibilidade**:
+- `aria-modal="true"` obrigatório
+- Close button com `aria-label` descritivo
+- Foco preso dentro do dialog enquanto aberto
+- Conteúdo fora do dialog inerte (idealmente via `inert` ou aria-hidden no resto da página)
 
-function open() {
-  track('dialog_open', { component: 'dialog', trigger: 'button' });
-  // ... lógica existente
-}
-
-function close() {
-  track('dialog_close', { component: 'dialog' });
-  // ... lógica existente
-}
-```
+**Analytics**: emitir `dialog_open` / `dialog_close` com `{ component, trigger? }`.
 
 ---
 
 ## Dropdown Menu
 
-```ts
-export function createDropdownMenu(options: {
-  trigger: HTMLElement;
-  items: Array<{ label: string; onClick: () => void; destructive?: boolean } | 'separator'>;
-}): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'relative inline-block';
-  wrapper.appendChild(options.trigger);
+**Propósito**: menu contextual de ações disparado por um trigger (botão, ícone). Para seleção de valor único de uma lista, usar Select.
 
-  const menu = document.createElement('div');
-  menu.setAttribute('role', 'menu');
-  menu.className = cn(
-    'absolute right-0 z-50 mt-1 min-w-[8rem] rounded-md border border-border',
-    'bg-popover text-popover-foreground shadow-md hidden'
-  );
+**API e exemplos**: `src/components/ui/dropdown-menu.ts` + stories + `DropdownMenuDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  options.items.forEach((item) => {
-    if (item === 'separator') {
-      const sep = document.createElement('hr');
-      sep.className = '-mx-1 my-1 h-px bg-muted border-none';
-      sep.setAttribute('role', 'separator');
-      menu.appendChild(sep);
-      return;
-    }
+**Estrutura**:
 
-    const btn = document.createElement('button');
-    btn.setAttribute('role', 'menuitem');
-    btn.type = 'button';
-    btn.className = cn(
-      'relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm',
-      'outline-none transition-colors hover:bg-accent hover:text-accent-foreground',
-      'focus-visible:ring-2 focus-visible:ring-ring',
-      item.destructive && 'text-destructive hover:text-destructive focus:text-destructive'
-    );
-    btn.textContent = item.label;
-    btn.addEventListener('click', () => { item.onClick(); closeMenu(); });
-    menu.appendChild(btn);
-  });
-
-  options.trigger.setAttribute('aria-haspopup', 'true');
-  options.trigger.setAttribute('aria-expanded', 'false');
-  options.trigger.addEventListener('click', toggleMenu);
-
-  function toggleMenu() {
-    const isOpen = !menu.classList.contains('hidden');
-    if (isOpen) closeMenu();
-    else openMenu();
-  }
-
-  function openMenu() {
-    menu.classList.remove('hidden');
-    options.trigger.setAttribute('aria-expanded', 'true');
-  }
-
-  function closeMenu() {
-    menu.classList.add('hidden');
-    options.trigger.setAttribute('aria-expanded', 'false');
-  }
-
-  document.addEventListener('click', (e) => {
-    if (!wrapper.contains(e.target as Node)) closeMenu();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeMenu(); options.trigger.focus(); }
-  });
-
-  wrapper.appendChild(menu);
-  return wrapper;
-}
 ```
+div wrapper (relative inline-block)
+├── trigger (aria-haspopup, aria-expanded)
+└── menu (role="menu", absolute, bg-popover, hidden quando fechado)
+    ├── button (role="menuitem")
+    ├── hr (role="separator") — opcional
+    └── button (role="menuitem", destructive opcional)
+```
+
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `trigger` | — | Elemento que abre o menu |
+| `items` | — | Array `{ label, onClick, destructive? }` ou `'separator'` |
+
+**Regras**:
+- Trigger com `aria-haspopup="true"` + `aria-expanded` atualizado
+- Menu com `role="menu"`; itens com `role="menuitem"`
+- Separadores com `role="separator"` e `aria-hidden="true"`
+- Tokens: `bg-popover text-popover-foreground`; hover `bg-accent text-accent-foreground`
+- Itens destrutivos: `text-destructive` no estado normal e hover
+- Click fora fecha; Escape fecha e devolve foco ao trigger
+- Navegação por teclado: Setas ↑↓ entre itens, Enter executa
+- Largura mínima `min-w-[8rem]`; padding dos itens em `--spacing-2 × --spacing-1.5`
+
+**Acessibilidade**:
+- `role="menu"` + `role="menuitem"` obrigatórios
+- `aria-expanded` no trigger
+- Foco gerenciado: ao abrir, foco vai ao primeiro item; ao fechar, volta ao trigger
+
+**Analytics**: emitir `menu_item_click` com `{ menu, item }`.
 
 ---
 
 ## Tooltip
 
-```ts
-export function createTooltip(trigger: HTMLElement, text: string): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'relative inline-block';
-  wrapper.appendChild(trigger);
+**Propósito**: descrição curta de um elemento focável, exibida no hover/focus. Para conteúdo interativo, usar Popover.
 
-  const tooltip = document.createElement('div');
-  tooltip.setAttribute('role', 'tooltip');
-  tooltip.className = cn(
-    'absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 hidden',
-    'rounded-md bg-popover text-popover-foreground border border-border px-3 py-1.5 text-xs shadow-md'
-  );
-  tooltip.textContent = text;
+**API e exemplos**: `src/components/ui/tooltip.ts` + stories + `TooltipDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  const tooltipId = `tooltip-${Math.random().toString(36).slice(2)}`;
-  tooltip.id = tooltipId;
-  trigger.setAttribute('aria-describedby', tooltipId);
+**Estrutura**:
 
-  trigger.addEventListener('mouseenter', () => tooltip.classList.remove('hidden'));
-  trigger.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
-  trigger.addEventListener('focus', () => tooltip.classList.remove('hidden'));
-  trigger.addEventListener('blur', () => tooltip.classList.add('hidden'));
-
-  wrapper.appendChild(tooltip);
-  return wrapper;
-}
 ```
+div wrapper (relative inline-block)
+├── trigger (aria-describedby aponta ao tooltip)
+└── tooltip (role="tooltip", id único, hidden quando inativo)
+```
+
+**Regras**:
+- `role="tooltip"` com ID único; trigger usa `aria-describedby` apontando ao ID
+- Aparece em hover **e** focus; desaparece em mouseleave **e** blur
+- Não pode conter conteúdo interativo (botões, links) — usar Popover nesses casos
+- Texto curto (máx ~50 chars); para conteúdo longo, usar Popover
+- Tokens: `bg-popover text-popover-foreground`, `border-border`, `text-xs`
+- Posição padrão: acima do trigger (`bottom-full mb-2`)
+- Z-index `50`
+
+**Acessibilidade**:
+- `role="tooltip"` obrigatório
+- `aria-describedby` no trigger (não `aria-labelledby` — tooltip descreve, não rotula)
+- Visível em teclado (focus), não apenas hover
+- Texto sempre visível para leitores de tela enquanto o trigger tem foco

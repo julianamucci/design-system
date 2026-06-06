@@ -4,151 +4,130 @@
 
 ## Aspect Ratio
 
-**Propósito**: manter proporções fixas de mídia independente do tamanho do container.
+**Propósito**: manter proporções fixas de mídia (imagem, vídeo, iframe) independente do tamanho do container.
 
-**Quando usar**: sempre que exibir imagem, vídeo ou iframe com proporção conhecida.
+**API e exemplos**: `src/components/ui/aspect-ratio.ts` + stories + `AspectRatioDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Implementação**:
-```ts
-export interface AspectRatioOptions {
-  ratio: number;           // ex: 16/9, 1, 4/3
-  children?: HTMLElement;
-}
+**Estrutura**:
 
-export function createAspectRatio({ ratio, children }: AspectRatioOptions): HTMLDivElement {
-  const container = document.createElement('div');
-  container.style.position = 'relative';
-  container.style.paddingBottom = `${(1 / ratio) * 100}%`;
-  container.style.overflow = 'hidden';
-
-  if (children) {
-    children.style.position = 'absolute';
-    children.style.inset = '0';
-    children.className = cn(children.className, 'object-cover w-full h-full');
-    container.appendChild(children);
-  }
-
-  return container;
-}
+```
+AspectRatio
+└── child (img | video | iframe) — position: absolute; inset: 0; object-cover
 ```
 
-**Ratios comuns**: `16/9`, `1`, `4/3`, `3/4`
+**Ratios comuns**: `16/9`, `1`, `4/3`, `3/4`.
+
+**Regras**:
+- O container é `position: relative` com `padding-bottom` calculado por `(1 / ratio) * 100%`
+- O child fica em `position: absolute; inset: 0` e ocupa 100% do container
+- Não definir altura fixa no container — a razão é controlada por padding
+- Tokens: usar utilitários Tailwind (`object-cover`, `w-full`, `h-full`); margens externas via classes 8-grid (`--spacing-*`)
 
 **Acessibilidade**:
-- Imagem informativa: `img.alt = 'Descrição significativa'`
-- Imagem decorativa: `img.alt = ''` + `img.setAttribute('aria-hidden', 'true')`
+- Imagem informativa: `alt` descritivo
+- Imagem decorativa: `alt=""` + `aria-hidden="true"`
+- Vídeo/iframe: `title` obrigatório
 
 ---
 
 ## Card
 
-**Propósito**: agrupar conteúdo relacionado em um container visualmente delimitado.
+**Propósito**: agrupar conteúdo relacionado em um container visualmente delimitado. Para containers sem borda ou sombra, usar `<div>` puro com tokens de espaçamento.
 
-**Implementação**:
-```ts
-export interface CardOptions {
-  title?: string;
-  description?: string;
-  content?: HTMLElement | string;
-  footer?: HTMLElement;
-}
+**API e exemplos**: `src/components/ui/card.ts` + stories + `CardDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-export function createCard({ title, description, content, footer }: CardOptions): HTMLDivElement {
-  const card = document.createElement('div');
-  card.className = 'rounded-lg border border-border bg-card text-card-foreground shadow-sm';
+**Estrutura**:
 
-  if (title || description) {
-    const header = document.createElement('div');
-    header.className = 'flex flex-col space-y-1.5 p-6';
-
-    if (title) {
-      const h3 = document.createElement('h3');
-      h3.className = 'font-semibold leading-none tracking-tight';
-      h3.textContent = title;
-      header.appendChild(h3);
-    }
-
-    if (description) {
-      const p = document.createElement('p');
-      p.className = 'text-muted-foreground';
-      p.textContent = description;
-      header.appendChild(p);
-    }
-
-    card.appendChild(header);
-  }
-
-  if (content) {
-    const body = document.createElement('div');
-    body.className = 'p-6 pt-0';
-    if (typeof content === 'string') {
-      body.textContent = content;
-    } else {
-      body.appendChild(content);
-    }
-    card.appendChild(body);
-  }
-
-  if (footer) {
-    const footerEl = document.createElement('div');
-    footerEl.className = 'flex items-center p-6 pt-0 border-t border-border';
-    footerEl.appendChild(footer);
-    card.appendChild(footerEl);
-  }
-
-  return card;
-}
+```
+Card (bg-card text-card-foreground border-border rounded-lg shadow-sm)
+├── CardHeader (opcional)
+│   ├── CardTitle (h3)
+│   └── CardDescription (p, text-muted-foreground)
+├── CardContent (opcional)
+└── CardFooter (opcional, border-t)
 ```
 
-**Tokens obrigatórios**: `bg-card text-card-foreground border-border`
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `title` | — | Título no header |
+| `description` | — | Descrição no header |
+| `content` | — | Corpo (HTMLElement ou string) |
+| `footer` | — | Rodapé com `border-t` |
+
+**Regras**:
+- Tokens obrigatórios: `bg-card text-card-foreground border-border`
+- Padding interno fixo em `--spacing-6` (24px) — não criar variações ad-hoc
+- 8-grid: `space-y-1.5` entre título e descrição, `p-6` em header/content/footer
+- Card clicável inteiro: usar `<a>` ou `<button>` como wrapper; nunca `<div>` com `onclick`
+- Conteúdo aninhado herda tokens — não sobrescrever `color` em descendentes
 
 **Acessibilidade**:
-- Botões dentro do Card: `aria-label` contextual com identificador
-- Card clicável: adicionar `tabindex="0"` + `role="link"` + `onkeydown` para Enter/Space
+- Botões dentro do Card precisam de `aria-label` contextual com identificador (ex: nome do produto)
+- Card como link: usar `<a>` semântico, não `tabindex` em `<div>`
 
 ---
 
 ## Separator
 
-**Propósito**: divisor visual horizontal ou vertical.
+**Propósito**: divisor visual horizontal ou vertical entre seções ou itens.
 
-**Implementação**:
-```ts
-export function createSeparator(orientation: 'horizontal' | 'vertical' = 'horizontal'): HTMLElement {
-  const sep = document.createElement('hr');
-  sep.setAttribute('role', 'separator');
-  sep.setAttribute('aria-orientation', orientation);
+**API e exemplos**: `src/components/ui/separator.ts` + stories + `SeparatorDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  if (orientation === 'horizontal') {
-    sep.className = 'border-none h-px bg-border my-4';
-  } else {
-    sep.className = 'border-none w-px bg-border mx-2 inline-block self-stretch';
-  }
+**Estrutura**:
 
-  return sep;
-}
+```
+Separator (<hr> | <div role="separator">)
+└── (sem children)
 ```
 
-**Decorativo**: adicionar `sep.setAttribute('aria-hidden', 'true')` quando for apenas visual.
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `orientation` | `horizontal` | `horizontal` ou `vertical` |
+| `decorative` | `false` | Adiciona `aria-hidden="true"` |
+
+**Regras**:
+- Horizontal: `h-px bg-border` + margem vertical em `--spacing-4`
+- Vertical: `w-px bg-border` + `self-stretch` + margem horizontal em `--spacing-2`
+- Sempre usar token `bg-border` — nunca cor literal
+- Decorativo (`aria-hidden="true"`) quando o separador é puramente visual
+
+**Acessibilidade**:
+- `role="separator"` + `aria-orientation` (quando semântico)
+- `aria-hidden="true"` quando decorativo
 
 ---
 
 ## Scroll Area
 
-**Propósito**: área com scroll customizado e consistente.
+**Propósito**: área com scroll customizado e altura limitada, mantendo aparência consistente entre navegadores.
 
-**Implementação**:
-```ts
-export function createScrollArea(options: { height?: string; content: HTMLElement }): HTMLDivElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'rounded-md border border-border overflow-auto';
-  wrapper.style.height = options.height ?? '288px'; // 72 * 4 = 288px
+**API e exemplos**: `src/components/ui/scroll-area.ts` + stories + `ScrollAreaDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  const inner = document.createElement('div');
-  inner.className = 'p-4';
-  inner.appendChild(options.content);
-  wrapper.appendChild(inner);
+**Estrutura**:
 
-  return wrapper;
-}
 ```
+ScrollArea (overflow-auto, border, rounded-md)
+└── inner (padding em --spacing-4)
+    └── content
+```
+
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `height` | `288px` (72 × 4) | Altura máxima do container |
+| `content` | — | Conteúdo a ser rolado |
+
+**Regras**:
+- Altura múltipla de 8 (8-grid) — defaults sugeridos: 144, 240, 288, 384
+- Padding interno fixo em `--spacing-4` (16px)
+- Não usar `overflow: scroll` (scrollbar sempre visível) — usar `overflow: auto`
+- Border opcional via token `border-border`
+
+**Acessibilidade**:
+- Conteúdo rolável deve ser alcançável por teclado (foco em elementos internos rola o container)
+- Não capturar foco no wrapper — só nos elementos internos

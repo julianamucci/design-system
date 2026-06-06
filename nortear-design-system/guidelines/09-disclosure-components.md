@@ -4,162 +4,83 @@
 
 ## Accordion
 
-**Propósito**: mostrar e ocultar seções de conteúdo relacionado.
+**Propósito**: mostrar e ocultar seções de conteúdo relacionado em uma lista vertical. Para mostrar/ocultar um único bloco isolado, usar **Collapsible**.
 
-**Quando usar**: FAQs, configurações avançadas, conteúdo agrupável.
+**API e exemplos**: `src/components/ui/accordion.ts` + stories + `AccordionDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Implementação**:
-```ts
-export interface AccordionItem {
-  value: string;
-  trigger: string;
-  content: string | HTMLElement;
-}
+**Quando usar**: FAQs, configurações avançadas, conteúdo agrupável onde nem tudo precisa estar visível ao mesmo tempo.
 
-export interface AccordionOptions {
-  items: AccordionItem[];
-  type?: 'single' | 'multiple';
-  collapsible?: boolean;
-}
+**Estrutura**:
 
-export function createAccordion({ items, type = 'single', collapsible = true }: AccordionOptions): HTMLDivElement {
-  const container = document.createElement('div');
-  container.className = 'w-full divide-y divide-border';
-  container.setAttribute('data-type', type);
-
-  const openItems = new Set<string>();
-
-  items.forEach(({ value, trigger, content }) => {
-    const item = document.createElement('div');
-    item.setAttribute('data-value', value);
-
-    const triggerId = `accordion-trigger-${value}`;
-    const contentId = `accordion-content-${value}`;
-
-    // Trigger
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.id = triggerId;
-    btn.setAttribute('aria-expanded', 'false');
-    btn.setAttribute('aria-controls', contentId);
-    btn.className = 'flex w-full items-center justify-between py-4 font-medium hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
-    btn.textContent = trigger;
-
-    const chevron = document.createElement('span');
-    chevron.setAttribute('aria-hidden', 'true');
-    chevron.className = 'transition-transform duration-200 motion-reduce:transition-none';
-    chevron.textContent = '↓';
-    btn.appendChild(chevron);
-
-    // Content
-    const contentEl = document.createElement('div');
-    contentEl.id = contentId;
-    contentEl.setAttribute('role', 'region');
-    contentEl.setAttribute('aria-labelledby', triggerId);
-    contentEl.className = 'overflow-hidden';
-    contentEl.hidden = true;
-
-    const inner = document.createElement('div');
-    inner.className = 'pb-4 pt-0';
-    if (typeof content === 'string') {
-      inner.textContent = content;
-    } else {
-      inner.appendChild(content);
-    }
-    contentEl.appendChild(inner);
-
-    btn.addEventListener('click', () => {
-      const isOpen = openItems.has(value);
-
-      if (type === 'single') {
-        openItems.clear();
-        container.querySelectorAll('[aria-expanded="true"]').forEach((el) => {
-          el.setAttribute('aria-expanded', 'false');
-          const panelId = el.getAttribute('aria-controls');
-          if (panelId) {
-            const panel = document.getElementById(panelId);
-            if (panel) panel.hidden = true;
-          }
-        });
-      }
-
-      if (!isOpen || (isOpen && collapsible)) {
-        const newOpen = !isOpen;
-        btn.setAttribute('aria-expanded', newOpen ? 'true' : 'false');
-        contentEl.hidden = !newOpen;
-        if (newOpen) {
-          openItems.add(value);
-        } else {
-          openItems.delete(value);
-        }
-      }
-    });
-
-    item.append(btn, contentEl);
-    container.appendChild(item);
-  });
-
-  return container;
-}
+```
+div container (divide-y divide-border)
+└── AccordionItem (data-value)
+    ├── button trigger (aria-expanded, aria-controls)
+    │   ├── label
+    │   └── chevron (aria-hidden, transition-transform)
+    └── div content (role="region", aria-labelledby, hidden quando colapsado)
+        └── inner (padding 8-grid)
 ```
 
-**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
+**Opts da factory**:
 
-Adicione as chamadas de `track` dentro do event listener de clique, antes da lógica de toggle:
+| Nome | Default | Função |
+|---|---|---|
+| `items` | — | Array `{ value, trigger, content }` |
+| `type` | `single` | `single` (1 aberto por vez) ou `multiple` |
+| `collapsible` | `true` | Permite fechar o item atual em `single` |
 
-```ts
-import { track } from '@/lib/analytics';
+**Regras**:
+- Cada item com `value` único — IDs derivam dele (`accordion-trigger-${value}`)
+- Trigger é `<button type="button">`, nunca `<div>`
+- `aria-expanded` no trigger reflete o estado real
+- `aria-controls` no trigger aponta ao ID do content
+- Content com `role="region"` + `aria-labelledby` apontando ao trigger
+- Colapsado: `content.hidden = true` (não apenas classe CSS)
+- Animação do chevron com `motion-reduce:transition-none`
+- Padding do trigger e content em `--spacing-4` (8-grid)
 
-btn.addEventListener('click', () => {
-  const willOpen = !openItems.has(value);
-  if (willOpen) {
-    track('accordion_expand', { label: trigger });
-  } else {
-    track('accordion_collapse', { label: trigger });
-  }
-  // ... lógica de toggle existente
-});
-```
+**Acessibilidade**:
+- Navegação por teclado: Setas ↑↓ entre triggers, Home/End para primeiro/último
+- Foco visível obrigatório: `ring-2 ring-ring ring-offset-2`
+- Conteúdo focável dentro do panel é alcançável apenas quando expandido
+
+**Analytics**: emitir `accordion_expand` / `accordion_collapse` com `{ label }` no clique.
 
 ---
 
 ## Collapsible
 
-**Propósito**: mostrar e ocultar um único bloco de conteúdo.
+**Propósito**: mostrar e ocultar um único bloco de conteúdo controlado por um trigger externo.
 
-**Implementação**:
-```ts
-export interface CollapsibleOptions {
-  trigger: HTMLElement;
-  content: HTMLElement;
-  open?: boolean;
-  ariaLabel?: { open: string; close: string };
-}
+**API e exemplos**: `src/components/ui/collapsible.ts` + stories + `CollapsibleDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-export function createCollapsible({ trigger, content, open = false, ariaLabel }: CollapsibleOptions): HTMLDivElement {
-  const container = document.createElement('div');
-  const contentId = `collapsible-${Math.random().toString(36).slice(2)}`;
+**Estrutura**:
 
-  trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  trigger.setAttribute('aria-controls', contentId);
-
-  content.id = contentId;
-  content.hidden = !open;
-
-  if (ariaLabel) {
-    trigger.setAttribute('aria-label', open ? ariaLabel.close : ariaLabel.open);
-  }
-
-  trigger.addEventListener('click', () => {
-    const isOpen = content.hidden === false;
-    content.hidden = isOpen;
-    trigger.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-    if (ariaLabel) {
-      trigger.setAttribute('aria-label', isOpen ? ariaLabel.open : ariaLabel.close);
-    }
-  });
-
-  container.append(trigger, content);
-  return container;
-}
 ```
+div container
+├── trigger (qualquer elemento focável; recebe aria-expanded e aria-controls)
+└── content (id único, hidden quando colapsado)
+```
+
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `trigger` | — | Elemento (botão) que controla a abertura |
+| `content` | — | Elemento que será mostrado/ocultado |
+| `open` | `false` | Estado inicial |
+| `ariaLabel` | — | `{ open, close }` para alternar `aria-label` do trigger |
+
+**Regras**:
+- `aria-expanded` no trigger atualizado em cada toggle
+- `aria-controls` no trigger aponta ao ID do content
+- Content com `hidden` (atributo nativo, não apenas classe)
+- Para múltiplos itens irmãos, prefira Accordion
+- Quando o trigger não tem texto visível, fornecer `ariaLabel.open` e `ariaLabel.close`
+- Padding e gap em múltiplos de 8 (`--spacing-*`)
+
+**Acessibilidade**:
+- `aria-expanded` obrigatório
+- `aria-controls` apontando ao content
+- Trigger sempre focável via teclado

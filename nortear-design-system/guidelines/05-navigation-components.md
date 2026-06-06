@@ -4,165 +4,115 @@
 
 ## Breadcrumb
 
-**Propósito**: indica a posição do usuário na hierarquia de navegação.
+**Propósito**: indica a posição do usuário na hierarquia de navegação. Use para hierarquias profundas (>2 níveis); para 1-2 níveis, prefira um botão "Voltar".
 
-**Implementação**:
-```ts
-export interface BreadcrumbItem {
-  label: string;
-  href?: string; // undefined = item atual (não link)
-}
+**API e exemplos**: `src/components/ui/breadcrumb.ts` + stories + `BreadcrumbDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-export function createBreadcrumb(items: BreadcrumbItem[]): HTMLElement {
-  const nav = document.createElement('nav');
-  nav.setAttribute('aria-label', 'Localização na página');
+**Estrutura**:
 
-  const ol = document.createElement('ol');
-  ol.className = 'flex items-center gap-1.5 text-muted-foreground';
-
-  items.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.className = 'flex items-center gap-1.5';
-
-    if (index > 0) {
-      const sep = document.createElement('span');
-      sep.setAttribute('aria-hidden', 'true');
-      sep.textContent = '/';
-      sep.className = 'text-muted-foreground/50';
-      li.appendChild(sep);
-    }
-
-    if (item.href) {
-      const a = document.createElement('a');
-      a.href = item.href;
-      a.textContent = item.label;
-      a.className = 'hover:text-foreground transition-colors';
-      li.appendChild(a);
-    } else {
-      const span = document.createElement('span');
-      span.textContent = item.label;
-      span.setAttribute('aria-current', 'page');
-      span.className = 'text-foreground font-medium';
-      li.appendChild(span);
-    }
-
-    ol.appendChild(li);
-  });
-
-  nav.appendChild(ol);
-  return nav;
-}
 ```
+nav (aria-label="Localização na página")
+└── ol (flex, gap em --spacing-1.5)
+    ├── li
+    │   └── a (item navegável)
+    ├── li
+    │   ├── span aria-hidden separator (/)
+    │   └── a
+    └── li (último item)
+        ├── span aria-hidden separator
+        └── span aria-current="page" (item atual, sem link)
+```
+
+**Regras**:
+- `<nav>` com `aria-label` descritivo (não apenas "Breadcrumb")
+- Lista ordenada (`<ol>`) — a ordem é semanticamente relevante
+- Separadores são `aria-hidden="true"` (decorativos)
+- Item atual: `<span aria-current="page">`, nunca `<a>`
+- Gap entre itens em `--spacing-1.5` (8-grid)
+- Cor: itens navegáveis em `text-muted-foreground`; item atual em `text-foreground font-medium`
+- Não truncar labels — se necessário, usar overflow horizontal com scroll
+
+**Acessibilidade**:
+- `aria-label` no `<nav>` em português contextual (ex: "Localização na página")
+- `aria-current="page"` exclusivo no último item
 
 ---
 
 ## Tabs
 
-**Propósito**: organizar conteúdo em seções alternáveis.
+**Propósito**: organizar conteúdo em seções alternáveis no mesmo nível hierárquico. Para navegação entre páginas distintas, usar nav links.
 
-**Implementação**:
-```ts
-export interface TabsOptions {
-  tabs: Array<{ value: string; label: string; content: HTMLElement }>;
-  defaultValue?: string;
-}
+**API e exemplos**: `src/components/ui/tabs.ts` + stories + `TabsDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-export function createTabs({ tabs, defaultValue }: TabsOptions): HTMLElement {
-  const container = document.createElement('div');
-  const activeTab = defaultValue ?? tabs[0]?.value;
+**Estrutura**:
 
-  // Tab list
-  const tablist = document.createElement('div');
-  tablist.setAttribute('role', 'tablist');
-  tablist.className = 'inline-flex h-9 items-center rounded-lg bg-muted p-1';
-
-  // Tab panels
-  const panels = new Map<string, HTMLElement>();
-
-  tabs.forEach(({ value, label, content }) => {
-    const btn = document.createElement('button');
-    btn.setAttribute('role', 'tab');
-    btn.setAttribute('aria-selected', value === activeTab ? 'true' : 'false');
-    btn.setAttribute('aria-controls', `panel-${value}`);
-    btn.id = `tab-${value}`;
-    btn.className = cn(
-      'inline-flex items-center justify-center px-3 py-1 rounded-md text-sm font-medium transition-all',
-      value === activeTab
-        ? 'bg-background text-foreground shadow'
-        : 'text-muted-foreground hover:text-foreground'
-    );
-    btn.textContent = label;
-
-    btn.addEventListener('click', () => activateTab(value));
-    tablist.appendChild(btn);
-
-    const panel = document.createElement('div');
-    panel.setAttribute('role', 'tabpanel');
-    panel.setAttribute('aria-labelledby', `tab-${value}`);
-    panel.id = `panel-${value}`;
-    panel.className = 'mt-2';
-    if (value !== activeTab) panel.hidden = true;
-    panel.appendChild(content);
-    panels.set(value, panel);
-  });
-
-  function activateTab(value: string) {
-    tablist.querySelectorAll('[role="tab"]').forEach((tab) => {
-      const t = tab as HTMLButtonElement;
-      const isActive = t.id === `tab-${value}`;
-      t.setAttribute('aria-selected', isActive ? 'true' : 'false');
-      t.className = cn(
-        'inline-flex items-center justify-center px-3 py-1 rounded-md text-sm font-medium transition-all',
-        isActive ? 'bg-background text-foreground shadow' : 'text-muted-foreground hover:text-foreground'
-      );
-    });
-    panels.forEach((panel, v) => { panel.hidden = v !== value; });
-  }
-
-  container.appendChild(tablist);
-  panels.forEach((panel) => container.appendChild(panel));
-  return container;
-}
 ```
+Tabs (container)
+├── TabList (role="tablist")
+│   ├── Tab (role="tab", aria-selected, aria-controls)
+│   └── Tab ...
+└── TabPanels
+    ├── TabPanel (role="tabpanel", aria-labelledby, hidden quando inativo)
+    └── TabPanel ...
+```
+
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `tabs` | — | Array `{ value, label, content }` |
+| `defaultValue` | primeiro item | Tab ativo inicial |
+
+**Regras**:
+- TabList em `inline-flex` com `bg-muted` e `p-1` (8-grid)
+- Cada Tab com `aria-selected` e `aria-controls` apontando ao painel
+- Cada TabPanel com `aria-labelledby` apontando ao botão da tab
+- Painel inativo: `hidden = true` (não usar apenas `display: none` via classe)
+- Conteúdos de painel devem ter mesma altura mínima quando possível, evitando jumps no layout
+- Navegação por teclado: Setas ← → entre tabs, Home/End para primeira/última
+
+**Acessibilidade**:
+- `role="tablist"`, `role="tab"`, `role="tabpanel"` obrigatórios
+- Foco visível no tab ativo
+- `aria-selected="true"` apenas no tab atual
+
+**Analytics**: emitir `tab_change` com `{ from, to, label }` no clique.
 
 ---
 
 ## Pagination
 
-**Propósito**: navegar entre páginas de uma lista.
+**Propósito**: navegar entre páginas de uma lista paginada. Para listas curtas (<20 itens), prefira scroll contínuo.
 
-**Implementação**:
-```ts
-export function createPagination(options: {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}): HTMLElement {
-  const { currentPage, totalPages, onPageChange } = options;
+**API e exemplos**: `src/components/ui/pagination.ts` + stories + `PaginationDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  const nav = document.createElement('nav');
-  nav.setAttribute('aria-label', 'Paginação dos resultados');
-  nav.className = 'flex items-center gap-1';
+**Estrutura**:
 
-  const prevBtn = document.createElement('button');
-  prevBtn.textContent = '←';
-  prevBtn.className = 'h-9 px-3 rounded-md border border-input hover:bg-accent disabled:opacity-50';
-  prevBtn.disabled = currentPage === 1;
-  prevBtn.setAttribute('aria-label', 'Página anterior');
-  prevBtn.addEventListener('click', () => onPageChange(currentPage - 1));
-
-  const nextBtn = document.createElement('button');
-  nextBtn.textContent = '→';
-  nextBtn.className = 'h-9 px-3 rounded-md border border-input hover:bg-accent disabled:opacity-50';
-  nextBtn.disabled = currentPage === totalPages;
-  nextBtn.setAttribute('aria-label', 'Próxima página');
-  nextBtn.addEventListener('click', () => onPageChange(currentPage + 1));
-
-  const pageInfo = document.createElement('span');
-  pageInfo.className = 'px-3 text-sm text-muted-foreground';
-  pageInfo.textContent = `${currentPage} / ${totalPages}`;
-
-  nav.append(prevBtn, pageInfo, nextBtn);
-  return nav;
-}
 ```
+nav (aria-label="Paginação dos resultados")
+├── button "Anterior" (aria-label, disabled quando currentPage=1)
+├── span / button (números de página)
+└── button "Próxima" (aria-label, disabled quando currentPage=totalPages)
+```
+
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `currentPage` | — | Página atual (1-indexed) |
+| `totalPages` | — | Total de páginas |
+| `onPageChange` | — | Callback ao mudar página |
+
+**Regras**:
+- `<nav>` com `aria-label` descritivo
+- Botões Anterior/Próxima sempre presentes; `disabled` nos extremos (não esconder)
+- Página atual com `aria-current="page"`
+- Altura dos botões em `--spacing-9` (36px); gap em `--spacing-1`
+- Nunca usar emojis literais — usar ícones SVG (`ChevronLeft`, `ChevronRight`)
+- Em mobile, exibir apenas controles "Anterior / X de Y / Próxima"
+
+**Acessibilidade**:
+- `aria-label` em todos os botões (ex: "Página anterior", "Página 3")
+- Botões `disabled` nos extremos (não somente visualmente desativados)
+
+**Analytics**: emitir `pagination_change` com `{ from, to, total }`.

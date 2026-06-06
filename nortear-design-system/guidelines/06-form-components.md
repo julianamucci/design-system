@@ -4,189 +4,153 @@
 
 ## Button
 
-**Propósito**: elemento de ação — dispara submissões, confirmações e ações do usuário.
+**Propósito**: elemento de ação — dispara submissões, confirmações e ações do usuário. Para navegação, usar `<a>`.
 
-**Variantes**: `default`, `destructive`, `outline`, `secondary`, `ghost`, `link`
+**API e exemplos**: `src/components/ui/button.ts` + stories + `ButtonDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Implementação**: ver `01-regras-gerais.md` → "Padrão de criação de componentes".
+**Estrutura**:
 
-```ts
-import { createButton } from '$lib/components/ui/button';
-import { track } from '$lib/analytics';
-
-// Botão simples
-const btn = createButton({
-  label: 'Salvar',
-  variant: 'default',
-  onClick: () => handleSalvar(),
-});
-
-// Com analytics
-const btnCheckout = createButton({
-  label: 'Finalizar compra',
-  onClick: () => {
-    track('button_click', {
-      component: 'button',
-      variant: 'default',
-      location: 'checkout_form',
-      label: 'Finalizar compra',
-    });
-    handleCheckout();
-  },
-});
-
-// Icon-only — aria-label obrigatório
-const btnDelete = createButton({ label: '' });
-btnDelete.setAttribute('aria-label', 'Excluir produto Cadeira Gamer Pro');
-btnDelete.innerHTML = `<svg aria-hidden="true"><!-- ícone Trash2 --></svg>`;
 ```
+button
+├── icon opcional (lucide SVG, aria-hidden="true")
+└── label (texto)
+```
+
+**Variantes**:
+
+| Variante | Uso |
+|---|---|
+| `default` | Ação primária |
+| `destructive` | Ação irreversível (delete) |
+| `outline` | Ação secundária |
+| `secondary` | Ação alternativa |
+| `ghost` | Ação terciária / icon-only |
+| `link` | Ação textual |
+
+**Tamanhos**: `sm`, `default`, `lg`, `icon`.
+
+**Regras**:
+- Padding vertical via `--spacing-*`, nunca altura fixa (ver memória "nunca usar altura fixa em primitivos")
+- Icon-only requer `aria-label` descritivo
+- Ícone interno: `aria-hidden="true"`, dimensões `h-4 w-4` (ou `h-5 w-5` em `lg`)
+- Ação destrutiva: confirmação por Dialog antes da execução
+- Gap entre ícone e label em `--spacing-2`
+
+**Acessibilidade**:
+- `<button>` semântico (nunca `<div onclick>`)
+- `aria-label` obrigatório quando não há texto visível
+- Estado `disabled` reflete `aria-disabled` quando necessário
+
+**Analytics**: emitir `button_click` com `{ component, variant, location, label }`.
 
 ---
 
 ## Input
 
-```ts
-export interface InputOptions {
-  id: string;
-  label: string;
-  type?: string;
-  placeholder?: string;
-  required?: boolean;
-  errorId?: string;
-}
+**Propósito**: campo de texto de linha única.
 
-export function createInput({ id, label, type = 'text', placeholder, required, errorId }: InputOptions): HTMLDivElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'space-y-2';
+**API e exemplos**: `src/components/ui/input.ts` + stories + `InputDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  const labelEl = document.createElement('label');
-  labelEl.htmlFor = id;
-  labelEl.className = 'text-sm font-medium leading-none';
-  labelEl.textContent = label;
+**Estrutura**:
 
-  const input = document.createElement('input');
-  input.type = type;
-  input.id = id;
-  input.name = id;
-  input.className = cn(
-    'flex h-9 w-full rounded-md border border-input bg-input px-3 py-1 shadow-sm transition-colors',
-    'file:border-0 file:bg-transparent file:text-sm file:font-medium',
-    'placeholder:text-muted-foreground',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-    'disabled:cursor-not-allowed disabled:opacity-50'
-  );
-
-  if (placeholder) input.placeholder = placeholder;
-  if (required) input.required = true;
-  if (errorId) {
-    input.setAttribute('aria-describedby', errorId);
-    input.setAttribute('aria-invalid', 'true');
-  }
-
-  wrapper.appendChild(labelEl);
-  wrapper.appendChild(input);
-  return wrapper;
-}
+```
+wrapper (space-y-2)
+├── label (htmlFor=id)
+├── input (id, type, name)
+└── p#<id>-error (role="alert", quando há erro)
 ```
 
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `id` | — | Obrigatório (link label↔input) |
+| `label` | — | Texto do `<label>` |
+| `type` | `text` | Tipo HTML do input |
+| `placeholder` | — | Exemplo real (não instrução) |
+| `required` | `false` | Marca campo obrigatório |
+| `errorId` | — | ID do elemento de erro (vincula via `aria-describedby`) |
+
 **Regras**:
-- `label` sempre associado via `for`/`id`
-- Placeholder: exemplo real — `'ex: ana@empresa.com'`
-- Tokens obrigatórios: `bg-input border-input`
+- `<label>` sempre associado via `htmlFor`/`id` (nunca placeholder como label)
+- Placeholder deve ser exemplo real — `'ex: ana@empresa.com'`, não `'Digite seu e-mail'`
+- Padding vertical em `--spacing-1`, horizontal em `--spacing-3`; nunca altura fixa
+- Tokens obrigatórios: `bg-input`, `border-input`
+- Foco visível: `ring-2 ring-ring ring-offset-2`
+- Estado de erro: `aria-invalid="true"` + `aria-describedby` para a mensagem
+
+**Acessibilidade**:
+- Label visível e associado
+- Erros com `role="alert"` (anunciados imediatamente)
+- `aria-required="true"` quando aplicável
 
 ---
 
 ## Form (HTML nativo + Zod)
 
-```ts
-import { z } from 'zod';
+**Propósito**: agrupar inputs e validar via Zod. Forms em vanilla TS usam `<form>` nativo + validação manual no submit.
 
-const schema = z.object({
-  email: z.string().email('E-mail inválido'),
-  nome: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
-});
+**API e exemplos**: `src/components/ui/form.ts` + stories + `FormDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-export function createLoginForm(onSubmit: (data: { email: string; nome: string }) => void): HTMLFormElement {
-  const form = document.createElement('form');
-  form.className = 'space-y-4';
-  form.noValidate = true; // Usamos Zod, não validação nativa
+**Estrutura**:
 
-  const emailWrapper = createInput({ id: 'email', label: 'E-mail', type: 'email', placeholder: 'ex: ana@empresa.com' });
-  const nomeWrapper = createInput({ id: 'nome', label: 'Nome', placeholder: 'ex: Ana Paula Silva' });
-
-  const submitBtn = createButton({ label: 'Entrar', variant: 'default' });
-  (submitBtn as HTMLButtonElement).type = 'submit';
-
-  form.append(emailWrapper, nomeWrapper, submitBtn);
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    clearErrors(form);
-
-    const data = {
-      email: (form.querySelector('#email') as HTMLInputElement).value,
-      nome: (form.querySelector('#nome') as HTMLInputElement).value,
-    };
-
-    const result = schema.safeParse(data);
-
-    if (!result.success) {
-      result.error.errors.forEach(({ path, message }) => {
-        showFieldError(form, path[0] as string, message);
-      });
-      return;
-    }
-
-    onSubmit(result.data);
-  });
-
-  return form;
-}
-
-function showFieldError(form: HTMLFormElement, fieldId: string, message: string) {
-  const input = form.querySelector(`#${fieldId}`) as HTMLInputElement;
-  const errorId = `${fieldId}-error`;
-  input.setAttribute('aria-invalid', 'true');
-  input.setAttribute('aria-describedby', errorId);
-
-  const error = document.createElement('p');
-  error.id = errorId;
-  error.className = 'text-destructive text-sm';
-  error.setAttribute('role', 'alert');
-  error.textContent = message;
-  input.insertAdjacentElement('afterend', error);
-}
-
-function clearErrors(form: HTMLFormElement) {
-  form.querySelectorAll('[role="alert"]').forEach((el) => el.remove());
-  form.querySelectorAll('[aria-invalid]').forEach((el) => {
-    el.removeAttribute('aria-invalid');
-    el.removeAttribute('aria-describedby');
-  });
-}
 ```
+form (noValidate, space-y-4)
+├── Input fields (cada um com errorId)
+├── submit button
+└── erros inline (inseridos via showFieldError)
+```
+
+**Regras**:
+- `form.noValidate = true` — validação é responsabilidade do Zod, não do browser
+- Schema Zod com mensagens em português
+- No submit: `e.preventDefault()` → limpar erros anteriores → `schema.safeParse()` → exibir erros por campo ou chamar `onSubmit`
+- Erros são `<p role="alert" id="${fieldId}-error">` inseridos imediatamente após o input
+- Limpar `aria-invalid` e `aria-describedby` ao limpar erros
+- Estado de loading durante submit: desabilitar botão + exibir spinner
+
+**Acessibilidade**:
+- Cada erro com `role="alert"` (live region)
+- `aria-invalid="true"` no campo com erro
+- `aria-describedby` apontando ao ID do erro
+- Foco no primeiro campo com erro após submit inválido
+
+**Analytics**: emitir `form_submit` com `{ form_id, valid: boolean, error_fields?: string[] }`.
 
 ---
 
 ## Checkbox
 
-```ts
-export function createCheckbox(options: { id: string; label: string; checked?: boolean }): HTMLDivElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'flex items-center space-x-2';
+**Propósito**: seleção booleana ou múltipla em listas.
 
-  const input = document.createElement('input');
-  input.type = 'checkbox';
-  input.id = options.id;
-  input.checked = options.checked ?? false;
-  input.className = 'h-4 w-4 rounded border border-input focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
+**API e exemplos**: `src/components/ui/checkbox.ts` + stories + `CheckboxDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-  const label = document.createElement('label');
-  label.htmlFor = options.id;
-  label.className = 'text-sm font-medium leading-none cursor-pointer';
-  label.textContent = options.label;
+**Estrutura**:
 
-  wrapper.append(input, label);
-  return wrapper;
-}
 ```
+wrapper (flex items-center space-x-2)
+├── input[type=checkbox] (id)
+└── label (htmlFor=id, cursor-pointer)
+```
+
+**Opts da factory**:
+
+| Nome | Default | Função |
+|---|---|---|
+| `id` | — | Obrigatório |
+| `label` | — | Texto do label |
+| `checked` | `false` | Estado inicial |
+| `indeterminate` | `false` | Estado tri-state (parent de grupo) |
+
+**Regras**:
+- `<input type="checkbox">` nativo — não recriar como `<div role="checkbox">` em vanilla
+- Label sempre associado via `htmlFor`/`id`
+- Tamanho fixo `h-4 w-4` (ícone, não texto — segue 8-grid via tokens)
+- Gap label↔checkbox em `--spacing-2`
+- Tri-state (indeterminate): apenas em parent de grupo, definido via JS (`input.indeterminate = true`)
+- Foco visível: `ring-2 ring-ring ring-offset-2`
+
+**Acessibilidade**:
+- Label clicável (cobre o input via `htmlFor`)
+- `aria-checked` é gerenciado nativamente
+- Grupo de checkboxes: envolver em `<fieldset>` + `<legend>`
