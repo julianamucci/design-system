@@ -153,127 +153,36 @@ export function createChart(canvasId: string, ariaLabel: string): HTMLElement {
 
 **Stack**: factory `createDataTable<TData>(opts)` em `src/components/ui/data-table.ts` sobre **`@tanstack/table-core`** v8 (engine headless) + **`@tanstack/virtual-core`**. Renderiza HTML semântico via DOM nativo reusando o factory `createTable` do design system para preservar tokens 8-grid e a11y.
 
-**Implementação básica**:
-```ts
-import { createDataTable, type DataTableColumn } from '@/components/ui/data-table';
-
-interface Invoice {
-  id: string;
-  customer: string;
-  status: 'Pago' | 'Pendente' | 'Cancelado';
-  amount: number;
-}
-
-const invoices: Invoice[] = [/* ... */];
-
-const columns: DataTableColumn<Invoice>[] = [
-  { accessorKey: 'id', header: 'Fatura', size: 110 },
-  { accessorKey: 'customer', header: 'Cliente' },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    meta: {
-      renderCell: ({ value }) => {
-        const badge = createBadge({
-          children: String(value),
-          variant: value === 'Cancelado' ? 'destructive' : value === 'Pendente' ? 'secondary' : 'default',
-        });
-        return badge;
-      },
-    },
-  },
-  {
-    accessorKey: 'amount',
-    header: 'Valor',
-    meta: {
-      renderCell: ({ value }) => {
-        const span = document.createElement('span');
-        span.className = 'nds-font-medium nds-tabular-nums';
-        span.textContent = Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        return span;
-      },
-    },
-  },
-];
-
-const table = createDataTable<Invoice>({
-  columns,
-  data: invoices,
-  enableRowSelection: true,
-  globalFilterPlaceholder: 'Buscar fatura, cliente, método...',
-});
-
-document.querySelector('#app')!.appendChild(table);
-```
+**API e exemplos**: `src/components/ui/data-table.ts` + stories + `DataTableDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
 **Flags principais** (todas opcionais): `enableGlobalFilter` (default `true`), `enableColumnVisibility` (default `true`), `enableColumnFilters`, `enableRowSelection`, `enableColumnResizing`, `enableColumnOrdering`, `enableColumnPinning`, `enablePagination` (default `true`), `virtualized` (desliga paginação).
 
-**ColumnMeta (Nortear)**:
-- `filter?: { type: 'text' | 'select'; options?: string[] }` — input/select por coluna
-- `editable?: boolean` — clique entra em edição inline
-- `renderCell?: (ctx) => HTMLElement | string` — DOM nativo para markup rico (badges, ícones, links). Sem JSX/snippets na stack vanilla
-- `cellClass?: string` — classes extras no `<td>`
+**`ColumnMeta` (Nortear)**:
 
-**Edição inline** — marque `meta.editable` e use `onCellEdit`. O componente **não muta** o array `data`:
-```ts
-let data: Invoice[] = [...invoices];
+| Chave | Tipo | Função |
+|---|---|---|
+| `filter` | `{ type: 'text' \| 'select'; options?: string[] }` | Input/select por coluna |
+| `editable` | `boolean` | Marca a coluna como editável inline |
+| `renderCell` | `(ctx) => HTMLElement \| string` | DOM nativo para markup rico (badges, ícones, links). Sem JSX/snippets na stack vanilla |
+| `cellClass` | `string` | Classes extras no `<td>` |
 
-const table = createDataTable<Invoice>({
-  columns: editableColumns,
-  get data() { return data; },
-  onCellEdit: (rowIndex, columnId, value) => {
-    data = data.map((row, i) =>
-      i === rowIndex ? { ...row, [columnId]: value } : row
-    );
-    // re-render externamente se necessário — engine notifica via subscription
-  },
-});
-```
-
-`Enter` confirma; `Esc` cancela.
-
-**i18n das labels** — passe via opção `labels` para suportar locale switch:
-```ts
-const table = createDataTable<Invoice>({
-  columns,
-  data: invoices,
-  labels: {
-    columns: t('demonstration.labels.columns'),
-    rowsPerPage: t('demonstration.labels.rowsPerPage'),
-    page: t('demonstration.labels.page'),
-    pageOf: t('demonstration.labels.of'),
-    firstPage: t('demonstration.labels.firstPage'),
-    prevPage: t('demonstration.labels.prevPage'),
-    nextPage: t('demonstration.labels.nextPage'),
-    lastPage: t('demonstration.labels.lastPage'),
-  },
-});
-```
-
-Sem `labels`, o factory usa defaults em pt-BR (`'Primeira página'`, `'Página anterior'` etc.).
-
-**Virtualização** — para datasets &gt; 500 linhas:
-```ts
-const table = createDataTable<Invoice>({
-  columns,
-  data: bigData,
-  virtualized: true,
-  maxHeight: '400px',
-  virtualRowHeight: 36,
-  enableColumnVisibility: false,
-});
-```
+**i18n**: o factory aceita uma opção `labels` para sobrescrever todas as strings (Colunas, Linhas por página, Página, de, Primeira/Anterior/Próxima/Última página, etc.). Sem `labels`, defaults em pt-BR. As docs pages passam `t('demonstration.labels.*')` para refletir o locale ativo.
 
 **Regras**:
 - Defina `columns` em escopo de módulo ou memoize — recriar zera o estado da engine
-- Selects de filtro recebem `filterFn: 'equals'` automaticamente
+- `enableRowSelection` apenas quando houver ação em lote — checkbox sem ação confunde
+- Para resize/reorder, defina `size` inicial na column def — sem isso o cabeçalho usa largura automática
+- Selects de filtro recebem `filterFn: 'equals'` automaticamente; texto usa `includesString`
 - Tokens 8-grid obrigatórios em CSS — `--spacing-1/2/4/6/8/10/24`. Off-grid (3, 5, 7, 9) são bugs
 - Estilos em `src/styles/components/data-table.css` registrado em `globals.css` — classes `.nds-data-table-*`
+- `data` nunca é mutado pelo componente — para edição inline, atualize o array externamente no handler de `onCellEdit`
 - Para markup rico, use `meta.renderCell` retornando `HTMLElement` (preferido) ou `string` (escape automático)
+- `virtualized` e `enablePagination` são mutuamente exclusivos; virtualização desativa paginação
 
 **Acessibilidade**:
 - HTML semântico real (`<table>`, `<thead>`, `<tbody>`, `<th scope="col">`, `<td>`)
-- `aria-sort` setado no `<th>` ordenável (`ascending` / `descending` / `none`)
+- `aria-sort` no `<th>` ordenável (`ascending` / `descending` / `none`)
 - `aria-label` contextual em todos os botões via `labels.sortBy(col)`, `labels.filter(col)`, etc.
-- Checkbox de cabeçalho com `indeterminate` em seleção parcial
+- Checkbox de cabeçalho com `indeterminate` em seleção parcial (tri-state)
 - Handle de resize: `role="separator"` + `aria-orientation="vertical"`
+- Estado vazio é uma linha com mensagem — nunca tabela vazia silenciosa
