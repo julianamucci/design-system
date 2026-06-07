@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDialog } from './dialog';
 import { createButton } from './button';
 
@@ -94,7 +94,7 @@ export const Open: Story = {
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('dialog');
-    await expect(dialog).toBeVisible();
+    await waitFor(() => expect(dialog).toBeVisible());
     await expect(dialog).toHaveAttribute('aria-modal', 'true');
   },
 };
@@ -190,7 +190,7 @@ export const Controlled: Story = {
       const trigger = canvas.getByRole('button', { name: /Open programmatically/i });
       await userEvent.click(trigger);
       const dialog = await body.findByRole('dialog');
-      await expect(dialog).toBeVisible();
+      await waitFor(() => expect(dialog).toBeVisible());
     });
 
     await step('Escape fecha o diálogo controlado', async () => {

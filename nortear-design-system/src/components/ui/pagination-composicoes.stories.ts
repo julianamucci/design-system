@@ -166,27 +166,29 @@ export const Interativo: Story = {
       await expect(status?.textContent).toMatch(/Página 3 de 8/);
     });
 
-    await step('Click em "5" atualiza status para Página 5', async () => {
+    await step('Click em "4" atualiza status para Página 4', async () => {
+      // Com total=8 e current=3, o algoritmo de páginas retorna
+      // [1, 2, 3, 4, ellipsis, 8] — então clicamos no vizinho "4".
       const links = canvas.getAllByRole('link');
-      const five = links.find((a) => (a.textContent ?? '').trim() === '5');
-      if (!five) throw new Error('link "5" não encontrado');
-      await userEvent.click(five);
+      const four = links.find((a) => (a.textContent ?? '').trim() === '4');
+      if (!four) throw new Error('link "4" não encontrado');
+      await userEvent.click(four);
       await waitFor(() => {
-        if (!/Página 5 de 8/.test(status?.textContent ?? '')) {
-          throw new Error('status não atualizou');
+        if (!/Página 4 de 8/.test(status?.textContent ?? '')) {
+          throw new Error('status não atualizou para 4');
         }
       });
     });
 
-    await step('Click em Next leva para página 6', async () => {
+    await step('Click em Next leva para página 5', async () => {
       const next = canvasElement.querySelector<HTMLAnchorElement>(
         'a[aria-label="Go to next page"]',
       );
       if (!next) throw new Error('Next não encontrado');
       await userEvent.click(next);
       await waitFor(() => {
-        if (!/Página 6 de 8/.test(status?.textContent ?? '')) {
-          throw new Error('status não atualizou para 6');
+        if (!/Página 5 de 8/.test(status?.textContent ?? '')) {
+          throw new Error('status não atualizou para 5');
         }
       });
     });

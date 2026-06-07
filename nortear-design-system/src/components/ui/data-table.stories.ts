@@ -61,12 +61,16 @@ export const Playground: Story = {
 
     await step('Filtro global reduz linhas', async () => {
       const search = c.getByLabelText(/Buscar fatura/i) as HTMLInputElement;
-      await userEvent.clear(search);
+      // Foca antes de limpar — em browser-mode o user-event pode falhar com
+      // "element could not be focused" se chamar clear() sem foco prévio.
+      await userEvent.click(search);
       await userEvent.type(search, 'Pix');
       await waitFor(() => {
         expect(canvasElement.querySelector('.nds-data-table-tr')).not.toBeNull();
       });
-      await userEvent.clear(search);
+      // Restaura o filtro selecionando tudo e deletando (mantém foco).
+      await userEvent.tripleClick(search);
+      await userEvent.keyboard('{Delete}');
     });
 
     await step('Ordenação por coluna Valor', async () => {

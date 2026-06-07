@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { createDialog } from './dialog';
 import { createButton } from './button';
 
@@ -130,7 +130,9 @@ export const ProfileEdit: Story = {
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('dialog');
-    await expect(within(dialog).getByText(/Nome de exibição/i)).toBeVisible();
+    await waitFor(() =>
+      expect(within(dialog).getByText(/Nome de exibição/i)).toBeVisible(),
+    );
   },
 };
 
