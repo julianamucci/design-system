@@ -1,7 +1,34 @@
-import type { Preview } from '@storybook/react-vite'
+import type { Preview, Decorator } from '@storybook/react-vite'
 import { useEffect, addons } from 'storybook/preview-api';
 import { GLOBALS_UPDATED, SET_GLOBALS } from 'storybook/internal/core-events';
 import { withThemeByClassName } from '@storybook/addon-themes';
+
+// Decorator que reseta scroll-lock entre stories. Stories de Dialog/Popover/
+// DropdownMenu/Sheet/Drawer abrem portais que aplicam `pointer-events: none`,
+// `overflow: hidden`, `data-scroll-locked`, `aria-hidden` ou `inert` no <body>.
+// Quando a story fecha, esses estados às vezes vazam para a próxima story.
+// Limpamos no início de cada Story para garantir DOM neutro.
+const scrollLockCleanupDecorator: Decorator = (Story) => {
+  if (typeof document !== 'undefined') {
+    const body = document.body;
+    // Remove estilos inline de scroll-lock que portais podem ter vazado
+    body.style.removeProperty('pointer-events');
+    body.style.removeProperty('overflow');
+    body.style.removeProperty('padding-right');
+    body.style.removeProperty('margin-right');
+    // Remove atributos que portais podem ter setado
+    body.removeAttribute('data-scroll-locked');
+    body.removeAttribute('aria-hidden');
+    body.removeAttribute('inert');
+    // Remove órfãos de portais que possam ter sobrado de stories anteriores
+    document.querySelectorAll(
+      '[data-base-ui-popup-root]:empty, [data-state="closed"][role="dialog"], [data-state="closed"][role="tooltip"]'
+    ).forEach((el) => {
+      if (!el.contains(document.activeElement)) el.remove();
+    });
+  }
+  return Story();
+};
 
 function applyClasses(brand: string, density: string, font: string) {
   const html = document.documentElement;
@@ -140,6 +167,9 @@ const preview: Preview = {
   },
 
   decorators: [
+    // 0. Cleanup de scroll-lock vazado por portais de stories anteriores
+    scrollLockCleanupDecorator,
+
     // 1. Gerencia Light/Dark Mode (via addon-themes)
     withThemeByClassName({
       themes: {

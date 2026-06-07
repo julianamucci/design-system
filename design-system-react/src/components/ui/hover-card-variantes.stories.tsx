@@ -39,7 +39,7 @@ export const Default: Story = {
   },
   render: () => (
     <div style={wrapperStyle}>
-      <HoverCard defaultOpen>
+      <HoverCard defaultOpen openDelay={0} closeDelay={0}>
         <HoverCardTrigger asChild>
           <a
             href="/users/joana"
@@ -85,7 +85,7 @@ export const ComDelayCurto: Story = {
   },
   render: () => (
     <div style={wrapperStyle}>
-      <HoverCard defaultOpen openDelay={100} closeDelay={50}>
+      <HoverCard defaultOpen openDelay={0} closeDelay={0}>
         <HoverCardTrigger asChild>
           <a
             href="https://example.com"

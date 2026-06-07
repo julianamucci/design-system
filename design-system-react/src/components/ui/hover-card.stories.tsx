@@ -51,8 +51,8 @@ const meta = {
   args: {
     side: "bottom",
     align: "center",
-    openDelay: 100,
-    closeDelay: 50,
+    openDelay: 0,
+    closeDelay: 0,
     defaultOpen: false,
   },
 } satisfies Meta<typeof HoverCardForArgs>;

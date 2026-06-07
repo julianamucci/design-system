@@ -28,8 +28,8 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-const openDelay = 100;
-const closeDelay = 50;
+const openDelay = 0;
+const closeDelay = 0;
 
 export const PerfilDeUsuario: Story = {
   parameters: {

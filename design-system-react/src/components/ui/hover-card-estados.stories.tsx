@@ -79,7 +79,7 @@ export const Aberto: Story = {
   },
   render: () => (
     <div style={wrapperStyle}>
-      <HoverCard defaultOpen openDelay={100} closeDelay={50}>
+      <HoverCard defaultOpen openDelay={0} closeDelay={0}>
         <HoverCardTrigger asChild>
           <a
             href="/users/joana"
@@ -134,7 +134,7 @@ export const Controlado: Story = {
               Fechar externamente
             </Button>
           </div>
-          <HoverCard open={open} onOpenChange={setOpen} openDelay={100} closeDelay={50}>
+          <HoverCard open={open} onOpenChange={setOpen} openDelay={0} closeDelay={0}>
             <HoverCardTrigger asChild>
               <a
                 href="/users/joana"
