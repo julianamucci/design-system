@@ -709,3 +709,17 @@ tabindex: "-1",  // PATCH: a11y — toast item não-interativo não deve ser tab
 - **Análise:** `Icon.svelte` e `icons/*.svelte` usam `$props()` corretamente; nenhum mau uso de runes encontrado. Suspeita de problema de cache Vite/bundler ou export duplicado.
 - **Mitigação imediata:** limpar `node_modules/.vite` e re-rodar.
 - **Próximo passo:** reproduzir em projeto isolado, abrir issue em https://github.com/lucide-icons/lucide.
+
+### svelte/@lucide/svelte — ícone `github` removido upstream
+
+- **Status:** RESOLVIDO localmente em 2026-06-06 — substituído por `code-2`.
+- **Versão:** `@lucide/svelte@1.8.0`
+- **Sintoma:** `import Github from '@lucide/svelte/icons/github'` falha com `dependencies imported but could not be resolved`, bloqueando a coleta de testes.
+- **Análise:** o lucide-icons removeu o ícone `github` upstream (questões de marca). Não há alias em `@lucide/svelte/aliases/`.
+- **Mitigação:** trocar a importação por `@lucide/svelte/icons/code-2` (substituto neutro) ou similar. Aplicado em `src/components/ui/command/CommandComposicaoLinkItemStory.svelte`.
+
+### svelte/input-otp — pacote não instalado (uso indevido)
+
+- **Status:** RESOLVIDO localmente em 2026-06-06.
+- **Sintoma:** `import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp'` em `InputOTPDocs.svelte` falha — o pacote `input-otp` é uma dep do shadcn-react, não da stack Svelte (que usa `bits-ui` `PinInput`).
+- **Mitigação:** declarar a constante localmente (`const REGEXP_ONLY_DIGITS_AND_CHARS = '^[a-zA-Z0-9]+$'`). Bits-ui aceita string regex em `pattern`.

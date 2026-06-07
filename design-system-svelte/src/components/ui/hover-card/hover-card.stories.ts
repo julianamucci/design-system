@@ -56,8 +56,8 @@ const meta = {
   args: {
     side: 'bottom',
     align: 'center',
-    openDelay: 100,
-    closeDelay: 100,
+    openDelay: 0,
+    closeDelay: 0,
     defaultOpen: false,
     triggerLabel: '@joana',
     variant: 'default',

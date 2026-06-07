@@ -29,7 +29,7 @@
     side = 'top',
     align = 'center',
     sideOffset = 4,
-    delayDuration = 200,
+    delayDuration = 0,
     defaultOpen = false,
     open = $bindable(undefined),
     triggerLabel = 'Salvar',

@@ -77,7 +77,7 @@ export const FocoTeclado: Story = {
   name: 'Foco via teclado (sem delay)',
   args: {
     defaultOpen: false,
-    delayDuration: 800,
+    delayDuration: 0,
     variant: 'default',
     triggerLabel: 'Salvar',
     ariaLabel: 'Salvar',

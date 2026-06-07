@@ -25,8 +25,8 @@ type Story = StoryObj<typeof meta>;
 
 const baseArgs = {
   defaultOpen: true,
-  openDelay: 50,
-  closeDelay: 50,
+  openDelay: 0,
+  closeDelay: 0,
 } as const;
 
 const waitOpen = async () => {

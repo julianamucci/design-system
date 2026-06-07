@@ -37,8 +37,8 @@ const waitForOpen = async (root: HTMLElement) => {
 export const Default: Story = {
   name: 'Default (700ms / 300ms)',
   args: {
-    openDelay: 100,
-    closeDelay: 100,
+    openDelay: 0,
+    closeDelay: 0,
     defaultOpen: true,
     variant: 'userProfile',
     triggerLabel: '@joana',
@@ -54,8 +54,8 @@ export const Default: Story = {
 export const ComDelayCurto: Story = {
   name: 'Com delay curto (50ms)',
   args: {
-    openDelay: 50,
-    closeDelay: 50,
+    openDelay: 0,
+    closeDelay: 0,
     defaultOpen: true,
     variant: 'userProfile',
     triggerLabel: '@joana',

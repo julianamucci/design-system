@@ -46,8 +46,8 @@ export const Aberto: Story = {
   name: 'Aberto (defaultOpen)',
   args: {
     defaultOpen: true,
-    openDelay: 50,
-    closeDelay: 50,
+    openDelay: 0,
+    closeDelay: 0,
     variant: 'userProfile',
     triggerLabel: '@joana',
   },
@@ -63,8 +63,8 @@ export const Controlado: Story = {
   name: 'Controlado (open prop)',
   args: {
     open: true,
-    openDelay: 50,
-    closeDelay: 50,
+    openDelay: 0,
+    closeDelay: 0,
     variant: 'userProfile',
     triggerLabel: '@joana',
   },

@@ -2,7 +2,9 @@
   import * as Command from '@/components/ui/command';
   import ExternalLink from '@lucide/svelte/icons/external-link';
   import BookOpen from '@lucide/svelte/icons/book-open';
-  import Github from '@lucide/svelte/icons/github';
+  // O ícone "github" foi removido do @lucide/svelte (questões de marca).
+  // Usamos `code-2` como substituto neutro para representar um link de repositório.
+  import Github from '@lucide/svelte/icons/code-2';
 </script>
 
 <div class="w-full max-w-sm rounded-xl border shadow-md">

@@ -5,7 +5,9 @@
     InputOTPSlot,
     InputOTPSeparator,
   } from '@/components/ui/input-otp';
-  import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp';
+  // bits-ui PinInput aceita `pattern` como string. Replicamos a constante
+  // pública do react-input-otp localmente para manter o snippet didático.
+  const REGEXP_ONLY_DIGITS_AND_CHARS = '^[a-zA-Z0-9]+$';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';

@@ -140,6 +140,32 @@ const preview: Preview = {
   },
 
   decorators: [
+    // Decorator 0: limpa scroll-lock / overlays órfãos deixados por overlays
+    // (Dialog, Sheet, Drawer, Tooltip, Popover, DropdownMenu) que não tiveram
+    // chance de desmontar entre stories. Sem isso o body fica com
+    // `pointer-events: none`, `overflow: hidden`, `inert` ou nodes vazios
+    // de portal que poluem o axe e bloqueiam play functions subsequentes.
+    (Story, ctx) => {
+      if (typeof document !== 'undefined') {
+        const body = document.body;
+        body.style.removeProperty('pointer-events');
+        body.style.removeProperty('overflow');
+        body.style.removeProperty('padding-right');
+        body.style.removeProperty('margin-right');
+        body.removeAttribute('data-scroll-locked');
+        body.removeAttribute('aria-hidden');
+        body.removeAttribute('inert');
+        document
+          .querySelectorAll(
+            '[data-bits-floating-content]:empty, [data-state="closed"][role="dialog"], [data-state="closed"][role="tooltip"]'
+          )
+          .forEach((el) => {
+            if (!el.contains(document.activeElement)) el.remove();
+          });
+      }
+      return Story(ctx);
+    },
+
     // Decorator 1: manages .dark class via addon-themes
     withThemeByClassName({
       themes: { light: '', dark: 'dark' },
