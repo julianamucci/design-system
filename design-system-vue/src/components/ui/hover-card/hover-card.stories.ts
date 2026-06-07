@@ -38,8 +38,8 @@ const meta = {
   },
   args: {
     defaultOpen: false,
-    openDelay: 100,
-    closeDelay: 100,
+    openDelay: 0,
+    closeDelay: 0,
   },
 } satisfies Meta<any>;
 

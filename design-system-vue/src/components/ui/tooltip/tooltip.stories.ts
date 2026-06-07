@@ -19,7 +19,7 @@ const meta = {
   decorators: [
     (story) => ({
       components: { TooltipProvider, story },
-      template: '<TooltipProvider :delay-duration="50"><story /></TooltipProvider>',
+      template: '<TooltipProvider :delay-duration="0"><story /></TooltipProvider>',
     }),
   ],
   parameters: {

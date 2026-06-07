@@ -73,7 +73,7 @@ export const Aberto: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout; min-height: 220px;">
-        <HoverCard :default-open="true" :open-delay="50" :close-delay="50">
+        <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
           <HoverCardTrigger as-child>
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@joana</a>
           </HoverCardTrigger>
@@ -114,7 +114,7 @@ export const Controlado: Story = {
     template: `
       <div class="flex flex-col gap-3" style="contain: layout; min-height: 240px;">
         <Button @click="open = !open">Toggle externo ({{ open ? 'aberto' : 'fechado' }})</Button>
-        <HoverCard :open="open" @update:open="(v) => open = v" :open-delay="50" :close-delay="50">
+        <HoverCard :open="open" @update:open="(v) => open = v" :open-delay="0" :close-delay="0">
           <HoverCardTrigger as-child>
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@joana</a>
           </HoverCardTrigger>

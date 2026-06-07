@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/vue3';
+import type { Preview, Decorator } from '@storybook/vue3';
 import { setup } from '@storybook/vue3';
 import { createPinia } from 'pinia';
 import { useEffect, addons } from 'storybook/preview-api';
@@ -53,6 +53,28 @@ if (typeof document !== 'undefined') {
 
 setup((app) => {
   app.use(createPinia());
+});
+
+const scrollLockCleanupDecorator: Decorator = () => ({
+  setup() {
+    if (typeof document !== 'undefined') {
+      const body = document.body;
+      body.style.removeProperty('pointer-events');
+      body.style.removeProperty('overflow');
+      body.style.removeProperty('padding-right');
+      body.style.removeProperty('margin-right');
+      body.removeAttribute('data-scroll-locked');
+      body.removeAttribute('aria-hidden');
+      body.removeAttribute('inert');
+      document.querySelectorAll(
+        '[data-reka-popper-content-wrapper]:empty, [data-state="closed"][role="dialog"], [data-state="closed"][role="tooltip"]'
+      ).forEach((el) => {
+        if (!el.contains(document.activeElement)) el.remove();
+      });
+    }
+    return {};
+  },
+  template: '<story/>',
 });
 
 const preview: Preview = {
@@ -134,6 +156,13 @@ const preview: Preview = {
   },
 
   decorators: [
+    // Decorator 0: scroll-lock cleanup. Stories de Dialog/Popover/DropdownMenu/
+    // Sheet/Drawer abrem portais que setam estado no <body> (overflow, padding,
+    // pointer-events, data-scroll-locked, aria-hidden, inert) que vaza pra
+    // próxima story. Limpa antes de cada story e remove resíduos de portais
+    // fechados que sobram no DOM.
+    scrollLockCleanupDecorator,
+
     // Decorator 1: manages .dark class
     withThemeByClassName({
       themes: { light: '', dark: 'dark' },

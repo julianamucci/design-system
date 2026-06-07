@@ -41,7 +41,7 @@ export const PerfilDeUsuario: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout; min-height: 240px;">
-        <HoverCard :default-open="true" :open-delay="50" :close-delay="50">
+        <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
           <HoverCardTrigger as-child>
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@joana</a>
           </HoverCardTrigger>
@@ -79,7 +79,7 @@ export const PreviewDeLink: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout; min-height: 220px;">
-        <HoverCard :default-open="true" :open-delay="50" :close-delay="50">
+        <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
           <HoverCardTrigger as-child>
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">design-system.dev</a>
           </HoverCardTrigger>
@@ -119,7 +119,7 @@ export const DefinicaoDeTermo: Story = {
       <div style="contain: layout; min-height: 220px;">
         <p class="text-sm">
           O conteúdo é renderizado em um
-          <HoverCard :default-open="true" :open-delay="50" :close-delay="50">
+          <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
             <HoverCardTrigger as-child>
               <a href="#" class="font-medium text-primary underline-offset-4 underline decoration-dotted">portal</a>
             </HoverCardTrigger>
@@ -156,7 +156,7 @@ export const MetricaExplicada: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout; min-height: 240px;">
-        <HoverCard :default-open="true" :open-delay="50" :close-delay="50">
+        <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
           <HoverCardTrigger as-child>
             <a href="#" class="inline-flex items-baseline gap-1 font-medium text-primary underline-offset-4 underline decoration-dotted">
               <span class="text-2xl">87%</span>
