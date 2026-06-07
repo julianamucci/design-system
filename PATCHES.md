@@ -606,3 +606,106 @@ export const ComoCombobox: Story = {
 A versão original tinha apenas `role="combobox"` + `aria-expanded`, o que é incompleto para SR users. Aplicado **na story** porque é a docs/exemplo de combobox — quem consumir o pattern em produto deve replicar essas props (a `CommandDocs` pode reforçar isso).
 
 **Verificação após bump:** ver se [shadcn/ui combobox docs](https://ui.shadcn.com/docs/components/combobox) atualizam o exemplo. Se sim, sincronizar.
+
+---
+
+## Patches `node_modules/` (gerenciados via `patch-package`)
+
+A partir de 2026-06-06, patches diretamente em bibliotecas upstream `node_modules/` são versionados via [`patch-package`](https://github.com/ds300/patch-package) em cada stack. Postinstall aplica os patches automaticamente após `npm install`.
+
+**Localização**:
+- `design-system-react/patches/*.patch` (ex: `@base-ui+react+1.4.1.patch`)
+- `design-system-vue/patches/*.patch` (ex: `reka-ui+2.9.6.patch`, `vue-sonner+1.3.2.patch`)
+- `design-system-svelte/patches/*.patch` (ex: `bits-ui+2.18.0.patch`, `svelte-sonner+1.1.0.patch`)
+
+**Como atualizar**:
+```bash
+cd design-system-<stack>
+# Edite o arquivo em node_modules/<pkg>/...
+npx patch-package <pkg>       # regenera o .patch
+# Commit o arquivo regenerado em patches/
+```
+
+**Ao bumpar a dep**: confira se a versão do .patch (`@base-ui+react+1.4.1.patch`) ainda casa com a versão instalada. Se a dep mudou estrutura, `patch-package` reporta falha no install — re-aplique o patch manualmente.
+
+### vue/vue-sonner — Toast `<li>` tabindex 0 → -1 {#vue-sonner-toast-tabindex}
+
+- **Patch:** `design-system-vue/patches/vue-sonner+1.3.2.patch`
+- **Arquivos patcheados:** `node_modules/vue-sonner/lib/vue-sonner.js` (linha 326) + `vue-sonner.cjs`
+- **Versão upstream:** `vue-sonner@1.3.2`
+- **Categoria:** a11y
+- **Data:** 2026-06-06
+- **Upstream ref:** ainda aberto em [emilkowalski/sonner](https://github.com/emilkowalski/sonner)
+
+**Antes:**
+```js
+"aria-live": e.toast.important ? "assertive" : "polite",
+"aria-atomic": "true",
+role: "status",
+tabindex: "0",
+"data-sonner-toast": "true",
+```
+
+**Depois:**
+```js
+"aria-live": e.toast.important ? "assertive" : "polite",
+"aria-atomic": "true",
+role: "status",
+tabindex: "-1",  // PATCH: a11y — toast item não-interativo não deve ser tab-stop
+"data-sonner-toast": "true",
+```
+
+**Motivo:** O `<li>` do toast tem `aria-live`/`aria-atomic` (canal AT correto). `tabindex=0` torna o `<li>` tab-stop sem ação — viola `nested-interactive` (botão close interativo dentro) e cria stop de Tab inútil.
+
+**Verificação após bump:** stories `ui-sonner-*` não devem reportar `nested-interactive`.
+
+### svelte/svelte-sonner — Toast `<li>` tabindex 0 → -1 {#svelte-sonner-toast-tabindex}
+
+- **Patch:** `design-system-svelte/patches/svelte-sonner+1.1.0.patch`
+- **Arquivos patcheados:** `node_modules/svelte-sonner/dist/Toast.svelte` (linha 334)
+- **Versão upstream:** `svelte-sonner@1.1.0`
+- **Categoria:** a11y
+- **Data:** 2026-06-06
+- **Upstream ref:** ainda aberto em [emilkowalski/sonner](https://github.com/emilkowalski/sonner)
+
+**Antes:**
+```svelte
+<li tabindex={0} bind:this={toastRef} ...>
+```
+
+**Depois:**
+```svelte
+<li tabindex={-1} bind:this={toastRef} ...>
+```
+
+**Motivo:** Mesma análise que `vue-sonner` — `<li>` carrega `aria-live`/`aria-atomic`, não precisa estar na tab order. Evita `nested-interactive` com o botão close dentro.
+
+**Verificação após bump:** stories `ui-sonner-*` não devem reportar `nested-interactive`.
+
+---
+
+## Bugs upstream conhecidos (sem patch aplicado)
+
+### React/Vue/Svelte — FocusGuard `<span aria-hidden tabindex=0>` (axe `aria-hidden-focus`)
+
+- **Status:** PATCH TENTADO E REVERTIDO em 2026-06-06. **Não patchear este caso.**
+- **Pacotes afetados:** `@base-ui/react@1.4.1`, `reka-ui@2.9.6` (NavigationMenuTrigger), `bits-ui@2.18.0` (navigation-menu focus proxy)
+- **Sintoma axe:** stories de Popover/Dialog/Tooltip/DropdownMenu/Sheet/HoverCard/NavigationMenu reportam `aria-hidden-focus` (serious) — `<span aria-hidden="true" tabindex="0">` é focável mas marcado como aria-hidden.
+
+**Por que NÃO patchear pra `tabindex=-1`**: tentamos mudar `tabIndex: 0` → `-1` esperando manter `.focus()` programático. **Quebrou Tab wrap-around no focus trap**: o span é o elemento sentinela que captura Tab no fim do popover e dispara `onFocus` pra redirecionar pro primeiro/último item. Com `tabindex=-1`, Tab pula o span e vaza pro elemento seguinte do `document.body`. React vitest regrediu de 71 → 127 falhas; mesmo padrão em Vue/Svelte.
+
+**Conclusão**: este é um trade-off intencional das libs (focus trap funcional > axe rule). O elemento É focável programaticamente E aria-hidden — axe vê como erro mas a UX está correta.
+
+**Mitigações possíveis** (não aplicadas ainda):
+- (a) Configurar axe em `parameters.a11y.config.rules` pra ignorar `aria-hidden-focus` em `[data-base-ui-focus-guard]` / equivalentes — viola política "no skip"
+- (b) Aguardar fix upstream (`role="presentation"` + foco-manageable pode resolver, mas exige refator da lib)
+- (c) Tolerar as ~50 falhas axe nesses componentes — opção atual
+
+### svelte/@lucide/svelte — Runtime "Cannot read 'call' of undefined"
+
+- **Status:** EM INVESTIGAÇÃO — sem patch aplicado em 2026-06-06.
+- **Versão:** `@lucide/svelte@1.8.0` + `svelte@5.55.4`
+- **Sintoma:** erro `Cannot read properties of undefined (reading 'call')` em `Icon.svelte` durante HMR/render de `dialog-close.svelte` e outros componentes Svelte 5.
+- **Análise:** `Icon.svelte` e `icons/*.svelte` usam `$props()` corretamente; nenhum mau uso de runes encontrado. Suspeita de problema de cache Vite/bundler ou export duplicado.
+- **Mitigação imediata:** limpar `node_modules/.vite` e re-rodar.
+- **Próximo passo:** reproduzir em projeto isolado, abrir issue em https://github.com/lucide-icons/lucide.
