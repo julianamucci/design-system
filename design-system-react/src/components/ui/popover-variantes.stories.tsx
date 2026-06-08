@@ -54,7 +54,7 @@ export const Default: Story = {
         </PopoverTrigger>
         <PopoverContent>
           <PopoverTitle className="text-sm font-medium">
-            Configurações de exibição
+            Configuracoes de exibição
           </PopoverTitle>
           <p className="text-xs text-muted-foreground">
             Ajuste a aparência do conteúdo da página.
@@ -67,7 +67,7 @@ export const Default: Story = {
     await step("Content tem role=dialog e título acessível", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));
       await expect(dialog).toBeVisible();
-      await expect(dialog.textContent).toMatch(/Configurações de exibição/i);
+      await expect(dialog.textContent).toMatch(/Configuracoes de exibição/i);
     });
   },
 };
@@ -85,11 +85,11 @@ export const ComTitulo: Story = {
     <div style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
-          <Button variant="outline">Configurações</Button>
+          <Button variant="outline">Configuracoes</Button>
         </PopoverTrigger>
         <PopoverContent>
           <PopoverHeader>
-            <PopoverTitle>Configurações de exibição</PopoverTitle>
+            <PopoverTitle>Configuracoes de exibição</PopoverTitle>
             <PopoverDescription>
               Ajuste a aparência do conteúdo da página.
             </PopoverDescription>
@@ -108,7 +108,7 @@ export const ComTitulo: Story = {
     await step("Dialog inclui title e description distintos", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));
       await expect(dialog).toBeVisible();
-      await expect(dialog.textContent).toMatch(/Configurações de exibição/i);
+      await expect(dialog.textContent).toMatch(/Configuracoes de exibição/i);
       await expect(dialog.textContent).toMatch(/aparência do conteúdo/i);
     });
   },

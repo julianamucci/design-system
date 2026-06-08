@@ -7,7 +7,7 @@ import {
 } from "./resizable";
 
 const meta = {
-  title: "UI/Resizable/Composições",
+  title: "UI/Resizable/Composicoes",
   tags: ["layout"],
   component: ResizablePanelGroup,
   parameters: {
@@ -16,7 +16,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas: EditorPreview (editor + preview lado a lado), IDELayout (sidebar + editor + console), TripleSplit (3 painéis lado a lado) e PersistedLayout (autoSaveId persistindo tamanhos no localStorage).",
+          "Composicoes típicas: EditorPreview (editor + preview lado a lado), IDELayout (sidebar + editor + console), TripleSplit (3 painéis lado a lado) e PersistedLayout (autoSaveId persistindo tamanhos no localStorage).",
       },
     },
   },

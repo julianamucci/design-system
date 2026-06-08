@@ -41,7 +41,7 @@ export const Single: Story = {
         <AccordionItem value="item-3">
           <AccordionTrigger>Como cancelo minha assinatura?</AccordionTrigger>
           <AccordionContent>
-            Você pode cancelar a qualquer momento em Configurações → Assinatura.
+            Você pode cancelar a qualquer momento em Configuracoes → Assinatura.
           </AccordionContent>
         </AccordionItem>
       </Accordion>

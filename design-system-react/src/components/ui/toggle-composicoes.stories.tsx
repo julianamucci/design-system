@@ -5,7 +5,7 @@ import { Bold, Italic, Underline, List, Eye } from "lucide-react";
 import { Toggle } from "./toggle";
 
 const meta = {
-  title: "UI/Toggle/Composições",
+  title: "UI/Toggle/Composicoes",
   tags: ["form"],
   component: Toggle,
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições reais do Toggle: barra de formatação, filtro com label, tamanhos lado a lado e controle controlado.",
+          "Composicoes reais do Toggle: barra de formatação, filtro com label, tamanhos lado a lado e controle controlado.",
       },
     },
   },

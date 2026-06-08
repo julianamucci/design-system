@@ -12,7 +12,7 @@ import { Save, Trash2, Share2, Copy, Pencil } from 'lucide-vue-next';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Tooltip/Composições',
+  title: 'UI/Tooltip/Composicoes',
   component: Tooltip,
   tags: ['overlay'],
   decorators: [
@@ -28,7 +28,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais: BotaoIconOnly (icon button com aria-label + Tooltip de reforço), BarraDeAcoes (toolbar com Tooltips em múltiplos botões), AtalhoDeTeclado (Tooltip com Kbd), QuatroLados (top/right/bottom/left side by side).',
+          'Composicoes reais: BotaoIconOnly (icon button com aria-label + Tooltip de reforço), BarraDeAcoes (toolbar com Tooltips em múltiplos botões), AtalhoDeTeclado (Tooltip com Kbd), QuatroLados (top/right/bottom/left side by side).',
       },
     },
   },

@@ -4,7 +4,7 @@ import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/Textarea/Composições',
+  title: 'UI/Textarea/Composicoes',
   component: Textarea,
   tags: ['form'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'O Textarea deve sempre ser acompanhado de um Label acessível. Composições comuns: com Label, com texto de apoio, com contador de caracteres e com mensagem de erro.',
+          'O Textarea deve sempre ser acompanhado de um Label acessível. Composicoes comuns: com Label, com texto de apoio, com contador de caracteres e com mensagem de erro.',
       },
     },
   },

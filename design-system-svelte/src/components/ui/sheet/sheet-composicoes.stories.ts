@@ -6,7 +6,7 @@ import SheetStory from './SheetStory.svelte';
 import { track } from '@/lib/analytics';
 
 const meta = {
-  title: 'UI/Sheet/Composições',
+  title: 'UI/Sheet/Composicoes',
   component: SheetStory,
   tags: ['disclosure'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Sheet em fluxos de produto: filtros avançados, edição de perfil e termos com scroll. Renderizadas com open=true para captura no Chromatic.',
+          'Composicoes reais do Sheet em fluxos de produto: filtros avançados, edição de perfil e termos com scroll. Renderizadas com open=true para captura no Chromatic.',
       },
     },
   },

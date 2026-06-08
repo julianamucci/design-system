@@ -5,7 +5,7 @@ import { within, expect } from 'storybook/test';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/AspectRatio/Composições',
+  title: 'UI/AspectRatio/Composicoes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições reais: AspectRatio com <img>, <iframe>, <video>, em grid de cards ' +
+          'Composicoes reais: AspectRatio com <img>, <iframe>, <video>, em grid de cards ' +
           'e como placeholder de skeleton enquanto o conteúdo carrega.',
       },
     },

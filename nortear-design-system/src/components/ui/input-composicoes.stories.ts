@@ -4,7 +4,7 @@ import { createInput } from './input';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Input/Composições',
+  title: 'UI/Input/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do Input com label externo, texto de apoio e estado de erro com mensagem. ' +
+          'Composicoes do Input com label externo, texto de apoio e estado de erro com mensagem. ' +
           'O InputGroup (para prefixo/sufixo) é disponível apenas na stack React.',
       },
     },

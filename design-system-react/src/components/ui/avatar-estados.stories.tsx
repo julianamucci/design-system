@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Configurações do Avatar conforme o ciclo de carregamento da imagem: loaded, loading (com delayMs), failed e noImage.",
+          "Configuracoes do Avatar conforme o ciclo de carregamento da imagem: loaded, loading (com delayMs), failed e noImage.",
       },
     },
   },

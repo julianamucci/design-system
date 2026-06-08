@@ -5,7 +5,7 @@ import SliderStory from './SliderStory.svelte';
 import SliderFormStory from './SliderFormStory.svelte';
 
 const meta = {
-  title: 'UI/Slider/Composições',
+  title: 'UI/Slider/Composicoes',
   component: SliderStory,
   tags: ['form'],
   parameters: {

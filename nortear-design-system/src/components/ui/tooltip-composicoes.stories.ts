@@ -5,7 +5,7 @@ import { createButton, createButtonIcon } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Tooltip/Composições',
+  title: 'UI/Tooltip/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do Tooltip: IconButtonComAtalho (botão icon-only com aria-label + atalho), CamposDeForm (label "?"), DescricaoDeMetrica (cabeçalho de KPI) e LadosDePosicionamento (top/right/bottom/left lado-a-lado). NOTA: tooltip NÃO substitui aria-label — em botões icon-only, o aria-label do botão é obrigatório porque o tooltip não aparece em mobile sem hover.',
+          'Composicoes do Tooltip: IconButtonComAtalho (botão icon-only com aria-label + atalho), CamposDeForm (label "?"), DescricaoDeMetrica (cabeçalho de KPI) e LadosDePosicionamento (top/right/bottom/left lado-a-lado). NOTA: tooltip NÃO substitui aria-label — em botões icon-only, o aria-label do botão é obrigatório porque o tooltip não aparece em mobile sem hover.',
       },
     },
   },
@@ -115,7 +115,7 @@ export const CamposDeForm: Story = {
 
     const tooltip = createTooltip({
       trigger: help,
-      content: 'Cole o token gerado em Configurações > Integrações.',
+      content: 'Cole o token gerado em Configuracoes > Integrações.',
       side: 'right',
       class: 'max-w-xs whitespace-normal',
     });
@@ -138,7 +138,7 @@ export const CamposDeForm: Story = {
     await step('Tooltip de ajuda explica o campo', async () => {
       await waitForOpen();
       const tip = await body.findByRole('tooltip');
-      await expect(tip.textContent).toMatch(/Configurações/);
+      await expect(tip.textContent).toMatch(/Configuracoes/);
     });
     await step('Cleanup', async () => { await cleanupPortal(); });
   },

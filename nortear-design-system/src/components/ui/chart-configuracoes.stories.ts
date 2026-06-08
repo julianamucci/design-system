@@ -21,7 +21,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Chart/Configurações',
+  title: 'UI/Chart/Configuracoes',
 };
 
 export default meta;

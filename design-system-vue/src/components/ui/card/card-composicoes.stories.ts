@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const meta = {
-  title: 'UI/Card/Composições',
+  title: 'UI/Card/Composicoes',
   component: Card,
   tags: ['layout'],
   parameters: {
@@ -24,7 +24,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Card: com CardFooter (border-t + bg-muted/50), com CardAction (header vira grid [1fr_auto]), com imagem como primeiro filho (auto-radius) e 3 exemplos de produto (ProductCard), métrica (MetricCard) e perfil (ProfileCard).',
+          'Composicoes reais do Card: com CardFooter (border-t + bg-muted/50), com CardAction (header vira grid [1fr_auto]), com imagem como primeiro filho (auto-radius) e 3 exemplos de produto (ProductCard), métrica (MetricCard) e perfil (ProfileCard).',
       },
     },
   },

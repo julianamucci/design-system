@@ -19,7 +19,7 @@ import {
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/DropdownMenu/Composições',
+  title: 'UI/DropdownMenu/Composicoes',
   component: DropdownMenu,
   tags: ['overlay'],
   parameters: {
@@ -29,7 +29,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais: ComLabel (agrupamento com label e separator), ComCheckboxItems (toggles), ComRadioGroup (seleção única), ComSubmenu (hierarquia), ComShortcuts (atalhos visuais).',
+          'Composicoes reais: ComLabel (agrupamento com label e separator), ComCheckboxItems (toggles), ComRadioGroup (seleção única), ComSubmenu (hierarquia), ComShortcuts (atalhos visuais).',
       },
     },
   },
@@ -67,7 +67,7 @@ export const ComLabel: Story = {
             <DropdownMenuLabel>Conta</DropdownMenuLabel>
             <DropdownMenuGroup>
               <DropdownMenuItem>Perfil</DropdownMenuItem>
-              <DropdownMenuItem>Configurações</DropdownMenuItem>
+              <DropdownMenuItem>Configuracoes</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuLabel>Workspace</DropdownMenuLabel>

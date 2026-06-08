@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Dialog/Composições',
+  title: 'UI/Dialog/Composicoes',
   component: Dialog,
   tags: ['overlay'],
   parameters: {
@@ -26,7 +26,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições canônicas de uso real do Dialog: confirmação de email, edição de perfil e pré-visualização de mídia.',
+          'Composicoes canônicas de uso real do Dialog: confirmação de email, edição de perfil e pré-visualização de mídia.',
       },
     },
   },

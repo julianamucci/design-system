@@ -18,7 +18,7 @@ import {
 } from "./dropdown-menu";
 
 const meta = {
-  title: "UI/Breadcrumb/Composições",
+  title: "UI/Breadcrumb/Composicoes",
   tags: ["navigation"],
   component: Breadcrumb,
   parameters: {
@@ -28,7 +28,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições canônicas do Breadcrumb: default, com ellipsis, separador customizado e responsivo com DropdownMenu.",
+          "Composicoes canônicas do Breadcrumb: default, com ellipsis, separador customizado e responsivo com DropdownMenu.",
       },
     },
   },

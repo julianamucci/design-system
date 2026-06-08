@@ -6,7 +6,7 @@ import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
 
 const meta = {
-  title: 'UI/Select/Composições',
+  title: 'UI/Select/Composicoes',
   component: Select,
   tags: ['form'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Select: tamanho compacto (sm) para formulários densos, seleção por região com grupos e Select com ícones por item.',
+          'Composicoes do Select: tamanho compacto (sm) para formulários densos, seleção por região com grupos e Select com ícones por item.',
       },
     },
   },

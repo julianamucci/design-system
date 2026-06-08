@@ -131,7 +131,7 @@ export const Left: Story = {
             <nav class="px-4 py-2 text-sm space-y-2">
               <a href="#" class="block">Início</a>
               <a href="#" class="block">Pedidos</a>
-              <a href="#" class="block">Configurações</a>
+              <a href="#" class="block">Configuracoes</a>
             </nav>
             <DrawerFooter>
               <DrawerClose as-child>

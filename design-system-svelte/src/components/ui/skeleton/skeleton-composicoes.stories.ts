@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import SkeletonComposicaoStory from './SkeletonComposicaoStory.svelte';
 
 const meta = {
-  title: 'UI/Skeleton/Composições',
+  title: 'UI/Skeleton/Composicoes',
   component: SkeletonComposicaoStory,
   tags: ['feedback'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições comuns: card de perfil, lista com avatar, imagem em AspectRatio e parágrafo. Cada Skeleton recebe aria-hidden e o container recebe aria-busy + aria-label.',
+          'Composicoes comuns: card de perfil, lista com avatar, imagem em AspectRatio e parágrafo. Cada Skeleton recebe aria-hidden e o container recebe aria-busy + aria-label.',
       },
     },
   },

@@ -4,7 +4,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
 import { ChevronDown, Filter, Settings } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Collapsible/Composições',
+  title: 'UI/Collapsible/Composicoes',
   component: Collapsible,
   tags: ['disclosure'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Composições do Collapsible: com ícone no trigger, com ícone giratório e conteúdo estruturado.',
+        component: 'Composicoes do Collapsible: com ícone no trigger, com ícone giratório e conteúdo estruturado.',
       },
     },
   },
@@ -80,7 +80,7 @@ export const ComIconeGiratório: Story = {
         <CollapsibleTrigger class="flex w-full items-center justify-between px-4 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
           <div class="flex items-center gap-2">
             <Settings aria-hidden="true" class="h-4 w-4" />
-            <span>Configurações avançadas</span>
+            <span>Configuracoes avançadas</span>
           </div>
           <ChevronDown
             aria-hidden="true"

@@ -12,7 +12,7 @@ import {
 } from "./pagination";
 
 const meta = {
-  title: "UI/Pagination/Composições",
+  title: "UI/Pagination/Composicoes",
   tags: ["navigation"],
   component: Pagination,
   parameters: {
@@ -21,7 +21,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas: Simples (5 páginas), ComEllipsis (12 páginas), UltimaPagina (Next desabilitado), AsButton (sem URLs reais) e ComOnPageChange (controlada com analytics).",
+          "Composicoes típicas: Simples (5 páginas), ComEllipsis (12 páginas), UltimaPagina (Next desabilitado), AsButton (sem URLs reais) e ComOnPageChange (controlada com analytics).",
       },
     },
   },

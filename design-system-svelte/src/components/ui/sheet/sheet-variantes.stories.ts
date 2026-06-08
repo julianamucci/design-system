@@ -98,7 +98,7 @@ export const Bottom: Story = {
     open: true,
     side: 'bottom',
     triggerLabel: 'Abrir painel',
-    title: 'Configurações rápidas',
+    title: 'Configuracoes rápidas',
     description: 'Equivalente ao Drawer mas sem gesto de arrastar.',
     actionLabel: 'Salvar',
     cancelLabel: 'Cancelar',

@@ -101,19 +101,19 @@ export const Vertical: Story = {
     components: sharedComponents,
     template: `
       <Tabs default-value="profile" orientation="vertical" class="w-full max-w-xl">
-        <TabsList aria-label="Configurações da conta">
+        <TabsList aria-label="Configuracoes da conta">
           <TabsTrigger value="profile">Perfil</TabsTrigger>
           <TabsTrigger value="account">Conta</TabsTrigger>
           <TabsTrigger value="security">Segurança</TabsTrigger>
         </TabsList>
         <TabsContent value="profile" class="pl-4 text-sm text-muted-foreground">
-          Configurações do perfil — nome, foto e bio.
+          Configuracoes do perfil — nome, foto e bio.
         </TabsContent>
         <TabsContent value="account" class="pl-4 text-sm text-muted-foreground">
-          Configurações da conta — e-mail, idioma e fuso.
+          Configuracoes da conta — e-mail, idioma e fuso.
         </TabsContent>
         <TabsContent value="security" class="pl-4 text-sm text-muted-foreground">
-          Configurações de segurança — senha e 2FA.
+          Configuracoes de segurança — senha e 2FA.
         </TabsContent>
       </Tabs>
     `,

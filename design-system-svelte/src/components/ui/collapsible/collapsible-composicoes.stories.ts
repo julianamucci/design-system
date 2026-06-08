@@ -6,7 +6,7 @@ import CollapsibleComButtonStory from './CollapsibleComButtonStory.svelte';
 import CollapsibleComIconeStory from './CollapsibleComIconeStory.svelte';
 
 const meta = {
-  title: 'UI/Collapsible/Composições',
+  title: 'UI/Collapsible/Composicoes',
   component: Collapsible,
   tags: ['disclosure'],
   parameters: {
@@ -16,7 +16,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Collapsible: trigger estilizado como botão e trigger com ícone rotativo indicando o estado.',
+          'Composicoes do Collapsible: trigger estilizado como botão e trigger com ícone rotativo indicando o estado.',
       },
     },
   },

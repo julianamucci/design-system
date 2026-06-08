@@ -64,9 +64,9 @@ function SidebarPreview({ variant, collapsible = "offcanvas", side = "left" }: S
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Configurações">
+                    <SidebarMenuButton tooltip="Configuracoes">
                       <Settings aria-hidden="true" />
-                      <span>Configurações</span>
+                      <span>Configuracoes</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>

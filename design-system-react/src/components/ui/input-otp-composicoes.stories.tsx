@@ -10,7 +10,7 @@ import { Label } from "./label";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/InputOTP/Composições",
+  title: "UI/InputOTP/Composicoes",
   tags: ["form"],
   component: InputOTP,
   parameters: {
@@ -19,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas: ComLabel, ComHelpText, ComErrorMessage e ComResendButton.",
+          "Composicoes típicas: ComLabel, ComHelpText, ComErrorMessage e ComResendButton.",
       },
     },
   },

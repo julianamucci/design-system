@@ -6,7 +6,7 @@ import PopoverStory from './PopoverStory.svelte';
 import { track } from '@/lib/analytics';
 
 const meta = {
-  title: 'UI/Popover/Composições',
+  title: 'UI/Popover/Composicoes',
   component: PopoverStory,
   tags: ['overlay'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Popover em fluxos de produto: conteúdo livre, configurações com título e formulário inline.',
+          'Composicoes reais do Popover em fluxos de produto: conteúdo livre, configurações com título e formulário inline.',
       },
     },
   },
@@ -58,7 +58,7 @@ export const ConteudoLivre: Story = {
 };
 
 export const ConfiguracoesComTitulo: Story = {
-  name: 'Configurações com título',
+  name: 'Configuracoes com título',
   parameters: {
     docs: {
       description: {
@@ -70,18 +70,18 @@ export const ConfiguracoesComTitulo: Story = {
   args: {
     open: true,
     variant: 'withTitle',
-    triggerLabel: 'Configurações',
-    title: 'Configurações de exibição',
+    triggerLabel: 'Configuracoes',
+    title: 'Configuracoes de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
     saveLabel: 'Salvar',
     cancelLabel: 'Cancelar',
-    onAction: trackOpen('Configurações', 'storybook:composicoes:configuracoes'),
+    onAction: trackOpen('Configuracoes', 'storybook:composicoes:configuracoes'),
     onCancel: trackClose('storybook:composicoes:configuracoes', 'cancel'),
   },
   play: async () => {
     await waitOpen();
     const body = within(document.body);
-    await expect(body.getByText(/Configurações de exibição/)).toBeInTheDocument();
+    await expect(body.getByText(/Configuracoes de exibição/)).toBeInTheDocument();
   },
 };
 

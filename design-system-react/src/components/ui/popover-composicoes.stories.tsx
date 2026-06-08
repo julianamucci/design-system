@@ -13,7 +13,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Popover/Composições",
+  title: "UI/Popover/Composicoes",
   tags: ["overlay"],
   component: Popover,
   parameters: {
@@ -22,7 +22,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas do Popover: EditarPerfil (form inline), FiltrosRapidos (checkbox group), SelecaoDeData (date picker) e SideTop (auto-flip).",
+          "Composicoes típicas do Popover: EditarPerfil (form inline), FiltrosRapidos (checkbox group), SelecaoDeData (date picker) e SideTop (auto-flip).",
       },
     },
   },

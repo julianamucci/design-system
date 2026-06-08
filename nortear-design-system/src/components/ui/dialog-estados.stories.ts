@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Configurações canônicas do Dialog: closed, open, sem botão Close e controlled (abertura programática via referência ao trigger).',
+          'Configuracoes canônicas do Dialog: closed, open, sem botão Close e controlled (abertura programática via referência ao trigger).',
       },
     },
   },

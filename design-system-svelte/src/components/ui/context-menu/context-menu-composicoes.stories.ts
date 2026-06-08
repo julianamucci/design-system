@@ -5,7 +5,7 @@ import { Root as ContextMenu } from './index';
 import ContextMenuComposicaoStory from './ContextMenuComposicaoStory.svelte';
 
 const meta = {
-  title: 'UI/ContextMenu/Composições',
+  title: 'UI/ContextMenu/Composicoes',
   component: ContextMenu,
   tags: ['overlay'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições avançadas do Context Menu: checkbox, radio group, submenu e atalhos de teclado.',
+          'Composicoes avançadas do Context Menu: checkbox, radio group, submenu e atalhos de teclado.',
       },
     },
   },

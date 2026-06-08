@@ -5,7 +5,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/DropdownMenu/Composições',
+  title: 'UI/DropdownMenu/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do DropdownMenu: ComLabel, ComCheckboxItems, ComRadioGroup e ComShortcuts. NOTA: a factory createDropdownMenu (Basecoat) não tem submenu nativo — a composição "ComSubmenu" foi omitida intencionalmente. Para hierarquia, monte o Sub manualmente ou prefira menus planos.',
+          'Composicoes do DropdownMenu: ComLabel, ComCheckboxItems, ComRadioGroup e ComShortcuts. NOTA: a factory createDropdownMenu (Basecoat) não tem submenu nativo — a composição "ComSubmenu" foi omitida intencionalmente. Para hierarquia, monte o Sub manualmente ou prefira menus planos.',
       },
     },
   },
@@ -220,7 +220,7 @@ export const ComLabel: Story = {
       items: [
         { type: 'label', label: 'Conta' },
         { type: 'item',  label: 'Perfil',         value: 'profile'  },
-        { type: 'item',  label: 'Configurações',  value: 'settings' },
+        { type: 'item',  label: 'Configuracoes',  value: 'settings' },
         { type: 'separator' },
         { type: 'label', label: 'Suporte' },
         { type: 'item',  label: 'Documentação',   value: 'docs'     },

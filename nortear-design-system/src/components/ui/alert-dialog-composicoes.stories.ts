@@ -7,14 +7,14 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/AlertDialog/Composições',
+  title: 'UI/AlertDialog/Composicoes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
-        component: 'Composições canônicas: confirmação destrutiva e neutra.',
+        component: 'Composicoes canônicas: confirmação destrutiva e neutra.',
       },
     },
   },

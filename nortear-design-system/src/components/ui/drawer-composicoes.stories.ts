@@ -5,7 +5,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['disclosure'],
-  title: 'UI/Drawer/Composições',
+  title: 'UI/Drawer/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do Drawer com formulário, confirmação e conteúdo com scroll. Wrapper com contain: layout para confinar o portal em previews.',
+          'Composicoes do Drawer com formulário, confirmação e conteúdo com scroll. Wrapper com contain: layout para confinar o portal em previews.',
       },
     },
   },

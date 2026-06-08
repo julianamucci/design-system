@@ -5,7 +5,7 @@ import { Alert, AlertTitle, AlertDescription } from "./alert";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Alert/Composições",
+  title: "UI/Alert/Composicoes",
   tags: ["feedback"],
   component: Alert,
   parameters: {

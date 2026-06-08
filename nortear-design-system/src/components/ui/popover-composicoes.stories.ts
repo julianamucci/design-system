@@ -7,7 +7,7 @@ import { createLabel } from './label';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Popover/Composições',
+  title: 'UI/Popover/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Popover: EditarPerfil (form inline), FiltroDeTabela (checkboxes + ação), SeletorDeCor (swatches) e ConfiguracoesRapidas (toggles via inputs). Demonstra uso prático em fluxos comuns de produto.',
+          'Composicoes reais do Popover: EditarPerfil (form inline), FiltroDeTabela (checkboxes + ação), SeletorDeCor (swatches) e ConfiguracoesRapidas (toggles via inputs). Demonstra uso prático em fluxos comuns de produto.',
       },
     },
   },
@@ -237,9 +237,9 @@ export const SeletorDeCor: Story = {
 };
 
 export const ConfiguracoesRapidas: Story = {
-  name: 'Configurações Rápidas',
+  name: 'Configuracoes Rápidas',
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Configurações' });
+    const trigger = createButton({ variant: 'outline', label: 'Configuracoes' });
 
     const content = document.createElement('div');
     content.className = 'nds-stack';

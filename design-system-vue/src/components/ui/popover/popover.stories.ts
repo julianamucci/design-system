@@ -95,7 +95,7 @@ export const Playground: Story = {
           </PopoverTrigger>
           <PopoverContent :side="args.side" :align="args.align">
             <PopoverHeader>
-              <PopoverTitle class="text-sm font-medium">Configurações de exibição</PopoverTitle>
+              <PopoverTitle class="text-sm font-medium">Configuracoes de exibição</PopoverTitle>
               <PopoverDescription class="text-xs text-muted-foreground">
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
@@ -133,7 +133,7 @@ export const Playground: Story = {
       await userEvent.click(trigger);
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
       await expect(dialog).toBeVisible();
-      await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
+      await expect(dialog).toHaveAccessibleName(/Configuracoes de exibição/i);
     });
 
     await step('3. Escape fecha e retorna foco ao trigger', async () => {

@@ -12,7 +12,7 @@ const multiSeries = [
 
 const meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Configurações',
+  title: 'UI/Chart/Configuracoes',
   component: ChartContainer,
   tags: ['display'],
 } satisfies Meta<typeof ChartContainer>;

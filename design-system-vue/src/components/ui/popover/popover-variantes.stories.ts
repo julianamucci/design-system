@@ -24,7 +24,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições estruturais do Popover: Default (conteúdo livre), ComTitulo (Header + Title + Description + ações), Form (formulário inline com Inputs + submit).',
+          'Composicoes estruturais do Popover: Default (conteúdo livre), ComTitulo (Header + Title + Description + ações), Form (formulário inline com Inputs + submit).',
       },
     },
   },
@@ -63,7 +63,7 @@ export const Default: Story = {
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start">
-            <PopoverTitle class="text-sm font-medium">Configurações de exibição</PopoverTitle>
+            <PopoverTitle class="text-sm font-medium">Configuracoes de exibição</PopoverTitle>
             <p class="text-xs text-muted-foreground">Ajuste a aparência do conteúdo da página.</p>
           </PopoverContent>
         </Popover>
@@ -91,11 +91,11 @@ export const ComTitulo: Story = {
       <div style="contain: layout; min-height: 260px;">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
-            <Button variant="outline">Configurações</Button>
+            <Button variant="outline">Configuracoes</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start">
             <PopoverHeader>
-              <PopoverTitle class="text-sm font-medium">Configurações de exibição</PopoverTitle>
+              <PopoverTitle class="text-sm font-medium">Configuracoes de exibição</PopoverTitle>
               <PopoverDescription class="text-xs text-muted-foreground">
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
@@ -113,7 +113,7 @@ export const ComTitulo: Story = {
     const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
+    await expect(dialog).toHaveAccessibleName(/Configuracoes de exibição/i);
   },
 };
 

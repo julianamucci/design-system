@@ -5,7 +5,7 @@ import { Input } from './index';
 import InputWithLabelStory from './InputWithLabelStory.svelte';
 
 const meta = {
-  title: 'UI/Input/Composições',
+  title: 'UI/Input/Composicoes',
   component: Input,
   tags: ['form'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     controls: { disable: true },
     docs: {
       description: {
-        component: 'Composições do Input com Label e texto de apoio. InputGroup é React-only — em Svelte, use Label + Input com slot nativo.',
+        component: 'Composicoes do Input com Label e texto de apoio. InputGroup é React-only — em Svelte, use Label + Input com slot nativo.',
       },
     },
   },

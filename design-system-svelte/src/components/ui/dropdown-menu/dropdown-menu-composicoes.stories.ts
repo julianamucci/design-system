@@ -5,7 +5,7 @@ import { within, expect } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
 
 const meta = {
-  title: 'UI/DropdownMenu/Composições',
+  title: 'UI/DropdownMenu/Composicoes',
   component: DropdownMenuStory,
   tags: ['overlay'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições idiomáticas: com Label e Separator, com CheckboxItems, com RadioGroup, com Submenu e com Shortcuts. Renderizadas com defaultOpen=true para captura no Chromatic.',
+          'Composicoes idiomáticas: com Label e Separator, com CheckboxItems, com RadioGroup, com Submenu e com Shortcuts. Renderizadas com defaultOpen=true para captura no Chromatic.',
       },
     },
   },

@@ -18,7 +18,7 @@ type Story = StoryObj;
 
 const BASE_ITEMS: AccordionOptions['items'] = [
   { value: 'item-1', trigger: 'Informações gerais', content: 'Conteúdo das informações gerais do componente.' },
-  { value: 'item-2', trigger: 'Configurações avançadas', content: 'Conteúdo das configurações avançadas disponíveis.' },
+  { value: 'item-2', trigger: 'Configuracoes avançadas', content: 'Conteúdo das configurações avançadas disponíveis.' },
   { value: 'item-3', trigger: 'Suporte e contato', content: 'Entre em contato pelo email suporte@empresa.com.' },
 ];
 

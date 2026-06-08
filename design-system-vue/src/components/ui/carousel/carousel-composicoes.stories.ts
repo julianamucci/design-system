@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 const meta = {
-  title: 'UI/Carousel/Composições',
+  title: 'UI/Carousel/Composicoes',
   component: Carousel,
   tags: ['display'],
   parameters: {
@@ -16,7 +16,7 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Composições do Carousel — dots customizados via CarouselApi e galeria visual com conteúdo variado.',
+        component: 'Composicoes do Carousel — dots customizados via CarouselApi e galeria visual com conteúdo variado.',
       },
     },
   },

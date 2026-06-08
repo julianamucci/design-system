@@ -4,7 +4,7 @@ import { createRadioGroup } from './radio-group';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/RadioGroup/Composições',
+  title: 'UI/RadioGroup/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições de uso do RadioGroup: FormaDePagamento (vertical, 3 opções), FormaDeEntrega (horizontal, 3 opções curtas), ComDescricao (cada item com texto auxiliar) e EmFormulario (integrado a um `<form>` com submit).',
+          'Composicoes de uso do RadioGroup: FormaDePagamento (vertical, 3 opções), FormaDeEntrega (horizontal, 3 opções curtas), ComDescricao (cada item com texto auxiliar) e EmFormulario (integrado a um `<form>` com submit).',
       },
     },
   },

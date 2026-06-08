@@ -10,7 +10,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Button/Composições',
+  title: 'UI/Button/Composicoes',
   component: Button,
   tags: ['form'],
 } satisfies Meta<typeof Button>;

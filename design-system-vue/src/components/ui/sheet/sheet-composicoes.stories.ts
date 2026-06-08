@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Sheet/Composições',
+  title: 'UI/Sheet/Composicoes',
   component: Sheet,
   tags: ['disclosure'],
   parameters: {
@@ -26,7 +26,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições canônicas de uso real do Sheet: filtros avançados, edição de perfil, navegação secundária e formulário longo com scroll.',
+          'Composicoes canônicas de uso real do Sheet: filtros avançados, edição de perfil, navegação secundária e formulário longo com scroll.',
       },
     },
   },
@@ -170,7 +170,7 @@ export const SecondaryNavigation: Story = {
             <a href="#" class="rounded-md px-3 py-2 text-sm hover:bg-muted">Componentes</a>
             <a href="#" class="rounded-md px-3 py-2 text-sm hover:bg-muted">Tokens</a>
             <a href="#" class="rounded-md px-3 py-2 text-sm hover:bg-muted">Documentação</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm hover:bg-muted">Configurações</a>
+            <a href="#" class="rounded-md px-3 py-2 text-sm hover:bg-muted">Configuracoes</a>
           </nav>
         </SheetContent>
       </Sheet>

@@ -7,7 +7,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Dialog/Composições',
+  title: 'UI/Dialog/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Dialog: confirmação por e-mail, edição de perfil e pré-visualização de mídia.',
+          'Composicoes reais do Dialog: confirmação por e-mail, edição de perfil e pré-visualização de mídia.',
       },
     },
   },

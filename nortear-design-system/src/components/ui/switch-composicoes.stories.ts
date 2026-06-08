@@ -4,7 +4,7 @@ import { createSwitch } from './switch';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Switch/Composições',
+  title: 'UI/Switch/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições de uso do Switch: par básico Switch + Label, painel com descrição, lista de configurações e formulário com envio (sincronizando estado em `<input type="hidden">`, dado que o factory Basecoat não expõe prop `name`).',
+          'Composicoes de uso do Switch: par básico Switch + Label, painel com descrição, lista de configurações e formulário com envio (sincronizando estado em `<input type="hidden">`, dado que o factory Basecoat não expõe prop `name`).',
       },
     },
   },

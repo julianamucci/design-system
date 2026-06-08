@@ -4,7 +4,7 @@ import { createResizablePanel } from './resizable';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Resizable/Composições',
+  title: 'UI/Resizable/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Resizable: EditorComPreview (editor + preview lado a lado), SidebarComConteudoEConsole (sidebar | conteúdo / console — layout aninhado tipo IDE), ListaDetalhe (lista de itens + painel de detalhes) e TresColunas (navegação | conteúdo | metadados). NOTA Basecoat: a factory custom NÃO suporta autoSaveId, onLayout nem maxSize — para persistência e callbacks, use as stacks React/Vue/Svelte.',
+          'Composicoes reais do Resizable: EditorComPreview (editor + preview lado a lado), SidebarComConteudoEConsole (sidebar | conteúdo / console — layout aninhado tipo IDE), ListaDetalhe (lista de itens + painel de detalhes) e TresColunas (navegação | conteúdo | metadados). NOTA Basecoat: a factory custom NÃO suporta autoSaveId, onLayout nem maxSize — para persistência e callbacks, use as stacks React/Vue/Svelte.',
       },
     },
   },

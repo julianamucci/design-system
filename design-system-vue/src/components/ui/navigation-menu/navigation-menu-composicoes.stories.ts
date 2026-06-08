@@ -10,7 +10,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/NavigationMenu/Composições',
+  title: 'UI/NavigationMenu/Composicoes',
   component: NavigationMenu,
   tags: ['navigation'],
   parameters: {
@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais de NavigationMenu: LinkSimples (sem dropdown), ComDropdown (lista vertical), MegaMenuGrid (grid 2 colunas) e ComCardDestacado (card promocional + lista).',
+          'Composicoes reais de NavigationMenu: LinkSimples (sem dropdown), ComDropdown (lista vertical), MegaMenuGrid (grid 2 colunas) e ComCardDestacado (card promocional + lista).',
       },
     },
   },

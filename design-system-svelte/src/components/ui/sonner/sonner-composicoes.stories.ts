@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import SonnerToastStory from './SonnerToastStory.svelte';
 
 const meta = {
-  title: 'UI/Sonner/Composições',
+  title: 'UI/Sonner/Composicoes',
   component: SonnerToastStory,
   tags: ['feedback'],
   parameters: {
@@ -12,7 +12,7 @@ const meta = {
     controls: { disable: true },
     docs: {
       description: {
-        component: 'Composições do Sonner: toast com descrição, ação inline, promise automático e persistente.',
+        component: 'Composicoes do Sonner: toast com descrição, ação inline, promise automático e persistente.',
       },
     },
   },

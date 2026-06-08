@@ -27,7 +27,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições estruturais recorrentes do Dialog. Não há prop variant — escolha a estrutura que melhor descreve o caso de uso.',
+          'Composicoes estruturais recorrentes do Dialog. Não há prop variant — escolha a estrutura que melhor descreve o caso de uso.',
       },
     },
   },
@@ -249,7 +249,7 @@ export const CustomCloseInFooter: Story = {
       <Dialog default-open>
         <DialogContent :showCloseButton="false">
           <DialogHeader>
-            <DialogTitle>Configurações de notificação</DialogTitle>
+            <DialogTitle>Configuracoes de notificação</DialogTitle>
             <DialogDescription>Escolha como deseja ser avisado sobre novas atividades.</DialogDescription>
           </DialogHeader>
           <DialogFooter class="flex-col gap-2 sm:flex-col">

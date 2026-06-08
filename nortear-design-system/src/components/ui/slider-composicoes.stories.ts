@@ -4,7 +4,7 @@ import { createSlider } from './slider';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Slider/Composições',
+  title: 'UI/Slider/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Slider: Volume (single, com unidade), Brilho (single, step grande), FaixaDePreco (range — composição manual de 2 sliders com clamping mútuo, já que o factory custom não suporta 2 thumbs) e EmFormulario (integrado a `<form>` com debounce de analytics). DIVERGÊNCIA Basecoat: factory é wrapper de `<input type="range">` nativo — sem range nativo, sem `onValueCommitted` (debounce manual), sem orientação vertical acessível.',
+          'Composicoes reais do Slider: Volume (single, com unidade), Brilho (single, step grande), FaixaDePreco (range — composição manual de 2 sliders com clamping mútuo, já que o factory custom não suporta 2 thumbs) e EmFormulario (integrado a `<form>` com debounce de analytics). DIVERGÊNCIA Basecoat: factory é wrapper de `<input type="range">` nativo — sem range nativo, sem `onValueCommitted` (debounce manual), sem orientação vertical acessível.',
       },
     },
   },
@@ -244,7 +244,7 @@ export const EmFormulario: Story = {
     form.className = 'nds-stack';
     form.dataset.spacing = 'md';
     form.style.width = '20rem';
-    form.setAttribute('aria-label', 'Configurações de áudio');
+    form.setAttribute('aria-label', 'Configuracoes de áudio');
 
     // Debounce manual — o factory Basecoat não tem onValueCommitted
     let debounceId: ReturnType<typeof setTimeout> | null = null;
@@ -295,7 +295,7 @@ export const EmFormulario: Story = {
     const canvas = within(canvasElement);
     await step('Form com aria-label', async () => {
       const form = canvasElement.querySelector('form');
-      await expect(form).toHaveAttribute('aria-label', 'Configurações de áudio');
+      await expect(form).toHaveAttribute('aria-label', 'Configuracoes de áudio');
     });
     await step('Status inicial visível', async () => {
       await expect(canvas.getByText(/Aguardando alteração/)).toBeVisible();

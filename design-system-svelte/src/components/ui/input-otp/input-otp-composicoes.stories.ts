@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 
 const meta = {
-  title: 'UI/InputOTP/Composições',
+  title: 'UI/InputOTP/Composicoes',
   component: InputOTPStory,
   tags: ['form'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do InputOTP: com label, com texto de ajuda, com mensagem de erro e com botão reenviar.',
+          'Composicoes do InputOTP: com label, com texto de ajuda, com mensagem de erro e com botão reenviar.',
       },
     },
   },

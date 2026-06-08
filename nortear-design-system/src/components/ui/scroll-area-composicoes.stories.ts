@@ -6,7 +6,7 @@ import { createBadge } from './badge';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/ScrollArea/Composições',
+  title: 'UI/ScrollArea/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -14,7 +14,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições reais: lista vertical com badges, cards horizontais em carrossel, tabela ampla bidirecional, ScrollArea dentro de Card e sidebar de navegação rolável.',
+          'Composicoes reais: lista vertical com badges, cards horizontais em carrossel, tabela ampla bidirecional, ScrollArea dentro de Card e sidebar de navegação rolável.',
       },
     },
   },

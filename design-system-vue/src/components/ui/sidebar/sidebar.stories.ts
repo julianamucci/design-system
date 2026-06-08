@@ -82,7 +82,7 @@ const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', isActive: true },
   { icon: Blocks,          label: 'Componentes', isActive: false },
   { icon: Palette,         label: 'Tokens', isActive: false },
-  { icon: Settings,        label: 'Configurações', isActive: false },
+  { icon: Settings,        label: 'Configuracoes', isActive: false },
   { icon: User,            label: 'Perfil', isActive: false },
 ];
 
@@ -140,9 +140,9 @@ export const Playground: Story = {
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Configurações">
+                      <SidebarMenuButton tooltip="Configuracoes">
                         <Settings aria-hidden="true" />
-                        <span>Configurações</span>
+                        <span>Configuracoes</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>

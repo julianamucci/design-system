@@ -5,7 +5,7 @@ import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
 
 const meta = {
-  title: 'UI/Badge/Composições',
+  title: 'UI/Badge/Composicoes',
   component: Badge,
   tags: ['feedback'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Badge: com ícone, como link, envolvido em botão clicável e como contador numérico.',
+          'Composicoes do Badge: com ícone, como link, envolvido em botão clicável e como contador numérico.',
       },
     },
   },

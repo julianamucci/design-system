@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import ToggleStory from './ToggleStory.svelte';
 
 const meta = {
-  title: 'UI/Toggle/Composições',
+  title: 'UI/Toggle/Composicoes',
   component: ToggleStory,
   tags: ['form'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Toggle: icon-only com aria-label, ícone + texto visível (filtros) e variações de tamanho.',
+          'Composicoes do Toggle: icon-only com aria-label, ícone + texto visível (filtros) e variações de tamanho.',
       },
     },
   },

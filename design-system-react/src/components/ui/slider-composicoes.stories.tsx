@@ -5,7 +5,7 @@ import { Slider } from "./slider";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Slider/Composições",
+  title: "UI/Slider/Composicoes",
   tags: ["form"],
   component: Slider,
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições do Slider: com Label e valor textual (aria-live), faixa de preço, step customizado e múltiplos sliders em formulário.",
+          "Composicoes do Slider: com Label e valor textual (aria-live), faixa de preço, step customizado e múltiplos sliders em formulário.",
       },
     },
     controls: { disable: true },

@@ -81,7 +81,7 @@ export const Playground: Story = {
           </PopoverTrigger>
           <PopoverContent side={side} align={align} sideOffset={sideOffset}>
             <PopoverHeader>
-              <PopoverTitle>Configurações de exibição</PopoverTitle>
+              <PopoverTitle>Configuracoes de exibição</PopoverTitle>
               <PopoverDescription>
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>

@@ -68,7 +68,7 @@ export const Playground: Story = {
           <DropdownMenuContent side="bottom" align="start">
             <DropdownMenuLabel>Conta</DropdownMenuLabel>
             <DropdownMenuItem>Perfil</DropdownMenuItem>
-            <DropdownMenuItem>Configurações</DropdownMenuItem>
+            <DropdownMenuItem>Configuracoes</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
           </DropdownMenuContent>

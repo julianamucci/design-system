@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições estruturais do Popover. Não há prop `variant` ou `cva()` — cada item abaixo é um padrão de uso recorrente.',
+          'Composicoes estruturais do Popover. Não há prop `variant` ou `cva()` — cada item abaixo é um padrão de uso recorrente.',
       },
     },
   },
@@ -61,8 +61,8 @@ export const WithTitle: Story = {
   args: {
     open: true,
     variant: 'withTitle',
-    triggerLabel: 'Configurações',
-    title: 'Configurações de exibição',
+    triggerLabel: 'Configuracoes',
+    title: 'Configuracoes de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
     saveLabel: 'Salvar',
     cancelLabel: 'Cancelar',

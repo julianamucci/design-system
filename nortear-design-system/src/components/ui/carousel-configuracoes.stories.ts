@@ -29,14 +29,14 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Carousel/Configurações',
+  title: 'UI/Carousel/Configuracoes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
-        component: 'Configurações do Carousel — item único (padrão), múltiplos itens visíveis e avanço automático via autoplay.',
+        component: 'Configuracoes do Carousel — item único (padrão), múltiplos itens visíveis e avanço automático via autoplay.',
       },
     },
   },

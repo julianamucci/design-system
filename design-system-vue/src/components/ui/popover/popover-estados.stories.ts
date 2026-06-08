@@ -53,7 +53,7 @@ export const Fechado: Story = {
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
           <PopoverContent>
-            <PopoverTitle class="text-sm font-medium">Configurações</PopoverTitle>
+            <PopoverTitle class="text-sm font-medium">Configuracoes</PopoverTitle>
             <p class="text-xs text-muted-foreground">Conteúdo desmontado quando fechado.</p>
           </PopoverContent>
         </Popover>
@@ -87,7 +87,7 @@ export const Aberto: Story = {
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start">
-            <PopoverTitle class="text-sm font-medium">Configurações de exibição</PopoverTitle>
+            <PopoverTitle class="text-sm font-medium">Configuracoes de exibição</PopoverTitle>
             <p class="text-xs text-muted-foreground">Ajuste a aparência do conteúdo.</p>
           </PopoverContent>
         </Popover>
@@ -98,7 +98,7 @@ export const Aberto: Story = {
     const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
+    await expect(dialog).toHaveAccessibleName(/Configuracoes de exibição/i);
   },
 };
 

@@ -44,7 +44,7 @@ const meta: Meta<PopoverArgs> = {
   },
   args: {
     triggerLabel: 'Abrir popover',
-    title: 'Configurações de exibição',
+    title: 'Configuracoes de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
     side: 'bottom',
     align: 'center',

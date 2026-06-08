@@ -13,7 +13,7 @@ import { createButton } from '@/components/ui/button';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Card/Composições',
+  title: 'UI/Card/Composicoes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -21,7 +21,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições canônicas do Card: com footer (ações), com slot de ação no header via `createCardAction` e com imagem como primeiro filho (padding automático removido).',
+          'Composicoes canônicas do Card: com footer (ações), com slot de ação no header via `createCardAction` e com imagem como primeiro filho (padding automático removido).',
       },
     },
   },

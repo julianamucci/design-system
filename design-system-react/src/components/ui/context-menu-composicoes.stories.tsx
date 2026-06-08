@@ -21,7 +21,7 @@ import {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/ContextMenu/Composições",
+  title: "UI/ContextMenu/Composicoes",
   tags: ["overlay"],
   component: ContextMenu,
   parameters: {
@@ -31,7 +31,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições do ContextMenu: com checkbox, radio group, submenu e shortcuts.",
+          "Composicoes do ContextMenu: com checkbox, radio group, submenu e shortcuts.",
       },
     },
   },

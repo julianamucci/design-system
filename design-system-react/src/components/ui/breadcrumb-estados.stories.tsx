@@ -22,7 +22,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Configurações estruturais do Breadcrumb: simples, com ellipsis, separador customizado e link customizado via render.",
+          "Configuracoes estruturais do Breadcrumb: simples, com ellipsis, separador customizado e link customizado via render.",
       },
     },
   },

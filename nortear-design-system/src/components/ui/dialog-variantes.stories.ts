@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições estruturais do Dialog. Não há prop variant — escolha a composição que melhor descreve o caso de uso.',
+          'Composicoes estruturais do Dialog. Não há prop variant — escolha a composição que melhor descreve o caso de uso.',
       },
     },
   },

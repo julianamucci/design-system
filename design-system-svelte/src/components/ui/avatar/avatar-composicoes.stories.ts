@@ -5,7 +5,7 @@ import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
 
 const meta = {
-  title: 'UI/Avatar/Composições',
+  title: 'UI/Avatar/Composicoes',
   component: Avatar,
   tags: ['display'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Avatar: imagem, iniciais, ícone, agrupamento e com indicador de status.',
+          'Composicoes do Avatar: imagem, iniciais, ícone, agrupamento e com indicador de status.',
       },
     },
   },

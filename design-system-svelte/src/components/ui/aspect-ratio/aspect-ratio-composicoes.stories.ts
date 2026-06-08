@@ -5,7 +5,7 @@ import AspectRatioStory from './AspectRatioStory.svelte';
 import AspectRatioGridStory from './AspectRatioGridStory.svelte';
 
 const meta = {
-  title: 'UI/AspectRatio/Composições',
+  title: 'UI/AspectRatio/Composicoes',
   component: AspectRatioStory,
   tags: ['layout'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições comuns do AspectRatio com diferentes tipos de filho: imagem, iframe, vídeo e em grid responsivo.',
+          'Composicoes comuns do AspectRatio com diferentes tipos de filho: imagem, iframe, vídeo e em grid responsivo.',
       },
     },
   },

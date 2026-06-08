@@ -11,7 +11,7 @@ import { Button } from "./button";
 import { Save, Trash2, Share2, Bold, Italic, Underline } from "lucide-react";
 
 const meta = {
-  title: "UI/Tooltip/Composições",
+  title: "UI/Tooltip/Composicoes",
   tags: ["overlay"],
   component: Tooltip,
   decorators: [
@@ -27,7 +27,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas: IconBarToolbar (barra de ferramentas icon-only), ComAtalhoTeclado (kbd) e SidesPosicionamento (top/bottom/left/right).",
+          "Composicoes típicas: IconBarToolbar (barra de ferramentas icon-only), ComAtalhoTeclado (kbd) e SidesPosicionamento (top/bottom/left/right).",
       },
     },
   },

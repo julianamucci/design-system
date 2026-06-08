@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
 const meta = {
-  title: 'UI/InputOTP/Composições',
+  title: 'UI/InputOTP/Composicoes',
   component: InputOTP,
   tags: ['form'],
   parameters: {
@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais de InputOTP: ComLabel (Label associada via for/id), ComHelpText (texto auxiliar via aria-describedby), ComErrorMessage (mensagem de erro com aria-invalid) e ComResendButton (botão para reenviar código).',
+          'Composicoes reais de InputOTP: ComLabel (Label associada via for/id), ComHelpText (texto auxiliar via aria-describedby), ComErrorMessage (mensagem de erro com aria-invalid) e ComResendButton (botão para reenviar código).',
       },
     },
   },

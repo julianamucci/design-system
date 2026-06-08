@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { ScrollArea, ScrollBar } from './index';
 
 const meta = {
-  title: 'UI/ScrollArea/Composições',
+  title: 'UI/ScrollArea/Composicoes',
   component: ScrollArea,
   tags: ['layout'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais do ScrollArea: lista em sidebar fixa, galeria horizontal de cards e tabela ampla com scroll bidirecional.',
+          'Composicoes reais do ScrollArea: lista em sidebar fixa, galeria horizontal de cards e tabela ampla com scroll bidirecional.',
       },
     },
   },

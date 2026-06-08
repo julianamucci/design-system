@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 
 const meta = {
-  title: 'UI/ScrollArea/Composições',
+  title: 'UI/ScrollArea/Composicoes',
   component: ScrollAreaStory,
   tags: ['layout'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais do ScrollArea — lista em sidebar, galeria horizontal de cards e tabela ampla com scroll bidirecional.',
+          'Composicoes reais do ScrollArea — lista em sidebar, galeria horizontal de cards e tabela ampla com scroll bidirecional.',
       },
     },
   },

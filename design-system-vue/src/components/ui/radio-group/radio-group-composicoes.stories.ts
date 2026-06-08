@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/RadioGroup/Composições',
+  title: 'UI/RadioGroup/Composicoes',
   component: RadioGroup,
   tags: ['form'],
   parameters: {

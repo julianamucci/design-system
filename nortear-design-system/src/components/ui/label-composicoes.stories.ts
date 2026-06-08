@@ -8,14 +8,14 @@ import { createCheckbox } from './checkbox';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Label/Composições',
+  title: 'UI/Label/Composicoes',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {
         component:
-          'Composições comuns do Label: com Input, com Checkbox, e com campo obrigatório.',
+          'Composicoes comuns do Label: com Input, com Checkbox, e com campo obrigatório.',
       },
     },
   },

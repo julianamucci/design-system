@@ -86,9 +86,9 @@ function makeStory(variant: 'sidebar' | 'floating' | 'inset'): Story {
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="Configurações">
+                        <SidebarMenuButton tooltip="Configuracoes">
                           <Settings aria-hidden="true" />
-                          <span>Configurações</span>
+                          <span>Configuracoes</span>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     </SidebarMenu>
@@ -218,9 +218,9 @@ export const SideRight: Story = {
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Configurações">
+                      <SidebarMenuButton tooltip="Configuracoes">
                         <Settings aria-hidden="true" />
-                        <span>Configurações</span>
+                        <span>Configuracoes</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>

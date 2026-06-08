@@ -4,7 +4,7 @@ import { createPagination } from './pagination';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Pagination/Composições',
+  title: 'UI/Pagination/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do Pagination: Simples (5 páginas, sem ellipsis), ComEllipsis (12 páginas com … entre 1, atual e total), UltimaPagina (Next desabilitado) e Interativo (estado controlado por re-render). NOTA: a factory createPagination (Basecoat) não tem estado interno — para SPA real, mantenha `current` no escopo do consumidor e re-monte o nav a cada onPageChange.',
+          'Composicoes do Pagination: Simples (5 páginas, sem ellipsis), ComEllipsis (12 páginas com … entre 1, atual e total), UltimaPagina (Next desabilitado) e Interativo (estado controlado por re-render). NOTA: a factory createPagination (Basecoat) não tem estado interno — para SPA real, mantenha `current` no escopo do consumidor e re-monte o nav a cada onPageChange.',
       },
     },
   },

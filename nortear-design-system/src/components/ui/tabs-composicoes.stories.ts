@@ -6,14 +6,14 @@ import { User, Settings, Shield } from 'lucide';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Tabs/Composições',
+  title: 'UI/Tabs/Composicoes',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {
         component:
-          'Composições reais com Tabs. Demonstra ícones, badges e layout vertical. ' +
+          'Composicoes reais com Tabs. Demonstra ícones, badges e layout vertical. ' +
           'DIVERGÊNCIAS Basecoat: a factory custom não expõe `variant` nem `orientation`; ' +
           'variantes line/vertical são aplicadas via utility classes manualmente.',
       },
@@ -104,7 +104,7 @@ export const ComIconesNoTrigger: Story = {
       trigger.appendChild(wrapper);
     });
 
-    return setLabel(root, 'Configurações');
+    return setLabel(root, 'Configuracoes');
   },
   parameters: {
     docs: {
@@ -117,7 +117,7 @@ export const ComIconesNoTrigger: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const tablist = await canvas.findByRole('tablist');
-    await expect(tablist).toHaveAttribute('aria-label', 'Configurações');
+    await expect(tablist).toHaveAttribute('aria-label', 'Configuracoes');
     const tabs = await canvas.findAllByRole('tab');
     await expect(tabs).toHaveLength(3);
   },
@@ -196,7 +196,7 @@ export const Vertical: Story = {
       list.style.minWidth = '10rem';
       list.setAttribute('aria-orientation', 'vertical');
     }
-    return setLabel(root, 'Configurações');
+    return setLabel(root, 'Configuracoes');
   },
   parameters: {
     docs: {

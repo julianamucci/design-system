@@ -15,7 +15,7 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/AlertDialog/Composições",
+  title: "UI/AlertDialog/Composicoes",
   tags: ["overlay"],
   component: AlertDialog,
   parameters: {
@@ -25,7 +25,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições canônicas: confirmação destrutiva e confirmação neutra.",
+          "Composicoes canônicas: confirmação destrutiva e confirmação neutra.",
       },
     },
   },

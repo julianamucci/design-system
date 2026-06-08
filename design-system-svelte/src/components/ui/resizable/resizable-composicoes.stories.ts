@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
 
 const meta = {
-  title: 'UI/Resizable/Composições',
+  title: 'UI/Resizable/Composicoes',
   component: ResizableStory,
   tags: ['layout'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Resizable — Sidebar + Conteúdo, Editor + Preview e layout aninhado tipo IDE (Sidebar | Editor / Console).',
+          'Composicoes reais do Resizable — Sidebar + Conteúdo, Editor + Preview e layout aninhado tipo IDE (Sidebar | Editor / Console).',
       },
     },
   },

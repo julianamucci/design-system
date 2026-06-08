@@ -11,7 +11,7 @@ const SQUARE_SRC =
   "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80";
 
 const meta = {
-  title: "UI/AspectRatio/Composições",
+  title: "UI/AspectRatio/Composicoes",
   tags: ["layout"],
   component: AspectRatio,
   parameters: {
@@ -21,7 +21,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições canônicas: imagem com ImageWithFallback, iframe de mapa, vídeo com legendas e grid de cards mantendo a mesma proporção.",
+          "Composicoes canônicas: imagem com ImageWithFallback, iframe de mapa, vídeo com legendas e grid de cards mantendo a mesma proporção.",
       },
     },
   },

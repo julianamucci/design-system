@@ -11,7 +11,7 @@ import {
 import { Card, CardContent } from "./card";
 
 const meta = {
-  title: "UI/Carousel/Configurações",
+  title: "UI/Carousel/Configuracoes",
   tags: ["display"],
   component: Carousel,
   parameters: {
@@ -21,7 +21,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Configurações funcionais do Carousel: item único, múltiplos itens responsivos e autoplay via plugin.",
+          "Configuracoes funcionais do Carousel: item único, múltiplos itens responsivos e autoplay via plugin.",
       },
     },
   },

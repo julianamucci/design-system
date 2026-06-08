@@ -99,7 +99,7 @@ function buildDemoSidebar(args: SidebarArgs): HTMLElement {
     createSidebarGroup({
       label: 'Conta',
       items: [
-        { label: 'Configurações', href: '#' },
+        { label: 'Configuracoes', href: '#' },
         { label: 'Perfil',        href: '#' },
       ],
     }),

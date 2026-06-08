@@ -5,7 +5,7 @@ import { within, expect } from 'storybook/test';
 import MenubarStory from './MenubarStory.svelte';
 
 const meta = {
-  title: 'UI/Menubar/Composições',
+  title: 'UI/Menubar/Composicoes',
   component: MenubarStory,
   tags: ['navigation'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições idiomáticas do Menubar: com Shortcuts, com Submenu, com CheckboxItems, com RadioGroup e EditorCompleto (4 menus). Renderizadas com defaultValue para captura no Chromatic.',
+          'Composicoes idiomáticas do Menubar: com Shortcuts, com Submenu, com CheckboxItems, com RadioGroup e EditorCompleto (4 menus). Renderizadas com defaultValue para captura no Chromatic.',
       },
     },
   },

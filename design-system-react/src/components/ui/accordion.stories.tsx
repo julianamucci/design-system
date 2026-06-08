@@ -53,7 +53,7 @@ export const Playground: Story = {
       <AccordionItem value="item-3">
         <AccordionTrigger>Como cancelo minha assinatura?</AccordionTrigger>
         <AccordionContent>
-          Você pode cancelar a qualquer momento em Configurações → Assinatura.
+          Você pode cancelar a qualquer momento em Configuracoes → Assinatura.
           O acesso permanece ativo até o fim do período já pago.
         </AccordionContent>
       </AccordionItem>

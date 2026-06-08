@@ -32,7 +32,7 @@ export const Closed: Story = {
     defaultOpen: false,
     variant: 'withTitle',
     triggerLabel: 'Abrir popover',
-    title: 'Configurações de exibição',
+    title: 'Configuracoes de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
   },
   play: async ({ canvasElement }) => {
@@ -53,7 +53,7 @@ export const Open: Story = {
     defaultOpen: true,
     variant: 'withTitle',
     triggerLabel: 'Abrir popover',
-    title: 'Configurações de exibição',
+    title: 'Configuracoes de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
     saveLabel: 'Salvar',
     cancelLabel: 'Cancelar',
@@ -81,7 +81,7 @@ export const SideTop: Story = {
     side: 'top',
     variant: 'withTitle',
     triggerLabel: 'Abrir popover',
-    title: 'Configurações de exibição',
+    title: 'Configuracoes de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
   },
   play: async () => {

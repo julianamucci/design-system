@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import TextareaStory from './TextareaStory.svelte';
 
 const meta = {
-  title: 'UI/Textarea/Composições',
+  title: 'UI/Textarea/Composicoes',
   component: TextareaStory,
   tags: ['form'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Textarea com Label, texto de apoio, contador acessível e mensagem de erro.',
+          'Composicoes do Textarea com Label, texto de apoio, contador acessível e mensagem de erro.',
       },
     },
   },

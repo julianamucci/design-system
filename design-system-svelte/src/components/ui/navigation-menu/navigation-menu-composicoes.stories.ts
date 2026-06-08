@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
 
 const meta = {
-  title: 'UI/NavigationMenu/Composições',
+  title: 'UI/NavigationMenu/Composicoes',
   component: NavigationMenuStory,
   tags: ['navigation'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições idiomáticas do NavigationMenu: link simples (sem submenu), com dropdown de produtos, mega-menu em grid e mega-menu com card destacado.',
+          'Composicoes idiomáticas do NavigationMenu: link simples (sem submenu), com dropdown de produtos, mega-menu em grid e mega-menu com card destacado.',
       },
     },
   },

@@ -6,13 +6,13 @@ import LabelWithCheckboxStory from './LabelWithCheckboxStory.svelte';
 import LabelCampoObrigatorioStory from './LabelCampoObrigatorioStory.svelte';
 
 /**
- * Composições do Label com outros componentes de formulário.
+ * Composicoes do Label com outros componentes de formulário.
  *
  * O Label é sempre associado ao campo via `for`/`id`.
  * Estas stories demonstram os pares mais comuns.
  */
 const meta = {
-  title: 'UI/Label/Composições',
+  title: 'UI/Label/Composicoes',
   component: LabelWithInputStory,
   tags: ['form'],
   parameters: {
@@ -21,7 +21,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Label com Input e Checkbox. O Label deve ser associado ao campo via `for` correspondente ao `id` do controle.',
+          'Composicoes do Label com Input e Checkbox. O Label deve ser associado ao campo via `for` correspondente ao `id` do controle.',
       },
     },
   },

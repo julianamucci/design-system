@@ -12,7 +12,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Pagination/Composições',
+  title: 'UI/Pagination/Composicoes',
   component: Pagination,
   tags: ['navigation'],
   parameters: {
@@ -22,7 +22,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Pagination: Simples (5 páginas), ComEllipsis (lista longa com primeira/última fixas), UltimaPagina (Next desabilitado), Controlada (page sincronizada com state externo) e CompletaTabela (cabeçalho de DataTable).',
+          'Composicoes reais do Pagination: Simples (5 páginas), ComEllipsis (lista longa com primeira/última fixas), UltimaPagina (Next desabilitado), Controlada (page sincronizada com state externo) e CompletaTabela (cabeçalho de DataTable).',
       },
     },
   },

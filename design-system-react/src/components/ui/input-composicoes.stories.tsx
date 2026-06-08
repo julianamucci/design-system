@@ -11,7 +11,7 @@ import {
 } from "./input-group";
 
 const meta = {
-  title: "UI/Input/Composições",
+  title: "UI/Input/Composicoes",
   tags: ["form"],
   component: InputGroup,
   parameters: {
@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições do InputGroup — container que combina Input com addons, ícones, textos decorativos e botões internos.",
+          "Composicoes do InputGroup — container que combina Input com addons, ícones, textos decorativos e botões internos.",
       },
     },
   },

@@ -4,7 +4,7 @@ import { ScrollArea, ScrollBar } from "./scroll-area";
 import { Separator } from "./separator";
 
 const meta = {
-  title: "UI/ScrollArea/Composições",
+  title: "UI/ScrollArea/Composicoes",
   tags: ["layout"],
   component: ScrollArea,
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas: TagList (lista com Separator), CardCarousel (cards horizontais), DataMatrix (tabela bidirecional) e SidebarMenu (navegação rolável de sidebar).",
+          "Composicoes típicas: TagList (lista com Separator), CardCarousel (cards horizontais), DataMatrix (tabela bidirecional) e SidebarMenu (navegação rolável de sidebar).",
       },
     },
   },

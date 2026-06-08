@@ -60,7 +60,7 @@ const meta = {
     defaultOpen: false,
     modal: false,
     triggerLabel: 'Abrir popover',
-    title: 'Configurações de exibição',
+    title: 'Configuracoes de exibição',
     description: 'Ajuste a aparência do conteúdo da página.',
     saveLabel: 'Salvar',
     cancelLabel: 'Cancelar',
@@ -96,7 +96,7 @@ export const Playground: Story = {
       await userEvent.click(trigger);
       const dialog = await waitForPortal('dialog');
       await expect(dialog).toBeVisible();
-      await expect(dialog).toHaveAccessibleName(/Configurações de exibição/i);
+      await expect(dialog).toHaveAccessibleName(/Configuracoes de exibição/i);
     });
 
     await step('2. Escape fecha o popover e retorna foco ao trigger', async () => {

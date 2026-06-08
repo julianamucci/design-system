@@ -5,7 +5,7 @@ import { createBadge, type BadgeVariant } from './badge';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Badge/Composições',
+  title: 'UI/Badge/Composicoes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições reais: Badge com ícone SVG, como contagem de notificações, ' +
+          'Composicoes reais: Badge com ícone SVG, como contagem de notificações, ' +
           'envolvido em <a> para link e em <button> para trigger clicável.',
       },
     },
@@ -59,7 +59,7 @@ function makeBadge(variant: BadgeVariant, ...children: Array<string | HTMLElemen
   return createBadge({ variant, children });
 }
 
-// ─── Composições ──────────────────────────────────────────────────────────────
+// ─── Composicoes ──────────────────────────────────────────────────────────────
 
 export const WithIcon: Story = {
   render: () => {

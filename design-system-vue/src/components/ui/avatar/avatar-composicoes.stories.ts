@@ -4,7 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from './index';
 import { User } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Avatar/Composições',
+  title: 'UI/Avatar/Composicoes',
   component: Avatar,
   tags: ['display'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições típicas do Avatar: imagem, iniciais, ícone genérico, agrupamento com sobreposição e indicador de status.',
+          'Composicoes típicas do Avatar: imagem, iniciais, ícone genérico, agrupamento com sobreposição e indicador de status.',
       },
     },
   },

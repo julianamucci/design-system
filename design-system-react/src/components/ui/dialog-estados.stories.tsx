@@ -27,7 +27,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Configurações canônicas do Dialog: Closed (estado inicial), Open (defaultOpen), WithCloseButtonHidden (sem X no canto) e Controlled (controle externo via open + onOpenChange).",
+          "Configuracoes canônicas do Dialog: Closed (estado inicial), Open (defaultOpen), WithCloseButtonHidden (sem X no canto) e Controlled (controle externo via open + onOpenChange).",
       },
     },
   },

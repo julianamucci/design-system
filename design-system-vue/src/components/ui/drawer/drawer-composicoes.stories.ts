@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Drawer/Composições',
+  title: 'UI/Drawer/Composicoes',
   component: Drawer,
   tags: ['disclosure'],
   parameters: {
@@ -26,7 +26,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Drawer: formulário inline, confirmação destrutiva e conteúdo com scroll interno. Cada composição usa Title+Description para acessibilidade e Footer para ações primárias/secundárias.',
+          'Composicoes reais do Drawer: formulário inline, confirmação destrutiva e conteúdo com scroll interno. Cada composição usa Title+Description para acessibilidade e Footer para ações primárias/secundárias.',
       },
     },
   },

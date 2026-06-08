@@ -4,7 +4,7 @@ import { createSelect } from './select';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Select/Composições',
+  title: 'UI/Select/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições de uso do Select: EstadoBrasileiro (lista plana), RegiaoComGrupos (`<optgroup>` Sudeste/Sul) e EmFormulario (integrado a um `<form>` com submit). NOTA: o factory custom do Basecoat é um wrapper do `<select>` HTML nativo — agrupamento só é possível compondo `<optgroup>` manualmente; ícones inline em `<option>` não são suportados pelo navegador.',
+          'Composicoes de uso do Select: EstadoBrasileiro (lista plana), RegiaoComGrupos (`<optgroup>` Sudeste/Sul) e EmFormulario (integrado a um `<form>` com submit). NOTA: o factory custom do Basecoat é um wrapper do `<select>` HTML nativo — agrupamento só é possível compondo `<optgroup>` manualmente; ícones inline em `<option>` não são suportados pelo navegador.',
       },
     },
   },

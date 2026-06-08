@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 
 const meta = {
-  title: 'UI/Label/Composições',
+  title: 'UI/Label/Composicoes',
   component: Label,
   tags: ['form'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     actions: { disable: true },
     docs: {
       description: {
-        component: 'Composições do Label com outros componentes de formulário: Input, Checkbox e campo obrigatório.',
+        component: 'Composicoes do Label com outros componentes de formulário: Input, Checkbox e campo obrigatório.',
       },
     },
   },

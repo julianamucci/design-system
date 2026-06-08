@@ -29,14 +29,14 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Carousel/Composições',
+  title: 'UI/Carousel/Composicoes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
     docs: {
       description: {
-        component: 'Composições do Carousel — com dots customizados abaixo do viewport e galeria de imagens.',
+        component: 'Composicoes do Carousel — com dots customizados abaixo do viewport e galeria de imagens.',
       },
     },
   },

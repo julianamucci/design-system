@@ -4,7 +4,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TabsStory from './TabsStory.svelte';
 
 const meta = {
-  title: 'UI/Tabs/Composições',
+  title: 'UI/Tabs/Composicoes',
   component: TabsStory,
   tags: ['navigation'],
   parameters: {
@@ -26,7 +26,7 @@ export const SettingsPanel: Story = {
       ],
       defaultValue: 'profile',
       variant: 'default',
-      ariaLabel: 'Configurações',
+      ariaLabel: 'Configuracoes',
       class: 'w-full max-w-xl',
     },
   }),
@@ -42,7 +42,7 @@ export const SettingsPanel: Story = {
 
     await step('TabsList tem aria-label descritivo', async () => {
       const list = canvas.getByRole('tablist');
-      await expect(list).toHaveAttribute('aria-label', 'Configurações');
+      await expect(list).toHaveAttribute('aria-label', 'Configuracoes');
     });
 
     await step('ArrowRight ativa próxima tab', async () => {

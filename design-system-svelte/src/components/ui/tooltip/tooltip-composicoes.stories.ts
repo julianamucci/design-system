@@ -5,7 +5,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
 
 const meta = {
-  title: 'UI/Tooltip/Composições',
+  title: 'UI/Tooltip/Composicoes',
   component: TooltipStory,
   tags: ['overlay'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições comuns do Tooltip: atalho de teclado em botão icon-only, sides diferentes (top/bottom/left/right) e descrição curta de ação.',
+          'Composicoes comuns do Tooltip: atalho de teclado em botão icon-only, sides diferentes (top/bottom/left/right) e descrição curta de ação.',
       },
     },
   },

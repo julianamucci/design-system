@@ -5,7 +5,7 @@ import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 
 const meta = {
-  title: 'UI/AlertDialog/Composições',
+  title: 'UI/AlertDialog/Composicoes',
   component: AlertDialog,
   tags: ['overlay'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Composições canônicas: confirmação destrutiva e neutra.',
+        component: 'Composicoes canônicas: confirmação destrutiva e neutra.',
       },
     },
   },

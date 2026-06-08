@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/context-menu';
 
 const meta = {
-  title: 'UI/ContextMenu/Composições',
+  title: 'UI/ContextMenu/Composicoes',
   component: ContextMenu,
   tags: ['overlay'],
   parameters: {
@@ -29,7 +29,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições avançadas do Context Menu: checkbox, radio group, submenu e shortcuts.',
+          'Composicoes avançadas do Context Menu: checkbox, radio group, submenu e shortcuts.',
       },
     },
   },

@@ -7,7 +7,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Resizable/Composições',
+  title: 'UI/Resizable/Composicoes',
   component: ResizablePanelGroup,
   tags: ['layout'],
   parameters: {
@@ -17,7 +17,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Resizable: layout de editor com sidebar + preview, layout vertical com cabeçalho/conteúdo/rodapé e três painéis em sequência.',
+          'Composicoes reais do Resizable: layout de editor com sidebar + preview, layout vertical com cabeçalho/conteúdo/rodapé e três painéis em sequência.',
       },
     },
   },

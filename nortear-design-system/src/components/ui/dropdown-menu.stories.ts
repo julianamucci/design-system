@@ -63,7 +63,7 @@ function buildMenuEl(args: DropdownArgs): { el: HTMLElement; trigger: HTMLButton
     items: [
       { type: 'label', label: 'Conta' },
       { type: 'item', label: 'Perfil', value: 'profile' },
-      { type: 'item', label: 'Configurações', value: 'settings' },
+      { type: 'item', label: 'Configuracoes', value: 'settings' },
       { type: 'separator' },
       { type: 'item', label: 'Sair', value: 'logout' },
     ],

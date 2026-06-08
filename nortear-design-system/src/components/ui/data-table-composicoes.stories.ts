@@ -7,7 +7,7 @@ import { type Invoice, invoices, currency, statusVariant, baseColumns } from './
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'UI/DataTable/Composições',
+  title: 'UI/DataTable/Composicoes',
   parameters: {
     layout: 'padded',
     controls: { disable: true },

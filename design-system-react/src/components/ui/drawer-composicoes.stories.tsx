@@ -16,7 +16,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Drawer/Composições",
+  title: "UI/Drawer/Composicoes",
   tags: ["disclosure"],
   component: Drawer,
   parameters: {
@@ -25,7 +25,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas do Drawer — Formulário (Label+Input+Footer), Confirmação simples (botões Confirmar/Cancelar) e Scroll (lista longa testando overflow).",
+          "Composicoes típicas do Drawer — Formulário (Label+Input+Footer), Confirmação simples (botões Confirmar/Cancelar) e Scroll (lista longa testando overflow).",
       },
     },
   },

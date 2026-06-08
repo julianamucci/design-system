@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
 
 const meta = {
-  title: 'UI/ToggleGroup/Composições',
+  title: 'UI/ToggleGroup/Composicoes',
   component: ToggleGroupStory,
   tags: ['form'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do ToggleGroup: barra de alinhamento (single), formatação de texto (multiple) e modo de visualização (vertical).',
+          'Composicoes do ToggleGroup: barra de alinhamento (single), formatação de texto (multiple) e modo de visualização (vertical).',
       },
     },
   },

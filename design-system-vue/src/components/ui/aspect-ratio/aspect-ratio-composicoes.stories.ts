@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { AspectRatio } from './index';
 
 const meta = {
-  title: 'UI/AspectRatio/Composições',
+  title: 'UI/AspectRatio/Composicoes',
   component: AspectRatio,
   tags: ['layout'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições típicas do AspectRatio com diferentes conteúdos filhos: imagens, iframes (mapas), vídeos e uso em grids responsivos.',
+          'Composicoes típicas do AspectRatio com diferentes conteúdos filhos: imagens, iframes (mapas), vídeos e uso em grids responsivos.',
       },
     },
   },

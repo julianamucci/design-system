@@ -7,7 +7,7 @@ import SidebarSubMenuStory from './SidebarSubMenuStory.svelte';
 import SidebarSkeletonStory from './SidebarSkeletonStory.svelte';
 
 const meta = {
-  title: 'UI/Sidebar/Composições',
+  title: 'UI/Sidebar/Composicoes',
   component: SidebarNavGroupsStory,
   tags: ['layout'],
   parameters: {
@@ -16,7 +16,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições avançadas da Sidebar: múltiplos grupos de navegação, sub-menus expansíveis e estado de carregamento com skeleton.',
+          'Composicoes avançadas da Sidebar: múltiplos grupos de navegação, sub-menus expansíveis e estado de carregamento com skeleton.',
       },
     },
   },

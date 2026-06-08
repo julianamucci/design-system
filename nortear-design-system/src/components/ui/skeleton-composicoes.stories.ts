@@ -4,7 +4,7 @@ import { createSkeleton } from './skeleton';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Skeleton/Composições',
+  title: 'UI/Skeleton/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do Skeleton dentro de Card, Lista, AspectRatio e Parágrafo. ' +
+          'Composicoes do Skeleton dentro de Card, Lista, AspectRatio e Parágrafo. ' +
           'Container pai recebe aria-busy + aria-label; cada Skeleton recebe aria-hidden + motion-reduce.',
       },
     },

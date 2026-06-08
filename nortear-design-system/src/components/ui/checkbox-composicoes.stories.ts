@@ -4,7 +4,7 @@ import { createCheckbox } from './checkbox';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Checkbox/Composições',
+  title: 'UI/Checkbox/Composicoes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições de uso do Checkbox: com label, com descrição auxiliar, em grupo fieldset e em lista de múltipla seleção.',
+          'Composicoes de uso do Checkbox: com label, com descrição auxiliar, em grupo fieldset e em lista de múltipla seleção.',
       },
     },
   },

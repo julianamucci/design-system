@@ -5,7 +5,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import HoverCardStory from './HoverCardStory.svelte';
 
 const meta = {
-  title: 'UI/HoverCard/Composições',
+  title: 'UI/HoverCard/Composicoes',
   component: HoverCardStory,
   tags: ['overlay'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do HoverCard: preview de perfil, preview de link, definição de termo e métrica explicada.',
+          'Composicoes do HoverCard: preview de perfil, preview de link, definição de termo e métrica explicada.',
       },
     },
   },

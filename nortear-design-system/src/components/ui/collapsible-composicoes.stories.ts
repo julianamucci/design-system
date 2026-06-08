@@ -9,7 +9,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Collapsible/Composições',
+  title: 'UI/Collapsible/Composicoes',
 };
 
 export default meta;
@@ -142,7 +142,7 @@ export const ComChevronRotativo: Story = {
     triggerEl.className = 'nds-cluster nds-w-full';
     triggerEl.dataset.justify = 'between';
     const label = document.createElement('span');
-    label.textContent = 'Configurações avançadas';
+    label.textContent = 'Configuracoes avançadas';
     triggerEl.appendChild(label);
     triggerEl.appendChild(chevron);
 
@@ -208,7 +208,7 @@ export const ComIconeSettings: Story = {
   render: () => {
     const triggerEl = makeTriggerWithIcon(
       Settings as unknown as LucideIconNode[],
-      'Configurações do sistema',
+      'Configuracoes do sistema',
     );
 
     const content = document.createElement('div');

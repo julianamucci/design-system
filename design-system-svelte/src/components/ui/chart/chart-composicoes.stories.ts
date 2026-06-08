@@ -9,7 +9,7 @@ const chartData = [
 
 const meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Composições',
+  title: 'UI/Chart/Composicoes',
   component: ChartContainer,
   tags: ['display'],
 } satisfies Meta<typeof ChartContainer>;

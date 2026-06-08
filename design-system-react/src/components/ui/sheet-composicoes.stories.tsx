@@ -17,7 +17,7 @@ import { Label } from "./label";
 import { track } from "@/lib/analytics";
 
 const meta = {
-  title: "UI/Sheet/Composições",
+  title: "UI/Sheet/Composicoes",
   tags: ["disclosure"],
   component: Sheet,
   parameters: {
@@ -26,7 +26,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições reais do Sheet em fluxos de produto: filtros avançados, navegação secundária e painel inferior mobile.",
+          "Composicoes reais do Sheet em fluxos de produto: filtros avançados, navegação secundária e painel inferior mobile.",
       },
     },
   },
@@ -138,7 +138,7 @@ export const SecondaryNavigation: Story = {
             </SheetDescription>
           </SheetHeader>
           <nav className="flex flex-col gap-1 px-4" aria-label="Seções">
-            {["Dashboard", "Projetos", "Equipe", "Configurações"].map(
+            {["Dashboard", "Projetos", "Equipe", "Configuracoes"].map(
               (label) => (
                 <Button
                   key={label}

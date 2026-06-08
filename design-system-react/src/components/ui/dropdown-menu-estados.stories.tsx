@@ -85,7 +85,7 @@ export const Aberto: Story = {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem>Configurações</DropdownMenuItem>
+          <DropdownMenuItem>Configuracoes</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -180,7 +180,7 @@ export const ItemDesabilitado: Story = {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem disabled>Configurações (em breve)</DropdownMenuItem>
+          <DropdownMenuItem disabled>Configuracoes (em breve)</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

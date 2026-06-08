@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições visuais do Checkbox. Não possui variantes cva — as composições abaixo representam os padrões de uso mais comuns.',
+          'Composicoes visuais do Checkbox. Não possui variantes cva — as composições abaixo representam os padrões de uso mais comuns.',
       },
     },
   },

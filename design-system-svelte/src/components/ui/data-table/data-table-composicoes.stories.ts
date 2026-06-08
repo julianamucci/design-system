@@ -4,7 +4,7 @@ import type { DataTableColumn } from './index';
 import { invoices, baseColumns, currency, statusVariant, type Invoice } from './data-table.fixtures';
 
 const meta = {
-  title: 'UI/DataTable/Composições',
+  title: 'UI/DataTable/Composicoes',
   component: DataTable,
   tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },

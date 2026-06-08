@@ -5,7 +5,7 @@ import { createToggle, type ToggleOptions, type ToggleVariant } from './toggle';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Toggle/Composições',
+  title: 'UI/Toggle/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições de uso do Toggle: toolbar de formatação (icon-only com aria-label), filtro com label visível, tamanhos (sm/default/lg) e simulação de ToggleGroup. Lembre: para conjunto relacionado representando uma escolha conjunta, use `ToggleGroup` em vez de múltiplos Toggle soltos.',
+          'Composicoes de uso do Toggle: toolbar de formatação (icon-only com aria-label), filtro com label visível, tamanhos (sm/default/lg) e simulação de ToggleGroup. Lembre: para conjunto relacionado representando uma escolha conjunta, use `ToggleGroup` em vez de múltiplos Toggle soltos.',
       },
     },
   },

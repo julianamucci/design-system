@@ -29,7 +29,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições estruturais do Dialog: Default, WithForm, WithScrollContent, NoFooter, WithDestructiveAction e CustomCloseInFooter. Não há prop `variant` — a forma é dada pela composição interna.",
+          "Composicoes estruturais do Dialog: Default, WithForm, WithScrollContent, NoFooter, WithDestructiveAction e CustomCloseInFooter. Não há prop `variant` — a forma é dada pela composição interna.",
       },
     },
   },

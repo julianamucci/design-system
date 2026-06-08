@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Configurações de composição do Breadcrumb: simples, com ellipsis, separador customizado e link customizado via child snippet (Svelte) para integração com routers.',
+          'Configuracoes de composição do Breadcrumb: simples, com ellipsis, separador customizado e link customizado via child snippet (Svelte) para integração com routers.',
       },
     },
   },

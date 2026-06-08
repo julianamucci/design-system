@@ -10,7 +10,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Accordion/Composições',
+  title: 'UI/Accordion/Composicoes',
 };
 
 export default meta;
@@ -209,8 +209,8 @@ export const ConteudoRico: Story = {
 const FAQ_ITEMS: AccordionOptions['items'] = [
   { value: 'senha',        trigger: 'Como faço para redefinir minha senha?',   content: 'Acesse a tela de login e clique em "Esqueci minha senha". Você receberá um link de redefinição no email cadastrado, válido por 24 horas.' },
   { value: 'pagamento',    trigger: 'Quais formas de pagamento são aceitas?',   content: 'Aceitamos cartão de crédito, Pix e boleto bancário. Parcelamento disponível em até 12 vezes sem juros no cartão.' },
-  { value: 'cancelamento', trigger: 'Como cancelo minha assinatura?',          content: 'Você pode cancelar a qualquer momento em Configurações → Assinatura. O acesso permanece ativo até o fim do período já pago.' },
-  { value: 'dados',        trigger: 'Onde encontro meus dados de acesso?',     content: 'Seus dados de acesso estão disponíveis em Configurações → Conta.' },
+  { value: 'cancelamento', trigger: 'Como cancelo minha assinatura?',          content: 'Você pode cancelar a qualquer momento em Configuracoes → Assinatura. O acesso permanece ativo até o fim do período já pago.' },
+  { value: 'dados',        trigger: 'Onde encontro meus dados de acesso?',     content: 'Seus dados de acesso estão disponíveis em Configuracoes → Conta.' },
 ];
 
 export const FAQ: Story = {

@@ -30,7 +30,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const meta = {
-  title: "UI/Command/Composições",
+  title: "UI/Command/Composicoes",
   tags: ["overlay"],
   component: Command,
   parameters: {
@@ -40,7 +40,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições do Command: com grupos, com shortcuts, como combobox em Popover e como command palette em CommandDialog.",
+          "Composicoes do Command: com grupos, com shortcuts, como combobox em Popover e como command palette em CommandDialog.",
       },
     },
     // cmdk listbox tem separator/empty como children — ver PATCHES.md#command-listbox-children

@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Popover/Composições',
+  title: 'UI/Popover/Composicoes',
   component: Popover,
   tags: ['overlay'],
   parameters: {
@@ -25,7 +25,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais: EditarPerfil (formulário inline), SeletorDeDimensoes (largura/altura), ConfiguracoesRapidas (toggles) e SeletorDeCor (palette).',
+          'Composicoes reais: EditarPerfil (formulário inline), SeletorDeDimensoes (largura/altura), ConfiguracoesRapidas (toggles) e SeletorDeCor (palette).',
       },
     },
   },
@@ -139,7 +139,7 @@ export const ConfiguracoesRapidas: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Configurações contextuais com toggles binários — alternativa leve ao Dialog para ajustes rápidos.',
+        story: 'Configuracoes contextuais com toggles binários — alternativa leve ao Dialog para ajustes rápidos.',
       },
     },
   },
@@ -155,7 +155,7 @@ export const ConfiguracoesRapidas: Story = {
       <div style="contain: layout; min-height: 300px;">
         <Popover :default-open="true">
           <PopoverTrigger as-child>
-            <Button variant="outline">Configurações rápidas</Button>
+            <Button variant="outline">Configuracoes rápidas</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start" class="w-64">
             <PopoverHeader>

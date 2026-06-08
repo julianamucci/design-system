@@ -4,7 +4,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { Progress } from './index';
 
 const meta = {
-  title: 'UI/Progress/Composições',
+  title: 'UI/Progress/Composicoes',
   component: Progress,
   tags: ['feedback'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Progress: upload com porcentagem animada, múltiplos progressos em lista, cor customizada via [&>div]:bg-* e indeterminate para operações sem progresso mensurável.',
+          'Composicoes reais do Progress: upload com porcentagem animada, múltiplos progressos em lista, cor customizada via [&>div]:bg-* e indeterminate para operações sem progresso mensurável.',
       },
     },
   },

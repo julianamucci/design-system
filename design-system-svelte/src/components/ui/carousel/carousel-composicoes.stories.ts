@@ -5,7 +5,7 @@ import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
 
 const meta = {
-  title: 'UI/Carousel/Composições',
+  title: 'UI/Carousel/Composicoes',
   component: Carousel,
   tags: ['display'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Carousel: com dots customizados (via CarouselApi) e galeria de imagens.',
+          'Composicoes do Carousel: com dots customizados (via CarouselApi) e galeria de imagens.',
       },
     },
   },

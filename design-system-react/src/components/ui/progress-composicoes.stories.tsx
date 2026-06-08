@@ -10,7 +10,7 @@ import {
 } from "./progress";
 
 const meta = {
-  title: "UI/Progress/Composições",
+  title: "UI/Progress/Composicoes",
   tags: ["feedback"],
   component: Progress,
   parameters: {
@@ -18,7 +18,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições do Progress: múltiplas barras lado a lado, cor customizada via [&>div]:bg-*, com label/value, e com texto aria-live para anunciar progresso.",
+          "Composicoes do Progress: múltiplas barras lado a lado, cor customizada via [&>div]:bg-*, com label/value, e com texto aria-live para anunciar progresso.",
       },
     },
     controls: { disable: true },

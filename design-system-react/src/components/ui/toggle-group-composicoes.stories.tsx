@@ -9,7 +9,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 
 const meta = {
-  title: "UI/ToggleGroup/Composições",
+  title: "UI/ToggleGroup/Composicoes",
   tags: ["form"],
   component: ToggleGroup,
   parameters: {
@@ -18,7 +18,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), seletor vertical e versão outline/segmented.",
+          "Composicoes reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), seletor vertical e versão outline/segmented.",
       },
     },
   },

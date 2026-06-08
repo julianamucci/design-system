@@ -4,7 +4,7 @@ import { createNavigationMenu } from './navigation-menu';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/NavigationMenu/Composições',
+  title: 'UI/NavigationMenu/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do NavigationMenu: LinkSimples (sem submenu), ComDropdown (lista vertical de sub-links), MegaMenuGrid (grid 2 colunas com descrições) e ComCardDestacado (card hero + lista de links). NOTA: a factory createNavigationMenu (Basecoat) NÃO possui Viewport compartilhado — cada Content abre em <div> próprio relativo ao Trigger. Para paridade visual com base-ui/reka-ui/bits-ui, ajustamos classes inline nos casos avançados.',
+          'Composicoes do NavigationMenu: LinkSimples (sem submenu), ComDropdown (lista vertical de sub-links), MegaMenuGrid (grid 2 colunas com descrições) e ComCardDestacado (card hero + lista de links). NOTA: a factory createNavigationMenu (Basecoat) NÃO possui Viewport compartilhado — cada Content abre em <div> próprio relativo ao Trigger. Para paridade visual com base-ui/reka-ui/bits-ui, ajustamos classes inline nos casos avançados.',
       },
     },
   },

@@ -5,7 +5,7 @@ import { createAvatar, createAvatarFallback, createAvatarImage, createAvatarRoot
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Avatar/Composições',
+  title: 'UI/Avatar/Composicoes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições canônicas do Avatar: com imagem, com iniciais, com ícone, agrupamento e com indicador de status.',
+          'Composicoes canônicas do Avatar: com imagem, com iniciais, com ícone, agrupamento e com indicador de status.',
       },
     },
   },

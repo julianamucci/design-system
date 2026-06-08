@@ -3,7 +3,7 @@ import { userEvent, within, expect } from "storybook/test";
 import { Checkbox } from "./checkbox";
 
 const meta = {
-  title: "UI/Checkbox/Composições",
+  title: "UI/Checkbox/Composicoes",
   tags: ["form"],
   component: Checkbox,
   parameters: {

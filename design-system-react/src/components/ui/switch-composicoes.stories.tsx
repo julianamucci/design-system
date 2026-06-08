@@ -5,7 +5,7 @@ import { Switch } from "./switch";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Switch/Composições",
+  title: "UI/Switch/Composicoes",
   tags: ["form"],
   component: Switch,
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições reais do Switch: Label associado, painel de configurações, lista de preferências e controle controlado.",
+          "Composicoes reais do Switch: Label associado, painel de configurações, lista de preferências e controle controlado.",
       },
     },
   },

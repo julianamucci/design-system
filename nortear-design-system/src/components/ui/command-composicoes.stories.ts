@@ -6,7 +6,7 @@ import { createCommand } from './command';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Command/Composições',
+  title: 'UI/Command/Composicoes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -14,7 +14,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do Command: com grupos, com itens desabilitados misturados e lista longa.',
+          'Composicoes do Command: com grupos, com itens desabilitados misturados e lista longa.',
       },
     },
   },

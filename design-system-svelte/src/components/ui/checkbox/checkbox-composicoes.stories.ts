@@ -5,7 +5,7 @@ import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 
 const meta = {
-  title: 'UI/Checkbox/Composições',
+  title: 'UI/Checkbox/Composicoes',
   component: Checkbox,
   tags: ['form'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Checkbox com Label, descrição auxiliar e uso em grupo com fieldset.',
+          'Composicoes do Checkbox com Label, descrição auxiliar e uso em grupo com fieldset.',
       },
     },
   },

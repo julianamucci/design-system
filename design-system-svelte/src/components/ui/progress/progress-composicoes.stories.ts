@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import ProgressStory from './ProgressStory.svelte';
 
 const meta = {
-  title: 'UI/Progress/Composições',
+  title: 'UI/Progress/Composicoes',
   component: ProgressStory,
   tags: ['feedback'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições comuns: upload animado com label/valor, loading simples, conclusão em cor de sucesso e processamento indeterminate.',
+          'Composicoes comuns: upload animado com label/valor, loading simples, conclusão em cor de sucesso e processamento indeterminate.',
       },
     },
   },

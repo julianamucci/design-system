@@ -11,7 +11,7 @@ const chartData = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Composições',
+  title: 'UI/Chart/Composicoes',
   tags: ["display"],
 };
 export default meta;

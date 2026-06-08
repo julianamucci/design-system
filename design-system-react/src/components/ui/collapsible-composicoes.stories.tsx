@@ -10,7 +10,7 @@ import { buttonVariants } from "./button";
 import { cn } from "@/lib/utils";
 
 const meta = {
-  title: "UI/Collapsible/Composições",
+  title: "UI/Collapsible/Composicoes",
   tags: ["disclosure"],
   component: Collapsible,
   parameters: {
@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições do Collapsible: com Button via asChild, com ícone no trigger e com conteúdo estruturado.",
+          "Composicoes do Collapsible: com Button via asChild, com ícone no trigger e com conteúdo estruturado.",
       },
     },
   },

@@ -5,7 +5,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/InputOTP/Composições',
+  title: 'UI/InputOTP/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do InputOTP: ComLabel (label visível associado), ComHelpText (origem + validade), ComErrorMessage (aria-describedby + aria-invalid) e ComResendButton (botão para reenviar código).',
+          'Composicoes do InputOTP: ComLabel (label visível associado), ComHelpText (origem + validade), ComErrorMessage (aria-describedby + aria-invalid) e ComResendButton (botão para reenviar código).',
       },
     },
   },

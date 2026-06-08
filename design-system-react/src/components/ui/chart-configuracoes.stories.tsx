@@ -18,7 +18,7 @@ const multiSeries = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Configurações',
+  title: 'UI/Chart/Configuracoes',
   tags: ["display"],
 };
 export default meta;

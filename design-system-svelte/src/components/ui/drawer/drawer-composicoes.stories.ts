@@ -5,7 +5,7 @@ import { within, expect } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 
 const meta = {
-  title: 'UI/Drawer/Composições',
+  title: 'UI/Drawer/Composicoes',
   component: DrawerStory,
   tags: ['disclosure'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições idiomáticas: drawer com formulário, com confirmação e com scroll interno. Renderizadas com defaultOpen para captura no Chromatic.',
+          'Composicoes idiomáticas: drawer com formulário, com confirmação e com scroll interno. Renderizadas com defaultOpen para captura no Chromatic.',
       },
     },
   },

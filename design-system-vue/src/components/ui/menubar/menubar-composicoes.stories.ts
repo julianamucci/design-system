@@ -19,7 +19,7 @@ import {
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Menubar/Composições',
+  title: 'UI/Menubar/Composicoes',
   component: Menubar,
   tags: ['navigation'],
   parameters: {
@@ -29,7 +29,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais de Menubar: ComShortcuts (atalhos visuais), ComSubmenu (hierarquia), ComCheckboxItems (toggles), ComRadioGroup (seleção única) e EditorCompleto (4 menus juntos).',
+          'Composicoes reais de Menubar: ComShortcuts (atalhos visuais), ComSubmenu (hierarquia), ComCheckboxItems (toggles), ComRadioGroup (seleção única) e EditorCompleto (4 menus juntos).',
       },
     },
   },

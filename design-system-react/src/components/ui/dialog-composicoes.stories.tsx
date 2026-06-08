@@ -17,7 +17,7 @@ import { Label } from "./label";
 import { track } from "@/lib/analytics";
 
 const meta = {
-  title: "UI/Dialog/Composições",
+  title: "UI/Dialog/Composicoes",
   tags: ["overlay"],
   component: Dialog,
   parameters: {
@@ -26,7 +26,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições reais do Dialog em fluxos de produto: confirmar e-mail, edição de perfil e pré-visualização de mídia.",
+          "Composicoes reais do Dialog em fluxos de produto: confirmar e-mail, edição de perfil e pré-visualização de mídia.",
       },
     },
   },

@@ -5,7 +5,7 @@ import { Card } from './index';
 import CardStory from './CardStory.svelte';
 
 const meta = {
-  title: 'UI/Card/Composições',
+  title: 'UI/Card/Composicoes',
   component: Card,
   tags: ['layout'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições comuns do Card: com footer, com action, com imagem e exemplos reais (produto, métrica, perfil).',
+          'Composicoes comuns do Card: com footer, com action, com imagem e exemplos reais (produto, métrica, perfil).',
       },
     },
   },

@@ -49,7 +49,7 @@ function buildBase(opts: {
       ]
     : [
         { type: 'item' as const, label: 'Perfil', value: 'profile' },
-        { type: 'item' as const, label: 'Configurações', value: 'settings' },
+        { type: 'item' as const, label: 'Configuracoes', value: 'settings' },
         { type: 'separator' as const },
         { type: 'item' as const, label: 'Sair', value: 'logout' },
       ];

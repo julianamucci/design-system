@@ -76,7 +76,7 @@ export const Vertical: Story = {
     const nav = createNavigationMenu([
       { label: 'Início',      href: '/' },
       { label: 'Dashboard',   href: '/dashboard' },
-      { label: 'Configurações', href: '/configuracoes' },
+      { label: 'Configuracoes', href: '/configuracoes' },
       { label: 'Sair',        href: '/logout' },
     ]);
     nav.setAttribute('aria-label', 'Navegação lateral');

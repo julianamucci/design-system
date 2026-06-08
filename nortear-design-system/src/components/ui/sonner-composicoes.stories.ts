@@ -7,13 +7,13 @@ import { sanitizeHtml } from '@/lib/sanitize-html';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Sonner/Composições',
+  title: 'UI/Sonner/Composicoes',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {
-        component: 'Composições de toast: com descrição, com ação, promise e persistente.',
+        component: 'Composicoes de toast: com descrição, com ação, promise e persistente.',
       },
     },
   },

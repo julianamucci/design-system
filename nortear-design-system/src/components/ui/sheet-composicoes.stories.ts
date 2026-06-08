@@ -7,7 +7,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['disclosure'],
-  title: 'UI/Sheet/Composições',
+  title: 'UI/Sheet/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições reais do Sheet: filtros avançados (right), navegação secundária (left) e painel ' +
+          'Composicoes reais do Sheet: filtros avançados (right), navegação secundária (left) e painel ' +
           'mobile-style (bottom). NOTA: a factory Basecoat não suporta SheetClose com asChild — o botão X é ' +
           'sempre renderizado pela factory, e botões customizados de cancelar precisam acionar o overlay manualmente.',
       },
@@ -117,7 +117,7 @@ export const SecondaryNavigation: Story = {
     nav.className = 'nds-stack';
     nav.dataset.spacing = 'sm';
     nav.setAttribute('aria-label', 'Secondary navigation');
-    const items = ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'];
+    const items = ['Dashboard', 'Projetos', 'Equipe', 'Configuracoes', 'Faturas'];
     for (const label of items) {
       const a = document.createElement('a');
       a.href = '#';

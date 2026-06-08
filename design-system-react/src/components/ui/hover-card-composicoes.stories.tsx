@@ -4,7 +4,7 @@ import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 const meta = {
-  title: "UI/HoverCard/Composições",
+  title: "UI/HoverCard/Composicoes",
   tags: ["overlay"],
   component: HoverCard,
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas: PerfilDeUsuario, PreviewDeLink, DefinicaoDeTermo e MetricaExplicada.",
+          "Composicoes típicas: PerfilDeUsuario, PreviewDeLink, DefinicaoDeTermo e MetricaExplicada.",
       },
     },
   },

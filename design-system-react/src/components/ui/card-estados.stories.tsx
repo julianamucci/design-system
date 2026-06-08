@@ -21,7 +21,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Configurações do Card: padrão (passivo), clicável (envolvido em <button> com aria-label) e com footer. Card não recebe foco no root — apenas elementos internos ou o wrapper clicável navegam por teclado.",
+          "Configuracoes do Card: padrão (passivo), clicável (envolvido em <button> com aria-label) e com footer. Card não recebe foco no root — apenas elementos internos ou o wrapper clicável navegam por teclado.",
       },
     },
   },

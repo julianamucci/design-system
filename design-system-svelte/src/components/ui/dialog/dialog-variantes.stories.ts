@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições estruturais do Dialog. Não há prop `variant` ou `cva()` — cada item abaixo é um padrão de uso recorrente.',
+          'Composicoes estruturais do Dialog. Não há prop `variant` ou `cva()` — cada item abaixo é um padrão de uso recorrente.',
       },
     },
   },

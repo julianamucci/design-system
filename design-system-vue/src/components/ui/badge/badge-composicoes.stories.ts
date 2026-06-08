@@ -4,7 +4,7 @@ import { Badge } from './index';
 import { Check, Bell } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Badge/Composições',
+  title: 'UI/Badge/Composicoes',
   component: Badge,
   tags: ['feedback'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Composições do Badge: com ícone, envolvido em link, envolvido em button e usado como contador.',
+        component: 'Composicoes do Badge: com ícone, envolvido em link, envolvido em button e usado como contador.',
       },
     },
   },

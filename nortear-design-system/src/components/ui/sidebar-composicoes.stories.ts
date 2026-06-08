@@ -17,7 +17,7 @@ import {
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Sidebar/Composições',
+  title: 'UI/Sidebar/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'fullscreen',
@@ -25,7 +25,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições avançadas da Sidebar: com grupos de navegação e labels, com badges em itens, com sub-menu e com busca no header.',
+          'Composicoes avançadas da Sidebar: com grupos de navegação e labels, com badges em itens, com sub-menu e com busca no header.',
       },
     },
   },
@@ -109,7 +109,7 @@ export const ComGrupos: Story = {
       createSidebarGroup({
         label: 'Conta',
         items: [
-          { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
+          { label: 'Configuracoes', icon: makeIcon(ICON_SETTINGS), href: '#' },
           { label: 'Notificações',  icon: makeIcon(ICON_BELL),     href: '#', badge: '5' },
           { label: 'Perfil',        icon: makeIcon(ICON_USER),     href: '#' },
         ],
@@ -286,7 +286,7 @@ export const ComSubMenu: Story = {
     const footerMenu = document.createElement('ul');
     footerMenu.className = 'nds-sidebar-menu';
     footerMenu.setAttribute('data-sidebar', 'menu');
-    footerMenu.appendChild(createSidebarMenuItem({ label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' }));
+    footerMenu.appendChild(createSidebarMenuItem({ label: 'Configuracoes', icon: makeIcon(ICON_SETTINGS), href: '#' }));
     footer.appendChild(footerMenu);
     inner.appendChild(footer);
 
@@ -380,7 +380,7 @@ export const ComBusca: Story = {
           { label: 'Dashboard',     icon: makeIcon(ICON_HOME),     active: true, href: '#' },
           { label: 'Componentes',   icon: makeIcon(ICON_LAYOUT),   href: '#' },
           { label: 'Tokens',        icon: makeIcon(ICON_LAYERS),   href: '#' },
-          { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
+          { label: 'Configuracoes', icon: makeIcon(ICON_SETTINGS), href: '#' },
         ],
       }),
     );
@@ -453,7 +453,7 @@ export const ComBadges: Story = {
           { label: 'Dashboard',      icon: makeIcon(ICON_HOME),   active: true, href: '#' },
           { label: 'Notificações',   icon: makeIcon(ICON_BELL),   href: '#',    badge: '12' },
           { label: 'Componentes',    icon: makeIcon(ICON_LAYOUT), href: '#',    badge: '3' },
-          { label: 'Configurações',  icon: makeIcon(ICON_SETTINGS), href: '#' },
+          { label: 'Configuracoes',  icon: makeIcon(ICON_SETTINGS), href: '#' },
         ],
       }),
     );

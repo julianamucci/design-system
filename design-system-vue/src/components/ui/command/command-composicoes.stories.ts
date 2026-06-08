@@ -16,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button';
 
 const meta = {
-  title: 'UI/Command/Composições',
+  title: 'UI/Command/Composicoes',
   component: Command,
   tags: ['overlay'],
   parameters: {
@@ -26,7 +26,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Command: com grupos, com shortcuts, como combobox em Popover e como command palette em CommandDialog.',
+          'Composicoes do Command: com grupos, com shortcuts, como combobox em Popover e como command palette em CommandDialog.',
       },
     },
   },

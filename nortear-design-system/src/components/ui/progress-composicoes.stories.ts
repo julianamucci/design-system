@@ -4,7 +4,7 @@ import { createProgress } from './progress';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Progress/Composições',
+  title: 'UI/Progress/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do Progress em contextos reais de aplicação. Como a factory Basecoat não expõe ' +
+          'Composicoes do Progress em contextos reais de aplicação. Como a factory Basecoat não expõe ' +
           'ProgressLabel/ProgressValue/ProgressTrack, todos os exemplos compõem Label/Value via DOM nativo.',
       },
     },

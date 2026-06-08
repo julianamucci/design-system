@@ -22,7 +22,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Chart/Composições',
+  title: 'UI/Chart/Composicoes',
 };
 
 export default meta;

@@ -20,7 +20,7 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/DropdownMenu/Composições",
+  title: "UI/DropdownMenu/Composicoes",
   tags: ["overlay"],
   component: DropdownMenu,
   parameters: {
@@ -29,7 +29,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas: ComLabel (grupo + separador), ComCheckboxItems (toggles), ComRadioGroup (seleção única), ComSubmenu (hierarquia) e ComShortcuts (atalhos visuais).",
+          "Composicoes típicas: ComLabel (grupo + separador), ComCheckboxItems (toggles), ComRadioGroup (seleção única), ComSubmenu (hierarquia) e ComShortcuts (atalhos visuais).",
       },
     },
   },
@@ -62,7 +62,7 @@ export const ComLabel: Story = {
         <DropdownMenuContent>
           <DropdownMenuLabel>Conta</DropdownMenuLabel>
           <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem>Configurações</DropdownMenuItem>
+          <DropdownMenuItem>Configuracoes</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuLabel>Equipe</DropdownMenuLabel>
           <DropdownMenuItem>Convidar membros</DropdownMenuItem>

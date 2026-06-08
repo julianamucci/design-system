@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import SwitchStory from './SwitchStory.svelte';
 
 const meta = {
-  title: 'UI/Switch/Composições',
+  title: 'UI/Switch/Composicoes',
   component: SwitchStory,
   tags: ['form'],
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições do Switch com Label, descrição auxiliar e padrões de uso em painel de configurações.',
+          'Composicoes do Switch com Label, descrição auxiliar e padrões de uso em painel de configurações.',
       },
     },
   },

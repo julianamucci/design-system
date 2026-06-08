@@ -8,14 +8,14 @@ import DialogMediaPreviewStory from './DialogMediaPreviewStory.svelte';
 import { track } from '@/lib/analytics';
 
 const meta = {
-  title: 'UI/Dialog/Composições',
+  title: 'UI/Dialog/Composicoes',
   parameters: {
     layout: 'centered',
     controls: { disable: true },
     docs: {
       description: {
         component:
-          'Composições reais do Dialog em fluxos de produto: confirmar email, edição de perfil e pré-visualização de mídia.',
+          'Composicoes reais do Dialog em fluxos de produto: confirmar email, edição de perfil e pré-visualização de mídia.',
   tags: ['overlay'],
       },
     },

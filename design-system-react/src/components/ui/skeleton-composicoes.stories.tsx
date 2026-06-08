@@ -4,7 +4,7 @@ import { Skeleton } from "./skeleton";
 import { AspectRatio } from "./aspect-ratio";
 
 const meta = {
-  title: "UI/Skeleton/Composições",
+  title: "UI/Skeleton/Composicoes",
   tags: ["feedback"],
   component: Skeleton,
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas do Skeleton — card de perfil, lista, imagem em AspectRatio e parágrafo. Cada composição tem `aria-busy` no container e `aria-hidden` nos Skeletons.",
+          "Composicoes típicas do Skeleton — card de perfil, lista, imagem em AspectRatio e parágrafo. Cada composição tem `aria-busy` no container e `aria-hidden` nos Skeletons.",
       },
     },
   },

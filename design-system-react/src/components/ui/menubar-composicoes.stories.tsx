@@ -19,7 +19,7 @@ import {
 } from "./menubar";
 
 const meta = {
-  title: "UI/Menubar/Composições",
+  title: "UI/Menubar/Composicoes",
   tags: ["navigation"],
   component: Menubar,
   parameters: {
@@ -28,7 +28,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições típicas: ComShortcuts, ComSubmenu, ComCheckboxItems, ComRadioGroup e EditorCompleto (4 menus simulando editor).",
+          "Composicoes típicas: ComShortcuts, ComSubmenu, ComCheckboxItems, ComRadioGroup e EditorCompleto (4 menus simulando editor).",
       },
     },
   },

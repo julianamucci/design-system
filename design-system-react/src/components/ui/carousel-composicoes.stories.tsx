@@ -14,7 +14,7 @@ import { Button } from "./button";
 import { cn } from "@/lib/utils";
 
 const meta = {
-  title: "UI/Carousel/Composições",
+  title: "UI/Carousel/Composicoes",
   tags: ["display"],
   component: Carousel,
   parameters: {
@@ -24,7 +24,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições do Carousel com outros componentes: dots customizados via CarouselApi e galeria de imagens em Card.",
+          "Composicoes do Carousel com outros componentes: dots customizados via CarouselApi e galeria de imagens em Card.",
       },
     },
   },

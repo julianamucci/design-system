@@ -15,7 +15,7 @@ import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/ToggleGroup/Composições',
+  title: 'UI/ToggleGroup/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -23,7 +23,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização (vertical com texto). **Divergências Basecoat** documentadas em 3 camadas (notes + DocsProps + esta composição): (1) factory é não-controlada — sem prop `value`, apenas `defaultValue`; (2) `orientation`/`size`/`spacing`/`disabled` no grupo NÃO existem — aplicar manualmente; (3) `aria-label` no grupo e em items icon-only setado via `setAttribute` no elemento retornado; (4) `children` é string HTML literal — gerar SVG via `createElementNS` + `outerHTML` (NUNCA interpolar dado dinâmico).',
+          'Composicoes reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização (vertical com texto). **Divergências Basecoat** documentadas em 3 camadas (notes + DocsProps + esta composição): (1) factory é não-controlada — sem prop `value`, apenas `defaultValue`; (2) `orientation`/`size`/`spacing`/`disabled` no grupo NÃO existem — aplicar manualmente; (3) `aria-label` no grupo e em items icon-only setado via `setAttribute` no elemento retornado; (4) `children` é string HTML literal — gerar SVG via `createElementNS` + `outerHTML` (NUNCA interpolar dado dinâmico).',
       },
     },
   },

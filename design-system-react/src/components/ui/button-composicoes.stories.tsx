@@ -4,7 +4,7 @@ import { Plus, Trash2, ChevronRight, Download } from "lucide-react";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Button/Composições",
+  title: "UI/Button/Composicoes",
   tags: ["form"],
   component: Button,
   parameters: {

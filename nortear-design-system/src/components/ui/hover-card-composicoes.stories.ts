@@ -4,7 +4,7 @@ import { createHoverCard } from './hover-card';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/HoverCard/Composições',
+  title: 'UI/HoverCard/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do HoverCard: PerfilDeUsuario (avatar + bio + métrica), PreviewDeLink (favicon + URL + título), DefinicaoDeTermo (texto explicativo) e MetricaExplicada (KPI + descrição em dashboard).',
+          'Composicoes do HoverCard: PerfilDeUsuario (avatar + bio + métrica), PreviewDeLink (favicon + URL + título), DefinicaoDeTermo (texto explicativo) e MetricaExplicada (KPI + descrição em dashboard).',
       },
     },
   },

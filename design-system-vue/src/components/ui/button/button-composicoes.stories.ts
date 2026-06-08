@@ -4,7 +4,7 @@ import { Plus, Trash2, ChevronRight, Download } from 'lucide-vue-next';
 import { Button } from './index';
 
 const meta: Meta<any> = {
-  title: 'UI/Button/Composições',
+  title: 'UI/Button/Composicoes',
   component: Button,
   tags: ['form'],
   parameters: {

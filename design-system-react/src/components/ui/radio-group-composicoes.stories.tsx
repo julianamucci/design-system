@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições do RadioGroup: controle reativo via useState, integração em formulário com submit e card de seleção visual.",
+          "Composicoes do RadioGroup: controle reativo via useState, integração em formulário com submit e card de seleção visual.",
       },
     },
   },

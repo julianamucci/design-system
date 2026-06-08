@@ -87,7 +87,7 @@ export const ComTitulo: Story = {
 
     const title = document.createElement('h4');
     title.className = 'nds-text-body nds-font-medium nds-leading-none';
-    title.textContent = 'Configurações de exibição';
+    title.textContent = 'Configuracoes de exibição';
 
     const desc = document.createElement('p');
     desc.className = 'nds-text-caption nds-text-muted-foreground';
@@ -103,7 +103,7 @@ export const ComTitulo: Story = {
     await step('Content com header (h4 + p)', async () => {
       await waitForOpen();
       const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-      await expect(panel?.querySelector('h4')?.textContent).toMatch(/Configurações de exibição/);
+      await expect(panel?.querySelector('h4')?.textContent).toMatch(/Configuracoes de exibição/);
       await expect(panel?.querySelector('p')?.textContent).toMatch(/Ajuste a aparência/);
     });
     await step('Cleanup', async () => {

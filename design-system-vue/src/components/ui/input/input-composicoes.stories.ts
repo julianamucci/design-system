@@ -4,7 +4,7 @@ import { Input } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/Input/Composições',
+  title: 'UI/Input/Composicoes',
   component: Input,
   tags: ['form'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'O Input deve ser sempre acompanhado de um Label acessível. Composições comuns: com Label, com texto de apoio (hint), e com mensagem de erro. O InputGroup (React-only) não está disponível nesta stack.',
+          'O Input deve ser sempre acompanhado de um Label acessível. Composicoes comuns: com Label, com texto de apoio (hint), e com mensagem de erro. O InputGroup (React-only) não está disponível nesta stack.',
       },
     },
   },

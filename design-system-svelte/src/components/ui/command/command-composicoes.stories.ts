@@ -8,7 +8,7 @@ import CommandComposicaoLinkItemStory from './CommandComposicaoLinkItemStory.sve
 import CommandComposicaoPaletteStory from './CommandComposicaoPaletteStory.svelte';
 
 const meta = {
-  title: 'UI/Command/Composições',
+  title: 'UI/Command/Composicoes',
   component: Command,
   tags: ['overlay'],
   parameters: {

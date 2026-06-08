@@ -89,9 +89,9 @@ function SidebarWithNavGroups() {
                     <SidebarMenuBadge>3</SidebarMenuBadge>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Configurações">
+                    <SidebarMenuButton tooltip="Configuracoes">
                       <Settings aria-hidden="true" />
-                      <span>Configurações</span>
+                      <span>Configuracoes</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
@@ -188,9 +188,9 @@ function SidebarWithSubMenu() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Configurações">
+                    <SidebarMenuButton tooltip="Configuracoes">
                       <Settings aria-hidden="true" />
-                      <span>Configurações</span>
+                      <span>Configuracoes</span>
                     </SidebarMenuButton>
                     <SidebarMenuAction showOnHover aria-label="Mais opções de configurações">
                       <ChevronRight aria-hidden="true" />
@@ -233,7 +233,7 @@ function SidebarWithSearch() {
     { icon: Blocks, label: "Componentes" },
     { icon: Coins, label: "Tokens" },
     { icon: Bell, label: "Notificações" },
-    { icon: Settings, label: "Configurações" },
+    { icon: Settings, label: "Configuracoes" },
     { icon: User, label: "Perfil" },
   ];
 
@@ -294,7 +294,7 @@ function SidebarWithSearch() {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/Sidebar/Composições",
+  title: "UI/Sidebar/Composicoes",
   tags: ["layout"],
   component: Sidebar,
   parameters: {
@@ -303,7 +303,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições comuns da Sidebar: com grupos e badges, com submenu aninhado (SidebarMenuSub) e com campo de busca (SidebarInput).",
+          "Composicoes comuns da Sidebar: com grupos e badges, com submenu aninhado (SidebarMenuSub) e com campo de busca (SidebarInput).",
       },
     },
   },

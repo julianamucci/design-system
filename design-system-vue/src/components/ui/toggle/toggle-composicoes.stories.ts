@@ -4,7 +4,7 @@ import { Toggle } from './index';
 import { Bold, Italic, Underline, List, Eye, LayoutGrid } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Toggle/Composições',
+  title: 'UI/Toggle/Composicoes',
   component: Toggle,
   tags: ['form'],
   parameters: {

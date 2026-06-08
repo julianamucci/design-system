@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Alert/Composições',
+  title: 'UI/Alert/Composicoes',
   component: Alert,
   tags: ['feedback'],
   parameters: {

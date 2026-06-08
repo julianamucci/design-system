@@ -20,7 +20,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Configurações do Breadcrumb: simples, com ellipsis, separador customizado e link como router (asChild-like).',
+          'Configuracoes do Breadcrumb: simples, com ellipsis, separador customizado e link como router (asChild-like).',
       },
     },
   },

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 
 const meta: Meta = {
-  title: "UI/Tabs/Composições",
+  title: "UI/Tabs/Composicoes",
   tags: ["navigation"],
   component: Tabs,
   parameters: {
@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          "Composições reais do Tabs: com ícones, badges, modo controlado e activationMode manual.",
+          "Composicoes reais do Tabs: com ícones, badges, modo controlado e activationMode manual.",
       },
     },
   },
@@ -30,7 +30,7 @@ export const ComIcones: Story = {
   name: "Com ícones",
   render: () => (
     <Tabs defaultValue="profile" className="w-full max-w-lg">
-      <TabsList aria-label="Configurações da conta">
+      <TabsList aria-label="Configuracoes da conta">
         <TabsTrigger value="profile">
           <User aria-hidden="true" />
           Perfil
@@ -45,8 +45,8 @@ export const ComIcones: Story = {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="profile">Dados do perfil.</TabsContent>
-      <TabsContent value="account">Configurações da conta.</TabsContent>
-      <TabsContent value="security">Configurações de segurança.</TabsContent>
+      <TabsContent value="account">Configuracoes da conta.</TabsContent>
+      <TabsContent value="security">Configuracoes de segurança.</TabsContent>
     </Tabs>
   ),
   parameters: {

@@ -11,7 +11,7 @@ import {
 } from './data-table.fixtures';
 
 const meta: Meta<Record<string, unknown>> = {
-  title: 'UI/DataTable/Composições',
+  title: 'UI/DataTable/Composicoes',
   component: DataTable as never,
   tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },

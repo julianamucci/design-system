@@ -9,7 +9,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Alert/Composições',
+  title: 'UI/Alert/Composicoes',
   component: Alert,
   tags: ['feedback'],
 } satisfies Meta<typeof Alert>;

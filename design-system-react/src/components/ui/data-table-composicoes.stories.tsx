@@ -11,7 +11,7 @@ import {
 } from "./data-table.fixtures"
 
 const meta: Meta<typeof DataTable<Invoice>> = {
-  title: "UI/DataTable/Composições",
+  title: "UI/DataTable/Composicoes",
   tags: ["tables"],
   component: DataTable<Invoice>,
   parameters: { controls: { disable: true }, actions: { disable: true } },

@@ -30,7 +30,7 @@ import {
 } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Sidebar/Composições',
+  title: 'UI/Sidebar/Composicoes',
   component: Sidebar,
   tags: ['layout'],
   parameters: {
@@ -40,7 +40,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições avançadas da Sidebar: com grupos de navegação, com sub-menus, com badge e com campo de busca.',
+          'Composicoes avançadas da Sidebar: com grupos de navegação, com sub-menus, com badge e com campo de busca.',
       },
     },
   },
@@ -139,9 +139,9 @@ export const WithNavGroups: Story = {
                       </SidebarMenuAction>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Configurações">
+                      <SidebarMenuButton tooltip="Configuracoes">
                         <Settings aria-hidden="true" />
-                        <span>Configurações</span>
+                        <span>Configuracoes</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   </SidebarMenu>
@@ -350,8 +350,8 @@ export const WithSearch: Story = {
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Configurações">
-                        <Settings aria-hidden="true" /><span>Configurações</span>
+                      <SidebarMenuButton tooltip="Configuracoes">
+                        <Settings aria-hidden="true" /><span>Configuracoes</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>

@@ -55,7 +55,7 @@ function buildVariantDemo(variant: SidebarVariant): HTMLElement {
         { label: 'Dashboard', active: true, href: '#' },
         { label: 'Componentes', href: '#' },
         { label: 'Tokens', href: '#' },
-        { label: 'Configurações', href: '#' },
+        { label: 'Configuracoes', href: '#' },
       ],
     }),
   );

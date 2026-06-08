@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 import { Code2, Eye, Settings2, User, Shield } from 'lucide-vue-next';
 
 const meta: Meta<any> = {
-  title: 'UI/Tabs/Composições',
+  title: 'UI/Tabs/Composicoes',
   component: Tabs,
   tags: ['navigation'],
   parameters: {
@@ -15,7 +15,7 @@ const meta: Meta<any> = {
     docs: {
       description: {
         component:
-          'Composições reais de Tabs: controlado com analytics, com ícones, vertical para configurações e modo manual.',
+          'Composicoes reais de Tabs: controlado com analytics, com ícones, vertical para configurações e modo manual.',
       },
     },
   },
@@ -129,7 +129,7 @@ export const VerticalConfiguracoes: Story = {
     components: { ...sharedComponents, User, Settings2, Shield },
     template: `
       <Tabs default-value="profile" orientation="vertical" class="w-full max-w-2xl">
-        <TabsList aria-label="Configurações da conta">
+        <TabsList aria-label="Configuracoes da conta">
           <TabsTrigger value="profile">
             <User class="size-4" aria-hidden="true" />
             Perfil

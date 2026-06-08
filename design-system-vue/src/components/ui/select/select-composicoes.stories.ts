@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Select/Composições',
+  title: 'UI/Select/Composicoes',
   component: Select,
   tags: ['form'],
   parameters: {
@@ -25,7 +25,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composições reais: ComLabel (label externo associado), Controlado (modelValue + @update:modelValue), EmFormulario (Select dentro de form) e ComSeparator (grupos divididos por SelectSeparator).',
+          'Composicoes reais: ComLabel (label externo associado), Controlado (modelValue + @update:modelValue), EmFormulario (Select dentro de form) e ComSeparator (grupos divididos por SelectSeparator).',
       },
     },
   },

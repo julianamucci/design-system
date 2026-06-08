@@ -6,7 +6,7 @@ import { Label } from "./label";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Textarea/Composições",
+  title: "UI/Textarea/Composicoes",
   tags: ["form"],
   component: Textarea,
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições reais do Textarea: com Label + descrição, com contador acessível, em formulário e controlado.",
+          "Composicoes reais do Textarea: com Label + descrição, com contador acessível, em formulário e controlado.",
       },
     },
   },

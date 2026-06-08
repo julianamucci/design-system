@@ -39,7 +39,7 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          "Item default — variante neutra. Usa bg-accent no hover/foco; ideal para ações regulares (Perfil, Configurações, Editar).",
+          "Item default — variante neutra. Usa bg-accent no hover/foco; ideal para ações regulares (Perfil, Configuracoes, Editar).",
       },
     },
   },
@@ -51,7 +51,7 @@ export const Default: Story = {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem>Configurações</DropdownMenuItem>
+          <DropdownMenuItem>Configuracoes</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -5,7 +5,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext
 import { Card } from '@/components/ui/card';
 
 const meta = {
-  title: 'UI/Carousel/Configurações',
+  title: 'UI/Carousel/Configuracoes',
   component: Carousel,
   tags: ['display'],
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Configurações principais do Carousel — quantos itens por vez, autoplay via plugin.',
+        component: 'Configuracoes principais do Carousel — quantos itens por vez, autoplay via plugin.',
       },
     },
   },

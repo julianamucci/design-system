@@ -20,7 +20,7 @@ type Story = StoryObj;
 const FAQ_ITEMS: AccordionOptions['items'] = [
   { value: 'senha',     trigger: 'Como faço para redefinir minha senha?',  content: 'Acesse a tela de login e clique em "Esqueci minha senha". Você receberá um link de redefinição no email cadastrado, válido por 24 horas.' },
   { value: 'pagamento', trigger: 'Quais formas de pagamento são aceitas?',  content: 'Aceitamos cartão de crédito, Pix e boleto bancário. Parcelamento disponível em até 12 vezes sem juros no cartão.' },
-  { value: 'cancel',    trigger: 'Como cancelo minha assinatura?',          content: 'Você pode cancelar a qualquer momento em Configurações → Assinatura. O acesso permanece ativo até o fim do período já pago.' },
+  { value: 'cancel',    trigger: 'Como cancelo minha assinatura?',          content: 'Você pode cancelar a qualquer momento em Configuracoes → Assinatura. O acesso permanece ativo até o fim do período já pago.' },
 ];
 
 const SPEC_ITEMS: AccordionOptions['items'] = [

@@ -4,7 +4,7 @@ import { Skeleton } from './index';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const meta: Meta<any> = {
-  title: 'UI/Skeleton/Composições',
+  title: 'UI/Skeleton/Composicoes',
   component: Skeleton,
   tags: ['feedback'],
   parameters: {
@@ -14,7 +14,7 @@ const meta: Meta<any> = {
     docs: {
       description: {
         component:
-          'Composições reais do Skeleton replicando estruturas de conteúdo: card de perfil, lista com avatar, imagem em AspectRatio e parágrafo. Cada Skeleton com aria-hidden e container com aria-busy + aria-label.',
+          'Composicoes reais do Skeleton replicando estruturas de conteúdo: card de perfil, lista com avatar, imagem em AspectRatio e parágrafo. Cada Skeleton com aria-hidden e container com aria-busy + aria-label.',
       },
     },
   },

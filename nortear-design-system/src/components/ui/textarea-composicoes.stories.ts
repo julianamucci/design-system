@@ -5,7 +5,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Textarea/Composições',
+  title: 'UI/Textarea/Composicoes',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições do Textarea com Label externo, texto de apoio, contador acessível, mensagem de erro e envio em formulário HTML nativo. ' +
+          'Composicoes do Textarea com Label externo, texto de apoio, contador acessível, mensagem de erro e envio em formulário HTML nativo. ' +
           'NOTA: o factory Basecoat não expõe props onChange/maxLength/readOnly/aria-invalid — todos são aplicados via API DOM nativa após a criação.',
       },
     },

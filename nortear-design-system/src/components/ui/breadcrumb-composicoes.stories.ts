@@ -12,7 +12,7 @@ import {
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Breadcrumb/Composições',
+  title: 'UI/Breadcrumb/Composicoes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -20,7 +20,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Configurações de composição do Breadcrumb: padrão, com ellipsis, separador customizado e colapso responsivo.',
+          'Configuracoes de composição do Breadcrumb: padrão, com ellipsis, separador customizado e colapso responsivo.',
       },
     },
   },

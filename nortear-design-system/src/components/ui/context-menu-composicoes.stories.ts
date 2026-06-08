@@ -14,7 +14,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composições avançadas do ContextMenu: com checkbox simulado, radio group simulado, submenu inline e atalhos visuais.',
+          'Composicoes avançadas do ContextMenu: com checkbox simulado, radio group simulado, submenu inline e atalhos visuais.',
       },
     },
   },

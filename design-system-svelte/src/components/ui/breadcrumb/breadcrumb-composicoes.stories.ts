@@ -5,7 +5,7 @@ import { Breadcrumb } from './index';
 import BreadcrumbStory from './BreadcrumbStory.svelte';
 
 const meta = {
-  title: 'UI/Breadcrumb/Composições',
+  title: 'UI/Breadcrumb/Composicoes',
   component: Breadcrumb,
   tags: ['navigation'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Configurações disponíveis do Breadcrumb: padrão com ChevronRight, com ellipsis para níveis longos, separador customizado (Slash) e composição responsiva com DropdownMenu.',
+          'Configuracoes disponíveis do Breadcrumb: padrão com ChevronRight, com ellipsis para níveis longos, separador customizado (Slash) e composição responsiva com DropdownMenu.',
       },
     },
   },

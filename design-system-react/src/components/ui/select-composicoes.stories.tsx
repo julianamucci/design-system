@@ -24,7 +24,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composições do Select: controle reativo com useState, integração em formulário com submit e Select com Label externo associado.",
+          "Composicoes do Select: controle reativo com useState, integração em formulário com submit e Select com Label externo associado.",
       },
     },
   },

@@ -4,7 +4,7 @@ import { CheckCircle2, Bell } from "lucide-react";
 import { Badge } from "./badge";
 
 const meta = {
-  title: "UI/Badge/Composições",
+  title: "UI/Badge/Composicoes",
   tags: ["feedback"],
   component: Badge,
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Configurações contextuais do Badge: combinado com ícone, como contador numérico, envolvido em <a> para navegação ou em <button> para trigger clicável.",
+          "Configuracoes contextuais do Badge: combinado com ícone, como contador numérico, envolvido em <a> para navegação ou em <button> para trigger clicável.",
       },
     },
   },

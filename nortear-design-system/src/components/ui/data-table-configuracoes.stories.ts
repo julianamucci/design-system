@@ -6,7 +6,7 @@ import { type Invoice, invoices, baseColumns } from './data-table.fixtures';
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'UI/DataTable/Configurações',
+  title: 'UI/DataTable/Configuracoes',
   parameters: {
     layout: 'padded',
     controls: { disable: true },

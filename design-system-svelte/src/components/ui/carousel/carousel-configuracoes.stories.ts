@@ -5,7 +5,7 @@ import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
 
 const meta = {
-  title: 'UI/Carousel/Configurações',
+  title: 'UI/Carousel/Configuracoes',
   component: Carousel,
   tags: ['display'],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Configurações comuns: item único, múltiplos itens responsivos (basis-1/2 em md, basis-1/3 em lg) e autoplay via plugin embla-carousel-autoplay.',
+          'Configuracoes comuns: item único, múltiplos itens responsivos (basis-1/2 em md, basis-1/3 em lg) e autoplay via plugin embla-carousel-autoplay.',
       },
     },
   },
