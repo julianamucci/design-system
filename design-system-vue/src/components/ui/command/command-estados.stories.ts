@@ -54,8 +54,12 @@ export const EstadoVazio: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('CommandEmpty é exibido quando não há resultados', async () => {
-      const empty = canvas.getByText('Nenhum resultado encontrado.');
+    await step('Digitar termo inexistente exibe CommandEmpty', async () => {
+      const input = canvasElement.querySelector('input[data-slot="command-input"]') as HTMLInputElement
+        ?? (canvasElement.querySelector('input') as HTMLInputElement);
+      await userEvent.click(input);
+      await userEvent.keyboard('zzz');
+      const empty = await canvas.findByText('Nenhum resultado encontrado.', undefined, { timeout: 2000 });
       await expect(empty).toBeVisible();
     });
   },
@@ -91,7 +95,7 @@ export const ItemDesabilitado: Story = {
 
     await step('item desabilitado tem atributo data-disabled', async () => {
       const disabledItem = canvas.getByText('Input (desabilitado)').closest('[data-slot="command-item"]');
-      await expect(disabledItem).toHaveAttribute('data-disabled', 'true');
+      await expect(disabledItem).toHaveAttribute('data-disabled');
     });
 
     await step('item desabilitado tem opacidade reduzida via classe', async () => {

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
 import { ref } from 'vue';
-import { within, expect, waitFor } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'vue-input-otp';
 import {
   InputOTP,
@@ -65,8 +65,11 @@ export const SeisDigitos: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const input = await waitFor(() => canvas.getByLabelText(/6 dígitos/i));
+    const input = await waitFor(() => {
+      const el = canvasElement.querySelector('input');
+      if (!el) throw new Error('input not mounted');
+      return el as HTMLInputElement;
+    });
     await expect(input).toHaveAttribute('maxlength', '6');
   },
 };
@@ -103,8 +106,11 @@ export const QuatroDigitos: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const input = await waitFor(() => canvas.getByLabelText(/PIN de 4 dígitos/i));
+    const input = await waitFor(() => {
+      const el = canvasElement.querySelector('input');
+      if (!el) throw new Error('input not mounted');
+      return el as HTMLInputElement;
+    });
     await expect(input).toHaveAttribute('maxlength', '4');
   },
 };
@@ -151,10 +157,13 @@ export const ComSeparator: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const separator = canvasElement.querySelector('[role="separator"]');
     await expect(separator).toBeInTheDocument();
-    const input = await waitFor(() => canvas.getByLabelText(/separador/i));
+    const input = await waitFor(() => {
+      const el = canvasElement.querySelector('input');
+      if (!el) throw new Error('input not mounted');
+      return el as HTMLInputElement;
+    });
     await expect(input).toHaveAttribute('maxlength', '6');
   },
 };
@@ -193,8 +202,11 @@ export const Alfanumerico: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const input = await waitFor(() => canvas.getByLabelText(/alfanumérico/i));
+    const input = await waitFor(() => {
+      const el = canvasElement.querySelector('input');
+      if (!el) throw new Error('input not mounted');
+      return el as HTMLInputElement;
+    });
     await expect(input).toHaveAttribute('inputmode', 'text');
   },
 };

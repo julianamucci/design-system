@@ -230,7 +230,7 @@ export const WithDestructiveAction: Story = {
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const action = await body.findByRole('button', { name: /Remover anexo/i });
-    await expect(action).toHaveClass('bg-destructive');
+    await expect(action).toHaveAttribute('data-variant', 'destructive');
   },
 };
 

@@ -66,10 +66,37 @@ const scrollLockCleanupDecorator: Decorator = () => ({
       body.removeAttribute('data-scroll-locked');
       body.removeAttribute('aria-hidden');
       body.removeAttribute('inert');
-      document.querySelectorAll(
-        '[data-reka-popper-content-wrapper]:empty, [data-state="closed"][role="dialog"], [data-state="closed"][role="tooltip"]'
-      ).forEach((el) => {
-        if (!el.contains(document.activeElement)) el.remove();
+      // Limpa também o storybook-root, que pode vir com aria-hidden de portal anterior.
+      const root = document.getElementById('storybook-root');
+      if (root) {
+        root.removeAttribute('aria-hidden');
+        root.removeAttribute('data-aria-hidden');
+        root.removeAttribute('inert');
+      }
+      // Sweep agressivo de overlays órfãos (portais de stories anteriores).
+      const selectors = [
+        // Reka data-state slots fechados/abertos persistentes
+        '[data-state="closed"][role="dialog"]',
+        '[data-state="closed"][role="tooltip"]',
+        '[data-state="closed"][role="menu"]',
+        '[data-state="closed"][role="listbox"]',
+        '[data-reka-popper-content-wrapper]',
+        '[data-reka-portal]',
+        // Vaul drawer leftovers
+        '[data-vaul-drawer]',
+        '[data-vaul-overlay]',
+        // Sonner toaster portals
+        '[data-sonner-toaster]',
+        // Generic overlay roles fora do storybook-root (fallback)
+        '[role="dialog"]',
+        '[role="menu"]',
+        '[role="tooltip"]',
+        '[role="listbox"]',
+      ];
+      document.querySelectorAll(selectors.join(',')).forEach((node) => {
+        if (!root || !root.contains(node)) {
+          if (!node.contains(document.activeElement)) node.remove();
+        }
       });
     }
     return {};
