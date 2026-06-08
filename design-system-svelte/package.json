@@ -45,7 +45,7 @@
     "@storybook/addon-themes": "^10.4.0",
     "@storybook/addon-vitest": "^10.4.0",
     "@storybook/svelte-vite": "^10.4.0",
-    "@storybook/test-runner": "^0.24.3",
+    "@storybook/test-runner": "^0.24.4",
     "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "@tailwindcss/vite": "^4.2.4",
     "@tsconfig/svelte": "^5.0.8",
