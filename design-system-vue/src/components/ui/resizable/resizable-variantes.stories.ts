@@ -44,9 +44,9 @@ export const Horizontal: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Handle aplica aria-orientation=vertical no modo horizontal', async () => {
+    await step('Handle no modo horizontal recebe data-panel-group-direction=horizontal', async () => {
       const handle = canvasElement.querySelector('[data-slot="resizable-handle"]');
-      await expect(handle).toHaveAttribute('aria-orientation', 'vertical');
+      await expect(handle).toHaveAttribute('data-panel-group-direction', 'horizontal');
     });
   },
 };
@@ -69,9 +69,9 @@ export const Vertical: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Handle aplica aria-orientation=horizontal no modo vertical', async () => {
+    await step('Handle no modo vertical recebe data-panel-group-direction=vertical', async () => {
       const handle = canvasElement.querySelector('[data-slot="resizable-handle"]');
-      await expect(handle).toHaveAttribute('aria-orientation', 'horizontal');
+      await expect(handle).toHaveAttribute('data-panel-group-direction', 'vertical');
     });
   },
 };

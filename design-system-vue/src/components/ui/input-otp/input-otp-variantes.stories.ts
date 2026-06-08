@@ -65,12 +65,15 @@ export const SeisDigitos: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const input = await waitFor(() => {
+    await waitFor(() => {
       const el = canvasElement.querySelector('input');
       if (!el) throw new Error('input not mounted');
       return el as HTMLInputElement;
     });
-    await expect(input).toHaveAttribute('maxlength', '6');
+    // vue-input-otp não seta maxlength no <input> — o limite é gerenciado via
+    // props/state. Validar contando os slots renderizados.
+    const slots = canvasElement.querySelectorAll('[data-slot="input-otp-slot"]');
+    await expect(slots.length).toBe(6);
   },
 };
 
@@ -106,12 +109,13 @@ export const QuatroDigitos: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const input = await waitFor(() => {
+    await waitFor(() => {
       const el = canvasElement.querySelector('input');
       if (!el) throw new Error('input not mounted');
       return el as HTMLInputElement;
     });
-    await expect(input).toHaveAttribute('maxlength', '4');
+    const slots = canvasElement.querySelectorAll('[data-slot="input-otp-slot"]');
+    await expect(slots.length).toBe(4);
   },
 };
 
@@ -159,12 +163,13 @@ export const ComSeparator: Story = {
   play: async ({ canvasElement }) => {
     const separator = canvasElement.querySelector('[role="separator"]');
     await expect(separator).toBeInTheDocument();
-    const input = await waitFor(() => {
+    await waitFor(() => {
       const el = canvasElement.querySelector('input');
       if (!el) throw new Error('input not mounted');
       return el as HTMLInputElement;
     });
-    await expect(input).toHaveAttribute('maxlength', '6');
+    const slots = canvasElement.querySelectorAll('[data-slot="input-otp-slot"]');
+    await expect(slots.length).toBe(6);
   },
 };
 

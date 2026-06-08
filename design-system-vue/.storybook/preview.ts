@@ -73,25 +73,23 @@ const scrollLockCleanupDecorator: Decorator = () => ({
         root.removeAttribute('data-aria-hidden');
         root.removeAttribute('inert');
       }
-      // Sweep agressivo de overlays órfãos (portais de stories anteriores).
+      // Sweep de overlays órfãos (portais de stories anteriores). Usamos APENAS
+      // seletores específicos a estados "fechado" ou portais marcados como tal,
+      // para NÃO remover o portal da story corrente quando ela monta com
+      // defaultOpen=true imediatamente após o decorator (race condition).
       const selectors = [
         // Reka data-state slots fechados/abertos persistentes
         '[data-state="closed"][role="dialog"]',
         '[data-state="closed"][role="tooltip"]',
         '[data-state="closed"][role="menu"]',
         '[data-state="closed"][role="listbox"]',
-        '[data-reka-popper-content-wrapper]',
-        '[data-reka-portal]',
-        // Vaul drawer leftovers
-        '[data-vaul-drawer]',
-        '[data-vaul-overlay]',
-        // Sonner toaster portals
+        // Reka popper wrappers SEM filhos (vazaram da story anterior)
+        '[data-reka-popper-content-wrapper]:empty',
+        // Vaul drawer leftovers em data-state=closed
+        '[data-vaul-drawer][data-state="closed"]',
+        '[data-vaul-overlay][data-state="closed"]',
+        // Sonner toaster portals — sempre 1; mata duplicados
         '[data-sonner-toaster]',
-        // Generic overlay roles fora do storybook-root (fallback)
-        '[role="dialog"]',
-        '[role="menu"]',
-        '[role="tooltip"]',
-        '[role="listbox"]',
       ];
       document.querySelectorAll(selectors.join(',')).forEach((node) => {
         if (!root || !root.contains(node)) {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
-import { fn, userEvent, within, expect } from 'storybook/test';
+import { fn, userEvent, within, expect, waitFor } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 import RadioGroupDocs from '@/components/docs/RadioGroupDocs.vue';
@@ -91,20 +91,20 @@ export const Playground: Story = {
 
     await step('Clicar no primeiro item seleciona-o', async () => {
       await userEvent.click(radios[0]);
-      await expect(radios[0]).toHaveAttribute('aria-checked', 'true');
+      await waitFor(() => expect(radios[0]).toHaveAttribute('aria-checked', 'true'));
       await expect(radios[1]).toHaveAttribute('aria-checked', 'false');
     });
 
     await step('Setas alternam o item selecionado', async () => {
       (radios[0] as HTMLElement).focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(radios[1]).toHaveAttribute('aria-checked', 'true');
+      await waitFor(() => expect(radios[1]).toHaveAttribute('aria-checked', 'true'));
       await expect(radios[0]).toHaveAttribute('aria-checked', 'false');
     });
 
     await step('ArrowUp volta ao anterior', async () => {
       await userEvent.keyboard('{ArrowUp}');
-      await expect(radios[0]).toHaveAttribute('aria-checked', 'true');
+      await waitFor(() => expect(radios[0]).toHaveAttribute('aria-checked', 'true'));
     });
   },
 };

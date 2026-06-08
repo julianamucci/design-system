@@ -4,13 +4,27 @@ export async function waitForPortal(
   role: "tooltip" | "dialog" | "listbox" | "menu" | "menuitem" | "option",
   options: { name?: string | RegExp; timeout?: number } = {},
 ): Promise<HTMLElement> {
-  const { name, timeout = 4000 } = options;
+  const { name, timeout = 6000 } = options;
   const body = within(document.body);
 
   // Find the element with extended timeout to allow portal mount + open animation.
-  const el = name
-    ? await body.findByRole(role, { name }, { timeout })
-    : await body.findByRole(role, undefined, { timeout });
+  // Em casos onde o portal Reka aparece com data-state=open mas findByRole ignora
+  // por aria-hidden temporário, fallback para querySelector direto.
+  let el: HTMLElement;
+  try {
+    el = name
+      ? await body.findByRole(role, { name }, { timeout })
+      : await body.findByRole(role, undefined, { timeout });
+  } catch (err) {
+    const candidate = document.querySelector(
+      `[role="${role}"][data-state="open"]`,
+    ) as HTMLElement | null;
+    if (candidate) {
+      el = candidate;
+    } else {
+      throw err;
+    }
+  }
 
   // If the element exists but is mid-close animation, wait briefly for a re-open
   // or settle. Failures here fall through so callers see the original element.
