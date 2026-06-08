@@ -107,6 +107,21 @@ export function createPopover(options: PopoverOptions): HTMLElement {
       panelEl.appendChild(content);
     }
 
+    // Accessible name (axe rule: aria-dialog-name). Prefer an existing heading
+    // inside the content via aria-labelledby; otherwise fall back to a string
+    // aria-label derived from the trigger's accessible text.
+    const heading = panelEl.querySelector<HTMLElement>('h1, h2, h3, h4, h5, h6, [role="heading"]');
+    if (heading) {
+      if (!heading.id) heading.id = `${contentId}-title`;
+      panelEl.setAttribute('aria-labelledby', heading.id);
+    } else {
+      const triggerName =
+        trigger.getAttribute('aria-label') ||
+        trigger.textContent?.trim() ||
+        'Popover';
+      panelEl.setAttribute('aria-label', triggerName);
+    }
+
     document.body.appendChild(panelEl);
     positionFloating(trigger, panelEl, side, align);
 

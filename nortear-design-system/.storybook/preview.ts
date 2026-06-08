@@ -118,6 +118,34 @@ const preview: Preview = {
       parentSelector: 'html',
     }),
 
+    // Sweep stale portals from previous stories. Vanilla factories portal to
+    // document.body and aren't auto-cleaned when Storybook swaps the canvas.
+    // This decorator runs synchronously on every render, removing any leftover
+    // portal content (popover, sheet/drawer, tooltip, hover-card, dropdown,
+    // dialog) before the next story's render/play executes.
+    (Story) => {
+      if (typeof document !== 'undefined') {
+        const stalePortalSelectors = [
+          '[data-slot="popover-content"]',
+          '[data-slot="sheet-content"]',
+          '[data-slot="sheet-overlay"]',
+          '[data-slot="tooltip-content"]',
+          '[data-slot="hover-card-content"]',
+          '[data-slot="dropdown-menu-content"]',
+          '[data-slot="dialog-content"]',
+          '[data-slot="dialog-overlay"]',
+        ];
+        document
+          .querySelectorAll(stalePortalSelectors.join(','))
+          .forEach((node) => {
+            // Only sweep nodes that live directly under <body> (true portals),
+            // not nodes that are still inside the active canvas wrapper.
+            if (node.parentElement === document.body) node.remove();
+          });
+      }
+      return Story();
+    },
+
     (Story, context) => {
       const brand = (context.globals['brand'] as string) || 'default';
       const density = (context.globals['density'] as string) || 'default';
