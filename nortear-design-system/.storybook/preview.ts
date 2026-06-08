@@ -134,13 +134,32 @@ const preview: Preview = {
           '[data-slot="dropdown-menu-content"]',
           '[data-slot="dialog-content"]',
           '[data-slot="dialog-overlay"]',
+          // Fallback class selectors (defensive — primitives should set data-slot
+          // but some still rely on className only).
+          '.nds-dropdown-menu-content',
+          '.nds-hover-card-content',
+          '.nds-popover-content',
+          '.nds-tooltip-content',
+          '.nds-context-menu-content',
+          // Ultimate fallback: any orphan element with overlay role anywhere
+          // outside #storybook-root. Stories that build custom menus (e.g.
+          // dropdown-menu-composicoes uses Tailwind raw classes) won't match
+          // data-slot or .nds-* selectors.
+          '[role="menu"]',
+          '[role="dialog"]',
+          '[role="tooltip"]',
+          '[role="listbox"]',
         ];
         document
           .querySelectorAll(stalePortalSelectors.join(','))
           .forEach((node) => {
-            // Only sweep nodes that live directly under <body> (true portals),
-            // not nodes that are still inside the active canvas wrapper.
-            if (node.parentElement === document.body) node.remove();
+            // Sweep any portal node that lives in <body> outside the canvas root.
+            // Most factories portal to document.body directly, but some chain
+            // through a positioning wrapper.
+            const root = document.getElementById('storybook-root');
+            if (!root || !root.contains(node)) {
+              node.remove();
+            }
           });
       }
       return Story();

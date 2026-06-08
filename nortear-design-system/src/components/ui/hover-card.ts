@@ -102,6 +102,17 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement {
     panelEl.style.position = 'absolute';
     panelEl.appendChild(content);
 
+    // PATCH: a11y — role="dialog" exige accessible name. Prefer aria-labelledby
+    // apontando para heading interno; fallback usa aria-label do trigger.
+    const heading = panelEl.querySelector<HTMLElement>('h1, h2, h3, h4, h5, h6, [role="heading"]');
+    if (heading) {
+      if (!heading.id) heading.id = `${cardId}-title`;
+      panelEl.setAttribute('aria-labelledby', heading.id);
+    } else {
+      const triggerLabel = trigger.getAttribute('aria-label') || trigger.textContent?.trim() || 'Hover card';
+      panelEl.setAttribute('aria-label', triggerLabel);
+    }
+
     document.body.appendChild(panelEl);
     positionHoverCard(trigger, panelEl, side, align);
 

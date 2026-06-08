@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
 import { createSheet } from './sheet';
 import { createButton } from './button';
 
@@ -116,7 +116,7 @@ export const SecondaryNavigation: Story = {
     const nav = document.createElement('nav');
     nav.className = 'nds-stack';
     nav.dataset.spacing = 'sm';
-    nav.setAttribute('aria-label', 'Secondary navigation');
+    nav.setAttribute('aria-label', 'Sheet sample sidebar links (story-only)');
     const items = ['Dashboard', 'Projetos', 'Equipe', 'Configuracoes', 'Faturas'];
     for (const label of items) {
       const a = document.createElement('a');
@@ -134,13 +134,14 @@ export const SecondaryNavigation: Story = {
       description: 'Navegue entre as áreas do sistema.',
       content: nav,
     });
-    queueMicrotask(() => trigger.click());
     return sheet;
   },
-  play: async () => {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole('button', { name: 'Abrir menu' });
+    await userEvent.click(trigger);
     const body = within(document.body);
-    const dialogs = await body.findAllByRole('dialog');
-    const dialog = dialogs[dialogs.length - 1];
+    const dialog = await body.findByRole('dialog');
     await expect(within(dialog).getByRole('navigation')).toBeVisible();
     await expect(within(dialog).getByRole('link', { name: 'Dashboard' })).toBeVisible();
   },
