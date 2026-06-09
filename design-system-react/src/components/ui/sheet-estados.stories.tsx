@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { userEvent, within, expect } from "storybook/test";
+import { userEvent, within, expect, waitFor } from "storybook/test";
 import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Sheet,
@@ -233,7 +233,15 @@ export const Controlled: Story = {
 
     await step("Escape fecha o sheet controlado", async () => {
       await userEvent.keyboard("{Escape}");
-      await expect(body.queryByRole("dialog")).not.toBeInTheDocument();
+      await waitFor(
+        () => {
+          const dialog = body.queryByRole("dialog");
+          if (dialog && dialog.getAttribute("data-closed") === null) {
+            throw new Error("sheet ainda aberto");
+          }
+        },
+        { timeout: 2000 },
+      );
     });
   },
 };

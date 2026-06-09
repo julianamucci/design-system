@@ -113,7 +113,7 @@ export const Disabled: Story = {
     const radios = canvas.getAllByRole("radio");
     await step("Cada item está desabilitado", async () => {
       for (const r of radios) {
-        await expect(r).toBeDisabled();
+        await expect(r).toHaveAttribute("aria-disabled", "true");
       }
     });
     await step("Clique não altera seleção quando disabled", async () => {
@@ -153,9 +153,9 @@ export const ItemDisabled: Story = {
     const canvas = within(canvasElement);
     const radios = canvas.getAllByRole("radio");
     await step("Apenas o item boleto está desabilitado", async () => {
-      await expect(radios[0]).not.toBeDisabled();
-      await expect(radios[1]).not.toBeDisabled();
-      await expect(radios[2]).toBeDisabled();
+      await expect(radios[0]).not.toHaveAttribute("aria-disabled", "true");
+      await expect(radios[1]).not.toHaveAttribute("aria-disabled", "true");
+      await expect(radios[2]).toHaveAttribute("aria-disabled", "true");
     });
   },
 };

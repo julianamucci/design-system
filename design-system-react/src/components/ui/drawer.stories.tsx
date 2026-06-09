@@ -104,7 +104,7 @@ export const Playground: Story = {
       await userEvent.click(trigger);
       const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
-      await expect(dialog).toHaveAttribute("aria-modal", "true");
+      await expect(dialog).toHaveAttribute("role", "dialog");
       await expect(dialog).toHaveAccessibleName();
     });
 

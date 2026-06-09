@@ -20,11 +20,30 @@ const scrollLockCleanupDecorator: Decorator = (Story) => {
     body.removeAttribute('data-scroll-locked');
     body.removeAttribute('aria-hidden');
     body.removeAttribute('inert');
-    // Remove órfãos de portais que possam ter sobrado de stories anteriores
-    document.querySelectorAll(
-      '[data-base-ui-popup-root]:empty, [data-state="closed"][role="dialog"], [data-state="closed"][role="tooltip"]'
-    ).forEach((el) => {
-      if (!el.contains(document.activeElement)) el.remove();
+    const root = document.getElementById('storybook-root');
+    if (root) {
+      root.removeAttribute('aria-hidden');
+      root.removeAttribute('inert');
+    }
+    // Remove órfãos de portais que possam ter sobrado de stories anteriores.
+    // Inclui fallback: qualquer overlay (dialog/menu/tooltip/listbox) que esteja
+    // FORA de #storybook-root é resíduo de portal de story anterior.
+    const selectors = [
+      '[data-base-ui-popup-root]:empty',
+      '[data-base-ui-portal]:empty',
+      '[data-state="closed"][role="dialog"]',
+      '[data-state="closed"][role="tooltip"]',
+      '[data-state="closed"][role="menu"]',
+      '[data-state="closed"][role="listbox"]',
+      '[role="dialog"]',
+      '[role="menu"]',
+      '[role="tooltip"]',
+      '[role="listbox"]',
+    ];
+    document.querySelectorAll(selectors.join(',')).forEach((el) => {
+      if (root && root.contains(el)) return;
+      if (el.contains(document.activeElement)) return;
+      el.remove();
     });
   }
   return Story();

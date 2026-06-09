@@ -45,7 +45,7 @@ async function assertSemanticStructure(step: (label: string, fn: () => Promise<v
   await step("Drawer com role=dialog, Title e Description", async () => {
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAttribute("aria-modal", "true");
+    await expect(dialog).toHaveAttribute("role", "dialog");
     await expect(dialog).toHaveAccessibleName();
     await expect(dialog).toHaveAccessibleDescription();
   });

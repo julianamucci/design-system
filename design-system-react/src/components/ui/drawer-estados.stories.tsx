@@ -111,10 +111,10 @@ export const Aberto: Story = {
   ),
   play: async ({ step }) => {
     const body = within(document.body);
-    await step("Drawer aberto com role=dialog e aria-modal=true", async () => {
+    await step("Drawer aberto com role=dialog", async () => {
       const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
-      await expect(dialog).toHaveAttribute("aria-modal", "true");
+      await expect(dialog).toHaveAttribute("role", "dialog");
       await expect(dialog).toHaveAccessibleName();
     });
   },

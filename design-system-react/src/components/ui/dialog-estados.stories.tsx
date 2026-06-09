@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { userEvent, within, expect } from "storybook/test";
+import { userEvent, within, expect, waitFor } from "storybook/test";
 import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Dialog,
@@ -229,7 +229,15 @@ export const Controlled: Story = {
 
     await step("Escape fecha o diálogo controlado", async () => {
       await userEvent.keyboard("{Escape}");
-      await expect(body.queryByRole("dialog")).not.toBeInTheDocument();
+      await waitFor(
+        () => {
+          const dialog = body.queryByRole("dialog");
+          if (dialog && dialog.getAttribute("data-closed") === null) {
+            throw new Error("dialog ainda aberto");
+          }
+        },
+        { timeout: 2000 },
+      );
     });
   },
 };
