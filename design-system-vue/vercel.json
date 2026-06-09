@@ -1,9 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "NODE_OPTIONS='--max-old-space-size=7168' npm run build-storybook",
+  "buildCommand": "npm run build-storybook",
   "outputDirectory": "storybook-static",
   "installCommand": "npm install",
   "framework": null,
+  "build": {
+    "env": {
+      "NODE_OPTIONS": "--max-old-space-size=7168"
+    }
+  },
   "headers": [
     {
       "source": "/assets/(.*)",
