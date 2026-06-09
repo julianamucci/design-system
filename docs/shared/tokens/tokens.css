@@ -5,8 +5,9 @@
  * NÃO edite diretamente — edite tokens.json e regenere.
  */
 
-/* ── Google Fonts ─────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700;800&family=PT+Serif:wght@400;700&family=LXGW+WenKai+TC:wght@400;700&display=swap');
+/* Google Fonts: cada stack faz o hoist em seu próprio globals.css (React/Vue/Svelte)
+ * ou via <link> em index.html / preview-head.html (Nortear). Não duplicar aqui —
+ * Vite/Lightning CSS reordena e gera warning "must precede all other rules". */
 
 /* ── Motion tokens (durações, easings, reduced-motion) ──────────────────── */
 @import "./motion.css";
