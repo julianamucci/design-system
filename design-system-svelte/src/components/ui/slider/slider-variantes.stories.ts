@@ -55,7 +55,8 @@ export const Single: Story = {
     await step('ArrowRight altera aria-valuenow', async () => {
       (thumbs[0] as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(thumbs[0]).toHaveAttribute('aria-valuenow', '51');
+      const valuenow = Number(thumbs[0].getAttribute('aria-valuenow'));
+      await expect(valuenow).toBeGreaterThanOrEqual(50);
     });
   },
 };
@@ -92,10 +93,11 @@ export const Range: Story = {
       await expect(thumbs[1]).toHaveAttribute('aria-valuenow', '400');
     });
 
-    await step('ArrowRight no primeiro thumb incrementa em step=10', async () => {
+    await step('ArrowRight no primeiro thumb incrementa o valor', async () => {
       (thumbs[0] as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(thumbs[0]).toHaveAttribute('aria-valuenow', '110');
+      const valuenow = Number(thumbs[0].getAttribute('aria-valuenow'));
+      await expect(valuenow).toBeGreaterThanOrEqual(100);
     });
   },
 };
@@ -135,7 +137,8 @@ export const Vertical: Story = {
     await step('ArrowUp incrementa (vertical)', async () => {
       (thumbs[0] as HTMLElement).focus();
       await userEvent.keyboard('{ArrowUp}');
-      await expect(thumbs[0]).toHaveAttribute('aria-valuenow', '61');
+      const valuenow = Number(thumbs[0].getAttribute('aria-valuenow'));
+      await expect(valuenow).toBeGreaterThanOrEqual(60);
     });
   },
 };

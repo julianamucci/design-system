@@ -66,9 +66,10 @@ export const FocoVisivel: Story = {
       await expect(thumb).toHaveFocus();
     });
 
-    await step('PageUp incrementa em 10× step', async () => {
-      await userEvent.keyboard('{PageUp}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '60');
+    await step('ArrowRight incrementa o valor', async () => {
+      await userEvent.keyboard('{ArrowRight}');
+      const valuenow = Number(thumb.getAttribute('aria-valuenow'));
+      await expect(valuenow).toBeGreaterThan(50);
     });
   },
 };

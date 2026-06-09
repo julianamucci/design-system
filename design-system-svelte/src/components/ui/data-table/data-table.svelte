@@ -108,6 +108,14 @@
   let columnOrder = $state<ColumnOrderState>([]);
   let columnPinning = $state<ColumnPinningState>({ left: [], right: [] });
   let columnSizing = $state<ColumnSizingState>({});
+  let columnSizingInfo = $state<Record<string, unknown>>({
+    startOffset: null,
+    startSize: null,
+    deltaOffset: null,
+    deltaPercentage: null,
+    isResizingColumn: false,
+    columnSizingStart: [],
+  });
   let draggedColumnId = $state<string | null>(null);
   // eslint-disable-next-line svelte/state_referenced_locally
   let pagination = $state<{ pageIndex: number; pageSize: number }>({ pageIndex: 0, pageSize });
@@ -159,6 +167,8 @@
         columnOrder,
         columnPinning,
         columnSizing,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        columnSizingInfo: columnSizingInfo as any,
         pagination,
       },
       enableRowSelection,
@@ -177,6 +187,8 @@
       onColumnOrderChange: (u) => (columnOrder = apply(columnOrder, u)),
       onColumnPinningChange: (u) => (columnPinning = apply(columnPinning, u)),
       onColumnSizingChange: (u) => (columnSizing = apply(columnSizing, u)),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onColumnSizingInfoChange: ((u: any) => (columnSizingInfo = apply(columnSizingInfo, u))) as any,
       onPaginationChange: (u) => (pagination = apply(pagination, u)),
       getCoreRowModel: getCoreRowModel(),
       getSortedRowModel: getSortedRowModel(),

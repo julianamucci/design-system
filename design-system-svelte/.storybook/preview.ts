@@ -155,13 +155,35 @@ const preview: Preview = {
         body.removeAttribute('data-scroll-locked');
         body.removeAttribute('aria-hidden');
         body.removeAttribute('inert');
-        document
-          .querySelectorAll(
-            '[data-bits-floating-content]:empty, [data-state="closed"][role="dialog"], [data-state="closed"][role="tooltip"]'
-          )
-          .forEach((el) => {
-            if (!el.contains(document.activeElement)) el.remove();
-          });
+        const root = document.getElementById('storybook-root');
+        if (root) {
+          root.removeAttribute('aria-hidden');
+          root.removeAttribute('data-aria-hidden');
+          root.removeAttribute('inert');
+        }
+        // Sweep de overlays órfãos (portais de stories anteriores). Usamos APENAS
+        // seletores específicos a estados "fechado" ou portais marcados como tal,
+        // para NÃO remover o portal da story corrente quando ela monta com
+        // defaultOpen=true imediatamente após o decorator (race condition).
+        const selectors = [
+          // bits-ui data-state slots fechados/abertos persistentes
+          '[data-state="closed"][role="dialog"]',
+          '[data-state="closed"][role="tooltip"]',
+          '[data-state="closed"][role="menu"]',
+          '[data-state="closed"][role="listbox"]',
+          // bits-ui floating wrappers SEM filhos (vazaram da story anterior)
+          '[data-bits-floating-content]:empty',
+          // vaul-svelte drawer leftovers em data-state=closed
+          '[data-vaul-drawer][data-state="closed"]',
+          '[data-vaul-overlay][data-state="closed"]',
+          // Sonner toaster portals — sempre 1; mata duplicados
+          '[data-sonner-toaster]',
+        ];
+        document.querySelectorAll(selectors.join(',')).forEach((node) => {
+          if (!root || !root.contains(node)) {
+            if (!node.contains(document.activeElement)) node.remove();
+          }
+        });
       }
       return Story(ctx);
     },
