@@ -83,11 +83,18 @@ gh repo create meu-design-system \
 # ou clique em "Use this template" no GitHub
 ```
 
-Depois, customize:
-1. **Tokens** em `docs/shared/tokens/tokens.css` (cores, espaçamentos, radius)
-2. **Tema** em `docs/shared/themes/default.css`
-3. **Brand** em `<stack>/.storybook/brand-logo.svg` e `manager.ts`
-4. **Domínios** das suas instâncias de Storybook (atualize `vercel.json`)
+Depois, customize seguindo o **[`BRAND-CUSTOMIZATION.md`](BRAND-CUSTOMIZATION.md)** — guia passo a passo (10 etapas) com:
+
+1. Tokens (cores, espaçamentos, radius)
+2. Temas adicionais
+3. Tipografia
+4. Logo nas 4 stacks
+5. Manager do Storybook (sidebar + título)
+6. Conteúdo trilíngue
+7. README e nome do projeto
+8. Deploy Vercel (5 projetos + DNS)
+9. CLI customizada (npm publish)
+10. Checklist final antes do primeiro release
 
 Storybooks ao vivo do template original:
 - **React** → [react.norteardesign.com.br](https://react.norteardesign.com.br)
