@@ -71,6 +71,31 @@ Páginas de fundação documentadas em `Foundations/*` no Storybook (todas as 4 
 - SEO e GEO
 - Divergências Cross-Stack
 
+## 🚀 Use como template
+
+Este repo é um **GitHub Template Repository**. Pra fundar seu próprio design system multi-stack a partir dele:
+
+```bash
+# via gh CLI
+gh repo create meu-design-system \
+  --template julianamucci/design-system --public
+
+# ou clique em "Use this template" no GitHub
+```
+
+Depois, customize:
+1. **Tokens** em `docs/shared/tokens/tokens.css` (cores, espaçamentos, radius)
+2. **Tema** em `docs/shared/themes/default.css`
+3. **Brand** em `<stack>/.storybook/brand-logo.svg` e `manager.ts`
+4. **Domínios** das suas instâncias de Storybook (atualize `vercel.json`)
+
+Storybooks ao vivo do template original:
+- **React** → [react.norteardesign.com.br](https://react.norteardesign.com.br)
+- **Vue** → [vue.norteardesign.com.br](https://vue.norteardesign.com.br)
+- **Svelte** → [svelte.norteardesign.com.br](https://svelte.norteardesign.com.br)
+- **Vanilla** → [vanilla.norteardesign.com.br](https://vanilla.norteardesign.com.br)
+- **Portal** → [norteardesign.com.br](https://norteardesign.com.br)
+
 ## Quick Start
 
 ### Pré-requisitos
@@ -161,6 +186,45 @@ Ver [`patches.md`](patches.md) — registry completo:
 - **svelte-sonner** `1.1.0` — toast `<li>` tabindex 0 → -1 (idem)
 - Tokens de dimensão substituindo classes hardcoded (`h-(--height-default)` etc.)
 - Compose patterns (combobox, calendar) com `aria-*` adicionais
+
+## Deploy
+
+Cada um dos 5 projetos (1 portal + 4 storybooks) tem seu próprio `vercel.json` e é deployado como **projeto Vercel independente** apontando pra subdomínio próprio. A topologia:
+
+| Projeto Vercel | Diretório raiz no repo | Subdomínio | Build |
+|---|---|---|---|
+| `nortear-portal` | `landing/` | `norteardesign.com.br` + `www.` | (estático) |
+| `nortear-react` | `design-system-react/` | `react.norteardesign.com.br` | `npm run build-storybook` |
+| `nortear-vue` | `design-system-vue/` | `vue.norteardesign.com.br` | `npm run build-storybook` |
+| `nortear-svelte` | `design-system-svelte/` | `svelte.norteardesign.com.br` | `npm run build-storybook` |
+| `nortear-vanilla` | `nortear-design-system/` | `vanilla.norteardesign.com.br` | `npm run build-storybook` |
+
+### DNS records pra norteardesign.com.br
+
+Configurar no painel do seu registrador:
+
+```
+Tipo   Nome      Valor                      TTL
+────   ────      ─────                      ───
+A      @         76.76.21.21                3600
+CNAME  www       cname.vercel-dns.com.      3600
+CNAME  react     cname.vercel-dns.com.      3600
+CNAME  vue       cname.vercel-dns.com.      3600
+CNAME  svelte    cname.vercel-dns.com.      3600
+CNAME  vanilla   cname.vercel-dns.com.      3600
+```
+
+A Vercel automaticamente provisiona certificados TLS (Let's Encrypt) pra todos os subdomínios.
+
+### Setup Vercel (one-time)
+
+Pra cada um dos 5 projetos:
+
+1. `vercel login` (uma vez por máquina)
+2. Em cada diretório raiz do projeto, rode `vercel link` e selecione o projeto Vercel correspondente
+3. Conecte ao GitHub repo (auto-deploy a cada push em `main`)
+4. Em "Settings → Domains", adicione o subdomínio próprio
+5. Aguarde provisionamento DNS + TLS (~2-5 min)
 
 ## Roadmap
 
