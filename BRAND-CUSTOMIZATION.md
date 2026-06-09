@@ -2,7 +2,7 @@
 
 Guia passo a passo pra transformar este template no seu próprio design system. Siga na ordem — cada etapa builda sobre a anterior.
 
-> **Pré-requisito**: você já clicou em **"Use this template"** no GitHub, clonou seu repo novo, rodou `npm install --legacy-peer-deps` em cada `<stack>/`, e conseguiu rodar `npm run storybook` em pelo menos uma stack.
+> **Pré-requisito**: você já clicou em **"Use this template"** no GitHub, clonou seu repo novo, rodou `npm install` em cada `<stack>/`, e conseguiu rodar `npm run storybook` em pelo menos uma stack.
 
 ---
 
