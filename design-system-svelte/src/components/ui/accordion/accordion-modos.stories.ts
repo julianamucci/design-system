@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { Accordion } from './index';

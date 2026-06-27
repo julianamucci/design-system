@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -397,7 +397,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -416,17 +419,26 @@ const visualTestItems = computed(() => [
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.productDescription') }}</CardDescription>
             <CardAction>
-              <Badge variant="secondary">{{ tContent('demonstration.labels.productStock') }}</Badge>
+              <Badge variant="secondary">
+                {{ tContent('demonstration.labels.productStock') }}
+              </Badge>
             </CardAction>
           </CardHeader>
           <CardContent class="text-base font-semibold">
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
           <CardFooter class="justify-end gap-2">
-            <Button variant="outline" size="sm" :aria-label="`${tContent('demonstration.labels.actionEdit')} ${tContent('demonstration.labels.productTitle')}`">
+            <Button
+              variant="outline"
+              size="sm"
+              :aria-label="`${tContent('demonstration.labels.actionEdit')} ${tContent('demonstration.labels.productTitle')}`"
+            >
               {{ tContent('demonstration.labels.actionEdit') }}
             </Button>
-            <Button size="sm" :aria-label="`${tContent('demonstration.labels.actionDelete')} ${tContent('demonstration.labels.productTitle')}`">
+            <Button
+              size="sm"
+              :aria-label="`${tContent('demonstration.labels.actionDelete')} ${tContent('demonstration.labels.productTitle')}`"
+            >
               {{ tContent('demonstration.labels.actionDelete') }}
             </Button>
           </CardFooter>
@@ -444,7 +456,10 @@ const visualTestItems = computed(() => [
           <CardHeader>
             <div class="flex items-center gap-3">
               <Avatar>
-                <AvatarImage :src="DEMO_IMAGE_AVATAR" :alt="`Foto de perfil de ${tContent('demonstration.labels.profileTitle')}`" />
+                <AvatarImage
+                  :src="DEMO_IMAGE_AVATAR"
+                  :alt="`Foto de perfil de ${tContent('demonstration.labels.profileTitle')}`"
+                />
                 <AvatarFallback>MR</AvatarFallback>
               </Avatar>
               <div class="min-w-0">
@@ -498,14 +513,14 @@ const visualTestItems = computed(() => [
         title: tContent('usage.uxWriting.title'),
         cols: {
           element: tContent('usage.uxWriting.table.element'),
-          rules:   tContent('usage.uxWriting.table.rules'),
-          do:      tContent('usage.uxWriting.table.correct'),
-          dont:    tContent('usage.uxWriting.table.avoid'),
+          rules: tContent('usage.uxWriting.table.rules'),
+          do: tContent('usage.uxWriting.table.correct'),
+          dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.title.name'),     rules: tContent('usage.uxWriting.table.title.format'),     do: tContent('usage.uxWriting.table.title.good'),     dont: tContent('usage.uxWriting.table.title.bad') },
+          { element: tContent('usage.uxWriting.table.title.name'), rules: tContent('usage.uxWriting.table.title.format'), do: tContent('usage.uxWriting.table.title.good'), dont: tContent('usage.uxWriting.table.title.bad') },
           { element: tContent('usage.uxWriting.table.description.name'), rules: tContent('usage.uxWriting.table.description.format'), do: tContent('usage.uxWriting.table.description.good'), dont: tContent('usage.uxWriting.table.description.bad') },
-          { element: tContent('usage.uxWriting.table.action.name'),    rules: tContent('usage.uxWriting.table.action.format'),    do: tContent('usage.uxWriting.table.action.good'),    dont: tContent('usage.uxWriting.table.action.bad') },
+          { element: tContent('usage.uxWriting.table.action.name'), rules: tContent('usage.uxWriting.table.action.format'), do: tContent('usage.uxWriting.table.action.good'), dont: tContent('usage.uxWriting.table.action.bad') },
           { element: tContent('usage.uxWriting.table.ariaLabel.name'), rules: tContent('usage.uxWriting.table.ariaLabel.format'), do: tContent('usage.uxWriting.table.ariaLabel.good'), dont: tContent('usage.uxWriting.table.ariaLabel.bad') },
         ],
       }"
@@ -547,14 +562,23 @@ const visualTestItems = computed(() => [
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
           <CardFooter class="justify-end gap-2">
-            <Button variant="outline" size="sm">{{ tContent('demonstration.labels.actionCancel') }}</Button>
-            <Button size="sm">{{ tContent('demonstration.labels.actionSave') }}</Button>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              {{ tContent('demonstration.labels.actionCancel') }}
+            </Button>
+            <Button size="sm">
+              {{ tContent('demonstration.labels.actionSave') }}
+            </Button>
           </CardFooter>
         </Card>
       </template>
       <template #dont-preview-0>
         <Card class="w-full">
-          <CardContent class="py-2 text-sm text-muted-foreground">—</CardContent>
+          <CardContent class="py-2 text-sm text-muted-foreground">
+            —
+          </CardContent>
         </Card>
       </template>
       <template #do-preview-1>
@@ -585,8 +609,15 @@ const visualTestItems = computed(() => [
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
           </CardHeader>
           <CardFooter class="justify-end gap-2">
-            <Button variant="outline" size="sm">{{ tContent('demonstration.labels.actionEdit') }}</Button>
-            <Button size="sm">{{ tContent('demonstration.labels.actionDelete') }}</Button>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              {{ tContent('demonstration.labels.actionEdit') }}
+            </Button>
+            <Button size="sm">
+              {{ tContent('demonstration.labels.actionDelete') }}
+            </Button>
           </CardFooter>
         </Card>
       </template>
@@ -602,23 +633,33 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes (Tamanhos e Composições) ─────────────────────── -->
-    <DocsVariants :title="tContent('variants.visualTitle')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.visualTitle')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
         <Card class="w-full">
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.productDescription') }}</CardDescription>
           </CardHeader>
-          <CardContent class="text-sm font-semibold">{{ tContent('demonstration.labels.productPrice') }}</CardContent>
+          <CardContent class="text-sm font-semibold">
+            {{ tContent('demonstration.labels.productPrice') }}
+          </CardContent>
         </Card>
       </template>
       <template #variant-preview-1>
-        <Card size="sm" class="w-full">
+        <Card
+          size="sm"
+          class="w-full"
+        >
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.metricTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.metricTrend') }}</CardDescription>
           </CardHeader>
-          <CardContent class="text-xl font-semibold">{{ tContent('demonstration.labels.metricValue') }}</CardContent>
+          <CardContent class="text-xl font-semibold">
+            {{ tContent('demonstration.labels.metricValue') }}
+          </CardContent>
         </Card>
       </template>
       <template #variant-preview-2>
@@ -627,10 +668,19 @@ const visualTestItems = computed(() => [
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.productStock') }}</CardDescription>
           </CardHeader>
-          <CardContent class="text-sm font-semibold">{{ tContent('demonstration.labels.productPrice') }}</CardContent>
+          <CardContent class="text-sm font-semibold">
+            {{ tContent('demonstration.labels.productPrice') }}
+          </CardContent>
           <CardFooter class="justify-end gap-2">
-            <Button variant="outline" size="sm">{{ tContent('demonstration.labels.actionCancel') }}</Button>
-            <Button size="sm">{{ tContent('demonstration.labels.actionSave') }}</Button>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              {{ tContent('demonstration.labels.actionCancel') }}
+            </Button>
+            <Button size="sm">
+              {{ tContent('demonstration.labels.actionSave') }}
+            </Button>
           </CardFooter>
         </Card>
       </template>
@@ -649,17 +699,24 @@ const visualTestItems = computed(() => [
               </Button>
             </CardAction>
           </CardHeader>
-          <CardContent class="text-sm font-semibold">{{ tContent('demonstration.labels.productPrice') }}</CardContent>
+          <CardContent class="text-sm font-semibold">
+            {{ tContent('demonstration.labels.productPrice') }}
+          </CardContent>
         </Card>
       </template>
       <template #variant-preview-4>
         <Card class="w-full">
-          <div class="aspect-video w-full bg-muted" aria-hidden="true" />
+          <div
+            class="aspect-video w-full bg-muted"
+            aria-hidden="true"
+          />
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.productDescription') }}</CardDescription>
           </CardHeader>
-          <CardContent class="text-sm font-semibold">{{ tContent('demonstration.labels.productPrice') }}</CardContent>
+          <CardContent class="text-sm font-semibold">
+            {{ tContent('demonstration.labels.productPrice') }}
+          </CardContent>
         </Card>
       </template>
     </DocsVariants>
@@ -678,11 +735,23 @@ const visualTestItems = computed(() => [
             <CardDescription>Estrutura ergonômica.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p class="text-lg font-semibold">R$ 1.299,00</p>
+            <p class="text-lg font-semibold">
+              R$ 1.299,00
+            </p>
           </CardContent>
           <CardFooter class="justify-end gap-2">
-            <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>
-            <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>
+            <Button
+              variant="outline"
+              aria-label="Editar produto Cadeira Gamer Pro"
+            >
+              Editar
+            </Button>
+            <Button
+              variant="destructive"
+              aria-label="Excluir produto Cadeira Gamer Pro"
+            >
+              Excluir
+            </Button>
           </CardFooter>
         </Card>
       </template>
@@ -692,17 +761,29 @@ const visualTestItems = computed(() => [
             <CardTitle>Assinantes ativos</CardTitle>
             <CardDescription>+12% no mês</CardDescription>
             <CardAction>
-              <Button variant="outline" size="sm" aria-label="Editar métrica Assinantes ativos">Editar</Button>
+              <Button
+                variant="outline"
+                size="sm"
+                aria-label="Editar métrica Assinantes ativos"
+              >
+                Editar
+              </Button>
             </CardAction>
           </CardHeader>
           <CardContent>
-            <p class="text-2xl font-semibold">8.742</p>
+            <p class="text-2xl font-semibold">
+              8.742
+            </p>
           </CardContent>
         </Card>
       </template>
       <template #variant-preview-2>
         <Card class="w-full max-w-sm">
-          <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80" alt="Cadeira Gamer Pro" class="w-full h-40 object-cover" />
+          <img
+            src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80"
+            alt="Cadeira Gamer Pro"
+            class="w-full h-40 object-cover"
+          >
           <CardHeader>
             <CardTitle>Cadeira Gamer Pro</CardTitle>
             <CardDescription>Estrutura ergonômica.</CardDescription>
@@ -726,13 +807,13 @@ const visualTestItems = computed(() => [
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: tContent('props.cardTitle'),        cols: propCols, items: cardPropItems },
-        { title: tContent('props.headerTitle'),      cols: propCols, items: slotOnlyItems },
-        { title: tContent('props.cardTitleTitle'),   cols: propCols, items: slotOnlyItems },
+        { title: tContent('props.cardTitle'), cols: propCols, items: cardPropItems },
+        { title: tContent('props.headerTitle'), cols: propCols, items: slotOnlyItems },
+        { title: tContent('props.cardTitleTitle'), cols: propCols, items: slotOnlyItems },
         { title: tContent('props.descriptionTitle'), cols: propCols, items: slotOnlyItems },
-        { title: tContent('props.actionTitle'),      cols: propCols, items: slotOnlyItems },
-        { title: tContent('props.contentTitle'),     cols: propCols, items: slotOnlyItems },
-        { title: tContent('props.footerTitle'),      cols: propCols, items: slotOnlyItems },
+        { title: tContent('props.actionTitle'), cols: propCols, items: slotOnlyItems },
+        { title: tContent('props.contentTitle'), cols: propCols, items: slotOnlyItems },
+        { title: tContent('props.footerTitle'), cols: propCols, items: slotOnlyItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -762,10 +843,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Sheet,
   SheetClose,
@@ -94,7 +94,6 @@ export const AdvancedFilters: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const apply = await body.findByRole('button', { name: /Aplicar filtros/i });
@@ -142,7 +141,6 @@ export const ProfileEdit: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const nameInput = await body.findByLabelText(/Nome/i);
@@ -177,7 +175,6 @@ export const SecondaryNavigation: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
@@ -219,7 +216,6 @@ export const LongFormScroll: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const save = await body.findByRole('button', { name: /Salvar preferências/i });

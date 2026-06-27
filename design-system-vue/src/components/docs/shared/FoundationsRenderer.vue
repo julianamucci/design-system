@@ -158,11 +158,20 @@ track('docs_page_view', {
         :key="sec.key"
         class="space-y-4 border-t border-border/50 pt-8"
       >
-        <div v-if="sec.title || sec.subtitle" class="space-y-1">
-          <h2 v-if="sec.title" class="text-xl font-semibold text-foreground">
+        <div
+          v-if="sec.title || sec.subtitle"
+          class="space-y-1"
+        >
+          <h2
+            v-if="sec.title"
+            class="text-xl font-semibold text-foreground"
+          >
             {{ sec.title }}
           </h2>
-          <p v-if="sec.subtitle" class="text-sm text-muted-foreground">
+          <p
+            v-if="sec.subtitle"
+            class="text-sm text-muted-foreground"
+          >
             {{ sec.subtitle }}
           </p>
         </div>
@@ -180,16 +189,30 @@ track('docs_page_view', {
         </p>
 
         <!-- Table (cols + rows) -->
-        <div v-if="sec.cols && sec.rows" class="rounded-lg border border-border/50 overflow-hidden">
+        <div
+          v-if="sec.cols && sec.rows"
+          class="rounded-lg border border-border/50 overflow-hidden"
+        >
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead v-for="(c, i) in colsArray(sec.cols)" :key="i">{{ c }}</TableHead>
+                <TableHead
+                  v-for="(c, i) in colsArray(sec.cols)"
+                  :key="i"
+                >
+                  {{ c }}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow v-for="(row, r) in rowsArray(sec.rows, sec.cols)" :key="r">
-                <TableCell v-for="(cell, ci) in row" :key="ci">
+              <TableRow
+                v-for="(row, r) in rowsArray(sec.rows, sec.cols)"
+                :key="r"
+              >
+                <TableCell
+                  v-for="(cell, ci) in row"
+                  :key="ci"
+                >
                   <span v-html="cell" />
                 </TableCell>
               </TableRow>
@@ -212,7 +235,10 @@ track('docs_page_view', {
               <span class="text-xs uppercase tracking-wide text-muted-foreground">
                 {{ item.key }}
               </span>
-              <p class="text-sm text-foreground" v-html="item.value" />
+              <p
+                class="text-sm text-foreground"
+                v-html="item.value"
+              />
             </template>
             <template v-else>
               <h3 class="text-sm font-semibold text-foreground">
@@ -235,8 +261,13 @@ track('docs_page_view', {
                     v-if="!['title','subtitle','description','body'].includes(String(k)) && typeof val === 'string'"
                     class="flex gap-2 text-xs"
                   >
-                    <dt class="text-muted-foreground capitalize">{{ k }}:</dt>
-                    <dd class="text-foreground" v-html="val" />
+                    <dt class="text-muted-foreground capitalize">
+                      {{ k }}:
+                    </dt>
+                    <dd
+                      class="text-foreground"
+                      v-html="val"
+                    />
                   </div>
                 </template>
               </dl>
@@ -249,17 +280,32 @@ track('docs_page_view', {
           v-if="sec.rules"
           class="space-y-2 list-disc pl-5 text-sm text-foreground"
         >
-          <li v-for="rule in rulesEntries(sec.rules)" :key="rule.key" v-html="rule.value" />
+          <li
+            v-for="rule in rulesEntries(sec.rules)"
+            :key="rule.key"
+            v-html="rule.value"
+          />
         </ul>
 
         <!-- Extras (strings ou objetos não tratados) -->
-        <div v-for="ex in sec.extras" :key="ex.key" class="space-y-2">
+        <div
+          v-for="ex in sec.extras"
+          :key="ex.key"
+          class="space-y-2"
+        >
           <template v-if="typeof ex.value === 'string'">
-            <p class="text-sm text-foreground" v-html="ex.value" />
+            <p
+              class="text-sm text-foreground"
+              v-html="ex.value"
+            />
           </template>
           <template v-else-if="Array.isArray(ex.value)">
             <ul class="space-y-1 list-disc pl-5 text-sm text-foreground">
-              <li v-for="(v, i) in ex.value" :key="i" v-html="String(v)" />
+              <li
+                v-for="(v, i) in ex.value"
+                :key="i"
+                v-html="String(v)"
+              />
             </ul>
           </template>
         </div>

@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, expect, waitFor } from 'storybook/test';
 import {
   Popover,
   PopoverContent,
@@ -61,8 +61,6 @@ export const Fechado: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /Abrir popover/i });
     await expect(trigger).toBeVisible();
     await expect(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -95,7 +93,6 @@ export const Aberto: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAccessibleName(/Configuracoes de exibição/i);
@@ -132,8 +129,6 @@ export const Controlado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step('Click no toggle externo abre o Popover', async () => {
       const toggle = canvas.getByRole('button', { name: /Toggle externo/i });
@@ -180,7 +175,6 @@ export const Modal: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
   },

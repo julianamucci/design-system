@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';

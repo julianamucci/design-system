@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -16,7 +16,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import {
@@ -543,7 +542,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -561,48 +563,83 @@ const visualTestItems = computed(() => [
           <TableCaption>{{ tContent('demonstration.labels.caption') }}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">{{ tContent('demonstration.labels.invoice') }}</TableHead>
-              <TableHead scope="col">{{ tContent('demonstration.labels.status') }}</TableHead>
-              <TableHead scope="col">{{ tContent('demonstration.labels.method') }}</TableHead>
-              <TableHead scope="col" class="text-right">{{ tContent('demonstration.labels.amount') }}</TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.invoice') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.status') }}
+              </TableHead>
+              <TableHead scope="col">
+                {{ tContent('demonstration.labels.method') }}
+              </TableHead>
+              <TableHead
+                scope="col"
+                class="text-right"
+              >
+                {{ tContent('demonstration.labels.amount') }}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="font-medium">{{ tContent('demonstration.labels.inv001') }}</TableCell>
+              <TableCell class="font-medium">
+                {{ tContent('demonstration.labels.inv001') }}
+              </TableCell>
               <TableCell>{{ tContent('demonstration.labels.paid') }}</TableCell>
               <TableCell>{{ tContent('demonstration.labels.creditCard') }}</TableCell>
-              <TableCell class="text-right">{{ tContent('demonstration.labels.amount001') }}</TableCell>
+              <TableCell class="text-right">
+                {{ tContent('demonstration.labels.amount001') }}
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">{{ tContent('demonstration.labels.inv002') }}</TableCell>
+              <TableCell class="font-medium">
+                {{ tContent('demonstration.labels.inv002') }}
+              </TableCell>
               <TableCell>{{ tContent('demonstration.labels.pending') }}</TableCell>
               <TableCell>{{ tContent('demonstration.labels.bankTransfer') }}</TableCell>
-              <TableCell class="text-right">{{ tContent('demonstration.labels.amount002') }}</TableCell>
+              <TableCell class="text-right">
+                {{ tContent('demonstration.labels.amount002') }}
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">{{ tContent('demonstration.labels.inv003') }}</TableCell>
+              <TableCell class="font-medium">
+                {{ tContent('demonstration.labels.inv003') }}
+              </TableCell>
               <TableCell>{{ tContent('demonstration.labels.canceled') }}</TableCell>
               <TableCell>{{ tContent('demonstration.labels.pix') }}</TableCell>
-              <TableCell class="text-right">{{ tContent('demonstration.labels.amount003') }}</TableCell>
+              <TableCell class="text-right">
+                {{ tContent('demonstration.labels.amount003') }}
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">{{ tContent('demonstration.labels.inv004') }}</TableCell>
+              <TableCell class="font-medium">
+                {{ tContent('demonstration.labels.inv004') }}
+              </TableCell>
               <TableCell>{{ tContent('demonstration.labels.paid') }}</TableCell>
               <TableCell>{{ tContent('demonstration.labels.creditCard') }}</TableCell>
-              <TableCell class="text-right">{{ tContent('demonstration.labels.amount004') }}</TableCell>
+              <TableCell class="text-right">
+                {{ tContent('demonstration.labels.amount004') }}
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">{{ tContent('demonstration.labels.inv005') }}</TableCell>
+              <TableCell class="font-medium">
+                {{ tContent('demonstration.labels.inv005') }}
+              </TableCell>
               <TableCell>{{ tContent('demonstration.labels.pending') }}</TableCell>
               <TableCell>{{ tContent('demonstration.labels.pix') }}</TableCell>
-              <TableCell class="text-right">{{ tContent('demonstration.labels.amount005') }}</TableCell>
+              <TableCell class="text-right">
+                {{ tContent('demonstration.labels.amount005') }}
+              </TableCell>
             </TableRow>
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell :col-span="3">{{ tContent('demonstration.labels.total') }}</TableCell>
-              <TableCell class="text-right">{{ tContent('demonstration.labels.totalAmount') }}</TableCell>
+              <TableCell :col-span="3">
+                {{ tContent('demonstration.labels.total') }}
+              </TableCell>
+              <TableCell class="text-right">
+                {{ tContent('demonstration.labels.totalAmount') }}
+              </TableCell>
             </TableRow>
           </TableFooter>
         </Table>
@@ -655,7 +692,7 @@ const visualTestItems = computed(() => [
         },
         items: [
           { element: tContent('usage.uxWriting.table.caption.name'), rules: tContent('usage.uxWriting.table.caption.format'), do: tContent('usage.uxWriting.table.caption.good'), dont: tContent('usage.uxWriting.table.caption.bad') },
-          { element: tContent('usage.uxWriting.table.head.name'),    rules: tContent('usage.uxWriting.table.head.format'),    do: tContent('usage.uxWriting.table.head.good'),    dont: tContent('usage.uxWriting.table.head.bad')    },
+          { element: tContent('usage.uxWriting.table.head.name'), rules: tContent('usage.uxWriting.table.head.format'), do: tContent('usage.uxWriting.table.head.good'), dont: tContent('usage.uxWriting.table.head.bad') },
           { element: tContent('usage.uxWriting.table.emptyState.name'), rules: tContent('usage.uxWriting.table.emptyState.format'), do: tContent('usage.uxWriting.table.emptyState.good'), dont: tContent('usage.uxWriting.table.emptyState.bad') },
           { element: tContent('usage.uxWriting.table.actionLabel.name'), rules: tContent('usage.uxWriting.table.actionLabel.format'), do: tContent('usage.uxWriting.table.actionLabel.good'), dont: tContent('usage.uxWriting.table.actionLabel.bad') },
         ],
@@ -677,14 +714,23 @@ const visualTestItems = computed(() => [
           <TableCaption>Lista de faturas recentes</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">Fatura</TableHead>
-              <TableHead scope="col" class="text-right">Valor</TableHead>
+              <TableHead scope="col">
+                Fatura
+              </TableHead>
+              <TableHead
+                scope="col"
+                class="text-right"
+              >
+                Valor
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
               <TableCell>#INV-001</TableCell>
-              <TableCell class="text-right">R$ 250,00</TableCell>
+              <TableCell class="text-right">
+                R$ 250,00
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -694,13 +740,17 @@ const visualTestItems = computed(() => [
           <TableHeader>
             <TableRow>
               <TableHead>Fatura</TableHead>
-              <TableHead class="text-right">Valor</TableHead>
+              <TableHead class="text-right">
+                Valor
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
               <TableCell>#INV-001</TableCell>
-              <TableCell class="text-right">R$ 250,00</TableCell>
+              <TableCell class="text-right">
+                R$ 250,00
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -710,7 +760,9 @@ const visualTestItems = computed(() => [
           <TableCaption>Lista de faturas</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">Fatura</TableHead>
+              <TableHead scope="col">
+                Fatura
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -725,7 +777,9 @@ const visualTestItems = computed(() => [
           <TableCaption>Lista de faturas</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">Fatura</TableHead>
+              <TableHead scope="col">
+                Fatura
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody />
@@ -740,28 +794,48 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <!-- Básica -->
       <template #variant-preview-0>
         <Table>
           <TableCaption>Lista de faturas recentes</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">Fatura</TableHead>
-              <TableHead scope="col">Status</TableHead>
-              <TableHead scope="col" class="text-right">Valor</TableHead>
+              <TableHead scope="col">
+                Fatura
+              </TableHead>
+              <TableHead scope="col">
+                Status
+              </TableHead>
+              <TableHead
+                scope="col"
+                class="text-right"
+              >
+                Valor
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell class="font-medium">
+                #INV-001
+              </TableCell>
               <TableCell>Pago</TableCell>
-              <TableCell class="text-right">R$ 250,00</TableCell>
+              <TableCell class="text-right">
+                R$ 250,00
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell class="font-medium">
+                #INV-002
+              </TableCell>
               <TableCell>Pendente</TableCell>
-              <TableCell class="text-right">R$ 150,00</TableCell>
+              <TableCell class="text-right">
+                R$ 150,00
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -772,24 +846,41 @@ const visualTestItems = computed(() => [
           <TableCaption>Lista de faturas recentes</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">Fatura</TableHead>
-              <TableHead scope="col" class="text-right">Valor</TableHead>
+              <TableHead scope="col">
+                Fatura
+              </TableHead>
+              <TableHead
+                scope="col"
+                class="text-right"
+              >
+                Valor
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="font-medium">#INV-001</TableCell>
-              <TableCell class="text-right">R$ 250,00</TableCell>
+              <TableCell class="font-medium">
+                #INV-001
+              </TableCell>
+              <TableCell class="text-right">
+                R$ 250,00
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">#INV-002</TableCell>
-              <TableCell class="text-right">R$ 150,00</TableCell>
+              <TableCell class="font-medium">
+                #INV-002
+              </TableCell>
+              <TableCell class="text-right">
+                R$ 150,00
+              </TableCell>
             </TableRow>
           </TableBody>
           <TableFooter>
             <TableRow>
               <TableCell>Total</TableCell>
-              <TableCell class="text-right">R$ 400,00</TableCell>
+              <TableCell class="text-right">
+                R$ 400,00
+              </TableCell>
             </TableRow>
           </TableFooter>
         </Table>
@@ -797,19 +888,34 @@ const visualTestItems = computed(() => [
       <!-- Caption sr-only -->
       <template #variant-preview-2>
         <div>
-          <p class="text-sm font-semibold mb-3">Faturas recentes</p>
+          <p class="text-sm font-semibold mb-3">
+            Faturas recentes
+          </p>
           <Table>
-            <TableCaption class="sr-only">Lista de faturas recentes</TableCaption>
+            <TableCaption class="sr-only">
+              Lista de faturas recentes
+            </TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead scope="col">Fatura</TableHead>
-                <TableHead scope="col" class="text-right">Valor</TableHead>
+                <TableHead scope="col">
+                  Fatura
+                </TableHead>
+                <TableHead
+                  scope="col"
+                  class="text-right"
+                >
+                  Valor
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell class="font-medium">#INV-001</TableCell>
-                <TableCell class="text-right">R$ 250,00</TableCell>
+                <TableCell class="font-medium">
+                  #INV-001
+                </TableCell>
+                <TableCell class="text-right">
+                  R$ 250,00
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -821,23 +927,42 @@ const visualTestItems = computed(() => [
           <TableCaption>Lista de faturas recentes</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">Fatura</TableHead>
-              <TableHead scope="col" class="text-right">Ações</TableHead>
+              <TableHead scope="col">
+                Fatura
+              </TableHead>
+              <TableHead
+                scope="col"
+                class="text-right"
+              >
+                Ações
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell class="font-medium">
+                #INV-001
+              </TableCell>
               <TableCell class="text-right">
-                <Button variant="ghost" size="sm" :aria-label="`${tContent('demonstration.labels.actionsLabel')} #INV-001`">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  :aria-label="`${tContent('demonstration.labels.actionsLabel')} #INV-001`"
+                >
                   {{ tContent('demonstration.labels.actions') }}
                 </Button>
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell class="font-medium">
+                #INV-002
+              </TableCell>
               <TableCell class="text-right">
-                <Button variant="ghost" size="sm" :aria-label="`${tContent('demonstration.labels.actionsLabel')} #INV-002`">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  :aria-label="`${tContent('demonstration.labels.actionsLabel')} #INV-002`"
+                >
                   {{ tContent('demonstration.labels.actions') }}
                 </Button>
               </TableCell>
@@ -851,9 +976,18 @@ const visualTestItems = computed(() => [
           <TableCaption>Lista de faturas recentes</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">Fatura</TableHead>
-              <TableHead scope="col">Status</TableHead>
-              <TableHead scope="col" class="text-right">Valor</TableHead>
+              <TableHead scope="col">
+                Fatura
+              </TableHead>
+              <TableHead scope="col">
+                Status
+              </TableHead>
+              <TableHead
+                scope="col"
+                class="text-right"
+              >
+                Valor
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -877,30 +1011,57 @@ const visualTestItems = computed(() => [
         <div class="w-full flex flex-col gap-3">
           <div class="flex items-center gap-2">
             <div class="relative w-full max-w-sm">
-              <Search class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <Input placeholder="Filtrar faturas..." class="pl-8" />
+              <Search
+                class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                placeholder="Filtrar faturas..."
+                class="pl-8"
+              />
             </div>
-            <Button variant="outline">Status</Button>
+            <Button variant="outline">
+              Status
+            </Button>
           </div>
           <Table>
-            <TableCaption class="sr-only">Lista de faturas filtráveis</TableCaption>
+            <TableCaption class="sr-only">
+              Lista de faturas filtráveis
+            </TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead scope="col">Fatura</TableHead>
-                <TableHead scope="col">Status</TableHead>
-                <TableHead scope="col" class="text-right">Valor</TableHead>
+                <TableHead scope="col">
+                  Fatura
+                </TableHead>
+                <TableHead scope="col">
+                  Status
+                </TableHead>
+                <TableHead
+                  scope="col"
+                  class="text-right"
+                >
+                  Valor
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell class="font-medium">#INV-001</TableCell>
+                <TableCell class="font-medium">
+                  #INV-001
+                </TableCell>
                 <TableCell>Pago</TableCell>
-                <TableCell class="text-right">R$ 250,00</TableCell>
+                <TableCell class="text-right">
+                  R$ 250,00
+                </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell class="font-medium">#INV-002</TableCell>
+                <TableCell class="font-medium">
+                  #INV-002
+                </TableCell>
                 <TableCell>Pendente</TableCell>
-                <TableCell class="text-right">R$ 150,00</TableCell>
+                <TableCell class="text-right">
+                  R$ 150,00
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -909,39 +1070,80 @@ const visualTestItems = computed(() => [
       <!-- Cabeçalhos ordenáveis -->
       <template #variant-preview-1>
         <Table>
-          <TableCaption class="sr-only">Faturas ordenáveis</TableCaption>
+          <TableCaption class="sr-only">
+            Faturas ordenáveis
+          </TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col" aria-sort="ascending">
-                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+              <TableHead
+                scope="col"
+                aria-sort="ascending"
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  class="-ml-2 h-8"
+                >
                   Fatura
-                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                  <ArrowUpDown
+                    class="ml-2 h-4 w-4"
+                    aria-hidden="true"
+                  />
                 </Button>
               </TableHead>
-              <TableHead scope="col" aria-sort="none">
-                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+              <TableHead
+                scope="col"
+                aria-sort="none"
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  class="-ml-2 h-8"
+                >
                   Status
-                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                  <ArrowUpDown
+                    class="ml-2 h-4 w-4"
+                    aria-hidden="true"
+                  />
                 </Button>
               </TableHead>
-              <TableHead scope="col" aria-sort="none" class="text-right">
-                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+              <TableHead
+                scope="col"
+                aria-sort="none"
+                class="text-right"
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  class="-ml-2 h-8"
+                >
                   Valor
-                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                  <ArrowUpDown
+                    class="ml-2 h-4 w-4"
+                    aria-hidden="true"
+                  />
                 </Button>
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell class="font-medium">
+                #INV-001
+              </TableCell>
               <TableCell>Pago</TableCell>
-              <TableCell class="text-right">R$ 250,00</TableCell>
+              <TableCell class="text-right">
+                R$ 250,00
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell class="font-medium">
+                #INV-002
+              </TableCell>
               <TableCell>Pendente</TableCell>
-              <TableCell class="text-right">R$ 150,00</TableCell>
+              <TableCell class="text-right">
+                R$ 150,00
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -949,33 +1151,58 @@ const visualTestItems = computed(() => [
       <!-- Seleção de linhas -->
       <template #variant-preview-2>
         <Table>
-          <TableCaption class="sr-only">Faturas com seleção</TableCaption>
+          <TableCaption class="sr-only">
+            Faturas com seleção
+          </TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col" class="w-10">
+              <TableHead
+                scope="col"
+                class="w-10"
+              >
                 <Checkbox aria-label="Selecionar todas as linhas" />
               </TableHead>
-              <TableHead scope="col">Fatura</TableHead>
-              <TableHead scope="col">Status</TableHead>
-              <TableHead scope="col" class="text-right">Valor</TableHead>
+              <TableHead scope="col">
+                Fatura
+              </TableHead>
+              <TableHead scope="col">
+                Status
+              </TableHead>
+              <TableHead
+                scope="col"
+                class="text-right"
+              >
+                Valor
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow data-state="selected">
               <TableCell>
-                <Checkbox :model-value="true" aria-label="Selecionar fatura #INV-001" />
+                <Checkbox
+                  :model-value="true"
+                  aria-label="Selecionar fatura #INV-001"
+                />
               </TableCell>
-              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell class="font-medium">
+                #INV-001
+              </TableCell>
               <TableCell>Pago</TableCell>
-              <TableCell class="text-right">R$ 250,00</TableCell>
+              <TableCell class="text-right">
+                R$ 250,00
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Checkbox aria-label="Selecionar fatura #INV-002" />
               </TableCell>
-              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell class="font-medium">
+                #INV-002
+              </TableCell>
               <TableCell>Pendente</TableCell>
-              <TableCell class="text-right">R$ 150,00</TableCell>
+              <TableCell class="text-right">
+                R$ 150,00
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -984,24 +1211,43 @@ const visualTestItems = computed(() => [
       <template #variant-preview-3>
         <div class="w-full flex flex-col gap-3">
           <Table>
-            <TableCaption class="sr-only">Faturas paginadas</TableCaption>
+            <TableCaption class="sr-only">
+              Faturas paginadas
+            </TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead scope="col">Fatura</TableHead>
-                <TableHead scope="col">Status</TableHead>
-                <TableHead scope="col" class="text-right">Valor</TableHead>
+                <TableHead scope="col">
+                  Fatura
+                </TableHead>
+                <TableHead scope="col">
+                  Status
+                </TableHead>
+                <TableHead
+                  scope="col"
+                  class="text-right"
+                >
+                  Valor
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell class="font-medium">#INV-001</TableCell>
+                <TableCell class="font-medium">
+                  #INV-001
+                </TableCell>
                 <TableCell>Pago</TableCell>
-                <TableCell class="text-right">R$ 250,00</TableCell>
+                <TableCell class="text-right">
+                  R$ 250,00
+                </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell class="font-medium">#INV-002</TableCell>
+                <TableCell class="font-medium">
+                  #INV-002
+                </TableCell>
                 <TableCell>Pendente</TableCell>
-                <TableCell class="text-right">R$ 150,00</TableCell>
+                <TableCell class="text-right">
+                  R$ 150,00
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -1011,10 +1257,17 @@ const visualTestItems = computed(() => [
                 <PaginationPrevious href="#" />
               </PaginationItem>
               <PaginationItem>
-                <PaginationLink href="#" :is-active="true">1</PaginationLink>
+                <PaginationLink
+                  href="#"
+                  :is-active="true"
+                >
+                  1
+                </PaginationLink>
               </PaginationItem>
               <PaginationItem>
-                <PaginationLink href="#">2</PaginationLink>
+                <PaginationLink href="#">
+                  2
+                </PaginationLink>
               </PaginationItem>
               <PaginationItem>
                 <PaginationNext href="#" />
@@ -1040,11 +1293,11 @@ const visualTestItems = computed(() => [
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: tContent('props.tableTitle'),       cols: propCols, items: tablePropItems      },
-        { title: tContent('props.tableHeadTitle'),   cols: propCols, items: tableHeadPropItems  },
-        { title: tContent('props.tableCellTitle'),   cols: propCols, items: tableCellPropItems  },
-        { title: tContent('props.tableRowTitle'),    cols: propCols, items: tableRowPropItems   },
-        { title: 'TableEmpty',                       cols: propCols, items: tableEmptyPropItems },
+        { title: tContent('props.tableTitle'), cols: propCols, items: tablePropItems },
+        { title: tContent('props.tableHeadTitle'), cols: propCols, items: tableHeadPropItems },
+        { title: tContent('props.tableCellTitle'), cols: propCols, items: tableCellPropItems },
+        { title: tContent('props.tableRowTitle'), cols: propCols, items: tableRowPropItems },
+        { title: 'TableEmpty', cols: propCols, items: tableEmptyPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -1073,10 +1326,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

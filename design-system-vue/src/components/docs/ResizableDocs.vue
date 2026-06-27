@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -336,7 +336,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -353,13 +356,23 @@ const visualTestItems = computed(() => [
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div class="w-full h-[220px] min-h-[200px] rounded-md border overflow-hidden">
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
+              <ResizablePanel
+                :default-size="30"
+                :min-size="20"
+                :max-size="50"
+              >
                 <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
                   {{ tContent('demonstration.labels.sidebar') }}
                 </div>
               </ResizablePanel>
-              <ResizableHandle with-handle :aria-label="`${tContent('demonstration.labels.horizontal')} — use setas`" />
-              <ResizablePanel :default-size="70" :min-size="50">
+              <ResizableHandle
+                with-handle
+                :aria-label="`${tContent('demonstration.labels.horizontal')} — use setas`"
+              />
+              <ResizablePanel
+                :default-size="70"
+                :min-size="50"
+              >
                 <div class="flex h-full items-center justify-center p-4 text-sm">
                   {{ tContent('demonstration.labels.content') }}
                 </div>
@@ -368,13 +381,24 @@ const visualTestItems = computed(() => [
           </div>
           <div class="w-full h-[220px] min-h-[200px] rounded-md border overflow-hidden">
             <ResizablePanelGroup direction="vertical">
-              <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
+              <ResizablePanel
+                :default-size="50"
+                :min-size="20"
+                :max-size="80"
+              >
                 <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
                   {{ tContent('demonstration.labels.top') }}
                 </div>
               </ResizablePanel>
-              <ResizableHandle with-handle :aria-label="`${tContent('demonstration.labels.vertical')} — use setas`" />
-              <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
+              <ResizableHandle
+                with-handle
+                :aria-label="`${tContent('demonstration.labels.vertical')} — use setas`"
+              />
+              <ResizablePanel
+                :default-size="50"
+                :min-size="20"
+                :max-size="80"
+              >
                 <div class="flex h-full items-center justify-center p-4 text-sm">
                   {{ tContent('demonstration.labels.bottom') }}
                 </div>
@@ -384,21 +408,40 @@ const visualTestItems = computed(() => [
         </div>
         <div class="w-full h-[280px] min-h-[240px] rounded-md border overflow-hidden">
           <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel :default-size="25" :min-size="15" :max-size="40">
+            <ResizablePanel
+              :default-size="25"
+              :min-size="15"
+              :max-size="40"
+            >
               <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
                 {{ tContent('demonstration.labels.sidebar') }}
               </div>
             </ResizablePanel>
-            <ResizableHandle with-handle :aria-label="`${tContent('demonstration.labels.nested')} — sidebar/conteúdo — use setas`" />
-            <ResizablePanel :default-size="75" :min-size="50">
+            <ResizableHandle
+              with-handle
+              :aria-label="`${tContent('demonstration.labels.nested')} — sidebar/conteúdo — use setas`"
+            />
+            <ResizablePanel
+              :default-size="75"
+              :min-size="50"
+            >
               <ResizablePanelGroup direction="vertical">
-                <ResizablePanel :default-size="65" :min-size="30">
+                <ResizablePanel
+                  :default-size="65"
+                  :min-size="30"
+                >
                   <div class="flex h-full items-center justify-center p-4 text-sm">
                     {{ tContent('demonstration.labels.content') }}
                   </div>
                 </ResizablePanel>
-                <ResizableHandle with-handle :aria-label="`${tContent('demonstration.labels.nested')} — conteúdo/rodapé — use setas`" />
-                <ResizablePanel :default-size="35" :min-size="20">
+                <ResizableHandle
+                  with-handle
+                  :aria-label="`${tContent('demonstration.labels.nested')} — conteúdo/rodapé — use setas`"
+                />
+                <ResizablePanel
+                  :default-size="35"
+                  :min-size="20"
+                >
                   <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
                     {{ tContent('demonstration.labels.bottom') }}
                   </div>
@@ -449,14 +492,14 @@ const visualTestItems = computed(() => [
         title: tContent('usage.uxWriting.title'),
         cols: {
           element: tContent('usage.uxWriting.table.element'),
-          rules:   tContent('usage.uxWriting.table.rules'),
-          do:      tContent('usage.uxWriting.table.correct'),
-          dont:    tContent('usage.uxWriting.table.avoid'),
+          rules: tContent('usage.uxWriting.table.rules'),
+          do: tContent('usage.uxWriting.table.correct'),
+          dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.ariaLabel.name'),  rules: tContent('usage.uxWriting.table.ariaLabel.format'),  do: tContent('usage.uxWriting.table.ariaLabel.good'),  dont: tContent('usage.uxWriting.table.ariaLabel.bad')  },
+          { element: tContent('usage.uxWriting.table.ariaLabel.name'), rules: tContent('usage.uxWriting.table.ariaLabel.format'), do: tContent('usage.uxWriting.table.ariaLabel.good'), dont: tContent('usage.uxWriting.table.ariaLabel.bad') },
           { element: tContent('usage.uxWriting.table.panelLabel.name'), rules: tContent('usage.uxWriting.table.panelLabel.format'), do: tContent('usage.uxWriting.table.panelLabel.good'), dont: tContent('usage.uxWriting.table.panelLabel.bad') },
-          { element: tContent('usage.uxWriting.table.size.name'),       rules: tContent('usage.uxWriting.table.size.format'),       do: stripHtml(tContent('usage.uxWriting.table.size.good')), dont: tContent('usage.uxWriting.table.size.bad') },
+          { element: tContent('usage.uxWriting.table.size.name'), rules: tContent('usage.uxWriting.table.size.format'), do: stripHtml(tContent('usage.uxWriting.table.size.good')), dont: tContent('usage.uxWriting.table.size.bad') },
         ],
       }"
       :do="{
@@ -490,12 +533,26 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <div class="w-full h-[200px] min-h-[200px] rounded-md border overflow-hidden">
           <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">Sidebar</div>
+            <ResizablePanel
+              :default-size="30"
+              :min-size="20"
+              :max-size="50"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+                Sidebar
+              </div>
             </ResizablePanel>
-            <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas" />
-            <ResizablePanel :default-size="70" :min-size="50">
-              <div class="flex h-full items-center justify-center p-3 text-xs">Conteúdo</div>
+            <ResizableHandle
+              with-handle
+              aria-label="Redimensionar painéis — use setas"
+            />
+            <ResizablePanel
+              :default-size="70"
+              :min-size="50"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs">
+                Conteúdo
+              </div>
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
@@ -504,11 +561,15 @@ const visualTestItems = computed(() => [
         <div class="w-full h-[200px] min-h-[200px] rounded-md border overflow-hidden">
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel>
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">Sidebar</div>
+              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+                Sidebar
+              </div>
             </ResizablePanel>
             <ResizableHandle aria-label="Redimensionar painéis — use setas" />
             <ResizablePanel>
-              <div class="flex h-full items-center justify-center p-3 text-xs">Conteúdo</div>
+              <div class="flex h-full items-center justify-center p-3 text-xs">
+                Conteúdo
+              </div>
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
@@ -516,12 +577,26 @@ const visualTestItems = computed(() => [
       <template #do-preview-1>
         <div class="w-full h-[200px] min-h-[200px] rounded-md border overflow-hidden">
           <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel :default-size="40" :min-size="20" :max-size="60">
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">A</div>
+            <ResizablePanel
+              :default-size="40"
+              :min-size="20"
+              :max-size="60"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+                A
+              </div>
             </ResizablePanel>
-            <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
-            <ResizablePanel :default-size="60" :min-size="40">
-              <div class="flex h-full items-center justify-center p-3 text-xs">B</div>
+            <ResizableHandle
+              with-handle
+              aria-label="Redimensionar painéis — use setas para ajustar"
+            />
+            <ResizablePanel
+              :default-size="60"
+              :min-size="40"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs">
+                B
+              </div>
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
@@ -529,12 +604,26 @@ const visualTestItems = computed(() => [
       <template #dont-preview-1>
         <div class="w-full h-[200px] min-h-[200px] rounded-md border overflow-hidden">
           <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel :default-size="40" :min-size="20" :max-size="60">
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">A</div>
+            <ResizablePanel
+              :default-size="40"
+              :min-size="20"
+              :max-size="60"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+                A
+              </div>
             </ResizablePanel>
-            <ResizableHandle with-handle aria-label="Handle" />
-            <ResizablePanel :default-size="60" :min-size="40">
-              <div class="flex h-full items-center justify-center p-3 text-xs">B</div>
+            <ResizableHandle
+              with-handle
+              aria-label="Handle"
+            />
+            <ResizablePanel
+              :default-size="60"
+              :min-size="40"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs">
+                B
+              </div>
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
@@ -548,16 +637,33 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
         <div class="w-full h-[200px] min-h-[200px] rounded-md border overflow-hidden">
           <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">{{ tContent('demonstration.labels.left') }}</div>
+            <ResizablePanel
+              :default-size="30"
+              :min-size="20"
+              :max-size="50"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+                {{ tContent('demonstration.labels.left') }}
+              </div>
             </ResizablePanel>
-            <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas" />
-            <ResizablePanel :default-size="70" :min-size="50">
-              <div class="flex h-full items-center justify-center p-3 text-xs">{{ tContent('demonstration.labels.right') }}</div>
+            <ResizableHandle
+              with-handle
+              aria-label="Redimensionar painéis — use setas"
+            />
+            <ResizablePanel
+              :default-size="70"
+              :min-size="50"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs">
+                {{ tContent('demonstration.labels.right') }}
+              </div>
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
@@ -565,12 +671,27 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <div class="w-full h-[260px] min-h-[200px] rounded-md border overflow-hidden">
           <ResizablePanelGroup direction="vertical">
-            <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">{{ tContent('demonstration.labels.top') }}</div>
+            <ResizablePanel
+              :default-size="50"
+              :min-size="20"
+              :max-size="80"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+                {{ tContent('demonstration.labels.top') }}
+              </div>
             </ResizablePanel>
-            <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas" />
-            <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-              <div class="flex h-full items-center justify-center p-3 text-xs">{{ tContent('demonstration.labels.bottom') }}</div>
+            <ResizableHandle
+              with-handle
+              aria-label="Redimensionar painéis — use setas"
+            />
+            <ResizablePanel
+              :default-size="50"
+              :min-size="20"
+              :max-size="80"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs">
+                {{ tContent('demonstration.labels.bottom') }}
+              </div>
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
@@ -578,18 +699,43 @@ const visualTestItems = computed(() => [
       <template #variant-preview-2>
         <div class="w-full h-[260px] min-h-[200px] rounded-md border overflow-hidden">
           <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">{{ tContent('demonstration.labels.sidebar') }}</div>
+            <ResizablePanel
+              :default-size="30"
+              :min-size="20"
+              :max-size="50"
+            >
+              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+                {{ tContent('demonstration.labels.sidebar') }}
+              </div>
             </ResizablePanel>
-            <ResizableHandle with-handle aria-label="Redimensionar sidebar — use setas" />
-            <ResizablePanel :default-size="70" :min-size="50">
+            <ResizableHandle
+              with-handle
+              aria-label="Redimensionar sidebar — use setas"
+            />
+            <ResizablePanel
+              :default-size="70"
+              :min-size="50"
+            >
               <ResizablePanelGroup direction="vertical">
-                <ResizablePanel :default-size="60" :min-size="20">
-                  <div class="flex h-full items-center justify-center p-3 text-xs">{{ tContent('demonstration.labels.content') }}</div>
+                <ResizablePanel
+                  :default-size="60"
+                  :min-size="20"
+                >
+                  <div class="flex h-full items-center justify-center p-3 text-xs">
+                    {{ tContent('demonstration.labels.content') }}
+                  </div>
                 </ResizablePanel>
-                <ResizableHandle with-handle aria-label="Redimensionar console — use setas" />
-                <ResizablePanel :default-size="40" :min-size="20">
-                  <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">Console</div>
+                <ResizableHandle
+                  with-handle
+                  aria-label="Redimensionar console — use setas"
+                />
+                <ResizablePanel
+                  :default-size="40"
+                  :min-size="20"
+                >
+                  <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+                    Console
+                  </div>
                 </ResizablePanel>
               </ResizablePanelGroup>
             </ResizablePanel>
@@ -614,8 +760,8 @@ const visualTestItems = computed(() => [
       :title="tContent('props.title')"
       :tables="[
         { title: 'ResizablePanelGroup', cols: propCols, items: panelGroupPropItems },
-        { title: 'ResizablePanel',      cols: propCols, items: panelPropItems      },
-        { title: 'ResizableHandle',     cols: propCols, items: handlePropItems     },
+        { title: 'ResizablePanel', cols: propCols, items: panelPropItems },
+        { title: 'ResizableHandle', cols: propCols, items: handlePropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -645,10 +791,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

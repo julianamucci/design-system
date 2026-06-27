@@ -8,16 +8,12 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -419,7 +415,11 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="dropdown-menu">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="dropdown-menu"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -432,17 +432,27 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-wrap items-center justify-center gap-4 w-full" style="contain: layout">
+      <div
+        class="flex flex-wrap items-center justify-center gap-4 w-full"
+        style="contain: layout"
+      >
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
-            <Button variant="outline">{{ tContent('demonstration.labels.basic') }}</Button>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.basic') }}
+            </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuContent
+            side="bottom"
+            align="start"
+          >
             <DropdownMenuLabel>Conta</DropdownMenuLabel>
             <DropdownMenuItem>Perfil</DropdownMenuItem>
             <DropdownMenuItem>Configurações</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
+            <DropdownMenuItem variant="destructive">
+              Sair
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -493,9 +503,9 @@ const a11yCritCols = computed(() => ({
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.trigger.name'),     rules: tContent('usage.uxWriting.table.trigger.format'),     do: tContent('usage.uxWriting.table.trigger.good'),     dont: tContent('usage.uxWriting.table.trigger.bad')     },
-          { element: tContent('usage.uxWriting.table.label.name'),       rules: tContent('usage.uxWriting.table.label.format'),       do: tContent('usage.uxWriting.table.label.good'),       dont: tContent('usage.uxWriting.table.label.bad')       },
-          { element: tContent('usage.uxWriting.table.item.name'),        rules: tContent('usage.uxWriting.table.item.format'),        do: tContent('usage.uxWriting.table.item.good'),        dont: tContent('usage.uxWriting.table.item.bad')        },
+          { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
+          { element: tContent('usage.uxWriting.table.label.name'), rules: tContent('usage.uxWriting.table.label.format'), do: tContent('usage.uxWriting.table.label.good'), dont: tContent('usage.uxWriting.table.label.bad') },
+          { element: tContent('usage.uxWriting.table.item.name'), rules: tContent('usage.uxWriting.table.item.format'), do: tContent('usage.uxWriting.table.item.good'), dont: tContent('usage.uxWriting.table.item.bad') },
           { element: tContent('usage.uxWriting.table.destructive.name'), rules: tContent('usage.uxWriting.table.destructive.format'), do: tContent('usage.uxWriting.table.destructive.good'), dont: tContent('usage.uxWriting.table.destructive.bad') },
         ],
       }"
@@ -528,9 +538,18 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
-          <DropdownMenu :default-open="true" :modal="false">
-            <DropdownMenuContent side="bottom" align="start">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
+          <DropdownMenu
+            :default-open="true"
+            :modal="false"
+          >
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+            >
               <DropdownMenuLabel>Conta</DropdownMenuLabel>
               <DropdownMenuItem>Perfil</DropdownMenuItem>
               <DropdownMenuItem>Configurações</DropdownMenuItem>
@@ -542,9 +561,18 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #dont-preview-0>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
-          <DropdownMenu :default-open="true" :modal="false">
-            <DropdownMenuContent side="bottom" align="start">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
+          <DropdownMenu
+            :default-open="true"
+            :modal="false"
+          >
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+            >
               <DropdownMenuItem>Item 1</DropdownMenuItem>
               <DropdownMenuItem>Item 2</DropdownMenuItem>
               <DropdownMenuItem>Item 3</DropdownMenuItem>
@@ -557,20 +585,40 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #do-preview-1>
-        <div style="contain: layout; min-height: 200px;" class="w-full">
-          <DropdownMenu :default-open="true" :modal="false">
-            <DropdownMenuContent side="bottom" align="start">
+        <div
+          style="contain: layout; min-height: 200px;"
+          class="w-full"
+        >
+          <DropdownMenu
+            :default-open="true"
+            :modal="false"
+          >
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+            >
               <DropdownMenuItem>Editar</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>
+              <DropdownMenuItem variant="destructive">
+                Excluir conta
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </template>
       <template #dont-preview-1>
-        <div style="contain: layout; min-height: 200px;" class="w-full">
-          <DropdownMenu :default-open="true" :modal="false">
-            <DropdownMenuContent side="bottom" align="start">
+        <div
+          style="contain: layout; min-height: 200px;"
+          class="w-full"
+        >
+          <DropdownMenu
+            :default-open="true"
+            :modal="false"
+          >
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+            >
               <DropdownMenuItem>Editar</DropdownMenuItem>
               <DropdownMenuItem>Excluir conta</DropdownMenuItem>
             </DropdownMenuContent>
@@ -586,11 +634,23 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 200px;" class="w-full">
-          <DropdownMenu :default-open="true" :modal="false">
-            <DropdownMenuContent side="bottom" align="start">
+        <div
+          style="contain: layout; min-height: 200px;"
+          class="w-full"
+        >
+          <DropdownMenu
+            :default-open="true"
+            :modal="false"
+          >
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+            >
               <DropdownMenuItem>Editar</DropdownMenuItem>
               <DropdownMenuItem>Duplicar</DropdownMenuItem>
               <DropdownMenuItem>Compartilhar</DropdownMenuItem>
@@ -599,12 +659,23 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 200px;" class="w-full">
-          <DropdownMenu :default-open="true" :modal="false">
-            <DropdownMenuContent side="bottom" align="start">
+        <div
+          style="contain: layout; min-height: 200px;"
+          class="w-full"
+        >
+          <DropdownMenu
+            :default-open="true"
+            :modal="false"
+          >
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+            >
               <DropdownMenuItem>Perfil</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>
+              <DropdownMenuItem variant="destructive">
+                Excluir conta
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -619,12 +690,26 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 240px;" class="w-full">
-          <DropdownMenu :default-open="true" :modal="false">
+        <div
+          style="contain: layout; min-height: 240px;"
+          class="w-full"
+        >
+          <DropdownMenu
+            :default-open="true"
+            :modal="false"
+          >
             <DropdownMenuTrigger as-child>
-              <Button variant="outline" size="sm">Conta</Button>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                Conta
+              </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="start">
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+            >
               <DropdownMenuLabel>Conta</DropdownMenuLabel>
               <DropdownMenuItem>Perfil</DropdownMenuItem>
               <DropdownMenuItem>Configurações</DropdownMenuItem>
@@ -637,44 +722,98 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 200px;" class="w-full">
-          <DropdownMenu :default-open="true" :modal="false">
+        <div
+          style="contain: layout; min-height: 200px;"
+          class="w-full"
+        >
+          <DropdownMenu
+            :default-open="true"
+            :modal="false"
+          >
             <DropdownMenuTrigger as-child>
-              <Button variant="outline" size="sm">Colunas</Button>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                Colunas
+              </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="start">
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+            >
               <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-              <DropdownMenuCheckboxItem v-model:checked="compShowName">Nome</DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem v-model:checked="compShowEmail">E-mail</DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem v-model:checked="compShowRole">Cargo</DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem v-model:checked="compShowName">
+                Nome
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem v-model:checked="compShowEmail">
+                E-mail
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem v-model:checked="compShowRole">
+                Cargo
+              </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout; min-height: 200px;" class="w-full">
-          <DropdownMenu :default-open="true" :modal="false">
+        <div
+          style="contain: layout; min-height: 200px;"
+          class="w-full"
+        >
+          <DropdownMenu
+            :default-open="true"
+            :modal="false"
+          >
             <DropdownMenuTrigger as-child>
-              <Button variant="outline" size="sm">Tema</Button>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                Tema
+              </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="start">
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+            >
               <DropdownMenuLabel>Aparência</DropdownMenuLabel>
               <DropdownMenuRadioGroup v-model="compTheme">
-                <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="light">
+                  Claro
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark">
+                  Escuro
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="system">
+                  Sistema
+                </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </template>
       <template #variant-preview-3>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
-          <DropdownMenu :default-open="true" :modal="false">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
+          <DropdownMenu
+            :default-open="true"
+            :modal="false"
+          >
             <DropdownMenuTrigger as-child>
-              <Button variant="outline" size="sm">Editar</Button>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                Editar
+              </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="start">
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+            >
               <DropdownMenuItem>
                 Desfazer
                 <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
@@ -743,10 +882,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

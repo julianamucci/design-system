@@ -149,7 +149,6 @@ onUnmounted(() => {
 <template>
   <div class="sb-unstyled flex-1 h-full overflow-auto ds-docs">
     <div class="p-8 max-w-6xl mx-auto space-y-8">
-
       <!-- ── Header ──────────────────────────────────────────────────────── -->
       <header class="space-y-4 pb-8">
         <div class="flex items-center justify-between">
@@ -182,17 +181,31 @@ onUnmounted(() => {
       <!-- ── Paleta semântica ───────────────────────────────────────────────── -->
       <section class="space-y-6 border-t border-border/50 pt-8">
         <div class="space-y-1">
-          <h2 class="text-xl font-semibold text-foreground">{{ t('palette.title') }}</h2>
-          <p class="text-sm text-muted-foreground">{{ t('palette.subtitle') }}</p>
+          <h2 class="text-xl font-semibold text-foreground">
+            {{ t('palette.title') }}
+          </h2>
+          <p class="text-sm text-muted-foreground">
+            {{ t('palette.subtitle') }}
+          </p>
         </div>
 
-        <div v-for="group in PALETTE_GROUPS" :key="group.key" class="space-y-3">
-          <h3 class="text-sm font-medium text-foreground">{{ t(`palette.groups.${group.key}`) }}</h3>
+        <div
+          v-for="group in PALETTE_GROUPS"
+          :key="group.key"
+          class="space-y-3"
+        >
+          <h3 class="text-sm font-medium text-foreground">
+            {{ t(`palette.groups.${group.key}`) }}
+          </h3>
           <ul
             class="grid gap-3 list-none p-0 m-0"
             style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))"
           >
-            <li v-for="token in group.tokens" :key="token" class="list-none">
+            <li
+              v-for="token in group.tokens"
+              :key="token"
+              class="list-none"
+            >
               <Swatch
                 :token="token"
                 orientation="horizontal"
@@ -208,8 +221,12 @@ onUnmounted(() => {
       <!-- ── Temas de marca ─────────────────────────────────────────────────── -->
       <section class="space-y-6 border-t border-border/50 pt-8">
         <div class="space-y-1">
-          <h2 class="text-xl font-semibold text-foreground">{{ t('brand.title') }}</h2>
-          <p class="text-sm text-muted-foreground">{{ t('brand.subtitle') }}</p>
+          <h2 class="text-xl font-semibold text-foreground">
+            {{ t('brand.title') }}
+          </h2>
+          <p class="text-sm text-muted-foreground">
+            {{ t('brand.subtitle') }}
+          </p>
         </div>
         <div class="grid gap-4 md:grid-cols-3">
           <div
@@ -222,7 +239,12 @@ onUnmounted(() => {
                 {{ t(`brand.themes.${theme.key}`) }}
               </span>
               <div class="flex flex-wrap gap-3">
-                <Swatch v-for="token in MINI_TOKENS" :key="token" :token="token" orientation="vertical" />
+                <Swatch
+                  v-for="token in MINI_TOKENS"
+                  :key="token"
+                  :token="token"
+                  orientation="vertical"
+                />
               </div>
             </div>
           </div>
@@ -232,8 +254,12 @@ onUnmounted(() => {
       <!-- ── Light e Dark ───────────────────────────────────────────────────── -->
       <section class="space-y-6 border-t border-border/50 pt-8">
         <div class="space-y-1">
-          <h2 class="text-xl font-semibold text-foreground">{{ t('modes.title') }}</h2>
-          <p class="text-sm text-muted-foreground">{{ t('modes.subtitle') }}</p>
+          <h2 class="text-xl font-semibold text-foreground">
+            {{ t('modes.title') }}
+          </h2>
+          <p class="text-sm text-muted-foreground">
+            {{ t('modes.subtitle') }}
+          </p>
         </div>
         <div class="grid gap-4 md:grid-cols-2">
           <div
@@ -246,7 +272,12 @@ onUnmounted(() => {
                 {{ t(`modes.${mode.key}`) }}
               </span>
               <div class="flex flex-wrap gap-3">
-                <Swatch v-for="token in MINI_TOKENS" :key="token" :token="token" orientation="vertical" />
+                <Swatch
+                  v-for="token in MINI_TOKENS"
+                  :key="token"
+                  :token="token"
+                  orientation="vertical"
+                />
               </div>
             </div>
           </div>
@@ -256,15 +287,23 @@ onUnmounted(() => {
       <!-- ── Densidade e Fontes ─────────────────────────────────────────────── -->
       <section class="space-y-6 border-t border-border/50 pt-8">
         <div class="space-y-1">
-          <h2 class="text-xl font-semibold text-foreground">{{ t('axes.title') }}</h2>
-          <p class="text-sm text-muted-foreground">{{ t('axes.subtitle') }}</p>
+          <h2 class="text-xl font-semibold text-foreground">
+            {{ t('axes.title') }}
+          </h2>
+          <p class="text-sm text-muted-foreground">
+            {{ t('axes.subtitle') }}
+          </p>
         </div>
 
         <!-- Densidade -->
         <div class="space-y-3">
           <div class="space-y-1">
-            <h3 class="text-sm font-medium text-foreground">{{ t('axes.density.title') }}</h3>
-            <p class="text-sm text-muted-foreground">{{ t('axes.density.subtitle') }}</p>
+            <h3 class="text-sm font-medium text-foreground">
+              {{ t('axes.density.title') }}
+            </h3>
+            <p class="text-sm text-muted-foreground">
+              {{ t('axes.density.subtitle') }}
+            </p>
           </div>
           <div
             class="grid gap-4"
@@ -282,12 +321,25 @@ onUnmounted(() => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead v-for="(col, i) in densityData.tableCols" :key="i">{{ col }}</TableHead>
+                      <TableHead
+                        v-for="(col, i) in densityData.tableCols"
+                        :key="i"
+                      >
+                        {{ col }}
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    <TableRow v-for="(row, r) in densityData.tableRows" :key="r">
-                      <TableCell v-for="(val, c) in row" :key="c">{{ val }}</TableCell>
+                    <TableRow
+                      v-for="(row, r) in densityData.tableRows"
+                      :key="r"
+                    >
+                      <TableCell
+                        v-for="(val, c) in row"
+                        :key="c"
+                      >
+                        {{ val }}
+                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -299,8 +351,12 @@ onUnmounted(() => {
         <!-- Fontes -->
         <div class="space-y-3">
           <div class="space-y-1">
-            <h3 class="text-sm font-medium text-foreground">{{ t('axes.fonts.title') }}</h3>
-            <p class="text-sm text-muted-foreground">{{ t('axes.fonts.subtitle') }}</p>
+            <h3 class="text-sm font-medium text-foreground">
+              {{ t('axes.fonts.title') }}
+            </h3>
+            <p class="text-sm text-muted-foreground">
+              {{ t('axes.fonts.subtitle') }}
+            </p>
           </div>
           <div
             class="grid gap-4"
@@ -317,7 +373,10 @@ onUnmounted(() => {
               <div :class="item.className">
                 <!-- font-family inline: o span precisa USAR var(--font-family-active)
                      para o escopo .fonte-* deste card valer (senão herda do <body>). -->
-                <span class="text-2xl text-foreground" :style="{ fontFamily: 'var(--font-family-active)' }">
+                <span
+                  class="text-2xl text-foreground"
+                  :style="{ fontFamily: 'var(--font-family-active)' }"
+                >
                   Aa Bb Cc 123
                 </span>
               </div>
@@ -325,7 +384,6 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-
     </div>
   </div>
 </template>

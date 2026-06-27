@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -291,7 +291,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -306,12 +309,23 @@ const visualTestItems = computed(() => [
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div class="flex flex-wrap items-center gap-3">
         <Badge>{{ tContent('demonstration.labels.defaultLabel') }}</Badge>
-        <Badge variant="secondary">{{ tContent('demonstration.labels.secondaryLabel') }}</Badge>
-        <Badge variant="destructive">{{ tContent('demonstration.labels.destructiveLabel') }}</Badge>
-        <Badge variant="outline">{{ tContent('demonstration.labels.outlineLabel') }}</Badge>
-        <Badge variant="destructive">{{ tContent('demonstration.labels.countLabel') }}</Badge>
+        <Badge variant="secondary">
+          {{ tContent('demonstration.labels.secondaryLabel') }}
+        </Badge>
+        <Badge variant="destructive">
+          {{ tContent('demonstration.labels.destructiveLabel') }}
+        </Badge>
+        <Badge variant="outline">
+          {{ tContent('demonstration.labels.outlineLabel') }}
+        </Badge>
+        <Badge variant="destructive">
+          {{ tContent('demonstration.labels.countLabel') }}
+        </Badge>
         <Badge>
-          <Check class="h-3 w-3" aria-hidden="true" />
+          <Check
+            class="h-3 w-3"
+            aria-hidden="true"
+          />
           {{ tContent('demonstration.labels.statusLabel') }}
         </Badge>
       </div>
@@ -360,9 +374,9 @@ const visualTestItems = computed(() => [
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.label.name'),    rules: tContent('usage.uxWriting.table.label.format'),    do: tContent('usage.uxWriting.table.label.good'),    dont: tContent('usage.uxWriting.table.label.bad')    },
-          { element: tContent('usage.uxWriting.table.status.name'),   rules: tContent('usage.uxWriting.table.status.format'),   do: tContent('usage.uxWriting.table.status.good'),   dont: tContent('usage.uxWriting.table.status.bad')   },
-          { element: tContent('usage.uxWriting.table.count.name'),    rules: tContent('usage.uxWriting.table.count.format'),    do: tContent('usage.uxWriting.table.count.good'),    dont: tContent('usage.uxWriting.table.count.bad')    },
+          { element: tContent('usage.uxWriting.table.label.name'), rules: tContent('usage.uxWriting.table.label.format'), do: tContent('usage.uxWriting.table.label.good'), dont: tContent('usage.uxWriting.table.label.bad') },
+          { element: tContent('usage.uxWriting.table.status.name'), rules: tContent('usage.uxWriting.table.status.format'), do: tContent('usage.uxWriting.table.status.good'), dont: tContent('usage.uxWriting.table.status.bad') },
+          { element: tContent('usage.uxWriting.table.count.name'), rules: tContent('usage.uxWriting.table.count.format'), do: tContent('usage.uxWriting.table.count.good'), dont: tContent('usage.uxWriting.table.count.bad') },
           { element: tContent('usage.uxWriting.table.category.name'), rules: tContent('usage.uxWriting.table.category.format'), do: tContent('usage.uxWriting.table.category.good'), dont: tContent('usage.uxWriting.table.category.bad') },
         ],
       }"
@@ -400,10 +414,14 @@ const visualTestItems = computed(() => [
         <Badge>Este item foi adicionado recentemente ao catálogo</Badge>
       </template>
       <template #do-preview-1>
-        <Badge variant="destructive">Expirado</Badge>
+        <Badge variant="destructive">
+          Expirado
+        </Badge>
       </template>
       <template #dont-preview-1>
-        <Badge variant="destructive">Novidade</Badge>
+        <Badge variant="destructive">
+          Novidade
+        </Badge>
       </template>
     </DocsDoDont>
 
@@ -417,18 +435,27 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
         <Badge>{{ tContent('demonstration.labels.defaultLabel') }}</Badge>
       </template>
       <template #variant-preview-1>
-        <Badge variant="secondary">{{ tContent('demonstration.labels.secondaryLabel') }}</Badge>
+        <Badge variant="secondary">
+          {{ tContent('demonstration.labels.secondaryLabel') }}
+        </Badge>
       </template>
       <template #variant-preview-2>
-        <Badge variant="destructive">{{ tContent('demonstration.labels.destructiveLabel') }}</Badge>
+        <Badge variant="destructive">
+          {{ tContent('demonstration.labels.destructiveLabel') }}
+        </Badge>
       </template>
       <template #variant-preview-3>
-        <Badge variant="outline">{{ tContent('demonstration.labels.outlineLabel') }}</Badge>
+        <Badge variant="outline">
+          {{ tContent('demonstration.labels.outlineLabel') }}
+        </Badge>
       </template>
     </DocsVariants>
 
@@ -441,24 +468,44 @@ const visualTestItems = computed(() => [
     >
       <template #variant-preview-0>
         <Badge>
-          <Check class="h-3 w-3" aria-hidden="true" />
+          <Check
+            class="h-3 w-3"
+            aria-hidden="true"
+          />
           Ativo
         </Badge>
       </template>
       <template #variant-preview-1>
-        <span role="status" aria-label="12 notificações não lidas" class="inline-flex items-center gap-2">
-          <Bell class="h-5 w-5" aria-hidden="true" />
+        <span
+          role="status"
+          aria-label="12 notificações não lidas"
+          class="inline-flex items-center gap-2"
+        >
+          <Bell
+            class="h-5 w-5"
+            aria-hidden="true"
+          />
           <Badge variant="destructive">12</Badge>
         </span>
       </template>
       <template #variant-preview-2>
-        <a href="#design" aria-label="Ver todos os itens da categoria Design" class="inline-flex">
+        <a
+          href="#design"
+          aria-label="Ver todos os itens da categoria Design"
+          class="inline-flex"
+        >
           <Badge variant="secondary">Design</Badge>
         </a>
       </template>
       <template #variant-preview-3>
-        <button type="button" aria-label="Filtrar por React" class="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md">
-          <Badge variant="outline">React</Badge>
+        <button
+          type="button"
+          aria-label="Filtrar por React"
+          class="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md"
+        >
+          <Badge variant="outline">
+            React
+          </Badge>
         </button>
       </template>
     </DocsCompositions>
@@ -500,10 +547,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

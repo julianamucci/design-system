@@ -10,5 +10,9 @@ const props = defineProps<{
 </script>
 
 <template>
-  <Loader2Icon role="status" aria-label="Loading" :class="cn('size-4 animate-spin', props.class)" />
+  <Loader2Icon
+    role="status"
+    aria-label="Loading"
+    :class="cn('size-4 animate-spin', props.class)"
+  />
 </template>

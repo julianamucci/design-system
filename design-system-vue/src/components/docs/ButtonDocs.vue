@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, ChevronRight, Download, Loader2 } from 'lucide-vue-next';
+import { Plus, Trash2, ChevronRight, Download } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import buttonTranslations from '@shared/content/button/translations.json';
@@ -343,7 +343,10 @@ function handleDemoClick(variant: string) {
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -354,254 +357,338 @@ function handleDemoClick(variant: string) {
       />
     </template>
 
-        <!-- ── Demonstração ───────────────────────────────────────────── -->
-        <DocsDemonstration :title="tContent('demonstration.title')">
-          <div class="flex flex-wrap gap-3">
-            <Button @click="handleDemoClick('default')">
-              {{ tContent('demonstration.labels.primary') }}
-            </Button>
-            <Button variant="destructive" @click="handleDemoClick('destructive')">
-              {{ tContent('demonstration.labels.destructive') }}
-            </Button>
-            <Button variant="outline" @click="handleDemoClick('outline')">
-              {{ tContent('demonstration.labels.outline') }}
-            </Button>
-            <Button variant="secondary" @click="handleDemoClick('secondary')">
-              {{ tContent('demonstration.labels.secondary') }}
-            </Button>
-            <Button variant="ghost" @click="handleDemoClick('ghost')">
-              {{ tContent('demonstration.labels.ghost') }}
-            </Button>
-            <Button variant="link" @click="handleDemoClick('link')">
-              {{ tContent('demonstration.labels.link') }}
-            </Button>
-            <Button @click="handleDemoClick('withIcon')">
-              <Plus aria-hidden="true" />
-              {{ tContent('demonstration.labels.withIcon') }}
-            </Button>
-            <Button size="icon" :aria-label="tContent('demonstration.labels.iconOnly')" @click="handleDemoClick('iconOnly')">
-              <Plus aria-hidden="true" />
-            </Button>
-          </div>
-        </DocsDemonstration>
-
-        <!-- ── Anatomia ───────────────────────────────────────────────── -->
-        <DocsAnatomy
-          :title="tContent('anatomy.title')"
-          :items="anatomyItems"
-          :structure-label="tContent('anatomy.structureLabel')"
-          :structure-code="tContent('anatomy.structureCode')"
-        />
-
-        <!-- ── Quando Usar ────────────────────────────────────────────── -->
-        <DocsWhenToUse
-          :title="tContent('usage.title')"
-          :guidelines="{
-            title: tContent('usage.guidelines.title'),
-            items: [tContent('usage.guidelines.item1'), tContent('usage.guidelines.item2'), tContent('usage.guidelines.item3'), tContent('usage.guidelines.item4')],
-          }"
-          :scenarios="{
-            title: tContent('usage.scenarios.title'),
-            cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
-            items: [
-              { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
-              { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-              { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
-              { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
-            ],
-          }"
-          :ux-writing="{
-            title: tContent('usage.uxWriting.title'),
-            cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
-            items: [
-              { element: tContent('usage.uxWriting.table.primary.name'),     rules: tContent('usage.uxWriting.table.primary.format'),     do: tContent('usage.uxWriting.table.primary.good'),     dont: tContent('usage.uxWriting.table.primary.bad') },
-              { element: tContent('usage.uxWriting.table.destructive.name'), rules: tContent('usage.uxWriting.table.destructive.format'), do: tContent('usage.uxWriting.table.destructive.good'), dont: tContent('usage.uxWriting.table.destructive.bad') },
-              { element: tContent('usage.uxWriting.table.cancel.name'),      rules: tContent('usage.uxWriting.table.cancel.format'),      do: tContent('usage.uxWriting.table.cancel.good'),      dont: tContent('usage.uxWriting.table.cancel.bad') },
-            ],
-          }"
-          :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
-          :dont="{ title: tContent('usage.dont.title'), items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3'), tContent('usage.dont.item4')] }"
-        />
-
-        <!-- ── Do & Don't ─────────────────────────────────────────────── -->
-        <DocsDoDont
-          :title="tContent('doDont.title')"
-          :pairs="[
-            { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-            { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
-          ]"
+    <!-- ── Demonstração ───────────────────────────────────────────── -->
+    <DocsDemonstration :title="tContent('demonstration.title')">
+      <div class="flex flex-wrap gap-3">
+        <Button @click="handleDemoClick('default')">
+          {{ tContent('demonstration.labels.primary') }}
+        </Button>
+        <Button
+          variant="destructive"
+          @click="handleDemoClick('destructive')"
         >
-          <template #do-preview-0>
-            <Button>Salvar alterações</Button>
-          </template>
-          <template #dont-preview-0>
-            <Button>Clique aqui</Button>
-          </template>
-          <template #do-preview-1>
-            <div class="flex gap-2">
-              <Button variant="outline">Cancelar</Button>
-              <Button>Confirmar</Button>
-            </div>
-          </template>
-          <template #dont-preview-1>
-            <div class="flex gap-2">
-              <Button>Cancelar</Button>
-              <Button>Confirmar</Button>
-            </div>
-          </template>
-        </DocsDoDont>
-
-        <!-- ── Importação ─────────────────────────────────────────────── -->
-        <DocsImport
-          :title="tContent('import.title')"
-          :description="tContent('import.basic')"
-          :code="codeImportBasic"
-          :secondary-description="tContent('import.withIcon')"
-          :secondary-code="codeImportWithIcon"
-        />
-
-        <!-- ── Variantes ──────────────────────────────────────────────── -->
-        <DocsVariants :title="tContent('variants.title')" :items="variantItems">
-          <template #variant-preview-0><Button>{{ tContent('demonstration.labels.primary') }}</Button></template>
-          <template #variant-preview-1><Button variant="destructive">{{ tContent('demonstration.labels.destructive') }}</Button></template>
-          <template #variant-preview-2><Button variant="outline">{{ tContent('demonstration.labels.outline') }}</Button></template>
-          <template #variant-preview-3><Button variant="secondary">{{ tContent('demonstration.labels.secondary') }}</Button></template>
-          <template #variant-preview-4><Button variant="ghost">{{ tContent('demonstration.labels.ghost') }}</Button></template>
-          <template #variant-preview-5><Button variant="link">{{ tContent('demonstration.labels.link') }}</Button></template>
-        </DocsVariants>
-
-        <!-- ── Tamanhos ──────────────────────────────────────────────── -->
-        <DocsVariants :title="tContent('variants.sizesTitle')" :items="sizeItems" id="tamanhos">
-          <template #variant-preview-0><Button>Padrão</Button></template>
-          <template #variant-preview-1><Button size="sm">Pequeno</Button></template>
-          <template #variant-preview-2><Button size="lg">Grande</Button></template>
-          <template #variant-preview-3>
-            <Button size="icon" aria-label="Adicionar">
-              <Plus aria-hidden="true" />
-            </Button>
-          </template>
-          <template #variant-preview-4>
-            <Button size="icon-sm" aria-label="Adicionar">
-              <Plus aria-hidden="true" />
-            </Button>
-          </template>
-          <template #variant-preview-5>
-            <Button size="icon-lg" aria-label="Adicionar">
-              <Plus aria-hidden="true" />
-            </Button>
-          </template>
-        </DocsVariants>
-
-        <!-- ── Composições ─────────────────────────────────────────────── -->
-        <DocsCompositions
-          :title="tContent('variants.compositionsTitle')"
-          :use-when-label="tNav('common.useWhen')"
-          component-slug="button"
-          :items="compositionItems"
+          {{ tContent('demonstration.labels.destructive') }}
+        </Button>
+        <Button
+          variant="outline"
+          @click="handleDemoClick('outline')"
         >
-          <template #variant-preview-0>
-            <Button>
-              <Plus aria-hidden="true" />
-              Adicionar item
-            </Button>
-          </template>
-          <template #variant-preview-1>
-            <Button variant="outline">
-              Próximo
-              <ChevronRight aria-hidden="true" />
-            </Button>
-          </template>
-          <template #variant-preview-2>
-            <Button variant="destructive">
-              <Trash2 aria-hidden="true" />
-              Excluir
-            </Button>
-          </template>
-          <template #variant-preview-3>
-            <Button size="icon" aria-label="Baixar arquivo">
-              <Download aria-hidden="true" />
-            </Button>
-          </template>
-          <template #variant-preview-4>
-            <div class="flex gap-2">
-              <Button variant="outline">Cancelar</Button>
-              <Button>Confirmar</Button>
-            </div>
-          </template>
-          <template #variant-preview-5>
-            <Button as="a" href="#docs" variant="link">
-              Ver documentação
-            </Button>
-          </template>
-        </DocsCompositions>
+          {{ tContent('demonstration.labels.outline') }}
+        </Button>
+        <Button
+          variant="secondary"
+          @click="handleDemoClick('secondary')"
+        >
+          {{ tContent('demonstration.labels.secondary') }}
+        </Button>
+        <Button
+          variant="ghost"
+          @click="handleDemoClick('ghost')"
+        >
+          {{ tContent('demonstration.labels.ghost') }}
+        </Button>
+        <Button
+          variant="link"
+          @click="handleDemoClick('link')"
+        >
+          {{ tContent('demonstration.labels.link') }}
+        </Button>
+        <Button @click="handleDemoClick('withIcon')">
+          <Plus aria-hidden="true" />
+          {{ tContent('demonstration.labels.withIcon') }}
+        </Button>
+        <Button
+          size="icon"
+          :aria-label="tContent('demonstration.labels.iconOnly')"
+          @click="handleDemoClick('iconOnly')"
+        >
+          <Plus aria-hidden="true" />
+        </Button>
+      </div>
+    </DocsDemonstration>
 
-        <!-- ── Estados ───────────────────────────────────────────────── -->
-        <DocsStates
-          :title="tContent('states.title')"
-          :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
-          :items="stateItems"
-        />
+    <!-- ── Anatomia ───────────────────────────────────────────────── -->
+    <DocsAnatomy
+      :title="tContent('anatomy.title')"
+      :items="anatomyItems"
+      :structure-label="tContent('anatomy.structureLabel')"
+      :structure-code="tContent('anatomy.structureCode')"
+    />
 
-        <!-- ── Propriedades ───────────────────────────────────────────── -->
-        <DocsProps
-          :title="tContent('props.title')"
-          :tables="[
-            { title: tContent('props.buttonTitle'), cols: propCols, items: buttonPropItems },
-          ]"
-          :interface-code="interfaceCode"
-          :extensibility-title="tContent('props.extensibilityTitle')"
-          :extensibility-notes="tContent('props.extensibility')"
-        />
+    <!-- ── Quando Usar ────────────────────────────────────────────── -->
+    <DocsWhenToUse
+      :title="tContent('usage.title')"
+      :guidelines="{
+        title: tContent('usage.guidelines.title'),
+        items: [tContent('usage.guidelines.item1'), tContent('usage.guidelines.item2'), tContent('usage.guidelines.item3'), tContent('usage.guidelines.item4')],
+      }"
+      :scenarios="{
+        title: tContent('usage.scenarios.title'),
+        cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
+        items: [
+          { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
+          { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
+          { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
+          { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
+        ],
+      }"
+      :ux-writing="{
+        title: tContent('usage.uxWriting.title'),
+        cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
+        items: [
+          { element: tContent('usage.uxWriting.table.primary.name'), rules: tContent('usage.uxWriting.table.primary.format'), do: tContent('usage.uxWriting.table.primary.good'), dont: tContent('usage.uxWriting.table.primary.bad') },
+          { element: tContent('usage.uxWriting.table.destructive.name'), rules: tContent('usage.uxWriting.table.destructive.format'), do: tContent('usage.uxWriting.table.destructive.good'), dont: tContent('usage.uxWriting.table.destructive.bad') },
+          { element: tContent('usage.uxWriting.table.cancel.name'), rules: tContent('usage.uxWriting.table.cancel.format'), do: tContent('usage.uxWriting.table.cancel.good'), dont: tContent('usage.uxWriting.table.cancel.bad') },
+        ],
+      }"
+      :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
+      :dont="{ title: tContent('usage.dont.title'), items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3'), tContent('usage.dont.item4')] }"
+    />
 
-        <!-- ── Tokens ─────────────────────────────────────────────────── -->
-        <DocsTokens
-          :title="tContent('tokens.title')"
-          :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
-          :items="tokenRows"
-          :customization-title="tContent('tokens.customizationTitle')"
-          :customization-code="codeCustomizationTokens"
-        />
+    <!-- ── Do & Don't ─────────────────────────────────────────────── -->
+    <DocsDoDont
+      :title="tContent('doDont.title')"
+      :pairs="[
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+      ]"
+    >
+      <template #do-preview-0>
+        <Button>Salvar alterações</Button>
+      </template>
+      <template #dont-preview-0>
+        <Button>Clique aqui</Button>
+      </template>
+      <template #do-preview-1>
+        <div class="flex gap-2">
+          <Button variant="outline">
+            Cancelar
+          </Button>
+          <Button>Confirmar</Button>
+        </div>
+      </template>
+      <template #dont-preview-1>
+        <div class="flex gap-2">
+          <Button>Cancelar</Button>
+          <Button>Confirmar</Button>
+        </div>
+      </template>
+    </DocsDoDont>
 
-        <!-- ── Acessibilidade ─────────────────────────────────────────── -->
-        <DocsAccessibility
-          :title="tContent('accessibility.title')"
-          :summary="tContent('accessibility.summary')"
-          :items="accessibilityItems"
-          :keyboard-title="tContent('accessibility.keyboardTitle')"
-          :keyboard-items="keyboardItems"
-        />
+    <!-- ── Importação ─────────────────────────────────────────────── -->
+    <DocsImport
+      :title="tContent('import.title')"
+      :description="tContent('import.basic')"
+      :code="codeImportBasic"
+      :secondary-description="tContent('import.withIcon')"
+      :secondary-code="codeImportWithIcon"
+    />
 
-        <!-- ── Relacionados ───────────────────────────────────────────── -->
-        <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <!-- ── Variantes ──────────────────────────────────────────────── -->
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
+      <template #variant-preview-0>
+        <Button>{{ tContent('demonstration.labels.primary') }}</Button>
+      </template>
+      <template #variant-preview-1>
+        <Button variant="destructive">
+          {{ tContent('demonstration.labels.destructive') }}
+        </Button>
+      </template>
+      <template #variant-preview-2>
+        <Button variant="outline">
+          {{ tContent('demonstration.labels.outline') }}
+        </Button>
+      </template>
+      <template #variant-preview-3>
+        <Button variant="secondary">
+          {{ tContent('demonstration.labels.secondary') }}
+        </Button>
+      </template>
+      <template #variant-preview-4>
+        <Button variant="ghost">
+          {{ tContent('demonstration.labels.ghost') }}
+        </Button>
+      </template>
+      <template #variant-preview-5>
+        <Button variant="link">
+          {{ tContent('demonstration.labels.link') }}
+        </Button>
+      </template>
+    </DocsVariants>
 
-        <!-- ── Notas ──────────────────────────────────────────────────── -->
-        <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <!-- ── Tamanhos ──────────────────────────────────────────────── -->
+    <DocsVariants
+      id="tamanhos"
+      :title="tContent('variants.sizesTitle')"
+      :items="sizeItems"
+    >
+      <template #variant-preview-0>
+        <Button>Padrão</Button>
+      </template>
+      <template #variant-preview-1>
+        <Button size="sm">
+          Pequeno
+        </Button>
+      </template>
+      <template #variant-preview-2>
+        <Button size="lg">
+          Grande
+        </Button>
+      </template>
+      <template #variant-preview-3>
+        <Button
+          size="icon"
+          aria-label="Adicionar"
+        >
+          <Plus aria-hidden="true" />
+        </Button>
+      </template>
+      <template #variant-preview-4>
+        <Button
+          size="icon-sm"
+          aria-label="Adicionar"
+        >
+          <Plus aria-hidden="true" />
+        </Button>
+      </template>
+      <template #variant-preview-5>
+        <Button
+          size="icon-lg"
+          aria-label="Adicionar"
+        >
+          <Plus aria-hidden="true" />
+        </Button>
+      </template>
+    </DocsVariants>
 
-        <!-- ── Analytics ─────────────────────────────────────────────── -->
-        <DocsAnalytics
-          :title="tContent('analytics.title')"
-          :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
-          :items="analyticsItems"
-        />
+    <!-- ── Composições ─────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="button"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Button>
+          <Plus aria-hidden="true" />
+          Adicionar item
+        </Button>
+      </template>
+      <template #variant-preview-1>
+        <Button variant="outline">
+          Próximo
+          <ChevronRight aria-hidden="true" />
+        </Button>
+      </template>
+      <template #variant-preview-2>
+        <Button variant="destructive">
+          <Trash2 aria-hidden="true" />
+          Excluir
+        </Button>
+      </template>
+      <template #variant-preview-3>
+        <Button
+          size="icon"
+          aria-label="Baixar arquivo"
+        >
+          <Download aria-hidden="true" />
+        </Button>
+      </template>
+      <template #variant-preview-4>
+        <div class="flex gap-2">
+          <Button variant="outline">
+            Cancelar
+          </Button>
+          <Button>Confirmar</Button>
+        </div>
+      </template>
+      <template #variant-preview-5>
+        <Button
+          as="a"
+          href="#docs"
+          variant="link"
+        >
+          Ver documentação
+        </Button>
+      </template>
+    </DocsCompositions>
 
-        <!-- ── Testes ─────────────────────────────────────────────────── -->
-        <DocsTestes
-          :title="tContent('testes.title')"
-          :functional="{
-            title: tContent('testes.functional.title'),
-            cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
-            items: functionalTestItems,
-          }"
-          :accessibility="{
-            title: tContent('testes.accessibility.title'),
-            cols: a11yCritCols,
-            items: a11yTestItems,
-          }"
-          :visual="{
-            title: tContent('testes.visual.title'),
-            cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
-            items: visualTestItems,
-          }"
-        />
+    <!-- ── Estados ───────────────────────────────────────────────── -->
+    <DocsStates
+      :title="tContent('states.title')"
+      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :items="stateItems"
+    />
+
+    <!-- ── Propriedades ───────────────────────────────────────────── -->
+    <DocsProps
+      :title="tContent('props.title')"
+      :tables="[
+        { title: tContent('props.buttonTitle'), cols: propCols, items: buttonPropItems },
+      ]"
+      :interface-code="interfaceCode"
+      :extensibility-title="tContent('props.extensibilityTitle')"
+      :extensibility-notes="tContent('props.extensibility')"
+    />
+
+    <!-- ── Tokens ─────────────────────────────────────────────────── -->
+    <DocsTokens
+      :title="tContent('tokens.title')"
+      :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
+      :items="tokenRows"
+      :customization-title="tContent('tokens.customizationTitle')"
+      :customization-code="codeCustomizationTokens"
+    />
+
+    <!-- ── Acessibilidade ─────────────────────────────────────────── -->
+    <DocsAccessibility
+      :title="tContent('accessibility.title')"
+      :summary="tContent('accessibility.summary')"
+      :items="accessibilityItems"
+      :keyboard-title="tContent('accessibility.keyboardTitle')"
+      :keyboard-items="keyboardItems"
+    />
+
+    <!-- ── Relacionados ───────────────────────────────────────────── -->
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
+
+    <!-- ── Notas ──────────────────────────────────────────────────── -->
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
+
+    <!-- ── Analytics ─────────────────────────────────────────────── -->
+    <DocsAnalytics
+      :title="tContent('analytics.title')"
+      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :items="analyticsItems"
+    />
+
+    <!-- ── Testes ─────────────────────────────────────────────────── -->
+    <DocsTestes
+      :title="tContent('testes.title')"
+      :functional="{
+        title: tContent('testes.functional.title'),
+        cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
+        items: functionalTestItems,
+      }"
+      :accessibility="{
+        title: tContent('testes.accessibility.title'),
+        cols: a11yCritCols,
+        items: a11yTestItems,
+      }"
+      :visual="{
+        title: tContent('testes.visual.title'),
+        cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
+        items: visualTestItems,
+      }"
+    />
   </DocsPageLayout>
 </template>

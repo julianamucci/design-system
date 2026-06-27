@@ -376,7 +376,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="textarea">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="textarea"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -395,10 +399,10 @@ const visualTestItems = computed(() => [
           <Textarea
             id="demo-description"
             :model-value="demoDescription"
-            @update:model-value="(v) => demoDescription = String(v)"
             :maxlength="demoMax"
             :placeholder="tContent('demonstration.labels.descriptionPlaceholder')"
             class="resize-y min-h-[120px]"
+            @update:model-value="(v) => demoDescription = String(v)"
           />
           <div class="flex justify-between text-xs text-muted-foreground">
             <span>{{ tContent('demonstration.labels.descriptionHelp') }}</span>
@@ -416,9 +420,9 @@ const visualTestItems = computed(() => [
           <Textarea
             id="demo-bio"
             :model-value="demoBio"
-            @update:model-value="(v) => demoBio = String(v)"
             :placeholder="tContent('demonstration.labels.bioPlaceholder')"
             class="resize-y min-h-[120px]"
+            @update:model-value="(v) => demoBio = String(v)"
           />
         </div>
 
@@ -539,16 +543,29 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label :for="'dodont-do-1'">Descrição</Label>
-          <Textarea id="dodont-do-1" :maxlength="500" placeholder="ex: Descreva o produto..." class="resize-y min-h-[100px]" />
+          <Textarea
+            id="dodont-do-1"
+            :maxlength="500"
+            placeholder="ex: Descreva o produto..."
+            class="resize-y min-h-[100px]"
+          />
           <div class="flex justify-end text-xs text-muted-foreground">
-            <span aria-live="polite" aria-label="0 de 500 caracteres usados">0/500</span>
+            <span
+              aria-live="polite"
+              aria-label="0 de 500 caracteres usados"
+            >0/500</span>
           </div>
         </div>
       </template>
       <template #dont-preview-0>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label :for="'dodont-dont-1'">Descrição</Label>
-          <Textarea id="dodont-dont-1" :maxlength="500" placeholder="ex: Descreva o produto..." class="resize-y min-h-[100px]" />
+          <Textarea
+            id="dodont-dont-1"
+            :maxlength="500"
+            placeholder="ex: Descreva o produto..."
+            class="resize-y min-h-[100px]"
+          />
         </div>
       </template>
 
@@ -556,13 +573,21 @@ const visualTestItems = computed(() => [
       <template #do-preview-1>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label :for="'dodont-do-2'">Biografia</Label>
-          <Textarea id="dodont-do-2" placeholder="Conte um pouco sobre você..." class="resize-y min-h-[100px]" />
+          <Textarea
+            id="dodont-do-2"
+            placeholder="Conte um pouco sobre você..."
+            class="resize-y min-h-[100px]"
+          />
         </div>
       </template>
       <template #dont-preview-1>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label :for="'dodont-dont-2'">Biografia</Label>
-          <Textarea id="dodont-dont-2" placeholder="Conte um pouco sobre você..." class="resize min-h-[100px]" />
+          <Textarea
+            id="dodont-dont-2"
+            placeholder="Conte um pouco sobre você..."
+            class="resize min-h-[100px]"
+          />
         </div>
       </template>
     </DocsDoDont>
@@ -575,12 +600,20 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" component-slug="textarea">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      component-slug="textarea"
+    >
       <!-- default -->
       <template #variant-preview-0>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label :for="'variant-default'">Descrição</Label>
-          <Textarea id="variant-default" placeholder="ex: Descreva o produto..." class="resize-y min-h-[100px]" />
+          <Textarea
+            id="variant-default"
+            placeholder="ex: Descreva o produto..."
+            class="resize-y min-h-[100px]"
+          />
         </div>
       </template>
 
@@ -588,9 +621,17 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label :for="'variant-counter'">Descrição</Label>
-          <Textarea id="variant-counter" :maxlength="500" placeholder="ex: Descreva o produto..." class="resize-y min-h-[100px]" />
+          <Textarea
+            id="variant-counter"
+            :maxlength="500"
+            placeholder="ex: Descreva o produto..."
+            class="resize-y min-h-[100px]"
+          />
           <div class="flex justify-end text-xs text-muted-foreground">
-            <span aria-live="polite" aria-label="0 de 500 caracteres usados">0/500</span>
+            <span
+              aria-live="polite"
+              aria-label="0 de 500 caracteres usados"
+            >0/500</span>
           </div>
         </div>
       </template>
@@ -599,7 +640,11 @@ const visualTestItems = computed(() => [
       <template #variant-preview-2>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label :for="'variant-noresize'">Mensagem</Label>
-          <Textarea id="variant-noresize" placeholder="Digite sua mensagem..." class="resize-none min-h-[100px]" />
+          <Textarea
+            id="variant-noresize"
+            placeholder="Digite sua mensagem..."
+            class="resize-none min-h-[100px]"
+          />
         </div>
       </template>
     </DocsVariants>
@@ -615,7 +660,11 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <div class="flex flex-col gap-1.5 w-full max-w-md">
           <Label :for="'ta-label'">Descrição</Label>
-          <Textarea id="ta-label" class="resize-y min-h-[120px]" placeholder="ex: Descreva o produto..." />
+          <Textarea
+            id="ta-label"
+            class="resize-y min-h-[120px]"
+            placeholder="ex: Descreva o produto..."
+          />
         </div>
       </template>
 
@@ -623,7 +672,11 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <div class="flex flex-col gap-1.5 w-full max-w-md">
           <Label :for="'ta-hint'">Descrição</Label>
-          <Textarea id="ta-hint" class="resize-y min-h-[120px]" placeholder="ex: Descreva o produto..." />
+          <Textarea
+            id="ta-hint"
+            class="resize-y min-h-[120px]"
+            placeholder="ex: Descreva o produto..."
+          />
           <p class="text-xs text-muted-foreground">
             Descreva o produto com clareza, destacando os principais atributos.
           </p>
@@ -637,10 +690,10 @@ const visualTestItems = computed(() => [
           <Textarea
             id="ta-counter"
             :model-value="compCounterValue"
-            @update:model-value="(v) => compCounterValue = String(v)"
             :maxlength="500"
             class="resize-y min-h-[120px]"
             placeholder="ex: Descreva o produto..."
+            @update:model-value="(v) => compCounterValue = String(v)"
           />
           <div class="flex justify-between items-start gap-3 text-xs text-muted-foreground">
             <span>Descreva com clareza.</span>
@@ -666,7 +719,10 @@ const visualTestItems = computed(() => [
             class="resize-y min-h-[120px]"
             placeholder="ex: Descreva o produto..."
           />
-          <p class="text-xs text-destructive" id="ta-error-error">
+          <p
+            id="ta-error-error"
+            class="text-xs text-destructive"
+          >
             A descrição é obrigatória e deve ter pelo menos 20 caracteres.
           </p>
         </div>
@@ -685,10 +741,10 @@ const visualTestItems = computed(() => [
               id="ta-form"
               name="feedback"
               :model-value="compFormValue"
-              @update:model-value="(v) => compFormValue = String(v)"
               :maxlength="500"
               class="resize-y min-h-[120px]"
               placeholder="O que poderíamos melhorar?"
+              @update:model-value="(v) => compFormValue = String(v)"
             />
             <div class="flex justify-end text-xs text-muted-foreground">
               <span
@@ -700,8 +756,15 @@ const visualTestItems = computed(() => [
               </span>
             </div>
           </div>
-          <Button type="submit">Enviar</Button>
-          <p aria-live="polite" class="text-xs text-muted-foreground">{{ compFormResult }}</p>
+          <Button type="submit">
+            Enviar
+          </Button>
+          <p
+            aria-live="polite"
+            class="text-xs text-muted-foreground"
+          >
+            {{ compFormResult }}
+          </p>
         </form>
       </template>
     </DocsCompositions>

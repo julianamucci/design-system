@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import {
   NavigationMenu,
@@ -58,7 +58,6 @@ export const LinkSimples: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const links = canvas.getAllByRole('link');
     await expect(links.length).toBe(4);
     await expect(links[0]).toHaveAttribute('aria-current', 'page');
@@ -94,7 +93,6 @@ export const ComDropdown: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /Produtos/i });
     await expect(trigger).toHaveAttribute('aria-expanded', 'true');
   },
@@ -129,7 +127,6 @@ export const MegaMenuGrid: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /Soluções/i });
     await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     const links = within(document.body).getAllByRole('link');
@@ -174,7 +171,6 @@ export const ComCardDestacado: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /Recursos/i });
     await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     const featured = within(document.body).getByText(/Novidade · v3.0/i);

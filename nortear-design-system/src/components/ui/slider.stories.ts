@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { userEvent, within, expect, fireEvent } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { within, expect, fireEvent } from 'storybook/test';
 import { createSlider } from './slider';
 import { createSliderDocs } from '@/components/docs/SliderDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';

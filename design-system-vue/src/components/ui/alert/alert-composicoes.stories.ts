@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import { Button } from '@/components/ui/button';

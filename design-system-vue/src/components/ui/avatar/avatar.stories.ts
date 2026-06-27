@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
 import AvatarDocs from '@/components/docs/AvatarDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -47,7 +47,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Container do Avatar está presente no DOM', async () => {
       const root = canvasElement.querySelector('[data-slot="avatar"]');

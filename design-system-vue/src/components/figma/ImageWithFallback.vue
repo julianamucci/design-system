@@ -35,7 +35,7 @@ const handleError = () => {
     v-else
     :src="src" 
     :alt="alt" 
-    @error="handleError" 
-    v-bind="$attrs"
-  />
+    v-bind="$attrs" 
+    @error="handleError"
+  >
 </template>

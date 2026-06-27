@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -41,7 +41,6 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const radios = canvas.getAllByRole('radio');
     await step('Nenhum item selecionado por padrão', async () => {
       for (const r of radios) await expect(r).toHaveAttribute('aria-checked', 'false');
@@ -67,7 +66,6 @@ export const Checked: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const pix = canvas.getByRole('radio', { name: /Pix/ });
     await step('Item Pix está selecionado', async () => {
       await expect(pix).toHaveAttribute('aria-checked', 'true');
@@ -101,7 +99,6 @@ export const FocoVisivel: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const radios = canvas.getAllByRole('radio');
     await step('Primeiro item recebe foco programaticamente', async () => {
       (radios[0] as HTMLElement).focus();
@@ -128,7 +125,6 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const radios = canvas.getAllByRole('radio');
     await step('Todos os itens estão desabilitados', async () => {
       for (const r of radios) {
@@ -164,7 +160,6 @@ export const ItemDisabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const pix = canvas.getByRole('radio', { name: /Pix/i });
     await step('Apenas o item Pix está desabilitado', async () => {
       await expect(pix).toHaveAttribute('data-disabled');
@@ -198,7 +193,6 @@ export const Invalid: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const radios = canvas.getAllByRole('radio');
     await step('Itens estão marcados como aria-invalid', async () => {
       for (const r of radios) await expect(r).toHaveAttribute('aria-invalid', 'true');

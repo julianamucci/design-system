@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import { Info } from 'lucide-vue-next';
 
@@ -29,7 +29,6 @@ export const Completo: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Role alert presente', async () => {
       await expect(canvas.getByRole('alert')).toBeInTheDocument();
@@ -54,7 +53,6 @@ export const SemTitulo: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Alert visível sem título', async () => {
       await expect(canvas.getByRole('alert')).toBeVisible();
@@ -80,7 +78,6 @@ export const SemIcone: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Alert visível sem ícone', async () => {
       await expect(canvas.getByRole('alert')).toBeVisible();
@@ -109,7 +106,6 @@ export const InsercaoDinamica: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Alert dentro de região aria-live', async () => {
       const liveRegion = canvasElement.querySelector('[aria-live="polite"]');

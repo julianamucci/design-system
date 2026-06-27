@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
-import { Root as Sidebar } from './index';
 import SidebarNavGroupsStory from './SidebarNavGroupsStory.svelte';
 import SidebarSubMenuStory from './SidebarSubMenuStory.svelte';
 import SidebarSkeletonStory from './SidebarSkeletonStory.svelte';

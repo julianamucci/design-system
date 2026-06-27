@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
 import { expect, waitFor } from 'storybook/test';
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'vue-input-otp';

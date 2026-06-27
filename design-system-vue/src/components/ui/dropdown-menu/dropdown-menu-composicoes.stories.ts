@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { within, expect } from 'storybook/test';
+import { expect } from 'storybook/test';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -81,7 +81,6 @@ export const ComLabel: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     await expect(body.getAllByRole('menuitem').length).toBe(4);
@@ -115,7 +114,6 @@ export const ComCheckboxItems: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const checkboxes = await body.findAllByRole('menuitemcheckbox');
@@ -152,7 +150,6 @@ export const ComRadioGroup: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const radios = await body.findAllByRole('menuitemradio');
@@ -189,7 +186,6 @@ export const ComSubmenu: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const subTrigger = await waitForPortal('menuitem', { name: /Exportar como/i });
@@ -233,7 +229,6 @@ export const ComShortcuts: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     await expect(body.getByText('⌘Z')).toBeVisible();

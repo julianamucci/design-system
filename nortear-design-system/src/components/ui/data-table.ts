@@ -37,7 +37,9 @@ import { createButton } from './button';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 declare module '@tanstack/table-core' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // TData/TValue precisam casar com a assinatura original do TanStack pra
+  // module augmentation funcionar — não são "não usados" do ponto de vista do TS.
+  /* eslint-disable unused-imports/no-unused-vars */
   interface ColumnMeta<TData extends RowData, TValue> {
     filter?: { type: 'text' | 'select'; options?: string[]; placeholder?: string };
     editable?: boolean;
@@ -45,10 +47,10 @@ declare module '@tanstack/table-core' {
     /** Renderiza conteúdo customizado para a célula (string ou HTMLElement). */
     renderCell?: (ctx: { value: unknown; row: TData; rowIndex: number }) => string | HTMLElement;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface TableMeta<TData extends RowData> {
     updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
   }
+  /* eslint-enable unused-imports/no-unused-vars */
 }
 
 export type DataTableColumn<TData, TValue = unknown> = ColumnDef<TData, TValue>;

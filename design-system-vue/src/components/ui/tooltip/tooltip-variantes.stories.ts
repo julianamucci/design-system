@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Tooltip,
   TooltipContent,
@@ -64,7 +64,6 @@ export const Default: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const tip = await waitForPortal('tooltip');
     await expect(tip).toBeVisible();
   },
@@ -99,7 +98,6 @@ export const ComAtalho: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const tip = await waitForPortal('tooltip');
     await expect(tip).toBeVisible();
   },
@@ -132,7 +130,6 @@ export const TextoLongo: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const tip = await waitForPortal('tooltip');
     await expect(tip).toBeVisible();
   },

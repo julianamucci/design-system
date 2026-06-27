@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { Label } from './index';
 import LabelDocs from '@/components/docs/LabelDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -42,7 +42,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Label está presente e visível', async () => {
       const label = canvas.getByText('Nome completo');

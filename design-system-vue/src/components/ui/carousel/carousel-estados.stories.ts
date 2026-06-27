@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
 import { Card } from '@/components/ui/card';
 
@@ -41,7 +41,6 @@ export const PrimeiroSlide: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('No primeiro slide, "Item anterior" fica disabled', async () => {
       const prev = canvas.getByRole('button', { name: /item anterior/i });
@@ -74,7 +73,6 @@ export const UltimoSlide: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('No último slide, "Próximo item" fica disabled', async () => {
       const next = canvas.getByRole('button', { name: /próximo item/i });

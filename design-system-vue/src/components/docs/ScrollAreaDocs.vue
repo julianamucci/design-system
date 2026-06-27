@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -310,7 +310,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -355,7 +358,9 @@ const visualTestItems = computed(() => [
                     :key="card.id"
                     class="shrink-0 w-[140px] rounded-md border bg-muted p-3"
                   >
-                    <div class="text-sm font-medium">{{ card.title }}</div>
+                    <div class="text-sm font-medium">
+                      {{ card.title }}
+                    </div>
                   </figure>
                 </div>
                 <ScrollBar orientation="horizontal" />
@@ -372,7 +377,9 @@ const visualTestItems = computed(() => [
               <table class="border-collapse text-sm">
                 <thead>
                   <tr>
-                    <th class="sticky top-0 z-10 bg-background border px-3 py-2 text-left">#</th>
+                    <th class="sticky top-0 z-10 bg-background border px-3 py-2 text-left">
+                      #
+                    </th>
                     <th
                       v-for="col in matrixCols"
                       :key="col"
@@ -383,8 +390,13 @@ const visualTestItems = computed(() => [
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="row in matrixRows" :key="row">
-                    <th class="border px-3 py-2 text-left whitespace-nowrap bg-muted">{{ row }}</th>
+                  <tr
+                    v-for="row in matrixRows"
+                    :key="row"
+                  >
+                    <th class="border px-3 py-2 text-left whitespace-nowrap bg-muted">
+                      {{ row }}
+                    </th>
                     <td
                       v-for="col in matrixCols"
                       :key="col"
@@ -441,13 +453,13 @@ const visualTestItems = computed(() => [
         title: tContent('usage.uxWriting.title'),
         cols: {
           element: tContent('usage.uxWriting.table.element'),
-          rules:   tContent('usage.uxWriting.table.rules'),
-          do:      tContent('usage.uxWriting.table.correct'),
-          dont:    tContent('usage.uxWriting.table.avoid'),
+          rules: tContent('usage.uxWriting.table.rules'),
+          do: tContent('usage.uxWriting.table.correct'),
+          dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.container.name'),   rules: tContent('usage.uxWriting.table.container.format'),   do: tContent('usage.uxWriting.table.container.good'),   dont: tContent('usage.uxWriting.table.container.bad')   },
-          { element: tContent('usage.uxWriting.table.scrollArea.name'),  rules: tContent('usage.uxWriting.table.scrollArea.format'),  do: tContent('usage.uxWriting.table.scrollArea.good'),  dont: tContent('usage.uxWriting.table.scrollArea.bad')  },
+          { element: tContent('usage.uxWriting.table.container.name'), rules: tContent('usage.uxWriting.table.container.format'), do: tContent('usage.uxWriting.table.container.good'), dont: tContent('usage.uxWriting.table.container.bad') },
+          { element: tContent('usage.uxWriting.table.scrollArea.name'), rules: tContent('usage.uxWriting.table.scrollArea.format'), do: tContent('usage.uxWriting.table.scrollArea.good'), dont: tContent('usage.uxWriting.table.scrollArea.bad') },
           { element: tContent('usage.uxWriting.table.orientation.name'), rules: tContent('usage.uxWriting.table.orientation.format'), do: tContent('usage.uxWriting.table.orientation.good'), dont: tContent('usage.uxWriting.table.orientation.bad') },
         ],
       }"
@@ -483,22 +495,42 @@ const visualTestItems = computed(() => [
         <div class="h-[180px] w-full overflow-hidden rounded-md border">
           <ScrollArea class="h-full w-full">
             <div class="p-3 space-y-1.5">
-              <div v-for="i in 18" :key="i" class="text-xs rounded-sm border px-2 py-1">Item {{ i }}</div>
+              <div
+                v-for="i in 18"
+                :key="i"
+                class="text-xs rounded-sm border px-2 py-1"
+              >
+                Item {{ i }}
+              </div>
             </div>
           </ScrollArea>
         </div>
       </template>
       <template #dont-preview-0>
         <div class="w-full rounded-md border p-3 space-y-1.5">
-          <div v-for="i in 6" :key="i" class="text-xs rounded-sm border px-2 py-1">Item {{ i }}</div>
-          <p class="text-[10px] text-muted-foreground">Sem altura — conteúdo expande</p>
+          <div
+            v-for="i in 6"
+            :key="i"
+            class="text-xs rounded-sm border px-2 py-1"
+          >
+            Item {{ i }}
+          </div>
+          <p class="text-[10px] text-muted-foreground">
+            Sem altura — conteúdo expande
+          </p>
         </div>
       </template>
       <template #do-preview-1>
         <div class="h-[180px] w-full overflow-hidden rounded-md border">
           <ScrollArea class="h-full w-full">
             <div class="p-3 space-y-1.5">
-              <div v-for="i in 14" :key="i" class="text-xs rounded-sm border px-2 py-1">Item {{ i }}</div>
+              <div
+                v-for="i in 14"
+                :key="i"
+                class="text-xs rounded-sm border px-2 py-1"
+              >
+                Item {{ i }}
+              </div>
             </div>
           </ScrollArea>
         </div>
@@ -508,7 +540,13 @@ const visualTestItems = computed(() => [
           <ScrollArea class="h-full w-full">
             <ScrollArea class="h-[100px] w-full">
               <div class="p-3 space-y-1.5">
-                <div v-for="i in 10" :key="i" class="text-xs rounded-sm border px-2 py-1">Item {{ i }}</div>
+                <div
+                  v-for="i in 10"
+                  :key="i"
+                  class="text-xs rounded-sm border px-2 py-1"
+                >
+                  Item {{ i }}
+                </div>
               </div>
             </ScrollArea>
           </ScrollArea>
@@ -523,12 +561,19 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
         <div class="h-[200px] w-[260px] overflow-hidden rounded-md border">
           <ScrollArea class="h-full w-full">
             <div class="p-3 space-y-1.5">
-              <div v-for="i in 20" :key="i" class="text-xs rounded-sm border px-2 py-1">
+              <div
+                v-for="i in 20"
+                :key="i"
+                class="text-xs rounded-sm border px-2 py-1"
+              >
                 {{ tContent('demonstration.labels.tag') }} {{ i }}
               </div>
             </div>
@@ -539,7 +584,11 @@ const visualTestItems = computed(() => [
         <div class="h-[140px] w-[420px] overflow-hidden rounded-md border">
           <ScrollArea class="h-full w-full whitespace-nowrap">
             <div class="flex w-max gap-3 p-3">
-              <figure v-for="i in 10" :key="i" class="shrink-0 w-[120px] rounded-md border bg-muted p-3 text-xs">
+              <figure
+                v-for="i in 10"
+                :key="i"
+                class="shrink-0 w-[120px] rounded-md border bg-muted p-3 text-xs"
+              >
                 Card {{ i }}
               </figure>
             </div>
@@ -552,8 +601,15 @@ const visualTestItems = computed(() => [
           <ScrollArea class="h-full w-full">
             <table class="border-collapse text-xs">
               <tbody>
-                <tr v-for="r in 12" :key="r">
-                  <td v-for="c in 10" :key="c" class="border px-3 py-1.5 whitespace-nowrap">
+                <tr
+                  v-for="r in 12"
+                  :key="r"
+                >
+                  <td
+                    v-for="c in 10"
+                    :key="c"
+                    class="border px-3 py-1.5 whitespace-nowrap"
+                  >
                     R{{ r }}-C{{ c }}
                   </td>
                 </tr>
@@ -581,7 +637,7 @@ const visualTestItems = computed(() => [
       :title="tContent('props.title')"
       :tables="[
         { title: 'ScrollArea', cols: propCols, items: scrollAreaPropItems },
-        { title: 'ScrollBar',  cols: propCols, items: scrollBarPropItems  },
+        { title: 'ScrollBar', cols: propCols, items: scrollBarPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -611,10 +667,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

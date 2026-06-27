@@ -33,7 +33,13 @@ const props = defineProps<{
           class="h-8 rounded-md border border-input bg-transparent px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
           @change="(e) => props.table.setPageSize(Number((e.target as HTMLSelectElement).value))"
         >
-          <option v-for="opt in pageSizeOptions" :key="opt" :value="opt">{{ opt }}</option>
+          <option
+            v-for="opt in pageSizeOptions"
+            :key="opt"
+            :value="opt"
+          >
+            {{ opt }}
+          </option>
         </select>
       </div>
       <div class="text-muted-foreground">

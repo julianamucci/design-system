@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { within, expect, waitFor } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import {
   InputOTP,
   InputOTPGroup,
@@ -54,7 +54,6 @@ export const Vazio: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const input = await waitFor(() => canvas.getByLabelText(/vazio/i));
     await expect((input as HTMLInputElement).value).toBe('');
   },
@@ -85,7 +84,6 @@ export const Preenchendo: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const input = await waitFor(() => canvas.getByLabelText(/preenchendo/i));
     await expect((input as HTMLInputElement).value).toBe('123');
   },
@@ -116,7 +114,6 @@ export const Completo: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const input = await waitFor(() => canvas.getByLabelText(/completo/i));
     await expect((input as HTMLInputElement).value).toBe('123456');
     await expect((input as HTMLInputElement).value).toHaveLength(6);
@@ -148,7 +145,6 @@ export const Desabilitado: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const input = await waitFor(() => canvas.getByLabelText(/desabilitado/i));
     await expect(input).toBeDisabled();
   },
@@ -189,7 +185,6 @@ export const Erro: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const input = await waitFor(() => canvas.getByLabelText(/com erro/i));
     await expect(input).toHaveAttribute('aria-invalid', 'true');
     await expect(canvas.getByText(/Código incorreto/i)).toBeVisible();

@@ -14,7 +14,7 @@ const config: TestRunnerConfig = {
     await page.evaluate(() => {
       // @ts-expect-error: axe global injetado pelo axe-playwright
       if (typeof window !== 'undefined' && window.axe) {
-        // @ts-expect-error
+        // @ts-expect-error: axe global injetado pelo axe-playwright
         delete window.axe;
       }
     });

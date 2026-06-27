@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect, waitFor } from 'storybook/test';
 import {
   HoverCard,
   HoverCardContent,
@@ -93,8 +93,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
 
     const waitForClose = async () => {
       await waitFor(

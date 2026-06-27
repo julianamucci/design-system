@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';

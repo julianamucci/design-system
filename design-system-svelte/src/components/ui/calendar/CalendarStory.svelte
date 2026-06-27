@@ -28,11 +28,9 @@
   const refNext = refSingle.add({ days: 1 });
 
   // Intentional: initial state captured once at mount (stories mount fresh per render)
-  // eslint-disable-next-line svelte/state_referenced_locally
   let single = $state<DateValue | undefined>(
     variant === 'selected' || variant === 'single' ? refSingle : undefined,
   );
-  // eslint-disable-next-line svelte/state_referenced_locally
   let multiple = $state<DateValue[]>(
     variant === 'multiple' ? [refPrev, refSingle, refNext] : [],
   );

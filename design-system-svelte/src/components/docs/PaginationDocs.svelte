@@ -401,7 +401,7 @@ interface PaginationDirectionalProps {
         <PaginationContent>
           <PaginationItem>
             <PaginationLink page={{ type: 'page', value: 1, key: 'p1' } as any} isActive={false}>
-              {'<'}
+              &lt;
             </PaginationLink>
           </PaginationItem>
           {#each pages as p (p.key)}
@@ -415,7 +415,7 @@ interface PaginationDirectionalProps {
           {/each}
           <PaginationItem>
             <PaginationLink page={{ type: 'page', value: 5, key: 'p5' } as any} isActive={false}>
-              {'>'}
+              &gt;
             </PaginationLink>
           </PaginationItem>
         </PaginationContent>

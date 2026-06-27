@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createBadge, type BadgeVariant } from './badge';
 import { createBadgeDocs } from '@/components/docs/BadgeDocs';

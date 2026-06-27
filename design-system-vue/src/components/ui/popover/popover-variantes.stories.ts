@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Popover,
   PopoverContent,
@@ -71,7 +71,6 @@ export const Default: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
   },
@@ -110,7 +109,6 @@ export const ComTitulo: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAccessibleName(/Configuracoes de exibição/i);
@@ -150,7 +148,6 @@ export const Form: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByLabelText(/Nome/i)).toBeVisible();

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -58,7 +58,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('nav com aria-label="breadcrumb" está presente', async () => {
       const nav = canvas.getByRole('navigation', { name: 'breadcrumb' });

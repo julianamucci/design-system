@@ -40,11 +40,19 @@ function trackId(name: string): string | undefined {
 
 <template>
   <section :id="props.id">
-    <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
+    <h2 class="text-xl font-semibold mb-4">
+      {{ title }}
+    </h2>
     <div class="space-y-4">
-      <Card v-for="(item, i) in items" :key="i" class="p-4 gap-2">
+      <Card
+        v-for="(item, i) in items"
+        :key="i"
+        class="p-4 gap-2"
+      >
         <div>
-          <p class="text-sm font-semibold">{{ item.name }}</p>
+          <p class="text-sm font-semibold">
+            {{ item.name }}
+          </p>
           <p
             class="text-xs text-muted-foreground mt-0.5 leading-relaxed"
             v-html="sanitizeHtml(item.description)"
@@ -65,7 +73,10 @@ function trackId(name: string): string | undefined {
           >
             {{ openStates[i] ? 'Ocultar código' : 'Ver código' }}
           </Button>
-          <Card v-if="openStates[i]" class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-2">
+          <Card
+            v-if="openStates[i]"
+            class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-2"
+          >
             <code class="whitespace-pre">{{ item.code }}</code>
           </Card>
         </div>

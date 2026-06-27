@@ -14,7 +14,6 @@
     MenubarSub,
     MenubarSubTrigger,
     MenubarSubContent,
-    MenubarGroup,
   } from './index';
 
   type Variant = 'default' | 'destructive';

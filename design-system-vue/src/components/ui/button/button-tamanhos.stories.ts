@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { Plus } from 'lucide-vue-next';
 import { Button } from './index';
 
@@ -50,7 +50,6 @@ export const Large: Story = {
 };
 
 const iconAriaLabelPlay: Story['play'] = async ({ canvasElement, step }) => {
-  const canvas = within(canvasElement);
   await step('Botão icon-only é acessível via aria-label', async () => {
     const button = canvas.getByRole('button', { name: 'Adicionar item' });
     await expect(button).toBeInTheDocument();

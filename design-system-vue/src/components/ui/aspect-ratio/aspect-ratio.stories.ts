@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { AspectRatio } from './index';
 import AspectRatioDocs from '@/components/docs/AspectRatioDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -51,7 +51,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Wrapper com data-slot aspect-ratio está presente', async () => {
       const wrapper = canvasElement.querySelector('[data-slot="aspect-ratio"]');

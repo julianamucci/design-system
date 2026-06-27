@@ -18,7 +18,7 @@
     SidebarRail,
     SidebarInput,
   } from '@/components/ui/sidebar';
-  import { LayoutDashboard, Box, Palette, Settings, User, Bell, Search } from 'lucide-svelte';
+  import { LayoutDashboard, Box, Palette, Settings, User, Bell } from 'lucide-svelte';
 
   const mainNavItems = [
     { icon: LayoutDashboard, label: 'Dashboard',    isActive: true,  badge: null },

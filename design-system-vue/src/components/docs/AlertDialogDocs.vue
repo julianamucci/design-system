@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -420,7 +420,10 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -436,7 +439,9 @@ const a11yCritCols = computed(() => ({
       <div class="flex flex-wrap items-center justify-center gap-4 w-full">
         <AlertDialog>
           <AlertDialogTrigger as-child>
-            <Button variant="destructive">{{ tContent('demonstration.labels.triggerLabel') }}</Button>
+            <Button variant="destructive">
+              {{ tContent('demonstration.labels.triggerLabel') }}
+            </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -515,10 +520,10 @@ const a11yCritCols = computed(() => ({
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.title.name'),       rules: tContent('usage.uxWriting.table.title.format'),       do: tContent('usage.uxWriting.table.title.good'),       dont: tContent('usage.uxWriting.table.title.bad')       },
+          { element: tContent('usage.uxWriting.table.title.name'), rules: tContent('usage.uxWriting.table.title.format'), do: tContent('usage.uxWriting.table.title.good'), dont: tContent('usage.uxWriting.table.title.bad') },
           { element: tContent('usage.uxWriting.table.description.name'), rules: tContent('usage.uxWriting.table.description.format'), do: tContent('usage.uxWriting.table.description.good'), dont: tContent('usage.uxWriting.table.description.bad') },
-          { element: tContent('usage.uxWriting.table.action.name'),      rules: tContent('usage.uxWriting.table.action.format'),      do: tContent('usage.uxWriting.table.action.good'),      dont: tContent('usage.uxWriting.table.action.bad')      },
-          { element: tContent('usage.uxWriting.table.cancel.name'),      rules: tContent('usage.uxWriting.table.cancel.format'),      do: tContent('usage.uxWriting.table.cancel.good'),      dont: tContent('usage.uxWriting.table.cancel.bad')      },
+          { element: tContent('usage.uxWriting.table.action.name'), rules: tContent('usage.uxWriting.table.action.format'), do: tContent('usage.uxWriting.table.action.good'), dont: tContent('usage.uxWriting.table.action.bad') },
+          { element: tContent('usage.uxWriting.table.cancel.name'), rules: tContent('usage.uxWriting.table.cancel.format'), do: tContent('usage.uxWriting.table.cancel.good'), dont: tContent('usage.uxWriting.table.cancel.bad') },
         ],
       }"
       :do="{
@@ -558,7 +563,9 @@ const a11yCritCols = computed(() => ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">Excluir</AlertDialogAction>
+              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Excluir
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -580,7 +587,9 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-1>
         <AlertDialog default-open>
           <AlertDialogTrigger as-child>
-            <Button variant="destructive">Excluir</Button>
+            <Button variant="destructive">
+              Excluir
+            </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -589,7 +598,9 @@ const a11yCritCols = computed(() => ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">Excluir</AlertDialogAction>
+              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Excluir
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -597,7 +608,9 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-1>
         <AlertDialog default-open>
           <AlertDialogTrigger as-child>
-            <Button variant="destructive">Excluir</Button>
+            <Button variant="destructive">
+              Excluir
+            </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -623,7 +636,11 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" :note="stripHtml(tContent('variants.note'))">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      :note="stripHtml(tContent('variants.note'))"
+    >
       <template #variant-preview-0>
         <AlertDialog default-open>
           <AlertDialogContent>
@@ -633,7 +650,9 @@ const a11yCritCols = computed(() => ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">Excluir</AlertDialogAction>
+              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Excluir
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -712,11 +731,11 @@ const a11yCritCols = computed(() => ({
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: tContent('props.rootTitle'),    cols: propCols, items: rootProps    },
+        { title: tContent('props.rootTitle'), cols: propCols, items: rootProps },
         { title: tContent('props.triggerTitle'), cols: propCols, items: triggerProps },
         { title: tContent('props.contentTitle'), cols: propCols, items: contentProps },
-        { title: tContent('props.actionTitle'),  cols: propCols, items: actionProps  },
-        { title: tContent('props.cancelTitle'),  cols: propCols, items: cancelProps  },
+        { title: tContent('props.actionTitle'), cols: propCols, items: actionProps },
+        { title: tContent('props.cancelTitle'), cols: propCols, items: cancelProps },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -746,10 +765,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

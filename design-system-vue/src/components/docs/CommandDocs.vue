@@ -4,7 +4,6 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { sanitizeHtml } from '@/lib/sanitize-html';
 
 import {
   Command,
@@ -552,7 +551,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="command">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="command"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -562,10 +565,16 @@ const visualTestItems = computed(() => [
         install-note="npx shadcn-vue@latest add command"
       >
         <template #badges>
-          <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
+          <Badge
+            variant="secondary"
+            class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
+          >
             {{ tContent('category') }}
           </Badge>
-          <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
+          <Badge
+            variant="secondary"
+            class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
+          >
             {{ tContent('type') }}
           </Badge>
         </template>
@@ -578,22 +587,29 @@ const visualTestItems = computed(() => [
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div class="w-full space-y-8">
-
         <!-- Demo 1: Inline -->
         <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">Inline</p>
+          <p class="text-sm font-medium text-foreground">
+            Inline
+          </p>
           <div class="w-full max-w-sm rounded-xl border border-border shadow-sm overflow-hidden">
             <Command>
               <CommandInput :placeholder="tContent('demonstration.labels.searchPlaceholder')" />
               <CommandList>
                 <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
                 <CommandGroup :heading="tContent('demonstration.labels.groupComponents')">
-                  <CommandItem value="button">{{ tContent('demonstration.labels.itemButton') }}</CommandItem>
-                  <CommandItem value="input">{{ tContent('demonstration.labels.itemInput') }}</CommandItem>
+                  <CommandItem value="button">
+                    {{ tContent('demonstration.labels.itemButton') }}
+                  </CommandItem>
+                  <CommandItem value="input">
+                    {{ tContent('demonstration.labels.itemInput') }}
+                  </CommandItem>
                 </CommandGroup>
                 <CommandSeparator />
                 <CommandGroup :heading="tContent('demonstration.labels.groupUtils')">
-                  <CommandItem value="separator">{{ tContent('demonstration.labels.itemSeparator') }}</CommandItem>
+                  <CommandItem value="separator">
+                    {{ tContent('demonstration.labels.itemSeparator') }}
+                  </CommandItem>
                 </CommandGroup>
               </CommandList>
             </Command>
@@ -602,7 +618,9 @@ const visualTestItems = computed(() => [
 
         <!-- Demo 2: Combobox -->
         <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">Combobox</p>
+          <p class="text-sm font-medium text-foreground">
+            Combobox
+          </p>
           <Popover v-model:open="comboboxOpen">
             <PopoverTrigger as-child>
               <Button
@@ -641,9 +659,14 @@ const visualTestItems = computed(() => [
 
         <!-- Demo 3: Command Palette -->
         <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">Command Palette</p>
+          <p class="text-sm font-medium text-foreground">
+            Command Palette
+          </p>
           <div class="flex items-center gap-3">
-            <Button variant="outline" @click="openPalette">
+            <Button
+              variant="outline"
+              @click="openPalette"
+            >
               {{ tContent('demonstration.labels.openPalette') }}
             </Button>
             <span class="flex items-center gap-1 text-sm text-muted-foreground">
@@ -662,24 +685,32 @@ const visualTestItems = computed(() => [
             <CommandList>
               <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
               <CommandGroup :heading="tContent('demonstration.labels.groupComponents')">
-                <CommandItem value="button" @select="paletteSelect('button')">
+                <CommandItem
+                  value="button"
+                  @select="paletteSelect('button')"
+                >
                   {{ tContent('demonstration.labels.itemButton') }}
                   <CommandShortcut>⌘B</CommandShortcut>
                 </CommandItem>
-                <CommandItem value="input" @select="paletteSelect('input')">
+                <CommandItem
+                  value="input"
+                  @select="paletteSelect('input')"
+                >
                   {{ tContent('demonstration.labels.itemInput') }}
                 </CommandItem>
               </CommandGroup>
               <CommandSeparator />
               <CommandGroup :heading="tContent('demonstration.labels.groupUtils')">
-                <CommandItem value="separator" @select="paletteSelect('separator')">
+                <CommandItem
+                  value="separator"
+                  @select="paletteSelect('separator')"
+                >
                   {{ tContent('demonstration.labels.itemSeparator') }}
                 </CommandItem>
               </CommandGroup>
             </CommandList>
           </CommandDialog>
         </div>
-
       </div>
     </DocsDemonstration>
 
@@ -736,11 +767,16 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <div class="w-full rounded-xl border border-border overflow-hidden">
           <Command>
-            <CommandInput placeholder="zzz" model-value="zzz" />
+            <CommandInput
+              placeholder="zzz"
+              model-value="zzz"
+            />
             <CommandList>
               <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
               <CommandGroup heading="Componentes">
-                <CommandItem value="button">Button</CommandItem>
+                <CommandItem value="button">
+                  Button
+                </CommandItem>
               </CommandGroup>
             </CommandList>
           </Command>
@@ -749,10 +785,15 @@ const visualTestItems = computed(() => [
       <template #dont-preview-0>
         <div class="w-full rounded-xl border border-border overflow-hidden">
           <Command>
-            <CommandInput placeholder="zzz" model-value="zzz" />
+            <CommandInput
+              placeholder="zzz"
+              model-value="zzz"
+            />
             <CommandList>
               <CommandGroup heading="Componentes">
-                <CommandItem value="button">Button</CommandItem>
+                <CommandItem value="button">
+                  Button
+                </CommandItem>
               </CommandGroup>
             </CommandList>
           </Command>
@@ -762,7 +803,12 @@ const visualTestItems = computed(() => [
       <!-- Pair 2: shortcut hint -->
       <template #do-preview-1>
         <div class="flex items-center gap-2">
-          <Button variant="outline" size="sm">Buscar</Button>
+          <Button
+            variant="outline"
+            size="sm"
+          >
+            Buscar
+          </Button>
           <span class="flex items-center gap-1 text-xs text-muted-foreground">
             Pressione
             <kbd class="pointer-events-none inline-flex h-4 select-none items-center rounded border border-border bg-muted px-1 font-mono text-[10px] text-muted-foreground">⌘K</kbd>
@@ -770,7 +816,12 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <Button variant="outline" size="sm">Buscar</Button>
+        <Button
+          variant="outline"
+          size="sm"
+        >
+          Buscar
+        </Button>
       </template>
     </DocsDoDont>
 
@@ -797,8 +848,12 @@ const visualTestItems = computed(() => [
             <CommandList>
               <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
               <CommandGroup heading="Componentes">
-                <CommandItem value="button">Button</CommandItem>
-                <CommandItem value="input">Input</CommandItem>
+                <CommandItem value="button">
+                  Button
+                </CommandItem>
+                <CommandItem value="input">
+                  Input
+                </CommandItem>
               </CommandGroup>
             </CommandList>
           </Command>
@@ -809,7 +864,12 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <Popover>
           <PopoverTrigger as-child>
-            <Button variant="outline" role="combobox" aria-expanded="false" class="w-48 justify-between">
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded="false"
+              class="w-48 justify-between"
+            >
               Selecione um item...
             </Button>
           </PopoverTrigger>
@@ -819,8 +879,12 @@ const visualTestItems = computed(() => [
               <CommandList>
                 <CommandEmpty>Nenhum resultado.</CommandEmpty>
                 <CommandGroup>
-                  <CommandItem value="button">Button</CommandItem>
-                  <CommandItem value="input">Input</CommandItem>
+                  <CommandItem value="button">
+                    Button
+                  </CommandItem>
+                  <CommandItem value="input">
+                    Input
+                  </CommandItem>
                 </CommandGroup>
               </CommandList>
             </Command>
@@ -831,7 +895,12 @@ const visualTestItems = computed(() => [
       <!-- palette preview -->
       <template #variant-preview-2>
         <div class="flex items-center gap-2">
-          <Button variant="outline" size="sm">Buscar</Button>
+          <Button
+            variant="outline"
+            size="sm"
+          >
+            Buscar
+          </Button>
           <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">⌘K</kbd>
         </div>
       </template>
@@ -851,16 +920,30 @@ const visualTestItems = computed(() => [
             <CommandList>
               <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
               <CommandGroup heading="Componentes">
-                <CommandItem value="button">Button</CommandItem>
-                <CommandItem value="input">Input</CommandItem>
-                <CommandItem value="badge">Badge</CommandItem>
-                <CommandItem value="separator">Separator</CommandItem>
+                <CommandItem value="button">
+                  Button
+                </CommandItem>
+                <CommandItem value="input">
+                  Input
+                </CommandItem>
+                <CommandItem value="badge">
+                  Badge
+                </CommandItem>
+                <CommandItem value="separator">
+                  Separator
+                </CommandItem>
               </CommandGroup>
               <CommandSeparator />
               <CommandGroup heading="Utilitários">
-                <CommandItem value="cn">cn()</CommandItem>
-                <CommandItem value="clsx">clsx()</CommandItem>
-                <CommandItem value="twmerge">twMerge()</CommandItem>
+                <CommandItem value="cn">
+                  cn()
+                </CommandItem>
+                <CommandItem value="clsx">
+                  clsx()
+                </CommandItem>
+                <CommandItem value="twmerge">
+                  twMerge()
+                </CommandItem>
               </CommandGroup>
             </CommandList>
           </Command>
@@ -873,15 +956,36 @@ const visualTestItems = computed(() => [
             <CommandList>
               <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
               <CommandGroup heading="Componentes">
-                <CommandItem value="button">Button</CommandItem>
-                <CommandItem value="input" disabled>Input (em breve)</CommandItem>
-                <CommandItem value="badge">Badge</CommandItem>
-                <CommandItem value="select" disabled>Select (em breve)</CommandItem>
+                <CommandItem value="button">
+                  Button
+                </CommandItem>
+                <CommandItem
+                  value="input"
+                  disabled
+                >
+                  Input (em breve)
+                </CommandItem>
+                <CommandItem value="badge">
+                  Badge
+                </CommandItem>
+                <CommandItem
+                  value="select"
+                  disabled
+                >
+                  Select (em breve)
+                </CommandItem>
               </CommandGroup>
               <CommandSeparator />
               <CommandGroup heading="Utilitários">
-                <CommandItem value="cn">cn()</CommandItem>
-                <CommandItem value="clsx" disabled>clsx() (depreciado)</CommandItem>
+                <CommandItem value="cn">
+                  cn()
+                </CommandItem>
+                <CommandItem
+                  value="clsx"
+                  disabled
+                >
+                  clsx() (depreciado)
+                </CommandItem>
               </CommandGroup>
             </CommandList>
           </Command>
@@ -919,9 +1023,9 @@ const visualTestItems = computed(() => [
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: tContent('props.commandTitle'),      cols: propCols, items: commandPropItems      },
+        { title: tContent('props.commandTitle'), cols: propCols, items: commandPropItems },
         { title: tContent('props.commandInputTitle'), cols: propCols, items: commandInputPropItems },
-        { title: tContent('props.commandItemTitle'),  cols: propCols, items: commandItemPropItems  },
+        { title: tContent('props.commandItemTitle'), cols: propCols, items: commandItemPropItems },
         { title: tContent('props.commandDialogTitle'),cols: propCols, items: commandDialogPropItems },
       ]"
       :interface-code="interfaceCode"
@@ -947,10 +1051,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

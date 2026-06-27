@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { userEvent, within, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
 import { createMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';

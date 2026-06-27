@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, expect } from 'storybook/test';
 import {
   Select,
   SelectContent,
@@ -73,7 +73,6 @@ export const ComLabel: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(canvas.getByText(/^Estado$/i)).toBeVisible();
     await expect(canvas.getByRole('combobox')).toBeInTheDocument();
   },
@@ -111,8 +110,6 @@ export const Controlado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
     await step('Valor inicial vazio', async () => {
       await expect(canvas.getByText(/Valor atual:/i)).toBeVisible();
     });
@@ -157,7 +154,6 @@ export const EmFormulario: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(canvas.getByRole('combobox', { name: /Selecionar estado/i })).toBeInTheDocument();
     await expect(canvas.getByRole('button', { name: /Enviar/i })).toBeInTheDocument();
   },
@@ -195,8 +191,6 @@ export const ComSeparator: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
     await step('Abre dropdown e mostra ambos os grupos', async () => {
       await userEvent.click(canvas.getByRole('combobox'));
       const listbox = await waitForPortal('listbox', { timeout: 2000 });

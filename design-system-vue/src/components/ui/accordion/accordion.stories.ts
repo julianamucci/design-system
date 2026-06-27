@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import {
   Accordion,
   AccordionContent,
@@ -67,7 +67,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Item 1 começa aberto (defaultValue)', async () => {
       const triggers = canvas.getAllByRole('button');

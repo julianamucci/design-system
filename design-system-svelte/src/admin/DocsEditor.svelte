@@ -4,7 +4,6 @@
  * Acesse em: http://localhost:5173/?view=admin  (modo dev)
  */
   import { onMount, onDestroy } from 'svelte';
-  import Quill from 'quill';
   import 'quill/dist/quill.snow.css';
   import { createDocsStore } from './useDocs';
   import type { Locale } from '@/lib/i18n';

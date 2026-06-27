@@ -24,12 +24,12 @@ function handleChange(value: string) {
     <button
       v-for="lang in locales"
       :key="lang.value"
-      @click="handleChange(lang.value)"
       :class="['h-(--height-xs) px-2 text-[10px] font-bold rounded-(--radius-button) transition-all',
-        store.locale === lang.value
-          ? 'bg-secondary text-secondary-foreground'
-          : 'text-muted-foreground hover:text-foreground hover:bg-muted/50']"
+               store.locale === lang.value
+                 ? 'bg-secondary text-secondary-foreground'
+                 : 'text-muted-foreground hover:text-foreground hover:bg-muted/50']"
       :aria-pressed="store.locale === lang.value"
+      @click="handleChange(lang.value)"
     >
       {{ lang.label }}
     </button>

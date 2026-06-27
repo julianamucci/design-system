@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -435,7 +435,11 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="drawer">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="drawer"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -448,10 +452,15 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-wrap items-center justify-center gap-4 w-full" style="contain: layout">
+      <div
+        class="flex flex-wrap items-center justify-center gap-4 w-full"
+        style="contain: layout"
+      >
         <Drawer>
           <DrawerTrigger as-child>
-            <Button variant="outline">{{ tContent('demonstration.labels.bottom') }}</Button>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.bottom') }}
+            </Button>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
@@ -461,7 +470,9 @@ const a11yCritCols = computed(() => ({
             <DrawerFooter>
               <Button>OK</Button>
               <DrawerClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">
+                  Cancelar
+                </Button>
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>
@@ -514,10 +525,10 @@ const a11yCritCols = computed(() => ({
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.title.name'),       rules: tContent('usage.uxWriting.table.title.format'),       do: tContent('usage.uxWriting.table.title.good'),       dont: tContent('usage.uxWriting.table.title.bad')       },
+          { element: tContent('usage.uxWriting.table.title.name'), rules: tContent('usage.uxWriting.table.title.format'), do: tContent('usage.uxWriting.table.title.good'), dont: tContent('usage.uxWriting.table.title.bad') },
           { element: tContent('usage.uxWriting.table.description.name'), rules: tContent('usage.uxWriting.table.description.format'), do: tContent('usage.uxWriting.table.description.good'), dont: tContent('usage.uxWriting.table.description.bad') },
-          { element: tContent('usage.uxWriting.table.trigger.name'),     rules: tContent('usage.uxWriting.table.trigger.format'),     do: tContent('usage.uxWriting.table.trigger.good'),     dont: tContent('usage.uxWriting.table.trigger.bad')     },
-          { element: tContent('usage.uxWriting.table.close.name'),       rules: tContent('usage.uxWriting.table.close.format'),       do: tContent('usage.uxWriting.table.close.good'),       dont: tContent('usage.uxWriting.table.close.bad')       },
+          { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
+          { element: tContent('usage.uxWriting.table.close.name'), rules: tContent('usage.uxWriting.table.close.format'), do: tContent('usage.uxWriting.table.close.good'), dont: tContent('usage.uxWriting.table.close.bad') },
         ],
       }"
       :do="{
@@ -549,7 +560,10 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <div style="contain: layout" class="w-full">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
           <Drawer :default-open="true">
             <DrawerContent>
               <DrawerHeader>
@@ -559,7 +573,9 @@ const a11yCritCols = computed(() => ({
               <DrawerFooter>
                 <Button>Salvar</Button>
                 <DrawerClose as-child>
-                  <Button variant="outline">Cancelar</Button>
+                  <Button variant="outline">
+                    Cancelar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -567,16 +583,23 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #dont-preview-0>
-        <div style="contain: layout" class="w-full">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
           <Drawer :default-open="true">
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle class="sr-only">Sem título visível</DrawerTitle>
+                <DrawerTitle class="sr-only">
+                  Sem título visível
+                </DrawerTitle>
                 <DrawerDescription>Conteúdo sem título — leitor de tela não anuncia.</DrawerDescription>
               </DrawerHeader>
               <DrawerFooter>
                 <DrawerClose as-child>
-                  <Button variant="outline">Fechar</Button>
+                  <Button variant="outline">
+                    Fechar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -584,8 +607,14 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #do-preview-1>
-        <div style="contain: layout" class="w-full">
-          <Drawer :default-open="true" direction="bottom">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
+          <Drawer
+            :default-open="true"
+            direction="bottom"
+          >
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>Filtros</DrawerTitle>
@@ -594,7 +623,9 @@ const a11yCritCols = computed(() => ({
               <DrawerFooter>
                 <Button>Aplicar</Button>
                 <DrawerClose as-child>
-                  <Button variant="outline">Cancelar</Button>
+                  <Button variant="outline">
+                    Cancelar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -602,7 +633,10 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #dont-preview-1>
-        <div style="contain: layout" class="w-full">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
           <Drawer :default-open="true">
             <DrawerContent>
               <DrawerHeader>
@@ -611,7 +645,9 @@ const a11yCritCols = computed(() => ({
               </DrawerHeader>
               <DrawerFooter>
                 <DrawerClose as-child>
-                  <Button variant="outline">Fechar</Button>
+                  <Button variant="outline">
+                    Fechar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -627,10 +663,19 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <div style="contain: layout" class="w-full">
-          <Drawer :default-open="true" direction="bottom">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
+          <Drawer
+            :default-open="true"
+            direction="bottom"
+          >
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('variants.items.bottom') }}</DrawerTitle>
@@ -638,7 +683,9 @@ const a11yCritCols = computed(() => ({
               </DrawerHeader>
               <DrawerFooter>
                 <DrawerClose as-child>
-                  <Button variant="outline">Fechar</Button>
+                  <Button variant="outline">
+                    Fechar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -646,8 +693,14 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout" class="w-full">
-          <Drawer :default-open="true" direction="top">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
+          <Drawer
+            :default-open="true"
+            direction="top"
+          >
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('variants.items.top') }}</DrawerTitle>
@@ -655,7 +708,9 @@ const a11yCritCols = computed(() => ({
               </DrawerHeader>
               <DrawerFooter>
                 <DrawerClose as-child>
-                  <Button variant="outline">Fechar</Button>
+                  <Button variant="outline">
+                    Fechar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -663,8 +718,14 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout" class="w-full">
-          <Drawer :default-open="true" direction="left">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
+          <Drawer
+            :default-open="true"
+            direction="left"
+          >
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('variants.items.left') }}</DrawerTitle>
@@ -672,7 +733,9 @@ const a11yCritCols = computed(() => ({
               </DrawerHeader>
               <DrawerFooter>
                 <DrawerClose as-child>
-                  <Button variant="outline">Fechar</Button>
+                  <Button variant="outline">
+                    Fechar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -680,8 +743,14 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-3>
-        <div style="contain: layout" class="w-full">
-          <Drawer :default-open="true" direction="right">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
+          <Drawer
+            :default-open="true"
+            direction="right"
+          >
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('variants.items.right') }}</DrawerTitle>
@@ -689,7 +758,9 @@ const a11yCritCols = computed(() => ({
               </DrawerHeader>
               <DrawerFooter>
                 <DrawerClose as-child>
-                  <Button variant="outline">Fechar</Button>
+                  <Button variant="outline">
+                    Fechar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -706,10 +777,15 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div style="contain: layout" class="w-full">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
           <Drawer>
             <DrawerTrigger as-child>
-              <Button variant="outline">Editar perfil</Button>
+              <Button variant="outline">
+                Editar perfil
+              </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
@@ -723,13 +799,18 @@ const a11yCritCols = computed(() => ({
                 </Label>
                 <Label class="grid gap-1 text-sm">
                   E-mail
-                  <Input type="email" default-value="maria@exemplo.com" />
+                  <Input
+                    type="email"
+                    default-value="maria@exemplo.com"
+                  />
                 </Label>
               </form>
               <DrawerFooter>
                 <Button>Salvar alterações</Button>
                 <DrawerClose as-child>
-                  <Button variant="outline">Cancelar</Button>
+                  <Button variant="outline">
+                    Cancelar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -737,10 +818,15 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout" class="w-full">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
           <Drawer>
             <DrawerTrigger as-child>
-              <Button variant="outline">Remover item</Button>
+              <Button variant="outline">
+                Remover item
+              </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
@@ -748,9 +834,13 @@ const a11yCritCols = computed(() => ({
                 <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
               </DrawerHeader>
               <DrawerFooter>
-                <Button variant="destructive">Remover</Button>
+                <Button variant="destructive">
+                  Remover
+                </Button>
                 <DrawerClose as-child>
-                  <Button variant="outline">Cancelar</Button>
+                  <Button variant="outline">
+                    Cancelar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -758,10 +848,15 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout" class="w-full">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
           <Drawer>
             <DrawerTrigger as-child>
-              <Button variant="outline">Ler termos</Button>
+              <Button variant="outline">
+                Ler termos
+              </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
@@ -769,12 +864,19 @@ const a11yCritCols = computed(() => ({
                 <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
               </DrawerHeader>
               <div class="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
-                <p v-for="i in 12" :key="i">Parágrafo {{ i }}: termos longos para garantir scroll interno.</p>
+                <p
+                  v-for="i in 12"
+                  :key="i"
+                >
+                  Parágrafo {{ i }}: termos longos para garantir scroll interno.
+                </p>
               </div>
               <DrawerFooter>
                 <Button>Aceitar termos</Button>
                 <DrawerClose as-child>
-                  <Button variant="outline">Cancelar</Button>
+                  <Button variant="outline">
+                    Cancelar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -782,21 +884,30 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-3>
-        <div style="contain: layout" class="w-full">
+        <div
+          style="contain: layout"
+          class="w-full"
+        >
           <Drawer direction="right">
             <DrawerTrigger as-child>
-              <Button variant="outline">Abrir filtros</Button>
+              <Button variant="outline">
+                Abrir filtros
+              </Button>
             </DrawerTrigger>
             <DrawerContent class="max-w-md">
               <DrawerHeader>
                 <DrawerTitle>Filtros</DrawerTitle>
                 <DrawerDescription>Refine os resultados.</DrawerDescription>
               </DrawerHeader>
-              <div class="px-4 text-sm text-muted-foreground">Conteúdo dos filtros…</div>
+              <div class="px-4 text-sm text-muted-foreground">
+                Conteúdo dos filtros…
+              </div>
               <DrawerFooter>
                 <Button>Aplicar</Button>
                 <DrawerClose as-child>
-                  <Button variant="outline">Cancelar</Button>
+                  <Button variant="outline">
+                    Cancelar
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -850,10 +961,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

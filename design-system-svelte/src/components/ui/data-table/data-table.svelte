@@ -117,7 +117,6 @@
     columnSizingStart: [],
   });
   let draggedColumnId = $state<string | null>(null);
-  // eslint-disable-next-line svelte/state_referenced_locally
   let pagination = $state<{ pageIndex: number; pageSize: number }>({ pageIndex: 0, pageSize });
 
   function apply<T>(prev: T, updater: Updater<T>): T {

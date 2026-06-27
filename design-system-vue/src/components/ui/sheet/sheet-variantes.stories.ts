@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Sheet,
   SheetClose,
@@ -80,7 +80,6 @@ export const Right: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
@@ -109,7 +108,6 @@ export const Left: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
@@ -137,7 +135,6 @@ export const Top: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
@@ -171,7 +168,6 @@ export const Bottom: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');

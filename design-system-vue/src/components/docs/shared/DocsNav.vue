@@ -23,12 +23,19 @@ function scrollTo(id: string) {
 
 <template>
   <div class="space-y-6">
-    <div v-for="group in groups" :key="group.label">
+    <div
+      v-for="group in groups"
+      :key="group.label"
+    >
       <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2">
         {{ group.label }}
       </p>
       <ul class="list-none space-y-1 p-0 m-0">
-        <li v-for="section in group.sections" :key="section.id" class="list-none">
+        <li
+          v-for="section in group.sections"
+          :key="section.id"
+          class="list-none"
+        >
           <button
             type="button"
             :aria-current="activeSection === section.id ? 'location' : undefined"

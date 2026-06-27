@@ -368,7 +368,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="checkbox">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="checkbox"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -384,26 +388,47 @@ const visualTestItems = computed(() => [
       <div class="flex flex-wrap gap-6">
         <div class="flex items-center gap-2">
           <Checkbox id="demo-terms" />
-          <label for="demo-terms" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label
+            for="demo-terms"
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
             {{ tContent('demonstration.labels.acceptTerms') }}
           </label>
         </div>
         <div class="flex items-center gap-2">
-          <Checkbox id="demo-newsletter" :checked="true" />
-          <label for="demo-newsletter" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <Checkbox
+            id="demo-newsletter"
+            :checked="true"
+          />
+          <label
+            for="demo-newsletter"
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
             {{ tContent('demonstration.labels.newsletter') }}
           </label>
         </div>
         <div class="flex items-center gap-2">
-          <Checkbox id="demo-session" :disabled="true" />
-          <label for="demo-session" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <Checkbox
+            id="demo-session"
+            :disabled="true"
+          />
+          <label
+            for="demo-session"
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
             {{ tContent('demonstration.labels.rememberMe') }}
           </label>
         </div>
         <div class="flex items-start gap-2">
-          <Checkbox id="demo-notif" class="mt-0.5" />
+          <Checkbox
+            id="demo-notif"
+            class="mt-0.5"
+          />
           <div class="space-y-1">
-            <label for="demo-notif" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <label
+              for="demo-notif"
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
               {{ tContent('demonstration.labels.notifications') }}
             </label>
             <p class="text-xs text-muted-foreground">
@@ -491,7 +516,10 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <div class="flex items-center gap-2">
           <Checkbox id="dodont-do-1" />
-          <label for="dodont-do-1" class="text-sm font-medium leading-none">
+          <label
+            for="dodont-do-1"
+            class="text-sm font-medium leading-none"
+          >
             Receber notificações por email
           </label>
         </div>
@@ -499,7 +527,10 @@ const visualTestItems = computed(() => [
       <template #dont-preview-0>
         <div class="flex items-center gap-2">
           <Checkbox id="dodont-dont-1" />
-          <label for="dodont-dont-1" class="text-sm font-medium leading-none">
+          <label
+            for="dodont-dont-1"
+            class="text-sm font-medium leading-none"
+          >
             Email
           </label>
         </div>
@@ -508,14 +539,22 @@ const visualTestItems = computed(() => [
       <!-- Pair 2: fieldset vs checkboxes soltos -->
       <template #do-preview-1>
         <fieldset class="space-y-2 border rounded-md p-3 w-full">
-          <legend class="text-xs font-semibold px-1">Notificações</legend>
+          <legend class="text-xs font-semibold px-1">
+            Notificações
+          </legend>
           <div class="flex items-center gap-2">
             <Checkbox id="dodont-do-2a" />
-            <label for="dodont-do-2a" class="text-sm font-medium leading-none">Email</label>
+            <label
+              for="dodont-do-2a"
+              class="text-sm font-medium leading-none"
+            >Email</label>
           </div>
           <div class="flex items-center gap-2">
             <Checkbox id="dodont-do-2b" />
-            <label for="dodont-do-2b" class="text-sm font-medium leading-none">Push</label>
+            <label
+              for="dodont-do-2b"
+              class="text-sm font-medium leading-none"
+            >Push</label>
           </div>
         </fieldset>
       </template>
@@ -523,11 +562,17 @@ const visualTestItems = computed(() => [
         <div class="space-y-2">
           <div class="flex items-center gap-2">
             <Checkbox id="dodont-dont-2a" />
-            <label for="dodont-dont-2a" class="text-sm font-medium leading-none">Email</label>
+            <label
+              for="dodont-dont-2a"
+              class="text-sm font-medium leading-none"
+            >Email</label>
           </div>
           <div class="flex items-center gap-2">
             <Checkbox id="dodont-dont-2b" />
-            <label for="dodont-dont-2b" class="text-sm font-medium leading-none">Push</label>
+            <label
+              for="dodont-dont-2b"
+              class="text-sm font-medium leading-none"
+            >Push</label>
           </div>
         </div>
       </template>
@@ -543,12 +588,19 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" component-slug="checkbox">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      component-slug="checkbox"
+    >
       <!-- default: unchecked -->
       <template #variant-preview-0>
         <div class="flex items-center gap-2">
           <Checkbox id="variant-default" />
-          <label for="variant-default" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label
+            for="variant-default"
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
             Aceito os termos e condições
           </label>
         </div>
@@ -557,8 +609,14 @@ const visualTestItems = computed(() => [
       <!-- checked -->
       <template #variant-preview-1>
         <div class="flex items-center gap-2">
-          <Checkbox id="variant-checked" :checked="true" />
-          <label for="variant-checked" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <Checkbox
+            id="variant-checked"
+            :checked="true"
+          />
+          <label
+            for="variant-checked"
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
             Aceito os termos e condições
           </label>
         </div>
@@ -568,7 +626,10 @@ const visualTestItems = computed(() => [
       <template #variant-preview-2>
         <div class="flex items-center gap-2">
           <Checkbox id="variant-with-label" />
-          <label for="variant-with-label" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label
+            for="variant-with-label"
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
             Receber novidades por email
           </label>
         </div>
@@ -577,9 +638,15 @@ const visualTestItems = computed(() => [
       <!-- withDescription -->
       <template #variant-preview-3>
         <div class="flex items-start gap-2">
-          <Checkbox id="variant-with-desc" class="mt-0.5" />
+          <Checkbox
+            id="variant-with-desc"
+            class="mt-0.5"
+          />
           <div class="space-y-1">
-            <label for="variant-with-desc" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <label
+              for="variant-with-desc"
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
               Receber novidades por email
             </label>
             <p class="text-sm text-muted-foreground">
@@ -601,7 +668,10 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <div class="flex items-center gap-2">
           <Checkbox id="cb-tos" />
-          <Label for="cb-tos" class="text-sm font-medium leading-none cursor-pointer">
+          <Label
+            for="cb-tos"
+            class="text-sm font-medium leading-none cursor-pointer"
+          >
             Aceito os termos e condições
           </Label>
         </div>
@@ -610,7 +680,10 @@ const visualTestItems = computed(() => [
       <!-- 1: withDescription -->
       <template #variant-preview-1>
         <div class="flex gap-2 items-start">
-          <Checkbox id="cb-newsletter" class="mt-0.5" />
+          <Checkbox
+            id="cb-newsletter"
+            class="mt-0.5"
+          />
           <div class="flex flex-col gap-1">
             <Label for="cb-newsletter">Receber novidades por email</Label>
             <p class="text-sm text-muted-foreground">
@@ -623,7 +696,9 @@ const visualTestItems = computed(() => [
       <!-- 2: fieldset -->
       <template #variant-preview-2>
         <fieldset class="border rounded-lg p-4 space-y-3 w-72">
-          <legend class="text-sm font-semibold px-1">Notificações</legend>
+          <legend class="text-sm font-semibold px-1">
+            Notificações
+          </legend>
           <div class="flex items-center gap-2">
             <Checkbox id="notif-email" />
             <Label for="notif-email">Receber novidades por email</Label>
@@ -643,21 +718,36 @@ const visualTestItems = computed(() => [
       <template #variant-preview-3>
         <div class="space-y-3 w-72">
           <div class="flex items-center gap-2 pb-2 border-b">
-            <Checkbox id="cb-select-all" v-model:checked="selectAllValue" />
-            <Label for="cb-select-all" class="text-sm font-semibold leading-none">
+            <Checkbox
+              id="cb-select-all"
+              v-model:checked="selectAllValue"
+            />
+            <Label
+              for="cb-select-all"
+              class="text-sm font-semibold leading-none"
+            >
               Selecionar todos os itens
             </Label>
           </div>
           <div class="flex items-center gap-2 pl-2">
-            <Checkbox id="cb-select-child-1" v-model:checked="selectAllChild1" />
+            <Checkbox
+              id="cb-select-child-1"
+              v-model:checked="selectAllChild1"
+            />
             <Label for="cb-select-child-1">Receber novidades por email</Label>
           </div>
           <div class="flex items-center gap-2 pl-2">
-            <Checkbox id="cb-select-child-2" v-model:checked="selectAllChild2" />
+            <Checkbox
+              id="cb-select-child-2"
+              v-model:checked="selectAllChild2"
+            />
             <Label for="cb-select-child-2">Receber notificações push</Label>
           </div>
           <div class="flex items-center gap-2 pl-2">
-            <Checkbox id="cb-select-child-3" v-model:checked="selectAllChild3" />
+            <Checkbox
+              id="cb-select-child-3"
+              v-model:checked="selectAllChild3"
+            />
             <Label for="cb-select-child-3">Alertas por SMS</Label>
           </div>
         </div>
@@ -666,28 +756,42 @@ const visualTestItems = computed(() => [
       <!-- 4: inList -->
       <template #variant-preview-4>
         <div class="space-y-2 w-80">
-          <p class="text-sm font-semibold mb-3">Preferências de contato</p>
+          <p class="text-sm font-semibold mb-3">
+            Preferências de contato
+          </p>
           <div class="flex items-center justify-between rounded-md border px-3 py-2">
             <div class="flex items-center gap-2">
-              <Checkbox id="list-email" v-model:checked="inListEmail" />
+              <Checkbox
+                id="list-email"
+                v-model:checked="inListEmail"
+              />
               <Label for="list-email">Receber novidades por email</Label>
             </div>
           </div>
           <div class="flex items-center justify-between rounded-md border px-3 py-2">
             <div class="flex items-center gap-2">
-              <Checkbox id="list-push" v-model:checked="inListPush" />
+              <Checkbox
+                id="list-push"
+                v-model:checked="inListPush"
+              />
               <Label for="list-push">Receber notificações push</Label>
             </div>
           </div>
           <div class="flex items-center justify-between rounded-md border px-3 py-2">
             <div class="flex items-center gap-2">
-              <Checkbox id="list-sms" v-model:checked="inListSms" />
+              <Checkbox
+                id="list-sms"
+                v-model:checked="inListSms"
+              />
               <Label for="list-sms">Alertas por SMS</Label>
             </div>
           </div>
           <div class="flex items-center justify-between rounded-md border px-3 py-2">
             <div class="flex items-center gap-2">
-              <Checkbox id="list-newsletter" v-model:checked="inListNewsletter" />
+              <Checkbox
+                id="list-newsletter"
+                v-model:checked="inListNewsletter"
+              />
               <Label for="list-newsletter">Newsletter semanal</Label>
             </div>
           </div>
@@ -741,10 +845,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────────── -->
     <DocsAnalytics

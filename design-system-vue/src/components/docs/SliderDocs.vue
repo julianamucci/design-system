@@ -448,7 +448,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="slider">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="slider"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -466,7 +470,10 @@ const visualTestItems = computed(() => [
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <Label>{{ tContent('demonstration.labels.volume') }}</Label>
-            <span aria-live="polite" class="text-sm tabular-nums text-foreground">
+            <span
+              aria-live="polite"
+              class="text-sm tabular-nums text-foreground"
+            >
               {{ volumeValue[0] }}%
             </span>
           </div>
@@ -483,7 +490,10 @@ const visualTestItems = computed(() => [
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <Label>{{ tContent('demonstration.labels.priceRange') }}</Label>
-            <span aria-live="polite" class="text-sm tabular-nums text-foreground">
+            <span
+              aria-live="polite"
+              class="text-sm tabular-nums text-foreground"
+            >
               R$ {{ priceValue[0] }} — R$ {{ priceValue[1] }}
             </span>
           </div>
@@ -500,7 +510,10 @@ const visualTestItems = computed(() => [
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <Label>{{ tContent('demonstration.labels.brightness') }}</Label>
-            <span aria-live="polite" class="text-sm tabular-nums text-foreground">
+            <span
+              aria-live="polite"
+              class="text-sm tabular-nums text-foreground"
+            >
               {{ verticalValue[0] }}%
             </span>
           </div>
@@ -562,9 +575,9 @@ const visualTestItems = computed(() => [
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.ariaLabel.name'),    rules: tContent('usage.uxWriting.table.ariaLabel.format'),    do: tContent('usage.uxWriting.table.ariaLabel.good'),    dont: tContent('usage.uxWriting.table.ariaLabel.bad')    },
+          { element: tContent('usage.uxWriting.table.ariaLabel.name'), rules: tContent('usage.uxWriting.table.ariaLabel.format'), do: tContent('usage.uxWriting.table.ariaLabel.good'), dont: tContent('usage.uxWriting.table.ariaLabel.bad') },
           { element: tContent('usage.uxWriting.table.valueDisplay.name'), rules: tContent('usage.uxWriting.table.valueDisplay.format'), do: tContent('usage.uxWriting.table.valueDisplay.good'), dont: tContent('usage.uxWriting.table.valueDisplay.bad') },
-          { element: tContent('usage.uxWriting.table.range.name'),        rules: tContent('usage.uxWriting.table.range.format'),        do: tContent('usage.uxWriting.table.range.good'),        dont: tContent('usage.uxWriting.table.range.bad')        },
+          { element: tContent('usage.uxWriting.table.range.name'), rules: tContent('usage.uxWriting.table.range.format'), do: tContent('usage.uxWriting.table.range.good'), dont: tContent('usage.uxWriting.table.range.bad') },
         ],
       }"
       :do="{
@@ -610,26 +623,49 @@ const visualTestItems = computed(() => [
         <div class="space-y-2 w-64">
           <div class="flex items-center justify-between">
             <Label>Volume</Label>
-            <span aria-live="polite" class="text-sm tabular-nums">75%</span>
+            <span
+              aria-live="polite"
+              class="text-sm tabular-nums"
+            >75%</span>
           </div>
-          <Slider :model-value="[75]" :min="0" :max="100" aria-label="Volume" />
+          <Slider
+            :model-value="[75]"
+            :min="0"
+            :max="100"
+            aria-label="Volume"
+          />
         </div>
       </template>
       <template #dont-preview-0>
         <div class="w-64">
-          <Slider :model-value="[75]" :min="0" :max="100" aria-label="Volume" />
+          <Slider
+            :model-value="[75]"
+            :min="0"
+            :max="100"
+            aria-label="Volume"
+          />
         </div>
       </template>
 
       <!-- Pair 2: aria-label descritivo vs genérico -->
       <template #do-preview-1>
         <div class="w-64">
-          <Slider :model-value="[40]" :min="0" :max="100" aria-label="Brilho" />
+          <Slider
+            :model-value="[40]"
+            :min="0"
+            :max="100"
+            aria-label="Brilho"
+          />
         </div>
       </template>
       <template #dont-preview-1>
         <div class="w-64">
-          <Slider :model-value="[40]" :min="0" :max="100" aria-label="Slider" />
+          <Slider
+            :model-value="[40]"
+            :min="0"
+            :max="100"
+            aria-label="Slider"
+          />
         </div>
       </template>
     </DocsDoDont>
@@ -641,15 +677,27 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" component-slug="slider">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      component-slug="slider"
+    >
       <!-- single -->
       <template #variant-preview-0>
         <div class="w-64 space-y-2">
           <div class="flex items-center justify-between">
             <Label>Volume</Label>
-            <span aria-live="polite" class="text-sm tabular-nums">50%</span>
+            <span
+              aria-live="polite"
+              class="text-sm tabular-nums"
+            >50%</span>
           </div>
-          <Slider :model-value="[50]" :min="0" :max="100" aria-label="Volume" />
+          <Slider
+            :model-value="[50]"
+            :min="0"
+            :max="100"
+            aria-label="Volume"
+          />
         </div>
       </template>
 
@@ -658,16 +706,31 @@ const visualTestItems = computed(() => [
         <div class="w-64 space-y-2">
           <div class="flex items-center justify-between">
             <Label>Faixa de preço</Label>
-            <span aria-live="polite" class="text-sm tabular-nums">R$ 100 — R$ 400</span>
+            <span
+              aria-live="polite"
+              class="text-sm tabular-nums"
+            >R$ 100 — R$ 400</span>
           </div>
-          <Slider :model-value="[100, 400]" :min="0" :max="500" :step="10" aria-label="Faixa de preço" />
+          <Slider
+            :model-value="[100, 400]"
+            :min="0"
+            :max="500"
+            :step="10"
+            aria-label="Faixa de preço"
+          />
         </div>
       </template>
 
       <!-- vertical -->
       <template #variant-preview-2>
         <div class="h-40 flex justify-center">
-          <Slider :model-value="[60]" orientation="vertical" :min="0" :max="100" aria-label="Brilho" />
+          <Slider
+            :model-value="[60]"
+            orientation="vertical"
+            :min="0"
+            :max="100"
+            aria-label="Brilho"
+          />
         </div>
       </template>
     </DocsVariants>
@@ -683,9 +746,17 @@ const visualTestItems = computed(() => [
         <div class="space-y-3 w-72">
           <div class="flex items-center justify-between">
             <Label>Volume</Label>
-            <span aria-live="polite" class="text-sm tabular-nums">{{ compVolume[0] }}%</span>
+            <span
+              aria-live="polite"
+              class="text-sm tabular-nums"
+            >{{ compVolume[0] }}%</span>
           </div>
-          <Slider v-model="compVolume" :min="0" :max="100" aria-label="Volume" />
+          <Slider
+            v-model="compVolume"
+            :min="0"
+            :max="100"
+            aria-label="Volume"
+          />
         </div>
       </template>
 
@@ -693,9 +764,18 @@ const visualTestItems = computed(() => [
         <div class="space-y-3 w-72">
           <div class="flex items-center justify-between">
             <Label>Brilho</Label>
-            <span aria-live="polite" class="text-sm tabular-nums">{{ compBrightness[0] }}%</span>
+            <span
+              aria-live="polite"
+              class="text-sm tabular-nums"
+            >{{ compBrightness[0] }}%</span>
           </div>
-          <Slider v-model="compBrightness" :min="0" :max="100" :step="5" aria-label="Brilho" />
+          <Slider
+            v-model="compBrightness"
+            :min="0"
+            :max="100"
+            :step="5"
+            aria-label="Brilho"
+          />
         </div>
       </template>
 
@@ -703,11 +783,20 @@ const visualTestItems = computed(() => [
         <div class="space-y-3 w-72">
           <div class="flex items-center justify-between">
             <Label>Faixa de preço</Label>
-            <span aria-live="polite" class="text-sm tabular-nums">
+            <span
+              aria-live="polite"
+              class="text-sm tabular-nums"
+            >
               R$ {{ compPrice[0] }} — R$ {{ compPrice[1] }}
             </span>
           </div>
-          <Slider v-model="compPrice" :min="0" :max="1000" :step="10" aria-label="Faixa de preço" />
+          <Slider
+            v-model="compPrice"
+            :min="0"
+            :max="1000"
+            :step="10"
+            aria-label="Faixa de preço"
+          />
         </div>
       </template>
 
@@ -720,7 +809,10 @@ const visualTestItems = computed(() => [
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <Label>Volume</Label>
-              <span aria-live="polite" class="text-sm tabular-nums">{{ compFormVolume[0] }}%</span>
+              <span
+                aria-live="polite"
+                class="text-sm tabular-nums"
+              >{{ compFormVolume[0] }}%</span>
             </div>
             <Slider
               v-model="compFormVolume"
@@ -730,8 +822,17 @@ const visualTestItems = computed(() => [
               @value-commit="onCompFormCommit"
             />
           </div>
-          <Button type="submit" size="sm" class="self-start">Salvar</Button>
-          <p class="text-xs text-muted-foreground" aria-live="polite">
+          <Button
+            type="submit"
+            size="sm"
+            class="self-start"
+          >
+            Salvar
+          </Button>
+          <p
+            class="text-xs text-muted-foreground"
+            aria-live="polite"
+          >
             Último commit: {{ compFormCommitted }}%
           </p>
         </form>
@@ -782,10 +883,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────────── -->
     <DocsAnalytics

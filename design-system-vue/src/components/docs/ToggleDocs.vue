@@ -353,7 +353,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="toggle">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="toggle"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -371,22 +375,22 @@ const visualTestItems = computed(() => [
         <div class="flex items-center gap-1 rounded-md border p-1">
           <Toggle
             :model-value="demoBold"
-            @update:model-value="(v: boolean) => demoBold = v"
             :aria-label="tContent('demonstration.labels.bold')"
+            @update:model-value="(v: boolean) => demoBold = v"
           >
             <Bold aria-hidden="true" />
           </Toggle>
           <Toggle
             :model-value="demoItalic"
-            @update:model-value="(v: boolean) => demoItalic = v"
             :aria-label="tContent('demonstration.labels.italic')"
+            @update:model-value="(v: boolean) => demoItalic = v"
           >
             <Italic aria-hidden="true" />
           </Toggle>
           <Toggle
             :model-value="demoUnderline"
-            @update:model-value="(v: boolean) => demoUnderline = v"
             :aria-label="tContent('demonstration.labels.underline')"
+            @update:model-value="(v: boolean) => demoUnderline = v"
           >
             <Underline aria-hidden="true" />
           </Toggle>
@@ -531,16 +535,28 @@ const visualTestItems = computed(() => [
       <!-- Pair 2: ToggleGroup vs múltiplos Toggle soltos -->
       <template #do-preview-1>
         <div class="flex items-center gap-1 rounded-md border p-1">
-          <Toggle aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
-          <Toggle aria-label="Itálico"><Italic aria-hidden="true" /></Toggle>
-          <Toggle aria-label="Sublinhado"><Underline aria-hidden="true" /></Toggle>
+          <Toggle aria-label="Negrito">
+            <Bold aria-hidden="true" />
+          </Toggle>
+          <Toggle aria-label="Itálico">
+            <Italic aria-hidden="true" />
+          </Toggle>
+          <Toggle aria-label="Sublinhado">
+            <Underline aria-hidden="true" />
+          </Toggle>
         </div>
       </template>
       <template #dont-preview-1>
         <div class="flex items-center gap-3">
-          <Toggle aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
-          <Toggle aria-label="Itálico"><Italic aria-hidden="true" /></Toggle>
-          <Toggle aria-label="Sublinhado"><Underline aria-hidden="true" /></Toggle>
+          <Toggle aria-label="Negrito">
+            <Bold aria-hidden="true" />
+          </Toggle>
+          <Toggle aria-label="Itálico">
+            <Italic aria-hidden="true" />
+          </Toggle>
+          <Toggle aria-label="Sublinhado">
+            <Underline aria-hidden="true" />
+          </Toggle>
         </div>
       </template>
     </DocsDoDont>
@@ -552,7 +568,11 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" component-slug="toggle">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      component-slug="toggle"
+    >
       <!-- default -->
       <template #variant-preview-0>
         <Toggle aria-label="Negrito">
@@ -562,7 +582,10 @@ const visualTestItems = computed(() => [
 
       <!-- outline -->
       <template #variant-preview-1>
-        <Toggle variant="outline" aria-label="Itálico">
+        <Toggle
+          variant="outline"
+          aria-label="Itálico"
+        >
           <Italic aria-hidden="true" />
         </Toggle>
       </template>
@@ -584,34 +607,73 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div role="group" aria-label="Formatação de texto" class="flex items-center gap-1 rounded-md border border-input p-1">
-          <Toggle aria-label="Negrito" :model-value="true">
-            <Bold class="h-4 w-4" aria-hidden="true" />
+        <div
+          role="group"
+          aria-label="Formatação de texto"
+          class="flex items-center gap-1 rounded-md border border-input p-1"
+        >
+          <Toggle
+            aria-label="Negrito"
+            :model-value="true"
+          >
+            <Bold
+              class="h-4 w-4"
+              aria-hidden="true"
+            />
           </Toggle>
           <Toggle aria-label="Itálico">
-            <Italic class="h-4 w-4" aria-hidden="true" />
+            <Italic
+              class="h-4 w-4"
+              aria-hidden="true"
+            />
           </Toggle>
           <Toggle aria-label="Sublinhado">
-            <Underline class="h-4 w-4" aria-hidden="true" />
+            <Underline
+              class="h-4 w-4"
+              aria-hidden="true"
+            />
           </Toggle>
         </div>
       </template>
       <template #variant-preview-1>
         <Toggle variant="outline">
-          <Eye class="h-4 w-4" aria-hidden="true" />
+          <Eye
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
           Mostrar ocultos
         </Toggle>
       </template>
       <template #variant-preview-2>
         <div class="flex items-center gap-3">
-          <Toggle variant="outline" size="sm" aria-label="Negrito (sm)">
-            <Bold class="h-4 w-4" aria-hidden="true" />
+          <Toggle
+            variant="outline"
+            size="sm"
+            aria-label="Negrito (sm)"
+          >
+            <Bold
+              class="h-4 w-4"
+              aria-hidden="true"
+            />
           </Toggle>
-          <Toggle variant="outline" aria-label="Negrito (default)">
-            <Bold class="h-4 w-4" aria-hidden="true" />
+          <Toggle
+            variant="outline"
+            aria-label="Negrito (default)"
+          >
+            <Bold
+              class="h-4 w-4"
+              aria-hidden="true"
+            />
           </Toggle>
-          <Toggle variant="outline" size="lg" aria-label="Negrito (lg)">
-            <Bold class="h-4 w-4" aria-hidden="true" />
+          <Toggle
+            variant="outline"
+            size="lg"
+            aria-label="Negrito (lg)"
+          >
+            <Bold
+              class="h-4 w-4"
+              aria-hidden="true"
+            />
           </Toggle>
         </div>
       </template>
@@ -620,11 +682,20 @@ const visualTestItems = computed(() => [
           <span class="text-sm font-medium">Filtros de exibição</span>
           <div class="flex flex-wrap gap-2">
             <Toggle variant="outline">
-              <Eye class="h-4 w-4" aria-hidden="true" />
+              <Eye
+                class="h-4 w-4"
+                aria-hidden="true"
+              />
               Mostrar ocultos
             </Toggle>
-            <Toggle variant="outline" :model-value="true">
-              <List class="h-4 w-4" aria-hidden="true" />
+            <Toggle
+              variant="outline"
+              :model-value="true"
+            >
+              <List
+                class="h-4 w-4"
+                aria-hidden="true"
+              />
               Visão compacta
             </Toggle>
           </div>
@@ -678,10 +749,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────────── -->
     <DocsAnalytics

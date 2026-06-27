@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import DataTable from './data-table.svelte';
 import { invoices, baseColumns, type Invoice } from './data-table.fixtures';
 
