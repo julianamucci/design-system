@@ -38,14 +38,11 @@ const componentCategories = [
 ];
 
 export default function App() {
-  // Admin editor route: ?view=admin
-  if (new URLSearchParams(window.location.search).get('view') === 'admin') {
-    return <DocsEditor />;
-  }
-
   const [currentPage, setCurrentPage] = useState('home');
   const [isDark, setIsDark] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('default');
+
+  const isAdminRoute = new URLSearchParams(window.location.search).get('view') === 'admin';
 
   // Inicialização do tema por subdomínio
   useEffect(() => {
@@ -95,6 +92,10 @@ export default function App() {
 
     return <HomePage onNavigate={setCurrentPage} />;
   };
+
+  if (isAdminRoute) {
+    return <DocsEditor />;
+  }
 
   return (
     <SidebarProvider>

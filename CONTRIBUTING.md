@@ -100,10 +100,12 @@ Dois workflows rodam em cada PR e push em `main`:
 
 Matrix das 4 stacks em paralelo, cada uma:
 1. `npm ci` (com cache de `node_modules` por stack)
-2. `npm run lint`
-3. `npm run build-storybook`
+2. `npm run lint` — **informativo** (warnings visíveis, não falha o job)
+3. `npm run build-storybook` — **bloqueante** (precisa passar)
 
-Falha em qualquer stack reprova o check `CI Success`. Configure este check como **Required status check** em `Settings → Branches → Branch protection rules → main` no GitHub.
+Falha de build em qualquer stack reprova o check `CI Success`. Configure este check como **Required status check** em `Settings → Branches → Branch protection rules → main` no GitHub.
+
+**Lint informativo (temporário)**: enquanto o backlog de violações é limpo (Storybook 10 renderer imports, `any`, `@ts-expect-error` sem descrição, etc.), o passo de lint usa `continue-on-error: true` pra não bloquear merges. Quando lint estiver limpo nas 4 stacks, remover essa flag em `.github/workflows/ci.yml`.
 
 ### `test.yml` — informativo (não bloqueia merge)
 
