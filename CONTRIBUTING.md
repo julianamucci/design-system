@@ -86,6 +86,12 @@ Em seguida, adicione uma entrada em `patches.md` no formato do template document
 - Adicione `aria-label` na story se faltar contexto
 - Configuração de ferramenta (axe rules suppression para falsos-positivos conhecidos) é OK quando documentada com justificativa em `.storybook/test-runner.ts` e/ou `patches.md`
 
+### Pre-commit hook automático
+
+A raiz tem um hook Husky (`.husky/pre-commit`) que bloqueia commits introduzindo qualquer um dos padrões proibidos acima em arquivos `*.stories.*`, `*.test.*` ou `*.spec.*`. O hook é instalado automaticamente quando você roda `npm install` na raiz (graças ao script `prepare`).
+
+Se precisar fazer commit emergencial bypassando o hook (raríssimo — só pra release com bug upstream conhecido), use `git commit --no-verify` e abra issue documentando o motivo.
+
 ## Convenções de commit
 
 Use prefixos descritivos:
