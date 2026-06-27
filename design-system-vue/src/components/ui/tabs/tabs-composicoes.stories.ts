@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 import { Code2, Eye, Settings2, User, Shield } from 'lucide-vue-next';
 
@@ -69,7 +69,6 @@ export const Controlado: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const tabs = canvas.getAllByRole('tab');
 
     await step('Trocar para "Propriedades" atualiza o estado externo', async () => {
@@ -166,7 +165,6 @@ export const VerticalConfiguracoes: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const list = canvas.getByRole('tablist');
 
     await step('TabsList tem aria-orientation=vertical', async () => {
@@ -212,7 +210,6 @@ export const ModoManual: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const tabs = canvas.getAllByRole('tab');
 
     await step('ArrowRight move o foco sem ativar (mode manual)', async () => {

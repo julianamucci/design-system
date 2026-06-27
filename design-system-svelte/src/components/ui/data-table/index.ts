@@ -7,7 +7,9 @@ import type {
 } from '@tanstack/table-core';
 
 declare module '@tanstack/table-core' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // TData/TValue precisam casar com a assinatura original do TanStack pra
+  // module augmentation funcionar — não são "não usados" do ponto de vista do TS.
+  /* eslint-disable unused-imports/no-unused-vars */
   interface ColumnMeta<TData extends RowData, TValue> {
     filter?: { type: 'text' | 'select'; options?: string[]; placeholder?: string };
     editable?: boolean;
@@ -18,10 +20,10 @@ declare module '@tanstack/table-core' {
     /** Svelte-only: classes Tailwind extras aplicadas no <td> de cada célula da coluna. */
     cellClass?: string;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface TableMeta<TData extends RowData> {
     updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
   }
+  /* eslint-enable unused-imports/no-unused-vars */
 }
 
 export type DataTableColumn<TData, TValue = unknown> = ColumnDef<TData, TValue>;

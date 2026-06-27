@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Drawer,
   DrawerClose,
@@ -46,7 +46,6 @@ const sharedComponents = {
 };
 
 async function expectDirection(expected: string) {
-  const body = within(document.body);
   const dialog = await waitForPortal('dialog');
   await expect(dialog).toBeVisible();
   const content = document.querySelector('[data-slot="drawer-content"]') as HTMLElement | null;

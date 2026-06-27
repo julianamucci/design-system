@@ -437,14 +437,20 @@ watch(
 </script>
 
 <template>
-  <div data-slot="data-table" :class="cn('flex flex-col gap-3', props.class)">
+  <div
+    data-slot="data-table"
+    :class="cn('flex flex-col gap-3', props.class)"
+  >
     <!-- Toolbar -->
     <div
       v-if="enableGlobalFilter || enableColumnVisibility"
       data-slot="data-table-toolbar"
       class="flex items-center gap-2"
     >
-      <div v-if="enableGlobalFilter" class="relative max-w-sm flex-1">
+      <div
+        v-if="enableGlobalFilter"
+        class="relative max-w-sm flex-1"
+      >
         <Search
           aria-hidden="true"
           class="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -458,12 +464,19 @@ watch(
       </div>
       <DropdownMenu v-if="enableColumnVisibility">
         <DropdownMenuTrigger as-child>
-          <Button variant="outline" size="sm" class="ml-auto">
+          <Button
+            variant="outline"
+            size="sm"
+            class="ml-auto"
+          >
             <Settings2 aria-hidden="true" />
             Colunas
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" class="w-64">
+        <DropdownMenuContent
+          align="end"
+          class="w-64"
+        >
           <DropdownMenuGroup>
             <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -480,7 +493,10 @@ watch(
                 >
                   {{ flexHeaderLabel(column.columnDef.header) ?? column.id }}
                 </DropdownMenuCheckboxItem>
-                <div v-if="enableColumnPinning" class="flex shrink-0 pr-1">
+                <div
+                  v-if="enableColumnPinning"
+                  class="flex shrink-0 pr-1"
+                >
                   <button
                     type="button"
                     :aria-label="pinLabel(column)"
@@ -497,7 +513,11 @@ watch(
                       aria-hidden="true"
                       class="size-3.5"
                     />
-                    <Pin v-else aria-hidden="true" class="size-3.5 -rotate-45" />
+                    <Pin
+                      v-else
+                      aria-hidden="true"
+                      class="size-3.5 -rotate-45"
+                    />
                   </button>
                 </div>
               </div>
@@ -611,7 +631,10 @@ watch(
                       class="size-3.5 text-muted-foreground"
                     />
                   </button>
-                  <div v-else class="flex-1">
+                  <div
+                    v-else
+                    class="flex-1"
+                  >
                     <FlexRender
                       :render="header.column.columnDef.header"
                       :props="header.getContext()"
@@ -665,7 +688,9 @@ watch(
                   class="h-7 w-full rounded-md border border-input bg-transparent px-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
                   @change="(e) => header.column.setFilterValue((e.target as HTMLSelectElement).value || undefined)"
                 >
-                  <option value="">Todos</option>
+                  <option value="">
+                    Todos
+                  </option>
                   <option
                     v-for="opt in header.column.columnDef.meta.filter.options ?? []"
                     :key="opt"
@@ -683,13 +708,22 @@ watch(
                   @update:model-value="(v) => header.column.setFilterValue(v)"
                 />
               </template>
-              <span v-else class="sr-only">Sem filtro</span>
+              <span
+                v-else
+                class="sr-only"
+              >Sem filtro</span>
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <tr v-if="paddingTop > 0" aria-hidden="true">
-            <td :colspan="visibleLeafColumns" :style="{ height: `${paddingTop}px` }" />
+          <tr
+            v-if="paddingTop > 0"
+            aria-hidden="true"
+          >
+            <td
+              :colspan="visibleLeafColumns"
+              :style="{ height: `${paddingTop}px` }"
+            />
           </tr>
           <template v-if="rows.length">
             <TableRow
@@ -726,8 +760,14 @@ watch(
               {{ emptyMessage }}
             </TableCell>
           </TableRow>
-          <tr v-if="paddingBottom > 0" aria-hidden="true">
-            <td :colspan="visibleLeafColumns" :style="{ height: `${paddingBottom}px` }" />
+          <tr
+            v-if="paddingBottom > 0"
+            aria-hidden="true"
+          >
+            <td
+              :colspan="visibleLeafColumns"
+              :style="{ height: `${paddingBottom}px` }"
+            />
           </tr>
         </TableBody>
       </Table>

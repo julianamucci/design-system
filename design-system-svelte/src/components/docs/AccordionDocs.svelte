@@ -5,7 +5,7 @@
     AccordionItem,
     AccordionTrigger,
   } from '@/components/ui/accordion';
-  import { Info, AlertTriangle, CheckCircle, CheckCircle2 } from 'lucide-svelte';
+  import { Info, AlertTriangle, CheckCircle2 } from 'lucide-svelte';
   import { Badge } from '@/components/ui/badge';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';

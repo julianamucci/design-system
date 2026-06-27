@@ -4,7 +4,6 @@
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
   import { createActiveSection } from '@/lib/use-active-section.svelte';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
   import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.svelte';
   import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.svelte';

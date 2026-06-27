@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Card,
   CardHeader,
@@ -117,7 +117,6 @@ export const ProductCard: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('ProductCard tem header, content e footer renderizados', async () => {
       await expect(canvasElement.querySelector('[data-slot="card-header"]')).toBeInTheDocument();

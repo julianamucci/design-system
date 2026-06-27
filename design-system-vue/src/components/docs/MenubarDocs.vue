@@ -430,7 +430,11 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="menubar">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="menubar"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -443,7 +447,10 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full" style="contain: layout; min-height: 320px;">
+      <div
+        class="w-full"
+        style="contain: layout; min-height: 320px;"
+      >
         <Menubar>
           <MenubarMenu value="file">
             <MenubarTrigger>{{ stripHtml(tContent('demonstration.labels.fileMenu')) }}</MenubarTrigger>
@@ -474,17 +481,27 @@ const a11yCritCols = computed(() => ({
           <MenubarMenu value="view">
             <MenubarTrigger>{{ stripHtml(tContent('demonstration.labels.viewMenu')) }}</MenubarTrigger>
             <MenubarContent>
-              <MenubarCheckboxItem :checked="true">Barra de status</MenubarCheckboxItem>
-              <MenubarCheckboxItem :checked="false">Barra lateral</MenubarCheckboxItem>
+              <MenubarCheckboxItem :checked="true">
+                Barra de status
+              </MenubarCheckboxItem>
+              <MenubarCheckboxItem :checked="false">
+                Barra lateral
+              </MenubarCheckboxItem>
             </MenubarContent>
           </MenubarMenu>
           <MenubarMenu value="tools">
             <MenubarTrigger>{{ stripHtml(tContent('demonstration.labels.toolsMenu')) }}</MenubarTrigger>
             <MenubarContent>
               <MenubarRadioGroup model-value="grid">
-                <MenubarRadioItem value="list">Lista</MenubarRadioItem>
-                <MenubarRadioItem value="grid">Grid</MenubarRadioItem>
-                <MenubarRadioItem value="kanban">Kanban</MenubarRadioItem>
+                <MenubarRadioItem value="list">
+                  Lista
+                </MenubarRadioItem>
+                <MenubarRadioItem value="grid">
+                  Grid
+                </MenubarRadioItem>
+                <MenubarRadioItem value="kanban">
+                  Kanban
+                </MenubarRadioItem>
               </MenubarRadioGroup>
             </MenubarContent>
           </MenubarMenu>
@@ -537,9 +554,9 @@ const a11yCritCols = computed(() => ({
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.trigger.name'),     rules: tContent('usage.uxWriting.table.trigger.format'),     do: tContent('usage.uxWriting.table.trigger.good'),     dont: tContent('usage.uxWriting.table.trigger.bad')     },
-          { element: tContent('usage.uxWriting.table.item.name'),        rules: tContent('usage.uxWriting.table.item.format'),        do: tContent('usage.uxWriting.table.item.good'),        dont: tContent('usage.uxWriting.table.item.bad')        },
-          { element: tContent('usage.uxWriting.table.shortcut.name'),    rules: tContent('usage.uxWriting.table.shortcut.format'),    do: tContent('usage.uxWriting.table.shortcut.good'),    dont: tContent('usage.uxWriting.table.shortcut.bad')    },
+          { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
+          { element: tContent('usage.uxWriting.table.item.name'), rules: tContent('usage.uxWriting.table.item.format'), do: tContent('usage.uxWriting.table.item.good'), dont: tContent('usage.uxWriting.table.item.bad') },
+          { element: tContent('usage.uxWriting.table.shortcut.name'), rules: tContent('usage.uxWriting.table.shortcut.format'), do: tContent('usage.uxWriting.table.shortcut.good'), dont: tContent('usage.uxWriting.table.shortcut.bad') },
           { element: tContent('usage.uxWriting.table.destructive.name'), rules: tContent('usage.uxWriting.table.destructive.format'), do: tContent('usage.uxWriting.table.destructive.good'), dont: tContent('usage.uxWriting.table.destructive.bad') },
         ],
       }"
@@ -572,23 +589,40 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <div style="contain: layout; min-height: 80px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 80px;"
+          class="w-full"
+        >
           <Menubar>
-            <MenubarMenu value="file"><MenubarTrigger>Arquivo</MenubarTrigger><MenubarContent><MenubarItem>Novo</MenubarItem></MenubarContent></MenubarMenu>
-            <MenubarMenu value="edit"><MenubarTrigger>Editar</MenubarTrigger><MenubarContent><MenubarItem>Copiar</MenubarItem></MenubarContent></MenubarMenu>
-            <MenubarMenu value="view"><MenubarTrigger>Exibir</MenubarTrigger><MenubarContent><MenubarItem>Zoom</MenubarItem></MenubarContent></MenubarMenu>
+            <MenubarMenu value="file">
+              <MenubarTrigger>Arquivo</MenubarTrigger><MenubarContent><MenubarItem>Novo</MenubarItem></MenubarContent>
+            </MenubarMenu>
+            <MenubarMenu value="edit">
+              <MenubarTrigger>Editar</MenubarTrigger><MenubarContent><MenubarItem>Copiar</MenubarItem></MenubarContent>
+            </MenubarMenu>
+            <MenubarMenu value="view">
+              <MenubarTrigger>Exibir</MenubarTrigger><MenubarContent><MenubarItem>Zoom</MenubarItem></MenubarContent>
+            </MenubarMenu>
           </Menubar>
         </div>
       </template>
       <template #dont-preview-0>
-        <div style="contain: layout; min-height: 80px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 80px;"
+          class="w-full"
+        >
           <Menubar>
-            <MenubarMenu value="single"><MenubarTrigger>Menu</MenubarTrigger><MenubarContent><MenubarItem>Item</MenubarItem></MenubarContent></MenubarMenu>
+            <MenubarMenu value="single">
+              <MenubarTrigger>Menu</MenubarTrigger><MenubarContent><MenubarItem>Item</MenubarItem></MenubarContent>
+            </MenubarMenu>
           </Menubar>
         </div>
       </template>
       <template #do-preview-1>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
           <Menubar default-value="edit">
             <MenubarMenu value="edit">
               <MenubarTrigger>Editar</MenubarTrigger>
@@ -601,7 +635,10 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #dont-preview-1>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
           <Menubar default-value="file">
             <MenubarMenu value="file">
               <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -631,9 +668,15 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
           <Menubar default-value="file">
             <MenubarMenu value="file">
               <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -647,14 +690,19 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
           <Menubar default-value="file">
             <MenubarMenu value="file">
               <MenubarTrigger>Arquivo</MenubarTrigger>
               <MenubarContent>
                 <MenubarItem>Salvar</MenubarItem>
                 <MenubarSeparator />
-                <MenubarItem variant="destructive">Excluir arquivo</MenubarItem>
+                <MenubarItem variant="destructive">
+                  Excluir arquivo
+                </MenubarItem>
               </MenubarContent>
             </MenubarMenu>
           </Menubar>
@@ -670,7 +718,10 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
           <Menubar default-value="edit">
             <MenubarMenu value="edit">
               <MenubarTrigger>Editar</MenubarTrigger>
@@ -686,28 +737,50 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
           <Menubar default-value="view">
             <MenubarMenu value="view">
               <MenubarTrigger>Exibir</MenubarTrigger>
               <MenubarContent>
-                <MenubarCheckboxItem :checked="compShowSidebar" @update:checked="(v: boolean) => (compShowSidebar = v)">Sidebar</MenubarCheckboxItem>
-                <MenubarCheckboxItem :checked="compShowGrid" @update:checked="(v: boolean) => (compShowGrid = v)">Grid</MenubarCheckboxItem>
+                <MenubarCheckboxItem
+                  :checked="compShowSidebar"
+                  @update:checked="(v: boolean) => (compShowSidebar = v)"
+                >
+                  Sidebar
+                </MenubarCheckboxItem>
+                <MenubarCheckboxItem
+                  :checked="compShowGrid"
+                  @update:checked="(v: boolean) => (compShowGrid = v)"
+                >
+                  Grid
+                </MenubarCheckboxItem>
               </MenubarContent>
             </MenubarMenu>
           </Menubar>
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
           <Menubar default-value="theme">
             <MenubarMenu value="theme">
               <MenubarTrigger>Tema</MenubarTrigger>
               <MenubarContent>
                 <MenubarRadioGroup v-model="compTheme">
-                  <MenubarRadioItem value="light">Claro</MenubarRadioItem>
-                  <MenubarRadioItem value="dark">Escuro</MenubarRadioItem>
-                  <MenubarRadioItem value="system">Sistema</MenubarRadioItem>
+                  <MenubarRadioItem value="light">
+                    Claro
+                  </MenubarRadioItem>
+                  <MenubarRadioItem value="dark">
+                    Escuro
+                  </MenubarRadioItem>
+                  <MenubarRadioItem value="system">
+                    Sistema
+                  </MenubarRadioItem>
                 </MenubarRadioGroup>
               </MenubarContent>
             </MenubarMenu>
@@ -715,7 +788,10 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-3>
-        <div style="contain: layout; min-height: 220px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full"
+        >
           <Menubar>
             <MenubarMenu value="file">
               <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -798,10 +874,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

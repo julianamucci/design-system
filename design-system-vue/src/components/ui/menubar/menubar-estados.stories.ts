@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -67,8 +67,6 @@ export const Fechado: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
     const menubar = canvas.getByRole('menubar');
     await expect(menubar).toBeVisible();
     await expect(body.queryByRole('menu')).not.toBeInTheDocument();
@@ -104,7 +102,6 @@ export const Aberto: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
   },
@@ -136,7 +133,6 @@ export const ItemDesabilitado: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const disabled = await waitForPortal('menuitem', { name: /Arquivar/i });
@@ -169,7 +165,6 @@ export const CheckboxChecked: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const checkboxes = await body.findAllByRole('menuitemcheckbox');
     await expect(checkboxes.length).toBe(2);
     await expect(checkboxes[0]).toHaveAttribute('aria-checked', 'true');

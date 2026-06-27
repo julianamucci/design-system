@@ -1,6 +1,6 @@
 /** @jsxImportSource react */
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { fn, userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import SidebarDocs from '@/components/docs/SidebarDocs.vue';
 
@@ -171,7 +171,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('sidebar renderiza com navegação acessível', async () => {
       const nav = canvas.getByRole('navigation', { name: /navegação principal/i });

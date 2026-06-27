@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { Label } from './index';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -34,7 +34,6 @@ export const ComInput: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Label e Input estão presentes', async () => {
       await expect(canvas.getByText('Telefone')).toBeVisible();
@@ -60,7 +59,6 @@ export const ComCheckbox: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Label está visível', async () => {
       await expect(canvas.getByText('Aceito os termos de uso')).toBeVisible();
@@ -94,7 +92,6 @@ export const CampoObrigatorio: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Label com marcador required está visível', async () => {
       await expect(canvas.getByText('Email profissional')).toBeInTheDocument();

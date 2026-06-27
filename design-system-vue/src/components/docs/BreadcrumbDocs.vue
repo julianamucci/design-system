@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -480,7 +480,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="breadcrumb">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="breadcrumb"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -497,15 +501,21 @@ const visualTestItems = computed(() => [
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.navigation') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.navigation') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -556,13 +566,13 @@ const visualTestItems = computed(() => [
         title: tContent('usage.uxWriting.title'),
         cols: {
           element: tContent('usage.uxWriting.table.element'),
-          rules:   tContent('usage.uxWriting.table.rules'),
-          do:      tContent('usage.uxWriting.table.correct'),
-          dont:    tContent('usage.uxWriting.table.avoid'),
+          rules: tContent('usage.uxWriting.table.rules'),
+          do: tContent('usage.uxWriting.table.correct'),
+          dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.link.name'),      rules: stripHtml(tContent('usage.uxWriting.table.link.format')),      do: tContent('usage.uxWriting.table.link.good'),               dont: tContent('usage.uxWriting.table.link.bad') },
-          { element: tContent('usage.uxWriting.table.page.name'),      rules: stripHtml(tContent('usage.uxWriting.table.page.format')),      do: stripHtml(tContent('usage.uxWriting.table.page.good')),    dont: tContent('usage.uxWriting.table.page.bad') },
+          { element: tContent('usage.uxWriting.table.link.name'), rules: stripHtml(tContent('usage.uxWriting.table.link.format')), do: tContent('usage.uxWriting.table.link.good'), dont: tContent('usage.uxWriting.table.link.bad') },
+          { element: tContent('usage.uxWriting.table.page.name'), rules: stripHtml(tContent('usage.uxWriting.table.page.format')), do: stripHtml(tContent('usage.uxWriting.table.page.good')), dont: tContent('usage.uxWriting.table.page.bad') },
           { element: tContent('usage.uxWriting.table.separator.name'), rules: stripHtml(tContent('usage.uxWriting.table.separator.format')), do: stripHtml(tContent('usage.uxWriting.table.separator.good')), dont: tContent('usage.uxWriting.table.separator.bad') },
         ],
       }"
@@ -598,11 +608,15 @@ const visualTestItems = computed(() => [
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -615,15 +629,21 @@ const visualTestItems = computed(() => [
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.breadcrumb') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.breadcrumb') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -632,7 +652,9 @@ const visualTestItems = computed(() => [
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -640,7 +662,9 @@ const visualTestItems = computed(() => [
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -653,23 +677,33 @@ const visualTestItems = computed(() => [
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.docs') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.docs') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.guide') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.guide') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.navigation') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.navigation') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -690,16 +724,23 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes (Configurações Disponíveis) ───────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
         <Breadcrumb class="w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -712,7 +753,9 @@ const visualTestItems = computed(() => [
         <Breadcrumb class="w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -720,7 +763,9 @@ const visualTestItems = computed(() => [
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -733,13 +778,17 @@ const visualTestItems = computed(() => [
         <Breadcrumb class="w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <SlashIcon />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.docs') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.docs') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <SlashIcon />
@@ -754,7 +803,9 @@ const visualTestItems = computed(() => [
         <Breadcrumb class="w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -780,11 +831,15 @@ const visualTestItems = computed(() => [
         <Breadcrumb class="w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -797,7 +852,9 @@ const visualTestItems = computed(() => [
         <Breadcrumb class="w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -805,7 +862,9 @@ const visualTestItems = computed(() => [
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -818,11 +877,15 @@ const visualTestItems = computed(() => [
         <Breadcrumb class="w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
             <BreadcrumbItem>
@@ -835,7 +898,9 @@ const visualTestItems = computed(() => [
         <Breadcrumb class="w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.home') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.home') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -843,11 +908,15 @@ const visualTestItems = computed(() => [
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.guide') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.guide') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{{ tContent('demonstration.labels.components') }}</BreadcrumbLink>
+              <BreadcrumbLink href="#">
+                {{ tContent('demonstration.labels.components') }}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -874,12 +943,12 @@ const visualTestItems = computed(() => [
       :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.breadcrumbTitle'), cols: propCols, items: breadcrumbPropItems },
-        { title: tContent('props.listTitle'),       cols: propCols, items: listPropItems       },
-        { title: tContent('props.itemTitle'),       cols: propCols, items: itemPropItems       },
-        { title: tContent('props.linkTitle'),       cols: propCols, items: linkPropItems       },
-        { title: tContent('props.pageTitle'),       cols: propCols, items: pagePropItems       },
-        { title: tContent('props.separatorTitle'),  cols: propCols, items: separatorPropItems  },
-        { title: tContent('props.ellipsisTitle'),   cols: propCols, items: ellipsisPropItems   },
+        { title: tContent('props.listTitle'), cols: propCols, items: listPropItems },
+        { title: tContent('props.itemTitle'), cols: propCols, items: itemPropItems },
+        { title: tContent('props.linkTitle'), cols: propCols, items: linkPropItems },
+        { title: tContent('props.pageTitle'), cols: propCols, items: pagePropItems },
+        { title: tContent('props.separatorTitle'), cols: propCols, items: separatorPropItems },
+        { title: tContent('props.ellipsisTitle'), cols: propCols, items: ellipsisPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -909,10 +978,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

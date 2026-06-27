@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -459,7 +459,10 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -484,7 +487,9 @@ const a11yCritCols = computed(() => ({
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">{{ tContent('demonstration.labels.cancel') }}</Button>
+                <Button variant="outline">
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
               </DialogClose>
               <Button>{{ tContent('demonstration.labels.action') }}</Button>
             </DialogFooter>
@@ -540,11 +545,11 @@ const a11yCritCols = computed(() => ({
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.title.name'),       rules: tContent('usage.uxWriting.table.title.format'),       do: tContent('usage.uxWriting.table.title.good'),       dont: tContent('usage.uxWriting.table.title.bad')       },
+          { element: tContent('usage.uxWriting.table.title.name'), rules: tContent('usage.uxWriting.table.title.format'), do: tContent('usage.uxWriting.table.title.good'), dont: tContent('usage.uxWriting.table.title.bad') },
           { element: tContent('usage.uxWriting.table.description.name'), rules: tContent('usage.uxWriting.table.description.format'), do: tContent('usage.uxWriting.table.description.good'), dont: tContent('usage.uxWriting.table.description.bad') },
-          { element: tContent('usage.uxWriting.table.action.name'),      rules: tContent('usage.uxWriting.table.action.format'),      do: tContent('usage.uxWriting.table.action.good'),      dont: tContent('usage.uxWriting.table.action.bad')      },
-          { element: tContent('usage.uxWriting.table.cancel.name'),      rules: tContent('usage.uxWriting.table.cancel.format'),      do: tContent('usage.uxWriting.table.cancel.good'),      dont: tContent('usage.uxWriting.table.cancel.bad')      },
-          { element: tContent('usage.uxWriting.table.srOnly.name'),      rules: tContent('usage.uxWriting.table.srOnly.format'),      do: tContent('usage.uxWriting.table.srOnly.good'),      dont: tContent('usage.uxWriting.table.srOnly.bad')      },
+          { element: tContent('usage.uxWriting.table.action.name'), rules: tContent('usage.uxWriting.table.action.format'), do: tContent('usage.uxWriting.table.action.good'), dont: tContent('usage.uxWriting.table.action.bad') },
+          { element: tContent('usage.uxWriting.table.cancel.name'), rules: tContent('usage.uxWriting.table.cancel.format'), do: tContent('usage.uxWriting.table.cancel.good'), dont: tContent('usage.uxWriting.table.cancel.bad') },
+          { element: tContent('usage.uxWriting.table.srOnly.name'), rules: tContent('usage.uxWriting.table.srOnly.format'), do: tContent('usage.uxWriting.table.srOnly.good'), dont: tContent('usage.uxWriting.table.srOnly.bad') },
         ],
       }"
       :do="{
@@ -584,7 +589,9 @@ const a11yCritCols = computed(() => ({
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">
+                  Cancelar
+                </Button>
               </DialogClose>
               <Button>Salvar alterações</Button>
             </DialogFooter>
@@ -600,7 +607,9 @@ const a11yCritCols = computed(() => ({
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Não</Button>
+                <Button variant="outline">
+                  Não
+                </Button>
               </DialogClose>
               <Button>OK</Button>
             </DialogFooter>
@@ -616,7 +625,9 @@ const a11yCritCols = computed(() => ({
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">
+                  Cancelar
+                </Button>
               </DialogClose>
               <Button>Salvar alterações</Button>
             </DialogFooter>
@@ -632,9 +643,13 @@ const a11yCritCols = computed(() => ({
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">
+                  Cancelar
+                </Button>
               </DialogClose>
-              <Button variant="destructive">Excluir conta</Button>
+              <Button variant="destructive">
+                Excluir conta
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -651,7 +666,11 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" :note="stripHtml(tContent('variants.note'))">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      :note="stripHtml(tContent('variants.note'))"
+    >
       <template #variant-preview-0>
         <Dialog default-open>
           <DialogContent>
@@ -661,7 +680,9 @@ const a11yCritCols = computed(() => ({
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">
+                  Cancelar
+                </Button>
               </DialogClose>
               <Button>Salvar alterações</Button>
             </DialogFooter>
@@ -682,14 +703,21 @@ const a11yCritCols = computed(() => ({
               </div>
               <div class="grid gap-1.5">
                 <Label for="docs-form-email">Email</Label>
-                <Input id="docs-form-email" type="email" />
+                <Input
+                  id="docs-form-email"
+                  type="email"
+                />
               </div>
             </form>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">
+                  Cancelar
+                </Button>
               </DialogClose>
-              <Button type="submit">Salvar alterações</Button>
+              <Button type="submit">
+                Salvar alterações
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -702,11 +730,18 @@ const a11yCritCols = computed(() => ({
               <DialogDescription>Leia atentamente os termos.</DialogDescription>
             </DialogHeader>
             <div class="space-y-3 text-sm text-muted-foreground max-h-56 overflow-y-auto">
-              <p v-for="i in 8" :key="i">Parágrafo {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <p
+                v-for="i in 8"
+                :key="i"
+              >
+                Parágrafo {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </p>
             </div>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Recusar</Button>
+                <Button variant="outline">
+                  Recusar
+                </Button>
               </DialogClose>
               <Button>Aceitar termos</Button>
             </DialogFooter>
@@ -732,16 +767,20 @@ const a11yCritCols = computed(() => ({
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">
+                  Cancelar
+                </Button>
               </DialogClose>
-              <Button variant="destructive">Remover anexo</Button>
+              <Button variant="destructive">
+                Remover anexo
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </template>
       <template #variant-preview-5>
         <Dialog default-open>
-          <DialogContent :showCloseButton="false">
+          <DialogContent :show-close-button="false">
             <DialogHeader>
               <DialogTitle>Configurações de notificação</DialogTitle>
               <DialogDescription>Escolha como deseja ser avisado.</DialogDescription>
@@ -749,7 +788,9 @@ const a11yCritCols = computed(() => ({
             <DialogFooter class="flex-col gap-2 sm:flex-col">
               <Button>Salvar preferências</Button>
               <DialogClose as-child>
-                <Button variant="ghost">Fechar</Button>
+                <Button variant="ghost">
+                  Fechar
+                </Button>
               </DialogClose>
             </DialogFooter>
           </DialogContent>
@@ -771,10 +812,14 @@ const a11yCritCols = computed(() => ({
               <DialogTitle>Confirmar e-mail</DialogTitle>
               <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
             </DialogHeader>
-            <p class="text-sm text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
+            <p class="text-sm text-muted-foreground">
+              Vamos enviar um link para maria@exemplo.com.
+            </p>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">
+                  Cancelar
+                </Button>
               </DialogClose>
               <Button>Enviar link</Button>
             </DialogFooter>
@@ -791,16 +836,24 @@ const a11yCritCols = computed(() => ({
             <form class="grid gap-3">
               <div class="grid gap-1.5">
                 <Label for="docs-comp-name">Nome de exibição</Label>
-                <Input id="docs-comp-name" model-value="Maria Souza" />
+                <Input
+                  id="docs-comp-name"
+                  model-value="Maria Souza"
+                />
               </div>
               <div class="grid gap-1.5">
                 <Label for="docs-comp-role">Função</Label>
-                <Input id="docs-comp-role" model-value="Designer" />
+                <Input
+                  id="docs-comp-role"
+                  model-value="Designer"
+                />
               </div>
             </form>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">
+                  Cancelar
+                </Button>
               </DialogClose>
               <Button>Salvar alterações</Button>
             </DialogFooter>
@@ -837,9 +890,9 @@ const a11yCritCols = computed(() => ({
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: tContent('props.rootTitle'),             cols: propCols, items: rootProps             },
-        { title: tContent('props.contentTitle'),          cols: propCols, items: contentProps          },
-        { title: tContent('props.footerTitle'),           cols: propCols, items: footerProps           },
+        { title: tContent('props.rootTitle'), cols: propCols, items: rootProps },
+        { title: tContent('props.contentTitle'), cols: propCols, items: contentProps },
+        { title: tContent('props.footerTitle'), cols: propCols, items: footerProps },
         { title: tContent('props.titleDescriptionTitle'), cols: propCols, items: titleDescriptionProps },
       ]"
       :interface-code="interfaceCode"
@@ -870,10 +923,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

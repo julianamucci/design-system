@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { within, expect } from 'storybook/test';
-import { toast, injectToastStyles } from './sonner';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
+import { injectToastStyles } from './sonner';
 import { createSonnerDocs } from '@/components/docs/SonnerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sanitizeHtml } from '@/lib/sanitize-html';

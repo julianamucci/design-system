@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -281,7 +281,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -297,27 +300,59 @@ const visualTestItems = computed(() => [
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <div class="space-y-2">
           <AspectRatio :ratio="16 / 9">
-            <img :src="imgLandscape" :alt="tContent('demonstration.labels.sixteenNine')" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+            <img
+              :src="imgLandscape"
+              :alt="tContent('demonstration.labels.sixteenNine')"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover rounded-md"
+            >
           </AspectRatio>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.sixteenNine') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.sixteenNine') }}
+          </p>
         </div>
         <div class="space-y-2">
           <AspectRatio :ratio="4 / 3">
-            <img :src="imgProduct" :alt="tContent('demonstration.labels.fourThree')" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+            <img
+              :src="imgProduct"
+              :alt="tContent('demonstration.labels.fourThree')"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover rounded-md"
+            >
           </AspectRatio>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.fourThree') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.fourThree') }}
+          </p>
         </div>
         <div class="space-y-2">
           <AspectRatio :ratio="1">
-            <img :src="imgAvatar" :alt="tContent('demonstration.labels.square')" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+            <img
+              :src="imgAvatar"
+              :alt="tContent('demonstration.labels.square')"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover rounded-md"
+            >
           </AspectRatio>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.square') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.square') }}
+          </p>
         </div>
         <div class="space-y-2">
           <AspectRatio :ratio="3 / 4">
-            <img :src="imgPortrait" :alt="tContent('demonstration.labels.threeFour')" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+            <img
+              :src="imgPortrait"
+              :alt="tContent('demonstration.labels.threeFour')"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover rounded-md"
+            >
           </AspectRatio>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.threeFour') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.threeFour') }}
+          </p>
         </div>
       </div>
     </DocsDemonstration>
@@ -386,23 +421,59 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <AspectRatio :ratio="16 / 9" class="w-full">
-          <img :src="imgLandscape" alt="Paisagem" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+        <AspectRatio
+          :ratio="16 / 9"
+          class="w-full"
+        >
+          <img
+            :src="imgLandscape"
+            alt="Paisagem"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover rounded-md"
+          >
         </AspectRatio>
       </template>
       <template #dont-preview-0>
-        <AspectRatio :ratio="16 / 9" class="w-full bg-muted">
-          <img :src="imgLandscape" alt="Paisagem" loading="lazy" decoding="async" class="h-full w-full object-contain rounded-md" />
+        <AspectRatio
+          :ratio="16 / 9"
+          class="w-full bg-muted"
+        >
+          <img
+            :src="imgLandscape"
+            alt="Paisagem"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-contain rounded-md"
+          >
         </AspectRatio>
       </template>
       <template #do-preview-1>
-        <AspectRatio :ratio="4 / 3" class="w-full">
-          <img :src="imgProduct" alt="Produto" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+        <AspectRatio
+          :ratio="4 / 3"
+          class="w-full"
+        >
+          <img
+            :src="imgProduct"
+            alt="Produto"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover rounded-md"
+          >
         </AspectRatio>
       </template>
       <template #dont-preview-1>
-        <AspectRatio :ratio="4 / 3" class="w-full rounded-md border">
-          <img :src="imgProduct" alt="Produto" loading="lazy" decoding="async" class="h-full w-full object-cover" />
+        <AspectRatio
+          :ratio="4 / 3"
+          class="w-full rounded-md border"
+        >
+          <img
+            :src="imgProduct"
+            alt="Produto"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover"
+          >
         </AspectRatio>
       </template>
     </DocsDoDont>
@@ -414,30 +485,78 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <AspectRatio :ratio="16 / 9" class="w-full">
-          <img :src="imgLandscape" alt="Paisagem 16:9" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+        <AspectRatio
+          :ratio="16 / 9"
+          class="w-full"
+        >
+          <img
+            :src="imgLandscape"
+            alt="Paisagem 16:9"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover rounded-md"
+          >
         </AspectRatio>
       </template>
       <template #variant-preview-1>
-        <AspectRatio :ratio="4 / 3" class="w-full">
-          <img :src="imgProduct" alt="Produto 4:3" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+        <AspectRatio
+          :ratio="4 / 3"
+          class="w-full"
+        >
+          <img
+            :src="imgProduct"
+            alt="Produto 4:3"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover rounded-md"
+          >
         </AspectRatio>
       </template>
       <template #variant-preview-2>
-        <AspectRatio :ratio="1" class="w-full">
-          <img :src="imgAvatar" alt="Avatar 1:1" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+        <AspectRatio
+          :ratio="1"
+          class="w-full"
+        >
+          <img
+            :src="imgAvatar"
+            alt="Avatar 1:1"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover rounded-md"
+          >
         </AspectRatio>
       </template>
       <template #variant-preview-3>
-        <AspectRatio :ratio="3 / 4" class="w-full">
-          <img :src="imgPortrait" alt="Retrato 3:4" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+        <AspectRatio
+          :ratio="3 / 4"
+          class="w-full"
+        >
+          <img
+            :src="imgPortrait"
+            alt="Retrato 3:4"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover rounded-md"
+          >
         </AspectRatio>
       </template>
       <template #variant-preview-4>
-        <AspectRatio :ratio="21 / 9" class="w-full">
-          <img :src="imgUltraWide" alt="Ultra-wide 21:9" loading="lazy" decoding="async" class="h-full w-full object-cover rounded-md" />
+        <AspectRatio
+          :ratio="21 / 9"
+          class="w-full"
+        >
+          <img
+            :src="imgUltraWide"
+            alt="Ultra-wide 21:9"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover rounded-md"
+          >
         </AspectRatio>
       </template>
     </DocsVariants>
@@ -458,7 +577,7 @@ const visualTestItems = computed(() => [
       :title="tContent('props.title')"
       :tables="[
         { title: 'AspectRatio', cols: propCols, items: aspectRatioPropItems },
-        { title: 'Slot',        cols: propCols, items: slotPropItems       },
+        { title: 'Slot', cols: propCols, items: slotPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -488,10 +607,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

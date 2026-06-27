@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import AlertDocs from '@/components/docs/AlertDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -40,7 +40,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Elemento alert está presente no DOM', async () => {
       const alert = canvas.getByRole('alert');

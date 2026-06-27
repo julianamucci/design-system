@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import {
@@ -8,7 +8,6 @@ import {
   createSidebarContent,
   createSidebarHeader,
   createSidebarFooter,
-  createSidebarGroup,
   createSidebarMenuItem,
 } from './sidebar';
 

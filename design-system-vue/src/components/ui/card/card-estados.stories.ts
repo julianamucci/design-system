@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect, fn, userEvent } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, fn, userEvent } from 'storybook/test';
 import {
   Card,
   CardHeader,
@@ -88,7 +88,6 @@ export const Clickable: Story = {
     `,
   }),
   play: async ({ args, canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const onCardClick = (args as { onCardClick: ReturnType<typeof fn> }).onCardClick;
 
     await step('Card clicável tem wrapper <button> com aria-label', async () => {

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createDrawer } from './drawer';
 import { createSheet, type SheetSide } from './sheet';
@@ -57,7 +57,7 @@ function buildVariant(side: SheetSide, triggerLabel: string, title: string): HTM
   return wrapper;
 }
 
-async function expectDirection(side: SheetSide, step: any) {
+async function expectDirection(side: SheetSide, step: (name: string, fn: () => Promise<void> | void) => Promise<void>) {
   const body = within(document.body);
   const dialog = await body.findByRole('dialog');
   await step(`Renderiza com direção ${side}`, async () => {

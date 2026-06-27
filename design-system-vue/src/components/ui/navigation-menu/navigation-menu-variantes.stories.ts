@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -65,7 +65,6 @@ export const Horizontal: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const nav = canvas.getByRole('navigation', { name: /Navegação principal/i });
     await expect(nav).toBeVisible();
     await expect(nav).toHaveAttribute('aria-orientation', 'horizontal');
@@ -91,7 +90,6 @@ export const Vertical: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const nav = canvas.getByRole('navigation', { name: /Navegação lateral/i });
     await expect(nav).toBeVisible();
     await expect(nav).toHaveAttribute('aria-orientation', 'vertical');

@@ -37,7 +37,10 @@ function handleCopy(token: string) {
 </script>
 
 <template>
-  <div v-if="orientation === 'vertical'" class="flex flex-col items-center gap-1">
+  <div
+    v-if="orientation === 'vertical'"
+    class="flex flex-col items-center gap-1"
+  >
     <span
       class="h-8 w-8 rounded-md border border-border/50"
       :style="{ backgroundColor: `hsl(var(--${token}))` }"
@@ -66,7 +69,11 @@ function handleCopy(token: string) {
       class="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-neutral-900 px-2 py-1 text-[10px] text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-1"
       aria-hidden="true"
     >
-      <Check v-if="copied" class="h-3 w-3" aria-hidden="true" />
+      <Check
+        v-if="copied"
+        class="h-3 w-3"
+        aria-hidden="true"
+      />
       {{ copied ? copiedLabel : copyLabel }}
     </span>
   </button>

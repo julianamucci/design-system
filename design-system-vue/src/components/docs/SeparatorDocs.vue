@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -254,7 +254,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -270,11 +273,17 @@ const visualTestItems = computed(() => [
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <div class="space-y-2">
           <div class="rounded-md border p-4 space-y-3">
-            <div class="text-sm font-medium">Header</div>
+            <div class="text-sm font-medium">
+              Header
+            </div>
             <Separator orientation="horizontal" />
-            <div class="text-xs text-muted-foreground">Conteúdo separado por divisor horizontal.</div>
+            <div class="text-xs text-muted-foreground">
+              Conteúdo separado por divisor horizontal.
+            </div>
           </div>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.horizontal') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.horizontal') }}
+          </p>
         </div>
 
         <div class="space-y-2">
@@ -285,31 +294,47 @@ const visualTestItems = computed(() => [
             <Separator orientation="vertical" />
             <span>Sobre</span>
           </div>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.vertical') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.vertical') }}
+          </p>
         </div>
 
         <div class="space-y-2">
           <div class="rounded-md border p-3 space-y-2 text-sm">
-            <div class="font-medium text-xs uppercase text-muted-foreground">Categoria A</div>
+            <div class="font-medium text-xs uppercase text-muted-foreground">
+              Categoria A
+            </div>
             <div>Item 1</div>
             <div>Item 2</div>
             <Separator orientation="horizontal" />
-            <div class="font-medium text-xs uppercase text-muted-foreground">Categoria B</div>
+            <div class="font-medium text-xs uppercase text-muted-foreground">
+              Categoria B
+            </div>
             <div>Item 3</div>
             <div>Item 4</div>
           </div>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.inMenu') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.inMenu') }}
+          </p>
         </div>
 
         <div class="space-y-2">
           <div class="rounded-md border bg-card text-card-foreground">
-            <div class="p-4 text-sm font-medium">Card title</div>
+            <div class="p-4 text-sm font-medium">
+              Card title
+            </div>
             <Separator orientation="horizontal" />
-            <div class="p-4 text-sm text-muted-foreground">Conteúdo do card abaixo do separator.</div>
+            <div class="p-4 text-sm text-muted-foreground">
+              Conteúdo do card abaixo do separator.
+            </div>
             <Separator orientation="horizontal" />
-            <div class="p-4 text-xs text-muted-foreground">Footer do card.</div>
+            <div class="p-4 text-xs text-muted-foreground">
+              Footer do card.
+            </div>
           </div>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.inCard') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.inCard') }}
+          </p>
         </div>
       </div>
     </DocsDemonstration>
@@ -379,9 +404,13 @@ const visualTestItems = computed(() => [
     >
       <template #do-preview-0>
         <div class="w-full rounded-md border p-3 space-y-2 text-sm">
-          <div class="font-medium">Grupo A</div>
+          <div class="font-medium">
+            Grupo A
+          </div>
           <Separator orientation="horizontal" />
-          <div class="font-medium">Grupo B</div>
+          <div class="font-medium">
+            Grupo B
+          </div>
         </div>
       </template>
       <template #dont-preview-0>
@@ -416,7 +445,10 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
         <div class="w-full space-y-3 text-sm">
           <div>Conteúdo acima</div>
@@ -480,10 +512,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

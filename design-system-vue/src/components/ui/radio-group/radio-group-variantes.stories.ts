@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -45,7 +45,6 @@ export const Vertical: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const group = canvas.getByRole('radiogroup');
     await step('Container tem role=radiogroup', async () => {
       await expect(group).toBeInTheDocument();
@@ -78,7 +77,6 @@ export const Horizontal: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const group = canvas.getByRole('radiogroup');
     await step('Orientação horizontal aplicada', async () => {
       await expect(group).toHaveAttribute('aria-orientation', 'horizontal');
@@ -126,7 +124,6 @@ export const WithDescription: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Cada radio tem aria-describedby para sua descrição', async () => {
       const cartao = canvas.getByRole('radio', { name: /Cartão de crédito/i });
       await expect(cartao).toHaveAttribute('aria-describedby', 'wd-cartao-desc');

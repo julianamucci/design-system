@@ -379,7 +379,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="switch">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="switch"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -437,7 +441,10 @@ const visualTestItems = computed(() => [
             :model-value="demoSm"
             @update:model-value="(v: boolean) => demoSm = v"
           />
-          <Label :for="'demo-sm'" class="text-xs">
+          <Label
+            :for="'demo-sm'"
+            class="text-xs"
+          >
             {{ tContent('demonstration.labels.sm') }}
           </Label>
         </div>
@@ -582,7 +589,11 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" component-slug="switch">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      component-slug="switch"
+    >
       <!-- default -->
       <template #variant-preview-0>
         <div class="flex items-center space-x-2">
@@ -607,8 +618,14 @@ const visualTestItems = computed(() => [
       <!-- sm -->
       <template #variant-preview-2>
         <div class="flex items-center space-x-2">
-          <Switch id="variant-sm" size="sm" />
-          <Label :for="'variant-sm'" class="text-xs">Tamanho compacto</Label>
+          <Switch
+            id="variant-sm"
+            size="sm"
+          />
+          <Label
+            :for="'variant-sm'"
+            class="text-xs"
+          >Tamanho compacto</Label>
         </div>
       </template>
     </DocsVariants>
@@ -624,7 +641,10 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <div class="flex items-center space-x-2">
           <Switch id="sw-email" />
-          <Label :for="'sw-email'" class="text-sm font-medium leading-none cursor-pointer">
+          <Label
+            :for="'sw-email'"
+            class="text-sm font-medium leading-none cursor-pointer"
+          >
             Receber notificações por email
           </Label>
         </div>
@@ -639,32 +659,46 @@ const visualTestItems = computed(() => [
               Receba novidades e promoções da plataforma.
             </p>
           </div>
-          <Switch id="sw-marketing" :model-value="true" />
+          <Switch
+            id="sw-marketing"
+            :model-value="true"
+          />
         </div>
       </template>
 
       <!-- settingsList -->
       <template #variant-preview-2>
         <div class="space-y-2 w-96">
-          <h4 class="text-sm font-medium">Preferências de notificação</h4>
+          <h4 class="text-sm font-medium">
+            Preferências de notificação
+          </h4>
           <div class="flex items-center justify-between rounded-lg border p-3">
             <div class="flex flex-col gap-0.5 pr-3">
               <Label :for="'pref-email'">Receber novidades por email</Label>
-              <p class="text-sm text-muted-foreground">Resumo semanal sobre o produto.</p>
+              <p class="text-sm text-muted-foreground">
+                Resumo semanal sobre o produto.
+              </p>
             </div>
-            <Switch id="pref-email" :model-value="true" />
+            <Switch
+              id="pref-email"
+              :model-value="true"
+            />
           </div>
           <div class="flex items-center justify-between rounded-lg border p-3">
             <div class="flex flex-col gap-0.5 pr-3">
               <Label :for="'pref-push'">Receber notificações push</Label>
-              <p class="text-sm text-muted-foreground">Alertas no dispositivo em tempo real.</p>
+              <p class="text-sm text-muted-foreground">
+                Alertas no dispositivo em tempo real.
+              </p>
             </div>
             <Switch id="pref-push" />
           </div>
           <div class="flex items-center justify-between rounded-lg border p-3">
             <div class="flex flex-col gap-0.5 pr-3">
               <Label :for="'pref-sms'">Alertas por SMS</Label>
-              <p class="text-sm text-muted-foreground">Eventos críticos via mensagem de texto.</p>
+              <p class="text-sm text-muted-foreground">
+                Eventos críticos via mensagem de texto.
+              </p>
             </div>
             <Switch id="pref-sms" />
           </div>
@@ -673,12 +707,21 @@ const visualTestItems = computed(() => [
 
       <!-- inForm -->
       <template #variant-preview-3>
-        <form class="flex flex-col gap-3 w-80" @submit.prevent>
+        <form
+          class="flex flex-col gap-3 w-80"
+          @submit.prevent
+        >
           <div class="flex items-center space-x-2">
-            <Switch id="sw-form-newsletter" name="newsletter" :model-value="true" />
+            <Switch
+              id="sw-form-newsletter"
+              name="newsletter"
+              :model-value="true"
+            />
             <Label :for="'sw-form-newsletter'">Aceitar newsletter semanal</Label>
           </div>
-          <Button type="submit">Salvar preferências</Button>
+          <Button type="submit">
+            Salvar preferências
+          </Button>
         </form>
       </template>
     </DocsCompositions>
@@ -729,10 +772,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────────── -->
     <DocsAnalytics

@@ -28,38 +28,81 @@ defineProps<{
 
 <template>
   <section id="propriedades">
-    <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
+    <h2 class="text-xl font-semibold mb-4">
+      {{ title }}
+    </h2>
     <div class="space-y-8">
-      <div v-for="(def, ti) in tables" :key="ti" class="space-y-3">
-        <h3 v-if="def.title" class="text-base font-semibold">{{ def.title }}</h3>
+      <div
+        v-for="(def, ti) in tables"
+        :key="ti"
+        class="space-y-3"
+      >
+        <h3
+          v-if="def.title"
+          class="text-base font-semibold"
+        >
+          {{ def.title }}
+        </h3>
         <Card class="p-4 overflow-x-auto md:overflow-visible">
-            <Table class="[&_th]:whitespace-normal [&_td]:whitespace-normal">
-              <TableHeader>
-                <TableRow class="border-b border-border bg-muted/50 text-left">
-                  <TableHead class="p-3 font-semibold">{{ def.cols.prop }}</TableHead>
-                  <TableHead class="p-3 font-semibold">{{ def.cols.type }}</TableHead>
-                  <TableHead class="p-3 font-semibold">{{ def.cols.default }}</TableHead>
-                  <TableHead class="p-3 font-semibold">{{ def.cols.required }}</TableHead>
-                  <TableHead class="p-3 font-semibold">{{ def.cols.description }}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow v-for="(item, i) in def.items" :key="i" class="border-b border-border last:border-0 hover:bg-muted/5">
-                  <TableCell class="p-3 font-mono font-bold text-primary">{{ item.name }}</TableCell>
-                  <TableCell class="p-3 font-mono text-muted-foreground">{{ item.type }}</TableCell>
-                  <TableCell class="p-3 text-muted-foreground">{{ item.defaultValue }}</TableCell>
-                  <TableCell class="p-3 text-muted-foreground">{{ item.required }}</TableCell>
-                  <TableCell class="p-3 text-muted-foreground">{{ item.description }}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+          <Table class="[&_th]:whitespace-normal [&_td]:whitespace-normal">
+            <TableHeader>
+              <TableRow class="border-b border-border bg-muted/50 text-left">
+                <TableHead class="p-3 font-semibold">
+                  {{ def.cols.prop }}
+                </TableHead>
+                <TableHead class="p-3 font-semibold">
+                  {{ def.cols.type }}
+                </TableHead>
+                <TableHead class="p-3 font-semibold">
+                  {{ def.cols.default }}
+                </TableHead>
+                <TableHead class="p-3 font-semibold">
+                  {{ def.cols.required }}
+                </TableHead>
+                <TableHead class="p-3 font-semibold">
+                  {{ def.cols.description }}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow
+                v-for="(item, i) in def.items"
+                :key="i"
+                class="border-b border-border last:border-0 hover:bg-muted/5"
+              >
+                <TableCell class="p-3 font-mono font-bold text-primary">
+                  {{ item.name }}
+                </TableCell>
+                <TableCell class="p-3 font-mono text-muted-foreground">
+                  {{ item.type }}
+                </TableCell>
+                <TableCell class="p-3 text-muted-foreground">
+                  {{ item.defaultValue }}
+                </TableCell>
+                <TableCell class="p-3 text-muted-foreground">
+                  {{ item.required }}
+                </TableCell>
+                <TableCell class="p-3 text-muted-foreground">
+                  {{ item.description }}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </Card>
       </div>
-      <Card v-if="interfaceCode" class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
+      <Card
+        v-if="interfaceCode"
+        class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none"
+      >
         <code class="whitespace-pre">{{ interfaceCode }}</code>
       </Card>
-      <div v-if="extensibilityTitle" class="space-y-2">
-        <h3 class="text-base font-semibold">{{ extensibilityTitle }}</h3>
+      <div
+        v-if="extensibilityTitle"
+        class="space-y-2"
+      >
+        <h3 class="text-base font-semibold">
+          {{ extensibilityTitle }}
+        </h3>
         <div
           v-if="extensibilityNotes"
           class="text-sm text-muted-foreground leading-relaxed"

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { fn, userEvent, within, expect, waitFor } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { fn, userEvent, expect, waitFor } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 import RadioGroupDocs from '@/components/docs/RadioGroupDocs.vue';
@@ -77,7 +77,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const radios = canvas.getAllByRole('radio');
 
     await step('RadioGroup renderiza 3 itens com role=radio', async () => {

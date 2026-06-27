@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { Toggle } from './index';
 import { Bold, Italic, Eye } from 'lucide-vue-next';
 
@@ -34,7 +34,6 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Negrito' });
     await step('Toggle default renderiza icon-only com aria-label', async () => {
       await expect(toggle).toBeInTheDocument();
@@ -58,7 +57,6 @@ export const Outline: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Itálico' });
     await step('Toggle outline renderiza com borda input', async () => {
       await expect(toggle).toBeInTheDocument();
@@ -79,7 +77,6 @@ export const WithLabel: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: /Mostrar ocultos/i });
     await step('Toggle com label visível renderiza texto', async () => {
       await expect(toggle).toBeInTheDocument();

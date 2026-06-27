@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { h, ref } from 'vue';
 import { DataTable, type DataTableColumn } from './index';
 import { Badge } from '@/components/ui/badge';

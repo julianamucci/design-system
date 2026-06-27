@@ -280,7 +280,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="progress">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="progress"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -298,30 +302,53 @@ const visualTestItems = computed(() => [
         <div class="space-y-2 rounded-md border p-4">
           <div class="flex items-center justify-between text-sm">
             <span class="text-foreground">{{ tContent('demonstration.labels.upload') }}</span>
-            <span class="text-muted-foreground tabular-nums" aria-live="polite">{{ demoValue }}{{ tContent('demonstration.labels.percent') }}</span>
+            <span
+              class="text-muted-foreground tabular-nums"
+              aria-live="polite"
+            >{{ demoValue }}{{ tContent('demonstration.labels.percent') }}</span>
           </div>
-          <Progress :model-value="demoValue" :aria-label="tContent('demonstration.labels.upload')" />
+          <Progress
+            :model-value="demoValue"
+            :aria-label="tContent('demonstration.labels.upload')"
+          />
         </div>
 
         <!-- Estados estáticos -->
         <div class="space-y-3 rounded-md border p-4">
           <div class="space-y-1.5">
-            <div class="text-sm text-muted-foreground">value=0</div>
-            <Progress :model-value="0" :aria-label="tContent('demonstration.labels.loading')" />
+            <div class="text-sm text-muted-foreground">
+              value=0
+            </div>
+            <Progress
+              :model-value="0"
+              :aria-label="tContent('demonstration.labels.loading')"
+            />
           </div>
           <div class="space-y-1.5">
-            <div class="text-sm text-muted-foreground">value=50</div>
-            <Progress :model-value="50" :aria-label="tContent('demonstration.labels.loading')" />
+            <div class="text-sm text-muted-foreground">
+              value=50
+            </div>
+            <Progress
+              :model-value="50"
+              :aria-label="tContent('demonstration.labels.loading')"
+            />
           </div>
           <div class="space-y-1.5">
-            <div class="text-sm text-muted-foreground">value=100</div>
-            <Progress :model-value="100" :aria-label="tContent('demonstration.labels.complete')" />
+            <div class="text-sm text-muted-foreground">
+              value=100
+            </div>
+            <Progress
+              :model-value="100"
+              :aria-label="tContent('demonstration.labels.complete')"
+            />
           </div>
         </div>
 
         <!-- Indeterminate -->
         <div class="space-y-2 rounded-md border p-4">
-          <div class="text-sm text-foreground">{{ tContent('demonstration.labels.indeterminate') }}</div>
+          <div class="text-sm text-foreground">
+            {{ tContent('demonstration.labels.indeterminate') }}
+          </div>
           <Progress
             :model-value="null"
             class="[&>div]:animate-indeterminate"
@@ -388,8 +415,8 @@ const visualTestItems = computed(() => [
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.label.name'),     rules: tContent('usage.uxWriting.table.label.format'),     do: tContent('usage.uxWriting.table.label.good'),     dont: tContent('usage.uxWriting.table.label.bad')     },
-          { element: tContent('usage.uxWriting.table.value.name'),     rules: tContent('usage.uxWriting.table.value.format'),     do: tContent('usage.uxWriting.table.value.good'),     dont: tContent('usage.uxWriting.table.value.bad')     },
+          { element: tContent('usage.uxWriting.table.label.name'), rules: tContent('usage.uxWriting.table.label.format'), do: tContent('usage.uxWriting.table.label.good'), dont: tContent('usage.uxWriting.table.label.bad') },
+          { element: tContent('usage.uxWriting.table.value.name'), rules: tContent('usage.uxWriting.table.value.format'), do: tContent('usage.uxWriting.table.value.good'), dont: tContent('usage.uxWriting.table.value.bad') },
           { element: tContent('usage.uxWriting.table.ariaLabel.name'), rules: tContent('usage.uxWriting.table.ariaLabel.format'), do: tContent('usage.uxWriting.table.ariaLabel.good'), dont: tContent('usage.uxWriting.table.ariaLabel.bad') },
         ],
       }"
@@ -427,30 +454,48 @@ const visualTestItems = computed(() => [
             <span class="text-foreground">Enviando arquivo</span>
             <span class="text-muted-foreground tabular-nums">42%</span>
           </div>
-          <Progress :model-value="42" aria-label="Progresso do upload" />
+          <Progress
+            :model-value="42"
+            aria-label="Progresso do upload"
+          />
         </div>
       </template>
       <template #dont-preview-0>
         <div class="w-full">
-          <Progress :model-value="42" aria-label="Barra" />
+          <Progress
+            :model-value="42"
+            aria-label="Barra"
+          />
         </div>
       </template>
       <template #do-preview-1>
         <div class="w-full space-y-1.5">
           <div class="flex items-center justify-between text-sm">
             <span class="text-foreground">Enviando</span>
-            <span class="text-muted-foreground tabular-nums" aria-live="polite">50%</span>
+            <span
+              class="text-muted-foreground tabular-nums"
+              aria-live="polite"
+            >50%</span>
           </div>
-          <Progress :model-value="50" aria-label="Progresso do upload" />
+          <Progress
+            :model-value="50"
+            aria-label="Progresso do upload"
+          />
         </div>
       </template>
       <template #dont-preview-1>
         <div class="w-full space-y-1.5">
           <div class="flex items-center justify-between text-sm">
             <span class="text-foreground">Enviando</span>
-            <span class="text-muted-foreground tabular-nums" aria-live="assertive">51%</span>
+            <span
+              class="text-muted-foreground tabular-nums"
+              aria-live="assertive"
+            >51%</span>
           </div>
-          <Progress :model-value="51" aria-label="Progresso do upload" />
+          <Progress
+            :model-value="51"
+            aria-label="Progresso do upload"
+          />
         </div>
       </template>
     </DocsDoDont>
@@ -462,10 +507,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
         <div class="w-full">
-          <Progress :model-value="50" aria-label="Progresso de exemplo" />
+          <Progress
+            :model-value="50"
+            aria-label="Progresso de exemplo"
+          />
         </div>
       </template>
       <template #variant-preview-1>
@@ -483,7 +534,10 @@ const visualTestItems = computed(() => [
             <span class="text-foreground">Enviando arquivo</span>
             <span class="text-muted-foreground tabular-nums">42%</span>
           </div>
-          <Progress :model-value="42" aria-label="Progresso do upload" />
+          <Progress
+            :model-value="42"
+            aria-label="Progresso do upload"
+          />
         </div>
       </template>
     </DocsVariants>
@@ -533,10 +587,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

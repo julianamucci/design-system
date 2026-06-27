@@ -530,7 +530,7 @@ input.setAttribute('aria-label', 'Volume');`,
               description:
                 stripHtml(t('variants.styles.vertical')) +
                 ' Não suportado de forma acessível pelo <input type="range"> nativo — divergência documentada.',
-              code: `// Não suportado — <input type=\"range\"> nativo não tem orientação vertical acessível.\n// Workaround visual via CSS rotate, mas ARIA não acompanha.`,
+              code: `// Não suportado — <input type="range"> nativo não tem orientação vertical acessível.\n// Workaround visual via CSS rotate, mas ARIA não acompanha.`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack';

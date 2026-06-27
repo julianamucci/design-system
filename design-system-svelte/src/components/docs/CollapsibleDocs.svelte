@@ -1,11 +1,10 @@
 <script lang="ts">
   import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-  import { ChevronDown, Settings2, Filter, Settings } from 'lucide-svelte';
+  import { ChevronDown, Filter, Settings } from 'lucide-svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
   import { createActiveSection } from '@/lib/use-active-section.svelte';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader,

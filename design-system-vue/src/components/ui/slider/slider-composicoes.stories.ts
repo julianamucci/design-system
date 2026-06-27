@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, expect } from 'storybook/test';
 import { Slider } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -42,7 +42,6 @@ export const VolumeComValor: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const thumb = canvas.getByRole('slider');
 
     await step('Valor textual visível', async () => {
@@ -81,7 +80,6 @@ export const FaixaDePreco: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const thumbs = canvas.getAllByRole('slider');
 
     await step('2 thumbs renderizados', async () => {
@@ -140,7 +138,6 @@ export const EmFormulario: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const thumbs = canvas.getAllByRole('slider');
 
     await step('Formulário tem input de texto e 2 sliders', async () => {
@@ -180,7 +177,6 @@ export const StepGrosso: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const thumb = canvas.getByRole('slider');
 
     await step('aria-valuemin=1 e aria-valuemax=5', async () => {

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { fn, userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { fn, userEvent, expect } from 'storybook/test';
 import { ToggleGroup, ToggleGroupItem } from './index';
 import { AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next';
 import ToggleGroupDocs from '@/components/docs/ToggleGroupDocs.vue';
@@ -85,7 +85,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
     const center = canvas.getByRole('button', { name: 'Centralizar' });
     const right = canvas.getByRole('button', { name: 'Alinhar à direita' });

@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { fn, userEvent, within, expect } from 'storybook/test';
+import { fn, userEvent, expect } from 'storybook/test';
 import { Slider } from './index';
 import { Label } from '@/components/ui/label';
 import SliderDocs from '@/components/docs/SliderDocs.vue';
@@ -100,7 +100,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const thumbs = canvas.getAllByRole('slider');
 
     await step('Renderiza 1 thumb com role=slider', async () => {

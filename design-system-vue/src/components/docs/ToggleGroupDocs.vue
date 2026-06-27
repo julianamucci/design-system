@@ -456,7 +456,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="toggle-group">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="toggle-group"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -474,19 +478,31 @@ const visualTestItems = computed(() => [
         <ToggleGroup
           type="single"
           :model-value="demoAlignment"
-          @update:model-value="(v) => demoAlignment = (v as string)"
           :aria-label="tContent('demonstration.labels.alignmentLabel')"
+          @update:model-value="(v) => demoAlignment = (v as string)"
         >
-          <ToggleGroupItem value="left" :aria-label="tContent('demonstration.labels.left')">
+          <ToggleGroupItem
+            value="left"
+            :aria-label="tContent('demonstration.labels.left')"
+          >
             <AlignLeft aria-hidden="true" />
           </ToggleGroupItem>
-          <ToggleGroupItem value="center" :aria-label="tContent('demonstration.labels.center')">
+          <ToggleGroupItem
+            value="center"
+            :aria-label="tContent('demonstration.labels.center')"
+          >
             <AlignCenter aria-hidden="true" />
           </ToggleGroupItem>
-          <ToggleGroupItem value="right" :aria-label="tContent('demonstration.labels.right')">
+          <ToggleGroupItem
+            value="right"
+            :aria-label="tContent('demonstration.labels.right')"
+          >
             <AlignRight aria-hidden="true" />
           </ToggleGroupItem>
-          <ToggleGroupItem value="justify" :aria-label="tContent('demonstration.labels.justify')">
+          <ToggleGroupItem
+            value="justify"
+            :aria-label="tContent('demonstration.labels.justify')"
+          >
             <AlignJustify aria-hidden="true" />
           </ToggleGroupItem>
         </ToggleGroup>
@@ -495,16 +511,25 @@ const visualTestItems = computed(() => [
         <ToggleGroup
           type="multiple"
           :model-value="demoFormatting"
-          @update:model-value="(v) => demoFormatting = (v as string[])"
           :aria-label="tContent('demonstration.labels.formattingLabel')"
+          @update:model-value="(v) => demoFormatting = (v as string[])"
         >
-          <ToggleGroupItem value="bold" :aria-label="tContent('demonstration.labels.bold')">
+          <ToggleGroupItem
+            value="bold"
+            :aria-label="tContent('demonstration.labels.bold')"
+          >
             <Bold aria-hidden="true" />
           </ToggleGroupItem>
-          <ToggleGroupItem value="italic" :aria-label="tContent('demonstration.labels.italic')">
+          <ToggleGroupItem
+            value="italic"
+            :aria-label="tContent('demonstration.labels.italic')"
+          >
             <Italic aria-hidden="true" />
           </ToggleGroupItem>
-          <ToggleGroupItem value="underline" :aria-label="tContent('demonstration.labels.underline')">
+          <ToggleGroupItem
+            value="underline"
+            :aria-label="tContent('demonstration.labels.underline')"
+          >
             <Underline aria-hidden="true" />
           </ToggleGroupItem>
         </ToggleGroup>
@@ -514,13 +539,19 @@ const visualTestItems = computed(() => [
           type="single"
           variant="outline"
           :model-value="demoView"
-          @update:model-value="(v) => demoView = (v as string)"
           :aria-label="tContent('demonstration.labels.viewLabel')"
+          @update:model-value="(v) => demoView = (v as string)"
         >
-          <ToggleGroupItem value="grid" :aria-label="tContent('demonstration.labels.grid')">
+          <ToggleGroupItem
+            value="grid"
+            :aria-label="tContent('demonstration.labels.grid')"
+          >
             <LayoutGrid aria-hidden="true" />
           </ToggleGroupItem>
-          <ToggleGroupItem value="list" :aria-label="tContent('demonstration.labels.list')">
+          <ToggleGroupItem
+            value="list"
+            :aria-label="tContent('demonstration.labels.list')"
+          >
             <List aria-hidden="true" />
           </ToggleGroupItem>
         </ToggleGroup>
@@ -631,33 +662,110 @@ const visualTestItems = computed(() => [
     >
       <!-- Pair 1: ToggleGroup vs múltiplos Toggles soltos -->
       <template #do-preview-0>
-        <ToggleGroup type="multiple" aria-label="Formatação">
-          <ToggleGroupItem value="bold" aria-label="Negrito"><Bold aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="italic" aria-label="Itálico"><Italic aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="underline" aria-label="Sublinhado"><Underline aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroup
+          type="multiple"
+          aria-label="Formatação"
+        >
+          <ToggleGroupItem
+            value="bold"
+            aria-label="Negrito"
+          >
+            <Bold aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="italic"
+            aria-label="Itálico"
+          >
+            <Italic aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="underline"
+            aria-label="Sublinhado"
+          >
+            <Underline aria-hidden="true" />
+          </ToggleGroupItem>
         </ToggleGroup>
       </template>
       <template #dont-preview-0>
         <div class="flex items-center gap-3">
-          <ToggleGroup type="single" aria-label="A"><ToggleGroupItem value="bold" aria-label="Negrito"><Bold aria-hidden="true" /></ToggleGroupItem></ToggleGroup>
-          <ToggleGroup type="single" aria-label="B"><ToggleGroupItem value="italic" aria-label="Itálico"><Italic aria-hidden="true" /></ToggleGroupItem></ToggleGroup>
-          <ToggleGroup type="single" aria-label="C"><ToggleGroupItem value="underline" aria-label="Sublinhado"><Underline aria-hidden="true" /></ToggleGroupItem></ToggleGroup>
+          <ToggleGroup
+            type="single"
+            aria-label="A"
+          >
+            <ToggleGroupItem
+              value="bold"
+              aria-label="Negrito"
+            >
+              <Bold aria-hidden="true" />
+            </ToggleGroupItem>
+          </ToggleGroup>
+          <ToggleGroup
+            type="single"
+            aria-label="B"
+          >
+            <ToggleGroupItem
+              value="italic"
+              aria-label="Itálico"
+            >
+              <Italic aria-hidden="true" />
+            </ToggleGroupItem>
+          </ToggleGroup>
+          <ToggleGroup
+            type="single"
+            aria-label="C"
+          >
+            <ToggleGroupItem
+              value="underline"
+              aria-label="Sublinhado"
+            >
+              <Underline aria-hidden="true" />
+            </ToggleGroupItem>
+          </ToggleGroup>
         </div>
       </template>
 
       <!-- Pair 2: aria-label descritivo vs ausente/genérico -->
       <template #do-preview-1>
-        <ToggleGroup type="single" default-value="left" aria-label="Alinhamento do texto">
-          <ToggleGroupItem value="left" aria-label="Alinhar à esquerda"><AlignLeft aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="center" aria-label="Centralizar"><AlignCenter aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="right" aria-label="Alinhar à direita"><AlignRight aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroup
+          type="single"
+          default-value="left"
+          aria-label="Alinhamento do texto"
+        >
+          <ToggleGroupItem
+            value="left"
+            aria-label="Alinhar à esquerda"
+          >
+            <AlignLeft aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="center"
+            aria-label="Centralizar"
+          >
+            <AlignCenter aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="right"
+            aria-label="Alinhar à direita"
+          >
+            <AlignRight aria-hidden="true" />
+          </ToggleGroupItem>
         </ToggleGroup>
       </template>
       <template #dont-preview-1>
-        <ToggleGroup type="single" default-value="left" aria-label="Grupo">
-          <ToggleGroupItem value="left"><AlignLeft aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="center"><AlignCenter aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="right"><AlignRight aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroup
+          type="single"
+          default-value="left"
+          aria-label="Grupo"
+        >
+          <ToggleGroupItem value="left">
+            <AlignLeft aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="center">
+            <AlignCenter aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="right">
+            <AlignRight aria-hidden="true" />
+          </ToggleGroupItem>
         </ToggleGroup>
       </template>
     </DocsDoDont>
@@ -669,30 +777,88 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" component-slug="toggle-group">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      component-slug="toggle-group"
+    >
       <!-- single -->
       <template #variant-preview-0>
-        <ToggleGroup type="single" default-value="center" aria-label="Alinhamento do texto">
-          <ToggleGroupItem value="left" aria-label="Alinhar à esquerda"><AlignLeft aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="center" aria-label="Centralizar"><AlignCenter aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="right" aria-label="Alinhar à direita"><AlignRight aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroup
+          type="single"
+          default-value="center"
+          aria-label="Alinhamento do texto"
+        >
+          <ToggleGroupItem
+            value="left"
+            aria-label="Alinhar à esquerda"
+          >
+            <AlignLeft aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="center"
+            aria-label="Centralizar"
+          >
+            <AlignCenter aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="right"
+            aria-label="Alinhar à direita"
+          >
+            <AlignRight aria-hidden="true" />
+          </ToggleGroupItem>
         </ToggleGroup>
       </template>
 
       <!-- multiple -->
       <template #variant-preview-1>
-        <ToggleGroup type="multiple" :default-value="['bold']" aria-label="Formatação">
-          <ToggleGroupItem value="bold" aria-label="Negrito"><Bold aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="italic" aria-label="Itálico"><Italic aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="underline" aria-label="Sublinhado"><Underline aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroup
+          type="multiple"
+          :default-value="['bold']"
+          aria-label="Formatação"
+        >
+          <ToggleGroupItem
+            value="bold"
+            aria-label="Negrito"
+          >
+            <Bold aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="italic"
+            aria-label="Itálico"
+          >
+            <Italic aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="underline"
+            aria-label="Sublinhado"
+          >
+            <Underline aria-hidden="true" />
+          </ToggleGroupItem>
         </ToggleGroup>
       </template>
 
       <!-- vertical -->
       <template #variant-preview-2>
-        <ToggleGroup type="single" orientation="vertical" variant="outline" default-value="grid" aria-label="Modo de visualização">
-          <ToggleGroupItem value="grid" aria-label="Grade"><LayoutGrid aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="list" aria-label="Lista"><List aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroup
+          type="single"
+          orientation="vertical"
+          variant="outline"
+          default-value="grid"
+          aria-label="Modo de visualização"
+        >
+          <ToggleGroupItem
+            value="grid"
+            aria-label="Grade"
+          >
+            <LayoutGrid aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="list"
+            aria-label="Lista"
+          >
+            <List aria-hidden="true" />
+          </ToggleGroupItem>
         </ToggleGroup>
       </template>
     </DocsVariants>
@@ -705,38 +871,118 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <ToggleGroup type="single" variant="outline" default-value="left" aria-label="Alinhamento do texto">
-          <ToggleGroupItem value="left" aria-label="Alinhar à esquerda"><AlignLeft aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="center" aria-label="Centralizar"><AlignCenter aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="right" aria-label="Alinhar à direita"><AlignRight aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          default-value="left"
+          aria-label="Alinhamento do texto"
+        >
+          <ToggleGroupItem
+            value="left"
+            aria-label="Alinhar à esquerda"
+          >
+            <AlignLeft aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="center"
+            aria-label="Centralizar"
+          >
+            <AlignCenter aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="right"
+            aria-label="Alinhar à direita"
+          >
+            <AlignRight aria-hidden="true" />
+          </ToggleGroupItem>
         </ToggleGroup>
       </template>
       <template #variant-preview-1>
-        <ToggleGroup type="multiple" variant="outline" :default-value="['bold']" aria-label="Formatação">
-          <ToggleGroupItem value="bold" aria-label="Negrito"><Bold aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="italic" aria-label="Itálico"><Italic aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="underline" aria-label="Sublinhado"><Underline aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroup
+          type="multiple"
+          variant="outline"
+          :default-value="['bold']"
+          aria-label="Formatação"
+        >
+          <ToggleGroupItem
+            value="bold"
+            aria-label="Negrito"
+          >
+            <Bold aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="italic"
+            aria-label="Itálico"
+          >
+            <Italic aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="underline"
+            aria-label="Sublinhado"
+          >
+            <Underline aria-hidden="true" />
+          </ToggleGroupItem>
         </ToggleGroup>
       </template>
       <template #variant-preview-2>
-        <ToggleGroup type="single" variant="outline" default-value="grid" orientation="vertical" aria-label="Modo de visualização">
-          <ToggleGroupItem value="grid"><LayoutGrid aria-hidden="true" />Grade</ToggleGroupItem>
-          <ToggleGroupItem value="list"><List aria-hidden="true" />Lista</ToggleGroupItem>
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          default-value="grid"
+          orientation="vertical"
+          aria-label="Modo de visualização"
+        >
+          <ToggleGroupItem value="grid">
+            <LayoutGrid aria-hidden="true" />Grade
+          </ToggleGroupItem>
+          <ToggleGroupItem value="list">
+            <List aria-hidden="true" />Lista
+          </ToggleGroupItem>
         </ToggleGroup>
       </template>
       <template #variant-preview-3>
-        <ToggleGroup type="single" variant="outline" default-value="left" aria-label="Alinhamento do texto">
-          <ToggleGroupItem value="left" aria-label="Alinhar à esquerda"><AlignLeft aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="center" :disabled="true" aria-label="Centralizar (indisponível)"><AlignCenter aria-hidden="true" /></ToggleGroupItem>
-          <ToggleGroupItem value="right" aria-label="Alinhar à direita"><AlignRight aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          default-value="left"
+          aria-label="Alinhamento do texto"
+        >
+          <ToggleGroupItem
+            value="left"
+            aria-label="Alinhar à esquerda"
+          >
+            <AlignLeft aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="center"
+            :disabled="true"
+            aria-label="Centralizar (indisponível)"
+          >
+            <AlignCenter aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="right"
+            aria-label="Alinhar à direita"
+          >
+            <AlignRight aria-hidden="true" />
+          </ToggleGroupItem>
         </ToggleGroup>
       </template>
       <template #variant-preview-4>
         <div class="flex flex-col gap-2 w-72">
           <span>Filtros de exibição</span>
-          <ToggleGroup type="multiple" variant="outline" :default-value="['compact']" aria-label="Filtros de exibição">
-            <ToggleGroupItem value="hidden"><Eye aria-hidden="true" />Ocultos</ToggleGroupItem>
-            <ToggleGroupItem value="compact"><List aria-hidden="true" />Compacto</ToggleGroupItem>
+          <ToggleGroup
+            type="multiple"
+            variant="outline"
+            :default-value="['compact']"
+            aria-label="Filtros de exibição"
+          >
+            <ToggleGroupItem value="hidden">
+              <Eye aria-hidden="true" />Ocultos
+            </ToggleGroupItem>
+            <ToggleGroupItem value="compact">
+              <List aria-hidden="true" />Compacto
+            </ToggleGroupItem>
           </ToggleGroup>
         </div>
       </template>
@@ -753,8 +999,8 @@ const visualTestItems = computed(() => [
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: 'ToggleGroup',     cols: propCols, items: groupPropItems },
-        { title: 'ToggleGroupItem', cols: propCols, items: itemPropItems  },
+        { title: 'ToggleGroup', cols: propCols, items: groupPropItems },
+        { title: 'ToggleGroupItem', cols: propCols, items: itemPropItems },
       ]"
       :interface-code="interfaceCode"
     />
@@ -781,10 +1027,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────────── -->
     <DocsAnalytics

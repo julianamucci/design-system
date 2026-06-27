@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { userEvent, within, expect, fn } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { within, expect, fn } from 'storybook/test';
 import { createContextMenu } from './context-menu';
 import { createContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -68,27 +68,6 @@ function makeTrigger(label: string): HTMLElement {
   el.style.userSelect = 'none';
   el.textContent = label;
   return el;
-}
-
-function buildShortcut(text: string): HTMLElement {
-  const span = document.createElement('span');
-  span.className = 'ml-auto text-xs tracking-widest text-muted-foreground';
-  span.setAttribute('aria-hidden', 'true');
-  span.textContent = text;
-  return span;
-}
-
-function buildItemWithShortcut(label: string, shortcut: string): HTMLElement {
-  const li = document.createElement('li');
-  li.setAttribute('role', 'menuitem');
-  li.className =
-    'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
-  li.setAttribute('tabindex', '-1');
-  const labelSpan = document.createElement('span');
-  labelSpan.className = 'flex-1';
-  labelSpan.textContent = label;
-  li.append(labelSpan, buildShortcut(shortcut));
-  return li;
 }
 
 // ─── Playground ───────────────────────────────────────────────────────────────

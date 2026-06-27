@@ -361,11 +361,10 @@ export function createThemeColorsDocs(): HTMLElement {
   // demonstrando o eixo. Guardamos as células p/ reescrever ao trocar locale.
   const densityTables: Array<{ heads: HTMLElement[]; cells: HTMLElement[][] }> = [];
 
-  function densityData() {
-    return (themeColorsTranslations as Record<string, any>)[getLocale()].axes.density as {
-      tableCols: string[];
-      tableRows: string[][];
-    };
+  function densityData(): { tableCols: string[]; tableRows: string[][] } {
+    return ((themeColorsTranslations as Record<string, unknown>)[getLocale()] as {
+      axes: { density: { tableCols: string[]; tableRows: string[][] } };
+    }).axes.density;
   }
 
   function createDensityTable(): HTMLElement {

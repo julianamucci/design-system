@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPagination } from './pagination';
 import { createPaginationDocs } from '@/components/docs/PaginationDocs';
@@ -58,7 +58,7 @@ export const Playground: Story = {
       current: Math.min(Math.max(1, args.current), args.total),
       showPrevNext: args.showPrevNext,
       onPageChange: (page) => {
-        // eslint-disable-next-line no-console
+         
         console.log('[pagination] page_change', page);
       },
     });

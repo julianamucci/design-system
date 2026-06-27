@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { within, expect } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
 import { createAlertDocs } from '@/components/docs/AlertDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';

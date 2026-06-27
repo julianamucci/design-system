@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
-import { createCheckbox, type CheckboxOptions } from './checkbox';
+import { createCheckbox } from './checkbox';
 import { createCheckboxDocs } from '@/components/docs/CheckboxDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 

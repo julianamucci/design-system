@@ -27,7 +27,9 @@ function trackId(name: string): string | undefined {
 
 <template>
   <section id="relacionados">
-    <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
+    <h2 class="text-xl font-semibold mb-4">
+      {{ title }}
+    </h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Button
         v-for="(item, i) in items"
@@ -41,8 +43,12 @@ function trackId(name: string): string | undefined {
         :data-track-id="trackId(item.name)"
         :data-track-label="item.name"
       >
-        <p class="text-sm font-semibold text-primary">{{ item.name }}</p>
-        <p class="text-xs text-muted-foreground leading-relaxed">{{ item.description }}</p>
+        <p class="text-sm font-semibold text-primary">
+          {{ item.name }}
+        </p>
+        <p class="text-xs text-muted-foreground leading-relaxed">
+          {{ item.description }}
+        </p>
       </Button>
     </div>
   </section>

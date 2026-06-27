@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { createChart } from './chart';
 import { createCard, createCardHeader, createCardTitle, createCardDescription, createCardContent } from './card';
 

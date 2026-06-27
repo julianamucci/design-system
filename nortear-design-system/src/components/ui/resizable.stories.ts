@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createResizablePanel } from './resizable';
 import { createResizableDocs } from '@/components/docs/ResizableDocs';

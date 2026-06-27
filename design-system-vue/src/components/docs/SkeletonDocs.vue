@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -248,7 +248,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="skeleton">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="skeleton"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -268,13 +272,24 @@ const visualTestItems = computed(() => [
             :aria-label="tContent('demonstration.labels.card')"
             class="flex items-center gap-4 rounded-md border p-4"
           >
-            <Skeleton class="h-12 w-12 rounded-full motion-reduce:animate-none" :aria-hidden="true" />
+            <Skeleton
+              class="h-12 w-12 rounded-full motion-reduce:animate-none"
+              :aria-hidden="true"
+            />
             <div class="space-y-2 flex-1">
-              <Skeleton class="h-4 w-[180px] motion-reduce:animate-none" :aria-hidden="true" />
-              <Skeleton class="h-4 w-[140px] motion-reduce:animate-none" :aria-hidden="true" />
+              <Skeleton
+                class="h-4 w-[180px] motion-reduce:animate-none"
+                :aria-hidden="true"
+              />
+              <Skeleton
+                class="h-4 w-[140px] motion-reduce:animate-none"
+                :aria-hidden="true"
+              />
             </div>
           </div>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.card') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.card') }}
+          </p>
         </div>
 
         <div class="space-y-2">
@@ -283,15 +298,30 @@ const visualTestItems = computed(() => [
             :aria-label="tContent('demonstration.labels.list')"
             class="space-y-3 rounded-md border p-4 m-0 list-none"
           >
-            <li v-for="i in 5" :key="i" class="flex items-center gap-3">
-              <Skeleton class="h-8 w-8 rounded-full motion-reduce:animate-none" :aria-hidden="true" />
+            <li
+              v-for="i in 5"
+              :key="i"
+              class="flex items-center gap-3"
+            >
+              <Skeleton
+                class="h-8 w-8 rounded-full motion-reduce:animate-none"
+                :aria-hidden="true"
+              />
               <div class="space-y-2 flex-1">
-                <Skeleton class="h-3 w-[160px] motion-reduce:animate-none" :aria-hidden="true" />
-                <Skeleton class="h-3 w-[100px] motion-reduce:animate-none" :aria-hidden="true" />
+                <Skeleton
+                  class="h-3 w-[160px] motion-reduce:animate-none"
+                  :aria-hidden="true"
+                />
+                <Skeleton
+                  class="h-3 w-[100px] motion-reduce:animate-none"
+                  :aria-hidden="true"
+                />
               </div>
             </li>
           </ul>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.list') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.list') }}
+          </p>
         </div>
 
         <div class="space-y-2">
@@ -300,10 +330,15 @@ const visualTestItems = computed(() => [
             :aria-label="tContent('demonstration.labels.image')"
           >
             <AspectRatio :ratio="16 / 9">
-              <Skeleton class="h-full w-full rounded-md motion-reduce:animate-none" :aria-hidden="true" />
+              <Skeleton
+                class="h-full w-full rounded-md motion-reduce:animate-none"
+                :aria-hidden="true"
+              />
             </AspectRatio>
           </div>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.image') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.image') }}
+          </p>
         </div>
 
         <div class="space-y-2">
@@ -312,11 +347,22 @@ const visualTestItems = computed(() => [
             :aria-label="tContent('demonstration.labels.paragraph')"
             class="space-y-2 rounded-md border p-4"
           >
-            <Skeleton class="h-4 w-full motion-reduce:animate-none" :aria-hidden="true" />
-            <Skeleton class="h-4 w-[92%] motion-reduce:animate-none" :aria-hidden="true" />
-            <Skeleton class="h-4 w-[60%] motion-reduce:animate-none" :aria-hidden="true" />
+            <Skeleton
+              class="h-4 w-full motion-reduce:animate-none"
+              :aria-hidden="true"
+            />
+            <Skeleton
+              class="h-4 w-[92%] motion-reduce:animate-none"
+              :aria-hidden="true"
+            />
+            <Skeleton
+              class="h-4 w-[60%] motion-reduce:animate-none"
+              :aria-hidden="true"
+            />
           </div>
-          <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.paragraph') }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ tContent('demonstration.labels.paragraph') }}
+          </p>
         </div>
       </div>
     </DocsDemonstration>
@@ -386,23 +432,53 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <div aria-busy="true" aria-label="Carregando card" class="flex items-center gap-3 w-full rounded-md border p-3">
-          <Skeleton class="h-10 w-10 rounded-full motion-reduce:animate-none" :aria-hidden="true" />
+        <div
+          aria-busy="true"
+          aria-label="Carregando card"
+          class="flex items-center gap-3 w-full rounded-md border p-3"
+        >
+          <Skeleton
+            class="h-10 w-10 rounded-full motion-reduce:animate-none"
+            :aria-hidden="true"
+          />
           <div class="space-y-2 flex-1">
-            <Skeleton class="h-3 w-[140px] motion-reduce:animate-none" :aria-hidden="true" />
-            <Skeleton class="h-3 w-[100px] motion-reduce:animate-none" :aria-hidden="true" />
+            <Skeleton
+              class="h-3 w-[140px] motion-reduce:animate-none"
+              :aria-hidden="true"
+            />
+            <Skeleton
+              class="h-3 w-[100px] motion-reduce:animate-none"
+              :aria-hidden="true"
+            />
           </div>
         </div>
       </template>
       <template #dont-preview-0>
-        <div aria-busy="true" aria-label="Carregando" class="w-full rounded-md border p-3">
-          <Skeleton class="h-2 w-[60px] motion-reduce:animate-none" :aria-hidden="true" />
+        <div
+          aria-busy="true"
+          aria-label="Carregando"
+          class="w-full rounded-md border p-3"
+        >
+          <Skeleton
+            class="h-2 w-[60px] motion-reduce:animate-none"
+            :aria-hidden="true"
+          />
         </div>
       </template>
       <template #do-preview-1>
-        <div aria-busy="true" aria-label="Carregando lista" class="space-y-2 w-full rounded-md border p-3">
-          <Skeleton class="h-4 w-full motion-reduce:animate-none" :aria-hidden="true" />
-          <Skeleton class="h-4 w-[80%] motion-reduce:animate-none" :aria-hidden="true" />
+        <div
+          aria-busy="true"
+          aria-label="Carregando lista"
+          class="space-y-2 w-full rounded-md border p-3"
+        >
+          <Skeleton
+            class="h-4 w-full motion-reduce:animate-none"
+            :aria-hidden="true"
+          />
+          <Skeleton
+            class="h-4 w-[80%] motion-reduce:animate-none"
+            :aria-hidden="true"
+          />
         </div>
       </template>
       <template #dont-preview-1>
@@ -420,21 +496,48 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <div aria-busy="true" aria-label="Skeleton retângulo" class="w-full">
-          <Skeleton class="h-24 w-full rounded-md motion-reduce:animate-none" :aria-hidden="true" />
+        <div
+          aria-busy="true"
+          aria-label="Skeleton retângulo"
+          class="w-full"
+        >
+          <Skeleton
+            class="h-24 w-full rounded-md motion-reduce:animate-none"
+            :aria-hidden="true"
+          />
         </div>
       </template>
       <template #variant-preview-1>
-        <div aria-busy="true" aria-label="Skeleton círculo" class="w-full flex items-center justify-center">
-          <Skeleton class="h-12 w-12 rounded-full motion-reduce:animate-none" :aria-hidden="true" />
+        <div
+          aria-busy="true"
+          aria-label="Skeleton círculo"
+          class="w-full flex items-center justify-center"
+        >
+          <Skeleton
+            class="h-12 w-12 rounded-full motion-reduce:animate-none"
+            :aria-hidden="true"
+          />
         </div>
       </template>
       <template #variant-preview-2>
-        <div aria-busy="true" aria-label="Skeleton linha de texto" class="w-full space-y-2">
-          <Skeleton class="h-4 w-[250px] motion-reduce:animate-none" :aria-hidden="true" />
-          <Skeleton class="h-4 w-[200px] motion-reduce:animate-none" :aria-hidden="true" />
+        <div
+          aria-busy="true"
+          aria-label="Skeleton linha de texto"
+          class="w-full space-y-2"
+        >
+          <Skeleton
+            class="h-4 w-[250px] motion-reduce:animate-none"
+            :aria-hidden="true"
+          />
+          <Skeleton
+            class="h-4 w-[200px] motion-reduce:animate-none"
+            :aria-hidden="true"
+          />
         </div>
       </template>
     </DocsVariants>
@@ -484,10 +587,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

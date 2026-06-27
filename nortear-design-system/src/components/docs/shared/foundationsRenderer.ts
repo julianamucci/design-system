@@ -172,7 +172,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
 
     const thead = createTableHeader();
     const headRow = createTableRow();
-    const heads: HTMLElement[] = colKeys.map((ck) => {
+    const heads: HTMLElement[] = colKeys.map(() => {
       const th = createTableHead('');
       headRow.appendChild(th);
       return th;
@@ -185,7 +185,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
       const row = rows[rk];
       const tr = createTableRow();
       const cells: HTMLElement[] = [];
-      colKeys.forEach((ck) => {
+      colKeys.forEach(() => {
         const td = createTableCell('');
         tr.appendChild(td);
         cells.push(td);

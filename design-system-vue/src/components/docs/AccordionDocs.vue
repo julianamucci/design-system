@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -382,7 +382,10 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -393,366 +396,457 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       />
     </template>
 
-        <!-- ── Demonstração ───────────────────────────────────────────── -->
-        <DocsDemonstration :title="tContent('demonstration.title')">
-          <Accordion type="single" :collapsible="true" class="w-full max-w-lg">
-            <AccordionItem
-              v-for="item in demoItems"
-              :key="item.value"
-              :value="item.value"
-            >
-              <AccordionTrigger @click="handleDemoTriggerClick($event, item.q)">
-                {{ item.q }}
-              </AccordionTrigger>
-              <AccordionContent>{{ item.a }}</AccordionContent>
+    <!-- ── Demonstração ───────────────────────────────────────────── -->
+    <DocsDemonstration :title="tContent('demonstration.title')">
+      <Accordion
+        type="single"
+        :collapsible="true"
+        class="w-full max-w-lg"
+      >
+        <AccordionItem
+          v-for="item in demoItems"
+          :key="item.value"
+          :value="item.value"
+        >
+          <AccordionTrigger @click="handleDemoTriggerClick($event, item.q)">
+            {{ item.q }}
+          </AccordionTrigger>
+          <AccordionContent>{{ item.a }}</AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </DocsDemonstration>
+
+    <!-- ── Anatomia ───────────────────────────────────────────────── -->
+    <DocsAnatomy
+      :title="tContent('anatomy.title')"
+      :items="anatomyItems"
+      :structure-label="tContent('anatomy.structureLabel')"
+      :structure-code="tContent('anatomy.structureCode')"
+    />
+
+    <!-- ── Quando Usar ────────────────────────────────────────────── -->
+    <DocsWhenToUse
+      :title="tContent('usage.title')"
+      :guidelines="{
+        title: tContent('usage.guidelines.title'),
+        items: [
+          tContent('usage.guidelines.item1'),
+          tContent('usage.guidelines.item2'),
+          tContent('usage.guidelines.item3'),
+          tContent('usage.guidelines.item4'),
+          tContent('usage.guidelines.item5'),
+        ],
+      }"
+      :scenarios="{
+        title: tContent('usage.scenarios.title'),
+        cols: {
+          scenario: tContent('usage.scenarios.cols.scenario'),
+          use: tContent('usage.scenarios.cols.use'),
+          alternative: tContent('usage.scenarios.cols.alternative'),
+        },
+        items: [
+          { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
+          { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
+          { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
+          { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
+          { s: tContent('usage.scenarios.item5.s'), u: tContent('usage.scenarios.item5.u'), a: tContent('usage.scenarios.item5.a') },
+        ],
+      }"
+      :ux-writing="{
+        title: tContent('usage.uxWriting.title'),
+        cols: {
+          element: tContent('usage.uxWriting.table.element'),
+          rules: tContent('usage.uxWriting.table.rules'),
+          do: tContent('usage.uxWriting.table.correct'),
+          dont: tContent('usage.uxWriting.table.avoid'),
+        },
+        items: [
+          { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
+          { element: tContent('usage.uxWriting.table.triggerDoc.name'), rules: tContent('usage.uxWriting.table.triggerDoc.format'), do: tContent('usage.uxWriting.table.triggerDoc.good'), dont: tContent('usage.uxWriting.table.triggerDoc.bad') },
+          { element: tContent('usage.uxWriting.table.content.name'), rules: tContent('usage.uxWriting.table.content.format'), do: tContent('usage.uxWriting.table.content.good'), dont: tContent('usage.uxWriting.table.content.bad') },
+        ],
+      }"
+      :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
+      :dont="{ title: tContent('usage.dont.title'), items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3'), tContent('usage.dont.item4')] }"
+    />
+
+    <!-- ── Do & Don't ─────────────────────────────────────────────── -->
+    <DocsDoDont
+      :title="tContent('doDont.title')"
+      :pairs="[
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+      ]"
+    >
+      <template #do-preview-0>
+        <Accordion
+          type="single"
+          :collapsible="true"
+          class="w-full max-w-xs text-sm"
+        >
+          <AccordionItem value="faq">
+            <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
+            <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+      <template #dont-preview-0>
+        <Accordion
+          type="single"
+          :collapsible="true"
+          class="w-full max-w-xs text-sm"
+        >
+          <AccordionItem value="faq">
+            <AccordionTrigger>Senha</AccordionTrigger>
+            <AccordionContent>Informações sobre redefinição.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+      <template #do-preview-1>
+        <Accordion
+          type="multiple"
+          class="w-full max-w-xs text-sm"
+        >
+          <AccordionItem value="s1">
+            <AccordionTrigger>Especificações técnicas</AccordionTrigger>
+            <AccordionContent>CPU, RAM, SSD.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="s2">
+            <AccordionTrigger>Compatibilidade</AccordionTrigger>
+            <AccordionContent>Windows 11, macOS, Linux.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+      <template #dont-preview-1>
+        <Accordion
+          type="single"
+          :collapsible="true"
+          class="w-full max-w-xs text-sm"
+        >
+          <AccordionItem value="s1">
+            <AccordionTrigger>Expandir</AccordionTrigger>
+            <AccordionContent>Conteúdo único.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+    </DocsDoDont>
+
+    <!-- ── Importação ─────────────────────────────────────────────── -->
+    <DocsImport
+      :title="tContent('import.title')"
+      :description="tContent('import.note')"
+      :code="codeImport"
+    />
+
+    <!-- ── Modos de Operação ──────────────────────────────────────── -->
+    <DocsVariants
+      id="modos"
+      :title="tContent('variants.title')"
+      :items="modeItems"
+    >
+      <template #variant-preview-0>
+        <Accordion
+          type="single"
+          :collapsible="true"
+          default-value="item-1"
+          class="w-full max-w-sm text-sm"
+        >
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Pergunta 1</AccordionTrigger>
+            <AccordionContent>Resposta objetiva em 1–2 linhas.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>Pergunta 2</AccordionTrigger>
+            <AccordionContent>Outro conteúdo aqui.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+      <template #variant-preview-1>
+        <Accordion
+          type="multiple"
+          class="w-full max-w-sm text-sm"
+        >
+          <AccordionItem value="s1">
+            <AccordionTrigger>Especificações técnicas</AccordionTrigger>
+            <AccordionContent>CPU, RAM, SSD.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="s2">
+            <AccordionTrigger>Compatibilidade</AccordionTrigger>
+            <AccordionContent>Windows 11, macOS, Linux.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+      <template #variant-preview-2>
+        <Accordion
+          type="single"
+          :collapsible="true"
+          default-value="item-1"
+          class="w-full max-w-sm text-sm"
+        >
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Item 1 — controlado</AccordionTrigger>
+            <AccordionContent>Estado gerenciado externamente via value + onValueChange.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>Item 2 — controlado</AccordionTrigger>
+            <AccordionContent>Útil para sincronizar com URL ou outro estado.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+      <template #variant-preview-3>
+        <Accordion
+          type="single"
+          :collapsible="true"
+          default-value="item-1"
+          class="w-full max-w-sm text-sm"
+        >
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
+            <AccordionContent>Este item inicia expandido via defaultValue.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>Item fechado por padrão</AccordionTrigger>
+            <AccordionContent>Este item inicia colapsado.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+    </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="accordion"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Accordion
+          type="single"
+          :collapsible="true"
+          class="w-full max-w-lg text-sm"
+        >
+          <AccordionItem value="info">
+            <AccordionTrigger>
+              <span class="flex items-center gap-2">
+                <Info
+                  class="h-4 w-4"
+                  aria-hidden="true"
+                />
+                Informações gerais
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>Detalhes sobre a conta e preferências.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="aviso">
+            <AccordionTrigger>
+              <span class="flex items-center gap-2">
+                <AlertTriangle
+                  class="h-4 w-4"
+                  aria-hidden="true"
+                />
+                Avisos importantes
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>Pendências que requerem atenção do usuário.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="sucesso">
+            <AccordionTrigger>
+              <span class="flex items-center gap-2">
+                <CheckCircle2
+                  class="h-4 w-4"
+                  aria-hidden="true"
+                />
+                Itens concluídos
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>Lista de tarefas finalizadas com sucesso.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+      <template #variant-preview-1>
+        <Accordion
+          type="single"
+          :collapsible="true"
+          class="w-full max-w-lg text-sm"
+        >
+          <AccordionItem value="novo">
+            <AccordionTrigger>
+              <span class="flex items-center gap-2">
+                Novidades da versão
+                <Badge>Novo</Badge>
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>Lista das funcionalidades adicionadas nesta release.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="beta">
+            <AccordionTrigger>
+              <span class="flex items-center gap-2">
+                Funcionalidades em teste
+                <Badge variant="secondary">Beta</Badge>
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>Recursos disponíveis para usuários do programa beta.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+      <template #variant-preview-2>
+        <Accordion
+          type="multiple"
+          class="w-full max-w-lg text-sm"
+        >
+          <AccordionItem value="specs">
+            <AccordionTrigger>Especificações técnicas</AccordionTrigger>
+            <AccordionContent>
+              <table class="w-full text-sm border-collapse">
+                <tbody>
+                  <tr class="border-b">
+                    <td class="py-1 pr-4">
+                      CPU
+                    </td><td class="py-1">
+                      Intel Core i7-12700
+                    </td>
+                  </tr>
+                  <tr class="border-b">
+                    <td class="py-1 pr-4">
+                      RAM
+                    </td><td class="py-1">
+                      16GB DDR5
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="py-1 pr-4">
+                      SSD
+                    </td><td class="py-1">
+                      512GB NVMe
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="inclui">
+            <AccordionTrigger>O que está incluso</AccordionTrigger>
+            <AccordionContent>
+              <ul class="list-disc pl-5 space-y-1">
+                <li>Cabo de alimentação</li>
+                <li>Manual do usuário</li>
+                <li>Garantia de 24 meses</li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </template>
+      <template #variant-preview-3>
+        <div class="w-full max-w-lg">
+          <h2 class="text-lg font-semibold mb-3">
+            Perguntas frequentes
+          </h2>
+          <Accordion
+            type="single"
+            :collapsible="true"
+            class="w-full text-sm"
+          >
+            <AccordionItem value="senha">
+              <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
+              <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha". Você receberá um link de redefinição no email cadastrado.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="pagamento">
+              <AccordionTrigger>Quais formas de pagamento são aceitas?</AccordionTrigger>
+              <AccordionContent>Aceitamos cartão de crédito, Pix e boleto bancário.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="cancelamento">
+              <AccordionTrigger>Como cancelo minha assinatura?</AccordionTrigger>
+              <AccordionContent>Você pode cancelar a qualquer momento em Configurações → Assinatura.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="dados">
+              <AccordionTrigger>Onde encontro meus dados de acesso?</AccordionTrigger>
+              <AccordionContent>Seus dados de acesso estão disponíveis em Configurações → Conta.</AccordionContent>
             </AccordionItem>
           </Accordion>
-        </DocsDemonstration>
+        </div>
+      </template>
+    </DocsCompositions>
 
-        <!-- ── Anatomia ───────────────────────────────────────────────── -->
-        <DocsAnatomy
-          :title="tContent('anatomy.title')"
-          :items="anatomyItems"
-          :structure-label="tContent('anatomy.structureLabel')"
-          :structure-code="tContent('anatomy.structureCode')"
-        />
+    <!-- ── Estados ───────────────────────────────────────────────── -->
+    <DocsStates
+      :title="tContent('states.title')"
+      :cols="{
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
+      }"
+      :items="stateItems"
+    />
 
-        <!-- ── Quando Usar ────────────────────────────────────────────── -->
-        <DocsWhenToUse
-          :title="tContent('usage.title')"
-          :guidelines="{
-            title: tContent('usage.guidelines.title'),
-            items: [
-              tContent('usage.guidelines.item1'),
-              tContent('usage.guidelines.item2'),
-              tContent('usage.guidelines.item3'),
-              tContent('usage.guidelines.item4'),
-              tContent('usage.guidelines.item5'),
-            ],
-          }"
-          :scenarios="{
-            title: tContent('usage.scenarios.title'),
-            cols: {
-              scenario: tContent('usage.scenarios.cols.scenario'),
-              use: tContent('usage.scenarios.cols.use'),
-              alternative: tContent('usage.scenarios.cols.alternative'),
-            },
-            items: [
-              { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
-              { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-              { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
-              { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
-              { s: tContent('usage.scenarios.item5.s'), u: tContent('usage.scenarios.item5.u'), a: tContent('usage.scenarios.item5.a') },
-            ],
-          }"
-          :ux-writing="{
-            title: tContent('usage.uxWriting.title'),
-            cols: {
-              element: tContent('usage.uxWriting.table.element'),
-              rules: tContent('usage.uxWriting.table.rules'),
-              do: tContent('usage.uxWriting.table.correct'),
-              dont: tContent('usage.uxWriting.table.avoid'),
-            },
-            items: [
-              { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
-              { element: tContent('usage.uxWriting.table.triggerDoc.name'), rules: tContent('usage.uxWriting.table.triggerDoc.format'), do: tContent('usage.uxWriting.table.triggerDoc.good'), dont: tContent('usage.uxWriting.table.triggerDoc.bad') },
-              { element: tContent('usage.uxWriting.table.content.name'), rules: tContent('usage.uxWriting.table.content.format'), do: tContent('usage.uxWriting.table.content.good'), dont: tContent('usage.uxWriting.table.content.bad') },
-            ],
-          }"
-          :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
-          :dont="{ title: tContent('usage.dont.title'), items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3'), tContent('usage.dont.item4')] }"
-        />
+    <!-- ── Propriedades ───────────────────────────────────────────── -->
+    <DocsProps
+      :title="tContent('props.title')"
+      :tables="[
+        { title: tContent('props.accordion.title'), cols: propCols, items: accordionPropItems },
+        { title: tContent('props.item.title'), cols: propCols, items: itemPropItems },
+        { title: tContent('props.trigger.title'), cols: propCols, items: triggerPropItems },
+        { title: tContent('props.content.title'), cols: propCols, items: contentPropItems },
+      ]"
+      :interface-code="interfaceCode"
+      :extensibility-title="tContent('props.extensibilityTitle')"
+      :extensibility-notes="tContent('props.extensibility')"
+    />
 
-        <!-- ── Do & Don't ─────────────────────────────────────────────── -->
-        <DocsDoDont
-          :title="tContent('doDont.title')"
-          :pairs="[
-            { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-            { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
-          ]"
-        >
-          <template #do-preview-0>
-            <Accordion type="single" :collapsible="true" class="w-full max-w-xs text-sm">
-              <AccordionItem value="faq">
-                <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
-                <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-          <template #dont-preview-0>
-            <Accordion type="single" :collapsible="true" class="w-full max-w-xs text-sm">
-              <AccordionItem value="faq">
-                <AccordionTrigger>Senha</AccordionTrigger>
-                <AccordionContent>Informações sobre redefinição.</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-          <template #do-preview-1>
-            <Accordion type="multiple" class="w-full max-w-xs text-sm">
-              <AccordionItem value="s1">
-                <AccordionTrigger>Especificações técnicas</AccordionTrigger>
-                <AccordionContent>CPU, RAM, SSD.</AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="s2">
-                <AccordionTrigger>Compatibilidade</AccordionTrigger>
-                <AccordionContent>Windows 11, macOS, Linux.</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-          <template #dont-preview-1>
-            <Accordion type="single" :collapsible="true" class="w-full max-w-xs text-sm">
-              <AccordionItem value="s1">
-                <AccordionTrigger>Expandir</AccordionTrigger>
-                <AccordionContent>Conteúdo único.</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-        </DocsDoDont>
+    <!-- ── Tokens ─────────────────────────────────────────────────── -->
+    <DocsTokens
+      :title="tContent('tokens.title')"
+      :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
+      :items="tokenRows"
+      :customization-title="tContent('tokens.customizationTitle')"
+      :customization-code="codeCustomization"
+    />
 
-        <!-- ── Importação ─────────────────────────────────────────────── -->
-        <DocsImport
-          :title="tContent('import.title')"
-          :description="tContent('import.note')"
-          :code="codeImport"
-        />
+    <!-- ── Acessibilidade ─────────────────────────────────────────── -->
+    <DocsAccessibility
+      :title="tContent('accessibility.title')"
+      :summary="tContent('accessibility.summary')"
+      :items="accessibilityItems"
+      :keyboard-title="tContent('accessibility.keyboardTitle')"
+      :keyboard-items="keyboardItems"
+    />
 
-        <!-- ── Modos de Operação ──────────────────────────────────────── -->
-        <DocsVariants id="modos" :title="tContent('variants.title')" :items="modeItems">
-          <template #variant-preview-0>
-            <Accordion type="single" :collapsible="true" default-value="item-1" class="w-full max-w-sm text-sm">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>Pergunta 1</AccordionTrigger>
-                <AccordionContent>Resposta objetiva em 1–2 linhas.</AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2">
-                <AccordionTrigger>Pergunta 2</AccordionTrigger>
-                <AccordionContent>Outro conteúdo aqui.</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-          <template #variant-preview-1>
-            <Accordion type="multiple" class="w-full max-w-sm text-sm">
-              <AccordionItem value="s1">
-                <AccordionTrigger>Especificações técnicas</AccordionTrigger>
-                <AccordionContent>CPU, RAM, SSD.</AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="s2">
-                <AccordionTrigger>Compatibilidade</AccordionTrigger>
-                <AccordionContent>Windows 11, macOS, Linux.</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-          <template #variant-preview-2>
-            <Accordion type="single" :collapsible="true" default-value="item-1" class="w-full max-w-sm text-sm">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>Item 1 — controlado</AccordionTrigger>
-                <AccordionContent>Estado gerenciado externamente via value + onValueChange.</AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2">
-                <AccordionTrigger>Item 2 — controlado</AccordionTrigger>
-                <AccordionContent>Útil para sincronizar com URL ou outro estado.</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-          <template #variant-preview-3>
-            <Accordion type="single" :collapsible="true" default-value="item-1" class="w-full max-w-sm text-sm">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
-                <AccordionContent>Este item inicia expandido via defaultValue.</AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2">
-                <AccordionTrigger>Item fechado por padrão</AccordionTrigger>
-                <AccordionContent>Este item inicia colapsado.</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-        </DocsVariants>
+    <!-- ── Relacionados ───────────────────────────────────────────── -->
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
-        <!-- ── Composições ─────────────────────────────────────────────── -->
-        <DocsCompositions
-          :title="tContent('variants.compositionsTitle')"
-          :use-when-label="tNav('common.useWhen')"
-          component-slug="accordion"
-          :items="compositionItems"
-        >
-          <template #variant-preview-0>
-            <Accordion type="single" :collapsible="true" class="w-full max-w-lg text-sm">
-              <AccordionItem value="info">
-                <AccordionTrigger>
-                  <span class="flex items-center gap-2">
-                    <Info class="h-4 w-4" aria-hidden="true" />
-                    Informações gerais
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>Detalhes sobre a conta e preferências.</AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="aviso">
-                <AccordionTrigger>
-                  <span class="flex items-center gap-2">
-                    <AlertTriangle class="h-4 w-4" aria-hidden="true" />
-                    Avisos importantes
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>Pendências que requerem atenção do usuário.</AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="sucesso">
-                <AccordionTrigger>
-                  <span class="flex items-center gap-2">
-                    <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
-                    Itens concluídos
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>Lista de tarefas finalizadas com sucesso.</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-          <template #variant-preview-1>
-            <Accordion type="single" :collapsible="true" class="w-full max-w-lg text-sm">
-              <AccordionItem value="novo">
-                <AccordionTrigger>
-                  <span class="flex items-center gap-2">
-                    Novidades da versão
-                    <Badge>Novo</Badge>
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>Lista das funcionalidades adicionadas nesta release.</AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="beta">
-                <AccordionTrigger>
-                  <span class="flex items-center gap-2">
-                    Funcionalidades em teste
-                    <Badge variant="secondary">Beta</Badge>
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>Recursos disponíveis para usuários do programa beta.</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-          <template #variant-preview-2>
-            <Accordion type="multiple" class="w-full max-w-lg text-sm">
-              <AccordionItem value="specs">
-                <AccordionTrigger>Especificações técnicas</AccordionTrigger>
-                <AccordionContent>
-                  <table class="w-full text-sm border-collapse">
-                    <tbody>
-                      <tr class="border-b"><td class="py-1 pr-4">CPU</td><td class="py-1">Intel Core i7-12700</td></tr>
-                      <tr class="border-b"><td class="py-1 pr-4">RAM</td><td class="py-1">16GB DDR5</td></tr>
-                      <tr><td class="py-1 pr-4">SSD</td><td class="py-1">512GB NVMe</td></tr>
-                    </tbody>
-                  </table>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="inclui">
-                <AccordionTrigger>O que está incluso</AccordionTrigger>
-                <AccordionContent>
-                  <ul class="list-disc pl-5 space-y-1">
-                    <li>Cabo de alimentação</li>
-                    <li>Manual do usuário</li>
-                    <li>Garantia de 24 meses</li>
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </template>
-          <template #variant-preview-3>
-            <div class="w-full max-w-lg">
-              <h2 class="text-lg font-semibold mb-3">Perguntas frequentes</h2>
-              <Accordion type="single" :collapsible="true" class="w-full text-sm">
-                <AccordionItem value="senha">
-                  <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
-                  <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha". Você receberá um link de redefinição no email cadastrado.</AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="pagamento">
-                  <AccordionTrigger>Quais formas de pagamento são aceitas?</AccordionTrigger>
-                  <AccordionContent>Aceitamos cartão de crédito, Pix e boleto bancário.</AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="cancelamento">
-                  <AccordionTrigger>Como cancelo minha assinatura?</AccordionTrigger>
-                  <AccordionContent>Você pode cancelar a qualquer momento em Configurações → Assinatura.</AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="dados">
-                  <AccordionTrigger>Onde encontro meus dados de acesso?</AccordionTrigger>
-                  <AccordionContent>Seus dados de acesso estão disponíveis em Configurações → Conta.</AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          </template>
-        </DocsCompositions>
+    <!-- ── Notas ──────────────────────────────────────────────────── -->
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
-        <!-- ── Estados ───────────────────────────────────────────────── -->
-        <DocsStates
-          :title="tContent('states.title')"
-          :cols="{
-            state: tContent('states.cols.state'),
-            trigger: tContent('states.cols.trigger'),
-            behavior: tContent('states.cols.behavior'),
-          }"
-          :items="stateItems"
-        />
+    <!-- ── Analytics ─────────────────────────────────────────────── -->
+    <DocsAnalytics
+      :title="tContent('analytics.title')"
+      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :items="analyticsItems"
+    />
 
-        <!-- ── Propriedades ───────────────────────────────────────────── -->
-        <DocsProps
-          :title="tContent('props.title')"
-          :tables="[
-            { title: tContent('props.accordion.title'), cols: propCols, items: accordionPropItems },
-            { title: tContent('props.item.title'),      cols: propCols, items: itemPropItems      },
-            { title: tContent('props.trigger.title'),   cols: propCols, items: triggerPropItems   },
-            { title: tContent('props.content.title'),   cols: propCols, items: contentPropItems   },
-          ]"
-          :interface-code="interfaceCode"
-          :extensibility-title="tContent('props.extensibilityTitle')"
-          :extensibility-notes="tContent('props.extensibility')"
-        />
-
-        <!-- ── Tokens ─────────────────────────────────────────────────── -->
-        <DocsTokens
-          :title="tContent('tokens.title')"
-          :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
-          :items="tokenRows"
-          :customization-title="tContent('tokens.customizationTitle')"
-          :customization-code="codeCustomization"
-        />
-
-        <!-- ── Acessibilidade ─────────────────────────────────────────── -->
-        <DocsAccessibility
-          :title="tContent('accessibility.title')"
-          :summary="tContent('accessibility.summary')"
-          :items="accessibilityItems"
-          :keyboard-title="tContent('accessibility.keyboardTitle')"
-          :keyboard-items="keyboardItems"
-        />
-
-        <!-- ── Relacionados ───────────────────────────────────────────── -->
-        <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
-
-        <!-- ── Notas ──────────────────────────────────────────────────── -->
-        <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
-
-        <!-- ── Analytics ─────────────────────────────────────────────── -->
-        <DocsAnalytics
-          :title="tContent('analytics.title')"
-          :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
-          :items="analyticsItems"
-        />
-
-        <!-- ── Testes ─────────────────────────────────────────────────── -->
-        <DocsTestes
-          :title="tContent('testes.title')"
-          :functional="{
-            title: tContent('testes.functional.title'),
-            cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
-            items: functionalTestItems,
-          }"
-          :accessibility="{
-            title: tContent('testes.accessibility.title'),
-            cols: a11yCritCols,
-            items: a11yTestItems,
-          }"
-          :visual="{
-            title: tContent('testes.visual.title'),
-            cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
-            items: visualTestItems,
-          }"
-        />
+    <!-- ── Testes ─────────────────────────────────────────────────── -->
+    <DocsTestes
+      :title="tContent('testes.title')"
+      :functional="{
+        title: tContent('testes.functional.title'),
+        cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
+        items: functionalTestItems,
+      }"
+      :accessibility="{
+        title: tContent('testes.accessibility.title'),
+        cols: a11yCritCols,
+        items: a11yTestItems,
+      }"
+      :visual="{
+        title: tContent('testes.visual.title'),
+        cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
+        items: visualTestItems,
+      }"
+    />
   </DocsPageLayout>
 </template>

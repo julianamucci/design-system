@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Drawer,
   DrawerClose,
@@ -87,7 +87,6 @@ export const ComFormulario: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const nameInput = await body.findByLabelText(/Nome/i);
@@ -128,7 +127,6 @@ export const ComConfirmacao: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const action = await body.findByRole('button', { name: /Remover anexo/i });
@@ -171,7 +169,6 @@ export const ComScroll: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const accept = await body.findByRole('button', { name: /Aceitar termos/i });

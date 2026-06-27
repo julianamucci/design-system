@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -401,7 +401,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="chart">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="chart"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -413,14 +417,16 @@ const visualTestItems = computed(() => [
     </template>
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
-    <DocsDemonstration :title="tContent('demonstration.title')" component-slug="chart">
+    <DocsDemonstration
+      :title="tContent('demonstration.title')"
+      component-slug="chart"
+    >
       <div class="flex flex-col items-center justify-center w-full py-8 gap-4">
         <ChartContainer
           :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
           class="h-[240px] w-full max-w-lg"
           :aria-label="tContent('demonstration.labels.chartTitle')"
-         />
-
+        />
       </div>
     </DocsDemonstration>
 
@@ -471,10 +477,10 @@ const visualTestItems = computed(() => [
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.axisLabel.name'),     rules: tContent('usage.uxWriting.table.axisLabel.format'),     do: tContent('usage.uxWriting.table.axisLabel.good'),     dont: tContent('usage.uxWriting.table.axisLabel.bad')     },
-          { element: tContent('usage.uxWriting.table.tooltipValue.name'),  rules: tContent('usage.uxWriting.table.tooltipValue.format'),  do: tContent('usage.uxWriting.table.tooltipValue.good'),  dont: tContent('usage.uxWriting.table.tooltipValue.bad')  },
-          { element: tContent('usage.uxWriting.table.legendLabel.name'),   rules: tContent('usage.uxWriting.table.legendLabel.format'),   do: tContent('usage.uxWriting.table.legendLabel.good'),   dont: tContent('usage.uxWriting.table.legendLabel.bad')   },
-          { element: tContent('usage.uxWriting.table.emptyState.name'),    rules: tContent('usage.uxWriting.table.emptyState.format'),    do: tContent('usage.uxWriting.table.emptyState.good'),    dont: tContent('usage.uxWriting.table.emptyState.bad')    },
+          { element: tContent('usage.uxWriting.table.axisLabel.name'), rules: tContent('usage.uxWriting.table.axisLabel.format'), do: tContent('usage.uxWriting.table.axisLabel.good'), dont: tContent('usage.uxWriting.table.axisLabel.bad') },
+          { element: tContent('usage.uxWriting.table.tooltipValue.name'), rules: tContent('usage.uxWriting.table.tooltipValue.format'), do: tContent('usage.uxWriting.table.tooltipValue.good'), dont: tContent('usage.uxWriting.table.tooltipValue.bad') },
+          { element: tContent('usage.uxWriting.table.legendLabel.name'), rules: tContent('usage.uxWriting.table.legendLabel.format'), do: tContent('usage.uxWriting.table.legendLabel.good'), dont: tContent('usage.uxWriting.table.legendLabel.bad') },
+          { element: tContent('usage.uxWriting.table.emptyState.name'), rules: tContent('usage.uxWriting.table.emptyState.format'), do: tContent('usage.uxWriting.table.emptyState.good'), dont: tContent('usage.uxWriting.table.emptyState.bad') },
         ],
       }"
       :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
@@ -496,8 +502,7 @@ const visualTestItems = computed(() => [
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[120px] w-full max-w-xs"
             aria-label="Bar chart com legenda"
-           />
-
+          />
         </div>
       </template>
       <!-- Pair 1: DON'T — sem legenda -->
@@ -506,28 +511,40 @@ const visualTestItems = computed(() => [
           <ChartContainer
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[120px] w-full max-w-xs"
-           />
-          <p class="text-xs text-muted-foreground italic">Sem legenda — séries indistinguíveis</p>
+          />
+          <p class="text-xs text-muted-foreground italic">
+            Sem legenda — séries indistinguíveis
+          </p>
         </div>
       </template>
       <!-- Pair 2: DO — com aria-label -->
       <template #do-preview-1>
         <div class="flex flex-col items-center justify-center gap-2 py-4">
           <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-xs font-mono">
-            <span class="w-2 h-2 rounded-full bg-green-500" aria-hidden="true"></span>
+            <span
+              class="w-2 h-2 rounded-full bg-green-500"
+              aria-hidden="true"
+            />
             <code>aria-label="Gráfico de barras: acessos mensais"</code>
           </div>
-          <p class="text-xs text-muted-foreground text-center max-w-xs">aria-label descritivo garante acessibilidade para leitores de tela</p>
+          <p class="text-xs text-muted-foreground text-center max-w-xs">
+            aria-label descritivo garante acessibilidade para leitores de tela
+          </p>
         </div>
       </template>
       <!-- Pair 2: DON'T — sem aria-label -->
       <template #dont-preview-1>
         <div class="flex flex-col items-center justify-center gap-2 py-4">
           <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-xs font-mono">
-            <span class="w-2 h-2 rounded-full bg-red-500" aria-hidden="true"></span>
+            <span
+              class="w-2 h-2 rounded-full bg-red-500"
+              aria-hidden="true"
+            />
             <code>&lt;ChartContainer :config="..."&gt;</code>
           </div>
-          <p class="text-xs text-muted-foreground text-center max-w-xs">Sem aria-label — gráfico inacessível para leitores de tela</p>
+          <p class="text-xs text-muted-foreground text-center max-w-xs">
+            Sem aria-label — gráfico inacessível para leitores de tela
+          </p>
         </div>
       </template>
     </DocsDoDont>
@@ -542,7 +559,11 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" component-slug="chart">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      component-slug="chart"
+    >
       <!-- Bar chart -->
       <template #variant-preview-0>
         <div class="py-6 px-4 flex flex-col gap-3">
@@ -550,7 +571,7 @@ const visualTestItems = computed(() => [
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[180px] w-full"
             aria-label="Bar chart"
-           />
+          />
         </div>
       </template>
       <!-- Line chart -->
@@ -560,7 +581,7 @@ const visualTestItems = computed(() => [
             :option="buildLineOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[180px] w-full"
             aria-label="Line chart"
-           />
+          />
         </div>
       </template>
       <!-- Area chart -->
@@ -570,7 +591,7 @@ const visualTestItems = computed(() => [
             :option="buildAreaOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[180px] w-full"
             aria-label="Area chart"
-           />
+          />
         </div>
       </template>
       <!-- Pie chart -->
@@ -580,7 +601,7 @@ const visualTestItems = computed(() => [
             :option="buildPieOption({ data: pieData })"
             class="h-[180px] w-[260px]"
             aria-label="Pie chart"
-           />
+          />
         </div>
       </template>
     </DocsVariants>
@@ -602,7 +623,7 @@ const visualTestItems = computed(() => [
               :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
               class="h-[200px] w-full"
               aria-label="Gráfico de barras: acessos mensais por dispositivo"
-             />
+            />
           </CardContent>
         </Card>
       </template>
@@ -613,22 +634,25 @@ const visualTestItems = computed(() => [
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[200px] w-full max-w-md"
             aria-label="Gráfico multi-séries: Desktop e Mobile"
-           />
-
+          />
         </div>
       </template>
 
       <template #variant-preview-2>
         <div class="flex items-center gap-4 rounded-md border p-4 w-fit">
           <div>
-            <p class="text-xs text-muted-foreground">Acessos</p>
-            <p class="text-2xl font-semibold">1.224</p>
+            <p class="text-xs text-muted-foreground">
+              Acessos
+            </p>
+            <p class="text-2xl font-semibold">
+              1.224
+            </p>
           </div>
           <ChartContainer
             :option="buildLineOption({ xAxis: xMonths, series: multiSeries })"
             class="h-[48px] w-[120px]"
             aria-label="Tendência de acessos nos últimos 6 meses"
-           />
+          />
         </div>
       </template>
 
@@ -654,7 +678,7 @@ const visualTestItems = computed(() => [
       :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.containerTitle'), cols: propCols, items: containerPropItems },
-        { title: tContent('props.legendTitle'),    cols: propCols, items: legendPropItems    },
+        { title: tContent('props.legendTitle'), cols: propCols, items: legendPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -680,10 +704,18 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" component-slug="chart" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+      component-slug="chart"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" component-slug="chart" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+      component-slug="chart"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

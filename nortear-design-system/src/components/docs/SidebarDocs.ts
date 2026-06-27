@@ -815,7 +815,7 @@ export function createSidebarDocs(): HTMLElement {
 
         const codeWithGroups = [
           `const instance = createSidebar({ defaultOpen: true });`,
-          `const inner = instance.element.querySelector('[data-sidebar=\"sidebar\"]')!;`,
+          `const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;`,
           ``,
           `const content = createSidebarContent();`,
           `content.appendChild(createSidebarGroup({`,

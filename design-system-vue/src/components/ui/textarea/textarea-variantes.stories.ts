@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -38,7 +38,6 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Textarea default renderiza com data-slot', async () => {
       const textarea = canvas.getByRole('textbox');
       await expect(textarea).toHaveAttribute('data-slot', 'textarea');
@@ -79,7 +78,6 @@ export const WithCounter: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Textarea com maxlength está configurado', async () => {
       const textarea = canvas.getByRole('textbox') as HTMLTextAreaElement;
@@ -121,7 +119,6 @@ export const NoResize: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Textarea aplica classe resize-none', async () => {
       const textarea = canvas.getByRole('textbox');
       await expect(textarea).toHaveClass('resize-none');

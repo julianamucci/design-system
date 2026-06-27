@@ -467,7 +467,11 @@ const demoSlides = [1, 2, 3, 4, 5];
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="carousel">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="carousel"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -479,11 +483,20 @@ const demoSlides = [1, 2, 3, 4, 5];
     </template>
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
-    <DocsDemonstration :title="tContent('demonstration.title')" component-slug="carousel">
+    <DocsDemonstration
+      :title="tContent('demonstration.title')"
+      component-slug="carousel"
+    >
       <div class="flex items-center justify-center w-full py-10">
-        <Carousel class="w-full max-w-sm" :aria-label="tContent('usage.uxWriting.table.caption.good')">
+        <Carousel
+          class="w-full max-w-sm"
+          :aria-label="tContent('usage.uxWriting.table.caption.good')"
+        >
           <CarouselContent>
-            <CarouselItem v-for="n in demoSlides" :key="n">
+            <CarouselItem
+              v-for="n in demoSlides"
+              :key="n"
+            >
               <Card class="flex aspect-square items-center justify-center p-6">
                 <span class="text-3xl font-semibold">{{ n }}</span>
               </Card>
@@ -540,9 +553,9 @@ const demoSlides = [1, 2, 3, 4, 5];
         },
         items: [
           { element: tContent('usage.uxWriting.table.previous.name'), rules: tContent('usage.uxWriting.table.previous.format'), do: tContent('usage.uxWriting.table.previous.good'), dont: tContent('usage.uxWriting.table.previous.bad') },
-          { element: tContent('usage.uxWriting.table.next.name'),     rules: tContent('usage.uxWriting.table.next.format'),     do: tContent('usage.uxWriting.table.next.good'),     dont: tContent('usage.uxWriting.table.next.bad')     },
-          { element: tContent('usage.uxWriting.table.dots.name'),     rules: tContent('usage.uxWriting.table.dots.format'),     do: tContent('usage.uxWriting.table.dots.good'),     dont: tContent('usage.uxWriting.table.dots.bad')     },
-          { element: tContent('usage.uxWriting.table.caption.name'),  rules: tContent('usage.uxWriting.table.caption.format'),  do: tContent('usage.uxWriting.table.caption.good'),  dont: tContent('usage.uxWriting.table.caption.bad')  },
+          { element: tContent('usage.uxWriting.table.next.name'), rules: tContent('usage.uxWriting.table.next.format'), do: tContent('usage.uxWriting.table.next.good'), dont: tContent('usage.uxWriting.table.next.bad') },
+          { element: tContent('usage.uxWriting.table.dots.name'), rules: tContent('usage.uxWriting.table.dots.format'), do: tContent('usage.uxWriting.table.dots.good'), dont: tContent('usage.uxWriting.table.dots.bad') },
+          { element: tContent('usage.uxWriting.table.caption.name'), rules: tContent('usage.uxWriting.table.caption.format'), do: tContent('usage.uxWriting.table.caption.good'), dont: tContent('usage.uxWriting.table.caption.bad') },
         ],
       }"
       :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
@@ -559,9 +572,15 @@ const demoSlides = [1, 2, 3, 4, 5];
     >
       <template #do-preview-0>
         <div class="flex items-center justify-center py-6 px-8">
-          <Carousel class="w-full max-w-[200px]" :aria-label="tContent('usage.uxWriting.table.caption.good')">
+          <Carousel
+            class="w-full max-w-[200px]"
+            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          >
             <CarouselContent>
-              <CarouselItem v-for="n in [1, 2, 3]" :key="n">
+              <CarouselItem
+                v-for="n in [1, 2, 3]"
+                :key="n"
+              >
                 <Card class="flex aspect-square items-center justify-center p-4">
                   <span class="text-xl font-semibold">{{ n }}</span>
                 </Card>
@@ -576,7 +595,10 @@ const demoSlides = [1, 2, 3, 4, 5];
         <div class="flex items-center justify-center py-6 px-8">
           <Carousel class="w-full max-w-[200px]">
             <CarouselContent>
-              <CarouselItem v-for="n in [1, 2, 3]" :key="n">
+              <CarouselItem
+                v-for="n in [1, 2, 3]"
+                :key="n"
+              >
                 <Card class="flex aspect-square items-center justify-center p-4">
                   <span class="text-xl font-semibold">{{ n }}</span>
                 </Card>
@@ -588,19 +610,29 @@ const demoSlides = [1, 2, 3, 4, 5];
       <template #do-preview-1>
         <div class="flex flex-col items-center justify-center gap-2 py-4">
           <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-xs font-mono">
-            <span class="w-2 h-2 rounded-full bg-green-500" aria-hidden="true"></span>
+            <span
+              class="w-2 h-2 rounded-full bg-green-500"
+              aria-hidden="true"
+            />
             <code>Autoplay({ delay: 3000, stopOnInteraction: true })</code>
           </div>
-          <p class="text-xs text-muted-foreground text-center max-w-xs">loop: true + stopOnInteraction respeita WCAG 2.2.2</p>
+          <p class="text-xs text-muted-foreground text-center max-w-xs">
+            loop: true + stopOnInteraction respeita WCAG 2.2.2
+          </p>
         </div>
       </template>
       <template #dont-preview-1>
         <div class="flex flex-col items-center justify-center gap-2 py-4">
           <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-xs font-mono">
-            <span class="w-2 h-2 rounded-full bg-red-500" aria-hidden="true"></span>
+            <span
+              class="w-2 h-2 rounded-full bg-red-500"
+              aria-hidden="true"
+            />
             <code>Autoplay({ delay: 800 })</code>
           </div>
-          <p class="text-xs text-muted-foreground text-center max-w-xs">Avanço rápido sem pausa quebra WCAG 2.2.2</p>
+          <p class="text-xs text-muted-foreground text-center max-w-xs">
+            Avanço rápido sem pausa quebra WCAG 2.2.2
+          </p>
         </div>
       </template>
     </DocsDoDont>
@@ -615,12 +647,22 @@ const demoSlides = [1, 2, 3, 4, 5];
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" component-slug="carousel">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      component-slug="carousel"
+    >
       <template #variant-preview-0>
         <div class="py-10 px-12">
-          <Carousel class="w-full max-w-xs" :aria-label="tContent('usage.uxWriting.table.caption.good')">
+          <Carousel
+            class="w-full max-w-xs"
+            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          >
             <CarouselContent>
-              <CarouselItem v-for="n in demoSlides" :key="n">
+              <CarouselItem
+                v-for="n in demoSlides"
+                :key="n"
+              >
                 <Card class="flex aspect-square items-center justify-center p-6">
                   <span class="text-2xl font-semibold">{{ n }}</span>
                 </Card>
@@ -633,9 +675,16 @@ const demoSlides = [1, 2, 3, 4, 5];
       </template>
       <template #variant-preview-1>
         <div class="py-14 px-4">
-          <Carousel orientation="vertical" class="w-full max-w-[200px]" :aria-label="tContent('usage.uxWriting.table.caption.good')">
+          <Carousel
+            orientation="vertical"
+            class="w-full max-w-[200px]"
+            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          >
             <CarouselContent class="h-[200px]">
-              <CarouselItem v-for="n in demoSlides" :key="n">
+              <CarouselItem
+                v-for="n in demoSlides"
+                :key="n"
+              >
                 <Card class="flex aspect-square items-center justify-center p-4">
                   <span class="text-2xl font-semibold">{{ n }}</span>
                 </Card>
@@ -648,9 +697,15 @@ const demoSlides = [1, 2, 3, 4, 5];
       </template>
       <template #variant-preview-2>
         <div class="py-10 px-12">
-          <Carousel class="w-full max-w-xs" :aria-label="tContent('usage.uxWriting.table.caption.good')">
+          <Carousel
+            class="w-full max-w-xs"
+            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          >
             <CarouselContent>
-              <CarouselItem v-for="n in demoSlides" :key="n">
+              <CarouselItem
+                v-for="n in demoSlides"
+                :key="n"
+              >
                 <Card class="flex aspect-square items-center justify-center p-6">
                   <span class="text-2xl font-semibold">{{ n }}</span>
                 </Card>
@@ -663,9 +718,16 @@ const demoSlides = [1, 2, 3, 4, 5];
       </template>
       <template #variant-preview-3>
         <div class="py-10 px-12">
-          <Carousel class="w-full max-w-md" :aria-label="tContent('usage.uxWriting.table.caption.good')">
+          <Carousel
+            class="w-full max-w-md"
+            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          >
             <CarouselContent>
-              <CarouselItem v-for="n in [1, 2, 3, 4, 5, 6]" :key="n" class="md:basis-1/2 lg:basis-1/3">
+              <CarouselItem
+                v-for="n in [1, 2, 3, 4, 5, 6]"
+                :key="n"
+                class="md:basis-1/2 lg:basis-1/3"
+              >
                 <Card class="flex aspect-square items-center justify-center p-4">
                   <span class="text-xl font-semibold">{{ n }}</span>
                 </Card>
@@ -693,7 +755,10 @@ const demoSlides = [1, 2, 3, 4, 5];
             @init-api="onDotsInit"
           >
             <CarouselContent>
-              <CarouselItem v-for="n in demoSlides" :key="n">
+              <CarouselItem
+                v-for="n in demoSlides"
+                :key="n"
+              >
                 <Card class="flex aspect-square items-center justify-center p-6">
                   <span class="text-2xl font-semibold">{{ n }}</span>
                 </Card>
@@ -702,7 +767,10 @@ const demoSlides = [1, 2, 3, 4, 5];
             <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
             <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
           </Carousel>
-          <div class="flex items-center justify-center gap-2" :aria-label="tContent('demonstration.labels.goToSlide')">
+          <div
+            class="flex items-center justify-center gap-2"
+            :aria-label="tContent('demonstration.labels.goToSlide')"
+          >
             <button
               v-for="(_, i) in demoSlides"
               :key="i"
@@ -717,16 +785,26 @@ const demoSlides = [1, 2, 3, 4, 5];
       </template>
       <template #variant-preview-1>
         <div class="py-6 px-4">
-          <Carousel class="w-full max-w-sm" :aria-label="tContent('usage.uxWriting.table.caption.good')">
+          <Carousel
+            class="w-full max-w-sm"
+            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          >
             <CarouselContent>
-              <CarouselItem v-for="(photo, i) in galleryPhotos" :key="i">
+              <CarouselItem
+                v-for="(photo, i) in galleryPhotos"
+                :key="i"
+              >
                 <Card class="overflow-hidden">
                   <div class="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
                     <span class="text-2xl font-semibold text-foreground">{{ photo.title }}</span>
                   </div>
                   <div class="p-4">
-                    <h3 class="text-sm font-semibold text-foreground">{{ photo.title }}</h3>
-                    <p class="text-xs text-muted-foreground">{{ photo.description }}</p>
+                    <h3 class="text-sm font-semibold text-foreground">
+                      {{ photo.title }}
+                    </h3>
+                    <p class="text-xs text-muted-foreground">
+                      {{ photo.description }}
+                    </p>
                   </div>
                 </Card>
               </CarouselItem>
@@ -744,7 +822,10 @@ const demoSlides = [1, 2, 3, 4, 5];
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
           >
             <CarouselContent>
-              <CarouselItem v-for="n in demoSlides" :key="n">
+              <CarouselItem
+                v-for="n in demoSlides"
+                :key="n"
+              >
                 <Card class="flex aspect-square items-center justify-center p-6">
                   <span class="text-2xl font-semibold">{{ n }}</span>
                 </Card>
@@ -757,9 +838,16 @@ const demoSlides = [1, 2, 3, 4, 5];
       </template>
       <template #variant-preview-3>
         <div class="py-10 px-12">
-          <Carousel class="w-full max-w-md" :aria-label="tContent('usage.uxWriting.table.caption.good')">
+          <Carousel
+            class="w-full max-w-md"
+            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          >
             <CarouselContent>
-              <CarouselItem v-for="n in [1, 2, 3, 4, 5, 6]" :key="n" class="md:basis-1/2 lg:basis-1/3">
+              <CarouselItem
+                v-for="n in [1, 2, 3, 4, 5, 6]"
+                :key="n"
+                class="md:basis-1/2 lg:basis-1/3"
+              >
                 <Card class="flex aspect-square items-center justify-center p-4">
                   <span class="text-xl font-semibold">{{ n }}</span>
                 </Card>
@@ -783,10 +871,10 @@ const demoSlides = [1, 2, 3, 4, 5];
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: tContent('props.carouselTitle'),  cols: propCols, items: carouselPropItems    },
-        { title: tContent('props.contentTitle'),   cols: propCols, items: contentItemPropItems },
-        { title: tContent('props.itemTitle'),      cols: propCols, items: contentItemPropItems },
-        { title: tContent('props.navTitle'),       cols: propCols, items: navPropItems         },
+        { title: tContent('props.carouselTitle'), cols: propCols, items: carouselPropItems },
+        { title: tContent('props.contentTitle'), cols: propCols, items: contentItemPropItems },
+        { title: tContent('props.itemTitle'), cols: propCols, items: contentItemPropItems },
+        { title: tContent('props.navTitle'), cols: propCols, items: navPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -812,10 +900,18 @@ const demoSlides = [1, 2, 3, 4, 5];
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" component-slug="carousel" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+      component-slug="carousel"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" component-slug="carousel" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+      component-slug="carousel"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

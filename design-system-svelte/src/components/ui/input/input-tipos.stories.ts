@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
-import { Input } from './index';
 import InputStory from './InputStory.svelte';
 
 const meta = {

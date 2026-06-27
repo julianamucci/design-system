@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import {
   Select,
   SelectContent,
@@ -71,8 +71,6 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
     await step('Trigger tem role=combobox com placeholder', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
       await expect(trigger).toBeInTheDocument();
@@ -124,8 +122,6 @@ export const WithGroups: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
     await step('Abre dropdown e renderiza labels dos grupos', async () => {
       await userEvent.click(canvas.getByRole('combobox'));
       const listbox = await waitForPortal('listbox', { timeout: 2000 });
@@ -171,8 +167,6 @@ export const WithIcon: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
     await step('Trigger renderiza com placeholder', async () => {
       await expect(canvas.getByText(/Selecione\.\.\./i)).toBeVisible();
     });

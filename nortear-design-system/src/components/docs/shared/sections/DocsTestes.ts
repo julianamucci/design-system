@@ -1,4 +1,3 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
 import { createCard } from '@/components/ui/card';
 import { createBadge } from '@/components/ui/badge';
 import { createKbd } from '@/components/ui/kbd';

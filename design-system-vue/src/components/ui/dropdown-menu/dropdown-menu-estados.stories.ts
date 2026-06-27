@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, expect, waitFor } from 'storybook/test';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,8 +63,6 @@ export const Fechado: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /Abrir menu/i });
     await expect(trigger).toBeVisible();
     await expect(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -93,7 +91,6 @@ export const Aberto: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
   },
@@ -125,8 +122,6 @@ export const Controlado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step('Click no toggle externo abre o menu', async () => {
       const toggle = canvas.getByRole('button', { name: /Toggle externo/i });
@@ -170,7 +165,6 @@ export const ItemDesabilitado: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const disabled = await waitForPortal('menuitem', { name: /Arquivar/i });

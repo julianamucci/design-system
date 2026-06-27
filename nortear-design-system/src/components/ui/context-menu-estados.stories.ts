@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn } from 'storybook/test';
 import { createContextMenu } from './context-menu';
 

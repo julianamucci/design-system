@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { fn, userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { fn, userEvent, expect } from 'storybook/test';
 import { Button } from './index';
 import ButtonDocs from '@/components/docs/ButtonDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -49,7 +49,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step, args }) => {
-    const canvas = within(canvasElement);
     const button = canvas.getByRole('button');
 
     await step('Botão está presente e visível', async () => {

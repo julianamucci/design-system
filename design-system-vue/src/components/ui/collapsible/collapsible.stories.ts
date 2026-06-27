@@ -1,7 +1,6 @@
 // @jsxImportSource react
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { fn, userEvent, within, expect } from 'storybook/test';
-import { ref } from 'vue';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
 import CollapsibleDocs from '@/components/docs/CollapsibleDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -59,7 +58,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Trigger está presente e acessível', async () => {
       const trigger = canvas.getByRole('button');

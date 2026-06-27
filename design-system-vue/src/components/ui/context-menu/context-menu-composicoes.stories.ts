@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { ref } from 'vue';
 import {
   ContextMenu,
@@ -41,7 +41,6 @@ type Story = StoryObj<typeof meta>;
 export const ComCheckbox: Story = {
   name: 'Com CheckboxItem',
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('trigger renderizado', async () => {
       const trigger = canvas.getByText('Clique com o botão direito aqui');
       await expect(trigger).toBeInTheDocument();
@@ -95,7 +94,6 @@ export const ComCheckbox: Story = {
 export const ComRadioGroup: Story = {
   name: 'Com RadioGroup',
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('trigger renderizado', async () => {
       const trigger = canvas.getByText('Clique com o botão direito aqui');
       await expect(trigger).toBeInTheDocument();
@@ -142,7 +140,6 @@ export const ComRadioGroup: Story = {
 export const ComSubmenu: Story = {
   name: 'Com Submenu',
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('trigger renderizado', async () => {
       const trigger = canvas.getByText('Clique com o botão direito aqui');
       await expect(trigger).toBeInTheDocument();
@@ -200,7 +197,6 @@ export const ComSubmenu: Story = {
 export const Completo: Story = {
   name: 'Completo — Checkbox + Radio + Submenu + Shortcut',
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('trigger renderizado', async () => {
       const trigger = canvas.getByText('Clique com o botão direito aqui');
       await expect(trigger).toBeInTheDocument();

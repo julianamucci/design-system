@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { createButton, createButtonIcon, type ButtonVariant, type ButtonSize } from './button';
 import { createButtonDocs } from '@/components/docs/ButtonDocs';

@@ -22,13 +22,25 @@ defineProps<{
 
 <template>
   <section id="importacao">
-    <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
-    <p v-if="description" class="text-sm text-muted-foreground mb-3">{{ description }}</p>
+    <h2 class="text-xl font-semibold mb-4">
+      {{ title }}
+    </h2>
+    <p
+      v-if="description"
+      class="text-sm text-muted-foreground mb-3"
+    >
+      {{ description }}
+    </p>
     <Card class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
       <code class="whitespace-pre">{{ code }}</code>
     </Card>
     <template v-if="secondaryCode">
-      <p v-if="secondaryDescription" class="text-sm text-muted-foreground mt-4 mb-3">{{ secondaryDescription }}</p>
+      <p
+        v-if="secondaryDescription"
+        class="text-sm text-muted-foreground mt-4 mb-3"
+      >
+        {{ secondaryDescription }}
+      </p>
       <Card class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-3">
         <code class="whitespace-pre">{{ secondaryCode }}</code>
       </Card>

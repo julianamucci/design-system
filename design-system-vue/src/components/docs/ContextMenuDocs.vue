@@ -4,7 +4,6 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { sanitizeHtml } from '@/lib/sanitize-html';
 import { Badge } from '@/components/ui/badge';
 import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -561,7 +560,11 @@ const compositionItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="context-menu">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="context-menu"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -648,8 +651,8 @@ const compositionItems = computed(() => [
       :scenarios="{
         title: tContent('usage.scenarios.title'),
         cols: {
-          scenario:    tContent('usage.scenarios.cols.scenario'),
-          use:         tContent('usage.scenarios.cols.use'),
+          scenario: tContent('usage.scenarios.cols.scenario'),
+          use: tContent('usage.scenarios.cols.use'),
           alternative: tContent('usage.scenarios.cols.alternative'),
         },
         items: [
@@ -681,7 +684,9 @@ const compositionItems = computed(() => [
             </ContextMenuTrigger>
             <ContextMenuContent class="w-40">
               <ContextMenuItem>Editar</ContextMenuItem>
-              <ContextMenuItem variant="destructive">Excluir</ContextMenuItem>
+              <ContextMenuItem variant="destructive">
+                Excluir
+              </ContextMenuItem>
             </ContextMenuContent>
           </ContextMenu>
           <span class="text-xs text-muted-foreground">+ botão visível</span>
@@ -693,7 +698,9 @@ const compositionItems = computed(() => [
             Área (sem botão)
           </ContextMenuTrigger>
           <ContextMenuContent class="w-40">
-            <ContextMenuItem variant="destructive">Excluir</ContextMenuItem>
+            <ContextMenuItem variant="destructive">
+              Excluir
+            </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
       </template>
@@ -707,7 +714,9 @@ const compositionItems = computed(() => [
           <ContextMenuContent class="w-40">
             <ContextMenuItem>Editar</ContextMenuItem>
             <ContextMenuSeparator />
-            <ContextMenuItem variant="destructive">Excluir</ContextMenuItem>
+            <ContextMenuItem variant="destructive">
+              Excluir
+            </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
       </template>
@@ -763,7 +772,10 @@ const compositionItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <!-- default -->
       <template #variant-preview-0>
         <ContextMenu>
@@ -805,7 +817,10 @@ const compositionItems = computed(() => [
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
           <ContextMenuContent class="w-48">
-            <ContextMenuCheckboxItem :checked="demoShowGrid" @update:checked="demoShowGrid = $event">
+            <ContextMenuCheckboxItem
+              :checked="demoShowGrid"
+              @update:checked="demoShowGrid = $event"
+            >
               Mostrar grade
             </ContextMenuCheckboxItem>
           </ContextMenuContent>
@@ -819,9 +834,16 @@ const compositionItems = computed(() => [
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
           <ContextMenuContent class="w-48">
-            <ContextMenuRadioGroup :model-value="demoLayout" @update:model-value="demoLayout = $event as string">
-              <ContextMenuRadioItem value="grid">Grade</ContextMenuRadioItem>
-              <ContextMenuRadioItem value="list">Lista</ContextMenuRadioItem>
+            <ContextMenuRadioGroup
+              :model-value="demoLayout"
+              @update:model-value="demoLayout = $event as string"
+            >
+              <ContextMenuRadioItem value="grid">
+                Grade
+              </ContextMenuRadioItem>
+              <ContextMenuRadioItem value="list">
+                Lista
+              </ContextMenuRadioItem>
             </ContextMenuRadioGroup>
           </ContextMenuContent>
         </ContextMenu>
@@ -852,10 +874,16 @@ const compositionItems = computed(() => [
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
           <ContextMenuContent class="w-48">
-            <ContextMenuLabel inset>Arquivo</ContextMenuLabel>
+            <ContextMenuLabel inset>
+              Arquivo
+            </ContextMenuLabel>
             <ContextMenuSeparator />
-            <ContextMenuItem inset>{{ tContent('demonstration.labels.edit') }}</ContextMenuItem>
-            <ContextMenuItem inset>{{ tContent('demonstration.labels.duplicate') }}</ContextMenuItem>
+            <ContextMenuItem inset>
+              {{ tContent('demonstration.labels.edit') }}
+            </ContextMenuItem>
+            <ContextMenuItem inset>
+              {{ tContent('demonstration.labels.duplicate') }}
+            </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
       </template>
@@ -876,11 +904,19 @@ const compositionItems = computed(() => [
           </ContextMenuTrigger>
           <ContextMenuContent class="w-52">
             <ContextMenuGroup>
-              <ContextMenuLabel inset>Visualização</ContextMenuLabel>
-              <ContextMenuCheckboxItem :checked="compShowGrid" @update:checked="compShowGrid = $event">
+              <ContextMenuLabel inset>
+                Visualização
+              </ContextMenuLabel>
+              <ContextMenuCheckboxItem
+                :checked="compShowGrid"
+                @update:checked="compShowGrid = $event"
+              >
                 Mostrar grade
               </ContextMenuCheckboxItem>
-              <ContextMenuCheckboxItem :checked="compShowRulers" @update:checked="compShowRulers = $event">
+              <ContextMenuCheckboxItem
+                :checked="compShowRulers"
+                @update:checked="compShowRulers = $event"
+              >
                 Mostrar réguas
               </ContextMenuCheckboxItem>
             </ContextMenuGroup>
@@ -896,11 +932,22 @@ const compositionItems = computed(() => [
           </ContextMenuTrigger>
           <ContextMenuContent class="w-52">
             <ContextMenuGroup>
-              <ContextMenuLabel inset>Zoom</ContextMenuLabel>
-              <ContextMenuRadioGroup :model-value="compZoom" @update:model-value="compZoom = $event as string">
-                <ContextMenuRadioItem value="75">75%</ContextMenuRadioItem>
-                <ContextMenuRadioItem value="100">100%</ContextMenuRadioItem>
-                <ContextMenuRadioItem value="150">150%</ContextMenuRadioItem>
+              <ContextMenuLabel inset>
+                Zoom
+              </ContextMenuLabel>
+              <ContextMenuRadioGroup
+                :model-value="compZoom"
+                @update:model-value="compZoom = $event as string"
+              >
+                <ContextMenuRadioItem value="75">
+                  75%
+                </ContextMenuRadioItem>
+                <ContextMenuRadioItem value="100">
+                  100%
+                </ContextMenuRadioItem>
+                <ContextMenuRadioItem value="150">
+                  150%
+                </ContextMenuRadioItem>
               </ContextMenuRadioGroup>
             </ContextMenuGroup>
           </ContextMenuContent>
@@ -956,8 +1003,8 @@ const compositionItems = computed(() => [
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state:    tContent('states.cols.state'),
-        trigger:  tContent('states.cols.trigger'),
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
         behavior: tContent('states.cols.behavior'),
       }"
       :items="stateItems"
@@ -967,12 +1014,12 @@ const compositionItems = computed(() => [
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: tContent('props.contentTitle'),       cols: propCols, items: contentPropItems       },
-        { title: tContent('props.itemTitle'),          cols: propCols, items: itemPropItems           },
-        { title: tContent('props.checkboxItemTitle'),  cols: propCols, items: checkboxItemPropItems   },
-        { title: tContent('props.radioGroupTitle'),    cols: propCols, items: radioGroupPropItems     },
-        { title: tContent('props.radioItemTitle'),     cols: propCols, items: radioItemPropItems      },
-        { title: tContent('props.labelTitle'),         cols: propCols, items: labelPropItems          },
+        { title: tContent('props.contentTitle'), cols: propCols, items: contentPropItems },
+        { title: tContent('props.itemTitle'), cols: propCols, items: itemPropItems },
+        { title: tContent('props.checkboxItemTitle'), cols: propCols, items: checkboxItemPropItems },
+        { title: tContent('props.radioGroupTitle'), cols: propCols, items: radioGroupPropItems },
+        { title: tContent('props.radioItemTitle'), cols: propCols, items: radioItemPropItems },
+        { title: tContent('props.labelTitle'), cols: propCols, items: labelPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -983,8 +1030,8 @@ const compositionItems = computed(() => [
     <DocsTokens
       :title="tContent('tokens.title')"
       :cols="{
-        token:       tContent('tokens.table.token'),
-        value:       tContent('tokens.table.class'),
+        token: tContent('tokens.table.token'),
+        value: tContent('tokens.table.class'),
         description: tContent('tokens.table.part'),
       }"
       :items="tokenRows"
@@ -1002,16 +1049,22 @@ const compositionItems = computed(() => [
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
       :cols="{
-        event:   tContent('analytics.table.event'),
+        event: tContent('analytics.table.event'),
         trigger: tContent('analytics.table.trigger'),
         payload: tContent('analytics.table.payload'),
       }"
@@ -1024,20 +1077,20 @@ const compositionItems = computed(() => [
       :functional="{
         title: tContent('testes.functional.title'),
         cols: {
-          action:   tNav('common.userAction'),
-          result:   tNav('common.expectedResult'),
+          action: tNav('common.userAction'),
+          result: tNav('common.expectedResult'),
           priority: tNav('common.priority'),
         },
         items: functionalTestItems,
       }"
       :accessibility="{
         title: tContent('testes.accessibility.title'),
-        cols:  a11yCritCols,
+        cols: a11yCritCols,
         items: a11yTestItems,
       }"
       :visual="{
         title: tContent('testes.visual.title'),
-        cols:  { story: tNav('common.storyState'), priority: tNav('common.priority') },
+        cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
         items: visualTestItems,
       }"
     />

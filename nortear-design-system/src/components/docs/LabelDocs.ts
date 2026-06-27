@@ -5,7 +5,6 @@ import { sanitizeHtml } from '@/lib/sanitize-html';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createLabel } from '@/components/ui/label';
 import { createInput } from '@/components/ui/input';
-import { createCheckbox } from '@/components/ui/checkbox';
 import uiTranslations from '@/i18n/ui.json';
 import labelTranslations from '@shared/content/label/translations.json';
 

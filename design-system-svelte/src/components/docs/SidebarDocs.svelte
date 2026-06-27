@@ -27,9 +27,8 @@
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
   import { createActiveSection } from '@/lib/use-active-section.svelte';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
-
-  import uiTranslations from '@/i18n/ui.json';
+  
+import uiTranslations from '@/i18n/ui.json';
   import sidebarTranslations from '@shared/content/sidebar/translations.json';
 
   import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.svelte';

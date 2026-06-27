@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect, userEvent } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent } from 'storybook/test';
 import { Checkbox } from './index';
 
 const meta = {
@@ -39,7 +39,6 @@ export const Unchecked: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
     await step('Checkbox presente e desmarcado', async () => {
@@ -70,7 +69,6 @@ export const Checked: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
     await step('Checkbox presente e marcado', async () => {
@@ -101,7 +99,6 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
     await step('Checkbox presente e desabilitado', async () => {
@@ -133,7 +130,6 @@ export const DisabledChecked: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
     await step('Checkbox marcado e desabilitado', async () => {
@@ -165,7 +161,6 @@ export const Error: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
     await step('Checkbox com aria-invalid presente', async () => {
@@ -208,7 +203,6 @@ export const FocoVisivel: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
     await step('Checkbox recebe foco via teclado', async () => {

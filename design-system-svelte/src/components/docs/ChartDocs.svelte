@@ -1,11 +1,10 @@
 <script lang="ts">
   import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption } from '@/components/ui/chart';
-  import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+  import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
   import { createActiveSection } from '@/lib/use-active-section.svelte';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,

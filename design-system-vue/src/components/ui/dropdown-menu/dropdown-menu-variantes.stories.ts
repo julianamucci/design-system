@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,7 +57,6 @@ export const Default: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const items = await body.findAllByRole('menuitem');
@@ -90,7 +89,6 @@ export const Destructive: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const destructive = await waitForPortal('menuitem', { name: /Excluir conta/i });
