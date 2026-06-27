@@ -174,10 +174,6 @@ sed -i 's/"name": "design-system-react"/"name": "acme-react"/g' design-system-re
 # README principal
 sed -i 's/Nortear/Acme/g' README.md
 sed -i 's/norteardesign.com.br/acme.design/g' README.md
-
-# Landing page
-sed -i 's/Nortear/Acme/g' landing/index.html
-sed -i 's/norteardesign.com.br/acme.design/g' landing/index.html
 ```
 
 **Importante**: revise os diffs antes de commitar — `sed` é cego e pode pegar ocorrências legítimas que você queria manter.
@@ -186,18 +182,16 @@ sed -i 's/norteardesign.com.br/acme.design/g' landing/index.html
 
 ## Etapa 9 — Deploy (Vercel)
 
-Se você quer publicar, atualize os domínios em cada `<stack>/vercel.json` (apenas se quiser CSP/Cache headers diferentes — domínios em si são configurados no painel do Vercel).
+Este template publica **apenas os 4 Storybooks** — um portal/landing page que agrupa eles é um **projeto separado** que você cria fora deste repo (pode ser um site estático, um Next.js, um blog em qualquer framework — fica a seu critério).
 
-Depois, no painel do Vercel:
-1. Crie 5 projetos novos (um por stack + um pra landing)
-2. Conecte cada um ao seu repo, apontando o **Root Directory** corretamente:
-   - `landing/`
-   - `design-system-react/`
-   - `design-system-vue/`
-   - `design-system-svelte/`
-   - `nortear-design-system/` (renomeie se quiser)
-3. Em **Settings → Domains** de cada projeto, adicione o subdomínio próprio (ex: `react.acme.design`)
-4. Configure DNS no seu registrador com os CNAMEs específicos que cada projeto Vercel mostrar
+No painel do Vercel, pra cada uma das 4 stacks:
+
+1. **New Project → Import Git Repository**, seleciona o repo do seu design system
+2. **Root Directory**: aponta pro subdiretório da stack (`design-system-react`, `design-system-vue`, etc.)
+3. **Framework Preset**: Other (o `vercel.json` já configura build/install)
+4. Após criar: **Settings → Domains** → adicione `react.suamarca.com` (ou equivalente)
+5. Copie o hostname CNAME que o Vercel mostrar e configure no DNS do seu registrador
+6. Aguarde propagação + provisionamento TLS (~2-15 min)
 
 Veja a seção "Deploy" do [`README.md`](README.md) pra topologia completa.
 
@@ -247,7 +241,7 @@ npx acme@latest add button card alert
 - [ ] Logo SVG atualizado nas 4 stacks
 - [ ] Tipografia carregando corretamente (sem fallback em system-ui)
 - [ ] `brandTitle` em todos os `manager.ts` aponta pra sua marca
-- [ ] README e landing page sem menções residuais a "Nortear"
+- [ ] README sem menções residuais a "Nortear"
 - [ ] `npm run storybook` roda em todas as 4 stacks sem erro
 - [ ] `npm run build-storybook` builda com sucesso em todas as 4 stacks
 - [ ] `npm run test-storybook` passa (ou você documentou as falhas remanescentes em `patches.md`)

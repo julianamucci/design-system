@@ -92,7 +92,7 @@ Depois, customize seguindo o **[`BRAND-CUSTOMIZATION.md`](BRAND-CUSTOMIZATION.md
 5. Manager do Storybook (sidebar + título)
 6. Conteúdo trilíngue
 7. README e nome do projeto
-8. Deploy Vercel (5 projetos + DNS)
+8. Deploy Vercel (4 Storybooks + DNS)
 9. CLI customizada (npm publish)
 10. Checklist final antes do primeiro release
 
@@ -101,7 +101,8 @@ Storybooks ao vivo do template original:
 - **Vue** → [vue.norteardesign.com.br](https://vue.norteardesign.com.br)
 - **Svelte** → [svelte.norteardesign.com.br](https://svelte.norteardesign.com.br)
 - **Vanilla** → [vanilla.norteardesign.com.br](https://vanilla.norteardesign.com.br)
-- **Portal** → [norteardesign.com.br](https://norteardesign.com.br)
+
+> O site/portal que linka pros 4 Storybooks (em [norteardesign.com.br](https://norteardesign.com.br)) é um projeto separado consumindo este design system — não faz parte do template. Cada fork pode construir o seu próprio portal (ou nenhum) conforme a necessidade.
 
 ## Quick Start
 
@@ -196,42 +197,42 @@ Ver [`patches.md`](patches.md) — registry completo:
 
 ## Deploy
 
-Cada um dos 5 projetos (1 portal + 4 storybooks) tem seu próprio `vercel.json` e é deployado como **projeto Vercel independente** apontando pra subdomínio próprio. A topologia:
+Cada uma das 4 stacks tem seu próprio `vercel.json` e é deployada como **projeto Vercel independente** apontando pra subdomínio próprio. A topologia:
 
 | Projeto Vercel | Diretório raiz no repo | Subdomínio | Build |
 |---|---|---|---|
-| `nortear-portal` | `landing/` | `norteardesign.com.br` + `www.` | (estático) |
 | `nortear-react` | `design-system-react/` | `react.norteardesign.com.br` | `npm run build-storybook` |
 | `nortear-vue` | `design-system-vue/` | `vue.norteardesign.com.br` | `npm run build-storybook` |
 | `nortear-svelte` | `design-system-svelte/` | `svelte.norteardesign.com.br` | `npm run build-storybook` |
 | `nortear-vanilla` | `nortear-design-system/` | `vanilla.norteardesign.com.br` | `npm run build-storybook` |
 
+O site/portal que agrupa os 4 Storybooks (acessível em [norteardesign.com.br](https://norteardesign.com.br)) é um **projeto separado** que consome este design system como template — não é versionado aqui.
+
 ### DNS records pra norteardesign.com.br
 
-Configurar no painel do seu registrador:
+Configurar no painel do seu registrador. Os 4 CNAMEs apontam pros hostnames específicos que cada projeto Vercel mostra em **Settings → Domains** (formato `f<hash>.vercel-dns-017.com`):
 
 ```
-Tipo   Nome      Valor                      TTL
-────   ────      ─────                      ───
-A      @         76.76.21.21                3600
-CNAME  www       cname.vercel-dns.com.      3600
-CNAME  react     cname.vercel-dns.com.      3600
-CNAME  vue       cname.vercel-dns.com.      3600
-CNAME  svelte    cname.vercel-dns.com.      3600
-CNAME  vanilla   cname.vercel-dns.com.      3600
+Tipo   Nome      Valor                                       TTL
+────   ────      ─────                                       ───
+CNAME  react     <hash-react>.vercel-dns-017.com.            3600
+CNAME  vue       <hash-vue>.vercel-dns-017.com.              3600
+CNAME  svelte    <hash-svelte>.vercel-dns-017.com.           3600
+CNAME  vanilla   <hash-vanilla>.vercel-dns-017.com.          3600
 ```
 
-A Vercel automaticamente provisiona certificados TLS (Let's Encrypt) pra todos os subdomínios.
+A Vercel automaticamente provisiona certificados TLS (Let's Encrypt) pra todos os subdomínios após a propagação DNS.
 
 ### Setup Vercel (one-time)
 
-Pra cada um dos 5 projetos:
+Pra cada uma das 4 stacks:
 
-1. `vercel login` (uma vez por máquina)
-2. Em cada diretório raiz do projeto, rode `vercel link` e selecione o projeto Vercel correspondente
-3. Conecte ao GitHub repo (auto-deploy a cada push em `main`)
-4. Em "Settings → Domains", adicione o subdomínio próprio
-5. Aguarde provisionamento DNS + TLS (~2-5 min)
+1. No painel Vercel: **New Project → Import Git Repository**, seleciona este repo
+2. **Root Directory**: `design-system-<stack>` (ex: `design-system-react`)
+3. **Framework Preset**: Other (o `vercel.json` já configura o resto)
+4. Após criar: **Settings → Domains** → adiciona o subdomínio próprio
+5. Copie o hostname CNAME que aparece e configure no seu registrador
+6. Aguarde propagação DNS + TLS (~2-15 min)
 
 ## Roadmap
 
