@@ -78,8 +78,7 @@ async function installIfMissing(root, deps) {
   const missing = deps.filter((d) => !installed.has(d));
   if (!missing.length) { log('skip', `npm deps já presentes: ${deps.join(' ')}`); return; }
 
-  // Defense in depth — valida antes do spawn() com shell:true (necessário pra
-  // resolver npm.cmd no Windows). Ver lib.mjs:isValidPackageName.
+  // Defesa em profundidade — ver lib.mjs:isValidPackageName.
   assertSafePackageNames(missing);
 
   let cmd = 'npm', args = ['install', ...missing];
@@ -87,8 +86,11 @@ async function installIfMissing(root, deps) {
   else if (await exists(path.join(root, 'yarn.lock'))) { cmd = 'yarn'; args = ['add', ...missing]; }
   else if (await exists(path.join(root, 'bun.lockb'))) { cmd = 'bun';  args = ['add', ...missing]; }
   log('info', `${cmd} ${args.join(' ')}`);
+  // Windows: append .cmd explicitamente em vez de usar shell:true.
+  // Ver init.mjs pra justificativa completa.
+  const winCmd = process.platform === 'win32' ? `${cmd}.cmd` : cmd;
   return new Promise((resolve, reject) => {
-    const p = spawn(cmd, args, { cwd: root, stdio: 'inherit', shell: process.platform === 'win32' });
+    const p = spawn(winCmd, args, { cwd: root, stdio: 'inherit', shell: false });
     p.on('close', (code) => code === 0 ? resolve() : reject(new Error(`${cmd} saiu com código ${code}`)));
   });
 }

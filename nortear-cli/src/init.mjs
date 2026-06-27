@@ -71,10 +71,7 @@ export async function init({ flags }) {
 
 // Detecta pnpm/yarn/bun/npm via lockfiles e roda `install <deps>`.
 async function runPackageManager(root, deps) {
-  // Defense in depth — embora `deps` venha do registry interno, validar antes
-  // do spawn() com shell:true (necessário pra resolver npm.cmd no Windows)
-  // previne injection se o registry for comprometido ou alguém passar nome
-  // exótico no futuro.
+  // Defesa em profundidade — valida nomes mesmo que `deps` venha do registry interno.
   assertSafePackageNames(deps);
 
   let cmd = 'npm', args = ['install', ...deps];
@@ -82,8 +79,13 @@ async function runPackageManager(root, deps) {
   else if (await exists(path.join(root, 'yarn.lock')))      { cmd = 'yarn'; args = ['add', ...deps]; }
   else if (await exists(path.join(root, 'bun.lockb')))      { cmd = 'bun';  args = ['add', ...deps]; }
   log('info', `${cmd} ${args.join(' ')}`);
+  // No Windows, npm/pnpm/yarn/bun são .cmd batch files que o Node não consegue
+  // executar diretamente sem shell. Em vez de usar `shell: true` (que abre
+  // brecha de command injection caso a validação acima falhe), append .cmd
+  // explicitamente — assim o spawn passa args como argv literal, sem shell.
+  const winCmd = process.platform === 'win32' ? `${cmd}.cmd` : cmd;
   return new Promise((resolve, reject) => {
-    const p = spawn(cmd, args, { cwd: root, stdio: 'inherit', shell: process.platform === 'win32' });
+    const p = spawn(winCmd, args, { cwd: root, stdio: 'inherit', shell: false });
     p.on('close', (code) => code === 0 ? resolve() : reject(new Error(`${cmd} saiu com código ${code}`)));
   });
 }
