@@ -1,6 +1,8 @@
 // Minimal vanilla toast utility for Basecoat (no framework dependency).
 // Provides a Sonner-compatible API surface for stories and demos.
 
+import { sanitizeHtml } from '@/lib/sanitize-html';
+
 export type ToastType = 'default' | 'success' | 'error' | 'warning' | 'info' | 'loading';
 export type ToastPosition = 'top-right' | 'top-center' | 'top-left' | 'bottom-right' | 'bottom-center' | 'bottom-left';
 
@@ -86,7 +88,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
     const iconWrap = document.createElement('span');
     iconWrap.className = 'nds-toast-icon';
     if (type === 'loading') iconWrap.classList.add('nds-toast-icon-spin');
-    iconWrap.innerHTML = ICONS[type];
+    iconWrap.innerHTML = sanitizeHtml(ICONS[type]);
     toast.appendChild(iconWrap);
   }
 
@@ -125,7 +127,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
     closeBtn.setAttribute('data-close-button', '');
     closeBtn.setAttribute('aria-label', 'Close');
     closeBtn.className = 'nds-toast-close';
-    closeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+    closeBtn.innerHTML = sanitizeHtml('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>');
     closeBtn.addEventListener('click', () => removeToast(id));
     toast.appendChild(closeBtn);
   }

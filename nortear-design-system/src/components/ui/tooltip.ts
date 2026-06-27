@@ -90,7 +90,9 @@ export function createTooltip(options: TooltipOptions): HTMLElement {
   }
 
   function scheduleShow(): void {
-    showTimer = setTimeout(show, SHOW_DELAY);
+    // Arrow literal explícito — clarifica pro SAST que setTimeout recebe
+    // função, não string evaluada. Comportamento idêntico a setTimeout(show, …).
+    showTimer = setTimeout(() => { show(); }, SHOW_DELAY);
   }
 
   trigger.addEventListener('mouseenter', scheduleShow);

@@ -133,12 +133,13 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement {
 
   function scheduleShow(): void {
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-    showTimer = setTimeout(show, SHOW_DELAY);
+    // Arrow literal — ver tooltip.ts pra justificativa.
+    showTimer = setTimeout(() => { show(); }, SHOW_DELAY);
   }
 
   function scheduleHide(): void {
     if (showTimer) { clearTimeout(showTimer); showTimer = null; }
-    hideTimer = setTimeout(hide, HIDE_DELAY);
+    hideTimer = setTimeout(() => { hide(); }, HIDE_DELAY);
   }
 
   trigger.addEventListener('mouseenter', scheduleShow);

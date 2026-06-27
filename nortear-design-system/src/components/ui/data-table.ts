@@ -33,6 +33,7 @@ import {
 import { createCheckbox } from './checkbox';
 import { createInput } from './input';
 import { createButton } from './button';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -150,8 +151,10 @@ const ICONS = {
 
 function svgEl(html: string): SVGSVGElement {
   const wrap = document.createElement('div');
-  // PATCH: security — ICONS contém apenas strings literais constantes (sem dados do usuário).
-  wrap.innerHTML = html;
+  // ICONS contém apenas strings literais constantes (sem dados do usuário),
+  // mas wrappamos via sanitizeHtml pra deixar a chain segura mesmo se um
+  // chamador externo passar HTML não-confiável.
+  wrap.innerHTML = sanitizeHtml(html);
   return wrap.firstElementChild as SVGSVGElement;
 }
 

@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
+import { sanitizeHtml } from './sanitize-html';
 
 export function cn(...inputs: ClassValue[]) {
   return clsx(inputs);
@@ -24,7 +25,13 @@ export function el<K extends keyof HTMLElementTagNameMap>(
   return element;
 }
 
-/** Renderiza HTML string num container (com sanitização externa). */
+/**
+ * Renderiza HTML string num container, sanitizando antes via `sanitizeHtml`.
+ *
+ * O sanitizer remove <script>, <style>, <iframe>, event handlers on*, e
+ * neutraliza `href/src/action="javascript:..."`. Para HTML 100% confiável
+ * (string literal estática), o overhead de re-parse é desprezível.
+ */
 export function renderHtml(container: Element, html: string): void {
-  container.innerHTML = html;
+  container.innerHTML = sanitizeHtml(html);
 }

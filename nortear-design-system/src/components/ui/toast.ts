@@ -1,6 +1,8 @@
 // ─── Toast — Vanilla factory standalone ─────────────────────────────────────
 // Visual: classes .nds-toaster / .nds-toast (zero Tailwind/basecoat-css).
 
+import { sanitizeHtml } from '@/lib/sanitize-html';
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type ToastVariant = 'default' | 'destructive';
@@ -86,7 +88,7 @@ export function createToast(options: ToastOptions): HTMLElement {
   closeBtn.type = 'button';
   closeBtn.className = 'nds-toast-close';
   closeBtn.setAttribute('aria-label', 'Close notification');
-  closeBtn.innerHTML = CLOSE_SVG;
+  closeBtn.innerHTML = sanitizeHtml(CLOSE_SVG);
   closeBtn.addEventListener('click', () => dismissToast(toast));
   toast.appendChild(closeBtn);
 
