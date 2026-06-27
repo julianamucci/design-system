@@ -152,6 +152,8 @@ Veja [`nortear-cli/README.md`](nortear-cli/README.md).
 
 Testes rodam **axe-playwright em TODAS as stories** (`postVisit` no `test-runner.ts`). Falhas remanescentes são padrões upstream conhecidos (FocusGuard `aria-hidden + tabindex=0`) documentados em [`patches.md`](patches.md).
 
+**Segurança**: cada PR também passa por **Qwiet AI (Harness SAST + SCA)** via [`.github/workflows/shiftleft.yml`](.github/workflows/shiftleft.yml). Findings críticas viram comentários no próprio PR.
+
 ```bash
 npm run storybook:<stack>          # local dev
 npm run build-storybook            # storybook estático em <stack>/storybook-static/
