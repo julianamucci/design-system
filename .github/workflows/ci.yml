@@ -40,23 +40,11 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: '22'
-          # Sem cache: regeneramos o lock no install pra contornar
-          # npm/cli#4828, então o hash muda a cada run e cache nunca hit.
-          # Vanilla pode nem ter lock no repo. Cache off elimina o failure
-          # mode 'Some specified paths were not resolved'.
+          cache: npm
+          cache-dependency-path: ${{ matrix.stack.dir }}/package-lock.json
 
       - name: Install dependencies
-        # Workaround para npm/cli#4828 (optional deps multi-plataforma).
-        # Locks gerados no Windows omitem bindings Linux (ex:
-        # @oxc-parser/binding-linux-x64-gnu usado pelo Rolldown/Storybook 10).
-        # Tanto 'npm ci' quanto 'npm install' respeitam o lock existente e
-        # pulam as bindings ausentes. A única solução robusta é deletar o
-        # lock antes do install, forçando resolução fresca pela plataforma
-        # atual do runner. Custo: ~30s a mais por stack. Sem isso, builds
-        # quebram com 'Cannot find @oxc-parser/binding-linux-x64-gnu'.
-        run: |
-          rm -f package-lock.json
-          npm install --no-audit --no-fund
+        run: npm ci
 
       # Lint roda mas é informativo (continue-on-error) enquanto o backlog de
       # violações é limpo (renderer imports do Storybook 10, ts-expect-error sem

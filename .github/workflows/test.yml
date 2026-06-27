@@ -49,14 +49,11 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: '22'
-          # Ver comentário em ci.yml — cache off por conta do workaround #4828
+          cache: npm
+          cache-dependency-path: ${{ matrix.stack.dir }}/package-lock.json
 
       - name: Install dependencies
-        # Ver comentário em ci.yml — deleta lock e usa npm install
-        # pra contornar npm/cli#4828
-        run: |
-          rm -f package-lock.json
-          npm install --no-audit --no-fund
+        run: npm ci
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
