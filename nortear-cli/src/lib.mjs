@@ -137,6 +137,28 @@ export function rewriteImports(content, currentTarget, paths) {
 function escapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
 // ── FS ──────────────────────────────────────────────────────────────────────
+/**
+ * Valida que `name` é um nome de pacote npm válido — letras minúsculas, dígitos,
+ * `-`, `_`, `.`, `~`, opcionalmente escopo `@org/`. Rejeita qualquer outro
+ * caractere pra prevenir command injection quando o nome chega ao spawn com
+ * `shell:true` no Windows (npm.cmd / pnpm.cmd / yarn.cmd / bun.cmd precisam
+ * de shell pra serem resolvidos).
+ *
+ * Regex baseada em npm-spec: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#name
+ */
+export function isValidPackageName(name) {
+  if (typeof name !== 'string' || name.length === 0 || name.length > 214) return false;
+  return /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(name);
+}
+
+/** Rejeita arrays que contenham qualquer string que falhe `isValidPackageName`. */
+export function assertSafePackageNames(names) {
+  const bad = names.find((n) => !isValidPackageName(n));
+  if (bad !== undefined) {
+    throw new Error(`Nome de pacote inválido (possível command injection): ${JSON.stringify(bad)}`);
+  }
+}
+
 export async function exists(p) {
   try { await access(p, constants.F_OK); return true; } catch { return false; }
 }

@@ -7,6 +7,7 @@ import {
   DEFAULT_PATHS, DEFAULT_ENTRY_CSS,
   targetFor, rewriteImports, makeRelImport,
   writeFileEnsuringDir, appendIfMissing, exists,
+  assertSafePackageNames,
 } from './lib.mjs';
 
 export async function init({ flags }) {
@@ -70,6 +71,12 @@ export async function init({ flags }) {
 
 // Detecta pnpm/yarn/bun/npm via lockfiles e roda `install <deps>`.
 async function runPackageManager(root, deps) {
+  // Defense in depth — embora `deps` venha do registry interno, validar antes
+  // do spawn() com shell:true (necessário pra resolver npm.cmd no Windows)
+  // previne injection se o registry for comprometido ou alguém passar nome
+  // exótico no futuro.
+  assertSafePackageNames(deps);
+
   let cmd = 'npm', args = ['install', ...deps];
   if (await exists(path.join(root, 'pnpm-lock.yaml')))      { cmd = 'pnpm'; args = ['add', ...deps]; }
   else if (await exists(path.join(root, 'yarn.lock')))      { cmd = 'yarn'; args = ['add', ...deps]; }

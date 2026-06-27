@@ -82,5 +82,8 @@
     "vue-eslint-parser": "^10.4.1",
     "vue-tsc": "^2.2.12",
     "wait-on": "^9.0.5"
+  },
+  "overrides": {
+    "postcss": "^8.5.15"
   }
 }

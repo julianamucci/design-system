@@ -6,6 +6,7 @@ import {
   readConfig, resolveAll,
   targetFor, rewriteImports, makeRelImport,
   writeFileEnsuringDir, appendIfMissing, exists,
+  assertSafePackageNames,
 } from './lib.mjs';
 
 export async function add({ args, flags }) {
@@ -76,6 +77,10 @@ async function installIfMissing(root, deps) {
   ]);
   const missing = deps.filter((d) => !installed.has(d));
   if (!missing.length) { log('skip', `npm deps já presentes: ${deps.join(' ')}`); return; }
+
+  // Defense in depth — valida antes do spawn() com shell:true (necessário pra
+  // resolver npm.cmd no Windows). Ver lib.mjs:isValidPackageName.
+  assertSafePackageNames(missing);
 
   let cmd = 'npm', args = ['install', ...missing];
   if (await exists(path.join(root, 'pnpm-lock.yaml')))  { cmd = 'pnpm'; args = ['add', ...missing]; }
