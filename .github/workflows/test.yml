@@ -53,8 +53,11 @@ jobs:
           cache-dependency-path: ${{ matrix.stack.dir }}/package-lock.json
 
       - name: Install dependencies
-        # Ver comentário em ci.yml — usa npm install pra contornar npm/cli#4828
-        run: npm install --no-audit --no-fund
+        # Ver comentário em ci.yml — deleta lock e usa npm install
+        # pra contornar npm/cli#4828
+        run: |
+          rm -f package-lock.json
+          npm install --no-audit --no-fund
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium

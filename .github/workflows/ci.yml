@@ -44,12 +44,17 @@ jobs:
           cache-dependency-path: ${{ matrix.stack.dir }}/package-lock.json
 
       - name: Install dependencies
-        # npm install (não 'npm ci') contorna o bug npm/cli#4828 com optional
-        # deps multi-plataforma. O bug: locks gerados no Windows não incluem
-        # bindings nativas Linux (ex: @oxc-parser/binding-linux-x64-gnu usado
-        # pelo Rolldown/Storybook 10). 'npm ci' falha; 'npm install' resolve
-        # optionals em runtime baseado na plataforma atual.
-        run: npm install --no-audit --no-fund
+        # Workaround para npm/cli#4828 (optional deps multi-plataforma).
+        # Locks gerados no Windows omitem bindings Linux (ex:
+        # @oxc-parser/binding-linux-x64-gnu usado pelo Rolldown/Storybook 10).
+        # Tanto 'npm ci' quanto 'npm install' respeitam o lock existente e
+        # pulam as bindings ausentes. A única solução robusta é deletar o
+        # lock antes do install, forçando resolução fresca pela plataforma
+        # atual do runner. Custo: ~30s a mais por stack. Sem isso, builds
+        # quebram com 'Cannot find @oxc-parser/binding-linux-x64-gnu'.
+        run: |
+          rm -f package-lock.json
+          npm install --no-audit --no-fund
 
       # Lint roda mas é informativo (continue-on-error) enquanto o backlog de
       # violações é limpo (renderer imports do Storybook 10, ts-expect-error sem
