@@ -49,8 +49,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: '22'
-          cache: npm
-          cache-dependency-path: ${{ matrix.stack.dir }}/package-lock.json
+          # Ver comentário em ci.yml — cache off por conta do workaround #4828
 
       - name: Install dependencies
         # Ver comentário em ci.yml — deleta lock e usa npm install

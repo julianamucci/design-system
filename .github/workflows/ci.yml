@@ -40,8 +40,10 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: '22'
-          cache: npm
-          cache-dependency-path: ${{ matrix.stack.dir }}/package-lock.json
+          # Sem cache: regeneramos o lock no install pra contornar
+          # npm/cli#4828, então o hash muda a cada run e cache nunca hit.
+          # Vanilla pode nem ter lock no repo. Cache off elimina o failure
+          # mode 'Some specified paths were not resolved'.
 
       - name: Install dependencies
         # Workaround para npm/cli#4828 (optional deps multi-plataforma).
