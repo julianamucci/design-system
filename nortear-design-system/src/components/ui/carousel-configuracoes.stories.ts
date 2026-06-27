@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCarousel } from './carousel';
 import { createCard, createCardContent } from './card';
 import { within, expect } from 'storybook/test';

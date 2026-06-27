@@ -6,33 +6,11 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import {
   Calendar,
-  CalendarCell,
-  CalendarCellTrigger,
-  CalendarGrid,
-  CalendarGridBody,
-  CalendarGridHead,
-  CalendarGridRow,
-  CalendarHeadCell,
-  CalendarHeader,
-  CalendarHeading,
-  CalendarNextButton,
-  CalendarPrevButton,
 } from '@/components/ui/calendar';
 import {
   RangeCalendar,
-  RangeCalendarCell,
-  RangeCalendarCellTrigger,
-  RangeCalendarGrid,
-  RangeCalendarGridBody,
-  RangeCalendarGridHead,
-  RangeCalendarGridRow,
-  RangeCalendarHeadCell,
-  RangeCalendarHeader,
-  RangeCalendarHeading,
-  RangeCalendarNextButton,
-  RangeCalendarPrevButton,
 } from '@/components/ui/range-calendar';
-import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date';
+import { CalendarDate } from '@internationalized/date';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import calendarTranslations from '@shared/content/calendar/translations.json';
@@ -451,7 +429,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -511,10 +492,10 @@ const visualTestItems = computed(() => [
         title: tContent('usage.uxWriting.title'),
         cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
         items: [
-          { element: tContent('usage.uxWriting.table.label.name'),    rules: tContent('usage.uxWriting.table.label.format'),    do: tContent('usage.uxWriting.table.label.good'),    dont: tContent('usage.uxWriting.table.label.bad') },
-          { element: tContent('usage.uxWriting.table.trigger.name'),  rules: tContent('usage.uxWriting.table.trigger.format'),  do: tContent('usage.uxWriting.table.trigger.good'),  dont: tContent('usage.uxWriting.table.trigger.bad') },
+          { element: tContent('usage.uxWriting.table.label.name'), rules: tContent('usage.uxWriting.table.label.format'), do: tContent('usage.uxWriting.table.label.good'), dont: tContent('usage.uxWriting.table.label.bad') },
+          { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
           { element: tContent('usage.uxWriting.table.disabled.name'), rules: tContent('usage.uxWriting.table.disabled.format'), do: tContent('usage.uxWriting.table.disabled.good'), dont: tContent('usage.uxWriting.table.disabled.bad') },
-          { element: tContent('usage.uxWriting.table.srOnly.name'),   rules: tContent('usage.uxWriting.table.srOnly.format'),   do: tContent('usage.uxWriting.table.srOnly.good'),   dont: tContent('usage.uxWriting.table.srOnly.bad') },
+          { element: tContent('usage.uxWriting.table.srOnly.name'), rules: tContent('usage.uxWriting.table.srOnly.format'), do: tContent('usage.uxWriting.table.srOnly.good'), dont: tContent('usage.uxWriting.table.srOnly.bad') },
         ],
       }"
       :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
@@ -574,7 +555,10 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes (Modos e Layouts) ────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.visualTitle') || 'Modos e Layouts'" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.visualTitle') || 'Modos e Layouts'"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
         <Calendar
           v-model="demoSelectedSingle"
@@ -666,8 +650,8 @@ const visualTestItems = computed(() => [
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: tContent('props.calendarTitle'),  cols: propCols, items: calendarPropItems    },
-        { title: 'CalendarCellTrigger',            cols: propCols, items: cellTriggerPropItems },
+        { title: tContent('props.calendarTitle'), cols: propCols, items: calendarPropItems },
+        { title: 'CalendarCellTrigger', cols: propCols, items: cellTriggerPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -693,10 +677,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

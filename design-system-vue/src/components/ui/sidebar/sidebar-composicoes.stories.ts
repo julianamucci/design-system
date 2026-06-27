@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Sidebar,
   SidebarContent,
@@ -64,7 +64,6 @@ export const WithNavGroups: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('renderiza nav acessível com grupos', async () => {
       const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
       await expect(nav).toBeInTheDocument();
@@ -185,7 +184,6 @@ export const WithSubMenu: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('renderiza nav acessível com sub-menus', async () => {
       const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
       await expect(nav).toBeInTheDocument();
@@ -304,7 +302,6 @@ export const WithSearch: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('renderiza nav acessível com campo de busca', async () => {
       const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
       await expect(nav).toBeInTheDocument();

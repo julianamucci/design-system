@@ -21,7 +21,6 @@
     class: className = '',
   }: Props = $props();
 
-  // eslint-disable-next-line svelte/state_referenced_locally
   let internalOpen = $state(defaultOpen || open);
 </script>
 

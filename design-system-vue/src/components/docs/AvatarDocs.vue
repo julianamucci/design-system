@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -442,7 +442,10 @@ const testesVisual = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -453,288 +456,397 @@ const testesVisual = computed(() => ({
       />
     </template>
 
-        <!-- ── Demonstração ───────────────────────────────────────────── -->
-        <DocsDemonstration :title="tContent('demonstration.title')">
-          <div class="flex flex-wrap items-end justify-center gap-8">
-            <div class="flex flex-col items-center gap-2">
-              <Avatar>
-                <AvatarImage :src="imgMaria" :alt="tContent('demonstration.labels.withImageAlt')" />
-                <AvatarFallback :delay-ms="600">MR</AvatarFallback>
-              </Avatar>
-              <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withImage') }}</span>
-            </div>
+    <!-- ── Demonstração ───────────────────────────────────────────── -->
+    <DocsDemonstration :title="tContent('demonstration.title')">
+      <div class="flex flex-wrap items-end justify-center gap-8">
+        <div class="flex flex-col items-center gap-2">
+          <Avatar>
+            <AvatarImage
+              :src="imgMaria"
+              :alt="tContent('demonstration.labels.withImageAlt')"
+            />
+            <AvatarFallback :delay-ms="600">
+              MR
+            </AvatarFallback>
+          </Avatar>
+          <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withImage') }}</span>
+        </div>
 
-            <div class="flex flex-col items-center gap-2">
-              <Avatar>
-                <AvatarFallback>{{ tContent('demonstration.labels.withFallbackInitials') }}</AvatarFallback>
-              </Avatar>
-              <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withFallback') }}</span>
-            </div>
+        <div class="flex flex-col items-center gap-2">
+          <Avatar>
+            <AvatarFallback>{{ tContent('demonstration.labels.withFallbackInitials') }}</AvatarFallback>
+          </Avatar>
+          <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withFallback') }}</span>
+        </div>
 
-            <div class="flex flex-col items-center gap-2">
-              <Avatar>
-                <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
-                  <User class="h-5 w-5" aria-hidden="true" />
-                </AvatarFallback>
-              </Avatar>
-              <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withIcon') }}</span>
-            </div>
+        <div class="flex flex-col items-center gap-2">
+          <Avatar>
+            <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
+              <User
+                class="h-5 w-5"
+                aria-hidden="true"
+              />
+            </AvatarFallback>
+          </Avatar>
+          <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withIcon') }}</span>
+        </div>
 
-            <div class="flex flex-col items-center gap-2">
-              <div class="flex -space-x-2">
-                <Avatar class="ring-2 ring-background">
-                  <AvatarImage :src="imgMaria" alt="" />
-                  <AvatarFallback aria-hidden="true">MR</AvatarFallback>
-                </Avatar>
-                <Avatar class="ring-2 ring-background">
-                  <AvatarImage :src="imgAna" alt="" />
-                  <AvatarFallback aria-hidden="true">AS</AvatarFallback>
-                </Avatar>
-                <Avatar class="ring-2 ring-background">
-                  <AvatarImage :src="imgCarlos" alt="" />
-                  <AvatarFallback aria-hidden="true">CS</AvatarFallback>
-                </Avatar>
-                <Avatar class="ring-2 ring-background">
-                  <AvatarFallback class="text-xs" aria-hidden="true">+3</AvatarFallback>
-                </Avatar>
-              </div>
-              <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.groupTitle') }}</span>
-            </div>
-
-            <div class="flex flex-col items-center gap-2">
-              <div class="relative inline-block">
-                <Avatar>
-                  <AvatarImage :src="imgMaria" :alt="tContent('demonstration.labels.withImageAlt')" />
-                  <AvatarFallback>MR</AvatarFallback>
-                </Avatar>
-                <span
-                  class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
-                  :aria-label="tContent('demonstration.labels.statusOnline')"
-                />
-              </div>
-              <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.statusTitle') }}</span>
-            </div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="flex -space-x-2">
+            <Avatar class="ring-2 ring-background">
+              <AvatarImage
+                :src="imgMaria"
+                alt=""
+              />
+              <AvatarFallback aria-hidden="true">
+                MR
+              </AvatarFallback>
+            </Avatar>
+            <Avatar class="ring-2 ring-background">
+              <AvatarImage
+                :src="imgAna"
+                alt=""
+              />
+              <AvatarFallback aria-hidden="true">
+                AS
+              </AvatarFallback>
+            </Avatar>
+            <Avatar class="ring-2 ring-background">
+              <AvatarImage
+                :src="imgCarlos"
+                alt=""
+              />
+              <AvatarFallback aria-hidden="true">
+                CS
+              </AvatarFallback>
+            </Avatar>
+            <Avatar class="ring-2 ring-background">
+              <AvatarFallback
+                class="text-xs"
+                aria-hidden="true"
+              >
+                +3
+              </AvatarFallback>
+            </Avatar>
           </div>
-        </DocsDemonstration>
+          <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.groupTitle') }}</span>
+        </div>
 
-        <!-- ── Anatomia ───────────────────────────────────────────────── -->
-        <DocsAnatomy
-          :title="tContent('anatomy.title')"
-          :items="anatomyItems"
-          :structure-label="tContent('anatomy.structureLabel')"
-          :structure-code="tContent('anatomy.structureCode')"
-        />
-
-        <!-- ── Quando Usar ────────────────────────────────────────────── -->
-        <DocsWhenToUse
-          :title="tContent('usage.title')"
-          :guidelines="whenToUseGuidelines"
-          :scenarios="whenToUseScenarios"
-          :ux-writing="whenToUseUxWriting"
-          :do="whenToUseDo"
-          :dont="whenToUseDont"
-        />
-
-        <!-- ── Do & Don't ─────────────────────────────────────────────── -->
-        <DocsDoDont
-          :title="tContent('doDont.title')"
-          :pairs="doDontPairs"
-        >
-          <template #do-preview-0>
+        <div class="flex flex-col items-center gap-2">
+          <div class="relative inline-block">
             <Avatar>
-              <AvatarImage :src="imgMaria" alt="Foto de perfil de Maria Rodrigues" />
-              <AvatarFallback :delay-ms="600">MR</AvatarFallback>
-            </Avatar>
-          </template>
-          <template #dont-preview-0>
-            <Avatar>
-              <AvatarImage :src="imgInvalid" alt="" />
-            </Avatar>
-          </template>
-          <template #do-preview-1>
-            <Avatar>
+              <AvatarImage
+                :src="imgMaria"
+                :alt="tContent('demonstration.labels.withImageAlt')"
+              />
               <AvatarFallback>MR</AvatarFallback>
             </Avatar>
-          </template>
-          <template #dont-preview-1>
-            <Avatar class="text-xs">
-              <AvatarFallback>maria</AvatarFallback>
-            </Avatar>
-          </template>
-        </DocsDoDont>
+            <span
+              class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+              :aria-label="tContent('demonstration.labels.statusOnline')"
+            />
+          </div>
+          <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.statusTitle') }}</span>
+        </div>
+      </div>
+    </DocsDemonstration>
 
-        <!-- ── Importação ─────────────────────────────────────────────── -->
-        <DocsImport
-          :title="tContent('import.title')"
-          :description="tContent('import.basic')"
-          :code="codeImportBasic"
-          :secondary-description="tContent('import.withIcon')"
-          :secondary-code="codeImportWithIcon"
-        />
+    <!-- ── Anatomia ───────────────────────────────────────────────── -->
+    <DocsAnatomy
+      :title="tContent('anatomy.title')"
+      :items="anatomyItems"
+      :structure-label="tContent('anatomy.structureLabel')"
+      :structure-code="tContent('anatomy.structureCode')"
+    />
 
-        <!-- ── Variantes (composições) ─────────────────────────────────── -->
-        <DocsVariants :title="tContent('variants.title')" :items="variantItems">
-          <template #variant-preview-0>
-            <Avatar>
-              <AvatarImage :src="imgMaria" :alt="tContent('demonstration.labels.withImageAlt')" />
-              <AvatarFallback :delay-ms="600">MR</AvatarFallback>
-            </Avatar>
-          </template>
-          <template #variant-preview-1>
-            <Avatar>
-              <AvatarFallback>{{ tContent('demonstration.labels.withFallbackInitials') }}</AvatarFallback>
-            </Avatar>
-          </template>
-          <template #variant-preview-2>
-            <Avatar>
-              <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
-                <User class="h-5 w-5" aria-hidden="true" />
-              </AvatarFallback>
-            </Avatar>
-          </template>
-          <template #variant-preview-3>
-            <div class="flex -space-x-2">
-              <Avatar class="ring-2 ring-background">
-                <AvatarImage :src="imgMaria" alt="" />
-                <AvatarFallback aria-hidden="true">MR</AvatarFallback>
-              </Avatar>
-              <Avatar class="ring-2 ring-background">
-                <AvatarImage :src="imgAna" alt="" />
-                <AvatarFallback aria-hidden="true">AS</AvatarFallback>
-              </Avatar>
-              <Avatar class="ring-2 ring-background">
-                <AvatarImage :src="imgCarlos" alt="" />
-                <AvatarFallback aria-hidden="true">CS</AvatarFallback>
-              </Avatar>
-              <Avatar class="ring-2 ring-background">
-                <AvatarFallback class="text-xs" aria-hidden="true">+3</AvatarFallback>
-              </Avatar>
-            </div>
-          </template>
-          <template #variant-preview-4>
-            <div class="relative inline-block">
-              <Avatar>
-                <AvatarImage :src="imgMaria" :alt="tContent('demonstration.labels.withImageAlt')" />
-                <AvatarFallback>MR</AvatarFallback>
-              </Avatar>
-              <span
-                class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
-                :aria-label="tContent('demonstration.labels.statusOnline')"
-              />
-            </div>
-          </template>
-        </DocsVariants>
+    <!-- ── Quando Usar ────────────────────────────────────────────── -->
+    <DocsWhenToUse
+      :title="tContent('usage.title')"
+      :guidelines="whenToUseGuidelines"
+      :scenarios="whenToUseScenarios"
+      :ux-writing="whenToUseUxWriting"
+      :do="whenToUseDo"
+      :dont="whenToUseDont"
+    />
 
-        <!-- ── Composições ─────────────────────────────────────────────── -->
-        <DocsCompositions
-          :title="tContent('variants.compositionsTitle')"
-          :use-when-label="tNav('common.useWhen')"
-          component-slug="avatar"
-          :items="compositionItems"
+    <!-- ── Do & Don't ─────────────────────────────────────────────── -->
+    <DocsDoDont
+      :title="tContent('doDont.title')"
+      :pairs="doDontPairs"
+    >
+      <template #do-preview-0>
+        <Avatar>
+          <AvatarImage
+            :src="imgMaria"
+            alt="Foto de perfil de Maria Rodrigues"
+          />
+          <AvatarFallback :delay-ms="600">
+            MR
+          </AvatarFallback>
+        </Avatar>
+      </template>
+      <template #dont-preview-0>
+        <Avatar>
+          <AvatarImage
+            :src="imgInvalid"
+            alt=""
+          />
+        </Avatar>
+      </template>
+      <template #do-preview-1>
+        <Avatar>
+          <AvatarFallback>MR</AvatarFallback>
+        </Avatar>
+      </template>
+      <template #dont-preview-1>
+        <Avatar class="text-xs">
+          <AvatarFallback>maria</AvatarFallback>
+        </Avatar>
+      </template>
+    </DocsDoDont>
+
+    <!-- ── Importação ─────────────────────────────────────────────── -->
+    <DocsImport
+      :title="tContent('import.title')"
+      :description="tContent('import.basic')"
+      :code="codeImportBasic"
+      :secondary-description="tContent('import.withIcon')"
+      :secondary-code="codeImportWithIcon"
+    />
+
+    <!-- ── Variantes (composições) ─────────────────────────────────── -->
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
+      <template #variant-preview-0>
+        <Avatar>
+          <AvatarImage
+            :src="imgMaria"
+            :alt="tContent('demonstration.labels.withImageAlt')"
+          />
+          <AvatarFallback :delay-ms="600">
+            MR
+          </AvatarFallback>
+        </Avatar>
+      </template>
+      <template #variant-preview-1>
+        <Avatar>
+          <AvatarFallback>{{ tContent('demonstration.labels.withFallbackInitials') }}</AvatarFallback>
+        </Avatar>
+      </template>
+      <template #variant-preview-2>
+        <Avatar>
+          <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
+            <User
+              class="h-5 w-5"
+              aria-hidden="true"
+            />
+          </AvatarFallback>
+        </Avatar>
+      </template>
+      <template #variant-preview-3>
+        <div class="flex -space-x-2">
+          <Avatar class="ring-2 ring-background">
+            <AvatarImage
+              :src="imgMaria"
+              alt=""
+            />
+            <AvatarFallback aria-hidden="true">
+              MR
+            </AvatarFallback>
+          </Avatar>
+          <Avatar class="ring-2 ring-background">
+            <AvatarImage
+              :src="imgAna"
+              alt=""
+            />
+            <AvatarFallback aria-hidden="true">
+              AS
+            </AvatarFallback>
+          </Avatar>
+          <Avatar class="ring-2 ring-background">
+            <AvatarImage
+              :src="imgCarlos"
+              alt=""
+            />
+            <AvatarFallback aria-hidden="true">
+              CS
+            </AvatarFallback>
+          </Avatar>
+          <Avatar class="ring-2 ring-background">
+            <AvatarFallback
+              class="text-xs"
+              aria-hidden="true"
+            >
+              +3
+            </AvatarFallback>
+          </Avatar>
+        </div>
+      </template>
+      <template #variant-preview-4>
+        <div class="relative inline-block">
+          <Avatar>
+            <AvatarImage
+              :src="imgMaria"
+              :alt="tContent('demonstration.labels.withImageAlt')"
+            />
+            <AvatarFallback>MR</AvatarFallback>
+          </Avatar>
+          <span
+            class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+            :aria-label="tContent('demonstration.labels.statusOnline')"
+          />
+        </div>
+      </template>
+    </DocsVariants>
+
+    <!-- ── Composições ─────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="avatar"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Avatar>
+          <AvatarImage
+            src="https://github.com/shadcn.png"
+            alt="Foto de perfil de Maria Rodrigues"
+          />
+          <AvatarFallback>MR</AvatarFallback>
+        </Avatar>
+      </template>
+      <template #variant-preview-1>
+        <Avatar>
+          <AvatarFallback>JP</AvatarFallback>
+        </Avatar>
+      </template>
+      <template #variant-preview-2>
+        <Avatar>
+          <AvatarFallback
+            role="img"
+            aria-label="Usuário genérico"
+          >
+            <User
+              aria-hidden="true"
+              class="h-5 w-5 text-muted-foreground"
+            />
+          </AvatarFallback>
+        </Avatar>
+      </template>
+      <template #variant-preview-3>
+        <div
+          class="flex -space-x-2"
+          role="group"
+          aria-label="Participantes"
         >
-          <template #variant-preview-0>
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
-              <AvatarFallback>MR</AvatarFallback>
-            </Avatar>
-          </template>
-          <template #variant-preview-1>
-            <Avatar>
-              <AvatarFallback>JP</AvatarFallback>
-            </Avatar>
-          </template>
-          <template #variant-preview-2>
-            <Avatar>
-              <AvatarFallback role="img" aria-label="Usuário genérico">
-                <User aria-hidden="true" class="h-5 w-5 text-muted-foreground" />
-              </AvatarFallback>
-            </Avatar>
-          </template>
-          <template #variant-preview-3>
-            <div class="flex -space-x-2" role="group" aria-label="Participantes">
-              <Avatar class="ring-2 ring-background">
-                <AvatarImage src="https://github.com/shadcn.png" alt="" />
-                <AvatarFallback aria-hidden="true">MR</AvatarFallback>
-              </Avatar>
-              <Avatar class="ring-2 ring-background">
-                <AvatarFallback aria-hidden="true">JP</AvatarFallback>
-              </Avatar>
-              <Avatar class="ring-2 ring-background">
-                <AvatarFallback aria-hidden="true">AL</AvatarFallback>
-              </Avatar>
-              <Avatar class="ring-2 ring-background">
-                <AvatarFallback class="text-xs" aria-hidden="true">+3</AvatarFallback>
-              </Avatar>
-            </div>
-          </template>
-          <template #variant-preview-4>
-            <div class="relative inline-block">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
-                <AvatarFallback>MR</AvatarFallback>
-              </Avatar>
-              <span
-                class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
-                role="status"
-                aria-label="online"
-              />
-            </div>
-          </template>
-        </DocsCompositions>
+          <Avatar class="ring-2 ring-background">
+            <AvatarImage
+              src="https://github.com/shadcn.png"
+              alt=""
+            />
+            <AvatarFallback aria-hidden="true">
+              MR
+            </AvatarFallback>
+          </Avatar>
+          <Avatar class="ring-2 ring-background">
+            <AvatarFallback aria-hidden="true">
+              JP
+            </AvatarFallback>
+          </Avatar>
+          <Avatar class="ring-2 ring-background">
+            <AvatarFallback aria-hidden="true">
+              AL
+            </AvatarFallback>
+          </Avatar>
+          <Avatar class="ring-2 ring-background">
+            <AvatarFallback
+              class="text-xs"
+              aria-hidden="true"
+            >
+              +3
+            </AvatarFallback>
+          </Avatar>
+        </div>
+      </template>
+      <template #variant-preview-4>
+        <div class="relative inline-block">
+          <Avatar>
+            <AvatarImage
+              src="https://github.com/shadcn.png"
+              alt="Foto de perfil de Maria Rodrigues"
+            />
+            <AvatarFallback>MR</AvatarFallback>
+          </Avatar>
+          <span
+            class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+            role="status"
+            aria-label="online"
+          />
+        </div>
+      </template>
+    </DocsCompositions>
 
-        <!-- ── Configurações (States) ──────────────────────────────────── -->
-        <DocsStates
-          :title="tContent('states.title')"
-          :cols="statesCols"
-          :items="stateItems"
-        />
+    <!-- ── Configurações (States) ──────────────────────────────────── -->
+    <DocsStates
+      :title="tContent('states.title')"
+      :cols="statesCols"
+      :items="stateItems"
+    />
 
-        <!-- ── Propriedades ───────────────────────────────────────────── -->
-        <DocsProps
-          :title="tContent('props.title')"
-          :tables="propsTables"
-          :interface-code="interfaceCode"
-          :extensibility-title="tContent('props.extensibilityTitle')"
-          :extensibility-notes="tContent('props.extensibility')"
-        />
+    <!-- ── Propriedades ───────────────────────────────────────────── -->
+    <DocsProps
+      :title="tContent('props.title')"
+      :tables="propsTables"
+      :interface-code="interfaceCode"
+      :extensibility-title="tContent('props.extensibilityTitle')"
+      :extensibility-notes="tContent('props.extensibility')"
+    />
 
-        <!-- ── Tokens ─────────────────────────────────────────────────── -->
-        <DocsTokens
-          :title="tContent('tokens.title')"
-          :cols="tokensCols"
-          :items="tokenRows"
-          :customization-title="tContent('tokens.customizationTitle')"
-          :customization-code="codeCustomizationTokens"
-        />
+    <!-- ── Tokens ─────────────────────────────────────────────────── -->
+    <DocsTokens
+      :title="tContent('tokens.title')"
+      :cols="tokensCols"
+      :items="tokenRows"
+      :customization-title="tContent('tokens.customizationTitle')"
+      :customization-code="codeCustomizationTokens"
+    />
 
-        <!-- ── Acessibilidade ─────────────────────────────────────────── -->
-        <DocsAccessibility
-          :title="tContent('accessibility.title')"
-          :summary="tContent('accessibility.summary')"
-          :items="accessibilityItems"
-          :keyboard-title="tContent('accessibility.keyboardTitle')"
-          :keyboard-items="keyboardItems"
-        />
+    <!-- ── Acessibilidade ─────────────────────────────────────────── -->
+    <DocsAccessibility
+      :title="tContent('accessibility.title')"
+      :summary="tContent('accessibility.summary')"
+      :items="accessibilityItems"
+      :keyboard-title="tContent('accessibility.keyboardTitle')"
+      :keyboard-items="keyboardItems"
+    />
 
-        <!-- ── Relacionados ───────────────────────────────────────────── -->
-        <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <!-- ── Relacionados ───────────────────────────────────────────── -->
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
-        <!-- ── Notas ──────────────────────────────────────────────────── -->
-        <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <!-- ── Notas ──────────────────────────────────────────────────── -->
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
-        <!-- ── Analytics ─────────────────────────────────────────────── -->
-        <DocsAnalytics
-          :title="tContent('analytics.title')"
-          :cols="analyticsCols"
-          :items="analyticsItems"
-        />
+    <!-- ── Analytics ─────────────────────────────────────────────── -->
+    <DocsAnalytics
+      :title="tContent('analytics.title')"
+      :cols="analyticsCols"
+      :items="analyticsItems"
+    />
 
-        <!-- ── Testes ─────────────────────────────────────────────────── -->
-        <DocsTestes
-          :title="tContent('testes.title')"
-          :functional="testesFunctional"
-          :accessibility="testesAccessibility"
-          :visual="testesVisual"
-        />
+    <!-- ── Testes ─────────────────────────────────────────────────── -->
+    <DocsTestes
+      :title="tContent('testes.title')"
+      :functional="testesFunctional"
+      :accessibility="testesAccessibility"
+      :visual="testesVisual"
+    />
   </DocsPageLayout>
 </template>

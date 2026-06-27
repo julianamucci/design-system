@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { within, expect } from 'storybook/test';
 import { createButton, createButtonIcon, btnClass } from './button';
 
 const meta: Meta = {

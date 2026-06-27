@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -357,7 +357,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -371,18 +374,81 @@ const visualTestItems = computed(() => [
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div style="contain: layout; position: relative; min-height: 120px;">
-        <Toaster position="top-right" :rich-colors="true" />
+        <Toaster
+          position="top-right"
+          :rich-colors="true"
+        />
         <div class="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" @click="fireDefault">{{ tContent('demonstration.labels.triggerDefault') }}</Button>
-          <Button variant="outline" size="sm" @click="fireSuccess">{{ tContent('demonstration.labels.triggerSuccess') }}</Button>
-          <Button variant="outline" size="sm" @click="fireError">{{ tContent('demonstration.labels.triggerError') }}</Button>
-          <Button variant="outline" size="sm" @click="fireWarning">{{ tContent('demonstration.labels.triggerWarning') }}</Button>
-          <Button variant="outline" size="sm" @click="fireInfo">{{ tContent('demonstration.labels.triggerInfo') }}</Button>
-          <Button variant="outline" size="sm" @click="fireLoading">{{ tContent('demonstration.labels.triggerLoading') }}</Button>
-          <Button variant="outline" size="sm" @click="fireWithDescription">{{ tContent('demonstration.labels.triggerWithDescription') }}</Button>
-          <Button variant="outline" size="sm" @click="fireWithAction">{{ tContent('demonstration.labels.triggerWithAction') }}</Button>
-          <Button variant="outline" size="sm" @click="firePromise">{{ tContent('demonstration.labels.triggerPromise') }}</Button>
-          <Button variant="outline" size="sm" @click="firePersistent">{{ tContent('demonstration.labels.triggerPersistent') }}</Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireDefault"
+          >
+            {{ tContent('demonstration.labels.triggerDefault') }}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireSuccess"
+          >
+            {{ tContent('demonstration.labels.triggerSuccess') }}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireError"
+          >
+            {{ tContent('demonstration.labels.triggerError') }}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireWarning"
+          >
+            {{ tContent('demonstration.labels.triggerWarning') }}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireInfo"
+          >
+            {{ tContent('demonstration.labels.triggerInfo') }}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireLoading"
+          >
+            {{ tContent('demonstration.labels.triggerLoading') }}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireWithDescription"
+          >
+            {{ tContent('demonstration.labels.triggerWithDescription') }}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireWithAction"
+          >
+            {{ tContent('demonstration.labels.triggerWithAction') }}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="firePromise"
+          >
+            {{ tContent('demonstration.labels.triggerPromise') }}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="firePersistent"
+          >
+            {{ tContent('demonstration.labels.triggerPersistent') }}
+          </Button>
         </div>
       </div>
     </DocsDemonstration>
@@ -451,27 +517,75 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <div style="contain: layout; position: relative; min-height: 80px;" class="w-full">
-          <Toaster position="top-right" :rich-colors="true" />
-          <Button variant="outline" size="sm" @click="fireSuccess">{{ tContent('demonstration.labels.triggerSuccess') }}</Button>
+        <div
+          style="contain: layout; position: relative; min-height: 80px;"
+          class="w-full"
+        >
+          <Toaster
+            position="top-right"
+            :rich-colors="true"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireSuccess"
+          >
+            {{ tContent('demonstration.labels.triggerSuccess') }}
+          </Button>
         </div>
       </template>
       <template #dont-preview-0>
-        <div style="contain: layout; position: relative; min-height: 80px;" class="w-full">
-          <Toaster position="top-right" :rich-colors="true" />
-          <Button variant="outline" size="sm" @click="fireError">{{ tContent('demonstration.labels.triggerError') }}</Button>
+        <div
+          style="contain: layout; position: relative; min-height: 80px;"
+          class="w-full"
+        >
+          <Toaster
+            position="top-right"
+            :rich-colors="true"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireError"
+          >
+            {{ tContent('demonstration.labels.triggerError') }}
+          </Button>
         </div>
       </template>
       <template #do-preview-1>
-        <div style="contain: layout; position: relative; min-height: 80px;" class="w-full">
-          <Toaster position="top-right" :rich-colors="true" />
-          <Button variant="outline" size="sm" @click="firePromise">{{ tContent('demonstration.labels.triggerPromise') }}</Button>
+        <div
+          style="contain: layout; position: relative; min-height: 80px;"
+          class="w-full"
+        >
+          <Toaster
+            position="top-right"
+            :rich-colors="true"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            @click="firePromise"
+          >
+            {{ tContent('demonstration.labels.triggerPromise') }}
+          </Button>
         </div>
       </template>
       <template #dont-preview-1>
-        <div style="contain: layout; position: relative; min-height: 80px;" class="w-full">
-          <Toaster position="top-right" :rich-colors="true" />
-          <Button variant="outline" size="sm" @click="fireError">{{ tContent('demonstration.labels.triggerError') }}</Button>
+        <div
+          style="contain: layout; position: relative; min-height: 80px;"
+          class="w-full"
+        >
+          <Toaster
+            position="top-right"
+            :rich-colors="true"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireError"
+          >
+            {{ tContent('demonstration.labels.triggerError') }}
+          </Button>
         </div>
       </template>
     </DocsDoDont>
@@ -484,35 +598,98 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <div style="contain: layout; position: relative; min-height: 80px;" class="w-full">
-          <Toaster position="top-right" :rich-colors="true" />
-          <Button variant="outline" size="sm" @click="fireDefault">{{ tContent('demonstration.labels.triggerDefault') }}</Button>
+        <div
+          style="contain: layout; position: relative; min-height: 80px;"
+          class="w-full"
+        >
+          <Toaster
+            position="top-right"
+            :rich-colors="true"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireDefault"
+          >
+            {{ tContent('demonstration.labels.triggerDefault') }}
+          </Button>
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; position: relative; min-height: 80px;" class="w-full">
-          <Toaster position="top-right" :rich-colors="true" />
-          <Button variant="outline" size="sm" @click="fireSuccess">{{ tContent('demonstration.labels.triggerSuccess') }}</Button>
+        <div
+          style="contain: layout; position: relative; min-height: 80px;"
+          class="w-full"
+        >
+          <Toaster
+            position="top-right"
+            :rich-colors="true"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireSuccess"
+          >
+            {{ tContent('demonstration.labels.triggerSuccess') }}
+          </Button>
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout; position: relative; min-height: 80px;" class="w-full">
-          <Toaster position="top-right" :rich-colors="true" />
-          <Button variant="outline" size="sm" @click="fireError">{{ tContent('demonstration.labels.triggerError') }}</Button>
+        <div
+          style="contain: layout; position: relative; min-height: 80px;"
+          class="w-full"
+        >
+          <Toaster
+            position="top-right"
+            :rich-colors="true"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireError"
+          >
+            {{ tContent('demonstration.labels.triggerError') }}
+          </Button>
         </div>
       </template>
       <template #variant-preview-3>
-        <div style="contain: layout; position: relative; min-height: 80px;" class="w-full">
-          <Toaster position="top-right" :rich-colors="true" />
-          <Button variant="outline" size="sm" @click="fireWarning">{{ tContent('demonstration.labels.triggerWarning') }}</Button>
+        <div
+          style="contain: layout; position: relative; min-height: 80px;"
+          class="w-full"
+        >
+          <Toaster
+            position="top-right"
+            :rich-colors="true"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireWarning"
+          >
+            {{ tContent('demonstration.labels.triggerWarning') }}
+          </Button>
         </div>
       </template>
       <template #variant-preview-4>
-        <div style="contain: layout; position: relative; min-height: 80px;" class="w-full">
-          <Toaster position="top-right" :rich-colors="true" />
-          <Button variant="outline" size="sm" @click="fireInfo">{{ tContent('demonstration.labels.triggerInfo') }}</Button>
+        <div
+          style="contain: layout; position: relative; min-height: 80px;"
+          class="w-full"
+        >
+          <Toaster
+            position="top-right"
+            :rich-colors="true"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            @click="fireInfo"
+          >
+            {{ tContent('demonstration.labels.triggerInfo') }}
+          </Button>
         </div>
       </template>
     </DocsVariants>
@@ -556,10 +733,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

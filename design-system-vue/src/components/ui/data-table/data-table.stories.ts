@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { DataTable } from './index';
 import { baseColumns, invoices } from './data-table.fixtures';

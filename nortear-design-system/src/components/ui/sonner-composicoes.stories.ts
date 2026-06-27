@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { within, expect, userEvent } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { injectToastStyles } from './sonner';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 

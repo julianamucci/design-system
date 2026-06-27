@@ -28,7 +28,10 @@ const forwarded = useForwardProps(delegatedProps)
   >
     <slot>
       <span class="hidden sm:block">Next</span>
-      <ChevronRightIcon data-icon="inline-end" class="cn-rtl-flip" />
+      <ChevronRightIcon
+        data-icon="inline-end"
+        class="cn-rtl-flip"
+      />
     </slot>
   </PaginationNext>
 </template>

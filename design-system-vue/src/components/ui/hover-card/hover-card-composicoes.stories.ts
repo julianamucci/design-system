@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   HoverCard,
   HoverCardContent,
@@ -60,7 +60,6 @@ export const PerfilDeUsuario: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByText(/Joana Silva/i)).toBeVisible();
@@ -98,7 +97,6 @@ export const PreviewDeLink: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByText(/design-system.dev/i)).toBeVisible();
@@ -138,7 +136,6 @@ export const DefinicaoDeTermo: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
   },
@@ -176,7 +173,6 @@ export const MetricaExplicada: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByText(/CSAT/i)).toBeVisible();

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Eye, List } from 'lucide';
 import { createToggle, type ToggleOptions, type ToggleVariant } from './toggle';

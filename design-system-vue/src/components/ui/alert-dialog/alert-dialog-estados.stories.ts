@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, within, expect, fn } from 'storybook/test';
+import { userEvent, expect, fn } from 'storybook/test';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -76,8 +76,6 @@ export const Closed: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /Excluir item/i });
     await expect(trigger).toBeVisible();
     await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
@@ -117,7 +115,6 @@ export const Open: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
     await expect(dialog).toBeVisible();
   },
@@ -156,7 +153,6 @@ export const Confirmed: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step('Clique em Excluir fecha o diálogo', async () => {
       const action = await body.findByRole('button', { name: /^Excluir$/i });
       await userEvent.click(action);
@@ -195,7 +191,6 @@ export const Cancelled: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step('Clique em Cancelar fecha o diálogo', async () => {
       const cancel = await body.findByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
@@ -244,8 +239,6 @@ export const Controlled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step('Clique no trigger externo abre o diálogo', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });

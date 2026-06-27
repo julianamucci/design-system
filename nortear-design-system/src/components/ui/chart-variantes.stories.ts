@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { within, expect, waitFor } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect, waitFor } from 'storybook/test';
 import { createChart } from './chart';
 
 // ─── Shared data ──────────────────────────────────────────────────────────────

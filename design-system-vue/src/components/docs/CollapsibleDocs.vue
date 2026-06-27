@@ -4,7 +4,6 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { sanitizeHtml } from '@/lib/sanitize-html';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown, Filter, Settings } from 'lucide-vue-next';
 
@@ -407,7 +406,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="collapsible">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="collapsible"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -421,10 +424,11 @@ const visualTestItems = computed(() => [
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div class="w-full max-w-sm space-y-6">
-
         <!-- Demo 1: Default (não-controlado) -->
         <div class="space-y-1">
-          <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-2">Default (não-controlado)</p>
+          <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-2">
+            Default (não-controlado)
+          </p>
           <Collapsible class="space-y-2">
             <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
               {{ tContent('demonstration.labels.triggerClosed') }}
@@ -446,7 +450,9 @@ const visualTestItems = computed(() => [
 
         <!-- Demo 2: Controlado -->
         <div class="space-y-1">
-          <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-2">Controlado (v-model:open)</p>
+          <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-2">
+            Controlado (v-model:open)
+          </p>
           <div class="space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs text-muted-foreground">
@@ -459,7 +465,11 @@ const visualTestItems = computed(() => [
                 {{ demoControlledOpen ? 'Fechar' : 'Abrir' }}
               </button>
             </div>
-            <Collapsible :open="demoControlledOpen" @update:open="(v) => demoControlledOpen = v" class="space-y-2">
+            <Collapsible
+              :open="demoControlledOpen"
+              class="space-y-2"
+              @update:open="(v) => demoControlledOpen = v"
+            >
               <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
                 {{ demoControlledOpen ? tContent('demonstration.labels.triggerOpen') : tContent('demonstration.labels.triggerClosed') }}
                 <ChevronDown
@@ -481,18 +491,25 @@ const visualTestItems = computed(() => [
 
         <!-- Demo 3: Desabilitado -->
         <div class="space-y-1">
-          <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-2">Desabilitado</p>
-          <Collapsible disabled class="space-y-2">
+          <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-2">
+            Desabilitado
+          </p>
+          <Collapsible
+            disabled
+            class="space-y-2"
+          >
             <CollapsibleTrigger
               disabled
               class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium opacity-50 cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {{ tContent('demonstration.labels.headerLabel') }}
-              <ChevronDown aria-hidden="true" class="h-4 w-4 shrink-0" />
+              <ChevronDown
+                aria-hidden="true"
+                class="h-4 w-4 shrink-0"
+              />
             </CollapsibleTrigger>
           </Collapsible>
         </div>
-
       </div>
     </DocsDemonstration>
 
@@ -548,7 +565,10 @@ const visualTestItems = computed(() => [
         <Collapsible class="w-full space-y-2">
           <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             Exibir filtros avançados
-            <ChevronDown aria-hidden="true" class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180" />
+            <ChevronDown
+              aria-hidden="true"
+              class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+            />
           </CollapsibleTrigger>
         </Collapsible>
       </template>
@@ -556,7 +576,10 @@ const visualTestItems = computed(() => [
         <Collapsible class="w-full space-y-2">
           <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             Ver mais
-            <ChevronDown aria-hidden="true" class="h-4 w-4" />
+            <ChevronDown
+              aria-hidden="true"
+              class="h-4 w-4"
+            />
           </CollapsibleTrigger>
         </Collapsible>
       </template>
@@ -564,7 +587,10 @@ const visualTestItems = computed(() => [
         <Collapsible class="w-full space-y-2">
           <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             Filtros avançados
-            <ChevronDown aria-hidden="true" class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180" />
+            <ChevronDown
+              aria-hidden="true"
+              class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+            />
           </CollapsibleTrigger>
         </Collapsible>
       </template>
@@ -572,17 +598,26 @@ const visualTestItems = computed(() => [
         <div class="w-full space-y-2">
           <Collapsible class="space-y-1">
             <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors">
-              Seção 1 <ChevronDown aria-hidden="true" class="h-3 w-3" />
+              Seção 1 <ChevronDown
+                aria-hidden="true"
+                class="h-3 w-3"
+              />
             </CollapsibleTrigger>
           </Collapsible>
           <Collapsible class="space-y-1">
             <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors">
-              Seção 2 <ChevronDown aria-hidden="true" class="h-3 w-3" />
+              Seção 2 <ChevronDown
+                aria-hidden="true"
+                class="h-3 w-3"
+              />
             </CollapsibleTrigger>
           </Collapsible>
           <Collapsible class="space-y-1">
             <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors">
-              Seção 3 <ChevronDown aria-hidden="true" class="h-3 w-3" />
+              Seção 3 <ChevronDown
+                aria-hidden="true"
+                class="h-3 w-3"
+              />
             </CollapsibleTrigger>
           </Collapsible>
         </div>
@@ -609,7 +644,10 @@ const visualTestItems = computed(() => [
         <Collapsible class="w-full space-y-2">
           <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             {{ tContent('demonstration.labels.triggerClosed') }}
-            <ChevronDown aria-hidden="true" class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180" />
+            <ChevronDown
+              aria-hidden="true"
+              class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+            />
           </CollapsibleTrigger>
           <CollapsibleContent class="space-y-2">
             <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
@@ -620,10 +658,16 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-1>
         <!-- Controlado -->
-        <Collapsible :open="true" class="w-full space-y-2">
+        <Collapsible
+          :open="true"
+          class="w-full space-y-2"
+        >
           <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             {{ tContent('demonstration.labels.triggerOpen') }}
-            <ChevronDown aria-hidden="true" class="h-4 w-4 rotate-180" />
+            <ChevronDown
+              aria-hidden="true"
+              class="h-4 w-4 rotate-180"
+            />
           </CollapsibleTrigger>
           <CollapsibleContent class="space-y-2">
             <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
@@ -647,9 +691,15 @@ const visualTestItems = computed(() => [
             Exibir opções avançadas
           </CollapsibleTrigger>
           <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-2">
-            <p class="text-sm">Opção avançada 1</p>
-            <p class="text-sm">Opção avançada 2</p>
-            <p class="text-sm">Opção avançada 3</p>
+            <p class="text-sm">
+              Opção avançada 1
+            </p>
+            <p class="text-sm">
+              Opção avançada 2
+            </p>
+            <p class="text-sm">
+              Opção avançada 3
+            </p>
           </CollapsibleContent>
         </Collapsible>
       </template>
@@ -657,14 +707,23 @@ const visualTestItems = computed(() => [
         <Collapsible class="w-full max-w-sm">
           <CollapsibleTrigger class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             <span class="flex items-center gap-2">
-              <Filter class="h-4 w-4" aria-hidden="true" />
+              <Filter
+                class="h-4 w-4"
+                aria-hidden="true"
+              />
               Filtros avançados
             </span>
           </CollapsibleTrigger>
           <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-2">
-            <p class="text-sm">Filtro por categoria</p>
-            <p class="text-sm">Filtro por data</p>
-            <p class="text-sm">Filtro por status</p>
+            <p class="text-sm">
+              Filtro por categoria
+            </p>
+            <p class="text-sm">
+              Filtro por data
+            </p>
+            <p class="text-sm">
+              Filtro por status
+            </p>
           </CollapsibleContent>
         </Collapsible>
       </template>
@@ -672,11 +731,18 @@ const visualTestItems = computed(() => [
         <Collapsible class="w-full max-w-sm">
           <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             Configurações avançadas
-            <ChevronDown aria-hidden="true" class="h-4 w-4 shrink-0 transition-transform [[data-state=open]_&]:rotate-180" />
+            <ChevronDown
+              aria-hidden="true"
+              class="h-4 w-4 shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+            />
           </CollapsibleTrigger>
           <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-2">
-            <div class="flex justify-between text-sm"><span>Notificações</span><span>Ativadas</span></div>
-            <div class="flex justify-between text-sm"><span>Privacidade</span><span>Modo estrito</span></div>
+            <div class="flex justify-between text-sm">
+              <span>Notificações</span><span>Ativadas</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>Privacidade</span><span>Modo estrito</span>
+            </div>
           </CollapsibleContent>
         </Collapsible>
       </template>
@@ -684,15 +750,20 @@ const visualTestItems = computed(() => [
         <Collapsible class="w-full max-w-sm">
           <CollapsibleTrigger class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             <span class="flex items-center gap-2">
-              <Settings class="h-4 w-4" aria-hidden="true" />
+              <Settings
+                class="h-4 w-4"
+                aria-hidden="true"
+              />
               Configurações do sistema
             </span>
           </CollapsibleTrigger>
           <CollapsibleContent class="mt-2 rounded-md border bg-muted/50 p-4 space-y-3">
-            <p class="text-xs text-muted-foreground">Ajuste as preferências do sistema.</p>
-            <label class="flex items-center gap-2 text-sm"><input type="checkbox" /> Modo escuro</label>
-            <label class="flex items-center gap-2 text-sm"><input type="checkbox" /> Notificações push</label>
-            <label class="flex items-center gap-2 text-sm"><input type="checkbox" /> Analytics</label>
+            <p class="text-xs text-muted-foreground">
+              Ajuste as preferências do sistema.
+            </p>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox"> Modo escuro</label>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox"> Notificações push</label>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox"> Analytics</label>
           </CollapsibleContent>
         </Collapsible>
       </template>
@@ -714,8 +785,8 @@ const visualTestItems = computed(() => [
       :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.collapsibleTitle'), cols: propCols, items: collapsiblePropItems },
-        { title: tContent('props.triggerTitle'),     cols: propCols, items: triggerPropItems     },
-        { title: tContent('props.contentTitle'),     cols: propCols, items: contentPropItems     },
+        { title: tContent('props.triggerTitle'), cols: propCols, items: triggerPropItems },
+        { title: tContent('props.contentTitle'), cols: propCols, items: contentPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -745,10 +816,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

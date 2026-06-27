@@ -10,17 +10,14 @@
   import Settings from '@lucide/svelte/icons/settings';
   import Users from '@lucide/svelte/icons/users';
   import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
-  import ExternalLink from '@lucide/svelte/icons/external-link';
-  import BookOpen from '@lucide/svelte/icons/book-open';
   import Loader2 from '@lucide/svelte/icons/loader-2';
 
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
   import { createActiveSection } from '@/lib/use-active-section.svelte';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
-
-  import uiTranslations from '@/i18n/ui.json';
+  
+import uiTranslations from '@/i18n/ui.json';
   import componentTranslations from '@shared/content/command/translations.json';
 
   import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.svelte';

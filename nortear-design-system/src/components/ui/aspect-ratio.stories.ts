@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createAspectRatio } from './aspect-ratio';
 import { createAspectRatioDocs } from '@/components/docs/AspectRatioDocs';

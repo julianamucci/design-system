@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { sanitizeHtml } from '@/lib/sanitize-html';
 import {
   Tooltip,
   TooltipContent,
@@ -391,7 +390,11 @@ const a11yCritCols = computed(() => ({
 
 <template>
   <TooltipProvider :delay-duration="50">
-    <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="tooltip">
+    <DocsPageLayout
+      :nav-groups="navGroups"
+      :active-section="activeSection"
+      component-slug="tooltip"
+    >
       <template #header>
         <DocsHeader
           :title="tContent('title')"
@@ -404,11 +407,21 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Demonstração ─────────────────────────────────────────── -->
       <DocsDemonstration :title="tContent('demonstration.title')">
-        <div class="flex flex-wrap items-center justify-center gap-6 w-full" style="contain: layout; min-height: 120px;">
+        <div
+          class="flex flex-wrap items-center justify-center gap-6 w-full"
+          style="contain: layout; min-height: 120px;"
+        >
           <Tooltip>
             <TooltipTrigger as-child>
-              <Button variant="outline" size="icon" :aria-label="tContent('demonstration.labels.saveButton')">
-                <Save aria-hidden="true" class="size-4" />
+              <Button
+                variant="outline"
+                size="icon"
+                :aria-label="tContent('demonstration.labels.saveButton')"
+              >
+                <Save
+                  aria-hidden="true"
+                  class="size-4"
+                />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -418,8 +431,15 @@ const a11yCritCols = computed(() => ({
 
           <Tooltip>
             <TooltipTrigger as-child>
-              <Button variant="outline" size="icon" :aria-label="tContent('demonstration.labels.deleteButton')">
-                <Trash2 aria-hidden="true" class="size-4" />
+              <Button
+                variant="outline"
+                size="icon"
+                :aria-label="tContent('demonstration.labels.deleteButton')"
+              >
+                <Trash2
+                  aria-hidden="true"
+                  class="size-4"
+                />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -429,8 +449,15 @@ const a11yCritCols = computed(() => ({
 
           <Tooltip>
             <TooltipTrigger as-child>
-              <Button variant="outline" size="icon" :aria-label="tContent('demonstration.labels.shareButton')">
-                <Share2 aria-hidden="true" class="size-4" />
+              <Button
+                variant="outline"
+                size="icon"
+                :aria-label="tContent('demonstration.labels.shareButton')"
+              >
+                <Share2
+                  aria-hidden="true"
+                  class="size-4"
+                />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -484,9 +511,9 @@ const a11yCritCols = computed(() => ({
             dont: tContent('usage.uxWriting.table.avoid'),
           },
           items: [
-            { element: tContent('usage.uxWriting.table.content.name'),  rules: tContent('usage.uxWriting.table.content.format'),  do: tContent('usage.uxWriting.table.content.good'),  dont: tContent('usage.uxWriting.table.content.bad')  },
+            { element: tContent('usage.uxWriting.table.content.name'), rules: tContent('usage.uxWriting.table.content.format'), do: tContent('usage.uxWriting.table.content.good'), dont: tContent('usage.uxWriting.table.content.bad') },
             { element: tContent('usage.uxWriting.table.shortcut.name'), rules: tContent('usage.uxWriting.table.shortcut.format'), do: tContent('usage.uxWriting.table.shortcut.good'), dont: tContent('usage.uxWriting.table.shortcut.bad') },
-            { element: tContent('usage.uxWriting.table.icon.name'),     rules: tContent('usage.uxWriting.table.icon.format'),     do: tContent('usage.uxWriting.table.icon.good'),     dont: tContent('usage.uxWriting.table.icon.bad')     },
+            { element: tContent('usage.uxWriting.table.icon.name'), rules: tContent('usage.uxWriting.table.icon.format'), do: tContent('usage.uxWriting.table.icon.good'), dont: tContent('usage.uxWriting.table.icon.bad') },
           ],
         }"
         :do="{
@@ -518,38 +545,74 @@ const a11yCritCols = computed(() => ({
         ]"
       >
         <template #do-preview-0>
-          <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
+          <div
+            style="contain: layout; min-height: 80px;"
+            class="flex items-center justify-center w-full"
+          >
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="outline" size="icon" aria-label="Salvar">
-                  <Save aria-hidden="true" class="size-4" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  aria-label="Salvar"
+                >
+                  <Save
+                    aria-hidden="true"
+                    class="size-4"
+                  />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Salvar (Ctrl+S)</TooltipContent>
+              <TooltipContent side="bottom">
+                Salvar (Ctrl+S)
+              </TooltipContent>
             </Tooltip>
           </div>
         </template>
         <template #dont-preview-0>
-          <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
+          <div
+            style="contain: layout; min-height: 80px;"
+            class="flex items-center justify-center w-full"
+          >
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="outline" size="icon">
-                  <Save aria-hidden="true" class="size-4" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                >
+                  <Save
+                    aria-hidden="true"
+                    class="size-4"
+                  />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Salvar</TooltipContent>
+              <TooltipContent side="bottom">
+                Salvar
+              </TooltipContent>
             </Tooltip>
           </div>
         </template>
         <template #do-preview-1>
-          <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
+          <div
+            style="contain: layout; min-height: 80px;"
+            class="flex items-center justify-center w-full"
+          >
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="outline" size="icon" aria-label="Salvar">
-                  <Save aria-hidden="true" class="size-4" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  aria-label="Salvar"
+                >
+                  <Save
+                    aria-hidden="true"
+                    class="size-4"
+                  />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" class="gap-1">
+              <TooltipContent
+                side="bottom"
+                class="gap-1"
+              >
                 Salvar
                 <Kbd>Ctrl</Kbd>
                 <Kbd>S</Kbd>
@@ -558,7 +621,10 @@ const a11yCritCols = computed(() => ({
           </div>
         </template>
         <template #dont-preview-1>
-          <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
+          <div
+            style="contain: layout; min-height: 80px;"
+            class="flex items-center justify-center w-full"
+          >
             <div class="text-xs font-mono text-muted-foreground italic max-w-[200px] text-center">
               "Clique aqui para salvar o documento e voltar à tela inicial."
             </div>
@@ -573,28 +639,56 @@ const a11yCritCols = computed(() => ({
       />
 
       <!-- ── Variantes ────────────────────────────────────────────── -->
-      <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+      <DocsVariants
+        :title="tContent('variants.title')"
+        :items="variantItems"
+      >
         <template #variant-preview-0>
-          <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
+          <div
+            style="contain: layout; min-height: 80px;"
+            class="flex items-center justify-center w-full"
+          >
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="outline" size="icon" aria-label="Salvar">
-                  <Save aria-hidden="true" class="size-4" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  aria-label="Salvar"
+                >
+                  <Save
+                    aria-hidden="true"
+                    class="size-4"
+                  />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Salvar</TooltipContent>
+              <TooltipContent side="bottom">
+                Salvar
+              </TooltipContent>
             </Tooltip>
           </div>
         </template>
         <template #variant-preview-1>
-          <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
+          <div
+            style="contain: layout; min-height: 80px;"
+            class="flex items-center justify-center w-full"
+          >
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="outline" size="icon" aria-label="Salvar">
-                  <Save aria-hidden="true" class="size-4" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  aria-label="Salvar"
+                >
+                  <Save
+                    aria-hidden="true"
+                    class="size-4"
+                  />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" class="gap-1">
+              <TooltipContent
+                side="bottom"
+                class="gap-1"
+              >
                 Salvar
                 <Kbd>Ctrl</Kbd>
                 <Kbd>S</Kbd>
@@ -603,14 +697,27 @@ const a11yCritCols = computed(() => ({
           </div>
         </template>
         <template #variant-preview-2>
-          <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center w-full">
+          <div
+            style="contain: layout; min-height: 80px;"
+            class="flex items-center justify-center w-full"
+          >
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="outline" size="icon" aria-label="Info">
-                  <Save aria-hidden="true" class="size-4" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  aria-label="Info"
+                >
+                  <Save
+                    aria-hidden="true"
+                    class="size-4"
+                  />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" class="max-w-xs">
+              <TooltipContent
+                side="bottom"
+                class="max-w-xs"
+              >
                 Texto longo que ocupa até o tamanho máximo e quebra naturalmente em múltiplas linhas sem ser um parágrafo.
               </TooltipContent>
             </Tooltip>
@@ -626,14 +733,27 @@ const a11yCritCols = computed(() => ({
         :items="compositionItems"
       >
         <template #variant-preview-0>
-          <div style="contain: layout; min-height: 100px;" class="flex items-center justify-center w-full">
+          <div
+            style="contain: layout; min-height: 100px;"
+            class="flex items-center justify-center w-full"
+          >
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="ghost" size="icon" aria-label="Salvar">
-                  <Save aria-hidden="true" class="size-4" />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Salvar"
+                >
+                  <Save
+                    aria-hidden="true"
+                    class="size-4"
+                  />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" class="gap-1">
+              <TooltipContent
+                side="bottom"
+                class="gap-1"
+              >
                 Salvar
                 <Kbd>Ctrl</Kbd>
                 <Kbd>S</Kbd>
@@ -642,17 +762,33 @@ const a11yCritCols = computed(() => ({
           </div>
         </template>
         <template #variant-preview-1>
-          <div style="contain: layout; min-height: 120px;" class="flex items-start justify-center w-full">
+          <div
+            style="contain: layout; min-height: 120px;"
+            class="flex items-start justify-center w-full"
+          >
             <div class="flex flex-col gap-2 items-start">
               <div class="flex items-center gap-2">
-                <label for="api-token-vue-comp" class="text-sm font-medium">Token de API</label>
+                <label
+                  for="api-token-vue-comp"
+                  class="text-sm font-medium"
+                >Token de API</label>
                 <Tooltip>
                   <TooltipTrigger as-child>
-                    <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API">
-                      <HelpCircle aria-hidden="true" class="size-4" />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label="Ajuda sobre Token de API"
+                    >
+                      <HelpCircle
+                        aria-hidden="true"
+                        class="size-4"
+                      />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="right" class="max-w-xs">
+                  <TooltipContent
+                    side="right"
+                    class="max-w-xs"
+                  >
                     Cole o token gerado em Configurações &gt; Integrações.
                   </TooltipContent>
                 </Tooltip>
@@ -662,55 +798,91 @@ const a11yCritCols = computed(() => ({
                 type="text"
                 class="h-9 w-64 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
                 placeholder="sk-..."
-              />
+              >
             </div>
           </div>
         </template>
         <template #variant-preview-2>
-          <div style="contain: layout; min-height: 120px;" class="flex items-start justify-center w-full">
+          <div
+            style="contain: layout; min-height: 120px;"
+            class="flex items-start justify-center w-full"
+          >
             <div class="flex flex-col gap-1 items-start">
               <div class="flex items-center gap-2">
-                <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+                <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  LCP
+                </p>
                 <Tooltip>
                   <TooltipTrigger as-child>
-                    <Button variant="ghost" size="icon" aria-label="O que é LCP">
-                      <Info aria-hidden="true" class="size-4" />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label="O que é LCP"
+                    >
+                      <Info
+                        aria-hidden="true"
+                        class="size-4"
+                      />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="top" class="max-w-xs">
+                  <TooltipContent
+                    side="top"
+                    class="max-w-xs"
+                  >
                     Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
                   </TooltipContent>
                 </Tooltip>
               </div>
-              <p class="text-2xl font-semibold">1.8s</p>
+              <p class="text-2xl font-semibold">
+                1.8s
+              </p>
             </div>
           </div>
         </template>
         <template #variant-preview-3>
-          <div style="contain: layout; min-height: 160px;" class="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center w-full">
+          <div
+            style="contain: layout; min-height: 160px;"
+            class="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center w-full"
+          >
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="outline">Top</Button>
+                <Button variant="outline">
+                  Top
+                </Button>
               </TooltipTrigger>
-              <TooltipContent side="top">Tooltip top</TooltipContent>
+              <TooltipContent side="top">
+                Tooltip top
+              </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="outline">Right</Button>
+                <Button variant="outline">
+                  Right
+                </Button>
               </TooltipTrigger>
-              <TooltipContent side="right">Tooltip right</TooltipContent>
+              <TooltipContent side="right">
+                Tooltip right
+              </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="outline">Bottom</Button>
+                <Button variant="outline">
+                  Bottom
+                </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Tooltip bottom</TooltipContent>
+              <TooltipContent side="bottom">
+                Tooltip bottom
+              </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger as-child>
-                <Button variant="outline">Left</Button>
+                <Button variant="outline">
+                  Left
+                </Button>
               </TooltipTrigger>
-              <TooltipContent side="left">Tooltip left</TooltipContent>
+              <TooltipContent side="left">
+                Tooltip left
+              </TooltipContent>
             </Tooltip>
           </div>
         </template>
@@ -761,10 +933,16 @@ const a11yCritCols = computed(() => ({
       />
 
       <!-- ── Relacionados ─────────────────────────────────────────── -->
-      <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+      <DocsRelated
+        :title="tContent('related.title')"
+        :items="relatedItems"
+      />
 
       <!-- ── Notas ────────────────────────────────────────────────── -->
-      <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+      <DocsNotes
+        :title="tContent('notes.title')"
+        :items="noteItems"
+      />
 
       <!-- ── Analytics ────────────────────────────────────────────── -->
       <DocsAnalytics

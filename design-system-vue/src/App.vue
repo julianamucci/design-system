@@ -2,7 +2,7 @@
 import { ref, watch, defineAsyncComponent, shallowRef } from 'vue'
 import {
   Moon, Sun, Home,
-  FileText, Database, MessageSquare, Sparkles
+  FileText, MessageSquare, Sparkles
 } from 'lucide-vue-next'
 import HomePage from './components/HomePage.vue'
 import ThemeSelector from './components/ThemeSelector.vue'
@@ -84,7 +84,10 @@ function isCategoryOpen(name: string) {
 
 <template>
   <DocsEditor v-if="isAdminView" />
-  <div v-else class="flex h-screen overflow-hidden bg-background text-foreground">
+  <div
+    v-else
+    class="flex h-screen overflow-hidden bg-background text-foreground"
+  >
     <!-- Skip to content -->
     <a
       href="#main-content"
@@ -123,7 +126,10 @@ function isCategoryOpen(name: string) {
                 : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'"
               @click="navigateTo('home')"
             >
-              <Home class="h-4 w-4" aria-hidden="true" />
+              <Home
+                class="h-4 w-4"
+                aria-hidden="true"
+              />
               <span>Home</span>
             </button>
 
@@ -138,7 +144,11 @@ function isCategoryOpen(name: string) {
                 @click="toggleCategory(category.name)"
               >
                 <span class="flex items-center gap-2">
-                  <component :is="category.icon" class="h-4 w-4" aria-hidden="true" />
+                  <component
+                    :is="category.icon"
+                    class="h-4 w-4"
+                    aria-hidden="true"
+                  />
                   <span>{{ category.name }}</span>
                 </span>
                 <svg
@@ -157,7 +167,10 @@ function isCategoryOpen(name: string) {
                 </svg>
               </button>
 
-              <div v-if="isCategoryOpen(category.name)" class="ml-6 mt-1 space-y-1">
+              <div
+                v-if="isCategoryOpen(category.name)"
+                class="ml-6 mt-1 space-y-1"
+              >
                 <button
                   v-for="item in category.items"
                   :key="item.path"
@@ -196,14 +209,28 @@ function isCategoryOpen(name: string) {
           :aria-label="isDark ? 'Ativar modo claro' : 'Ativar modo escuro'"
           @click="isDark = !isDark"
         >
-          <Sun v-if="isDark" class="h-4 w-4" aria-hidden="true" />
-          <Moon v-else class="h-4 w-4" aria-hidden="true" />
+          <Sun
+            v-if="isDark"
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <Moon
+            v-else
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
         </button>
       </header>
 
       <!-- Content -->
-      <main id="main-content" class="flex-1 overflow-auto">
-        <HomePage v-if="currentPage === 'home'" @navigate="navigateTo" />
+      <main
+        id="main-content"
+        class="flex-1 overflow-auto"
+      >
+        <HomePage
+          v-if="currentPage === 'home'"
+          @navigate="navigateTo"
+        />
 
         <Suspense v-else-if="currentComponent">
           <template #default>
@@ -219,7 +246,10 @@ function isCategoryOpen(name: string) {
           </template>
         </Suspense>
 
-        <HomePage v-else @navigate="navigateTo" />
+        <HomePage
+          v-else
+          @navigate="navigateTo"
+        />
       </main>
     </div>
 

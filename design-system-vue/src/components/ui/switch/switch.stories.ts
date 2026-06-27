@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { fn, userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { fn, userEvent, expect } from 'storybook/test';
 import { Switch } from './index';
 import { Label } from '@/components/ui/label';
 import SwitchDocs from '@/components/docs/SwitchDocs.vue';
@@ -68,7 +68,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
 
     await step('Switch está presente com role=switch', async () => {

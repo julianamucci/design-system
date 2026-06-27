@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDrawer } from './drawer';
 import { createButton } from './button';
@@ -50,7 +50,7 @@ function buildWrapper(child: HTMLElement): HTMLElement {
   return wrapper;
 }
 
-async function closeAfter(step: any) {
+async function closeAfter(step: (name: string, fn: () => Promise<void> | void) => Promise<void>) {
   const body = within(document.body);
   await step('Limpa fechando via ESC antes do postVisit', async () => {
     await userEvent.keyboard('{Escape}');

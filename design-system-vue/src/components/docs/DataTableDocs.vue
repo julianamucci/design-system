@@ -365,7 +365,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -426,10 +429,10 @@ const visualTestItems = computed(() => [
         title: tContent('usage.uxWriting.title'),
         cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
         items: [
-          { element: tContent('usage.uxWriting.table.columnHeader.name'),      rules: tContent('usage.uxWriting.table.columnHeader.format'),      do: tContent('usage.uxWriting.table.columnHeader.good'),      dont: tContent('usage.uxWriting.table.columnHeader.bad')      },
+          { element: tContent('usage.uxWriting.table.columnHeader.name'), rules: tContent('usage.uxWriting.table.columnHeader.format'), do: tContent('usage.uxWriting.table.columnHeader.good'), dont: tContent('usage.uxWriting.table.columnHeader.bad') },
           { element: tContent('usage.uxWriting.table.filterPlaceholder.name'), rules: tContent('usage.uxWriting.table.filterPlaceholder.format'), do: tContent('usage.uxWriting.table.filterPlaceholder.good'), dont: tContent('usage.uxWriting.table.filterPlaceholder.bad') },
-          { element: tContent('usage.uxWriting.table.emptyState.name'),        rules: tContent('usage.uxWriting.table.emptyState.format'),        do: tContent('usage.uxWriting.table.emptyState.good'),        dont: tContent('usage.uxWriting.table.emptyState.bad')        },
-          { element: tContent('usage.uxWriting.table.selectionLabel.name'),    rules: tContent('usage.uxWriting.table.selectionLabel.format'),    do: tContent('usage.uxWriting.table.selectionLabel.good'),    dont: tContent('usage.uxWriting.table.selectionLabel.bad')    },
+          { element: tContent('usage.uxWriting.table.emptyState.name'), rules: tContent('usage.uxWriting.table.emptyState.format'), do: tContent('usage.uxWriting.table.emptyState.good'), dont: tContent('usage.uxWriting.table.emptyState.bad') },
+          { element: tContent('usage.uxWriting.table.selectionLabel.name'), rules: tContent('usage.uxWriting.table.selectionLabel.format'), do: tContent('usage.uxWriting.table.selectionLabel.good'), dont: tContent('usage.uxWriting.table.selectionLabel.bad') },
         ],
       }"
       :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
@@ -445,16 +448,36 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <DataTable :columns="demoColumns" :data="demoData" :enable-row-selection="false" global-filter-placeholder="Buscar fatura, cliente ou método" />
+        <DataTable
+          :columns="demoColumns"
+          :data="demoData"
+          :enable-row-selection="false"
+          global-filter-placeholder="Buscar fatura, cliente ou método"
+        />
       </template>
       <template #dont-preview-0>
-        <DataTable :columns="demoColumns" :data="demoData" :enable-row-selection="false" global-filter-placeholder="Buscar..." />
+        <DataTable
+          :columns="demoColumns"
+          :data="demoData"
+          :enable-row-selection="false"
+          global-filter-placeholder="Buscar..."
+        />
       </template>
       <template #do-preview-1>
-        <DataTable :columns="demoColumns" :data="demoData" :virtualized="true" max-height="240px" :enable-column-visibility="false" />
+        <DataTable
+          :columns="demoColumns"
+          :data="demoData"
+          :virtualized="true"
+          max-height="240px"
+          :enable-column-visibility="false"
+        />
       </template>
       <template #dont-preview-1>
-        <DataTable :columns="demoColumns" :data="demoData" :page-size="50" />
+        <DataTable
+          :columns="demoColumns"
+          :data="demoData"
+          :page-size="50"
+        />
       </template>
     </DocsDoDont>
 
@@ -468,7 +491,10 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Recursos ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" />
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    />
 
     <!-- ── Estados ───────────────────────────────────────────────── -->
     <DocsStates
@@ -482,8 +508,8 @@ const visualTestItems = computed(() => [
       :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.containerTitle'), cols: propCols, items: dataTablePropItems },
-        { title: 'Emits',                          cols: propCols, items: emitsItems         },
-        { title: tContent('props.tooltipTitle'),   cols: propCols, items: columnMetaItems    },
+        { title: 'Emits', cols: propCols, items: emitsItems },
+        { title: tContent('props.tooltipTitle'), cols: propCols, items: columnMetaItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -509,10 +535,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ──────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ─────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

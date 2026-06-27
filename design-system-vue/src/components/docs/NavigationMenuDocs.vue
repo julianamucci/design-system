@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -423,7 +423,11 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="navigation-menu">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="navigation-menu"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -436,19 +440,42 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full flex justify-center" style="contain: layout; min-height: 320px;">
-        <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
+      <div
+        class="w-full flex justify-center"
+        style="contain: layout; min-height: 320px;"
+      >
+        <NavigationMenu
+          aria-label="Navegação principal"
+          :delay-duration="80"
+        >
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuLink href="#" :active="true">{{ stripHtml(tContent('demonstration.labels.simpleLink')) }}</NavigationMenuLink>
+              <NavigationMenuLink
+                href="#"
+                :active="true"
+              >
+                {{ stripHtml(tContent('demonstration.labels.simpleLink')) }}
+              </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuTrigger>{{ stripHtml(tContent('demonstration.labels.withDropdown')) }}</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul class="grid w-[400px] gap-3 p-4">
-                  <li><NavigationMenuLink href="#">Produto A</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Produto B</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Produto C</NavigationMenuLink></li>
+                  <li>
+                    <NavigationMenuLink href="#">
+                      Produto A
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink href="#">
+                      Produto B
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink href="#">
+                      Produto C
+                    </NavigationMenuLink>
+                  </li>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -456,15 +483,33 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuTrigger>{{ stripHtml(tContent('demonstration.labels.withGrid')) }}</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul class="grid w-[600px] grid-cols-2 gap-3 p-4">
-                  <li><NavigationMenuLink href="#">Solução 1</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Solução 2</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Solução 3</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Solução 4</NavigationMenuLink></li>
+                  <li>
+                    <NavigationMenuLink href="#">
+                      Solução 1
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink href="#">
+                      Solução 2
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink href="#">
+                      Solução 3
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink href="#">
+                      Solução 4
+                    </NavigationMenuLink>
+                  </li>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink href="#">Sobre</NavigationMenuLink>
+              <NavigationMenuLink href="#">
+                Sobre
+              </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
@@ -516,9 +561,9 @@ const a11yCritCols = computed(() => ({
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.trigger.name'),     rules: tContent('usage.uxWriting.table.trigger.format'),     do: tContent('usage.uxWriting.table.trigger.good'),     dont: tContent('usage.uxWriting.table.trigger.bad')     },
-          { element: tContent('usage.uxWriting.table.link.name'),        rules: tContent('usage.uxWriting.table.link.format'),        do: tContent('usage.uxWriting.table.link.good'),        dont: tContent('usage.uxWriting.table.link.bad')        },
-          { element: tContent('usage.uxWriting.table.ariaLabel.name'),   rules: tContent('usage.uxWriting.table.ariaLabel.format'),   do: tContent('usage.uxWriting.table.ariaLabel.good'),   dont: tContent('usage.uxWriting.table.ariaLabel.bad')   },
+          { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
+          { element: tContent('usage.uxWriting.table.link.name'), rules: tContent('usage.uxWriting.table.link.format'), do: tContent('usage.uxWriting.table.link.good'), dont: tContent('usage.uxWriting.table.link.bad') },
+          { element: tContent('usage.uxWriting.table.ariaLabel.name'), rules: tContent('usage.uxWriting.table.ariaLabel.format'), do: tContent('usage.uxWriting.table.ariaLabel.good'), dont: tContent('usage.uxWriting.table.ariaLabel.bad') },
           { element: tContent('usage.uxWriting.table.currentPage.name'), rules: tContent('usage.uxWriting.table.currentPage.format'), do: tContent('usage.uxWriting.table.currentPage.good'), dont: tContent('usage.uxWriting.table.currentPage.bad') },
         ],
       }"
@@ -551,37 +596,88 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <div style="contain: layout; min-height: 80px;" class="w-full flex justify-center">
-          <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
+        <div
+          style="contain: layout; min-height: 80px;"
+          class="w-full flex justify-center"
+        >
+          <NavigationMenu
+            aria-label="Navegação principal"
+            :delay-duration="80"
+          >
             <NavigationMenuList>
-              <NavigationMenuItem><NavigationMenuLink href="#" :active="true">Início</NavigationMenuLink></NavigationMenuItem>
-              <NavigationMenuItem><NavigationMenuLink href="#">Sobre</NavigationMenuLink></NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  :active="true"
+                >
+                  Início
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#">
+                  Sobre
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
       </template>
       <template #dont-preview-0>
-        <div style="contain: layout; min-height: 80px;" class="w-full flex justify-center">
+        <div
+          style="contain: layout; min-height: 80px;"
+          class="w-full flex justify-center"
+        >
           <NavigationMenu :delay-duration="80">
             <NavigationMenuList>
-              <NavigationMenuItem><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
-              <NavigationMenuItem><NavigationMenuLink href="#">Sobre</NavigationMenuLink></NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#">
+                  Início
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#">
+                  Sobre
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
       </template>
       <template #do-preview-1>
-        <div style="contain: layout; min-height: 220px;" class="w-full flex justify-center">
-          <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="produtos">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full flex justify-center"
+        >
+          <NavigationMenu
+            aria-label="Navegação principal"
+            :delay-duration="80"
+            default-value="produtos"
+          >
             <NavigationMenuList>
               <NavigationMenuItem value="produtos">
                 <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul class="grid w-[400px] grid-cols-2 gap-3 p-4">
-                    <li><NavigationMenuLink href="#">Plano Pro</NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#">Plano Empresa</NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#">API</NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#">Integrações</NavigationMenuLink></li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        Plano Pro
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        Plano Empresa
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        API
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        Integrações
+                      </NavigationMenuLink>
+                    </li>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -590,14 +686,28 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #dont-preview-1>
-        <div style="contain: layout; min-height: 220px;" class="w-full flex justify-center">
-          <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="todos">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full flex justify-center"
+        >
+          <NavigationMenu
+            aria-label="Navegação principal"
+            :delay-duration="80"
+            default-value="todos"
+          >
             <NavigationMenuList>
               <NavigationMenuItem value="todos">
                 <NavigationMenuTrigger>Todos os links</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul class="grid w-[400px] gap-1 p-4 text-xs">
-                    <li v-for="i in 12" :key="i"><NavigationMenuLink href="#">Link {{ i }} (sem grupo)</NavigationMenuLink></li>
+                    <li
+                      v-for="i in 12"
+                      :key="i"
+                    >
+                      <NavigationMenuLink href="#">
+                        Link {{ i }} (sem grupo)
+                      </NavigationMenuLink>
+                    </li>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -614,33 +724,83 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 220px;" class="w-full flex justify-center">
-          <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full flex justify-center"
+        >
+          <NavigationMenu
+            aria-label="Navegação principal"
+            :delay-duration="80"
+          >
             <NavigationMenuList>
-              <NavigationMenuItem><NavigationMenuLink href="#" :active="true">Início</NavigationMenuLink></NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  :active="true"
+                >
+                  Início
+                </NavigationMenuLink>
+              </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul class="grid w-[300px] gap-2 p-3">
-                    <li><NavigationMenuLink href="#">Produto A</NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#">Produto B</NavigationMenuLink></li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        Produto A
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        Produto B
+                      </NavigationMenuLink>
+                    </li>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              <NavigationMenuItem><NavigationMenuLink href="#">Sobre</NavigationMenuLink></NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#">
+                  Sobre
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 220px;" class="w-full flex justify-start">
-          <NavigationMenu orientation="vertical" aria-label="Navegação lateral" :delay-duration="80">
+        <div
+          style="contain: layout; min-height: 220px;"
+          class="w-full flex justify-start"
+        >
+          <NavigationMenu
+            orientation="vertical"
+            aria-label="Navegação lateral"
+            :delay-duration="80"
+          >
             <NavigationMenuList class="flex-col items-start gap-1">
-              <NavigationMenuItem><NavigationMenuLink href="#" :active="true">Início</NavigationMenuLink></NavigationMenuItem>
-              <NavigationMenuItem><NavigationMenuLink href="#">Sobre</NavigationMenuLink></NavigationMenuItem>
-              <NavigationMenuItem><NavigationMenuLink href="#">Contato</NavigationMenuLink></NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  :active="true"
+                >
+                  Início
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#">
+                  Sobre
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#">
+                  Contato
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -655,29 +815,74 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 200px;" class="w-full flex justify-center">
-          <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
+        <div
+          style="contain: layout; min-height: 200px;"
+          class="w-full flex justify-center"
+        >
+          <NavigationMenu
+            aria-label="Navegação principal"
+            :delay-duration="80"
+          >
             <NavigationMenuList>
-              <NavigationMenuItem><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
-              <NavigationMenuItem><NavigationMenuLink href="#">Preços</NavigationMenuLink></NavigationMenuItem>
-              <NavigationMenuItem><NavigationMenuLink href="#">Contato</NavigationMenuLink></NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#">
+                  Início
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#">
+                  Preços
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#">
+                  Contato
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 280px;" class="w-full flex justify-center">
-          <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="produtos">
+        <div
+          style="contain: layout; min-height: 280px;"
+          class="w-full flex justify-center"
+        >
+          <NavigationMenu
+            aria-label="Navegação principal"
+            :delay-duration="80"
+            default-value="produtos"
+          >
             <NavigationMenuList>
-              <NavigationMenuItem><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#">
+                  Início
+                </NavigationMenuLink>
+              </NavigationMenuItem>
               <NavigationMenuItem value="produtos">
                 <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul class="grid w-[240px] gap-1 p-2">
-                    <li><NavigationMenuLink href="#">Plano Inicial</NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#">Plano Profissional</NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#">Plano Empresarial</NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#">Comparar planos</NavigationMenuLink></li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        Plano Inicial
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        Plano Profissional
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        Plano Empresarial
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        Comparar planos
+                      </NavigationMenuLink>
+                    </li>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -686,19 +891,74 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout; min-height: 320px;" class="w-full flex justify-center">
-          <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="solucoes">
+        <div
+          style="contain: layout; min-height: 320px;"
+          class="w-full flex justify-center"
+        >
+          <NavigationMenu
+            aria-label="Navegação principal"
+            :delay-duration="80"
+            default-value="solucoes"
+          >
             <NavigationMenuList>
               <NavigationMenuItem value="solucoes">
                 <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul class="grid w-[560px] grid-cols-2 gap-2 p-3">
-                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Marketing</div><p class="text-xs text-muted-foreground">Automação, leads e campanhas.</p></NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Vendas</div><p class="text-xs text-muted-foreground">Pipeline, CRM e propostas.</p></NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Suporte</div><p class="text-xs text-muted-foreground">Tickets, base de conhecimento.</p></NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Sucesso</div><p class="text-xs text-muted-foreground">Onboarding e retenção.</p></NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Operações</div><p class="text-xs text-muted-foreground">Workflows e integrações.</p></NavigationMenuLink></li>
-                    <li><NavigationMenuLink href="#"><div class="text-sm font-medium">Para Analytics</div><p class="text-xs text-muted-foreground">Dashboards e relatórios.</p></NavigationMenuLink></li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        <div class="text-sm font-medium">
+                          Para Marketing
+                        </div><p class="text-xs text-muted-foreground">
+                          Automação, leads e campanhas.
+                        </p>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        <div class="text-sm font-medium">
+                          Para Vendas
+                        </div><p class="text-xs text-muted-foreground">
+                          Pipeline, CRM e propostas.
+                        </p>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        <div class="text-sm font-medium">
+                          Para Suporte
+                        </div><p class="text-xs text-muted-foreground">
+                          Tickets, base de conhecimento.
+                        </p>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        <div class="text-sm font-medium">
+                          Para Sucesso
+                        </div><p class="text-xs text-muted-foreground">
+                          Onboarding e retenção.
+                        </p>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        <div class="text-sm font-medium">
+                          Para Operações
+                        </div><p class="text-xs text-muted-foreground">
+                          Workflows e integrações.
+                        </p>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="#">
+                        <div class="text-sm font-medium">
+                          Para Analytics
+                        </div><p class="text-xs text-muted-foreground">
+                          Dashboards e relatórios.
+                        </p>
+                      </NavigationMenuLink>
+                    </li>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -707,23 +967,45 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-3>
-        <div style="contain: layout; min-height: 320px;" class="w-full flex justify-center">
-          <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="recursos">
+        <div
+          style="contain: layout; min-height: 320px;"
+          class="w-full flex justify-center"
+        >
+          <NavigationMenu
+            aria-label="Navegação principal"
+            :delay-duration="80"
+            default-value="recursos"
+          >
             <NavigationMenuList>
               <NavigationMenuItem value="recursos">
                 <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <div class="flex gap-3 w-[560px] p-3">
-                    <a href="#" class="flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline">
+                    <a
+                      href="#"
+                      class="flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline"
+                    >
                       <div class="text-base font-semibold leading-tight">Comece em 5 minutos</div>
                       <p class="mt-2 text-sm leading-snug text-muted-foreground">
                         Crie sua primeira integração com nosso quickstart.
                       </p>
                     </a>
                     <ul class="flex flex-col flex-1 gap-1">
-                      <li><NavigationMenuLink href="#">Documentação</NavigationMenuLink></li>
-                      <li><NavigationMenuLink href="#">Tutoriais</NavigationMenuLink></li>
-                      <li><NavigationMenuLink href="#">Comunidade</NavigationMenuLink></li>
+                      <li>
+                        <NavigationMenuLink href="#">
+                          Documentação
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink href="#">
+                          Tutoriais
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink href="#">
+                          Comunidade
+                        </NavigationMenuLink>
+                      </li>
                     </ul>
                   </div>
                 </NavigationMenuContent>
@@ -779,10 +1061,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

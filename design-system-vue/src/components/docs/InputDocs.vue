@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -336,7 +336,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -352,24 +355,48 @@ const visualTestItems = computed(() => [
       <div class="w-full max-w-sm space-y-4">
         <div class="space-y-1.5">
           <Label for="demo-nome">{{ tContent('demonstration.labels.defaultLabel') }}</Label>
-          <Input id="demo-nome" type="text" :placeholder="tContent('demonstration.labels.defaultPlaceholder')" />
+          <Input
+            id="demo-nome"
+            type="text"
+            :placeholder="tContent('demonstration.labels.defaultPlaceholder')"
+          />
         </div>
         <div class="space-y-1.5">
           <Label for="demo-email">{{ tContent('demonstration.labels.emailLabel') }}</Label>
-          <Input id="demo-email" type="email" :placeholder="tContent('demonstration.labels.emailPlaceholder')" />
+          <Input
+            id="demo-email"
+            type="email"
+            :placeholder="tContent('demonstration.labels.emailPlaceholder')"
+          />
         </div>
         <div class="space-y-1.5">
           <Label for="demo-senha">{{ tContent('demonstration.labels.passwordLabel') }}</Label>
-          <Input id="demo-senha" type="password" :placeholder="tContent('demonstration.labels.passwordPlaceholder')" />
+          <Input
+            id="demo-senha"
+            type="password"
+            :placeholder="tContent('demonstration.labels.passwordPlaceholder')"
+          />
         </div>
         <div class="space-y-1.5">
           <Label for="demo-disabled">{{ tContent('demonstration.labels.disabledLabel') }}</Label>
-          <Input id="demo-disabled" type="text" :placeholder="tContent('demonstration.labels.disabledPlaceholder')" disabled />
+          <Input
+            id="demo-disabled"
+            type="text"
+            :placeholder="tContent('demonstration.labels.disabledPlaceholder')"
+            disabled
+          />
         </div>
         <div class="space-y-1.5">
           <Label for="demo-error">{{ tContent('demonstration.labels.errorLabel') }}</Label>
-          <Input id="demo-error" type="email" :placeholder="tContent('demonstration.labels.errorPlaceholder')" aria-invalid="true" />
-          <p class="text-sm text-destructive">{{ tContent('demonstration.labels.errorMessage') }}</p>
+          <Input
+            id="demo-error"
+            type="email"
+            :placeholder="tContent('demonstration.labels.errorPlaceholder')"
+            aria-invalid="true"
+          />
+          <p class="text-sm text-destructive">
+            {{ tContent('demonstration.labels.errorMessage') }}
+          </p>
         </div>
       </div>
     </DocsDemonstration>
@@ -428,13 +455,21 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label for="dodont-do-1">Email</Label>
-          <Input id="dodont-do-1" type="email" placeholder="ex: joao@empresa.com" />
+          <Input
+            id="dodont-do-1"
+            type="email"
+            placeholder="ex: joao@empresa.com"
+          />
         </div>
       </template>
       <template #dont-preview-0>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label for="dodont-dont-1">Email</Label>
-          <Input id="dodont-dont-1" type="email" placeholder="Digite seu email" />
+          <Input
+            id="dodont-dont-1"
+            type="email"
+            placeholder="Digite seu email"
+          />
         </div>
       </template>
 
@@ -442,13 +477,21 @@ const visualTestItems = computed(() => [
       <template #do-preview-1>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label for="dodont-do-2">Email</Label>
-          <Input id="dodont-do-2" type="email" placeholder="ex: joao@empresa.com" />
+          <Input
+            id="dodont-do-2"
+            type="email"
+            placeholder="ex: joao@empresa.com"
+          />
         </div>
       </template>
       <template #dont-preview-1>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label for="dodont-dont-2">Email</Label>
-          <Input id="dodont-dont-2" type="text" placeholder="ex: joao@empresa.com" />
+          <Input
+            id="dodont-dont-2"
+            type="text"
+            placeholder="ex: joao@empresa.com"
+          />
         </div>
       </template>
 
@@ -456,12 +499,19 @@ const visualTestItems = computed(() => [
       <template #do-preview-2>
         <div class="space-y-1.5 w-full max-w-xs">
           <Label for="dodont-do-3">Nome completo</Label>
-          <Input id="dodont-do-3" type="text" placeholder="ex: João da Silva" />
+          <Input
+            id="dodont-do-3"
+            type="text"
+            placeholder="ex: João da Silva"
+          />
         </div>
       </template>
       <template #dont-preview-2>
         <div class="w-full max-w-xs">
-          <Input type="text" placeholder="Nome completo" />
+          <Input
+            type="text"
+            placeholder="Nome completo"
+          />
         </div>
       </template>
     </DocsDoDont>
@@ -475,29 +525,45 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes (Tipos) ──────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" component-slug="input">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      component-slug="input"
+    >
       <!-- text -->
       <template #variant-preview-0>
         <div class="w-full max-w-xs">
-          <Input type="text" placeholder="ex: João da Silva" />
+          <Input
+            type="text"
+            placeholder="ex: João da Silva"
+          />
         </div>
       </template>
       <!-- email -->
       <template #variant-preview-1>
         <div class="w-full max-w-xs">
-          <Input type="email" placeholder="ex: joao@empresa.com" />
+          <Input
+            type="email"
+            placeholder="ex: joao@empresa.com"
+          />
         </div>
       </template>
       <!-- password -->
       <template #variant-preview-2>
         <div class="w-full max-w-xs">
-          <Input type="password" placeholder="Mínimo 8 caracteres" />
+          <Input
+            type="password"
+            placeholder="Mínimo 8 caracteres"
+          />
         </div>
       </template>
       <!-- number -->
       <template #variant-preview-3>
         <div class="w-full max-w-xs">
-          <Input type="number" placeholder="0" />
+          <Input
+            type="number"
+            placeholder="0"
+          />
         </div>
       </template>
       <!-- file -->
@@ -518,21 +584,42 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <div class="flex flex-col gap-1.5 w-full max-w-sm">
           <Label for="input-nome">Nome completo</Label>
-          <Input id="input-nome" type="text" placeholder="ex: João da Silva" />
+          <Input
+            id="input-nome"
+            type="text"
+            placeholder="ex: João da Silva"
+          />
         </div>
       </template>
       <template #variant-preview-1>
         <div class="flex flex-col gap-1.5 w-full max-w-sm">
           <Label for="input-email">Email</Label>
-          <Input id="input-email" type="email" placeholder="ex: joao@empresa.com" />
-          <p class="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>
+          <Input
+            id="input-email"
+            type="email"
+            placeholder="ex: joao@empresa.com"
+          />
+          <p class="text-xs text-muted-foreground">
+            Usaremos este email para envio de notificações.
+          </p>
         </div>
       </template>
       <template #variant-preview-2>
         <div class="flex flex-col gap-1.5 w-full max-w-sm">
           <Label for="input-email-error">Email</Label>
-          <Input id="input-email-error" type="email" placeholder="ex: joao@empresa.com" aria-invalid="true" aria-describedby="input-email-error-error" />
-          <p class="text-xs text-destructive" id="input-email-error-error">Email inválido. Use o formato nome@dominio.com</p>
+          <Input
+            id="input-email-error"
+            type="email"
+            placeholder="ex: joao@empresa.com"
+            aria-invalid="true"
+            aria-describedby="input-email-error-error"
+          />
+          <p
+            id="input-email-error-error"
+            class="text-xs text-destructive"
+          >
+            Email inválido. Use o formato nome@dominio.com
+          </p>
         </div>
       </template>
       <template #variant-preview-3>
@@ -540,7 +627,12 @@ const visualTestItems = computed(() => [
           <Label for="input-url">URL do site</Label>
           <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">
             <span class="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>
-            <Input class="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" type="url" id="input-url" placeholder="meusite.com" />
+            <Input
+              id="input-url"
+              class="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
+              type="url"
+              placeholder="meusite.com"
+            />
           </div>
         </div>
       </template>

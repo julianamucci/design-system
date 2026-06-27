@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAspectRatio } from './aspect-ratio';
 import { createCard, createCardContent, createCardHeader, createCardTitle, createCardDescription } from './card';
 import { within, expect } from 'storybook/test';

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -45,7 +45,6 @@ export const FormaDePagamento: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const radios = canvas.getAllByRole('radio');
 
     await step('3 opções renderizadas e associadas às labels', async () => {
@@ -87,7 +86,6 @@ export const ComFieldsetLegend: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Legend visível agrupa as opções', async () => {
       await expect(canvas.getByText('Forma de entrega')).toBeVisible();
     });
@@ -141,7 +139,6 @@ export const EmFormulario: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Formulário tem campo de email e radios', async () => {
       await expect(canvas.getByLabelText(/Email/i)).toBeInTheDocument();
@@ -200,7 +197,6 @@ export const CartoesSelecionaveis: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const radios = canvas.getAllByRole('radio');
     await step('3 cartões/radios renderizados', async () => {
       await expect(radios).toHaveLength(3);

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { ToggleGroup, ToggleGroupItem } from './index';
 import { AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next';
 
@@ -36,7 +36,6 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
     await step('Todos itens começam não-pressionados', async () => {
       await expect(left).toHaveAttribute('aria-pressed', 'false');
@@ -58,7 +57,6 @@ export const Selected: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const center = canvas.getByRole('button', { name: 'Centralizar' });
     await step('Item selecionado tem aria-pressed=true e data-state=on', async () => {
       await expect(center).toHaveAttribute('aria-pressed', 'true');
@@ -87,7 +85,6 @@ export const FocoVisivel: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
     const center = canvas.getByRole('button', { name: 'Centralizar' });
     await step('Item recebe foco programaticamente', async () => {
@@ -114,7 +111,6 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
     await step('Itens estão disabled', async () => {
       await expect(left).toBeDisabled();
@@ -140,7 +136,6 @@ export const ItemDisabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
     const center = canvas.getByRole('button', { name: 'Centralizar' });
     await step('Apenas o item central está desabilitado', async () => {

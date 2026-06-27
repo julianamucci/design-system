@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 import TabsDocs from '@/components/docs/TabsDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -67,7 +67,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const tabs = canvas.getAllByRole('tab');
 
     await step('Primeira tab começa ativa (defaultValue=overview)', async () => {

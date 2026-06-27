@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { fn, userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { fn, userEvent, expect } from 'storybook/test';
 import { Toggle } from './index';
 import { Bold } from 'lucide-vue-next';
 import ToggleDocs from '@/components/docs/ToggleDocs.vue';
@@ -64,7 +64,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Negrito' });
 
     await step('Toggle está presente com aria-label', async () => {

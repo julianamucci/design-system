@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import {
   Card,
   CardHeader,
@@ -65,7 +65,6 @@ export const Small: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Card tem data-size="sm" (subcomponentes reagem via group-data-[size=sm])', async () => {
       const card = canvasElement.querySelector('[data-slot="card"]');
       await expect(card).toHaveAttribute('data-size', 'sm');

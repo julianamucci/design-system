@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
 import { createRadioGroupDocs } from '@/components/docs/RadioGroupDocs';

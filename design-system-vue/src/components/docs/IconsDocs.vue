@@ -101,7 +101,6 @@ onUnmounted(() => {
 <template>
   <div class="sb-unstyled flex-1 h-full overflow-auto ds-docs">
     <div class="p-8 max-w-6xl mx-auto space-y-8">
-
       <!-- ── Header ──────────────────────────────────────────────────────── -->
       <header class="space-y-4 border-b border-border/50 pb-8">
         <div class="flex items-center justify-between">
@@ -132,7 +131,10 @@ onUnmounted(() => {
 
         <div class="flex flex-wrap items-center gap-3 pt-1">
           <span class="inline-flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md text-xs font-mono border border-border/50 text-muted-foreground">
-            <Package class="h-3 w-3" aria-hidden="true" />
+            <Package
+              class="h-3 w-3"
+              aria-hidden="true"
+            />
             lucide-vue-next
           </span>
           <span class="text-sm text-muted-foreground/70">
@@ -143,16 +145,22 @@ onUnmounted(() => {
 
       <!-- ── Como usar ────────────────────────────────────────────────────── -->
       <section class="space-y-6 border-t border-border/50 pt-8">
-        <h2 class="text-xl font-semibold text-foreground">{{ t('howToUse.title') }}</h2>
+        <h2 class="text-xl font-semibold text-foreground">
+          {{ t('howToUse.title') }}
+        </h2>
         <div class="grid gap-4 md:grid-cols-2">
           <div class="space-y-2">
-            <p class="text-sm font-medium text-foreground">{{ t('howToUse.individual.title') }}</p>
+            <p class="text-sm font-medium text-foreground">
+              {{ t('howToUse.individual.title') }}
+            </p>
             <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>import { Search, Settings, User } from 'lucide-vue-next';
 
 &lt;Search class="h-4 w-4" aria-hidden="true" /&gt;</code></pre>
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium text-foreground">{{ t('howToUse.sizes.title') }}</p>
+            <p class="text-sm font-medium text-foreground">
+              {{ t('howToUse.sizes.title') }}
+            </p>
             <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>h-3 w-3   // 12px — badges, captions
 h-4 w-4   // 16px — padrão em texto e botões
 h-5 w-5   // 20px — destaque em headers
@@ -163,7 +171,9 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
 
       <!-- ── Acessibilidade ─────────────────────────────────────────────────── -->
       <section class="space-y-4 border-t border-border/50 pt-8">
-        <h2 class="text-xl font-semibold text-foreground">{{ t('accessibility.title') }}</h2>
+        <h2 class="text-xl font-semibold text-foreground">
+          {{ t('accessibility.title') }}
+        </h2>
         <div class="grid gap-3 md:grid-cols-2">
           <div class="space-y-2">
             <p class="text-sm font-medium text-foreground">
@@ -201,8 +211,12 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
 
       <!-- ── Busca ────────────────────────────────────────────────────────── -->
       <section class="space-y-3 border-t border-border/50 pt-8">
-        <h2 class="text-xl font-semibold text-foreground">{{ t('search.title') }}</h2>
-        <p class="text-sm text-muted-foreground">{{ t('search.subtitle') }}</p>
+        <h2 class="text-xl font-semibold text-foreground">
+          {{ t('search.title') }}
+        </h2>
+        <p class="text-sm text-muted-foreground">
+          {{ t('search.subtitle') }}
+        </p>
         <div class="relative">
           <Search
             class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"
@@ -216,7 +230,11 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
             :aria-label="t('search.placeholder')"
           />
         </div>
-        <p class="text-sm text-muted-foreground" aria-live="polite" aria-atomic="true">
+        <p
+          class="text-sm text-muted-foreground"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {{ searchCountText }}
         </p>
       </section>
@@ -227,9 +245,16 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
         class="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground"
         role="status"
       >
-        <Search class="h-10 w-10 opacity-25" aria-hidden="true" />
-        <p class="font-medium">{{ t('search.noResults') }}</p>
-        <p class="text-sm opacity-70">{{ t('search.noResultsSub') }}</p>
+        <Search
+          class="h-10 w-10 opacity-25"
+          aria-hidden="true"
+        />
+        <p class="font-medium">
+          {{ t('search.noResults') }}
+        </p>
+        <p class="text-sm opacity-70">
+          {{ t('search.noResultsSub') }}
+        </p>
       </div>
 
       <ul
@@ -238,7 +263,11 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
         style="grid-template-columns: repeat(auto-fill, minmax(96px, 1fr))"
         :aria-label="iconsAvailableText"
       >
-        <li v-for="name in filteredNames" :key="name" class="list-none">
+        <li
+          v-for="name in filteredNames"
+          :key="name"
+          class="list-none"
+        >
           <button
             type="button"
             :aria-label="`${t('copy.tooltip')} ${name}`"
@@ -268,7 +297,6 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
           </button>
         </li>
       </ul>
-
     </div>
   </div>
 </template>

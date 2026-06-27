@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect } from 'storybook/test';
 import { Label } from './index';
 
 const meta = {
@@ -32,7 +32,6 @@ export const Padrao: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Label padrão está visível', async () => {
       const label = canvas.getByText('Nome completo');
@@ -64,7 +63,6 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Input está desabilitado', async () => {
       const input = canvas.getByPlaceholderText('000.000.000-00');
@@ -97,7 +95,6 @@ export const DisabledViaGrupo: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Grupo pai tem data-disabled="true"', async () => {
       const group = canvasElement.querySelector('[data-disabled="true"]');
@@ -132,7 +129,6 @@ export const Required: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Label com texto está visível', async () => {
       await expect(canvas.getByText('Email profissional')).toBeInTheDocument();

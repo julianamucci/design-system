@@ -381,7 +381,11 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="input-otp">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="input-otp"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -396,33 +400,75 @@ const a11yCritCols = computed(() => ({
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
         <!-- 6 dígitos -->
-        <div class="space-y-2" style="contain: layout; min-height: 100px;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('demonstration.labels.sixDigits'))" />
-          <InputOTP :max-length="6" v-model="demoSix" autocomplete="one-time-code" inputmode="numeric" aria-label="Código de 6 dígitos">
+        <div
+          class="space-y-2"
+          style="contain: layout; min-height: 100px;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('demonstration.labels.sixDigits'))"
+          />
+          <InputOTP
+            v-model="demoSix"
+            :max-length="6"
+            autocomplete="one-time-code"
+            inputmode="numeric"
+            aria-label="Código de 6 dígitos"
+          >
             <template #default="{ slots }">
               <InputOTPGroup>
-                <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
+                <InputOTPSlot
+                  v-for="(slot, index) in slots"
+                  :key="index"
+                  :index="index"
+                />
               </InputOTPGroup>
             </template>
           </InputOTP>
         </div>
 
         <!-- 4 dígitos -->
-        <div class="space-y-2" style="contain: layout; min-height: 100px;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('demonstration.labels.fourDigits'))" />
-          <InputOTP :max-length="4" v-model="demoFour" inputmode="numeric" aria-label="PIN de 4 dígitos">
+        <div
+          class="space-y-2"
+          style="contain: layout; min-height: 100px;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('demonstration.labels.fourDigits'))"
+          />
+          <InputOTP
+            v-model="demoFour"
+            :max-length="4"
+            inputmode="numeric"
+            aria-label="PIN de 4 dígitos"
+          >
             <template #default="{ slots }">
               <InputOTPGroup>
-                <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
+                <InputOTPSlot
+                  v-for="(slot, index) in slots"
+                  :key="index"
+                  :index="index"
+                />
               </InputOTPGroup>
             </template>
           </InputOTP>
         </div>
 
         <!-- Com Separator -->
-        <div class="space-y-2" style="contain: layout; min-height: 100px;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('demonstration.labels.withSeparator'))" />
-          <InputOTP :max-length="6" v-model="demoSep" inputmode="numeric" aria-label="Código com separador">
+        <div
+          class="space-y-2"
+          style="contain: layout; min-height: 100px;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('demonstration.labels.withSeparator'))"
+          />
+          <InputOTP
+            v-model="demoSep"
+            :max-length="6"
+            inputmode="numeric"
+            aria-label="Código com separador"
+          >
             <template #default>
               <InputOTPGroup>
                 <InputOTPSlot :index="0" />
@@ -440,12 +486,27 @@ const a11yCritCols = computed(() => ({
         </div>
 
         <!-- Alfanumérico -->
-        <div class="space-y-2" style="contain: layout; min-height: 100px;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('demonstration.labels.alphanumeric'))" />
-          <InputOTP :max-length="6" v-model="demoAlpha" inputmode="text" aria-label="Código alfanumérico">
+        <div
+          class="space-y-2"
+          style="contain: layout; min-height: 100px;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('demonstration.labels.alphanumeric'))"
+          />
+          <InputOTP
+            v-model="demoAlpha"
+            :max-length="6"
+            inputmode="text"
+            aria-label="Código alfanumérico"
+          >
             <template #default="{ slots }">
               <InputOTPGroup>
-                <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
+                <InputOTPSlot
+                  v-for="(slot, index) in slots"
+                  :key="index"
+                  :index="index"
+                />
               </InputOTPGroup>
             </template>
           </InputOTP>
@@ -518,23 +579,43 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground">autocomplete="one-time-code"</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground">
+            autocomplete="one-time-code"
+          </div>
         </div>
       </template>
       <template #dont-preview-0>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground italic">sem autocomplete</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground italic">
+            sem autocomplete
+          </div>
         </div>
       </template>
       <template #do-preview-1>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs">Label: Código de verificação</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs">
+            Label: Código de verificação
+          </div>
         </div>
       </template>
       <template #dont-preview-1>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs italic">(sem label)</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs italic">
+            (sem label)
+          </div>
         </div>
       </template>
     </DocsDoDont>
@@ -546,25 +627,48 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground">maxLength=6</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground">
+            maxLength=6
+          </div>
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground">maxLength=4</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground">
+            maxLength=4
+          </div>
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground">3 + Separator + 3</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground">
+            3 + Separator + 3
+          </div>
         </div>
       </template>
       <template #variant-preview-3>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground">REGEXP_ONLY_DIGITS_AND_CHARS</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground">
+            REGEXP_ONLY_DIGITS_AND_CHARS
+          </div>
         </div>
       </template>
     </DocsVariants>
@@ -579,7 +683,14 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div class="flex flex-col gap-2">
           <Label for="comp-label-otp">Código de verificação</Label>
-          <InputOTP id="comp-label-otp" :max-length="6" v-model="compLabelValue" autocomplete="one-time-code" inputmode="numeric" aria-label="Código de verificação">
+          <InputOTP
+            id="comp-label-otp"
+            v-model="compLabelValue"
+            :max-length="6"
+            autocomplete="one-time-code"
+            inputmode="numeric"
+            aria-label="Código de verificação"
+          >
             <template #default>
               <InputOTPGroup>
                 <InputOTPSlot :index="0" />
@@ -597,7 +708,15 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div class="flex flex-col gap-2">
           <Label for="comp-help-otp">Código de verificação</Label>
-          <InputOTP id="comp-help-otp" :max-length="6" v-model="compHelpValue" autocomplete="one-time-code" inputmode="numeric" aria-describedby="comp-help-otp-text" aria-label="Código de verificação">
+          <InputOTP
+            id="comp-help-otp"
+            v-model="compHelpValue"
+            :max-length="6"
+            autocomplete="one-time-code"
+            inputmode="numeric"
+            aria-describedby="comp-help-otp-text"
+            aria-label="Código de verificação"
+          >
             <template #default>
               <InputOTPGroup>
                 <InputOTPSlot :index="0" />
@@ -609,14 +728,28 @@ const a11yCritCols = computed(() => ({
               </InputOTPGroup>
             </template>
           </InputOTP>
-          <p id="comp-help-otp-text" class="text-xs text-muted-foreground">Enviamos por SMS, expira em 5 min.</p>
+          <p
+            id="comp-help-otp-text"
+            class="text-xs text-muted-foreground"
+          >
+            Enviamos por SMS, expira em 5 min.
+          </p>
         </div>
       </template>
 
       <template #variant-preview-2>
         <div class="flex flex-col gap-2">
           <Label for="comp-err-otp">Código de verificação</Label>
-          <InputOTP id="comp-err-otp" :max-length="6" v-model="compErrorValue" autocomplete="one-time-code" inputmode="numeric" aria-invalid="true" aria-describedby="comp-err-otp-text" aria-label="Código de verificação">
+          <InputOTP
+            id="comp-err-otp"
+            v-model="compErrorValue"
+            :max-length="6"
+            autocomplete="one-time-code"
+            inputmode="numeric"
+            aria-invalid="true"
+            aria-describedby="comp-err-otp-text"
+            aria-label="Código de verificação"
+          >
             <template #default>
               <InputOTPGroup>
                 <InputOTPSlot :index="0" />
@@ -628,14 +761,26 @@ const a11yCritCols = computed(() => ({
               </InputOTPGroup>
             </template>
           </InputOTP>
-          <p id="comp-err-otp-text" class="text-xs text-destructive">Código incorreto. Verifique e tente novamente.</p>
+          <p
+            id="comp-err-otp-text"
+            class="text-xs text-destructive"
+          >
+            Código incorreto. Verifique e tente novamente.
+          </p>
         </div>
       </template>
 
       <template #variant-preview-3>
         <div class="flex flex-col gap-3">
           <Label for="comp-resend-otp">Código de verificação</Label>
-          <InputOTP id="comp-resend-otp" :max-length="6" v-model="compResendValue" autocomplete="one-time-code" inputmode="numeric" aria-label="Código de verificação">
+          <InputOTP
+            id="comp-resend-otp"
+            v-model="compResendValue"
+            :max-length="6"
+            autocomplete="one-time-code"
+            inputmode="numeric"
+            aria-label="Código de verificação"
+          >
             <template #default>
               <InputOTPGroup>
                 <InputOTPSlot :index="0" />
@@ -648,8 +793,15 @@ const a11yCritCols = computed(() => ({
             </template>
           </InputOTP>
           <div class="flex items-center justify-between gap-3">
-            <p class="text-xs text-muted-foreground">Não recebeu?</p>
-            <Button variant="link" size="sm">Reenviar código</Button>
+            <p class="text-xs text-muted-foreground">
+              Não recebeu?
+            </p>
+            <Button
+              variant="link"
+              size="sm"
+            >
+              Reenviar código
+            </Button>
           </div>
         </div>
       </template>
@@ -700,10 +852,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

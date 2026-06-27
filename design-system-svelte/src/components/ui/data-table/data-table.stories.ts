@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import DataTable from './data-table.svelte';
 import DataTableDocs from '@/components/docs/DataTableDocs.svelte';

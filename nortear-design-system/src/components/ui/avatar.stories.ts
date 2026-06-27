@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createAvatar, createAvatarFallback, createAvatarImage, createAvatarRoot, type AvatarSize } from './avatar';
 import { createAvatarDocs } from '@/components/docs/AvatarDocs';

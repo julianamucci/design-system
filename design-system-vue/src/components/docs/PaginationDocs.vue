@@ -411,7 +411,11 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="pagination">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="pagination"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -425,7 +429,11 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div class="w-full space-y-6">
-        <Pagination :total="50" :items-per-page="10" :default-page="1">
+        <Pagination
+          :total="50"
+          :items-per-page="10"
+          :default-page="1"
+        >
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious>
@@ -433,19 +441,32 @@ const a11yCritCols = computed(() => ({
               </PaginationPrevious>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :is-active="true" :aria-label="`${tContent('demonstration.labels.page')} 1`">1</PaginationLink>
+              <PaginationLink
+                :is-active="true"
+                :aria-label="`${tContent('demonstration.labels.page')} 1`"
+              >
+                1
+              </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 2`">2</PaginationLink>
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 2`">
+                2
+              </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 3`">3</PaginationLink>
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 3`">
+                3
+              </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 4`">4</PaginationLink>
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 4`">
+                4
+              </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 5`">5</PaginationLink>
+              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 5`">
+                5
+              </PaginationLink>
             </PaginationItem>
             <PaginationItem>
               <PaginationNext>
@@ -501,8 +522,8 @@ const a11yCritCols = computed(() => ({
         },
         items: [
           { element: tContent('usage.uxWriting.table.previous.name'), rules: tContent('usage.uxWriting.table.previous.format'), do: tContent('usage.uxWriting.table.previous.good'), dont: tContent('usage.uxWriting.table.previous.bad') },
-          { element: tContent('usage.uxWriting.table.next.name'),     rules: tContent('usage.uxWriting.table.next.format'),     do: tContent('usage.uxWriting.table.next.good'),     dont: tContent('usage.uxWriting.table.next.bad')     },
-          { element: tContent('usage.uxWriting.table.page.name'),     rules: tContent('usage.uxWriting.table.page.format'),     do: tContent('usage.uxWriting.table.page.good'),     dont: tContent('usage.uxWriting.table.page.bad')     },
+          { element: tContent('usage.uxWriting.table.next.name'), rules: tContent('usage.uxWriting.table.next.format'), do: tContent('usage.uxWriting.table.next.good'), dont: tContent('usage.uxWriting.table.next.bad') },
+          { element: tContent('usage.uxWriting.table.page.name'), rules: tContent('usage.uxWriting.table.page.format'), do: tContent('usage.uxWriting.table.page.good'), dont: tContent('usage.uxWriting.table.page.bad') },
           { element: tContent('usage.uxWriting.table.ellipsis.name'), rules: tContent('usage.uxWriting.table.ellipsis.format'), do: tContent('usage.uxWriting.table.ellipsis.good'), dont: tContent('usage.uxWriting.table.ellipsis.bad') },
         ],
       }"
@@ -535,33 +556,76 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <Pagination :total="120" :items-per-page="10" :default-page="6" class="w-full">
+        <Pagination
+          :total="120"
+          :items-per-page="10"
+          :default-page="6"
+          class="w-full"
+        >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 1`">1</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 1`">
+                1
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationEllipsis /></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 5`">5</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :is-active="true" :aria-label="`Página atual, 6`">6</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 7`">7</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 5`">
+                5
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink
+                :is-active="true"
+                :aria-label="`Página atual, 6`"
+              >
+                6
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 7`">
+                7
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationEllipsis /></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 12`">12</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 12`">
+                12
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationNext /></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
       <template #dont-preview-0>
-        <Pagination :total="120" :items-per-page="10" :default-page="6" class="w-full">
+        <Pagination
+          :total="120"
+          :items-per-page="10"
+          :default-page="6"
+          class="w-full"
+        >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
-            <PaginationItem v-for="n in 12" :key="n">
-              <PaginationLink :is-active="n === 6">{{ n }}</PaginationLink>
+            <PaginationItem
+              v-for="n in 12"
+              :key="n"
+            >
+              <PaginationLink :is-active="n === 6">
+                {{ n }}
+              </PaginationLink>
             </PaginationItem>
             <PaginationItem><PaginationNext /></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
       <template #do-preview-1>
-        <Pagination :total="50" :items-per-page="10" :default-page="2" class="w-full">
+        <Pagination
+          :total="50"
+          :items-per-page="10"
+          :default-page="2"
+          class="w-full"
+        >
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious>
@@ -569,7 +633,11 @@ const a11yCritCols = computed(() => ({
               </PaginationPrevious>
             </PaginationItem>
             <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :is-active="true">2</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink :is-active="true">
+                2
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationLink>3</PaginationLink></PaginationItem>
             <PaginationItem>
               <PaginationNext>
@@ -580,11 +648,20 @@ const a11yCritCols = computed(() => ({
         </Pagination>
       </template>
       <template #dont-preview-1>
-        <Pagination :total="50" :items-per-page="10" :default-page="2" class="w-full">
+        <Pagination
+          :total="50"
+          :items-per-page="10"
+          :default-page="2"
+          class="w-full"
+        >
           <PaginationContent>
             <PaginationItem><PaginationPrevious><span>&lt;</span></PaginationPrevious></PaginationItem>
             <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :is-active="true">2</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink :is-active="true">
+                2
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationLink>3</PaginationLink></PaginationItem>
             <PaginationItem><PaginationNext><span>&gt;</span></PaginationNext></PaginationItem>
           </PaginationContent>
@@ -599,12 +676,24 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <Pagination :total="50" :items-per-page="10" :default-page="1" class="w-full">
+        <Pagination
+          :total="50"
+          :items-per-page="10"
+          :default-page="1"
+          class="w-full"
+        >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
-            <PaginationItem><PaginationLink :is-active="true">1</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink :is-active="true">
+                1
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationLink>2</PaginationLink></PaginationItem>
             <PaginationItem><PaginationLink>3</PaginationLink></PaginationItem>
             <PaginationItem><PaginationNext /></PaginationItem>
@@ -612,18 +701,35 @@ const a11yCritCols = computed(() => ({
         </Pagination>
       </template>
       <template #variant-preview-1>
-        <Pagination :total="50" :items-per-page="10" :default-page="3" class="w-full">
+        <Pagination
+          :total="50"
+          :items-per-page="10"
+          :default-page="3"
+          class="w-full"
+        >
           <PaginationContent>
             <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
             <PaginationItem><PaginationLink>2</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :is-active="true" :aria-label="`Página atual, 3`">3</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink
+                :is-active="true"
+                :aria-label="`Página atual, 3`"
+              >
+                3
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationLink>4</PaginationLink></PaginationItem>
             <PaginationItem><PaginationLink>5</PaginationLink></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
       <template #variant-preview-2>
-        <Pagination :total="50" :items-per-page="10" :default-page="2" class="w-full">
+        <Pagination
+          :total="50"
+          :items-per-page="10"
+          :default-page="2"
+          class="w-full"
+        >
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious>
@@ -648,50 +754,135 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <Pagination :total="50" :items-per-page="10" :default-page="1" class="w-full">
+        <Pagination
+          :total="50"
+          :items-per-page="10"
+          :default-page="1"
+          class="w-full"
+        >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
-            <PaginationItem><PaginationLink :is-active="true" :aria-label="`Página atual, 1`">1</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 2`">2</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 3`">3</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 4`">4</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 5`">5</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink
+                :is-active="true"
+                :aria-label="`Página atual, 1`"
+              >
+                1
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 2`">
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 3`">
+                3
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 4`">
+                4
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 5`">
+                5
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationNext /></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
       <template #variant-preview-1>
-        <Pagination :total="120" :items-per-page="10" :default-page="6" class="w-full">
+        <Pagination
+          :total="120"
+          :items-per-page="10"
+          :default-page="6"
+          class="w-full"
+        >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 1`">1</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 1`">
+                1
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationEllipsis /></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 5`">5</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :is-active="true" :aria-label="`Página atual, 6`">6</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 7`">7</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 5`">
+                5
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink
+                :is-active="true"
+                :aria-label="`Página atual, 6`"
+              >
+                6
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 7`">
+                7
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationEllipsis /></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 12`">12</PaginationLink></PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 12`">
+                12
+              </PaginationLink>
+            </PaginationItem>
             <PaginationItem><PaginationNext /></PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
       <template #variant-preview-2>
-        <Pagination :total="100" :items-per-page="10" :default-page="10" class="w-full">
+        <Pagination
+          :total="100"
+          :items-per-page="10"
+          :default-page="10"
+          class="w-full"
+        >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 1`">1</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationEllipsis /></PaginationItem>
-            <PaginationItem><PaginationLink :aria-label="`Ir para página 9`">9</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink :is-active="true" :aria-label="`Página atual, 10`">10</PaginationLink></PaginationItem>
             <PaginationItem>
-              <PaginationNext aria-disabled="true" tabindex="-1" class="pointer-events-none opacity-50" />
+              <PaginationLink :aria-label="`Ir para página 1`">
+                1
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem><PaginationEllipsis /></PaginationItem>
+            <PaginationItem>
+              <PaginationLink :aria-label="`Ir para página 9`">
+                9
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink
+                :is-active="true"
+                :aria-label="`Página atual, 10`"
+              >
+                10
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                aria-disabled="true"
+                tabindex="-1"
+                class="pointer-events-none opacity-50"
+              />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
       <template #variant-preview-3>
         <div class="w-full space-y-3">
-          <Pagination :total="80" :items-per-page="10" :page="compInteractiveCurrent" class="w-full">
+          <Pagination
+            :total="80"
+            :items-per-page="10"
+            :page="compInteractiveCurrent"
+            class="w-full"
+          >
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
@@ -701,7 +892,10 @@ const a11yCritCols = computed(() => ({
                   @click="compInteractiveCurrent = Math.max(1, compInteractiveCurrent - 1)"
                 />
               </PaginationItem>
-              <PaginationItem v-for="n in 8" :key="n">
+              <PaginationItem
+                v-for="n in 8"
+                :key="n"
+              >
                 <PaginationLink
                   :is-active="n === compInteractiveCurrent"
                   :aria-label="n === compInteractiveCurrent ? `Página atual, ${n}` : `Ir para página ${n}`"
@@ -720,7 +914,9 @@ const a11yCritCols = computed(() => ({
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-          <p class="text-sm text-muted-foreground text-center">Página {{ compInteractiveCurrent }} de 8</p>
+          <p class="text-sm text-muted-foreground text-center">
+            Página {{ compInteractiveCurrent }} de 8
+          </p>
         </div>
       </template>
     </DocsCompositions>
@@ -736,7 +932,7 @@ const a11yCritCols = computed(() => ({
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: 'PaginationLink',   cols: propCols, items: linkPropItems        },
+        { title: 'PaginationLink', cols: propCols, items: linkPropItems },
         { title: 'PaginationPrevious / PaginationNext', cols: propCols, items: directionalPropItems },
       ]"
       :interface-code="interfaceCode"
@@ -767,10 +963,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

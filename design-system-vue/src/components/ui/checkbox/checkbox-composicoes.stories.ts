@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { Checkbox } from './index';
 
 const meta = {
@@ -39,7 +39,6 @@ export const ComLabel: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Checkbox está presente e associado à label', async () => {
       const checkbox = canvas.getByRole('checkbox', { name: 'Aceito os termos e condições' });
@@ -87,7 +86,6 @@ export const ComDescricao: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Checkbox está presente e associado à label', async () => {
       const checkbox = canvas.getByRole('checkbox', { name: 'Receber novidades por email' });
@@ -140,7 +138,6 @@ export const GrupoFieldset: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Fieldset com legend está renderizado', async () => {
       const legend = canvas.getByText('Preferências de notificação');
@@ -208,7 +205,6 @@ export const SelecionarTodos: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Checkbox "Selecionar todos" está presente', async () => {
       const selectAll = canvas.getByRole('checkbox', { name: 'Selecionar todos os itens' });
@@ -278,7 +274,6 @@ export const EmFormulario: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Checkbox de termos está presente no formulário', async () => {
       const checkbox = canvas.getByRole('checkbox', { name: 'Aceito os termos e condições' });

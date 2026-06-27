@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { toast } from 'vue-sonner';
 import { Toaster } from './index';
 import { Button } from '@/components/ui/button';
@@ -73,7 +73,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Botão "Disparar success" está presente', async () => {
       const btn = canvas.getByRole('button', { name: /Disparar success/i });

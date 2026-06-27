@@ -26,7 +26,9 @@ function trackId(i: number): string | undefined {
 
 <template>
   <section id="notas">
-    <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
+    <h2 class="text-xl font-semibold mb-4">
+      {{ title }}
+    </h2>
     <div class="space-y-4">
       <div
         v-for="(item, i) in items"
@@ -35,7 +37,9 @@ function trackId(i: number): string | undefined {
         :data-track-id="trackId(i)"
       >
         <Alert variant="default">
-          <AlertTitle v-if="item.title">{{ item.title }}</AlertTitle>
+          <AlertTitle v-if="item.title">
+            {{ item.title }}
+          </AlertTitle>
           <AlertDescription v-html="sanitizeHtml(item.content)" />
         </Alert>
       </div>

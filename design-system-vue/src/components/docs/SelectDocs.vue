@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -446,7 +446,11 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="select">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="select"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -464,14 +468,26 @@ const visualTestItems = computed(() => [
         <div class="grid gap-2">
           <Label for="demo-estado">{{ tContent('demonstration.labels.stateLabel') }}</Label>
           <Select>
-            <SelectTrigger id="demo-estado" :aria-label="tContent('demonstration.labels.stateLabel')" class="w-full">
+            <SelectTrigger
+              id="demo-estado"
+              :aria-label="tContent('demonstration.labels.stateLabel')"
+              class="w-full"
+            >
               <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="sp">{{ tContent('demonstration.labels.sp') }}</SelectItem>
-              <SelectItem value="rj">{{ tContent('demonstration.labels.rj') }}</SelectItem>
-              <SelectItem value="mg">{{ tContent('demonstration.labels.mg') }}</SelectItem>
-              <SelectItem value="es">{{ tContent('demonstration.labels.es') }}</SelectItem>
+              <SelectItem value="sp">
+                {{ tContent('demonstration.labels.sp') }}
+              </SelectItem>
+              <SelectItem value="rj">
+                {{ tContent('demonstration.labels.rj') }}
+              </SelectItem>
+              <SelectItem value="mg">
+                {{ tContent('demonstration.labels.mg') }}
+              </SelectItem>
+              <SelectItem value="es">
+                {{ tContent('demonstration.labels.es') }}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -480,22 +496,40 @@ const visualTestItems = computed(() => [
         <div class="grid gap-2">
           <Label for="demo-regiao">{{ tContent('demonstration.labels.regionLabel') }}</Label>
           <Select>
-            <SelectTrigger id="demo-regiao" :aria-label="tContent('demonstration.labels.regionLabel')" class="w-full">
+            <SelectTrigger
+              id="demo-regiao"
+              :aria-label="tContent('demonstration.labels.regionLabel')"
+              class="w-full"
+            >
               <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>{{ tContent('demonstration.labels.groupSoutheast') }}</SelectLabel>
-                <SelectItem value="sp">{{ tContent('demonstration.labels.sp') }}</SelectItem>
-                <SelectItem value="rj">{{ tContent('demonstration.labels.rj') }}</SelectItem>
-                <SelectItem value="mg">{{ tContent('demonstration.labels.mg') }}</SelectItem>
-                <SelectItem value="es">{{ tContent('demonstration.labels.es') }}</SelectItem>
+                <SelectItem value="sp">
+                  {{ tContent('demonstration.labels.sp') }}
+                </SelectItem>
+                <SelectItem value="rj">
+                  {{ tContent('demonstration.labels.rj') }}
+                </SelectItem>
+                <SelectItem value="mg">
+                  {{ tContent('demonstration.labels.mg') }}
+                </SelectItem>
+                <SelectItem value="es">
+                  {{ tContent('demonstration.labels.es') }}
+                </SelectItem>
               </SelectGroup>
               <SelectGroup>
                 <SelectLabel>{{ tContent('demonstration.labels.groupSouth') }}</SelectLabel>
-                <SelectItem value="rs">{{ tContent('demonstration.labels.rs') }}</SelectItem>
-                <SelectItem value="sc">{{ tContent('demonstration.labels.sc') }}</SelectItem>
-                <SelectItem value="pr">{{ tContent('demonstration.labels.pr') }}</SelectItem>
+                <SelectItem value="rs">
+                  {{ tContent('demonstration.labels.rs') }}
+                </SelectItem>
+                <SelectItem value="sc">
+                  {{ tContent('demonstration.labels.sc') }}
+                </SelectItem>
+                <SelectItem value="pr">
+                  {{ tContent('demonstration.labels.pr') }}
+                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -505,13 +539,24 @@ const visualTestItems = computed(() => [
         <div class="grid gap-2">
           <Label for="demo-sm">{{ tContent('demonstration.labels.stateLabel') }} (sm)</Label>
           <Select>
-            <SelectTrigger id="demo-sm" size="sm" :aria-label="tContent('demonstration.labels.stateLabel')" class="w-full">
+            <SelectTrigger
+              id="demo-sm"
+              size="sm"
+              :aria-label="tContent('demonstration.labels.stateLabel')"
+              class="w-full"
+            >
               <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="sp">{{ tContent('demonstration.labels.sp') }}</SelectItem>
-              <SelectItem value="rj">{{ tContent('demonstration.labels.rj') }}</SelectItem>
-              <SelectItem value="mg">{{ tContent('demonstration.labels.mg') }}</SelectItem>
+              <SelectItem value="sp">
+                {{ tContent('demonstration.labels.sp') }}
+              </SelectItem>
+              <SelectItem value="rj">
+                {{ tContent('demonstration.labels.rj') }}
+              </SelectItem>
+              <SelectItem value="mg">
+                {{ tContent('demonstration.labels.mg') }}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -563,8 +608,8 @@ const visualTestItems = computed(() => [
         },
         items: [
           { element: tContent('usage.uxWriting.table.placeholder.name'), rules: tContent('usage.uxWriting.table.placeholder.format'), do: tContent('usage.uxWriting.table.placeholder.good'), dont: tContent('usage.uxWriting.table.placeholder.bad') },
-          { element: tContent('usage.uxWriting.table.itemLabel.name'),   rules: tContent('usage.uxWriting.table.itemLabel.format'),   do: tContent('usage.uxWriting.table.itemLabel.good'),   dont: tContent('usage.uxWriting.table.itemLabel.bad')   },
-          { element: tContent('usage.uxWriting.table.groupLabel.name'),  rules: tContent('usage.uxWriting.table.groupLabel.format'),  do: tContent('usage.uxWriting.table.groupLabel.good'),  dont: tContent('usage.uxWriting.table.groupLabel.bad')  },
+          { element: tContent('usage.uxWriting.table.itemLabel.name'), rules: tContent('usage.uxWriting.table.itemLabel.format'), do: tContent('usage.uxWriting.table.itemLabel.good'), dont: tContent('usage.uxWriting.table.itemLabel.bad') },
+          { element: tContent('usage.uxWriting.table.groupLabel.name'), rules: tContent('usage.uxWriting.table.groupLabel.format'), do: tContent('usage.uxWriting.table.groupLabel.good'), dont: tContent('usage.uxWriting.table.groupLabel.bad') },
         ],
       }"
       :do="{
@@ -608,25 +653,43 @@ const visualTestItems = computed(() => [
       <!-- Pair 1: estilo consistente vs sigla misturada -->
       <template #do-preview-0>
         <Select>
-          <SelectTrigger aria-label="Estado (do)" class="w-full">
+          <SelectTrigger
+            aria-label="Estado (do)"
+            class="w-full"
+          >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="sp">São Paulo</SelectItem>
-            <SelectItem value="rj">Rio de Janeiro</SelectItem>
-            <SelectItem value="mg">Minas Gerais</SelectItem>
+            <SelectItem value="sp">
+              São Paulo
+            </SelectItem>
+            <SelectItem value="rj">
+              Rio de Janeiro
+            </SelectItem>
+            <SelectItem value="mg">
+              Minas Gerais
+            </SelectItem>
           </SelectContent>
         </Select>
       </template>
       <template #dont-preview-0>
         <Select>
-          <SelectTrigger aria-label="Estado (dont)" class="w-full">
+          <SelectTrigger
+            aria-label="Estado (dont)"
+            class="w-full"
+          >
             <SelectValue placeholder="-- Escolha --" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="sp">SP</SelectItem>
-            <SelectItem value="rj">Rio de Janeiro</SelectItem>
-            <SelectItem value="mg">MG</SelectItem>
+            <SelectItem value="sp">
+              SP
+            </SelectItem>
+            <SelectItem value="rj">
+              Rio de Janeiro
+            </SelectItem>
+            <SelectItem value="mg">
+              MG
+            </SelectItem>
           </SelectContent>
         </Select>
       </template>
@@ -634,36 +697,54 @@ const visualTestItems = computed(() => [
       <!-- Pair 2: grupos com múltiplos itens vs grupo de 1 item -->
       <template #do-preview-1>
         <Select>
-          <SelectTrigger aria-label="Região (do)" class="w-full">
+          <SelectTrigger
+            aria-label="Região (do)"
+            class="w-full"
+          >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Sudeste</SelectLabel>
-              <SelectItem value="sp">São Paulo</SelectItem>
-              <SelectItem value="rj">Rio de Janeiro</SelectItem>
+              <SelectItem value="sp">
+                São Paulo
+              </SelectItem>
+              <SelectItem value="rj">
+                Rio de Janeiro
+              </SelectItem>
             </SelectGroup>
             <SelectGroup>
               <SelectLabel>Sul</SelectLabel>
-              <SelectItem value="rs">Rio Grande do Sul</SelectItem>
-              <SelectItem value="sc">Santa Catarina</SelectItem>
+              <SelectItem value="rs">
+                Rio Grande do Sul
+              </SelectItem>
+              <SelectItem value="sc">
+                Santa Catarina
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
       </template>
       <template #dont-preview-1>
         <Select>
-          <SelectTrigger aria-label="Região (dont)" class="w-full">
+          <SelectTrigger
+            aria-label="Região (dont)"
+            class="w-full"
+          >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Sudeste</SelectLabel>
-              <SelectItem value="sp">São Paulo</SelectItem>
+              <SelectItem value="sp">
+                São Paulo
+              </SelectItem>
             </SelectGroup>
             <SelectGroup>
               <SelectLabel>Sul</SelectLabel>
-              <SelectItem value="rs">Rio Grande do Sul</SelectItem>
+              <SelectItem value="rs">
+                Rio Grande do Sul
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -677,18 +758,33 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems" component-slug="select">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+      component-slug="select"
+    >
       <!-- default -->
       <template #variant-preview-0>
         <Select>
-          <SelectTrigger aria-label="Selecionar estado (default)" class="w-full">
+          <SelectTrigger
+            aria-label="Selecionar estado (default)"
+            class="w-full"
+          >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="sp">São Paulo</SelectItem>
-            <SelectItem value="rj">Rio de Janeiro</SelectItem>
-            <SelectItem value="mg">Minas Gerais</SelectItem>
-            <SelectItem value="es">Espírito Santo</SelectItem>
+            <SelectItem value="sp">
+              São Paulo
+            </SelectItem>
+            <SelectItem value="rj">
+              Rio de Janeiro
+            </SelectItem>
+            <SelectItem value="mg">
+              Minas Gerais
+            </SelectItem>
+            <SelectItem value="es">
+              Espírito Santo
+            </SelectItem>
           </SelectContent>
         </Select>
       </template>
@@ -696,19 +792,30 @@ const visualTestItems = computed(() => [
       <!-- withGroups -->
       <template #variant-preview-1>
         <Select>
-          <SelectTrigger aria-label="Selecionar estado (grupos)" class="w-full">
+          <SelectTrigger
+            aria-label="Selecionar estado (grupos)"
+            class="w-full"
+          >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Sudeste</SelectLabel>
-              <SelectItem value="var-sp">São Paulo</SelectItem>
-              <SelectItem value="var-rj">Rio de Janeiro</SelectItem>
+              <SelectItem value="var-sp">
+                São Paulo
+              </SelectItem>
+              <SelectItem value="var-rj">
+                Rio de Janeiro
+              </SelectItem>
             </SelectGroup>
             <SelectGroup>
               <SelectLabel>Sul</SelectLabel>
-              <SelectItem value="var-rs">Rio Grande do Sul</SelectItem>
-              <SelectItem value="var-sc">Santa Catarina</SelectItem>
+              <SelectItem value="var-rs">
+                Rio Grande do Sul
+              </SelectItem>
+              <SelectItem value="var-sc">
+                Santa Catarina
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -717,20 +824,32 @@ const visualTestItems = computed(() => [
       <!-- withIcon -->
       <template #variant-preview-2>
         <Select>
-          <SelectTrigger aria-label="Selecionar idioma" class="w-full">
+          <SelectTrigger
+            aria-label="Selecionar idioma"
+            class="w-full"
+          >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="pt-BR">
-              <Globe class="size-4" aria-hidden="true" />
+              <Globe
+                class="size-4"
+                aria-hidden="true"
+              />
               <span>Português (BR)</span>
             </SelectItem>
             <SelectItem value="en">
-              <Globe class="size-4" aria-hidden="true" />
+              <Globe
+                class="size-4"
+                aria-hidden="true"
+              />
               <span>English</span>
             </SelectItem>
             <SelectItem value="es">
-              <Globe class="size-4" aria-hidden="true" />
+              <Globe
+                class="size-4"
+                aria-hidden="true"
+              />
               <span>Español</span>
             </SelectItem>
           </SelectContent>
@@ -746,42 +865,76 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div class="flex flex-col gap-2 w-80" style="contain: layout; min-height: 100px; position: relative">
+        <div
+          class="flex flex-col gap-2 w-80"
+          style="contain: layout; min-height: 100px; position: relative"
+        >
           <Label for="comp-state">{{ tContent('demonstration.labels.stateLabel') }}</Label>
           <Select>
-            <SelectTrigger id="comp-state" :aria-label="tContent('demonstration.labels.stateLabel')">
+            <SelectTrigger
+              id="comp-state"
+              :aria-label="tContent('demonstration.labels.stateLabel')"
+            >
               <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="sp">{{ tContent('demonstration.labels.sp') }}</SelectItem>
-              <SelectItem value="rj">{{ tContent('demonstration.labels.rj') }}</SelectItem>
-              <SelectItem value="mg">{{ tContent('demonstration.labels.mg') }}</SelectItem>
-              <SelectItem value="rs">{{ tContent('demonstration.labels.rs') }}</SelectItem>
+              <SelectItem value="sp">
+                {{ tContent('demonstration.labels.sp') }}
+              </SelectItem>
+              <SelectItem value="rj">
+                {{ tContent('demonstration.labels.rj') }}
+              </SelectItem>
+              <SelectItem value="mg">
+                {{ tContent('demonstration.labels.mg') }}
+              </SelectItem>
+              <SelectItem value="rs">
+                {{ tContent('demonstration.labels.rs') }}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
       </template>
 
       <template #variant-preview-1>
-        <div class="flex flex-col gap-2 w-80" style="contain: layout; min-height: 100px; position: relative">
+        <div
+          class="flex flex-col gap-2 w-80"
+          style="contain: layout; min-height: 100px; position: relative"
+        >
           <Label for="comp-region">{{ tContent('demonstration.labels.regionLabel') }}</Label>
           <Select>
-            <SelectTrigger id="comp-region" :aria-label="tContent('demonstration.labels.regionLabel')">
+            <SelectTrigger
+              id="comp-region"
+              :aria-label="tContent('demonstration.labels.regionLabel')"
+            >
               <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>{{ tContent('demonstration.labels.groupSoutheast') }}</SelectLabel>
-                <SelectItem value="comp-sp">{{ tContent('demonstration.labels.sp') }}</SelectItem>
-                <SelectItem value="comp-rj">{{ tContent('demonstration.labels.rj') }}</SelectItem>
-                <SelectItem value="comp-mg">{{ tContent('demonstration.labels.mg') }}</SelectItem>
-                <SelectItem value="comp-es">{{ tContent('demonstration.labels.es') }}</SelectItem>
+                <SelectItem value="comp-sp">
+                  {{ tContent('demonstration.labels.sp') }}
+                </SelectItem>
+                <SelectItem value="comp-rj">
+                  {{ tContent('demonstration.labels.rj') }}
+                </SelectItem>
+                <SelectItem value="comp-mg">
+                  {{ tContent('demonstration.labels.mg') }}
+                </SelectItem>
+                <SelectItem value="comp-es">
+                  {{ tContent('demonstration.labels.es') }}
+                </SelectItem>
               </SelectGroup>
               <SelectGroup>
                 <SelectLabel>{{ tContent('demonstration.labels.groupSouth') }}</SelectLabel>
-                <SelectItem value="comp-rs">{{ tContent('demonstration.labels.rs') }}</SelectItem>
-                <SelectItem value="comp-sc">{{ tContent('demonstration.labels.sc') }}</SelectItem>
-                <SelectItem value="comp-pr">{{ tContent('demonstration.labels.pr') }}</SelectItem>
+                <SelectItem value="comp-rs">
+                  {{ tContent('demonstration.labels.rs') }}
+                </SelectItem>
+                <SelectItem value="comp-sc">
+                  {{ tContent('demonstration.labels.sc') }}
+                </SelectItem>
+                <SelectItem value="comp-pr">
+                  {{ tContent('demonstration.labels.pr') }}
+                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -797,13 +950,22 @@ const visualTestItems = computed(() => [
           <div class="flex flex-col gap-2">
             <Label for="comp-form-state">{{ tContent('demonstration.labels.stateLabel') }}</Label>
             <Select name="state">
-              <SelectTrigger id="comp-form-state" :aria-label="tContent('demonstration.labels.stateLabel')">
+              <SelectTrigger
+                id="comp-form-state"
+                :aria-label="tContent('demonstration.labels.stateLabel')"
+              >
                 <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="sp">{{ tContent('demonstration.labels.sp') }}</SelectItem>
-                <SelectItem value="rj">{{ tContent('demonstration.labels.rj') }}</SelectItem>
-                <SelectItem value="mg">{{ tContent('demonstration.labels.mg') }}</SelectItem>
+                <SelectItem value="sp">
+                  {{ tContent('demonstration.labels.sp') }}
+                </SelectItem>
+                <SelectItem value="rj">
+                  {{ tContent('demonstration.labels.rj') }}
+                </SelectItem>
+                <SelectItem value="mg">
+                  {{ tContent('demonstration.labels.mg') }}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -832,10 +994,10 @@ const visualTestItems = computed(() => [
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: 'Select',        cols: propCols, items: selectPropItems        },
+        { title: 'Select', cols: propCols, items: selectPropItems },
         { title: 'SelectTrigger', cols: propCols, items: selectTriggerPropItems },
-        { title: 'SelectValue',   cols: propCols, items: selectValuePropItems   },
-        { title: 'SelectItem',    cols: propCols, items: selectItemPropItems    },
+        { title: 'SelectValue', cols: propCols, items: selectValuePropItems },
+        { title: 'SelectItem', cols: propCols, items: selectItemPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -864,10 +1026,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────────── -->
     <DocsAnalytics

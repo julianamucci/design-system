@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect, fn } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect, fn } from 'storybook/test';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -81,8 +81,6 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step('Trigger está presente no DOM', async () => {
       const trigger = canvas.getByRole('button', { name: /Excluir conta/i });

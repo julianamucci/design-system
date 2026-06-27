@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { Input } from './index';
 import InputDocs from '@/components/docs/InputDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -44,7 +44,6 @@ export const Playground: Story = {
     template: '<div class="w-64"><Input v-bind="args" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Input está presente no DOM', async () => {
       const input = canvas.getByRole('textbox');

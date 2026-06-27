@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import {
   Accordion,
   AccordionContent,
@@ -39,7 +39,6 @@ export const Fechado: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button');
 
     await step('Trigger tem aria-expanded=false', async () => {
@@ -70,7 +69,6 @@ export const Aberto: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button');
 
     await step('Trigger tem aria-expanded=true', async () => {
@@ -103,7 +101,6 @@ export const Disabled: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const triggers = canvas.getAllByRole('button');
 
     await step('Segundo trigger está desabilitado', async () => {
@@ -141,7 +138,6 @@ export const FocusVisible: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const triggers = canvas.getAllByRole('button');
 
     await step('Trigger recebe foco via Tab', async () => {

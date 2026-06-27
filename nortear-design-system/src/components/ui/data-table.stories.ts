@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import { createDataTable } from './data-table';
 import { createDataTableDocs } from '@/components/docs/DataTableDocs';

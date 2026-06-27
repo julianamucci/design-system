@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -375,7 +375,11 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="hover-card">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="hover-card"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -390,21 +394,41 @@ const a11yCritCols = computed(() => ({
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
         <!-- User profile -->
-        <div class="space-y-2" style="contain: layout; min-height: 100px; position: relative;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('demonstration.labels.userProfile'))" />
-          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+        <div
+          class="space-y-2"
+          style="contain: layout; min-height: 100px; position: relative;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('demonstration.labels.userProfile'))"
+          />
+          <HoverCard
+            :open-delay="50"
+            :close-delay="50"
+            :default-open="true"
+          >
             <HoverCardTrigger as-child>
-              <a href="#joana" class="text-primary underline-offset-4 hover:underline">@joana</a>
+              <a
+                href="#joana"
+                class="text-primary underline-offset-4 hover:underline"
+              >@joana</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div class="flex gap-3">
                 <Avatar>
-                  <AvatarImage src="" alt="" />
+                  <AvatarImage
+                    src=""
+                    alt=""
+                  />
                   <AvatarFallback>JS</AvatarFallback>
                 </Avatar>
                 <div class="flex flex-col">
-                  <p class="font-medium text-sm">Joana Silva</p>
-                  <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+                  <p class="font-medium text-sm">
+                    Joana Silva
+                  </p>
+                  <p class="text-xs text-muted-foreground">
+                    Designer · 142 seguidores
+                  </p>
                 </div>
               </div>
             </HoverCardContent>
@@ -412,11 +436,24 @@ const a11yCritCols = computed(() => ({
         </div>
 
         <!-- Link preview -->
-        <div class="space-y-2" style="contain: layout; min-height: 100px; position: relative;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('demonstration.labels.linkPreview'))" />
-          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+        <div
+          class="space-y-2"
+          style="contain: layout; min-height: 100px; position: relative;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('demonstration.labels.linkPreview'))"
+          />
+          <HoverCard
+            :open-delay="50"
+            :close-delay="50"
+            :default-open="true"
+          >
             <HoverCardTrigger as-child>
-              <a href="#link" class="text-primary underline-offset-4 hover:underline">design-system.dev</a>
+              <a
+                href="#link"
+                class="text-primary underline-offset-4 hover:underline"
+              >design-system.dev</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div class="flex flex-col gap-2">
@@ -424,21 +461,38 @@ const a11yCritCols = computed(() => ({
                   <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
                   <span>design-system.dev</span>
                 </div>
-                <p class="font-medium">Guia de overlays acessíveis</p>
+                <p class="font-medium">
+                  Guia de overlays acessíveis
+                </p>
               </div>
             </HoverCardContent>
           </HoverCard>
         </div>
 
         <!-- Definition -->
-        <div class="space-y-2" style="contain: layout; min-height: 100px; position: relative;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('demonstration.labels.definitionTooltip'))" />
-          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+        <div
+          class="space-y-2"
+          style="contain: layout; min-height: 100px; position: relative;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('demonstration.labels.definitionTooltip'))"
+          />
+          <HoverCard
+            :open-delay="50"
+            :close-delay="50"
+            :default-open="true"
+          >
             <HoverCardTrigger as-child>
-              <a href="#wcag" class="text-primary underline-offset-4 hover:underline">WCAG 2.1</a>
+              <a
+                href="#wcag"
+                class="text-primary underline-offset-4 hover:underline"
+              >WCAG 2.1</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <p class="font-medium text-sm">WCAG 2.1</p>
+              <p class="font-medium text-sm">
+                WCAG 2.1
+              </p>
               <p class="text-xs text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
               </p>
@@ -447,16 +501,35 @@ const a11yCritCols = computed(() => ({
         </div>
 
         <!-- Metric -->
-        <div class="space-y-2" style="contain: layout; min-height: 100px; position: relative;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('demonstration.labels.metricExplainer'))" />
-          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+        <div
+          class="space-y-2"
+          style="contain: layout; min-height: 100px; position: relative;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('demonstration.labels.metricExplainer'))"
+          />
+          <HoverCard
+            :open-delay="50"
+            :close-delay="50"
+            :default-open="true"
+          >
             <HoverCardTrigger as-child>
-              <a href="#metric" class="text-primary underline-offset-4 hover:underline">3,42%</a>
+              <a
+                href="#metric"
+                class="text-primary underline-offset-4 hover:underline"
+              >3,42%</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <p class="text-xs text-muted-foreground">Conversão (últimos 30d)</p>
-              <p class="text-2xl font-semibold">3,42%</p>
-              <p class="text-xs text-muted-foreground">Cliques no CTA / usuários únicos.</p>
+              <p class="text-xs text-muted-foreground">
+                Conversão (últimos 30d)
+              </p>
+              <p class="text-2xl font-semibold">
+                3,42%
+              </p>
+              <p class="text-xs text-muted-foreground">
+                Cliques no CTA / usuários únicos.
+              </p>
             </HoverCardContent>
           </HoverCard>
         </div>
@@ -510,7 +583,7 @@ const a11yCritCols = computed(() => ({
         items: [
           { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
           { element: tContent('usage.uxWriting.table.content.name'), rules: tContent('usage.uxWriting.table.content.format'), do: tContent('usage.uxWriting.table.content.good'), dont: tContent('usage.uxWriting.table.content.bad') },
-          { element: tContent('usage.uxWriting.table.delay.name'),   rules: tContent('usage.uxWriting.table.delay.format'),   do: tContent('usage.uxWriting.table.delay.good'),   dont: tContent('usage.uxWriting.table.delay.bad')   },
+          { element: tContent('usage.uxWriting.table.delay.name'), rules: tContent('usage.uxWriting.table.delay.format'), do: tContent('usage.uxWriting.table.delay.good'), dont: tContent('usage.uxWriting.table.delay.bad') },
         ],
       }"
       :do="{
@@ -542,29 +615,53 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <div style="contain: layout; min-height: 80px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 80px;"
+          class="w-full"
+        >
           <div class="text-sm space-y-1">
-            <div class="text-primary underline">@joana</div>
-            <div class="text-xs text-muted-foreground">+ link para /users/joana</div>
+            <div class="text-primary underline">
+              @joana
+            </div>
+            <div class="text-xs text-muted-foreground">
+              + link para /users/joana
+            </div>
           </div>
         </div>
       </template>
       <template #dont-preview-0>
-        <div style="contain: layout; min-height: 80px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 80px;"
+          class="w-full"
+        >
           <div class="text-sm">
-            <div class="text-primary underline">@joana</div>
-            <div class="text-xs text-muted-foreground italic">apenas hover (touch users perdem)</div>
+            <div class="text-primary underline">
+              @joana
+            </div>
+            <div class="text-xs text-muted-foreground italic">
+              apenas hover (touch users perdem)
+            </div>
           </div>
         </div>
       </template>
       <template #do-preview-1>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-sm font-mono">openDelay={{ '{500}' }}</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-sm font-mono">
+            openDelay={{ '{500}' }}
+          </div>
         </div>
       </template>
       <template #dont-preview-1>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-sm font-mono">openDelay={{ '{0}' }}</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-sm font-mono">
+            openDelay={{ '{0}' }}
+          </div>
         </div>
       </template>
     </DocsDoDont>
@@ -576,15 +673,28 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground">openDelay=700 / closeDelay=300</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground">
+            openDelay=700 / closeDelay=300
+          </div>
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground">openDelay=500 / closeDelay=200</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground">
+            openDelay=500 / closeDelay=200
+          </div>
         </div>
       </template>
     </DocsVariants>
@@ -597,20 +707,37 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
-          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+        <div
+          style="contain: layout; min-height: 140px; position: relative;"
+          class="w-full"
+        >
+          <HoverCard
+            :open-delay="50"
+            :close-delay="50"
+            :default-open="true"
+          >
             <HoverCardTrigger as-child>
-              <a href="#joana" class="text-primary underline-offset-4 hover:underline">@joana</a>
+              <a
+                href="#joana"
+                class="text-primary underline-offset-4 hover:underline"
+              >@joana</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div class="flex gap-3">
                 <Avatar>
-                  <AvatarImage src="" alt="" />
+                  <AvatarImage
+                    src=""
+                    alt=""
+                  />
                   <AvatarFallback>JS</AvatarFallback>
                 </Avatar>
                 <div class="flex flex-col">
-                  <p class="font-medium text-sm">Joana Silva</p>
-                  <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+                  <p class="font-medium text-sm">
+                    Joana Silva
+                  </p>
+                  <p class="text-xs text-muted-foreground">
+                    Designer · 142 seguidores
+                  </p>
                 </div>
               </div>
             </HoverCardContent>
@@ -618,10 +745,20 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
-          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+        <div
+          style="contain: layout; min-height: 140px; position: relative;"
+          class="w-full"
+        >
+          <HoverCard
+            :open-delay="50"
+            :close-delay="50"
+            :default-open="true"
+          >
             <HoverCardTrigger as-child>
-              <a href="#link" class="text-primary underline-offset-4 hover:underline">design-system.dev</a>
+              <a
+                href="#link"
+                class="text-primary underline-offset-4 hover:underline"
+              >design-system.dev</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <div class="flex flex-col gap-2">
@@ -629,15 +766,24 @@ const a11yCritCols = computed(() => ({
                   <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
                   <span>design-system.dev</span>
                 </div>
-                <p class="font-medium">Guia de overlays acessíveis</p>
+                <p class="font-medium">
+                  Guia de overlays acessíveis
+                </p>
               </div>
             </HoverCardContent>
           </HoverCard>
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
-          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+        <div
+          style="contain: layout; min-height: 140px; position: relative;"
+          class="w-full"
+        >
+          <HoverCard
+            :open-delay="50"
+            :close-delay="50"
+            :default-open="true"
+          >
             <HoverCardTrigger as-child>
               <button
                 type="button"
@@ -647,7 +793,9 @@ const a11yCritCols = computed(() => ({
               </button>
             </HoverCardTrigger>
             <HoverCardContent>
-              <p class="font-medium text-sm">WCAG 2.1 AA</p>
+              <p class="font-medium text-sm">
+                WCAG 2.1 AA
+              </p>
               <p class="text-xs text-muted-foreground">
                 Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.
               </p>
@@ -656,8 +804,15 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-3>
-        <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
-          <HoverCard :open-delay="50" :close-delay="50" :default-open="true">
+        <div
+          style="contain: layout; min-height: 140px; position: relative;"
+          class="w-full"
+        >
+          <HoverCard
+            :open-delay="50"
+            :close-delay="50"
+            :default-open="true"
+          >
             <HoverCardTrigger as-child>
               <button
                 type="button"
@@ -668,7 +823,9 @@ const a11yCritCols = computed(() => ({
             </HoverCardTrigger>
             <HoverCardContent>
               <div class="flex items-baseline justify-between gap-2">
-                <p class="text-sm font-medium">Largest Contentful Paint</p>
+                <p class="text-sm font-medium">
+                  Largest Contentful Paint
+                </p>
                 <span class="text-xs font-medium text-emerald-600">1.8s</span>
               </div>
               <p class="text-xs text-muted-foreground">
@@ -725,10 +882,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

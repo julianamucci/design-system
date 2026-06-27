@@ -13,7 +13,6 @@
     DropdownMenuSub,
     DropdownMenuSubTrigger,
     DropdownMenuSubContent,
-    DropdownMenuGroup,
   } from '@/components/ui/dropdown-menu';
   import { Button } from '@/components/ui/button';
   import { locale, useTranslation } from '@/lib/i18n';

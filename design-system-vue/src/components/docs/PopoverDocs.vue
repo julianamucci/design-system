@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -421,7 +421,11 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="popover">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="popover"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -436,58 +440,123 @@ const a11yCritCols = computed(() => ({
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full">
         <!-- Default -->
-        <div class="space-y-2 flex flex-col items-start" style="contain: layout; min-height: 220px; position: relative;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('variants.items.default'))" />
+        <div
+          class="space-y-2 flex flex-col items-start"
+          style="contain: layout; min-height: 220px; position: relative;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('variants.items.default'))"
+          />
           <Popover>
             <PopoverTrigger as-child>
-              <Button variant="outline">{{ tContent('demonstration.labels.trigger') }}</Button>
+              <Button variant="outline">
+                {{ tContent('demonstration.labels.trigger') }}
+              </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" align="start">
-              <PopoverTitle class="text-sm font-medium">{{ tContent('demonstration.labels.title') }}</PopoverTitle>
-              <p class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.description') }}</p>
+            <PopoverContent
+              side="bottom"
+              align="start"
+            >
+              <PopoverTitle class="text-sm font-medium">
+                {{ tContent('demonstration.labels.title') }}
+              </PopoverTitle>
+              <p class="text-xs text-muted-foreground">
+                {{ tContent('demonstration.labels.description') }}
+              </p>
             </PopoverContent>
           </Popover>
         </div>
 
         <!-- With title and actions -->
-        <div class="space-y-2 flex flex-col items-start" style="contain: layout; min-height: 220px; position: relative;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('variants.items.withTitle'))" />
+        <div
+          class="space-y-2 flex flex-col items-start"
+          style="contain: layout; min-height: 220px; position: relative;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('variants.items.withTitle'))"
+          />
           <Popover>
             <PopoverTrigger as-child>
-              <Button variant="outline">{{ tContent('demonstration.labels.title') }}</Button>
+              <Button variant="outline">
+                {{ tContent('demonstration.labels.title') }}
+              </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" align="start">
+            <PopoverContent
+              side="bottom"
+              align="start"
+            >
               <PopoverHeader>
-                <PopoverTitle class="text-sm font-medium">{{ tContent('demonstration.labels.title') }}</PopoverTitle>
+                <PopoverTitle class="text-sm font-medium">
+                  {{ tContent('demonstration.labels.title') }}
+                </PopoverTitle>
                 <PopoverDescription class="text-xs text-muted-foreground">
                   {{ tContent('demonstration.labels.description') }}
                 </PopoverDescription>
               </PopoverHeader>
               <div class="flex justify-end gap-2 pt-1">
-                <Button variant="outline" size="sm">{{ tContent('demonstration.labels.cancel') }}</Button>
-                <Button size="sm">{{ tContent('demonstration.labels.save') }}</Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                >
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
+                <Button size="sm">
+                  {{ tContent('demonstration.labels.save') }}
+                </Button>
               </div>
             </PopoverContent>
           </Popover>
         </div>
 
         <!-- Form -->
-        <div class="space-y-2 flex flex-col items-start" style="contain: layout; min-height: 260px; position: relative;">
-          <p class="text-xs font-medium text-muted-foreground" v-html="sanitizeHtml(tContent('variants.items.form'))" />
+        <div
+          class="space-y-2 flex flex-col items-start"
+          style="contain: layout; min-height: 260px; position: relative;"
+        >
+          <p
+            class="text-xs font-medium text-muted-foreground"
+            v-html="sanitizeHtml(tContent('variants.items.form'))"
+          />
           <Popover>
             <PopoverTrigger as-child>
-              <Button variant="outline">{{ tContent('demonstration.labels.form.trigger') }}</Button>
+              <Button variant="outline">
+                {{ tContent('demonstration.labels.form.trigger') }}
+              </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" align="start">
+            <PopoverContent
+              side="bottom"
+              align="start"
+            >
               <PopoverHeader>
-                <PopoverTitle class="text-sm font-medium">{{ tContent('demonstration.labels.form.trigger') }}</PopoverTitle>
+                <PopoverTitle class="text-sm font-medium">
+                  {{ tContent('demonstration.labels.form.trigger') }}
+                </PopoverTitle>
               </PopoverHeader>
-              <form class="grid gap-2" @submit.prevent>
-                <Label for="popover-demo-name" class="text-xs">{{ tContent('demonstration.labels.form.name') }}</Label>
+              <form
+                class="grid gap-2"
+                @submit.prevent
+              >
+                <Label
+                  for="popover-demo-name"
+                  class="text-xs"
+                >{{ tContent('demonstration.labels.form.name') }}</Label>
                 <Input id="popover-demo-name" />
-                <Label for="popover-demo-email" class="text-xs">{{ tContent('demonstration.labels.form.email') }}</Label>
-                <Input id="popover-demo-email" type="email" />
-                <Button type="submit" size="sm">{{ tContent('demonstration.labels.form.submit') }}</Button>
+                <Label
+                  for="popover-demo-email"
+                  class="text-xs"
+                >{{ tContent('demonstration.labels.form.email') }}</Label>
+                <Input
+                  id="popover-demo-email"
+                  type="email"
+                />
+                <Button
+                  type="submit"
+                  size="sm"
+                >
+                  {{ tContent('demonstration.labels.form.submit') }}
+                </Button>
               </form>
             </PopoverContent>
           </Popover>
@@ -539,9 +608,9 @@ const a11yCritCols = computed(() => ({
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.title.name'),       rules: tContent('usage.uxWriting.table.title.format'),       do: tContent('usage.uxWriting.table.title.good'),       dont: tContent('usage.uxWriting.table.title.bad')       },
+          { element: tContent('usage.uxWriting.table.title.name'), rules: tContent('usage.uxWriting.table.title.format'), do: tContent('usage.uxWriting.table.title.good'), dont: tContent('usage.uxWriting.table.title.bad') },
           { element: tContent('usage.uxWriting.table.description.name'), rules: tContent('usage.uxWriting.table.description.format'), do: tContent('usage.uxWriting.table.description.good'), dont: tContent('usage.uxWriting.table.description.bad') },
-          { element: tContent('usage.uxWriting.table.trigger.name'),     rules: tContent('usage.uxWriting.table.trigger.format'),     do: tContent('usage.uxWriting.table.trigger.good'),     dont: tContent('usage.uxWriting.table.trigger.bad')     },
+          { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
         ],
       }"
       :do="{
@@ -573,28 +642,56 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <div style="contain: layout; min-height: 80px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 80px;"
+          class="w-full"
+        >
           <div class="text-sm space-y-1">
-            <div class="font-medium">Configurações de exibição</div>
-            <div class="text-xs text-muted-foreground">+ PopoverTitle anunciado pelo SR</div>
+            <div class="font-medium">
+              Configurações de exibição
+            </div>
+            <div class="text-xs text-muted-foreground">
+              + PopoverTitle anunciado pelo SR
+            </div>
           </div>
         </div>
       </template>
       <template #dont-preview-0>
-        <div style="contain: layout; min-height: 80px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 80px;"
+          class="w-full"
+        >
           <div class="text-sm">
-            <div class="text-xs text-muted-foreground italic">Sem título — SR fica sem contexto</div>
+            <div class="text-xs text-muted-foreground italic">
+              Sem título — SR fica sem contexto
+            </div>
           </div>
         </div>
       </template>
       <template #do-preview-1>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <Button variant="outline" size="sm">Editar perfil</Button>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <Button
+            variant="outline"
+            size="sm"
+          >
+            Editar perfil
+          </Button>
         </div>
       </template>
       <template #dont-preview-1>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <Button variant="outline" size="sm">Clique aqui</Button>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <Button
+            variant="outline"
+            size="sm"
+          >
+            Clique aqui
+          </Button>
         </div>
       </template>
     </DocsDoDont>
@@ -606,20 +703,38 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground">PopoverContent (sem header)</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground">
+            PopoverContent (sem header)
+          </div>
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground">PopoverHeader + Title + Description</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground">
+            PopoverHeader + Title + Description
+          </div>
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
-          <div class="text-xs font-mono text-muted-foreground">form (Inputs + submit)</div>
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
+          <div class="text-xs font-mono text-muted-foreground">
+            form (Inputs + submit)
+          </div>
         </div>
       </template>
     </DocsVariants>
@@ -632,103 +747,222 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
           <Popover>
             <PopoverTrigger as-child>
-              <Button variant="outline" size="sm">{{ tContent('demonstration.labels.form.trigger') }}</Button>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                {{ tContent('demonstration.labels.form.trigger') }}
+              </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" align="start">
+            <PopoverContent
+              side="bottom"
+              align="start"
+            >
               <PopoverHeader>
                 <PopoverTitle>{{ tContent('demonstration.labels.form.trigger') }}</PopoverTitle>
               </PopoverHeader>
-              <form class="space-y-2" @submit.prevent>
+              <form
+                class="space-y-2"
+                @submit.prevent
+              >
                 <div class="space-y-1">
-                  <Label for="pc-name-vue" class="text-xs">{{ tContent('demonstration.labels.form.name') }}</Label>
-                  <Input id="pc-name-vue" model-value="Joana Silva" />
+                  <Label
+                    for="pc-name-vue"
+                    class="text-xs"
+                  >{{ tContent('demonstration.labels.form.name') }}</Label>
+                  <Input
+                    id="pc-name-vue"
+                    model-value="Joana Silva"
+                  />
                 </div>
                 <div class="space-y-1">
-                  <Label for="pc-email-vue" class="text-xs">{{ tContent('demonstration.labels.form.email') }}</Label>
-                  <Input id="pc-email-vue" type="email" model-value="joana@example.com" />
+                  <Label
+                    for="pc-email-vue"
+                    class="text-xs"
+                  >{{ tContent('demonstration.labels.form.email') }}</Label>
+                  <Input
+                    id="pc-email-vue"
+                    type="email"
+                    model-value="joana@example.com"
+                  />
                 </div>
-                <Button type="submit" size="sm">{{ tContent('demonstration.labels.form.submit') }}</Button>
+                <Button
+                  type="submit"
+                  size="sm"
+                >
+                  {{ tContent('demonstration.labels.form.submit') }}
+                </Button>
               </form>
             </PopoverContent>
           </Popover>
         </div>
       </template>
       <template #variant-preview-1>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
           <Popover>
             <PopoverTrigger as-child>
-              <Button variant="outline" size="sm">Filtros</Button>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                Filtros
+              </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" align="start">
+            <PopoverContent
+              side="bottom"
+              align="start"
+            >
               <PopoverHeader>
                 <PopoverTitle>Filtrar por status</PopoverTitle>
               </PopoverHeader>
               <div class="space-y-2">
                 <label class="flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked class="h-4 w-4" /> Ativo
+                  <input
+                    type="checkbox"
+                    checked
+                    class="h-4 w-4"
+                  > Ativo
                 </label>
                 <label class="flex items-center gap-2 text-sm">
-                  <input type="checkbox" class="h-4 w-4" /> Pendente
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4"
+                  > Pendente
                 </label>
                 <label class="flex items-center gap-2 text-sm">
-                  <input type="checkbox" class="h-4 w-4" /> Arquivado
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4"
+                  > Arquivado
                 </label>
               </div>
               <div class="flex justify-end gap-2 pt-2">
-                <Button variant="ghost" size="sm">Limpar</Button>
-                <Button size="sm">Aplicar</Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                >
+                  Limpar
+                </Button>
+                <Button size="sm">
+                  Aplicar
+                </Button>
               </div>
             </PopoverContent>
           </Popover>
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
           <Popover>
             <PopoverTrigger as-child>
-              <Button variant="outline" size="sm">Cor</Button>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                Cor
+              </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" align="start">
+            <PopoverContent
+              side="bottom"
+              align="start"
+            >
               <PopoverHeader>
                 <PopoverTitle>Selecionar cor</PopoverTitle>
               </PopoverHeader>
               <div class="grid grid-cols-6 gap-2">
-                <button type="button" aria-label="Vermelho" class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-red-500" />
-                <button type="button" aria-label="Laranja"  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-orange-500" />
-                <button type="button" aria-label="Amarelo"  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-yellow-500" />
-                <button type="button" aria-label="Verde"    class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-green-500" />
-                <button type="button" aria-label="Azul"     class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-blue-500" />
-                <button type="button" aria-label="Roxo"     class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-purple-500" />
+                <button
+                  type="button"
+                  aria-label="Vermelho"
+                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-red-500"
+                />
+                <button
+                  type="button"
+                  aria-label="Laranja"
+                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-orange-500"
+                />
+                <button
+                  type="button"
+                  aria-label="Amarelo"
+                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-yellow-500"
+                />
+                <button
+                  type="button"
+                  aria-label="Verde"
+                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-green-500"
+                />
+                <button
+                  type="button"
+                  aria-label="Azul"
+                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-blue-500"
+                />
+                <button
+                  type="button"
+                  aria-label="Roxo"
+                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-purple-500"
+                />
               </div>
             </PopoverContent>
           </Popover>
         </div>
       </template>
       <template #variant-preview-3>
-        <div style="contain: layout; min-height: 60px;" class="w-full">
+        <div
+          style="contain: layout; min-height: 60px;"
+          class="w-full"
+        >
           <Popover>
             <PopoverTrigger as-child>
-              <Button variant="outline" size="sm">Configurações</Button>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                Configurações
+              </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" align="start">
+            <PopoverContent
+              side="bottom"
+              align="start"
+            >
               <PopoverHeader>
                 <PopoverTitle>Preferências rápidas</PopoverTitle>
               </PopoverHeader>
               <div class="space-y-3">
                 <div class="flex items-center justify-between gap-3">
                   <Label for="cfg-notifs-vue">Notificações</Label>
-                  <input id="cfg-notifs-vue" type="checkbox" checked class="h-4 w-4" />
+                  <input
+                    id="cfg-notifs-vue"
+                    type="checkbox"
+                    checked
+                    class="h-4 w-4"
+                  >
                 </div>
                 <div class="flex items-center justify-between gap-3">
                   <Label for="cfg-dark-vue">Modo escuro</Label>
-                  <input id="cfg-dark-vue" type="checkbox" class="h-4 w-4" />
+                  <input
+                    id="cfg-dark-vue"
+                    type="checkbox"
+                    class="h-4 w-4"
+                  >
                 </div>
                 <div class="flex items-center justify-between gap-3">
                   <Label for="cfg-compact-vue">Modo compacto</Label>
-                  <input id="cfg-compact-vue" type="checkbox" class="h-4 w-4" />
+                  <input
+                    id="cfg-compact-vue"
+                    type="checkbox"
+                    class="h-4 w-4"
+                  >
                 </div>
               </div>
             </PopoverContent>
@@ -752,7 +986,7 @@ const a11yCritCols = computed(() => ({
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: 'Popover',        cols: propCols, items: popoverRootPropItems },
+        { title: 'Popover', cols: propCols, items: popoverRootPropItems },
         { title: 'PopoverContent', cols: propCols, items: popoverContentPropItems },
       ]"
       :interface-code="interfaceCode"
@@ -783,10 +1017,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -421,7 +421,10 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -437,7 +440,9 @@ const a11yCritCols = computed(() => ({
       <div class="flex flex-wrap items-center justify-center gap-4 w-full">
         <Sheet>
           <SheetTrigger as-child>
-            <Button variant="outline">{{ tContent('demonstration.labels.trigger') }}</Button>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.trigger') }}
+            </Button>
           </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
@@ -450,7 +455,9 @@ const a11yCritCols = computed(() => ({
             </div>
             <SheetFooter>
               <SheetClose as-child>
-                <Button variant="outline">{{ tContent('demonstration.labels.cancel') }}</Button>
+                <Button variant="outline">
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
               </SheetClose>
               <Button>{{ tContent('demonstration.labels.apply') }}</Button>
             </SheetFooter>
@@ -504,10 +511,10 @@ const a11yCritCols = computed(() => ({
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.title.name'),       rules: tContent('usage.uxWriting.table.title.format'),       do: tContent('usage.uxWriting.table.title.good'),       dont: tContent('usage.uxWriting.table.title.bad')       },
+          { element: tContent('usage.uxWriting.table.title.name'), rules: tContent('usage.uxWriting.table.title.format'), do: tContent('usage.uxWriting.table.title.good'), dont: tContent('usage.uxWriting.table.title.bad') },
           { element: tContent('usage.uxWriting.table.description.name'), rules: tContent('usage.uxWriting.table.description.format'), do: tContent('usage.uxWriting.table.description.good'), dont: tContent('usage.uxWriting.table.description.bad') },
-          { element: tContent('usage.uxWriting.table.trigger.name'),     rules: tContent('usage.uxWriting.table.trigger.format'),     do: tContent('usage.uxWriting.table.trigger.good'),     dont: tContent('usage.uxWriting.table.trigger.bad')     },
-          { element: tContent('usage.uxWriting.table.primary.name'),     rules: tContent('usage.uxWriting.table.primary.format'),     do: tContent('usage.uxWriting.table.primary.good'),     dont: tContent('usage.uxWriting.table.primary.bad')     },
+          { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
+          { element: tContent('usage.uxWriting.table.primary.name'), rules: tContent('usage.uxWriting.table.primary.format'), do: tContent('usage.uxWriting.table.primary.good'), dont: tContent('usage.uxWriting.table.primary.bad') },
         ],
       }"
       :do="{
@@ -539,7 +546,10 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <Sheet default-open :modal="false">
+        <Sheet
+          default-open
+          :modal="false"
+        >
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle>Filtros avançados</SheetTitle>
@@ -547,7 +557,9 @@ const a11yCritCols = computed(() => ({
             </SheetHeader>
             <SheetFooter>
               <SheetClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">
+                  Cancelar
+                </Button>
               </SheetClose>
               <Button>Aplicar filtros</Button>
             </SheetFooter>
@@ -555,13 +567,22 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #dont-preview-0>
-        <Sheet default-open :modal="false">
+        <Sheet
+          default-open
+          :modal="false"
+        >
           <SheetContent side="right">
             <SheetHeader>
-              <SheetTitle class="sr-only">Sem título visível</SheetTitle>
-              <SheetDescription class="sr-only">Sem descrição visível</SheetDescription>
+              <SheetTitle class="sr-only">
+                Sem título visível
+              </SheetTitle>
+              <SheetDescription class="sr-only">
+                Sem descrição visível
+              </SheetDescription>
             </SheetHeader>
-            <div class="p-4 text-sm text-muted-foreground">Painel sem Title/Description visíveis — leitores de tela ficam sem contexto.</div>
+            <div class="p-4 text-sm text-muted-foreground">
+              Painel sem Title/Description visíveis — leitores de tela ficam sem contexto.
+            </div>
             <SheetFooter>
               <Button>Aplicar</Button>
             </SheetFooter>
@@ -569,7 +590,10 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #do-preview-1>
-        <Sheet default-open :modal="false">
+        <Sheet
+          default-open
+          :modal="false"
+        >
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle>Filtros avançados</SheetTitle>
@@ -579,7 +603,10 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #dont-preview-1>
-        <Sheet default-open :modal="false">
+        <Sheet
+          default-open
+          :modal="false"
+        >
           <SheetContent side="top">
             <SheetHeader>
               <SheetTitle>Filtros avançados</SheetTitle>
@@ -597,9 +624,15 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
-        <Sheet default-open :modal="false">
+        <Sheet
+          default-open
+          :modal="false"
+        >
           <SheetContent side="right">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.rightLabel') }}</SheetTitle>
@@ -607,7 +640,9 @@ const a11yCritCols = computed(() => ({
             </SheetHeader>
             <SheetFooter>
               <SheetClose as-child>
-                <Button variant="outline">{{ tContent('demonstration.labels.cancel') }}</Button>
+                <Button variant="outline">
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
               </SheetClose>
               <Button>{{ tContent('demonstration.labels.apply') }}</Button>
             </SheetFooter>
@@ -615,7 +650,10 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-1>
-        <Sheet default-open :modal="false">
+        <Sheet
+          default-open
+          :modal="false"
+        >
           <SheetContent side="left">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.leftLabel') }}</SheetTitle>
@@ -625,7 +663,10 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-2>
-        <Sheet default-open :modal="false">
+        <Sheet
+          default-open
+          :modal="false"
+        >
           <SheetContent side="top">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.topLabel') }}</SheetTitle>
@@ -635,7 +676,10 @@ const a11yCritCols = computed(() => ({
         </Sheet>
       </template>
       <template #variant-preview-3>
-        <Sheet default-open :modal="false">
+        <Sheet
+          default-open
+          :modal="false"
+        >
           <SheetContent side="bottom">
             <SheetHeader>
               <SheetTitle>{{ tContent('demonstration.labels.bottomLabel') }}</SheetTitle>
@@ -655,21 +699,36 @@ const a11yCritCols = computed(() => ({
     >
       <template #variant-preview-0>
         <div style="contain: layout">
-          <Sheet default-open :modal="false">
-            <SheetContent side="right" class="w-[400px] sm:w-[420px]">
+          <Sheet
+            default-open
+            :modal="false"
+          >
+            <SheetContent
+              side="right"
+              class="w-[400px] sm:w-[420px]"
+            >
               <SheetHeader>
                 <SheetTitle>Filtros avançados</SheetTitle>
                 <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
               </SheetHeader>
               <form class="grid gap-3 px-4">
                 <Label for="comp-cat">Categoria</Label>
-                <Input id="comp-cat" default-value="Eletrônicos" />
+                <Input
+                  id="comp-cat"
+                  default-value="Eletrônicos"
+                />
                 <Label for="comp-min">Preço mínimo</Label>
-                <Input id="comp-min" type="number" default-value="100" />
+                <Input
+                  id="comp-min"
+                  type="number"
+                  default-value="100"
+                />
               </form>
               <SheetFooter>
                 <SheetClose as-child>
-                  <Button variant="outline">Cancelar</Button>
+                  <Button variant="outline">
+                    Cancelar
+                  </Button>
                 </SheetClose>
                 <Button>Aplicar filtros</Button>
               </SheetFooter>
@@ -679,17 +738,35 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-1>
         <div style="contain: layout">
-          <Sheet default-open :modal="false">
+          <Sheet
+            default-open
+            :modal="false"
+          >
             <SheetContent side="left">
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>
                 <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
               </SheetHeader>
-              <nav aria-label="Navegação secundária" class="flex flex-col gap-1 px-4">
-                <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Dashboard</a>
-                <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Projetos</a>
-                <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Equipe</a>
-                <a href="#" class="px-3 py-2 rounded-md text-sm hover:bg-accent">Configurações</a>
+              <nav
+                aria-label="Navegação secundária"
+                class="flex flex-col gap-1 px-4"
+              >
+                <a
+                  href="#"
+                  class="px-3 py-2 rounded-md text-sm hover:bg-accent"
+                >Dashboard</a>
+                <a
+                  href="#"
+                  class="px-3 py-2 rounded-md text-sm hover:bg-accent"
+                >Projetos</a>
+                <a
+                  href="#"
+                  class="px-3 py-2 rounded-md text-sm hover:bg-accent"
+                >Equipe</a>
+                <a
+                  href="#"
+                  class="px-3 py-2 rounded-md text-sm hover:bg-accent"
+                >Configurações</a>
               </nav>
             </SheetContent>
           </Sheet>
@@ -697,16 +774,34 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <div style="contain: layout">
-          <Sheet default-open :modal="false">
+          <Sheet
+            default-open
+            :modal="false"
+          >
             <SheetContent side="bottom">
               <SheetHeader>
                 <SheetTitle>Ações rápidas</SheetTitle>
                 <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
               </SheetHeader>
               <div class="grid grid-cols-3 gap-3 px-4 text-sm">
-                <button type="button" class="p-3 rounded-md border hover:bg-accent">Compartilhar</button>
-                <button type="button" class="p-3 rounded-md border hover:bg-accent">Editar</button>
-                <button type="button" class="p-3 rounded-md border hover:bg-accent">Excluir</button>
+                <button
+                  type="button"
+                  class="p-3 rounded-md border hover:bg-accent"
+                >
+                  Compartilhar
+                </button>
+                <button
+                  type="button"
+                  class="p-3 rounded-md border hover:bg-accent"
+                >
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  class="p-3 rounded-md border hover:bg-accent"
+                >
+                  Excluir
+                </button>
               </div>
             </SheetContent>
           </Sheet>
@@ -714,18 +809,28 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-3>
         <div style="contain: layout">
-          <Sheet default-open :modal="false">
+          <Sheet
+            default-open
+            :modal="false"
+          >
             <SheetContent side="right">
               <SheetHeader>
                 <SheetTitle>Termos de uso</SheetTitle>
                 <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
               </SheetHeader>
               <div class="space-y-3 px-4 text-sm text-muted-foreground max-h-64 overflow-auto">
-                <p v-for="i in 12" :key="i">Parágrafo {{ i }}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.</p>
+                <p
+                  v-for="i in 12"
+                  :key="i"
+                >
+                  Parágrafo {{ i }}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.
+                </p>
               </div>
               <SheetFooter>
                 <SheetClose as-child>
-                  <Button variant="outline">Cancelar</Button>
+                  <Button variant="outline">
+                    Cancelar
+                  </Button>
                 </SheetClose>
                 <Button>Aceitar termos</Button>
               </SheetFooter>
@@ -780,10 +885,16 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics

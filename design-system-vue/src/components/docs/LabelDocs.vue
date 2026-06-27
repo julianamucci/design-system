@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { sanitizeHtml } from '@/lib/sanitize-html';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
-import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import labelTranslations from '@shared/content/label/translations.json';
@@ -277,7 +273,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -294,22 +293,40 @@ const visualTestItems = computed(() => [
         <!-- Default -->
         <div class="flex flex-col gap-2">
           <Label for="demo-default">{{ tContent('demonstration.labels.default') }}</Label>
-          <Input id="demo-default" type="text" :placeholder="tContent('demonstration.labels.default')" />
+          <Input
+            id="demo-default"
+            type="text"
+            :placeholder="tContent('demonstration.labels.default')"
+          />
         </div>
 
         <!-- Required -->
         <div class="flex flex-col gap-2">
           <Label for="demo-required">
             {{ tContent('demonstration.labels.required') }}
-            <span class="text-destructive" aria-hidden="true">{{ tContent('demonstration.labels.requiredMarker') }}</span>
+            <span
+              class="text-destructive"
+              aria-hidden="true"
+            >{{ tContent('demonstration.labels.requiredMarker') }}</span>
           </Label>
-          <Input id="demo-required" type="email" :placeholder="tContent('demonstration.labels.required')" aria-required="true" />
+          <Input
+            id="demo-required"
+            type="email"
+            :placeholder="tContent('demonstration.labels.required')"
+            aria-required="true"
+          />
         </div>
 
         <!-- Disabled -->
         <div class="flex flex-col gap-2">
           <Label for="demo-disabled">{{ tContent('demonstration.labels.disabled') }}</Label>
-          <Input id="demo-disabled" type="text" class="peer" :placeholder="tContent('demonstration.labels.disabled')" disabled />
+          <Input
+            id="demo-disabled"
+            type="text"
+            class="peer"
+            :placeholder="tContent('demonstration.labels.disabled')"
+            disabled
+          />
         </div>
       </div>
     </DocsDemonstration>
@@ -364,13 +381,20 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <div class="flex flex-col gap-2 w-full max-w-xs">
           <Label for="do-input-1">Nome completo</Label>
-          <Input id="do-input-1" type="text" placeholder="Digite seu nome" />
+          <Input
+            id="do-input-1"
+            type="text"
+            placeholder="Digite seu nome"
+          />
         </div>
       </template>
       <template #dont-preview-0>
         <div class="flex flex-col gap-2 w-full max-w-xs">
           <Label>Nome completo</Label>
-          <Input type="text" placeholder="Digite seu nome" />
+          <Input
+            type="text"
+            placeholder="Digite seu nome"
+          />
         </div>
       </template>
 
@@ -378,13 +402,21 @@ const visualTestItems = computed(() => [
       <template #do-preview-1>
         <div class="flex flex-col gap-2 w-full max-w-xs">
           <Label for="do-input-2">Email profissional</Label>
-          <Input id="do-input-2" type="email" placeholder="voce@empresa.com" />
+          <Input
+            id="do-input-2"
+            type="email"
+            placeholder="voce@empresa.com"
+          />
         </div>
       </template>
       <template #dont-preview-1>
         <div class="flex flex-col gap-2 w-full max-w-xs">
           <Label for="dont-input-2">Informe seu email profissional</Label>
-          <Input id="dont-input-2" type="email" placeholder="voce@empresa.com" />
+          <Input
+            id="dont-input-2"
+            type="email"
+            placeholder="voce@empresa.com"
+          />
         </div>
       </template>
     </DocsDoDont>
@@ -396,11 +428,18 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <template #variant-preview-0>
         <div class="flex flex-col gap-2 w-full max-w-xs">
           <Label for="variant-default">Nome completo</Label>
-          <Input id="variant-default" type="text" placeholder="Digite seu nome" />
+          <Input
+            id="variant-default"
+            type="text"
+            placeholder="Digite seu nome"
+          />
         </div>
       </template>
     </DocsVariants>
@@ -448,10 +487,16 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics

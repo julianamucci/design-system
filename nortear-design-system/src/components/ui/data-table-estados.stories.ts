@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createDataTable } from './data-table';
 import { type Invoice, baseColumns } from './data-table.fixtures';
 

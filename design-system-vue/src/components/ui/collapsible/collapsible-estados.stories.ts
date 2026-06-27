@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { fn, userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { ref } from 'vue';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
 import { ChevronDown } from 'lucide-vue-next';
@@ -48,7 +48,6 @@ export const NaoControlado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Trigger presente com estado inicial fechado', async () => {
       const trigger = canvas.getByRole('button');
@@ -116,7 +115,6 @@ export const Controlado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Estado inicial: painel fechado', async () => {
       const trigger = canvas.getByRole('button', { name: /Exibir/ });
@@ -164,7 +162,6 @@ export const Desabilitado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Trigger desabilitado está presente', async () => {
       const trigger = canvas.getByRole('button');

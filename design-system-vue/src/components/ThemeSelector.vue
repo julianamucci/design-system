@@ -32,7 +32,10 @@ function select(id: string) {
       :aria-expanded="open"
       @click="open = !open"
     >
-      <Palette class="h-4 w-4" aria-hidden="true" />
+      <Palette
+        class="h-4 w-4"
+        aria-hidden="true"
+      />
     </button>
 
     <div
@@ -48,7 +51,11 @@ function select(id: string) {
         @click="select(theme.id)"
       >
         <span>{{ theme.name }}</span>
-        <Check v-if="currentTheme === theme.id" class="h-4 w-4" aria-hidden="true" />
+        <Check
+          v-if="currentTheme === theme.id"
+          class="h-4 w-4"
+          aria-hidden="true"
+        />
       </button>
     </div>
 

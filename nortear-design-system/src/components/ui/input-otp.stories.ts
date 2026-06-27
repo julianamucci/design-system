@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createInputOTP } from './input-otp';
 import { createInputOTPDocs } from '@/components/docs/InputOTPDocs';

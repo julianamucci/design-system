@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { createChart } from './chart';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -39,7 +39,6 @@ export const Vazio: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Container do gráfico está presente', async () => {
       const chart = canvasElement.querySelector('[data-slot="chart"]');
@@ -81,7 +80,6 @@ export const UmPonto: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('SVG está presente com um único ponto', async () => {
       // echarts injeta o SVG de forma assíncrona após mount.

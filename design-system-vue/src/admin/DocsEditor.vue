@@ -3,7 +3,7 @@
  * DocsEditor.vue — editor visual de documentação com Quill.js.
  * Acesse em: http://localhost:5173/?view=admin  (modo dev)
  */
-import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import { useDocs } from './useDocs';
@@ -52,24 +52,32 @@ function handleKeyDown(e: KeyboardEvent) {
 
 <template>
   <div class="flex h-screen bg-background text-foreground font-sans">
-
     <!-- Sidebar -->
     <aside class="w-56 shrink-0 border-r border-border flex flex-col">
       <div class="flex h-14 items-center gap-2 border-b border-border px-4">
         <span class="font-semibold text-sm">Docs Editor</span>
-        <span v-if="dirty" class="ml-auto h-2 w-2 rounded-full bg-warning" title="Não salvo" />
+        <span
+          v-if="dirty"
+          class="ml-auto h-2 w-2 rounded-full bg-warning"
+          title="Não salvo"
+        />
       </div>
 
       <nav class="flex-1 overflow-y-auto py-2">
-        <p v-if="!components.length" class="px-4 text-xs text-muted-foreground">Carregando...</p>
+        <p
+          v-if="!components.length"
+          class="px-4 text-xs text-muted-foreground"
+        >
+          Carregando...
+        </p>
         <button
           v-for="comp in components"
           :key="comp"
-          @click="changeComponent(comp)"
           class="w-full px-4 py-2 text-left text-sm transition-colors"
           :class="activeComponent === comp
             ? 'bg-muted font-medium text-foreground'
             : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'"
+          @click="changeComponent(comp)"
         >
           {{ comp }}
         </button>
@@ -80,11 +88,11 @@ function handleKeyDown(e: KeyboardEvent) {
         <button
           v-for="l in LOCALES"
           :key="l"
-          @click="locale = l"
           class="flex-1 rounded py-1 text-xs transition-colors"
           :class="locale === l
             ? 'bg-primary text-primary-foreground'
             : 'bg-muted text-muted-foreground hover:bg-muted/80'"
+          @click="locale = l"
         >
           {{ LOCALE_LABELS[l] }}
         </button>
@@ -93,18 +101,25 @@ function handleKeyDown(e: KeyboardEvent) {
 
     <!-- Editor area -->
     <div class="flex flex-1 flex-col overflow-hidden">
-
       <!-- Toolbar -->
       <header class="flex h-14 items-center gap-3 border-b border-border px-6">
-        <h1 class="text-sm font-semibold">{{ activeComponent }}</h1>
+        <h1 class="text-sm font-semibold">
+          {{ activeComponent }}
+        </h1>
         <span class="text-xs text-muted-foreground">{{ LOCALE_LABELS[locale] }}</span>
-        <span v-if="error" class="text-xs text-destructive">Erro: {{ error }}</span>
+        <span
+          v-if="error"
+          class="text-xs text-destructive"
+        >Erro: {{ error }}</span>
         <div class="ml-auto flex items-center gap-2">
-          <span v-if="dirty" class="text-xs text-warning">Alterações não salvas</span>
+          <span
+            v-if="dirty"
+            class="text-xs text-warning"
+          >Alterações não salvas</span>
           <button
-            @click="save"
             :disabled="saving || !dirty"
             class="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-opacity disabled:opacity-50"
+            @click="save"
           >
             {{ saving ? 'Salvando...' : 'Salvar' }}
           </button>
@@ -114,10 +129,16 @@ function handleKeyDown(e: KeyboardEvent) {
 
       <!-- Fields -->
       <main class="flex-1 overflow-y-auto p-6">
-        <div v-if="loading" class="flex h-32 items-center justify-center">
+        <div
+          v-if="loading"
+          class="flex h-32 items-center justify-center"
+        >
           <div class="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         </div>
-        <div v-else class="max-w-2xl space-y-6">
+        <div
+          v-else
+          class="max-w-2xl space-y-6"
+        >
           <FieldEditor
             v-for="(value, key) in localeData"
             :key="key"

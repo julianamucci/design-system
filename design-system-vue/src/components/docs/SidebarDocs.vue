@@ -4,7 +4,6 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { sanitizeHtml } from '@/lib/sanitize-html';
 import { Badge } from '@/components/ui/badge';
 import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -496,7 +495,11 @@ const compositionItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection" component-slug="sidebar">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+    component-slug="sidebar"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -506,10 +509,16 @@ const compositionItems = computed(() => [
         install-note="npx shadcn-vue@latest add sidebar"
       >
         <template #badges>
-          <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
+          <Badge
+            variant="secondary"
+            class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
+          >
             {{ tContent('category') }}
           </Badge>
-          <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
+          <Badge
+            variant="secondary"
+            class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
+          >
             {{ tContent('type') }}
           </Badge>
         </template>
@@ -521,18 +530,27 @@ const compositionItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full min-h-[400px] flex rounded-lg overflow-hidden border border-border" style="contain: layout">
+      <div
+        class="w-full min-h-[400px] flex rounded-lg overflow-hidden border border-border"
+        style="contain: layout"
+      >
         <SidebarProvider>
           <nav :aria-label="tContent('demonstration.labels.mainNav')">
             <Sidebar collapsible="offcanvas">
-              <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+              <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">
+                Design System
+              </SidebarHeader>
               <SidebarContent>
                 <SidebarGroup>
                   <SidebarGroupLabel>{{ tContent('demonstration.labels.mainNav') }}</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
                       <SidebarMenuItem>
-                        <SidebarMenuButton :isActive="true" :tooltip="tContent('demonstration.labels.dashboard')" aria-current="page">
+                        <SidebarMenuButton
+                          :is-active="true"
+                          :tooltip="tContent('demonstration.labels.dashboard')"
+                          aria-current="page"
+                        >
                           <LayoutDashboard aria-hidden="true" />
                           <span>{{ tContent('demonstration.labels.dashboard') }}</span>
                         </SidebarMenuButton>
@@ -584,8 +602,13 @@ const compositionItems = computed(() => [
               <SidebarTrigger />
               <span class="text-sm text-muted-foreground">{{ tContent('demonstration.labels.dashboard') }}</span>
             </header>
-            <main id="main-content" class="p-4">
-              <p class="text-sm text-muted-foreground">{{ tContent('description') }}</p>
+            <main
+              id="main-content"
+              class="p-4"
+            >
+              <p class="text-sm text-muted-foreground">
+                {{ tContent('description') }}
+              </p>
             </main>
           </SidebarInset>
         </SidebarProvider>
@@ -643,17 +666,29 @@ const compositionItems = computed(() => [
     >
       <!-- Par 1: SidebarProvider na raiz -->
       <template #do-preview-0>
-        <div class="w-full min-h-[180px] flex rounded overflow-hidden border border-border text-xs" style="contain: layout">
+        <div
+          class="w-full min-h-[180px] flex rounded overflow-hidden border border-border text-xs"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar collapsible="none" class="w-32">
-                <SidebarHeader class="p-2 font-semibold text-sidebar-foreground text-xs">App</SidebarHeader>
+              <Sidebar
+                collapsible="none"
+                class="w-32"
+              >
+                <SidebarHeader class="p-2 font-semibold text-sidebar-foreground text-xs">
+                  App
+                </SidebarHeader>
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -664,7 +699,12 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main id="main-content-do1" class="p-2 text-muted-foreground">Conteúdo</main>
+              <main
+                id="main-content-do1"
+                class="p-2 text-muted-foreground"
+              >
+                Conteúdo
+              </main>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -672,25 +712,42 @@ const compositionItems = computed(() => [
       <template #dont-preview-0>
         <div class="w-full min-h-[180px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5">
           <div class="w-32 bg-sidebar border-r border-border p-2">
-            <p class="font-semibold text-sidebar-foreground">App</p>
-            <p class="text-muted-foreground mt-2">Dashboard</p>
+            <p class="font-semibold text-sidebar-foreground">
+              App
+            </p>
+            <p class="text-muted-foreground mt-2">
+              Dashboard
+            </p>
           </div>
-          <div class="flex-1 p-2 text-muted-foreground">Estado replicado manualmente</div>
+          <div class="flex-1 p-2 text-muted-foreground">
+            Estado replicado manualmente
+          </div>
         </div>
       </template>
 
       <!-- Par 2: aria-current no item ativo -->
       <template #do-preview-1>
-        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-border text-xs" style="contain: layout">
+        <div
+          class="w-full min-h-[120px] flex rounded overflow-hidden border border-border text-xs"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar collapsible="none" class="w-32">
+              <Sidebar
+                collapsible="none"
+                class="w-32"
+              >
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" :tooltip="'Dashboard'" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            :tooltip="'Dashboard'"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -700,27 +757,48 @@ const compositionItems = computed(() => [
                 </SidebarContent>
               </Sidebar>
             </nav>
-            <SidebarInset><main id="main-content-do2" class="p-2 text-xs text-muted-foreground">aria-current="page" + tooltip</main></SidebarInset>
+            <SidebarInset>
+              <main
+                id="main-content-do2"
+                class="p-2 text-xs text-muted-foreground"
+              >
+                aria-current="page" + tooltip
+              </main>
+            </SidebarInset>
           </SidebarProvider>
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5" style="contain: layout">
+        <div
+          class="w-full min-h-[120px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5"
+          style="contain: layout"
+        >
           <div class="w-32 bg-sidebar border-r border-border p-2">
             <div class="bg-sidebar-accent rounded p-1 text-sidebar-foreground">
-              <LayoutDashboard class="inline-block mr-1 size-3" aria-hidden="true" />Dashboard
+              <LayoutDashboard
+                class="inline-block mr-1 size-3"
+                aria-hidden="true"
+              />Dashboard
             </div>
           </div>
-          <div class="flex-1 p-2 text-muted-foreground">Sem aria-current no item ativo</div>
+          <div class="flex-1 p-2 text-muted-foreground">
+            Sem aria-current no item ativo
+          </div>
         </div>
       </template>
 
       <!-- Par 3: SidebarTrigger só em mobile -->
       <template #do-preview-2>
-        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-border text-xs" style="contain: layout">
+        <div
+          class="w-full min-h-[120px] flex rounded overflow-hidden border border-border text-xs"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar collapsible="none" class="w-32">
+              <Sidebar
+                collapsible="none"
+                class="w-32"
+              >
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
@@ -741,16 +819,25 @@ const compositionItems = computed(() => [
                 <SidebarTrigger class="lg:hidden size-5" />
                 <span class="text-xs text-muted-foreground">Trigger só em mobile</span>
               </header>
-              <main id="main-content-do3" class="p-2"></main>
+              <main
+                id="main-content-do3"
+                class="p-2"
+              />
             </SidebarInset>
           </SidebarProvider>
         </div>
       </template>
       <template #dont-preview-2>
-        <div class="w-full min-h-[120px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5" style="contain: layout">
+        <div
+          class="w-full min-h-[120px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar collapsible="none" class="w-32">
+              <Sidebar
+                collapsible="none"
+                class="w-32"
+              >
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
@@ -771,7 +858,10 @@ const compositionItems = computed(() => [
                 <SidebarTrigger class="size-5" />
                 <span class="text-xs text-muted-foreground">Trigger em desktop</span>
               </header>
-              <main id="main-content-dont3" class="p-2"></main>
+              <main
+                id="main-content-dont3"
+                class="p-2"
+              />
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -788,20 +878,35 @@ const compositionItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────────── -->
-    <DocsVariants :title="tContent('variants.title')" :items="variantItems">
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
       <!-- variant: sidebar -->
       <template #variant-preview-0>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
+        <div
+          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar variant="sidebar" collapsible="offcanvas">
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">App</SidebarHeader>
+              <Sidebar
+                variant="sidebar"
+                collapsible="offcanvas"
+              >
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                  App
+                </SidebarHeader>
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -818,7 +923,12 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main id="main-content-v1" class="p-3 text-xs text-muted-foreground">variant="sidebar"</main>
+              <main
+                id="main-content-v1"
+                class="p-3 text-xs text-muted-foreground"
+              >
+                variant="sidebar"
+              </main>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -826,17 +936,29 @@ const compositionItems = computed(() => [
 
       <!-- variant: floating -->
       <template #variant-preview-1>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
+        <div
+          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar variant="floating" collapsible="offcanvas">
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">App</SidebarHeader>
+              <Sidebar
+                variant="floating"
+                collapsible="offcanvas"
+              >
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                  App
+                </SidebarHeader>
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -853,7 +975,12 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main id="main-content-v2" class="p-3 text-xs text-muted-foreground">variant="floating"</main>
+              <main
+                id="main-content-v2"
+                class="p-3 text-xs text-muted-foreground"
+              >
+                variant="floating"
+              </main>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -861,17 +988,29 @@ const compositionItems = computed(() => [
 
       <!-- variant: inset -->
       <template #variant-preview-2>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
+        <div
+          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar variant="inset" collapsible="offcanvas">
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">App</SidebarHeader>
+              <Sidebar
+                variant="inset"
+                collapsible="offcanvas"
+              >
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                  App
+                </SidebarHeader>
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -888,7 +1027,12 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main id="main-content-v3" class="p-3 text-xs text-muted-foreground">variant="inset"</main>
+              <main
+                id="main-content-v3"
+                class="p-3 text-xs text-muted-foreground"
+              >
+                variant="inset"
+              </main>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -896,26 +1040,43 @@ const compositionItems = computed(() => [
 
       <!-- collapsible: icon -->
       <template #variant-preview-3>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
+        <div
+          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
+          style="contain: layout"
+        >
           <SidebarProvider :default-open="false">
             <nav aria-label="Navegação principal">
-              <Sidebar variant="sidebar" collapsible="icon">
+              <Sidebar
+                variant="sidebar"
+                collapsible="icon"
+              >
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" tooltip="Dashboard" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            tooltip="Dashboard"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                          <SidebarMenuButton size="sm" tooltip="Componentes">
+                          <SidebarMenuButton
+                            size="sm"
+                            tooltip="Componentes"
+                          >
                             <Blocks aria-hidden="true" /><span>Componentes</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                          <SidebarMenuButton size="sm" tooltip="Tokens">
+                          <SidebarMenuButton
+                            size="sm"
+                            tooltip="Tokens"
+                          >
                             <Palette aria-hidden="true" /><span>Tokens</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -927,7 +1088,12 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main id="main-content-v4" class="p-3 text-xs text-muted-foreground">collapsible="icon"</main>
+              <main
+                id="main-content-v4"
+                class="p-3 text-xs text-muted-foreground"
+              >
+                collapsible="icon"
+              </main>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -935,17 +1101,29 @@ const compositionItems = computed(() => [
 
       <!-- collapsible: none -->
       <template #variant-preview-4>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
+        <div
+          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar variant="sidebar" collapsible="none">
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">App</SidebarHeader>
+              <Sidebar
+                variant="sidebar"
+                collapsible="none"
+              >
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                  App
+                </SidebarHeader>
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -961,7 +1139,12 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main id="main-content-v5" class="p-3 text-xs text-muted-foreground">collapsible="none"</main>
+              <main
+                id="main-content-v5"
+                class="p-3 text-xs text-muted-foreground"
+              >
+                collapsible="none"
+              </main>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -969,20 +1152,38 @@ const compositionItems = computed(() => [
 
       <!-- side: right -->
       <template #variant-preview-5>
-        <div class="w-full min-h-[200px] flex rounded overflow-hidden border border-border" style="contain: layout">
+        <div
+          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <SidebarInset>
-              <main id="main-content-v6" class="p-3 text-xs text-muted-foreground">side="right"</main>
+              <main
+                id="main-content-v6"
+                class="p-3 text-xs text-muted-foreground"
+              >
+                side="right"
+              </main>
             </SidebarInset>
             <nav aria-label="Navegação principal">
-              <Sidebar variant="sidebar" collapsible="offcanvas" side="right">
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">App</SidebarHeader>
+              <Sidebar
+                variant="sidebar"
+                collapsible="offcanvas"
+                side="right"
+              >
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                  App
+                </SidebarHeader>
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -1007,18 +1208,30 @@ const compositionItems = computed(() => [
     >
       <!-- Com grupos de navegação -->
       <template #variant-preview-0>
-        <div class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border" style="contain: layout">
+        <div
+          class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar variant="sidebar" collapsible="offcanvas">
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">Design System</SidebarHeader>
+              <Sidebar
+                variant="sidebar"
+                collapsible="offcanvas"
+              >
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                  Design System
+                </SidebarHeader>
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupLabel>Principal</SidebarGroupLabel>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -1074,29 +1287,51 @@ const compositionItems = computed(() => [
 
       <!-- Com sub-menu -->
       <template #variant-preview-1>
-        <div class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border" style="contain: layout">
+        <div
+          class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar variant="sidebar" collapsible="offcanvas">
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">Design System</SidebarHeader>
+              <Sidebar
+                variant="sidebar"
+                collapsible="offcanvas"
+              >
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                  Design System
+                </SidebarHeader>
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupLabel>Componentes</SidebarGroupLabel>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                          <SidebarMenuButton size="sm" :aria-expanded="subMenuOpen" @click="toggleSubMenu">
+                          <SidebarMenuButton
+                            size="sm"
+                            :aria-expanded="subMenuOpen"
+                            @click="toggleSubMenu"
+                          >
                             <Blocks aria-hidden="true" />
                             <span>Componentes</span>
-                            <ChevronDown aria-hidden="true" :class="['ml-auto transition-transform', subMenuOpen ? 'rotate-180' : '']" />
+                            <ChevronDown
+                              aria-hidden="true"
+                              :class="['ml-auto transition-transform', subMenuOpen ? 'rotate-180' : '']"
+                            />
                           </SidebarMenuButton>
                           <SidebarMenuSub v-if="subMenuOpen">
-                            <SidebarMenuSubItem v-for="name in ['Alert','Button','Card','Dialog']" :key="name">
+                            <SidebarMenuSubItem
+                              v-for="name in ['Alert','Button','Card','Dialog']"
+                              :key="name"
+                            >
                               <SidebarMenuSubButton>{{ name }}</SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           </SidebarMenuSub>
@@ -1132,15 +1367,29 @@ const compositionItems = computed(() => [
 
       <!-- Com busca no header -->
       <template #variant-preview-2>
-        <div class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border" style="contain: layout">
+        <div
+          class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar variant="sidebar" collapsible="offcanvas">
+              <Sidebar
+                variant="sidebar"
+                collapsible="offcanvas"
+              >
                 <SidebarHeader class="gap-2 p-3">
                   <span class="font-semibold text-sm text-sidebar-foreground">Design System</span>
                   <div class="relative">
-                    <Search aria-hidden="true" class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60 pointer-events-none" />
-                    <SidebarInput type="search" placeholder="Buscar..." aria-label="Buscar navegação" class="pl-7 h-8 text-xs" />
+                    <Search
+                      aria-hidden="true"
+                      class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60 pointer-events-none"
+                    />
+                    <SidebarInput
+                      type="search"
+                      placeholder="Buscar..."
+                      aria-label="Buscar navegação"
+                      class="pl-7 h-8 text-xs"
+                    />
                   </div>
                 </SidebarHeader>
                 <SidebarContent>
@@ -1149,7 +1398,11 @@ const compositionItems = computed(() => [
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -1185,28 +1438,46 @@ const compositionItems = computed(() => [
 
       <!-- Com badges -->
       <template #variant-preview-3>
-        <div class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border" style="contain: layout">
+        <div
+          class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border"
+          style="contain: layout"
+        >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
-              <Sidebar variant="sidebar" collapsible="offcanvas">
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">App</SidebarHeader>
+              <Sidebar
+                variant="sidebar"
+                collapsible="offcanvas"
+              >
+                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                  App
+                </SidebarHeader>
                 <SidebarContent>
                   <SidebarGroup>
                     <SidebarGroupContent>
                       <SidebarMenu>
                         <SidebarMenuItem>
-                          <SidebarMenuButton :isActive="true" size="sm" aria-current="page">
+                          <SidebarMenuButton
+                            :is-active="true"
+                            size="sm"
+                            aria-current="page"
+                          >
                             <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                          <SidebarMenuButton size="sm" aria-label="Notificações (12 não lidas)">
+                          <SidebarMenuButton
+                            size="sm"
+                            aria-label="Notificações (12 não lidas)"
+                          >
                             <Bell aria-hidden="true" /><span>Notificações</span>
                           </SidebarMenuButton>
                           <SidebarMenuBadge>12</SidebarMenuBadge>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                          <SidebarMenuButton size="sm" aria-label="Componentes (3 atualizações)">
+                          <SidebarMenuButton
+                            size="sm"
+                            aria-label="Componentes (3 atualizações)"
+                          >
                             <Blocks aria-hidden="true" /><span>Componentes</span>
                           </SidebarMenuButton>
                           <SidebarMenuBadge>3</SidebarMenuBadge>
@@ -1243,11 +1514,11 @@ const compositionItems = computed(() => [
     <DocsProps
       :title="tContent('props.title')"
       :tables="[
-        { title: tContent('props.providerTitle'),       cols: propCols, items: providerPropItems       },
-        { title: tContent('props.sidebarTitle'),        cols: propCols, items: sidebarPropItems        },
-        { title: tContent('props.menuButtonTitle'),     cols: propCols, items: menuButtonPropItems     },
-        { title: tContent('props.menuSubButtonTitle'),  cols: propCols, items: menuSubButtonPropItems  },
-        { title: tContent('props.menuSkeletonTitle'),   cols: propCols, items: menuSkeletonPropItems   },
+        { title: tContent('props.providerTitle'), cols: propCols, items: providerPropItems },
+        { title: tContent('props.sidebarTitle'), cols: propCols, items: sidebarPropItems },
+        { title: tContent('props.menuButtonTitle'), cols: propCols, items: menuButtonPropItems },
+        { title: tContent('props.menuSubButtonTitle'), cols: propCols, items: menuSubButtonPropItems },
+        { title: tContent('props.menuSkeletonTitle'), cols: propCols, items: menuSkeletonPropItems },
       ]"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -1272,10 +1543,16 @@ const compositionItems = computed(() => [
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────────── -->
-    <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
     <!-- ── Notas ──────────────────────────────────────────────────────── -->
-    <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
     <!-- ── Analytics ─────────────────────────────────────────────────── -->
     <DocsAnalytics

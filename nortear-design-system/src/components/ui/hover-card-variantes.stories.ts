@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/html';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { within, expect, waitFor } from 'storybook/test';
 import { createHoverCard } from './hover-card';
 
 const meta: Meta = {

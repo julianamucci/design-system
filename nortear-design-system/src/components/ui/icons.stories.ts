@@ -6,7 +6,15 @@
  * do autodocs e da suite de testes — ele existe apenas para evitar
  * erros de lint em projetos que exigem default export em *.stories.* files.
  */
-export default {
+const meta = {
   title: '_internal/foundations-icons-legacy',
   tags: ['!dev', '!autodocs', '!test'],
+};
+
+export default meta;
+
+// Story stub obrigatório (regra storybook/story-exports). Marcado com !test
+// pelas tags do meta — não aparece no sidebar nem roda nos testes.
+export const _Stub = {
+  render: () => document.createElement('div'),
 };

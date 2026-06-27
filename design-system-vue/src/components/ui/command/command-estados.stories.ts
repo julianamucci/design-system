@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import {
   Command,
   CommandEmpty,
@@ -52,7 +52,6 @@ export const EstadoVazio: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Digitar termo inexistente exibe CommandEmpty', async () => {
       const input = canvasElement.querySelector('input[data-slot="command-input"]') as HTMLInputElement
@@ -91,7 +90,6 @@ export const ItemDesabilitado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('item desabilitado tem atributo data-disabled', async () => {
       const disabledItem = canvas.getByText('Input (desabilitado)').closest('[data-slot="command-item"]');

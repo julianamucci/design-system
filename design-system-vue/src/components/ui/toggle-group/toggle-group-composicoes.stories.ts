@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { ToggleGroup, ToggleGroupItem } from './index';
 import {
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
@@ -41,7 +41,6 @@ export const BarraDeAlinhamento: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const items = canvas.getAllByRole('button');
     await step('4 opções de alinhamento renderizadas', async () => {
       await expect(items).toHaveLength(4);
@@ -69,7 +68,6 @@ export const BarraDeFormatacao: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const bold = canvas.getByRole('button', { name: 'Negrito' });
     const italic = canvas.getByRole('button', { name: 'Itálico' });
     await step('Bold já ativo, italic inativo', async () => {
@@ -102,7 +100,6 @@ export const ModoVisualizacaoVertical: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const grid = canvas.getByRole('button', { name: 'Grade' });
     const list = canvas.getByRole('button', { name: 'Lista' });
     await step('Vertical com outline renderiza 2 itens', async () => {
@@ -130,7 +127,6 @@ export const ComSpacing: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Grupo com spacing > 0 renderiza itens separados', async () => {
       const group = canvasElement.querySelector('[data-slot="toggle-group"]');
       await expect(group).toHaveAttribute('data-spacing', '1');

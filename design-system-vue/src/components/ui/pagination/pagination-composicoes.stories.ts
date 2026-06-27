@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { within, expect } from 'storybook/test';
+import { expect } from 'storybook/test';
 import {
   Pagination,
   PaginationContent,
@@ -70,7 +70,6 @@ export const Simples: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const nav = canvas.getByRole('navigation');
     await expect(nav).toBeInTheDocument();
     const active = canvas.getByLabelText(/Página atual, 1/i);
@@ -114,7 +113,6 @@ export const ComEllipsis: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const active = canvas.getByLabelText(/Página atual, 6/i);
     await expect(active).toHaveAttribute('aria-current', 'page');
   },
@@ -148,7 +146,6 @@ export const UltimaPagina: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const active = canvas.getByLabelText(/Página atual, 10/i);
     await expect(active).toHaveAttribute('aria-current', 'page');
   },
@@ -200,7 +197,6 @@ export const Controlada: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const active = canvas.getByLabelText(/Página atual, 2/i);
     await expect(active).toHaveAttribute('aria-current', 'page');
   },
@@ -243,7 +239,6 @@ export const CompletaTabela: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     const nav = canvas.getByRole('navigation');
     await expect(nav).toBeInTheDocument();
     const active = canvas.getByLabelText(/Página atual, 2/i);

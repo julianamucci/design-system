@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { userEvent, within, expect } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { userEvent, expect } from 'storybook/test';
 import { Toggle } from './index';
 import { Bold, Italic, Underline, List, Eye, LayoutGrid } from 'lucide-vue-next';
 
@@ -45,7 +45,6 @@ export const BarraDeFormatacao: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const toggles = canvas.getAllByRole('button');
     await step('4 toggles renderizados', async () => {
       await expect(toggles).toHaveLength(4);
@@ -82,7 +81,6 @@ export const FiltroDeVisualizacao: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Toggles com label visível renderizam', async () => {
       await expect(canvas.getByText('Mostrar ocultos')).toBeVisible();
       await expect(canvas.getByText('Visão compacta')).toBeVisible();
@@ -113,7 +111,6 @@ export const TamanhosComparados: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const toggles = canvas.getAllByRole('button');
     await step('3 tamanhos renderizados', async () => {
       await expect(toggles).toHaveLength(3);
@@ -140,7 +137,6 @@ export const ToggleEmPainel: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Mostrar arquivados' });
     await step('Toggle isolado em painel com descrição', async () => {
       await expect(toggle).toBeInTheDocument();

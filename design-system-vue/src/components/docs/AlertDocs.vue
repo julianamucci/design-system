@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -324,7 +324,10 @@ const visualTestItems = computed(() => [
 </script>
 
 <template>
-  <DocsPageLayout :nav-groups="navGroups" :active-section="activeSection">
+  <DocsPageLayout
+    :nav-groups="navGroups"
+    :active-section="activeSection"
+  >
     <template #header>
       <DocsHeader
         :title="tContent('title')"
@@ -335,276 +338,350 @@ const visualTestItems = computed(() => [
       />
     </template>
 
-        <!-- ── Demonstração ───────────────────────────────────────────── -->
-        <DocsDemonstration :title="tContent('demonstration.title')">
-          <div class="w-full space-y-3">
-            <Alert>
-              <Info class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
-            </Alert>
-            <Alert variant="destructive">
-              <AlertCircle class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
-            </Alert>
-            <Alert class="bg-success/10 text-success border-success/30">
-              <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
-            </Alert>
-            <Alert class="bg-warning/10 text-warning border-warning/30">
-              <TriangleAlert class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
-            </Alert>
-          </div>
-        </DocsDemonstration>
+    <!-- ── Demonstração ───────────────────────────────────────────── -->
+    <DocsDemonstration :title="tContent('demonstration.title')">
+      <div class="w-full space-y-3">
+        <Alert>
+          <Info
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
+        </Alert>
+        <Alert variant="destructive">
+          <AlertCircle
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
+        </Alert>
+        <Alert class="bg-success/10 text-success border-success/30">
+          <CheckCircle2
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
+        </Alert>
+        <Alert class="bg-warning/10 text-warning border-warning/30">
+          <TriangleAlert
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
+        </Alert>
+      </div>
+    </DocsDemonstration>
 
-        <!-- ── Anatomia ───────────────────────────────────────────────── -->
-        <DocsAnatomy
-          :title="tContent('anatomy.title')"
-          :items="anatomyItems"
-          :structure-label="tContent('anatomy.structureLabel')"
-          :structure-code="tContent('anatomy.structureCode')"
-        />
+    <!-- ── Anatomia ───────────────────────────────────────────────── -->
+    <DocsAnatomy
+      :title="tContent('anatomy.title')"
+      :items="anatomyItems"
+      :structure-label="tContent('anatomy.structureLabel')"
+      :structure-code="tContent('anatomy.structureCode')"
+    />
 
-        <!-- ── Quando Usar ────────────────────────────────────────────── -->
-        <DocsWhenToUse
-          :title="tContent('usage.title')"
-          :guidelines="{
-            title: tContent('usage.guidelines.title'),
-            items: [tContent('usage.guidelines.item1'), tContent('usage.guidelines.item2'), tContent('usage.guidelines.item3'), tContent('usage.guidelines.item4')],
-          }"
-          :scenarios="{
-            title: tContent('usage.scenarios.title'),
-            cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
-            items: [
-              { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
-              { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-              { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
-              { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
-            ],
-          }"
-          :ux-writing="{
-            title: tContent('usage.uxWriting.title'),
-            cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
-            items: [
-              { element: tContent('usage.uxWriting.table.title.name'), rules: tContent('usage.uxWriting.table.title.format'), do: tContent('usage.uxWriting.table.title.good'), dont: tContent('usage.uxWriting.table.title.bad') },
-              { element: tContent('usage.uxWriting.table.description.name'), rules: tContent('usage.uxWriting.table.description.format'), do: tContent('usage.uxWriting.table.description.good'), dont: tContent('usage.uxWriting.table.description.bad') },
-              { element: tContent('usage.uxWriting.table.error.name'), rules: tContent('usage.uxWriting.table.error.format'), do: tContent('usage.uxWriting.table.error.good'), dont: tContent('usage.uxWriting.table.error.bad') },
-              { element: tContent('usage.uxWriting.table.warning.name'), rules: tContent('usage.uxWriting.table.warning.format'), do: tContent('usage.uxWriting.table.warning.good'), dont: tContent('usage.uxWriting.table.warning.bad') },
-            ],
-          }"
-          :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
-          :dont="{ title: tContent('usage.dont.title'), items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3')] }"
-        />
+    <!-- ── Quando Usar ────────────────────────────────────────────── -->
+    <DocsWhenToUse
+      :title="tContent('usage.title')"
+      :guidelines="{
+        title: tContent('usage.guidelines.title'),
+        items: [tContent('usage.guidelines.item1'), tContent('usage.guidelines.item2'), tContent('usage.guidelines.item3'), tContent('usage.guidelines.item4')],
+      }"
+      :scenarios="{
+        title: tContent('usage.scenarios.title'),
+        cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
+        items: [
+          { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
+          { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
+          { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
+          { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
+        ],
+      }"
+      :ux-writing="{
+        title: tContent('usage.uxWriting.title'),
+        cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
+        items: [
+          { element: tContent('usage.uxWriting.table.title.name'), rules: tContent('usage.uxWriting.table.title.format'), do: tContent('usage.uxWriting.table.title.good'), dont: tContent('usage.uxWriting.table.title.bad') },
+          { element: tContent('usage.uxWriting.table.description.name'), rules: tContent('usage.uxWriting.table.description.format'), do: tContent('usage.uxWriting.table.description.good'), dont: tContent('usage.uxWriting.table.description.bad') },
+          { element: tContent('usage.uxWriting.table.error.name'), rules: tContent('usage.uxWriting.table.error.format'), do: tContent('usage.uxWriting.table.error.good'), dont: tContent('usage.uxWriting.table.error.bad') },
+          { element: tContent('usage.uxWriting.table.warning.name'), rules: tContent('usage.uxWriting.table.warning.format'), do: tContent('usage.uxWriting.table.warning.good'), dont: tContent('usage.uxWriting.table.warning.bad') },
+        ],
+      }"
+      :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
+      :dont="{ title: tContent('usage.dont.title'), items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3')] }"
+    />
 
-        <!-- ── Do & Don't ─────────────────────────────────────────────── -->
-        <DocsDoDont
-          :title="tContent('doDont.title')"
-          :pairs="[
-            { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-            { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
-          ]"
+    <!-- ── Do & Don't ─────────────────────────────────────────────── -->
+    <DocsDoDont
+      :title="tContent('doDont.title')"
+      :pairs="[
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+      ]"
+    >
+      <template #do-preview-0>
+        <Alert>
+          <AlertCircle
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>Erro ao salvar</AlertTitle>
+          <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
+        </Alert>
+      </template>
+      <template #dont-preview-0>
+        <Alert><AlertDescription>Salvo!</AlertDescription></Alert>
+      </template>
+      <template #do-preview-1>
+        <Alert variant="destructive">
+          <AlertCircle
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>Erro ao salvar</AlertTitle>
+          <AlertDescription>Verifique sua conexão.</AlertDescription>
+        </Alert>
+      </template>
+      <template #dont-preview-1>
+        <Alert variant="destructive">
+          <AlertTitle>Erro ao salvar</AlertTitle>
+          <AlertDescription>Verifique sua conexão.</AlertDescription>
+        </Alert>
+      </template>
+    </DocsDoDont>
+
+    <!-- ── Importação ─────────────────────────────────────────────── -->
+    <DocsImport
+      :title="tContent('import.title')"
+      :description="tContent('import.basic')"
+      :code="codeImportBasic"
+      :secondary-description="tContent('import.withIcon')"
+      :secondary-code="codeImportWithIcon"
+    />
+
+    <!-- ── Variantes ──────────────────────────────────────────────── -->
+    <DocsVariants
+      :title="tContent('variants.title')"
+      :items="variantItems"
+    >
+      <template #variant-preview-0>
+        <Alert class="w-full">
+          <Info
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
+        </Alert>
+      </template>
+      <template #variant-preview-1>
+        <Alert
+          variant="destructive"
+          class="w-full"
         >
-          <template #do-preview-0>
-            <Alert>
-              <AlertCircle class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>Erro ao salvar</AlertTitle>
-              <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
-            </Alert>
-          </template>
-          <template #dont-preview-0>
-            <Alert><AlertDescription>Salvo!</AlertDescription></Alert>
-          </template>
-          <template #do-preview-1>
-            <Alert variant="destructive">
-              <AlertCircle class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>Erro ao salvar</AlertTitle>
-              <AlertDescription>Verifique sua conexão.</AlertDescription>
-            </Alert>
-          </template>
-          <template #dont-preview-1>
-            <Alert variant="destructive">
-              <AlertTitle>Erro ao salvar</AlertTitle>
-              <AlertDescription>Verifique sua conexão.</AlertDescription>
-            </Alert>
-          </template>
-        </DocsDoDont>
+          <AlertCircle
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
+        </Alert>
+      </template>
+      <template #variant-preview-2>
+        <Alert class="w-full bg-success/10 text-success border-success/30">
+          <CheckCircle2
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
+        </Alert>
+      </template>
+      <template #variant-preview-3>
+        <Alert class="w-full bg-warning/10 text-warning border-warning/30">
+          <TriangleAlert
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
+        </Alert>
+      </template>
+      <template #variant-preview-4>
+        <Alert class="w-full">
+          <Info
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
+        </Alert>
+      </template>
+    </DocsVariants>
 
-        <!-- ── Importação ─────────────────────────────────────────────── -->
-        <DocsImport
-          :title="tContent('import.title')"
-          :description="tContent('import.basic')"
-          :code="codeImportBasic"
-          :secondary-description="tContent('import.withIcon')"
-          :secondary-code="codeImportWithIcon"
-        />
-
-        <!-- ── Variantes ──────────────────────────────────────────────── -->
-        <DocsVariants :title="tContent('variants.title')" :items="variantItems">
-          <template #variant-preview-0>
-            <Alert class="w-full">
-              <Info class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-          <template #variant-preview-1>
-            <Alert variant="destructive" class="w-full">
-              <AlertCircle class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-          <template #variant-preview-2>
-            <Alert class="w-full bg-success/10 text-success border-success/30">
-              <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-          <template #variant-preview-3>
-            <Alert class="w-full bg-warning/10 text-warning border-warning/30">
-              <TriangleAlert class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-          <template #variant-preview-4>
-            <Alert class="w-full">
-              <Info class="h-4 w-4" aria-hidden="true" />
-              <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-        </DocsVariants>
-
-        <!-- ── Composições ─────────────────────────────────────────────── -->
-        <DocsCompositions
-          :title="tContent('variants.compositionsTitle')"
-          :use-when-label="tNav('common.useWhen')"
-          component-slug="alert"
-          :items="compositionItems"
+    <!-- ── Composições ─────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="alert"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Alert class="w-full">
+          <Info
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
+        </Alert>
+      </template>
+      <template #variant-preview-1>
+        <Alert class="w-full">
+          <Info
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+          <AlertDescription class="flex items-center justify-between gap-4 mt-1">
+            <span>Salve seu trabalho para não perder as alterações.</span>
+            <Button
+              size="sm"
+              variant="outline"
+            >
+              Salvar agora
+            </Button>
+          </AlertDescription>
+        </Alert>
+      </template>
+      <template #variant-preview-2>
+        <Alert
+          variant="destructive"
+          class="w-full"
         >
-          <template #variant-preview-0>
-            <Alert class="w-full">
-              <Info class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
-              <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-          <template #variant-preview-1>
-            <Alert class="w-full">
-              <Info class="h-4 w-4" aria-hidden="true" />
-              <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
-              <AlertDescription class="flex items-center justify-between gap-4 mt-1">
-                <span>Salve seu trabalho para não perder as alterações.</span>
-                <Button size="sm" variant="outline">Salvar agora</Button>
-              </AlertDescription>
-            </Alert>
-          </template>
-          <template #variant-preview-2>
-            <Alert variant="destructive" class="w-full">
-              <AlertCircle class="h-4 w-4" aria-hidden="true" />
-              <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
-            </Alert>
-          </template>
-          <template #variant-preview-3>
-            <div class="space-y-3 w-full">
-              <Alert>
-                <Info class="h-4 w-4" aria-hidden="true" />
-                <AlertTitle>Informação</AlertTitle>
-                <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
-              </Alert>
-              <Alert variant="destructive">
-                <AlertCircle class="h-4 w-4" aria-hidden="true" />
-                <AlertTitle>Erro</AlertTitle>
-                <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
-              </Alert>
-              <Alert class="bg-success/10 text-success border-success/30">
-                <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
-                <AlertTitle>Sucesso</AlertTitle>
-                <AlertDescription>Ação concluída com sucesso.</AlertDescription>
-              </Alert>
-              <Alert class="bg-warning/10 text-warning border-warning/30">
-                <TriangleAlert class="h-4 w-4" aria-hidden="true" />
-                <AlertTitle>Aviso</AlertTitle>
-                <AlertDescription>Aviso que requer atenção.</AlertDescription>
-              </Alert>
-            </div>
-          </template>
-        </DocsCompositions>
+          <AlertCircle
+            class="h-4 w-4"
+            aria-hidden="true"
+          />
+          <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
+        </Alert>
+      </template>
+      <template #variant-preview-3>
+        <div class="space-y-3 w-full">
+          <Alert>
+            <Info
+              class="h-4 w-4"
+              aria-hidden="true"
+            />
+            <AlertTitle>Informação</AlertTitle>
+            <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
+          </Alert>
+          <Alert variant="destructive">
+            <AlertCircle
+              class="h-4 w-4"
+              aria-hidden="true"
+            />
+            <AlertTitle>Erro</AlertTitle>
+            <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
+          </Alert>
+          <Alert class="bg-success/10 text-success border-success/30">
+            <CheckCircle2
+              class="h-4 w-4"
+              aria-hidden="true"
+            />
+            <AlertTitle>Sucesso</AlertTitle>
+            <AlertDescription>Ação concluída com sucesso.</AlertDescription>
+          </Alert>
+          <Alert class="bg-warning/10 text-warning border-warning/30">
+            <TriangleAlert
+              class="h-4 w-4"
+              aria-hidden="true"
+            />
+            <AlertTitle>Aviso</AlertTitle>
+            <AlertDescription>Aviso que requer atenção.</AlertDescription>
+          </Alert>
+        </div>
+      </template>
+    </DocsCompositions>
 
-        <!-- ── Configurações (States) ──────────────────────────────────── -->
-        <DocsStates
-          :title="tContent('states.title')"
-          :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
-          :items="stateItems"
-        />
+    <!-- ── Configurações (States) ──────────────────────────────────── -->
+    <DocsStates
+      :title="tContent('states.title')"
+      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :items="stateItems"
+    />
 
-        <!-- ── Propriedades ───────────────────────────────────────────── -->
-        <DocsProps
-          :title="tContent('props.title')"
-          :tables="[
-            { title: tContent('props.alertTitle'),      cols: propCols, items: alertPropItems },
-            { title: tContent('props.alertTitleTitle'), cols: propCols, items: slotPropItems  },
-            { title: tContent('props.alertDescTitle'),  cols: propCols, items: slotPropItems  },
-          ]"
-          :interface-code="interfaceCode"
-          :extensibility-title="tContent('props.extensibilityTitle')"
-          :extensibility-notes="tContent('props.extensibility')"
-        />
+    <!-- ── Propriedades ───────────────────────────────────────────── -->
+    <DocsProps
+      :title="tContent('props.title')"
+      :tables="[
+        { title: tContent('props.alertTitle'), cols: propCols, items: alertPropItems },
+        { title: tContent('props.alertTitleTitle'), cols: propCols, items: slotPropItems },
+        { title: tContent('props.alertDescTitle'), cols: propCols, items: slotPropItems },
+      ]"
+      :interface-code="interfaceCode"
+      :extensibility-title="tContent('props.extensibilityTitle')"
+      :extensibility-notes="tContent('props.extensibility')"
+    />
 
-        <!-- ── Tokens ─────────────────────────────────────────────────── -->
-        <DocsTokens
-          :title="tContent('tokens.title')"
-          :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
-          :items="tokenRows"
-          :customization-title="tContent('tokens.customizationTitle')"
-          :customization-code="codeCustomizationTokens"
-        />
+    <!-- ── Tokens ─────────────────────────────────────────────────── -->
+    <DocsTokens
+      :title="tContent('tokens.title')"
+      :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
+      :items="tokenRows"
+      :customization-title="tContent('tokens.customizationTitle')"
+      :customization-code="codeCustomizationTokens"
+    />
 
-        <!-- ── Acessibilidade ─────────────────────────────────────────── -->
-        <DocsAccessibility
-          :title="tContent('accessibility.title')"
-          :summary="tContent('accessibility.summary')"
-          :items="accessibilityItems"
-          :keyboard-title="tContent('accessibility.keyboardTitle')"
-          :keyboard-items="keyboardItems"
-        />
+    <!-- ── Acessibilidade ─────────────────────────────────────────── -->
+    <DocsAccessibility
+      :title="tContent('accessibility.title')"
+      :summary="tContent('accessibility.summary')"
+      :items="accessibilityItems"
+      :keyboard-title="tContent('accessibility.keyboardTitle')"
+      :keyboard-items="keyboardItems"
+    />
 
-        <!-- ── Relacionados ───────────────────────────────────────────── -->
-        <DocsRelated :title="tContent('related.title')" :items="relatedItems" />
+    <!-- ── Relacionados ───────────────────────────────────────────── -->
+    <DocsRelated
+      :title="tContent('related.title')"
+      :items="relatedItems"
+    />
 
-        <!-- ── Notas ──────────────────────────────────────────────────── -->
-        <DocsNotes :title="tContent('notes.title')" :items="noteItems" />
+    <!-- ── Notas ──────────────────────────────────────────────────── -->
+    <DocsNotes
+      :title="tContent('notes.title')"
+      :items="noteItems"
+    />
 
-        <!-- ── Analytics ─────────────────────────────────────────────── -->
-        <DocsAnalytics
-          :title="tContent('analytics.title')"
-          :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
-          :items="analyticsItems"
-        />
+    <!-- ── Analytics ─────────────────────────────────────────────── -->
+    <DocsAnalytics
+      :title="tContent('analytics.title')"
+      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :items="analyticsItems"
+    />
 
-        <!-- ── Testes ─────────────────────────────────────────────────── -->
-        <DocsTestes
-          :title="tContent('testes.title')"
-          :functional="{
-            title: tContent('testes.functional.title'),
-            cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
-            items: functionalTestItems,
-          }"
-          :accessibility="{
-            title: tContent('testes.accessibility.title'),
-            cols: a11yCritCols,
-            items: a11yTestItems,
-          }"
-          :visual="{
-            title: tContent('testes.visual.title'),
-            cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
-            items: visualTestItems,
-          }"
-        />
+    <!-- ── Testes ─────────────────────────────────────────────────── -->
+    <DocsTestes
+      :title="tContent('testes.title')"
+      :functional="{
+        title: tContent('testes.functional.title'),
+        cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
+        items: functionalTestItems,
+      }"
+      :accessibility="{
+        title: tContent('testes.accessibility.title'),
+        cols: a11yCritCols,
+        items: a11yTestItems,
+      }"
+      :visual="{
+        title: tContent('testes.visual.title'),
+        cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
+        items: visualTestItems,
+      }"
+    />
   </DocsPageLayout>
 </template>
