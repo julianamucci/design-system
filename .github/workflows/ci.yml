@@ -34,17 +34,22 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: ${{ matrix.stack.dir }}/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        # npm install (não 'npm ci') contorna o bug npm/cli#4828 com optional
+        # deps multi-plataforma. O bug: locks gerados no Windows não incluem
+        # bindings nativas Linux (ex: @oxc-parser/binding-linux-x64-gnu usado
+        # pelo Rolldown/Storybook 10). 'npm ci' falha; 'npm install' resolve
+        # optionals em runtime baseado na plataforma atual.
+        run: npm install --no-audit --no-fund
 
       # Lint roda mas é informativo (continue-on-error) enquanto o backlog de
       # violações é limpo (renderer imports do Storybook 10, ts-expect-error sem
@@ -61,7 +66,7 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Upload Storybook artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: storybook-${{ matrix.stack.name }}
           path: ${{ matrix.stack.dir }}/storybook-static

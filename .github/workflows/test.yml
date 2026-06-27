@@ -43,17 +43,18 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: ${{ matrix.stack.dir }}/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        # Ver comentário em ci.yml — usa npm install pra contornar npm/cli#4828
+        run: npm install --no-audit --no-fund
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
@@ -71,7 +72,7 @@ jobs:
 
       - name: Upload test report on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: test-report-${{ matrix.stack.name }}
           path: |
