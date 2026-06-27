@@ -92,6 +92,30 @@ A raiz tem um hook Husky (`.husky/pre-commit`) que bloqueia commits introduzindo
 
 Se precisar fazer commit emergencial bypassando o hook (raríssimo — só pra release com bug upstream conhecido), use `git commit --no-verify` e abra issue documentando o motivo.
 
+## CI no GitHub Actions
+
+Dois workflows rodam em cada PR e push em `main`:
+
+### `ci.yml` — obrigatório (bloqueia merge)
+
+Matrix das 4 stacks em paralelo, cada uma:
+1. `npm ci` (com cache de `node_modules` por stack)
+2. `npm run lint`
+3. `npm run build-storybook`
+
+Falha em qualquer stack reprova o check `CI Success`. Configure este check como **Required status check** em `Settings → Branches → Branch protection rules → main` no GitHub.
+
+### `test.yml` — informativo (não bloqueia merge)
+
+Matrix das 4 stacks em paralelo, cada uma:
+1. `npm ci` + `npx playwright install --with-deps chromium`
+2. `npm run build-storybook`
+3. `npm run test-storybook:ci` (Playwright + axe-playwright em **todas** as stories)
+
+Marcado com `continue-on-error: true` enquanto algumas stacks não estão em 100% de aprovação. Aparece amarelo no PR pra dar visibilidade, mas não bloqueia merge.
+
+**Quando virar obrigatório**: assim que as 4 stacks atingirem 100% sustentado por ~2 semanas, remover `continue-on-error: true` em `.github/workflows/test.yml` e adicionar este workflow ao branch protection.
+
 ## Convenções de commit
 
 Use prefixos descritivos:

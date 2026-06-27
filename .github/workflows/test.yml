@@ -1,0 +1,98 @@
+name: Tests (informative)
+
+# test-storybook (Playwright + axe-playwright) em cada stack.
+# Atualmente INFORMATIVO: aparece no PR mas não bloqueia merge enquanto algumas
+# stacks não estão em 100%. Quando todas chegarem a 100%, flipar pra required no
+# branch protection rules.
+#
+# Estado atual (snapshot da última run local):
+#   Nortear: 100% (527/527)
+#   Vue:     87%  (467/534)
+#   React:   85%  (461/543)
+#   Svelte:  79%  (426/540)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-storybook:
+    name: ${{ matrix.stack.name }}
+    runs-on: ubuntu-latest
+    # Permite que o job falhe sem reprovar o PR — é o que torna o workflow
+    # "informativo". Quando os testes estiverem 100%, remover esta linha.
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        stack:
+          - { name: react,   dir: design-system-react,    port: 6006 }
+          - { name: vue,     dir: design-system-vue,      port: 6007 }
+          - { name: svelte,  dir: design-system-svelte,   port: 6008 }
+          - { name: vanilla, dir: nortear-design-system,  port: 6009 }
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.stack.dir }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: ${{ matrix.stack.dir }}/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build Storybook
+        run: npm run build-storybook
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+
+      - name: Run test-storybook
+        run: npm run test-storybook:ci
+        env:
+          # Reduz noise de logs internos do Playwright
+          DEBUG: ''
+
+      - name: Upload test report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-${{ matrix.stack.name }}
+          path: |
+            ${{ matrix.stack.dir }}/test-results
+            ${{ matrix.stack.dir }}/playwright-report
+          retention-days: 14
+          if-no-files-found: ignore
+
+  summary:
+    name: Test Summary
+    needs: test-storybook
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Status note
+        run: |
+          echo "## Test Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Este workflow é **informativo** — falhas aqui não bloqueiam merge." >> $GITHUB_STEP_SUMMARY
+          echo "Veja cada job acima pra o resultado individual da stack." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Meta: 100% de aprovação em todas as 4 stacks. Quando atingido," >> $GITHUB_STEP_SUMMARY
+          echo "remover \`continue-on-error: true\` e adicionar este workflow ao" >> $GITHUB_STEP_SUMMARY
+          echo "branch protection como check obrigatório." >> $GITHUB_STEP_SUMMARY

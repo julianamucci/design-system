@@ -1,0 +1,79 @@
+name: CI
+
+# Required checks: lint + typecheck + build-storybook em cada stack.
+# Bloqueia merge se qualquer um falhar.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancela builds antigos quando há novo push na mesma branch/PR
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.stack.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      # Não aborta os outros se uma stack falha — quero ver tudo
+      fail-fast: false
+      matrix:
+        stack:
+          - { name: react,   dir: design-system-react }
+          - { name: vue,     dir: design-system-vue }
+          - { name: svelte,  dir: design-system-svelte }
+          - { name: vanilla, dir: nortear-design-system }
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.stack.dir }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: ${{ matrix.stack.dir }}/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build Storybook
+        run: npm run build-storybook
+        env:
+          # Storybook 10 + Rolldown ocasionalmente excede 4GB heap default
+          NODE_OPTIONS: --max-old-space-size=6144
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-${{ matrix.stack.name }}
+          path: ${{ matrix.stack.dir }}/storybook-static
+          retention-days: 7
+          if-no-files-found: error
+
+  # Job final que depende de todos os builds — usado como check required no branch protection
+  ci-success:
+    name: CI Success
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all stack builds passed
+        run: |
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            echo "::error::Pelo menos uma stack falhou no CI"
+            exit 1
+          fi
+          echo "✅ Todas as 4 stacks passaram em lint + build-storybook"
