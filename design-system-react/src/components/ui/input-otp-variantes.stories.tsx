@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, expect, waitFor } from "storybook/test";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";

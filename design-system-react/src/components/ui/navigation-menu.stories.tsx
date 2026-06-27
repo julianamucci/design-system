@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import {
   NavigationMenu,
@@ -108,7 +108,6 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step("Root tem role=navigation e aria-label", async () => {
       const nav = canvas.getByRole("navigation");

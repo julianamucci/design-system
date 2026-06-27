@@ -57,6 +57,9 @@ import {
 } from "@/components/ui/table"
 
 declare module "@tanstack/react-table" {
+  // TData/TValue precisam casar com a assinatura original do TanStack pra
+  // module augmentation funcionar — não são "não usados" do ponto de vista do TS.
+  /* eslint-disable unused-imports/no-unused-vars */
   interface ColumnMeta<TData extends RowData, TValue> {
     filter?: { type: "text" | "select"; options?: string[]; placeholder?: string }
     editable?: boolean
@@ -64,6 +67,7 @@ declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     updateData?: (rowIndex: number, columnId: string, value: unknown) => void
   }
+  /* eslint-enable unused-imports/no-unused-vars */
 }
 
 export type DataTableColumn<TData, TValue = unknown> = ColumnDef<TData, TValue>
@@ -176,6 +180,9 @@ function DataTable<TData>({
     enableColumnFilters &&
     allColumns.some((c) => !!c.meta?.filter)
 
+  // TanStack Table useReactTable é a API headless oficial; o objeto config
+  // é estável entre renders. React Compiler não consegue inferir memoização.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns: allColumns,

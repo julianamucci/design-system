@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, userEvent, fn } from "storybook/test";
 import { MoreVertical } from "lucide-react";
 import {

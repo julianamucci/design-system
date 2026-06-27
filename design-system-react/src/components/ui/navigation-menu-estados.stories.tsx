@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, waitFor } from "storybook/test";
 import {
   NavigationMenu,
@@ -118,7 +118,6 @@ export const Aberto: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Content visível com sub-link Plano Pro", async () => {
       await waitFor(async () => {
         const link = body.queryByText(/Plano Pro/i);

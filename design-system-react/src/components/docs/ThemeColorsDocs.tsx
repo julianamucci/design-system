@@ -248,9 +248,10 @@ export function ThemeColorsDocs() {
             </div>
             <div className="grid gap-4 md:grid-cols-3">
               {DENSITY_ITEMS.map((item) => {
-                const dData = (themeColorsTranslations as Record<string, any>)[locale].axes.density as {
-                  tableCols: string[]; tableRows: string[][];
+                const dData = (themeColorsTranslations as Record<string, unknown>)[locale] as {
+                  axes: { density: { tableCols: string[]; tableRows: string[][] } };
                 };
+                const densityData = dData.axes.density;
                 return (
                   <div key={item.key} className="rounded-lg border border-border/50 p-4 space-y-3">
                     <span className="block text-xs text-muted-foreground">
@@ -260,11 +261,11 @@ export function ThemeColorsDocs() {
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            {dData.tableCols.map((col, i) => <TableHead key={i}>{col}</TableHead>)}
+                            {densityData.tableCols.map((col, i) => <TableHead key={i}>{col}</TableHead>)}
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {dData.tableRows.map((row, r) => (
+                          {densityData.tableRows.map((row, r) => (
                             <TableRow key={r}>
                               {row.map((val, c) => <TableCell key={c}>{val}</TableCell>)}
                             </TableRow>

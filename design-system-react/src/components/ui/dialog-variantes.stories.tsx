@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { within, expect } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Dialog,
   DialogClose,
@@ -89,7 +89,6 @@ export const Default: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     await expect(await waitForPortal("dialog")).toBeInTheDocument();
   },
 };
@@ -145,7 +144,6 @@ export const WithForm: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     await expect(await body.findByLabelText(/nome/i)).toBeInTheDocument();
     await expect(await body.findByLabelText(/e-mail/i)).toBeInTheDocument();
   },
@@ -196,7 +194,6 @@ export const WithScrollContent: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     await expect(await body.findByText(/termos de uso/i)).toBeInTheDocument();
   },
 };
@@ -230,7 +227,6 @@ export const NoFooter: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     await expect(await body.findByText(/sobre este recurso/i)).toBeInTheDocument();
   },
 };
@@ -276,7 +272,6 @@ export const WithDestructiveAction: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     const action = await waitForPortal("button", { name: /^Remover item$/i });
     await expect(action).toHaveClass("bg-destructive");
   },
@@ -316,7 +311,6 @@ export const CustomCloseInFooter: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     await expect(await waitForPortal("dialog")).toBeInTheDocument();
   },
 };

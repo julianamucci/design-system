@@ -46,13 +46,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Lint roda mas é informativo (continue-on-error) enquanto o backlog de
-      # violações é limpo (renderer imports do Storybook 10, ts-expect-error sem
-      # descrição, `any`, etc.). Quando lint estiver limpo nas 4 stacks, remover
-      # continue-on-error daqui.
-      - name: Lint (informative)
+      - name: Lint
         run: npm run lint
-        continue-on-error: true
 
       - name: Build Storybook
         run: npm run build-storybook
@@ -81,5 +76,4 @@ jobs:
             echo "::error::Pelo menos uma stack falhou no build"
             exit 1
           fi
-          echo "✅ Todas as 4 stacks passaram em build-storybook"
-          echo "ℹ️  Lint warnings ainda visíveis nos logs individuais — limpeza em backlog"
+          echo "✅ Todas as 4 stacks passaram em lint + build-storybook"

@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { within, expect, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { within, expect } from "storybook/test";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 const meta = {
@@ -76,7 +76,6 @@ export const PerfilDeUsuario: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Estrutura semântica: dialog + link acessível", async () => {
       const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
@@ -134,7 +133,6 @@ export const PreviewDeLink: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Dialog acessível e link com href válido", async () => {
       const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
@@ -183,7 +181,6 @@ export const DefinicaoDeTermo: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Dialog renderizado para termo técnico", async () => {
       const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
@@ -233,7 +230,6 @@ export const MetricaExplicada: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Dialog explicativo + botão com aria-label acessível", async () => {
       const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();

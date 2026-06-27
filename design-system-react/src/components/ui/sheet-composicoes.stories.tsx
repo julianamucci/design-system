@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Sheet,
   SheetClose,
@@ -105,7 +105,6 @@ export const FiltersPanel: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toHaveAccessibleName(/Filtros avançados/i);
     const input = within(dialog).getByLabelText(/Categoria/i);
@@ -162,7 +161,6 @@ export const SecondaryNavigation: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toHaveAttribute("data-side", "left");
     const nav = within(dialog).getByRole("navigation");
@@ -224,7 +222,6 @@ export const BottomPanel: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toHaveAttribute("data-side", "bottom");
   },

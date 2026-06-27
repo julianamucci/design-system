@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -67,7 +67,6 @@ export const Closed: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     const trigger = canvas.getByRole("button", { name: /Excluir item/i });
     await expect(trigger).toBeVisible();
     // Base UI pode manter portal no DOM mesmo fechado; checar data-state
@@ -109,7 +108,6 @@ export const Open: Story = {
     </AlertDialog>
   ),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal("alertdialog");
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAccessibleName(/Excluir item/i);
@@ -154,7 +152,6 @@ export const Confirmed: Story = {
     );
   },
   play: async ({ step }) => {
-    const body = within(document.body);
 
     await step("Diálogo está aberto", async () => {
       const dialog = await waitForPortal("alertdialog");
@@ -202,7 +199,6 @@ export const Cancelled: Story = {
     );
   },
   play: async ({ step }) => {
-    const body = within(document.body);
 
     await step("Cancel é clicado e diálogo fecha", async () => {
       const cancel = await waitForPortal("button", { name: /Cancelar/i });
@@ -264,7 +260,6 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step("Clique no trigger externo abre o diálogo", async () => {
       const trigger = canvas.getByRole("button", {

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import Autoplay from "embla-carousel-autoplay";
 import {
@@ -82,7 +82,6 @@ export const MultiResponsive: Story = {
 };
 
 export const Autoplay_: Story = {
-  name: "Autoplay",
   render: () => (
     <Carousel
       className="w-full max-w-md"

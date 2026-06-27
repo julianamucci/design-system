@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import { useState } from "react";
 import {
   Command,
@@ -104,7 +104,6 @@ export const ComGrupos: Story = {
 // ─── Com Shortcuts ────────────────────────────────────────────────────────────
 
 export const ComShortcuts: Story = {
-  name: "Com Shortcuts",
   render: () => (
     <div className="w-72">
       <Command>
@@ -231,7 +230,6 @@ export const ComoCombobox: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step("trigger exibe placeholder inicial", async () => {
       const trigger = canvas.getByRole("combobox");
@@ -322,7 +320,6 @@ export const CommandPalette: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step("botão de abertura está presente", async () => {
       const btn = canvas.getByRole("button", { name: /Abrir command palette/i });

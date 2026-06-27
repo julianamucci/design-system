@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, waitFor } from "storybook/test";
 import {
   NavigationMenu,
@@ -120,7 +120,6 @@ export const ComDropdown: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Content visível com sub-links", async () => {
       await waitFor(async () => {
         const link = body.queryByText(/Plano Pro/i);
@@ -199,7 +198,6 @@ export const MegaMenuGrid: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Mega-menu grid com 4 cards visíveis", async () => {
       await waitFor(async () => {
         const t = body.queryByText(/Para Times/i);
@@ -264,7 +262,6 @@ export const ComCardDestacado: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Card destacado e lista de links presentes", async () => {
       await waitFor(async () => {
         const tokens = body.queryByText(/Tokens v2/i);

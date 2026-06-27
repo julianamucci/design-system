@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { within, expect } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Dialog,
   DialogClose,
@@ -79,7 +79,6 @@ export const ConfirmEmail: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toHaveAccessibleName(/Confirmar e-mail/i);
   },
@@ -137,7 +136,6 @@ export const ProfileEdit: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     const input = await body.findByLabelText(/Nome completo/i);
     await expect(input).toBeVisible();
   },
@@ -177,7 +175,6 @@ export const MediaPreview: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
   },

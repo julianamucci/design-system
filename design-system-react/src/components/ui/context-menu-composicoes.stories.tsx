@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import { useState } from "react";
 import {
@@ -53,7 +53,6 @@ function TriggerArea({ children }: { children: React.ReactNode }) {
 // ─── Com Shortcut ─────────────────────────────────────────────────────────────
 
 export const ComShortcut: Story = {
-  name: "Com Shortcut",
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado e visível", async () => {
@@ -129,7 +128,6 @@ function CheckboxDemo() {
 }
 
 export const ComCheckbox: Story = {
-  name: "Com Checkbox",
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado", async () => {
@@ -187,7 +185,6 @@ export const ComRadio: Story = {
 // ─── Com Submenu ──────────────────────────────────────────────────────────────
 
 export const ComSubmenu: Story = {
-  name: "Com Submenu",
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado", async () => {

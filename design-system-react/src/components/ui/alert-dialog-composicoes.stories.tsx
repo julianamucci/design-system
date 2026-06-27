@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { within, expect } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -65,7 +65,6 @@ export const Destrutiva: Story = {
     </AlertDialog>
   ),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal("alertdialog");
     await expect(dialog).toBeVisible();
     const action = await waitForPortal("button", { name: /Excluir conta/i });
@@ -102,7 +101,6 @@ export const Neutra: Story = {
     </AlertDialog>
   ),
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal("alertdialog");
     await expect(dialog).toBeVisible();
     const action = await waitForPortal("button", { name: /^Publicar$/i });

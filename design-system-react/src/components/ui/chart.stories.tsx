@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './chart';
 import { ChartDocs } from '@/components/docs/ChartDocs';

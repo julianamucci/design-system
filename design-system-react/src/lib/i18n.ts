@@ -76,13 +76,13 @@ export function useTranslation(
   overrides?: TranslationOverrides,
 ) {
   const locale = useI18nStore((state) => state.locale);
-  const rawDict = (translations[locale] ?? translations['pt-BR'] ?? {}) as Record<string, unknown>;
 
   /**
    * Achata recursivamente um objeto aninhado em um mapa plano com chaves de ponto.
    * Ex: { nav: { overview: "Visão Geral" } } → { "nav.overview": "Visão Geral" }
    */
   const flatDict = useMemo(() => {
+    const rawDict = (translations[locale] ?? translations['pt-BR'] ?? {}) as Record<string, unknown>;
     const result: Record<string, unknown> = {};
 
     function flatten(obj: Record<string, unknown>, prefix: string) {
@@ -108,7 +108,7 @@ export function useTranslation(
     }
 
     return result;
-  }, [rawDict, overrides, locale]);
+  }, [translations, overrides, locale]);
 
   const t = useCallback(
     (key: string, defaultValue?: string): string => {

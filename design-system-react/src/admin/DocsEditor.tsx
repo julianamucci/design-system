@@ -50,6 +50,9 @@ function QuillEditor({ value, onChange, placeholder }: QuillEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const quillRef     = useRef<Quill | null>(null);
   const onChangeRef  = useRef(onChange);
+  // Padrão "ref-as-mutable-box" pra manter a callback mais recente sem
+  // disparar re-render do effect — comum em editores third-party (Quill).
+  // eslint-disable-next-line react-hooks/refs
   onChangeRef.current = onChange;
 
   useEffect(() => {

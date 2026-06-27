@@ -40,19 +40,14 @@ const componentCategories = [
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [isDark, setIsDark] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState('default');
+  // Inicialização de tema por subdomínio direto no initializer do useState
+  // (evita flicker do primeiro render + atende react-hooks/set-state-in-effect)
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    const { theme, isDevMode } = getThemeInfo();
+    return isDevMode ? 'default' : theme;
+  });
 
   const isAdminRoute = new URLSearchParams(window.location.search).get('view') === 'admin';
-
-  // Inicialização do tema por subdomínio
-  useEffect(() => {
-    const { theme, isDevMode } = getThemeInfo();
-
-    // Se não estiver em dev mode, o tema é forçado pelo subdomínio
-    if (!isDevMode) {
-      setCurrentTheme(theme);
-    }
-  }, []);
 
   useEffect(() => {
     // Remove todas as possíveis classes de tema

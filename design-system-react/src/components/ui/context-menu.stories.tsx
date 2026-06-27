@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { ContextMenuDocs } from "@/components/docs/ContextMenuDocs";

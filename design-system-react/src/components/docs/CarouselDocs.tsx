@@ -112,7 +112,11 @@ function DotsCarouselPreview({ total, ariaLabel, previousLabel, nextLabel, slide
 
   useEffect(() => {
     if (!api) return;
+    // Embla expõe API imperativa via .on() — setState dentro do callback é o
+    // padrão recomendado pelo lib pra sincronizar React state com o carrossel.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrent(api.selectedScrollSnap());
+     
     api.on("select", () => setCurrent(api.selectedScrollSnap()));
   }, [api]);
 
@@ -605,7 +609,11 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
   useEffect(() => {
     if (!api) return;
+    // Embla expõe API imperativa via .on() — setState dentro do callback é o
+    // padrão recomendado pelo lib pra sincronizar React state com o carrossel.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrent(api.selectedScrollSnap());
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     api.on("select", () => setCurrent(api.selectedScrollSnap()));
   }, [api]);
 

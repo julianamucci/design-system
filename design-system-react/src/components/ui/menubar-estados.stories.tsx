@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { within, expect, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { within, expect } from "storybook/test";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -64,7 +64,6 @@ export const Fechado: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     await step("Triggers visíveis e nenhum menu aberto", async () => {
       const triggers = canvas.getAllByRole("menuitem");
       await expect(triggers.length).toBeGreaterThanOrEqual(2);
@@ -104,7 +103,6 @@ export const Aberto: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Menu aberto com role=menu", async () => {
       const menu = await waitForPortal("menu");
       await expect(menu).toBeVisible();
@@ -135,7 +133,6 @@ export const ItemDesabilitado: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Pelo menos um item com data-disabled", async () => {
       await waitForPortal("menu");
       const items = document.querySelectorAll("[data-slot='menubar-item']");
@@ -172,7 +169,6 @@ export const CheckboxChecked: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("CheckboxItem com aria-checked=true", async () => {
       await waitForPortal("menu");
       const checkboxes = body.getAllByRole("menuitemcheckbox");

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
@@ -111,7 +111,6 @@ function ControlledExample() {
 }
 
 export const Controlado: Story = {
-  name: "Controlado",
   render: () => <ControlledExample />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -140,7 +139,6 @@ export const Controlado: Story = {
 // ─── Disabled ─────────────────────────────────────────────────────────────────
 
 export const Desabilitado: Story = {
-  name: "Desabilitado",
   render: () => (
     <Collapsible className="w-80 space-y-2">
       <CollapsibleTrigger

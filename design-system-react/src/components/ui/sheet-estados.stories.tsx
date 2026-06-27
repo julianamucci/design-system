@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Sheet,
   SheetClose,
@@ -85,7 +85,6 @@ export const Closed: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     const trigger = canvas.getAllByRole("button")[0];
     await expect(trigger).toBeVisible();
     const dialog = body.queryByRole("dialog");
@@ -129,7 +128,6 @@ export const Open: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAccessibleName();
@@ -171,7 +169,6 @@ export const WithCloseButtonHidden: Story = {
     );
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
     const closeBtn = within(dialog).queryByRole("button", { name: /^Close$/i });
@@ -220,7 +217,6 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step("Clique no trigger externo abre o sheet", async () => {
       const trigger = canvas.getByRole("button", {

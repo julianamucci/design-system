@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { within, expect, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { within, expect } from "storybook/test";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -73,7 +73,6 @@ export const ComShortcuts: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("3 shortcuts renderizados ao lado dos items", async () => {
       await waitForPortal("menu");
       const shortcuts = document.querySelectorAll(
@@ -113,7 +112,6 @@ export const ComSubmenu: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("SubTrigger renderizado", async () => {
       await waitForPortal("menu");
       const subTrigger = document.querySelector(
@@ -169,7 +167,6 @@ export const ComCheckboxItems: Story = {
     return <Demo />;
   },
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("3 itens com role=menuitemcheckbox", async () => {
       await waitForPortal("menu");
       const checkboxes = body.getAllByRole("menuitemcheckbox");
@@ -214,7 +211,6 @@ export const ComRadioGroup: Story = {
     return <Demo />;
   },
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("RadioItems com role=menuitemradio e exatamente um checked", async () => {
       await waitForPortal("menu");
       const radios = body.getAllByRole("menuitemradio");
@@ -312,7 +308,6 @@ export const EditorCompleto: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     await step("4 Triggers no menubar", async () => {
       const triggers = canvas.getAllByRole("menuitem");
       await expect(triggers.length).toBeGreaterThanOrEqual(4);

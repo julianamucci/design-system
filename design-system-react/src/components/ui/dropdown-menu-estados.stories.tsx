@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,7 +58,6 @@ export const Fechado: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     await step("Apenas trigger visível, menu ausente", async () => {
       const trigger = canvas.getByRole("button", { name: /Abrir menu/i });
       await expect(trigger).toBeVisible();
@@ -91,7 +90,6 @@ export const Aberto: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Menu aberto com role=menu", async () => {
       const menu = await waitForPortal("menu");
       await expect(menu).toBeVisible();
@@ -141,7 +139,6 @@ export const Controlado: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step("Botão externo abre o menu", async () => {
       const openBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
@@ -186,7 +183,6 @@ export const ItemDesabilitado: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Item disabled tem data-disabled e aria-disabled", async () => {
       await waitForPortal("menu");
       const items = document.querySelectorAll(

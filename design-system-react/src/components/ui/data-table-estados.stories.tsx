@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import { DataTable } from "./data-table"
 import { baseColumns, type Invoice } from "./data-table.fixtures"
 

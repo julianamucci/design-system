@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Drawer,
   DrawerClose,
@@ -70,7 +70,6 @@ export const Fechado: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     await step("Apenas trigger visível", async () => {
       const trigger = canvas.getByRole("button", { name: /Abrir/i });
       await expect(trigger).toBeVisible();
@@ -110,7 +109,6 @@ export const Aberto: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Drawer aberto com role=dialog", async () => {
       const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();
@@ -161,7 +159,6 @@ export const Controlado: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step("Botão externo abre o drawer", async () => {
       const openBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
@@ -212,7 +209,6 @@ export const NaoDismissible: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const body = within(document.body);
     await step("Drawer permanece aberto após ESC", async () => {
       const dialog = await waitForPortal("dialog");
       await expect(dialog).toBeVisible();

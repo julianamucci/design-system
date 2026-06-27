@@ -1,7 +1,7 @@
 import type * as React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import { HoverCardDocs } from "@/components/docs/HoverCardDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -97,7 +97,6 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step("1. Tab foca o trigger e abre o Content", async () => {
       const trigger = canvas.getByRole("link", { name: /@joana/i });

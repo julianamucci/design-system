@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import {
   ContextMenu,
@@ -46,7 +46,6 @@ function TriggerArea({ children }: { children: React.ReactNode }) {
 // ─── Item Disabled ────────────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {
-  name: "Item Disabled",
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado", async () => {
@@ -86,7 +85,6 @@ export const ItemDisabled: Story = {
 // ─── Item Inset ───────────────────────────────────────────────────────────────
 
 export const ItemInset: Story = {
-  name: "Item Inset",
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado", async () => {
@@ -122,7 +120,6 @@ export const ItemInset: Story = {
 // ─── Item Destructive ─────────────────────────────────────────────────────────
 
 export const ItemDestructive: Story = {
-  name: "Item Destructive",
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado", async () => {

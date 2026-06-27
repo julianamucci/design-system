@@ -16,7 +16,7 @@ export function token(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
-const DURATION_SCALES = ['instant', 'fast', 'base', 'moderate', 'slow', 'stately'] as const;
+export const DURATION_SCALES = ['instant', 'fast', 'base', 'moderate', 'slow', 'stately'] as const;
 export type DurationScale = typeof DURATION_SCALES[number];
 
 /** Duração em segundos (formato esperado pelo `motion.animate`). */
@@ -26,7 +26,7 @@ export function duration(scale: DurationScale): number {
   return ms / 1000;
 }
 
-const EASING_NAMES = ['linear', 'standard', 'emphasis', 'entrance', 'exit'] as const;
+export const EASING_NAMES = ['linear', 'standard', 'emphasis', 'entrance', 'exit'] as const;
 export type EasingName = typeof EASING_NAMES[number];
 
 /** Cubic-bezier ou keyword CSS, conforme tokens. */

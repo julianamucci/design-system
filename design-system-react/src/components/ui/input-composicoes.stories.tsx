@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import { Search, Mail, Eye, EyeOff, AtSign, DollarSign } from "lucide-react";
 import { useState } from "react";

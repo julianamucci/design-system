@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { within, expect, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Drawer,
   DrawerClose,
@@ -41,7 +41,6 @@ const wrapperStyle: React.CSSProperties = {
 };
 
 async function assertSemanticStructure(step: (label: string, fn: () => Promise<void>) => Promise<unknown>) {
-  const body = within(document.body);
   await step("Drawer com role=dialog, Title e Description", async () => {
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
@@ -105,7 +104,6 @@ export const ComFormulario: Story = {
   play: async ({ step }) => {
     await assertSemanticStructure(step as never);
     await step("Inputs do formulário presentes", async () => {
-      const body = within(document.body);
       const nameInput = await body.findByLabelText(/Nome/i);
       const emailInput = await body.findByLabelText(/E-mail/i);
       await expect(nameInput).toBeInTheDocument();
@@ -149,7 +147,6 @@ export const ComConfirmacao: Story = {
   play: async ({ step }) => {
     await assertSemanticStructure(step as never);
     await step("Botões Confirmar e Cancelar presentes", async () => {
-      const body = within(document.body);
       await expect(body.getByRole("button", { name: /Confirmar/i })).toBeInTheDocument();
       await expect(body.getByRole("button", { name: /Cancelar/i })).toBeInTheDocument();
     });

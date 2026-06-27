@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import {
   Command,
@@ -86,7 +86,6 @@ export const EstadoSemResultados: Story = {
 // ─── Item Desabilitado ────────────────────────────────────────────────────────
 
 export const ItemDesabilitado: Story = {
-  name: "Item Desabilitado",
   render: () => (
     <div className="w-72">
       <Command>

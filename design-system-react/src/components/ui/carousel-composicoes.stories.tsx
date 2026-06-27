@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useState } from "react";
 import { userEvent, within, expect } from "storybook/test";
 import {
@@ -50,9 +50,12 @@ function ComDotsCarousel() {
 
   useEffect(() => {
     if (!api) return;
+    // Embla API imperativa — ver CarouselDocs.tsx pra justificativa.
+    /* eslint-disable react-hooks/set-state-in-effect */
     setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap());
     const onSelect = () => setCurrent(api.selectedScrollSnap());
+    /* eslint-enable react-hooks/set-state-in-effect */
     api.on("select", onSelect);
     return () => {
       api.off("select", onSelect);

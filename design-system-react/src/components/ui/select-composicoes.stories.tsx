@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn, userEvent, screen, within, expect, waitFor } from "storybook/test";
-import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { fn, userEvent, within, expect, waitFor } from "storybook/test";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import { useState } from "react";
 import {
   Select,

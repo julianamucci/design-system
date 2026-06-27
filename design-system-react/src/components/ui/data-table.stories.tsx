@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, userEvent, expect } from "storybook/test"
 import { DataTable } from "./data-table"
 import { DataTableDocs } from "@/components/docs/DataTableDocs"
