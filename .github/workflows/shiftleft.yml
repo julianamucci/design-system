@@ -18,6 +18,23 @@ jobs:
         distribution: zulu
         java-version: 8
 
+    - name: Setup Node 22
+      uses: actions/setup-node@v5
+      with:
+        node-version: '22'
+
+    # Instala as dependências ANTES da análise: sem node_modules o motor de
+    # taint não resolve imports de terceiros (ex: dompurify) e não consegue
+    # aplicar as políticas de sanitizador — todo innerHTML sanitizado via
+    # DOMPurify.sanitize() continuaria sendo reportado como XSS.
+    # --ignore-scripts: não precisamos de postinstall (patch-package) pra
+    # análise estática, e evita executar scripts de terceiros no CI.
+    - name: Install dependencies (needed for taint resolution)
+      run: |
+        for dir in design-system-react design-system-vue design-system-svelte nortear-design-system nortear-cli; do
+          (cd "$dir" && npm ci --ignore-scripts --no-audit --no-fund)
+        done
+
     - name: Download Harness SAST and SCA CLI
       run: |
         curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
