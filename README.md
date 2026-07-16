@@ -83,18 +83,19 @@ gh repo create meu-design-system \
 # ou clique em "Use this template" no GitHub
 ```
 
-Depois, customize seguindo o **[`BRAND-CUSTOMIZATION.md`](BRAND-CUSTOMIZATION.md)** — guia passo a passo (10 etapas) com:
+Depois, customize seguindo o **[`BRAND-CUSTOMIZATION.md`](BRAND-CUSTOMIZATION.md)** — guia passo a passo (11 etapas) com:
 
 1. Tokens (cores, espaçamentos, radius)
 2. Temas adicionais
 3. Tipografia
 4. Logo nas 4 stacks
 5. Manager do Storybook (sidebar + título)
-6. Conteúdo trilíngue
-7. README e nome do projeto
-8. Deploy Vercel (4 Storybooks + DNS)
-9. CLI customizada (npm publish)
-10. Checklist final antes do primeiro release
+6. **Analytics (GA4)** — trocar o Measurement ID do template pelo seu ⚠
+7. Conteúdo trilíngue
+8. README e nome do projeto
+9. Deploy Vercel (4 Storybooks + DNS)
+10. CLI customizada (npm publish)
+11. Checklist final antes do primeiro release
 
 Storybooks ao vivo do template original:
 - **React** → [react.norteardesign.com.br](https://react.norteardesign.com.br)
@@ -132,14 +133,15 @@ npm run storybook:vanilla    # http://localhost:6009
 
 ## Nortear CLI (Vanilla TS)
 
-Pra puxar componentes do Nortear num projeto vanilla, estilo shadcn:
+Pra puxar componentes do Nortear num projeto vanilla, estilo shadcn. **Ainda não publicado no npm** — por enquanto, rode a partir do clone:
 
 ```bash
-npx nortear@latest init
-npx nortear@latest add button card alert
+# do repo root, dentro do seu projeto consumidor:
+node <caminho-do-clone>/nortear-cli/bin/nortear.mjs init
+node <caminho-do-clone>/nortear-cli/bin/nortear.mjs add button card alert
 ```
 
-Veja [`nortear-cli/README.md`](nortear-cli/README.md).
+Quando publicado (roadmap), vira `npx nortear@latest init`. Veja [`nortear-cli/README.md`](nortear-cli/README.md).
 
 ## Qualidade
 

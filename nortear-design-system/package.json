@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "storybook": "storybook dev -p 6009",
-    "build-storybook": "storybook build",
+    "build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://vanilla.norteardesign.com.br --out storybook-static",
     "test-storybook": "test-storybook --url http://127.0.0.1:6009",
     "test-storybook:component": "test-storybook --url http://127.0.0.1:6009",
     "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npx http-server storybook-static --port 6009 --silent\" \"npx wait-on tcp:6009 && npm run test-storybook\"",

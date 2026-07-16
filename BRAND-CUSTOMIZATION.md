@@ -144,7 +144,36 @@ Aplicar em **react/vue/svelte/nortear**.
 
 ---
 
-## Etapa 7 — Conteúdo trilíngue (opcional)
+## Etapa 7 — Analytics (GA4) ⚠ obrigatória se for publicar
+
+O template vem com Google Analytics 4 configurado com o Measurement ID **do Nortear** (`G-K0BQWVR1RG`). Se você publicar seu fork sem trocar, **os pageviews dos seus usuários serão enviados pra propriedade GA4 do template original** — você não verá seus próprios dados e estará vazando tráfego pra terceiros.
+
+### Opção A — Usar seu próprio GA4
+
+1. Crie uma propriedade GA4 em [analytics.google.com](https://analytics.google.com) e copie o Measurement ID (formato `G-XXXXXXXXXX`)
+2. Substitua em todos os arquivos de uma vez:
+
+```bash
+# Linux/macOS/Git Bash — troque G-SEUIDAQUI pelo seu ID
+grep -rl "G-K0BQWVR1RG" --include="*.html" --include="*.ts" --include="*.md" --include="*.json" . \
+  | grep -v node_modules | grep -v storybook-static \
+  | xargs sed -i 's/G-K0BQWVR1RG/G-SEUIDAQUI/g'
+```
+
+3. Confira que zerou: `grep -rl "G-K0BQWVR1RG" . | grep -v node_modules` não deve retornar nada
+
+Onde o ID vive (caso prefira trocar manualmente):
+- `<stack>/.storybook/manager-head.html` — script gtag (4 stacks). GA4 fica no **manager**, não no iframe — ver [`docs/shared/guidelines/07-analytics.md`](docs/shared/guidelines/07-analytics.md)
+- `design-system-react/index.html` — sandbox dev
+- `<stack>/src/lib/analytics.ts` — comentários de documentação
+
+### Opção B — Remover analytics
+
+Delete os blocos `<script>` do gtag nos `manager-head.html` e `index.html`. A função `track()` em `src/lib/analytics.ts` já é no-op silencioso quando `gtag` não existe — nenhum outro código precisa mudar.
+
+---
+
+## Etapa 8 — Conteúdo trilíngue (opcional)
 
 Se você quer remover idiomas (ex: ficar só em pt-BR + en) ou adicionar mais:
 
@@ -161,7 +190,7 @@ Depois atualize o `LanguageSwitcher` em cada stack:
 
 ---
 
-## Etapa 8 — README, LICENSE e nome do projeto
+## Etapa 9 — README, LICENSE e nome do projeto
 
 Substitua todas as ocorrências de "Nortear" pelo nome da sua marca:
 
@@ -180,9 +209,20 @@ sed -i 's/norteardesign.com.br/acme.design/g' README.md
 
 ---
 
-## Etapa 9 — Deploy (Vercel)
+## Etapa 10 — Deploy (Vercel)
 
 Este template publica **apenas os 4 Storybooks** — um portal/landing page que agrupa eles é um **projeto separado** que você cria fora deste repo (pode ser um site estático, um Next.js, um blog em qualquer framework — fica a seu critério).
+
+### SEO: sitemap + robots (troque os domínios!)
+
+O `build-storybook` de cada stack roda `scripts/generate-seo-files.mjs` ao final, gerando `sitemap.xml` + `robots.txt` no output com base no domínio passado via `--base`. **Esses domínios estão hardcoded no `package.json` de cada stack apontando pra `*.norteardesign.com.br`** — troque pelos seus:
+
+```bash
+# em cada <stack>/package.json, ajuste o --base do script build-storybook:
+"build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://react.SEUDOMINIO.com --out storybook-static"
+```
+
+Depois do primeiro deploy, submeta cada `https://<sub>.seudominio.com/sitemap.xml` no [Google Search Console](https://search.google.com/search-console).
 
 No painel do Vercel, pra cada uma das 4 stacks:
 
@@ -197,7 +237,7 @@ Veja a seção "Deploy" do [`README.md`](README.md) pra topologia completa.
 
 ---
 
-## Etapa 10 — CLI customizada (opcional)
+## Etapa 11 — CLI customizada (opcional)
 
 Se você quer que outras pessoas possam instalar seus componentes via `npx`:
 
@@ -241,6 +281,7 @@ npx acme@latest add button card alert
 - [ ] Logo SVG atualizado nas 4 stacks
 - [ ] Tipografia carregando corretamente (sem fallback em system-ui)
 - [ ] `brandTitle` em todos os `manager.ts` aponta pra sua marca
+- [ ] **GA4 Measurement ID trocado** — `grep -r "G-K0BQWVR1RG" . | grep -v node_modules` retorna vazio
 - [ ] README sem menções residuais a "Nortear"
 - [ ] `npm run storybook` roda em todas as 4 stacks sem erro
 - [ ] `npm run build-storybook` builda com sucesso em todas as 4 stacks

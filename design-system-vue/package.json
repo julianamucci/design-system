@@ -11,7 +11,7 @@
     "test": "vitest run",
     "postinstall": "patch-package",
     "storybook": "storybook dev -p 6007",
-    "build-storybook": "storybook build",
+    "build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://vue.norteardesign.com.br --out storybook-static",
     "test-storybook": "test-storybook --url http://127.0.0.1:6007",
     "test-storybook:component": "test-storybook --url http://127.0.0.1:6007",
     "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npx http-server storybook-static --port 6007 --silent\" \"npx wait-on tcp:6007 && npm run test-storybook\"",
