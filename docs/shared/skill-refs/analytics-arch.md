@@ -19,7 +19,7 @@ Tracking nas docs pages é **automático**:
 
 ### Configuração GA4
 
-- **Measurement ID**: `G-K0BQWVR1RG`
+- **Measurement ID**: definido por stack via `STORYBOOK_GA_MEASUREMENT_ID` em `.env.development` (dev) / `.env.production` (build)
 - **Script**: injetado em `.storybook/manager-head.html` (manager, não iframe)
 - **Flow**: iframe dispara → `window.top.gtag` do manager → GA4
 

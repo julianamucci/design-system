@@ -190,12 +190,12 @@ Injected into every preview iframe `<head>`. Contains two scripts:
 
 **Script 1 — GA4:**
 ```html
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K0BQWVR1RG"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=%STORYBOOK_GA_MEASUREMENT_ID%"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-K0BQWVR1RG', { send_page_view: false });
+  gtag('config', '%STORYBOOK_GA_MEASUREMENT_ID%', { send_page_view: false });
 </script>
 ```
 `send_page_view: false` — page views are fired manually via `track('docs_page_view', ...)`.

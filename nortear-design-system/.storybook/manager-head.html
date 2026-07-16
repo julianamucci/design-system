@@ -6,16 +6,17 @@
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
 
-<!-- ⚠ TEMPLATE: G-K0BQWVR1RG é o GA4 do Nortear. Troque pelo SEU Measurement ID
-     antes de publicar (ver BRAND-CUSTOMIZATION.md, Etapa 7 — Analytics), ou os
-     pageviews do seu fork serão enviados para a propriedade GA4 do template.
+<!-- GA4: o Measurement ID vem de STORYBOOK_GA_MEASUREMENT_ID (substituição %VAR%
+     do Storybook), lida de .env.development / .env.production — arquivos locais,
+     fora do git. Copie .env.example e preencha com a SUA propriedade GA4; sem eles
+     o tracking é no-op (ver BRAND-CUSTOMIZATION.md, Etapa 7 — Analytics).
      GA4 vive no manager, não no iframe — ver docs/shared/guidelines/07-analytics.md -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K0BQWVR1RG"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=%STORYBOOK_GA_MEASUREMENT_ID%"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-K0BQWVR1RG', {
+  gtag('config', '%STORYBOOK_GA_MEASUREMENT_ID%', {
     send_page_view: false  /* page_view manual enviado por useSeoEffect a cada troca de story */
   });
 </script>

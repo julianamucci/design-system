@@ -19,7 +19,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## Configuração GA4 do Projeto
 
-- **Measurement ID**: `G-K0BQWVR1RG`
+- **Measurement ID**: `%STORYBOOK_GA_MEASUREMENT_ID%`
 - **Script GA4**: injetado em `.storybook/preview-head.html` de cada stack
 - **Utilitário**: `src/lib/analytics.ts` — função `track(event, params)` com tipos TypeScript
 - **Guideline**: `docs/shared/guidelines/07-analytics.md`
@@ -152,7 +152,7 @@ interface AnalyticsBasePayload {
 ### 1. Verificar script GA4
 
 ```bash
-grep -l "G-K0BQWVR1RG" design-system-*/storybook/preview-head.html
+grep -l "%STORYBOOK_GA_MEASUREMENT_ID%" design-system-*/storybook/preview-head.html
 ```
 
 Confirme que TODAS as stacks (react, vue, svelte, basecoat) têm o script GA4.

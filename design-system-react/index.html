@@ -14,14 +14,16 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" /></noscript>
     <title>Design System — Nortear</title>
 
-    <!-- ⚠ TEMPLATE: G-K0BQWVR1RG é o GA4 do Nortear. Troque pelo SEU Measurement ID
-         antes de publicar (ver BRAND-CUSTOMIZATION.md, Etapa 7 — Analytics). -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K0BQWVR1RG"></script>
+    <!-- GA4: o Measurement ID vem de VITE_GA_MEASUREMENT_ID (interpolado pelo Vite),
+         lido de .env.development / .env.production — arquivos locais, fora do git.
+         Copie .env.example e preencha com a SUA propriedade GA4; sem eles o
+         tracking é no-op (ver BRAND-CUSTOMIZATION.md, Etapa 7 — Analytics). -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA_MEASUREMENT_ID%"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-K0BQWVR1RG', {
+      gtag('config', '%VITE_GA_MEASUREMENT_ID%', {
         send_page_view: false  /* page views manuais via track('docs_page_view') */
       });
     </script>

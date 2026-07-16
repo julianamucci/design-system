@@ -1,6 +1,6 @@
 /**
  * Camada de analytics para o Design System.
- * Envia eventos para o Google Analytics 4 (Measurement ID: G-K0BQWVR1RG).
+ * Envia eventos para o Google Analytics 4 (Measurement ID definido em .env.development / .env.production).
  *
  * Arquitetura:
  *   - GA4 é carregado no manager do Storybook (manager-head.html), não no iframe.

@@ -146,30 +146,33 @@ Aplicar em **react/vue/svelte/nortear**.
 
 ## Etapa 7 — Analytics (GA4) ⚠ obrigatória se for publicar
 
-O template vem com Google Analytics 4 configurado com o Measurement ID **do Nortear** (`G-K0BQWVR1RG`). Se você publicar seu fork sem trocar, **os pageviews dos seus usuários serão enviados pra propriedade GA4 do template original** — você não verá seus próprios dados e estará vazando tráfego pra terceiros.
+O Measurement ID do GA4 **não é versionado** — ele é lido de variáveis de ambiente por stack. Cada stack tem um `.env.example` commitado como modelo; os arquivos reais (`.env.development` e `.env.production`) estão no `.gitignore` e cada fork preenche os seus.
 
-### Opção A — Usar seu próprio GA4
+**Sem os `.env.*`, o GA4 fica inativo por padrão** (o placeholder `%STORYBOOK_GA_MEASUREMENT_ID%` não é substituído e o gtag vira no-op) — o template nunca envia dados pra lugar nenhum até você configurar.
 
-1. Crie uma propriedade GA4 em [analytics.google.com](https://analytics.google.com) e copie o Measurement ID (formato `G-XXXXXXXXXX`)
-2. Substitua em todos os arquivos de uma vez:
+### Setup (por stack que você for usar)
+
+1. Crie sua propriedade GA4 em [analytics.google.com](https://analytics.google.com) e copie o Measurement ID (formato `G-XXXXXXXXXX`). Recomendado: uma propriedade pra dev e outra pra produção, pra não poluir os dados reais com tráfego local.
+2. Copie o modelo e preencha:
 
 ```bash
-# Linux/macOS/Git Bash — troque G-SEUIDAQUI pelo seu ID
-grep -rl "G-K0BQWVR1RG" --include="*.html" --include="*.ts" --include="*.md" --include="*.json" . \
-  | grep -v node_modules | grep -v storybook-static \
-  | xargs sed -i 's/G-K0BQWVR1RG/G-SEUIDAQUI/g'
+# em cada <stack>/
+cp .env.example .env.development   # ID do ambiente de desenvolvimento
+cp .env.example .env.production    # ID do ambiente de produção
+# edite os dois arquivos com seus IDs
 ```
 
-3. Confira que zerou: `grep -rl "G-K0BQWVR1RG" . | grep -v node_modules` não deve retornar nada
+As variáveis:
+- `STORYBOOK_GA_MEASUREMENT_ID` — interpolada pelo Storybook nos `manager-head.html` (sintaxe `%VAR%`); `storybook dev` usa `.env.development`, `storybook build` usa `.env.production`
+- `VITE_GA_MEASUREMENT_ID` — interpolada pelo Vite no `index.html` do sandbox React
 
-Onde o ID vive (caso prefira trocar manualmente):
-- `<stack>/.storybook/manager-head.html` — script gtag (4 stacks). GA4 fica no **manager**, não no iframe — ver [`docs/shared/guidelines/07-analytics.md`](docs/shared/guidelines/07-analytics.md)
-- `design-system-react/index.html` — sandbox dev
-- `<stack>/src/lib/analytics.ts` — comentários de documentação
+3. **Vercel/CI**: os `.env.*` não vão pro repo, então defina `STORYBOOK_GA_MEASUREMENT_ID` como variável de ambiente em cada projeto Vercel (**Settings → Environment Variables**, escopo Production) com o ID de produção.
 
-### Opção B — Remover analytics
+> GA4 fica no **manager** do Storybook, não no iframe — ver [`docs/shared/guidelines/07-analytics.md`](docs/shared/guidelines/07-analytics.md).
 
-Delete os blocos `<script>` do gtag nos `manager-head.html` e `index.html`. A função `track()` em `src/lib/analytics.ts` já é no-op silencioso quando `gtag` não existe — nenhum outro código precisa mudar.
+### Não quer analytics?
+
+Não faça nada — sem env vars o tracking já é no-op. Pra remover de vez, delete os blocos `<script>` do gtag nos `manager-head.html` (4 stacks) e no `design-system-react/index.html`; a função `track()` em `src/lib/analytics.ts` já é silenciosa quando `gtag` não existe.
 
 ---
 
@@ -281,7 +284,7 @@ npx acme@latest add button card alert
 - [ ] Logo SVG atualizado nas 4 stacks
 - [ ] Tipografia carregando corretamente (sem fallback em system-ui)
 - [ ] `brandTitle` em todos os `manager.ts` aponta pra sua marca
-- [ ] **GA4 Measurement ID trocado** — `grep -r "G-K0BQWVR1RG" . | grep -v node_modules` retorna vazio
+- [ ] **GA4 configurado** — `.env.development`/`.env.production` preenchidos com SEUS IDs (a partir do `.env.example`) + `STORYBOOK_GA_MEASUREMENT_ID` definida nos projetos Vercel
 - [ ] README sem menções residuais a "Nortear"
 - [ ] `npm run storybook` roda em todas as 4 stacks sem erro
 - [ ] `npm run build-storybook` builda com sucesso em todas as 4 stacks

@@ -25,7 +25,7 @@
       "rows": {
         "id": {
           "key": "Measurement ID",
-          "value": "<code>G-K0BQWVR1RG</code>"
+          "value": "<code>STORYBOOK_GA_MEASUREMENT_ID</code> (definido em <code>.env.development</code> / <code>.env.production</code>)"
         },
         "script": {
           "key": "Script GA4",
@@ -210,7 +210,7 @@
       "rows": {
         "id": {
           "key": "Measurement ID",
-          "value": "<code>G-K0BQWVR1RG</code>"
+          "value": "<code>STORYBOOK_GA_MEASUREMENT_ID</code> (definido em <code>.env.development</code> / <code>.env.production</code>)"
         },
         "script": {
           "key": "GA4 script",
@@ -395,7 +395,7 @@
       "rows": {
         "id": {
           "key": "Measurement ID",
-          "value": "<code>G-K0BQWVR1RG</code>"
+          "value": "<code>STORYBOOK_GA_MEASUREMENT_ID</code> (definido em <code>.env.development</code> / <code>.env.production</code>)"
         },
         "script": {
           "key": "Script GA4",

@@ -1,6 +1,6 @@
 /**
  * Camada de analytics para o Design System.
- * Envia eventos para o Google Analytics 4 (Measurement ID: G-K0BQWVR1RG).
+ * Envia eventos para o Google Analytics 4 (Measurement ID: %STORYBOOK_GA_MEASUREMENT_ID%).
  */
 
 declare global {
