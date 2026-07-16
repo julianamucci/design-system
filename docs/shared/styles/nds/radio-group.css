@@ -55,9 +55,14 @@
 }
 
 .nds-radio-item:disabled,
-.nds-radio-item[aria-disabled="true"] {
+.nds-radio-item[aria-disabled="true"],
+.nds-radio-item[data-disabled] {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.nds-radio-item[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
 }
 
 /* ── Indicator (círculo central) ─────────────────────────────────────────── */
@@ -70,6 +75,23 @@
   width: 0.625rem;                                /* 10px — círculo interno */
   height: 0.625rem;
   fill: hsl(var(--primary));
+}
+
+/* Indicador sem <svg> (React/Vue/Svelte — libs desmontam o indicator quando
+ * unchecked): o círculo interno é desenhado via ::after, mesmo visual. */
+.nds-radio-indicator:empty::after {
+  content: "";
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 9999px;
+  background-color: hsl(var(--primary));
+}
+
+/* ── Hit-area expandida ──────────────────────────────────────────────────── */
+.nds-radio-item::after {
+  content: "";
+  position: absolute;
+  inset: -0.5rem -0.75rem;
 }
 
 /* Native input visualmente oculto (mas presente para forms) */

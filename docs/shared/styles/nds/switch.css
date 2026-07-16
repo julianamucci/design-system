@@ -35,13 +35,19 @@
     0 0 0 4px hsl(var(--ring) / 0.5);
 }
 
-.nds-switch[data-state="checked"] {
+.nds-switch[data-state="checked"],
+.nds-switch[data-checked] {
   background-color: hsl(var(--primary));
 }
 
-.nds-switch:disabled {
+.nds-switch:disabled,
+.nds-switch[data-disabled] {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.nds-switch[aria-invalid="true"] {
+  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.4);
 }
 
 /* ── Thumb ───────────────────────────────────────────────────────────────── */
@@ -59,8 +65,33 @@
   transition: transform var(--duration-base);
 }
 
-.nds-switch-thumb[data-state="checked"] {
+.nds-switch-thumb[data-state="checked"],
+.nds-switch-thumb[data-checked] {
   transform: translateX(var(--spacing-4));            /* 16px deslocamento */
+}
+
+/* ── Tamanho sm (track 24×16, thumb 12, curso 8 — grid 8) ─────────────────── */
+.nds-switch[data-size="sm"] {
+  width: var(--spacing-6);                            /* 24px */
+  height: var(--spacing-4);                           /* 16px */
+}
+.nds-switch[data-size="sm"] .nds-switch-thumb {
+  width: var(--spacing-3, 0.75rem);                   /* 12px */
+  height: var(--spacing-3, 0.75rem);
+}
+.nds-switch[data-size="sm"] .nds-switch-thumb[data-state="checked"],
+.nds-switch[data-size="sm"] .nds-switch-thumb[data-checked] {
+  transform: translateX(var(--spacing-2));            /* 8px deslocamento */
+}
+
+/* ── Hit-area expandida ──────────────────────────────────────────────────── */
+.nds-switch {
+  position: relative;
+}
+.nds-switch::after {
+  content: "";
+  position: absolute;
+  inset: -0.5rem -0.75rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

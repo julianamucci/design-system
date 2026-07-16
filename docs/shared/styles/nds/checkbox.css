@@ -37,13 +37,16 @@
   box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
 }
 
-.nds-checkbox[data-state="checked"] {
+.nds-checkbox[data-state="checked"],
+.nds-checkbox[data-checked] {
   background-color: hsl(var(--primary));
   border-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
 }
 
 .nds-checkbox[aria-disabled="true"],
+.nds-checkbox:disabled,
+.nds-checkbox[data-disabled],
 .nds-checkbox:has(input:disabled) {
   cursor: not-allowed;
   opacity: 0.5;
@@ -76,4 +79,11 @@
   height: 1px;
   opacity: 0;
   pointer-events: none;
+}
+
+/* ── Hit-area expandida (touch target ≥ 32×32 sem afetar layout) ─────────── */
+.nds-checkbox::after {
+  content: "";
+  position: absolute;
+  inset: -0.5rem -0.75rem;                      /* -8px vertical, -12px lateral */
 }

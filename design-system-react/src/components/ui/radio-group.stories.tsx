@@ -85,7 +85,10 @@ export const Playground: Story = {
     if (!args.disabled) {
       await step("Clique no primeiro item dispara onValueChange", async () => {
         await userEvent.click(radios[0]);
-        await expect(args.onValueChange).toHaveBeenCalledWith("cartao");
+        // base-ui ≥1.6 passa (value, eventDetails) — asserta só no value
+        await expect(args.onValueChange).toHaveBeenCalled();
+        const mock = args.onValueChange as unknown as { mock: { lastCall?: unknown[] } };
+        await expect(mock.mock.lastCall?.[0]).toBe("cartao");
       });
 
       await step("Primeiro item fica com aria-checked=true", async () => {
