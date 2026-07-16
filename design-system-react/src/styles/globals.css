@@ -10,6 +10,11 @@
 @import "@shared/tokens/tokens.css";
 @import "@shared/themes/index.css";
 
+/* ── Componentes standalone .nds-* (compartilhados com Vue/Svelte/Vanilla) ──
+ * Migração Tailwind → .nds-* em andamento: os dois sistemas coexistem até
+ * todos os componentes/docs serem convertidos; aí o Tailwind sai. */
+@import "@shared/styles/nds/index.css";
+
 /* Customizações Storybook Docs */
 @import "./storybook-docs.css";
 

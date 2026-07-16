@@ -109,6 +109,19 @@
 .nds-button-lg:has(> svg) {
   padding-inline: var(--spacing-4);
 }
+/* xs — menor que sm: mesma fonte 12px, padding-block mínimo (2px, divisor de 8).
+ * Mantém a regra WCAG 1.4.4: altura resultante de padding + line-height. */
+.nds-button-xs {
+  gap: var(--spacing-1);
+  padding-inline: var(--spacing-2);
+  padding-block: 0.125rem;                      /* 2px */
+  font-size: 0.75rem;                           /* 12px */
+}
+.nds-button-xs:has(> svg) {
+  padding-inline: var(--spacing-1);
+}
+.nds-button-xs > svg,
+.nds-button-xs .nds-button-icon-svg { width: 0.75rem; height: 0.75rem; }
 
 /* Icon-only (quadrado) — sem texto. width/height explícitos em rem garantem
  * tamanho previsível em qualquer contexto (não dependem de font-size do
@@ -117,10 +130,16 @@
  * O ícone interno escala via classes .nds-button-icon-svg-* aplicadas pela
  * factory, independentes do font-size do botão. */
 .nds-button-icon,
+.nds-button-icon-xs,
 .nds-button-icon-sm,
 .nds-button-icon-lg {
   padding: 0;
 }
+.nds-button-icon-xs {
+  width: 1.5rem;                                /* 24px — paridade com --height-xs */
+  height: 1.5rem;
+}
+.nds-button-icon-xs > svg { width: 0.75rem; height: 0.75rem; }
 .nds-button-icon-sm {
   width: 2rem;                                  /* 32px */
   height: 2rem;
@@ -168,7 +187,8 @@
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 .nds-button-outline:hover,
-.nds-button-outline[aria-pressed="true"] {
+.nds-button-outline[aria-pressed="true"],
+.nds-button-outline[aria-expanded="true"] {
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }
@@ -186,7 +206,8 @@
   color: hsl(var(--foreground));
 }
 .nds-button-ghost:hover,
-.nds-button-ghost[aria-pressed="true"] {
+.nds-button-ghost[aria-pressed="true"],
+.nds-button-ghost[aria-expanded="true"] {
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }

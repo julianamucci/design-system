@@ -1,0 +1,65 @@
+/* ─── Nortear Design System — CSS standalone .nds-* ─────────────────────────
+ * Fonte única consumida pelas 4 stacks (React, Vue, Svelte, Vanilla).
+ * Consome apenas custom properties de tokens.css + themes/*.css.
+ * Ordem de import preservada da stack vanilla (cascade-sensível). */
+
+@import "./layout.css";
+@import "./typography.css";
+@import "./colors.css";
+@import "./pill.css";
+@import "./code.css";
+@import "./utilities.css";
+@import "./spacing.css";
+@import "./app-shell.css";
+@import "./button.css";
+@import "./alert.css";
+@import "./badge.css";
+@import "./kbd.css";
+@import "./card.css";
+@import "./related-card.css";
+@import "./docs-nav.css";
+@import "./docs-demo.css";
+@import "./docs-icons.css";
+@import "./docs-swatches.css";
+@import "./language-switcher.css";
+@import "./accordion.css";
+@import "./alert-dialog.css";
+@import "./aspect-ratio.css";
+@import "./avatar.css";
+@import "./separator.css";
+@import "./label.css";
+@import "./skeleton.css";
+@import "./progress.css";
+@import "./input.css";
+@import "./textarea.css";
+@import "./checkbox.css";
+@import "./switch.css";
+@import "./radio-group.css";
+@import "./tabs.css";
+@import "./breadcrumb.css";
+@import "./pagination.css";
+@import "./collapsible.css";
+@import "./toggle.css";
+@import "./toggle-group.css";
+@import "./tooltip.css";
+@import "./popover.css";
+@import "./hover-card.css";
+@import "./dropdown-menu.css";
+@import "./dialog.css";
+@import "./sheet.css";
+@import "./table.css";
+@import "./data-table.css";
+@import "./select.css";
+@import "./slider.css";
+@import "./command.css";
+@import "./menubar.css";
+@import "./navigation-menu.css";
+@import "./scroll-area.css";
+@import "./resizable.css";
+@import "./input-otp.css";
+@import "./calendar.css";
+@import "./toast.css";
+@import "./carousel.css";
+@import "./sidebar.css";
+@import "./form.css";
+@import "./chart.css";
