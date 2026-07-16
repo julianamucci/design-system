@@ -1,6 +1,6 @@
 // `nortear init` — escreve nortear.json + baixa o item 'init' (camada base).
 import path from 'node:path';
-import { spawn } from 'node:child_process';
+import spawn from 'cross-spawn';
 import {
   c, log,
   fetchRegistry, writeConfig, readConfig,
@@ -79,13 +79,12 @@ async function runPackageManager(root, deps) {
   else if (await exists(path.join(root, 'yarn.lock')))      { cmd = 'yarn'; args = ['add', ...deps]; }
   else if (await exists(path.join(root, 'bun.lockb')))      { cmd = 'bun';  args = ['add', ...deps]; }
   log('info', `${cmd} ${args.join(' ')}`);
-  // No Windows, npm/pnpm/yarn/bun são .cmd batch files que o Node não consegue
-  // executar diretamente sem shell. Em vez de usar `shell: true` (que abre
-  // brecha de command injection caso a validação acima falhe), append .cmd
-  // explicitamente — assim o spawn passa args como argv literal, sem shell.
-  const winCmd = process.platform === 'win32' ? `${cmd}.cmd` : cmd;
+  // cross-spawn: resolve npm.cmd/pnpm.cmd no Windows escapando os argumentos
+  // pro cmd.exe corretamente — sem `shell: true` (injection) e sem o EINVAL
+  // que Node ≥20.12 lança ao spawnar .cmd diretamente (CVE-2024-27980).
   return new Promise((resolve, reject) => {
-    const p = spawn(winCmd, args, { cwd: root, stdio: 'inherit', shell: false });
+    const p = spawn(cmd, args, { cwd: root, stdio: 'inherit' });
+    p.on('error', reject);
     p.on('close', (code) => code === 0 ? resolve() : reject(new Error(`${cmd} saiu com código ${code}`)));
   });
 }

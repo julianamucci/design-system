@@ -1,6 +1,6 @@
 // `nortear add <name...>` — copia componentes + suas dependências do registry.
 import path from 'node:path';
-import { spawn } from 'node:child_process';
+import spawn from 'cross-spawn';
 import {
   c, log,
   readConfig, resolveAll,
@@ -86,11 +86,10 @@ async function installIfMissing(root, deps) {
   else if (await exists(path.join(root, 'yarn.lock'))) { cmd = 'yarn'; args = ['add', ...missing]; }
   else if (await exists(path.join(root, 'bun.lockb'))) { cmd = 'bun';  args = ['add', ...missing]; }
   log('info', `${cmd} ${args.join(' ')}`);
-  // Windows: append .cmd explicitamente em vez de usar shell:true.
-  // Ver init.mjs pra justificativa completa.
-  const winCmd = process.platform === 'win32' ? `${cmd}.cmd` : cmd;
+  // cross-spawn — ver init.mjs pra justificativa completa (EINVAL + injection).
   return new Promise((resolve, reject) => {
-    const p = spawn(winCmd, args, { cwd: root, stdio: 'inherit', shell: false });
+    const p = spawn(cmd, args, { cwd: root, stdio: 'inherit' });
+    p.on('error', reject);
     p.on('close', (code) => code === 0 ? resolve() : reject(new Error(`${cmd} saiu com código ${code}`)));
   });
 }
